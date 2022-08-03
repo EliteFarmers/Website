@@ -1,0 +1,18 @@
+<script lang="ts">
+	import { session } from "$app/stores";
+
+	$: user = $session.user;
+</script>
+
+<nav class="flex justify-between justify-items-center align-middle bg-gray-100 p-2">
+	<section class="flex gap-2 mx-6 align-middle justify-items-center justify-end">
+		<a class="p-3 hover:bg-gray-50" href="/">SkyViewer</a>
+		<a class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/profile">Profile</a>
+	</section>
+	<section class="flex gap-4 mx-6">
+		<!-- Login with discord styled button -->
+		<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/api/auth" hidden={!!user}>Login with Discord</a>
+		<!-- Logout button -->
+		<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/api/signout" hidden={user === false}>Logout</a>
+	</section>
+</nav>
