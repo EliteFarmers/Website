@@ -53,3 +53,45 @@ export function toReadable(num: number) {
 	if (num >= 1000) return (num / 1000).toFixed(1) + ' K';
 	return num.toFixed(1);
 }
+
+/**
+ * 
+ * Converts a skyblock date to unix seconds.
+ * 
+ * @param  {number} sbYear
+ * @param  {number} sbMonth
+ * @param  {number} sbDay
+ * @returns Date
+ */
+ export function getTimeStamp(sbYear: number, sbMonth: number, sbDay: number): number {
+	// SkyBlock epoch is 2019/06/11
+	const epochSeconds = 1560275700;
+		
+	// Total skyblock days passed since epoch
+	const totalDays = (sbYear * 372) + (sbMonth * 31) + sbDay;
+
+	// Convert skyblock days to real life time
+	const realLifeSeconds = (totalDays * 20 * 60);
+
+	// Convert real life time to unix time
+	const unixTime = epochSeconds + realLifeSeconds;
+
+	// Convert unix time to date object
+	return unixTime;
+}
+/**
+ * 
+ * Converts a skyblock contest key string to unix seconds.
+ * 
+ * @param  {string} contestKey
+ */
+export function getContestTimeStamp(contestKey: string) {
+	// contest keys are in this format: '160:6_30:NETHER_STALK'
+	// Parse the date and time from the contest key
+	const split = contestKey.split(':');
+	const skyblockYear = +split[0];
+	const skyblockMonth = +split[1].split('_')[0];
+	const skyblockDay = +split[1].split('_')[1];
+
+	return getTimeStamp(skyblockYear, skyblockMonth, skyblockDay);
+}
