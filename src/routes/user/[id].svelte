@@ -48,7 +48,7 @@
 	<title>{ign}'s Stats</title>
 </svelte:head>
 
-<Skills member={profiles[3].members[uuid]} />
+<Skills member={profiles[3].member} />
 
 <!-- <Inventory itemstacks={profiles[3].members[uuid].inv_armor.data.value} /> -->
 
