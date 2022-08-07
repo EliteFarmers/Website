@@ -1,28 +1,124 @@
 export type UUID = string;
 export type TimestampMills = number;
+type Tier = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type Skill = 'farming' | 'mining' | 'combat' | 'foraging' | 'fishing' | 'enchanting' | 'alchemy' | 'taming' | 'carpentry' | 'runecrafting' | 'social'; 
 
-export type ProfileResponse = {
+export type RawProfileResponse = {
 	success: boolean;
+	profiles: RawProfileData[];
+}
+
+export type Profiles = {
+	last_fetched: TimestampMills;
+	version: number;
 	profiles: ProfileData[];
 }
 
 export type ProfileData = {
 	profile_id: UUID;
-	members: ProfileMembers;
+	member: ProfileMember;
+	members: MemberData[];
 	cute_name: string;
 	community_upgrades?: CommunityUpgrades;
 	game_mode?: string; 
 	banking?: BankingData;
 	last_save?: TimestampMills;
+	coop: boolean;
 }
 
-export type ProfileMembers = { 
-	[uuid: UUID]: ProfileMember
+type MemberData = {
+	uuid: UUID;
+	last_seen: TimestampMills;
+}
+
+type CommunityUpgradeNames = 'minion_slots' | 'island_size' | 'guests_count' | 'coins_allowance' | 'coop_slots';
+
+export type CommunityUpgrades = {
+	[key in CommunityUpgradeNames]: Tier;
+}
+
+export type RawProfileData = {
+	profile_id: UUID;
+	members: RawProfileMembers;
+	cute_name: string;
+	community_upgrades?: RawCommunityUpgrades;
+	game_mode?: string; 
+	banking?: BankingData;
+	last_save?: TimestampMills;
+}
+
+export type RawProfileMembers = { 
+	[uuid: UUID]: RawProfileMember
 }
 
 export type ProfileMember = {
+	last_save: TimestampMills;
+	inventories: Inventories;
+	skills: ExperienceSkills;
+	collection: { 
+		[key: string]: number 
+	};
+	collection_tiers: {
+		[key: string]: number
+	};
+	minions: CraftedMinions;
+	jacob: JacobData;
+	fairy: FairyData;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	[key: string]: any
+}
+
+export type SkillName = 'alchemy' | 'carpentry' | 'combat' | 'enchanting' | 'farming' | 'foraging' | 'fishing' | 'mining' | 'runecrafting' | 'social' | 'taming';
+
+export type ExperienceSkills = {
+	[key in SkillName]: number;
+}
+
+export type CropName = 'cactus' | 'carrot' | 'cocoa' | 'melon' | 'mushroom' | 'nether_wart' | 'potato' | 'pumpkin' | 'sugar_cane' | 'wheat';
+
+export type ContestData = {
+	[key in CropName]: JacobContest[];
+}
+
+export type CraftedMinions = {
+	[key: string]: number;
+}
+
+export type JacobContest = {
+	collected: number;
+	timestamp: number;
+	position?: number;
+	participants?: number;
+}
+
+export type JacobData = {
+	medals: MedalInventory;
+	perks: FarmingPerks;
+	participations: number;
+	contests: ContestData
+};
+
+export type FairyData = {
+	souls_collected: number;
+	souls: number;
+	exchanges: number;
+};
+
+export type Inventories = {
+	player: ItemStack[];
+	armor: ItemStack[];
+	ender_chest: ItemStack[];
+	backpacks: ItemStack[][];
+	talismans: ItemStack[];
+	equipment: ItemStack[];
+	wardrobe: ItemStack[];
+	vault: ItemStack[];
+	potions: ItemStack[];
+	quiver: ItemStack[];
+}
+
+export type RawProfileMember = {
 	last_save: TimestampMills;
 	inv_armor: NBTData;
 	experience_skill_alchemy: number;
@@ -38,8 +134,8 @@ export type ProfileMember = {
 	collection: { 
 		[key: string]: number 
 	},
-	crafted_generators: string[],
-	jacob: StrippedContestData,
+	crafted_generators?: string[],
+	jacob2?: RawAPIJacobData,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any
 }
@@ -69,13 +165,13 @@ export type ItemStack = {
 	tag: any,
 }
 
-export type CommunityUpgrades = {
+export type RawCommunityUpgrades = {
 	upgrade_states: CommunityUpgradeState[]
 }
 
 export type CommunityUpgradeState = {
-	upgrade: string;
-	tier: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+	upgrade: CommunityUpgradeNames;
+	tier: Tier;
 	started_ms: TimestampMills;
 	started_by: UUID;
 	claimed_ms: TimestampMills;
@@ -85,7 +181,7 @@ export type CommunityUpgradeState = {
 
 export type BankingData = {
 	balance: number,
-	transactions: BankingTransaction[]
+	transactions?: BankingTransaction[]
 }
 
 export type BankingTransaction = {
