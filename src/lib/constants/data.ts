@@ -1,3 +1,7 @@
+export const PROFILE_UPDATE_INTERVAL = 1000 * 60 * 10; // 10 minutes
+export const PLAYER_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
+export const ACCOUNT_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
+
 export const EXCLUDED_FIELDS = [
 	'objectives', 
 	'tutorial', 
