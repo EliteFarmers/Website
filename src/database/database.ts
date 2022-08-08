@@ -14,6 +14,19 @@ const User = UsersInit(new Sequelize(POSTGRES_URI, {
 	logging: false,
 }));
 
+let isReady = false;
+
+export async function SyncTables() {
+	if (isReady) return;
+	isReady = true;
+	await User.sync({ force: false });
+}
+
+(async () => {
+	await SyncTables();
+	console.log('Connected to database.');
+})();
+
 export function GetUser(uuid: string) {
 	return User.findOne({ where: { uuid: uuid } });
 }
@@ -51,6 +64,10 @@ export function LinkDiscordUser(uuid: string, user: DiscordUser) {
 
 export function UnlinkDiscordUser(uuid: string) {
 	return UpdateUser({ uuid: uuid }, { id: null, user: null });
+}
+
+export function UpdateDiscordUser(id: string, user: DiscordUser) {
+	return UpdateUser({ id: id }, { user: user });
 }
 
 export async function GetAccountData(uuid: string) {
