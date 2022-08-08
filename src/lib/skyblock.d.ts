@@ -10,7 +10,9 @@ export type RawProfileResponse = {
 }
 
 export type Profiles = {
+	success: boolean;
 	last_fetched: TimestampMills;
+	times_fetched: number;
 	version: number;
 	profiles: ProfileData[];
 }
@@ -25,6 +27,23 @@ export type ProfileData = {
 	banking?: BankingData;
 	last_save?: TimestampMills;
 	coop: boolean;
+	api: APISettings;
+}
+
+export type APISettings = {
+	skills: APISetting;
+	collections: APISetting;
+	inventory: APISetting;
+	vault: APISetting;
+};
+
+export type APISetting = {
+	enabled: boolean;
+	last_fetched: TimestampMills;
+	history: {
+		enabled: boolean;
+		fetched: TimestampMills;
+	}[];
 }
 
 type MemberData = {
@@ -55,11 +74,11 @@ export type RawProfileMembers = {
 export type ProfileMember = {
 	last_save: TimestampMills;
 	inventories: Inventories;
-	skills: ExperienceSkills;
-	collection: { 
+	skills?: ExperienceSkills;
+	collection?: { 
 		[key: string]: number 
 	};
-	collection_tiers: {
+	collection_tiers?: {
 		[key: string]: number
 	};
 	minions: CraftedMinions;
@@ -106,16 +125,16 @@ export type FairyData = {
 };
 
 export type Inventories = {
-	player: ItemStack[];
+	player?: ItemStack[];
 	armor: ItemStack[];
-	ender_chest: ItemStack[];
-	backpacks: ItemStack[][];
-	talismans: ItemStack[];
-	equipment: ItemStack[];
-	wardrobe: ItemStack[];
-	vault: ItemStack[];
-	potions: ItemStack[];
-	quiver: ItemStack[];
+	ender_chest?: ItemStack[];
+	backpacks?: ItemStack[][];
+	talismans?: ItemStack[];
+	equipment?: ItemStack[];
+	wardrobe?: ItemStack[];
+	vault?: ItemStack[];
+	potions?: ItemStack[];
+	quiver?: ItemStack[];
 }
 
 export type RawProfileMember = {
@@ -249,4 +268,44 @@ type FarmingContest = {
 	claimed_rewards?: true,
 	claimed_position?: number,
 	claimed_participants?: number
+}
+
+export type PlayerInfo = {
+	success: boolean,
+	last_fetched: TimestampMills,
+	version: number,
+	player: PlayerData
+}
+
+export type PlayerData = {
+	firstLogin: number,
+	lastLogin: number,
+	karma: number,
+	newPackageRank?: string,
+	socialMedia?: {
+		links?: {
+			DISCORD?: string,
+			HYPIXEL?: string,
+			[key: string]: string
+		}
+	},
+	skyblock_extra?: {
+		ozanne_coins?: number,
+		[key: string]: unknown
+	}
+	[key: string]: unknown
+}
+
+export type AccountInfo = {
+	success: boolean,
+	last_fetched: TimestampMills,
+	version: number,
+	account: {
+		id: string,
+		name: string,
+		properties: {
+			name: string,
+			value: string,
+		}[]
+	}
 }
