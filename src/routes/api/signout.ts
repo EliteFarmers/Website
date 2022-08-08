@@ -5,8 +5,7 @@ export async function GET() {
 				`discord_access_token=deleted; Path=/; Max-Age=-1`,
 				`discord_refresh_token=deleted; Path=/; Max-Age=-1`,
 			],
-			Location: '/'
 		},
-		status: 302
+		status: 200
 	}
 }
