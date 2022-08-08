@@ -28,19 +28,17 @@
 			name: string;
 			properties: { name: string, value: string }[]
 		},
-		profiles: ProfileData[],
-		player: any;
 	}
 
-	const { account, profiles, player } = data;
-	const { id: uuid, name: ign, properties } = account;
+	// const { account, profiles, player } = data;
+	const { id: uuid, name: ign, properties } = data.account;
 
 	onMount(async () => {
 		if (ign !== $page.params.id) history.replaceState(history.state, document.title, ign);
 
-		console.log({account});
-		console.log({profiles});
-		console.log({player});
+		console.log(data.account);
+		// console.log({profiles});
+		// console.log({player});
 	});
 </script>
 
@@ -48,8 +46,8 @@
 	<title>{ign}'s Stats</title>
 </svelte:head>
 
-<Skills member={profiles[3].member} />
+<!-- <Skills member={profiles[3].member} /> -->
 
 <!-- <Inventory itemstacks={profiles[3].members[uuid].inv_armor.data.value} /> -->
 
-<h1 class="text-center m-16">{uuid} {ign} {profiles} {properties} {player}</h1>
+<h1 class="text-center m-16">{uuid} {ign}</h1>
