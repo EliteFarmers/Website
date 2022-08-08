@@ -1,16 +1,25 @@
-import type { CommunityUpgrades, ContestData, CraftedMinions, CropName, Inventories, JacobData, ProfileData, ProfileMember, Profiles, RawProfileData, RawProfileMember } from './skyblock.d';
+import type { AccountInfo, APISettings, CommunityUpgrades, ContestData, CraftedMinions, CropName, Inventories, JacobData, PlayerData, ProfileData, ProfileMember, Profiles, RawProfileData, RawProfileMember } from './skyblock.d';
+import { ACCOUNT_UPDATE_INTERVAL, API_CROP_TO_CROP, EXCLUDED_FIELDS, INVENTORY_FIELDS_RENAME, KEPT_PLAYER_FIELDS, MOVE_TO_STATS, PLAYER_UPDATE_INTERVAL, PROFILE_UPDATE_INTERVAL } from './constants/data';
+import { CreateUser, GetUser, GetUserByIGN, UpdateAccountData, UpdatePlayerData, UpdateProfilesData } from '$db/database';
 import { parse, simplify } from 'prismarine-nbt';
-import { API_CROP_TO_CROP, EXCLUDED_FIELDS, INVENTORY_FIELDS_RENAME, KEPT_PLAYER_FIELDS, MOVE_TO_STATS } from './constants/data';
 import { getContestTimeStamp } from './format';
+import type { User } from '$db/models/users';
 
 
 export async function accountFromIGN(ign: string) {
+
+	// First check if the account is cached.
+	const user = await GetUserByIGN(ign);
+	// If the account is cached and newer than the interval, return it.
+	if (user) return accountFromUUID(user.uuid, user);
+
+	// If the account is not cached, get it from the API.
 	const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${ign}`).catch(() => undefined);
 
 	if (!response) return undefined;
 
 	if (response.status !== 200) {
-		return response;
+		return undefined;
 	}
 
 	const data = await response.json();
@@ -18,19 +27,56 @@ export async function accountFromIGN(ign: string) {
 	return accountFromUUID(data.id);
 }
 
-export async function accountFromUUID(ign: string) {
-	const response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${ign}`).catch(() => undefined);
+export async function accountFromUUID(uuid: string, user?: User) {
+
+	if (!user) {
+		user = await GetUser(uuid) ?? undefined;
+	}
+
+	// If user account data is older than the interval, get the latest data from the API.
+	if (user && user?.account?.success && (Date.now() - user.account.last_fetched) < ACCOUNT_UPDATE_INTERVAL) {
+		return user.account;
+	}
+
+	const response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).catch(() => undefined);
 
 	if (!response) return undefined;
 
 	if (response.status !== 200) {
-		return response;
+		return undefined;
 	}
 
-	return response.json();
+	const data = await response.json();
+
+	const result: AccountInfo = {
+		success: true,
+		last_fetched: Date.now(),
+		version: 1,
+		account: data
+	}
+
+	if (user) {
+		UpdateAccountData(uuid, result);
+	} else {
+		CreateUser(uuid, result.account.name).then(() => UpdateAccountData(uuid, result));
+	}
+
+	return result;
 }
 
 export async function fetchProfiles(uuid: string, key: string): Promise<Profiles | undefined> {
+
+	// First check if the profiles are cached.
+	const user = await GetUser(uuid);
+	// If the profiles are cached and newer than 30 minutes, return it.
+	if (user && user.skyblock?.success && (Date.now() - user.skyblock.last_fetched) < PROFILE_UPDATE_INTERVAL) {
+		return user.skyblock;
+	}
+
+	if (!user) {
+		accountFromUUID(uuid);
+	}
+
 	const response = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${key}`);
 
 	if (!response) return undefined;
@@ -39,60 +85,160 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 		return undefined;
 	}
 
-	return new Promise((resolve,) => {
-		response.json().then(async (data) => {
-			const startTime = Date.now();
-			const parsed = await formatProfiles(data.profiles, uuid);
-			const endTime = Date.now();
+	try {
+		const data = await response.json();
+		const parsed = await GetProfiles(data.profiles, uuid, user ?? undefined);
 
-			console.log(`[Skyblock] Parsed profiles in ${endTime - startTime}ms.`);
-
-			resolve(parsed);
-		}).catch((e) => {
-			console.log('Failed to fetch profile data.', e);
-			resolve(undefined);
-		});
-	});
+		if (user) {
+			UpdateProfilesData(uuid, parsed);
+		}
+	
+		return parsed;
+	} catch (error) {
+		console.log(error);
+		return undefined;
+	}
 }
 
 export async function fetchPlayer(uuid: string, key: string) {
+
+	// First check if the player is cached.
+	const user = await GetUser(uuid);
+	// If the player is cached and newer than the interval, return it.
+	if (user && user.player?.success && (Date.now() - user.player.last_fetched) < PLAYER_UPDATE_INTERVAL) {
+		return user.player;
+	}
+
+	if (!user) {
+		accountFromUUID(uuid);
+	}
+
 	const response = await fetch(`https://api.hypixel.net/player?uuid=${uuid}&key=${key}`);
 
 	if (!response) return undefined;
 
 	if (response.status !== 200) {
-		return response;
+		return undefined;
 	}
 
-	return new Promise((resolve,) => {
-		response.json().then(async (data) => {
+	try {
+		const data = await response.json();
+		const player = formatPlayer(data.player);
 
-			const player = data.player;
+		const result = {
+			success: true,
+			last_fetched: Date.now(),
+			version: 1,
+			player: player
+		}
 
-			for (const key in player) {
-				let keep = false;
-				for (const field of KEPT_PLAYER_FIELDS) {
-					if (key.startsWith(field)) keep = true;
-				}
-				if (!keep) delete player[key];
-			}
-
-			data.player = player;
-
-			resolve(data);
-		}).catch(() => {
-			console.log('Failed to fetch player data.');
-			resolve(undefined);
-		});
-	});
+		if (user) {
+			UpdatePlayerData(uuid, result);
+		}
+	
+		return result;
+	} catch (error) {
+		return undefined;
+	}
 }
 
-export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
+function formatPlayer(player: PlayerData) {
+	for (const key in player) {
+		let keep = false;
+		for (const field of KEPT_PLAYER_FIELDS) {
+			if (key.startsWith(field)) keep = true;
+		}
+		if (!keep) delete player[key];
+	}
+	return player;
+}
+
+export async function GetProfiles(profiles: RawProfileData[], uuid: string, user?: User) {
 	const data: Profiles = {
+		success: profiles.length > 0,
 		last_fetched: Date.now(),
+		times_fetched: user?.skyblock?.times_fetched ?? 0,
 		version: 1,
-		profiles: []
+		profiles: [],
 	};
+
+	if (!user || !user.skyblock?.success) {
+		data.last_fetched = user?.skyblock?.last_fetched ?? Date.now();
+
+		data.profiles = await formatProfiles(profiles, uuid);
+		await loadNBTData(data.profiles);
+		
+		return data;
+	}
+
+	data.times_fetched++;
+
+	const oldProfiles = user.skyblock.profiles;
+	const newProfiles = await formatProfiles(profiles, uuid);
+
+	for (const profile of newProfiles) {
+		const oldProfile = oldProfiles.find((p: ProfileData) => p.profile_id === profile.profile_id);
+		
+		if (!oldProfile) {
+			data.profiles.push(profile);
+			continue;
+		}
+
+		const member = profile.member;
+		const oldMember = oldProfile.member;
+
+		const apiSettings = profile.api;
+		let key: keyof APISettings;
+		for (key in apiSettings) {
+			apiSettings[key].history = oldProfile.api?.[key]?.history ?? [];
+
+			const oldState = oldProfile.api?.[key];
+			const newState = profile.api?.[key];
+
+			if (oldState?.enabled !== newState?.enabled) {
+				apiSettings[key].history.push({
+					enabled: oldProfile.api?.[key]?.enabled ?? false,
+					fetched: oldState.last_fetched,
+				});
+			}
+		}
+
+		const collected: ProfileMember = {
+			...member,
+			skills: (member.skills) ? member.skills : oldMember.skills,
+			inventories: {
+				player: (member.inventories?.player) ? member.inventories.player : oldMember.inventories?.player,
+				armor: member.inventories?.armor,
+				ender_chest: (member.inventories?.ender_chest) ? member.inventories.ender_chest : oldMember.inventories?.ender_chest,
+				backpacks: (member.inventories?.backpacks) ? member.inventories.backpacks : oldMember.inventories?.backpacks,
+				talismans: (member.inventories?.talismans) ? member.inventories.talismans : oldMember.inventories?.talismans,
+				equipment: (member.inventories?.equipment) ? member.inventories.equipment : oldMember.inventories?.equipment,
+				wardrobe: (member.inventories?.wardrobe) ? member.inventories.wardrobe : oldMember.inventories?.wardrobe,
+				vault: (member.inventories?.vault) ? member.inventories.vault : oldMember.inventories?.vault,
+				potions: (member.inventories?.potions) ? member.inventories.potions : oldMember.inventories?.potions,
+				quiver: (member.inventories?.quiver) ? member.inventories.quiver : oldMember.inventories?.quiver,
+			},
+			collection: (member.collection) ? member.collection : oldMember.collection,
+			collection_tiers: (member.collection_tiers) ? member.collection_tiers : oldMember.collection_tiers,
+		};
+
+
+		data.profiles.push({
+			...profile,
+			member: collected,
+			api: apiSettings,
+		});
+	}
+
+	await loadNBTData(data.profiles);
+
+	return data;
+}
+
+
+
+export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
+	const data: ProfileData[] = [];
 	
 	for (const profile of profiles) {
 
@@ -114,7 +260,7 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 
 		const memberData = formatMemberData(profile.members[uuid]);
 		
-		data.profiles.push({
+		data.push({
 			profile_id: profile.profile_id,
 			member: memberData,
 			members: members,
@@ -123,11 +269,12 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 			community_upgrades: getCommunityUpgradeData(profile),
 			game_mode: profile.game_mode, 
 			banking: getBankingData(profile),
-			last_save: profile.last_save
+			last_save: profile.last_save,
+			api: getAPISettings(memberData),
 		});
 	}
 
-	await loadNBTData(data.profiles);
+	await loadNBTData(data);
 
 	return data;
 }
@@ -144,14 +291,14 @@ async function loadNBTData(profiles: ProfileData[]) {
 			queue.push(hydrateNBT(data.inventories, key));
 		}
 	
-		if (data.inventories.backpacks) {
+		if (data.inventories?.backpacks) {
 			for (const key in data.inventories.backpacks) {
 				queue.push(hydrateNBT(data.inventories.backpacks, key));
 			}
 		}
 	}
 
-	Promise.allSettled(queue);
+	await Promise.allSettled(queue);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -210,7 +357,7 @@ function formatMemberData(member: RawProfileMember): ProfileMember {
 		collection_tiers: condenseCollTiers(member),
 		fairy: condenseGroup(member, 'fairy_'),
 		essence: condenseGroup(member, 'essence_', undefined, ['soulflow']),
-		inventories: inventories as Inventories,
+		inventories: inventories,
 		...member,
 	}
 
@@ -228,6 +375,28 @@ function formatMemberData(member: RawProfileMember): ProfileMember {
 	}
 
 	return data;
+}
+
+function getAPISettings(member: ProfileMember) {
+	const settings: APISettings = {
+		skills: {
+			enabled: (member.skills) ? true : false,
+			last_fetched: Date.now(), history: []
+		},
+		collections: {
+			enabled: (member.collection) ? true : false,
+			last_fetched: Date.now(), history: []
+		},
+		inventory: {
+			enabled: (member.inventories?.player) ? true : false,
+			last_fetched: Date.now(), history: []
+		},
+		vault: {
+			enabled: (member.inventories?.vault) ? true : false,
+			last_fetched: Date.now(), history: []
+		}
+	}
+	return settings;
 }
 
 function formatContests(member: RawProfileMember) {
@@ -302,7 +471,7 @@ function condenseCollTiers(member: RawProfileMember) {
 
 	if (!member.unlocked_coll_tiers) {
 		delete member.unlocked_coll_tiers;
-		return tiers;
+		return undefined;
 	}
 
 	for (const key of member.unlocked_coll_tiers) {
@@ -314,6 +483,11 @@ function condenseCollTiers(member: RawProfileMember) {
 	}
 
 	delete member.unlocked_coll_tiers;
+
+	// If there are no tiers, delete the field.
+	if (Object.keys(tiers).length < 1) {
+		return undefined;
+	}
 
 	return tiers;
 }
@@ -334,14 +508,16 @@ function condenseGroup(member: RawProfileMember, prefix: string, rename?: (arg: 
 		delete member[key];
 	}
 
+	if (Object.keys(group).length < 1) {
+		return undefined;
+	}
+
 	return group;
 }
 
 function condenseInventories(member: RawProfileMember): Inventories {
-	const inventories: Inventories = {
-		player: [], armor: [], ender_chest: [],
-		backpacks: [], talismans: [], equipment: [],
-		wardrobe: [], vault: [], potions: [], quiver: []
+	const inventories: Inventories = { 
+		armor: [],
 	};
 
 	const keys = INVENTORY_FIELDS_RENAME;
