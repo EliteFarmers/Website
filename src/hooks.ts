@@ -1,6 +1,7 @@
 import cookie from 'cookie';
 import type { GetSession, Handle } from '@sveltejs/kit';
 import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL as HOST, } from '$env/static/public';
+import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const cookies = cookie.parse(event.request.headers.get("cookie") || "");
@@ -35,8 +36,15 @@ export const getSession: GetSession = async ({ locals }) => {
 			});
 
 			const response = await request.json();
+			const discordUser = { ...response };
 
-			if (response.id) return { user: { ...response } }
+			GetUserByDiscordID(discordUser.id).then(user => {
+				if (user?.id) {
+					UpdateDiscordUser(user.id, discordUser);
+				}
+			});
+
+			if (response.id) return { user: discordUser }
 		} catch (error) {
 			return { user: false }
 		}
