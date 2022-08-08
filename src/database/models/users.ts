@@ -50,8 +50,9 @@ export function UsersInit(sequelize: Sequelize) {
 		id: DataTypes.STRING,
 		ign: DataTypes.STRING,
 		user: DataTypes.JSONB,
+
+		skyblock: DataTypes.JSONB,
 		// JSON because it won't be queried by subfields
-		skyblock: DataTypes.JSON,
 		account: DataTypes.JSON,
 		player: DataTypes.JSON,
 
@@ -61,13 +62,6 @@ export function UsersInit(sequelize: Sequelize) {
 		sequelize: sequelize,
 		tableName: 'users',
 		freezeTableName: true,
-		indexes: [
-			{
-				name: "weight_index",
-				using: 'BTREE',
-				fields: ['weight']
-			}
-		]
 	});
 	return User;
 }
