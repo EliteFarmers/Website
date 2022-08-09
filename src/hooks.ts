@@ -19,17 +19,17 @@ export const getSession: GetSession = async ({ locals }) => {
 		discord_refresh_token: locals.discord_refresh_token,
 	}
 
-	if (!cookies.discord_access_token && !cookies.discord_refresh_token) return { user: false }
+	if (!cookies.discord_access_token && !cookies.discord_refresh_token) return { discordUser: false, user: false };
 
 	if (!cookies.discord_access_token) {
 		const discord_request = await fetch(`${HOST}/api/refresh?code=${cookies.discord_refresh_token}`);
 
-		if (discord_request.status !== 200) return { user: false }
+		if (discord_request.status !== 200) return { discordUser: false, user: false };
 
 		try {
 			const discord_response = await discord_request.json();
 
-			if (!discord_response.discord_access_token) return { user: false }
+			if (!discord_response.discord_access_token) return { discordUser: false, user: false }
 
 			const request = await fetch(`${DISCORD_API_URL}/users/@me`, {
 				headers: { 'Authorization': `Bearer ${discord_response.discord_access_token}` }
@@ -38,15 +38,15 @@ export const getSession: GetSession = async ({ locals }) => {
 			const response = await request.json();
 			const discordUser = { ...response };
 
-			GetUserByDiscordID(discordUser.id).then(user => {
-				if (user?.id) {
-					UpdateDiscordUser(user.id, discordUser);
-				}
-			});
+			const user = (await GetUserByDiscordID(discordUser.id)) ?? false;
 
-			if (response.id) return { user: discordUser }
+			if (user && user.id) {
+				UpdateDiscordUser(user.id, discordUser);
+			}
+
+			if (response.id) return { discordUser: discordUser, user: user };
 		} catch (error) {
-			return { user: false }
+			return { discordUser: false, user: false }
 		}
 	}
 
@@ -57,12 +57,20 @@ export const getSession: GetSession = async ({ locals }) => {
 
 		// returns a discord user if JWT was valid
 		const response = await request.json();
+		const discordUser = { ...response };
 
-		if (response.id) return { user: { ...response } }
+		const user = (await GetUserByDiscordID(response.id)) ?? false;
+
+		if (user && user.id) {
+			UpdateDiscordUser(user.id, discordUser);
+		}
+
+		if (response.id) return { discordUser: discordUser, user: user };
 	}
 
 	// not authenticated, return empty user object
 	return {
+		discordUser: false,
 		user: false
 	}
 }

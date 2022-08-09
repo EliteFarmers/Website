@@ -6,34 +6,22 @@
 
 	export let member: ProfileMember;
 
-	const { 
-		experience_skill_alchemy: alchemy, 
-		experience_skill_carpentry: carpentry,
-		experience_skill_combat: combat,
-		experience_skill_enchanting: enchanting,
-		experience_skill_farming: farming,
-		experience_skill_fishing: fishing,
-		experience_skill_foraging: foraging,
-		experience_skill_mining: mining,
-		experience_skill_runecrafting: runecrafting,
-		experience_skill_taming: taming
-	} = member;
-
+	const skills = member.skills;
 </script>
 
 <section class="flex justify-center align-middle">
 	<div class="w-[40%]">
-		<Skillbar name="Combat" progress={getLevelProgress('combat', combat)}/>
-		<Skillbar name="Mining" progress={getLevelProgress('mining', mining)}/>
-		<Skillbar name="Taming" progress={getLevelProgress('taming', taming)}/>
-		<Skillbar name="Alchemy" progress={getLevelProgress('alchemy', alchemy)}/>
-		<Skillbar name="Carpentry" progress={getLevelProgress('carpentry', carpentry)}/>
+		<Skillbar name="Combat" progress={getLevelProgress('combat', skills?.combat ?? 0)}/>
+		<Skillbar name="Mining" progress={getLevelProgress('mining', skills?.mining ?? 0)}/>
+		<Skillbar name="Taming" progress={getLevelProgress('taming', skills?.taming ?? 0)}/>
+		<Skillbar name="Alchemy" progress={getLevelProgress('alchemy', skills?.alchemy ?? 0)}/>
+		<Skillbar name="Carpentry" progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}/>
 	</div>
 	<div class="w-[40%]">
-		<Skillbar name="Farming" progress={getLevelProgress('farming', farming, member.jacob2.perks.farming_level_cap + DEFAULT_SKILL_CAPS.farming)}/>
-		<Skillbar name="Fishing" progress={getLevelProgress('fishing', fishing)}/>
-		<Skillbar name="Foraging" progress={getLevelProgress('foraging', foraging)}/>
-		<Skillbar name="Enchanting" progress={getLevelProgress('enchanting', enchanting)}/>
-		<Skillbar name="Runecrafting" progress={getLevelProgress('runecrafting', runecrafting)}/>
+		<Skillbar name="Farming" progress={getLevelProgress('farming', skills?.farming ?? 0, (member.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming)}/>
+		<Skillbar name="Fishing" progress={getLevelProgress('fishing', skills?.fishing ?? 0)}/>
+		<Skillbar name="Foraging" progress={getLevelProgress('foraging', skills?.foraging ?? 0)}/>
+		<Skillbar name="Enchanting" progress={getLevelProgress('enchanting', skills?.enchanting ?? 0)}/>
+		<Skillbar name="Runecrafting" progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}/>
 	</div>
 </section>
