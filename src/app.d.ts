@@ -9,27 +9,8 @@ declare namespace App {
 	}
 	// interface Platform {}
 	interface Session {
-		user: false | User 
+		discordUser: import('$db/models/users').DiscordUser | false;
+		user: import('$db/models/users').User | false;
 	}
 	// interface Stuff {}
-}
-
-type User = {
-	id: string;
-	username: string;
-	discriminator: string;
-	avatar: string;
-	avatar_decoration?: string | null;
-	email: string;
-	verified: boolean;
-	bot: boolean;
-	mfa_enabled: boolean;
-	locale: string;
-	premium_type?: string;
-	public_flags: number;
-	flags: number;
-	premium_since?: string;
-	banner?: string | null;
-	banner_color?: string | null;
-	accent_color?: string | null;
 }
