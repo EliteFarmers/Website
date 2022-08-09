@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { session } from "$app/stores";
 
-	$: user = $session.user;
+	$: discordUser = $session.discordUser;
 </script>
 
 <nav class="flex justify-between justify-items-center align-middle bg-gray-100 p-2">
@@ -11,8 +11,8 @@
 	</section>
 	<section class="flex gap-4 mx-6">
 		<!-- Login with discord styled button -->
-		<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/login" hidden={!!user}>Login with Discord</a>
+		<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/login" hidden={!!discordUser}>Login with Discord</a>
 		<!-- Logout button -->
-		<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/logout" hidden={user === false}>Logout</a>
+		<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/logout" hidden={discordUser === false}>Logout</a>
 	</section>
 </nav>

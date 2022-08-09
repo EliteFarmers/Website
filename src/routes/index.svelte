@@ -45,7 +45,7 @@
 			</div>
 			<button 
 				class="p-2 m-4 rounded-lg border-2 border-white bg-green-300 hover:bg-green-400}"
-				on:click={() => { goto(`/user/${enteredText}`) }}
+				on:click={() => { goto(`/stats/${enteredText}`) }}
 			>
 				Confirm
 			</button>

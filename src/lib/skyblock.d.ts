@@ -300,12 +300,14 @@ export type AccountInfo = {
 	success: boolean,
 	last_fetched: TimestampMills,
 	version: number,
-	account: {
-		id: string,
+	account: AccountData
+}
+
+export type AccountData = {
+	id: string,
+	name: string,
+	properties: {
 		name: string,
-		properties: {
-			name: string,
-			value: string,
-		}[]
-	}
+		value: string,
+	}[]
 }
