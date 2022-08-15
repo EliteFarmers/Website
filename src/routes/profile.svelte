@@ -6,7 +6,7 @@
 			// Redirect to login page
 			return { 
 				status: 302, 
-				redirect: '/api/auth' 
+				redirect: '/login' 
 			};
 		}
 
@@ -23,7 +23,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { DiscordUser, User } from '$db/models/users';
-
+	
 	export let discordUser: DiscordUser;
 	export let user: User | false;
 

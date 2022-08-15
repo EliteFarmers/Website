@@ -24,13 +24,13 @@ export const GET: RequestHandler = async ({ url }) => {
 		grant_type: 'refresh_token',
 		refresh_token: refreshToken,
 		redirect_uri: DISCORD_REDIRECT_URI,
-		state: uuid,
 		scope: 'identify email guilds',
+		state: uuid,
 	};
 
 	const body = new URLSearchParams(data);
 
-	const request = await fetch(`https://discord.com/api/oauth2/token`, {
+	const request = await fetch('https://discord.com/api/oauth2/token', {
 		method: 'POST',
 		body: body,
 		headers: {
@@ -51,13 +51,13 @@ export const GET: RequestHandler = async ({ url }) => {
 	const refreshTokenExpires = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)); // 30 days
 
 	return {
-		status: 200,
-		headers: { 
-			'Set-Cookie': [
+		body: { 
+			discord_access_token: response.access_token,
+			cookies: [
 				`discord_access_token=${response.access_token}; Expires=${accessTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
-				`discord_refresh_token=${response.refresh}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
+				`discord_refresh_token=${response.refresh_token}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
 			],
 		},
-		body: { 'discord_access_token': response.access_token }
+		status: 200,
 	};
 }
