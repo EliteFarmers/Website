@@ -6,7 +6,7 @@
 	export const load: Load = async ({ fetch }) => {
 		await fetch('/api/signout');
 
-		if (browser) session.set({ user: false });
+		if (browser) session.set({ user: false, discordUser: false });
 
 		return {
 			status: 302,
