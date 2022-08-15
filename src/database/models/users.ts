@@ -52,8 +52,8 @@ export function UsersInit(sequelize: Sequelize) {
 		user: DataTypes.JSONB,
 
 		skyblock: DataTypes.JSONB,
+		account: DataTypes.JSONB,
 		// JSON because it won't be queried by subfields
-		account: DataTypes.JSON,
 		player: DataTypes.JSON,
 
 		createdAt: DataTypes.DATE,
