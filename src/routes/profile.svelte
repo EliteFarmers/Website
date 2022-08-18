@@ -31,6 +31,24 @@
 		console.log(discordUser);
 		console.log(user);
 	});
+
+	let linkValue = 'Hi';
+	const linkSubmit = async () => {
+		if (!linkValue || !linkValue.match(/^[a-zA-Z0-9_]{1,16}$/)) {
+			return;
+		}
+
+		const body = new URLSearchParams({ username: linkValue });
+		// Send post request to link endpoint
+
+		const response = await fetch('/api/link', {
+			method: 'POST',
+			body: body,
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+		});
+	}
 </script>
 
 <svelte:head>
@@ -58,8 +76,18 @@
 	</div>
 	<!-- Link to view profile stats -->
 	{#if user}
-		<a href="/stats/{user.ign}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+		<a href="/stats/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
 			View Profile Stats
-		</a>		
+		</a>
+	{:else}
+		<!-- Form to input username to link account -->
+		<form on:submit|preventDefault={linkSubmit}>
+			<div class="flex items-center">
+				<input type="text" name="username" bind:value={linkValue} class="w-full px-4 py-2 border-2 rounded" placeholder="Username" />
+				<button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+					Link Account
+				</button>
+			</div>
+		</form>
 	{/if}
 </div>

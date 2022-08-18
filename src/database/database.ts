@@ -1,7 +1,7 @@
 import { POSTGRES_URI } from "$env/static/private";
 import type { Profiles, AccountInfo, PlayerInfo } from "$lib/skyblock";
 import { Op, Sequelize } from "sequelize";
-import { UsersInit, type DiscordUser, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
+import { UsersInit, type DiscordUser, type UserData, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
 
 export type DataUpdate = { 
 	account: AccountInfo, 
@@ -27,16 +27,33 @@ export async function SyncTables() {
 	console.log('Connected to database.');
 })();
 
-export function GetUser(uuid: string) {
-	return User.findOne({ where: { uuid: uuid } });
+export async function GetUser(uuid: string) {
+	const user = await User.findOne({ where: { uuid: uuid } });
+	if (!user) return null;
+	return user.get({ plain: true }) as UserData;
 }
 
-export function GetUserByIGN(ign: string) {
-	return User.findOne({ where: { ign: { [Op.iLike]: '%' + ign } } });
+export async function GetUserByIGN(ign: string) {
+	const user = await User.findOne({ where: { ign: { [Op.iLike]: '%' + ign } } });
+	if (!user) return null;
+	return user.get({ plain: true }) as UserData;
 }
 
-export function GetUserByDiscordID(id: string) {
-	return User.findOne({ where: { id: id } });
+export async function GetUserByDiscordID(id: string) {
+	const user = await User.findOne({ where: { id: id } });
+	if (!user) return null;
+	return user.get({ plain: true }) as UserData;
+}
+
+export async function FindUserToLink(discordUser: DiscordUser) {
+	const user = await User.findOne({ where: { 
+		"player.player.social.links.DISCORD": { 
+			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator}` 
+		} 
+	}});
+
+	if (!user) return null;
+	return user.get({ plain: true }) as UserData;
 }
 
 export function CreateUser(uuid: string, ign: string) {
