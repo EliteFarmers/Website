@@ -56,9 +56,9 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	}
 
 	if (user) {
-		UpdateAccountData(uuid, result);
+		await UpdateAccountData(uuid, result);
 	} else {
-		CreateUser(uuid, result.account.name).then(() => UpdateAccountData(uuid, result));
+		await CreateUser(uuid, result.account.name).then(() => UpdateAccountData(uuid, result));
 	}
 
 	return result;
@@ -74,7 +74,7 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 	}
 
 	if (!user) {
-		accountFromUUID(uuid);
+		await accountFromUUID(uuid);
 	}
 
 	const response = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${key}`);
@@ -90,7 +90,7 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 		const parsed = await GetProfiles(data.profiles, uuid, user ?? undefined);
 
 		if (user) {
-			UpdateProfilesData(uuid, parsed);
+			await UpdateProfilesData(uuid, parsed);
 		}
 	
 		return parsed;
@@ -110,7 +110,7 @@ export async function fetchPlayer(uuid: string, key: string) {
 	}
 
 	if (!user) {
-		accountFromUUID(uuid);
+		await accountFromUUID(uuid);
 	}
 
 	const response = await fetch(`https://api.hypixel.net/player?uuid=${uuid}&key=${key}`);
@@ -133,7 +133,7 @@ export async function fetchPlayer(uuid: string, key: string) {
 		}
 
 		if (user) {
-			UpdatePlayerData(uuid, result);
+			await UpdatePlayerData(uuid, result);
 		}
 	
 		return result;

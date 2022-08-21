@@ -1,8 +1,6 @@
-import { json } from '@sveltejs/kit';
 import { HYPIXEL_API_KEY } from '$env/static/private'; 
-
 import { fetchProfiles } from '$lib/data';
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
 
@@ -20,11 +18,5 @@ export const GET: RequestHandler = async ({ params }) => {
 	if (!profiles) 
 		return new Response(undefined, { status: 404 })
 
-	throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292701)");
-	// Suggestion (check for correctness before using):
-	// return json(profiles);
-	return {
-		status: 200,
-		body: profiles
-	};
+	return new Response(JSON.stringify(profiles));
 };
