@@ -23,8 +23,9 @@ export type DiscordUser = {
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {	
 	// Default
-	declare createdAt: CreationOptional<Date>;
-	declare updatedAt: CreationOptional<Date>;
+	// "| string" added to allow for the string substitution to work around SvelteKit's inability to serialize date objects.
+	declare createdAt: CreationOptional<Date | string>;
+	declare updatedAt: CreationOptional<Date | string>;
 
 	// Added 
 	declare uuid: string;

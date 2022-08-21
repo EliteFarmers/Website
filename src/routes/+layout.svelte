@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Nav from '$comp/nav.svelte';
+	import { page } from '$app/stores';
 </script>
 
-<Nav />
+<Nav discordUser={$page.data.discordUser} />
 
 <slot />
 
