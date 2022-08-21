@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { session } from "$app/stores";
+	import type { DiscordUser } from "$db/models/users";
 
-	$: discordUser = $session.discordUser;
+	export let discordUser: DiscordUser | false;
 </script>
 
 <nav class="flex justify-between justify-items-center align-middle bg-gray-100 p-2">

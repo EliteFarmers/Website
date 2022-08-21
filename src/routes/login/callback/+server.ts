@@ -1,4 +1,4 @@
-import type { RequestHandler } from './__types/callback';
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
  
@@ -7,18 +7,13 @@ export const GET: RequestHandler = async ({ url }) => {
 	const error = url.searchParams.get('error');
 
 	if (error) {
-		return {
-			status: 302,
-			headers: { Location: '/' },
-		}
+		return new Response(undefined, { status: 302, headers: { Location: '/' } })
 	}
 
-	return {
-		status: 200,
+	return new Response('', {
 		headers: {
 			refresh: `0;url=/api/login?code=${returnCode}&state=${returnState}`,
 			'content-type': 'text/plain',
-		},
-		body: '',
-	}
+		}
+	})
 }

@@ -1,5 +1,5 @@
 import cookie from 'cookie';
-import type { GetSession, Handle } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit';
 import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL as HOST, } from '$env/static/public';
 import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
 
@@ -8,6 +8,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	event.locals.discord_access_token = browserCookies.discord_access_token;
 	event.locals.discord_refresh_token = browserCookies.discord_refresh_token;
+
+	if (!event.locals.discord_access_token && !event.locals.discord_refresh_token) {
+		event.locals.discordUser = false;
+		event.locals.user = false;
+
+		return await resolve(event);
+	}
 
 	const { session, cookies } = await getUser(event.locals);
 	const { discordUser, user } = session;
@@ -24,20 +31,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	return response;
-}
-
-export const getSession: GetSession = async ({ locals }) => {
-
-	if (locals.discordUser) {
-		return {
-			discordUser: locals.discordUser,
-			user: locals.user ?? false,
-		}
-	}
-
-	const { session, } = await getUser(locals);
-
-	return session;
 }
 
 async function getUser(locals: App.Locals): Promise<{ session: App.Session, cookies?: string[] }> {

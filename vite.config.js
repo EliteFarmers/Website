@@ -8,7 +8,6 @@ const config = {
 		alias: {
 			$comp: path.resolve('./src/components'),
 			$stores: path.resolve('./src/stores'),
-			$lib: path.resolve('./src/lib'),
 			$db: path.resolve('./src/database'),
 		}
 	}

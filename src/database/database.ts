@@ -1,7 +1,7 @@
 import { POSTGRES_URI } from "$env/static/private";
 import type { Profiles, AccountInfo, PlayerInfo } from "$lib/skyblock";
 import { Op, Sequelize } from "sequelize";
-import { UsersInit, type DiscordUser, type UserData, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
+import { UsersInit, type DiscordUser, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
 
 export type DataUpdate = { 
 	account: AccountInfo, 
@@ -28,32 +28,38 @@ export async function SyncTables() {
 })();
 
 export async function GetUser(uuid: string) {
-	const user = await User.findOne({ where: { uuid: uuid } });
-	if (!user) return null;
-	return user.get({ plain: true }) as UserData;
+	return await findOne({ uuid: uuid });
 }
 
 export async function GetUserByIGN(ign: string) {
-	const user = await User.findOne({ where: { ign: { [Op.iLike]: '%' + ign } } });
-	if (!user) return null;
-	return user.get({ plain: true }) as UserData;
+	return await findOne({ 
+		ign: { [Op.iLike]: '%' + ign } 
+	});
 }
 
 export async function GetUserByDiscordID(id: string) {
-	const user = await User.findOne({ where: { id: id } });
+	return await findOne({ id: id });
+}
+
+async function findOne(options: UserWhereOptions) {
+	const user = await User.findOne({ where: options, raw: true, nest: true });
 	if (!user) return null;
-	return user.get({ plain: true }) as UserData;
+
+	// Hopefully a new version of SvelteKit will fix this.
+	user.createdAt = (user.createdAt as Date).toISOString();
+	user.updatedAt = (user.updatedAt as Date).toISOString();
+
+	return user;
 }
 
 export async function FindUserToLink(discordUser: DiscordUser) {
-	const user = await User.findOne({ where: { 
+	const user = await findOne({ 
 		"player.player.social.links.DISCORD": { 
 			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator}` 
 		} 
-	}});
+	});
 
-	if (!user) return null;
-	return user.get({ plain: true }) as UserData;
+	return user;
 }
 
 export function CreateUser(uuid: string, ign: string) {

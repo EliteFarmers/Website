@@ -1,39 +1,15 @@
-<!-- <script context="module" lang="ts">
-	import type { LoadEvent } from '@sveltejs/kit';
-
-	export async function load(event: LoadEvent) {
-		console.log(event.props, event.params, event.status);
-	}
-</script> -->
-
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { session } from "$app/stores";
 
 	let enteredText = '';
-
-	// if ($session.user === undefined) {
-	// 	let user = undefined;
-
-	// 	const drequest = await fetch(`${DISCORD_API_URL}/users/@me`, {
-	// 		headers: { 'Authorization': `Bearer ${response.access_token}`}
-	// 	});
-
-	// 	// returns a discord user if JWT was valid
-	// 	const dresponse = await drequest.json();
-
-	// 	if (dresponse.id) {
-	// 		user = dresponse;
-	// 	}
-	// } 
 </script>
 
 <svelte:head>
-	<title>Sky Viewer</title>
+	<title>Elite</title>
 </svelte:head>
 
 <main class="">
-	<h1 class="text-4xl text-center my-16">Welcome to Sky Viewer!</h1>
+	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
 	<p class="text-xl text-center">Look up any skyblock player!</p>
 
 	<div class="flex align-items-center justify-center justify-self-center relative">

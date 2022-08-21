@@ -10,10 +10,10 @@ export async function GET() {
 	const uuid = crypto.randomUUID();
 	authState.set(uuid);
 
-	return {
+	return new Response(undefined, {
+		status: 302,
 		headers: {
 			'Location': DISCORD_ENDPOINT + `&state=${uuid}`
-		},
-		status: 302,
-	}
+		}
+	})
 }

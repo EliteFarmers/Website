@@ -1,38 +1,16 @@
-<script lang="ts" context="module">
-	import type { Load } from './__types/profile';
-
-	export const load: Load = async ({ params, fetch, session }) => {
-		if (!session.discordUser) {
-			// Redirect to login page
-			return { 
-				status: 302, 
-				redirect: '/login' 
-			};
-		}
-
-		return {
-			status: 200,
-			props: {
-				discordUser: session.discordUser,
-				user: session.user,
-			}
-		};
-	}
-</script>
-
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { DiscordUser, User } from '$db/models/users';
+	import { page } from '$app/stores';
 	
-	export let discordUser: DiscordUser;
-	export let user: User | false;
+	$: discordUser = $page.data.discordUser;
+	$: user = $page.data.user;
 
 	onMount(async () => {
 		console.log(discordUser);
 		console.log(user);
 	});
 
-	let linkValue = 'Hi';
+	let linkValue = '';
 	const linkSubmit = async () => {
 		if (!linkValue || !linkValue.match(/^[a-zA-Z0-9_]{1,16}$/)) {
 			return;
