@@ -40,10 +40,10 @@ export async function accountFromUUID(uuid: string, user?: User) {
 
 	const response = await fetch(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).catch(() => undefined);
 
-	if (!response) return undefined;
+	if (!response) return user?.account ?? undefined;
 
 	if (response.status !== 200) {
-		return undefined;
+		return user?.account ?? undefined;
 	}
 
 	const data = await response.json();
@@ -79,10 +79,10 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 
 	const response = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${key}`);
 
-	if (!response) return undefined;
+	if (!response) return user?.skyblock ?? undefined;
 
 	if (response.status !== 200) {
-		return undefined;
+		return user?.skyblock ?? undefined;
 	}
 
 	try {
