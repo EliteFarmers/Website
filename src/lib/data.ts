@@ -5,6 +5,7 @@ import { parse, simplify } from 'prismarine-nbt';
 import { getContestTimeStamp } from './format';
 import type { User } from '$db/models/users';
 
+const RESPONSE_VERSION = 1;
 
 export async function accountFromIGN(ign: string) {
 
@@ -51,7 +52,7 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	const result: AccountInfo = {
 		success: true,
 		last_fetched: Date.now(),
-		version: 1,
+		version: RESPONSE_VERSION,
 		account: data
 	}
 
@@ -96,7 +97,7 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 		return parsed;
 	} catch (error) {
 		console.log(error);
-		return undefined;
+		return user?.skyblock ?? undefined;
 	}
 }
 
@@ -115,20 +116,22 @@ export async function fetchPlayer(uuid: string, key: string) {
 
 	const response = await fetch(`https://api.hypixel.net/player?uuid=${uuid}&key=${key}`);
 
-	if (!response) return undefined;
+	if (!response) return user?.player ?? undefined;
 
 	if (response.status !== 200) {
-		return undefined;
+		return user?.player ?? undefined;
 	}
 
 	try {
 		const data = await response.json();
+		if (!data.player) return user?.player ?? undefined;
+
 		const player = formatPlayer(data.player);
 
 		const result = {
 			success: true,
 			last_fetched: Date.now(),
-			version: 1,
+			version: RESPONSE_VERSION,
 			player: player
 		}
 
@@ -155,10 +158,10 @@ function formatPlayer(player: PlayerData) {
 
 export async function GetProfiles(profiles: RawProfileData[], uuid: string, user?: User) {
 	const data: Profiles = {
-		success: profiles.length > 0,
+		success: profiles ? profiles.length > 0 : false,
 		last_fetched: Date.now(),
 		times_fetched: user?.skyblock?.times_fetched ?? 0,
-		version: 1,
+		version: RESPONSE_VERSION,
 		profiles: [],
 	};
 
@@ -239,7 +242,8 @@ export async function GetProfiles(profiles: RawProfileData[], uuid: string, user
 
 export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 	const data: ProfileData[] = [];
-	
+	if (!profiles) return data;
+
 	for (const profile of profiles) {
 
 		// Crafted minions are spread amongst profile members.
