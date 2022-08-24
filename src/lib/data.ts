@@ -69,11 +69,19 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 
 	// First check if the profiles are cached.
 	const user = await GetUser(uuid);
-	// If the profiles are cached and newer than 30 minutes, return it.
-	if (user && user.skyblock?.success && (Date.now() - user.skyblock.last_fetched) < PROFILE_UPDATE_INTERVAL) {
+	// If the profiles are cached, return it.
+	if (user && user.skyblock?.success) {
+		// If the profiles are older than the interval, get them from the API.
+		if ((Date.now() - user.skyblock.last_fetched) > PROFILE_UPDATE_INTERVAL) {
+			fetchNewProfiles(user, uuid, key);
+		}
 		return user.skyblock;
 	}
 
+	return await fetchNewProfiles(user, uuid, key);
+}
+
+async function fetchNewProfiles(user: User | null, uuid: string, key: string) {
 	if (!user) {
 		await accountFromUUID(uuid);
 	}
@@ -206,23 +214,26 @@ export async function GetProfiles(profiles: RawProfileData[], uuid: string, user
 			}
 		}
 
+		const newInv = member.inventories;
+		const oldInv = oldMember.inventories;
+
 		const collected: ProfileMember = {
 			...member,
-			skills: (member.skills) ? member.skills : oldMember.skills,
+			skills: member.skills ?? oldMember.skills,
 			inventories: {
-				player: (member.inventories?.player) ? member.inventories.player : oldMember.inventories?.player,
-				armor: member.inventories?.armor,
-				ender_chest: (member.inventories?.ender_chest) ? member.inventories.ender_chest : oldMember.inventories?.ender_chest,
-				backpacks: (member.inventories?.backpacks) ? member.inventories.backpacks : oldMember.inventories?.backpacks,
-				talismans: (member.inventories?.talismans) ? member.inventories.talismans : oldMember.inventories?.talismans,
-				equipment: (member.inventories?.equipment) ? member.inventories.equipment : oldMember.inventories?.equipment,
-				wardrobe: (member.inventories?.wardrobe) ? member.inventories.wardrobe : oldMember.inventories?.wardrobe,
-				vault: (member.inventories?.vault) ? member.inventories.vault : oldMember.inventories?.vault,
-				potions: (member.inventories?.potions) ? member.inventories.potions : oldMember.inventories?.potions,
-				quiver: (member.inventories?.quiver) ? member.inventories.quiver : oldMember.inventories?.quiver,
+				armor: newInv.armor,
+				player: newInv.player ?? oldInv.player,
+				ender_chest: newInv.ender_chest ?? oldInv.ender_chest,
+				backpacks: newInv.backpacks ?? oldInv.backpacks,
+				talismans: newInv.talismans ?? oldInv.talismans,
+				equipment: newInv.equipment ?? oldInv.equipment,
+				wardrobe: newInv.wardrobe ?? oldInv.wardrobe,
+				vault: newInv.vault ?? oldInv.vault,
+				potions: newInv.potions ?? oldInv.potions,
+				quiver: newInv.quiver ?? oldInv.quiver,
 			},
-			collection: (member.collection) ? member.collection : oldMember.collection,
-			collection_tiers: (member.collection_tiers) ? member.collection_tiers : oldMember.collection_tiers,
+			collection: member.collection ?? oldMember.collection,
+			collection_tiers: member.collection_tiers ?? oldMember.collection_tiers,
 		};
 
 

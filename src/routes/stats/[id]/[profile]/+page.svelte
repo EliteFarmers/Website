@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import type { Profiles } from '$lib/skyblock';
+
 	import { onMount } from "svelte/internal";
 	import { page } from "$app/stores";
 	import { error } from "@sveltejs/kit";
@@ -12,29 +14,41 @@
 
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
+	import { PROFILE_UPDATE_INTERVAL } from "$lib/constants/data";
+	import { PUBLIC_HOST_URL } from "$env/static/public";
 
 	export let data: PageData;
 
 	const account = data.account;
-	const profiles = data.profiles;
+	let profiles = data.profiles;
 	const player = data.player;
 	const { id: uuid, name: ign, properties } = account;
 
-
 	let profileName = data.profileName;
+	let profile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
 
-	let selectedProfile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
-
-	if (!selectedProfile && profiles.profiles.length > 0) {
+	if (!profile && profiles.profiles.length > 0) {
 		const recentProfile = profiles.profiles.sort((a, b) => b.member.last_save - a.member.last_save)[0];
 		profileName = recentProfile.cute_name;
-		selectedProfile = recentProfile;
+		profile = recentProfile;
 	}
 
-	const profile = selectedProfile;
-
 	if (!profile) {
-		throw error(404, `Profile ${profileName} not found`);
+		throw error(404, `No profile found matching "${profileName}"`);
+	}
+
+	$: {
+		profile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
+	
+		if (!profile && profiles.profiles.length > 0) {
+			const recentProfile = profiles.profiles.sort((a, b) => b.member.last_save - a.member.last_save)[0];
+			profileName = recentProfile.cute_name;
+			profile = recentProfile;
+		}
+
+		if (!profile) {
+			throw error(404, `No profile found matching "${profileName}"`);
+		}
 	}
 
 	const farmingXp = getLevelProgress('farming', profile.member.skills?.farming ?? 0, (profile.member.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming);
@@ -47,6 +61,25 @@
 		// console.log(account);
 		// console.log({ profiles });
 		console.log({ player });
+
+		// If the data is old, fetch new data and update the page.
+		if ((Date.now() - profiles.last_fetched) > PROFILE_UPDATE_INTERVAL) {
+			setTimeout(() => {
+				fetch(`${PUBLIC_HOST_URL}/api/profiles/${uuid}`).then((res) => {
+					if (res.status !== 200) {
+						return;
+					}
+					res.json().then((data) => {
+						if (data && data.success) {
+							profiles = data as Profiles;
+							console.log('Fetched new data');
+						}
+					});
+				}).catch((err) => {
+					console.log(err);
+				});
+			}, 2000);
+		}
 	});
 </script>
 
@@ -77,7 +110,7 @@
 {#if showSkills}
 	<div class="flex justify-center w-full" transition:slide={{ duration: 1000, easing: quadInOut }}>
 		<div class="w-[90%]">
-			<Skills member={profile.member} />
+			<Skills member={profile?.member} />
 		</div>
 	</div>
 {/if}
@@ -88,3 +121,4 @@
 
 <h1 id="Info" class="text-center m-16">{uuid} {ign} {profile} {player?.player.socialMedia?.links?.DISCORD}</h1>
 
+<h1 class="text-center m-16">{ profiles.last_fetched }</h1>
