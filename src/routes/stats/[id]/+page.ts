@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { AccountInfo, Profiles } from '$lib/skyblock';
 import type { PageLoad } from './$types';
 import { browser } from '$app/env';
@@ -10,6 +10,12 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	let ign; 
 
 	if (uuid.length < 17) {
+
+		// UUID is probably an IGN, check if matches valid characters
+		if (!uuid.match(/^[a-zA-Z0-9_]+$/)) {
+			throw error(400, 'Not a valid username!');
+		}
+
 		const account = await fetch(`/api/account/${uuid}`);
 		const info: AccountInfo = await account.json();
 
