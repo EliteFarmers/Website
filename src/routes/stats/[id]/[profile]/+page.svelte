@@ -12,18 +12,19 @@
 
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
+	import { PROFILE_UPDATE_INTERVAL } from "$lib/constants/data";
+	import { PUBLIC_HOST_URL } from "$env/static/public";
 
 	export let data: PageData;
 
 	const account = data.account;
-	const profiles = data.profiles;
+	let profiles = data.profiles;
 	const player = data.player;
 	const { id: uuid, name: ign, properties } = account;
 
-
 	let profileName = data.profileName;
 
-	let selectedProfile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
+	$: selectedProfile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
 
 	if (!selectedProfile && profiles.profiles.length > 0) {
 		const recentProfile = profiles.profiles.sort((a, b) => b.member.last_save - a.member.last_save)[0];
@@ -31,7 +32,7 @@
 		selectedProfile = recentProfile;
 	}
 
-	const profile = selectedProfile;
+	let profile = selectedProfile;
 
 	if (!profile) {
 		throw error(404, `Profile ${profileName} not found`);
@@ -47,6 +48,23 @@
 		// console.log(account);
 		// console.log({ profiles });
 		console.log({ player });
+
+		// If the data is old, fetch new data and update the page.
+		if ((Date.now() - profiles.last_fetched) > PROFILE_UPDATE_INTERVAL) {
+			setTimeout(() => {
+				fetch(`${PUBLIC_HOST_URL}/api/profiles/${uuid}`).then((res) => {
+					if (res.status !== 200) {
+						return;
+					}
+					res.json().then((data) => {
+						console.log('Fetched new profiles');
+						if (data.success) profiles = data;
+					});
+				}).catch((err) => {
+					console.log(err);
+				});
+			}, 2000);
+		}
 	});
 </script>
 
