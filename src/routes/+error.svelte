@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	console.error($page.error);
-
 	$: message = $page.error?.message ?? 'Unknown error.';
 	$: status = $page.status;
 </script>
