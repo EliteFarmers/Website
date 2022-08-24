@@ -1,6 +1,6 @@
-import { RANKS, RANK_PLUS_COLORS, type PlusColor } from './constants/data';
+import { RANKS, RANK_PLUS_COLORS } from './constants/data';
 import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS } from './constants/levels';
-import type { RankName, Skill } from './skyblock';
+import type { RankName, Skill, PlusColor } from './skyblock';
 
 function getLevelCap(skill: Skill) {
 	return DEFAULT_SKILL_CAPS[skill];
