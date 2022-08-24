@@ -281,7 +281,9 @@ export type PlayerData = {
 	firstLogin: number,
 	lastLogin: number,
 	karma: number,
-	newPackageRank?: string,
+	rank?: RankName,
+	newPackageRank?: RankName,
+	rankPlusColor?: PlusColor,
 	socialMedia?: {
 		links?: {
 			DISCORD?: string,
@@ -311,3 +313,11 @@ export type AccountData = {
 		value: string,
 	}[]
 }
+
+export type PlusColor = 'BLACK' | 'DARK_BLUE' | 'DARK_GREEN' | 'DARK_AQUA' | 
+	'DARK_RED' | 'DARK_PURPLE' | 'GOLD' | 'GRAY' | 'DARK_GRAY' | 'BLUE' | 'GREEN' | 
+	'AQUA' | 'RED' | 'LIGHT_PURPLE' | 'YELLOW' | 'WHITE';
+
+// Doesn't include 'NONE'
+export type RankName = 'OWNER' | 'ADMIN' | 'GAME_MASTER' | 'YOUTUBER' | 
+	'SUPERSTAR' | 'MVP_PLUS' | 'MVP' | 'VIP_PLUS' | 'VIP' | 'MAYOR' | 'MINISTER' | 'PIG+++';
