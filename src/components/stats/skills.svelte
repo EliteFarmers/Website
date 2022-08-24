@@ -4,9 +4,9 @@
 	import Skillbar from "./skillbar.svelte";
 	import { DEFAULT_SKILL_CAPS } from "$lib/constants/levels";
 
-	export let member: ProfileMember;
+	export let member: ProfileMember | undefined;
 
-	const skills = member.skills;
+	const skills = member?.skills;
 </script>
 
 <section id="Skills" class="md:flex justify-center align-middle">
@@ -18,7 +18,7 @@
 		<Skillbar name="Carpentry" progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}/>
 	</div>
 	<div class="md:w-[40%]">
-		<Skillbar name="Farming" progress={getLevelProgress('farming', skills?.farming ?? 0, (member.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming)}/>
+		<Skillbar name="Farming" progress={getLevelProgress('farming', skills?.farming ?? 0, (member?.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming)}/>
 		<Skillbar name="Fishing" progress={getLevelProgress('fishing', skills?.fishing ?? 0)}/>
 		<Skillbar name="Foraging" progress={getLevelProgress('foraging', skills?.foraging ?? 0)}/>
 		<Skillbar name="Enchanting" progress={getLevelProgress('enchanting', skills?.enchanting ?? 0)}/>
