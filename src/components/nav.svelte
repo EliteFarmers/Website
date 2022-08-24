@@ -5,7 +5,7 @@
 	import { navigating } from "$app/stores";
 
 	import { slide } from 'svelte/transition';
-	import { quadInOut, sineInOut } from 'svelte/easing';
+	import { quadInOut } from 'svelte/easing';
 
 	export let discordUser: DiscordUser | false;
 
@@ -30,8 +30,8 @@
 		</section>
 		<!-- Section that's centered in the nav bar -->
 		<section class="flex gap-2 mx-6 justify-items-center justify-center w-1/2">
-			<form class="m-0 p-0 w-[100%]" on:submit|preventDefault>
-				<input class="w-5/6 bg-gray-200 p-3 rounded-md hover:bg-gray-50" type="text" placeholder="Search" bind:value={searchVal} disabled={$navigating !== null} />
+			<form class="m-0 p-0 w-[100%] flex justify-items-center align-middle" on:submit|preventDefault>
+				<input class="w-5/6 mx-2 bg-gray-200 p-3 rounded-md hover:bg-gray-50" type="text" placeholder="Enter username" bind:value={searchVal} disabled={$navigating !== null} />
 				<button class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" on:click={search} disabled={$navigating !== null}>
 					<svg class="h-4 w-4" viewBox="0 0 24 24">
 						<path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
