@@ -1,5 +1,6 @@
+import { RANKS, RANK_PLUS_COLORS, type PlusColor } from './constants/data';
 import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS } from './constants/levels';
-import type { Skill } from './skyblock';
+import type { RankName, Skill } from './skyblock';
 
 function getLevelCap(skill: Skill) {
 	return DEFAULT_SKILL_CAPS[skill];
@@ -94,4 +95,16 @@ export function getContestTimeStamp(contestKey: string) {
 	const skyblockDay = +split[1].split('_')[1];
 
 	return getTimeStamp(skyblockYear, skyblockMonth, skyblockDay);
+}
+
+export function getRankDefaults(rank?: RankName) {
+	if (!rank) return undefined;
+	
+	return RANKS[rank];
+}
+
+export function convertPlusColorToHex(color?: PlusColor) {	
+	if (!color) return undefined;
+	
+	return RANK_PLUS_COLORS[color as keyof typeof RANK_PLUS_COLORS];
 }

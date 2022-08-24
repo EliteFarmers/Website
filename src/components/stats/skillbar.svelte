@@ -29,15 +29,21 @@
 	})
 </script>
 
-<div class="relative w-[90%]">
-	<span>{ name }  <strong>{ progress.level }</strong></span>
-	<div class="relative w-[100%] bg-slate-300 h-8 rounded-lg" 
-		on:mouseenter={() => hovering = true} 
-		on:mouseleave={() => hovering = false}
-	>
-		<div class="absolute top-0 bottom-0 left-0 bg-orange-300 rounded-lg" style="width: {Math.max(2, percent)}%;" ></div>
-		<div class="absolute grid align-middle justify-center w-[100%] h-[100%]">
-			<span>{ hovering ? expanded : readable }</span>
+<section class="flex justify-center">
+	<div class="relative w-[90%]">
+		<span>{ name }  <strong>{ progress.level }</strong></span>
+		<div class="relative w-[100%] bg-slate-300 h-8 rounded-lg" 
+			on:mouseenter={() => hovering = true} 
+			on:mouseleave={() => hovering = false}
+		>
+			<div class="absolute top-0 bottom-0 left-0 bg-orange-300 rounded-lg" style="width: {Math.max(2, percent)}%;" ></div>
+			{#if percent >= 100}
+				<!-- Gold color to show completion -->
+				<div class="absolute top-0 left-0 w-full h-full bg-yellow-400 rounded-lg" style="opacity: 0.7;"></div>
+			{/if}
+			<div class="absolute grid align-middle justify-center w-[100%] h-[100%]">
+				<span>{ hovering ? expanded : readable }</span>
+			</div>
 		</div>
 	</div>
-</div>
+</section>
