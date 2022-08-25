@@ -21,6 +21,13 @@ export type DiscordUser = {
 	accent_color?: string | null;
 }
 
+export type UserInfo = {
+	linked: boolean,
+	id: string | null,
+	cheating: boolean,
+	times_fetched: number,
+}
+
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {	
 	// Default
 	// "| string" added to allow for the string substitution to work around SvelteKit's inability to serialize date objects.
@@ -34,6 +41,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	declare skyblock: CreationOptional<Profiles | null>;
 	declare account: CreationOptional<AccountInfo | null>;
 	declare player: CreationOptional<PlayerInfo | null>;
+	declare info: CreationOptional<UserInfo | null>;
 
 	// Discord
 	declare id: CreationOptional<string | null>;
@@ -54,6 +62,7 @@ export function UsersInit(sequelize: Sequelize) {
 
 		skyblock: DataTypes.JSONB,
 		account: DataTypes.JSONB,
+		info: DataTypes.JSONB,
 		// JSON because it won't be queried by subfields
 		player: DataTypes.JSON,
 
