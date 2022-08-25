@@ -1,7 +1,7 @@
 import { POSTGRES_URI } from "$env/static/private";
 import type { Profiles, AccountInfo, PlayerInfo } from "$lib/skyblock";
 import { Op, Sequelize } from "sequelize";
-import { UsersInit, type DiscordUser, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
+import { UsersInit, type DiscordUser, type UserInfo, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
 
 export type DataUpdate = { 
 	account: AccountInfo, 
@@ -62,8 +62,15 @@ export async function FindUserToLink(discordUser: DiscordUser) {
 	return user;
 }
 
+const infoDefaults: UserInfo = {
+	linked: false,
+	id: null,
+	cheating: false,
+	times_fetched: 0
+};
+
 export function CreateUser(uuid: string, ign: string) {
-	return User.create({ uuid: uuid, ign: ign });
+	return User.create({ uuid: uuid, ign: ign, info: infoDefaults });
 }
 
 export function UpdateUserData({ account, player, profiles }: DataUpdate) {
@@ -81,12 +88,20 @@ export function UpdateUser(where: UserWhereOptions, data: UserUpdateOptions) {
 	});
 }
 
-export function LinkDiscordUser(uuid: string, user: DiscordUser) {
-	return UpdateUser({ uuid: uuid }, { id: user.id, user: user });
+export async function LinkDiscordUser(uuid: string, user: DiscordUser) {
+	const oldUser = await GetUser(uuid);
+	const oldInfo = oldUser?.info ?? infoDefaults;
+	const newInfo = { ...oldInfo, linked: true, id: user.id };
+
+	return UpdateUser({ uuid: uuid }, { id: user.id, user: user, info: newInfo });
 }
 
-export function UnlinkDiscordUser(uuid: string) {
-	return UpdateUser({ uuid: uuid }, { id: null, user: null });
+export async function UnlinkDiscordUser(uuid: string) {
+	const oldUser = await GetUser(uuid);
+	const oldInfo = oldUser?.info ?? infoDefaults;
+	const newInfo = { ...oldInfo, linked: false, id: null };
+
+	return UpdateUser({ uuid: uuid }, { id: null, user: null, info: newInfo });
 }
 
 export function UpdateDiscordUser(id: string, user: DiscordUser) {
@@ -116,6 +131,48 @@ export function UpdatePlayerData(uuid: string, data: PlayerInfo) {
 	return UpdateUser({ uuid: uuid }, { player: data });
 }
 
-export function UpdateProfilesData(uuid: string, data: Profiles) {
-	return UpdateUser({ uuid: uuid }, { skyblock: data });
+export async function UpdateProfilesData(uuid: string, data: Profiles) {
+	const user = await GetUser(uuid);
+	const oldInfo = user?.info ?? infoDefaults;
+	const newInfo = { ...oldInfo, times_fetched: data.times_fetched };
+
+	return UpdateUser({ uuid: uuid }, { skyblock: data, info: newInfo });
+}
+
+export async function UpdateUserInfo(uuid: string, data: Partial<UserInfo>) {
+	const user = await GetUser(uuid);
+	const oldInfo = user?.info ?? infoDefaults;
+	const newInfo = { ...oldInfo, ...data };
+
+	return UpdateUser({ uuid: uuid }, { info: newInfo });
+}
+
+export async function GetUserInfo(uuid: string) {
+	const user = await GetUser(uuid);
+	if (!user) return null;
+
+	if (!user.info) {
+		await UpdateUser({ uuid: uuid }, { info: infoDefaults });
+	}
+
+	return user?.info ?? null;
+}
+
+
+
+export async function UpdateCheating(uuid: string, cheating: boolean) {
+	const user = await GetUser(uuid);
+	const oldInfo = user?.info ?? infoDefaults;
+	const newInfo = { ...oldInfo, cheating: cheating };
+
+	return UpdateUser({ uuid: uuid }, { info: newInfo });
+}
+
+export function GetViewLeaderboard(limit = 20) {
+	return User.findAll({ 
+		limit: limit, 
+		order: [['info.times_fetched', 'DESC']], 
+		where: { info: { cheating: { [Op.ne]: true } }, 'info.times_fetched': { [Op.ne]: null } },
+		attributes:	{ exclude: ['account', 'player', 'skyblock', 'createdAt', 'updatedAt'] },
+	});
 }
