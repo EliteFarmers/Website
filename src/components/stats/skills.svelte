@@ -15,13 +15,13 @@
 		<Skillbar name="Mining" progress={getLevelProgress('mining', skills?.mining ?? 0)}/>
 		<Skillbar name="Taming" progress={getLevelProgress('taming', skills?.taming ?? 0)}/>
 		<Skillbar name="Alchemy" progress={getLevelProgress('alchemy', skills?.alchemy ?? 0)}/>
-		<Skillbar name="Carpentry" progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}/>
+		<Skillbar name="Runecrafting" progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}/>
 	</div>
 	<div class="md:w-[40%]">
-		<Skillbar name="Farming" progress={getLevelProgress('farming', skills?.farming ?? 0, (member?.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming)}/>
 		<Skillbar name="Fishing" progress={getLevelProgress('fishing', skills?.fishing ?? 0)}/>
 		<Skillbar name="Foraging" progress={getLevelProgress('foraging', skills?.foraging ?? 0)}/>
 		<Skillbar name="Enchanting" progress={getLevelProgress('enchanting', skills?.enchanting ?? 0)}/>
-		<Skillbar name="Runecrafting" progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}/>
+		<Skillbar name="Carpentry" progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}/>
+		<Skillbar name="Social" progress={getLevelProgress('social', skills?.social ?? 0)}/>
 	</div>
 </section>

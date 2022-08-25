@@ -47,6 +47,7 @@ export type APISetting = {
 }
 
 type MemberData = {
+	ign: string;
 	uuid: UUID;
 	last_seen: TimestampMills;
 }

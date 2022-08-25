@@ -1,22 +1,19 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import type { Profiles } from '$lib/skyblock';
-
 	import { onMount } from "svelte/internal";
 	import { page } from "$app/stores";
 	import { error } from "@sveltejs/kit";
+	import { slide } from 'svelte/transition';
+	import { quadInOut } from 'svelte/easing';
+
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
+	import { FetchNewProfiles } from '$lib/util';
 
 	import Skills from "$comp/stats/skills.svelte";
 	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
 
-	import { slide } from 'svelte/transition';
-	import { quadInOut } from 'svelte/easing';
-	import { PROFILE_UPDATE_INTERVAL } from "$lib/constants/data";
-	import { PUBLIC_HOST_URL } from "$env/static/public";
-
+	import type { PageData } from './$types';
 	export let data: PageData;
 
 	const account = data.account;
@@ -36,6 +33,9 @@
 	if (!profile) {
 		throw error(404, `No profile found matching "${profileName}"`);
 	}
+
+	const profileNames = profiles.profiles.filter((p) => p.cute_name !== profile?.cute_name).map((p) => p.cute_name);
+	profileNames.unshift(profile?.cute_name);
 
 	$: {
 		profile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
@@ -63,23 +63,10 @@
 		console.log({ player });
 
 		// If the data is old, fetch new data and update the page.
-		if ((Date.now() - profiles.last_fetched) > PROFILE_UPDATE_INTERVAL) {
-			setTimeout(() => {
-				fetch(`${PUBLIC_HOST_URL}/api/profiles/${uuid}`).then((res) => {
-					if (res.status !== 200) {
-						return;
-					}
-					res.json().then((data) => {
-						if (data && data.success) {
-							profiles = data as Profiles;
-							console.log('Fetched new data');
-						}
-					});
-				}).catch((err) => {
-					console.log(err);
-				});
-			}, 2000);
-		}
+		FetchNewProfiles(uuid, profiles.last_fetched).then((data) => {
+			if (!data) return;
+			profiles = data;
+		});
 	});
 </script>
 
@@ -87,7 +74,7 @@
 	<title>{ign}'s Stats</title>
 </svelte:head>
 
-<PlayerInfo account={account} player={player}>
+<PlayerInfo account={account} player={player} members={profile?.members} profileNames={profileNames} linked={data.user.linked}>
 	<div class="flex md:justify-start md:w-1/2">
 		<div class="w-[90%]">
 			<Skillbar name="Farming" progress={farmingXp} />
@@ -115,10 +102,6 @@
 	</div>
 {/if}
 
-
-
-<!-- <Skills member={profile.member} /> -->
-
 <h1 id="Info" class="text-center m-16">{uuid} {ign} {profile} {player?.player.socialMedia?.links?.DISCORD}</h1>
 
-<h1 class="text-center m-16">{ profiles.last_fetched }</h1>
+<h1 class="text-center m-16">Views: { profiles.times_fetched }</h1>

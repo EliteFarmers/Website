@@ -1,5 +1,5 @@
 import { RANKS, RANK_PLUS_COLORS } from './constants/data';
-import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS } from './constants/levels';
+import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
 import type { RankName, Skill, PlusColor } from './skyblock';
 
 function getLevelCap(skill: Skill) {
@@ -10,7 +10,15 @@ export function getSkillLevel(skill: Skill, xp: number, max?: number) {
 	let level = 0;
 
 	const cap = max ?? getLevelCap(skill);
-	const levels = Object.values(skill !== 'runecrafting' ? LEVEL_XP : RUNE_LEVELS).slice(0, cap);
+
+	let XP_CHART = LEVEL_XP as { [key: number]: number };
+	if (skill === 'runecrafting') {
+		XP_CHART = RUNE_LEVELS;
+	} else if (skill === 'social') {
+		XP_CHART = SOCIAL_XP;
+	}
+
+	const levels = Object.values(XP_CHART).slice(0, cap);
 
 	for (const xpRequired of levels) {
 		if ((xp -= xpRequired) > 0) level++; else {
