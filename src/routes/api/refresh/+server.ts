@@ -1,5 +1,4 @@
-import { json as json$1 } from '@sveltejs/kit';
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_URI } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
 import crypto from 'crypto';
@@ -13,8 +12,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	const uuid = crypto.randomUUID();
 
 	if (!refreshToken) {
-		return json$1({ error: 'No refresh token found' }, {
-			status: 500
+		return new Response(JSON.stringify({ error: 'No refresh token found' }), {
+			status: 404
 		});
 	}
 
@@ -41,7 +40,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const response = await request.json();
 
 	if (response.error) {
-		return json$1({ error: response.error }, {
+		return new Response(JSON.stringify({ error: response.error }), {
 			status: 400
 		});
 	}
@@ -49,11 +48,11 @@ export const GET: RequestHandler = async ({ url }) => {
 	const accessTokenExpires = new Date(Date.now() + response.expires_in); // ~10 minutes
 	const refreshTokenExpires = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)); // 30 days
 
-	return json$1({ 
+	return new Response(JSON.stringify({ 
 		discord_access_token: response.access_token,
 		cookies: [
 			`discord_access_token=${response.access_token}; Expires=${accessTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
 			`discord_refresh_token=${response.refresh_token}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
 		],
-	});
+	}));
 }
