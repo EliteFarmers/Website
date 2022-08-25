@@ -1,4 +1,4 @@
-import type { AccountInfo, APISettings, CommunityUpgrades, ContestData, CraftedMinions, CropName, Inventories, JacobData, PlayerData, ProfileData, ProfileMember, Profiles, RawProfileData, RawProfileMember } from './skyblock.d';
+import type { AccountInfo, APISettings, CommunityUpgrades, ContestData, CraftedMinions, CropName, Inventories, JacobData, MemberData, PlayerData, ProfileData, ProfileMember, Profiles, RawProfileData, RawProfileMember, RawProfileMembers } from './skyblock.d';
 import { ACCOUNT_UPDATE_INTERVAL, API_CROP_TO_CROP, EXCLUDED_FIELDS, INVENTORY_FIELDS_RENAME, KEPT_PLAYER_FIELDS, MOVE_TO_STATS, PLAYER_UPDATE_INTERVAL, PROFILE_UPDATE_INTERVAL } from './constants/data';
 import { CreateUser, GetUser, GetUserByIGN, UpdateAccountData, UpdatePlayerData, UpdateProfilesData } from '$db/database';
 import { parse, simplify } from 'prismarine-nbt';
@@ -59,7 +59,11 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	if (user) {
 		await UpdateAccountData(uuid, result);
 	} else {
-		await CreateUser(uuid, result.account.name).then(() => UpdateAccountData(uuid, result));
+		if (!await GetUser(uuid)) {
+			await CreateUser(uuid, result.account.name).then(() => UpdateAccountData(uuid, result));
+		} else {
+			await UpdateAccountData(uuid, result);
+		}
 	}
 
 	return result;
@@ -258,20 +262,13 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 	for (const profile of profiles) {
 
 		// Crafted minions are spread amongst profile members.
-		let minions: string[] = [];
+		let allMinions: string[] = [];
 
-		const members = Object.keys(profile.members)
-			.filter((key) => key !== uuid)
-			.map(id => {
-				const member = profile.members[id];
-				minions = minions.concat(member.crafted_generators ?? []);
-				
-				return { uuid: id, last_seen: member.last_save }
-			})
-			.sort((a, b) => b.last_seen - a.last_seen);
+		const { members, minions } = await formatMembers(profile.members, uuid);
+		allMinions = allMinions.concat(minions ?? []);
 
 		// Add the other members' minions to their own profile.
-		profile.members[uuid].crafted_generators?.push(...minions);
+		profile.members[uuid].crafted_generators?.push(...allMinions);
 
 		const memberData = formatMemberData(profile.members[uuid]);
 		
@@ -322,6 +319,32 @@ async function hydrateNBT(element: any, key: string) {
 
 	const nbt = await parse(Buffer.from(element[key].data, 'base64'));
 	element[key] = simplify(nbt.parsed)?.i ?? false;
+}
+
+async function formatMembers(members: RawProfileMembers, uuid: string) {
+
+	const data: MemberData[] = [];
+	const minions: string[] = [];
+
+	const uuids = Object.keys(members).filter((key) => key !== uuid);
+
+	for (const memberUUID of uuids) {
+		const member = members[memberUUID];
+		minions.push(...(member.crafted_generators ?? []));
+		
+		const memberUser = await GetUser(memberUUID);
+		let memberName = memberUser?.ign;
+		if (!memberName) {
+			const account = await accountFromUUID(memberUUID);
+			memberName = account?.account?.name ?? 'Unknown';
+		}
+
+		data.push({ uuid: memberUUID, last_seen: member.last_save, ign: memberName });
+	};
+
+	data.sort((a, b) => b.last_seen - a.last_seen);
+	
+	return { members: data, minions };
 }
 
 function getBankingData(profile: ProfileData | RawProfileData) {
