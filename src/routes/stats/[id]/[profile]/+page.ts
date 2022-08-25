@@ -1,3 +1,4 @@
+import type { UserInfo } from '$db/models/users';
 import type { AccountInfo, PlayerInfo, Profiles } from '$lib/skyblock';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
@@ -17,16 +18,18 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 	const profilesFetch = fetch(`/api/profiles/${account.id}`);
 	const playerFetch = fetch(`/api/player/${account.id}`);
+	const userFetch = fetch(`/api/info/${account.id}`);
 
 	try {
-		const [ profilesRes, playerRes ] = await Promise.all([ profilesFetch, playerFetch ]);
-		const [ profiles, player ] = await Promise.all([ profilesRes.json(), playerRes.json() ]);
+		const [ profilesRes, playerRes, userRes ] = await Promise.all([ profilesFetch, playerFetch, userFetch ]);
+		const [ profiles, player, user ] = await Promise.all([ profilesRes.json(), playerRes.json(), userRes.json() ]);
 
 		return { 
 			account: account, 
 			profiles: profiles as Profiles, 
 			player: player as PlayerInfo, 
-			profileName: params.profile 
+			profileName: params.profile,
+			user: user as UserInfo
 		};
 	} catch (err) {
 		throw error(404);
