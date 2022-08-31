@@ -75,14 +75,14 @@
 </svelte:head>
 
 <PlayerInfo account={account} player={player} members={profile?.members} profileNames={profileNames} linked={data.user.linked}>
-	<div class="flex md:justify-start md:w-1/2">
+	<div class="flex lg:justify-start lg:w-1/2">
 		<div class="w-[90%]">
 			<Skillbar name="Farming" progress={farmingXp} />
 		</div>
 		<div class="w-[10%]">
 			<!-- Collapse/expand button -->
-			<button class="flex justify-center align-middle items-center w-full md:h-16 h-full md:p-4 bg-gray-200 rounded-lg" on:click={() => { showSkills = !showSkills }}>
-				<svg class="w-6 h-6 md:w-full md:h-full" viewBox="0 0 24 24">
+			<button class="flex justify-center align-middle items-center w-full lg:h-16 h-full lg:p-4 bg-gray-200 rounded-lg" on:click={() => { showSkills = !showSkills }}>
+				<svg class="w-6 h-6 lg:w-full lg:h-full" viewBox="0 0 24 24">
 					{#if showSkills}
 						<path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
 					{:else}
