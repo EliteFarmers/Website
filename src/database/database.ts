@@ -9,10 +9,12 @@ export type DataUpdate = {
 	profiles: Profiles 
 }
 
-const User = UsersInit(new Sequelize(POSTGRES_URI, {
+const sequelize = new Sequelize(POSTGRES_URI, {
 	dialect: 'postgres',
 	logging: false,
-}));
+})
+
+const User = UsersInit(sequelize);
 
 let isReady = false;
 
@@ -168,11 +170,17 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 	return UpdateUser({ uuid: uuid }, { info: newInfo });
 }
 
-export function GetViewLeaderboard(limit = 20) {
-	return User.findAll({ 
-		limit: limit, 
+export async function GetViewLeaderboard(limit = 20) {
+	const list = await User.findAll({ 
+		limit: limit,
+		attributes:	{ 
+			exclude: ['account', 'player', 'skyblock', 'createdAt', 'updatedAt', 'user'],
+		},
+		where: { ['info.cheating']: { [Op.not]: true }, ['info.times_fetched']: { [Op.gt]: 0 } },
 		order: [['info.times_fetched', 'DESC']], 
-		where: { info: { cheating: { [Op.ne]: true } }, 'info.times_fetched': { [Op.ne]: null } },
-		attributes:	{ exclude: ['account', 'player', 'skyblock', 'createdAt', 'updatedAt'] },
+	});
+
+	return list.sort((prev, next) => {
+		return (next.info?.times_fetched ?? 0) - (prev.info?.times_fetched ?? 0);
 	});
 }
