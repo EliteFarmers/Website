@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import type { DiscordUser } from "$db/models/users";
-	import { page } from "$app/stores";
+	import { PUBLIC_HOST_URL } from "$env/static/public";
 	import { navigating } from "$app/stores";
+	import { goto } from "$app/navigation";
+	import { page } from "$app/stores";
 
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
@@ -41,18 +42,18 @@
 			</form>
 		</section>
 		<section class="flex gap-2 ml-3 justify-end w-1/5 md:w-1/4">
-			<button class="block sm:hidden bg-gray-200 p-3 rounded-md hover:bg-gray-50" on:click={search} disabled={$navigating !== null}>
+			<button class="block sm:hidden bg-gray-200 p-3 rounded-md hover:bg-gray-50" on:click={() => goto(`${PUBLIC_HOST_URL}/`)} disabled={$navigating !== null}>
 				<svg class="h-4 w-4" viewBox="0 0 24 24">
 					<path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
 				</svg>
 			</button>
 			<!-- Login with discord styled button -->
 			<div hidden={discordUser !== false}>
-				<a sveltekit:reload class="bg-gray-200 hidden md:block p-3 rounded-md hover:bg-gray-50" href="/login">Discord Login</a>
-				<a sveltekit:reload class="bg-gray-200 block md:hidden p-3 rounded-md hover:bg-gray-50" href="/login">Login</a>
+				<a data-sveltekit-reload class="bg-gray-200 hidden md:block p-3 rounded-md hover:bg-gray-50" href="/login">Discord Login</a>
+				<a data-sveltekit-reload class="bg-gray-200 block md:hidden p-3 rounded-md hover:bg-gray-50" href="/login">Login</a>
 			</div>
 			<!-- Logout button -->
-			<a sveltekit:reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/logout" hidden={discordUser === false}>Logout</a>
+			<a data-sveltekit-reload class="bg-gray-200 p-3 rounded-md hover:bg-gray-50" href="/logout" hidden={discordUser === false}>Logout</a>
 		</section>
 	</nav>
 	{#if $navigating}

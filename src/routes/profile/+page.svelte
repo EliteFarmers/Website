@@ -39,16 +39,16 @@
 			<div class="flex justify-between items-center">
 				<div class="flex items-center">
 					<img class="w-10 h-10 rounded-full mr-4" src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png" alt="{discordUser.username}'s avatar" />
-					<div class="text-sm font-bold leading-none">{(user) ? user.ign : discordUser.username}</div>
+					<div class="text-body-sm font-bold leading-none">{(user) ? user.ign : discordUser.username}</div>
 				</div>
 				<div class="flex items-center">
-					<div class="text-sm font-bold leading-none">{discordUser.username}</div>
-					<div class="ml-2 text-gray-500 text-xs">#{discordUser.discriminator}</div>
+					<div class="text-body-sm font-bold leading-none">{discordUser.username}</div>
+					<div class="ml-2 text-gray-500 text-body-sm">#{discordUser.discriminator}</div>
 				</div>
 			</div>
 			<div class="text-gray-700">
-				<div class="text-sm font-bold leading-none">{discordUser.id}</div>
-				<div class="text-sm font-bold leading-none">{discordUser.email}</div>
+				<div class="text-body-sm font-bold leading-none">{discordUser.id}</div>
+				<div class="text-body-sm font-bold leading-none">{discordUser.email}</div>
 			</div>
 		</div>
 	</div>
