@@ -25,7 +25,7 @@
 
 <main class="">
 	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
-	<p class="text-xl text-center">Look up any skyblock player!</p>
+	<p class="text-body-xl text-center">Look up any skyblock player!</p>
 
 	<div class="flex align-items-center justify-center justify-self-center relative">
 		<form on:submit|preventDefault class="w-10/12 flex align-items-center justify-center">

@@ -21,7 +21,7 @@
 
 </script>
 
-<section class="lg:flex justify-middle p-4 m-4 bg-gray-100">
+<section class="lg:flex justify-middle p-4 my-4 mx-0 sm:mx-4 bg-gray-100">
 	<div class="flex lg:w-1/2 justify-items-middle justify-start sm:justify-center">
 		<!-- Player avatar image -->
 		<div class="hidden sm:flex justify-end align-middle lg:w-1/4">
@@ -34,7 +34,7 @@
 			<div class="w-full sm:inline-block grid col-span-1">
 				<div class="flex items-center -ml-1">
 					<Dropdown hasItems={(members ?? []).length > 0}>
-						<h1 slot="top" class="text-2xl">
+						<h1 slot="top" class="text-body-xl">
 							{#if rank && plus} 
 								<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span>&nbsp;{account.name}
 							{:else if rank}
@@ -45,8 +45,8 @@
 						</h1>
 						<div slot="rest" class="grid col-span-1">
 							{#each (members ?? []) as member}
-								<a sveltekit:reload href={`${PUBLIC_HOST_URL}/stats/${member.ign ?? member.uuid}/${profileNames[0]}`}
-								class="p-1 text-sm text-gray-600 hover:text-gray-900"
+								<a data-sveltekit-reload href={`${PUBLIC_HOST_URL}/stats/${member.ign ?? member.uuid}/${profileNames[0]}`}
+								class="p-1 text-body-sm text-gray-600 hover:text-gray-900"
 								>{member.ign}</a>
 							{/each}
 						</div>
@@ -55,21 +55,21 @@
 						<h1 slot="top">{profileNames[0]}</h1>
 						<div slot="rest" class="grid col-span-1">
 							{#each (profileNames ?? []) as name}
-								<a sveltekit:reload href={`${PUBLIC_HOST_URL}/stats/${account.name}/${name}`}
-									class="p-1 text-sm text-gray-600 hover:text-gray-900"
+								<a data-sveltekit-reload href={`${PUBLIC_HOST_URL}/stats/${account.name}/${name}`}
+									class="p-1 text-body-sm text-gray-600 hover:text-gray-900"
 								>{name}</a>
 							{/each}
 						</div>
 					</Dropdown>
 				</div>
-				<div class="flex sm:block w-full justify-center align-middle">
-					<div class="inline-block sm:hidden justify-center align-middle w-1/2">
+				<div class="block xs:flex sm:block w-full justify-center align-middle">
+					<div class="inline-block sm:hidden justify-center align-middle w-1/3 sm:w-1/2 mt-3">
 						<div class="mx-8 mb-2">
 							<img class="w-16" src={`https://mc-heads.net/body/${account.id}`} alt="User's Minecraft appearance" />
 						</div>
 					</div>
-					<div class="block w-1/2">
-						<div class="text-md inline-block p-2 px-3 m-1 lg:mt-2 ml-0 rounded-md bg-gray-200 items-center">
+					<div class="block w-2/3 sm:w-1/2">
+						<div class="text-body-lg inline-block p-2 px-3 m-1 lg:mt-2 ml-0 rounded-md bg-gray-200 items-center">
 							<div class="flex items-center gap-2">
 								{#if playerData.socialMedia?.links?.DISCORD}
 									<h1>{playerData.socialMedia?.links?.DISCORD}</h1>
@@ -93,8 +93,8 @@
 							</div>
 						</div>
 						<div class="flex justify-start -ml-1">
-							<a class="p-2 px-3 m-1 bg-gray-200 rounded-md" href="https://sky.shiiyu.moe{$page.url.pathname}" target="_blank">SkyCrypt</a>
-							<a class="p-2 px-3 m-1 bg-gray-200 rounded-md" href="https://plancke.io/hypixel/player/stats/{account.name}">Plancke</a>
+							<a class="p-2 px-3 m-1 text-body bg-gray-200 rounded-md" href="https://sky.shiiyu.moe{$page.url.pathname}" target="_blank">SkyCrypt</a>
+							<a class="p-2 px-3 m-1 text-body bg-gray-200 rounded-md" href="https://plancke.io/hypixel/player/stats/{account.name}">Plancke</a>
 						</div>
 					</div>
 				</div>
