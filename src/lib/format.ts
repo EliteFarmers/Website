@@ -11,7 +11,7 @@ export function getSkillLevel(skill: Skill, xp: number, max?: number) {
 
 	const cap = max ?? getLevelCap(skill);
 
-	let XP_CHART = LEVEL_XP as { [key: number]: number };
+	let XP_CHART = LEVEL_XP as Record<number, number>;
 	if (skill === 'runecrafting') {
 		XP_CHART = RUNE_LEVELS;
 	} else if (skill === 'social') {
@@ -43,7 +43,7 @@ export function getLevelProgress(skill: Skill, xp: number, max?: number) {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const nextReq = (LEVEL_XP as any)[level + 1];
+	const nextReq = (LEVEL_XP as Record<number, number>)[level + 1];
 
 	return {
 		level: level,
@@ -114,5 +114,5 @@ export function getRankDefaults(rank?: RankName) {
 export function convertPlusColorToHex(color?: PlusColor) {	
 	if (!color) return undefined;
 	
-	return RANK_PLUS_COLORS[color as keyof typeof RANK_PLUS_COLORS];
+	return RANK_PLUS_COLORS[color];
 }

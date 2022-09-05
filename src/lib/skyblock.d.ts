@@ -4,12 +4,12 @@ type Tier = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type Skill = 'farming' | 'mining' | 'combat' | 'foraging' | 'fishing' | 'enchanting' | 'alchemy' | 'taming' | 'carpentry' | 'runecrafting' | 'social'; 
 
-export type RawProfileResponse = {
+export interface RawProfileResponse {
 	success: boolean;
 	profiles: RawProfileData[];
 }
 
-export type Profiles = {
+export interface Profiles {
 	success: boolean;
 	last_fetched: TimestampMills;
 	times_fetched: number;
@@ -17,7 +17,7 @@ export type Profiles = {
 	profiles: ProfileData[];
 }
 
-export type ProfileData = {
+export interface ProfileData {
 	profile_id: UUID;
 	member: ProfileMember;
 	members: MemberData[];
@@ -30,14 +30,14 @@ export type ProfileData = {
 	api: APISettings;
 }
 
-export type APISettings = {
+export interface APISettings {
 	skills: APISetting;
 	collections: APISetting;
 	inventory: APISetting;
 	vault: APISetting;
-};
+}
 
-export type APISetting = {
+export interface APISetting {
 	enabled: boolean;
 	last_fetched: TimestampMills;
 	history: {
@@ -46,7 +46,7 @@ export type APISetting = {
 	}[];
 }
 
-type MemberData = {
+interface MemberData {
 	ign: string;
 	uuid: UUID;
 	last_seen: TimestampMills;
@@ -58,7 +58,7 @@ export type CommunityUpgrades = {
 	[key in CommunityUpgradeNames]: Tier;
 }
 
-export type RawProfileData = {
+export interface RawProfileData {
 	profile_id: UUID;
 	members: RawProfileMembers;
 	cute_name: string;
@@ -68,20 +68,14 @@ export type RawProfileData = {
 	last_save?: TimestampMills;
 }
 
-export type RawProfileMembers = { 
-	[uuid: UUID]: RawProfileMember
-}
+export type RawProfileMembers = Record<UUID, RawProfileMember>;
 
-export type ProfileMember = {
+export interface ProfileMember {
 	last_save: TimestampMills;
 	inventories: Inventories;
 	skills?: ExperienceSkills;
-	collection?: { 
-		[key: string]: number 
-	};
-	collection_tiers?: {
-		[key: string]: number
-	};
+	collection?: Record<string, number>;
+	collection_tiers?: Record<string, number>;
 	minions: CraftedMinions;
 	jacob: JacobData;
 	fairy: FairyData;
@@ -101,31 +95,28 @@ export type ContestData = {
 	[key in CropName]: JacobContest[];
 }
 
-export type CraftedMinions = {
-	[key: string]: number;
-}
-
-export type JacobContest = {
+export type CraftedMinions = Record<string, number>;
+export interface JacobContest {
 	collected: number;
 	timestamp: number;
 	position?: number;
 	participants?: number;
 }
 
-export type JacobData = {
+export interface JacobData {
 	medals: MedalInventory;
 	perks: FarmingPerks;
 	participations: number;
 	contests: ContestData
-};
+}
 
-export type FairyData = {
+export interface FairyData {
 	souls_collected: number;
 	souls: number;
 	exchanges: number;
-};
+}
 
-export type Inventories = {
+export interface Inventories {
 	player?: ItemStack[];
 	armor: ItemStack[];
 	ender_chest?: ItemStack[];
@@ -138,7 +129,7 @@ export type Inventories = {
 	quiver?: ItemStack[];
 }
 
-export type RawProfileMember = {
+export interface RawProfileMember {
 	last_save: TimestampMills;
 	inv_armor: NBTData;
 	experience_skill_alchemy: number;
@@ -151,16 +142,14 @@ export type RawProfileMember = {
 	experience_skill_mining: number;
 	experience_skill_runecrafting: number;
 	experience_skill_taming: number;
-	collection: { 
-		[key: string]: number 
-	},
+	collection: Record<string, number>;
 	crafted_generators?: string[],
 	jacob2?: RawAPIJacobData,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any
 }
 
-export type NBTData = {
+export interface NBTData {
 	type: number,
 	data: {
 		type: string,
@@ -168,7 +157,7 @@ export type NBTData = {
 	}
 }
 
-export type ItemStack = {
+export interface ItemStack {
 	Count: {
 		type: string,
 		value: number
@@ -185,11 +174,11 @@ export type ItemStack = {
 	tag: any,
 }
 
-export type RawCommunityUpgrades = {
+export interface RawCommunityUpgrades {
 	upgrade_states: CommunityUpgradeState[]
 }
 
-export type CommunityUpgradeState = {
+export interface CommunityUpgradeState {
 	upgrade: CommunityUpgradeNames;
 	tier: Tier;
 	started_ms: TimestampMills;
@@ -199,25 +188,25 @@ export type CommunityUpgradeState = {
 	fasttracked: boolean;
 }
 
-export type BankingData = {
+export interface BankingData {
 	balance: number,
 	transactions?: BankingTransaction[]
 }
 
-export type BankingTransaction = {
+export interface BankingTransaction {
 	amount: number,
 	timestamp: TimestampMills,
 	action: 'DEPOSIT' | 'WITHDRAW',
 	initiator_name: `§b${string}` | 'Bank Interest'
 }
 
-export type MedalInventory = {
+export interface MedalInventory {
 	bronze: number,
 	silver: number,
 	gold: number
 }
 
-export type FarmingPerks = {
+export interface FarmingPerks {
 	double_drops: number,
 	farming_level_cap: number
 }
@@ -229,56 +218,50 @@ export type FarmingContestScores = {
 export type ContestCrop = 'cactus' | 'carrot' | 'cocoa' | 'melon' | 'mushroom' | 'netherwart' | 'potato' | 'pumpkin' | 'sugarcane' | 'wheat';
 
 
-type RawAPIProfiles = {
+interface RawAPIProfiles {
 	success: boolean,
 	profiles: RawAPIProfile[]
 }
 
-type RawAPIProfile = {
+interface RawAPIProfile {
 	profile_id: string,
-	members: {
-		[uuid: string]: RawAPIMember
-	},
+	members: Record<string, RawAPIMember>,
 	cute_name: string,
 	game_mode: string, // Probably will use soon
 	[key: string]: unknown // Not using anything else
 }
 
-type RawAPIMember = {
+interface RawAPIMember {
 	last_save: number,
 	experience_skill_farming: number,
-	collection: { 
-		[key: string]: number 
-	},
+	collection: Record<string, number>,
 	crafted_generators: string[],
 	jacob2: RawAPIJacobData,
 	[key: string]: unknown // Not using anything else
 }
 
-type RawAPIJacobData = {
+interface RawAPIJacobData {
 	medals_inv: MedalInventory,
 	perks: FarmingPerks,
 	talked: boolean,
-	contests: {
-		[key: string]: FarmingContest
-	}
+	contests: Record<string, FarmingContest>
 }
 
-type FarmingContest = {
+interface FarmingContest {
 	collected: number,
 	claimed_rewards?: true,
 	claimed_position?: number,
 	claimed_participants?: number
 }
 
-export type PlayerInfo = {
+export interface PlayerInfo {
 	success: boolean,
 	last_fetched: TimestampMills,
 	version: number,
 	player: PlayerData
 }
 
-export type PlayerData = {
+export interface PlayerData {
 	firstLogin: number,
 	lastLogin: number,
 	karma: number,
@@ -299,14 +282,14 @@ export type PlayerData = {
 	[key: string]: unknown
 }
 
-export type AccountInfo = {
+export interface AccountInfo {
 	success: boolean,
 	last_fetched: TimestampMills,
 	version: number,
 	account: AccountData
 }
 
-export type AccountData = {
+export interface AccountData {
 	id: string,
 	name: string,
 	properties: {

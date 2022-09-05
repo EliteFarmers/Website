@@ -1,12 +1,12 @@
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = ({ url }) => {
  
 	const returnCode = url.searchParams.get('code');
 	const returnState = url.searchParams.get('state');
 	const error = url.searchParams.get('error');
 
-	if (error) {
+	if (error || !returnCode || !returnState) {
 		return new Response(undefined, { status: 302, headers: { Location: '/' } })
 	}
 

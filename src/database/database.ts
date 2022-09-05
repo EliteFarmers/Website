@@ -3,7 +3,7 @@ import type { Profiles, AccountInfo, PlayerInfo } from "$lib/skyblock";
 import { Op, Sequelize } from "sequelize";
 import { UsersInit, type DiscordUser, type UserInfo, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
 
-export type DataUpdate = { 
+export interface DataUpdate { 
 	account: AccountInfo, 
 	player: PlayerInfo,
 	profiles: Profiles 
@@ -21,13 +21,13 @@ let isReady = false;
 export async function SyncTables() {
 	if (isReady) return;
 	isReady = true;
+	console.log('Connected to database.');
 	await User.sync({ force: false });
 }
 
-(async () => {
-	await SyncTables();
-	console.log('Connected to database.');
-})();
+// Runs once on startup
+await SyncTables();
+// ==================== //
 
 export async function GetUser(uuid: string) {
 	return await findOne({ uuid: uuid });
@@ -157,7 +157,7 @@ export async function GetUserInfo(uuid: string) {
 		await UpdateUser({ uuid: uuid }, { info: infoDefaults });
 	}
 
-	return user?.info ?? null;
+	return user.info ?? null;
 }
 
 

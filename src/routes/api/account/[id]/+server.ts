@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		? await accountFromIGN(id)
 		: await accountFromUUID(id);
 	
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 	if (!account || (account as any).size === 0 || (account as any).errorMessage) {
 		return new Response('Account not found', { status: 404 })
 	}

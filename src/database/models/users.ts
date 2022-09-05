@@ -2,26 +2,26 @@ import type { AccountInfo, PlayerInfo, Profiles } from '$lib/skyblock.d';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import type { CreationOptional, InferAttributes, InferCreationAttributes, Optional, WhereAttributeHash } from 'sequelize';
 
-export type DiscordUser = {
-	id: string;
-	username: string;
-	discriminator: string;
-	avatar: string;
-	avatar_decoration?: string | null;
-	email: string;
-	verified: boolean;
-	mfa_enabled: boolean;
-	locale: string;
-	premium_type?: string;
-	public_flags: number;
-	flags: number;
-	premium_since?: string;
-	banner?: string | null;
-	banner_color?: string | null;
-	accent_color?: string | null;
+export interface DiscordUser {
+	id: string,
+	username: string,
+	discriminator: string,
+	avatar: string,
+	avatar_decoration?: string | null,
+	email: string,
+	verified: boolean,
+	mfa_enabled: boolean,
+	locale: string,
+	premium_type?: string,
+	public_flags: number,
+	flags: number,
+	premium_since?: string,
+	banner?: string | null,
+	banner_color?: string | null,
+	accent_color?: string | null,
 }
 
-export type UserInfo = {
+export interface UserInfo {
 	linked: boolean,
 	id: string | null,
 	cheating: boolean,

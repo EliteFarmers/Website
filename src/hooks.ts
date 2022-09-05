@@ -2,9 +2,10 @@ import cookie from 'cookie';
 import type { Handle } from '@sveltejs/kit';
 import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL as HOST, } from '$env/static/public';
 import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
+import type { DiscordUser } from '$db/models/users';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const browserCookies = cookie.parse(event.request.headers.get("cookie") || "");
+	const browserCookies = cookie.parse(event.request.headers.get("cookie") ?? '');
 
 	event.locals.discord_access_token = browserCookies.discord_access_token;
 	event.locals.discord_refresh_token = browserCookies.discord_refresh_token;
@@ -63,13 +64,13 @@ async function fetchUser(token: string): Promise<{ session: App.Session, cookies
 	});
 
 	// returns a discord user if JWT was valid
-	const response = await request.json();
+	const response = await request.json() as DiscordUser;
 	const discordUser = { ...response };
 
 	const user = (await GetUserByDiscordID(response.id)) ?? false;
 
-	if (user && user.id) {
-		UpdateDiscordUser(user.id, discordUser);
+	if (user !== false && user.id) {
+		void UpdateDiscordUser(user.id, discordUser);
 	}
 
 	if (response.id) { 
@@ -87,7 +88,7 @@ async function refreshUser(token: string): Promise<{ session: App.Session, cooki
 	if (discord_request.status !== 200) return failure;
 	
 	try {
-		const discord_response = await discord_request.json();
+		const discord_response = await discord_request.json() as { discord_access_token: string, discord_refresh_token: string, cookies: string[] };
 
 		if (!discord_response.discord_access_token) return failure;
 
@@ -95,13 +96,13 @@ async function refreshUser(token: string): Promise<{ session: App.Session, cooki
 			headers: { 'Authorization': `Bearer ${discord_response.discord_access_token}` }
 		});
 
-		const response = await request.json();
+		const response = await request.json() as DiscordUser;
 		const discordUser = { ...response };
 
 		const user = (await GetUserByDiscordID(discordUser.id)) ?? false;
 
-		if (user && user.id) {
-			UpdateDiscordUser(user.id, discordUser);
+		if (user !== false && user.id) {
+			void UpdateDiscordUser(user.id, discordUser);
 		}
 
 		if (response.id) {
