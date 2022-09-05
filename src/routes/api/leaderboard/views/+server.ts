@@ -2,7 +2,6 @@ import { GetViewLeaderboard } from '$db/database';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
-
 	const amountRaw = url.searchParams.get('amount') ?? 10;
 
 	// Sanitize amountRaw to be a number

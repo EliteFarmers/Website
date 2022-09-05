@@ -78,7 +78,7 @@ export const DEFAULT_SKILL_CAPS = {
 export const CONDITIONAL_SKILL_CAPS = {
 	farming: {
 		max: 60,
-		calc: (farming_level_cap: number) => DEFAULT_SKILL_CAPS.farming + farming_level_cap
+		calc: (farming_level_cap: number) => DEFAULT_SKILL_CAPS.farming + farming_level_cap,
 	},
 };
 

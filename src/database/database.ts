@@ -1,18 +1,24 @@
-import { POSTGRES_URI } from "$env/static/private";
-import type { Profiles, AccountInfo, PlayerInfo } from "$lib/skyblock";
-import { Op, Sequelize } from "sequelize";
-import { UsersInit, type DiscordUser, type UserInfo, type UserUpdateOptions, type UserWhereOptions } from "./models/users";
+import { POSTGRES_URI } from '$env/static/private';
+import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
+import { Op, Sequelize } from 'sequelize';
+import {
+	UsersInit,
+	type DiscordUser,
+	type UserInfo,
+	type UserUpdateOptions,
+	type UserWhereOptions,
+} from './models/users';
 
-export interface DataUpdate { 
-	account: AccountInfo, 
-	player: PlayerInfo,
-	profiles: Profiles 
+export interface DataUpdate {
+	account: AccountInfo;
+	player: PlayerInfo;
+	profiles: Profiles;
 }
 
 const sequelize = new Sequelize(POSTGRES_URI, {
 	dialect: 'postgres',
 	logging: false,
-})
+});
 
 const User = UsersInit(sequelize);
 
@@ -34,8 +40,8 @@ export async function GetUser(uuid: string) {
 }
 
 export async function GetUserByIGN(ign: string) {
-	return await findOne({ 
-		ign: { [Op.iLike]: '%' + ign } 
+	return await findOne({
+		ign: { [Op.iLike]: '%' + ign },
 	});
 }
 
@@ -55,10 +61,10 @@ async function findOne(options: UserWhereOptions) {
 }
 
 export async function FindUserToLink(discordUser: DiscordUser) {
-	const user = await findOne({ 
-		"player.player.social.links.DISCORD": { 
-			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator}` 
-		} 
+	const user = await findOne({
+		'player.player.social.links.DISCORD': {
+			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator}`,
+		},
 	});
 
 	return user;
@@ -68,7 +74,7 @@ const infoDefaults: UserInfo = {
 	linked: false,
 	id: null,
 	cheating: false,
-	times_fetched: 0
+	times_fetched: 0,
 };
 
 export function CreateUser(uuid: string, ign: string) {
@@ -76,17 +82,20 @@ export function CreateUser(uuid: string, ign: string) {
 }
 
 export function UpdateUserData({ account, player, profiles }: DataUpdate) {
-	return UpdateUser({
-		ign: account.account.name,
-		skyblock: profiles,
-		account: account,
-		player: player,
-	}, { uuid: account.account.id });
+	return UpdateUser(
+		{
+			ign: account.account.name,
+			skyblock: profiles,
+			account: account,
+			player: player,
+		},
+		{ uuid: account.account.id }
+	);
 }
 
 export function UpdateUser(where: UserWhereOptions, data: UserUpdateOptions) {
 	return User.update(data, {
-		where: where
+		where: where,
 	});
 }
 
@@ -160,8 +169,6 @@ export async function GetUserInfo(uuid: string) {
 	return user.info ?? null;
 }
 
-
-
 export async function UpdateCheating(uuid: string, cheating: boolean) {
 	const user = await GetUser(uuid);
 	const oldInfo = user?.info ?? infoDefaults;
@@ -171,13 +178,13 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 }
 
 export async function GetViewLeaderboard(limit = 20) {
-	const list = await User.findAll({ 
+	const list = await User.findAll({
 		limit: limit,
-		attributes:	{ 
+		attributes: {
 			exclude: ['account', 'player', 'skyblock', 'createdAt', 'updatedAt', 'user'],
 		},
 		where: { ['info.cheating']: { [Op.not]: true }, ['info.times_fetched']: { [Op.gt]: 0 } },
-		order: [['info.times_fetched', 'DESC']], 
+		order: [['info.times_fetched', 'DESC']],
 	});
 
 	return list.sort((prev, next) => {

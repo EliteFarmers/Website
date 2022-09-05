@@ -7,4 +7,4 @@ export const load: PageLoad = async ({ parent }) => {
 	if (!discordUser) {
 		throw redirect(302, '/login');
 	}
-}
+};

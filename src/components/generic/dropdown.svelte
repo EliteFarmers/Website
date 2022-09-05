@@ -4,17 +4,21 @@
 
 	export let hasItems = true;
 	let collapse = true;
-
 </script>
 
-<section class="mx-1 relative cursor-pointer" 
-	on:mouseleave={() => collapse = true} on:mouseenter={() => collapse = false}
-	on:click={() => collapse = !collapse}
+<section
+	class="mx-1 relative cursor-pointer"
+	on:mouseleave={() => (collapse = true)}
+	on:mouseenter={() => (collapse = false)}
+	on:click={() => (collapse = !collapse)}
 >
 	<div class="p-3 bg-gray-200 rounded-lg">
-		<slot name="top" />	
-		{#if (!collapse && hasItems)}
-			<div transition:slide={{ duration: 500, easing: quadInOut }} class="absolute z-50 bg-gray-200 rounded-lg p-3 left-0">
+		<slot name="top" />
+		{#if !collapse && hasItems}
+			<div
+				transition:slide={{ duration: 500, easing: quadInOut }}
+				class="absolute z-50 bg-gray-200 rounded-lg p-3 left-0"
+			>
 				<slot name="rest" />
 			</div>
 		{/if}

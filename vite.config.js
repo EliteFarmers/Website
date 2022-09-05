@@ -9,8 +9,8 @@ const config = {
 			$comp: path.resolve('./src/components'),
 			$stores: path.resolve('./src/stores'),
 			$db: path.resolve('./src/database'),
-		}
-	}
+		},
+	},
 };
 
 export default config;

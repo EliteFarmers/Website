@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	if (!refreshToken) {
 		return new Response(JSON.stringify({ error: 'No refresh token found' }), {
-			status: 404
+			status: 404,
 		});
 	}
 
@@ -37,22 +37,33 @@ export const GET: RequestHandler = async ({ url }) => {
 		},
 	});
 
-	const response = await request.json() as { access_token: string, expires_in: number, refresh_token: string, error?: unknown };
+	const response = (await request.json()) as {
+		access_token: string;
+		expires_in: number;
+		refresh_token: string;
+		error?: unknown;
+	};
 
 	if (response.error) {
 		return new Response(JSON.stringify({ error: response.error }), {
-			status: 400
+			status: 400,
 		});
 	}
 
 	const accessTokenExpires = new Date(Date.now() + response.expires_in); // ~10 minutes
-	const refreshTokenExpires = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+	const refreshTokenExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
-	return new Response(JSON.stringify({ 
-		discord_access_token: response.access_token,
-		cookies: [
-			`discord_access_token=${response.access_token}; Expires=${accessTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
-			`discord_refresh_token=${response.refresh_token}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
-		],
-	}));
-}
+	return new Response(
+		JSON.stringify({
+			discord_access_token: response.access_token,
+			cookies: [
+				`discord_access_token=${
+					response.access_token
+				}; Expires=${accessTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
+				`discord_refresh_token=${
+					response.refresh_token
+				}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
+			],
+		})
+	);
+};
