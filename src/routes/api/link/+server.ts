@@ -1,4 +1,4 @@
-import { GetUserByIGN, LinkDiscordUser } from '$db/database';
+import { GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
@@ -14,7 +14,17 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	}
 
 	if (locals.discordUser.id && locals.user) {
-		// Might unlink here if the user is already linked.
+		const username = decodeURIComponent(body.replace('username=', ''));
+
+		if (username === '$Unlink') {
+			const uuid = locals.user.uuid;
+
+			if (!uuid) {
+				return new Response('Invalid UUID.', { status: 404 });
+			}
+			await UnlinkDiscordUser(uuid);
+			return new Response(JSON.stringify({ success: true }));
+		}
 		return new Response(JSON.stringify(locals.user));
 	}
 
@@ -23,7 +33,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
 	// Check if the username is a valid minecraft username.
 	if (!username || !username.match(/^[a-zA-Z0-9_]{1,16}$/)) {
-		return new Response('Invalid username.', { status: 400 });
+		return new Response('Invalid username.', { status: 404 });
 	}
 
 	const foundUser = await GetUserByIGN(username);
@@ -41,7 +51,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator}`;
 
 	if (discordUser !== linkedName) {
-		return new Response('User has a different account linked.', { status: 400 });
+		return new Response('User has a different account linked.', { status: 401 });
 	}
 
 	// Success!
