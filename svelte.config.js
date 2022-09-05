@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
+import path from 'path';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,6 +13,7 @@ const config = {
 			precompress: true
 		}),
 		env: {
+			dir: path.resolve('./'),
 			publicPrefix: 'PUBLIC_'
 		},
 	}
