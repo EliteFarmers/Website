@@ -15,10 +15,10 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(undefined, { status: 500 })
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const player = await fetchPlayer(uuid, HYPIXEL_API_KEY) as any;
+	const player = await fetchPlayer(uuid, HYPIXEL_API_KEY);
 
-	if (!player || player.size === 0) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+	if (!player || (player as any).size === 0) {
 		throw error(404, 'Hypixel API couldn\'t be reached.');
 	}
 

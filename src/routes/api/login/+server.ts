@@ -29,7 +29,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		},
 	});
 
-	const response = await request.json();
+	const response = await request.json() as { access_token: string, expires_in: number, refresh_token: string, error?: unknown };
 
 	if (response.error) {
 		return new Response(undefined, { status: 302, headers: { Location: '/' } })

@@ -9,7 +9,7 @@ const endpoint = 'https://discord.com/api/oauth2/authorize'
 	+ '&redirect_uri=' + encodeURIComponent(PUBLIC_DISCORD_REDIRECT_URI) 
 	+ '&response_type=code&scope=identify%20email%20guilds';
 
-export const load = async () => {
+export const load = () => {
 	if (!browser) {
 		const uuid = crypto.randomUUID();
 		authState.set(uuid);

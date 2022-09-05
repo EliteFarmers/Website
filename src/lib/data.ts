@@ -1,4 +1,4 @@
-import type { AccountInfo, APISettings, CommunityUpgrades, ContestData, CraftedMinions, CropName, Inventories, JacobData, MemberData, PlayerData, ProfileData, ProfileMember, Profiles, RawProfileData, RawProfileMember, RawProfileMembers } from './skyblock.d';
+import type { AccountData, AccountInfo, APISettings, CommunityUpgrades, ContestData, CraftedMinions, CropName, ExperienceSkills, FairyData, Inventories, JacobData, MemberData, PlayerData, ProfileData, ProfileMember, Profiles, RawProfileData, RawProfileMember, RawProfileMembers, RawProfileResponse } from './skyblock.d';
 import { ACCOUNT_UPDATE_INTERVAL, API_CROP_TO_CROP, EXCLUDED_FIELDS, INVENTORY_FIELDS_RENAME, KEPT_PLAYER_FIELDS, MOVE_TO_STATS, PLAYER_UPDATE_INTERVAL, PROFILE_UPDATE_INTERVAL } from './constants/data';
 import { CreateUser, GetUser, GetUserByIGN, UpdateAccountData, UpdatePlayerData, UpdateProfilesData } from '$db/database';
 import { parse, simplify } from 'prismarine-nbt';
@@ -23,7 +23,7 @@ export async function accountFromIGN(ign: string) {
 		return undefined;
 	}
 
-	const data = await response.json();
+	const data = await response.json() as { id: string };
 
 	return accountFromUUID(data.id);
 }
@@ -35,7 +35,7 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	}
 
 	// If user account data is older than the interval, get the latest data from the API.
-	if (user && user?.account?.success && (Date.now() - user.account.last_fetched) < ACCOUNT_UPDATE_INTERVAL) {
+	if (user?.account?.success && (Date.now() - user.account.last_fetched) < ACCOUNT_UPDATE_INTERVAL) {
 		return user.account;
 	}
 
@@ -47,7 +47,7 @@ export async function accountFromUUID(uuid: string, user?: User) {
 		return user?.account ?? undefined;
 	}
 
-	const data = await response.json();
+	const data = await response.json() as AccountData;
 
 	const result: AccountInfo = {
 		success: true,
@@ -74,11 +74,12 @@ export async function fetchProfiles(uuid: string, key: string): Promise<Profiles
 	// First check if the profiles are cached.
 	const user = await GetUser(uuid);
 	// If the profiles are cached, return it.
-	if (user && user.skyblock?.success) {
+	if (user?.skyblock?.success) {
 		// If the profiles are older than the interval, get them from the API.
 		if ((Date.now() - user.skyblock.last_fetched) > PROFILE_UPDATE_INTERVAL) {
-			fetchNewProfiles(user, uuid, key);
+			void fetchNewProfiles(user, uuid, key);
 		}
+		// Return old profiles immediately anyway, so the user doesn't have to wait.
 		return user.skyblock;
 	}
 
@@ -92,14 +93,12 @@ async function fetchNewProfiles(user: User | null, uuid: string, key: string) {
 
 	const response = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${key}`);
 
-	if (!response) return user?.skyblock ?? undefined;
-
 	if (response.status !== 200) {
 		return user?.skyblock ?? undefined;
 	}
 
 	try {
-		const data = await response.json();
+		const data = await response.json() as RawProfileResponse;
 		const parsed = await GetProfiles(data.profiles, uuid, user ?? undefined);
 
 		if (user) {
@@ -118,7 +117,7 @@ export async function fetchPlayer(uuid: string, key: string) {
 	// First check if the player is cached.
 	const user = await GetUser(uuid);
 	// If the player is cached and newer than the interval, return it.
-	if (user && user.player?.success && (Date.now() - user.player.last_fetched) < PLAYER_UPDATE_INTERVAL) {
+	if (user?.player?.success && (Date.now() - user.player.last_fetched) < PLAYER_UPDATE_INTERVAL) {
 		return user.player;
 	}
 
@@ -128,15 +127,12 @@ export async function fetchPlayer(uuid: string, key: string) {
 
 	const response = await fetch(`https://api.hypixel.net/player?uuid=${uuid}&key=${key}`);
 
-	if (!response) return user?.player ?? undefined;
-
 	if (response.status !== 200) {
 		return user?.player ?? undefined;
 	}
 
 	try {
-		const data = await response.json();
-		if (!data.player) return user?.player ?? undefined;
+		const data = await response.json() as { player: PlayerData };
 
 		const player = formatPlayer(data.player);
 
@@ -163,6 +159,7 @@ function formatPlayer(player: PlayerData) {
 		for (const field of KEPT_PLAYER_FIELDS) {
 			if (key.startsWith(field)) keep = true;
 		}
+		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 		if (!keep) delete player[key];
 	}
 	return player;
@@ -170,14 +167,14 @@ function formatPlayer(player: PlayerData) {
 
 export async function GetProfiles(profiles: RawProfileData[], uuid: string, user?: User) {
 	const data: Profiles = {
-		success: profiles ? profiles.length > 0 : false,
+		success: (profiles.length > 0),
 		last_fetched: Date.now(),
 		times_fetched: user?.skyblock?.times_fetched ?? 0,
 		version: RESPONSE_VERSION,
 		profiles: [],
 	};
 
-	if (!user || !user.skyblock?.success) {
+	if (!user?.skyblock?.success) {
 		data.last_fetched = user?.skyblock?.last_fetched ?? Date.now();
 
 		data.profiles = await formatProfiles(profiles, uuid);
@@ -205,14 +202,14 @@ export async function GetProfiles(profiles: RawProfileData[], uuid: string, user
 		const apiSettings = profile.api;
 		let key: keyof APISettings;
 		for (key in apiSettings) {
-			apiSettings[key].history = oldProfile.api?.[key]?.history ?? [];
+			apiSettings[key].history = oldProfile.api[key].history;
 
-			const oldState = oldProfile.api?.[key];
-			const newState = profile.api?.[key];
+			const oldState = oldProfile.api[key];
+			const newState = profile.api[key];
 
-			if (oldState?.enabled !== newState?.enabled) {
+			if (oldState.enabled !== newState.enabled) {
 				apiSettings[key].history.push({
-					enabled: oldProfile.api?.[key]?.enabled ?? false,
+					enabled: oldProfile.api[key].enabled,
 					fetched: oldState.last_fetched,
 				});
 			}
@@ -257,7 +254,6 @@ export async function GetProfiles(profiles: RawProfileData[], uuid: string, user
 
 export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 	const data: ProfileData[] = [];
-	if (!profiles) return data;
 
 	for (const profile of profiles) {
 
@@ -265,7 +261,7 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 		let allMinions: string[] = [];
 
 		const { members, minions } = await formatMembers(profile.members, uuid);
-		allMinions = allMinions.concat(minions ?? []);
+		allMinions = allMinions.concat(minions);
 
 		// Add the other members' minions to their own profile.
 		profile.members[uuid].crafted_generators?.push(...allMinions);
@@ -303,9 +299,9 @@ async function loadNBTData(profiles: ProfileData[]) {
 			queue.push(hydrateNBT(data.inventories, key));
 		}
 	
-		if (data.inventories?.backpacks) {
-			for (const key in data.inventories.backpacks) {
-				queue.push(hydrateNBT(data.inventories.backpacks, key));
+		if (data.inventories.backpacks) {
+			for (let i = 0; i < data.inventories.backpacks.length; i++) {
+				queue.push(hydrateNBT(data.inventories.backpacks[i], i.toString()));
 			}
 		}
 	}
@@ -313,11 +309,15 @@ async function loadNBTData(profiles: ProfileData[]) {
 	await Promise.allSettled(queue);
 }
 
+// This method is used to parse NBT data from the API, not sure if it could be typed better.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function hydrateNBT(element: any, key: string) {
-	if (!element?.[key]?.data) return;
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+	if (!element[key]?.data) return;
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
 	const nbt = await parse(Buffer.from(element[key].data, 'base64'));
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 	element[key] = simplify(nbt.parsed)?.i ?? false;
 }
 
@@ -336,7 +336,7 @@ async function formatMembers(members: RawProfileMembers, uuid: string) {
 		let memberName = memberUser?.ign;
 		if (!memberName) {
 			const account = await accountFromUUID(memberUUID);
-			memberName = account?.account?.name ?? 'Unknown';
+			memberName = account?.account.name ?? 'Unknown';
 		}
 
 		data.push({ uuid: memberUUID, last_seen: member.last_save, ign: memberName });
@@ -359,7 +359,7 @@ function getCommunityUpgradeData(profile: RawProfileData) {
 
 	const upgrades = profile.community_upgrades.upgrade_states;
 
-	if (!upgrades || upgrades.length < 1) return undefined;
+	if (upgrades.length < 1) return undefined;
 
 	const data: CommunityUpgrades = {
 		minion_slots: 0,
@@ -383,32 +383,37 @@ function formatMemberData(member: RawProfileMember): ProfileMember {
 
 	// Remove ignored fields.
 	for (const field of excludedFields) {
+		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 		delete member[field];
 	}
 
 	const inventories = condenseInventories(member);
 
 	const data: ProfileMember = {
-		skills: condenseGroup(member, 'experience_skill_', (a) => a.replace('social2', 'social')),
+		skills: condenseGroup(member, 'experience_skill_', (a) => a.replace('social2', 'social')) as ExperienceSkills,
 		jacob: formatContests(member),
 		minions: condenseMinions(member),
 		collection_tiers: condenseCollTiers(member),
-		fairy: condenseGroup(member, 'fairy_'),
+		fairy: condenseGroup(member, 'fairy_') as unknown as FairyData,
 		essence: condenseGroup(member, 'essence_', undefined, ['soulflow']),
 		inventories: inventories,
 		...member,
 	}
 
 	// Remove a few fields that are not needed.
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 	if (data.dungeons?.dungeon_types?.catacombs?.best_runs) {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		delete data.dungeons.dungeon_types.catacombs.best_runs;
 	}
 
 	const moveToStats = MOVE_TO_STATS;
 	for (const field of moveToStats) {
-		if (!data[field]) continue;
+		if (!data[field] || Object.prototype.hasOwnProperty.call(data, field)) continue;
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 		data.stats[field] = data[field];
+		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 		delete data[field];
 	}
 
@@ -426,11 +431,11 @@ function getAPISettings(member: ProfileMember) {
 			last_fetched: Date.now(), history: []
 		},
 		inventory: {
-			enabled: (member.inventories?.player) ? true : false,
+			enabled: (member.inventories.player) ? true : false,
 			last_fetched: Date.now(), history: []
 		},
 		vault: {
-			enabled: (member.inventories?.vault) ? true : false,
+			enabled: (member.inventories.vault) ? true : false,
 			last_fetched: Date.now(), history: []
 		}
 	}
@@ -476,8 +481,7 @@ function formatContests(member: RawProfileMember) {
 }
 
 function getCropName(crop: string) {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const name = (API_CROP_TO_CROP as any)[crop];
+	const name = (API_CROP_TO_CROP as Record<string, unknown>)[crop];
 
 	if (!name) return undefined;
 
@@ -512,12 +516,12 @@ function condenseCollTiers(member: RawProfileMember) {
 		return undefined;
 	}
 
-	for (const key of member.unlocked_coll_tiers) {
+	for (const key of member.unlocked_coll_tiers as string[]) {
 		const index = key.lastIndexOf('_');
 		const collection = key.substring(0, index);
 		const tier = key.substring(index + 1);
 
-		tiers[collection] = Math.max(tiers[collection] ?? 0, parseInt(tier));
+		tiers[collection] = Math.max(tiers[collection], parseInt(tier));
 	}
 
 	delete member.unlocked_coll_tiers;
@@ -531,10 +535,11 @@ function condenseCollTiers(member: RawProfileMember) {
 }
 
 function condenseGroup(member: RawProfileMember, prefix: string, rename?: (arg: string) => string, extra?: string[]) {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const group: any = {};
+	const group: Record<string, unknown> = {};
 
 	for (const key in member) {
+		if (!Object.prototype.hasOwnProperty.call(member, key)) continue; 
+
 		const isExtra = extra?.includes(key);
 		if (!key.startsWith(prefix) && !isExtra) continue;
 
@@ -543,6 +548,7 @@ function condenseGroup(member: RawProfileMember, prefix: string, rename?: (arg: 
 		
 		group[name] = member[key];
 
+		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 		delete member[key];
 	}
 
@@ -561,10 +567,15 @@ function condenseInventories(member: RawProfileMember): Inventories {
 	const keys = INVENTORY_FIELDS_RENAME;
 
 	for (const key in keys) {
-		const inventory = member[key];
+		if (!Object.prototype.hasOwnProperty.call(member, key)) continue; 
+
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const inventory: Record<string, unknown> | undefined = member[key];
 		if (!inventory) continue;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 		(inventories as any)[(keys as any)[key]] = inventory;
+
+		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 		delete member[key];
 	}
 
