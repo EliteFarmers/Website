@@ -28,7 +28,7 @@ export const EXCLUDED_FIELDS = [
 	'wardrobe_equipped_slot'
 ];
 
-export const API_CROP_TO_CROP = Object.assign(Object.create(null), {
+export const API_CROP_TO_CROP = {
 	'WHEAT': 'wheat',
 	'POTATO_ITEM': 'potato',
 	'CARROT_ITEM': 'carrot',
@@ -40,9 +40,9 @@ export const API_CROP_TO_CROP = Object.assign(Object.create(null), {
 	'INK_SACK:3': 'cocoa',
 	'MUSHROOM_COLLECTION': 'mushroom',
 	'NETHER_STALK': 'nether_wart'
-});
+};
 
-export const INVENTORY_FIELDS_RENAME = Object.assign(Object.create(null), {
+export const INVENTORY_FIELDS_RENAME = {
 	'inv_contents': 'player',
 	'inv_armor': 'armor',
 	'ender_chest_contents': 'ender_chest',
@@ -53,7 +53,7 @@ export const INVENTORY_FIELDS_RENAME = Object.assign(Object.create(null), {
 	'personal_vault_contents': 'vault',
 	'potion_bag': 'potions',
 	'quiver': 'quiver'
-});
+};
 
 export const MOVE_TO_STATS = [ 
 	'first_join', 
@@ -75,7 +75,7 @@ export const KEPT_PLAYER_FIELDS = [
 	'skyblock_extra',
 	'scorpius_bribe_',
 	'claimed_'
-]
+];
 
 export const RANKS: { [color in RankName]: { color: string, tag: string, plus?: string, plusColor?: string } } = {
 	OWNER: {

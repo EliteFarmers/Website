@@ -24,10 +24,10 @@ export async function FetchNewProfiles(uuid: string, last_fetched: number, delay
 	}
 
 	try {
-		const data = await res.json();
+		const data = await res.json() as Profiles;
 
-		if (data && data.success) {
-			return data as Profiles;
+		if (data.success) {
+			return data;
 		}
 	} catch (e) {
 		return undefined;

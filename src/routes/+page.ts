@@ -1,5 +1,3 @@
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async () => {
-	return null;
-}
+export const load: PageLoad = () => undefined;

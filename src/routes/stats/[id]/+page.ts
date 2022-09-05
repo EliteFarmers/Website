@@ -15,7 +15,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		}
 
 		const account = await fetch(`/api/account/${uuid}`);
-		const info: AccountInfo = await account.json();
+		const info = await account.json() as AccountInfo;
 
 		uuid = account.ok ? info.account.id : '';
 		ign = account.ok ? info.account.name : undefined;
@@ -31,11 +31,11 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw redirect(302, '/');
 	}
 
-	const data: Profiles = await response.json();
+	const data = await response.json() as Profiles;
 
 	// Get latest profile
-	data?.profiles?.sort((a, b) => b.member.last_save - a.member.last_save);
-	const name = data?.profiles?.[0]?.cute_name;
+	data.profiles.sort((a, b) => b.member.last_save - a.member.last_save);
+	const name = data.profiles[0]?.cute_name;
 
 	if (ign && name) {
 		throw redirect(302, `/stats/${ign}/${name}`);

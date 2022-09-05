@@ -10,11 +10,13 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw error(404, accountRes.statusText);
 	}
 
-	const { account }: AccountInfo = await accountRes.json();
+	const data = await accountRes.json() as AccountInfo;
 
-	if (!account) {
+	if (!data.success) {
 		throw error(404, 'Account not found');
 	}
+
+	const account = data.account;
 
 	const profilesFetch = fetch(`/api/profiles/${account.id}`);
 	const playerFetch = fetch(`/api/player/${account.id}`);
@@ -22,14 +24,14 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 	try {
 		const [ profilesRes, playerRes, userRes ] = await Promise.all([ profilesFetch, playerFetch, userFetch ]);
-		const [ profiles, player, user ] = await Promise.all([ profilesRes.json(), playerRes.json(), userRes.json() ]);
+		const [ profiles, player, user ] = await Promise.all([ profilesRes.json(), playerRes.json(), userRes.json() ]) as [ Profiles, PlayerInfo, UserInfo ];
 
 		return { 
 			account: account, 
-			profiles: profiles as Profiles, 
-			player: player as PlayerInfo, 
+			profiles: profiles , 
+			player: player, 
 			profileName: params.profile,
-			user: user as UserInfo
+			user: user
 		};
 	} catch (err) {
 		throw error(404);
