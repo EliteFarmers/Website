@@ -2,7 +2,6 @@ import { GetUser } from '$db/database';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
-
 	const uuid = params.uuid.replaceAll('-', '');
 
 	if (!uuid || uuid.length !== 32) {

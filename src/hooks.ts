@@ -1,11 +1,11 @@
 import cookie from 'cookie';
 import type { Handle } from '@sveltejs/kit';
-import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL as HOST, } from '$env/static/public';
+import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL as HOST } from '$env/static/public';
 import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
 import type { DiscordUser } from '$db/models/users';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const browserCookies = cookie.parse(event.request.headers.get("cookie") ?? '');
+	const browserCookies = cookie.parse(event.request.headers.get('cookie') ?? '');
 
 	event.locals.discord_access_token = browserCookies.discord_access_token;
 	event.locals.discord_refresh_token = browserCookies.discord_refresh_token;
@@ -27,17 +27,16 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	if (cookies) {
 		for (const cookie of cookies) {
-			response.headers.append("Set-Cookie", cookie);
+			response.headers.append('Set-Cookie', cookie);
 		}
 	}
 
 	return response;
-}
+};
 
-async function getUser(locals: App.Locals): Promise<{ session: App.Session, cookies?: string[] }> {
-
+async function getUser(locals: App.Locals): Promise<{ session: App.Session; cookies?: string[] }> {
 	if (!locals.discord_access_token && !locals.discord_refresh_token) {
-		return { session: { discordUser: false, user: false }};
+		return { session: { discordUser: false, user: false } };
 	}
 
 	if (!locals.discord_access_token && locals.discord_refresh_token) {
@@ -52,19 +51,18 @@ async function getUser(locals: App.Locals): Promise<{ session: App.Session, cook
 	return {
 		session: {
 			discordUser: false,
-			user: false
-		}
-	}
+			user: false,
+		},
+	};
 }
 
-async function fetchUser(token: string): Promise<{ session: App.Session, cookies?: string[] }> {
-
+async function fetchUser(token: string): Promise<{ session: App.Session; cookies?: string[] }> {
 	const request = await fetch(`${DISCORD_API_URL}/users/@me`, {
-		headers: { 'Authorization': `Bearer ${token}`}
+		headers: { Authorization: `Bearer ${token}` },
 	});
 
 	// returns a discord user if JWT was valid
-	const response = await request.json() as DiscordUser;
+	const response = (await request.json()) as DiscordUser;
 	const discordUser = { ...response };
 
 	const user = (await GetUserByDiscordID(response.id)) ?? false;
@@ -73,30 +71,33 @@ async function fetchUser(token: string): Promise<{ session: App.Session, cookies
 		void UpdateDiscordUser(user.id, discordUser);
 	}
 
-	if (response.id) { 
-		return { session: { discordUser: discordUser, user: user }};
+	if (response.id) {
+		return { session: { discordUser: discordUser, user: user } };
 	} else {
-		return { session: { discordUser: false, user: false }};
+		return { session: { discordUser: false, user: false } };
 	}
-
 }
 
-async function refreshUser(token: string): Promise<{ session: App.Session, cookies?: string[] }> {
+async function refreshUser(token: string): Promise<{ session: App.Session; cookies?: string[] }> {
 	const failure: { session: App.Session } = { session: { discordUser: false, user: false } };
 	const discord_request = await fetch(`${HOST}/api/refresh?code=${token}`);
 
 	if (discord_request.status !== 200) return failure;
-	
+
 	try {
-		const discord_response = await discord_request.json() as { discord_access_token: string, discord_refresh_token: string, cookies: string[] };
+		const discord_response = (await discord_request.json()) as {
+			discord_access_token: string;
+			discord_refresh_token: string;
+			cookies: string[];
+		};
 
 		if (!discord_response.discord_access_token) return failure;
 
 		const request = await fetch(`${DISCORD_API_URL}/users/@me`, {
-			headers: { 'Authorization': `Bearer ${discord_response.discord_access_token}` }
+			headers: { Authorization: `Bearer ${discord_response.discord_access_token}` },
 		});
 
-		const response = await request.json() as DiscordUser;
+		const response = (await request.json()) as DiscordUser;
 		const discordUser = { ...response };
 
 		const user = (await GetUserByDiscordID(discordUser.id)) ?? false;
@@ -106,11 +107,11 @@ async function refreshUser(token: string): Promise<{ session: App.Session, cooki
 		}
 
 		if (response.id) {
-			return { 
+			return {
 				session: { discordUser: discordUser, user: user },
-				cookies: discord_response.cookies
-			}
-		};
+				cookies: discord_response.cookies,
+			};
+		}
 	} catch (error) {
 		return failure;
 	}

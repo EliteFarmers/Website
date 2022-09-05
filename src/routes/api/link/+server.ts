@@ -2,11 +2,10 @@ import { GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = () => {
-	return new Response(undefined, { status: 404 })
+	return new Response(undefined, { status: 404 });
 };
 
 export const POST: RequestHandler = async ({ locals, request }) => {
-
 	const body = await request.text();
 
 	if (!locals.discordUser) {
@@ -45,7 +44,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	const linkedName = foundUser.player?.player.socialMedia?.links?.DISCORD;
 
 	if (!linkedName) {
-		return new Response('User doesn\'t have a linked account on Hypixel.', { status: 404 });
+		return new Response("User doesn't have a linked account on Hypixel.", { status: 404 });
 	}
 
 	const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator}`;
@@ -57,4 +56,4 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	// Success!
 	await LinkDiscordUser(foundUser.uuid, locals.discordUser);
 	return new Response(JSON.stringify(foundUser));
-}
+};
