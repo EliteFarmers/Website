@@ -106,4 +106,4 @@
 
 <h1 id="Info" class="text-center text-body m-16">{uuid} {ign} {profile} {player?.player.socialMedia?.links?.DISCORD}</h1>
 
-<h1 class="text-center m-16 text-body">Views: { profiles.times_fetched }</h1> -->
+<h1 class="text-center m-16 text-body">Views: { profiles.times_fetched }</h1>
