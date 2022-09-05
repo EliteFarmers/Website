@@ -1,5 +1,5 @@
-import { browser } from '$app/env';
-import { goto, invalidate } from '$app/navigation';
+import { browser } from '$app/environment';
+import { invalidateAll } from '$app/navigation';
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
@@ -13,11 +13,8 @@ export const load: PageLoad = async ({ setHeaders }) => {
 	})
 
 	if (browser) {
-		await invalidate();
+		await invalidateAll();
 	}
 
-	// Hacky fix for https://github.com/sveltejs/kit/issues/5952
-	if (browser) {
-		return await goto('/');
-	} else throw redirect(302, '/');
+	throw redirect(302, '/');
 }

@@ -1,9 +1,8 @@
 import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_URI } from '$env/static/public';
 import { authState, authStateVal } from '$stores/auth';
-import { browser } from '$app/env';
-import crypto from 'crypto';
+import { browser } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
-import { goto } from '$app/navigation';
+import crypto from 'crypto';
 
 const endpoint = 'https://discord.com/api/oauth2/authorize'
 	+ '?client_id=' + PUBLIC_DISCORD_CLIENT_ID
@@ -16,9 +15,6 @@ export const load = async () => {
 		authState.set(uuid);
 	}
 	
-	// Hacky fix for https://github.com/sveltejs/kit/issues/5952
 	const location = endpoint ? (endpoint + `&state=${authStateVal}`) : '/';
-	if (browser) {
-		return await goto(location);
-	} else throw redirect(302, location);
+	throw redirect(302, location);
 }

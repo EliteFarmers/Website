@@ -1,8 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { AccountInfo, Profiles } from '$lib/skyblock';
 import type { PageLoad } from './$types';
-import { browser } from '$app/env';
-import { goto } from '$app/navigation';
 
 export const load: PageLoad = async ({ params, fetch }) => {
 
@@ -24,19 +22,13 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	}
 
 	if (uuid === '') {
-		// Hacky fix for https://github.com/sveltejs/kit/issues/5952
-		if (browser) {
-			return await goto('/');
-		} else throw redirect(302, '/');
+		throw redirect(302, '/');
 	}
 
 	const response = await fetch(`/api/profiles/${uuid}`);
 
 	if (!response.ok) {
-		// Hacky fix for https://github.com/sveltejs/kit/issues/5952
-		if (browser) {
-			return await goto('/');
-		} else throw redirect(302, '/');
+		throw redirect(302, '/');
 	}
 
 	const data: Profiles = await response.json();
@@ -46,16 +38,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	const name = data?.profiles?.[0]?.cute_name;
 
 	if (ign && name) {
-		// Hacky fix for https://github.com/sveltejs/kit/issues/5952
-		
-		const location = `/stats/${ign}/${name}`;
-		if (browser) {
-			return await goto(location);
-		} else throw redirect(302, location);
+		throw redirect(302, `/stats/${ign}/${name}`);
 	}
 
-	// Hacky fix for https://github.com/sveltejs/kit/issues/5952
-	if (browser) {
-		return await goto('/');
-	} else throw redirect(302, '/');
+	throw redirect(302, '/');
 }
