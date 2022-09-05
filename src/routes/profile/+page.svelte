@@ -10,9 +10,23 @@
 		console.log(user);
 	});
 
+	let errorMessage = '';
 	let linkValue = '';
 	const linkSubmit = async () => {
-		if (!linkValue || !linkValue.match(/^[a-zA-Z0-9_]{1,16}$/)) {
+		let skip = false;
+
+		if (user && !linkValue) {
+			linkValue = '$Unlink';
+
+			// Alert the user that unlinking their account will remove all of their data.
+			if (confirm('Are you sure you want to unlink your account? This removes all of your preferences.')) {
+				skip = true;
+			} else {
+				linkValue = '';
+			}
+		}
+
+		if (!skip && ((!linkValue && !user) || !linkValue.match(/^[a-zA-Z0-9_]{1,16}$/))) {
 			return;
 		}
 
@@ -26,6 +40,15 @@
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
 		});
+
+		if (response.status === 200) {
+			linkValue = '';
+			user = !skip;
+			location.reload();
+		} else {
+			const data = await response.text();
+			errorMessage = data;
+		}
 	}
 </script>
 
@@ -57,15 +80,17 @@
 		<a href="/stats/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
 			View Profile Stats
 		</a>
-	{:else}
-		<!-- Form to input username to link account -->
-		<form on:submit|preventDefault={linkSubmit}>
-			<div class="flex items-center">
-				<input type="text" name="username" bind:value={linkValue} class="w-full px-4 py-2 border-2 rounded" placeholder="Username" />
-				<button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-					Link Account
-				</button>
-			</div>
-		</form>
 	{/if}
+	<!-- Form to input username to link account -->
+	<form on:submit|preventDefault={linkSubmit}>
+		<div class="flex items-center">
+			<div class="grid col-span-1 relative">
+				<input hidden={user} type="text" name="username" bind:value={linkValue} class="w-full px-4 py-2 border-2 rounded" placeholder="Username" />
+				<span class="text-red-600 text-body-sm absolute p-1 -bottom-[100%] select-none">{errorMessage}</span>
+			</div>
+			<button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+				{user ? 'Unlink Account' : 'Link Account' }
+			</button>
+		</div>
+	</form>
 </div>
