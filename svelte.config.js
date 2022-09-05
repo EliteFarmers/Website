@@ -10,13 +10,13 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			precompress: true
+			precompress: true,
 		}),
 		env: {
 			dir: path.resolve('./'),
-			publicPrefix: 'PUBLIC_'
+			publicPrefix: 'PUBLIC_',
 		},
-	}
+	},
 };
 
 export default config;

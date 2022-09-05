@@ -14,7 +14,7 @@
 			"$stores/*": ["src/stores/*"],
 			"$lib/*": ["src/lib/*"],
 			"$lib": ["src/lib"],
-			"$db/*": ["src/database/*"],
+			"$db/*": ["src/database/*"]
 		}
 	}
 }

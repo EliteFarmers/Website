@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	
+
 	$: discordUser = $page.data.discordUser;
 	$: user = $page.data.user;
 
@@ -49,7 +49,7 @@
 			const data = await response.text();
 			errorMessage = data;
 		}
-	}
+	};
 </script>
 
 <svelte:head>
@@ -61,8 +61,12 @@
 		<div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 			<div class="flex justify-between items-center">
 				<div class="flex items-center">
-					<img class="w-10 h-10 rounded-full mr-4" src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png" alt="{discordUser.username}'s avatar" />
-					<div class="text-body-sm font-bold leading-none">{(user) ? user.ign : discordUser.username}</div>
+					<img
+						class="w-10 h-10 rounded-full mr-4"
+						src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
+						alt="{discordUser.username}'s avatar"
+					/>
+					<div class="text-body-sm font-bold leading-none">{user ? user.ign : discordUser.username}</div>
 				</div>
 				<div class="flex items-center">
 					<div class="text-body-sm font-bold leading-none">{discordUser.username}</div>
@@ -85,11 +89,21 @@
 	<form on:submit|preventDefault={linkSubmit}>
 		<div class="flex items-center">
 			<div class="grid col-span-1 relative">
-				<input hidden={user} type="text" name="username" bind:value={linkValue} class="w-full px-4 py-2 border-2 rounded" placeholder="Username" />
+				<input
+					hidden={user}
+					type="text"
+					name="username"
+					bind:value={linkValue}
+					class="w-full px-4 py-2 border-2 rounded"
+					placeholder="Username"
+				/>
 				<span class="text-red-600 text-body-sm absolute p-1 -bottom-[100%] select-none">{errorMessage}</span>
 			</div>
-			<button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-				{user ? 'Unlink Account' : 'Link Account' }
+			<button
+				type="submit"
+				class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+			>
+				{user ? 'Unlink Account' : 'Link Account'}
 			</button>
 		</div>
 	</form>

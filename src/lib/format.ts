@@ -21,25 +21,25 @@ export function getSkillLevel(skill: Skill, xp: number, max?: number) {
 	const levels = Object.values(XP_CHART).slice(0, cap);
 
 	for (const xpRequired of levels) {
-		if ((xp -= xpRequired) > 0) level++; else {
+		if ((xp -= xpRequired) > 0) level++;
+		else {
 			xp += xpRequired;
 			break;
 		}
 	}
 
-	return [ level, xp ];
+	return [level, xp];
 }
 
 export function getLevelProgress(skill: Skill, xp: number, max?: number) {
-
-	const [ level, remainder ] = getSkillLevel(skill, xp, max);
+	const [level, remainder] = getSkillLevel(skill, xp, max);
 
 	if ((max && level >= max) || level === getLevelCap(skill)) {
 		return {
 			level: level,
 			ratio: 1,
-			progress: remainder
-		}
+			progress: remainder,
+		};
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,12 +47,11 @@ export function getLevelProgress(skill: Skill, xp: number, max?: number) {
 
 	return {
 		level: level,
-		ratio: (remainder / nextReq),
+		ratio: remainder / nextReq,
 		progress: remainder,
 		goal: nextReq,
-		next: level + 1
-	}
-
+		next: level + 1,
+	};
 }
 
 export function toReadable(num: number) {
@@ -64,23 +63,23 @@ export function toReadable(num: number) {
 }
 
 /**
- * 
+ *
  * Converts a skyblock date to unix seconds.
- * 
+ *
  * @param  {number} sbYear
  * @param  {number} sbMonth
  * @param  {number} sbDay
  * @returns Date
  */
- export function getTimeStamp(sbYear: number, sbMonth: number, sbDay: number): number {
+export function getTimeStamp(sbYear: number, sbMonth: number, sbDay: number): number {
 	// SkyBlock epoch is 2019/06/11
 	const epochSeconds = 1560275700;
-		
+
 	// Total skyblock days passed since epoch
-	const totalDays = (sbYear * 372) + (sbMonth * 31) + sbDay;
+	const totalDays = sbYear * 372 + sbMonth * 31 + sbDay;
 
 	// Convert skyblock days to real life time
-	const realLifeSeconds = (totalDays * 20 * 60);
+	const realLifeSeconds = totalDays * 20 * 60;
 
 	// Convert real life time to unix time
 	const unixTime = epochSeconds + realLifeSeconds;
@@ -89,9 +88,9 @@ export function toReadable(num: number) {
 	return unixTime;
 }
 /**
- * 
+ *
  * Converts a skyblock contest key string to unix seconds.
- * 
+ *
  * @param  {string} contestKey
  */
 export function getContestTimeStamp(contestKey: string) {
@@ -107,12 +106,12 @@ export function getContestTimeStamp(contestKey: string) {
 
 export function getRankDefaults(rank?: RankName) {
 	if (!rank) return undefined;
-	
+
 	return RANKS[rank];
 }
 
-export function convertPlusColorToHex(color?: PlusColor) {	
+export function convertPlusColorToHex(color?: PlusColor) {
 	if (!color) return undefined;
-	
+
 	return RANK_PLUS_COLORS[color];
 }
