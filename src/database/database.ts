@@ -75,6 +75,7 @@ const infoDefaults: UserInfo = {
 	id: null,
 	cheating: false,
 	times_fetched: 0,
+	profiles: [],
 };
 
 export function CreateUser(uuid: string, ign: string) {
