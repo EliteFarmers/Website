@@ -1,7 +1,15 @@
 import type { ProfileInfo, WeightSource } from '$db/models/users';
-import { CROPS_PER_ONE_WEIGHT } from './constants/weights';
 import type { ProfileData, ProfileMember } from './skyblock';
 import { RoundToFixed } from './util';
+import {
+	CROPS_PER_ONE_WEIGHT,
+	FARMING_LEVEL_50_BONUS,
+	FARMING_LEVEL_60_BONUS,
+	MAX_MEDAL_BONUS,
+	MINION_REWARD_AT_TIER,
+	MINION_REWARD_WEIGHT,
+	WEIGHT_PER_GOLD_MEDAL,
+} from './constants/weights';
 
 export function CalculateWeight(profiles: ProfileData[]) {
 	const data: ProfileInfo[] = [];
@@ -90,9 +98,9 @@ function calcBonus(member: ProfileMember) {
 	if (member.skills) {
 		const farmingCap = member.jacob.perks.farming_level_cap;
 		if (member.skills.farming > 111672425 && farmingCap === 10) {
-			bonus.set('farminglevel', 250);
+			bonus.set('farminglevel', FARMING_LEVEL_60_BONUS);
 		} else if (member.skills.farming > 55172425) {
-			bonus.set('farminglevel', 100);
+			bonus.set('farminglevel', FARMING_LEVEL_50_BONUS);
 		}
 	}
 
@@ -103,31 +111,37 @@ function calcBonus(member: ProfileMember) {
 	}
 
 	const earnedGolds = member.jacob.earned_medals.gold;
-	if (earnedGolds >= 1000) {
-		bonus.set('medals', 500);
+	if (earnedGolds >= MAX_MEDAL_BONUS) {
+		bonus.set('medals', MAX_MEDAL_BONUS * WEIGHT_PER_GOLD_MEDAL);
 	} else {
 		const roundDown = Math.floor(earnedGolds / 50) * 50;
 		if (roundDown > 0) {
-			bonus.set('medals', roundDown / 2);
+			bonus.set('medals', roundDown * WEIGHT_PER_GOLD_MEDAL);
 		}
 	}
 
 	// Tier 12 farming minions
 	const tier12s = [
-		'WHEAT', 'CARROT', 'POTATO', 
-		'PUMPKIN', 'MELON', 'MUSHROOM', 
-		'COCOA', 'CACTUS', 'SUGAR_CANE', 
-		'NETHER_WARTS'
+		'WHEAT',
+		'CARROT',
+		'POTATO',
+		'PUMPKIN',
+		'MELON',
+		'MUSHROOM',
+		'COCOA',
+		'CACTUS',
+		'SUGAR_CANE',
+		'NETHER_WARTS',
 	];
 
 	let obtained12s = 0;
-	tier12s.forEach(minion => {
+	tier12s.forEach((minion) => {
 		// Bit shift to get the tier
-		obtained12s += (member.minions[minion] >> 12 & 1) === 1 ? 1 : 0;
+		obtained12s += ((member.minions[minion] >> MINION_REWARD_AT_TIER) & 1) === 1 ? 1 : 0;
 	});
 
 	if (obtained12s > 0) {
-		bonus.set('minions', obtained12s * 5);
+		bonus.set('minions', obtained12s * MINION_REWARD_WEIGHT);
 	}
 
 	return bonus;
