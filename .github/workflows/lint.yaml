@@ -24,12 +24,12 @@ jobs:
               with:
                   node-version: 18.8
 
+            - name: Make dummy env for types
+              run: mv .env.example .env
+
             # ESLint and Prettier must be in `package.json`
             - name: Install Node.js dependencies
               run: npm ci
-
-            - name: Make dummy env for types
-              run: cp .env.example .env
 
             - name: Run Linters
               run: npm run lint
