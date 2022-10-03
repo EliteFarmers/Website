@@ -28,5 +28,8 @@ jobs:
             - name: Install Node.js dependencies
               run: npm ci
 
+            - name: Make dummy env for types
+              run: cp .env.example .env
+
             - name: Run Linters
               run: npm run lint

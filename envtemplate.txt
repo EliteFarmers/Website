@@ -1,8 +1,0 @@
-HYPIXEL_API_KEY="key-goes-here"
-DISCORD_CLIENT_SECRET="secret-goes-here"
-
-PUBLIC_DISCORD_CLIENT_ID="client-id-here"
-
-PUBLIC_DISCORD_URL="https://discord.com/api"
-PUBLIC_DISCORD_REDIRECT_URI="http://localhost:5173/api/callback"
-PUBLIC_HOST_URL="http://localhost:5173"
