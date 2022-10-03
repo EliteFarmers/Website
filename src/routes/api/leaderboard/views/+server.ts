@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	try {
 		const data = await GetViewLeaderboard(amount);
 		return new Response(JSON.stringify(data));
-	} catch (error: any) {
+	} catch (error) {
 		return new Response(JSON.stringify({ error: "Couldn't fetch leaderboard" }), { status: 500 });
 	}
 };
