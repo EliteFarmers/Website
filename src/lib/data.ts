@@ -23,7 +23,6 @@ import type {
 } from './skyblock.d';
 import {
 	ACCOUNT_UPDATE_INTERVAL,
-	API_CROP_TO_CROP,
 	EXCLUDED_FIELDS,
 	INVENTORY_FIELDS_RENAME,
 	KEPT_PLAYER_FIELDS,
@@ -31,6 +30,7 @@ import {
 	PLAYER_UPDATE_INTERVAL,
 	PROFILE_UPDATE_INTERVAL,
 } from './constants/data';
+import { API_CROP_TO_CROP } from './constants/crops';
 import {
 	CreateUser,
 	GetUser,

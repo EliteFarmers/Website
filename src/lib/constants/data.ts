@@ -28,20 +28,6 @@ export const EXCLUDED_FIELDS = [
 	'wardrobe_equipped_slot',
 ];
 
-export const API_CROP_TO_CROP = {
-	WHEAT: 'wheat',
-	POTATO_ITEM: 'potato',
-	CARROT_ITEM: 'carrot',
-	MELON: 'melon',
-	PUMPKIN: 'pumpkin',
-	CACTUS: 'cactus',
-	SUGAR_CANE: 'sugar_cane',
-	INK_SACK: 'cocoa',
-	'INK_SACK:3': 'cocoa',
-	MUSHROOM_COLLECTION: 'mushroom',
-	NETHER_STALK: 'nether_wart',
-};
-
 export const INVENTORY_FIELDS_RENAME = {
 	inv_contents: 'player',
 	inv_armor: 'armor',
