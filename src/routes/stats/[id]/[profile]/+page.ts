@@ -34,9 +34,10 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		let profileName = profileId;
 		// If the profile ID is long then it's a UUID, so we need to find the name
 
-		let profile = (profileId.length > 20) 
-			? profiles.profiles.find((p) => p.profile_id.toUpperCase() === profileId.toUpperCase())
-			: profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileId.toUpperCase());
+		let profile =
+			profileId.length > 20
+				? profiles.profiles.find((p) => p.profile_id.toUpperCase() === profileId.toUpperCase())
+				: profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileId.toUpperCase());
 
 		profileId = profile?.profile_id ?? profileId;
 		profileName = profile?.cute_name ?? profileName;

@@ -9,7 +9,7 @@ export const CROPS_PER_ONE_WEIGHT = {
 	mushroom: 72_000,
 	cocoa: 219_648.785,
 	cactus: 159_297.912,
-}
+};
 
 // Bonus
 

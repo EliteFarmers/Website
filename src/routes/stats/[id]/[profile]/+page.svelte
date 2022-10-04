@@ -35,7 +35,8 @@
 
 	onMount(async () => {
 		const url = `/stats/${ign}/${profileName}`;
-		if ($page.url.pathname !== url) history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
+		if ($page.url.pathname !== url)
+			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
 
 		// console.log(account);
 		// console.log({ profiles });

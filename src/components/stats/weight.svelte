@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { WeightInfo } from "$db/models/users";
+	import type { WeightInfo } from '$db/models/users';
 
 	export let weightInfo: WeightInfo;
 

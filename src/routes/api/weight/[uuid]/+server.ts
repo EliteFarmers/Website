@@ -45,7 +45,7 @@ export const GET: RequestHandler = async ({ params }) => {
 
 	// If the profile data is recent enough, use the cached data
 	if (Date.now() - profilesData.last_fetched < PROFILE_UPDATE_INTERVAL && info.profiles) {
-		return new Response(JSON.stringify(info), { status: 200 }); 
+		return new Response(JSON.stringify(info), { status: 200 });
 	}
 
 	const weightData = CalculateWeight(profiles);
