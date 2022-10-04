@@ -17,11 +17,12 @@
 
 	onMount(() => {
 		percent = Math.round(progress.ratio * 100);
+		const lang = navigator.language;
 
 		readable =
 			progress.goal !== undefined
-				? toReadable(progress.progress) + ' / ' + toReadable(progress.goal)
-				: toReadable(progress.progress);
+				? toReadable(progress.progress, lang) + ' / ' + toReadable(progress.goal, lang)
+				: toReadable(progress.progress, lang);
 
 		expanded =
 			progress.goal !== undefined
