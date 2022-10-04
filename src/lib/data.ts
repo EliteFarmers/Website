@@ -3,6 +3,7 @@ import type {
 	AccountInfo,
 	APISettings,
 	CommunityUpgrades,
+	CommunityUpgradeState,
 	ContestData,
 	CraftedMinions,
 	CropName,
@@ -200,14 +201,16 @@ function formatPlayer(player: PlayerData) {
 	return player;
 }
 
-export async function GetProfiles(profiles: RawProfileData[], uuid: string, user?: User) {
+export async function GetProfiles(profiles: RawProfileData[] | null, uuid: string, user?: User) {
 	const data: Profiles = {
-		success: profiles.length > 0,
+		success: (profiles && profiles.length > 0) ?? false,
 		last_fetched: Date.now(),
-		times_fetched: user?.skyblock?.times_fetched ?? 0,
+		times_fetched: user?.skyblock?.times_fetched ?? 1,
 		version: RESPONSE_VERSION,
 		profiles: [],
 	};
+
+	if (!data.success || !profiles) return data;
 
 	if (!user?.skyblock?.success) {
 		data.last_fetched = user?.skyblock?.last_fetched ?? Date.now();
@@ -308,7 +311,7 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 			community_upgrades: getCommunityUpgradeData(profile),
 			game_mode: profile.game_mode,
 			banking: getBankingData(profile),
-			last_save: profile.last_save,
+			selected: profile.selected,
 			api: getAPISettings(memberData),
 		});
 	}
@@ -369,10 +372,8 @@ async function formatMembers(members: RawProfileMembers, uuid: string) {
 			memberName = account?.account.name ?? 'Unknown';
 		}
 
-		data.push({ uuid: memberUUID, last_seen: member.last_save, ign: memberName });
+		data.push({ uuid: memberUUID, ign: memberName });
 	}
-
-	data.sort((a, b) => b.last_seen - a.last_seen);
 
 	return { members: data, minions };
 }
@@ -389,9 +390,9 @@ function getBankingData(profile: ProfileData | RawProfileData) {
 function getCommunityUpgradeData(profile: RawProfileData) {
 	if (!profile.community_upgrades) return undefined;
 
-	const upgrades = profile.community_upgrades.upgrade_states;
+	const upgrades = profile.community_upgrades.upgrade_states as CommunityUpgradeState[] | undefined;
 
-	if (upgrades.length < 1) return undefined;
+	if (upgrades && upgrades.length < 1) return undefined;
 
 	const data: CommunityUpgrades = {
 		minion_slots: 0,
@@ -401,7 +402,7 @@ function getCommunityUpgradeData(profile: RawProfileData) {
 		coop_slots: 0,
 	};
 
-	for (const upgrade of upgrades) {
+	for (const upgrade of upgrades ?? []) {
 		if (data[upgrade.upgrade] > upgrade.tier) continue;
 		data[upgrade.upgrade] = upgrade.tier;
 	}
@@ -579,7 +580,7 @@ function condenseCollTiers(member: RawProfileMember) {
 		const collection = key.substring(0, index);
 		const tier = key.substring(index + 1);
 
-		tiers[collection] = Math.max(tiers[collection], parseInt(tier));
+		tiers[collection] = Math.max((tiers[collection] as number | undefined) ?? 0, parseInt(tier));
 	}
 
 	delete member.unlocked_coll_tiers;

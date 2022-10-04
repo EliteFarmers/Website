@@ -36,7 +36,7 @@ export interface ProfileData {
 	community_upgrades?: CommunityUpgrades;
 	game_mode?: string;
 	banking?: BankingData;
-	last_save?: TimestampMills;
+	selected: boolean;
 	coop: boolean;
 	api: APISettings;
 }
@@ -60,7 +60,6 @@ export interface APISetting {
 interface MemberData {
 	ign: string;
 	uuid: UUID;
-	last_seen: TimestampMills;
 }
 
 type CommunityUpgradeNames = 'minion_slots' | 'island_size' | 'guests_count' | 'coins_allowance' | 'coop_slots';
@@ -76,13 +75,12 @@ export interface RawProfileData {
 	community_upgrades?: RawCommunityUpgrades;
 	game_mode?: string;
 	banking?: BankingData;
-	last_save?: TimestampMills;
+	selected: boolean;
 }
 
 export type RawProfileMembers = Record<UUID, RawProfileMember>;
 
 export interface ProfileMember {
-	last_save: TimestampMills;
 	inventories: Inventories;
 	skills?: ExperienceSkills;
 	collection?: Record<string, number>;
@@ -163,7 +161,6 @@ export interface Inventories {
 }
 
 export interface RawProfileMember {
-	last_save: TimestampMills;
 	inv_armor: NBTData;
 	experience_skill_alchemy: number;
 	experience_skill_carpentry: number;
@@ -274,7 +271,6 @@ interface RawAPIProfile {
 }
 
 interface RawAPIMember {
-	last_save: number;
 	experience_skill_farming: number;
 	collection: Record<string, number>;
 	crafted_generators: string[];
