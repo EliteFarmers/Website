@@ -9,9 +9,11 @@
 
 	export let account: AccountData;
 	export let player: PlayerInfo;
-	export let profileNames: string[];
+	export let profileIds: { id: string; name: string }[];
 	export let members: MemberData[] | undefined;
 	export let linked: boolean;
+
+	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name));
 
 	const playerData = player.player;
 
@@ -20,8 +22,8 @@
 	const plusColor = rank?.plusColor;
 </script>
 
-<section class="lg:flex justify-middle p-4 my-4 mx-0 sm:mx-4 bg-gray-100">
-	<div class="flex lg:w-1/2 justify-items-middle justify-start sm:justify-center">
+<section class="md:flex justify-middle p-4 my-4 mx-0 sm:mx-4 bg-gray-100">
+	<div class="flex w-full justify-items-middle justify-start sm:justify-center">
 		<!-- Player avatar image -->
 		<div class="hidden sm:flex justify-end align-middle lg:w-1/4">
 			<div class="mx-8 mb-2">
@@ -48,20 +50,20 @@
 							{#each members ?? [] as member}
 								<a
 									data-sveltekit-reload
-									href={`${PUBLIC_HOST_URL}/stats/${member.ign ?? member.uuid}/${profileNames[0]}`}
-									class="p-1 text-body-sm text-gray-600 hover:text-gray-900">{member.ign}</a
+									href={`${PUBLIC_HOST_URL}/stats/${member.ign ?? member.uuid}/${profileIds[0].id}`}
+									class="p-1 text-body text-gray-600 hover:text-gray-900">{member.ign}</a
 								>
 							{/each}
 						</div>
 					</Dropdown>
-					<Dropdown hasItems={(profileNames ?? []).length > 0}>
-						<h1 slot="top">{profileNames[0]}</h1>
+					<Dropdown hasItems={(profiles ?? []).length > 0}>
+						<h1 slot="top">{profileIds[0].name}</h1>
 						<div slot="rest" class="grid col-span-1">
-							{#each profileNames ?? [] as name}
+							{#each profiles ?? [] as pId}
 								<a
 									data-sveltekit-reload
-									href={`${PUBLIC_HOST_URL}/stats/${account.name}/${name}`}
-									class="p-1 text-body-sm text-gray-600 hover:text-gray-900">{name}</a
+									href={`${PUBLIC_HOST_URL}/stats/${account.name}/${pId.name}`}
+									class="p-1 text-body text-gray-600 hover:text-gray-900">{pId.name}</a
 								>
 							{/each}
 						</div>

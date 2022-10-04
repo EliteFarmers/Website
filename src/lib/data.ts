@@ -495,6 +495,7 @@ function formatContests(member: RawProfileMember) {
 
 	const jacob: JacobData = {
 		medals: jacob2?.medals_inv ?? { bronze: 0, silver: 0, gold: 0 },
+		earned_medals: { bronze: 0, silver: 0, gold: 0 },
 		perks: jacob2?.perks ?? { double_drops: 0, farming_level_cap: 0 },
 		participations: 0,
 		contests: contests,
@@ -507,14 +508,28 @@ function formatContests(member: RawProfileMember) {
 
 		const split = contestKey.split(':');
 		const cropName = getCropName(split[2]);
-		if (!cropName) continue;
-		if (contest.collected >= 100) jacob.participations++;
+		if (!cropName || contest.collected < 100) continue;
+
+		jacob.participations++;
+
+		const position = contest.claimed_position;
+		const participants = contest.claimed_participants;
+
+		if (position !== undefined && participants) {
+			if (position <= participants * 0.05 + 1) {
+				jacob.earned_medals.gold++;
+			} else if (position <= participants * 0.25 + 1) {
+				jacob.earned_medals.silver++;
+			} else if (position <= participants * 0.6 + 1) {
+				jacob.earned_medals.bronze++;
+			}
+		}
 
 		contests[cropName].push({
 			collected: contest.collected,
 			timestamp: getContestTimeStamp(contestKey),
-			position: contest.claimed_position,
-			participants: contest.claimed_participants,
+			position: position,
+			participants: participants,
 		});
 	}
 
