@@ -305,6 +305,7 @@ export interface PlayerData {
 	karma: number;
 	rank?: RankName;
 	newPackageRank?: RankName;
+	monthlyPackageRank?: 'NONE' | 'SUPERSTAR';
 	rankPlusColor?: PlusColor;
 	socialMedia?: {
 		links?: {
