@@ -10,3 +10,17 @@ export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	SUGAR_CANE: 'Sugar Cane',
 	WHEAT: 'Wheat',
 };
+
+export const API_CROP_TO_CROP = {
+	WHEAT: 'wheat',
+	POTATO_ITEM: 'potato',
+	CARROT_ITEM: 'carrot',
+	MELON: 'melon',
+	PUMPKIN: 'pumpkin',
+	CACTUS: 'cactus',
+	SUGAR_CANE: 'sugar_cane',
+	INK_SACK: 'cocoa',
+	'INK_SACK:3': 'cocoa',
+	MUSHROOM_COLLECTION: 'mushroom',
+	NETHER_STALK: 'nether_wart',
+};
