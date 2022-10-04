@@ -137,6 +137,7 @@ export interface JacobContest {
 
 export interface JacobData {
 	medals: MedalInventory;
+	earned_medals: MedalInventory;
 	perks: FarmingPerks;
 	participations: number;
 	contests: ContestData;

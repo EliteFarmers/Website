@@ -2,7 +2,7 @@
 	import type { DiscordUser } from '$db/models/users';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
 	import { navigating } from '$app/stores';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { slide } from 'svelte/transition';
@@ -15,10 +15,13 @@
 	async function search() {
 		const isAtStats = $page.url.pathname.startsWith('/stats');
 
-		await goto(`/stats/${searchVal}`);
-
+		const url = `${$page.url.origin}/stats/${searchVal}`;
 		if (isAtStats) {
+			window.location.href = url;
 			location.reload();
+		} else {
+			await goto(url);
+			searchVal = '';
 		}
 	}
 </script>

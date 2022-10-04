@@ -33,3 +33,10 @@ export async function FetchNewProfiles(uuid: string, last_fetched: number, delay
 		return undefined;
 	}
 }
+
+export function RoundToFixed(num: number | null, fixed = 2) {
+	if (num === null) return 0;
+
+	const divider = Math.pow(10, fixed);
+	return Math.round((num + Number.EPSILON) * divider) / divider;
+}

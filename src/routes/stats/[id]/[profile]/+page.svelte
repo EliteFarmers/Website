@@ -12,44 +12,19 @@
 	import Skills from '$comp/stats/skills.svelte';
 	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
+	import Weight from '$comp/stats/weight.svelte';
+	import Collections from '$comp/stats/collections.svelte';
 
 	import type { PageData } from './$types';
 	export let data: PageData;
 
 	const account = data.account;
-	let profiles = data.profiles;
+	const profileIds = data.profiles;
 	const player = data.player;
 	const { id: uuid, name: ign, properties } = account;
 
 	let profileName = data.profileName;
-	let profile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
-
-	if (!profile && profiles.profiles.length > 0) {
-		const recentProfile = profiles.profiles.sort((a, b) => b.member.last_save - a.member.last_save)[0];
-		profileName = recentProfile.cute_name;
-		profile = recentProfile;
-	}
-
-	if (!profile) {
-		throw error(404, `No profile found matching "${profileName}"`);
-	}
-
-	const profileNames = profiles.profiles.filter((p) => p.cute_name !== profile?.cute_name).map((p) => p.cute_name);
-	profileNames.unshift(profile?.cute_name);
-
-	$: {
-		profile = profiles.profiles.find((p) => p.cute_name.toUpperCase() === profileName.toUpperCase());
-
-		if (!profile && profiles.profiles.length > 0) {
-			const recentProfile = profiles.profiles.sort((a, b) => b.member.last_save - a.member.last_save)[0];
-			profileName = recentProfile.cute_name;
-			profile = recentProfile;
-		}
-
-		if (!profile) {
-			throw error(404, `No profile found matching "${profileName}"`);
-		}
-	}
+	let profile = data.profile;
 
 	const farmingXp = getLevelProgress(
 		'farming',
@@ -59,17 +34,18 @@
 	let showSkills = $page.url.href.includes('#Skills');
 
 	onMount(async () => {
-		// if (ign !== $page.params.id) history.replaceState(history.state, document.title, ign);
-		if (profileName !== $page.params.profile) history.replaceState(history.state, document.title, profileName);
+		const url = `/stats/${ign}/${profileName}`;
+		if ($page.url.pathname !== url)
+			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
 
 		// console.log(account);
 		// console.log({ profiles });
-		console.log({ player });
+		console.log(data.weight);
 
 		// If the data is old, fetch new data and update the page.
-		FetchNewProfiles(uuid, profiles.last_fetched).then((data) => {
+		FetchNewProfiles(uuid, data.last_fetched).then((data) => {
 			if (!data) return;
-			profiles = data;
+			// profiles = data;
 		});
 	});
 </script>
@@ -79,8 +55,14 @@
 </svelte:head>
 
 <main class="m-0 p-0 w-full">
-	<PlayerInfo {account} {player} members={profile?.members} {profileNames} linked={data.user.linked}>
-		<div class="flex lg:justify-start lg:w-1/2">
+	<PlayerInfo {account} {player} members={profile.members} {profileIds} linked={data.user.linked}>
+		<section class="flex justify-center lg:justify-start lg:pl-[20%] w-full">
+			<Weight weightInfo={data.weight} />
+		</section>
+	</PlayerInfo>
+
+	<section class="flex items-center justify-center w-full">
+		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
 			<div class="w-[90%]">
 				<Skillbar name="Farming" progress={farmingXp} />
 			</div>
@@ -102,7 +84,7 @@
 				</button>
 			</div>
 		</div>
-	</PlayerInfo>
+	</section>
 
 	{#if showSkills}
 		<div class="flex justify-center w-full" transition:slide={{ duration: 1000, easing: quadInOut }}>
@@ -111,6 +93,8 @@
 			</div>
 		</div>
 	{/if}
+
+	<Collections member={profile.member} weight={data.weight} />
 </main>
 
 <h1 id="Info" class="text-center text-body m-16">
@@ -118,6 +102,5 @@
 	{ign}
 	{profile}
 	{player?.player.socialMedia?.links?.DISCORD}
+	{data.weight?.farming?.total}
 </h1>
-
-<h1 class="text-center m-16 text-body">Views: {profiles.times_fetched}</h1>
