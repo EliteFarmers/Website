@@ -1,12 +1,24 @@
 <script lang="ts">
-	import { CROPS_MAX_TIER } from '$lib/constants/crops';
+	import crops from '$lib/collections';
 
 	export let name: string | undefined;
 	export let value: number;
-	export let tier: number;
 	export let weight: number;
 
-	const maxTier: number = name ? CROPS_MAX_TIER[name] ?? 0 : 0;
+	const crop = name ? crops.crops[name] : undefined;
+	let tier = 0;
+	let maxTier = 0;
+
+	if (crop) {
+		for (let i = crop.length - 1; i >= 0; i--) {
+			if (value >= crop[i]) {
+				tier = i + 1;
+				break;
+			}
+		}
+
+		maxTier = crop.length;
+	}
 </script>
 
 <section class="p-1 m-1 bg-gray-100 rounded-lg">
