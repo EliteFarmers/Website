@@ -17,7 +17,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		code: code,
 		redirect_uri: REDIRECT_URI,
 		state: state,
-		scope: 'identify email guilds',
+		scope: 'identify guilds',
 	};
 
 	const request = await fetch('https://discord.com/api/oauth2/token', {

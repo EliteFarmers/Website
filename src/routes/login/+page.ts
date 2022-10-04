@@ -10,7 +10,7 @@ const endpoint =
 	PUBLIC_DISCORD_CLIENT_ID +
 	'&redirect_uri=' +
 	encodeURIComponent(PUBLIC_DISCORD_REDIRECT_URI) +
-	'&response_type=code&scope=identify%20email%20guilds';
+	'&response_type=code&scope=identify%20guilds';
 
 export const load = () => {
 	if (!browser) {

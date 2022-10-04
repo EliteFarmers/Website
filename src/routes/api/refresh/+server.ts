@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		grant_type: 'refresh_token',
 		refresh_token: refreshToken,
 		redirect_uri: DISCORD_REDIRECT_URI,
-		scope: 'identify email guilds',
+		scope: 'identify guilds',
 		state: uuid,
 	};
 
