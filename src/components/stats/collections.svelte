@@ -9,7 +9,7 @@
 
 	const collections = Object.entries(member.collection ?? {})
 		.filter(([key]) => PROPER_CROP_NAME[key])
-		.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value, tier: member.collection_tiers?.[key] ?? 0 }));
+		.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value }));
 </script>
 
 <section class="py-4">
