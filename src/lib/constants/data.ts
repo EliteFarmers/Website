@@ -65,6 +65,7 @@ export const KEPT_PLAYER_FIELDS = [
 	'rank',
 	'rankPlusColor',
 	'newPackageRank',
+	'monthlyPackageRank',
 	'userLanguage',
 	'skyblock_extra',
 	'scorpius_bribe_',
