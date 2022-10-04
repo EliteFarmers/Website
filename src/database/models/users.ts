@@ -27,33 +27,25 @@ export interface DiscordUser {
 	accent_color?: string | null;
 }
 
-export interface WeightSource {
-	amount: number;
-	name: string;
-	bonus?: true;
-}
-
 export interface WeightBreakdown {
 	total: number;
 	bonus: number;
-	sources: WeightSource[];
+	sources: Record<string, number>;
+	bonuses: Record<string, number>;
 }
 
 export interface WeightInfo {
 	farming: WeightBreakdown;
 }
 
-export interface ProfileInfo {
-	profile_id: string;
-	weight: WeightInfo;
-}
+export type ProfileWeightInfo = Partial<Record<string, WeightInfo>>;
 
 export interface UserInfo {
 	linked: boolean;
 	id: string | null;
 	cheating: boolean;
 	times_fetched: number;
-	profiles: ProfileInfo[];
+	profiles: ProfileWeightInfo;
 }
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {

@@ -1,5 +1,5 @@
-import type { ProfileInfo, WeightSource } from '$db/models/users';
 import type { ProfileData, ProfileMember } from './skyblock';
+import type { ProfileWeightInfo } from '$db/models/users';
 import { RoundToFixed } from './util';
 import {
 	CROPS_PER_ONE_WEIGHT,
@@ -12,7 +12,7 @@ import {
 } from './constants/weights';
 
 export function CalculateWeight(profiles: ProfileData[]) {
-	const data: ProfileInfo[] = [];
+	const data: ProfileWeightInfo = {};
 
 	for (const profile of profiles) {
 		const tempCollections = calcCollections(profile.member);
@@ -20,25 +20,27 @@ export function CalculateWeight(profiles: ProfileData[]) {
 		const tempBonus = calcBonus(profile.member);
 		const bonus = computeBonusWeight(tempBonus);
 
-		const sources: WeightSource[] = [];
+		const sources: Record<string, number> = {};
 		tempCollections?.forEach((value, key) => {
-			sources.push({ name: key, amount: value });
+			sources[key] = (value as number | undefined) ?? 0;
+			if ((sources[key] as number | null) === null || isNaN(sources[key])) sources[key] = 0;
 		});
 
+		const bonuses: Record<string, number> = {};
 		tempBonus.forEach((value, key) => {
-			sources.push({ name: key, amount: value, bonus: true });
+			bonuses[key] = value;
 		});
 
-		data.push({
-			profile_id: profile.profile_id,
-			weight: {
-				farming: {
-					total: (weight ?? 0) + bonus,
-					bonus: bonus,
-					sources: sources,
-				},
+		const total = (weight ?? 0) + bonus;
+
+		data[profile.profile_id] = {
+			farming: {
+				total: isNaN(total) ? 0 : total,
+				bonus: bonus,
+				sources: sources,
+				bonuses: bonuses,
 			},
-		});
+		};
 	}
 
 	return data;
@@ -149,6 +151,10 @@ function calcBonus(member: ProfileMember) {
 
 function computeBonusWeight(bonus: Map<string, number>) {
 	let bonusWeight = 0;
+
+	if (bonus.size <= 0) {
+		return bonusWeight;
+	}
 
 	bonus.forEach((value) => {
 		bonusWeight += value;
