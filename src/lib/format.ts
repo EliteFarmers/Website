@@ -54,12 +54,9 @@ export function getLevelProgress(skill: Skill, xp: number, max?: number) {
 	};
 }
 
-export function toReadable(num: number) {
-	if (num >= 1000000000000) return (num / 1000000000000).toFixed(1) + ' T';
-	if (num >= 1000000000) return (num / 1000000000).toFixed(1) + ' B';
-	if (num >= 1000000) return (num / 1000000).toFixed(1) + ' M';
-	if (num >= 1000) return (num / 1000).toFixed(1) + ' K';
-	return num.toFixed(1);
+export function toReadable(num: number, locale = 'en-US') {
+	const formatter = new Intl.NumberFormat(locale, { notation: 'compact' });
+	return formatter.format(num);
 }
 
 /**
@@ -98,7 +95,7 @@ export function getContestTimeStamp(contestKey: string) {
 	// Parse the date and time from the contest key
 	const split = contestKey.split(':');
 	const skyblockYear = +split[0];
-	const skyblockMonth = +split[1].split('_')[0];
+	const skyblockMonth = +split[1].split('_')[0] - 1;
 	const skyblockDay = +split[1].split('_')[1];
 
 	return getTimeStamp(skyblockYear, skyblockMonth, skyblockDay);
