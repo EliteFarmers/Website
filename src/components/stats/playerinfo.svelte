@@ -18,7 +18,8 @@
 	const playerData = player.player;
 
 	const rankName =
-		playerData.monthlyPackageRank === 'SUPERSTAR' ? 'SUPERSTAR' : playerData.rank ?? playerData.newPackageRank;
+		playerData.rank ??
+		(playerData.monthlyPackageRank !== 'NONE' ? playerData.monthlyPackageRank : playerData.newPackageRank);
 	const rank = getRankDefaults(rankName);
 	const plus = rank?.plus ?? undefined;
 	const plusColor = rank?.plusColor;
