@@ -1,7 +1,6 @@
-import type { ServerLoad } from "@sveltejs/kit";	
+import type { ServerLoad } from '@sveltejs/kit';
 
 export const load: ServerLoad = ({ cookies }) => {
-	
 	cookies.set('discord_access_token', 'deleted;', {
 		path: '/',
 		maxAge: -1,
