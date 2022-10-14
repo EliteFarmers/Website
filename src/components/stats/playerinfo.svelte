@@ -34,9 +34,9 @@
 			</div>
 		</div>
 		<!-- Player name -->
-		<div class="flex justify-start justify-items-center w-full lg:w-1/4">
+		<div class="flex justify-center md:justify-start justify-items-center w-full lg:w-1/4">
 			<div class="w-full sm:inline-block grid col-span-1">
-				<div class="flex items-center -ml-1">
+				<div class="flex justify-cente sm:justify-start items-center -ml-1">
 					<Dropdown hasItems={(members ?? []).length > 0}>
 						<h1 slot="top" class="text-body-xl">
 							{#if rank && plus}
@@ -92,7 +92,7 @@
 								{:else}
 									<h1>Discord&nbsp;N/A</h1>
 								{/if}
-								<Tooltip text={linked ? 'Verified' : 'Unverified'}>
+								<div class="relative">
 									{#if linked}
 										<!-- Verified checkmark -->
 										<svg
@@ -118,7 +118,16 @@
 											/>
 										</svg>
 									{/if}
-								</Tooltip>
+									<Tooltip>
+										<p>
+											{#if linked}
+												Verified
+											{:else}
+												Not verified
+											{/if}
+										</p>
+									</Tooltip>
+								</div>
 							</div>
 						</div>
 						<div class="flex justify-start -ml-1">
