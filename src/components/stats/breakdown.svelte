@@ -1,23 +1,21 @@
 <script lang="ts">
-	import type { WeightBreakdown } from "$db/models/users";
-	import { PROPER_BONUS_NAME } from "$lib/constants/weights";
+	import type { WeightBreakdown } from '$db/models/users';
+	import { PROPER_BONUS_NAME } from '$lib/constants/weights';
 
 	export let weight: WeightBreakdown;
 
-	const sources = Object.entries(weight.sources ?? {})
-		.sort((a, b) => b[1] - a[1]);
+	const sources = Object.entries(weight.sources ?? {}).sort((a, b) => b[1] - a[1]);
 
-	const bonuses = Object.entries(weight.bonuses ?? {})
-		.sort((a, b) => a[0].localeCompare(b[0]));
+	const bonuses = Object.entries(weight.bonuses ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
 </script>
 
 <section class="py-4 flex justify-center align-middle" aria-labelledby="Breakdown">
 	<div class="w-[90%] md:w-[70%] bg-gray-100 rounded-lg p-4">
-		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown</h1>
+		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown - {weight.total.toLocaleString()}</h1>
 		<div class="block md:flex justify-evenly py-4">
 			<div class="w-full md:w-1/3">
 				<h3>
-					<span class="font-semibold text-2xl">Crops</span>
+					Crops
 					<span class="text-gray-500 pl-2">({(weight.total - weight.bonus).toLocaleString()})</span>
 				</h3>
 				{#each sources as [source, value]}
@@ -28,20 +26,15 @@
 				{/each}
 			</div>
 			<div class="w-full md:w-1/3">
-				<h3>
-					<span class="font-semibold text-2xl">Bonus</span>
-					<span class="text-gray-500 pl-2">({weight.bonus.toLocaleString()})</span>
-				</h3>
+				<h3>Bonus<span>({weight.bonus.toLocaleString()})</span></h3>
 				{#each bonuses as [bonus, value]}
 					<div class="item">
 						<div class="name capitalize">{PROPER_BONUS_NAME[bonus]}</div>
 						<div class="flex-none">{value.toLocaleString()}</div>
 					</div>
 				{/each}
-				<br>
-				<h3>
-					<span class="font-semibold text-2xl">Questions?</span>
-				</h3>
+				<br />
+				<h3>Questions?</h3>
 				<div class="text-md pt-1">
 					View all calculations on the <a href="/info" class="text-blue-600 hover:underline">info page</a>.
 				</div>
@@ -57,6 +50,14 @@
 
 	.name {
 		@apply flex-grow;
+	}
+
+	h3 {
+		@apply text-2xl font-semibold py-2;
+	}
+
+	h3 > span {
+		@apply text-xl text-gray-500 pl-2 font-normal;
 	}
 
 	/* Alternate background colors */
