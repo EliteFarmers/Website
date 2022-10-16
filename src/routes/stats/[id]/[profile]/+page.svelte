@@ -16,6 +16,7 @@
 	import Collections from '$comp/stats/collections.svelte';
 
 	import type { PageData } from './$types';
+	import APIstatus from '$comp/stats/apistatus.svelte';
 	export let data: PageData;
 
 	const account = data.account;
@@ -62,6 +63,8 @@
 			<Weight weightInfo={data.weight} />
 		</section>
 	</PlayerInfo>
+
+	<APIstatus api={profile.api} />
 
 	<section class="flex items-center justify-center w-full">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
