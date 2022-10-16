@@ -72,7 +72,7 @@ export function calcCollections(member: ProfileMember) {
 	collections.set('Pumpkin', RoundToFixed(PUMPKIN / CROPS_PER_ONE_WEIGHT.pumpkin));
 	collections.set('Melon', RoundToFixed(MELON / CROPS_PER_ONE_WEIGHT.melon));
 	collections.set('Mushroom', RoundToFixed(MUSHROOM / CROPS_PER_ONE_WEIGHT.mushroom));
-	collections.set('Cocoa', RoundToFixed(COCOA / CROPS_PER_ONE_WEIGHT.cocoa));
+	collections.set('Cocoa Beans', RoundToFixed(COCOA / CROPS_PER_ONE_WEIGHT.cocoa));
 	collections.set('Cactus', RoundToFixed(CACTUS / CROPS_PER_ONE_WEIGHT.cactus));
 	collections.set('Sugar Cane', RoundToFixed(CANE / CROPS_PER_ONE_WEIGHT.sugarcane));
 	collections.set('Nether Wart', RoundToFixed(WART / CROPS_PER_ONE_WEIGHT.netherwart));
