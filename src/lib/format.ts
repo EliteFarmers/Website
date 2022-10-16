@@ -59,7 +59,7 @@ export function toReadable(num: number, locale = 'en-US') {
 	const formatted = formatter.format(num);
 
 	// Add a space between the number and the unit
-	return formatted.replace(/(\d)([a-z]+)/i, '$1 $2'); 
+	return formatted.replace(/(\d)([a-z]+)/i, '$1 $2');
 }
 
 /**

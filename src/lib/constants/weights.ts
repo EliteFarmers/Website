@@ -23,7 +23,7 @@ export const WEIGHT_PER_GOLD_MEDAL = 0.5;
 export const MINION_REWARD_AT_TIER = 12;
 export const MINION_REWARD_WEIGHT = 5;
 
-export const PROPER_BONUS_NAME: Partial<Record<string, string>>  = {
+export const PROPER_BONUS_NAME: Partial<Record<string, string>> = {
 	minions: 'Tier 12 Minions',
 	medals: 'Gold Medals',
 	farminglevel: 'Farming Level',
