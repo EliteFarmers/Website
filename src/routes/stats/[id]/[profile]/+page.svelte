@@ -40,7 +40,7 @@
 
 		// console.log(account);
 		// console.log({ profiles });
-		console.log(data.weight);
+		// console.log(data.weight);
 
 		// If the data is old, fetch new data and update the page.
 		FetchNewProfiles(uuid, data.last_fetched).then((data) => {

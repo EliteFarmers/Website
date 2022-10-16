@@ -2,7 +2,7 @@
 	import type { DiscordUser } from '$db/models/users';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
 	import { navigating } from '$app/stores';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import { slide } from 'svelte/transition';
@@ -16,13 +16,14 @@
 		const isAtStats = $page.url.pathname.startsWith('/stats');
 
 		const url = `${$page.url.origin}/stats/${searchVal}`;
+
 		if (isAtStats) {
 			window.location.href = url;
-			location.reload();
+			goto(url);
 		} else {
 			await goto(url);
-			searchVal = '';
 		}
+		searchVal = '';
 	}
 </script>
 
@@ -35,7 +36,7 @@
 		</section>
 		<!-- Section that's centered in the nav bar -->
 		<section class="hidden sm:flex gap-2 mx-6 justify-items-center justify-center w-3/5 md:1/2">
-			<form class="m-0 p-0 w-[100%] flex justify-items-center align-middle" on:submit|preventDefault>
+			<form class="m-0 p-0 w-[100%] flex justify-items-center align-middle" on:submit|preventDefault={search}>
 				<input
 					class="w-5/6 mx-2 bg-gray-200 p-3 rounded-md hover:bg-gray-50"
 					type="text"
@@ -43,9 +44,10 @@
 					bind:value={searchVal}
 					disabled={$navigating !== null}
 				/>
-				<button
+				<a
+					data-sveltekit-reload
 					class="bg-gray-200 p-3 rounded-md hover:bg-gray-50"
-					on:click={search}
+					href="{PUBLIC_HOST_URL}/stats/{searchVal}"
 					disabled={$navigating !== null}
 				>
 					<svg class="h-4 w-4" viewBox="0 0 24 24">
@@ -54,13 +56,13 @@
 							d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
 						/>
 					</svg>
-				</button>
+				</a>
 			</form>
 		</section>
 		<section class="flex gap-2 ml-3 justify-end w-1/5 md:w-1/4">
-			<button
+			<a
 				class="block sm:hidden bg-gray-200 p-3 rounded-md hover:bg-gray-50"
-				on:click={() => goto(`${PUBLIC_HOST_URL}/`)}
+				href={`${PUBLIC_HOST_URL}/`}
 				disabled={$navigating !== null}
 			>
 				<svg class="h-4 w-4" viewBox="0 0 24 24">
@@ -69,7 +71,7 @@
 						d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
 					/>
 				</svg>
-			</button>
+			</a>
 			<!-- Login with discord styled button -->
 			<div hidden={discordUser !== false}>
 				<a
