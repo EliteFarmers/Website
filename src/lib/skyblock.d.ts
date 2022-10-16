@@ -50,7 +50,7 @@ export interface APISettings {
 
 export interface APISetting {
 	enabled: boolean;
-	last_fetched: TimestampMills;
+	last_changed: TimestampMills;
 	history: {
 		enabled: boolean;
 		fetched: TimestampMills;

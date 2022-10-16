@@ -241,14 +241,17 @@ export async function GetProfiles(profiles: RawProfileData[] | null, uuid: strin
 		let key: keyof APISettings;
 		for (key in apiSettings) {
 			apiSettings[key].history = oldProfile.api[key].history;
+			apiSettings[key].last_changed = oldProfile.api[key].last_changed;
 
 			const oldState = oldProfile.api[key];
 			const newState = profile.api[key];
 
 			if (oldState.enabled !== newState.enabled) {
+				apiSettings[key].last_changed = Date.now();
+
 				apiSettings[key].history.push({
 					enabled: oldProfile.api[key].enabled,
-					fetched: oldState.last_fetched,
+					fetched: oldState.last_changed,
 				});
 			}
 		}
@@ -456,22 +459,22 @@ function getAPISettings(member: ProfileMember) {
 	const settings: APISettings = {
 		skills: {
 			enabled: member.skills ? true : false,
-			last_fetched: Date.now(),
+			last_changed: Date.now(),
 			history: [],
 		},
 		collections: {
 			enabled: member.collection ? true : false,
-			last_fetched: Date.now(),
+			last_changed: Date.now(),
 			history: [],
 		},
 		inventory: {
 			enabled: member.inventories.player ? true : false,
-			last_fetched: Date.now(),
+			last_changed: Date.now(),
 			history: [],
 		},
 		vault: {
 			enabled: member.inventories.vault ? true : false,
-			last_fetched: Date.now(),
+			last_changed: Date.now(),
 			history: [],
 		},
 	};
