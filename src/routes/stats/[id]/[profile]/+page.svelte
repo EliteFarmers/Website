@@ -52,6 +52,8 @@
 
 <svelte:head>
 	<title>{ign}'s Stats</title>
+	<!-- Preload image -->
+	<link rel="preload" href="/images/cropatlas.png" as="image" />
 </svelte:head>
 
 <main class="m-0 p-0 w-full">
