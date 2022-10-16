@@ -24,3 +24,16 @@ export const API_CROP_TO_CROP = {
 	MUSHROOM_COLLECTION: 'mushroom',
 	NETHER_STALK: 'nether_wart',
 };
+
+export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
+	Cactus: 'CACTUS',
+	Carrot: 'CARROT',
+	'Cocoa Beans': 'COCOA',
+	Melon: 'MELON',
+	Mushroom: 'MUSHROOM',
+	'Nether Wart': 'NETHER_WARTS',
+	Potato: 'POTATO',
+	Pumpkin: 'PUMPKIN',
+	'Sugar Cane': 'SUGAR_CANE',
+	Wheat: 'WHEAT',
+};
