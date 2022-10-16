@@ -13,7 +13,11 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		}
 
 		const account = await fetch(`/api/account/${uuid}`);
-		const info = (await account.json()) as AccountInfo;
+		const info = (await account.json().catch(() => undefined)) as AccountInfo | undefined;
+
+		if (!info) {
+			throw error(404, 'Account not found!');
+		}
 
 		uuid = account.ok ? info.account.id : '';
 		ign = account.ok ? info.account.name : undefined;
