@@ -22,3 +22,10 @@ export const WEIGHT_PER_GOLD_MEDAL = 0.5;
 // Get 5 bonus weight for every tier 12 farming minion
 export const MINION_REWARD_AT_TIER = 12;
 export const MINION_REWARD_WEIGHT = 5;
+
+export const PROPER_BONUS_NAME: Partial<Record<string, string>> = {
+	minions: 'Tier 12 Minions',
+	medals: 'Gold Medals',
+	farminglevel: 'Farming Level',
+	anita: 'Anita Buff',
+};

@@ -56,7 +56,10 @@ export function getLevelProgress(skill: Skill, xp: number, max?: number) {
 
 export function toReadable(num: number, locale = 'en-US') {
 	const formatter = new Intl.NumberFormat(locale, { notation: 'compact' });
-	return formatter.format(num);
+	const formatted = formatter.format(num);
+
+	// Add a space between the number and the unit
+	return formatted.replace(/(\d)([a-z]+)/i, '$1 $2');
 }
 
 /**
