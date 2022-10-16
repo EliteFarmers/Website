@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte/internal';
 	import { page } from '$app/stores';
-	import { error } from '@sveltejs/kit';
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 
@@ -14,9 +13,10 @@
 	import Skillbar from '$comp/stats/skillbar.svelte';
 	import Weight from '$comp/stats/weight.svelte';
 	import Collections from '$comp/stats/collections.svelte';
+	import APIstatus from '$comp/stats/apistatus.svelte';
+	import Breakdown from '$comp/stats/breakdown.svelte';
 
 	import type { PageData } from './$types';
-	import APIstatus from '$comp/stats/apistatus.svelte';
 	export let data: PageData;
 
 	const account = data.account;
@@ -66,7 +66,7 @@
 
 	<APIstatus api={profile.api} />
 
-	<section class="flex items-center justify-center w-full">
+	<section class="flex items-center justify-center w-full py-4">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
 			<div class="w-[90%]">
 				<Skillbar name="Farming" progress={farmingXp} />
@@ -92,7 +92,7 @@
 	</section>
 
 	{#if showSkills}
-		<div class="flex justify-center w-full" transition:slide={{ duration: 1000, easing: quadInOut }}>
+		<div class="flex justify-center w-full pb-4" transition:slide={{ duration: 1000, easing: quadInOut }}>
 			<div class="w-[90%]">
 				<Skills member={profile?.member} />
 			</div>
@@ -100,6 +100,8 @@
 	{/if}
 
 	<Collections member={profile.member} weight={data.weight} />
+
+	<Breakdown weight={data.weight.farming} />
 </main>
 
 <h1 id="Info" class="text-center text-body m-16">
