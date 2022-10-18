@@ -64,7 +64,7 @@
 	<meta property="og:title" content="{ign} | Farming Weight" />
 	<meta property="og:description" content="View {ign}'s farming profile." />
 	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
-	<meta property="og:url" content="{$page.url.toString()}" />
+	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
 <main class="m-0 p-0 w-full">
