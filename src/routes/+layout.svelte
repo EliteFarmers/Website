@@ -1,47 +1,45 @@
 <script lang="ts">
-	import Nav from '$comp/nav.svelte';
 	import { page } from '$app/stores';
 	import { navigating } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+	import { Theme, themeStore } from '$stores/themeStore';
 
-	enum Theme {
-		Light = 'light',
-		Dark = 'dark',
-		Unset = 'unset',
-	};
-
-	let theme: Theme = Theme.Unset;
-	if (browser) {
-		const stored = localStorage.getItem('theme') ?? Theme.Unset;
-		theme = stored as Theme;
-	}
+	import Nav from '$comp/nav.svelte';
+	import Footer from '$comp/footer.svelte';
 
 	onMount(async () => {
-		const stored = localStorage.getItem('theme') ?? Theme.Unset;
-		
+		themeStore.subscribe((value) => {
+			if (value !== Theme.Unset) window.localStorage.setItem('theme', value);
+		});
+
+		const stored = window.localStorage.getItem('theme') ?? Theme.Unset;
+
 		if (stored === Theme.Unset) {
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-			if (prefersDark.matches) {
-				theme = Theme.Dark;
+			if (!prefersDark.matches) {
+				themeStore.set(Theme.Light);
 			} else {
-				theme = Theme.Light;
+				themeStore.set(Theme.Dark);
 			}
+		} else {
+			themeStore.set(stored as Theme);
 		}
 	});
 </script>
 
-<div class="{theme}">
+<div class="{$themeStore} relative min-h-screen pb-16">
 	<Nav discordUser={$page.data.discordUser} />
 
 	{#if $navigating}
 		<!-- Gray out the screen -->
-		<div class="absolute top-0 left-0 w-full h-full bg-gray-100 opacity-50" />
+		<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 opacity-50" />
 	{/if}
 
 	<div class="dark:bg-zinc-900">
 		<slot />
 	</div>
+
+	<Footer />
 </div>
 
 <style lang="postcss">
