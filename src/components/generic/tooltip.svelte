@@ -16,8 +16,6 @@
 		const { clientX, clientY } = e;
 		const { innerWidth, innerHeight } = window;
 
-		console.log({ clientWidth }, { clientHeight }, { clientX }, { clientY }, { innerWidth }, { innerHeight });
-
 		// If the tooltip is too wide, move it to the left
 		if (clientX + clientWidth > innerWidth) {
 			tooltip.style.left = `${clientX - clientWidth}px`;
@@ -40,19 +38,20 @@
 	}
 </script>
 
-<div class="dropdown absolute" on:mouseenter={on} on:mouseleave={off} on:mousedown={on}>
+<div
+	class="dropdown absolute top-0 left-0 min-h-full min-w-full z-10"
+	on:mouseenter={on}
+	on:mouseleave={off}
+	on:mousedown={on}
+>
 	<div class="z-10" hidden={!show}>
-		<div class="bg-gray-300 rounded-lg text-body p-3 top-2">
+		<div class="bg-gray-300 dark:bg-zinc-700 rounded-lg text-body p-3 top-2">
 			<slot />
 		</div>
 	</div>
 </div>
 
 <style lang="postcss">
-	.dropdown {
-		@apply absolute top-0 left-0 min-h-full min-w-full z-10;
-	}
-
 	.dropdown > * {
 		@apply relative;
 	}

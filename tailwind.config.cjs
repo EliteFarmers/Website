@@ -3,6 +3,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
 	mode: 'jit',
 	content: ['./src/**/*.svelte'],
+	darkMode: 'class',
 	theme: {
 		extend: {
 			fontSize: {
