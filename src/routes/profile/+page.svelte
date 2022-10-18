@@ -29,6 +29,7 @@
 		}
 
 		if (!skip && ((!linkValue && !user) || !linkValue.match(/^[a-zA-Z0-9_]{1,16}$/))) {
+			errorMessage = 'Invalid username';
 			return;
 		}
 
@@ -56,13 +57,23 @@
 
 <svelte:head>
 	<title>{discordUser.username}'s Profile</title>
+	<!-- Meta -->
+	<meta name="description" content="View {discordUser.username}'s farming profile." />
+	<meta name="keywords" content="farming, profile, Skyblock, weight, {discordUser.username}" />
+	<meta name="author" content="EliteDev" />
+	<meta name="robots" content="index, follow" />
+	<!-- Meta OG -->
+	<meta property="og:title" content="{discordUser.username} | Farming Weight" />
+	<meta property="og:description" content="View {discordUser.username}'s farming profile." />
+	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
+	<meta property="og:url" content="https://elitebot.dev/{discordUser.id}" />
 </svelte:head>
 
 <div class="flex flex-col justify-center items-center">
-	<div class="w-full max-w-xl">
-		<div class="bg-gray-200 dark:bg-zinc-800 shadow-md rounded m-8 px-8 pt-6 pb-8 mb-4">
+	<div class="w-full max-w-xl mb-8">
+		<div class="bg-gray-100 dark:bg-zinc-800 shadow-md rounded m-8 px-8 pt-6 pb-8 mb-4">
 			<div class="flex justify-between items-center">
-				<div class="flex items-center bg-gray-300 dark:bg-zinc-700 p-2 rounded-md">
+				<div class="flex items-center bg-gray-200 dark:bg-zinc-700 p-2 rounded-md">
 					<img
 						class="w-10 h-10 rounded-full mr-4"
 						src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
@@ -72,16 +83,18 @@
 				</div>
 				<div class="flex items-center">
 					<div class="text-xl font-bold leading-none">{discordUser.username}</div>
-					<div class="ml-2 text-gray-400 dark:text-zinc-300 text-md">#{discordUser.discriminator}</div>
+					<div class="ml-2 text-gray-500 dark:text-zinc-300 text-md">#{discordUser.discriminator}</div>
 				</div>
 			</div>
 			<div>
 				<br />
 				<div class="text-md">
-					UUID: <span class="text-sm text-gray-400 dark:text-zinc-300">{user.uuid}</span>
+					UUID: <span class="text-sm text-gray-500 dark:text-zinc-300"
+						>{user.uuid ?? 'Minecraft Account Unlinked'}</span
+					>
 				</div>
 				<div class="text-md">
-					Discord ID: <span class="text-sm text-gray-400 dark:text-zinc-300">{discordUser.id}</span>
+					Discord ID: <span class="text-sm text-gray-500 dark:text-zinc-300">{discordUser.id}</span>
 				</div>
 			</div>
 		</div>
@@ -98,16 +111,16 @@
 	<!-- Form to input username to link account -->
 	<form on:submit|preventDefault={linkSubmit} class="w-full max-w-md mb-16">
 		<div class="flex flex-col gap-4 items-center w-full">
-			<div class="grid col-span-1 relative">
+			<div class="grid col-span-1 relative w-full">
 				<input
 					hidden={user}
 					type="text"
 					name="username"
 					bind:value={linkValue}
-					class="w-full px-4 py-2 border-2 rounded"
+					class="w-full px-4 py-2 border-2 rounded text-black"
 					placeholder="Username"
 				/>
-				<span class="text-red-600 text-body-sm absolute p-1 -bottom-[100%] select-none">{errorMessage}</span>
+				<span class="text-red-600 text-sm absolute bottom-0 select-none">{errorMessage}</span>
 			</div>
 			{#if user}
 				<button
@@ -123,6 +136,27 @@
 				>
 					Link Account
 				</button>
+
+				<div class="text-center flex flex-col">
+					<h1 class="text-lg py-2">
+						Ensure <span class="text-green-500 select-all"
+							>{discordUser.username}#{discordUser.discriminator}</span
+						> is linked in Hypixel.net as follows:
+					</h1>
+					<video
+						autoplay
+						loop
+						muted
+						class="w-full max-w-md rounded-md"
+						src="/images/HypixelLink.mp4"
+						alt="How to link your Hypixel account"
+					/>
+					<h1 class="text-md py-2">
+						(Enter <span class="text-green-500 select-all"
+							>{discordUser.username}#{discordUser.discriminator}</span
+						>, the video is just the example)
+					</h1>
+				</div>
 			{/if}
 		</div>
 	</form>

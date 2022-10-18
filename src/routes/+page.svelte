@@ -39,12 +39,12 @@
 				/>
 			</div>
 			<button
-				class="p-2 m-4 rounded-lg border-2 border-white bg-green-300 hover:bg-green-400}"
+				class="p-2 m-4 rounded-lg border-2 border-white dark:border-green-800 bg-green-300 dark:bg-green-600 hover:bg-green-400}"
 				on:click={() => {
 					goto(`/stats/${enteredText}`);
 				}}
 			>
-				Confirm
+				Search
 			</button>
 		</form>
 	</div>
