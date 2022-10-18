@@ -4,23 +4,41 @@
 
 	export let weight: WeightBreakdown;
 
-	const sources = Object.entries(weight.sources ?? {}).sort((a, b) => b[1] - a[1]);
+	if (!weight) {
+		weight = {
+			total: 0,
+			bonus: 0,
+			sources: {},
+			bonuses: {},
+		};
+	}
 
-	const bonuses = Object.entries(weight.bonuses ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
+	const sources = Object.entries(weight?.sources ?? {}).sort((a, b) => b[1] - a[1]);
+	const bonuses = Object.entries(weight?.bonuses ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
+
+	if (sources.length === 0) {
+		sources.push(['None Found - API might be off', 0]);
+	}
+
+	if (bonuses.length === 0) {
+		bonuses.push(['No bonuses unlocked yet!', 0]);
+	}
 </script>
 
 <section class="py-4 flex justify-center align-middle" aria-labelledby="Breakdown">
-	<div class="w-[90%] md:w-[70%] bg-gray-100 rounded-lg p-4">
-		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown - {weight.total.toLocaleString()}</h1>
+	<div class="w-[90%] md:w-[70%] bg-gray-100 dark:bg-zinc-800 rounded-lg p-4">
+		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown - {weight?.total.toLocaleString()}</h1>
 		<div class="block md:flex justify-evenly py-4">
 			<div class="w-full md:w-1/3">
 				<h3>
 					Crops
-					<span class="text-gray-500 pl-2">({(weight.total - weight.bonus).toLocaleString()})</span>
+					<span class="text-gray-500 dark:text-zinc-300 pl-2"
+						>({(weight.total - weight.bonus).toLocaleString()})</span
+					>
 				</h3>
 				{#each sources as [source, value]}
 					<div class="item">
-						<div class="name">{source}</div>
+						<div class="flex-grow">{source}</div>
 						<div class="flex-none">{value.toLocaleString()}</div>
 					</div>
 				{/each}
@@ -29,7 +47,7 @@
 				<h3>Bonus<span>({weight.bonus.toLocaleString()})</span></h3>
 				{#each bonuses as [bonus, value]}
 					<div class="item">
-						<div class="name capitalize">{PROPER_BONUS_NAME[bonus]}</div>
+						<div class="flex-grow capitalize">{PROPER_BONUS_NAME[bonus] ?? bonus}</div>
 						<div class="flex-none">{value.toLocaleString()}</div>
 					</div>
 				{/each}
@@ -48,10 +66,6 @@
 		@apply flex flex-row items-center p-1;
 	}
 
-	.name {
-		@apply flex-grow;
-	}
-
 	h3 {
 		@apply text-2xl font-semibold py-2;
 	}
@@ -62,6 +76,6 @@
 
 	/* Alternate background colors */
 	.item:nth-child(odd) {
-		@apply bg-gray-200;
+		@apply bg-opacity-25 bg-gray-400;
 	}
 </style>

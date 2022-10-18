@@ -31,7 +31,7 @@
 </script>
 
 <div class="p-1 m-1 flex gap-4 w-full">
-	<div class="bg-gray-100 rounded-lg flex justify-center align-middle w-full">
+	<div class="bg-gray-100 dark:bg-zinc-800 rounded-lg flex justify-center align-middle w-full">
 		<div class="crop-container p-1 md:p-3">
 			<div class="crop" style="background-position: 0% {1000 - 100 * index}%;" />
 		</div>
@@ -45,7 +45,7 @@
 			</div>
 			<div class="segments h-full max-h-8 flex flex-row gap-[0.15rem] md:gap-1">
 				{#each Array.from({ length: maxTier }) as _, i}
-					<div class="w-1/6 h-[100%] {i < tier ? 'bg-green-500' : 'bg-gray-200'}" />
+					<div class="w-1/6 h-[100%] {i < tier ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}" />
 				{/each}
 			</div>
 		</div>

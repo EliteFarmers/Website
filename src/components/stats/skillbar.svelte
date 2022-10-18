@@ -35,7 +35,7 @@
 	<div class="relative w-[90%]">
 		<span>{name} <strong>{progress.level}</strong></span>
 		<div
-			class="relative w-[100%] bg-slate-300 h-8 rounded-lg"
+			class="relative w-[100%] bg-slate-300 dark:bg-zinc-500 h-8 rounded-lg"
 			on:mouseenter={() => (hovering = true)}
 			on:mouseleave={() => (hovering = false)}
 		>
@@ -47,7 +47,7 @@
 				<!-- Gold color to show completion -->
 				<div class="absolute top-0 left-0 w-full h-full bg-yellow-400 rounded-lg" style="opacity: 0.7;" />
 			{/if}
-			<div class="absolute grid align-middle justify-center w-[100%] h-[100%]">
+			<div class="absolute text-black grid align-middle justify-center w-[100%] h-[100%]">
 				<span>{hovering ? expanded : readable}</span>
 			</div>
 		</div>

@@ -21,7 +21,7 @@
 
 <section class="py-4">
 	<div class="flex justify-center align-middle">
-		<div class="md:w-[70%]">
+		<div class="w-[90%] md:w-[70%]">
 			{#each collections as item}
 				<CollectionBar {...item} weight={weight?.farming?.sources?.[item.name ?? ''] ?? 0} />
 			{/each}

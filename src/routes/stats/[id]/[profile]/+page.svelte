@@ -74,7 +74,7 @@
 			<div class="w-[10%]">
 				<!-- Collapse/expand button -->
 				<button
-					class="flex justify-center align-middle items-center w-full lg:h-16 h-full lg:p-4 bg-gray-200 rounded-lg"
+					class="flex justify-center align-middle items-center w-full lg:h-16 h-full lg:p-4 bg-gray-200 dark:bg-zinc-800 rounded-lg"
 					on:click={() => {
 						showSkills = !showSkills;
 					}}

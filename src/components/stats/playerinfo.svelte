@@ -25,7 +25,7 @@
 	const plusColor = rank?.plusColor;
 </script>
 
-<section class="md:flex justify-middle p-4 my-4 mx-0 sm:mx-4 bg-gray-100">
+<section class="md:flex justify-middle p-4 my-4 mx-0 sm:mx-4 bg-gray-100 dark:bg-zinc-800 rounded-lg relative z-10">
 	<div class="flex w-full justify-items-middle justify-start sm:justify-center">
 		<!-- Player avatar image -->
 		<div class="hidden sm:flex justify-end align-middle lg:w-1/4">
@@ -54,7 +54,8 @@
 								<a
 									data-sveltekit-reload
 									href={`${PUBLIC_HOST_URL}/stats/${member.ign ?? member.uuid}/${profileIds[0].id}`}
-									class="p-1 text-body text-gray-600 hover:text-gray-900">{member.ign}</a
+									class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
+									>{member.ign}</a
 								>
 							{/each}
 						</div>
@@ -66,7 +67,8 @@
 								<a
 									data-sveltekit-reload
 									href={`${PUBLIC_HOST_URL}/stats/${account.name}/${pId.name}`}
-									class="p-1 text-body text-gray-600 hover:text-gray-900">{pId.name}</a
+									class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
+									>{pId.name}</a
 								>
 							{/each}
 						</div>
@@ -84,7 +86,7 @@
 					</div>
 					<div class="block w-2/3 sm:w-1/2">
 						<div
-							class="text-body-lg inline-block p-2 px-3 m-1 lg:mt-2 ml-0 rounded-md bg-gray-200 items-center"
+							class="text-body-lg inline-block p-2 px-3 m-1 lg:mt-2 ml-0 rounded-md bg-gray-200 dark:bg-zinc-700 items-center"
 						>
 							<div class="flex items-center gap-2">
 								{#if playerData.socialMedia?.links?.DISCORD}
@@ -123,7 +125,7 @@
 											{#if linked}
 												Verified
 											{:else}
-												Not verified
+												Not&nbsp;verified
 											{/if}
 										</p>
 									</Tooltip>
@@ -132,12 +134,12 @@
 						</div>
 						<div class="flex justify-start -ml-1">
 							<a
-								class="p-2 px-3 m-1 text-body bg-gray-200 rounded-md"
+								class="p-2 px-3 m-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
 								href="https://sky.shiiyu.moe{$page.url.pathname}"
 								target="_blank">SkyCrypt</a
 							>
 							<a
-								class="p-2 px-3 m-1 text-body bg-gray-200 rounded-md"
+								class="p-2 px-3 m-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
 								href="https://plancke.io/hypixel/player/stats/{account.name}">Plancke</a
 							>
 						</div>
