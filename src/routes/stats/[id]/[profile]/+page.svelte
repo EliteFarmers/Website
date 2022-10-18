@@ -55,6 +55,16 @@
 	<title>{ign}'s Stats</title>
 	<!-- Preload image -->
 	<link rel="preload" href="/images/cropatlas.png" as="image" />
+	<!-- Meta -->
+	<meta name="description" content="View {ign}'s farming profile." />
+	<meta name="keywords" content="farming, profile, Skyblock, weight, {ign}" />
+	<meta name="author" content="EliteDev" />
+	<meta name="robots" content="index, follow" />
+	<!-- Meta OG -->
+	<meta property="og:title" content="{ign} | Farming Weight" />
+	<meta property="og:description" content="View {ign}'s farming profile." />
+	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
+	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
 <main class="m-0 p-0 w-full">

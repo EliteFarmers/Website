@@ -56,17 +56,7 @@
 </script>
 
 <svelte:head>
-	<title>{discordUser.username}'s Profile</title>
-	<!-- Meta -->
-	<meta name="description" content="View {discordUser.username}'s farming profile." />
-	<meta name="keywords" content="farming, profile, Skyblock, weight, {discordUser.username}" />
-	<meta name="author" content="EliteDev" />
-	<meta name="robots" content="index, follow" />
-	<!-- Meta OG -->
-	<meta property="og:title" content="{discordUser.username} | Farming Weight" />
-	<meta property="og:description" content="View {discordUser.username}'s farming profile." />
-	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
-	<meta property="og:url" content="https://elitebot.dev/{discordUser.id}" />
+	<title>Your Profile</title>
 </svelte:head>
 
 <div class="flex flex-col justify-center items-center">
