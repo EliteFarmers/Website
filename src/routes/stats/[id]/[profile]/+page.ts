@@ -30,6 +30,10 @@ export const load: PageLoad = async ({ params, fetch }) => {
 			userRes.json(),
 		])) as [Profiles, PlayerInfo, UserInfo];
 
+		const rankFetch = await fetch(`/api/leaderboard/weight/${account.id}`);
+		const rankData = (await rankFetch.json()) as { success: boolean; rank: number };
+		const rank = rankData.success ? rankData.rank : -1;
+
 		let profileId = params.profile;
 		let profileName = profileId;
 		// If the profile ID is long then it's a UUID, so we need to find the name
@@ -71,6 +75,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 			user: user,
 			weight: weight,
 			last_fetched: profiles.last_fetched,
+			rank: rank,
 		};
 	} catch (err) {
 		console.error(err);
