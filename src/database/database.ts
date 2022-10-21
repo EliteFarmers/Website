@@ -1,4 +1,5 @@
 import { POSTGRES_URI } from '$env/static/private';
+import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
 import {
@@ -22,13 +23,19 @@ const sequelize = new Sequelize(POSTGRES_URI, {
 
 const User = UsersInit(sequelize);
 
+let CachedLeaderboardUpdated = 0;
+let CachedLeaderboard: LeaderboardEntry[] = [];
+let CachedLeaderboardMap: Map<string, LeaderboardEntry> = new Map<string, LeaderboardEntry>();
 let isReady = false;
 
 export async function SyncTables() {
 	if (isReady) return;
 	isReady = true;
-	console.log('Connected to database.');
+
 	await User.sync({ force: false });
+	await FetchWeightLeaderboard();
+
+	console.log('Connected to database.');
 }
 
 // Runs once on startup
@@ -75,7 +82,13 @@ const infoDefaults: UserInfo = {
 	id: null,
 	cheating: false,
 	times_fetched: 0,
-	profiles: [],
+	highest: {
+		farming: {
+			weight: 0,
+			profile: 'N/A',
+		},
+	},
+	profiles: {},
 };
 
 export function CreateUser(uuid: string, ign: string) {
@@ -178,17 +191,69 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 	return UpdateUser({ uuid: uuid }, { info: newInfo });
 }
 
-export async function GetViewLeaderboard(limit = 20) {
+interface LeaderboardEntry {
+	uuid: string;
+	ign: string;
+	rank: number;
+	farming: {
+		weight: number;
+		profile: string;
+	};
+}
+
+export async function GetPlayerRank(uuid: string) {
+	const user = await GetUser(uuid);
+	if (!user || !user.skyblock?.profiles) return -1;
+
+	const now = Date.now();
+	if (now - CachedLeaderboardUpdated < LEADERBOARD_UPDATE_INTERVAL) {
+		return CachedLeaderboardMap.get(uuid)?.rank ?? -1;
+	}
+
+	await FetchWeightLeaderboard();
+	return CachedLeaderboardMap.get(uuid)?.rank ?? -1;
+}
+
+export async function GetWeightLeaderboard(offset = 0, limit = 10) {
+	limit = Math.min(limit, 1000);
+	offset = Math.min(offset, 1000 - limit);
+
+	const now = Date.now();
+	if (now - CachedLeaderboardUpdated < LEADERBOARD_UPDATE_INTERVAL) {
+		return CachedLeaderboard.slice(offset, offset + limit);
+	}
+
+	await FetchWeightLeaderboard();
+
+	return CachedLeaderboard.slice(offset, offset + limit);
+}
+
+export async function FetchWeightLeaderboard() {
 	const list = await User.findAll({
-		limit: limit,
+		limit: 1_000,
 		attributes: {
-			exclude: ['account', 'player', 'skyblock', 'createdAt', 'updatedAt', 'user'],
+			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
+			include: [[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming'), 'farming']],
 		},
-		where: { ['info.cheating']: { [Op.not]: true }, ['info.times_fetched']: { [Op.gt]: 0 } },
-		order: [['info.times_fetched', 'DESC']],
+		where: { ['info.cheating']: { [Op.not]: true } },
+		order: [[sequelize.literal('farming'), 'DESC']],
+		raw: true,
+		nest: true,
 	});
 
-	return list.sort((prev, next) => {
-		return (next.info?.times_fetched ?? 0) - (prev.info?.times_fetched ?? 0);
+	CachedLeaderboard = list.map((user, i) => ({ ...user, rank: i + 1 })) as unknown as LeaderboardEntry[];
+	CachedLeaderboardUpdated = Date.now();
+
+	CachedLeaderboardMap = new Map(CachedLeaderboard.map((user) => [user.uuid, user]));
+}
+
+export async function GetViewLeaderboard(limit = 10) {
+	const list = await User.findAll({
+		limit: limit,
+		attributes: ['uuid', 'ign', 'info'],
+		where: { ['info.cheating']: { [Op.not]: true }, ['info.times_fetched']: { [Op.gt]: 0 } },
+		order: sequelize.literal(`"User"."info"->'times_fetched' DESC`),
 	});
+
+	return list;
 }

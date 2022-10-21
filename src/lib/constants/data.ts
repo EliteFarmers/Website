@@ -1,6 +1,7 @@
 import type { PlusColor, RankName } from '$lib/skyblock';
 
-export const PROFILE_UPDATE_INTERVAL = 1000 * 60 * 10; // 10 minutes
+export const PROFILE_UPDATE_INTERVAL = 1; //1000 * 60 * 10; // 10 minutes
+export const LEADERBOARD_UPDATE_INTERVAL = 1000 * 60 * 5; // 5 minutes
 export const PLAYER_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 export const ACCOUNT_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 
