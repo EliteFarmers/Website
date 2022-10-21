@@ -29,12 +29,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.discordUser = discordUser;
 	event.locals.user = user;
 
-	if (cookies) for (const { name, value, expires } of cookies) {
-		event.cookies.set(name, value, {
-			path: '/',
-			expires: new Date(expires),
-		});
-	}
+	if (cookies)
+		for (const { name, value, expires } of cookies) {
+			event.cookies.set(name, value, {
+				path: '/',
+				expires: new Date(expires),
+			});
+		}
 
 	return await resolve(event);
 };
@@ -51,7 +52,7 @@ async function getUser(locals: App.Locals): Promise<{ session: App.Session; cook
 	if (locals.discord_access_token) {
 		const data = await fetchUser(locals.discord_access_token);
 		if (data.session.discordUser) return data;
-		
+
 		if (locals.discord_refresh_token) {
 			return refreshUser(locals.discord_refresh_token);
 		}
@@ -89,7 +90,7 @@ async function fetchUser(token: string): Promise<{ session: App.Session; cookies
 }
 
 async function refreshUser(token: string): Promise<{ session: App.Session; cookies?: CookieData[] }> {
-	const failure: { session: App.Session, cookies?: CookieData[] } = { session: { discordUser: false, user: false } };
+	const failure: { session: App.Session; cookies?: CookieData[] } = { session: { discordUser: false, user: false } };
 	const discord_request = await fetch(`${HOST}/api/refresh?code=${token}`);
 
 	try {
