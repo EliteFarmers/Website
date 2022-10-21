@@ -1,5 +1,5 @@
 import type { ProfileData, ProfileMember } from './skyblock';
-import type { ProfileWeightInfo } from '$db/models/users';
+import type { HighestWeights, ProfileWeightInfo } from '$db/models/users';
 import { RoundToFixed } from './util';
 import {
 	CROPS_PER_ONE_WEIGHT,
@@ -11,8 +11,9 @@ import {
 	WEIGHT_PER_GOLD_MEDAL,
 } from './constants/weights';
 
-export function CalculateWeight(profiles: ProfileData[]) {
+export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeights) {
 	const data: ProfileWeightInfo = {};
+	const highestData: HighestWeights = { ...highest, farming: { weight: 0, profile: 'N/A' } };
 
 	for (const profile of profiles) {
 		const tempCollections = calcCollections(profile.member);
@@ -32,18 +33,24 @@ export function CalculateWeight(profiles: ProfileData[]) {
 		});
 
 		const total = (weight ?? 0) + bonus;
+		const realTotal = isNaN(total) ? 0 : total;
 
 		data[profile.profile_id] = {
 			farming: {
-				total: isNaN(total) ? 0 : total,
+				total: realTotal,
 				bonus: bonus,
 				sources: sources,
 				bonuses: bonuses,
 			},
 		};
+
+		if (realTotal > highestData.farming.weight) {
+			highestData.farming.weight = realTotal;
+			highestData.farming.profile = profile.profile_id;
+		}
 	}
 
-	return data;
+	return { data, highestData };
 }
 
 export function calcCollections(member: ProfileMember) {
@@ -112,14 +119,18 @@ function calcBonus(member: ProfileMember) {
 		bonus.set('anita', anitaBuff * 2);
 	}
 
-	const earnedGolds = member.jacob.earned_medals.gold;
-	if (earnedGolds >= MAX_MEDAL_BONUS) {
-		bonus.set('medals', MAX_MEDAL_BONUS * WEIGHT_PER_GOLD_MEDAL);
-	} else {
-		const roundDown = Math.floor(earnedGolds / 50) * 50;
-		if (roundDown > 0) {
-			bonus.set('medals', roundDown * WEIGHT_PER_GOLD_MEDAL);
+	try {
+		const earnedGolds = member.jacob.earned_medals.gold;
+		if (earnedGolds >= MAX_MEDAL_BONUS) {
+			bonus.set('medals', MAX_MEDAL_BONUS * WEIGHT_PER_GOLD_MEDAL);
+		} else {
+			const roundDown = Math.floor(earnedGolds / 50) * 50;
+			if (roundDown > 0) {
+				bonus.set('medals', roundDown * WEIGHT_PER_GOLD_MEDAL);
+			}
 		}
+	} catch (e) {
+		// console.log(e);
 	}
 
 	// Tier 12 farming minions

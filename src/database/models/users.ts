@@ -38,6 +38,13 @@ export interface WeightInfo {
 	farming: WeightBreakdown;
 }
 
+export interface HighestWeights {
+	farming: {
+		weight: number;
+		profile: string;
+	};
+}
+
 export type ProfileWeightInfo = Partial<Record<string, WeightInfo>>;
 
 export interface UserInfo {
@@ -45,6 +52,7 @@ export interface UserInfo {
 	id: string | null;
 	cheating: boolean;
 	times_fetched: number;
+	highest: HighestWeights;
 	profiles: ProfileWeightInfo;
 }
 
