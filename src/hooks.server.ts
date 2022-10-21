@@ -4,6 +4,12 @@ import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL as HOST } from '
 import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
 import type { DiscordUser } from '$db/models/users';
 
+interface CookieData {
+	name: string;
+	value: string;
+	expires: string;
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
 	const browserCookies = cookie.parse(event.request.headers.get('cookie') ?? '');
 
@@ -23,18 +29,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.discordUser = discordUser;
 	event.locals.user = user;
 
-	const response = await resolve(event);
-
-	if (cookies) {
-		for (const cookie of cookies) {
-			response.headers.append('Set-Cookie', cookie);
+	if (cookies)
+		for (const { name, value, expires } of cookies) {
+			event.cookies.set(name, value, {
+				path: '/',
+				expires: new Date(expires),
+			});
 		}
-	}
 
-	return response;
+	return await resolve(event);
 };
 
-async function getUser(locals: App.Locals): Promise<{ session: App.Session; cookies?: string[] }> {
+async function getUser(locals: App.Locals): Promise<{ session: App.Session; cookies?: CookieData[] }> {
 	if (!locals.discord_access_token && !locals.discord_refresh_token) {
 		return { session: { discordUser: false, user: false } };
 	}
@@ -44,7 +50,12 @@ async function getUser(locals: App.Locals): Promise<{ session: App.Session; cook
 	}
 
 	if (locals.discord_access_token) {
-		return fetchUser(locals.discord_access_token);
+		const data = await fetchUser(locals.discord_access_token);
+		if (data.session.discordUser) return data;
+
+		if (locals.discord_refresh_token) {
+			return refreshUser(locals.discord_refresh_token);
+		}
 	}
 
 	// not authenticated, return empty user object
@@ -56,7 +67,7 @@ async function getUser(locals: App.Locals): Promise<{ session: App.Session; cook
 	};
 }
 
-async function fetchUser(token: string): Promise<{ session: App.Session; cookies?: string[] }> {
+async function fetchUser(token: string): Promise<{ session: App.Session; cookies?: CookieData[] }> {
 	const request = await fetch(`${DISCORD_API_URL}/users/@me`, {
 		headers: { Authorization: `Bearer ${token}` },
 	});
@@ -78,18 +89,17 @@ async function fetchUser(token: string): Promise<{ session: App.Session; cookies
 	}
 }
 
-async function refreshUser(token: string): Promise<{ session: App.Session; cookies?: string[] }> {
-	const failure: { session: App.Session } = { session: { discordUser: false, user: false } };
+async function refreshUser(token: string): Promise<{ session: App.Session; cookies?: CookieData[] }> {
+	const failure: { session: App.Session; cookies?: CookieData[] } = { session: { discordUser: false, user: false } };
 	const discord_request = await fetch(`${HOST}/api/refresh?code=${token}`);
-
-	if (discord_request.status !== 200) return failure;
 
 	try {
 		const discord_response = (await discord_request.json()) as {
 			discord_access_token: string;
-			discord_refresh_token: string;
-			cookies: string[];
+			cookies: CookieData[];
 		};
+
+		failure.cookies = discord_response.cookies;
 
 		if (!discord_response.discord_access_token) return failure;
 

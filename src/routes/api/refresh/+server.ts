@@ -57,12 +57,16 @@ export const GET: RequestHandler = async ({ url }) => {
 		JSON.stringify({
 			discord_access_token: response.access_token,
 			cookies: [
-				`discord_access_token=${
-					response.access_token
-				}; Expires=${accessTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
-				`discord_refresh_token=${
-					response.refresh_token
-				}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; HttpOnly; SameSite=Strict;`,
+				{
+					name: 'discord_access_token',
+					value: response.access_token,
+					expires: accessTokenExpires.toUTCString(),
+				},
+				{
+					name: 'discord_refresh_token',
+					value: response.refresh_token,
+					expires: refreshTokenExpires.toUTCString(),
+				},
 			],
 		})
 	);
