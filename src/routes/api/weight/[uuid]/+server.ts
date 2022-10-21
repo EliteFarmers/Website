@@ -48,8 +48,9 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(JSON.stringify(info), { status: 200 });
 	}
 
-	const weightData = CalculateWeight(profiles);
-	info.profiles = weightData;
+	const { data, highestData } = CalculateWeight(profiles, info.highest);
+	info.profiles = data;
+	info.highest = highestData;
 
 	void UpdateUserInfo(uuid, info);
 
