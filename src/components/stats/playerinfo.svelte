@@ -16,6 +16,7 @@
 	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name));
 
 	const playerData = player.player;
+	const discordName = playerData.socialMedia?.links?.DISCORD;
 
 	const rankName =
 		playerData.rank ??
@@ -89,8 +90,8 @@
 							class="text-body-lg inline-block p-2 px-3 m-1 lg:mt-2 ml-0 rounded-md bg-gray-200 dark:bg-zinc-700 items-center"
 						>
 							<div class="flex items-center gap-2">
-								{#if playerData.socialMedia?.links?.DISCORD}
-									<h1>{playerData.socialMedia?.links?.DISCORD}</h1>
+								{#if discordName}
+									<h1 class="whitespace-nowrap">{discordName}</h1>
 								{:else}
 									<h1>Discord&nbsp;N/A</h1>
 								{/if}
