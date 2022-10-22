@@ -38,16 +38,21 @@
 		<a class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/profile"
 			>Profile</a
 		>
-		<a class="block md:hidden bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/leaderboard"
-			>LB</a
+		<a
+			class="block md:hidden bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			href="/leaderboard">LB</a
 		>
-		<a class="hidden md:block bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/leaderboard"
-			>Leaderboard</a
+		<a
+			class="hidden md:block bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			href="/leaderboard">Leaderboard</a
 		>
 	</section>
 	<!-- Section that's centered in the nav bar -->
 	<section class="hidden sm:flex gap-2 mx-6 justify-items-center justify-center w-3/5 md:1/2">
-		<form class="m-0 p-0 w-[100%] flex justify-center justify-items-center align-middle" on:submit|preventDefault={search}>
+		<form
+			class="m-0 p-0 w-[100%] flex justify-center justify-items-center align-middle"
+			on:submit|preventDefault={search}
+		>
 			<input
 				class="w-4/6 mx-2 bg-gray-200 dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
 				type="text"

@@ -63,7 +63,7 @@
 
 <section class="flex flex-col mt-8 justify-center w-full">
 	<h1 class="text-2xl text-center">Farming Weight Leaderboard</h1>
-	<div class="flex flex-col lg:flex-row justify-center align-middle rounded-lg m-8 bg-gray-100 dark:bg-zinc-800">
+	<div class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800">
 		<div class="flex flex-col gap-2 p-2 w-full">
 			{#each firstHalf as entry}
 				<Entry {entry} {jump} />
@@ -77,10 +77,10 @@
 	</div>
 	<div class="flex w-full justify-center gap-4 text-center">
 		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(0)}> First </button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start - 10)}>
+		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start - 20)}>
 			Back
 		</button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start + 10)}>
+		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start + 20)}>
 			Next
 		</button>
 		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(990)}> Last </button>
