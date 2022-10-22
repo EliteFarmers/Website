@@ -191,7 +191,7 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 	return UpdateUser({ uuid: uuid }, { info: newInfo });
 }
 
-interface LeaderboardEntry {
+export interface LeaderboardEntry {
 	uuid: string;
 	ign: string;
 	rank: number;
@@ -214,7 +214,7 @@ export async function GetPlayerRank(uuid: string) {
 	return CachedLeaderboardMap.get(uuid)?.rank ?? -1;
 }
 
-export async function GetWeightLeaderboard(offset = 0, limit = 10) {
+export async function GetWeightLeaderboard(offset = 0, limit = 20) {
 	limit = Math.min(limit, 1000);
 	offset = Math.min(offset, 1000 - limit);
 
@@ -235,7 +235,7 @@ export async function FetchWeightLeaderboard() {
 			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
 			include: [[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming'), 'farming']],
 		},
-		where: { ['info.cheating']: { [Op.not]: true } },
+		where: { ['info.cheating']: { [Op.not]: true }, ['info.highest.farming.weight']: { [Op.gt]: 0 } },
 		order: [[sequelize.literal('farming'), 'DESC']],
 		raw: true,
 		nest: true,
