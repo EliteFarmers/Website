@@ -63,7 +63,9 @@
 
 <section class="flex flex-col mt-8 justify-center w-full">
 	<h1 class="text-2xl text-center">Farming Weight Leaderboard</h1>
-	<div class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800">
+	<div
+		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"
+	>
 		<div class="flex flex-col gap-2 p-2 w-full">
 			{#each firstHalf as entry}
 				<Entry {entry} {jump} />

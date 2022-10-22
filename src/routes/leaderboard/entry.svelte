@@ -13,7 +13,7 @@
 	class="flex gap-2 justify-between align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
-	>
+>
 	<div class="flex gap-2 justify-start align-middle">
 		<div class="text-green-800 dark:text-green-300 text-end w-8 sm:w-10">
 			<h1 class="text-md xs:text-lg sm:text-2xl">#{entry.rank}</h1>
