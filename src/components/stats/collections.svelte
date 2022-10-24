@@ -9,21 +9,39 @@
 
 	const collections = Object.entries(member.collection ?? {})
 		.filter(([key]) => PROPER_CROP_NAME[key])
-		.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value, minionTierField: 0 }))
-		.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
+		.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value, minionTierField: 0, weight: 0 }));
 
 	for (const collection of collections) {
 		if (!collection.name) continue;
+
 		const minion = PROPER_CROP_TO_MINION[collection.name] ?? 'no';
 		collection.minionTierField = member.minions[minion] ?? 0;
+		collection.weight = weight?.farming?.sources?.[collection.name] ?? 0;
+	}
+
+	let list = collections.sort((a, b) => b.weight - a.weight);
+
+	let weightSort = true;
+	function swap() {
+		weightSort = !weightSort;
+		list = [];
+		setTimeout(() => {
+			list = weightSort
+				? collections.sort((a, b) => b.weight - a.weight)
+				: collections.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
+		}, 0);
 	}
 </script>
 
 <section class="py-4">
 	<div class="flex justify-center align-middle">
 		<div class="w-[90%] md:w-[70%]">
-			{#each collections as item}
-				<CollectionBar {...item} weight={weight?.farming?.sources?.[item.name ?? ''] ?? 0} />
+			<button
+				class="ml-2 -mt-4 py-1 rounded-md w-20 bg-gray-100 dark:bg-zinc-800 whitespace-nowrap text-sm hover:font-semibold"
+				on:click={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
+			>
+			{#each list as item}
+				<CollectionBar {...item} />
 			{/each}
 		</div>
 	</div>
