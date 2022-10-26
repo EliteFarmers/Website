@@ -9,8 +9,11 @@
 	} from '$env/static/public';
 	import { onMount } from 'svelte';
 
-	import PlayerCard from '$comp/generic/playercard.svelte';
 	import TwoPanel from '$comp/generic/twopanel.svelte';
+	import Entry from './leaderboard/entry.svelte';
+
+	import type { PageData } from './$types';
+	export let data: PageData;
 
 	let enteredText = '';
 	let topViewed: Partial<User>[] = [];
@@ -98,13 +101,19 @@
 		</div>
 	</TwoPanel>
 
-	<section class="flex justify-center mt-10">
-		<div class="grid gap-2 grid-cols-2 md:grid-cols-5 justify-center w-[90%]">
-			{#if topViewed.length > 0}
-				{#each topViewed as player}
-					<PlayerCard user={player} />
-				{/each}
-			{/if}
+	<section class="flex justify-center mt-4 mb-10">
+		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
+			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
+			{#each data.lb as entry}
+				<Entry {entry} jump={undefined} />
+			{/each}
+			<div class="flex justify-center w-full">
+				<a
+					href="/leaderboard"
+					class="text-center max-w-md px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-800"
+					>View Full Leaderboard</a
+				>
+			</div>
 		</div>
 	</section>
 </main>
