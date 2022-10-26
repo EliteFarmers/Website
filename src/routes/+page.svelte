@@ -1,7 +1,12 @@
 <script lang="ts">
 	import type { User } from '$db/models/users';
 	import { goto } from '$app/navigation';
-	import { PUBLIC_HOST_URL, PUBLIC_BOT_INVITE, PUBLIC_SUPPORT_SERVER_INVITE, PUBLIC_COMMUNITY_INVITE } from '$env/static/public';
+	import {
+		PUBLIC_HOST_URL,
+		PUBLIC_BOT_INVITE,
+		PUBLIC_SUPPORT_SERVER_INVITE,
+		PUBLIC_COMMUNITY_INVITE,
+	} from '$env/static/public';
 	import { onMount } from 'svelte';
 
 	import PlayerCard from '$comp/generic/playercard.svelte';
@@ -78,7 +83,10 @@
 			<h1 class="p-2 mb-4 w-full text-center bg-gray-200 dark:bg-zinc-700 rounded-md text-xl">
 				Add To Your Server
 			</h1>
-			<p class="w-full text-center">Quickly access stats and leaderboard in Discord! Elite Bot is verified and already present in more than 100 servers!</p>
+			<p class="w-full text-center">
+				Quickly access stats and leaderboard in Discord! Elite Bot is verified and already present in more than
+				100 servers!
+			</p>
 			<div class="flex justify-center">
 				<a
 					href={PUBLIC_BOT_INVITE}
