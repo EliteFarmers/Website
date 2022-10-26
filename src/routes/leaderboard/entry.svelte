@@ -2,7 +2,7 @@
 	import type { LeaderboardEntry } from '$db/database';
 
 	export let entry: LeaderboardEntry;
-	export let jump: string | null;
+	export let jump: string | undefined;
 
 	const highlight = entry.ign === jump;
 
