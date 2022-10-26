@@ -29,13 +29,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.discordUser = discordUser;
 	event.locals.user = user;
 
-	if (cookies)
+	if (cookies && cookies.length > 0) {
 		for (const { name, value, expires } of cookies) {
-			event.cookies.set(name, value, {
-				path: '/',
-				expires: new Date(expires),
-			});
+			if (value === 'deleted') {
+				event.cookies.delete(name);
+			} else {
+				event.cookies.set(name, value, {
+					path: '/',
+					expires: new Date(expires),
+				});
+			}
 		}
+	}
 
 	return await resolve(event);
 };
@@ -90,7 +95,23 @@ async function fetchUser(token: string): Promise<{ session: App.Session; cookies
 }
 
 async function refreshUser(token: string): Promise<{ session: App.Session; cookies?: CookieData[] }> {
-	const failure: { session: App.Session; cookies?: CookieData[] } = { session: { discordUser: false, user: false } };
+	const failure: { session: App.Session; cookies?: CookieData[] } = { 
+		session: { 
+			discordUser: false, user: false 
+		},
+		cookies: [
+			{
+				name: 'discord_access_token',
+				value: 'deleted',
+				expires: new Date(0).toUTCString(),
+			},
+			{
+				name: 'discord_refresh_token',
+				value: 'deleted',
+				expires: new Date(0).toUTCString(),
+			},
+		]
+	};
 	const discord_request = await fetch(`${HOST}/api/refresh?code=${token}`);
 
 	try {
@@ -98,8 +119,6 @@ async function refreshUser(token: string): Promise<{ session: App.Session; cooki
 			discord_access_token: string;
 			cookies: CookieData[];
 		};
-
-		failure.cookies = discord_response.cookies;
 
 		if (!discord_response.discord_access_token) return failure;
 
