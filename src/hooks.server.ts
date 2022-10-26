@@ -95,9 +95,10 @@ async function fetchUser(token: string): Promise<{ session: App.Session; cookies
 }
 
 async function refreshUser(token: string): Promise<{ session: App.Session; cookies?: CookieData[] }> {
-	const failure: { session: App.Session; cookies?: CookieData[] } = { 
-		session: { 
-			discordUser: false, user: false 
+	const failure: { session: App.Session; cookies?: CookieData[] } = {
+		session: {
+			discordUser: false,
+			user: false,
 		},
 		cookies: [
 			{
@@ -110,7 +111,7 @@ async function refreshUser(token: string): Promise<{ session: App.Session; cooki
 				value: 'deleted',
 				expires: new Date(0).toUTCString(),
 			},
-		]
+		],
 	};
 	const discord_request = await fetch(`${HOST}/api/refresh?code=${token}`);
 
