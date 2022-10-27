@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { FARMING_LEVEL_50_BONUS, FARMING_LEVEL_60_BONUS, MAX_MEDAL_BONUS, MINION_REWARD_AT_TIER, MINION_REWARD_WEIGHT } from '$lib/constants/weights';
+	import {
+		FARMING_LEVEL_50_BONUS,
+		FARMING_LEVEL_60_BONUS,
+		MAX_MEDAL_BONUS,
+		MINION_REWARD_AT_TIER,
+		MINION_REWARD_WEIGHT,
+	} from '$lib/constants/weights';
 </script>
 
 <table class="w-full">
@@ -33,14 +39,18 @@
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">
 			<td>Farming Minions</td>
-			<td>For each unlocked tier {MINION_REWARD_AT_TIER} farming minion, you'll earn {MINION_REWARD_WEIGHT} bonus weight.</td>
+			<td
+				>For each unlocked tier {MINION_REWARD_AT_TIER} farming minion, you'll earn {MINION_REWARD_WEIGHT} bonus
+				weight.</td
+			>
 			<td>{MINION_REWARD_WEIGHT} (Max 50)</td>
 		</tr>
 	</tbody>
 </table>
 
 <style lang="postcss">
-	td, th {
+	td,
+	th {
 		@apply p-1 px-2;
 	}
 

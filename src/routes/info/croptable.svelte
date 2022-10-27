@@ -65,7 +65,8 @@
 </table>
 
 <style lang="postcss">
-	td, th {
+	td,
+	th {
 		@apply p-1 px-2;
 	}
 

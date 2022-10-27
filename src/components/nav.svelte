@@ -99,7 +99,11 @@
 				href="/login">Login</a
 			>
 		</div>
-		<a class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/profile" hidden={discordUser === false}>
+		<a
+			class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			href="/profile"
+			hidden={discordUser === false}
+		>
 			Profile</a
 		>
 		<!-- Logout button -->
