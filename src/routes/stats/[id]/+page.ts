@@ -15,7 +15,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		const account = await fetch(`/api/account/${uuid}`);
 		const info = (await account.json().catch(() => undefined)) as AccountInfo | undefined;
 
-		if (!info) {
+		if (!info?.success) {
 			throw error(404, 'Account not found!');
 		}
 
@@ -23,7 +23,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		ign = account.ok ? info.account.name : undefined;
 	}
 
-	if (uuid === '') {
+	if (uuid === '' && ign === undefined) {
 		throw redirect(302, '/');
 	}
 
@@ -42,5 +42,5 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw redirect(302, `/stats/${ign}/${name}`);
 	}
 
-	throw redirect(302, '/');
+	throw error(404, 'Skyblock profile not found for this player!');
 };
