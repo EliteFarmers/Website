@@ -40,7 +40,7 @@
 		<form on:submit|preventDefault class="w-10/12 flex align-items-center justify-center">
 			<div class="relative inline-block md:w-1/3">
 				<input
-					class="p-2 m-4 mb-0 text-left border-2 rounded-lg w-[100%] mx-auto"
+					class="p-2 m-4 mb-0 text-left border-2 rounded-lg w-[100%] mx-auto dark:text-black"
 					bind:value={enteredText}
 					maxlength="100"
 					placeholder="Search for player"
@@ -60,7 +60,7 @@
 
 	<TwoPanel>
 		<div slot="left" class="m-4 p-4 w-full rounded-lg bg-gray-100 dark:bg-zinc-800">
-			<h1 class="p-2 mb-4 w-full text-center bg-gray-200 dark:bg-zinc-700 rounded-md text-xl">
+			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">
 				Join The Discord
 			</h1>
 			<p class="w-full text-center mb-4">
@@ -83,7 +83,7 @@
 			</div>
 		</div>
 		<div slot="right" class="m-4 p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
-			<h1 class="p-2 mb-4 w-full text-center bg-gray-200 dark:bg-zinc-700 rounded-md text-xl">
+			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">
 				Add To Your Server
 			</h1>
 			<p class="w-full text-center">
