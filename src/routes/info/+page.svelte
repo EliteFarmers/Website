@@ -5,7 +5,7 @@
 
 <main class="flex flex-col justify-center items-center w-full">
 	<section class="flex flex-col justify-center items-center w-full">
-		<h1 class="text-center text-3xl my-16">Weight Information</h1>
+		<h1 class="text-center text-3xl mt-16 mb-8">Weight Information</h1>
 		<article class="w-10/12 md:w-1/2">
 			<h2 class="text-2xl my-8">What is Farming Weight?</h2>
 			<p class="text-lg my-4">
@@ -34,7 +34,7 @@
 		</article>
 	</section>
 	<section class="flex flex-col justify-center items-center w-full">
-		<h1 class="text-center text-3xl my-12">Bonus Weight</h1>
+		<h1 class="text-center text-3xl mt-16 mb-8">Bonus Weight</h1>
 		<article class="w-10/12 md:w-1/2">
 			<p class="text-lg my-4">
 				There are a few sources of bonus weight that can be obtained. These are not intended to be a significant
@@ -46,7 +46,7 @@
 		</article>
 	</section>
 	<section class="flex flex-col justify-center items-center w-full">
-		<h1 class="text-center text-3xl my-16">F.A.Q.</h1>
+		<h1 class="text-center text-3xl mt-16 mb-8">F.A.Q.</h1>
 		<article class="w-10/12 md:w-1/2">
 			<h2 class="text-2xl my-8">How do I verify my account?</h2>
 			<p class="text-lg my-4">
@@ -96,7 +96,7 @@
 		</article>
 	</section>
 	<section class="flex flex-col justify-center items-center w-full">
-		<h1 class="text-center text-3xl my-16">Credits</h1>
+		<h1 class="text-center text-3xl mt-16 mb-8">Credits</h1>
 		<article class="w-10/12 md:w-1/2">
 			<p class="text-lg my-4">
 				Some Weight Calculations by <a class="underline" href="/stats/Bankhier">Bankhier</a>.
@@ -113,11 +113,15 @@
 				Minion Icons (and base API) from <a class="underline" href="https://hypixel.net/">Hypixel</a>.
 			</p>
 			<p class="text-lg my-4">
+				Player models provied by <a class="underline" href="https://mc-heads.net/">MCHeads</a>.
+			</p>
+			<p class="text-lg my-4">
 				Some inspiration and a little code from <a
 					class="underline"
 					href="https://github.com/SkyCryptWebsite/SkyCrypt">SkyCrypt</a
 				>.
 			</p>
+			<br /><br />
 		</article>
 	</section>
 </main>
