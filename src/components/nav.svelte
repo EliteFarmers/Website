@@ -35,9 +35,7 @@
 		<a class="hidden sm:block p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
 			>EliteDev</a
 		>
-		<a class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/profile"
-			>Profile</a
-		>
+		<a class="p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/info">Info</a>
 		<a
 			class="block md:hidden bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
 			href="/leaderboard">LB</a
@@ -101,6 +99,13 @@
 				href="/login">Login</a
 			>
 		</div>
+		<a
+			class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			href="/profile"
+			hidden={discordUser === false}
+		>
+			Profile</a
+		>
 		<!-- Logout button -->
 		<a
 			data-sveltekit-reload
