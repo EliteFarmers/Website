@@ -3,6 +3,7 @@ import type { Handle } from '@sveltejs/kit';
 import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL } from '$env/static/public';
 import { DBReady, GetUserByDiscordID, SyncTables, UpdateDiscordUser } from '$db/database';
 import type { DiscordUser } from '$db/models/users';
+import { RefreshUser } from '$lib/discordAuth';
 
 interface CookieData {
 	name: string;
@@ -117,18 +118,15 @@ async function refreshUser(token: string): Promise<{ session: App.Session; cooki
 			},
 		],
 	};
-	const discord_request = await fetch(`${HOST}/api/refresh?code=${token}`);
+	//const discord_request = await fetch(`/api/refresh?code=${token}`);
 
 	try {
-		const discord_response = (await discord_request.json()) as {
-			discord_access_token: string;
-			cookies: CookieData[];
-		};
+		const discordResponse = await RefreshUser(token, PUBLIC_HOST_URL + '/login/callback');
 
-		if (!discord_response.discord_access_token) return failure;
+		if (!discordResponse.access_token) return failure;
 
 		const request = await fetch(`${DISCORD_API_URL}/users/@me`, {
-			headers: { Authorization: `Bearer ${discord_response.discord_access_token}` },
+			headers: { Authorization: `Bearer ${discordResponse.access_token}` },
 		});
 
 		const response = (await request.json()) as DiscordUser;
@@ -143,10 +141,22 @@ async function refreshUser(token: string): Promise<{ session: App.Session; cooki
 		if (response.id) {
 			return {
 				session: { discordUser: discordUser, user: user },
-				cookies: discord_response.cookies,
+				cookies: [
+					{
+						name: 'discord_access_token',
+						value: discordResponse.access_token,
+						expires: discordResponse.access_token_expires
+					},
+					{
+						name: 'discord_refresh_token',
+						value: discordResponse.refresh_token,
+						expires: discordResponse.refresh_token_expires
+					},
+				],
 			};
 		}
 	} catch (error) {
+		console.log(error);
 		return failure;
 	}
 
