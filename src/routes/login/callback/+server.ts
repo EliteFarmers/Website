@@ -46,24 +46,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(400, new Error('Discord Authentication Error'));
 	}
 
-	const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+	const thirtyDays = 30 * 24 * 60 * 60;
 	const accessTokenExpires = new Date(Date.now() + response.expires_in); // ~10 minutes
 	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days
-
-	// const headers = new Headers();
-	// headers.append(
-	// 	'Set-Cookie',
-	// 	`discord_access_token=${
-	// 		response.access_token
-	// 	}; Expires=${accessTokenExpires.toUTCString()}; Path=/; SameSite=Strict; HttpOnly;`
-	// );
-	// headers.append(
-	// 	'Set-Cookie',
-	// 	`discord_refresh_token=${
-	// 		response.refresh_token
-	// 	}; Expires=${refreshTokenExpires.toUTCString()}; Path=/; SameSite=Strict; HttpOnly;`
-	// );
-	// headers.set('Location', '/');
 
 	cookies.set('discord_access_token', response.access_token, {
 		expires: accessTokenExpires,

@@ -2,11 +2,10 @@ import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } 
 import { authState, authStateVal } from '$stores/auth';
 import { browser } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
-import { invalidateAll } from '$app/navigation';
 import crypto from 'crypto';
 
 import type { PageLoad } from './$types';
-export const load: PageLoad = async ({ url }) => {
+export const load: PageLoad = ({ url }) => {
 	const success = url.searchParams.get('success');
 
 	if (!browser && !success) {
@@ -24,9 +23,7 @@ export const load: PageLoad = async ({ url }) => {
 		throw redirect(303, endpoint);
 	}
 
-	if (success && browser) {
-		await invalidateAll();
-	}
-
-	throw redirect(303, '/');
+	return {
+		success: success === 'true',
+	};
 };
