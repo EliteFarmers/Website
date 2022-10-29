@@ -6,11 +6,16 @@
 	let collapse = true;
 </script>
 
-<section
+<div
 	class="mx-1 relative cursor-pointer"
 	on:mouseleave={() => (collapse = true)}
 	on:mouseenter={() => (collapse = false)}
 	on:click={() => (collapse = !collapse)}
+	on:keypress={(event) => {
+		if (event.key === 'Enter') {
+			collapse = !collapse;
+		}
+	}}
 >
 	<div class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-lg">
 		<slot name="top" />
@@ -23,4 +28,4 @@
 			</div>
 		{/if}
 	</div>
-</section>
+</div>
