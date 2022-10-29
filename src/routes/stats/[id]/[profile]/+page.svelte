@@ -23,7 +23,7 @@
 	const account = data.account;
 	const profileIds = data.profiles;
 	const player = data.player;
-	const { id: uuid, name: ign, properties } = account;
+	const { id: uuid, name: ign } = account;
 
 	let profileName = data.profileName;
 	let profile = data.profile;
