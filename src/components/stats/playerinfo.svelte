@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { AccountData, MemberData, PlayerInfo } from '$lib/skyblock';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
 	import { getRankDefaults } from '$lib/format';
 	import { page } from '$app/stores';
 
@@ -54,7 +53,7 @@
 							{#each members ?? [] as member}
 								<a
 									data-sveltekit-reload
-									href={`${PUBLIC_HOST_URL}/stats/${member.ign ?? member.uuid}/${profileIds[0].id}`}
+									href={`/stats/${member.ign ?? member.uuid}/${profileIds[0].id}`}
 									class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
 									>{member.ign}</a
 								>
@@ -67,7 +66,7 @@
 							{#each profiles ?? [] as pId}
 								<a
 									data-sveltekit-reload
-									href={`${PUBLIC_HOST_URL}/stats/${account.name}/${pId.name}`}
+									href={`/stats/${account.name}/${pId.name}`}
 									class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
 									>{pId.name}</a
 								>

@@ -2,7 +2,6 @@
 	import type { User } from '$db/models/users';
 	import { goto } from '$app/navigation';
 	import {
-		PUBLIC_HOST_URL,
 		PUBLIC_BOT_INVITE,
 		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
@@ -19,7 +18,7 @@
 	let topViewed: Partial<User>[] = [];
 
 	onMount(async () => {
-		const viewed = await fetch(`${PUBLIC_HOST_URL}/api/leaderboard/views`);
+		const viewed = await fetch(`/api/leaderboard/views`);
 		const json = await viewed.json();
 
 		if (viewed.status === 200) {
