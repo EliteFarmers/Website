@@ -34,7 +34,9 @@
 		<a class="hidden sm:block p-3 rounded-md dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
 			>EliteDev</a
 		>
-		<a class="p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/info">Info</a>
+		<a class="p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/info"
+			>Info</a
+		>
 		<a
 			class="block md:hidden p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
 			href="/leaderboard">Top</a

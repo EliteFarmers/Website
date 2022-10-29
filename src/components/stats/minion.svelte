@@ -18,7 +18,9 @@
 			{#each tiers as tier, i}
 				<div class="flex align-middle text-center justify-center">
 					<div
-						class="w-4 h-6 mx-0 text-body {tier === '1' ? 'bg-green-400' : 'bg-gray-200 dark:bg-zinc-700'}"
+						class="w-4 h-6 mx-0 text-body rounded-sm {tier === '1'
+							? 'bg-green-500'
+							: 'bg-gray-200 dark:bg-zinc-700'}"
 					>
 						{i + 1}
 					</div>
@@ -30,7 +32,7 @@
 	<div class="tier-border">
 		{#each tiers as tier, i}
 			<div
-				class="tier {tier === '1' ? 'bg-green-400' : 'bg-gray-200 dark:bg-zinc-700'}"
+				class="tier {tier === '1' ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}"
 				style="grid-area: a{i};"
 			/>
 		{/each}
