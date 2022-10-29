@@ -7,7 +7,6 @@
 		PUBLIC_COMMUNITY_INVITE,
 		PUBLIC_HOST_URL,
 	} from '$env/static/public';
-	import { onMount } from 'svelte';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
 	import Entry from './leaderboard/entry.svelte';
@@ -16,16 +15,6 @@
 	export let data: PageData;
 
 	let enteredText = '';
-	let topViewed: Partial<User>[] = [];
-
-	onMount(async () => {
-		const viewed = await fetch(`/api/leaderboard/views`);
-		const json = await viewed.json();
-
-		if (viewed.status === 200) {
-			topViewed = json;
-		}
-	});
 </script>
 
 <svelte:head>
