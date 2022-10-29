@@ -17,6 +17,7 @@
 	import Breakdown from '$comp/stats/breakdown.svelte';
 
 	import type { PageData } from './$types';
+	import { PUBLIC_HOST_URL } from '$env/static/public';
 	export let data: PageData;
 
 	const account = data.account;
@@ -49,6 +50,11 @@
 			// profiles = data;
 		});
 	});
+
+	const weightStr = data.weight.farming.total.toLocaleString(undefined, { maximumFractionDigits: 0 });
+	const description = `${ign} has ${weightStr} Farming Weight${
+		data.rank > 0 ? `, earning rank #${data.rank} in the world!` : '!'
+	} View the site to see full information.`;
 </script>
 
 <svelte:head>
@@ -56,15 +62,11 @@
 	<!-- Preload image -->
 	<link rel="preload" href="/images/cropatlas.png" as="image" />
 	<!-- Meta -->
-	<meta name="description" content="View {ign}'s farming profile." />
+	<meta name="description" content={description} />
 	<meta name="keywords" content="farming, profile, Skyblock, weight, {ign}" />
-	<meta name="author" content="EliteDev" />
-	<meta name="robots" content="index, follow" />
-	<!-- Meta OG -->
 	<meta property="og:title" content="{ign} | Farming Weight" />
-	<meta property="og:description" content="View {ign}'s farming profile." />
-	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
-	<meta property="og:url" content={$page.url.toString()} />
+	<meta property="og:description" content={description} />
+	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
 </svelte:head>
 
 <main class="m-0 p-0 w-full">
@@ -114,10 +116,7 @@
 	<Breakdown weight={data.weight.farming} />
 </main>
 
-<h1 id="Info" class="text-center text-body m-16">
+<h1 class="text-center text-md m-16">
+	<span class="select-none text-gray-500">Player UUID:</span>
 	{uuid}
-	{ign}
-	{profile}
-	{player?.player.socialMedia?.links?.DISCORD}
-	{data.weight?.farming?.total}
 </h1>

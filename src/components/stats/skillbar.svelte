@@ -40,12 +40,15 @@
 			on:mouseleave={() => (hovering = false)}
 		>
 			<div
-				class="absolute top-0 bottom-0 left-0 bg-orange-300 rounded-lg"
+				class="absolute top-0 bottom-0 left-0 rounded-lg bg-yellow-100 dark:bg-yellow-600"
 				style="width: {Math.max(2, percent)}%;"
 			/>
 			{#if percent >= 100}
 				<!-- Gold color to show completion -->
-				<div class="absolute top-0 left-0 w-full h-full bg-yellow-400 rounded-lg" style="opacity: 0.7;" />
+				<div
+					class="absolute top-0 left-0 w-full h-full rounded-lg bg-yellow-300 dark:bg-yellow-400"
+					style="opacity: 0.7;"
+				/>
 			{/if}
 			<div class="absolute text-black grid align-middle justify-center w-[100%] h-[100%]">
 				<span>{hovering ? expanded : readable}</span>

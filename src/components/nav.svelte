@@ -28,19 +28,21 @@
 
 <nav class="flex justify-between justify-items-center bg-gray-100 dark:bg-zinc-800 p-2">
 	<section class="flex gap-2 mr-3 justify-start w-1/5 md:w-1/4">
-		<a class="block sm:hidden p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
+		<a class="block sm:hidden p-3 rounded-md dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
 			>Elite</a
 		>
-		<a class="hidden sm:block p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
+		<a class="hidden sm:block p-3 rounded-md dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
 			>EliteDev</a
 		>
-		<a class="p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/info">Info</a>
-		<a
-			class="block md:hidden bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href="/leaderboard">LB</a
+		<a class="p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/info"
+			>Info</a
 		>
 		<a
-			class="hidden md:block bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			class="block md:hidden p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			href="/leaderboard">Top</a
+		>
+		<a
+			class="hidden md:block p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
 			href="/leaderboard">Leaderboard</a
 		>
 	</section>
