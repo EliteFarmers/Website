@@ -256,9 +256,14 @@ export async function FetchWeightLeaderboard() {
 export async function GetViewLeaderboard(limit = 10) {
 	const list = await User.findAll({
 		limit: limit,
-		attributes: ['uuid', 'ign', 'info'],
+		attributes: {
+			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
+			include: [[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'times_fetched'), 'views']],
+		},
 		where: { ['info.cheating']: { [Op.not]: true }, ['info.times_fetched']: { [Op.gt]: 0 } },
-		order: sequelize.literal(`"User"."info"->'times_fetched' DESC`),
+		order: [[sequelize.literal('views'), 'DESC']],
+		raw: true,
+		nest: true,
 	});
 
 	return list;
