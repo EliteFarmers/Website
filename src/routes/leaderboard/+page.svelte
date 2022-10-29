@@ -7,7 +7,7 @@
 
 	let lb = data.lb;
 	let start = data.start;
-	let jump = data.jump;
+	let jump = data.jump ?? undefined;
 
 	let player = lb.find((entry) => entry.ign === jump);
 
@@ -35,15 +35,13 @@
 </script>
 
 <svelte:head>
-	<title>Weight Leaderboard</title>
+	<title>Leaderboard</title>
 
 	<meta name="keywords" content="hypixel, skyblock, leaderboard, stats, farming, weight" />
-	<meta name="author" content="Kaeso" />
-
 	{#if !data.jump}
-		<meta name="description" content="Farming Weight Leaderboard for Hypixel Skyblock" />
+		<meta name="description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
 		<meta property="og:title" content="Weight Leaderboard" />
-		<meta property="og:description" content="Farming Weight Leaderboard for Hypixel Skyblock" />
+		<meta property="og:description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
 	{:else if player}
 		<meta
 			name="description"
@@ -61,7 +59,7 @@
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
-<section class="flex flex-col mt-8 justify-center w-full">
+<section class="flex flex-col mt-16 justify-center w-full">
 	<h1 class="text-2xl text-center">Farming Weight Leaderboard</h1>
 	<div
 		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"

@@ -1,7 +1,17 @@
 <script lang="ts">
 	import CropTable from './croptable.svelte';
 	import BonusTable from './bonustable.svelte';
+	import { PUBLIC_HOST_URL } from '$env/static/public';
 </script>
+
+<svelte:head>
+	<title>Information</title>
+	<meta name="description" content="View all information about the site and how farming weight is calculated." />
+	<meta name="keywords" content="farming, profile, Skyblock, weight, calculate" />
+	<meta property="og:title" content="Elite" />
+	<meta property="og:description" content="View all information about the site and how farming weight is calculated." />
+	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
+</svelte:head>
 
 <main class="flex flex-col justify-center items-center w-full">
 	<section class="flex flex-col justify-center items-center w-full">

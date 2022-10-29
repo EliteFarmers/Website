@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { User } from '$db/models/users';
 	import { goto } from '$app/navigation';
-	import { PUBLIC_BOT_INVITE, PUBLIC_SUPPORT_SERVER_INVITE, PUBLIC_COMMUNITY_INVITE } from '$env/static/public';
+	import { PUBLIC_BOT_INVITE, PUBLIC_SUPPORT_SERVER_INVITE, PUBLIC_COMMUNITY_INVITE, PUBLIC_HOST_URL } from '$env/static/public';
 	import { onMount } from 'svelte';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
@@ -25,6 +25,11 @@
 
 <svelte:head>
 	<title>Elite</title>
+	<meta name="description" content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurating comparing between crops in the game." />
+	<meta name="keywords" content="farming, profile, Skyblock, weight, calculate" />
+	<meta property="og:title" content="Elite" />
+	<meta property="og:description" content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurating comparing between crops in the game." />
+	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
 </svelte:head>
 
 <main>
