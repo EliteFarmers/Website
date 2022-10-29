@@ -32,7 +32,7 @@
 
 	{#if $navigating}
 		<!-- Gray out the screen -->
-		<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 opacity-50" />
+		<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50" />
 	{/if}
 
 	<div class="dark:bg-zinc-900">
