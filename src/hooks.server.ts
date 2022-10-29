@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import type { Handle } from '@sveltejs/kit';
 import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL } from '$env/static/public';
 import { DBReady, GetUserByDiscordID, SyncTables, UpdateDiscordUser } from '$db/database';
@@ -16,10 +15,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		void SyncTables();
 	}
 
-	const browserCookies = cookie.parse(event.request.headers.get('cookie') ?? '');
+	const access = event.cookies.get('discord_access_token');
+	const refresh = event.cookies.get('discord_refresh_token');
 
-	event.locals.discord_access_token = browserCookies.discord_access_token;
-	event.locals.discord_refresh_token = browserCookies.discord_refresh_token;
+	event.locals.discord_access_token = access;
+	event.locals.discord_refresh_token = refresh;
 
 	if (!event.locals.discord_access_token && !event.locals.discord_refresh_token) {
 		event.locals.discordUser = false;
@@ -68,7 +68,7 @@ async function getUser(locals: App.Locals): Promise<{ session: App.Session; cook
 		}
 	}
 
-	// not authenticated, return empty user object
+	// Not authenticated, return empty user object
 	return {
 		session: {
 			discordUser: false,
