@@ -117,5 +117,6 @@
 </main>
 
 <h1 class="text-center text-md m-16">
-	<span class="select-none text-gray-500">Player UUID:</span> {uuid}
+	<span class="select-none text-gray-500">Player UUID:</span>
+	{uuid}
 </h1>
