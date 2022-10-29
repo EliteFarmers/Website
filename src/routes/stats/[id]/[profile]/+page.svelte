@@ -116,10 +116,6 @@
 	<Breakdown weight={data.weight.farming} />
 </main>
 
-<h1 id="Info" class="text-center text-body m-16">
-	{uuid}
-	{ign}
-	{profile}
-	{player?.player.socialMedia?.links?.DISCORD}
-	{data.weight?.farming?.total}
+<h1 class="text-center text-md m-16">
+	<span class="select-none text-gray-500">Player UUID:</span> {uuid}
 </h1>
