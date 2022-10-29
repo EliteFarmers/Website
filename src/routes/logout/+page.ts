@@ -10,5 +10,5 @@ export const load: PageLoad = async ({ parent }) => {
 		await invalidateAll();
 	}
 
-	throw redirect(302, '/');
+	throw redirect(303, '/');
 };

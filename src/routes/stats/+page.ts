@@ -8,5 +8,5 @@ export const load: PageLoad = async ({ parent }) => {
 		throw redirect(302, `/stats/${user.ign ?? user.uuid}`);
 	}
 
-	throw redirect(302, '/');
+	throw redirect(303, '/');
 };

@@ -24,13 +24,13 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	}
 
 	if (uuid === '' && ign === undefined) {
-		throw redirect(302, '/');
+		throw redirect(303, '/');
 	}
 
 	const response = await fetch(`/api/profiles/${uuid}`);
 
 	if (!response.ok) {
-		throw redirect(302, '/');
+		throw redirect(303, '/');
 	}
 
 	const data = (await response.json()) as Profiles;
@@ -39,7 +39,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	const name = data.profiles.filter((a) => a.selected)[0]?.cute_name;
 
 	if (ign && name) {
-		throw redirect(302, `/stats/${ign}/${name}`);
+		throw redirect(303, `/stats/${ign}/${name}`);
 	}
 
 	throw error(404, 'Skyblock profile not found for this player!');
