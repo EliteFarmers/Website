@@ -1,4 +1,4 @@
-import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_REDIRECT_URI as REDIRECT_URI } from '$env/static/public';
+import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET as CLIENT_SECRET } from '$env/static/private';
 import type { RequestHandler } from './$types';
 
@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		client_secret: CLIENT_SECRET,
 		grant_type: 'authorization_code',
 		code: code,
-		redirect_uri: REDIRECT_URI,
+		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
 		state: state,
 		scope: 'identify guilds',
 	};

@@ -1,10 +1,9 @@
 import type { RequestHandler } from './$types';
-import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_URI } from '$env/static/public';
+import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
 import crypto from 'crypto';
 
 const DISCORD_CLIENT_ID = PUBLIC_DISCORD_CLIENT_ID;
-const DISCORD_REDIRECT_URI = PUBLIC_DISCORD_REDIRECT_URI;
 
 export const GET: RequestHandler = async ({ url }) => {
 	const refreshToken = url.searchParams.get('code');
@@ -22,7 +21,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		client_secret: DISCORD_CLIENT_SECRET,
 		grant_type: 'refresh_token',
 		refresh_token: refreshToken,
-		redirect_uri: DISCORD_REDIRECT_URI,
+		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
 		scope: 'identify guilds',
 		state: uuid,
 	};
