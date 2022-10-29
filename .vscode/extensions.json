@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"bradlc.vscode-tailwindcss",
+		"svelte.svelte-vscode",
+		"syler.sass-indented",
+		"esbenp.prettier-vscode",
+		"vunguyentuan.vscode-postcss",
+		"cpylua.language-postcss",
+		"dbaeumer.vscode-eslint",
+		"usernamehw.errorlens"
+	]
+}
