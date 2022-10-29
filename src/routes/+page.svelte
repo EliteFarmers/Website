@@ -80,12 +80,14 @@
 				<a
 					href={PUBLIC_SUPPORT_SERVER_INVITE}
 					target="_blank"
+					rel="noopener noreferrer"
 					class="text-center px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-900"
 					>Join Support Server</a
 				>
 				<a
 					href={PUBLIC_COMMUNITY_INVITE}
 					target="_blank"
+					rel="noopener noreferrer"
 					class="text-center px-4 py-2 m-2 rounded-md bg-green-400 hover:bg-green-500 dark:bg-green-500 dark:hover:bg-green-700"
 					>Join Elite Farmers</a
 				>
@@ -101,6 +103,7 @@
 				<a
 					href={PUBLIC_BOT_INVITE}
 					target="_blank"
+					rel="noopener noreferrer"
 					class="text-center px-4 py-2 m-2 rounded-md bg-blue-400 hover:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-700"
 					>Invite Elite Bot</a
 				>
