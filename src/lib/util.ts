@@ -1,4 +1,3 @@
-import { PUBLIC_HOST_URL } from '$env/static/public';
 import { PROFILE_UPDATE_INTERVAL } from './constants/data';
 import type { Profiles } from './skyblock';
 
@@ -17,7 +16,7 @@ export async function FetchNewProfiles(uuid: string, last_fetched: number, delay
 	// Wait for the delay
 	await new Promise((resolve) => setTimeout(resolve, delay));
 
-	const res = await fetch(`${PUBLIC_HOST_URL}/api/profiles/${uuid}`);
+	const res = await fetch(`/api/profiles/${uuid}`);
 
 	if (res.status !== 200) {
 		return undefined;
