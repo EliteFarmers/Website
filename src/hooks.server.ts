@@ -145,12 +145,12 @@ async function refreshUser(token: string): Promise<{ session: App.Session; cooki
 					{
 						name: 'discord_access_token',
 						value: discordResponse.access_token,
-						expires: discordResponse.access_token_expires
+						expires: discordResponse.access_token_expires,
 					},
 					{
 						name: 'discord_refresh_token',
 						value: discordResponse.refresh_token,
-						expires: discordResponse.refresh_token_expires
+						expires: discordResponse.refresh_token_expires,
 					},
 				],
 			};

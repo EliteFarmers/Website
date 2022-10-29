@@ -1,11 +1,7 @@
 <script lang="ts">
 	import type { User } from '$db/models/users';
 	import { goto } from '$app/navigation';
-	import {
-		PUBLIC_BOT_INVITE,
-		PUBLIC_SUPPORT_SERVER_INVITE,
-		PUBLIC_COMMUNITY_INVITE,
-	} from '$env/static/public';
+	import { PUBLIC_BOT_INVITE, PUBLIC_SUPPORT_SERVER_INVITE, PUBLIC_COMMUNITY_INVITE } from '$env/static/public';
 	import { onMount } from 'svelte';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';

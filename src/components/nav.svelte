@@ -75,7 +75,7 @@
 	<section class="flex gap-2 ml-3 justify-end w-1/5 md:w-1/4">
 		<a
 			class="block sm:hidden dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href='/'
+			href="/"
 			disabled={$navigating !== null}
 		>
 			<svg class="h-4 w-4 mt-1" viewBox="0 0 24 24">

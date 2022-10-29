@@ -1,9 +1,8 @@
-import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL } from "$env/static/public";
-import { DISCORD_CLIENT_SECRET } from "$env/static/private";
+import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL } from '$env/static/public';
+import { DISCORD_CLIENT_SECRET } from '$env/static/private';
 import crypto from 'crypto';
 
 export async function RefreshUser(refreshToken: string, redirect: string) {
-
 	const uuid = crypto.randomUUID();
 
 	const data = {
@@ -45,5 +44,5 @@ export async function RefreshUser(refreshToken: string, redirect: string) {
 		access_token_expires: accessTokenExpires.toUTCString(),
 		refresh_token: response.refresh_token,
 		refresh_token_expires: refreshTokenExpires.toUTCString(),
-	}
+	};
 }
