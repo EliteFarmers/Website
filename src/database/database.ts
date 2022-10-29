@@ -26,16 +26,22 @@ const User = UsersInit(sequelize);
 let CachedLeaderboardUpdated = 0;
 let CachedLeaderboard: LeaderboardEntry[] = [];
 let CachedLeaderboardMap: Map<string, LeaderboardEntry> = new Map<string, LeaderboardEntry>();
-let isReady = false;
+export let DBReady = false;
 
 export async function SyncTables() {
-	if (isReady) return;
-	isReady = true;
+	if (DBReady) return;
+	DBReady = true;
 
-	await User.sync({ force: false });
-	await FetchWeightLeaderboard();
+	try {
+		await sequelize.authenticate();
 
-	console.log('Connected to database.');
+		await User.sync({ force: false });
+		await FetchWeightLeaderboard();
+		console.log('Connected to database.');
+	} catch (error) {
+		DBReady = false;
+		console.log('Unable to connect to the database!');
+	}
 }
 
 // Runs once on startup
