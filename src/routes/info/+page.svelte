@@ -9,7 +9,10 @@
 	<meta name="description" content="View all information about the site and how farming weight is calculated." />
 	<meta name="keywords" content="farming, profile, Skyblock, weight, calculate" />
 	<meta property="og:title" content="Elite" />
-	<meta property="og:description" content="View all information about the site and how farming weight is calculated." />
+	<meta
+		property="og:description"
+		content="View all information about the site and how farming weight is calculated."
+	/>
 	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
 </svelte:head>
 

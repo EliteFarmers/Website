@@ -30,7 +30,7 @@
 <svelte:head>
 	<meta name="author" content="Kaeso" />
 	<meta name="robots" content="index, follow" />
-	<meta property="og:site_name" content="Elite"/>
+	<meta property="og:site_name" content="Elite" />
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
