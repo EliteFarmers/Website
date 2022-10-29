@@ -26,16 +26,22 @@ const User = UsersInit(sequelize);
 let CachedLeaderboardUpdated = 0;
 let CachedLeaderboard: LeaderboardEntry[] = [];
 let CachedLeaderboardMap: Map<string, LeaderboardEntry> = new Map<string, LeaderboardEntry>();
-let isReady = false;
+export let DBReady = false;
 
 export async function SyncTables() {
-	if (isReady) return;
-	isReady = true;
+	if (DBReady) return;
+	DBReady = true;
 
-	await User.sync({ force: false });
-	await FetchWeightLeaderboard();
+	try {
+		await sequelize.authenticate();
 
-	console.log('Connected to database.');
+		await User.sync({ force: false });
+		await FetchWeightLeaderboard();
+		console.log('Connected to database.');
+	} catch (error) {
+		DBReady = false;
+		console.log('Unable to connect to the database!');
+	}
 }
 
 // Runs once on startup
@@ -250,9 +256,14 @@ export async function FetchWeightLeaderboard() {
 export async function GetViewLeaderboard(limit = 10) {
 	const list = await User.findAll({
 		limit: limit,
-		attributes: ['uuid', 'ign', 'info'],
+		attributes: {
+			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
+			include: [[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'times_fetched'), 'views']],
+		},
 		where: { ['info.cheating']: { [Op.not]: true }, ['info.times_fetched']: { [Op.gt]: 0 } },
-		order: sequelize.literal(`"User"."info"->'times_fetched' DESC`),
+		order: [[sequelize.literal('views'), 'DESC']],
+		raw: true,
+		nest: true,
 	});
 
 	return list;

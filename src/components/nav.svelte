@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { DiscordUser } from '$db/models/users';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -61,7 +60,7 @@
 			<a
 				data-sveltekit-reload
 				class="bg-gray-200 dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-				href="{PUBLIC_HOST_URL}/stats/{searchVal}"
+				href="/stats/{searchVal}"
 				disabled={$navigating !== null}
 			>
 				<svg class="h-4 w-4 mt-1" viewBox="0 0 24 24">
@@ -76,7 +75,7 @@
 	<section class="flex gap-2 ml-3 justify-end w-1/5 md:w-1/4">
 		<a
 			class="block sm:hidden dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href={`${PUBLIC_HOST_URL}/`}
+			href="/"
 			disabled={$navigating !== null}
 		>
 			<svg class="h-4 w-4 mt-1" viewBox="0 0 24 24">

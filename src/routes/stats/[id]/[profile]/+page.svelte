@@ -17,7 +17,6 @@
 	import Breakdown from '$comp/stats/breakdown.svelte';
 
 	import type { PageData } from './$types';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
 	export let data: PageData;
 
 	const account = data.account;
@@ -55,7 +54,7 @@
 <svelte:head>
 	<title>{ign}'s Stats</title>
 	<!-- Preload image -->
-	<link rel="preload" href="{PUBLIC_HOST_URL}/images/cropatlas.png" as="image" />
+	<link rel="preload" href="/images/cropatlas.png" as="image" />
 	<!-- Meta -->
 	<meta name="description" content="View {ign}'s farming profile." />
 	<meta name="keywords" content="farming, profile, Skyblock, weight, {ign}" />
