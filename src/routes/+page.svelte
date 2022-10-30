@@ -59,7 +59,7 @@
 	</div>
 
 	<TwoPanel>
-		<div slot="left" class="m-4 p-4 w-full rounded-lg bg-gray-100 dark:bg-zinc-800">
+		<div slot="left" class="p-4 w-full rounded-lg bg-gray-100 dark:bg-zinc-800">
 			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
 			<p class="w-full text-center mb-4">
 				Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 2,500 farming
@@ -82,7 +82,7 @@
 				>
 			</div>
 		</div>
-		<div slot="right" class="m-4 p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
+		<div slot="right" class="p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
 			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
 			<p class="w-full text-center">
 				Quickly access stats and leaderboard in Discord! Elite Bot is verified and already present in more than
