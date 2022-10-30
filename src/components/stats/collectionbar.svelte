@@ -31,7 +31,7 @@
 </script>
 
 <div class="p-1 m-1 flex gap-4 w-full">
-	<div class="bg-gray-100 dark:bg-zinc-800 rounded-lg flex justify-center align-middle w-full">
+	<div class="bg-gray-100 dark:bg-zinc-800 rounded-lg flex justify-center align-middle w-full max-h-20">
 		<div class="hidden md:flex crop-container p-1 md:p-3">
 			<div class="crop" style="background-position: 0% {1000 - 100 * index}%;" />
 		</div>
@@ -57,9 +57,7 @@
 
 <style lang="postcss">
 	.crop-container {
-		@apply align-middle justify-center;
-		width: 6vw !important;
-		height: 6vw;
+		@apply align-middle justify-center aspect-square object-contain w-20 h-20;
 		aspect-ratio: 1 / 1;
 	}
 	.crop {
