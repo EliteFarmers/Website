@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { User } from '$db/models/users';
 	import { goto } from '$app/navigation';
 	import {
 		PUBLIC_BOT_INVITE,
