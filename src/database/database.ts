@@ -98,7 +98,17 @@ const infoDefaults: UserInfo = {
 };
 
 export function CreateUser(uuid: string, ign: string) {
-	return User.create({ uuid: uuid, ign: ign, info: infoDefaults });
+	try {
+		return User.create({
+			uuid: uuid,
+			ign: ign,
+			info: infoDefaults,
+		});
+	} catch (e) {
+		if (e && (e as Error).name === 'SequelizeUniqueConstraintError') {
+			return GetUser(uuid);
+		}
+	}
 }
 
 export function UpdateUserData({ account, player, profiles }: DataUpdate) {
