@@ -50,7 +50,7 @@
 		});
 	});
 
-	const weightStr = data.weight.farming.total.toLocaleString(undefined, { maximumFractionDigits: 0 });
+	const weightStr = data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'hasn\'t loaded their';
 	const description = `${ign} has ${weightStr} Farming Weight${
 		data.rank > 0 ? `, earning rank #${data.rank} in the world!` : '!'
 	} View the site to see full information.`;
