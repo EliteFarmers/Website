@@ -42,10 +42,8 @@
 
 <style lang="postcss">
 	.image-container {
-		@apply flex align-middle justify-center rounded-lg;
-		width: 6vw !important;
-		height: 6vw;
-		aspect-ratio: 1 / 1;
+		@apply flex align-middle justify-center rounded-lg object-cover w-16 h-16;
+		aspect-ratio: 1 / 1 !important;
 		position: relative;
 	}
 
@@ -71,7 +69,7 @@
 	}
 
 	.image {
-		@apply rounded-lg inline-block w-full aspect-square;
+		@apply rounded-lg inline-block w-16 aspect-square;
 		background-image: url(/images/cropatlas.png);
 		background-size: 200% 1000%;
 		z-index: 3;

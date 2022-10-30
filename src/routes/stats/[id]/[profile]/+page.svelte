@@ -11,7 +11,6 @@
 	import Skills from '$comp/stats/skills.svelte';
 	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
-	import Weight from '$comp/stats/weight.svelte';
 	import Collections from '$comp/stats/collections.svelte';
 	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
@@ -70,11 +69,15 @@
 </svelte:head>
 
 <main class="m-0 p-0 w-full">
-	<PlayerInfo {account} {player} members={profile.members} {profileIds} linked={data.user.linked}>
-		<section class="flex justify-center lg:justify-start lg:pl-[8%] w-full">
-			<Weight weightInfo={data.weight} rank={data.rank} />
-		</section>
-	</PlayerInfo>
+	<PlayerInfo
+		{account}
+		{player}
+		members={profile.members}
+		{profileIds}
+		linked={data.user.linked}
+		weightInfo={data.weight}
+		weightRank={data.rank}
+	/>
 
 	<APIstatus api={profile.api} />
 
