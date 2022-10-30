@@ -1,6 +1,5 @@
 import { GetUser, UpdateUserInfo } from '$db/database';
 import type { UserInfo } from '$db/models/users';
-import { HYPIXEL_API_KEY } from '$env/static/private';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 import { accountFromUUID, fetchProfiles } from '$lib/data';
 import { CalculateWeight } from '$lib/weight';
@@ -30,7 +29,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		}
 	}
 
-	const profilesData = await fetchProfiles(uuid, HYPIXEL_API_KEY);
+	const profilesData = await fetchProfiles(uuid);
 
 	if (!profilesData?.success) {
 		return new Response(JSON.stringify({ error: 'Profiles not found' }), { status: 404 });
