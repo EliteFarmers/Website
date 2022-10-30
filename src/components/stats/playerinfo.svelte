@@ -33,7 +33,7 @@
 
 <section class="flex justify-center w-full my-8">
 	<div
-		class="flex col-span-1 flex-col md:flex-row justify-center gap-8 overflow-hidden p-0 sm:p-4 rounded-lg w-[98%] md:w-[90%] md:bg-gray-100 md:dark:bg-zinc-800"
+		class="flex col-span-1 flex-col md:flex-row justify-center gap-2 md:gap-8 overflow-hidden p-0 sm:p-4 rounded-lg w-[98%] md:w-[90%] md:bg-gray-100 md:dark:bg-zinc-800"
 	>
 		<div class="flex justify-center gap-4 w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
 			<div>
