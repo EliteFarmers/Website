@@ -6,19 +6,24 @@ import crypto from 'crypto';
 
 import type { PageLoad } from './$types';
 export const load: PageLoad = ({ url }) => {
-	if (!browser) {
+	const success = url.searchParams.get('success');
+
+	if (!browser && !success) {
 		const uuid = crypto.randomUUID();
 		authState.set(uuid);
+
+		const endpoint =
+			'https://discord.com/api/oauth2/authorize' +
+			`?client_id=${CLIENT_ID}` +
+			'&redirect_uri=' +
+			encodeURIComponent(url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE) +
+			'&response_type=code&scope=identify%20guilds' +
+			`&state=${authStateVal}`;
+
+		throw redirect(303, endpoint);
 	}
 
-	const endpoint =
-		'https://discord.com/api/oauth2/authorize' +
-		'?client_id=' +
-		CLIENT_ID +
-		'&redirect_uri=' +
-		encodeURIComponent(url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE) +
-		'&response_type=code&scope=identify%20guilds';
-
-	const location = endpoint ? endpoint + `&state=${authStateVal}` : '/';
-	throw redirect(302, location);
+	return {
+		success: success === 'true',
+	};
 };

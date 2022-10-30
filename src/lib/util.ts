@@ -3,10 +3,6 @@ import type { Profiles } from './skyblock';
 
 /**
  * Returns new profile data or `undefined` if the profile is not found or not updatable yet.
- *
- * @param  {string} uuid
- * @param  {number} last_fetched
- * @param  {} delay=2000
  */
 export async function FetchNewProfiles(uuid: string, last_fetched: number, delay = 2000) {
 	if (Date.now() - last_fetched < PROFILE_UPDATE_INTERVAL) {
