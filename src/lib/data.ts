@@ -19,7 +19,6 @@ import type {
 	RawProfileData,
 	RawProfileMember,
 	RawProfileMembers,
-	RawProfileResponse,
 } from './skyblock.d';
 import {
 	ACCOUNT_UPDATE_INTERVAL,
@@ -42,6 +41,7 @@ import {
 import { parse, simplify } from 'prismarine-nbt';
 import { getContestTimeStamp } from './format';
 import type { User } from '$db/models/users';
+import { FetchHypixelPlayer, FetchSkyblockProfiles } from '$lib/hypixel';
 
 const RESPONSE_VERSION = 1;
 
@@ -98,7 +98,8 @@ export async function accountFromUUID(uuid: string, user?: User) {
 		await UpdateAccountData(uuid, result);
 	} else {
 		if (!(await GetUser(uuid))) {
-			await CreateUser(uuid, result.account.name).then(() => UpdateAccountData(uuid, result));
+			await CreateUser(uuid, result.account.name);
+			void UpdateAccountData(uuid, result);
 		} else {
 			await UpdateAccountData(uuid, result);
 		}
@@ -107,35 +108,34 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	return result;
 }
 
-export async function fetchProfiles(uuid: string, key: string): Promise<Profiles | undefined> {
+export async function fetchProfiles(uuid: string): Promise<Profiles | undefined> {
 	// First check if the profiles are cached.
 	const user = await GetUser(uuid);
 	// If the profiles are cached, return it.
 	if (user?.skyblock?.success) {
 		// If the profiles are older than the interval, get them from the API.
 		if (Date.now() - user.skyblock.last_fetched > PROFILE_UPDATE_INTERVAL) {
-			void fetchNewProfiles(user, uuid, key);
+			void fetchNewProfiles(user, uuid);
 		}
 		// Return old profiles immediately anyway, so the user doesn't have to wait.
 		return user.skyblock;
 	}
 
-	return await fetchNewProfiles(user, uuid, key);
+	return await fetchNewProfiles(user, uuid);
 }
 
-async function fetchNewProfiles(user: User | null, uuid: string, key: string) {
+async function fetchNewProfiles(user: User | null, uuid: string) {
 	if (!user) {
 		await accountFromUUID(uuid);
 	}
 
-	const response = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${key}`);
+	const data = await FetchSkyblockProfiles(uuid);
 
-	if (response.status !== 200) {
+	if (!data.success) {
 		return user?.skyblock ?? undefined;
 	}
 
 	try {
-		const data = (await response.json()) as RawProfileResponse;
 		const parsed = await GetProfiles(data.profiles, uuid, user ?? undefined);
 
 		if (user) {
@@ -149,7 +149,7 @@ async function fetchNewProfiles(user: User | null, uuid: string, key: string) {
 	}
 }
 
-export async function fetchPlayer(uuid: string, key: string) {
+export async function fetchPlayer(uuid: string) {
 	// First check if the player is cached.
 	const user = await GetUser(uuid);
 	// If the player is cached and newer than the interval, return it.
@@ -161,15 +161,13 @@ export async function fetchPlayer(uuid: string, key: string) {
 		await accountFromUUID(uuid);
 	}
 
-	const response = await fetch(`https://api.hypixel.net/player?uuid=${uuid}&key=${key}`);
+	const data = await FetchHypixelPlayer(uuid);
 
-	if (response.status !== 200) {
+	if (!data.success) {
 		return user?.player ?? undefined;
 	}
 
 	try {
-		const data = (await response.json()) as { player: PlayerData };
-
 		const player = formatPlayer(data.player);
 
 		const result = {
