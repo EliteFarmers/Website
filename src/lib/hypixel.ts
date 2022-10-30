@@ -1,6 +1,6 @@
 import { HYPIXEL_API_KEY } from '$env/static/private';
 import type { PlayerData, RawProfileResponse } from '$lib/skyblock';
-import { RateLimiter } from 'limiter';
+import { RateLimiter } from '$lib/limiter/RateLimiter';
 
 const limiter = new RateLimiter({ tokensPerInterval: 119, interval: 'minute' });
 
