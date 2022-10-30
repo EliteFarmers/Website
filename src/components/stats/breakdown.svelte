@@ -33,7 +33,7 @@
 				<h3>
 					Crops
 					<span class="text-gray-500 dark:text-zinc-300 pl-2"
-						>({(weight.total - weight.bonus).toLocaleString()})</span
+						>({((weight?.total ?? 0) - weight.bonus).toLocaleString()})</span
 					>
 				</h3>
 				{#each sources as [source, value]}
