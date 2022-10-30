@@ -11,7 +11,7 @@
 	while (tiers.length < 12) tiers.push('0');
 </script>
 
-<div class="image-container bg-gray-100 dark:bg-zinc-800 p-1 md:p-2 lg:p-3">
+<div class="image-container bg-gray-100 dark:bg-zinc-800 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
 	<Tooltip>
 		<div class="text-body">{name} Minion</div>
 		<div class="flex gap-1">
@@ -42,7 +42,7 @@
 
 <style lang="postcss">
 	.image-container {
-		@apply flex align-middle justify-center rounded-lg object-cover w-16 h-16;
+		@apply flex align-middle justify-center rounded-lg object-cover;
 		aspect-ratio: 1 / 1 !important;
 		position: relative;
 	}
