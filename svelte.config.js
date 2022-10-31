@@ -16,6 +16,9 @@ const config = {
 			dir: path.resolve('./'),
 			publicPrefix: 'PUBLIC_',
 		},
+		csp: {
+			mode: 'hash',
+		},
 	},
 };
 

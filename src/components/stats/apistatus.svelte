@@ -25,7 +25,9 @@
 		</div>
 	</section>
 {:else if anyOff}
-	<section class="absolute flex justify-left align-middle pl-4 pb-4 -mt-5">
+	<section
+		class="absolute flex justify-left align-middle pl-[2vw] sm:pl-[4vw] md:pl-[6vw] pb-4 -mt-8 sm:-mt-12 md:-mt-8"
+	>
 		<div
 			class="border-4 border-t-0 rounded-lg rounded-t-none pt-1 border-yellow-300 bg-yellow-100 dark:border-yellow-600 dark:bg-yellow-700 text-center p-1"
 		>

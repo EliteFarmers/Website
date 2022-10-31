@@ -22,7 +22,7 @@
 		<a
 			class="p-2 rounded-md max-w-fit z-10 bg-gray-200 dark:bg-zinc-700"
 			data-sveltekit-reload
-			href={`/stats/${profiles.ign}`}
+			href={`/leaderboard?jump=${profiles.ign}`}
 		>
 			{#if rank !== -1}
 				<span class="mx-1 text-2xl font-semibold font-mono text-yellow-700 dark:text-yellow-400">

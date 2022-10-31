@@ -90,11 +90,11 @@
 		<article class="w-10/12 md:w-1/2">
 			<h2 class="text-2xl my-8">Why isn't farming XP counted?</h2>
 			<p class="text-lg my-4">
-				Yes! Hypixel seems to be counting the amount of farmed crops accurately, so the crop collections are
-				accurate. However, that was not always the case. In the past, Hypixel has had issues with counting
-				farmed crops when a player was in a shared island with another player. This has since been fixed as of
-				November 2nd, 2021. Sadly, there is no way to add back the crops that were lost during this time as the
-				amount lost differed wildly from player to player.
+				Farming XP is not counted because it is not a good representation of how much a player has farmed.
+				Outside of one time bonus weight amounts (see above table), farming xp isn't considered. This is to
+				ensure that players who farm using rabbit or who farm higher XP crops don't have an unfair advantage
+				over players who farm using other methods. Farming Weight is meant to balance the skill and time taken
+				to farm each crop.
 			</p>
 		</article>
 		<article class="w-10/12 md:w-1/2">
@@ -112,7 +112,12 @@
 		<h1 class="text-center text-3xl mt-16 mb-8">Credits</h1>
 		<article class="w-10/12 md:w-1/2">
 			<p class="text-lg my-4">
-				Some Weight Calculations by <a class="underline" href="/stats/Bankhier">Bankhier</a>.
+				Some Weight Calculations by <a class="underline" href="/stats/ac01147ed01a47d1b5777b31ccf5e616"
+					>Bankhier</a
+				>.
+			</p>
+			<p class="text-lg my-4">
+				Website logo by <a class="underline" href="/stats/bd082a55373e4305bee348b9060e16c9">MelonKingDe</a>.
 			</p>
 			<p class="text-lg my-4">
 				Flat Pumpkin and Flat Cactus icons are made by <a
@@ -129,9 +134,8 @@
 				Player models provied by <a class="underline" href="https://mc-heads.net/">MCHeads</a>.
 			</p>
 			<p class="text-lg my-4">
-				Some inspiration and a little code from <a
-					class="underline"
-					href="https://github.com/SkyCryptWebsite/SkyCrypt">SkyCrypt</a
+				Some inspiration from <a class="underline" href="https://github.com/SkyCryptWebsite/SkyCrypt"
+					>SkyCrypt</a
 				>.
 			</p>
 			<br /><br />
