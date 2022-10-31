@@ -90,10 +90,10 @@
 		<article class="w-10/12 md:w-1/2">
 			<h2 class="text-2xl my-8">Why isn't farming XP counted?</h2>
 			<p class="text-lg my-4">
-				Farming XP is not counted because it is not a good representation of how much a player has farmed. 
-				Outside of one time bonus weight amounts (see above table), farming xp isn't considered. This is 
-				to ensure that players who farm using rabbit or who farm higher XP crops don't have an unfair advantage
-				over players who farm using other methods. Farming Weight is meant to balance the skill and time taken 
+				Farming XP is not counted because it is not a good representation of how much a player has farmed.
+				Outside of one time bonus weight amounts (see above table), farming xp isn't considered. This is to
+				ensure that players who farm using rabbit or who farm higher XP crops don't have an unfair advantage
+				over players who farm using other methods. Farming Weight is meant to balance the skill and time taken
 				to farm each crop.
 			</p>
 		</article>
