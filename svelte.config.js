@@ -18,7 +18,7 @@ const config = {
 		},
 		csp: {
 			mode: 'hash',
-		}
+		},
 	},
 };
 

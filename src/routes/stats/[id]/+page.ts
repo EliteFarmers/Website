@@ -40,7 +40,6 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	// Get latest profile
 	const name = data.profiles.filter((a) => a.selected)[0]?.cute_name;
 
-	
 	if (uuid && name) {
 		throw redirect(303, `/stats/${ign ?? uuid}/${name}`);
 	}
