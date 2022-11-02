@@ -14,6 +14,7 @@
 	import Collections from '$comp/stats/collections.svelte';
 	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
+	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 
 	import type { PageData } from './$types';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
@@ -116,6 +117,8 @@
 	{/if}
 
 	<Collections member={profile.member} weight={data.weight} />
+
+	<JacobInfo jacob={profile.member.jacob} />
 
 	<Breakdown weight={data.weight.farming} />
 </main>
