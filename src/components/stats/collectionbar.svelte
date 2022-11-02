@@ -1,6 +1,6 @@
 <script lang="ts">
 	import crops from '$lib/collections';
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
+	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import Minion from './minion.svelte';
 
 	export let name: string | undefined;
@@ -13,7 +13,7 @@
 	let tier = 0;
 	let maxTier = 0;
 
-	const cropArray = Object.values(PROPER_CROP_NAME).sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
+	const cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
 
 	if (crop && name) {
 		for (let i = crop.length - 1; i >= 0; i--) {

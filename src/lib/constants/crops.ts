@@ -47,3 +47,5 @@ export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
 	'Sugar Cane': 'SUGAR_CANE',
 	Wheat: 'WHEAT',
 };
+
+export const PROPER_CROP_NAMES = Object.keys(PROPER_CROP_TO_MINION);
