@@ -24,7 +24,7 @@
 	let weightSort = true;
 	function swap() {
 		weightSort = !weightSort;
-		
+
 		list = weightSort
 			? collections.sort((a, b) => b.weight - a.weight)
 			: collections.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
