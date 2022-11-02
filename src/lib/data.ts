@@ -483,13 +483,13 @@ function formatContests(member: RawProfileMember) {
 	const jacob2 = member.jacob2;
 
 	const contests: ContestData = {
-		nether_wart: [],
+		netherwart: [],
 		potato: [],
 		carrot: [],
 		wheat: [],
 		pumpkin: [],
 		melon: [],
-		sugar_cane: [],
+		sugarcane: [],
 		cactus: [],
 		cocoa: [],
 		mushroom: [],

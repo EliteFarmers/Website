@@ -24,12 +24,10 @@
 	let weightSort = true;
 	function swap() {
 		weightSort = !weightSort;
-		list = [];
-		setTimeout(() => {
-			list = weightSort
-				? collections.sort((a, b) => b.weight - a.weight)
-				: collections.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
-		}, 0);
+
+		list = weightSort
+			? collections.sort((a, b) => b.weight - a.weight)
+			: collections.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
 	}
 </script>
 
@@ -40,7 +38,7 @@
 				class="ml-2 -mt-4 py-1 rounded-md w-20 bg-gray-100 dark:bg-zinc-800 whitespace-nowrap text-sm hover:font-semibold"
 				on:click={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 			>
-			{#each list as item}
+			{#each list as item (item.name)}
 				<CollectionBar {...item} />
 			{/each}
 		</div>

@@ -25,12 +25,8 @@
 		lb = data;
 		start = index;
 
-		firstHalf = [];
-		secondHalf = [];
-		setTimeout(() => {
-			firstHalf = lb.slice(0, Math.ceil(lb.length / 2));
-			secondHalf = lb.slice(Math.ceil(lb.length / 2));
-		}, 0);
+		firstHalf = lb.slice(0, Math.ceil(lb.length / 2));
+		secondHalf = lb.slice(Math.ceil(lb.length / 2));
 	}
 </script>
 
@@ -65,12 +61,12 @@
 		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"
 	>
 		<div class="flex flex-col gap-2 p-2 w-full">
-			{#each firstHalf as entry}
+			{#each firstHalf as entry (entry.uuid)}
 				<Entry {entry} {jump} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full">
-			{#each secondHalf as entry}
+			{#each secondHalf as entry (entry.uuid)}
 				<Entry {entry} {jump} />
 			{/each}
 		</div>

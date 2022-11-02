@@ -36,7 +36,7 @@
 						>({((weight?.total ?? 0) - weight.bonus).toLocaleString()})</span
 					>
 				</h3>
-				{#each sources as [source, value]}
+				{#each sources as [source, value] (source)}
 					<div class="item">
 						<div class="flex-grow">{source}</div>
 						<div class="flex-none">{value.toLocaleString()}</div>
@@ -45,7 +45,7 @@
 			</div>
 			<div class="w-full md:w-1/3">
 				<h3>Bonus<span>({weight.bonus.toLocaleString()})</span></h3>
-				{#each bonuses as [bonus, value]}
+				{#each bonuses as [bonus, value] (bonus)}
 					<div class="item">
 						<div class="flex-grow capitalize">{PROPER_BONUS_NAME[bonus] ?? bonus}</div>
 						<div class="flex-none">{value.toLocaleString()}</div>

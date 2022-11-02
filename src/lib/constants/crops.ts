@@ -9,6 +9,16 @@ export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	PUMPKIN: 'Pumpkin',
 	SUGAR_CANE: 'Sugar Cane',
 	WHEAT: 'Wheat',
+	cactus: 'Cactus',
+	carrot: 'Carrot',
+	cocoa: 'Cocoa Beans',
+	melon: 'Melon',
+	mushroom: 'Mushroom',
+	netherwart: 'Nether Wart',
+	potato: 'Potato',
+	pumpkin: 'Pumpkin',
+	sugarcane: 'Sugar Cane',
+	wheat: 'Wheat',
 };
 
 export const API_CROP_TO_CROP = {
@@ -18,11 +28,11 @@ export const API_CROP_TO_CROP = {
 	MELON: 'melon',
 	PUMPKIN: 'pumpkin',
 	CACTUS: 'cactus',
-	SUGAR_CANE: 'sugar_cane',
+	SUGAR_CANE: 'sugarcane',
 	INK_SACK: 'cocoa',
 	'INK_SACK:3': 'cocoa',
 	MUSHROOM_COLLECTION: 'mushroom',
-	NETHER_STALK: 'nether_wart',
+	NETHER_STALK: 'netherwart',
 };
 
 export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
