@@ -39,5 +39,6 @@
 
 	<div class="object-scale-down">
 		<h1 class="text-7xl md:text-8xl">{weightStr}</h1>
+		<h1 class="text-sm md:text-base w-full text-right">Farming Weight</h1>
 	</div>
 </section>
