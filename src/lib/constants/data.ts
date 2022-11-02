@@ -136,3 +136,18 @@ export const RANK_PLUS_COLORS: { [color in PlusColor]?: string } = {
 	YELLOW: 'efc721',
 	WHITE: '#929292',
 };
+
+export const SKYBLOCK_MONTHS = [
+	'Early Spring',
+	'Spring',
+	'Late Spring',
+	'Early Summer',
+	'Summer',
+	'Late Summer',
+	'Early Autumn',
+	'Autumn',
+	'Late Autumn',
+	'Early Winter',
+	'Winter',
+	'Late Winter',
+];

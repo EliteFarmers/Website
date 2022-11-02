@@ -1,4 +1,4 @@
-import { RANKS, RANK_PLUS_COLORS } from './constants/data';
+import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
 import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
 import type { RankName, Skill, PlusColor } from './skyblock';
 
@@ -106,6 +106,54 @@ export function getContestTimeStamp(contestKey: string) {
 	const skyblockDay = +split[1].split('_')[1];
 
 	return getTimeStamp(skyblockYear, skyblockMonth, skyblockDay);
+}
+
+/**
+ *
+ * Converts a unix timestamp to a skyblock date.
+ *
+ * @param  {string|number} unixSeconds
+ */
+export function getSkyblockDate(unixSeconds: string | number) {
+	// SkyBlock epoch is 2019/06/11
+	const epochSeconds = 1560275700;
+
+	// Convert unix time to real life time
+	const realLifeSeconds = +unixSeconds - epochSeconds;
+
+	// Convert real life time to skyblock days
+	const totalDays = realLifeSeconds / (20 * 60);
+
+	// Convert skyblock days to skyblock year, month, and day
+	const sbYear = Math.floor(totalDays / 372);
+	const sbMonth = Math.floor((totalDays % 372) / 31);
+
+	const sbDay = Math.floor((totalDays % 372) % 31);
+
+	return {
+		year: sbYear,
+		month: sbDay !== 0 ? sbMonth : sbMonth - 1,
+		day: sbDay !== 0 ? sbDay : 31,
+	};
+}
+
+export function getReadableSkyblockDate(unixSeconds: string | number) {
+	const { year, month, day } = getSkyblockDate(unixSeconds);
+
+	const suffix = appendOrdinalSuffix(day);
+
+	return `${SKYBLOCK_MONTHS[+month]} ${suffix}, Year ${+year + 1}`; // Year is 1 behind in api
+}
+
+export function appendOrdinalSuffix(i: number) {
+	const j = i % 10;
+	const k = i % 100;
+
+	if (j === 1 && k !== 11) return `${i}st`;
+	if (j === 2 && k !== 12) return `${i}nd`;
+	if (j === 3 && k !== 13) return `${i}rd`;
+
+	return `${i}th`;
 }
 
 export function getRankDefaults(rank?: RankName) {
