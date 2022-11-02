@@ -115,10 +115,10 @@ export type CropName =
 	| 'cocoa'
 	| 'melon'
 	| 'mushroom'
-	| 'nether_wart'
+	| 'netherwart'
 	| 'potato'
 	| 'pumpkin'
-	| 'sugar_cane'
+	| 'sugarcane'
 	| 'wheat';
 
 export type ContestData = {
