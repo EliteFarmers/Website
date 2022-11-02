@@ -15,11 +15,11 @@
 		: 'border-transparent'} rounded-md"
 >
 	<div class="flex gap-2 justify-start align-middle">
-		<div class="text-green-800 dark:text-green-300 text-end w-8 sm:w-10">
+		<div class="inline text-green-800 dark:text-green-300">
 			<h1 class="text-md xs:text-lg sm:text-2xl">#{entry.rank}</h1>
 		</div>
 		<div>
-			<h1 class="text-sm xs:text-xl sm:text-2xl font-semibold text-start">{ign}</h1>
+			<h1 class="inline text-sm xs:text-xl sm:text-2xl font-semibold text-start">{ign}</h1>
 		</div>
 	</div>
 	<div class="flex gap-2 p-1 justify-end align-middle">
