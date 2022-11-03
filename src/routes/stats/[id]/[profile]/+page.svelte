@@ -118,7 +118,7 @@
 
 	<Collections member={profile.member} weight={data.weight} />
 
-	<JacobInfo jacob={profile.member.jacob} />
+	<JacobInfo jacob={profile.member.jacob} ign={account.name} />
 
 	<Breakdown weight={data.weight.farming} />
 </main>
