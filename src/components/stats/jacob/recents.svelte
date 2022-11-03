@@ -26,7 +26,7 @@
 	let showMore = false;
 </script>
 
-<div class="flex flex-col gap-4 my-4">
+<div class="flex flex-col gap-2 my-4">
 	<h1 class="text-2xl">Recent Contests</h1>
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
 		{#if recentContests.length < 1}
