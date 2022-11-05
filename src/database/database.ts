@@ -49,6 +49,7 @@ await SyncTables();
 // ==================== //
 
 export async function GetUser(uuid: string) {
+	if (!uuid) return null;
 	return await findOne({ uuid: uuid });
 }
 
@@ -59,6 +60,7 @@ export async function GetUserByIGN(ign: string) {
 }
 
 export async function GetUserByDiscordID(id: string) {
+	if (!id) return null;
 	return await findOne({ id: id });
 }
 
