@@ -56,7 +56,7 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 export function calcCollections(member: ProfileMember) {
 	if (!member.collection) return undefined;
 
-	const {
+	let {
 		WHEAT,
 		POTATO_ITEM: POTATO,
 		CARROT_ITEM: CARROT,
@@ -68,21 +68,55 @@ export function calcCollections(member: ProfileMember) {
 		NETHER_STALK: WART,
 	} = member.collection;
 
-	const COCOA = member.collection['INK_SACK:3']; // Dumb cocoa
+	let COCOA = member.collection['INK_SACK:3']; // Dumb cocoa
+
+	if (isNaN(WHEAT)) WHEAT = 0;
+	if (isNaN(POTATO)) POTATO = 0;
+	if (isNaN(CARROT)) CARROT = 0;
+	if (isNaN(MUSHROOM)) MUSHROOM = 0;
+	if (isNaN(PUMPKIN)) PUMPKIN = 0;
+	if (isNaN(MELON)) MELON = 0;
+	if (isNaN(CANE)) CANE = 0;
+	if (isNaN(CACTUS)) CACTUS = 0;
+	if (isNaN(WART)) WART = 0;
+	if (isNaN(COCOA)) COCOA = 0;
 
 	const collections = new Map<string, number>();
 
+	const wheat = WHEAT / CROPS_PER_ONE_WEIGHT.wheat;
+	const potato = POTATO / CROPS_PER_ONE_WEIGHT.potato;
+	const carrot = CARROT / CROPS_PER_ONE_WEIGHT.carrot;
+	const mushroom = MUSHROOM / CROPS_PER_ONE_WEIGHT.mushroom;
+	const pumpkin = PUMPKIN / CROPS_PER_ONE_WEIGHT.pumpkin;
+	const melon = MELON / CROPS_PER_ONE_WEIGHT.melon;
+	const cane = CANE / CROPS_PER_ONE_WEIGHT.sugarcane;
+	const cactus = CACTUS / CROPS_PER_ONE_WEIGHT.cactus;
+	const wart = WART / CROPS_PER_ONE_WEIGHT.netherwart;
+	const cocoa = COCOA / CROPS_PER_ONE_WEIGHT.cocoa;
+
 	//Normalize collections
-	collections.set('Wheat', RoundToFixed(WHEAT / CROPS_PER_ONE_WEIGHT.wheat));
-	collections.set('Carrot', RoundToFixed(CARROT / CROPS_PER_ONE_WEIGHT.carrot));
-	collections.set('Potato', RoundToFixed(POTATO / CROPS_PER_ONE_WEIGHT.potato));
-	collections.set('Pumpkin', RoundToFixed(PUMPKIN / CROPS_PER_ONE_WEIGHT.pumpkin));
-	collections.set('Melon', RoundToFixed(MELON / CROPS_PER_ONE_WEIGHT.melon));
-	collections.set('Mushroom', RoundToFixed(MUSHROOM / CROPS_PER_ONE_WEIGHT.mushroom));
-	collections.set('Cocoa Beans', RoundToFixed(COCOA / CROPS_PER_ONE_WEIGHT.cocoa));
-	collections.set('Cactus', RoundToFixed(CACTUS / CROPS_PER_ONE_WEIGHT.cactus));
-	collections.set('Sugar Cane', RoundToFixed(CANE / CROPS_PER_ONE_WEIGHT.sugarcane));
-	collections.set('Nether Wart', RoundToFixed(WART / CROPS_PER_ONE_WEIGHT.netherwart));
+	collections.set('Wheat', RoundToFixed(wheat));
+	collections.set('Carrot', RoundToFixed(carrot));
+	collections.set('Potato', RoundToFixed(potato));
+	collections.set('Pumpkin', RoundToFixed(pumpkin));
+	collections.set('Melon', RoundToFixed(melon));
+	collections.set('Cocoa Beans', RoundToFixed(cocoa));
+	collections.set('Cactus', RoundToFixed(cactus));
+	collections.set('Sugar Cane', RoundToFixed(cane));
+	collections.set('Nether Wart', RoundToFixed(wart));
+
+	// Mushroom is a special case, it needs to be calculated dynamically based on the
+	// ratio between the farmed crops that give two mushrooms per break with cow pet
+	// and the farmed crops that give one mushroom per break with cow pet
+	const total = wheat + carrot + potato + pumpkin + melon + cocoa + cactus + cane + wart + mushroom;
+
+	const doubleBreakRatio = (cactus + cane) / total;
+	const normalRatio = (total - cactus - cane) / total;
+
+	const mushWght = CROPS_PER_ONE_WEIGHT.mushroom;
+	const mushroomWeight = doubleBreakRatio * (MUSHROOM / (2 * mushWght)) + normalRatio * (MUSHROOM / mushWght);
+
+	collections.set('Mushroom', RoundToFixed(mushroomWeight));
 
 	return collections;
 }
