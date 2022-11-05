@@ -114,7 +114,7 @@ export function calcCollections(member: ProfileMember) {
 	const normalRatio = (total - cactus - cane) / total;
 
 	const mushWght = CROPS_PER_ONE_WEIGHT.mushroom;
-	const mushroomWeight = (doubleBreakRatio * (MUSHROOM / (2 * mushWght))) + (normalRatio * (MUSHROOM / mushWght));
+	const mushroomWeight = doubleBreakRatio * (MUSHROOM / (2 * mushWght)) + normalRatio * (MUSHROOM / mushWght);
 
 	collections.set('Mushroom', RoundToFixed(mushroomWeight));
 

@@ -33,7 +33,11 @@
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">
 			<td>Mushroom</td>
-			<td>{crops['mushroom'].toLocaleString(undefined, { maximumFractionDigits: 0 })} - {(crops['mushroom'] * 2).toLocaleString(undefined, { maximumFractionDigits: 0 })}*</td>
+			<td
+				>{crops['mushroom'].toLocaleString(undefined, { maximumFractionDigits: 0 })} - {(
+					crops['mushroom'] * 2
+				).toLocaleString(undefined, { maximumFractionDigits: 0 })}*</td
+			>
 			<td>1</td>
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">

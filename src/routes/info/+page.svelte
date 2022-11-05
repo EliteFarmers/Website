@@ -45,10 +45,10 @@
 				breakdowns will be added in the future.
 			</p>
 			<p class="text-sm">
-				* Mushroom weight is calculated dynamically because of the Mooshroom Cow pet. Because Cactus and Sugar Cane
-				are both 2 blocks per break, the cow's perk gives you twice the normal rate of mushroom drops than from 
-				other crops. To counter this, you get half the weight from mushrooms for the ratio of Cactus and Sugar Cane
-				farmed out of the total weight, and the remainder is calculated normally.
+				* Mushroom weight is calculated dynamically because of the Mooshroom Cow pet. Because Cactus and Sugar
+				Cane are both 2 blocks per break, the cow's perk gives you twice the normal rate of mushroom drops than
+				from other crops. To counter this, you get half the weight from mushrooms for the ratio of Cactus and
+				Sugar Cane farmed out of the total weight, and the remainder is calculated normally.
 			</p>
 		</article>
 	</section>
