@@ -24,7 +24,7 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 		const sources: Record<string, number> = {};
 		let highestCrop: string | undefined = undefined;
 
-		for (const [ key, value ] of (tempCollections ?? new Map<string, number>())) {
+		for (const [key, value] of tempCollections ?? new Map<string, number>()) {
 			sources[key] = (value as number | undefined) ?? 0;
 			if ((sources[key] as number | null) === null || isNaN(sources[key])) {
 				sources[key] = 0;
@@ -33,7 +33,7 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 			if (!highestCrop || sources[key] > sources[highestCrop]) {
 				highestCrop = key;
 			}
-		};
+		}
 
 		const bonuses: Record<string, number> = {};
 		tempBonus.forEach((value, key) => {
