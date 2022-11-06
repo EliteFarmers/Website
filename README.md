@@ -12,9 +12,9 @@ Want to help develop EliteDev or just have it running locally?
 
 1. First clone/download the source code:
 
-	```
-	git clone https://github.com/ptlthg/EliteWebsite.git
-	```
+    ```
+    git clone https://github.com/ptlthg/EliteWebsite.git
+    ```
 
 2. Open up the project, Visual Studio Code is recommended.
 
