@@ -13,7 +13,7 @@ import {
 
 export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeights) {
 	const data: ProfileWeightInfo = {};
-	const highestData: HighestWeights = { ...highest, farming: { weight: 0, profile: 'N/A' } };
+	const highestData: HighestWeights = { ...highest, farming: { weight: 0, profile: 'N/A', crop: 'wheat' } };
 
 	for (const profile of profiles) {
 		const tempCollections = calcCollections(profile.member);
@@ -22,10 +22,18 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 		const bonus = computeBonusWeight(tempBonus);
 
 		const sources: Record<string, number> = {};
-		tempCollections?.forEach((value, key) => {
+		let highestCrop: string | undefined = undefined;
+
+		for (const [ key, value ] of (tempCollections ?? new Map<string, number>())) {
 			sources[key] = (value as number | undefined) ?? 0;
-			if ((sources[key] as number | null) === null || isNaN(sources[key])) sources[key] = 0;
-		});
+			if ((sources[key] as number | null) === null || isNaN(sources[key])) {
+				sources[key] = 0;
+			}
+
+			if (!highestCrop || sources[key] > sources[highestCrop]) {
+				highestCrop = key;
+			}
+		};
 
 		const bonuses: Record<string, number> = {};
 		tempBonus.forEach((value, key) => {
@@ -42,11 +50,13 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 				sources: sources,
 				bonuses: bonuses,
 			},
+			cute_name: profile.cute_name,
 		};
 
 		if (realTotal > highestData.farming.weight) {
 			highestData.farming.weight = realTotal;
 			highestData.farming.profile = profile.profile_id;
+			highestData.farming.crop = highestCrop ?? 'Wheat';
 		}
 	}
 
