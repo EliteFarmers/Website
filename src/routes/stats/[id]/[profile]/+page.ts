@@ -63,7 +63,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 			}));
 		profileIds.unshift({ id: profile.profile_id, name: profile.cute_name });
 
-		const weightFetch = await fetch(`/api/weight/${account.id}/${profileId}`);
+		const weightFetch = await fetch(`/api/weight/${account.id}/${profile.profile_id}`);
 		const weight = (await weightFetch.json()) as WeightInfo;
 
 		return {
