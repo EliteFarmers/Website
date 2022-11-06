@@ -36,12 +36,14 @@ export interface WeightBreakdown {
 
 export interface WeightInfo {
 	farming: WeightBreakdown;
+	cute_name: string;
 }
 
 export interface HighestWeights {
 	farming: {
 		weight: number;
 		profile: string;
+		crop: string;
 	};
 }
 

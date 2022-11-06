@@ -94,6 +94,7 @@ const infoDefaults: UserInfo = {
 		farming: {
 			weight: 0,
 			profile: 'N/A',
+			crop: 'N/A',
 		},
 	},
 	profiles: {},
