@@ -41,14 +41,16 @@
 	{:else if player}
 		<meta
 			name="description"
-			content="{player.ign} has {player.farming
-				.weight} farming weight, earning position #{player.rank} on the global weight leaderboard."
+			content="{player.ign} has {player.weight.toLocaleString(undefined, {
+				maximumFractionDigits: 0,
+			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
 		/>
 		<meta property="og:title" content="#{player.rank} | {player.ign}" />
 		<meta
 			property="og:description"
-			content="{player.ign} has {player.farming
-				.weight} farming weight, earning position #{player.rank} on the global weight leaderboard."
+			content="{player.ign} has {player.weight.toLocaleString(undefined, {
+				maximumFractionDigits: 0,
+			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
 		/>
 	{/if}
 	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
