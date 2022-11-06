@@ -252,10 +252,13 @@ export async function FetchWeightLeaderboard() {
 		limit: 1_000,
 		attributes: {
 			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
-			include: [[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming'), 'farming']],
+			include: [
+				[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming', 'profile'), 'profile'],
+				[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming', 'weight'), 'weight']
+			],
 		},
 		where: { ['info.cheating']: { [Op.not]: true }, ['info.highest.farming.weight']: { [Op.gt]: 0 } },
-		order: [[sequelize.literal('farming'), 'DESC']],
+		order: [[sequelize.literal('weight'), 'DESC']],
 		raw: true,
 		nest: true,
 	});
