@@ -214,10 +214,8 @@ export interface LeaderboardEntry {
 	uuid: string;
 	ign: string;
 	rank: number;
-	farming: {
-		weight: number;
-		profile: string;
-	};
+	weight: number;
+	profile: string;
 }
 
 export async function GetPlayerRank(uuid: string) {
@@ -254,7 +252,7 @@ export async function FetchWeightLeaderboard() {
 			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
 			include: [
 				[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming', 'profile'), 'profile'],
-				[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming', 'weight'), 'weight']
+				[sequelize.fn('jsonb_extract_path', sequelize.col('info'), 'highest', 'farming', 'weight'), 'weight'],
 			],
 		},
 		where: { ['info.cheating']: { [Op.not]: true }, ['info.highest.farming.weight']: { [Op.gt]: 0 } },
