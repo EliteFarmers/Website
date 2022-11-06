@@ -6,7 +6,7 @@
 
 	const highlight = entry.ign === jump;
 
-	const { ign, farming, uuid } = entry;
+	const { ign, weight, profile, uuid } = entry;
 </script>
 
 <div
@@ -24,11 +24,11 @@
 	</div>
 	<div class="flex gap-2 p-1 justify-end align-middle">
 		<div class="text-sm sm:text-xl">
-			{farming.weight.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+			{weight.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
 		</div>
 		<div>
 			<a
-				href="/stats/{uuid}/{farming.profile}"
+				href="/stats/{uuid}/{profile}"
 				class="text-blue-600 bg-gray-300 dark:bg-zinc-800 p-1 sm:p-2 ml-1 rounded-md text-md sm:text-lg"
 			>
 				Stats
