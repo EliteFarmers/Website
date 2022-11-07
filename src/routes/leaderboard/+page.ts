@@ -12,10 +12,12 @@ export const load: PageLoad = async ({ fetch, url }) => {
 
 		if (uuid?.account?.id) {
 			const res = await fetch(`/api/leaderboard/weight/${uuid.account.id}`);
-			const data = (await res.json()) as { rank: number; success: boolean };
+			const data = (await res.json()) as
+				| { success: true; entry: LeaderboardEntry }
+				| { success: false; error: string };
 
 			if (data.success) {
-				start = String(data.rank - (data.rank % 20) + 1);
+				start = String(data.entry.rank - (data.entry.rank % 20) + 1);
 			}
 		}
 	}

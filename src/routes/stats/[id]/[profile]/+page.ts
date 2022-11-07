@@ -1,3 +1,4 @@
+import type { LeaderboardEntry } from '$db/database';
 import type { UserInfo, WeightInfo } from '$db/models/users';
 import type { AccountInfo, PlayerInfo, Profiles } from '$lib/skyblock';
 import { error } from '@sveltejs/kit';
@@ -31,8 +32,10 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		])) as [Profiles, PlayerInfo, UserInfo];
 
 		const rankFetch = await fetch(`/api/leaderboard/weight/${account.id}`);
-		const rankData = (await rankFetch.json()) as { success: boolean; rank: number };
-		const rank = rankData.success ? rankData.rank : -1;
+		const rankData = (await rankFetch.json()) as
+			| { success: true; entry: LeaderboardEntry }
+			| { success: false; error: string };
+		const rank = rankData.success ? rankData.entry.rank : -1;
 
 		let profileId = params.profile;
 		let profileName = profileId;

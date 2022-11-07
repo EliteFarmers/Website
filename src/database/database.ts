@@ -224,11 +224,11 @@ export async function GetPlayerRank(uuid: string) {
 
 	const now = Date.now();
 	if (now - CachedLeaderboardUpdated < LEADERBOARD_UPDATE_INTERVAL) {
-		return CachedLeaderboardMap.get(uuid)?.rank ?? -1;
+		return CachedLeaderboardMap.get(uuid) ?? -1;
 	}
 
 	await FetchWeightLeaderboard();
-	return CachedLeaderboardMap.get(uuid)?.rank ?? -1;
+	return CachedLeaderboardMap.get(uuid) ?? -1;
 }
 
 export async function GetWeightLeaderboard(offset = 0, limit = 20) {

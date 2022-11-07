@@ -11,14 +11,14 @@ export const GET: RequestHandler = async ({ params }) => {
 	try {
 		const rank = await GetPlayerRank(uuid);
 
-		if (rank === -1 || !rank) {
+		if (rank === -1) {
 			return new Response(JSON.stringify({ success: false, error: 'Player not found.' }), { status: 404 });
 		}
 
 		return new Response(
 			JSON.stringify({
 				success: true,
-				rank: rank,
+				entry: rank,
 			})
 		);
 	} catch (error) {
