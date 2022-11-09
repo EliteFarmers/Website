@@ -50,6 +50,7 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 				sources: sources,
 				bonuses: bonuses,
 			},
+			api: profile.api,
 			cute_name: profile.cute_name,
 		};
 
