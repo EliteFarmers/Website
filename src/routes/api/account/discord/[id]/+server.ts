@@ -5,7 +5,7 @@ export const GET: RequestHandler = async ({ params }) => {
 	const { id } = params as { id: string };
 
 	if (!id || id.length < 17 || !/^\d+$/.test(id)) {
-		return new Response('Invalid Discord ID', { status: 400 });
+		return new Response(JSON.stringify({ success: false, error: 'Invalid Discord ID' }), { status: 400 });
 	}
 
 	const account = await GetAccountFromDiscord(id);
