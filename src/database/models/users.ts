@@ -1,4 +1,4 @@
-import type { AccountInfo, PlayerInfo, Profiles } from '$lib/skyblock.d';
+import type { AccountInfo, APISettings, PlayerInfo, Profiles } from '$lib/skyblock.d';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import type {
 	CreationOptional,
@@ -36,6 +36,7 @@ export interface WeightBreakdown {
 
 export interface WeightInfo {
 	farming: WeightBreakdown;
+	api: APISettings;
 	cute_name: string;
 }
 
