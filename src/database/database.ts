@@ -152,6 +152,13 @@ export function UpdateDiscordUser(id: string, user: DiscordUser) {
 	return UpdateUser({ id: id }, { user: user });
 }
 
+export async function GetAccountFromDiscord(id: string) {
+	const user = await GetUserByDiscordID(id);
+	if (!user) return null;
+
+	return user.account;
+}
+
 export async function GetAccountData(uuid: string) {
 	const user = await GetUser(uuid);
 	return user?.account ?? null;
