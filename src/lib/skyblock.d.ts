@@ -131,6 +131,7 @@ export interface JacobContest {
 	timestamp: number;
 	position?: number;
 	participants?: number;
+	medal?: 'gold' | 'silver' | 'bronze';
 }
 
 export interface JacobData {
@@ -290,6 +291,7 @@ interface FarmingContest {
 	claimed_rewards?: true;
 	claimed_position?: number;
 	claimed_participants?: number;
+	claimed_medal?: 'bronze' | 'silver' | 'gold';
 }
 
 export interface PlayerInfo {

@@ -516,8 +516,11 @@ function formatContests(member: RawProfileMember) {
 
 		const position = contest.claimed_position;
 		const participants = contest.claimed_participants;
+		const medal = contest.claimed_medal;
 
-		if (position !== undefined && participants) {
+		if (medal !== undefined && ['bronze', 'silver', 'gold'].includes(medal)) {
+			jacob.earned_medals[medal]++;
+		} else if (position !== undefined && participants) {
 			if (position <= participants * 0.05 + 1) {
 				jacob.earned_medals.gold++;
 			} else if (position <= participants * 0.25 + 1) {
@@ -532,6 +535,7 @@ function formatContests(member: RawProfileMember) {
 			timestamp: getContestTimeStamp(contestKey),
 			position: position,
 			participants: participants,
+			medal: contest.claimed_medal,
 		});
 	}
 
