@@ -149,7 +149,7 @@ async function fetchNewProfiles(user: User | null, uuid: string) {
 				const { data, highestData } = CalculateWeight(parsed.profiles, info.highest);
 				info.profiles = data;
 				info.highest = highestData;
-			
+
 				await UpdateUserInfo(uuid, info);
 			}
 		}
