@@ -535,7 +535,7 @@ function formatContests(member: RawProfileMember) {
 			timestamp: getContestTimeStamp(contestKey),
 			position: position,
 			participants: participants,
-			medal: contest.claimed_medal
+			medal: contest.claimed_medal,
 		});
 	}
 
