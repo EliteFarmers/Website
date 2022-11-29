@@ -1,8 +1,6 @@
-import { GetUser, UpdateUserInfo } from '$db/database';
+import { GetUser } from '$db/database';
 import type { UserInfo } from '$db/models/users';
-import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 import { accountFromUUID, fetchProfiles } from '$lib/data';
-import { CalculateWeight } from '$lib/weight';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -35,23 +33,11 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(JSON.stringify({ error: 'Profiles not found' }), { status: 404 });
 	}
 
-	const profiles = profilesData.profiles;
 	const info = user.info as Partial<UserInfo> | undefined;
 
 	if (!info) {
 		return new Response(JSON.stringify({ error: 'User info not found' }), { status: 404 });
 	}
-
-	// If the profile data is recent enough, use the cached data
-	if (Date.now() - profilesData.last_fetched < PROFILE_UPDATE_INTERVAL && info.profiles) {
-		return new Response(JSON.stringify(info), { status: 200 });
-	}
-
-	const { data, highestData } = CalculateWeight(profiles, info.highest);
-	info.profiles = data;
-	info.highest = highestData;
-
-	void UpdateUserInfo(uuid, info);
 
 	return new Response(JSON.stringify(info), { status: 200 });
 };

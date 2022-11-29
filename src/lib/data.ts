@@ -37,11 +37,13 @@ import {
 	UpdateAccountData,
 	UpdatePlayerData,
 	UpdateProfilesData,
+	UpdateUserInfo,
 } from '$db/database';
 import { parse, simplify } from 'prismarine-nbt';
 import { getContestTimeStamp } from './format';
 import type { User } from '$db/models/users';
 import { FetchHypixelPlayer, FetchSkyblockProfiles } from '$lib/hypixel';
+import { CalculateWeight } from './weight';
 
 const RESPONSE_VERSION = 1;
 
@@ -115,9 +117,9 @@ export async function fetchProfiles(uuid: string): Promise<Profiles | undefined>
 	if (user?.skyblock?.success) {
 		// If the profiles are older than the interval, get them from the API.
 		if (Date.now() - user.skyblock.last_fetched > PROFILE_UPDATE_INTERVAL) {
-			void fetchNewProfiles(user, uuid);
+			return await fetchNewProfiles(user, uuid);
 		}
-		// Return old profiles immediately anyway, so the user doesn't have to wait.
+		// Return old profiles if they are not older than the interval.
 		return user.skyblock;
 	}
 
@@ -127,6 +129,7 @@ export async function fetchProfiles(uuid: string): Promise<Profiles | undefined>
 async function fetchNewProfiles(user: User | null, uuid: string) {
 	if (!user) {
 		await accountFromUUID(uuid);
+		user = await GetUser(uuid);
 	}
 
 	const data = await FetchSkyblockProfiles(uuid);
@@ -140,6 +143,15 @@ async function fetchNewProfiles(user: User | null, uuid: string) {
 
 		if (user) {
 			await UpdateProfilesData(uuid, parsed);
+
+			const info = user.info;
+			if (info) {
+				const { data, highestData } = CalculateWeight(parsed.profiles, info.highest);
+				info.profiles = data;
+				info.highest = highestData;
+
+				await UpdateUserInfo(uuid, info);
+			}
 		}
 
 		return parsed;
