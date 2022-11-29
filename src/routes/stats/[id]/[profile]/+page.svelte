@@ -123,7 +123,13 @@
 	<Breakdown weight={data.weight.farming} />
 </main>
 
-<h1 class="text-center text-md m-16">
-	<span class="select-none text-gray-500">Player UUID:</span>
-	{uuid}
+<h1 class="text-center text-md m-16 flex flex-col">
+	<span>
+		<span class="select-none text-gray-500">Player UUID:</span>
+		{uuid}
+	</span>
+	<span>
+		<span class="select-none text-gray-500">Last Loaded:</span>
+		{new Date(data.last_fetched).toLocaleString()}
+	</span>
 </h1>
