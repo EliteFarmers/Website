@@ -6,7 +6,6 @@
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
-	import { FetchNewProfiles } from '$lib/util';
 
 	import Skills from '$comp/stats/skills.svelte';
 	import PlayerInfo from '$comp/stats/playerinfo.svelte';
@@ -37,18 +36,9 @@
 
 	onMount(async () => {
 		const url = `/stats/${ign}/${profileName}`;
-		if ($page.url.pathname !== url)
+		if ($page.url.pathname !== url) {
 			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
-
-		// console.log(account);
-		// console.log({ profiles });
-		// console.log(data.weight);
-
-		// If the data is old, fetch new data and update the page.
-		FetchNewProfiles(uuid, data.last_fetched).then((data) => {
-			if (!data) return;
-			// profiles = data;
-		});
+		}
 	});
 
 	const weightStr =
