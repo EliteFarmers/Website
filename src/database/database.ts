@@ -1,5 +1,7 @@
 import { POSTGRES_URI } from '$env/static/private';
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
+import { fetchProfiles } from '$lib/data';
+import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
 import {
@@ -26,6 +28,8 @@ const User = UsersInit(sequelize);
 let CachedLeaderboardUpdated = 0;
 let CachedLeaderboard: LeaderboardEntry[] = [];
 let CachedLeaderboardMap: Map<string, LeaderboardEntry> = new Map<string, LeaderboardEntry>();
+let limiter: RateLimiter;
+
 export let DBReady = false;
 
 export async function SyncTables() {
@@ -37,6 +41,10 @@ export async function SyncTables() {
 
 		await User.sync({ force: false });
 		await FetchWeightLeaderboard();
+
+		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
+		void RefreshDataTask();
+
 		console.log('Connected to database.');
 	} catch (error) {
 		DBReady = false;
@@ -288,4 +296,20 @@ export async function GetViewLeaderboard(limit = 10) {
 	});
 
 	return list;
+}
+
+export async function RefreshDataTask(limit = 250) {
+	const leaderboard = await GetWeightLeaderboard(0, limit);
+
+	// Refresh all users, one user per 15 seconds
+	for (const entry of leaderboard) {
+		await limiter.removeTokens(1);
+
+		Promise.allSettled([
+			// Room for more tasks here if ever needed
+			fetchProfiles(entry.uuid),
+		]).catch(() => undefined);
+	}
+
+	void RefreshDataTask();
 }
