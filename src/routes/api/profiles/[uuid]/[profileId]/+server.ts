@@ -15,9 +15,10 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(JSON.stringify({ error: "Hypixel API couldn't be reached." }), { status: 404 });
 	}
 
-	const profile = (profileId === 'selected') 
-		? profiles.profiles.find((profile) => profile.selected)
-		: profiles.profiles.find((profile) => profile.profile_id === profileId);
+	const profile =
+		profileId === 'selected'
+			? profiles.profiles.find((profile) => profile.selected)
+			: profiles.profiles.find((profile) => profile.profile_id === profileId);
 
 	if (!profile) {
 		return new Response(JSON.stringify({ error: 'Profile not found' }), { status: 404 });
@@ -28,7 +29,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		last_fetched: profiles.last_fetched,
 		version: profiles.version,
 		profile: profile,
-	}
+	};
 
 	return new Response(JSON.stringify(data));
 };

@@ -35,8 +35,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw redirect(303, '/');
 	}
 
-	const data = (await response.json()) as { profile: ProfileData, success: boolean };
-
+	const data = (await response.json()) as { profile: ProfileData; success: boolean };
 
 	if (data.success) {
 		throw redirect(303, `/stats/${ign ?? uuid}/${encodeURIComponent(data.profile.cute_name)}`);
