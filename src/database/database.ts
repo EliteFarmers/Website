@@ -4,6 +4,7 @@ import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
+import type { LeaderboardEntry } from '$db/leaderboards';
 import {
 	UsersInit,
 	type DiscordUser,
@@ -18,12 +19,12 @@ export interface DataUpdate {
 	profiles: Profiles;
 }
 
-const sequelize = new Sequelize(POSTGRES_URI, {
+export const sequelize = new Sequelize(POSTGRES_URI, {
 	dialect: 'postgres',
 	logging: false,
 });
 
-const User = UsersInit(sequelize);
+export const User = UsersInit(sequelize);
 
 let CachedLeaderboardUpdated = 0;
 let CachedLeaderboard: LeaderboardEntry[] = [];
@@ -225,14 +226,6 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 	return UpdateUser({ uuid: uuid }, { info: newInfo });
 }
 
-export interface LeaderboardEntry {
-	uuid: string;
-	ign: string;
-	rank: number;
-	weight: number;
-	profile: string;
-}
-
 export async function GetPlayerRank(uuid: string) {
 	const user = await GetUser(uuid);
 	if (!user?.skyblock?.profiles) return -1;
@@ -252,17 +245,22 @@ export async function GetWeightLeaderboard(offset = 0, limit = 20) {
 
 	const now = Date.now();
 	if (now - CachedLeaderboardUpdated < LEADERBOARD_UPDATE_INTERVAL) {
-		return CachedLeaderboard.slice(offset, offset + limit);
+		//return CachedLeaderboard.slice(offset, offset + limit);
 	}
 
-	await FetchWeightLeaderboard();
+	await FetchWeightLeaderboard(offset, offset + limit);
 
-	return CachedLeaderboard.slice(offset, offset + limit);
+	return CachedLeaderboard;//.slice(offset, offset + limit);
 }
 
-export async function FetchWeightLeaderboard() {
+export async function FetchWeightLeaderboard(offset = 0, limit = 20) {
+	const startTime = Date.now();
+	//offset = 5;
+	limit = 1000;
+	//console.log((process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2), 'MB');
 	const list = await User.findAll({
-		limit: 1_000,
+		limit: limit,
+		offset: offset,
 		attributes: {
 			exclude: ['id', 'account', 'player', 'skyblock', 'user', 'createdAt', 'updatedAt', 'info'],
 			include: [
@@ -275,11 +273,17 @@ export async function FetchWeightLeaderboard() {
 		raw: true,
 		nest: true,
 	});
+	//console.log((process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2), 'MB');
+	//console.log(list);
 
-	CachedLeaderboard = list.map((user, i) => ({ ...user, rank: i + 1 })) as unknown as LeaderboardEntry[];
+	CachedLeaderboard = list.map((user, i) => ({ ...user, rank: i + 1 + offset })) as unknown as LeaderboardEntry[];
 	CachedLeaderboardUpdated = Date.now();
 
 	CachedLeaderboardMap = new Map(CachedLeaderboard.map((user) => [user.uuid, user]));
+	const endTime = Date.now();
+	//console.log((process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2), 'MB');
+
+	console.log(`Fetched ${CachedLeaderboard.length} entries in ${endTime - startTime}ms`);
 }
 
 export async function GetViewLeaderboard(limit = 10) {
