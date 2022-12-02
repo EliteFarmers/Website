@@ -1,5 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
-import type { AccountInfo, Profiles } from '$lib/skyblock';
+import type { AccountInfo, ProfileData } from '$lib/skyblock';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, fetch }) => {
@@ -29,19 +29,16 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw redirect(303, '/');
 	}
 
-	const response = await fetch(`/api/profiles/${uuid}`);
+	const response = await fetch(`/api/profiles/${uuid}/selected`);
 
 	if (!response.ok) {
 		throw redirect(303, '/');
 	}
 
-	const data = (await response.json()) as Profiles;
+	const data = (await response.json()) as { profile: ProfileData; success: boolean };
 
-	// Get latest profile
-	const name = data.profiles.filter((a) => a.selected)[0]?.cute_name;
-
-	if (uuid && name) {
-		throw redirect(303, `/stats/${ign ?? uuid}/${name}`);
+	if (data.success) {
+		throw redirect(303, `/stats/${ign ?? uuid}/${encodeURIComponent(data.profile.cute_name)}`);
 	}
 
 	throw error(404, 'Skyblock profile not found for this player!');
