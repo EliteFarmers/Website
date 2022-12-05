@@ -20,13 +20,13 @@
 	<title>Elite</title>
 	<meta
 		name="description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurating comparing between crops in the game."
+		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
 	/>
 	<meta name="keywords" content="farming, profile, Skyblock, weight, calculate" />
 	<meta property="og:title" content="Elite" />
 	<meta
 		property="og:description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurating comparing between crops in the game."
+		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
 	/>
 	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
 </svelte:head>
