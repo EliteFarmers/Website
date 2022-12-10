@@ -183,7 +183,7 @@ export async function GetProfilesData(uuid: string) {
 }
 
 export function UpdateAccountData(uuid: string, data: AccountInfo) {
-	return UpdateUser({ uuid: uuid }, { account: data });
+	return UpdateUser({ uuid: uuid }, { account: data, ign: data.account.name });
 }
 
 export function UpdatePlayerData(uuid: string, data: PlayerInfo) {
