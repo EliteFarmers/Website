@@ -17,7 +17,8 @@ export const load: PageLoad = async ({ fetch, url }) => {
 				| { success: false; error: string };
 
 			if (data.success) {
-				start = String(data.entry.rank - (data.entry.rank % 20) + 1);
+				// Find the start of the page the user is on
+				start = String(Math.floor((data.entry.rank - 1) / 20) * 20 + 1);
 			}
 		}
 	}
