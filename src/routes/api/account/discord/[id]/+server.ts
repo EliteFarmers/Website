@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ params }) => {
 
 	const account = await GetAccountFromDiscord(id);
 
-	if (!account || !account.success) {
+	if (!account?.success) {
 		return new Response(JSON.stringify({ success: false, error: 'Account not found' }), { status: 404 });
 	}
 

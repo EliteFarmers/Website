@@ -28,10 +28,10 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	}
 
 	const input = body.replace('username=', '');
-	const username = decodeURIComponent(input);
+	const username = decodeURIComponent(input) || undefined;
 
 	// Check if the username is a valid minecraft username.
-	if (!username || !username.match(/^[a-zA-Z0-9_]{1,16}$/)) {
+	if (!username?.match(/^[a-zA-Z0-9_]{1,16}$/)) {
 		return new Response('Invalid username.', { status: 404 });
 	}
 
