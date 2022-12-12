@@ -1,3 +1,4 @@
+import { API_CROP_TO_CROP } from "$lib/constants/crops";
 import { LEADERBOARD_UPDATE_INTERVAL } from "$lib/constants/data";
 import type { ProfileData } from "$lib/skyblock";
 import { Op } from "sequelize";
@@ -34,6 +35,52 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 			DEFAULT: {
 				limit: 1_000,
 				property: 'weight',
+			},
+		}
+	},
+	skills: {
+		column: 'skyblock',
+		path: '[profile].member.skills',
+		pages: {
+			DEFAULT: {
+				limit: 1_000,
+				property: 'farming',
+			},
+			combat: {
+				limit: 1_000,
+				property: 'combat',
+			},
+			mining: {
+				limit: 1_000,
+				property: 'mining',
+			},
+			farming: {
+				limit: 1_000,
+				property: 'farming',
+			},
+			foraging: {
+				limit: 1_000,
+				property: 'foraging',
+			},
+			fishing: {
+				limit: 1_000,
+				property: 'fishing',
+			},
+			enchanting: {
+				limit: 1_000,
+				property: 'enchanting',
+			},
+			alchemy: {
+				limit: 1_000,
+				property: 'alchemy',
+			},
+			taming: {
+				limit: 1_000,
+				property: 'taming',
+			},
+			social: {
+				limit: 1_000,
+				property: 'social',
 			},
 		}
 	},
@@ -116,36 +163,22 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 	}
 
 	const onProfile = category.column === 'skyblock';
-	const path = category.path.replace('[profile].', '').split('.');
+	const path: string[] = category.path.replace('[profile].', '').split('.');
 
 	const exclude = ['info', 'profile', 'account', 'player', 'skyblock', 'createdAt', 'updatedAt'];
 	if (!onProfile) exclude.push('skyblock');
 	
-	//const startTime = Date.now();
-	/*
-	const list = await User.findAll({
-		//limit: page.limit,
-		//offset: offset,
-		attributes: {
-			exclude: exclude,
-			include: [
-				[sequelize.fn('jsonb_extract_path', sequelize.col(category.column), ...path, page.property), 'amount'],
-				[sequelize.fn('jsonb_extract_path', sequelize.col(category.column), 'profiles'), 'profiles'],
-				// Cross join the profiles
-				//[sequelize.fn('jsonb_array_elements', 'skyblock.profiles'), 'profile'],
-			],
-		},
-		where: { ['info.cheating']: { [Op.not]: true }, ['info.highest.farming.weight']: { [Op.gt]: 0 } },
-		// order: [[sequelize.literal('weight'), 'DESC']],
-		raw: true,
-		nest: true,
-	}).catch((e) => console.log(e));
-	*/
 	const rawQuery = `
-	SELECT *
-	FROM   users
-	WHERE  skyblock->'profiles'->'array' @? '$ ? (exists (@."member"))';
+		SELECT ign, uuid, amount, profile_id, cute_name
+		FROM (
+			SELECT ign, uuid, elem->'${path.join("'->'")}'->'${page.property}' as amount, elem->'profile_id' as profile_id, elem->'cute_name' as cute_name
+			FROM users, jsonb_array_elements(skyblock->'profiles') a(elem)
+			) sub
+		WHERE amount is not null
+		ORDER BY amount::dec DESC
+		LIMIT ${page.limit};
 	`;
+
 	const raw = await sequelize
 		.query(rawQuery, {
 			raw: true,
@@ -153,30 +186,4 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 		}).catch((e) => console.log(e));
 
 	return raw;
-	/*
-	const leaderboard: LeaderboardEntry[] = list.map((entry) => {
-		const highest = entry.skyblock?.profiles.sort((a, b) => {
-			const aAmount = a.member.collection?.[page.property] ?? 0;
-			const bAmount = b.member.collection?.[page.property] ?? 0;
-
-			return bAmount - aAmount;
-		})[0];
-		
-		return {
-			uuid: entry.uuid,
-			profile: highest?.profile_id ?? '',
-			ign: entry.ign ?? 'N/A',
-			rank: 0,
-			amount: highest?.member.collection?.[page.property] ?? 0,
-		}
-	}).sort((a, b) => b.amount - a.amount).map((entry, index) => ({ ...entry, rank: index + 1 }));
-
-	LeaderboardCache.set(cacheKey, leaderboard);
-	LastUpdated.set(cacheKey, Date.now());
-
-	const endTime = Date.now();
-	console.log(`Fetched leaderboard ${categoryName} in ${endTime - startTime}ms`);
-
-	//console.log(leaderboard);
-	return leaderboard;*/
 }
