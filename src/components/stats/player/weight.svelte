@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import type { WeightInfo } from '$db/models/users';
 	import Profiles from './profiles.svelte';
 

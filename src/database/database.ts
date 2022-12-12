@@ -235,7 +235,7 @@ export interface LeaderboardEntry {
 
 export async function GetPlayerRank(uuid: string) {
 	const user = await GetUser(uuid);
-	if (!user || !user.skyblock?.profiles) return -1;
+	if (!user?.skyblock?.profiles) return -1;
 
 	const now = Date.now();
 	if (now - CachedLeaderboardUpdated < LEADERBOARD_UPDATE_INTERVAL) {

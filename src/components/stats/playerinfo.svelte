@@ -3,8 +3,6 @@
 	import { getRankDefaults } from '$lib/format';
 	import { page } from '$app/stores';
 
-	import Dropdown from '$comp/generic/dropdown.svelte';
-	import Tooltip from '$comp/generic/tooltip.svelte';
 	import Weight from '$comp/stats/player/weight.svelte';
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
