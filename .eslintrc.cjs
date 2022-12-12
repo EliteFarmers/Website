@@ -21,5 +21,7 @@ module.exports = {
 	rules: {
 		eqeqeq: 'warn',
 		importsNotUsedAsValues: 'off',
+		noThrowLiteral: 'off',
+		'@typescript-eslint/no-throw-literal': 'off',
 	},
 };
