@@ -1,31 +1,20 @@
 <script lang="ts">
-	import crops from '$lib/collections';
 	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import Minion from './minion.svelte';
 
 	export let name: string | undefined;
 	export let value: number;
 	export let weight: number;
+	export let tier: number;
+	export let maxTier: number;
 	export let minionTierField: number;
 
-	const crop = name ? crops.crops[name] : undefined;
+	const crop = name ? name : undefined;
 	let index = 0;
-	let tier = 0;
-	let maxTier = 0;
 
 	const cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
 
 	if (crop && name) {
-		for (let i = crop.length - 1; i >= 0; i--) {
-			if (value >= crop[i]) {
-				tier = i + 1;
-				break;
-			}
-		}
-
-		maxTier = crop.length;
-
-		// Get index of where the crop was in crops.crops
 		index = cropArray.indexOf(name);
 	}
 </script>

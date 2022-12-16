@@ -1,33 +1,24 @@
 <script lang="ts">
-	import type { WeightInfo } from '$db/models/users';
-	import { PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
-	import type { ProfileMember } from '$lib/skyblock';
 	import CollectionBar from './collectionbar.svelte';
 
-	export let member: ProfileMember;
-	export let weight: WeightInfo;
+	export let collections: {
+		name: string | undefined;
+		value: number;
+		minionTierField: number;
+		weight: number;
+		tier: number;
+		maxTier: number;
+	}[];
 
-	const collections = Object.entries(member.collection ?? {})
-		.filter(([key]) => PROPER_CROP_NAME[key])
-		.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value, minionTierField: 0, weight: 0 }));
-
-	for (const collection of collections) {
-		if (!collection.name) continue;
-
-		const minion = PROPER_CROP_TO_MINION[collection.name] ?? 'no';
-		collection.minionTierField = member.minions[minion] ?? 0;
-		collection.weight = weight?.farming?.sources?.[collection.name] ?? 0;
-	}
-
-	let list = collections.sort((a, b) => b.weight - a.weight);
+	let list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
 
 	let weightSort = true;
 	function swap() {
 		weightSort = !weightSort;
 
 		list = weightSort
-			? collections.sort((a, b) => b.weight - a.weight)
-			: collections.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
+			? collections?.sort((a, b) => b.weight - a.weight)
+			: collections?.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
 	}
 </script>
 
