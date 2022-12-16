@@ -90,11 +90,13 @@
 		<!-- Login with discord styled button -->
 		<div hidden={discordUser !== false}>
 			<a
+				rel="nofollow noreferrer"
 				data-sveltekit-reload
 				class="bg-gray-200 dark:bg-zinc-700 hidden md:block p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
 				href="/login">Discord Login</a
 			>
 			<a
+				rel="nofollow noreferrer"
 				data-sveltekit-reload
 				class="bg-gray-200 dark:bg-zinc-700 block md:hidden p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
 				href="/login">Login</a
