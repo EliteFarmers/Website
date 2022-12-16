@@ -199,6 +199,18 @@ export async function fetchPlayer(uuid: string) {
 	}
 }
 
+export async function accountFromId(id: string) {
+	if (!id) return null;
+	id = id.replaceAll('-', '');
+
+	if (id.length === 32) {
+		if (id.match(/[^0-9a-f]/gi)) return null;
+		return await accountFromUUID(id);
+	} else {
+		return await accountFromIGN(id);
+	}
+}
+
 function formatPlayer(player: PlayerData) {
 	for (const key in player) {
 		let keep = false;
@@ -656,4 +668,28 @@ function condenseInventories(member: RawProfileMember): Inventories {
 	}
 
 	return inventories;
+}
+
+export function selectedProfile(profiles: ProfileData[], profileId?: string) {
+	if (profiles.length === 0) return null;
+
+	// Find the profile with the given ID
+	if (profileId) {
+		const profile =
+			profileId.length < 32
+				? profiles.find((profile) => profile.cute_name === profileId)
+				: profiles.find((profile) => profile.profile_id === profileId);
+
+		if (profile) return profile;
+	}
+
+	// Fallback to the selected profile
+	const selected = profiles.find((profile) => profile.selected);
+	if (selected) return selected;
+
+	// Fallback to the first profile
+	if (profiles.length > 0) return profiles[0];
+
+	// No profiles
+	return null;
 }
