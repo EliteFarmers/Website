@@ -22,6 +22,7 @@
 	const account = data.account;
 	const profileIds = data.profiles;
 	const player = data.player;
+	const collections = data.collections;
 	const { id: uuid, name: ign } = account;
 
 	let profileName = data.profileName;
@@ -106,7 +107,7 @@
 		</div>
 	{/if}
 
-	<Collections member={profile.member} weight={data.weight} />
+	<Collections {collections} />
 
 	<JacobInfo jacob={profile.member.jacob} ign={account.name} />
 
