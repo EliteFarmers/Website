@@ -128,20 +128,31 @@
 			<p class="text-lg my-4">
 				Flat Pumpkin and Flat Cactus icons are made by <a
 					class="underline"
+					rel="nofollow noreferrer noopener"
 					href="https://github.com/ThePotatoKing55/2D-block-texture-pack/"
 				>
 					ThePotatoKing55</a
 				>.
 			</p>
 			<p class="text-lg my-4">
-				Minion Icons (and base API) from <a class="underline" href="https://hypixel.net/">Hypixel</a>.
+				Minion Icons (and base API) from <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href="https://hypixel.net/">Hypixel</a
+				>.
 			</p>
 			<p class="text-lg my-4">
-				Player models provied by <a class="underline" href="https://mc-heads.net/">MCHeads</a>.
+				Player models provied by <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href="https://mc-heads.net/">MCHeads</a
+				>.
 			</p>
 			<p class="text-lg my-4">
-				Some inspiration from <a class="underline" href="https://github.com/SkyCryptWebsite/SkyCrypt"
-					>SkyCrypt</a
+				Some inspiration from <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href="https://github.com/SkyCryptWebsite/SkyCrypt">SkyCrypt</a
 				>.
 			</p>
 			<br /><br />

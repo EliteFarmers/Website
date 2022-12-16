@@ -49,13 +49,13 @@
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
 						href="https://sky.shiiyu.moe{$page.url.pathname}"
 						target="_blank"
-						rel="noopener noreferrer">SkyCrypt</a
+						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
 						href="https://plancke.io/hypixel/player/stats/{account.name}"
 						target="_blank"
-						rel="noopener noreferrer">Plancke</a
+						rel="noopener noreferrer nofollow">Plancke</a
 					>
 				</div>
 			</div>
