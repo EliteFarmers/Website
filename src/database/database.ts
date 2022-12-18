@@ -41,7 +41,6 @@ export async function SyncTables() {
 		await sequelize.authenticate();
 
 		await User.sync({ force: false });
-		await FetchWeightLeaderboard();
 
 		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
 		void RefreshDataTask();
