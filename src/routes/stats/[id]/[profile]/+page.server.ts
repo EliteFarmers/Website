@@ -1,4 +1,4 @@
-import type { LeaderboardEntry } from '$db/database';
+import { FetchLeaderboardRank } from '$db/leaderboards';
 import type { UserInfo, WeightInfo } from '$db/models/users';
 import { PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { accountFromId, selectedProfile } from '$lib/data';
@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const profilesFetch = fetch(`/api/profiles/${account.id}`);
 	const playerFetch = fetch(`/api/player/${account.id}`);
 	const userFetch = fetch(`/api/info/${account.id}`);
-	const rankFetch = fetch(`/api/leaderboard/weight/${account.id}`);
+	const rankFetch = FetchLeaderboardRank(account.id, 'weight');
 
 	try {
 		const [profilesRes, playerRes, userRes] = await Promise.all([profilesFetch, playerFetch, userFetch, rankFetch]);
@@ -32,10 +32,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			userRes.json(),
 		])) as [Profiles, PlayerInfo, UserInfo];
 
-		const rankData = (await (await rankFetch).json()) as
-			| { success: true; entry: LeaderboardEntry }
-			| { success: false; error: string };
-		const rank = rankData.success ? rankData.entry.rank : -1;
+		const rank = await rankFetch;
 
 		const profile = selectedProfile(profiles.profiles, params.profile);
 
