@@ -20,7 +20,6 @@
 	<div class="flex items-center gap-2">
 		<a
 			class="p-2 rounded-md max-w-fit z-10 bg-gray-200 dark:bg-zinc-700"
-			data-sveltekit-reload
 			href={`/leaderboard?jump=${profiles.ign}`}
 		>
 			{#if rank !== -1}
