@@ -1,4 +1,5 @@
-import { FetchLeaderboard, LeaderboardCategories } from '$db/leaderboards';
+import { GetUserByIGN } from '$db/database';
+import { FetchLeaderboardRank, GetLeaderboardSlice, LeaderboardCategories, LEADERBOARDS } from '$db/leaderboards';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -12,7 +13,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
 	let ign = url.searchParams.get('jump');
 
 	// Sanitize startRaw to be a number
-	const start = Number(startRaw);
+	let start = Number(startRaw);
 	if (isNaN(start) || start > 990 || start < 1) {
 		return new Response(JSON.stringify({ error: 'Not a valid start number' }), { status: 400 });
 	}
@@ -41,24 +42,22 @@ export const GET: RequestHandler = async ({ url, params }) => {
 			const rank = await FetchLeaderboardRank(player.uuid, category, page);
 
 			if (rank && rank !== -1) {
-				start = String(Math.floor((rank - 1) / 20) * 20 + 1);
+				start = Math.floor((rank - 1) / 20) * 20 + 1;
 			}
 		}
 	}
 
-	start = String(Math.max(1, Number(start)));
+	start = Math.max(1, Number(start));
 
-	const lb = await GetLeaderboardSlice(Number(start) - 1, 20, category, page);
+	const lb = await GetLeaderboardSlice(Number(start) - 1, limit, category, page);
 
 	const categoryEntry = LEADERBOARDS[category];
 	const pageEntry = categoryEntry?.pages[page ?? 'DEFAULT'];
 
 	const name = pageEntry?.name ?? categoryEntry?.name ?? 'Leaderboard';
 
-
 	try {
-		const data = await FetchLeaderboard(category, page/*, start - 1, limit*/);
-		return new Response(JSON.stringify(data));
+		return new Response(JSON.stringify({ success: true, start: start, name: name, leaderboard: lb }));
 	} catch (error) {
 		return new Response(JSON.stringify({ error: "Couldn't fetch leaderboard" }), { status: 500 });
 	}
