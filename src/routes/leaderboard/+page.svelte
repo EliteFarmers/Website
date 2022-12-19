@@ -1,90 +1,37 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import { page } from '$app/stores';
-	import Entry from './entry.svelte';
+	import { PUBLIC_HOST_URL } from "$env/static/public";
+	import { each } from "svelte/internal";
+	import type { PageData } from "./$types";
 
 	export let data: PageData;
 
-	let lb = data.lb;
-	let start = data.start;
-	let jump = data.jump ?? undefined;
-
-	let player = lb.find((entry) => entry.ign === jump);
-
-	let firstHalf = lb.slice(0, Math.ceil(lb.length / 2));
-	let secondHalf = lb.slice(Math.ceil(lb.length / 2));
-
-	async function lbPage(index: number) {
-		index = Math.max(1, index);
-
-		const request = await fetch(`/api/leaderboard/weight?start=${index}`);
-		const data = await request.json();
-
-		history.replaceState(history.state, document.title, `/leaderboard/?start=${index}`);
-
-		lb = data;
-		start = index;
-
-		firstHalf = lb.slice(0, Math.ceil(lb.length / 2));
-		secondHalf = lb.slice(Math.ceil(lb.length / 2));
-	}
+	const categories = data.categories;
 </script>
 
 <svelte:head>
-	<title>Leaderboard</title>
-
-	<meta name="keywords" content="hypixel, skyblock, leaderboard, stats, farming, weight" />
-	{#if !data.jump}
-		<meta name="description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-		<meta property="og:title" content="Weight Leaderboard" />
-		<meta property="og:description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-	{:else if player}
-		<meta
-			name="description"
-			content="{player.ign} has {player.weight.toLocaleString(undefined, {
-				maximumFractionDigits: 0,
-			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
-		/>
-		<meta property="og:title" content="#{player.rank} | {player.ign}" />
-		<meta
-			property="og:description"
-			content="{player.ign} has {player.weight.toLocaleString(undefined, {
-				maximumFractionDigits: 0,
-			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
-		/>
-	{/if}
-	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
-	<meta property="og:url" content={$page.url.toString()} />
+	<title>Leaderboards</title>
+	<meta name="description" content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game." />
+	<meta name="keywords" content="farming, profile, skyblock, weight, calculate, Hypixel, elite" />
+	<meta property="og:title" content="Elite - Skyblock Farming Weight" />
+	<meta property="og:description" content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game." />
+	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
 </svelte:head>
 
-<section class="flex flex-col mt-16 justify-center w-full">
-	<h1 class="text-2xl text-center">Farming Weight Leaderboard</h1>
-	<div
-		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"
-	>
-		<div class="flex flex-col gap-2 p-2 w-full">
-			{#each firstHalf as entry (entry.uuid)}
-				<Entry {entry} {jump} />
+<section>
+	{#each categories as category}
+		<h2 class="text-2xl text-center my-16">{category?.title ?? category?.pages[0].title}</h2>
+		<div class="flex flex-wrap justify-center">
+			{#each category?.pages ?? [] as leaderboard}
+				<div class="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-4">
+					<a href="/leaderboard/{category?.name}/{leaderboard.name.replace('DEFAULT', '')}">
+						<div class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800">
+							<h3 class="text-xl text-center">{leaderboard.title}</h3>
+							<p class="text-body text-center">{leaderboard.name}</p>
+						</div>
+					</a>
+				</div>
 			{/each}
 		</div>
-		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full">
-			{#each secondHalf as entry (entry.uuid)}
-				<Entry {entry} {jump} />
-			{/each}
-		</div>
-	</div>
-	<div class="flex w-full justify-center gap-4 text-center">
-		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(0)}> First </button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start - 20)}>
-			Back
-		</button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start + 20)}>
-			Next
-		</button>
-		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(990)}> Last </button>
-	</div>
-	<h3 class="text-sm text-center w-1/2 mx-[25%] py-4">
-		This leaderboard only consists of the top 1,000 players who have been searched on the website. New entries are
-		recalculated every 5 minutes.
-	</h3>
+	{/each}
 </section>
+
