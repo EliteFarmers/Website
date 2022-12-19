@@ -9,6 +9,7 @@
 		progress: number;
 		goal?: number;
 	};
+	export let rank = -1;
 
 	let percent = 100;
 	let readable = '';
@@ -33,7 +34,12 @@
 
 <section class="flex justify-center">
 	<div class="relative w-[90%]">
-		<span>{name} <strong>{progress.level}</strong></span>
+		<span>
+			{#if rank >= 0}
+				<span class="text-yellow-300 dark:text-yellow-400">#{rank}</span>
+			{/if}
+			{name} <strong>{progress.level}</strong>
+		</span>
 		<div
 			class="relative w-[100%] bg-slate-300 dark:bg-zinc-500 h-8 rounded-lg"
 			on:mouseenter={() => (hovering = true)}
