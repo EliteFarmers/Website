@@ -8,10 +8,9 @@
 	} from '$env/static/public';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
-	import Entry from './leaderboard/entry.svelte';
 
-	import type { PageData } from './$types';
-	export let data: PageData;
+	//import type { PageData } from './$types';
+	//export let data: PageData;
 
 	let enteredText = '';
 </script>
@@ -102,9 +101,7 @@
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-			{#each data.lb as entry}
-				<Entry {entry} jump={undefined} />
-			{/each}
+
 			<div class="flex justify-center w-full">
 				<a
 					href="/leaderboard"
