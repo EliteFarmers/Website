@@ -44,13 +44,9 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 	skills: {
 		column: 'skyblock',
 		path: '[profile].member.skills',
+		name: 'Skills',
 		format: 'decimal',
 		pages: {
-			DEFAULT: {
-				limit: 1_000,
-				property: 'farming',
-				name: 'Farming XP',
-			},
 			combat: {
 				limit: 1_000,
 				property: 'combat',
@@ -111,6 +107,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 	crops: {
 		column: 'skyblock',
 		path: '[profile].member.collection',
+		name: 'Collections',
 		format: 'number',
 		pages: {
 			cactus: {
@@ -168,6 +165,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 	contests: {
 		column: 'skyblock',
 		path: '[profile].member.jacob',
+		name: 'Contests',
 		format: 'number',
 		pages: {
 			DEFAULT: {
@@ -269,14 +267,33 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 	return raw as Leaderboard;
 }
 
-export async function FetchLeaderboardRank(uuid: string, category: string, page?: string) {
+export async function FetchLeaderboardRank(uuid: string, category: string, page?: string, profile?: string) {
 	const leaderboard = await FetchLeaderboard(category, page);
 
 	if (!leaderboard) return -1;
 
-	const rank = leaderboard.findIndex((entry) => entry.uuid === uuid);
+	const rank = leaderboard.findIndex((entry) => entry.uuid === uuid && (!profile || entry.profile === profile));
 
 	if (rank === -1) return -1;
 
 	return rank + 1;
+}
+
+export async function FetchLeaderboardRankings(uuid: string, profile?: string) {
+	const rankings: Record<string, Record<string, number>> = {};
+
+	for (const category of LeaderboardCategories) {
+		const categoryPages = LEADERBOARDS[category]?.pages;
+
+		for (const page of Object.keys(categoryPages ?? {})) {
+			const rank = await FetchLeaderboardRank(uuid, category, page, profile);
+
+			if (rank === -1) continue;
+
+			if (!rankings[category] as boolean) rankings[category] = {};
+			rankings[category][page] = rank;
+		}
+	}
+
+	return rankings;
 }

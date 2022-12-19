@@ -1,4 +1,4 @@
-import { FetchLeaderboardRank } from '$db/leaderboards';
+import { FetchLeaderboardRankings } from '$db/leaderboards';
 import type { UserInfo, WeightInfo } from '$db/models/users';
 import { PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { accountFromId, selectedProfile } from '$lib/data';
@@ -22,17 +22,14 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const profilesFetch = fetch(`/api/profiles/${account.id}`);
 	const playerFetch = fetch(`/api/player/${account.id}`);
 	const userFetch = fetch(`/api/info/${account.id}`);
-	const rankFetch = FetchLeaderboardRank(account.id, 'weight');
 
 	try {
-		const [profilesRes, playerRes, userRes] = await Promise.all([profilesFetch, playerFetch, userFetch, rankFetch]);
+		const [profilesRes, playerRes, userRes] = await Promise.all([profilesFetch, playerFetch, userFetch]);
 		const [profiles, player, user] = (await Promise.all([
 			profilesRes.json(),
 			playerRes.json(),
 			userRes.json(),
 		])) as [Profiles, PlayerInfo, UserInfo];
-
-		const rank = await rankFetch;
 
 		const profile = selectedProfile(profiles.profiles, params.profile);
 
@@ -73,6 +70,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			if (collection.tier === 0) collection.tier = collection.maxTier;
 		}
 
+		const rankings = await FetchLeaderboardRankings(account.id, profile.profile_id);
+
 		return {
 			account: account,
 			profile: profile,
@@ -82,7 +81,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			player: player,
 			weight: weight,
 			user: user,
-			rank: rank,
+			rankings: rankings,
 			collections: collections,
 		};
 	} catch (e) {
