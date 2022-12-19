@@ -12,8 +12,12 @@
 
 	const formatting = data.formatting;
 
-	afterNavigate(async () => {
-		scroll({ top: 1000 });
+	// Scroll back down to the buttons after navigating to prevent page jumping
+	const button = document.querySelector('button');
+	afterNavigate(({ type }) => {
+		if (type === 'goto') {
+			button?.focus();
+		}
 	});
 
 	async function lbPage(index: number) {
