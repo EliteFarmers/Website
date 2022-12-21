@@ -1,5 +1,5 @@
-import { LEADERBOARD_UPDATE_INTERVAL } from "$lib/constants/data";
-import { DBReady, sequelize } from "./database";
+import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
+import { DBReady, sequelize } from './database';
 
 export interface LeaderboardEntry {
 	uuid: string;
@@ -39,7 +39,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 				property: 'total',
 				name: 'Farming Weight',
 			},
-		}
+		},
 	},
 	skills: {
 		column: 'skyblock',
@@ -102,7 +102,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 				property: 'carpentry',
 				name: 'Carpentry XP',
 			},
-		}
+		},
 	},
 	crops: {
 		column: 'skyblock',
@@ -160,7 +160,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 				property: 'WHEAT',
 				name: 'Wheat Collection',
 			},
-		}
+		},
 	},
 	contests: {
 		column: 'skyblock',
@@ -173,7 +173,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 				property: 'participations',
 				name: 'Jacob Contest Participations',
 			},
-		}
+		},
 	},
 };
 
@@ -192,7 +192,6 @@ const LeaderboardCache = new Map<string, Leaderboard>();
 const LastUpdated = new Map<string, number>();
 
 export async function GetLeaderboardSlice(offset: number, limit: number, category: string, page = 'DEFAULT') {
-
 	if (LeaderboardCache.has(`${category}-${page}`)) {
 		const lastUpdated = LastUpdated.get(`${category}-${page}`) ?? 0;
 
@@ -231,20 +230,26 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 
 	const exclude = ['info', 'profile', 'account', 'player', 'skyblock', 'createdAt', 'updatedAt'];
 	if (!onProfile) exclude.push('skyblock');
-	
-	const rawQuery = (onProfile) ? `
+
+	const rawQuery = onProfile
+		? `
 		SELECT ign, uuid, amount, profile_id as profile, cute_name
 		FROM (
-			SELECT ign, uuid, elem->'${path.join("'->'")}'->'${page.property}' as amount, elem->'profile_id' as profile_id, elem->'cute_name' as cute_name
+			SELECT ign, uuid, elem->'${path.join("'->'")}'->'${
+				page.property
+		  }' as amount, elem->'profile_id' as profile_id, elem->'cute_name' as cute_name
 			FROM users, jsonb_array_elements(skyblock->'profiles') a(elem)
 			) sub
 		WHERE amount is not null and amount::dec > 0
 		ORDER BY amount::dec DESC
 		LIMIT ${page.limit};
-	` : `
+	`
+		: `
 		SELECT ign, uuid, amount, profile, cute_name
 		FROM (
-			SELECT ign, uuid, elem.val->'${path.join("'->'")}'->'${page.property}' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name
+			SELECT ign, uuid, elem.val->'${path.join("'->'")}'->'${
+				page.property
+		  }' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name
 			FROM users, jsonb_each(info->'profiles') as elem(profile, val)
 			WHERE jsonb_typeof(info->'profiles') != 'array'
 			) sub
@@ -257,7 +262,8 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 		.query(rawQuery, {
 			raw: true,
 			nest: true,
-		}).catch((e) => console.log(e));
+		})
+		.catch((e) => console.log(e));
 
 	if (!raw) return undefined;
 
