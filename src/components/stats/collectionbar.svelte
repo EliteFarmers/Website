@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import Minion from './minion.svelte';
 
@@ -8,6 +9,8 @@
 	export let tier: number;
 	export let maxTier: number;
 	export let minionTierField: number;
+	export let key: string;
+	export let rank = -1;
 
 	const crop = name ? name : undefined;
 	let index = 0;
@@ -26,9 +29,21 @@
 		</div>
 		<div class="flex flex-col gap-2 w-[100%] px-3 py-1">
 			<div class="flex justify-between">
-				<h1 class="w-1 md:w-fit text-xl md:text-2xl">
-					{value.toLocaleString()} <span class="text-lg whitespace-nowrap">{name}</span>
-				</h1>
+				<div>
+					<h1 class="w-1 md:w-fit text-xl md:text-2xl whitespace-nowrap">
+						{#if rank > 0}
+							<a
+								href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
+								class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+							>
+								<span class="text-xs xs:text-sm sm:text-md">#</span><span
+									class="text-lg xs:text-md sm:text-xl">{rank}</span
+								>
+							</a>
+						{/if}
+						{value.toLocaleString()} <span class="text-lg whitespace-nowrap">{name}</span>
+					</h1>
+				</div>
 				<h1 class="flex flex-col-reverse md:flex-row justify-end">
 					<span class="text-lg text-right text-gray-600">{tier} / {maxTier}</span>
 					<span class="md:ml-2 text-right font-semibold text-xl">{weight.toLocaleString()}</span>

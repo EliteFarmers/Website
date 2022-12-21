@@ -1,6 +1,6 @@
 import { FetchLeaderboardRankings } from '$db/leaderboards';
 import type { UserInfo, WeightInfo } from '$db/models/users';
-import { PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
+import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { accountFromId, selectedProfile } from '$lib/data';
 import FarmingCollections from '$lib/collections';
 import type { PlayerInfo, Profiles } from '$lib/skyblock';
@@ -48,16 +48,25 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		const weightFetch = await fetch(`/api/weight/${account.id}/${profile.profile_id}`);
 		const weight = (await weightFetch.json()) as WeightInfo;
 
-		const collections = Object.entries(profile.member.collection ?? {})
-			.filter(([key]) => PROPER_CROP_NAME[key])
-			.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value, minionTierField: 0, weight: 0 })) as {
+		interface Collection {
+			key: string;
 			name: string | undefined;
 			value: number;
 			minionTierField: number;
 			tier: number;
 			maxTier: number;
 			weight: number;
-		}[];
+		}
+
+		const collections = Object.entries(profile.member.collection ?? {})
+			.filter(([key]) => PROPER_CROP_NAME[key])
+			.map(([key, value]) => ({
+				key: API_CROP_TO_CROP[key as keyof typeof API_CROP_TO_CROP],
+				name: PROPER_CROP_NAME[key],
+				value: value,
+				minionTierField: 0,
+				weight: 0,
+			})) as Collection[];
 
 		for (const collection of collections) {
 			if (!collection.name) continue;

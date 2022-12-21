@@ -79,7 +79,7 @@
 	<section class="flex items-center justify-center w-full py-4">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
 			<div class="w-[90%]">
-				<Skillbar name="Farming" progress={farmingXp} rank={data.rankings.skills.farming} />
+				<Skillbar name="Farming" progress={farmingXp} rank={data.rankings?.skills?.farming} />
 			</div>
 			<div class="w-[10%]">
 				<!-- Collapse/expand button -->
@@ -109,11 +109,11 @@
 		</div>
 	{/if}
 
-	<Collections {collections} />
+	<Collections {collections} ranks={data.rankings.crops} />
 
 	<JacobInfo jacob={profile.member.jacob} ign={account.name} />
 
-	<Breakdown weight={data.weight.farming} />
+	<Breakdown weight={data.weight?.farming} />
 </main>
 
 <h1 class="text-center text-md m-16 flex flex-col">

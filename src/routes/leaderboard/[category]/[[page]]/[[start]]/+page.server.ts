@@ -1,15 +1,14 @@
-import { GetUserByIGN } from '$db/database';
+import { GetUser, GetUserByIGN } from '$db/database';
 import { FetchLeaderboardRank, GetLeaderboardSlice, LeaderboardCategories, LEADERBOARDS } from '$db/leaderboards';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params, url, depends }) => {
+export const load: PageServerLoad = async ({ params, depends }) => {
 	const { category } = params;
 	let page = params.page;
-	let start = params.start?.split('?')?.[0] ?? '1';
-	let ign = url.searchParams.get('jump');
+	let start = params.start ?? '1';
 
-	if (!params.start && page && !isNaN(Number(page))) {
+	if (!params.start && page && (!isNaN(Number(page)) || page.startsWith('+'))) {
 		start = page;
 		page = 'DEFAULT';
 	}
@@ -20,17 +19,26 @@ export const load: PageServerLoad = async ({ params, url, depends }) => {
 		throw error(404, 'Leaderboard not found');
 	}
 
-	if (ign && ign.length > 0 && ign.length <= 24 && /^[a-zA-Z0-9_]+$/.test(ign)) {
-		const player = await GetUserByIGN(ign);
+	let ign: string | undefined;
+	let profileId: string | undefined;
+	if (start.startsWith('+')) {
+		const [player, profile] = start.slice(1).split('-');
 
-		if (player) {
-			ign = player.ign;
+		const user = player.length === 32 ? await GetUser(player) : await GetUserByIGN(player);
 
-			const rank = await FetchLeaderboardRank(player.uuid, category, page);
+		if (user) {
+			profileId =
+				profile.length === 32
+					? profile
+					: user.skyblock?.profiles.find((p) => p.cute_name === profile)?.profile_id;
+
+			const rank = await FetchLeaderboardRank(user.uuid, category, page, profileId);
 
 			if (rank && rank !== -1) {
 				start = String(Math.floor((rank - 1) / 20) * 20 + 1);
 			}
+
+			ign = user.ign?.toString();
 		}
 	}
 
@@ -47,7 +55,8 @@ export const load: PageServerLoad = async ({ params, url, depends }) => {
 		lb,
 		start: Number(start),
 		jump: ign ?? undefined,
+		profileId: profileId, 
 		name,
 		formatting: categoryEntry?.format,
 	};
-}
+};

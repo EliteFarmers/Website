@@ -8,7 +8,9 @@
 		weight: number;
 		tier: number;
 		maxTier: number;
+		key: string;
 	}[];
+	export let ranks: Record<string, number> | undefined;
 
 	let list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
 
@@ -30,7 +32,7 @@
 				on:click={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 			>
 			{#each list as item (item.name)}
-				<CollectionBar {...item} />
+				<CollectionBar {...item} rank={ranks?.[item.key]} />
 			{/each}
 		</div>
 	</div>
