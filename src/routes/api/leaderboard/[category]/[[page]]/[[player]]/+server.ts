@@ -6,7 +6,7 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ url, params }) => {
 	const { category } = params;
 	let page = params.page;
-	let player = params.player;
+	// let player = params.player;
 
 	const startRaw = url.searchParams.get('start') ?? 1;
 	const limitRaw = url.searchParams.get('limit') ?? 20;
@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
 	}
 
 	if (!params.player && page && !isNaN(Number(page))) {
-		player = page;
+		// player = page;
 		page = 'DEFAULT';
 	}
 

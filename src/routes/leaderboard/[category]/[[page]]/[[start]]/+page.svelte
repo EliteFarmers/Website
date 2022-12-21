@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { page } from "$app/stores";
-	import type { PageData } from "./$types";
+	import { page } from '$app/stores';
+	import type { PageData } from './$types';
 	import Entry from './entry.svelte';
-	import type { LeaderboardEntry } from "$db/leaderboards";
-	import { afterNavigate, goto, invalidate } from "$app/navigation";
+	import type { LeaderboardEntry } from '$db/leaderboards';
+	import { afterNavigate, goto, invalidate } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -13,8 +13,9 @@
 	const formatting = data.formatting;
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
-	const button = document.querySelector('button');
 	afterNavigate(({ type }) => {
+		const button = document.querySelector('button');
+
 		if (type === 'goto') {
 			button?.focus();
 		}
@@ -23,7 +24,7 @@
 	async function lbPage(index: number) {
 		index = Math.max(1, index);
 
-		const newPage = $page.url.pathname.replace(/\/\d+$/g, `/${index}`) + ($page.url.search) + $page.url.hash ?? '';
+		const newPage = $page.url.pathname.replace(/\/[^\/]*$/, `/${index}`) + $page.url.search + $page.url.hash ?? '';
 		if (!$page.params.start && isNaN(Number($page.params.page))) {
 			await goto(newPage + '/' + index);
 		} else {
@@ -31,7 +32,6 @@
 		}
 	}
 </script>
-
 
 <svelte:head>
 	<title>{data.name} Leaderboard</title>
@@ -41,7 +41,7 @@
 		<meta name="description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
 		<meta property="og:title" content="Weight Leaderboard" />
 		<meta property="og:description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-	<!-- {:else if player}
+		<!-- {:else if player}
 		<meta
 			name="description"
 			content="{player.ign} has {player.weight.toLocaleString(undefined, {
@@ -67,12 +67,12 @@
 	>
 		<div class="flex flex-col gap-2 p-2 w-full">
 			{#each firstHalf as entry, i (entry)}
-				<Entry rank={i + data.start} {entry} jump={data.jump} {formatting} />
+				<Entry rank={i + data.start} {entry} {formatting} highlight={data.jump === entry.ign && data.profileId === entry.profile} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full">
 			{#each secondHalf as entry, i (entry)}
-				<Entry rank={i + firstHalf.length + data.start} {entry} jump={data.jump} {formatting} />
+				<Entry rank={i + firstHalf.length + data.start} {entry} {formatting} highlight={data.jump === entry.ign && data.profileId === entry.profile} />
 			{/each}
 		</div>
 	</div>
