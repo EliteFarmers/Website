@@ -222,7 +222,7 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 }
 
 export async function RefreshDataTask(limit = 250) {
-	const leaderboard = await GetLeaderboardSlice(0, limit, 'weight');
+	const leaderboard = await GetLeaderboardSlice(0, limit, 'weight', 'farming');
 
 	// Refresh all users, one user per 15 seconds
 	for (const entry of leaderboard) {

@@ -14,22 +14,15 @@
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(({ type }) => {
-		const button = document.querySelector('button');
-
 		if (type === 'goto') {
-			button?.focus();
+			document.querySelector('button')?.focus();
 		}
 	});
 
 	async function lbPage(index: number) {
 		index = Math.max(1, index);
 
-		const newPage = $page.url.pathname.replace(/\/[^\/]*$/, `/${index}`) + $page.url.search + $page.url.hash ?? '';
-		if (!$page.params.start && isNaN(Number($page.params.page))) {
-			await goto(newPage + '/' + index);
-		} else {
-			await goto(newPage);
-		}
+		await goto(`/leaderboard/${$page.params.category}/${$page.params.page}/${index}`);
 	}
 </script>
 

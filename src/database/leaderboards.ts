@@ -31,12 +31,12 @@ export type Leaderboard = LeaderboardEntry[];
 export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 	weight: {
 		column: 'info',
-		path: 'farming',
+		path: '',
 		format: 'decimal',
 		pages: {
-			DEFAULT: {
+			farming: {
 				limit: 1_000,
-				property: 'total',
+				property: 'farming.total',
 				name: 'Farming Weight',
 			},
 		},
@@ -168,7 +168,7 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 		name: 'Contests',
 		format: 'number',
 		pages: {
-			DEFAULT: {
+			count: {
 				limit: 1_000,
 				property: 'participations',
 				name: 'Jacob Contest Participations',
@@ -191,7 +191,7 @@ export const LeaderboardPages = Object.values(LEADERBOARDS).reduce<string[]>((pa
 const LeaderboardCache = new Map<string, Leaderboard>();
 const LastUpdated = new Map<string, number>();
 
-export async function GetLeaderboardSlice(offset: number, limit: number, category: string, page = 'DEFAULT') {
+export async function GetLeaderboardSlice(offset: number, limit: number, category: string, page: string) {
 	if (LeaderboardCache.has(`${category}-${page}`)) {
 		const lastUpdated = LastUpdated.get(`${category}-${page}`) ?? 0;
 
@@ -209,7 +209,7 @@ export async function GetLeaderboardSlice(offset: number, limit: number, categor
 	return leaderboard.slice(offset, offset + limit);
 }
 
-export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT') {
+export async function FetchLeaderboard(categoryName: string, pageName: string) {
 	const category = LEADERBOARDS[categoryName];
 	const page = category?.pages[pageName];
 
@@ -247,15 +247,15 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 		: `
 		SELECT ign, uuid, amount, profile, cute_name
 		FROM (
-			SELECT ign, uuid, elem.val->'${path.join("'->'")}'->'${
-				page.property
+			SELECT ign, uuid, elem.val->${category.path ? `'${path.join("'->'")}'->` : ''}'${
+				page.property.split('.').join("'->'")
 		  }' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name
 			FROM users, jsonb_each(info->'profiles') as elem(profile, val)
 			WHERE jsonb_typeof(info->'profiles') != 'array'
 			) sub
 		WHERE amount is not null and amount::dec > 0
 		ORDER BY amount::dec DESC
-		LIMIT 1000;
+		LIMIT ${page.limit};
 	`;
 
 	const raw = await sequelize
@@ -273,7 +273,7 @@ export async function FetchLeaderboard(categoryName: string, pageName = 'DEFAULT
 	return raw as Leaderboard;
 }
 
-export async function FetchLeaderboardRank(uuid: string, category: string, page?: string, profile?: string) {
+export async function FetchLeaderboardRank(uuid: string, category: string, page: string, profile?: string) {
 	const leaderboard = await FetchLeaderboard(category, page);
 
 	if (!leaderboard) return -1;

@@ -4,14 +4,8 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, depends }) => {
-	const { category } = params;
-	let page = params.page;
+	const { category, page } = params;
 	let start = params.start ?? '1';
-
-	if (!params.start && page && (!isNaN(Number(page)) || page.startsWith('+'))) {
-		start = page;
-		page = 'DEFAULT';
-	}
 
 	depends('custom:leaderboard');
 
@@ -47,7 +41,7 @@ export const load: PageServerLoad = async ({ params, depends }) => {
 	const lb = await GetLeaderboardSlice(Number(start) - 1, 20, category, page);
 
 	const categoryEntry = LEADERBOARDS[category];
-	const pageEntry = categoryEntry?.pages[page ?? 'DEFAULT'];
+	const pageEntry = categoryEntry?.pages[page];
 
 	const name = pageEntry?.name ?? categoryEntry?.name ?? 'Leaderboard';
 
