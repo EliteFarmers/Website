@@ -83,8 +83,8 @@
 		<div slot="right" class="p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
 			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
 			<p class="w-full text-center">
-				Quickly access stats and leaderboard in Discord! Elite Bot is verified and already present in more than
-				100 servers!
+				Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
+				300 servers!
 			</p>
 			<div class="flex justify-center">
 				<a
