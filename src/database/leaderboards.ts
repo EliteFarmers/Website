@@ -1,12 +1,13 @@
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
-import { DBReady, sequelize } from './database';
+import { DBReady, sequelize } from '$db/database';
+import client from '$db/redis';
 
 export interface LeaderboardEntry {
+	ign: string;
 	uuid: string;
 	profile: string;
 	cute_name: string;
-	ign: string;
-	rank?: number;
+	rank: number;
 	amount: number;
 }
 
@@ -135,6 +136,11 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 				property: 'MUSHROOM_COLLECTION',
 				name: 'Mushroom Collection',
 			},
+			netherwart: {
+				limit: 1_000,
+				property: 'NETHER_STALK',
+				name: 'Nether Wart Collection',
+			},
 			potato: {
 				limit: 1_000,
 				property: 'POTATO_ITEM',
@@ -149,11 +155,6 @@ export const LEADERBOARDS: Partial<Record<string, LeaderboardCategory>> = {
 				limit: 1_000,
 				property: 'SUGAR_CANE',
 				name: 'Sugar Cane Collection',
-			},
-			netherwart: {
-				limit: 1_000,
-				property: 'NETHER_STALK',
-				name: 'Nether Wart Collection',
 			},
 			wheat: {
 				limit: 1_000,
@@ -247,9 +248,9 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 		: `
 		SELECT ign, uuid, amount, profile, cute_name
 		FROM (
-			SELECT ign, uuid, elem.val->${category.path ? `'${path.join("'->'")}'->` : ''}'${
-				page.property.split('.').join("'->'")
-		  }' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name
+			SELECT ign, uuid, elem.val->${category.path ? `'${path.join("'->'")}'->` : ''}'${page.property
+				.split('.')
+				.join("'->'")}' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name
 			FROM users, jsonb_each(info->'profiles') as elem(profile, val)
 			WHERE jsonb_typeof(info->'profiles') != 'array'
 			) sub
@@ -267,34 +268,40 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 
 	if (!raw) return undefined;
 
-	LeaderboardCache.set(cacheKey, raw as Leaderboard);
 	LastUpdated.set(cacheKey, Date.now());
+
+	void SetLeaderboard(categoryName, pageName, raw as Leaderboard);
 
 	return raw as Leaderboard;
 }
 
-export async function FetchLeaderboardRank(uuid: string, category: string, page: string, profile?: string) {
-	const leaderboard = await FetchLeaderboard(category, page);
-
-	if (!leaderboard) return -1;
-
-	const rank = leaderboard.findIndex((entry) => entry.uuid === uuid && (!profile || entry.profile === profile));
-
-	if (rank === -1) return -1;
-
-	return rank + 1;
+export async function SetLeaderboard(category: string, page: string, entries: Leaderboard) {
+	try {
+		const members = entries.map((entry) => ({ value: `${entry.uuid}:${entry.profile}`, score: entry.amount }));
+		await client.ZADD(`${category}:${page}`, members);
+	} catch (e) {
+		console.error(e);
+	}
 }
 
-export async function FetchLeaderboardRankings(uuid: string, profile?: string) {
+export async function FetchLeaderboardRank(uuid: string, category: string, page: string, profile: string) {
+	const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
+
+	if (!rank) return -1;
+
+	return rank;
+}
+
+export async function FetchLeaderboardRankings(uuid: string, profile: string) {
 	const rankings: Record<string, Record<string, number>> = {};
 
 	for (const category of LeaderboardCategories) {
 		const categoryPages = LEADERBOARDS[category]?.pages;
 
 		for (const page of Object.keys(categoryPages ?? {})) {
-			const rank = await FetchLeaderboardRank(uuid, category, page, profile);
+			const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
 
-			if (rank === -1) continue;
+			if (!rank) continue;
 
 			if (!rankings[category] as boolean) rankings[category] = {};
 			rankings[category][page] = rank;

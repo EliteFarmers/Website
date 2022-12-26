@@ -26,6 +26,8 @@ export const load: PageServerLoad = async ({ params, depends }) => {
 					? profile
 					: user.skyblock?.profiles.find((p) => p.cute_name === profile)?.profile_id;
 
+			if (!profileId) throw error(404, 'Profile not found');
+
 			const rank = await FetchLeaderboardRank(user.uuid, category, page, profileId);
 
 			if (rank && rank !== -1) {
@@ -49,7 +51,7 @@ export const load: PageServerLoad = async ({ params, depends }) => {
 		lb,
 		start: Number(start),
 		jump: ign ?? undefined,
-		profileId: profileId, 
+		profileId: profileId,
 		name,
 		formatting: categoryEntry?.format,
 	};
