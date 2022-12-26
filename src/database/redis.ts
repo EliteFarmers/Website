@@ -1,7 +1,7 @@
 import { REDIS_PASSWORD, REDIS_URI } from '$env/static/private';
 import { createClient } from 'redis';
 
-const client = createClient({ url: REDIS_URI as string, password: REDIS_PASSWORD as string });
+const client = createClient({ url: REDIS_URI, password: REDIS_PASSWORD });
 
 client.on('error', (error) => {
 	console.error(error);
