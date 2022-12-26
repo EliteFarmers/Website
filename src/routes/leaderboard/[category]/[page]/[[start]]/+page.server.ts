@@ -14,27 +14,34 @@ export const load: PageServerLoad = async ({ params, depends }) => {
 	}
 
 	let ign: string | undefined;
+	let uuid: string | undefined;
 	let profileId: string | undefined;
+	let profileName: string | undefined;
+	let playerRank: number | undefined;
+
 	if (start.startsWith('+')) {
 		const [player, profile] = start.slice(1).split('-');
 
 		const user = player.length === 32 ? await GetUser(player) : await GetUserByIGN(player);
 
 		if (user) {
-			profileId =
-				profile.length === 32
-					? profile
-					: user.skyblock?.profiles.find((p) => p.cute_name === profile)?.profile_id;
+			const profileData = user.skyblock?.profiles.find(
+				(p) => p.profile_id === profile || p.cute_name === profile
+			);
+			profileId = profileData?.profile_id ?? profileId;
+			profileName = profileData?.cute_name;
 
-			if (!profileId) throw error(404, 'Profile not found');
+			if (!profileId || profileId.length !== 32) throw error(404, 'Profile not found');
 
-			const rank = await FetchLeaderboardRank(user.uuid, category, page, profileId);
+			const rank = await FetchLeaderboardRank(category, page, user.uuid, profileId);
 
 			if (rank && rank !== -1) {
 				start = String(Math.floor((rank - 1) / 20) * 20 + 1);
 			}
 
 			ign = user.ign?.toString();
+			uuid = user.uuid;
+			playerRank = rank;
 		}
 	}
 
@@ -51,8 +58,12 @@ export const load: PageServerLoad = async ({ params, depends }) => {
 		lb,
 		start: Number(start),
 		jump: ign ?? undefined,
+		userUUID: uuid ?? undefined,
 		profileId: profileId,
+		profileName: profileName,
+		playerRank: playerRank,
 		name,
 		formatting: categoryEntry?.format,
+		lbName: pageEntry?.name ?? 'Default',
 	};
 };

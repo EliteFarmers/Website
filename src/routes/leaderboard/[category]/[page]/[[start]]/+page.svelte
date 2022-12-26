@@ -4,6 +4,7 @@
 	import Entry from './entry.svelte';
 	import type { LeaderboardEntry } from '$db/leaderboards';
 	import { afterNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
@@ -12,34 +13,53 @@
 
 	const formatting = data.formatting;
 
+	const entry = data.lb.find((e) => e.uuid === data.userUUID && e.profile === data.profileId);
+
+	const options: Intl.NumberFormatOptions = {
+		maximumFractionDigits: 1,
+	};
+
+	if (formatting === 'decimal') {
+		options.minimumFractionDigits = 1;
+	}
+
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(() => {
 		(document.querySelector('a#navigate') as HTMLAnchorElement)?.focus();
+	});
+
+	onMount(async () => {
+		console.log(data);
+		if (!$page.url.pathname.includes('+') || !data.userUUID || !data.jump || !data.profileId || !data.profileName)
+			return;
+
+		const url = $page.url.pathname.replace(data.userUUID, data.jump).replace(data.profileId, data.profileName);
+		if ($page.url.pathname !== url) {
+			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
+		}
 	});
 </script>
 
 <svelte:head>
 	<title>{data.name} Leaderboard</title>
 
-	<meta name="keywords" content="hypixel, skyblock, leaderboard, stats, farming, weight" />
+	<meta name="keywords" content="hypixel, skyblock, leaderboard, stats, farming, {data.name}" />
 	{#if !data.jump}
-		<meta name="description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-		<meta property="og:title" content="Weight Leaderboard" />
-		<meta property="og:description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-		<!-- {:else if player}
+		<meta name="description" content="{data.name} Leaderboard for Hypixel Skyblock." />
+		<meta property="og:title" content="{data.name} Leaderboard" />
+		<meta property="og:description" content="{data.name} Leaderboard for Hypixel Skyblock." />
+	{:else if entry}
 		<meta
 			name="description"
-			content="{player.ign} has {player.weight.toLocaleString(undefined, {
+			content="{entry.ign} has {entry.amount.toLocaleString(undefined, {
 				maximumFractionDigits: 0,
-			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
+			})} {data.name}, earning position #{data.playerRank} on the global {data.name} leaderboard."
 		/>
-		<meta property="og:title" content="#{player.rank} | {player.ign}" />
+		<meta property="og:title" content="#{data.playerRank} | {entry.ign}" />
 		<meta
 			property="og:description"
-			content="{player.ign} has {player.weight.toLocaleString(undefined, {
-				maximumFractionDigits: 0,
-			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
-		/> -->
+			content="{entry.ign} has {entry.amount.toLocaleString(undefined, options)} {data.name}, earning position #{data.playerRank} on the global {data.name} leaderboard."
+		/>
 	{/if}
 	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
 	<meta property="og:url" content={$page.url.toString()} />
