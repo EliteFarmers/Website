@@ -25,7 +25,7 @@
 	const collections = data.collections;
 	const { id: uuid, name: ign } = account;
 
-	const weightRank = data.rankings?.weight?.DEFAULT ?? -1;
+	const weightRank = data.rankings?.weight?.farming ?? -1;
 
 	let profileName = data.profileName;
 	let profile = data.profile;
