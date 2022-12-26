@@ -24,7 +24,8 @@
 	}
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
-	afterNavigate(() => {
+	afterNavigate(({ from }) => {
+		if (!from?.url.pathname.startsWith('/leaderboard')) return;
 		(document.querySelector('a#navigate') as HTMLAnchorElement)?.focus();
 	});
 
