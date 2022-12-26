@@ -39,7 +39,13 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		if (player) {
 			ign = player.ign;
 
-			const rank = await FetchLeaderboardRank(player.uuid, category, page);
+			const profileIds = player.skyblock?.profiles.map((p) => p.profile_id) ?? [];
+
+			const ranks = await Promise.all(
+				profileIds.map((profileId) => FetchLeaderboardRank(category, page, player.uuid, profileId))
+			);
+
+			const rank = ranks.filter((r) => r !== -1).sort((a, b) => a - b)[0];
 
 			if (rank && rank !== -1) {
 				start = Math.floor((rank - 1) / 20) * 20 + 1;
@@ -52,7 +58,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
 	const lb = await GetLeaderboardSlice(Number(start) - 1, limit, category, page);
 
 	const categoryEntry = LEADERBOARDS[category];
-	const pageEntry = categoryEntry?.pages[page ?? 'DEFAULT'];
+	const pageEntry = categoryEntry?.pages[page];
 
 	const name = pageEntry?.name ?? categoryEntry?.name ?? 'Leaderboard';
 
