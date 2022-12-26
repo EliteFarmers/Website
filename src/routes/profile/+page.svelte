@@ -139,7 +139,6 @@
 						muted
 						class="w-full max-w-md rounded-md"
 						src="/images/HypixelLink.mp4"
-						alt="How to link your Hypixel account"
 					/>
 					<h1 class="text-md py-2">
 						(Enter <span class="text-green-500 select-all"
