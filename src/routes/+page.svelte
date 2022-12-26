@@ -8,9 +8,10 @@
 	} from '$env/static/public';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
+	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
-	//import type { PageData } from './$types';
-	//export let data: PageData;
+	import type { PageData } from './$types';
+	export let data: PageData;
 
 	let enteredText = '';
 </script>
@@ -101,10 +102,12 @@
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-
+			{#each data.lb as entry, i}
+				<Entry {entry} rank={i + 1} />
+			{/each}
 			<div class="flex justify-center w-full">
 				<a
-					href="/leaderboard"
+					href="/leaderboard/weight/farming"
 					class="text-center max-w-md px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-800"
 					>View Full Leaderboard</a
 				>
