@@ -36,8 +36,8 @@
 								href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
 								class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 							>
-								<span class="text-xs xs:text-sm sm:text-md">#</span><span
-									class="text-lg xs:text-md sm:text-xl">{rank}</span
+								<span class="text-sm xs:text-md sm:text-lg">#</span><span
+									class="text-md xs:text-lg sm:text-xl">{rank}</span
 								>
 							</a>
 						{/if}
