@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		return json({ success: false, error: 'Invalid player UUID.' });
 	}
 
-	if (profile && (profile.length !== 32 || !/^[a-zA-Z0-9_]+$/.test(profile))) {
+	if (profile.length !== 32 || !/^[a-zA-Z0-9_]+$/.test(profile)) {
 		return json({ success: false, error: 'Invalid profile UUID.' });
 	}
 
