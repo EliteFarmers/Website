@@ -3,7 +3,7 @@
 	import type { PageData } from './$types';
 	import Entry from './entry.svelte';
 	import type { LeaderboardEntry } from '$db/leaderboards';
-	import { afterNavigate, goto, invalidate } from '$app/navigation';
+	import { afterNavigate } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -13,17 +13,9 @@
 	const formatting = data.formatting;
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
-	afterNavigate(({ type }) => {
-		if (type === 'goto') {
-			document.querySelector('button')?.focus();
-		}
+	afterNavigate(() => {
+		(document.querySelector('a#navigate') as HTMLAnchorElement)?.focus();
 	});
-
-	async function lbPage(index: number) {
-		index = Math.max(1, index);
-
-		await goto(`/leaderboard/${$page.params.category}/${$page.params.page}/${index}`);
-	}
 </script>
 
 <svelte:head>
@@ -60,24 +52,60 @@
 	>
 		<div class="flex flex-col gap-2 p-2 w-full">
 			{#each firstHalf as entry, i (entry)}
-				<Entry rank={i + data.start} {entry} {formatting} highlight={data.jump === entry.ign && data.profileId === entry.profile} />
+				<Entry
+					rank={i + data.start}
+					{entry}
+					{formatting}
+					highlight={data.jump === entry.ign && data.profileId === entry.profile}
+				/>
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full">
 			{#each secondHalf as entry, i (entry)}
-				<Entry rank={i + firstHalf.length + data.start} {entry} {formatting} highlight={data.jump === entry.ign && data.profileId === entry.profile} />
+				<Entry
+					rank={i + firstHalf.length + data.start}
+					{entry}
+					{formatting}
+					highlight={data.jump === entry.ign && data.profileId === entry.profile}
+				/>
 			{/each}
 		</div>
 	</div>
 	<div class="flex w-full justify-center gap-4 text-center">
-		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(0)}> First </button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(data.start - 20)}>
+		<a
+			id="navigate"
+			href="/leaderboard/{$page.params.category}/{$page.params.page}/1"
+			class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6"
+		>
+			First
+		</a>
+		<a
+			id="navigate"
+			href="/leaderboard/{$page.params.category}/{$page.params.page}/{Math.min(
+				Math.max(1, data.start - 20),
+				990
+			)}"
+			class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6"
+		>
 			Back
-		</button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(data.start + 20)}>
+		</a>
+		<a
+			id="navigate"
+			href="/leaderboard/{$page.params.category}/{$page.params.page}/{Math.min(
+				Math.max(1, data.start + 20),
+				990
+			)}"
+			class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6"
+		>
 			Next
-		</button>
-		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(990)}> Last </button>
+		</a>
+		<a
+			id="navigate"
+			href="/leaderboard/{$page.params.category}/{$page.params.page}/990"
+			class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6"
+		>
+			Last
+		</a>
 	</div>
 	<h3 class="text-sm text-center w-1/2 mx-[25%] py-4">
 		This leaderboard only consists of the top 1,000 players who have been searched on the website. New entries are

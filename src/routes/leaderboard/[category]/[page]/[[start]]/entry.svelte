@@ -13,7 +13,7 @@
 	if (formatting === 'decimal') {
 		options.minimumFractionDigits = 1;
 	}
-	
+
 	const { ign, amount, profile, uuid, cute_name } = entry;
 </script>
 
