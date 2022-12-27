@@ -269,6 +269,7 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 	if (!raw) return undefined;
 
 	LastUpdated.set(cacheKey, Date.now());
+	LeaderboardCache.set(cacheKey, raw as Leaderboard);
 
 	void SetLeaderboard(categoryName, pageName, raw as Leaderboard);
 
