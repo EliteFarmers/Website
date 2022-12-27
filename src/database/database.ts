@@ -11,6 +11,7 @@ import {
 	type UserUpdateOptions,
 	type UserWhereOptions,
 } from './models/users';
+import { client } from './redis';
 
 export interface DataUpdate {
 	account: AccountInfo;
@@ -35,6 +36,7 @@ export async function SyncTables() {
 
 	try {
 		await sequelize.authenticate();
+		await client.connect();
 
 		await User.sync({ force: false });
 
