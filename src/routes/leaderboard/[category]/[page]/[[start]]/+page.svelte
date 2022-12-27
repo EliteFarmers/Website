@@ -59,7 +59,10 @@
 		<meta property="og:title" content="#{data.playerRank} | {entry.ign}" />
 		<meta
 			property="og:description"
-			content="{entry.ign} has {entry.amount.toLocaleString(undefined, options)} {data.name}, earning position #{data.playerRank} on the global {data.name} leaderboard."
+			content="{entry.ign} has {entry.amount.toLocaleString(
+				undefined,
+				options
+			)} {data.name}, earning position #{data.playerRank} on the global {data.name} leaderboard."
 		/>
 	{/if}
 	<meta property="og:image" content="https://elitebot.dev/favicon.png" />

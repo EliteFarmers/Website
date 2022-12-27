@@ -133,13 +133,7 @@
 							>{discordUser.username}#{discordUser.discriminator}</span
 						> is linked in Hypixel.net as follows:
 					</h1>
-					<video
-						autoplay
-						loop
-						muted
-						class="w-full max-w-md rounded-md"
-						src="/images/HypixelLink.mp4"
-					/>
+					<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
 					<h1 class="text-md py-2">
 						(Enter <span class="text-green-500 select-all"
 							>{discordUser.username}#{discordUser.discriminator}</span
