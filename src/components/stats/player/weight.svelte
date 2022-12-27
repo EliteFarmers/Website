@@ -20,7 +20,7 @@
 	<div class="flex items-center gap-2">
 		<a
 			class="p-2 rounded-md max-w-fit z-10 bg-gray-200 dark:bg-zinc-700"
-			href={`/leaderboard?jump=${profiles.ign}`}
+			href={`/leaderboard/weight/farming/+${profiles.ign}-${profiles.selected.id}`}
 		>
 			{#if rank !== -1}
 				<span class="mx-1 text-2xl font-semibold font-mono text-yellow-700 dark:text-yellow-400">
