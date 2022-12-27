@@ -29,21 +29,25 @@
 		</div>
 		<div class="flex flex-col gap-2 w-[100%] px-3 py-1">
 			<div class="flex justify-between">
-				<div>
-					<h1 class="w-1 md:w-fit text-xl md:text-2xl whitespace-nowrap">
-						{#if rank > 0}
-							<a
-								href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
-								class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
-							>
-								<span class="text-sm xs:text-md sm:text-lg">#</span><span
-									class="text-md xs:text-lg sm:text-xl">{rank}</span
+				<span>
+					<h1 class="w-1 md:w-fit text-xl md:text-2xl">
+						<span class="whitespace-nowrap">
+							{#if rank > 0}
+								<a
+									href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
+									class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 								>
-							</a>
-						{/if}
-						{value.toLocaleString()} <span class="text-lg whitespace-nowrap">{name}</span>
+									<span class="text-sm xs:text-md sm:text-lg">#</span><span
+										class="text-md xs:text-lg sm:text-xl">{rank}</span
+									>
+								</a>
+							{/if}
+							<span class="hidden md:inline">{value.toLocaleString()}</span>
+							<span class="text-lg">{name}</span>
+						</span>
+						<span class="inline md:hidden">{value.toLocaleString()}</span>
 					</h1>
-				</div>
+				</span>
 				<h1 class="flex flex-col-reverse md:flex-row justify-end">
 					<span class="text-lg text-right text-gray-600">{tier} / {maxTier}</span>
 					<span class="md:ml-2 text-right font-semibold text-xl">{weight.toLocaleString()}</span>
