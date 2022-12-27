@@ -1,12 +1,23 @@
 import { REDIS_PASSWORD, REDIS_URI } from '$env/static/private';
 import { createClient } from 'redis';
 
-const client = createClient({ url: REDIS_URI, password: REDIS_PASSWORD });
+class Redis {
+	private c;
 
-client.on('error', (error) => {
-	console.error(error);
-});
+	constructor() {
+		this.c = createClient({
+			url: REDIS_URI,
+			password: REDIS_PASSWORD,
+		});
 
-await client.connect();
+		this.c.on('error', (error) => {
+			console.error(error);
+		});
+	}
 
-export default client;
+	get client() {
+		return this.c;
+	}
+}
+
+export const client = new Redis().client;

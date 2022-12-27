@@ -1,6 +1,6 @@
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import { DBReady, sequelize } from '$db/database';
-import client from '$db/redis';
+import { client } from '$db/redis';
 
 export interface LeaderboardEntry {
 	ign: string;
