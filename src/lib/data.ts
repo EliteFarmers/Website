@@ -317,15 +317,9 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 
 	for (const profile of profiles) {
 		// Crafted minions are spread amongst profile members.
-		let allMinions: string[] = [];
-
 		const { members, minions } = await formatMembers(profile.members, uuid);
-		allMinions = allMinions.concat(minions);
 
-		// Add the other members' minions to their own profile.
-		profile.members[uuid].crafted_generators?.push(...allMinions);
-
-		const memberData = formatMemberData(profile.members[uuid]);
+		const memberData = formatMemberData(profile.members[uuid], { minions: minions });
 
 		data.push({
 			profile_id: profile.profile_id,
@@ -437,7 +431,7 @@ function getCommunityUpgradeData(profile: RawProfileData) {
 
 const excludedFields = EXCLUDED_FIELDS;
 
-function formatMemberData(member: RawProfileMember): ProfileMember {
+function formatMemberData(member: RawProfileMember, other: { minions: string[] }): ProfileMember {
 	// Remove ignored fields.
 	for (const field of excludedFields) {
 		// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -449,7 +443,7 @@ function formatMemberData(member: RawProfileMember): ProfileMember {
 	const data: ProfileMember = {
 		skills: condenseGroup(member, 'experience_skill_', (a) => a.replace('social2', 'social')) as ExperienceSkills,
 		jacob: formatContests(member),
-		minions: condenseMinions(member),
+		minions: condenseMinions(member, other.minions),
 		collection_tiers: condenseCollTiers(member),
 		fairy: condenseGroup(member, 'fairy_') as unknown as FairyData,
 		essence: condenseGroup(member, 'essence_', undefined, ['soulflow']),
@@ -576,15 +570,10 @@ function getCropName(crop: string) {
 	return name as CropName;
 }
 
-function condenseMinions(member: RawProfileMember) {
+function condenseMinions(member: RawProfileMember, otherMinions: string[]) {
 	const minions: CraftedMinions = {};
 
-	if (!member.crafted_generators) {
-		delete member.crafted_generators;
-		return minions;
-	}
-
-	for (const key of member.crafted_generators) {
+	for (const key of otherMinions.concat(member.crafted_generators ?? [])) {
 		const minion = key.substring(0, key.lastIndexOf('_'));
 		const tier = parseInt(key.substring(key.lastIndexOf('_') + 1));
 		// Byte shift the tier into the value

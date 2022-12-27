@@ -1,6 +1,6 @@
-import type { LeaderboardEntry } from '$db/database';
+import { FetchLeaderboardRankings } from '$db/leaderboards';
 import type { UserInfo, WeightInfo } from '$db/models/users';
-import { PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
+import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { accountFromId, selectedProfile } from '$lib/data';
 import FarmingCollections from '$lib/collections';
 import type { PlayerInfo, Profiles } from '$lib/skyblock';
@@ -22,20 +22,14 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	const profilesFetch = fetch(`/api/profiles/${account.id}`);
 	const playerFetch = fetch(`/api/player/${account.id}`);
 	const userFetch = fetch(`/api/info/${account.id}`);
-	const rankFetch = fetch(`/api/leaderboard/weight/${account.id}`);
 
 	try {
-		const [profilesRes, playerRes, userRes] = await Promise.all([profilesFetch, playerFetch, userFetch, rankFetch]);
+		const [profilesRes, playerRes, userRes] = await Promise.all([profilesFetch, playerFetch, userFetch]);
 		const [profiles, player, user] = (await Promise.all([
 			profilesRes.json(),
 			playerRes.json(),
 			userRes.json(),
 		])) as [Profiles, PlayerInfo, UserInfo];
-
-		const rankData = (await (await rankFetch).json()) as
-			| { success: true; entry: LeaderboardEntry }
-			| { success: false; error: string };
-		const rank = rankData.success ? rankData.entry.rank : -1;
 
 		const profile = selectedProfile(profiles.profiles, params.profile);
 
@@ -54,16 +48,25 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		const weightFetch = await fetch(`/api/weight/${account.id}/${profile.profile_id}`);
 		const weight = (await weightFetch.json()) as WeightInfo;
 
-		const collections = Object.entries(profile.member.collection ?? {})
-			.filter(([key]) => PROPER_CROP_NAME[key])
-			.map(([key, value]) => ({ name: PROPER_CROP_NAME[key], value, minionTierField: 0, weight: 0 })) as {
+		interface Collection {
+			key: string;
 			name: string | undefined;
 			value: number;
 			minionTierField: number;
 			tier: number;
 			maxTier: number;
 			weight: number;
-		}[];
+		}
+
+		const collections = Object.entries(profile.member.collection ?? {})
+			.filter(([key]) => PROPER_CROP_NAME[key])
+			.map(([key, value]) => ({
+				key: API_CROP_TO_CROP[key as keyof typeof API_CROP_TO_CROP],
+				name: PROPER_CROP_NAME[key],
+				value: value,
+				minionTierField: 0,
+				weight: 0,
+			})) as Collection[];
 
 		for (const collection of collections) {
 			if (!collection.name) continue;
@@ -76,6 +79,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			if (collection.tier === 0) collection.tier = collection.maxTier;
 		}
 
+		const rankings = await FetchLeaderboardRankings(account.id, profile.profile_id);
+
 		return {
 			account: account,
 			profile: profile,
@@ -85,7 +90,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			player: player,
 			weight: weight,
 			user: user,
-			rank: rank,
+			rankings: rankings,
 			collections: collections,
 		};
 	} catch (e) {

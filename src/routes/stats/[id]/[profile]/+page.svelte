@@ -25,6 +25,8 @@
 	const collections = data.collections;
 	const { id: uuid, name: ign } = account;
 
+	const weightRank = data.rankings?.weight?.farming ?? -1;
+
 	let profileName = data.profileName;
 	let profile = data.profile;
 
@@ -45,7 +47,7 @@
 	const weightStr =
 		data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "hasn't loaded their";
 	const description = `${ign} has ${weightStr} Farming Weight${
-		data.rank > 0 ? `, earning rank #${data.rank} in the world!` : '!'
+		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
 </script>
 
@@ -69,7 +71,7 @@
 		{profileIds}
 		linked={data.user.linked}
 		weightInfo={data.weight}
-		weightRank={data.rank}
+		{weightRank}
 	/>
 
 	<APIstatus api={profile.api} />
@@ -77,7 +79,7 @@
 	<section class="flex items-center justify-center w-full py-4">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
 			<div class="w-[90%]">
-				<Skillbar name="Farming" progress={farmingXp} />
+				<Skillbar name="Farming" progress={farmingXp} rank={data.rankings?.skills?.farming} />
 			</div>
 			<div class="w-[10%]">
 				<!-- Collapse/expand button -->
@@ -102,16 +104,16 @@
 	{#if showSkills}
 		<div class="flex justify-center w-full pb-4" transition:slide={{ duration: 1000, easing: quadInOut }}>
 			<div class="w-[90%]">
-				<Skills member={profile?.member} />
+				<Skills member={profile?.member} skillRanks={data.rankings.skills} />
 			</div>
 		</div>
 	{/if}
 
-	<Collections {collections} />
+	<Collections {collections} ranks={data.rankings.crops} />
 
 	<JacobInfo jacob={profile.member.jacob} ign={account.name} />
 
-	<Breakdown weight={data.weight.farming} />
+	<Breakdown weight={data.weight?.farming} />
 </main>
 
 <h1 class="text-center text-md m-16 flex flex-col">

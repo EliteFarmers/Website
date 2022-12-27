@@ -1,0 +1,69 @@
+import { GetUser, GetUserByIGN } from '$db/database';
+import { FetchLeaderboardRank, GetLeaderboardSlice, LeaderboardCategories, LEADERBOARDS } from '$db/leaderboards';
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ params, depends }) => {
+	const { category, page } = params;
+	let start = params.start ?? '1';
+
+	depends('custom:leaderboard');
+
+	if (!LeaderboardCategories.includes(category)) {
+		throw error(404, 'Leaderboard not found');
+	}
+
+	let ign: string | undefined;
+	let uuid: string | undefined;
+	let profileId: string | undefined;
+	let profileName: string | undefined;
+	let playerRank: number | undefined;
+
+	if (start.startsWith('+')) {
+		const [player, profile] = start.slice(1).split('-');
+
+		const user = player.length === 32 ? await GetUser(player) : await GetUserByIGN(player);
+
+		if (user) {
+			const profileData = user.skyblock?.profiles.find(
+				(p) => p.profile_id === profile || p.cute_name === profile
+			);
+			profileId = profileData?.profile_id ?? profileId;
+			profileName = profileData?.cute_name;
+
+			if (!profileId || profileId.length !== 32) throw error(404, 'Profile not found');
+
+			const rank = await FetchLeaderboardRank(category, page, user.uuid, profileId);
+
+			if (rank && rank !== -1) {
+				start = String(Math.floor((rank - 1) / 20) * 20 + 1);
+			}
+
+			ign = user.ign?.toString();
+			uuid = user.uuid;
+			playerRank = rank;
+		}
+	}
+
+	start = String(Math.max(1, Number(start)));
+
+	const lb = await GetLeaderboardSlice(Number(start) - 1, 20, category, page);
+
+	const categoryEntry = LEADERBOARDS[category];
+	const pageEntry = categoryEntry?.pages[page];
+
+	const name = pageEntry?.name ?? categoryEntry?.name ?? 'Leaderboard';
+
+	return {
+		lb,
+		start: Number(start),
+		jump: ign ?? undefined,
+		userUUID: uuid ?? undefined,
+		profileId: profileId,
+		profileName: profileName,
+		playerRank: playerRank,
+		name,
+		formatting: categoryEntry?.format,
+		lbName: pageEntry?.name ?? 'Default',
+	};
+};

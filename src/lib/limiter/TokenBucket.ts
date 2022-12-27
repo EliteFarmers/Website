@@ -120,7 +120,7 @@ export class TokenBucket {
 	 * If the bucket (and any parent buckets) contains enough tokens this will
 	 * return true, otherwise false is returned.
 	 * @param {Number} count The number of tokens to remove.
-	 * @param {Boolean} True if the tokens were successfully removed, otherwise
+	 * @returns {Boolean} True if the tokens were successfully removed, otherwise
 	 *  false.
 	 */
 	tryRemoveTokens(count: number): boolean {

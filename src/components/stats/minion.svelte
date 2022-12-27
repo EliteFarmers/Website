@@ -6,7 +6,7 @@
 	export let tierField: number;
 
 	// Turn tierField into its binary representation
-	const tiers = tierField.toString(2).substring(0, 12).split('');
+	const tiers = tierField?.toString(2).substring(0, 12).split('') ?? [];
 	// Add 0s to the end of the array if it's less than 12 in length
 	while (tiers.length < 12) tiers.push('0');
 </script>

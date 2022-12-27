@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 	import { onMount } from 'svelte';
 
@@ -9,6 +10,7 @@
 		progress: number;
 		goal?: number;
 	};
+	export let rank = -1;
 
 	let percent = 100;
 	let readable = '';
@@ -32,8 +34,20 @@
 </script>
 
 <section class="flex justify-center">
-	<div class="relative w-[90%]">
-		<span>{name} <strong>{progress.level}</strong></span>
+	<div class="relative w-[90%] my-1">
+		<div class="mb-1">
+			{#if rank >= 0}
+				<a
+					href="/leaderboard/skills/{name.toLowerCase()}/+{$page.params.id}-{$page.params.profile}"
+					class="py-1 pt-1.5 px-1.5 font-semibold text-green-700 dark:text-yellow-400 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+				>
+					<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						>{rank}</span
+					>
+				</a>
+			{/if}
+			<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level}</strong></span>
+		</div>
 		<div
 			class="relative w-[100%] bg-slate-300 dark:bg-zinc-500 h-8 rounded-lg"
 			on:mouseenter={() => (hovering = true)}

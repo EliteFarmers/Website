@@ -1,90 +1,98 @@
 <script lang="ts">
+	import { PUBLIC_HOST_URL } from '$env/static/public';
 	import type { PageData } from './$types';
-	import { page } from '$app/stores';
-	import Entry from './entry.svelte';
 
 	export let data: PageData;
 
-	let lb = data.lb;
-	let start = data.start;
-	let jump = data.jump ?? undefined;
+	const categories = data.categories;
 
-	let player = lb.find((entry) => entry.ign === jump);
-
-	let firstHalf = lb.slice(0, Math.ceil(lb.length / 2));
-	let secondHalf = lb.slice(Math.ceil(lb.length / 2));
-
-	async function lbPage(index: number) {
-		index = Math.max(1, index);
-
-		const request = await fetch(`/api/leaderboard/weight?start=${index}`);
-		const data = await request.json();
-
-		history.replaceState(history.state, document.title, `/leaderboard/?start=${index}`);
-
-		lb = data;
-		start = index;
-
-		firstHalf = lb.slice(0, Math.ceil(lb.length / 2));
-		secondHalf = lb.slice(Math.ceil(lb.length / 2));
-	}
+	const crops = categories.find((category) => category && category.name === 'crops');
+	const weight = categories.find((category) => category && category.name === 'weight');
+	const skills = categories.find((category) => category && category.name === 'skills');
+	const jacob = categories.find((category) => category && category.name === 'contests');
 </script>
 
 <svelte:head>
-	<title>Leaderboard</title>
-
-	<meta name="keywords" content="hypixel, skyblock, leaderboard, stats, farming, weight" />
-	{#if !data.jump}
-		<meta name="description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-		<meta property="og:title" content="Weight Leaderboard" />
-		<meta property="og:description" content="Farming Weight Leaderboard for Hypixel Skyblock." />
-	{:else if player}
-		<meta
-			name="description"
-			content="{player.ign} has {player.weight.toLocaleString(undefined, {
-				maximumFractionDigits: 0,
-			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
-		/>
-		<meta property="og:title" content="#{player.rank} | {player.ign}" />
-		<meta
-			property="og:description"
-			content="{player.ign} has {player.weight.toLocaleString(undefined, {
-				maximumFractionDigits: 0,
-			})} farming weight, earning position #{player.rank} on the global weight leaderboard."
-		/>
-	{/if}
-	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
-	<meta property="og:url" content={$page.url.toString()} />
+	<title>Leaderboards</title>
+	<meta
+		name="description"
+		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
+	/>
+	<meta name="keywords" content="farming, profile, skyblock, weight, calculate, Hypixel, elite" />
+	<meta property="og:title" content="Elite - Skyblock Farming Weight" />
+	<meta
+		property="og:description"
+		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
+	/>
+	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
 </svelte:head>
 
-<section class="flex flex-col mt-16 justify-center w-full">
-	<h1 class="text-2xl text-center">Farming Weight Leaderboard</h1>
-	<div
-		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"
-	>
-		<div class="flex flex-col gap-2 p-2 w-full">
-			{#each firstHalf as entry (entry.uuid)}
-				<Entry {entry} {jump} />
-			{/each}
-		</div>
-		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full">
-			{#each secondHalf as entry (entry.uuid)}
-				<Entry {entry} {jump} />
-			{/each}
-		</div>
-	</div>
-	<div class="flex w-full justify-center gap-4 text-center">
-		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(0)}> First </button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start - 20)}>
-			Back
-		</button>
-		<button class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6" on:click={() => lbPage(start + 20)}>
-			Next
-		</button>
-		<button class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6" on:click={() => lbPage(990)}> Last </button>
-	</div>
-	<h3 class="text-sm text-center w-1/2 mx-[25%] py-4">
-		This leaderboard only consists of the top 1,000 players who have been searched on the website. New entries are
-		recalculated every 5 minutes.
-	</h3>
-</section>
+<main class="flex flex-col gap-16 mb-16">
+	<h1 class="text-4xl text-center mt-16">Leaderboards</h1>
+	<section class="flex flex-wrap justify-center gap-2">
+		{#each weight?.pages ?? [] as leaderboard (leaderboard.name)}
+			<div class="w-1/2 md:w-1/3 lg:w-1/6 xl:w-1/8">
+				<a href="/leaderboard/{weight?.name}/{leaderboard.name.replace('DEFAULT', '')}">
+					<div
+						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
+					>
+						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
+					</div>
+				</a>
+			</div>
+		{/each}
+	</section>
+	<section class="flex flex-wrap justify-center gap-2">
+		{#each crops?.pages ?? [] as leaderboard, i (leaderboard.name)}
+			<div class="w-1/2 md:w-1/3 lg:w-1/6 xl:w-1/8">
+				<a href="/leaderboard/{crops?.name}/{leaderboard.name.replace('DEFAULT', '')}">
+					<div
+						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
+					>
+						<div class="crop" style="background-position: 0px {1000 - 100 * i}%;" />
+						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
+					</div>
+				</a>
+			</div>
+		{/each}
+	</section>
+	<h2 class="text-2xl text-center">Skills</h2>
+	<section class="flex flex-wrap justify-center gap-2">
+		{#each skills?.pages ?? [] as leaderboard (leaderboard.name)}
+			<div class="w-1/2 md:w-1/3 lg:w-1/6 xl:w-1/8">
+				<a href="/leaderboard/{skills?.name}/{leaderboard.name.replace('DEFAULT', '')}">
+					<div
+						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
+					>
+						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
+					</div>
+				</a>
+			</div>
+		{/each}
+	</section>
+	<h2 class="text-2xl text-center">Jacob</h2>
+	<section class="flex flex-wrap justify-center gap-2">
+		{#each jacob?.pages ?? [] as leaderboard (leaderboard.name)}
+			<div class="w-1/2 md:w-1/3 lg:w-1/6 xl:w-1/8">
+				<a href="/leaderboard/{jacob?.name}/{leaderboard.name.replace('DEFAULT', '')}">
+					<div
+						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
+					>
+						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
+					</div>
+				</a>
+			</div>
+		{/each}
+	</section>
+</main>
+
+<style lang="postcss">
+	.crop {
+		@apply w-16 h-16;
+		display: inline-block;
+		background-image: url('/images/cropatlas.png');
+		background-size: 100%;
+		aspect-ratio: 1;
+		background-size: 200% 1000%;
+	}
+</style>

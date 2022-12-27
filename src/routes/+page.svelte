@@ -8,7 +8,7 @@
 	} from '$env/static/public';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
-	import Entry from './leaderboard/entry.svelte';
+	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
 	import type { PageData } from './$types';
 	export let data: PageData;
@@ -84,8 +84,8 @@
 		<div slot="right" class="p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
 			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
 			<p class="w-full text-center">
-				Quickly access stats and leaderboard in Discord! Elite Bot is verified and already present in more than
-				100 servers!
+				Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
+				300 servers!
 			</p>
 			<div class="flex justify-center">
 				<a
@@ -102,12 +102,12 @@
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-			{#each data.lb as entry}
-				<Entry {entry} jump={undefined} />
+			{#each data.lb as entry, i}
+				<Entry {entry} rank={i + 1} />
 			{/each}
 			<div class="flex justify-center w-full">
 				<a
-					href="/leaderboard"
+					href="/leaderboard/weight/farming"
 					class="text-center max-w-md px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-800"
 					>View Full Leaderboard</a
 				>
