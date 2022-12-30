@@ -30,10 +30,11 @@ https://elitebot.dev/
 
     ```
     http://localhost:5173/login/callback
-    http://localhost:8000/login/callback
+    http://localhost:3000/login/callback
     ```
 
-    ![image](https://user-images.githubusercontent.com/94007463/201015643-cf2c4912-37f3-4de1-b47b-7f00f4b9a17d.png)
+    ![image](https://user-images.githubusercontent.com/24925519/210026662-1cea4e7d-64dc-4655-93c7-705c399d02df.png)
+
 
 4. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
 
@@ -82,7 +83,7 @@ To create a production version of your app, follow these steps.
     ```
     docker-compose -f docker-compose-prod.yaml up --build -d
     ```
-    You can now navigate to http://localhost:8000/ to view the site.
+    You can now navigate to http://localhost:3000/ to view the site.
 
 In order to deploy this site to an actual domain name, you'd have to change the `ORIGIN` and `PUBLIC_HOST_URL` to your domain name, and follow a tutorial elsewhere and point to this address with something like nginx forwarding.
 
