@@ -35,7 +35,6 @@ https://elitebot.dev/
 
     ![image](https://user-images.githubusercontent.com/24925519/210026662-1cea4e7d-64dc-4655-93c7-705c399d02df.png)
 
-
 4. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
 
 5. Start up the database and redis containers (or other postgres database if you went that route). You'll need to have `docker-compose` (comes with [Docker Desktop](https://www.docker.com/products/docker-desktop/)) installed on your system.
