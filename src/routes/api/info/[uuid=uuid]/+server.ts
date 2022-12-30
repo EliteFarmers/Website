@@ -1,6 +1,5 @@
 import { GetUser } from '$db/database';
 import type { RequestHandler } from './$types';
-import { GET as fetchWeight } from '../../weight/[uuid]/+server';
 import type { UserInfo } from '$db/models/users';
 
 export const GET: RequestHandler = async (event) => {
@@ -22,13 +21,5 @@ export const GET: RequestHandler = async (event) => {
 
 	const info = user.info as Partial<UserInfo>;
 
-	if (info.profiles) {
-		const response = await fetchWeight(event);
-
-		if (response.status === 200) {
-			return response;
-		}
-	}
-
-	return new Response(JSON.stringify(user.info));
+	return new Response(JSON.stringify(info));
 };

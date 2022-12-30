@@ -39,6 +39,6 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(JSON.stringify({ error: 'User info not found' }), { status: 404 });
 	}
 
-	const profile = info.profiles?.[params.profileId];
+	const profile = info.profiles?.[params.profile];
 	return new Response(JSON.stringify(profile ?? { error: 'Profile not found.' }), { status: profile ? 200 : 404 });
 };

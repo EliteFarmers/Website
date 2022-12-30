@@ -27,12 +27,6 @@ export const GET: RequestHandler = async ({ params }) => {
 		}
 	}
 
-	const profilesData = await fetchProfiles(uuid);
-
-	if (!profilesData?.success) {
-		return new Response(JSON.stringify({ error: 'Profiles not found' }), { status: 404 });
-	}
-
 	const info = user.info as Partial<UserInfo> | undefined;
 
 	if (!info) {

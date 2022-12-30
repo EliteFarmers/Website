@@ -94,6 +94,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 			collections: collections,
 		};
 	} catch (e) {
+		console.log(e);
 		throw error(500, 'Failed to fetch data');
 	}
 };
