@@ -1,6 +1,6 @@
 import { GetUser } from '$db/database';
 import type { UserInfo } from '$db/models/users';
-import { accountFromUUID, fetchProfiles } from '$lib/data';
+import { accountFromUUID } from '$lib/data';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -27,18 +27,11 @@ export const GET: RequestHandler = async ({ params }) => {
 		}
 	}
 
-	const profilesData = await fetchProfiles(uuid);
-
-	if (!profilesData?.success) {
-		return new Response(JSON.stringify({ error: 'Profiles not found' }), { status: 404 });
-	}
-
 	const info = user.info as Partial<UserInfo> | undefined;
 
 	if (!info) {
 		return new Response(JSON.stringify({ error: 'User info not found' }), { status: 404 });
 	}
 
-	const profile = info.profiles?.[params.profileId];
-	return new Response(JSON.stringify(profile ?? { error: 'Profile not found.' }), { status: profile ? 200 : 404 });
+	return new Response(JSON.stringify(info), { status: 200 });
 };

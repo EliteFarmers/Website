@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const uuid = params.uuid.replaceAll('-', '');
-	const profileId = params.profileId;
+	const profileId = params.profile;
 
 	if (!uuid || uuid.length !== 32 || !profileId) {
 		return new Response(JSON.stringify({ error: 'Not a valid UUID' }), { status: 400 });
