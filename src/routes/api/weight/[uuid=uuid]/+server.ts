@@ -1,6 +1,6 @@
 import { GetUser } from '$db/database';
 import type { UserInfo } from '$db/models/users';
-import { accountFromUUID, fetchProfiles } from '$lib/data';
+import { accountFromUUID } from '$lib/data';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
