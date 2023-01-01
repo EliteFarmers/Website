@@ -279,7 +279,15 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 export async function SetLeaderboard(category: string, page: string, entries: Leaderboard) {
 	try {
 		const members = entries.map((entry) => ({ value: `${entry.uuid}:${entry.profile}`, score: entry.amount }));
-		await client.ZADD(`${category}:${page}`, members);
+
+		// Transaction to ensure that the leaderboard is updated atomically
+		// Leaderboard must be deleted first to ensure that wiped entries are removed
+		const transaction = client.MULTI();
+
+		transaction.DEL(`${category}:${page}`);
+		transaction.ZADD(`${category}:${page}`, members);
+
+		await transaction.EXEC();
 	} catch (e) {
 		console.error(e);
 	}
