@@ -337,6 +337,10 @@ export interface AccountData {
 		name: string;
 		value: string;
 	}[];
+	face: {
+		base: string;
+		overlay: string;
+	};
 }
 
 export type PlusColor =

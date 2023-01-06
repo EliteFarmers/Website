@@ -1,7 +1,7 @@
 import { LEADERBOARDS } from '$db/leaderboards';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = () => {
+export const load: PageServerLoad = ({ setHeaders }) => {
 	const leaderboards = LEADERBOARDS;
 
 	const categories = Object.entries(leaderboards).map(([title, category]) => {
@@ -17,6 +17,10 @@ export const load: PageServerLoad = () => {
 			title: category.name,
 			pages,
 		};
+	});
+
+	setHeaders({
+		'Cache-Control': 'max-age=600',
 	});
 
 	return {
