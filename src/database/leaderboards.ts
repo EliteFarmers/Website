@@ -296,7 +296,10 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 
 export async function SetLeaderboard(category: string, page: string, entries: Leaderboard) {
 	try {
-		const members = entries.map((entry) => ({ value: `${entry.uuid}:${entry.profile}`, score: entry.amount }));
+		const members = entries.map((entry) => ({
+			value: `${entry.uuid}:${entry.profile}`,
+			score: isNaN(entry.amount) ? 0 : entry.amount,
+		}));
 
 		// Transaction to ensure that the leaderboard is updated atomically
 		// Leaderboard must be deleted first to ensure that wiped entries are removed
