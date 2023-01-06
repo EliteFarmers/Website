@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL } from '$env/static/public';
-import { DBReady, GetUserByDiscordID, SyncTables, UpdateDiscordUser } from '$db/database';
+import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
 import type { DiscordUser } from '$db/models/users';
 import { RefreshUser } from '$lib/discordAuth';
 
@@ -11,10 +11,6 @@ interface CookieData {
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
-	if (!DBReady) {
-		void SyncTables();
-	}
-
 	const access = event.cookies.get('discord_access_token');
 	const refresh = event.cookies.get('discord_refresh_token');
 
