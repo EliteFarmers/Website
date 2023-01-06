@@ -75,6 +75,7 @@
 		width: 100%;
 		aspect-ratio: 1;
 		background-size: 200% 1000%;
+		image-rendering: pixelated;
 	}
 
 	/* Mobile styles */

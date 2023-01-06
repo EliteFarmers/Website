@@ -13,7 +13,7 @@
 
 	const formatting = data.formatting;
 
-	const entry = data.lb.find((e) => e.uuid === data.userUUID && e.profile === data.profileId);
+	const entry = data.lb.find((e) => e.ign === data.jump && e.cute_name === data.profileName);
 
 	const options: Intl.NumberFormatOptions = {
 		maximumFractionDigits: 1,
@@ -34,7 +34,9 @@
 		if (!$page.url.pathname.includes('+') || !data.userUUID || !data.jump || !data.profileId || !data.profileName)
 			return;
 
-		const url = $page.url.pathname.replace(data.userUUID, data.jump).replace(data.profileId, data.profileName);
+		let url = $page.url.pathname.replace(`+${data.userUUID}`, `+${data.jump}`).replace(`-${data.profileId}`, `-${data.profileName}`);
+		if (!url.includes('-')) url += `-${data.profileName}`;
+
 		if ($page.url.pathname !== url) {
 			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
 		}
@@ -72,6 +74,7 @@
 <section class="flex flex-col mt-16 justify-center w-full">
 	<h1 class="text-4xl text-center my-8">{data.name} Leaderboard</h1>
 	<div
+		data-sveltekit-preload-data="tap"
 		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"
 	>
 		<div class="flex flex-col gap-2 p-2 w-full">
@@ -80,7 +83,7 @@
 					rank={i + data.start}
 					{entry}
 					{formatting}
-					highlight={data.jump === entry.ign && data.profileId === entry.profile}
+					highlight={data.jump === entry.ign && data.profileName === entry.cute_name}
 				/>
 			{/each}
 		</div>
@@ -90,7 +93,7 @@
 					rank={i + firstHalf.length + data.start}
 					{entry}
 					{formatting}
-					highlight={data.jump === entry.ign && data.profileId === entry.profile}
+					highlight={data.jump === entry.ign && data.profileName === entry.cute_name}
 				/>
 			{/each}
 		</div>
@@ -107,7 +110,7 @@
 			id="navigate"
 			href="/leaderboard/{$page.params.category}/{$page.params.page}/{Math.min(
 				Math.max(1, data.start - 20),
-				990
+				981
 			)}"
 			class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6"
 		>
@@ -117,7 +120,7 @@
 			id="navigate"
 			href="/leaderboard/{$page.params.category}/{$page.params.page}/{Math.min(
 				Math.max(1, data.start + 20),
-				990
+				981
 			)}"
 			class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6"
 		>
@@ -125,13 +128,13 @@
 		</a>
 		<a
 			id="navigate"
-			href="/leaderboard/{$page.params.category}/{$page.params.page}/990"
+			href="/leaderboard/{$page.params.category}/{$page.params.page}/981"
 			class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-md w-1/6"
 		>
 			Last
 		</a>
 	</div>
-	<h3 class="text-sm text-center w-1/2 mx-[25%] py-4">
+	<h3 class="text-sm text-center w-1/2 mx-auto py-4">
 		This leaderboard only consists of the top 1,000 players who have been searched on the website. New entries are
 		recalculated every 5 minutes.
 	</h3>

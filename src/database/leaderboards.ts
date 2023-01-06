@@ -1,7 +1,6 @@
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import { DBReady, sequelize } from '$db/database';
 import { client } from '$db/redis';
-
 export interface LeaderboardEntry {
 	ign: string;
 	uuid: string;
@@ -9,6 +8,10 @@ export interface LeaderboardEntry {
 	cute_name: string;
 	rank: number;
 	amount: number;
+	face?: {
+		base: string;
+		overlay: string;
+	};
 }
 
 export interface LeaderboardPage {
@@ -189,26 +192,42 @@ export const LeaderboardPages = Object.values(LEADERBOARDS).reduce<string[]>((pa
 	return pages;
 }, []);
 
-const LeaderboardCache = new Map<string, Leaderboard>();
-const LastUpdated = new Map<string, number>();
-
 export async function GetLeaderboardSlice(offset: number, limit: number, category: string, page: string) {
-	if (LeaderboardCache.has(`${category}-${page}`)) {
-		const lastUpdated = LastUpdated.get(`${category}-${page}`) ?? 0;
+	const cacheKey = `${category}-${page}`;
+	const lastUpdated = LastUpdated.get(cacheKey) ?? 0;
 
-		if (Date.now() - lastUpdated < LEADERBOARD_UPDATE_INTERVAL) {
-			const leaderboard = LeaderboardCache.get(`${category}-${page}`) ?? [];
-
-			return leaderboard.slice(offset, offset + limit);
-		}
+	if (Date.now() - lastUpdated > LEADERBOARD_UPDATE_INTERVAL) {
+		void FetchLeaderboard(category, page);
 	}
 
-	const leaderboard = await FetchLeaderboard(category, page);
+	const lb = await client.ZRANGE_WITHSCORES(`${category}:${page}`, offset, offset + limit - 1, { REV: true });
 
-	if (!leaderboard) return [];
+	const entries = await Promise.all(
+		lb.map(async (entry) => {
+			const { value, score } = entry;
+			const [uuid, profile] = value.split(':');
 
-	return leaderboard.slice(offset, offset + limit);
+			const [ign, cute_name, face] = await Promise.all([
+				client.GET(`ign:${uuid}`),
+				client.GET(`cute_name:${profile}`),
+				client.GET(`face:${uuid}`),
+			]);
+
+			const [base, overlay] = face?.split(':') ?? [];
+
+			return {
+				ign,
+				cute_name,
+				amount: score,
+				face: { base, overlay },
+			};
+		})
+	);
+
+	return entries;
 }
+
+const LastUpdated = new Map<string, number>();
 
 export async function FetchLeaderboard(categoryName: string, pageName: string) {
 	const category = LEADERBOARDS[categoryName];
@@ -218,14 +237,6 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 
 	const cacheKey = `${categoryName}-${pageName}`;
 
-	if (LeaderboardCache.has(cacheKey)) {
-		const lastUpdated = LastUpdated.get(cacheKey) ?? 0;
-
-		if (Date.now() - lastUpdated < LEADERBOARD_UPDATE_INTERVAL) {
-			return LeaderboardCache.get(cacheKey);
-		}
-	}
-
 	const onProfile = category.column === 'skyblock';
 	const path: string[] = category.path.replace('[profile].', '').split('.');
 
@@ -234,11 +245,12 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 
 	const rawQuery = onProfile
 		? `
-		SELECT ign, uuid, amount, profile_id as profile, cute_name
+		SELECT *
 		FROM (
-			SELECT ign, uuid, elem->'${path.join("'->'")}'->'${
+			SELECT ign, uuid, account->'account'->'face' as face,
+			elem->'${path.join("'->'")}'->'${
 				page.property
-		  }' as amount, elem->'profile_id' as profile_id, elem->'cute_name' as cute_name
+		  }' as amount, elem->'profile_id' as profile, elem->'cute_name' as cute_name
 			FROM users, jsonb_array_elements(skyblock->'profiles') a(elem)
 			) sub
 		WHERE amount is not null and amount::dec > 0
@@ -246,9 +258,10 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 		LIMIT ${page.limit};
 	`
 		: `
-		SELECT ign, uuid, amount, profile, cute_name
+		SELECT *
 		FROM (
-			SELECT ign, uuid, elem.val->${category.path ? `'${path.join("'->'")}'->` : ''}'${page.property
+			SELECT ign, uuid, account->'account'->'face' as face,
+			elem.val->${category.path ? `'${path.join("'->'")}'->` : ''}'${page.property
 				.split('.')
 				.join("'->'")}' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name
 			FROM users, jsonb_each(info->'profiles') as elem(profile, val)
@@ -269,7 +282,12 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 	if (!raw) return undefined;
 
 	LastUpdated.set(cacheKey, Date.now());
-	LeaderboardCache.set(cacheKey, raw as Leaderboard);
+
+	for (const entry of raw as Leaderboard) {
+		const { uuid, ign, profile, cute_name } = entry;
+		void client.SET(`cute_name:${profile}`, cute_name);
+		void client.SET(`ign:${uuid}`, ign);
+	}
 
 	void SetLeaderboard(categoryName, pageName, raw as Leaderboard);
 
@@ -294,11 +312,15 @@ export async function SetLeaderboard(category: string, page: string, entries: Le
 }
 
 export async function FetchLeaderboardRank(category: string, page: string, uuid: string, profile: string) {
-	const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
+	try {
+		const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
 
-	if (rank === null) return -1;
+		if (rank === null) return -1;
 
-	return rank + 1;
+		return rank + 1;
+	} catch (e) {
+		return -1;
+	}
 }
 
 export async function FetchLeaderboardRankings(uuid: string, profile: string) {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { LeaderboardEntry } from '$db/leaderboards';
+	import Face from './face.svelte';
 
 	export let entry: LeaderboardEntry;
 	export let highlight = false;
@@ -14,17 +15,16 @@
 		options.minimumFractionDigits = 1;
 	}
 
-	const { ign, amount, profile, uuid, cute_name } = entry;
+	const { ign, amount, profile, uuid, cute_name, face } = entry;
 </script>
 
 <a
-	data-sveltekit-preload-data="tap"
-	href="/stats/{uuid}/{profile}"
+	href="/stats/{uuid ?? encodeURIComponent(ign)}/{profile ?? encodeURIComponent(cute_name)}"
 	class="flex gap-2 justify-between hover:shadow-lg hover:bg-gray-100 hover:dark:bg-zinc-600 align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
 >
-	<div class="flex gap-4 justify-start align-middle items-center mx-2">
+	<div class="flex gap-2 justify-start align-middle items-center mx-2">
 		<div class="text-green-800 dark:text-green-300">
 			<h1>
 				<span class="text-sm xs:text-md sm:text-2xl">#</span><span class="text-lg xs:text-xl sm:text-3xl"
@@ -32,7 +32,8 @@
 				>
 			</h1>
 		</div>
-		<div class="flex flex-col">
+		<Face {ign} base={face?.base} overlay={face?.overlay} />
+		<div class="flex flex-col overflow-hidden min-w-fit">
 			<h1 class="inline text-sm xs:text-xl sm:text-2xl font-semibold text-start">{ign}</h1>
 			<h4 class="text-xs xs:text-sm sm:text-md text-start overflow-hidden text-ellipsis whitespace-nowrap">
 				{cute_name}

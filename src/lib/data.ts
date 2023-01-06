@@ -44,6 +44,7 @@ import { getContestTimeStamp } from './format';
 import type { User } from '$db/models/users';
 import { FetchHypixelPlayer, FetchSkyblockProfiles } from '$lib/hypixel';
 import { CalculateWeight } from './weight';
+import { ExtractFace } from './face';
 
 const RESPONSE_VERSION = 1;
 
@@ -88,6 +89,9 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	}
 
 	const data = (await response.json()) as AccountData;
+
+	// Saves the account's face to the redis cache.
+	void ExtractFace(data.properties[0]);
 
 	const result: AccountInfo = {
 		success: true,
