@@ -25,13 +25,14 @@ export const load: PageServerLoad = async ({ params, depends, setHeaders }) => {
 		const user = player.length === 32 ? await GetUser(player) : await GetUserByIGN(player);
 
 		if (user) {
-			const profileData = user.skyblock?.profiles.find(
-				(p) => profile ? (p.profile_id === profile || p.cute_name === profile) : p.selected
+			const profileData = user.skyblock?.profiles.find((p) =>
+				profile ? p.profile_id === profile || p.cute_name === profile : p.selected
 			);
 			profileId = profileData?.profile_id ?? profileId;
 			profileName = profileData?.cute_name;
 
-			if (!profileId || profileId.length !== 32) throw error(404, 'Couldn\'t find a leaderboard entry for that player and profile!');
+			if (!profileId || profileId.length !== 32)
+				throw error(404, "Couldn't find a leaderboard entry for that player and profile!");
 
 			const rank = await FetchLeaderboardRank(category, page, user.uuid, profileId);
 

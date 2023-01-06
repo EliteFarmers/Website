@@ -34,7 +34,9 @@
 		if (!$page.url.pathname.includes('+') || !data.userUUID || !data.jump || !data.profileId || !data.profileName)
 			return;
 
-		let url = $page.url.pathname.replace(`+${data.userUUID}`, `+${data.jump}`).replace(`-${data.profileId}`, `-${data.profileName}`);
+		let url = $page.url.pathname
+			.replace(`+${data.userUUID}`, `+${data.jump}`)
+			.replace(`-${data.profileId}`, `-${data.profileName}`);
 		if (!url.includes('-')) url += `-${data.profileName}`;
 
 		if ($page.url.pathname !== url) {
