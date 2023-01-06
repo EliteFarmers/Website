@@ -50,5 +50,10 @@
 		"pg": "^8.7.3",
 		"prismarine-nbt": "^2.2.1",
 		"sequelize": "^6.21.3"
+	},
+	"overrides": {
+		"@typescript-eslint/eslint-plugin": "^5.39.0",
+		"eslint": "^8.24.0",
+		"eslint-plugin-promise": "^6.0.1"
 	}
 }
