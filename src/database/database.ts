@@ -3,7 +3,6 @@ import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
-import { GetLeaderboardSlice } from '$db/leaderboards';
 import {
 	UsersInit,
 	type DiscordUser,
@@ -36,7 +35,7 @@ export async function SyncTables() {
 
 	try {
 		await sequelize.authenticate();
-		await client.connect();
+		if (!client.isOpen) await client.connect();
 
 		await User.sync({ force: false });
 
@@ -45,6 +44,7 @@ export async function SyncTables() {
 
 		console.log('Connected to database.');
 	} catch (error) {
+		console.log(error);
 		DBReady = false;
 		console.log('Unable to connect to the database!');
 	}
@@ -215,6 +215,15 @@ export async function GetUserInfo(uuid: string) {
 	return user.info ?? null;
 }
 
+export async function UpdateFaceData(uuid: string, data: { base: string; overlay: string }) {
+	const user = await GetUser(uuid);
+	const oldAccount = user?.account ?? null;
+	if (!oldAccount) return null;
+
+	const newAccount = { ...oldAccount, account: { ...oldAccount.account, face: data } };
+	return UpdateUser({ uuid: uuid }, { account: newAccount });
+}
+
 export async function UpdateCheating(uuid: string, cheating: boolean) {
 	const user = await GetUser(uuid);
 	const oldInfo = user?.info ?? infoDefaults;
@@ -224,15 +233,17 @@ export async function UpdateCheating(uuid: string, cheating: boolean) {
 }
 
 export async function RefreshDataTask(limit = 250) {
-	const leaderboard = await GetLeaderboardSlice(0, limit, 'weight', 'farming');
+	const leaderboard = await client.ZRANGE(`weight:farming`, 0, limit, { REV: true });
 
 	// Refresh all users, one user per 15 seconds
 	for (const entry of leaderboard) {
 		await limiter.removeTokens(1);
 
+		const uuid = entry.split(':')[0];
+
 		Promise.allSettled([
 			// Room for more tasks here if ever needed
-			fetchProfiles(entry.uuid),
+			fetchProfiles(uuid),
 		]).catch(() => undefined);
 	}
 
