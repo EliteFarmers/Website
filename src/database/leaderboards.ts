@@ -207,19 +207,19 @@ export async function GetLeaderboardSlice(offset: number, limit: number, categor
 			const { value, score } = entry;
 			const [uuid, profile] = value.split(':');
 
-			const [ign, cute_name, face] = await Promise.all([
+			const [ign, cute_name /*, face*/] = await Promise.all([
 				client.GET(`ign:${uuid}`),
 				client.GET(`cute_name:${profile}`),
-				client.GET(`face:${uuid}`),
+				//client.GET(`face:${uuid}`),
 			]);
 
-			const [base, overlay] = face?.split(':') ?? [];
+			// const [base, overlay] = face?.split(':') ?? [];
 
 			return {
 				ign,
 				cute_name,
 				amount: score,
-				face: { base, overlay },
+				// face: { base, overlay },
 			};
 		})
 	);
@@ -243,11 +243,12 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 	const exclude = ['info', 'profile', 'account', 'player', 'skyblock', 'createdAt', 'updatedAt'];
 	if (!onProfile) exclude.push('skyblock');
 
+	// account->'account'->'face' as face,
 	const rawQuery = onProfile
 		? `
 		SELECT *
 		FROM (
-			SELECT ign, uuid, account->'account'->'face' as face,
+			SELECT ign, uuid,
 			elem->'${path.join("'->'")}'->'${
 				page.property
 		  }' as amount, elem->'profile_id' as profile, elem->'cute_name' as cute_name
@@ -260,7 +261,7 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 		: `
 		SELECT *
 		FROM (
-			SELECT ign, uuid, account->'account'->'face' as face,
+			SELECT ign, uuid,
 			elem.val->${category.path ? `'${path.join("'->'")}'->` : ''}'${page.property
 				.split('.')
 				.join("'->'")}' as amount, elem.profile as profile, elem.val->'cute_name' as cute_name

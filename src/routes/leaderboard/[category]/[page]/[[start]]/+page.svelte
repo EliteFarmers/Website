@@ -30,7 +30,6 @@
 	});
 
 	onMount(async () => {
-		console.log(data);
 		if (!$page.url.pathname.includes('+') || !data.userUUID || !data.jump || !data.profileId || !data.profileName)
 			return;
 

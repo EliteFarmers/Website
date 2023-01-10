@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { LeaderboardEntry } from '$db/leaderboards';
-	import Face from './face.svelte';
+	// import Face from './face.svelte';
 
 	export let entry: LeaderboardEntry;
 	export let highlight = false;
@@ -35,7 +35,7 @@
 					>
 				</h1>
 			</div>
-			<Face {ign} base={face?.base} overlay={face?.overlay} />
+			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
 				<h1 class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{ign}</h1>
 				<h4
