@@ -19,7 +19,7 @@ import type {
 	RawProfileData,
 	RawProfileMember,
 	RawProfileMembers,
-} from './skyblock.d';
+} from '$lib/skyblock.d';
 import {
 	ACCOUNT_UPDATE_INTERVAL,
 	EXCLUDED_FIELDS,
@@ -28,7 +28,7 @@ import {
 	MOVE_TO_STATS,
 	PLAYER_UPDATE_INTERVAL,
 	PROFILE_UPDATE_INTERVAL,
-} from './constants/data';
+} from '$lib/constants/data';
 import { API_CROP_TO_CROP } from './constants/crops';
 import {
 	CreateUser,
@@ -40,11 +40,11 @@ import {
 	UpdateUserInfo,
 } from '$db/database';
 import { parse, simplify } from 'prismarine-nbt';
-import { getContestTimeStamp } from './format';
+import { getContestTimeStamp } from '$lib/format';
 import type { User } from '$db/models/users';
 import { FetchHypixelPlayer, FetchSkyblockProfiles } from '$lib/hypixel';
-import { CalculateWeight } from './weight';
-import { ExtractFace } from './face';
+import { CalculateWeight } from '$lib/weight';
+// import { ExtractFace } from './face';
 
 const RESPONSE_VERSION = 1;
 
@@ -91,7 +91,7 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	const data = (await response.json()) as AccountData;
 
 	// Saves the account's face to the redis cache.
-	void ExtractFace(data.properties[0]);
+	// void ExtractFace(data.properties[0]);
 
 	const result: AccountInfo = {
 		success: true,
