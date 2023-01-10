@@ -61,7 +61,7 @@ export async function GetUser(uuid: string) {
 
 export async function GetUserByIGN(ign: string) {
 	return await findOne({
-		ign: { [Op.iLike]: '%' + ign },
+		ign: { [Op.iLike]: ign.replace(/_/g, '\\_') },
 	});
 }
 
