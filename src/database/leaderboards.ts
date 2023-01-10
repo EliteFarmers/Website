@@ -286,8 +286,23 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 
 	for (const entry of raw as Leaderboard) {
 		const { uuid, ign, profile, cute_name } = entry;
-		void client.SET(`cute_name:${profile}`, cute_name);
-		void client.SET(`ign:${uuid}`, ign);
+		if (
+			!uuid ||
+			!ign ||
+			!profile ||
+			!cute_name ||
+			typeof cute_name !== 'string' ||
+			typeof ign !== 'string' ||
+			typeof uuid !== 'string' ||
+			typeof profile !== 'string'
+		)
+			continue;
+		try {
+			void client.SET(`cute_name:${profile}`, cute_name);
+			void client.SET(`ign:${uuid}`, ign);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	void SetLeaderboard(categoryName, pageName, raw as Leaderboard);
@@ -316,7 +331,7 @@ export async function SetLeaderboard(category: string, page: string, entries: Le
 
 		await transaction.EXEC();
 	} catch (e) {
-		console.error(e);
+		console.log('Leaderboard Error', e);
 	}
 }
 
