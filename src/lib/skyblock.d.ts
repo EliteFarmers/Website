@@ -92,6 +92,9 @@ export interface ProfileMember {
 		experience: number;
 	};
 	pets: PetList;
+	leveling: {
+		experience: number;
+	};
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any;
 }
