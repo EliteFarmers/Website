@@ -88,6 +88,9 @@ export interface ProfileMember {
 	minions: CraftedMinions;
 	jacob: JacobData;
 	fairy: FairyData;
+	leveling: {
+		experience: number;
+	};
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any;
 }
