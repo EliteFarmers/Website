@@ -89,6 +89,9 @@ export interface ProfileMember {
 	jacob: JacobData;
 	fairy: FairyData;
 	pets: PetList;
+	leveling: {
+		experience: number;
+	};
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any;
 }

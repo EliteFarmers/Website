@@ -264,6 +264,19 @@ export const HOTM_XP = {
 	7: 150000,
 };
 
+export const SKYBLOCK_LEVEL_COLORS = {
+	39: '#555555',
+	79: '#FFFFFF',
+	119: '#00AA00',
+	159: '#5555FF',
+	199: '#AA00AA',
+	239: '#FFAA00',
+	279: '#FF55FF',
+	319: '#55FFFF',
+	359: '#FF5555',
+	399: '#FF5555',
+};
+
 /*
 export const LEVELS = [
 	{ xp: 0, level: 0 },

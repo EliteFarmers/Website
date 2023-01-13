@@ -7,6 +7,7 @@
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
 	import type { WeightInfo } from '$db/models/users';
+	import Skyblocklevel from './player/skyblocklevel.svelte';
 
 	export let account: AccountData;
 	export let player: PlayerInfo;
@@ -15,6 +16,7 @@
 	export let linked: boolean;
 	export let weightInfo: WeightInfo;
 	export let weightRank: number;
+	export let skyblockXP: number;
 
 	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name));
 
@@ -43,7 +45,10 @@
 			</div>
 			<div class="flex flex-col gap-1 justify-start">
 				<PlayerName ign={account.name} {rank} {members} profileId={profileIds[0].id} />
-				<Discord username={discordName} {linked} />
+				<div class="flex justify-start">
+					<Skyblocklevel xp={skyblockXP} />
+					<Discord username={discordName} {linked} />
+				</div>
 				<div class="flex justify-start">
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"

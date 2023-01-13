@@ -73,6 +73,7 @@
 		linked={data.user.linked}
 		weightInfo={data.weight}
 		{weightRank}
+		skyblockXP={profile.member.leveling?.experience ?? 0}
 	/>
 
 	<APIstatus api={profile.api} />
