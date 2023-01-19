@@ -265,16 +265,17 @@ export const HOTM_XP = {
 };
 
 export const SKYBLOCK_LEVEL_COLORS = {
-	39: '#555555',
-	79: '#FFFFFF',
-	119: '#00AA00',
-	159: '#5555FF',
-	199: '#AA00AA',
-	239: '#FFAA00',
-	279: '#FF55FF',
-	319: '#55FFFF',
-	359: '#FF5555',
-	399: '#FF5555',
+	40: '#555555',
+	80: '#FFFFFF',
+	120: '#00AA00',
+	160: '#5555FF',
+	200: '#AA00AA',
+	240: '#FFAA00',
+	280: '#FF55FF',
+	320: '#55FFFF',
+	360: '#FF5555',
+	400: '#FF5555', // Intentionally the same as 360, might have a new color in the future
+	1000: '#FF5555', // Catch all for anything above 400
 };
 
 /*
