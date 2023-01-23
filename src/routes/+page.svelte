@@ -102,8 +102,12 @@
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-			{#each data.lb as entry, i}
-				<Entry {entry} rank={i + 1} />
+			{#each data.lb as e, i}
+				<Entry
+					entry={{ ign: e.ign ?? '', cute_name: e.cute_name ?? '', amount: e.amount }}
+					rank={i + 1}
+					formatting={'number'}
+				/>
 			{/each}
 			<div class="flex justify-center w-full">
 				<a
