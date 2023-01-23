@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { LeaderboardEntry } from '$db/leaderboards';
+	import type { Optional } from 'sequelize';
 	// import Face from './face.svelte';
 
-	export let entry: LeaderboardEntry;
+	export let entry: Optional<LeaderboardEntry, 'uuid' | 'profile' | 'rank'>;
 	export let highlight = false;
 	export let rank: number;
 	export let formatting: 'number' | 'decimal' = 'number';
@@ -15,7 +16,7 @@
 		options.minimumFractionDigits = 1;
 	}
 
-	const { ign, amount, profile, uuid, cute_name, face } = entry;
+	const { ign, amount, profile, uuid, cute_name } = entry;
 </script>
 
 <a
