@@ -15,9 +15,14 @@
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --max-warnings=0 .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"up": "docker-compose up -d database cache",
-		"down": "docker-compose down"
+		"down": "docker-compose down",
+		"prepare": "npm run smui-theme-light && npm run smui-theme-dark",
+		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
+		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark"
 	},
 	"devDependencies": {
+		"@smui/button": "^7.0.0-beta.0",
+		"@smui/card": "^7.0.0-beta.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "^1.0.0-next.589",
 		"@types/cookie": "^0.5.1",
@@ -35,6 +40,7 @@
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
 		"redis": "^4.5.1",
+		"smui-theme": "^7.0.0-beta.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^2.2.6",
 		"svelte-preprocess": "^4.10.1",
