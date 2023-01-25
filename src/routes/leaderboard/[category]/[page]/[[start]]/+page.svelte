@@ -5,6 +5,7 @@
 	import type { LeaderboardEntry } from '$db/leaderboards';
 	import { afterNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Head from '$comp/head.svelte';
 
 	export let data: PageData;
 
@@ -44,33 +45,14 @@
 	});
 </script>
 
-<svelte:head>
-	<title>{data.name} Leaderboard</title>
-
-	<meta name="keywords" content="hypixel, skyblock, leaderboard, stats, farming, {data.name}" />
-	{#if !data.jump}
-		<meta name="description" content="{data.name} Leaderboard for Hypixel Skyblock." />
-		<meta property="og:title" content="{data.name} Leaderboard" />
-		<meta property="og:description" content="{data.name} Leaderboard for Hypixel Skyblock." />
-	{:else if entry}
-		<meta
-			name="description"
-			content="{entry.ign} has {entry.amount.toLocaleString(undefined, {
+<Head
+	title={entry ? `#${data.playerRank} | ${entry.ign}` : `${data.name} Leaderboard`}
+	description={entry
+		? `${entry.ign} has ${entry.amount.toLocaleString(undefined, {
 				maximumFractionDigits: 0,
-			})} {data.name}, earning position #{data.playerRank} on the global {data.name} leaderboard."
-		/>
-		<meta property="og:title" content="#{data.playerRank} | {entry.ign}" />
-		<meta
-			property="og:description"
-			content="{entry.ign} has {entry.amount.toLocaleString(
-				undefined,
-				options
-			)} {data.name}, earning position #{data.playerRank} on the global {data.name} leaderboard."
-		/>
-	{/if}
-	<meta property="og:image" content="https://elitebot.dev/favicon.png" />
-	<meta property="og:url" content={$page.url.toString()} />
-</svelte:head>
+		  })} ${data.name}, earning position #${data.playerRank} on the global ${data.name} leaderboard.`
+		: `${data.name} Leaderboard for Hypixel Skyblock.`}
+/>
 
 <section class="flex flex-col mt-16 justify-center w-full">
 	<h1 class="text-4xl text-center my-8">{data.name} Leaderboard</h1>

@@ -4,32 +4,22 @@
 		PUBLIC_BOT_INVITE,
 		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
-		PUBLIC_HOST_URL,
 	} from '$env/static/public';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
 	import type { PageData } from './$types';
+	import Head from '$comp/head.svelte';
 	export let data: PageData;
 
 	let enteredText = '';
 </script>
 
-<svelte:head>
-	<title>Elite</title>
-	<meta
-		name="description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
-	/>
-	<meta name="keywords" content="farming, profile, skyblock, weight, calculate, Hypixel, elite" />
-	<meta property="og:title" content="Elite - Skyblock Farming Weight" />
-	<meta
-		property="og:description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
-	/>
-	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
-</svelte:head>
+<Head
+	title="Elite | Skyblock Farming Weight"
+	description="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
+/>
 
 <main>
 	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>

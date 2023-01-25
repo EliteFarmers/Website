@@ -16,7 +16,7 @@
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 
 	import type { PageData } from './$types';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import Head from '$comp/head.svelte';
 	export let data: PageData;
 
 	const account = data.account;
@@ -51,17 +51,9 @@
 	} View the site to see full information.`;
 </script>
 
-<svelte:head>
-	<title>{ign}'s Stats</title>
-	<!-- Preload image -->
+<Head title={ign + ' | Farming Weight'} {description}>
 	<link rel="preload" href="/images/cropatlas.png" as="image" />
-	<!-- Meta -->
-	<meta name="description" content={description} />
-	<meta name="keywords" content="farming, profile, Skyblock, weight, {ign}" />
-	<meta property="og:title" content="{ign} | Farming Weight" />
-	<meta property="og:description" content={description} />
-	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
-</svelte:head>
+</Head>
 
 <main class="m-0 p-0 w-full">
 	<PlayerInfo
