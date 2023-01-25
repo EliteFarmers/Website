@@ -284,6 +284,7 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 
 	LastUpdated.set(cacheKey, Date.now());
 
+	const updates = [];
 	for (const entry of raw as Leaderboard) {
 		const { uuid, ign, profile, cute_name } = entry;
 		if (
@@ -298,14 +299,15 @@ export async function FetchLeaderboard(categoryName: string, pageName: string) {
 		)
 			continue;
 		try {
-			void client.SET(`cute_name:${profile}`, cute_name);
-			void client.SET(`ign:${uuid}`, ign);
+			updates.push(client.SET(`cute_name:${profile}`, cute_name));
+			updates.push(client.SET(`ign:${uuid}`, ign));
 		} catch (e) {
 			console.log(e);
 		}
 	}
 
-	void SetLeaderboard(categoryName, pageName, raw as Leaderboard);
+	await Promise.allSettled(updates);
+	await SetLeaderboard(categoryName, pageName, raw as Leaderboard);
 
 	return raw as Leaderboard;
 }
