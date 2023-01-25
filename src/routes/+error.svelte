@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import Head from '$comp/head.svelte';
 
 	$: message = $page.error?.message ?? 'Unknown error.';
 	$: status = $page.status;
 </script>
 
-<svelte:head>
-	<title>{status}</title>
-</svelte:head>
+<Head title={status.toString()} description={message} />
 
 <h1 class="text-center font-bold text-6xl p-16 m-16 font-mono">{status}</h1>
 <h4 class="text-center font-lighter text-2xl">{message}</h4>
