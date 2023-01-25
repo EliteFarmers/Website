@@ -9,6 +9,9 @@
 	import TwoPanel from '$comp/generic/twopanel.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
+	import Card from '@smui/card';
+	import Button from '@smui/button';
+
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	export let data: PageData;
@@ -48,45 +51,33 @@
 	</div>
 
 	<TwoPanel>
-		<div slot="left" class="p-4 w-full rounded-lg bg-gray-100 dark:bg-zinc-800">
+		<Card slot="left" class="p-4">
 			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
-			<p class="w-full text-center mb-4">
+			<p class="w-full text-center mb-6">
 				Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 2,500 farming
 				weight. For website/bot support, join the support server!
 			</p>
-			<div class="flex flex-row justify-evenly">
-				<a
-					href={PUBLIC_SUPPORT_SERVER_INVITE}
-					target="_blank"
-					rel="noopener noreferrer nofollow"
-					class="text-center px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-900"
-					>Join Support Server</a
-				>
-				<a
-					href={PUBLIC_COMMUNITY_INVITE}
-					target="_blank"
-					rel="noopener noreferrer nofollow"
-					class="text-center px-4 py-2 m-2 rounded-md bg-green-400 hover:bg-green-500 dark:bg-green-500 dark:hover:bg-green-700"
-					>Join Elite Farmers</a
-				>
+			<div class="flex flex-col lg:flex-row justify-evenly m-1">
+				<Button href={PUBLIC_SUPPORT_SERVER_INVITE} variant="raised" class="m-1" target="_blank" rel="noopener noreferrer nofollow">
+					<p>Join Support Server</p>
+				</Button>
+				<Button href={PUBLIC_COMMUNITY_INVITE} variant="raised" class="m-1" color="secondary" target="_blank" rel="noopener noreferrer nofollow">
+					<p>Join Elite Farmers</p>
+				</Button>
 			</div>
-		</div>
-		<div slot="right" class="p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
+		</Card>
+		<Card slot="right" class="p-4">
 			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
-			<p class="w-full text-center">
+			<p class="w-full text-center mb-6">
 				Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
 				300 servers!
 			</p>
 			<div class="flex justify-center">
-				<a
-					href={PUBLIC_BOT_INVITE}
-					target="_blank"
-					rel="noopener noreferrer nofollow"
-					class="text-center px-4 py-2 m-2 rounded-md bg-blue-400 hover:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-700"
-					>Invite Elite Bot</a
-				>
+				<Button href={PUBLIC_BOT_INVITE} variant="raised" class="m-1" target="_blank" rel="noopener noreferrer nofollow">
+					<p>Invite Elite Bot</p>
+				</Button>
 			</div>
-		</div>
+		</Card>
 	</TwoPanel>
 
 	<section class="flex justify-center mt-4 mb-10">
@@ -96,7 +87,7 @@
 				<Entry
 					entry={{ ign: e.ign ?? '', cute_name: e.cute_name ?? '', amount: e.amount }}
 					rank={i + 1}
-					formatting={'number'}
+					formatting={'decimal'}
 				/>
 			{/each}
 			<div class="flex justify-center w-full">
