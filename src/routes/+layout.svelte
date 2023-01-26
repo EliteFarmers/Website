@@ -31,6 +31,16 @@
 	<meta name="author" content="Kaeso" />
 	<meta name="robots" content="index, follow" />
 	<meta property="og:url" content={$page.url.toString()} />
+
+	<!-- SMUI Styles -->
+	{#if $themeStore === Theme.Dark}
+		<link rel="stylesheet" href="/smui-dark.css" />
+	{:else if $themeStore === Theme.Light}
+		<link rel="stylesheet" href="/smui.css" />
+	{:else}
+		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
+		<link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)" />
+	{/if}
 </svelte:head>
 
 <div class="{$themeStore} relative min-h-screen pb-16">
