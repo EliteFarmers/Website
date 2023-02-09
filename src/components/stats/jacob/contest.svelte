@@ -13,11 +13,11 @@
 	let medal = '';
 	if (position !== undefined && participants) {
 		if (position <= participants * 0.05 + 1) {
-			medal = '🥇 ';
+			medal = 'Gold';
 		} else if (position <= participants * 0.25 + 1) {
-			medal = '🥈 ';
+			medal = 'Silver';
 		} else if (position <= participants * 0.6 + 1) {
-			medal = '🥉 ';
+			medal = 'Bronze';
 		}
 	}
 </script>
@@ -28,11 +28,25 @@
 		<span class="text-sm font-semibold">{ranking ? `#${position + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
-	<h3 class="text-lg font-semibold">{medal}{collected.toLocaleString()}</h3>
+	<h3 class="text-lg font-semibold">
+		{#if medal === 'Gold'}
+			<img class="inline-block w-5 h-5" src="/images/medals/gold.png" alt="Earned Medal" />
+		{:else if medal === 'Silver'}
+			<img class="inline-block w-5 h-5" src="/images/medals/silver.png" alt="Earned Medal" />
+		{:else if medal === 'Bronze'}
+			<img class="inline-block w-5 h-5" src="/images/medals/bronze.png" alt="Earned Medal" />
+		{/if}
+		{collected.toLocaleString()}
+	</h3>
 	<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp)}</h6>
 </div>
 
 <style lang="postcss">
+	img {
+		image-rendering: pixelated;
+		aspect-ratio: 1 / 1;
+	}
+
 	.cactus {
 		@apply border-cactus;
 	}
