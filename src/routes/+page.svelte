@@ -4,16 +4,19 @@
 		PUBLIC_BOT_INVITE,
 		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
+		PUBLIC_DONATION_URL,
 	} from '$env/static/public';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
+	import Head from '$comp/head.svelte';
+	import Twopanel from '$comp/generic/twopanel.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
 	import Card from '@smui/card';
 	import Button from '@smui/button';
+	import LayoutGrid, { Cell } from '@smui/layout-grid';
 
 	import type { PageData } from './$types';
-	import Head from '$comp/head.svelte';
 	export let data: PageData;
 
 	let enteredText = '';
@@ -79,6 +82,18 @@
 			</div>
 		</Card>
 	</TwoPanel>
+	<Twopanel>
+		<Card slot="left">
+			<iframe
+				id="kofiframe"
+				src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
+				scrolling="no"
+				style="border:none;width:100%;padding:4px;"
+				height="512"
+				title="kaeso"
+			/>
+		</Card>
+	</Twopanel>
 
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">

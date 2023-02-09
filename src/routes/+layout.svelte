@@ -51,7 +51,7 @@
 		<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50" />
 	{/if}
 
-	<div class="dark:bg-zinc-900">
+	<div>
 		<slot />
 	</div>
 
@@ -62,17 +62,4 @@
 	@tailwind base;
 	@tailwind components;
 	@tailwind utilities;
-
-	:global(body) {
-		background-color: rgb(24 24 27 / 1);
-		margin: 0;
-	}
-
-	.dark {
-		@apply bg-zinc-900 text-white;
-	}
-
-	.light {
-		@apply bg-white;
-	}
 </style>
