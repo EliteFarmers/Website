@@ -1,8 +1,15 @@
-import { HYPIXEL_API_KEY } from '$env/static/private';
+import { HYPIXEL_API_KEY, HYPIXEL_KEY_REQUEST_LIMIT } from '$env/static/private';
 import type { PlayerData, RawProfileResponse } from '$lib/skyblock';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 
-const limiter = new RateLimiter({ tokensPerInterval: 119, interval: 'minute' });
+let requestLimit = parseInt(HYPIXEL_KEY_REQUEST_LIMIT);
+
+if (isNaN(requestLimit)) {
+	console.error('HYPIXEL_KEY_REQUEST_LIMIT is not a number, defaulting to 60');
+	requestLimit = 60;
+}
+
+const limiter = new RateLimiter({ tokensPerInterval: requestLimit - 1, interval: 'minute' });
 
 interface NoSuccess {
 	success: false;
