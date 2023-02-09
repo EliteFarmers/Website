@@ -23,6 +23,7 @@
 	"devDependencies": {
 		"@smui/button": "^7.0.0-beta.0",
 		"@smui/card": "^7.0.0-beta.0",
+		"@smui/layout-grid": "^7.0.0-beta.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "^1.0.0-next.589",
 		"@types/cookie": "^0.5.1",

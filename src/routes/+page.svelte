@@ -4,16 +4,19 @@
 		PUBLIC_BOT_INVITE,
 		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
+		PUBLIC_DONATION_URL,
 	} from '$env/static/public';
 
 	import TwoPanel from '$comp/generic/twopanel.svelte';
+	import Head from '$comp/head.svelte';
+	import Twopanel from '$comp/generic/twopanel.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
 	import Card from '@smui/card';
 	import Button from '@smui/button';
+	import LayoutGrid, { Cell } from '@smui/layout-grid';
 
 	import type { PageData } from './$types';
-	import Head from '$comp/head.svelte';
 	export let data: PageData;
 
 	let enteredText = '';
@@ -50,35 +53,77 @@
 		</form>
 	</div>
 
+	<div class="flex w-full justify-center">
+		<LayoutGrid fixedColumnWidth>
+			<Cell span={6}>
+				<Card class="p-4">
+					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
+					<p class="w-full text-center mb-6">
+						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 2,500 farming
+						weight. For website/bot support, join the support server!
+					</p>
+					<div class="flex flex-col lg:flex-row justify-evenly m-1">
+						<Button
+							href={PUBLIC_SUPPORT_SERVER_INVITE}
+							variant="raised"
+							class="m-1"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Join Support Server</p>
+						</Button>
+						<Button
+							href={PUBLIC_COMMUNITY_INVITE}
+							variant="raised"
+							class="m-1"
+							color="secondary"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Join Elite Farmers</p>
+						</Button>
+					</div>
+				</Card>
+			</Cell>
+			<Cell span={6}>
+				<Card class="p-4">
+					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
+					<p class="w-full text-center mb-6">
+						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
+						300 servers!
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href={PUBLIC_BOT_INVITE}
+							variant="raised"
+							class="m-1"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Invite Elite Bot</p>
+						</Button>
+					</div>
+				</Card>
+			</Cell>
+		</LayoutGrid>
+	</div>
+
 	<TwoPanel>
-		<Card slot="left" class="p-4">
-			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
-			<p class="w-full text-center mb-6">
-				Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 2,500 farming
-				weight. For website/bot support, join the support server!
-			</p>
-			<div class="flex flex-col lg:flex-row justify-evenly m-1">
-				<Button href={PUBLIC_SUPPORT_SERVER_INVITE} variant="raised" class="m-1" target="_blank" rel="noopener noreferrer nofollow">
-					<p>Join Support Server</p>
-				</Button>
-				<Button href={PUBLIC_COMMUNITY_INVITE} variant="raised" class="m-1" color="secondary" target="_blank" rel="noopener noreferrer nofollow">
-					<p>Join Elite Farmers</p>
-				</Button>
-			</div>
-		</Card>
-		<Card slot="right" class="p-4">
-			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
-			<p class="w-full text-center mb-6">
-				Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
-				300 servers!
-			</p>
-			<div class="flex justify-center">
-				<Button href={PUBLIC_BOT_INVITE} variant="raised" class="m-1" target="_blank" rel="noopener noreferrer nofollow">
-					<p>Invite Elite Bot</p>
-				</Button>
-			</div>
-		</Card>
+
+		
 	</TwoPanel>
+	<Twopanel>
+		<Card slot="left">
+			<iframe
+				id="kofiframe"
+				src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
+				scrolling="no"
+				style="border:none;width:100%;padding:4px;"
+				height="512"
+				title="kaeso"
+			/>
+		</Card>
+	</Twopanel>
 
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
