@@ -40,7 +40,7 @@
 					<div
 						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
 					>
-						<div class="crop" style="background-position: 0px {1000 - 100 * i}%;" />
+						<img class="crop" src="/images/crops/{leaderboard.name}.png" alt="Crop" />
 						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
 					</div>
 				</a>
@@ -81,9 +81,7 @@
 	.crop {
 		@apply w-16 h-16;
 		display: inline-block;
-		background-image: url('/images/cropatlas.png');
-		background-size: 100%;
 		aspect-ratio: 1;
-		background-size: 200% 1000%;
+		image-rendering: pixelated;
 	}
 </style>

@@ -17,9 +17,7 @@ body {
 	color: theme.$on-surface;
 }
 
-a {
-	color: #40b3ff;
-}
+a,
 a:visited {
-	color: color.scale(#40b3ff, $lightness: -35%);
+	color: black;
 }

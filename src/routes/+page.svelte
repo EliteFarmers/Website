@@ -53,47 +53,82 @@
 		</form>
 	</div>
 
-	<TwoPanel>
-		<Card slot="left" class="p-4">
-			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
-			<p class="w-full text-center mb-4">
-				Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 3,000 farming
-				weight. For website/bot support, join the support server!
-			</p>
-			<div class="flex flex-col lg:flex-row justify-evenly m-1">
-				<Button href={PUBLIC_SUPPORT_SERVER_INVITE} variant="raised" class="m-1" target="_blank" rel="noopener noreferrer nofollow">
-					<p>Join Support Server</p>
-				</Button>
-				<Button href={PUBLIC_COMMUNITY_INVITE} variant="raised" class="m-1" color="secondary" target="_blank" rel="noopener noreferrer nofollow">
-					<p>Join Elite Farmers</p>
-				</Button>
-			</div>
-		</Card>
-		<Card slot="right" class="p-4">
-			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
-			<p class="w-full text-center mb-6">
-				Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
-				375 servers!
-			</p>
-			<div class="flex justify-center">
-				<Button href={PUBLIC_BOT_INVITE} variant="raised" class="m-1" target="_blank" rel="noopener noreferrer nofollow">
-					<p>Invite Elite Bot</p>
-				</Button>
-			</div>
-		</Card>
-	</TwoPanel>
-	<Twopanel>
-		<Card slot="left">
-			<iframe
-				id="kofiframe"
-				src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
-				scrolling="no"
-				style="border:none;width:100%;padding:4px;"
-				height="512"
-				title="kaeso"
-			/>
-		</Card>
-	</Twopanel>
+	<div class="flex w-full justify-center">
+		<LayoutGrid fixedColumnWidth>
+			<Cell span={8}>
+				<Card class="p-8 mb-8">
+					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
+					<p class="w-full text-center mb-6">
+						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 2,500
+						farming weight. For website/bot support, join the support server!
+					</p>
+					<div class="flex flex-col lg:flex-row justify-evenly m-1">
+						<Button
+							href={PUBLIC_SUPPORT_SERVER_INVITE}
+							variant="raised"
+							class="m-1"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Join Support Server</p>
+						</Button>
+						<Button
+							href={PUBLIC_COMMUNITY_INVITE}
+							variant="raised"
+							class="m-1"
+							color="secondary"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Join Elite Farmers</p>
+						</Button>
+					</div>
+				</Card>
+				<Card class="p-8">
+					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
+					<p class="w-full text-center mb-6">
+						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in
+						more than 300 servers!
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href={PUBLIC_BOT_INVITE}
+							variant="raised"
+							class="m-1"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Invite Elite Bot</p>
+						</Button>
+					</div>
+				</Card>
+			</Cell>
+			<Cell span={4}>
+				<Card>
+					<iframe
+						id="kofiframe"
+						src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
+						style="border:none;width:100%;padding:4px;"
+						height="512"
+						title="kaeso"
+					/>
+				</Card>
+			</Cell>
+			<Cell span={12}>
+				<Card class="overflow-hidden">
+					<a class="lumini flex flex-row gap-8 w-full hover:shadow-xl"
+						href="https://www.redbubble.com/people/Luumini/shop"
+						target="_blank"
+						rel="noopener noreferrer nofollow"
+					>
+						<h1 class="p-8 text-3xl font-semibold">Art By Lumini
+							<span class="text-sm font-xl">Click Me To Check Out Their Shop!</span>
+						</h1>
+					</a>
+				</Card>
+			</Cell>
+		</LayoutGrid>
+	</div>
 
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
@@ -115,3 +150,17 @@
 		</div>
 	</section>
 </main>
+
+<style>
+	.lumini {
+		display: block;
+		background-image: url('/images/LuminiBanner.png');
+		background-size: cover;
+		background-position: center;
+		height: fit-content;
+	}
+
+	.lumini h1 {
+		color: black;
+	}
+</style>
