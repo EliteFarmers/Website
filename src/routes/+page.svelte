@@ -88,7 +88,8 @@
 					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
 					<p class="w-full text-center mb-6">
 						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in
-						more than 300 servers!
+						more than 350 servers! Please note that the bot runs seperately from the website for now, leaderboards 
+						and stats may be slightly out of sync.
 					</p>
 					<div class="flex justify-center">
 						<Button
