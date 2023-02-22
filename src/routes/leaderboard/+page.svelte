@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

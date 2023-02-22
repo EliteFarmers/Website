@@ -74,7 +74,13 @@
 		</form>
 	</section>
 	<section class="flex gap-2 ml-3 justify-end w-1/5 md:w-1/4">
-		<a title="Ko-fi" target="_blank" rel="nofollow noreferrer" href="https://ko-fi.com/kaeso" class="social-button ko-fi">
+		<a
+			title="Ko-fi"
+			target="_blank"
+			rel="nofollow noreferrer"
+			href="https://ko-fi.com/kaeso"
+			class="social-button ko-fi"
+		>
 			<div class="social-icon" /></a
 		>
 		<a class="block sm:hidden dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600" href="/">

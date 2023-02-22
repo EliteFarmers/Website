@@ -71,15 +71,18 @@ export async function GetUserByDiscordID(id: string) {
 }
 
 export async function FindSimilarUsers(input: string) {
-	const users = await sequelize.query(`
+	const users = (await sequelize.query(
+		`
 		SELECT ign, LEVENSHTEIN(ign, '${input.replace(/_/g, '\\_')}') as similarity
 		FROM users
 		ORDER BY similarity ASC
 		LIMIT 5;
-	`, {
-		raw: true,
-		nest: true,
-	}) as { ign: string; similarity: number }[];
+	`,
+		{
+			raw: true,
+			nest: true,
+		}
+	)) as { ign: string; similarity: number }[];
 
 	return users;
 }
