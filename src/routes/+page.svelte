@@ -7,9 +7,7 @@
 		PUBLIC_DONATION_URL,
 	} from '$env/static/public';
 
-	import TwoPanel from '$comp/generic/twopanel.svelte';
 	import Head from '$comp/head.svelte';
-	import Twopanel from '$comp/generic/twopanel.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
 	import Card from '@smui/card';
@@ -88,8 +86,8 @@
 					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
 					<p class="w-full text-center mb-6">
 						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in
-						more than 350 servers! Please note that the bot runs seperately from the website for now, leaderboards 
-						and stats may be slightly out of sync.
+						more than 350 servers! Please note that the bot runs seperately from the website for now,
+						leaderboards and stats may be slightly out of sync.
 					</p>
 					<div class="flex justify-center">
 						<Button
@@ -117,12 +115,14 @@
 			</Cell>
 			<Cell span={12}>
 				<Card class="overflow-hidden">
-					<a class="lumini flex flex-row gap-8 w-full hover:shadow-xl"
+					<a
+						class="lumini flex flex-row gap-8 w-full hover:shadow-xl"
 						href="https://www.redbubble.com/people/Luumini/shop"
 						target="_blank"
 						rel="noopener noreferrer nofollow"
 					>
-						<h1 class="p-8 text-3xl font-semibold">Art By Lumini
+						<h1 class="p-8 text-3xl font-semibold">
+							Art By Lumini
 							<span class="text-sm font-xl">Click Me To Check Out Their Shop!</span>
 						</h1>
 					</a>
