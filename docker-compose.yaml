@@ -28,6 +28,7 @@ services:
             - '5434'
         volumes:
             - db-data:/var/lib/postgresql/data
+            - ./src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
             - elite-network
     cache:

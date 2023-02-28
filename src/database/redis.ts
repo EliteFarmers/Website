@@ -11,7 +11,7 @@ class Redis {
 		});
 
 		this.c.on('error', (error) => {
-			console.error(error);
+			console.error(error, 'Redis error');
 		});
 	}
 

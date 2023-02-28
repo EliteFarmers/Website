@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import Head from '$comp/head.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -12,20 +12,10 @@
 	const jacob = categories.find((category) => category && category.name === 'contests');
 </script>
 
-<svelte:head>
-	<title>Leaderboards</title>
-	<meta
-		name="description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
-	/>
-	<meta name="keywords" content="farming, profile, skyblock, weight, calculate, Hypixel, elite" />
-	<meta property="og:title" content="Elite - Skyblock Farming Weight" />
-	<meta
-		property="og:description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
-	/>
-	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
-</svelte:head>
+<Head
+	title="Elite | Leaderboards"
+	description="View the various leaderboards available on the site! See the top thousand farmers in every crop!"
+/>
 
 <main class="flex flex-col gap-16 mb-16">
 	<h1 class="text-4xl text-center mt-16">Leaderboards</h1>
@@ -49,7 +39,7 @@
 					<div
 						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
 					>
-						<div class="crop" style="background-position: 0px {1000 - 100 * i}%;" />
+						<img class="crop" src="/images/crops/{leaderboard.name}.png" alt="Crop" />
 						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
 					</div>
 				</a>
@@ -90,9 +80,7 @@
 	.crop {
 		@apply w-16 h-16;
 		display: inline-block;
-		background-image: url('/images/cropatlas.png');
-		background-size: 100%;
 		aspect-ratio: 1;
-		background-size: 200% 1000%;
+		image-rendering: pixelated;
 	}
 </style>

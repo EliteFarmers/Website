@@ -30,8 +30,17 @@
 <svelte:head>
 	<meta name="author" content="Kaeso" />
 	<meta name="robots" content="index, follow" />
-	<meta property="og:site_name" content="Elite" />
 	<meta property="og:url" content={$page.url.toString()} />
+
+	<!-- SMUI Styles -->
+	{#if $themeStore === Theme.Dark}
+		<link rel="stylesheet" href="/smui-dark.css" />
+	{:else if $themeStore === Theme.Light}
+		<link rel="stylesheet" href="/smui.css" />
+	{:else}
+		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
+		<link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)" />
+	{/if}
 </svelte:head>
 
 <div class="{$themeStore} relative min-h-screen pb-16">
@@ -42,7 +51,7 @@
 		<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50" />
 	{/if}
 
-	<div class="dark:bg-zinc-900">
+	<div>
 		<slot />
 	</div>
 
@@ -53,17 +62,4 @@
 	@tailwind base;
 	@tailwind components;
 	@tailwind utilities;
-
-	:global(body) {
-		background-color: rgb(24 24 27 / 1);
-		margin: 0;
-	}
-
-	.dark {
-		@apply bg-zinc-900 text-white;
-	}
-
-	.light {
-		@apply bg-white;
-	}
 </style>

@@ -4,32 +4,27 @@
 		PUBLIC_BOT_INVITE,
 		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
-		PUBLIC_HOST_URL,
+		PUBLIC_DONATION_URL,
 	} from '$env/static/public';
 
-	import TwoPanel from '$comp/generic/twopanel.svelte';
+	import Head from '$comp/head.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
+
+	import Card from '@smui/card';
+	import Button from '@smui/button';
+	import LayoutGrid, { Cell } from '@smui/layout-grid';
 
 	import type { PageData } from './$types';
 	export let data: PageData;
 
 	let enteredText = '';
+	let donationClicked = false;
 </script>
 
-<svelte:head>
-	<title>Elite</title>
-	<meta
-		name="description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
-	/>
-	<meta name="keywords" content="farming, profile, skyblock, weight, calculate, Hypixel, elite" />
-	<meta property="og:title" content="Elite - Skyblock Farming Weight" />
-	<meta
-		property="og:description"
-		content="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
-	/>
-	<meta property="og:image" content="{PUBLIC_HOST_URL}/favicon.png" />
-</svelte:head>
+<Head
+	title="Elite | Skyblock Farming Weight"
+	description="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
+/>
 
 <main>
 	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
@@ -57,53 +52,101 @@
 		</form>
 	</div>
 
-	<TwoPanel>
-		<div slot="left" class="p-4 w-full rounded-lg bg-gray-100 dark:bg-zinc-800">
-			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
-			<p class="w-full text-center mb-4">
-				Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 3,000 farming
-				weight. For website/bot support, join the support server!
-			</p>
-			<div class="flex flex-row justify-evenly">
-				<a
-					href={PUBLIC_SUPPORT_SERVER_INVITE}
-					target="_blank"
-					rel="noopener noreferrer nofollow"
-					class="text-center px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-900"
-					>Join Support Server</a
-				>
-				<a
-					href={PUBLIC_COMMUNITY_INVITE}
-					target="_blank"
-					rel="noopener noreferrer nofollow"
-					class="text-center px-4 py-2 m-2 rounded-md bg-green-400 hover:bg-green-500 dark:bg-green-500 dark:hover:bg-green-700"
-					>Join Elite Farmers</a
-				>
-			</div>
-		</div>
-		<div slot="right" class="p-4 w-full flex flex-col justify-between rounded-lg bg-gray-100 dark:bg-zinc-800">
-			<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
-			<p class="w-full text-center">
-				Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in more than
-				375 servers!
-			</p>
-			<div class="flex justify-center">
-				<a
-					href={PUBLIC_BOT_INVITE}
-					target="_blank"
-					rel="noopener noreferrer nofollow"
-					class="text-center px-4 py-2 m-2 rounded-md bg-blue-400 hover:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-700"
-					>Invite Elite Bot</a
-				>
-			</div>
-		</div>
-	</TwoPanel>
+	<div class="flex w-full justify-center">
+		<LayoutGrid fixedColumnWidth>
+			<Cell span={8}>
+				<Card class="p-8 mb-8">
+					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
+					<p class="w-full text-center mb-6">
+						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 3,000
+						farming weight. For website/bot support, join the support server!
+					</p>
+					<div class="flex flex-col lg:flex-row justify-evenly m-1">
+						<Button
+							href={PUBLIC_SUPPORT_SERVER_INVITE}
+							variant="raised"
+							class="m-1"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Join Support Server</p>
+						</Button>
+						<Button
+							href={PUBLIC_COMMUNITY_INVITE}
+							variant="raised"
+							class="m-1"
+							color="secondary"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Join Elite Farmers</p>
+						</Button>
+					</div>
+				</Card>
+				<Card class="p-8">
+					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
+					<p class="w-full text-center mb-6">
+						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in
+						more than 350 servers! Please note that the bot runs seperately from the website for now,
+						leaderboards and stats may be slightly out of sync.
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href={PUBLIC_BOT_INVITE}
+							variant="raised"
+							class="m-1"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							<p>Invite Elite Bot</p>
+						</Button>
+					</div>
+				</Card>
+			</Cell>
+			<Cell span={4}>
+				<Card>
+					{#if donationClicked}
+						<iframe
+							id="kofiframe"
+							src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
+							style="border:none;width:100%;padding:4px;"
+							height="512"
+							title="kaeso"
+						/>
+					{:else}
+						<button on:click={() => (donationClicked = true)}>
+							<img src="images/SupportKaeso.png" alt="Support The Website" /></button
+						>
+					{/if}
+				</Card>
+			</Cell>
+			<Cell span={12}>
+				<Card class="overflow-hidden">
+					<a
+						class="lumini flex flex-row gap-8 w-full hover:shadow-xl"
+						href="https://www.redbubble.com/people/Luumini/shop"
+						target="_blank"
+						rel="noopener noreferrer nofollow"
+					>
+						<h1 class="p-8 text-3xl font-semibold">
+							Art By Lumini
+							<span class="text-sm font-xl">Click Me To Check Out Their Shop!</span>
+						</h1>
+					</a>
+				</Card>
+			</Cell>
+		</LayoutGrid>
+	</div>
 
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-			{#each data.lb as entry, i}
-				<Entry {entry} rank={i + 1} />
+			{#each data.lb as e, i}
+				<Entry
+					entry={{ ign: e.ign ?? '', cute_name: e.cute_name ?? '', amount: e.amount }}
+					rank={i + 1}
+					formatting={'decimal'}
+				/>
 			{/each}
 			<div class="flex justify-center w-full">
 				<a
@@ -115,3 +158,17 @@
 		</div>
 	</section>
 </main>
+
+<style>
+	.lumini {
+		display: block;
+		background-image: url('/images/LuminiBanner.png');
+		background-size: cover;
+		background-position: center;
+		height: fit-content;
+	}
+
+	.lumini h1 {
+		color: black;
+	}
+</style>

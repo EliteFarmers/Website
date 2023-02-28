@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { LeaderboardEntry } from '$db/leaderboards';
+	import type { Optional } from 'sequelize';
 	// import Face from './face.svelte';
 
-	export let entry: LeaderboardEntry;
+	export let entry: Optional<LeaderboardEntry, 'uuid' | 'profile' | 'rank'>;
 	export let highlight = false;
 	export let rank: number;
 	export let formatting: 'number' | 'decimal' = 'number';
@@ -15,12 +16,12 @@
 		options.minimumFractionDigits = 1;
 	}
 
-	const { ign, amount, profile, uuid, cute_name, face } = entry;
+	const { ign, amount, profile, uuid, cute_name } = entry;
 </script>
 
 <a
 	href="/stats/{uuid ?? encodeURIComponent(ign)}/{profile ?? encodeURIComponent(cute_name)}"
-	class="inline-block hover:shadow-lg hover:bg-gray-100 hover:dark:bg-zinc-600 align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
+	class="inline-block w-full hover:shadow-lg hover:bg-gray-100 hover:dark:bg-zinc-600 align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
 >

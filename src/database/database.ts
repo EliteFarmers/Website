@@ -70,6 +70,27 @@ export async function GetUserByDiscordID(id: string) {
 	return await findOne({ id: id });
 }
 
+export async function FindSimilarUsers(input: string, limit = 5) {
+	const users = (await sequelize.query(
+		`
+		SELECT ign, uuid, similarity
+		FROM (
+			SELECT ign, uuid, player->'success' as played, LEVENSHTEIN(ign, '${input.replace(/_/g, '\\_')}') as similarity
+			FROM users
+			ORDER BY similarity ASC
+		) sub
+		WHERE played is not null
+		LIMIT ${limit};
+	`,
+		{
+			raw: true,
+			nest: true,
+		}
+	)) as { ign: string; similarity: number }[];
+
+	return users;
+}
+
 async function findOne(options: UserWhereOptions) {
 	const user = await User.findOne({ where: options, raw: true, nest: true });
 	if (!user) return null;

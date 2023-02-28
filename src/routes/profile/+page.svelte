@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import Head from '$comp/head.svelte';
 
 	$: discordUser = $page.data.discordUser;
 	$: user = $page.data.user;
@@ -55,9 +56,7 @@
 	};
 </script>
 
-<svelte:head>
-	<title>Your Profile</title>
-</svelte:head>
+<Head title="Profile" description="View your profile and link your Minecraft account!" />
 
 <div class="flex flex-col justify-center items-center">
 	<div class="w-full max-w-xl mb-8">
