@@ -10,5 +10,5 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(JSON.stringify({ error: "Database couldn't be reached" }), { status: 404 });
 	}
 
-	return new Response(JSON.stringify(names));
+	return new Response(JSON.stringify({ success: true, players: names }));
 };
