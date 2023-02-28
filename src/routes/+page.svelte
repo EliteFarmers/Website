@@ -105,7 +105,7 @@
 			</Cell>
 			<Cell span={4}>
 				<Card>
-					{#if donationClicked} 
+					{#if donationClicked}
 						<iframe
 							id="kofiframe"
 							src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
@@ -114,9 +114,9 @@
 							title="kaeso"
 						/>
 					{:else}
-						<button on:click={() => donationClicked = true}>
-							<img src="images/SupportKaeso.png" alt="Support The Website"
-						></button>
+						<button on:click={() => (donationClicked = true)}>
+							<img src="images/SupportKaeso.png" alt="Support The Website" /></button
+						>
 					{/if}
 				</Card>
 			</Cell>

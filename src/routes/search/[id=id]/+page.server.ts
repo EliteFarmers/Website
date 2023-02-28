@@ -1,5 +1,5 @@
-import { error } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
 	// Find similar users
@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		throw error(404, 'Skyblock profile not found for this player!');
 	}
 
-	const results = await similar.json() as { success: boolean, players: { ign: string; uuid: string }[] } | null;
+	const results = (await similar.json()) as { success: boolean; players: { ign: string; uuid: string }[] } | null;
 
 	if (!results?.success) {
 		throw error(404, 'Skyblock profile not found for this player!');
@@ -17,5 +17,5 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 
 	return {
 		similar: results.players,
-	}
+	};
 };
