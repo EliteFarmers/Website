@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
-	import type { PageServerData } from '../../stats/[id=id]/$types';
+	import type { PageData } from './$types';
 
-	export let data: PageServerData;
+	export let data: PageData;
 </script>
 
 <Head title="Player Not Found" description="This player could not be found, maybe you meant one of these?" />
@@ -17,7 +17,7 @@
 				these?
 			</p>
 			{#each data.similar as suggestion}
-				<div class="dark p-2">
+				<div class="bg-gray-100 dark:bg-zinc-800 rounded-md m-2">
 					<a class="p-2 flex flex-row" href="/stats/{suggestion.ign}">
 						<img
 							class="w-8 h-8 m-2"
