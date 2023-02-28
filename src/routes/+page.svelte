@@ -18,6 +18,7 @@
 	export let data: PageData;
 
 	let enteredText = '';
+	let donationClicked = false;
 </script>
 
 <Head
@@ -104,13 +105,19 @@
 			</Cell>
 			<Cell span={4}>
 				<Card>
-					<iframe
-						id="kofiframe"
-						src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
-						style="border:none;width:100%;padding:4px;"
-						height="512"
-						title="kaeso"
-					/>
+					{#if donationClicked} 
+						<iframe
+							id="kofiframe"
+							src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
+							style="border:none;width:100%;padding:4px;"
+							height="512"
+							title="kaeso"
+						/>
+					{:else}
+						<button on:click={() => donationClicked = true}>
+							<img src="images/SupportKaeso.png" alt="Support The Website"
+						></button>
+					{/if}
 				</Card>
 			</Cell>
 			<Cell span={12}>
