@@ -70,7 +70,7 @@ export async function GetUserByDiscordID(id: string) {
 	return await findOne({ id: id });
 }
 
-export async function FindSimilarUsers(input: string) {
+export async function FindSimilarUsers(input: string, limit = 5) {
 	const users = (await sequelize.query(
 		`
 		SELECT ign, uuid, similarity
@@ -80,7 +80,7 @@ export async function FindSimilarUsers(input: string) {
 			ORDER BY similarity ASC
 		) sub
 		WHERE played is not null
-		LIMIT 10;
+		LIMIT ${limit};
 	`,
 		{
 			raw: true,
