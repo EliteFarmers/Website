@@ -58,7 +58,7 @@
 				<Card class="p-8 mb-8">
 					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
 					<p class="w-full text-center mb-6">
-						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 2,500
+						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 3,000
 						farming weight. For website/bot support, join the support server!
 					</p>
 					<div class="flex flex-col lg:flex-row justify-evenly m-1">
