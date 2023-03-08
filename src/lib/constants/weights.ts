@@ -7,7 +7,7 @@ export const CROPS_PER_ONE_WEIGHT = {
 	pumpkin: 87_095.11,
 	melon: 435_466.47,
 	mushroom: 168_925.53,
-	cocoa: 303_091.99,
+	cocoa: 257_214.64,
 	cactus: 169_389.33,
 };
 
