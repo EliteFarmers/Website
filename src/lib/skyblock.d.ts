@@ -179,6 +179,9 @@ export interface RawProfileMember {
 	collection: Record<string, number>;
 	crafted_generators?: string[];
 	jacob2?: RawAPIJacobData;
+	leveling: {
+		experience: number;
+	};
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	[key: string]: any;
 }
