@@ -2,9 +2,13 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
+	import type { PageData } from './$types';
+	import Guild from './guild.svelte';
 
 	$: discordUser = $page.data.discordUser;
 	$: user = $page.data.user;
+
+	export let data: PageData;
 
 	onMount(async () => {
 		console.log(discordUser);
@@ -142,4 +146,10 @@
 			{/if}
 		</div>
 	</form>
+
+	<section class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense lg:w-[70%]">
+		{#each data.guilds as guild (guild.id)}
+			<Guild {guild} />
+		{/each}
+	</section>
 </div>

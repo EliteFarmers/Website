@@ -3,6 +3,7 @@ import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
+import { ServersInit } from './models/servers';
 import {
 	UsersInit,
 	type DiscordUser,
@@ -24,6 +25,7 @@ export const sequelize = new Sequelize(POSTGRES_URI, {
 });
 
 export const User = UsersInit(sequelize);
+export const Server = ServersInit(sequelize);
 
 let limiter: RateLimiter;
 
@@ -38,6 +40,7 @@ export async function SyncTables() {
 		if (!client.isOpen) await client.connect();
 
 		await User.sync({ force: false });
+		await Server.sync({ force: false });
 
 		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
 		void RefreshDataTask();
