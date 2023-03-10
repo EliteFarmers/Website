@@ -23,6 +23,12 @@
 			{/if}
 			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis">{guild.name}</h1>
 		</div>
-		<Button variant="raised" class="inline-block">Manage</Button>
+		<Button
+			href={`/guild/${guild.id}`}
+			variant="raised"
+			class="m-1"
+		>
+			<p>Manage</p>
+		</Button>
 	</div>
 </Card>
