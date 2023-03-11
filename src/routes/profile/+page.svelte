@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
 	import { PUBLIC_DONATION_URL } from '$env/static/public';
-	import Button from '@smui/button/src/Button.svelte';
+	import Button from '@smui/button';
 	import type { PageData, ActionData } from './$types';
 	import Guild from './guild.svelte';
 
@@ -129,6 +129,13 @@
 		{/if}
 	</div>
 	<section class="flex flex-col lg:w-[70%]">
+		<h1 class="text-2xl mb-4">Events</h1>
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
+			<!-- {#each data.events as event (event.id)}
+				<Event {event} />
+			{/each} -->
+		</div>
+
 		<h1 class="text-2xl mb-4">Your Servers</h1>
 		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
 			{#each data.guildsWithBot as guild (guild.id)}
