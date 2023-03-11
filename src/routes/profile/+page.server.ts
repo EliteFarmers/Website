@@ -1,5 +1,5 @@
 import { GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
-import { FetchGuilds } from '$lib/discord';
+import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
 import { IsIGN } from '$params/ign';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
@@ -18,13 +18,16 @@ export const load: PageServerLoad = async ({ parent, cookies }) => {
 	}
 
 	const guilds = await FetchGuilds(token);
+	const status = await FetchPremiumStatus(discordUser.id);
 
 	if (!guilds) {
 		throw redirect(302, '/login');
 	}
 
 	return {
-		guilds
+		guildsWithBot: guilds.filter((guild) => guild.hasBot),
+		guilds: guilds.filter((guild) => !guild.hasBot),
+		premium: status,
 	}
 };
 
