@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
+	import { PUBLIC_DONATION_URL } from '$env/static/public';
+	import Button from '@smui/button/src/Button.svelte';
 	import type { PageData, ActionData } from './$types';
 	import Guild from './guild.svelte';
 
@@ -15,7 +17,7 @@
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
 <div class="flex md:flex-row justify-center gap-16 m-16">
-	<div class="flex flex-col justify-center items-center">
+	<div class="flex flex-col items-start">
 		<div class="w-full max-w-xl mb-8">
 			<div class="bg-gray-100 dark:bg-zinc-800 shadow-md rounded m-8 px-8 pt-6 pb-8 mb-4">
 				<div class="flex justify-between items-center">
@@ -44,6 +46,32 @@
 					</div>
 				</div>
 			</div>
+		</div>
+
+		<div class="flex flex-col items-start mb-8">
+			<div class="flex gap-8 items-baseline">
+				<h1 class="text-xl">Premium Status</h1>
+				{#if data.premium.gold}
+					<h2 class="text-lg text-yellow-500 font-semibold">Gold</h2>
+				{:else if data.premium.silver}
+					<h2 class="text-lg text-zinc-400 font-semibold">Silver</h2>
+				{:else if data.premium.bronze}
+					<h2 class="text-lg text-orange-700 font-semibold">Bronze</h2>
+				{:else}
+					<h2 class="text-lg text-gray-500 font-semibold">None!</h2>
+				{/if}
+				<Button
+					class="m-1"
+					href={PUBLIC_DONATION_URL}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Upgrade
+				</Button>
+			</div>
+			{#if data.premium.donator}
+				<h2 class="text-lg text-center">Thank You!</h2>
+			{/if}
 		</div>
 		<!-- Form to input username to link account -->
 		{#if !user}
@@ -99,10 +127,20 @@
 				</div>
 			</form>
 		{/if}
-	</div>	
-	<section class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense lg:w-[70%] mb-16">
-		{#each data.guilds as guild (guild.id)}
-			<Guild {guild} />
-		{/each}
+	</div>
+	<section class="flex flex-col lg:w-[70%]">
+		<h1 class="text-2xl mb-4">Your Servers</h1>
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
+			{#each data.guildsWithBot as guild (guild.id)}
+				<Guild {guild} />
+			{/each}
+		</div>
+
+		<h1 class="text-2xl mb-4">Other Servers</h1>
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
+			{#each data.guilds as guild (guild.id)}
+				<Guild {guild} />
+			{/each}
+		</div>
 	</section>
 </div>
