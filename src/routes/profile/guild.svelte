@@ -6,7 +6,7 @@
 	export let guild: Guild;
 </script>
 
-<Card class="m-1 p-4 inline-block">
+<Card class="m-1 p-4 inline-block shrink">
 	<div class="flex justify-between items-center">
 		<div class="flex justify-start items-center gap-4">
 			{#if guild.icon == null}
@@ -23,12 +23,27 @@
 			{/if}
 			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis">{guild.name}</h1>
 		</div>
-		<Button
-			href={`/guild/${guild.id}`}
-			variant="raised"
-			class="m-1"
-		>
-			<p>Manage</p>
-		</Button>
+		{#if guild.hasBot}
+			<div class="flex justify-end items-center gap-4">
+				<Button
+					href={`/guild/${guild.id}`}
+					variant="raised"
+					class="m-1"
+				>
+					<p>Manage</p>
+				</Button>
+			</div>
+		{:else}
+			<div class="flex justify-end items-center gap-4">
+				<Button
+					href={`/invite?guild_id=${guild.id}`}
+					variant="outlined"
+					color="secondary"
+					class="m-1"
+				>
+					<p>Invite</p>
+				</Button>
+			</div>
+		{/if}
 	</div>
 </Card>
