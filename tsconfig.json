@@ -16,6 +16,7 @@
 			"$lib": ["src/lib"],
 			"$db/*": ["src/database/*"],
 			"$params/*": ["src/params/*"]
-		}
-	}
+		},
+	},
+	"exclude": [ "src/database/migrations" ]
 }
