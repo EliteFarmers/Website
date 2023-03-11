@@ -12,6 +12,7 @@ import {
 } from './models/users';
 import { client } from './redis';
 import dbConfig from './database.json';
+import { EventsInit } from './models/event';
 
 export interface DataUpdate {
 	account: AccountInfo;
@@ -31,6 +32,7 @@ export const sequelize = new Sequelize(settings.database, settings.username, set
 
 export const User = UsersInit(sequelize);
 export const Server = ServersInit(sequelize);
+export const Event = EventsInit(sequelize);
 
 let limiter: RateLimiter;
 
@@ -46,6 +48,7 @@ export async function SyncTables() {
 
 		await User.sync({ force: false });
 		await Server.sync({ force: false });
+		await Event.sync({ force: false });
 
 		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
 		void RefreshDataTask();

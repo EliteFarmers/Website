@@ -33,6 +33,7 @@ export async function FetchBotGuilds() {
 		await client.SETEX(`guild:${guild.id}`, GUILDS_FETCH_INTERVAL, guild.permissions);
 	}));
 
+
 	return true;
 }
 
@@ -76,6 +77,32 @@ export async function FetchGuilds(accessToken: string) {
 	}));
 
 	return withBot as Guild[];
+}
+
+export async function CanEditFetchedGuild(accessToken: string, guildId: string) {
+	// const hasBot = await client.exists(`guild:${guildId}`) > 0;
+
+	if (!IsSnowflake(guildId) /* || !hasBot*/) {
+		return false;
+	}
+
+	const url = `https://discord.com/api/v10/guilds/${guildId}/members/@me`;
+
+	const response = await fetch(url, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+	const json = await response.json() as unknown;
+
+	if (response.status !== 200) {
+		return false;
+	}
+
+	console.log(json);
+
+	return CanEditGuild(json as Guild);
 }
 
 export function CanEditGuild(guild: Guild) {
@@ -133,6 +160,17 @@ export async function FetchPremiumStatus(memberId: string) {
 	await client.SETEX(`premium:${memberId}`, MEMBER_FETCH_INTERVAL, JSON.stringify(status));
 
 	return status;
+}
+
+export async function GuildContainsBot(guildId: string) {
+	if (!IsSnowflake(guildId)) {
+		return false;
+	}
+
+	await FetchBotGuilds();
+
+	const hasBot = await client.exists(`guild:${guildId}`);
+	return hasBot > 0;
 }
 
 export interface Guild {
