@@ -1,4 +1,3 @@
-import { POSTGRES_URI } from '$env/static/private';
 import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
@@ -12,6 +11,7 @@ import {
 	type UserWhereOptions,
 } from './models/users';
 import { client } from './redis';
+import dbConfig from './database.json';
 
 export interface DataUpdate {
 	account: AccountInfo;
@@ -19,7 +19,12 @@ export interface DataUpdate {
 	profiles: Profiles;
 }
 
-export const sequelize = new Sequelize(POSTGRES_URI, {
+const mode = (process.env.NODE_ENV ?? 'development') as 'development' | 'production' | 'test';
+const settings = dbConfig[mode] as typeof dbConfig.development;
+
+export const sequelize = new Sequelize(settings.database, settings.username, settings.password, {
+	port: settings.port,
+	host: settings.host,
 	dialect: 'postgres',
 	logging: false,
 });

@@ -6,3 +6,4 @@ build/*
 .svelte-kit/*
 node_modules/*
 src/lib/limiter/*
+src/database/migrations/*
