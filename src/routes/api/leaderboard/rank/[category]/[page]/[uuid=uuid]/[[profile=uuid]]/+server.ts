@@ -1,11 +1,18 @@
 import { GetUser } from '$db/database';
-import { FetchLeaderboardRank, LeaderboardCategories, LEADERBOARDS } from '$db/leaderboards';
+import {
+	FetchLeaderboardPlayerAtRank,
+	FetchLeaderboardRank,
+	LeaderboardCategories,
+	LEADERBOARDS,
+} from '$db/leaderboards';
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params, setHeaders }) => {
+export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 	const { category, page, uuid, profile } = params;
+
+	const includeNext = url.searchParams.get('showNext') === 'true';
 
 	if (!LeaderboardCategories.includes(category)) {
 		return json({ success: false, error: 'Leaderboard not found' });
@@ -54,6 +61,12 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 	// Get the player's rank in the specified leaderboard
 	try {
 		const rank = await FetchLeaderboardRank(category, page, uuid, profile);
+
+		if (includeNext) {
+			const next = await FetchLeaderboardPlayerAtRank(category, page, rank - 1);
+
+			return json({ success: true, rank, next });
+		}
 
 		return json({ success: true, rank });
 	} catch (error) {

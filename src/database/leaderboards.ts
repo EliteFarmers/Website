@@ -365,3 +365,32 @@ export async function FetchLeaderboardRankings(uuid: string, profile: string) {
 
 	return rankings;
 }
+
+export async function FetchLeaderboardPlayerAtRank(category: string, page: string, rank: number) {
+	if (rank === 0) return null;
+	if (rank <= -1) {
+		const categoryPages = LEADERBOARDS[category]?.pages;
+		rank = categoryPages?.[page]?.limit ?? 1000;
+	}
+
+	const cacheKey = `${category}-${page}`;
+	const lastUpdated = LastUpdated.get(cacheKey) ?? 0;
+
+	if (Date.now() - lastUpdated > LEADERBOARD_UPDATE_INTERVAL) {
+		await FetchLeaderboard(category, page);
+	}
+
+	const entry = await client.ZRANGE_WITHSCORES(`${category}:${page}`, rank - 1, rank, { REV: true });
+	if (entry.length === 0) return null;
+
+	const { score, value } = entry[0];
+	const uuid = value.substring(0, 32);
+
+	const ign = await client.GET(`ign:${uuid}`);
+
+	return {
+		ign,
+		uuid,
+		amount: score,
+	};
+}
