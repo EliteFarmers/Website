@@ -1,6 +1,7 @@
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import { DBReady, sequelize } from '$db/database';
 import { client } from '$db/redis';
+import { fetchProfiles } from '$lib/data';
 export interface LeaderboardEntry {
 	ign: string;
 	uuid: string;
@@ -340,6 +341,9 @@ export async function SetLeaderboard(category: string, page: string, entries: Le
 export async function FetchLeaderboardRank(category: string, page: string, uuid: string, profile: string) {
 	try {
 		const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
+
+		// Update their profile if it's stale
+		void fetchProfiles(uuid, true);
 
 		if (rank === null) return -1;
 
