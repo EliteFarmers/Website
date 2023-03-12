@@ -6,6 +6,7 @@ import {
 	LEADERBOARDS,
 } from '$db/leaderboards';
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
+import { fetchProfiles } from '$lib/data';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -37,7 +38,16 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 			return json({ success: false, error: 'Player not found' });
 		}
 
-		const profileIds = player.skyblock?.profiles.map((p) => p.profile_id) ?? [];
+		let profileIds = player.skyblock?.profiles.map((p) => p.profile_id) ?? [];
+
+		if (profileIds.length === 0) {
+			const data = await fetchProfiles(player.uuid);
+			profileIds = data?.profiles.map((p) => p.profile_id) ?? [];
+
+			if (profileIds.length === 0) {
+				return json({ success: false, error: 'Player has no profiles/not loaded yet' });
+			}
+		}
 
 		try {
 			const ranks = await Promise.all(
@@ -49,8 +59,6 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 				acc[profileIds[i]] = rank;
 				return acc;
 			}, {});
-
-			console.log(ranksObj);
 
 			return json({ success: true, ranks: ranksObj });
 		} catch (error) {

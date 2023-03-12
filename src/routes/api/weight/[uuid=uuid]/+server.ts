@@ -1,6 +1,6 @@
 import { GetUser } from '$db/database';
 import type { UserInfo } from '$db/models/users';
-import { accountFromUUID } from '$lib/data';
+import { accountFromUUID, fetchProfiles } from '$lib/data';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -16,10 +16,11 @@ export const GET: RequestHandler = async ({ params }) => {
 		// Create a new user
 		const account = await accountFromUUID(uuid);
 
-		if (account) {
+		if (!account) {
 			return new Response(JSON.stringify({ error: 'Account not found' }), { status: 404 });
 		}
 
+		await fetchProfiles(uuid);
 		user = await GetUser(uuid);
 
 		if (!user) {
