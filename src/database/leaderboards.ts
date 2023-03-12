@@ -338,12 +338,20 @@ export async function SetLeaderboard(category: string, page: string, entries: Le
 	}
 }
 
-export async function FetchLeaderboardRank(category: string, page: string, uuid: string, profile: string) {
+export async function FetchLeaderboardRank(
+	category: string,
+	page: string,
+	uuid: string,
+	profile: string,
+	skipUpdate = false
+) {
 	try {
 		const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
 
-		// Update their profile if it's stale
-		void fetchProfiles(uuid, true);
+		if (!skipUpdate) {
+			// Update their profile if it's stale
+			void fetchProfiles(uuid, true);
+		}
 
 		if (rank === null) return -1;
 
@@ -360,7 +368,7 @@ export async function FetchLeaderboardRankings(uuid: string, profile: string) {
 		const categoryPages = LEADERBOARDS[category]?.pages;
 
 		for (const page of Object.keys(categoryPages ?? {})) {
-			const rank = await FetchLeaderboardRank(category, page, uuid, profile);
+			const rank = await FetchLeaderboardRank(category, page, uuid, profile, true);
 
 			if (!rankings[category] as boolean) rankings[category] = {};
 			rankings[category][page] = rank;
