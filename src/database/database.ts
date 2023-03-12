@@ -264,7 +264,7 @@ export async function RefreshDataTask(limit = 250) {
 
 		Promise.allSettled([
 			// Room for more tasks here if ever needed
-			fetchProfiles(uuid),
+			fetchProfiles(uuid, true),
 		]).catch(() => undefined);
 	}
 

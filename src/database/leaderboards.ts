@@ -1,6 +1,7 @@
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import { DBReady, sequelize } from '$db/database';
 import { client } from '$db/redis';
+import { fetchProfiles } from '$lib/data';
 export interface LeaderboardEntry {
 	ign: string;
 	uuid: string;
@@ -337,9 +338,20 @@ export async function SetLeaderboard(category: string, page: string, entries: Le
 	}
 }
 
-export async function FetchLeaderboardRank(category: string, page: string, uuid: string, profile: string) {
+export async function FetchLeaderboardRank(
+	category: string,
+	page: string,
+	uuid: string,
+	profile: string,
+	skipUpdate = false
+) {
 	try {
 		const rank = await client.ZREVRANK(`${category}:${page}`, `${uuid}:${profile}`);
+
+		if (!skipUpdate) {
+			// Update their profile if it's stale
+			void fetchProfiles(uuid, true);
+		}
 
 		if (rank === null) return -1;
 
@@ -356,7 +368,7 @@ export async function FetchLeaderboardRankings(uuid: string, profile: string) {
 		const categoryPages = LEADERBOARDS[category]?.pages;
 
 		for (const page of Object.keys(categoryPages ?? {})) {
-			const rank = await FetchLeaderboardRank(category, page, uuid, profile);
+			const rank = await FetchLeaderboardRank(category, page, uuid, profile, true);
 
 			if (!rankings[category] as boolean) rankings[category] = {};
 			rankings[category][page] = rank;
@@ -364,4 +376,33 @@ export async function FetchLeaderboardRankings(uuid: string, profile: string) {
 	}
 
 	return rankings;
+}
+
+export async function FetchLeaderboardPlayerAtRank(category: string, page: string, rank: number) {
+	if (rank === 0) return null;
+	if (rank <= -1) {
+		const categoryPages = LEADERBOARDS[category]?.pages;
+		rank = categoryPages?.[page]?.limit ?? 1000;
+	}
+
+	const cacheKey = `${category}-${page}`;
+	const lastUpdated = LastUpdated.get(cacheKey) ?? 0;
+
+	if (Date.now() - lastUpdated > LEADERBOARD_UPDATE_INTERVAL) {
+		await FetchLeaderboard(category, page);
+	}
+
+	const entry = await client.ZRANGE_WITHSCORES(`${category}:${page}`, rank - 1, rank, { REV: true });
+	if (entry.length === 0) return null;
+
+	const { score, value } = entry[0];
+	const uuid = value.substring(0, 32);
+
+	const ign = await client.GET(`ign:${uuid}`);
+
+	return {
+		ign,
+		uuid,
+		amount: score,
+	};
 }

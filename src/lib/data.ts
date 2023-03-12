@@ -114,17 +114,28 @@ export async function accountFromUUID(uuid: string, user?: User) {
 	return result;
 }
 
-export async function fetchProfiles(uuid: string): Promise<Profiles | undefined> {
+export async function fetchProfiles(uuid: string, updateOnly = false): Promise<Profiles | undefined> {
 	// First check if the profiles are cached.
 	const user = await GetUser(uuid);
 	// If the profiles are cached, return it.
 	if (user?.skyblock?.success) {
 		// If the profiles are older than the interval, get them from the API.
 		if (Date.now() - user.skyblock.last_fetched > PROFILE_UPDATE_INTERVAL) {
+			if (updateOnly) {
+				void fetchNewProfiles(user, uuid);
+				return undefined;
+			}
+
 			return await fetchNewProfiles(user, uuid);
 		}
+
 		// Return old profiles if they are not older than the interval.
-		return user.skyblock;
+		return !updateOnly ? user.skyblock : undefined;
+	}
+
+	if (updateOnly) {
+		void fetchNewProfiles(user, uuid);
+		return undefined;
 	}
 
 	return await fetchNewProfiles(user, uuid);
