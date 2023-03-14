@@ -3,14 +3,14 @@ import { CanEditFetchedGuild, FetchGuilds, GuildContainsBot } from '$lib/discord
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ parent, cookies }) => {
+export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { discordUser } = await parent();
 
 	if (!discordUser) {
 		throw redirect(302, '/login');
 	}
 
-	const token = cookies.get('discord_access_token');
+	const token = locals.discord_access_token;
 
 	if (!token) {
 		throw redirect(302, '/login');
