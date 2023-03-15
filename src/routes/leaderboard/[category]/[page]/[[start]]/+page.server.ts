@@ -1,5 +1,6 @@
 import { GetUser, GetUserByIGN } from '$db/database';
 import { FetchLeaderboardRank, GetLeaderboardSlice, LeaderboardCategories, LEADERBOARDS } from '$db/leaderboards';
+import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -56,7 +57,7 @@ export const load: PageServerLoad = async ({ params, depends, setHeaders }) => {
 	const name = pageEntry?.name ?? categoryEntry?.name ?? 'Leaderboard';
 
 	setHeaders({
-		'Cache-Control': 'max-age=300',
+		'Cache-Control': `max-age=${LEADERBOARD_UPDATE_INTERVAL / 1000}, public`,
 	});
 
 	return {

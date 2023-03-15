@@ -1,9 +1,10 @@
 import { GetUserByIGN } from '$db/database';
 import { FetchLeaderboardRank, GetLeaderboardSlice, LeaderboardCategories, LEADERBOARDS } from '$db/leaderboards';
-import { error } from '@sveltejs/kit';
+import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
+import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ url, params }) => {
+export const GET: RequestHandler = async ({ url, params, setHeaders }) => {
 	const { category } = params;
 	let page = params.page;
 	// let player = params.player;
@@ -15,13 +16,13 @@ export const GET: RequestHandler = async ({ url, params }) => {
 	// Sanitize startRaw to be a number
 	let start = Number(startRaw);
 	if (isNaN(start) || start > 990 || start < 1) {
-		return new Response(JSON.stringify({ error: 'Not a valid start number' }), { status: 400 });
+		return json({ success: false, error: 'Not a valid start number' }, { status: 400 });
 	}
 
 	// Sanitize limitRaw to be a number
 	const limit = Number(limitRaw);
 	if (isNaN(limit) || limit > 1000 || limit < 1) {
-		return new Response(JSON.stringify({ error: 'Not a valid limit number' }), { status: 400 });
+		return json({ success: false, error: 'Not a valid limit number' }, { status: 400 });
 	}
 
 	if (!params.player && page && !isNaN(Number(page))) {
@@ -62,9 +63,13 @@ export const GET: RequestHandler = async ({ url, params }) => {
 
 	const name = pageEntry?.name ?? categoryEntry?.name ?? 'Leaderboard';
 
+	setHeaders({
+		'Cache-Control': `max-age=${LEADERBOARD_UPDATE_INTERVAL / 1000}, public`,
+	});
+
 	try {
-		return new Response(JSON.stringify({ success: true, start: start, name: name, leaderboard: lb }));
+		return json({ success: true, start: start, name: name, leaderboard: lb });
 	} catch (error) {
-		return new Response(JSON.stringify({ error: "Couldn't fetch leaderboard" }), { status: 500 });
+		return json({ error: "Couldn't fetch leaderboard" }, { status: 500 });
 	}
 };

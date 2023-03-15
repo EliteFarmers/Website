@@ -20,7 +20,7 @@ export const load: PageServerLoad = ({ setHeaders }) => {
 	});
 
 	setHeaders({
-		'Cache-Control': 'max-age=600',
+		'Cache-Control': 'max-age=86400, public',
 	});
 
 	return {
