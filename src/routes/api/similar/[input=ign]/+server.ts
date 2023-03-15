@@ -1,14 +1,19 @@
 import { FindSimilarUsers } from '$db/database';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, setHeaders }) => {
 	const input = params.input.replaceAll('-', '');
 
 	const names = (await FindSimilarUsers(input)) as { ign: string; similarity: number }[] | null;
 
 	if (!names) {
-		return new Response(JSON.stringify({ error: "Database couldn't be reached" }), { status: 404 });
+		return json({ success: false, error: "Database couldn't be reached" }, { status: 404 });
 	}
 
-	return new Response(JSON.stringify({ success: true, players: names }));
+	setHeaders({
+		'Cache-Control': `max-age=86400, public`,
+	});
+
+	return json({ success: true, players: names });
 };

@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 	const pageEntry = categoryEntry?.pages[page];
 
 	if (!pageEntry) {
-		return json({ success: false, error: 'Leaderboard not found' });
+		return json({ success: false, error: 'Leaderboard not found' }, { status: 404 });
 	}
 
 	setHeaders({
@@ -35,7 +35,7 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 		const player = await GetUser(uuid);
 
 		if (!player) {
-			return json({ success: false, error: 'Player not found' });
+			return json({ success: false, error: 'Player not found' }, { status: 404 });
 		}
 
 		let profileIds = player.skyblock?.profiles.map((p) => p.profile_id) ?? [];
@@ -45,7 +45,7 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 			profileIds = data?.profiles.map((p) => p.profile_id) ?? [];
 
 			if (profileIds.length === 0) {
-				return json({ success: false, error: 'Player has no profiles/not loaded yet' });
+				return json({ success: false, error: 'Player has no profiles/not loaded yet' }, { status: 404 });
 			}
 		}
 
@@ -62,7 +62,7 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 
 			return json({ success: true, ranks: ranksObj });
 		} catch (error) {
-			return json({ success: false, error: 'Error while fetching ranks.' });
+			return json({ success: false, error: 'Error while fetching ranks.' }, { status: 500 });
 		}
 	}
 
@@ -78,6 +78,6 @@ export const GET: RequestHandler = async ({ params, url, setHeaders }) => {
 
 		return json({ success: true, rank });
 	} catch (error) {
-		return json({ success: false, error: 'Error while fetching rank.' });
+		return json({ success: false, error: 'Error while fetching rank.' }, { status: 500 });
 	}
 };

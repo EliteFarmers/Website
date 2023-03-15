@@ -1,4 +1,5 @@
 import { fetchProfiles } from '$lib/data';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params, url }) => {
@@ -7,13 +8,13 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	const includeInventories = url.searchParams.get('inv') === 'true';
 
 	if (!uuid || uuid.length !== 32) {
-		return new Response(JSON.stringify({ error: 'Not a valid UUID' }), { status: 400 });
+		return json({ success: false, error: 'Not a valid UUID' }, { status: 400 });
 	}
 
 	const profiles = await fetchProfiles(uuid);
 
 	if (!profiles) {
-		return new Response(JSON.stringify({ error: "Hypixel API couldn't be reached." }), { status: 404 });
+		return json({ success: false, error: "Hypixel API couldn't be reached." }, { status: 404 });
 	}
 
 	if (!includeInventories) {
@@ -22,5 +23,5 @@ export const GET: RequestHandler = async ({ params, url }) => {
 		});
 	}
 
-	return new Response(JSON.stringify(profiles));
+	return json(profiles);
 };

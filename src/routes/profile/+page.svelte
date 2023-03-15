@@ -50,8 +50,8 @@
 			user = !skip;
 			location.reload();
 		} else {
-			const data = await response.text();
-			errorMessage = data;
+			const data = await response.json();
+			errorMessage = data.error ?? 'An unknown error occurred';
 		}
 	};
 </script>

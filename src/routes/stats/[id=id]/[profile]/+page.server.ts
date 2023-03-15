@@ -6,8 +6,9 @@ import FarmingCollections from '$lib/collections';
 import type { PlayerInfo, Profiles } from '$lib/skyblock';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: PageServerLoad = async ({ params, fetch, setHeaders }) => {
 	const { id } = params;
 	const accountData = await accountFromId(id);
 
@@ -80,6 +81,10 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		}
 
 		const rankings = await FetchLeaderboardRankings(account.id, profile.profile_id);
+
+		setHeaders({
+			'Cache-Control': `max-age=${PROFILE_UPDATE_INTERVAL / 1000}, public`,
+		});
 
 		return {
 			account: account,
