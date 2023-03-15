@@ -58,7 +58,7 @@
 				<Card class="p-8 mb-8">
 					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
 					<p class="w-full text-center mb-6">
-						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 3,000
+						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 3,500
 						farming weight. For website/bot support, join the support server!
 					</p>
 					<div class="flex flex-col lg:flex-row justify-evenly m-1">
@@ -87,7 +87,7 @@
 					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
 					<p class="w-full text-center mb-6">
 						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in
-						more than 350 servers! Please note that the bot runs seperately from the website for now,
+						more than 400 servers! Please note that the bot runs seperately from the website for now,
 						leaderboards and stats may be slightly out of sync.
 					</p>
 					<div class="flex justify-center">
