@@ -24,10 +24,18 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 
 		await fetchProfiles(uuid);
 		user = await GetUser(uuid);
+	}
 
-		if (!user) {
-			return json({ error: 'User not found' }, { status: 404 });
-		}
+	const profiles = user?.info?.profiles;
+
+	if (!profiles || !Array.isArray(profiles)) {
+		await fetchProfiles(uuid);
+
+		user = await GetUser(uuid);
+	}
+
+	if (!user) {
+		return json({ error: 'User not found.' }, { status: 404 });
 	}
 
 	const info = user.info as Partial<UserInfo> | undefined;
