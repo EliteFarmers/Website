@@ -18,20 +18,22 @@
 
 <section class="block">
 	<div class="flex items-center gap-2">
-		<a
-			class="p-2 rounded-md max-w-fit z-10 bg-gray-200 dark:bg-zinc-700"
-			href={`/leaderboard/weight/farming/+${profiles.ign}-${profiles.selected.id}`}
-		>
-			{#if rank !== -1}
+		{#if rank !== -1}
+			<a
+				class="p-2 rounded-md max-w-fit z-10 bg-gray-200 dark:bg-zinc-700"
+				href={`/leaderboard/weight/farming/+${profiles.ign}-${profiles.selected.id}`}
+			>
 				<span class="mx-1 text-2xl font-semibold font-mono text-yellow-700 dark:text-yellow-400">
 					<span class="text-lg mr-0.5">#</span>{rank}
 				</span>
-			{:else}
+			</a>
+		{:else}
+			<div class="p-2 rounded-md max-w-fit z-10 bg-gray-200 dark:bg-zinc-700">
 				<span class="mx-1 text-lg font-semibold">
 					{rankText}
 				</span>
-			{/if}
-		</a>
+			</div>
+		{/if}
 		<Profiles {...profiles} />
 	</div>
 
