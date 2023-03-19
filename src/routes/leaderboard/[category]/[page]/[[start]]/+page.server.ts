@@ -47,9 +47,13 @@ export const load: PageServerLoad = async ({ params, depends, setHeaders }) => {
 		}
 	}
 
-	start = String(Math.max(1, Number(start)));
+	let startNum = Math.max(1, Number(start));
 
-	const lb = await GetLeaderboardSlice(Number(start) - 1, 20, category, page);
+	if (isNaN(startNum)) {
+		startNum = 1;
+	}
+
+	const lb = await GetLeaderboardSlice(startNum - 1, 20, category, page);
 
 	const categoryEntry = LEADERBOARDS[category];
 	const pageEntry = categoryEntry?.pages[page];
@@ -62,7 +66,7 @@ export const load: PageServerLoad = async ({ params, depends, setHeaders }) => {
 
 	return {
 		lb,
-		start: Number(start),
+		start: startNum,
 		jump: ign ?? undefined,
 		userUUID: uuid ?? undefined,
 		profileId: profileId,
