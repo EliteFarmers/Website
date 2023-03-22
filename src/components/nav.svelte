@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { DiscordUser } from '$db/models/users';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -7,7 +6,7 @@
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 
-	export let discordUser: DiscordUser | false;
+	export let loggedIn: boolean;
 
 	let searchVal = '';
 
@@ -92,7 +91,7 @@
 			</svg>
 		</a>
 		<!-- Login with discord styled button -->
-		<div hidden={discordUser !== false}>
+		<div hidden={loggedIn !== false}>
 			<a
 				rel="nofollow noreferrer"
 				data-sveltekit-reload
@@ -109,7 +108,7 @@
 		<a
 			class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
 			href="/profile"
-			hidden={discordUser === false}
+			hidden={loggedIn === false}
 		>
 			Profile</a
 		>
@@ -118,7 +117,7 @@
 			data-sveltekit-reload
 			class="bg-gray-200 dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
 			href="/logout"
-			hidden={discordUser === false}>Logout</a
+			hidden={loggedIn === false}>Logout</a
 		>
 	</section>
 </nav>

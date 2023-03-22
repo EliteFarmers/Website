@@ -3,6 +3,8 @@ import { PUBLIC_DISCORD_URL as DISCORD_API_URL, PUBLIC_HOST_URL } from '$env/sta
 import { GetUserByDiscordID, UpdateDiscordUser } from '$db/database';
 import type { DiscordUser } from '$db/models/users';
 import { RefreshUser } from '$lib/discordAuth';
+import PocketBase from 'pocketbase';
+import { POCKETBASE_URL } from '$env/static/private';
 
 interface CookieData {
 	name: string;
@@ -13,9 +15,25 @@ interface CookieData {
 export const handle: Handle = async ({ event, resolve }) => {
 	const access = event.cookies.get('discord_access_token');
 	const refresh = event.cookies.get('discord_refresh_token');
+	const pbToken = event.cookies.get('pocketbase_auth');
 
 	event.locals.discord_access_token = access;
 	event.locals.discord_refresh_token = refresh;
+	event.locals.pocketbase_token = pbToken;
+
+	event.locals.pb = new PocketBase(POCKETBASE_URL);
+	event.locals.pb.authStore.save(pbToken ?? '', null);
+
+	try {
+		// Try authenticating with PocketBase
+		if (event.locals.pb.authStore.isValid) {
+			const data = await event.locals.pb.collection('users').authRefresh();
+			console.log('data', data);
+		}
+	} catch (_) {
+		// If it fails, clear the authStore
+		event.locals.pb.authStore.clear();
+	}
 
 	if (!event.locals.discord_access_token && !event.locals.discord_refresh_token) {
 		event.locals.discordUser = false;

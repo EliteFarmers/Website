@@ -6,6 +6,9 @@
 
 	import Nav from '$comp/nav.svelte';
 	import Footer from '$comp/footer.svelte';
+	import type { LayoutData } from './$types';
+
+	export let data: LayoutData;
 
 	onMount(async () => {
 		themeStore.subscribe((value) => {
@@ -44,7 +47,7 @@
 </svelte:head>
 
 <div class="{$themeStore} relative min-h-screen pb-16">
-	<Nav discordUser={$page.data.discordUser} />
+	<Nav loggedIn={data.authModel !== null} />
 
 	{#if $navigating}
 		<!-- Gray out the screen -->

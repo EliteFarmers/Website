@@ -1,10 +1,17 @@
-import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
-import { DISCORD_CLIENT_SECRET as CLIENT_SECRET } from '$env/static/private';
 import { error, redirect } from '@sveltejs/kit';
 import { authStateVal } from '$stores/auth';
+import type { AuthProviderInfo } from 'pocketbase';
 
 import type { RequestHandler } from './$types';
-export const GET: RequestHandler = async ({ url, cookies }) => {
+export const GET: RequestHandler = async ({ url, locals, cookies }) => {
+
+	let provider; 
+	try {
+		provider = JSON.parse(authStateVal) as AuthProviderInfo & { redirectUrl: string };
+	} catch (err) {
+		throw error(400, 'Invalid state');
+	}
+
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
 	const errorMsg = url.searchParams.get('error');
@@ -13,53 +20,51 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(400, errorMsg);
 	}
 
-	if (!code || !state || state !== authStateVal) {
+	if (!code || !state || state !== provider.state) {
 		throw error(400, 'Missing code or state');
 	}
 
-	const data = {
-		client_id: CLIENT_ID,
-		client_secret: CLIENT_SECRET,
-		grant_type: 'authorization_code',
-		code: code,
-		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
-		state: state,
-		scope: 'identify guilds',
-	};
+	const authData = await locals.pb.collection('users').authWithOAuth2(
+		provider.name,
+		code,
+		provider.codeVerifier,
+		decodeURIComponent(provider.redirectUrl),
+		{
+			emailVisibility: false,
+		}
+	);
 
-	const request = await fetch('https://discord.com/api/oauth2/token', {
-		method: 'POST',
-		body: new URLSearchParams(data),
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
-	});
-
-	const response = (await request.json()) as {
-		access_token: string;
-		expires_in: number;
-		refresh_token: string;
-		error?: unknown;
-	};
-
-	if (response.error) {
-		throw error(400, new Error('Discord Authentication Error'));
+	if (!authData.token) {
+		throw error(400, 'Invalid code');
 	}
 
-	const thirtyDays = 30 * 24 * 60 * 60;
-	const accessTokenExpires = new Date(Date.now() + response.expires_in); // ~10 minutes
-	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days
+	await locals.pb.collection('users').update(authData.record.id, {
+		avatar: (authData.meta?.avatarUrl ?? '') as string,
+	});
 
-	cookies.set('discord_access_token', response.access_token, {
-		expires: accessTokenExpires,
-		maxAge: response.expires_in,
+	cookies.set('pocketbase_auth', authData.token, {
 		path: '/',
 	});
-	cookies.set('discord_refresh_token', response.refresh_token, {
+
+	if (!authData.meta?.accessToken || !authData.meta.refreshToken) {
+		throw redirect(303, '/');
+	}
+
+	const tenMinutes = 10 * 60;
+	const thirtyDays = 30 * 24 * 60 * 60;
+	const accessTokenExpires = new Date(Date.now() + tenMinutes); // 10 minutes
+	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days
+
+	cookies.set('discord_access_token', authData.meta.accessToken as string, {
+		expires: accessTokenExpires,
+		maxAge: tenMinutes,
+		path: '/',
+	});
+	cookies.set('discord_refresh_token', authData.meta.refreshToken as string, {
 		expires: refreshTokenExpires,
 		maxAge: thirtyDays,
 		path: '/',
 	});
 
-	throw redirect(303, '/login?success=true');
+	throw redirect(303, '/');
 };

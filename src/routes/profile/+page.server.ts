@@ -1,13 +1,14 @@
 import { GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
-import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
+import { FetchGuilds, FetchPremiumStatus, type PremiumStatus } from '$lib/discord';
 import { IsIGN } from '$params/ign';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
-	const { discordUser } = await parent();
+	await parent();
+	const authStore = locals.pb.authStore;
 
-	if (!discordUser) {
+	if (!authStore.model?.id) {
 		throw redirect(302, '/login');
 	}
 
@@ -18,7 +19,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	}
 
 	const guilds = await FetchGuilds(token);
-	const status = await FetchPremiumStatus(discordUser.id);
+	// const status = await FetchPremiumStatus(discordUser.id);
 
 	if (!guilds) {
 		throw redirect(302, '/login');
@@ -27,7 +28,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot),
 		guilds: guilds.filter((guild) => !guild.hasBot),
-		premium: status,
+		premium: authStore.model.premium as string,
 	}
 };
 

@@ -17,7 +17,7 @@ export async function FetchBotGuilds() {
 
 	const response = await fetch(url, {
 		headers: {
-			Authorization: `Bot ${DISCORD_BOT_TOKEN as string}`,
+			Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
 		},
 	});
 
@@ -116,7 +116,7 @@ export function CanEditGuild(guild: Guild) {
 	return (perms & manageGuild) === manageGuild || (perms & manageEvents) === manageEvents;
 }
 
-export async function FetchPremiumStatus(memberId: string) {
+export async function FetchPremiumStatus(memberId: string): Promise<PremiumStatus> {
 	const none = {
 		donator: false,
 		bronze: false,
@@ -134,11 +134,11 @@ export async function FetchPremiumStatus(memberId: string) {
 	}
 
 	// Get guild member
-	const url = `https://discord.com/api/v10/guilds/${KOFI_ROLES_SERVER as string}/members/${memberId}`;
+	const url = `https://discord.com/api/v10/guilds/${KOFI_ROLES_SERVER}/members/${memberId}`;
 
 	const response = await fetch(url, {
 		headers: {
-			Authorization: `Bot ${DISCORD_BOT_TOKEN as string}`,
+			Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
 		},
 	});
 
@@ -151,10 +151,10 @@ export async function FetchPremiumStatus(memberId: string) {
 	const roles = (member as { roles: string[] }).roles;
 
 	const status = {
-		donator: roles.includes(KOFI_DONATOR_ROLE as string),
-		bronze: roles.includes(KOFI_BRONZE_ROLE as string),
-		silver: roles.includes(KOFI_SILVER_ROLE as string),
-		gold: roles.includes(KOFI_GOLD_ROLE as string),
+		donator: roles.includes(KOFI_DONATOR_ROLE),
+		bronze: roles.includes(KOFI_BRONZE_ROLE),
+		silver: roles.includes(KOFI_SILVER_ROLE),
+		gold: roles.includes(KOFI_GOLD_ROLE),
 	};
 
 	await client.SETEX(`premium:${memberId}`, MEMBER_FETCH_INTERVAL, JSON.stringify(status));
@@ -181,4 +181,11 @@ export interface Guild {
     permissions: string,
     features: string[],
 	hasBot: boolean,
+}
+
+export enum PremiumStatus {
+	'donator',
+	'bronze',
+	'silver',
+	'gold'
 }

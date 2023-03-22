@@ -24,7 +24,7 @@
 					<div class="flex items-center bg-gray-200 dark:bg-zinc-700 p-2 rounded-md">
 						<img
 							class="w-10 h-10 rounded-full mr-4"
-							src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
+							src="{data.authModel?.avatar}"
 							alt="{discordUser.username}'s avatar"
 						/>
 						<div class="text-2xl font-bold leading-none">{user ? user.ign : discordUser.username}</div>
@@ -51,11 +51,11 @@
 		<div class="flex flex-col items-start mb-8">
 			<div class="flex gap-8 items-baseline">
 				<h1 class="text-xl">Premium Status</h1>
-				{#if data.premium.gold}
+				{#if data.premium === 'gold'}
 					<h2 class="text-lg text-yellow-500 font-semibold">Gold</h2>
-				{:else if data.premium.silver}
+				{:else if data.premium === 'silver'}
 					<h2 class="text-lg text-zinc-400 font-semibold">Silver</h2>
-				{:else if data.premium.bronze}
+				{:else if data.premium === 'gold'}
 					<h2 class="text-lg text-orange-700 font-semibold">Bronze</h2>
 				{:else}
 					<h2 class="text-lg text-gray-500 font-semibold">None!</h2>
@@ -69,7 +69,7 @@
 					Upgrade
 				</Button>
 			</div>
-			{#if data.premium.donator}
+			{#if data.premium !== ''}
 				<h2 class="text-lg text-center">Thank You!</h2>
 			{/if}
 		</div>
