@@ -9,12 +9,12 @@ import type {
 
 export interface DiscordServer {
 	id: string;
-	name: string,
-	icon: string,
-	owner: boolean,
-	permissions: string,
-	features: string[],
-	hasBot: boolean,
+	name: string;
+	icon: string;
+	owner: boolean;
+	permissions: string;
+	features: string[];
+	hasBot: boolean;
 }
 
 export class Server extends Model<InferAttributes<Server>, InferCreationAttributes<Server>> {
@@ -51,7 +51,7 @@ export function ServersInit(sequelize: Sequelize) {
 			permissions: DataTypes.STRING,
 			features: DataTypes.ARRAY(DataTypes.STRING),
 			hasBot: DataTypes.BOOLEAN,
-		
+
 			createdAt: DataTypes.DATE,
 			updatedAt: DataTypes.DATE,
 		},

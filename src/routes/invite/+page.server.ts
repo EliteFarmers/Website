@@ -1,6 +1,6 @@
 import { PUBLIC_BOT_INVITE } from '$env/static/public';
 import { redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from "./$types";
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = ({ url }) => {
 	// If there are any query parameters, redirect to the public bot invite with the same query parameters
@@ -14,4 +14,4 @@ export const load: PageServerLoad = ({ url }) => {
 	}
 
 	throw redirect(302, PUBLIC_BOT_INVITE);
-}
+};

@@ -11,14 +11,12 @@ declare global {
 			discord_refresh_token?: string;
 			pocketbase_token?: string;
 			discordUser?: import('$db/models/users').DiscordUser | false;
-			user?: import('$db/models/users').User | false;
-			cookies?: string[];
 			pb: PocketBase;
+			userRecord: import('$db/pocketbase/pocketbase').UserRecord | null;
 		}
 		// interface Platform {}
 		interface Session {
 			discordUser: import('$db/models/users').DiscordUser | false;
-			user: import('$db/models/users').User | false;
 			premium?: import('$lib/discord').PremiumStatus;
 		}
 		// interface Stuff {}

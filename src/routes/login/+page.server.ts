@@ -8,8 +8,9 @@ export const load: PageServerLoad = async ({ parent, locals, url }) => {
 	await parent();
 
 	const authMethods = await locals.pb.collection('users').listAuthMethods();
-	const discordProvider = authMethods.authProviders
-		.find((method) => method.name === 'discord') as AuthProviderInfo & { redirectUrl: string } | undefined;
+	const discordProvider = authMethods.authProviders.find((method) => method.name === 'discord') as
+		| (AuthProviderInfo & { redirectUrl: string })
+		| undefined;
 
 	if (!discordProvider) throw error(500, 'Discord auth provider not found!');
 
@@ -22,16 +23,3 @@ export const load: PageServerLoad = async ({ parent, locals, url }) => {
 
 	throw redirect(302, authUrl + redirectUrl);
 };
-
-/*
-[
-  {
-    name: 'discord',
-    state: 'Z07lgbE5AkoM37JBS0G9vKwcvaJ9eF',
-    codeVerifier: 'oYK2IPnNhGY6YXG30eYif17sZtSfRdHixrGxstRmMwt', 
-    codeChallenge: 'YhxY0yzyaaBLb-C1Lg104uEjh3LNNZHRWMKS_6XkT4M',
-    codeChallengeMethod: 'S256',
-    authUrl: 'https://discord.com/api/oauth2/authorize?client_id=845065148997566486&code_challenge=YhxY0yzyaaBLb-C1Lg104uEjh3LNNZHRWMKS_6XkT4M&code_challenge_method=S256&response_type=code&scope=identify+email&state=Z07lgbE5AkoM37JBS0G9vKwcvaJ9eF&redirect_uri='   
-  }
-]
-*/

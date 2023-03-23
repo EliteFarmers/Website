@@ -1,14 +1,13 @@
 import { GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
-import { FetchGuilds, FetchPremiumStatus, type PremiumStatus } from '$lib/discord';
+import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
 import { IsIGN } from '$params/ign';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
-	await parent();
-	const authStore = locals.pb.authStore;
+	const { authModel } = await parent();
 
-	if (!authStore.model?.id) {
+	if (!authModel?.id) {
 		throw redirect(302, '/login');
 	}
 
@@ -19,7 +18,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	}
 
 	const guilds = await FetchGuilds(token);
-	// const status = await FetchPremiumStatus(discordUser.id);
+	const status = await FetchPremiumStatus(authModel.discordId);
 
 	if (!guilds) {
 		throw redirect(302, '/login');
@@ -28,13 +27,13 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot),
 		guilds: guilds.filter((guild) => !guild.hasBot),
-		premium: authStore.model.premium as string,
-	}
+		premium: status as string,
+	};
 };
 
 export const actions: Actions = {
 	link: async ({ locals, request }) => {
-		if (!locals.discordUser) {
+		if (!locals.userRecord?.id || !locals.discordUser) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -44,27 +43,32 @@ export const actions: Actions = {
 		if (!username || !IsIGN(username)) {
 			return fail(400, { error: 'Invalid username.' });
 		}
-	
+
 		const foundUser = await GetUserByIGN(username);
-	
+
 		if (!foundUser) {
 			return fail(404, { error: 'User not found.' });
 		}
-	
+
 		const linkedName = foundUser.player?.player.socialMedia?.links?.DISCORD;
-	
+
 		if (!linkedName) {
 			return fail(400, { error: 'User has no linked account on Hypixel.' });
 		}
-	
-		const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator}`;
-	
+
+		const discordUser = `${locals.userRecord.username}#${locals.userRecord.discriminator}`;
+
 		if (discordUser !== linkedName) {
 			return fail(400, { error: 'User has a different linked account on Hypixel.' });
 		}
-	
+
 		// Success!
 		await LinkDiscordUser(foundUser.uuid, locals.discordUser);
+
+		await locals.pb.collection('users').update(locals.userRecord.id, {
+			uuid: foundUser.uuid,
+			ign: foundUser.ign,
+		});
 
 		return { success: true };
 	},
@@ -73,11 +77,11 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		if (!locals.user) {
+		if (!locals.userRecord?.uuid) {
 			return fail(400, { error: 'User not linked.' });
 		}
 
-		const uuid = locals.user.uuid;
+		const uuid = locals.userRecord.uuid;
 
 		if (!uuid) {
 			return fail(400, { error: 'Invalid UUID.' });
@@ -85,6 +89,11 @@ export const actions: Actions = {
 
 		await UnlinkDiscordUser(uuid);
 
+		await locals.pb.collection('users').update(locals.userRecord.id, {
+			uuid: '',
+			ign: '',
+		});
+
 		return { success: true };
-	}
-}
+	},
+};

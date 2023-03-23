@@ -23,9 +23,9 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	}
 
 	return {
-		guilds
-	}
-}
+		guilds,
+	};
+};
 
 export const actions: Actions = {
 	create: async ({ locals, request, params }) => {
@@ -59,5 +59,5 @@ export const actions: Actions = {
 		return {
 			success: true,
 		};
-	}
+	},
 };

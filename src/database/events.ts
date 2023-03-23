@@ -1,7 +1,7 @@
-import { Event, Server } from "./database";
-import type { EventData } from "./models/event";
-import type { ServerData } from "./models/servers";
-import { client } from "./redis";
+import { Event, Server } from './database';
+import type { EventData } from './models/event';
+import type { ServerData } from './models/servers';
+import { client } from './redis';
 
 export async function CreateEvent(data: EventData) {
 	try {

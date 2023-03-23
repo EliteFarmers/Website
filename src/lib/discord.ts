@@ -1,16 +1,23 @@
-import { client } from "$db/redis";
-import { DISCORD_BOT_TOKEN, KOFI_BRONZE_ROLE, KOFI_DONATOR_ROLE, KOFI_GOLD_ROLE, KOFI_ROLES_SERVER, KOFI_SILVER_ROLE } from "$env/static/private";
-import { IsSnowflake } from "$params/snowflake";
+import { client } from '$db/redis';
+import {
+	DISCORD_BOT_TOKEN,
+	KOFI_BRONZE_ROLE,
+	KOFI_DONATOR_ROLE,
+	KOFI_GOLD_ROLE,
+	KOFI_ROLES_SERVER,
+	KOFI_SILVER_ROLE,
+} from '$env/static/private';
+import { IsSnowflake } from '$params/snowflake';
 
 const GUILDS_KEY = 'botguilds';
 const GUILDS_FETCH_INTERVAL = 60 * 10; // 10 minutes
-const MEMBER_FETCH_INTERVAL = 60 * 20; // 20 minutes
+const MEMBER_FETCH_INTERVAL = 60 * 10; // 10 minutes
 
 export async function FetchBotGuilds() {
 	const guilds = await client.exists(GUILDS_KEY);
 
 	if (guilds > 0) {
-		return true
+		return true;
 	}
 
 	const url = 'https://discord.com/api/v10/users/@me/guilds';
@@ -21,7 +28,7 @@ export async function FetchBotGuilds() {
 		},
 	});
 
-	const json = await response.json() as unknown;
+	const json = (await response.json()) as unknown;
 
 	if (response.status !== 200 || !Array.isArray(json)) {
 		return false;
@@ -29,16 +36,17 @@ export async function FetchBotGuilds() {
 
 	await client.SETEX(GUILDS_KEY, GUILDS_FETCH_INTERVAL, JSON.stringify(json));
 
-	await Promise.allSettled(json.map(async (guild: Guild) => {
-		await client.SETEX(`guild:${guild.id}`, GUILDS_FETCH_INTERVAL, guild.permissions);
-	}));
-
+	await Promise.allSettled(
+		json.map(async (guild: Guild) => {
+			await client.SETEX(`guild:${guild.id}`, GUILDS_FETCH_INTERVAL, guild.permissions);
+		})
+	);
 
 	return true;
 }
 
 export async function FetchGuilds(accessToken: string) {
-	if (!await FetchBotGuilds()) {
+	if (!(await FetchBotGuilds())) {
 		return undefined;
 	}
 
@@ -50,7 +58,7 @@ export async function FetchGuilds(accessToken: string) {
 		},
 	});
 
-	const json = await response.json() as unknown;
+	const json = (await response.json()) as unknown;
 
 	if (response.status !== 200) {
 		return undefined;
@@ -68,13 +76,15 @@ export async function FetchGuilds(accessToken: string) {
 		return a.name.localeCompare(b.name);
 	});
 
-	const withBot = await Promise.all(guilds.map(async (guild: Guild) => {
-		const hasBot = await client.exists(`guild:${guild.id}`);
-		return {
-			...guild,
-			hasBot: hasBot > 0,
-		};
-	}));
+	const withBot = await Promise.all(
+		guilds.map(async (guild: Guild) => {
+			const hasBot = await client.exists(`guild:${guild.id}`);
+			return {
+				...guild,
+				hasBot: hasBot > 0,
+			};
+		})
+	);
 
 	return withBot as Guild[];
 }
@@ -94,7 +104,7 @@ export async function CanEditFetchedGuild(accessToken: string, guildId: string) 
 		},
 	});
 
-	const json = await response.json() as unknown;
+	const json = (await response.json()) as unknown;
 
 	if (response.status !== 200) {
 		return false;
@@ -117,20 +127,13 @@ export function CanEditGuild(guild: Guild) {
 }
 
 export async function FetchPremiumStatus(memberId: string): Promise<PremiumStatus> {
-	const none = {
-		donator: false,
-		bronze: false,
-		silver: false,
-		gold: false,
-	};
-
 	if (!IsSnowflake(memberId)) {
-		return none;
+		return PremiumStatus.None;
 	}
 
 	const cached = await client.get(`premium:${memberId}`);
 	if (cached) {
-		return JSON.parse(cached) as typeof none;
+		return cached as PremiumStatus;
 	}
 
 	// Get guild member
@@ -142,22 +145,32 @@ export async function FetchPremiumStatus(memberId: string): Promise<PremiumStatu
 		},
 	});
 
-	const member = await response.json() as unknown;
+	const member = (await response.json()) as unknown;
 
 	if (response.status !== 200) {
-		return none;
+		return PremiumStatus.None;
 	}
 
-	const roles = (member as { roles: string[] }).roles;
+	const roles = (member as { roles: string[] | undefined }).roles;
 
-	const status = {
-		donator: roles.includes(KOFI_DONATOR_ROLE),
-		bronze: roles.includes(KOFI_BRONZE_ROLE),
-		silver: roles.includes(KOFI_SILVER_ROLE),
-		gold: roles.includes(KOFI_GOLD_ROLE),
-	};
+	if (!roles?.length || roles.length <= 0 || !Array.isArray(roles)) {
+		return PremiumStatus.None;
+	}
 
-	await client.SETEX(`premium:${memberId}`, MEMBER_FETCH_INTERVAL, JSON.stringify(status));
+	let status;
+	if (roles.includes(KOFI_GOLD_ROLE)) {
+		status = PremiumStatus.Gold;
+	} else if (roles.includes(KOFI_SILVER_ROLE)) {
+		status = PremiumStatus.Silver;
+	} else if (roles.includes(KOFI_BRONZE_ROLE)) {
+		status = PremiumStatus.Bronze;
+	} else if (roles.includes(KOFI_DONATOR_ROLE)) {
+		status = PremiumStatus.Donator;
+	} else {
+		status = PremiumStatus.None;
+	}
+
+	await client.SETEX(`premium:${memberId}`, MEMBER_FETCH_INTERVAL, status);
 
 	return status;
 }
@@ -174,18 +187,19 @@ export async function GuildContainsBot(guildId: string) {
 }
 
 export interface Guild {
-	id: string,
-    name: string,
-    icon: string,
-    owner: boolean,
-    permissions: string,
-    features: string[],
-	hasBot: boolean,
+	id: string;
+	name: string;
+	icon: string;
+	owner: boolean;
+	permissions: string;
+	features: string[];
+	hasBot: boolean;
 }
 
 export enum PremiumStatus {
-	'donator',
-	'bronze',
-	'silver',
-	'gold'
+	None = 'none',
+	Donator = 'donator',
+	Bronze = 'bronze',
+	Silver = 'silver',
+	Gold = 'gold',
 }

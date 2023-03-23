@@ -26,7 +26,7 @@ https://elitebot.dev/
 
     c. Other values in the `.env` file can be kept as-is for local development.
 
-3. Create a **copy** of `src/database/database.example.json`, and rename it to `database.json`, keep the new file in this folder. This file is used to store the database connection information, and is not tracked by git. You'll have to fill out the values to properly connect to a postgres instance, or keep them as-is for the included container. Note that you *should* specify different databases for development and production.
+3. Create a **copy** of `src/database/database.example.json`, and rename it to `database.json`, keep the new file in this folder. This file is used to store the database connection information, and is not tracked by git. You'll have to fill out the values to properly connect to a postgres instance, or keep them as-is for the included container. Note that you _should_ specify different databases for development and production.
 
 4. Back on https://discord.com/developers/applications, you'll have to add redirect URIs in the dashboard in order to have authentication work. For local developement, add the following:
 

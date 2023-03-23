@@ -1,8 +1,71 @@
-import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL } from '$env/static/public';
+import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL, PUBLIC_HOST_URL } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
 import crypto from 'crypto';
+import type { DiscordUser } from '$db/models/users';
+import type PocketBase from 'pocketbase';
+import type { UserRecord } from '$db/pocketbase/pocketbase';
 
-export async function RefreshUser(refreshToken: string, redirect: string) {
+export type DiscordUpdateResponse = {
+	accessToken: string;
+	accessTokenExpires?: string;
+	refreshToken: string;
+	refreshTokenExpires?: string;
+	user: DiscordUser | null;
+} | null;
+
+export async function FetchDiscordUser(tokens: {
+	accessToken?: string;
+	refreshToken?: string;
+}): Promise<DiscordUpdateResponse> {
+	let { accessToken, refreshToken } = tokens;
+	let accessExpires: string | undefined;
+	let refreshExpires: string | undefined;
+
+	if (!accessToken && !refreshToken) return null;
+
+	if (!accessToken && refreshToken) {
+		const fresh = await RefreshDiscordUser(refreshToken, PUBLIC_HOST_URL + '/login/callback');
+		if (!fresh) return null;
+
+		accessToken = fresh.accessToken;
+		refreshToken = fresh.refreshToken;
+		accessExpires = fresh.accessTokenExpires;
+		refreshExpires = fresh.refreshTokenExpires;
+	}
+
+	if (!accessToken || !refreshToken) return null;
+
+	const user = await fetchDiscordUser(accessToken);
+
+	if (!user) return null;
+
+	return {
+		accessToken: accessToken,
+		accessTokenExpires: accessExpires ?? undefined,
+		refreshToken: refreshToken,
+		refreshTokenExpires: refreshExpires ?? undefined,
+		user: user,
+	};
+}
+
+async function fetchDiscordUser(accessToken: string): Promise<DiscordUser | null> {
+	const request = await fetch(`${PUBLIC_DISCORD_URL}/users/@me`, {
+		headers: { Authorization: `Bearer ${accessToken}` },
+	});
+
+	if (!request.ok) return null;
+
+	try {
+		const response = (await request.json()) as DiscordUser;
+		const discordUser = { ...response };
+
+		return discordUser;
+	} catch (_) {
+		return null;
+	}
+}
+
+export async function RefreshDiscordUser(refreshToken: string, redirect: string): Promise<DiscordUpdateResponse> {
 	const uuid = crypto.randomUUID();
 
 	const data = {
@@ -33,16 +96,28 @@ export async function RefreshUser(refreshToken: string, redirect: string) {
 	};
 
 	if (response.error) {
-		return { error: response.error };
+		return null;
 	}
 
 	const accessTokenExpires = new Date(Date.now() + response.expires_in); // ~10 minutes
 	const refreshTokenExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
 	return {
-		access_token: response.access_token,
-		access_token_expires: accessTokenExpires.toUTCString(),
-		refresh_token: response.refresh_token,
-		refresh_token_expires: refreshTokenExpires.toUTCString(),
+		accessToken: response.access_token,
+		accessTokenExpires: accessTokenExpires.toUTCString(),
+		refreshToken: response.refresh_token,
+		refreshTokenExpires: refreshTokenExpires.toUTCString(),
+		user: null,
 	};
+}
+
+export async function UpdateDiscordUser(pb: PocketBase, existing: UserRecord, user: DiscordUser): Promise<void> {
+	try {
+		await pb.collection('users').update(existing.id, {
+			username: user.username,
+			discriminator: user.discriminator,
+		});
+	} catch (error) {
+		console.error(error);
+	}
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
-	import type { PageData } from "./$types";
+	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 	export let form: FormData;
@@ -32,7 +32,7 @@
 				<option value="weightgain">Weight Gain</option>
 				<option value="collectiongain">Collection Gain</option>
 				<option value="weight">Weight Leaderboard</option>
-				<option value="collection">Collection Leaderboard</option>	
+				<option value="collection">Collection Leaderboard</option>
 			</select>
 			<div class="flex flex-row gap-2 items-center justify-center">
 				<div>
@@ -88,7 +88,6 @@
 							placeholder=""
 						/>
 					</div>
-
 				</div>
 			</div>
 
@@ -100,8 +99,6 @@
 				class="w-full px-4 py-2 border-2 rounded text-black"
 				placeholder="Event Reward"
 			/>
-			
-
 
 			<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>
 		</div>

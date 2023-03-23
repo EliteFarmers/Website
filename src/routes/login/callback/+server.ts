@@ -4,8 +4,7 @@ import type { AuthProviderInfo } from 'pocketbase';
 
 import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ url, locals, cookies }) => {
-
-	let provider; 
+	let provider;
 	try {
 		provider = JSON.parse(authStateVal) as AuthProviderInfo & { redirectUrl: string };
 	} catch (err) {
@@ -24,22 +23,22 @@ export const GET: RequestHandler = async ({ url, locals, cookies }) => {
 		throw error(400, 'Missing code or state');
 	}
 
-	const authData = await locals.pb.collection('users').authWithOAuth2(
-		provider.name,
-		code,
-		provider.codeVerifier,
-		decodeURIComponent(provider.redirectUrl),
-		{
+	const authData = await locals.pb
+		.collection('users')
+		.authWithOAuth2(provider.name, code, provider.codeVerifier, decodeURIComponent(provider.redirectUrl), {
 			emailVisibility: false,
-		}
-	);
+		});
 
 	if (!authData.token) {
 		throw error(400, 'Invalid code');
 	}
 
+	console.log(authData.meta);
 	await locals.pb.collection('users').update(authData.record.id, {
 		avatar: (authData.meta?.avatarUrl ?? '') as string,
+		discordId: (authData.meta?.id ?? '') as string,
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		discriminator: (authData.meta?.rawUser?.discriminator ?? '') as string,
 	});
 
 	cookies.set('pocketbase_auth', authData.token, {
