@@ -11,7 +11,7 @@ declare global {
 			discord_refresh_token?: string;
 			pocketbase_token?: string;
 			discordUser?: import('$db/models/users').DiscordUser | false;
-			pb: PocketBase;
+			pb: PocketBase | null;
 			userRecord: import('$db/pocketbase/pocketbase').UserRecord | null;
 		}
 		// interface Platform {}

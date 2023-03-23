@@ -3,9 +3,15 @@ import { authState } from '$stores/auth';
 import { error, redirect } from '@sveltejs/kit';
 import type { AuthProviderInfo } from 'pocketbase';
 import type { PageServerLoad } from './$types';
+import PocketBase from 'pocketbase';
+import { POCKETBASE_URL } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ parent, locals, url }) => {
 	await parent();
+
+	if (!locals.pb) {
+		locals.pb = new PocketBase(POCKETBASE_URL);
+	}
 
 	const authMethods = await locals.pb.collection('users').listAuthMethods();
 	const discordProvider = authMethods.authProviders.find((method) => method.name === 'discord') as

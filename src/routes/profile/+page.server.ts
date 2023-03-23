@@ -65,7 +65,7 @@ export const actions: Actions = {
 		// Success!
 		await LinkDiscordUser(foundUser.uuid, locals.discordUser);
 
-		await locals.pb.collection('users').update(locals.userRecord.id, {
+		await locals.pb?.collection('users').update(locals.userRecord.id, {
 			uuid: foundUser.uuid,
 			ign: foundUser.ign,
 		});
@@ -89,7 +89,7 @@ export const actions: Actions = {
 
 		await UnlinkDiscordUser(uuid);
 
-		await locals.pb.collection('users').update(locals.userRecord.id, {
+		await locals.pb?.collection('users').update(locals.userRecord.id, {
 			uuid: '',
 			ign: '',
 		});

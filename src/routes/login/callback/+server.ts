@@ -1,8 +1,10 @@
 import { error, redirect } from '@sveltejs/kit';
 import { authStateVal } from '$stores/auth';
+import { POCKETBASE_URL } from '$env/static/private';
 import type { AuthProviderInfo } from 'pocketbase';
-
 import type { RequestHandler } from './$types';
+import PocketBase from 'pocketbase';
+
 export const GET: RequestHandler = async ({ url, locals, cookies }) => {
 	let provider;
 	try {
@@ -23,6 +25,10 @@ export const GET: RequestHandler = async ({ url, locals, cookies }) => {
 		throw error(400, 'Missing code or state');
 	}
 
+	if (!locals.pb) {
+		locals.pb = new PocketBase(POCKETBASE_URL);
+	}
+
 	const authData = await locals.pb
 		.collection('users')
 		.authWithOAuth2(provider.name, code, provider.codeVerifier, decodeURIComponent(provider.redirectUrl), {
@@ -33,7 +39,6 @@ export const GET: RequestHandler = async ({ url, locals, cookies }) => {
 		throw error(400, 'Invalid code');
 	}
 
-	console.log(authData.meta);
 	await locals.pb.collection('users').update(authData.record.id, {
 		avatar: (authData.meta?.avatarUrl ?? '') as string,
 		discordId: (authData.meta?.id ?? '') as string,

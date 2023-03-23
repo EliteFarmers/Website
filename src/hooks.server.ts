@@ -14,19 +14,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 	locals.discord_access_token = access;
 	locals.discord_refresh_token = refresh;
 	locals.pocketbase_token = pbToken;
+	locals.pb = null;
 
-	locals.pb = new PocketBase(POCKETBASE_URL);
-	locals.pb.authStore.save(pbToken ?? '', null);
+	if (pbToken) {
+		locals.pb = new PocketBase(POCKETBASE_URL);
+		locals.pb.authStore.save(pbToken, null);
 
-	try {
-		// Try authenticating with PocketBase
-		if (locals.pb.authStore.isValid) {
-			await locals.pb.collection('users').authRefresh();
-			locals.userRecord = structuredClone(locals.pb.authStore.model) as UserRecord | null;
+		try {
+			// Try authenticating with PocketBase
+			if (locals.pb.authStore.isValid) {
+				await locals.pb.collection('users').authRefresh();
+				locals.userRecord = structuredClone(locals.pb.authStore.model) as UserRecord | null;
+			}
+		} catch (_) {
+			// If it fails, clear the authStore
+			locals.pb.authStore.clear();
 		}
-	} catch (_) {
-		// If it fails, clear the authStore
-		locals.pb.authStore.clear();
 	}
 
 	if (!locals.discord_access_token && !locals.discord_refresh_token) {

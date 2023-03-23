@@ -47,7 +47,7 @@
 </svelte:head>
 
 <div class="{$themeStore} relative min-h-screen pb-16">
-	<Nav loggedIn={data.authModel !== null} />
+	<Nav loggedIn={data.authModel?.id !== undefined} />
 
 	{#if $navigating}
 		<!-- Gray out the screen -->
