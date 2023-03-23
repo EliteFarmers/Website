@@ -57,7 +57,8 @@ services:
         networks:
             - elite-network
         volumes:
-            - pocketbase-data:/data
+            - pocketbase-data:/pb
+            - ./src/database/pocketbase/pb_migrations:/pb/pb_migrations
 
 networks:
     elite-network:

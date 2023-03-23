@@ -18,5 +18,5 @@
 			"$params/*": ["./src/params/*"]
 		}
 	},
-	"exclude": ["./src/database/migrations"]
+	"exclude": ["./src/database/migrations", "src/database/pocketbase/pb_migrations"]
 }
