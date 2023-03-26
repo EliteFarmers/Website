@@ -1,5 +1,4 @@
-migrate((db) => {
-  const snapshot = [
+[
     {
         "id": "_pb_users_auth_",
         "name": "users",
@@ -216,11 +215,4 @@ migrate((db) => {
         "deleteRule": null,
         "options": {}
     }
-  ];
-
-  const collections = snapshot.map((item) => new Collection(item));
-
-  return Dao(db).importCollections(collections, true, null);
-}, (db) => {
-  return null;
-})
+]
