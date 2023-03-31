@@ -1,5 +1,6 @@
+import { COLOR_CODES, type ColorCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
-import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
+import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP, PET_LEVELS } from './constants/levels';
 import type { RankName, Skill, PlusColor } from './skyblock';
 
 function getLevelCap(skill: Skill) {
@@ -166,4 +167,47 @@ export function convertPlusColorToHex(color?: PlusColor) {
 	if (!color) return undefined;
 
 	return RANK_PLUS_COLORS[color];
+}
+
+export function InsertColorCodes(text?: string) {
+	if (!text) return '';
+	
+	let result = text.replaceAll('<', '');
+	for (const color of Object.keys(COLOR_CODES)) {
+		result = result.replaceAll(color, `<span style="color: ${COLOR_CODES[color as ColorCode]};">`);
+	}
+
+	// Close all open spans
+	if (result.includes('<span')) {
+		result = result.replaceAll('<span', '</span><span');
+		result = result.replace('</span>', '');
+		result += '</span>';
+	}
+
+	return result;
+}
+
+export function RemoveColorCodes(text: string) {
+	let result = text;
+	for (const color of Object.keys(COLOR_CODES)) {
+		result = result.replaceAll(color, '');
+	}
+
+	return result;
+}
+
+export function GetPetLevel(xp: number, max = 100) {
+	let level = 0;
+	let remainder = xp;
+
+	for (const xpRequired of PET_LEVELS) {
+		if (level >= max) break;
+		if ((remainder -= xpRequired) > 0) level++;
+		else {
+			remainder += xpRequired;
+			break;
+		}
+	}
+
+	return level;
 }

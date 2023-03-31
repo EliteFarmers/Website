@@ -11,6 +11,7 @@
 		goal?: number;
 	};
 	export let rank = -1;
+	export let fullWidth = false;
 
 	let percent = 100;
 	let readable = '';
@@ -34,7 +35,7 @@
 </script>
 
 <section class="flex justify-center">
-	<div class="relative w-[90%] my-1">
+	<div class="relative w-[{ fullWidth ? '100%' : '90%' }] my-1">
 		<div class="mb-1">
 			{#if rank >= 0}
 				<a

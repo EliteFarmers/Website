@@ -1,6 +1,7 @@
 export type UUID = string;
 export type TimestampMills = number;
 type Tier = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type Rarity = 'COMMON' | 'UNCOMMON' | 'RARE' | 'EPIC' | 'LEGENDARY' | 'MYTHIC' | 'SPECIAL' | 'SUPREME';
 
 export type Skill =
 	| 'farming'
@@ -38,6 +39,7 @@ export interface ProfileData {
 	banking?: BankingData;
 	selected: boolean;
 	coop: boolean;
+	pets: PetData[];
 	api: APISettings;
 }
 
@@ -67,6 +69,17 @@ type CommunityUpgradeNames = 'minion_slots' | 'island_size' | 'guests_count' | '
 export type CommunityUpgrades = {
 	[key in CommunityUpgradeNames]: Tier;
 };
+
+export interface PetData {
+	uuid: string | null;
+	type: string;
+	exp: number;
+	active: boolean;
+	candyUsed: Tier;
+	tier: Rarity;
+	heldItem: string | null;
+	skin: string | null;
+}
 
 export interface RawProfileData {
 	profile_id: UUID;

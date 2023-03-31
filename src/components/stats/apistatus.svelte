@@ -2,13 +2,14 @@
 	import type { APISettings } from '$lib/skyblock';
 
 	export let api: APISettings;
+	export let bannerOnly = false;
 
 	const entries = Object.entries(api);
 	const collectionOff = api?.collections?.enabled === false;
 	const anyOff = entries.some(([, value]) => !value.enabled);
 </script>
 
-{#if collectionOff}
+{#if collectionOff || (bannerOnly && anyOff)}
 	<section class="flex justify-center align-middle py-8">
 		<div
 			class="border-4 rounded-lg border-red-400 w-[95%] lg:w-[80%] xl:w-[70%] bg-red-300 dark:border-red-800 dark:bg-red-900 text-center p-3"
