@@ -30,9 +30,7 @@
 			<p class="text-sm mt-4 mb-2">
 				Base Drops Per Break refers to the average amount of drops you get from breaking a crop without any
 				buffs. Sugar Cane and Cactus actually have a base drop of 1 per block, but because you can break 2
-				blocks at once, 2 is noted here. Mushroom is also nerfed more to make up for the Mooshroom cow perk; one
-				hour of perfect farming would net you an extra one weight with the current value. Full calculation
-				breakdowns will be added in the future.
+				blocks at once, 2 is noted here. Full calculation breakdowns will be added in the future.
 			</p>
 			<p class="text-sm">
 				* Mushroom weight is calculated dynamically because of the Mooshroom Cow pet. Because Cactus and Sugar
