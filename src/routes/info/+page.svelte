@@ -2,6 +2,7 @@
 	import CropTable from './croptable.svelte';
 	import BonusTable from './bonustable.svelte';
 	import Head from '$comp/head.svelte';
+	import { PUBLIC_COMMUNITY_INVITE } from '$env/static/public';
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
@@ -106,17 +107,27 @@
 		<h1 class="text-center text-3xl mt-16 mb-8">Credits</h1>
 		<article class="w-10/12 md:w-1/2">
 			<p class="text-lg my-4">
+				Website and Bot Maintained and Created by <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href="https://elitebot.dev/stats/Ke5o/7da0c47581dc42b4962118f8049147b7"
+				>
+					Kaeso</a
+				>.
+			</p>
+			<p class="text-lg my-4">
+				Original Weight Calculations and Max Farming Fortune Rates by <a
+					class="underline"
+					href="/stats/ac01147ed01a47d1b5777b31ccf5e616">Bankhier</a
+				>.
+			</p>
+			<p class="text-lg my-4">
 				Crop Icons by <a
 					class="underline"
 					rel="nofollow noreferrer noopener"
 					href="https://www.redbubble.com/people/Luumini/shop"
 				>
 					Lumini</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Some Weight Calculations by <a class="underline" href="/stats/ac01147ed01a47d1b5777b31ccf5e616"
-					>Bankhier</a
 				>.
 			</p>
 			<p class="text-lg my-4">
@@ -130,7 +141,7 @@
 				>.
 			</p>
 			<p class="text-lg my-4">
-				Player models provied by <a
+				Player models provided by <a
 					class="underline"
 					rel="nofollow noreferrer noopener"
 					href="https://mc-heads.net/">MCHeads</a
@@ -141,6 +152,13 @@
 					class="underline"
 					rel="nofollow noreferrer noopener"
 					href="https://github.com/SkyCryptWebsite/SkyCrypt">SkyCrypt</a
+				>.
+			</p>
+			<p class="text-lg my-4">
+				Feedback and support from the <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href={PUBLIC_COMMUNITY_INVITE}>Elite Skyblock Farmers</a
 				>.
 			</p>
 			<br /><br />
