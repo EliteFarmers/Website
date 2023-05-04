@@ -17,6 +17,7 @@
 
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
+	import Helpplease from '$comp/+helpplease.svelte';
 	export let data: PageData;
 
 	const account = data.account;
@@ -67,6 +68,7 @@
 		skyblockXP={profile.member.leveling?.experience ?? 0}
 	/>
 
+	<Helpplease />
 	<APIstatus api={profile.api} />
 
 	<section class="flex items-center justify-center w-full py-4">

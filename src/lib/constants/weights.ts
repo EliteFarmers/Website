@@ -4,11 +4,11 @@ export const CROPS_PER_ONE_WEIGHT = {
 	potato: 300_000,
 	sugarcane: 200_000,
 	netherwart: 250_000,
-	pumpkin: 87_095.11,
-	melon: 435_466.47,
-	mushroom: 168_925.53,
-	cocoa: 257_214.64,
-	cactus: 169_389.33,
+	pumpkin: 90_066.27,
+	melon: 450_324.6,
+	mushroom: 90_178.06,
+	cocoa: 267_174.04,
+	cactus: 177_254.45,
 };
 
 // Bonus
