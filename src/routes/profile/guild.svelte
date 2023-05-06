@@ -6,9 +6,9 @@
 	export let guild: Guild;
 </script>
 
-<Card class="m-1 p-4 inline-block shrink">
+<Card class="m-1 p-4 inline-block">
 	<div class="flex justify-between items-center">
-		<div class="flex justify-start items-center gap-4">
+		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
 			{#if guild.icon == null}
 				<div
 					class="w-12 h-12 flex items-center justify-center select-none bg-blend-darken bg-black rounded-full"
@@ -29,20 +29,18 @@
 					alt="Server Icon"
 				/>
 			{/if}
-			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis">{guild.name}</h1>
+			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis pr-4">{guild.name}</h1>
 		</div>
-		{#if guild.hasBot}
-			<div class="flex justify-end items-center gap-4">
+		<div class="flex justify-end min-w-0 items-center gap-4">
+			{#if guild.hasBot}
 				<Button href={`/guild/${guild.id}`} variant="raised" class="m-1">
 					<p>Manage</p>
 				</Button>
-			</div>
-		{:else}
-			<div class="flex justify-end items-center gap-4">
+			{:else}
 				<Button href={`/invite?guild_id=${guild.id}`} variant="outlined" color="secondary" class="m-1">
 					<p>Invite</p>
 				</Button>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 </Card>

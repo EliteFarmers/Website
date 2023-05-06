@@ -16,7 +16,7 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<div class="flex md:flex-row justify-center gap-16 m-16">
+<div class="flex flex-col lg:flex-row justify-center gap-16 m-16">
 	<div class="flex flex-col items-start">
 		<div class="w-full max-w-xl mb-8">
 			<div class="bg-gray-100 dark:bg-zinc-800 shadow-md rounded m-8 px-8 pt-6 pb-8 mb-4">
@@ -58,7 +58,7 @@
 				{/if}
 				<Button class="m-1" href="/plans" rel="noopener noreferrer">Upgrade</Button>
 			</div>
-			{#if data.premium !== ''}
+			{#if data.premium !== '' && data.premium !== 'none'}
 				<h2 class="text-lg text-center">Thank You!</h2>
 			{/if}
 		</div>
@@ -117,21 +117,30 @@
 	</div>
 	<section class="flex flex-col lg:w-[70%]">
 		<h1 class="text-2xl mb-4">Events</h1>
-		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
+		{#if true}
+			<p>You're not a part of any currently running events!</p>
+		{/if}
+		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
 			<!-- {#each data.events as event (event.id)}
 				<Event {event} />
 			{/each} -->
 		</div>
 
 		<h1 class="text-2xl mb-4">Your Servers</h1>
-		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
+		{#if data.guildsWithBot.length === 0}
+			<p>No servers you manage have the Elite bot invited! Add some below.</p>
+		{/if}
+		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
 			{#each data.guildsWithBot as guild (guild.id)}
 				<Guild {guild} />
 			{/each}
 		</div>
 
 		<h1 class="text-2xl mb-4">Other Servers</h1>
-		<div class="grid md:grid-cols-2 lg:grid-cols-3 grid-flow-row-dense mb-16">
+		{#if data.guildsWithBot.length === 0}
+			<p>You don't have Manage Event permissions in any servers!</p>
+		{/if}
+		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
 			{#each data.guilds as guild (guild.id)}
 				<Guild {guild} />
 			{/each}

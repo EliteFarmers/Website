@@ -5,6 +5,7 @@ class Redis {
 	private c;
 
 	constructor() {
+		console.log('Connecting to Redis...');
 		this.c = createClient({
 			url: REDIS_URI,
 			password: REDIS_PASSWORD,
@@ -15,9 +16,10 @@ class Redis {
 		});
 	}
 
-	get client() {
+	async client() {
+		await this.c.connect();
 		return this.c;
 	}
 }
 
-export const client = new Redis().client;
+export const client = await new Redis().client();

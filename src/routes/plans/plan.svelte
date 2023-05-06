@@ -17,7 +17,7 @@
 		{#if price === 0}
 			<Button variant="raised" color="secondary" disabled>Unlocked</Button>
 		{:else}
-			<Button variant="raised" color="secondary" target="_blank" {href}>{price} USD</Button>
+			<Button variant="raised" color="secondary" target="_blank" {href}>{price} USD / Month</Button>
 		{/if}
 	</div>
 </Card>

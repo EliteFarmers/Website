@@ -44,7 +44,7 @@
 			href="/leaderboard">Top</a
 		>
 		<a
-			class="hidden md:block p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+			class="hidden md:block p-3 rounded-[0.2rem] bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
 			href="/leaderboard">Leaderboard</a
 		>
 	</section>
