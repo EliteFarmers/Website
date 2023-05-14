@@ -11,12 +11,12 @@
 
 <Head
 	title="Elite Plans"
-	description="View the various plans to being enhanced functionality into your discord servers!"
+	description="View the various plans to bring enhanced functionality into your discord servers!"
 />
 
 <section class="flex flex-col justify-center align-middle items-center pb-16">
 	<h1 class="text-3xl my-16">Elite Plans</h1>
-	<p>View the various plans to being enhanced functionality into your Discord servers!</p>
+	<p>View the various plans to bring enhanced functionality into your Discord servers!</p>
 	<p>Subscriptions are monthly and done through Ko-Fi, instructions below.</p>
 	<div class="flex flex-row gap-8 my-16">
 		<Plan name="Free" price={0}>
