@@ -15,7 +15,6 @@
 	import LayoutGrid, { Cell } from '@smui/layout-grid';
 
 	import type { PageData } from './$types';
-	import Helpplease from '$comp/+helpplease.svelte';
 	export let data: PageData;
 
 	let enteredText = '';
@@ -52,8 +51,6 @@
 			</button>
 		</form>
 	</div>
-
-	<Helpplease />
 
 	<div class="flex w-full justify-center">
 		<LayoutGrid fixedColumnWidth>
