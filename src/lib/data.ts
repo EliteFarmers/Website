@@ -337,7 +337,7 @@ export async function formatProfiles(profiles: RawProfileData[], uuid: string) {
 		const memberData = formatMemberData(profile.members[uuid], { minions: minions });
 
 		data.push({
-			profile_id: profile.profile_id,
+			profile_id: profile.profile_id.replaceAll('-', ''),
 			member: memberData,
 			members: members,
 			cute_name: profile.cute_name,
