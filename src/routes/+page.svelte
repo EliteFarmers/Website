@@ -5,6 +5,7 @@
 		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
 		PUBLIC_DONATION_URL,
+		PUBLIC_WEIGHT_REQ,
 	} from '$env/static/public';
 
 	import Head from '$comp/head.svelte';
@@ -58,19 +59,10 @@
 				<Card class="p-8 mb-8">
 					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
 					<p class="w-full text-center mb-6">
-						Join an exclusive community of Elite Farmers! Full membership only unlocked after reaching 4,750
-						farming weight. For website/bot support, join the support server!
+						Join an exclusive community of Elite Farmers! Full membership unlocked after reaching {PUBLIC_WEIGHT_REQ}
+						farming weight. Also home to support for the bot/website, and thousands of fellow farmers!
 					</p>
 					<div class="flex flex-col lg:flex-row justify-evenly m-1">
-						<Button
-							href={PUBLIC_SUPPORT_SERVER_INVITE}
-							variant="raised"
-							class="m-1"
-							target="_blank"
-							rel="noopener noreferrer nofollow"
-						>
-							<p>Join Support Server</p>
-						</Button>
 						<Button
 							href={PUBLIC_COMMUNITY_INVITE}
 							variant="raised"
