@@ -11,7 +11,7 @@
 	import Head from '$comp/head.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
-	import { Card, Button, Input } from "flowbite-svelte";
+	import { Card, Button, Input } from 'flowbite-svelte';
 
 	import type { PageData } from './$types';
 	export let data: PageData;
@@ -45,14 +45,26 @@
 						rel="noopener noreferrer nofollow"
 					>
 						Join Elite Farmers
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-5 h-5 ml-2"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+							/></svg
+						>
 					</Button>
 				</Card>
 				<Card color="none" border={false}>
 					<h1 class="mb-4 w-full text-xl font-semibold">Add To Discord</h1>
 					<p class="w-full mb-6">
-						Quickly access stats and leaderboards in Discord!
-						Please note that the bot runs seperately from the website for now, leaderboards and stats may be out of sync.
+						Quickly access stats and leaderboards in Discord! Please note that the bot runs seperately from
+						the website for now, leaderboards and stats may be out of sync.
 					</p>
 					<Button
 						href={PUBLIC_BOT_INVITE}
@@ -61,7 +73,19 @@
 						rel="noopener noreferrer nofollow"
 					>
 						Invite Elite Bot
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-5 h-5 ml-2"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+							/></svg
+						>
 					</Button>
 				</Card>
 			</div>

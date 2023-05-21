@@ -7,7 +7,21 @@
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 
-	import { Avatar, DarkMode, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Input } from 'flowbite-svelte';
+	import {
+		Avatar,
+		DarkMode,
+		Dropdown,
+		DropdownDivider,
+		DropdownHeader,
+		DropdownItem,
+		Navbar,
+		NavBrand,
+		NavLi,
+		NavUl,
+		NavHamburger,
+		Button,
+		Input,
+	} from 'flowbite-svelte';
 
 	export let discordUser: DiscordUser | false;
 
@@ -34,14 +48,25 @@
 		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> EliteWebsite </span>
 	</NavBrand>
 	<div class="flex lg:order-1 w-1/3">
-
 		<div class="hidden relative md:block w-full">
 			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
 				<Input let:props placeholder="Player name" size="md">
-					<input type="text" {...props} bind:value={searchVal}>
+					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
 				<Button class="!p-2.5 h-full">
-				  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+					<svg
+						class="w-5 h-5"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+						><path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+						/></svg
+					>
 				</Button>
 			</form>
 		</div>
@@ -80,18 +105,20 @@
 
 		{#if discordUser}
 			<div class="flex items-center lg:order-2">
-				<Avatar id="avatar-menu" src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png" />
+				<Avatar
+					id="avatar-menu"
+					src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
+				/>
 			</div>
 			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
 				<DropdownHeader>
-				<span class="block text-sm"> {discordUser.username} </span>
+					<span class="block text-sm"> {discordUser.username} </span>
 				</DropdownHeader>
 				<DropdownItem href="/profile">Profile</DropdownItem>
 				<DropdownItem href="/stats">My Stats</DropdownItem>
 				<DropdownDivider />
 				<DropdownItem href="/logout">Sign out</DropdownItem>
 			</Dropdown>
-		
 		{:else}
 			<div class="flex lg:order-2 my-0">
 				<Button href="/login" size="sm">Login</Button>

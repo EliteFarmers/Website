@@ -1,10 +1,10 @@
-import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from "$env/static/public";
-import type { PageServerLoad } from "./$types";
+import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
+import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
-import crypto from "crypto";
+import crypto from 'crypto';
 
 export const load: PageServerLoad = ({ cookies, url }) => {
-	const success = url.searchParams.get("success");
+	const success = url.searchParams.get('success');
 	if (success) {
 		return {
 			success: true,
@@ -21,8 +21,8 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		'&response_type=code&scope=identify%20guilds' +
 		`&state=${uuid}`;
 
-	cookies.set("auth_state", uuid, {
-		path: "/",
+	cookies.set('auth_state', uuid, {
+		path: '/',
 		maxAge: 60 * 60 * 24 * 7,
 	});
 

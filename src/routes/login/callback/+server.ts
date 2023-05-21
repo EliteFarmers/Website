@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
 	const storedState = cookies.get('auth_state');
 	cookies.delete('auth_state');
-	
+
 	if (errorMsg) {
 		throw error(400, errorMsg);
 	}
