@@ -38,6 +38,7 @@
 					<Button
 						href={PUBLIC_COMMUNITY_INVITE}
 						class="w-fit font-semibold"
+						color="blue"
 						target="_blank"
 						rel="noopener noreferrer nofollow"
 					>
@@ -67,6 +68,7 @@
 						href={PUBLIC_BOT_INVITE}
 						class="w-fit font-semibold"
 						target="_blank"
+						color="blue"
 						rel="noopener noreferrer nofollow"
 					>
 						Invite Elite Bot
