@@ -11,10 +11,6 @@
 	import Head from '$comp/head.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
-	import Card from '@smui/card';
-	import Button from '@smui/button';
-	import LayoutGrid, { Cell } from '@smui/layout-grid';
-
 	import type { PageData } from './$types';
 	export let data: PageData;
 
