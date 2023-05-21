@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { PUBLIC_BOT_INVITE, PUBLIC_COMMUNITY_INVITE, PUBLIC_SUPPORT_SERVER_INVITE } from '$env/static/public';
-	import { swapTheme } from '$stores/themeStore';
 </script>
 
 <footer class="absolute w-full bottom-0 h-16">
@@ -25,11 +24,6 @@
 					class="underline hover:font-semibold">GitHub</a
 				>
 			</h1>
-		</div>
-		<div class="flex flex-col items-center justify-center">
-			<button class="bg-gray-200 dark:bg-zinc-700 p-4 rounded-lg" on:click={() => swapTheme()}
-				>Toggle Theme</button
-			>
 		</div>
 	</div>
 </footer>

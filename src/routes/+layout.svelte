@@ -1,30 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { navigating } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { Theme, themeStore } from '$stores/themeStore';
 
 	import Nav from '$comp/nav.svelte';
 	import Footer from '$comp/footer.svelte';
-
-	onMount(async () => {
-		themeStore.subscribe((value) => {
-			if (value !== Theme.Unset) window.localStorage.setItem('theme', value);
-		});
-
-		const stored = window.localStorage.getItem('theme') ?? Theme.Unset;
-
-		if (stored === Theme.Unset) {
-			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-			if (!prefersDark.matches) {
-				themeStore.set(Theme.Light);
-			} else {
-				themeStore.set(Theme.Dark);
-			}
-		} else {
-			themeStore.set(stored as Theme);
-		}
-	});
 </script>
 
 <svelte:head>
@@ -33,7 +12,7 @@
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
-<div class="{$themeStore} relative min-h-screen pb-16">
+<div class="bg-zinc-100 dark:bg-zinc-900 relative min-h-screen pb-16">
 	<Nav discordUser={$page.data.discordUser} />
 
 	{#if $navigating}
