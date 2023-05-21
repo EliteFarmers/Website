@@ -12,7 +12,7 @@
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
-<div class="bg-zinc-100 dark:bg-zinc-900 relative min-h-screen pb-16">
+<div class="bg-white dark:bg-zinc-900 relative min-h-screen pb-16 text-black dark:text-white">
 	<Nav discordUser={$page.data.discordUser} />
 
 	{#if $navigating}
