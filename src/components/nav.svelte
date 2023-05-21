@@ -79,6 +79,8 @@
 			aria-controls="mobile-menu-3"
 			aria-expanded="false"
 			id="search-button"
+			name="Show Search Bar"
+			aria-label="Show Search Bar"
 			class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm !p-2"
 		>
 			<svg
