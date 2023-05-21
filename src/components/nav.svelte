@@ -28,7 +28,7 @@
 	}
 </script>
 
-<Navbar let:hidden let:toggle class="flex items-center align-middle">
+<Navbar let:hidden let:toggle class="flex items-center align-middle" color="none">
 	<NavBrand href="/">
 		<img src="/favicon.png" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
 		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> EliteWebsite </span>
@@ -72,7 +72,7 @@
 		<NavHamburger on:click={toggle} />
 	</div>
 
-	<NavUl {hidden} class="lg:order-3 mx-auto justify-center lg:mx-0 md:items-center">
+	<NavUl {hidden} class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center">
 		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>
 		<NavLi href="/info" active={$page.url.pathname === '/info'}>Info</NavLi>
 		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
