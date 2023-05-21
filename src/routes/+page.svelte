@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import {
 		PUBLIC_BOT_INVITE,
-		PUBLIC_SUPPORT_SERVER_INVITE,
 		PUBLIC_COMMUNITY_INVITE,
 		PUBLIC_DONATION_URL,
 		PUBLIC_WEIGHT_REQ,
@@ -16,7 +14,6 @@
 	import type { PageData } from './$types';
 	export let data: PageData;
 
-	let enteredText = '';
 	let donationClicked = false;
 </script>
 
@@ -101,7 +98,7 @@
 						/>
 					{:else}
 						<button on:click={() => (donationClicked = true)}>
-							<img src="images/SupportKaeso.png" alt="Support The Website" /></button
+							<img src="images/SupportKaeso.webp" alt="Support The Website" /></button
 						>
 					{/if}
 				</Card>
@@ -144,7 +141,7 @@
 <style>
 	.lumini {
 		display: block;
-		background-image: url('/images/LuminiBanner.png');
+		background-image: url('/images/LuminiBanner.webp');
 		background-size: cover;
 		background-position: center;
 		height: fit-content;

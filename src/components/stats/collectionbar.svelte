@@ -24,15 +24,15 @@
 	let frameStyle = '';
 	if (rank > 0) {
 		if (rank <= 5) {
-			frameStyle = 'background-image: url(/images/frames/rainbow.png);';
+			frameStyle = 'background-image: url(/images/frames/rainbow.webp);';
 		} else if (rank <= 10) {
-			frameStyle = 'background-image: url(/images/frames/mithril.png);';
+			frameStyle = 'background-image: url(/images/frames/mithril.webp);';
 		} else if (rank <= 50) {
-			frameStyle = 'background-image: url(/images/frames/gold.png);';
+			frameStyle = 'background-image: url(/images/frames/gold.webp);';
 		} else if (rank <= 100) {
-			frameStyle = 'background-image: url(/images/frames/silver.png);';
+			frameStyle = 'background-image: url(/images/frames/silver.webp);';
 		} else if (rank <= 500) {
-			frameStyle = 'background-image: url(/images/frames/bronze.png);';
+			frameStyle = 'background-image: url(/images/frames/bronze.webp);';
 		}
 	}
 </script>
@@ -40,7 +40,7 @@
 <div class="p-1 m-1 flex gap-4 w-full">
 	<div class="bg-gray-100 dark:bg-zinc-800 rounded-lg flex justify-center align-middle w-full max-h-20">
 		<div class="hidden md:flex crop-container p-1 md:p-3" style={frameStyle}>
-			<img src="/images/crops/{key}.png" class="crop" alt={name} />
+			<img src="/images/crops/{key}.webp" class="crop" alt={name} />
 		</div>
 		<div class="flex flex-col gap-2 w-[100%] px-3 py-1">
 			<div class="flex justify-between">

@@ -39,7 +39,7 @@
 					<div
 						class="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700"
 					>
-						<img class="crop" src="/images/crops/{leaderboard.name}.png" alt="Crop" />
+						<img class="crop" src="/images/crops/{leaderboard.name}.webp" alt="Crop" />
 						<h3 class="text-xl text-center">{leaderboard.title.replace(' Collection', '')}</h3>
 					</div>
 				</a>
