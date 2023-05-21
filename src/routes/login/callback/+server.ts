@@ -1,7 +1,6 @@
 import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET as CLIENT_SECRET } from '$env/static/private';
 import { error, redirect } from '@sveltejs/kit';
-import { authStateVal } from '$stores/auth';
 
 import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ url, cookies }) => {
@@ -9,11 +8,14 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	const state = url.searchParams.get('state');
 	const errorMsg = url.searchParams.get('error');
 
+	const storedState = cookies.get('auth_state');
+	cookies.delete('auth_state');
+
 	if (errorMsg) {
 		throw error(400, errorMsg);
 	}
 
-	if (!code || !state || state !== authStateVal) {
+	if (!code || !state || state !== storedState) {
 		throw error(400, 'Missing code or state');
 	}
 

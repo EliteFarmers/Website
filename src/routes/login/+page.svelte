@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		await invalidateAll();
+		// await invalidateAll();
 		goto('/');
 	});
 </script>
