@@ -44,7 +44,7 @@
 
 <Navbar let:hidden let:toggle class="flex items-center align-middle" color="none">
 	<NavBrand href="/">
-		<img src="/favicon.png" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
+		<img src="/favicon.webp" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
 		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> EliteWebsite </span>
 	</NavBrand>
 	<div class="hidden relative md:flex lg:order-1 w-1/3" id="mobile-menu-3">
@@ -53,7 +53,7 @@
 				<Input let:props placeholder="Player name" size="md">
 					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
-				<Button class="!p-2.5 h-full">
+				<Button class="!p-2.5 h-full" type="submit" name="Search">
 					<svg
 						class="w-5 h-5"
 						fill="none"
@@ -103,7 +103,7 @@
 				<Input let:props placeholder="Player name" size="md">
 					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
-				<Button class="!p-2.5 h-full">
+				<Button class="!p-2.5 h-full" type="submit" name="Search">
 					<svg
 						class="w-5 h-5"
 						fill="none"

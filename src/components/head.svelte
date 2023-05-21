@@ -3,7 +3,7 @@
 
 	export let title: string | undefined; // 'Elite | Skyblock Farming Weight';
 	export let keywords: string | false = 'farming, profile, skyblock, weight, calculate, Hypixel, elite';
-	export let imageUrl: string | false = `${PUBLIC_HOST_URL}/favicon.png`;
+	export let imageUrl: string | false = `${PUBLIC_HOST_URL}/favicon.webp`;
 	export let description: string;
 </script>
 
