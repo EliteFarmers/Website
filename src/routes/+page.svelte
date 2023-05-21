@@ -11,6 +11,8 @@
 	import Head from '$comp/head.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
 
+	import { Card, Button, Input } from "flowbite-svelte";
+
 	import type { PageData } from './$types';
 	export let data: PageData;
 
@@ -25,74 +27,46 @@
 
 <main>
 	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
-	<p class="text-body-xl text-center">Look up any skyblock player!</p>
+	<p class="text-body-xl text-center mb-32">View stats of any skyblock player!</p>
 
-	<div class="flex align-items-center justify-center justify-self-center relative mb-8">
-		<form on:submit|preventDefault class="w-10/12 flex align-items-center justify-center">
-			<div class="relative inline-block md:w-1/3">
-				<input
-					class="p-2 m-4 mb-0 text-left border-2 rounded-lg w-[100%] mx-auto dark:text-black"
-					bind:value={enteredText}
-					maxlength="100"
-					placeholder="Search for player"
-					type="text"
-				/>
-			</div>
-			<button
-				class="p-2 m-4 rounded-lg border-2 border-white dark:border-green-800 bg-green-300 dark:bg-green-600 hover:bg-green-400}"
-				on:click={() => {
-					goto(`/stats/${enteredText}`);
-				}}
-			>
-				Search
-			</button>
-		</form>
-	</div>
-
-	<div class="flex w-full justify-center">
-		<LayoutGrid fixedColumnWidth>
-			<Cell span={8}>
-				<Card class="p-8 mb-8">
-					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Join The Discord</h1>
-					<p class="w-full text-center mb-6">
+	<div class="flex flex-col w-full items-center gap-8">
+		<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
+			<div class="flex flex-col items-center gap-8">
+				<Card color="none" border={false}>
+					<h1 class="mb-4 w-full text-xl font-semibold">Join The Discord</h1>
+					<p class="w-full mb-6">
 						Join an exclusive community of Elite Farmers! Full membership unlocked after reaching {PUBLIC_WEIGHT_REQ}
 						farming weight. Also home to support for the bot/website, and thousands of fellow farmers!
 					</p>
-					<div class="flex flex-col lg:flex-row justify-evenly m-1">
-						<Button
-							href={PUBLIC_COMMUNITY_INVITE}
-							variant="raised"
-							class="m-1"
-							color="secondary"
-							target="_blank"
-							rel="noopener noreferrer nofollow"
-						>
-							<p>Join Elite Farmers</p>
-						</Button>
-					</div>
+					<Button
+						href={PUBLIC_COMMUNITY_INVITE}
+						class="w-fit font-semibold"
+						target="_blank"
+						rel="noopener noreferrer nofollow"
+					>
+						Join Elite Farmers
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+					</Button>
 				</Card>
-				<Card class="p-8">
-					<h1 class="p-2 mb-4 w-full text-center rounded-md text-xl">Add To Your Server</h1>
-					<p class="w-full text-center mb-6">
-						Quickly access stats and leaderboards in Discord! Elite Bot is verified and already present in
-						more than 400 servers! Please note that the bot runs seperately from the website for now,
-						leaderboards and stats may be slightly out of sync.
+				<Card color="none" border={false}>
+					<h1 class="mb-4 w-full text-xl font-semibold">Add To Discord</h1>
+					<p class="w-full mb-6">
+						Quickly access stats and leaderboards in Discord!
+						Please note that the bot runs seperately from the website for now, leaderboards and stats may be out of sync.
 					</p>
-					<div class="flex justify-center">
-						<Button
-							href={PUBLIC_BOT_INVITE}
-							variant="raised"
-							class="m-1"
-							target="_blank"
-							rel="noopener noreferrer nofollow"
-						>
-							<p>Invite Elite Bot</p>
-						</Button>
-					</div>
+					<Button
+						href={PUBLIC_BOT_INVITE}
+						class="w-fit font-semibold"
+						target="_blank"
+						rel="noopener noreferrer nofollow"
+					>
+						Invite Elite Bot
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+					</Button>
 				</Card>
-			</Cell>
-			<Cell span={4}>
-				<Card>
+			</div>
+			<div class="flex flex-col items-center">
+				<Card class="!p-0 overflow-hidden" size="sm">
 					{#if donationClicked}
 						<iframe
 							id="kofiframe"
@@ -107,23 +81,19 @@
 						>
 					{/if}
 				</Card>
-			</Cell>
-			<Cell span={12}>
-				<Card class="overflow-hidden">
-					<a
-						class="lumini flex flex-row gap-8 w-full hover:shadow-xl"
-						href="https://www.redbubble.com/people/Luumini/shop"
-						target="_blank"
-						rel="noopener noreferrer nofollow"
-					>
-						<h1 class="p-8 text-3xl font-semibold">
-							Art By Lumini
-							<span class="text-sm font-xl">Click Me To Check Out Their Shop!</span>
-						</h1>
-					</a>
-				</Card>
-			</Cell>
-		</LayoutGrid>
+			</div>
+		</div>
+		<a
+			class="lumini flex flex-row gap-8 w-1/2 hover:shadow-xl rounded-md"
+			href="https://www.redbubble.com/people/Luumini/shop"
+			target="_blank"
+			rel="noopener noreferrer nofollow"
+		>
+			<h1 class="p-8 text-3xl font-semibold">
+				Art By Lumini
+				<span class="text-sm font-xl">Click Me To Check Out Their Shop!</span>
+			</h1>
+		</a>
 	</div>
 
 	<section class="flex justify-center mt-4 mb-10">
