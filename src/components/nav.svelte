@@ -7,6 +7,8 @@
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 
+	import { Avatar, DarkMode, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Input } from 'flowbite-svelte';
+
 	export let discordUser: DiscordUser | false;
 
 	let searchVal = '';
@@ -26,102 +28,77 @@
 	}
 </script>
 
-<nav class="flex justify-between justify-items-center bg-gray-100 dark:bg-zinc-800 p-2">
-	<section class="flex gap-2 mr-3 justify-start w-1/5 md:w-1/4">
-		<a class="block sm:hidden p-3 rounded-md dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
-			>Elite</a
-		>
-		<a class="hidden sm:block p-3 rounded-md dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/"
-			>EliteDev</a
-		>
-		<a class="p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600" href="/info"
-			>Info</a
-		>
-		<a
-			class="block md:hidden p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href="/leaderboard">Top</a
-		>
-		<a
-			class="hidden md:block p-3 rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href="/leaderboard">Leaderboard</a
-		>
-	</section>
-	<!-- Section that's centered in the nav bar -->
-	<section class="hidden sm:flex gap-2 mx-6 justify-items-center justify-center w-3/5 md:1/2">
-		<form
-			class="m-0 p-0 w-[100%] flex justify-center justify-items-center align-middle"
-			on:submit|preventDefault={search}
-		>
-			<input
-				class="w-4/6 mx-2 bg-gray-200 dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-				type="text"
-				placeholder="Enter username"
-				bind:value={searchVal}
-				disabled={$navigating !== null}
-			/>
-			<a
-				data-sveltekit-reload
-				class="bg-gray-200 dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-				href="/stats/{searchVal}"
-			>
-				<svg class="h-4 w-4 mt-1" viewBox="0 0 24 24">
-					<path
-						fill="currentColor"
-						d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-					/>
-				</svg>
-			</a>
-		</form>
-	</section>
-	<section class="flex gap-2 ml-3 justify-end w-1/5 md:w-1/4">
-		<a
-			title="Ko-fi"
-			target="_blank"
-			rel="nofollow noreferrer"
-			href="https://ko-fi.com/kaeso"
-			class="social-button ko-fi"
-		>
-			<div class="social-icon" /></a
-		>
-		<a class="block sm:hidden dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600" href="/">
-			<svg class="h-4 w-4 mt-1" viewBox="0 0 24 24">
-				<path
-					fill="currentColor"
-					d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-				/>
-			</svg>
-		</a>
-		<!-- Login with discord styled button -->
-		<div hidden={discordUser !== false}>
-			<a
-				rel="nofollow noreferrer"
-				data-sveltekit-reload
-				class="bg-gray-200 dark:bg-zinc-700 hidden md:block p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-				href="/login">Discord Login</a
-			>
-			<a
-				rel="nofollow noreferrer"
-				data-sveltekit-reload
-				class="bg-gray-200 dark:bg-zinc-700 block md:hidden p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-				href="/login">Login</a
-			>
+<Navbar let:hidden let:toggle class="flex items-center align-middle">
+	<NavBrand href="/">
+		<img src="/favicon.png" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
+		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> EliteWebsite </span>
+	</NavBrand>
+	<div class="flex lg:order-1 w-1/3">
+
+		<div class="hidden relative md:block w-full">
+			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
+				<Input let:props placeholder="Player name" size="md">
+					<input type="text" {...props} bind:value={searchVal}>
+				</Input>
+				<Button class="!p-2.5 h-full">
+				  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+				</Button>
+			</form>
 		</div>
-		<a
-			class="bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href="/profile"
-			hidden={discordUser === false}
+	</div>
+
+	<div class="md:hidden lg:order-3">
+		<Button
+			color="none"
+			data-collapse-toggle="mobile-menu-3"
+			aria-controls="mobile-menu-3"
+			aria-expanded="false"
+			class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1"
 		>
-			Profile</a
-		>
-		<!-- Logout button -->
-		<a
-			data-sveltekit-reload
-			class="bg-gray-200 dark:bg-zinc-700 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-zinc-600"
-			href="/logout"
-			hidden={discordUser === false}>Logout</a
-		>
-	</section>
-</nav>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6 dark:text-white"
+				><path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+				/></svg
+			>
+		</Button>
+		<NavHamburger on:click={toggle} />
+	</div>
+
+	<NavUl {hidden} class="lg:order-3 mx-auto justify-center lg:mx-0 md:items-center">
+		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>
+		<NavLi href="/info" active={$page.url.pathname === '/info'}>Info</NavLi>
+		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
+		<DarkMode initialTheme="dark" />
+
+		{#if discordUser}
+			<div class="flex items-center lg:order-2">
+				<Avatar id="avatar-menu" src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png" />
+			</div>
+			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
+				<DropdownHeader>
+				<span class="block text-sm"> {discordUser.username} </span>
+				</DropdownHeader>
+				<DropdownItem href="/profile">Profile</DropdownItem>
+				<DropdownItem href="/stats">My Stats</DropdownItem>
+				<DropdownDivider />
+				<DropdownItem href="/logout">Sign out</DropdownItem>
+			</Dropdown>
+		
+		{:else}
+			<div class="flex lg:order-2 my-0">
+				<Button href="/login" size="sm">Login</Button>
+			</div>
+		{/if}
+	</NavUl>
+</Navbar>
 {#if $navigating}
 	<div class="relative">
 		<div
