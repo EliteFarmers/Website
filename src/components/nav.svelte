@@ -47,8 +47,8 @@
 		<img src="/favicon.png" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
 		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> EliteWebsite </span>
 	</NavBrand>
-	<div class="flex lg:order-1 w-1/3">
-		<div class="hidden relative md:block w-full">
+	<div class="hidden relative md:flex lg:order-1 w-1/3" id="mobile-menu-3">
+		<div class="relative md:block w-full">
 			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
 				<Input let:props placeholder="Player name" size="md">
 					<input type="text" {...props} bind:value={searchVal} />
@@ -78,7 +78,8 @@
 			data-collapse-toggle="mobile-menu-3"
 			aria-controls="mobile-menu-3"
 			aria-expanded="false"
-			class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1"
+			id="search-button"
+			class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm !p-2"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +97,30 @@
 		</Button>
 		<NavHamburger on:click={toggle} />
 	</div>
+	<Dropdown class="w-full" color="none" placement="bottom-end" triggeredBy="#search-button">
+		<DropdownItem defaultClass="w-full">
+			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
+				<Input let:props placeholder="Player name" size="md">
+					<input type="text" {...props} bind:value={searchVal} />
+				</Input>
+				<Button class="!p-2.5 h-full">
+					<svg
+						class="w-5 h-5"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+						><path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+						/></svg
+					>
+				</Button>
+			</form>
+		</DropdownItem>
+	</Dropdown>
 
 	<NavUl {hidden} class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center">
 		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>
