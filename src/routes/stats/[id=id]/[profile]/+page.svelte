@@ -45,7 +45,7 @@
 	});
 
 	const weightStr =
-		data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "hasn't loaded their";
+		data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "not loaded their";
 	const description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
