@@ -1,21 +1,21 @@
 <script lang="ts">
-	import Tooltip from '$comp/generic/tooltip.svelte';
 	import { SKYBLOCK_LEVEL_COLORS } from '$lib/constants/levels';
+	import { Button, Popover } from 'flowbite-svelte';
 
 	export let xp: number;
 
 	const [, color] = Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? [];
 </script>
 
-<div
-	class="relative max-w-fit p-2 px-3 m-1 text-lg bg-gray-200 dark:bg-zinc-700 rounded-md"
+<Button
+	class="relative max-w-fit !p-0 bg-gray-200 dark:bg-zinc-700 rounded-md"
 	aria-label="Skyblock Level"
+	id="skyblock-level"
 >
-	<span class="font-mono font-bold" style="color: {color};">{Math.floor(xp / 100)}</span>
-	<Tooltip>
-		<div class="flex flex-col gap-1">
-			<div class="text-center">Skyblock&nbsp;Level</div>
-			<div class="text-center">{xp} XP</div>
-		</div>
-	</Tooltip>
-</div>
+	<span class="text-lg px-3 py-0 font-mono font-bold" style="color: {color};">{Math.floor(xp / 100)}</span>
+</Button>
+<Popover triggeredBy="#skyblock-level" title="Skyblock Level" arrow={false} class="text-black dark:text-white">
+	<div class="flex flex-col gap-1">
+		<div class="text-center">{xp} XP</div>
+	</div>
+</Popover>

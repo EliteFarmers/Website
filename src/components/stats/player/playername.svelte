@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Dropdown from '$comp/generic/dropdown.svelte';
+	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import type { MemberData } from '$lib/skyblock';
 
 	export let ign: string;
@@ -11,25 +11,32 @@
 	const plusColor = rank?.plusColor;
 </script>
 
-<Dropdown hasItems={(members ?? []).length > 0}>
-	<h1 slot="top" class="text-body-xl">
-		{#if rank && plus}
-			<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span
-			>&nbsp;{ign}
-		{:else if rank}
-			<span style="color: {rank.color};">{rank?.tag}</span>&nbsp;{ign}
-		{:else}
-			{ign}
-		{/if}
-	</h1>
-	<div slot="rest" class="grid col-span-1">
+<Button class="bg-zinc-200 dark:bg-zinc-700" aria-label="Other players in profile">
+	{#if rank && plus}
+		<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span>&nbsp;{ign}
+	{:else if rank}
+		<span style="color: {rank.color};">{rank?.tag}</span>&nbsp;{ign}
+	{:else}
+		<h1>{ign}</h1>
+	{/if}
+</Button>
+{#if members && members.length > 0}
+	<Dropdown>
 		{#each members ?? [] as member}
-			<a
-				data-sveltekit-reload
-				href={`/stats/${member.ign ?? member.uuid}/${profileId}`}
-				class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
-				>{member.ign}</a
-			>
+			<DropdownItem>
+				<a
+					href={`/stats/${member.ign ?? member.uuid}/${profileId}`}
+					class="flex flex-row gap-2 align-middle items-start"
+					data-sveltekit-reload
+				>
+					<img
+						class="w-6 h-6"
+						src="https://mc-heads.net/avatar/{member.uuid}/16"
+						alt="{member.ign} player head"
+					/>
+					<span class="">{member.ign}</span>
+				</a>
+			</DropdownItem>
 		{/each}
-	</div>
-</Dropdown>
+	</Dropdown>
+{/if}

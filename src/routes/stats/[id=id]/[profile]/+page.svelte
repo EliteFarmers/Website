@@ -17,36 +17,44 @@
 
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
+	import { afterNavigate, invalidateAll } from '$app/navigation';
 	export let data: PageData;
 
-	const account = data.account;
-	const profileIds = data.profiles;
-	const player = data.player;
-	const collections = data.collections;
-	const { id: uuid, name: ign } = account;
+	$: account = data.account;
+	$: profileIds = data.profiles;
+	$: player = data.player;
+	$: collections = data.collections;
+	$: uuid = data.account.id;
+	$: ign = data.account.name;
 
-	const weightRank = data.rankings?.weight?.farming ?? -1;
+	$: weightRank = data.rankings?.weight?.farming ?? -1;
 
-	let profileName = data.profileName;
-	let profile = data.profile;
+	$: profileName = data.profileName;
+	$: profile = data.profile;
 
 	const farmingXp = getLevelProgress(
 		'farming',
-		profile.member.skills?.farming ?? 0,
-		(profile.member.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming
+		profile?.member.skills?.farming ?? 0,
+		(profile?.member.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming
 	);
 	let showSkills = $page.url.href.includes('#Skills');
 
-	onMount(async () => {
-		const url = `/stats/${ign}/${profileName}`;
-		if ($page.url.pathname !== url) {
-			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
+	let hasNavigated = false;
+	afterNavigate(async () => {
+		if (hasNavigated) {
+			await invalidateAll();
 		}
+		hasNavigated = true;
+
+		// const url = `/stats/${ign}/${profileName}`;
+		// if ($page.url.pathname !== url) {
+		// 	history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
+		// }
 	});
 
-	const weightStr =
-		data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "not loaded their";
-	const description = `${ign} has ${weightStr} Farming Weight${
+	$: weightStr =
+		data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'not loaded their';
+	$: description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
 </script>

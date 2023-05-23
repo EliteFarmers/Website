@@ -8,6 +8,7 @@
 	import PlayerName from '$comp/stats/player/playername.svelte';
 	import type { WeightInfo } from '$db/models/users';
 	import Skyblocklevel from './player/skyblocklevel.svelte';
+	import { Button, Card, Chevron, Dropdown, DropdownItem } from 'flowbite-svelte';
 
 	export let account: AccountData;
 	export let player: PlayerInfo;
@@ -31,6 +32,23 @@
 	const rank = getRankDefaults(rankName);
 </script>
 
+<Card class="bg-zinc-100 dark:bg-zinc-800 rounded-md">
+	<div class="flex flex-row gap-8">
+		<img
+			class="w-16 min-h-full object-cover"
+			src={`https://mc-heads.net/body/${account.id}`}
+			alt="User's Minecraft appearance"
+		/>
+		<div class="flex flex-col gap-2">
+			<PlayerName ign={account.name} {rank} {members} profileId={profileIds[0].id} />
+			<div class="flex justify-start">
+				<Skyblocklevel xp={skyblockXP} />
+				<Discord username={discordName} {linked} />
+			</div>
+		</div>
+	</div>
+</Card>
+
 <section class="flex justify-center w-full my-8">
 	<div
 		class="flex col-span-1 flex-col md:flex-row justify-center gap-2 md:gap-8 p-0 sm:p-4 rounded-lg w-[98%] md:w-[90%] md:bg-gray-100 md:dark:bg-zinc-800"
@@ -45,10 +63,7 @@
 			</div>
 			<div class="flex flex-col gap-1 justify-start">
 				<PlayerName ign={account.name} {rank} {members} profileId={profileIds[0].id} />
-				<div class="flex justify-start">
-					<Skyblocklevel xp={skyblockXP} />
-					<Discord username={discordName} {linked} />
-				</div>
+
 				<div class="flex justify-start">
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"

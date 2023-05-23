@@ -9,7 +9,8 @@ import type { PageServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
 export const load: PageServerLoad = async ({ params, fetch, setHeaders }) => {
-	const { id } = params;
+	console.log('Loading page', params.id);
+	const id = params.id;
 	const accountData = await accountFromId(id);
 
 	if (!accountData) {
