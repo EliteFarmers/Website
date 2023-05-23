@@ -70,7 +70,7 @@
 
 	.image {
 		@apply rounded-lg inline-block w-16 aspect-square;
-		background-image: url(/images/cropatlas.png);
+		background-image: url(/images/cropatlas.webp);
 		background-size: 200% 1000%;
 		z-index: 3;
 	}
