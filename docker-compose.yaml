@@ -12,7 +12,6 @@ services:
         depends_on:
             - database
             - cache
-            - pocketbase
         restart: always
         networks:
             - elite-network
@@ -44,23 +43,6 @@ services:
             - redis-data:/data
         networks:
             - elite-network
-    pocketbase:
-        build: ./src/database/pocketbase/
-        restart: always
-        env_file:
-            - .env
-        ports:
-            - '8080:8080'
-        expose:
-            - '8080'
-        depends_on:
-            - database
-            - cache
-        networks:
-            - elite-network
-        volumes:
-            - pocketbase-data:/pb
-            - ./src/database/pocketbase/pb_migrations:/pb/pb_migrations
 
 networks:
     elite-network:
@@ -69,4 +51,3 @@ networks:
 volumes:
     db-data: {}
     redis-data: {}
-    pocketbase-data: {}

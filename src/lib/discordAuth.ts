@@ -2,8 +2,6 @@ import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL, PUBLIC_HOST_
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
 import crypto from 'crypto';
 import type { DiscordUser } from '$db/models/users';
-import type PocketBase from 'pocketbase';
-import type { UserRecord } from '$db/pocketbase/pocketbase';
 
 export type DiscordUpdateResponse = {
 	accessToken: string;
@@ -109,15 +107,4 @@ export async function RefreshDiscordUser(refreshToken: string, redirect: string)
 		refreshTokenExpires: refreshTokenExpires.toUTCString(),
 		user: null,
 	};
-}
-
-export async function UpdateDiscordUser(pb: PocketBase, existing: UserRecord, user: DiscordUser): Promise<void> {
-	try {
-		await pb.collection('users').update(existing.id, {
-			username: user.username,
-			discriminator: user.discriminator,
-		});
-	} catch (error) {
-		console.error(error);
-	}
 }
