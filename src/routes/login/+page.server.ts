@@ -1,31 +1,30 @@
-import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
-import { authState } from '$stores/auth';
-import { error, redirect } from '@sveltejs/kit';
-import type { AuthProviderInfo } from 'pocketbase';
+import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
 import type { PageServerLoad } from './$types';
-import PocketBase from 'pocketbase';
-import { POCKETBASE_URL } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
+import crypto from 'crypto';
 
-export const load: PageServerLoad = async ({ parent, locals, url }) => {
-	await parent();
-
-	if (!locals.pb) {
-		locals.pb = new PocketBase(POCKETBASE_URL);
+export const load: PageServerLoad = ({ cookies, url }) => {
+	const success = url.searchParams.get('success');
+	if (success) {
+		return {
+			success: true,
+		};
 	}
 
-	const authMethods = await locals.pb.collection('users').listAuthMethods();
-	const discordProvider = authMethods.authProviders.find((method) => method.name === 'discord') as
-		| (AuthProviderInfo & { redirectUrl: string })
-		| undefined;
+	const uuid = crypto.randomUUID();
 
-	if (!discordProvider) throw error(500, 'Discord auth provider not found!');
+	const endpoint =
+		'https://discord.com/api/oauth2/authorize' +
+		`?client_id=${PUBLIC_DISCORD_CLIENT_ID}` +
+		'&redirect_uri=' +
+		encodeURIComponent(`${url.origin}${PUBLIC_DISCORD_REDIRECT_ROUTE}`) +
+		'&response_type=code&scope=identify%20guilds' +
+		`&state=${uuid}`;
 
-	// We don't need the email scope, so we'll replace it with guilds which we do need
-	const authUrl = discordProvider.authUrl.replace('identify+email', 'identify+email+guilds');
-	const redirectUrl = encodeURIComponent(url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE);
+	cookies.set('auth_state', uuid, {
+		path: '/',
+		maxAge: 60 * 60 * 24 * 7,
+	});
 
-	discordProvider.redirectUrl = redirectUrl;
-	authState.set(JSON.stringify(discordProvider));
-
-	throw redirect(302, authUrl + redirectUrl);
+	throw redirect(303, endpoint);
 };

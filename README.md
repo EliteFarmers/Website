@@ -49,8 +49,6 @@ https://elitebot.dev/
 
 7. Run the website in dev mode with the following:
 
-    **Note:** Run `npm run prepare` before running the dev command for the first time, or if you make changes to the SMUI themes/components.
-
     ```
     npm run dev
     ```

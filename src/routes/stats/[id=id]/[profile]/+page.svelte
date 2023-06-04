@@ -53,7 +53,7 @@
 </script>
 
 <Head title={ign + ' | Farming Weight'} {description}>
-	<link rel="preload" href="/images/cropatlas.png" as="image" />
+	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>
 
 <main class="m-0 p-0 w-full">

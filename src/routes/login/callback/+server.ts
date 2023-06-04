@@ -1,7 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
-import { authStateVal } from '$stores/auth';
-import { POCKETBASE_URL } from '$env/static/private';
-import type { AuthProviderInfo } from 'pocketbase';
+
 import type { RequestHandler } from './$types';
 import PocketBase from 'pocketbase';
 
@@ -17,11 +15,14 @@ export const GET: RequestHandler = async ({ url, locals, cookies }) => {
 	const state = url.searchParams.get('state');
 	const errorMsg = url.searchParams.get('error');
 
+	const storedState = cookies.get('auth_state');
+	cookies.delete('auth_state');
+
 	if (errorMsg) {
 		throw error(400, errorMsg);
 	}
 
-	if (!code || !state || state !== provider.state) {
+	if (!code || !state || state !== storedState) {
 		throw error(400, 'Missing code or state');
 	}
 

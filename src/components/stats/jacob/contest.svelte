@@ -30,11 +30,11 @@
 	</h3>
 	<h3 class="text-lg font-semibold">
 		{#if medal === 'Gold'}
-			<img class="inline-block w-5 h-5" src="/images/medals/gold.png" alt="Earned Medal" />
+			<img class="inline-block w-5 h-5" src="/images/medals/gold.webp" alt="Earned Medal" />
 		{:else if medal === 'Silver'}
-			<img class="inline-block w-5 h-5" src="/images/medals/silver.png" alt="Earned Medal" />
+			<img class="inline-block w-5 h-5" src="/images/medals/silver.webp" alt="Earned Medal" />
 		{:else if medal === 'Bronze'}
-			<img class="inline-block w-5 h-5" src="/images/medals/bronze.png" alt="Earned Medal" />
+			<img class="inline-block w-5 h-5" src="/images/medals/bronze.webp" alt="Earned Medal" />
 		{/if}
 		{collected.toLocaleString()}
 	</h3>
