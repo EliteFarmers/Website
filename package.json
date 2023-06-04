@@ -54,7 +54,6 @@
 	"dependencies": {
 		"@sveltejs/adapter-node": "next",
 		"pg": "^8.7.3",
-		"pocketbase": "^0.12.1",
 		"prismarine-nbt": "^2.2.1",
 		"sequelize": "^6.21.3"
 	},

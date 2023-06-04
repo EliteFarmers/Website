@@ -11,7 +11,9 @@ import type {
 export interface DiscordUser {
 	id: string;
 	username: string;
-	discriminator: string;
+	discriminator?: string;
+	global_name: string;
+	display_name: string;
 	avatar: string;
 	avatar_decoration?: string | null;
 	email: string;
