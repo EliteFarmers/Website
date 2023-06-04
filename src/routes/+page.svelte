@@ -12,7 +12,6 @@
 	import { Card, Button, Input } from 'flowbite-svelte';
 
 	import type { PageData } from './$types';
-	import Helpplease from '$comp/+helpplease.svelte';
 	export let data: PageData;
 
 	let donationClicked = false;

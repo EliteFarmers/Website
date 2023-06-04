@@ -132,7 +132,7 @@
 		<DarkMode initialTheme="dark" />
 
 		{#if discordUser}
-			<div class="flex items-center lg:order-2">
+			<div class="flex items-center lg:order-2 cursor-pointer">
 				<Avatar
 					id="avatar-menu"
 					src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
