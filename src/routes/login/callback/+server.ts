@@ -1,16 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
-
 import type { RequestHandler } from './$types';
-import PocketBase from 'pocketbase';
 
 export const GET: RequestHandler = async ({ url, locals, cookies }) => {
-	let provider;
-	try {
-		provider = JSON.parse(authStateVal) as AuthProviderInfo & { redirectUrl: string };
-	} catch (err) {
-		throw error(400, 'Invalid state');
-	}
-
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
 	const errorMsg = url.searchParams.get('error');
@@ -24,35 +15,6 @@ export const GET: RequestHandler = async ({ url, locals, cookies }) => {
 
 	if (!code || !state || state !== storedState) {
 		throw error(400, 'Missing code or state');
-	}
-
-	if (!locals.pb) {
-		locals.pb = new PocketBase(POCKETBASE_URL);
-	}
-
-	const authData = await locals.pb
-		.collection('users')
-		.authWithOAuth2(provider.name, code, provider.codeVerifier, decodeURIComponent(provider.redirectUrl), {
-			emailVisibility: false,
-		});
-
-	if (!authData.token) {
-		throw error(400, 'Invalid code');
-	}
-
-	await locals.pb.collection('users').update(authData.record.id, {
-		avatar: (authData.meta?.avatarUrl ?? '') as string,
-		discordId: (authData.meta?.id ?? '') as string,
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-		discriminator: (authData.meta?.rawUser?.discriminator ?? '') as string,
-	});
-
-	cookies.set('pocketbase_auth', authData.token, {
-		path: '/',
-	});
-
-	if (!authData.meta?.accessToken || !authData.meta.refreshToken) {
-		throw redirect(303, '/');
 	}
 
 	const tenMinutes = 10 * 60;
