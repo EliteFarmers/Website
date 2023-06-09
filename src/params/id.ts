@@ -6,3 +6,5 @@ import type { ParamMatcher } from '@sveltejs/kit';
 export const match = ((param) => {
 	return ign(param) || uuid(param);
 }) satisfies ParamMatcher;
+
+export const IsIGNOrUUID = match;

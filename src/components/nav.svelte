@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { DiscordUser } from '$db/models/users';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -23,7 +22,7 @@
 		Input,
 	} from 'flowbite-svelte';
 
-	export let discordUser: DiscordUser | false;
+	$: discordUser = $page.data.discordUser;
 
 	let searchVal = '';
 
@@ -131,7 +130,7 @@
 		<DarkMode initialTheme="dark" />
 
 		{#if discordUser}
-			<div class="flex items-center lg:order-2">
+			<div class="flex items-center lg:order-2 cursor-pointer">
 				<Avatar
 					id="avatar-menu"
 					src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"

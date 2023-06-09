@@ -5,7 +5,13 @@ import crypto from 'crypto';
 
 export const load: PageServerLoad = ({ cookies, url }) => {
 	const success = url.searchParams.get('success');
+	const redirectTo = url.searchParams.get('redirect');
+
 	if (success) {
+		if (redirectTo) {
+			throw redirect(303, redirectTo);
+		}
+
 		return {
 			success: true,
 		};
@@ -22,6 +28,11 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		`&state=${uuid}`;
 
 	cookies.set('auth_state', uuid, {
+		path: '/',
+		maxAge: 60 * 60 * 24 * 7,
+	});
+
+	cookies.set('auth_redirect', redirectTo ?? '/', {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 7,
 	});

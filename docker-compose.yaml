@@ -2,7 +2,7 @@ version: '3.8'
 services:
     website:
         env_file:
-            - .env.production
+            - .env
         environment:
             - NODE_ENV=production
             - POSTGRES_URI=postgres://user:postgres123@database:5432/elite

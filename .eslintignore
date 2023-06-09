@@ -1,4 +1,4 @@
-.eslintrc.cjs
+*.cjs
 svelte.config.js
 vite.config.js
 build/*

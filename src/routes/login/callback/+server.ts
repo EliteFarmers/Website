@@ -1,8 +1,8 @@
-import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
-import { DISCORD_CLIENT_SECRET as CLIENT_SECRET } from '$env/static/private';
 import { error, redirect } from '@sveltejs/kit';
-
+import { DISCORD_CLIENT_SECRET } from '$env/static/private';
+import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
 import type { RequestHandler } from './$types';
+
 export const GET: RequestHandler = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
@@ -20,8 +20,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	}
 
 	const data = {
-		client_id: CLIENT_ID,
-		client_secret: CLIENT_SECRET,
+		client_id: PUBLIC_DISCORD_CLIENT_ID,
+		client_secret: DISCORD_CLIENT_SECRET,
 		grant_type: 'authorization_code',
 		code: code,
 		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
@@ -57,11 +57,19 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		maxAge: response.expires_in,
 		path: '/',
 	});
+
 	cookies.set('discord_refresh_token', response.refresh_token, {
 		expires: refreshTokenExpires,
 		maxAge: thirtyDays,
 		path: '/',
 	});
 
-	throw redirect(303, '/login?success=true');
+	const redirectUrl = cookies.get('auth_redirect');
+	cookies.delete('auth_redirect');
+
+	if (!redirectUrl || redirectUrl === '/') {
+		throw redirect(303, '/login?success=true');
+	}
+
+	throw redirect(303, `/login?redirect=${redirectUrl}`);
 };

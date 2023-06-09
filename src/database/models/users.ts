@@ -11,7 +11,9 @@ import type {
 export interface DiscordUser {
 	id: string;
 	username: string;
-	discriminator: string;
+	discriminator?: string;
+	global_name: string;
+	display_name: string;
 	avatar: string;
 	avatar_decoration?: string | null;
 	email: string;
@@ -74,6 +76,9 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 	declare player: CreationOptional<PlayerInfo | null>;
 	declare info: CreationOptional<UserInfo | null>;
 
+	declare leaderboardCredits: CreationOptional<number | null>;
+	declare eventCredits: CreationOptional<number | null>;
+
 	// Discord
 	declare id: CreationOptional<string | null>;
 	declare user: CreationOptional<DiscordUser | null>;
@@ -97,6 +102,15 @@ export function UsersInit(sequelize: Sequelize) {
 			info: DataTypes.JSONB,
 			// JSON because it won't be queried by subfields
 			player: DataTypes.JSON,
+
+			leaderboardCredits: {
+				type: DataTypes.INTEGER,
+				defaultValue: 0,
+			},
+			eventCredits: {
+				type: DataTypes.INTEGER,
+				defaultValue: 0,
+			},
 
 			createdAt: DataTypes.DATE,
 			updatedAt: DataTypes.DATE,

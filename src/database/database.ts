@@ -1,8 +1,8 @@
-import { POSTGRES_URI } from '$env/static/private';
 import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
+import { ServersInit } from './models/servers';
 import {
 	UsersInit,
 	type DiscordUser,
@@ -11,6 +11,8 @@ import {
 	type UserWhereOptions,
 } from './models/users';
 import { client } from './redis';
+import dbConfig from './database.json';
+import { EventsInit } from './models/event';
 
 export interface DataUpdate {
 	account: AccountInfo;
@@ -18,12 +20,19 @@ export interface DataUpdate {
 	profiles: Profiles;
 }
 
-export const sequelize = new Sequelize(POSTGRES_URI, {
+const mode = (process.env.NODE_ENV ?? 'development') as 'development' | 'production' | 'test';
+const settings = dbConfig[mode] as typeof dbConfig.development;
+
+export const sequelize = new Sequelize(settings.database, settings.username, settings.password, {
+	port: settings.port,
+	host: settings.host,
 	dialect: 'postgres',
 	logging: false,
 });
 
 export const User = UsersInit(sequelize);
+export const Server = ServersInit(sequelize);
+export const Event = EventsInit(sequelize);
 
 let limiter: RateLimiter;
 
@@ -38,6 +47,8 @@ export async function SyncTables() {
 		if (!client.isOpen) await client.connect();
 
 		await User.sync({ force: false });
+		await Server.sync({ force: false });
+		await Event.sync({ force: false });
 
 		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
 		void RefreshDataTask();
@@ -105,7 +116,7 @@ async function findOne(options: UserWhereOptions) {
 export async function FindUserToLink(discordUser: DiscordUser) {
 	const user = await findOne({
 		'player.player.social.links.DISCORD': {
-			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator}`,
+			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator ?? '0'}`,
 		},
 	});
 

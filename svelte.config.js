@@ -19,6 +19,10 @@ const config = {
 		csp: {
 			mode: 'hash',
 		},
+		csrf: {
+			// Only disable if in development mode
+			checkOrigin: process.env.NODE_ENV !== 'development',
+		},
 	},
 };
 

@@ -2,18 +2,21 @@
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-declare namespace App {
-	interface Locals {
-		discord_access_token?: string;
-		discord_refresh_token?: string;
-		discordUser?: import('$db/models/users').DiscordUser | false;
-		user?: import('$db/models/users').User | false;
-		cookies?: string[];
+
+import type { DiscordUser } from '$db/models/users';
+
+declare global {
+	namespace App {
+		interface Locals {
+			discord_access_token?: string;
+			discord_refresh_token?: string;
+			discordUser?: DiscordUser;
+		}
+		// interface Platform {}
+		interface Session {
+			discordUser: DiscordUser;
+			premium?: import('$lib/discord').PremiumStatus;
+		}
+		// interface Stuff {}
 	}
-	// interface Platform {}
-	interface Session {
-		discordUser: import('$db/models/users').DiscordUser | false;
-		user: import('$db/models/users').User | false;
-	}
-	// interface Stuff {}
 }
