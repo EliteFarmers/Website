@@ -12,9 +12,8 @@
 	$: user = data.discordUser || undefined;
 	$: mc = data.mcAccount;
 
-	$: discordUsername = (user?.discriminator && user.discriminator !== '0')
-		? `${user?.username}#${user.discriminator}`
-		: user?.username;
+	$: discordUsername =
+		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -97,14 +96,12 @@
 
 			<div class="text-center flex flex-col">
 				<h1 class="text-lg py-2">
-					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is
-					linked in Hypixel.net as follows:
+					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
 				</h1>
 				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
 				<h1 class="text-md py-2">
-					(Enter <span class="text-green-500 select-all"
-						>{discordUsername}</span
-					>, the video is just the example)
+					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
+					example)
 				</h1>
 			</div>
 		{:else}
