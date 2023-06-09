@@ -54,9 +54,13 @@ export const actions: Actions = {
 			return fail(400, { error: 'User has no linked account on Hypixel.' });
 		}
 
-		const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator ?? '0'}`;
+		const user = locals.discordUser;
 
-		if (discordUser !== linkedName) {
+		// Support migrated accounts
+		const discordName =
+			user.discriminator && user.discriminator !== '0' ? `${user.username}#${user.discriminator}` : user.username;
+
+		if (discordName !== linkedName) {
 			return fail(400, { error: 'User has a different linked account on Hypixel.' });
 		}
 
