@@ -11,7 +11,7 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		if (redirectTo) {
 			throw redirect(303, redirectTo);
 		}
-    
+
 		return {
 			success: true,
 		};
@@ -36,6 +36,6 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 7,
 	});
-    
+
 	throw redirect(303, endpoint);
 };
