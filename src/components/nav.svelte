@@ -6,8 +6,6 @@
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 
-	import type { DiscordUser } from '$db/models/users';
-
 	import {
 		Avatar,
 		DarkMode,
