@@ -2,14 +2,15 @@
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
 	import { PUBLIC_DONATION_URL } from '$env/static/public';
-	import Button from '@smui/button';
+	import { Button } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import Guild from './guild.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
 
-	$: user = data.authModel;
+	$: user = data.discordUser || undefined;
+	$: mc = data.mcAccount;
 
 	console.log(data.premium);
 </script>
@@ -22,8 +23,14 @@
 			<div class="bg-gray-100 dark:bg-zinc-800 shadow-md rounded m-8 px-8 pt-6 pb-8 mb-4">
 				<div class="flex justify-between items-center">
 					<div class="flex items-center bg-gray-200 dark:bg-zinc-700 p-2 rounded-md">
-						<img class="w-10 h-10 rounded-full mr-4" src={user?.avatar} alt="{user?.username}'s avatar" />
-						<div class="text-2xl font-bold leading-none">{user?.ign ?? user?.username}</div>
+						{#if user}
+							<img
+								class="w-10 h-10 rounded-full mr-4"
+								src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png"
+								alt="{user?.username}'s avatar"
+							/>
+						{/if}
+						<div class="text-2xl font-bold leading-none">{mc?.name ?? user?.username ?? 'N/A'}</div>
 					</div>
 					<div class="flex items-center">
 						<div class="text-xl font-bold leading-none">{user?.username}</div>
@@ -34,11 +41,11 @@
 					<br />
 					<div class="text-md">
 						UUID: <span class="text-sm text-gray-500 dark:text-zinc-300"
-							>{user?.uuid ?? 'Minecraft Account Unlinked'}</span
+							>{mc?.id ?? 'Minecraft Account Unlinked'}</span
 						>
 					</div>
 					<div class="text-md">
-						Discord ID: <span class="text-sm text-gray-500 dark:text-zinc-300">{user?.discordId}</span>
+						Discord ID: <span class="text-sm text-gray-500 dark:text-zinc-300">{user?.id}</span>
 					</div>
 				</div>
 			</div>
@@ -63,7 +70,7 @@
 			{/if}
 		</div>
 		<!-- Form to input username to link account -->
-		{#if !user?.ign}
+		{#if !mc?.name}
 			<form method="POST" action="?/link" class="w-full max-w-md mb-16" use:enhance>
 				<div class="flex flex-col gap-4 items-center w-full">
 					<div class="grid col-span-1 relative w-full">
@@ -86,13 +93,14 @@
 
 			<div class="text-center flex flex-col">
 				<h1 class="text-lg py-2">
-					Ensure <span class="text-green-500 select-all">{user?.username}#{user?.discriminator}</span> is linked
-					in Hypixel.net as follows:
+					Ensure <span class="text-green-500 select-all">{user?.username}#{user?.discriminator ?? '0'}</span> is
+					linked in Hypixel.net as follows:
 				</h1>
 				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
 				<h1 class="text-md py-2">
-					(Enter <span class="text-green-500 select-all">{user?.username}#{user?.discriminator}</span>, the
-					video is just the example)
+					(Enter <span class="text-green-500 select-all"
+						>{user?.discriminator ? `${user?.username}#${user.discriminator}` : `${user?.username}`}</span
+					>, the video is just the example)
 				</h1>
 			</div>
 		{:else}

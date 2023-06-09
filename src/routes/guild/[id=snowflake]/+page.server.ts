@@ -3,23 +3,20 @@ import { CanEditFetchedGuild, FetchGuilds, GuildContainsBot } from '$lib/discord
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ parent, locals }) => {
+export const load: PageServerLoad = async ({ parent, locals, params }) => {
+	throw error(404, 'This page is a WIP, check back soon!');
+
 	const { discordUser } = await parent();
-
-	if (!discordUser) {
-		throw redirect(302, '/login');
-	}
-
 	const token = locals.discord_access_token;
 
-	if (!token) {
-		throw redirect(302, '/login');
+	if (!discordUser || !token) {
+		throw redirect(302, `/login?redirect=/guild/${params.id}`);
 	}
 
-	const guilds = await FetchGuilds(token);
+	const guilds = await FetchGuilds(token ?? '');
 
 	if (!guilds) {
-		throw redirect(302, '/login');
+		throw error(500, 'Failed to fetch guilds.');
 	}
 
 	return {
@@ -28,7 +25,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 };
 
 export const actions: Actions = {
-	create: async ({ locals, request, params }) => {
+	create: async ({ locals, params }) => {
 		const guildId = params.id;
 
 		if (!locals.discordUser || !guildId || !locals.discord_access_token) {
@@ -53,8 +50,8 @@ export const actions: Actions = {
 			return fail(500, { error: 'An error occurred while creating the guild.' });
 		}
 
-		const data = await request.formData();
-		const name = data.get('name')?.toString();
+		//const data = await request.formData();
+		//const name = data.get('name')?.toString();
 
 		return {
 			success: true,

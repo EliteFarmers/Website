@@ -3,10 +3,17 @@
 	import Plan from './plan.svelte';
 
 	import type { PageData } from './$types';
-	import Card from '@smui/card';
-	export let data: PageData;
+	import { Card } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
+	import { error } from '@sveltejs/kit';
+	import type { PremiumStatus } from '$lib/discord';
+	//export let data: PageData;
 
-	const premium = data.authModel?.premium ?? 'none';
+	onMount(() => {
+		throw error(404, 'This page is currently under construction!');
+	});
+
+	const premium = 'none' as PremiumStatus; //data.premium;
 </script>
 
 <Head

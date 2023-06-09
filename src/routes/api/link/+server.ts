@@ -9,26 +9,20 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		return json({ success: false, error: 'You must be logged in to link your account.' }, { status: 401 });
 	}
 
-	if (locals.discordUser.id && locals.user) {
-		const username = decodeURIComponent(body.replace('username=', ''));
+	const username = decodeURIComponent(body.replace('username=', ''));
 
-		if (username === '$Unlink') {
-			const uuid = locals.user.uuid;
+	if (locals.discordUser.id && username === '$Unlink') {
+		const user = await GetUserByIGN(locals.discordUser.id);
 
-			if (!uuid) {
-				return json({ success: false, error: 'Invalid UUID.' }, { status: 404 });
-			}
-			await UnlinkDiscordUser(uuid);
-			return json({ success: true });
+		if (!user?.uuid) {
+			return json({ success: false, error: 'Invalid UUID.' }, { status: 404 });
 		}
-		return json(locals.user);
+
+		await UnlinkDiscordUser(user.uuid);
 	}
 
-	const input = body.replace('username=', '');
-	const username = decodeURIComponent(input) || undefined;
-
 	// Check if the username is a valid minecraft username.
-	if (!username?.match(/^[a-zA-Z0-9_]{1,16}$/)) {
+	if (!username.match(/^[a-zA-Z0-9_]{1,16}$/)) {
 		return json({ success: false, error: 'Invalid username.' }, { status: 404 });
 	}
 
@@ -44,7 +38,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		return json({ success: false, error: "User doesn't have a linked account on Hypixel." }, { status: 404 });
 	}
 
-	const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator}`;
+	const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator ?? '0'}`;
 
 	if (discordUser !== linkedName) {
 		return json({ success: false, error: 'User has a different account linked.' }, { status: 401 });

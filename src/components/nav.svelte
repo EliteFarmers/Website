@@ -24,7 +24,7 @@
 		Input,
 	} from 'flowbite-svelte';
 
-	export let discordUser: DiscordUser | false;
+	$: discordUser = $page.data.discordUser; 
 
 	let searchVal = '';
 

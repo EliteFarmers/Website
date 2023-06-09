@@ -11,7 +11,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	locals.discord_refresh_token = refresh;
 
 	if (!locals.discord_access_token && !locals.discord_refresh_token) {
-		locals.discordUser = false;
+		locals.discordUser = undefined;
 
 		return await resolve(event);
 	}
@@ -22,7 +22,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	});
 
 	if (!discord) {
-		locals.discordUser = false;
+		locals.discordUser = undefined;
 
 		cookies.delete('discord_access_token');
 		cookies.delete('discord_refresh_token');
@@ -32,7 +32,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return await resolve(event);
 	}
 
-	locals.discordUser = discord.user ?? false;
+	locals.discordUser = discord.user ?? undefined;
 
 	updateCookies(event, discord);
 

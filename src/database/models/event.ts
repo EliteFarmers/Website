@@ -57,6 +57,7 @@ export class Event extends Model<InferAttributes<Event>, InferCreationAttributes
 	declare requiredRoles: CreationOptional<string[] | null>;
 	declare bannedRoles: CreationOptional<string[] | null>;
 	declare bannedMembers: CreationOptional<string[] | null>;
+	declare bannedEntries: CreationOptional<string[] | null>;
 
 	declare startTime: CreationOptional<number | null>;
 	declare endTime: CreationOptional<number | null>;
@@ -98,6 +99,7 @@ export function EventsInit(sequelize: Sequelize) {
 			requiredRoles: DataTypes.ARRAY(DataTypes.STRING),
 			bannedRoles: DataTypes.ARRAY(DataTypes.STRING),
 			bannedMembers: DataTypes.ARRAY(DataTypes.STRING),
+			bannedEntries: DataTypes.ARRAY(DataTypes.STRING),
 
 			startTime: DataTypes.NUMBER,
 			endTime: DataTypes.NUMBER,

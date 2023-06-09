@@ -1,39 +1,37 @@
-import { GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
+import { GetAccountFromDiscord, GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
 import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
 import { IsIGN } from '$params/ign';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
-export const load: PageServerLoad = async ({ parent, locals }) => {
-	const { authModel } = await parent();
-
-	if (!authModel?.id) {
-		throw redirect(302, '/login');
-	}
-
+export const load: PageServerLoad = async ({ locals }) => {
+	const discordUser = locals.discordUser;
 	const token = locals.discord_access_token;
 
-	if (!token) {
-		throw redirect(302, '/login');
+	if (!discordUser?.id || !token) {
+		throw redirect(302, '/login?redirect=/profile');
 	}
 
 	const guilds = await FetchGuilds(token);
-	const status = await FetchPremiumStatus(authModel.discordId);
+	const status = await FetchPremiumStatus(discordUser.id);
 
 	if (!guilds) {
-		throw redirect(302, '/login');
+		throw error(500, 'Failed to fetch guilds.');
 	}
+
+	const account = await GetAccountFromDiscord(discordUser.id);
 
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot),
 		guilds: guilds.filter((guild) => !guild.hasBot),
 		premium: status as string,
+		mcAccount: account?.account ?? null,
 	};
 };
 
 export const actions: Actions = {
 	link: async ({ locals, request }) => {
-		if (!locals.userRecord?.id || !locals.discordUser) {
+		if (!locals.discordUser?.id) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -56,7 +54,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'User has no linked account on Hypixel.' });
 		}
 
-		const discordUser = `${locals.userRecord.username}#${locals.userRecord.discriminator}`;
+		const discordUser = `${locals.discordUser.username}#${locals.discordUser.discriminator ?? '0'}`;
 
 		if (discordUser !== linkedName) {
 			return fail(400, { error: 'User has a different linked account on Hypixel.' });
@@ -65,11 +63,6 @@ export const actions: Actions = {
 		// Success!
 		await LinkDiscordUser(foundUser.uuid, locals.discordUser);
 
-		await locals.pb?.collection('users').update(locals.userRecord.id, {
-			uuid: foundUser.uuid,
-			ign: foundUser.ign,
-		});
-
 		return { success: true };
 	},
 	unlink: async ({ locals }) => {
@@ -77,22 +70,15 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		if (!locals.userRecord?.uuid) {
+		const account = await GetAccountFromDiscord(locals.discordUser.id);
+
+		if (!account?.account.id) {
 			return fail(400, { error: 'User not linked.' });
 		}
 
-		const uuid = locals.userRecord.uuid;
-
-		if (!uuid) {
-			return fail(400, { error: 'Invalid UUID.' });
-		}
+		const uuid = account.account.id;
 
 		await UnlinkDiscordUser(uuid);
-
-		await locals.pb?.collection('users').update(locals.userRecord.id, {
-			uuid: '',
-			ign: '',
-		});
 
 		return { success: true };
 	},

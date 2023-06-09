@@ -64,5 +64,14 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	throw redirect(303, '/login?success=true');
+	const redirectUrl = cookies.get('auth_redirect');
+	cookies.delete('auth_redirect');
+
+	console.log('redirectUrl', redirectUrl);
+
+	if (!redirectUrl || redirectUrl === '/') {
+		throw redirect(303, '/login?success=true');
+	}
+
+	throw redirect(303, `/login?redirect=${redirectUrl}`);
 };

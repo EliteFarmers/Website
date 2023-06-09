@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Guild } from '$lib/discord';
-	import Card from '@smui/card';
-	import Button from '@smui/button';
+	import { Button, Card } from 'flowbite-svelte';
 
 	export let guild: Guild;
 </script>
@@ -37,7 +36,7 @@
 					<p>Manage</p>
 				</Button>
 			{:else}
-				<Button href={`/invite?guild_id=${guild.id}`} variant="outlined" color="secondary" class="m-1">
+				<Button href={`/invite?guild_id=${guild.id}`} variant="outlined" class="m-1">
 					<p>Invite</p>
 				</Button>
 			{/if}

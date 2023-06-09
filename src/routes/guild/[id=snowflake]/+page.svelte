@@ -2,8 +2,8 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
-	export let form: FormData;
+	//export let data: PageData;
+	//export let form: FormData;
 </script>
 
 <form method="POST" action="?/create" class="flex w-full mb-16 justify-center items-center" use:enhance>
@@ -100,7 +100,7 @@
 				placeholder="Event Reward"
 			/>
 
-			<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>
+			<!--<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>-->
 		</div>
 		<button
 			type="submit"

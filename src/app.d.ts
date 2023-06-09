@@ -2,21 +2,19 @@
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import type PocketBase from 'pocketbase';
+
+import type { DiscordUser } from '$db/models/users';
 
 declare global {
 	namespace App {
 		interface Locals {
 			discord_access_token?: string;
 			discord_refresh_token?: string;
-			pocketbase_token?: string;
-			discordUser?: import('$db/models/users').DiscordUser | false;
-			pb: PocketBase | null;
-			userRecord: import('$db/pocketbase/pocketbase').UserRecord | null;
+			discordUser?: DiscordUser;
 		}
 		// interface Platform {}
 		interface Session {
-			discordUser: import('$db/models/users').DiscordUser | false;
+			discordUser: DiscordUser;
 			premium?: import('$lib/discord').PremiumStatus;
 		}
 		// interface Stuff {}

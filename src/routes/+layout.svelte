@@ -13,7 +13,7 @@
 </svelte:head>
 
 <div class="bg-white dark:bg-zinc-900 relative min-h-screen pb-16 text-black dark:text-white">
-	<Nav discordUser={$page.data.discordUser} />
+	<Nav />
 
 	{#if $navigating}
 		<!-- Gray out the screen -->

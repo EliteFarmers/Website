@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Card from '@smui/card';
-	import Button from '@smui/button';
+	import { Card, Button } from 'flowbite-svelte';
 
 	export let name: string;
 	export let price: number;
@@ -15,9 +14,9 @@
 			<slot />
 		</ul>
 		{#if price === 0}
-			<Button variant="raised" color="secondary" disabled>Unlocked</Button>
+			<Button variant="raised" disabled>Unlocked</Button>
 		{:else}
-			<Button variant="raised" color="secondary" target="_blank" {href}>{price} USD / Month</Button>
+			<Button variant="raised" target="_blank" {href}>{price} USD / Month</Button>
 		{/if}
 	</div>
 </Card>
