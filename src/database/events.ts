@@ -1,4 +1,4 @@
-import { Event, Server } from './database';
+/*import { Event, Server } from './database';
 import type { EventData } from './models/event';
 import type { ServerData } from './models/servers';
 import { client } from './redis';
@@ -88,3 +88,4 @@ export async function GetOrCreateGuild(id: string) {
 		return null;
 	}
 }
+*/
