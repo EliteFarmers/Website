@@ -1,5 +1,5 @@
 import { GetAccountFromDiscord, GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
-import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
+// import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
 import { IsIGN } from '$params/ign';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
@@ -12,19 +12,19 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(302, '/login?redirect=/profile');
 	}
 
-	const guilds = await FetchGuilds(token);
-	const status = await FetchPremiumStatus(discordUser.id);
+	//const guilds = await FetchGuilds(token);
+	//const status = await FetchPremiumStatus(discordUser.id);
 
-	if (!guilds) {
-		throw error(500, 'Failed to fetch guilds.');
-	}
+	// if (!guilds) {
+	// 	throw error(500, 'Failed to fetch guilds.');
+	// }
 
 	const account = await GetAccountFromDiscord(discordUser.id);
 
 	return {
-		guildsWithBot: guilds.filter((guild) => guild.hasBot),
-		guilds: guilds.filter((guild) => !guild.hasBot),
-		premium: status as string,
+		guildsWithBot: [], // guilds.filter((guild) => guild.hasBot),
+		guilds: [], // guilds.filter((guild) => !guild.hasBot),
+		premium: 'none' as string,
 		mcAccount: account?.account ?? null,
 	};
 };

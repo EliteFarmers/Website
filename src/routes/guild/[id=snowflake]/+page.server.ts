@@ -1,4 +1,4 @@
-import { GetOrCreateGuild } from '$db/events';
+// import { GetOrCreateGuild } from '$db/events';
 import { CanEditFetchedGuild, FetchGuilds, GuildContainsBot } from '$lib/discord';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -43,15 +43,16 @@ export const actions: Actions = {
 		if (!containsBot) {
 			return fail(400, { error: 'This guild does not contain the bot.' });
 		}
-
+		/*
 		const guild = await GetOrCreateGuild(guildId);
 
 		if (!guild) {
 			return fail(500, { error: 'An error occurred while creating the guild.' });
 		}
 
-		//const data = await request.formData();
-		//const name = data.get('name')?.toString();
+		const data = await request.formData();
+		const name = data.get('name')?.toString();
+		*/
 
 		return {
 			success: true,

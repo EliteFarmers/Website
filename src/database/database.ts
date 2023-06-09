@@ -2,7 +2,6 @@ import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
-import { ServersInit } from './models/servers';
 import {
 	UsersInit,
 	type DiscordUser,
@@ -12,7 +11,7 @@ import {
 } from './models/users';
 import { client } from './redis';
 import dbConfig from './database.json';
-import { EventsInit } from './models/event';
+import { building } from '$app/environment';
 
 export interface DataUpdate {
 	account: AccountInfo;
@@ -31,24 +30,26 @@ export const sequelize = new Sequelize(settings.database, settings.username, set
 });
 
 export const User = UsersInit(sequelize);
-export const Server = ServersInit(sequelize);
-export const Event = EventsInit(sequelize);
+// export const Server = ServersInit(sequelize);
+// export const Event = EventsInit(sequelize);
 
 let limiter: RateLimiter;
 
 export let DBReady = false;
 
 export async function SyncTables() {
-	if (DBReady) return;
+	if (DBReady || building) return;
 	DBReady = true;
 
 	try {
 		await sequelize.authenticate();
-		if (!client.isOpen) await client.connect();
+		if (!client.isOpen) {
+			await client.connect();
+		}
 
 		await User.sync({ force: false });
-		await Server.sync({ force: false });
-		await Event.sync({ force: false });
+		//await Server.sync({ force: false });
+		//await Event.sync({ force: false });
 
 		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
 		void RefreshDataTask();

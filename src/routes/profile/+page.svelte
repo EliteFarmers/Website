@@ -136,7 +136,7 @@
 
 		<h1 class="text-2xl mb-4">Your Servers</h1>
 		{#if data.guildsWithBot.length === 0}
-			<p>No servers you manage have the Elite bot invited! Add some below.</p>
+			<p>This feature is a work in progress, check back later!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
 			{#each data.guildsWithBot as guild (guild.id)}
@@ -146,7 +146,7 @@
 
 		<h1 class="text-2xl mb-4">Other Servers</h1>
 		{#if data.guildsWithBot.length === 0}
-			<p>You don't have Manage Event permissions in any servers!</p>
+			<p>This feature is a work in progress, check back later!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
 			{#each data.guilds as guild (guild.id)}

@@ -1,3 +1,4 @@
+import { building } from '$app/environment';
 import { REDIS_PASSWORD, REDIS_URI } from '$env/static/private';
 import { createClient } from 'redis';
 
@@ -17,7 +18,14 @@ class Redis {
 	}
 
 	async client() {
-		await this.c.connect();
+		if (building) return this.c;
+
+		try {
+			await this.c.connect();
+		} catch (error) {
+			console.error(error, 'Redis error');
+		}
+
 		return this.c;
 	}
 }
