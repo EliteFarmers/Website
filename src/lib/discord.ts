@@ -10,7 +10,7 @@ import {
 import { IsSnowflake } from '$params/snowflake';
 
 const GUILDS_KEY = 'botguilds';
-const GUILDS_FETCH_INTERVAL = 1; //60 * 10; // 10 minutes
+const GUILDS_FETCH_INTERVAL = 60 * 10; // 10 minutes
 const MEMBER_FETCH_INTERVAL = 60 * 10; // 10 minutes
 
 export async function FetchBotGuilds() {
@@ -109,8 +109,6 @@ export async function CanEditFetchedGuild(accessToken: string, guildId: string) 
 	if (response.status !== 200) {
 		return false;
 	}
-
-	console.log(json);
 
 	return CanEditGuild(json as Guild);
 }
