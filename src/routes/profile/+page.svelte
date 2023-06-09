@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import { PUBLIC_DONATION_URL } from '$env/static/public';
+	// import { PUBLIC_DONATION_URL } from '$env/static/public';
 	import { Button } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
-	import Guild from './guild.svelte';
+	// import Guild from './guild.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -67,7 +67,7 @@
 				{:else}
 					<h2 class="text-lg text-gray-500 font-semibold">None!</h2>
 				{/if}
-				<Button class="m-1" href="/plans" rel="noopener noreferrer">Upgrade</Button>
+				<Button class="m-1" href="/plans" rel="noopener noreferrer" disabled>Upgrade</Button>
 			</div>
 			{#if data.premium !== '' && data.premium !== 'none'}
 				<h2 class="text-lg text-center">Thank You!</h2>
