@@ -22,7 +22,7 @@
 		Input,
 	} from 'flowbite-svelte';
 
-	$: discordUser = $page.data.discordUser; 
+	$: discordUser = $page.data.discordUser;
 
 	let searchVal = '';
 

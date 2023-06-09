@@ -116,7 +116,7 @@ async function findOne(options: UserWhereOptions) {
 export async function FindUserToLink(discordUser: DiscordUser) {
 	const user = await findOne({
 		'player.player.social.links.DISCORD': {
-			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator}`,
+			[Op.iLike]: `${discordUser.username}#${discordUser.discriminator ?? '0'}`,
 		},
 	});
 
