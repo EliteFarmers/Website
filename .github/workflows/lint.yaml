@@ -29,7 +29,7 @@ jobs:
                   echo "ls -a ."
                   ls -a .
                   mv .env.example .env
-                  mv src/database/database.example.json database.json
+                  mv src/database/database.example.json src/database/database.json
 
             # ESLint and Prettier must be in `package.json`
             - name: Install Node.js dependencies
