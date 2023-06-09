@@ -12,7 +12,9 @@
 	$: user = data.discordUser || undefined;
 	$: mc = data.mcAccount;
 
-	console.log(data.premium);
+	$: discordUsername = (user?.discriminator && user.discriminator !== '0')
+		? `${user?.username}#${user.discriminator}`
+		: user?.username;
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -21,20 +23,22 @@
 	<div class="flex flex-col items-start">
 		<div class="w-full max-w-xl mb-8">
 			<div class="bg-gray-100 dark:bg-zinc-800 shadow-md rounded m-8 px-8 pt-6 pb-8 mb-4">
-				<div class="flex justify-between items-center">
+				<div class="flex flex-col sm:flex-row justify-between items-center">
 					<div class="flex items-center bg-gray-200 dark:bg-zinc-700 p-2 rounded-md">
 						{#if user}
 							<img
 								class="w-10 h-10 rounded-full mr-4"
 								src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png"
-								alt="{user?.username}'s avatar"
+								alt="{discordUsername}'s avatar"
 							/>
 						{/if}
-						<div class="text-2xl font-bold leading-none">{mc?.name ?? user?.username ?? 'N/A'}</div>
+						<div class="text-2xl font-bold leading-none min-w-0">{mc?.name ?? 'N/A'}</div>
 					</div>
 					<div class="flex items-center">
 						<div class="text-xl font-bold leading-none">{user?.username}</div>
-						<div class="ml-2 text-gray-500 dark:text-zinc-300 text-md">#{user?.discriminator}</div>
+						{#if user?.discriminator && user?.discriminator !== '0'}
+							<div class="ml-2 text-gray-500 dark:text-zinc-300 text-md">#{user?.discriminator}</div>
+						{/if}
 					</div>
 				</div>
 				<div>
@@ -93,13 +97,13 @@
 
 			<div class="text-center flex flex-col">
 				<h1 class="text-lg py-2">
-					Ensure <span class="text-green-500 select-all">{user?.username}#{user?.discriminator ?? '0'}</span> is
+					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is
 					linked in Hypixel.net as follows:
 				</h1>
 				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
 				<h1 class="text-md py-2">
 					(Enter <span class="text-green-500 select-all"
-						>{user?.discriminator ? `${user?.username}#${user.discriminator}` : `${user?.username}`}</span
+						>{discordUsername}</span
 					>, the video is just the example)
 				</h1>
 			</div>
@@ -139,9 +143,9 @@
 			<p>This feature is a work in progress, check back later!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			{#each data.guildsWithBot as guild (guild.id)}
+			<!-- {#each data.guildsWithBot as guild (guild.id)}
 				<Guild {guild} />
-			{/each}
+			{/each} -->
 		</div>
 
 		<h1 class="text-2xl mb-4">Other Servers</h1>
@@ -149,9 +153,9 @@
 			<p>This feature is a work in progress, check back later!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			{#each data.guilds as guild (guild.id)}
+			<!-- {#each data.guilds as guild (guild.id)}
 				<Guild {guild} />
-			{/each}
+			{/each} -->
 		</div>
 	</section>
 </div>
