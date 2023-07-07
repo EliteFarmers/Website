@@ -65,22 +65,42 @@ export function CalculateWeight(profiles: ProfileData[], highest?: HighestWeight
 }
 
 export function calcCollections(member: ProfileMember) {
-	if (!member.collection) return undefined;
+	if (!member.collection) {  // collection api off
+        const total = {};
+        
+        for (const crop in member.jacob.contests) {
+            const contests = member.jacob.contests[crop as keyof typeof member.jacob.contests];
+            total[crop] = contests.reduce((acc, el) => acc + el.collected, 0);
+        }
+        
+        let {
+            wheat: WHEAT,
+            potato: POTATO,
+            carrot: CARROT,
+            mushroom: MUSHROOM,
+            pumpkin: PUMPKIN,
+            melon: MELON,
+            sugarcane: CANE,
+            cactus: CACTUS,
+            netherwart: WART,
+            cocoa: COCOA
+        } = total;
+    } else {
+        let {
+            WHEAT,
+            POTATO_ITEM: POTATO,
+            CARROT_ITEM: CARROT,
+            MUSHROOM_COLLECTION: MUSHROOM,
+            PUMPKIN,
+            MELON,
+            SUGAR_CANE: CANE,
+            CACTUS,
+            NETHER_STALK: WART,
+        } = member.collection;
 
-	let {
-		WHEAT,
-		POTATO_ITEM: POTATO,
-		CARROT_ITEM: CARROT,
-		MUSHROOM_COLLECTION: MUSHROOM,
-		PUMPKIN,
-		MELON,
-		SUGAR_CANE: CANE,
-		CACTUS,
-		NETHER_STALK: WART,
-	} = member.collection;
-
-	let COCOA = member.collection['INK_SACK:3']; // Dumb cocoa
-
+        let COCOA = member.collection['INK_SACK:3']; // Dumb cocoa
+    }
+    
 	if (isNaN(WHEAT)) WHEAT = 0;
 	if (isNaN(POTATO)) POTATO = 0;
 	if (isNaN(CARROT)) CARROT = 0;
