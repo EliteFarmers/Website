@@ -14,26 +14,30 @@
 	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
+	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
-	import Head from '$comp/head.svelte';
+	
 	export let data: PageData;
 
-	const account = data.account;
-	const profileIds = data.profiles;
-	const player = data.player;
-	const collections = data.collections;
-	const { id: uuid, name: ign } = account;
+	$: uuid = data.player.uuid;
+	$: ign = data.player.displayname;
 
-	const weightRank = data.rankings?.weight?.farming ?? -1;
+	$: profileIds = data.profiles;
+	$: player = data.player;
+	$: collections = data.collections;
 
-	let profileName = data.profileName;
-	let profile = data.profile;
+	$: weightRank = data.ranks?.misc?.farmingweight ?? -1;
+
+	$: profileName = data.profile.profileName;
+	$: profile = data.profile;
+
+	const member = data.member;
 
 	const farmingXp = getLevelProgress(
 		'farming',
-		profile.member.skills?.farming ?? 0,
-		(profile.member.jacob?.perks?.farming_level_cap ?? 0) + DEFAULT_SKILL_CAPS.farming
+		member.skills?.farming ?? 0,
+		(member.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 	);
 	let showSkills = $page.url.href.includes('#Skills');
 
@@ -45,7 +49,7 @@
 	});
 
 	const weightStr =
-		data.weight?.farming?.total?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "hasn't loaded their";
+		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "hasn't loaded their";
 	const description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
@@ -57,22 +61,27 @@
 
 <main class="m-0 p-0 w-full">
 	<PlayerInfo
-		{account}
 		{player}
 		members={profile.members}
 		{profileIds}
-		linked={data.user.linked}
-		weightInfo={data.weight}
+		linked={false}
+		weightInfo={member.farmingWeight}
 		{weightRank}
-		skyblockXP={profile.member.leveling?.experience ?? 0}
+		skyblockXP={member.skyblockXp ?? 0}
 	/>
 
-	<APIstatus api={profile.api} />
+	<!-- API settings not in API yet, will be soon:tm: -->
+	<APIstatus api={{
+		skills: { enabled: !!member.skills },
+		collections: { enabled: !!member.collections },
+		vault: { enabled: true },
+		inventory: { enabled: true },
+	}} />
 
 	<section class="flex items-center justify-center w-full py-4">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
 			<div class="w-[90%]">
-				<Skillbar name="Farming" progress={farmingXp} rank={data.rankings?.skills?.farming} />
+				<Skillbar name="Farming" progress={farmingXp} rank={data.ranks?.skills?.farming} />
 			</div>
 			<div class="w-[10%]">
 				<!-- Collapse/expand button -->
@@ -97,16 +106,16 @@
 	{#if showSkills}
 		<div class="flex justify-center w-full pb-4" transition:slide={{ duration: 1000, easing: quadInOut }}>
 			<div class="w-[90%]">
-				<Skills member={profile?.member} skillRanks={data.rankings.skills} />
+				<Skills skills={member.skills} skillRanks={data.ranks?.skills} />
 			</div>
 		</div>
 	{/if}
 
-	<Collections {collections} ranks={data.rankings.crops} />
+	<Collections {collections} ranks={data.ranks?.collections} />
 
-	<JacobInfo jacob={profile.member.jacob} ign={account.name} />
+	<JacobInfo jacob={member.jacob} ign={player.displayname ?? ''} />
 
-	<Breakdown weight={data.weight?.farming} />
+	<Breakdown weight={member.farmingWeight} />
 </main>
 
 <h1 class="text-center text-md m-16 flex flex-col">
@@ -115,7 +124,7 @@
 		{uuid}
 	</span>
 	<span>
-		<span class="select-none text-gray-500">Last Loaded:</span>
-		{new Date(data.last_fetched).toLocaleString()}
+		<span class="select-none text-gray-500">Last Updated:</span>
+		{new Date((member?.lastUpdated ?? 0) * 1000).toLocaleString()}
 	</span>
 </h1>

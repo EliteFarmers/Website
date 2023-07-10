@@ -1,25 +1,13 @@
 <script lang="ts">
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
+	import type { components } from '$lib/eliteapi/api';
 	import { getReadableSkyblockDate } from '$lib/format';
-	import type { JacobContest } from '$lib/skyblock';
-	type JacobContestCrop = JacobContest & { crop?: string };
 
-	export let contest: JacobContestCrop;
-	const { crop, position, participants, collected, timestamp } = contest;
+	export let contest: components['schemas']['ContestParticipationDto'];
 
-	const cropName = (crop ? PROPER_CROP_NAME[crop] : undefined) ?? 'Not Found';
+	const { crop, position, participants, collected, timestamp, medal } = contest;
+
+	const cropName = crop ?? 'Not Found';
 	const ranking = position !== undefined;
-
-	let medal = '';
-	if (position !== undefined && participants) {
-		if (position <= participants * 0.05 + 1) {
-			medal = 'Gold';
-		} else if (position <= participants * 0.25 + 1) {
-			medal = 'Silver';
-		} else if (position <= participants * 0.6 + 1) {
-			medal = 'Bronze';
-		}
-	}
 </script>
 
 <div class="p-2 flex flex-col gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop}">
@@ -29,16 +17,16 @@
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
 	<h3 class="text-lg font-semibold">
-		{#if medal === 'Gold'}
+		{#if medal === 'gold'}
 			<img class="inline-block w-5 h-5" src="/images/medals/gold.webp" alt="Earned Medal" />
-		{:else if medal === 'Silver'}
+		{:else if medal === 'silver'}
 			<img class="inline-block w-5 h-5" src="/images/medals/silver.webp" alt="Earned Medal" />
-		{:else if medal === 'Bronze'}
+		{:else if medal === 'bronze'}
 			<img class="inline-block w-5 h-5" src="/images/medals/bronze.webp" alt="Earned Medal" />
 		{/if}
-		{collected.toLocaleString()}
+		{(collected ?? 0).toLocaleString()}
 	</h3>
-	<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp)}</h6>
+	<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</h6>
 </div>
 
 <style lang="postcss">

@@ -1,12 +1,10 @@
 <script lang="ts">
-	import type { ProfileMember } from '$lib/skyblock';
 	import { getLevelProgress } from '$lib/format';
 	import Skillbar from './skillbar.svelte';
+	import type { components } from '$lib/eliteapi/api';
 
-	export let member: ProfileMember | undefined;
-	export let skillRanks: Record<string, number> | undefined;
-
-	const skills = member?.skills;
+	export let skills: components['schemas']['ProfileMemberDto']['skills'];
+	export let skillRanks: components['schemas']['LeaderboardPositionsDto']['skills'];
 </script>
 
 <section id="Skills" class="md:flex justify-center align-middle">

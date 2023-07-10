@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetUserByDiscordID } from '$db/database';
+import { GetPlayerByDiscordId } from '$lib/eliteapi/eliteapi';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const discordUser = locals.discordUser;
@@ -9,12 +9,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(303, '/');
 	}
 
-	const user = await GetUserByDiscordID(discordUser.id);
-	const ign = user?.account?.account.name;
-
-	if (!ign) {
+	const { data } = await GetPlayerByDiscordId(discordUser.id);
+	
+	if (!data) {
 		throw redirect(303, '/');
 	}
 
-	throw redirect(302, `/stats/${ign}`);
+	const selected = data.players?.find((profile) => data.selectedUuid === profile.uuid);
+
+	if (!selected?.displayname) {
+		throw redirect(303, '/');
+	}
+
+	throw redirect(302, `/stats/${selected.displayname}`);
 };

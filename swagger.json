@@ -1,0 +1,2814 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "EliteAPI",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/{playerUuidOrIgn}": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuidOrIgn",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuidOrIgn",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountEntities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/at/{year}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/YearlyContestsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YearlyContestsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YearlyContestsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/at/now": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/YearlyContestsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YearlyContestsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YearlyContestsDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Contests/at/{year}/{month}/{day}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "day",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/at/{year}/{month}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/JacobContestDto"
+                    }
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/JacobContestDto"
+                    }
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/JacobContestDto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/{timestamp}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "timestamp",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contest/{contestKey}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "contestKey",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JacobContestWithParticipationsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/{playerUuid}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/{playerUuid}/{profileUuid}": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Contests/{playerUuid}/Selected": {
+      "get": {
+        "tags": [
+          "Contests"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestParticipationDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Leaderboard/{id}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Leaderboard/skill/{skillName}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "skillName",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Leaderboard/collection/{collection}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "collection",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Leaderboard/ranks/{playerUuid}/{profileUuid}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardPositionsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardPositionsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardPositionsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeUpcoming",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardPositionDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardPositionDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardPositionDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Login/callback": {
+      "get": {
+        "tags": [
+          "Login"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "error",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Player/{playerUuidOrIgn}": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuidOrIgn",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDataDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDataDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDataDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Player/{discordId}": {
+      "get": {
+        "tags": [
+          "Player"
+        ],
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedAccountsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedAccountsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedAccountsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Profile/{uuid}/Selected": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileMemberDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileMemberDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileMemberDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Profile/{playerUuid}/{profileUuid}": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileMemberDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileMemberDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileMemberDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Profile/{profileUuid}": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "parameters": [
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Profiles/{playerUuid}": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weight/{playerUuid}": {
+      "get": {
+        "tags": [
+          "Weight"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weight/{playerUuid}/Selected": {
+      "get": {
+        "tags": [
+          "Weight"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmingWeightDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmingWeightDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmingWeightDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weight/{playerUuid}/{profileUuid}": {
+      "get": {
+        "tags": [
+          "Weight"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmingWeightDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmingWeightDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmingWeightDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Weights": {
+      "get": {
+        "tags": [
+          "Weight"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountEntities": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permissions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Purchase"
+            },
+            "nullable": true
+          },
+          "redemptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Redemption"
+            },
+            "nullable": true
+          },
+          "inventory": {
+            "$ref": "#/components/schemas/EliteInventory"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/EliteSettings"
+          },
+          "minecraftAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MinecraftAccount"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContestMedal": {
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "ContestParticipation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "collected": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "medalEarned": {
+            "$ref": "#/components/schemas/ContestMedal"
+          },
+          "profileMemberId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profileMember": {
+            "$ref": "#/components/schemas/ProfileMember"
+          },
+          "jacobContestId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "jacobContest": {
+            "$ref": "#/components/schemas/JacobContest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContestParticipationDto": {
+        "type": "object",
+        "properties": {
+          "crop": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "collected": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "medal": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Crop": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "EliteInventory": {
+        "type": "object",
+        "properties": {
+          "totalEarnedMedals": {
+            "$ref": "#/components/schemas/MedalInventory"
+          },
+          "spentMedals": {
+            "$ref": "#/components/schemas/MedalInventory"
+          },
+          "eventTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventTokensSpent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "leaderboardTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "leaderboardTokensSpent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unlockedCosmetics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EliteSettings": {
+        "type": "object",
+        "properties": {
+          "defaultPlayerUuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "hideDiscordTag": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FarmingWeight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalWeight": {
+            "type": "number",
+            "format": "double"
+          },
+          "cropWeight": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "bonusWeight": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "profileMemberId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profileMember": {
+            "$ref": "#/components/schemas/ProfileMember"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FarmingWeightDto": {
+        "type": "object",
+        "properties": {
+          "totalWeight": {
+            "type": "number",
+            "format": "double"
+          },
+          "cropWeight": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "bonusWeight": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FarmingWeightWithProfileDto": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalWeight": {
+            "type": "number",
+            "format": "double"
+          },
+          "cropWeight": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "bonusWeight": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobContest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "crop": {
+            "$ref": "#/components/schemas/Crop"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "participants": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobContestDto": {
+        "type": "object",
+        "properties": {
+          "crop": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "participants": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobContestWithParticipationsDto": {
+        "type": "object",
+        "properties": {
+          "crop": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "participants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StrippedContestParticipationDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "medals": {
+            "$ref": "#/components/schemas/MedalInventory"
+          },
+          "earnedMedals": {
+            "$ref": "#/components/schemas/MedalInventory"
+          },
+          "perks": {
+            "$ref": "#/components/schemas/JacobPerks"
+          },
+          "participations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContestParticipation"
+            },
+            "nullable": true
+          },
+          "contestsLastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "profileMemberId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profileMember": {
+            "$ref": "#/components/schemas/ProfileMember"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobDataDto": {
+        "type": "object",
+        "properties": {
+          "medals": {
+            "$ref": "#/components/schemas/MedalInventoryDto"
+          },
+          "earnedMedals": {
+            "$ref": "#/components/schemas/MedalInventoryDto"
+          },
+          "perks": {
+            "$ref": "#/components/schemas/JacobPerksDto"
+          },
+          "participations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContestParticipationDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobPerks": {
+        "type": "object",
+        "properties": {
+          "doubleDrops": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "levelCap": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobPerksDto": {
+        "type": "object",
+        "properties": {
+          "doubleDrops": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "levelCap": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LeaderboardDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardEntry"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ign": {
+            "type": "string",
+            "nullable": true
+          },
+          "profile": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LeaderboardPositionDto": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upcomingPlayers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardEntry"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LeaderboardPositionsDto": {
+        "type": "object",
+        "properties": {
+          "misc": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "skills": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "collections": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LinkedAccountsDto": {
+        "type": "object",
+        "properties": {
+          "selectedUuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "players": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlayerDataDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MedalInventory": {
+        "type": "object",
+        "properties": {
+          "bronze": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "silver": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gold": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MedalInventoryDto": {
+        "type": "object",
+        "properties": {
+          "bronze": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "silver": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gold": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberDetailsDto": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MinecraftAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "selected": {
+            "type": "boolean"
+          },
+          "profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileMember"
+            },
+            "nullable": true
+          },
+          "playerData": {
+            "$ref": "#/components/schemas/PlayerData"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MinecraftAccountProperty"
+            },
+            "nullable": true
+          },
+          "previousNames": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MinecraftAccountProperty": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pet": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "exp": {
+            "type": "number",
+            "format": "double"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "tier": {
+            "type": "string",
+            "nullable": true
+          },
+          "heldItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "candyUsed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skin": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PetDto": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "exp": {
+            "type": "number",
+            "format": "double"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "tier": {
+            "type": "string",
+            "nullable": true
+          },
+          "heldItem": {
+            "type": "string",
+            "nullable": true
+          },
+          "candyUsed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skin": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlayerData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "minecraftAccount": {
+            "$ref": "#/components/schemas/MinecraftAccount"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstLogin": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastLogin": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastLogout": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "karma": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "networkExp": {
+            "type": "number",
+            "format": "double"
+          },
+          "rewardHighScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewardScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewardStreak": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalDailyRewards": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRewards": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rank": {
+            "type": "string",
+            "nullable": true
+          },
+          "newPackageRank": {
+            "type": "string",
+            "nullable": true
+          },
+          "rankPlusColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthlyPackageRank": {
+            "type": "string",
+            "nullable": true
+          },
+          "mostRecentMonthlyPackageRank": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthlyRankColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "socialMedia": {
+            "$ref": "#/components/schemas/SocialMediaLinks"
+          },
+          "lastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlayerDataDto": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayname": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstLogin": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastLogin": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastLogout": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "karma": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "networkExp": {
+            "type": "number",
+            "format": "double"
+          },
+          "rewardHighScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewardScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewardStreak": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalDailyRewards": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRewards": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rank": {
+            "type": "string",
+            "nullable": true
+          },
+          "newPackageRank": {
+            "type": "string",
+            "nullable": true
+          },
+          "rankPlusColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthlyPackageRank": {
+            "type": "string",
+            "nullable": true
+          },
+          "mostRecentMonthlyPackageRank": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthlyRankColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "socialMedia": {
+            "$ref": "#/components/schemas/SocialMediaLinksDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "gameMode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "bankBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileMember"
+            },
+            "nullable": true
+          },
+          "craftedMinions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileDto": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "gameMode": {
+            "type": "string",
+            "nullable": true
+          },
+          "selected": {
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "bankBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberDetailsDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "skyblockXp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purse": {
+            "type": "number",
+            "format": "double"
+          },
+          "jacobData": {
+            "$ref": "#/components/schemas/JacobData"
+          },
+          "skills": {
+            "$ref": "#/components/schemas/Skills"
+          },
+          "farmingWeight": {
+            "$ref": "#/components/schemas/FarmingWeight"
+          },
+          "isSelected": {
+            "type": "boolean"
+          },
+          "wasRemoved": {
+            "type": "boolean"
+          },
+          "lastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "collections": {
+            "nullable": true
+          },
+          "collectionTiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "stats": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "essence": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "pets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pet"
+            },
+            "nullable": true
+          },
+          "playerUuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "minecraftAccount": {
+            "$ref": "#/components/schemas/MinecraftAccount"
+          },
+          "profileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProfileMemberDto": {
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "playerUuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "skyblockXp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purse": {
+            "type": "number",
+            "format": "double"
+          },
+          "bankBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "collections": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "nullable": true
+          },
+          "collectionTiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "craftedMinions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "pets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PetDto"
+            },
+            "nullable": true
+          },
+          "jacob": {
+            "$ref": "#/components/schemas/JacobDataDto"
+          },
+          "farmingWeight": {
+            "$ref": "#/components/schemas/FarmingWeightDto"
+          },
+          "skills": {
+            "$ref": "#/components/schemas/SkillsDto"
+          },
+          "isSelected": {
+            "type": "boolean"
+          },
+          "wasRemoved": {
+            "type": "boolean"
+          },
+          "lastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Purchase": {
+        "type": "object",
+        "properties": {
+          "purchaseType": {
+            "$ref": "#/components/schemas/PurchaseType"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Redemption": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cost": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Skills": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "combat": {
+            "type": "number",
+            "format": "double"
+          },
+          "mining": {
+            "type": "number",
+            "format": "double"
+          },
+          "foraging": {
+            "type": "number",
+            "format": "double"
+          },
+          "fishing": {
+            "type": "number",
+            "format": "double"
+          },
+          "enchanting": {
+            "type": "number",
+            "format": "double"
+          },
+          "alchemy": {
+            "type": "number",
+            "format": "double"
+          },
+          "carpentry": {
+            "type": "number",
+            "format": "double"
+          },
+          "runecrafting": {
+            "type": "number",
+            "format": "double"
+          },
+          "taming": {
+            "type": "number",
+            "format": "double"
+          },
+          "farming": {
+            "type": "number",
+            "format": "double"
+          },
+          "social": {
+            "type": "number",
+            "format": "double"
+          },
+          "profileMemberId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "profileMember": {
+            "$ref": "#/components/schemas/ProfileMember"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SkillsDto": {
+        "type": "object",
+        "properties": {
+          "farming": {
+            "type": "number",
+            "format": "double"
+          },
+          "mining": {
+            "type": "number",
+            "format": "double"
+          },
+          "combat": {
+            "type": "number",
+            "format": "double"
+          },
+          "foraging": {
+            "type": "number",
+            "format": "double"
+          },
+          "fishing": {
+            "type": "number",
+            "format": "double"
+          },
+          "enchanting": {
+            "type": "number",
+            "format": "double"
+          },
+          "alchemy": {
+            "type": "number",
+            "format": "double"
+          },
+          "carpentry": {
+            "type": "number",
+            "format": "double"
+          },
+          "runecrafting": {
+            "type": "number",
+            "format": "double"
+          },
+          "taming": {
+            "type": "number",
+            "format": "double"
+          },
+          "social": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SocialMediaLinks": {
+        "type": "object",
+        "properties": {
+          "discord": {
+            "type": "string",
+            "nullable": true
+          },
+          "hypixel": {
+            "type": "string",
+            "nullable": true
+          },
+          "youtube": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SocialMediaLinksDto": {
+        "type": "object",
+        "properties": {
+          "discord": {
+            "type": "string",
+            "nullable": true
+          },
+          "hypixel": {
+            "type": "string",
+            "nullable": true
+          },
+          "youtube": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StrippedContestParticipationDto": {
+        "type": "object",
+        "properties": {
+          "collected": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "medal": {
+            "type": "string",
+            "nullable": true
+          },
+          "playerUuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "playerName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "YearlyContestsDto": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "contests": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

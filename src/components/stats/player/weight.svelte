@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { WeightInfo } from '$db/models/users';
+	import type { components } from '$lib/eliteapi/api';
 	import Profiles from './profiles.svelte';
 
-	export let weightInfo: WeightInfo;
+	export let weightInfo: components['schemas']['FarmingWeight'] | undefined;
 	export let rank: number;
 
 	export let profiles: {
@@ -13,7 +13,7 @@
 
 	const rankText = rank !== -1 ? `#${rank}` : 'Unranked';
 
-	const weightStr = weightInfo?.farming?.total?.toLocaleString() ?? '0';
+	const weightStr = weightInfo?.totalWeight?.toLocaleString() ?? '0';
 </script>
 
 <section class="block">

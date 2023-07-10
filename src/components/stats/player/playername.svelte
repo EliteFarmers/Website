@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Dropdown from '$comp/generic/dropdown.svelte';
-	import type { MemberData } from '$lib/skyblock';
+	import type { components } from '$lib/eliteapi/api';
 
-	export let ign: string;
+	export let ign: string | null | undefined;
 	export let rank: { color: string; tag: string; plus?: string; plusColor?: string } | undefined;
-	export let members: MemberData[] | undefined;
+	export let members: components['schemas']['MemberDetailsDto'][] | undefined;
 	export let profileId: string;
 
 	const plus = rank?.plus ?? undefined;
@@ -26,9 +26,9 @@
 		{#each members ?? [] as member}
 			<a
 				data-sveltekit-reload
-				href={`/stats/${member.ign ?? member.uuid}/${profileId}`}
+				href={`/stats/${member.username ?? member.uuid}/${profileId}`}
 				class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
-				>{member.ign}</a
+				>{member.username}</a
 			>
 		{/each}
 	</div>

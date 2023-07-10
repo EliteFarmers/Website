@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Tooltip from '$comp/generic/tooltip.svelte';
 
-	export let username = 'Discord N/A';
+	export let username: string | null | undefined = 'Discord N/A';
 	export let linked: boolean;
 </script>
 
