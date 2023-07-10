@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ params, parent }) => {
 
     const selectedProfile = profiles.find((p) => p.selected) ?? profiles[0];
 
-    if (!selectedProfile.profileName) {
+    if (!selectedProfile.profileId) {
         throw redirect(303, '/');
     }
 

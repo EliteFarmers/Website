@@ -62,7 +62,7 @@
 <main class="m-0 p-0 w-full">
 	<PlayerInfo
 		{player}
-		members={profile.members}
+		members={profile.members?.filter(m => m.uuid !== uuid)}
 		{profileIds}
 		linked={false}
 		weightInfo={member.farmingWeight}

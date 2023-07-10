@@ -46,7 +46,8 @@ export const load: PageServerLoad = async ({ params, parent, setHeaders }) => {
 		}
 
 	const profileIds = profiles
-		.filter(p => p.profileId !== selectedProfile.profileId && p.profileName && p.profileId)
+		// Filter out the current profile and only show profiles that have the player as an active member
+		.filter(p => p.profileId !== selectedProfile.profileId && p.members?.some(m => m.uuid === player.uuid && m.active))
 		.map((p) => ({
 			id: p.profileId ?? 'Unknown',
 			name: p.profileName ?? 'Unknown',
