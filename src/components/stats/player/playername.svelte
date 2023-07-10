@@ -23,7 +23,7 @@
 		{/if}
 	</h1>
 	<div slot="rest" class="grid col-span-1">
-		{#each members ?? [] as member}
+		{#each members?.filter(m => m?.active) ?? [] as member}
 			<a
 				data-sveltekit-reload
 				href={`/stats/${member.username ?? member.uuid}/${profileId}`}
