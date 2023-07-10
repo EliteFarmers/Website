@@ -11,8 +11,6 @@
 	$: contests = data.contests;
 
 	$: timestamp = +$page.params.timestamp;
-
-	console.log(data.contests);
 </script>
 
 <Head 
@@ -40,13 +38,13 @@
 		</div>
 	{/if}
 
-	<div class="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-3 mb-16">
+	<div class="flex flex-row gap-4 mt-4 mb-16">
 		{#each contests as contest}
 			<div class="flex flex-col items-center justify-start p-4 space-y-2 bg-white rounded-md shadow-md dark:bg-zinc-800">
 				<h2 class="text-3xl font-semibold text-center">
 					{contest.crop ?? 'Not Found'}
 				</h2>
-				<h4>{contest.participations?.length ?? 0} / {contest.participants} Participants</h4>
+				<h4>{contest.participations?.length ?? 0} / {contest.participants !== -1 ? contest.participants : 'Unknown'} Participants</h4>
 				<div class="flex flex-col justify-center space-y-2">
 					{#each contest.participations?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)) ?? [] as participant}
 						<Participation entry={participant} />
