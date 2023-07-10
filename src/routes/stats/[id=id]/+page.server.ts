@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params, parent }) => {
+export const load: PageServerLoad = async ({ params, parent }) => {
     const { profiles } = await parent();
 
     const selectedProfile = profiles.find((p) => p.selected) ?? profiles[0];
@@ -10,5 +10,5 @@ export const load = (async ({ params, parent }) => {
         throw redirect(303, '/');
     }
 
-    throw redirect(302, `/stats/${params.id}/${selectedProfile.profileName}`);
-}) satisfies PageServerLoad;
+    throw redirect(302, `/stats/${params.id}/${selectedProfile.profileId}`);
+};

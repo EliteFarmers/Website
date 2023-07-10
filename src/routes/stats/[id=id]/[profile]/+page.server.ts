@@ -8,9 +8,9 @@ import { GetPlayerRanks, GetProfileMember } from '$lib/eliteapi/eliteapi';
 export const load: PageServerLoad = async ({ params, parent, setHeaders }) => {
 	const { player, profiles } = await parent();
 
-	console.log('profiles', params.profile, profiles);
-	const selectedProfile = profiles.find((p) => p.selected) ?? profiles[0];
-		//p.profileId === params.profile || p.profileName?.localeCompare(params.profile)) ?? profiles[0];
+	const selectedProfile = profiles.find((p) => p.profileId === params.profile || p.profileName?.toUpperCase() === params.profile.toUpperCase()) 
+		?? profiles.find((p) => p.selected) 
+		?? profiles[0];
 
 	if (!player.uuid || !selectedProfile.profileId) {
 		throw error(404, 'Player not found');

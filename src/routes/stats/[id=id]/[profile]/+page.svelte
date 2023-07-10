@@ -32,7 +32,7 @@
 	$: profileName = data.profile.profileName;
 	$: profile = data.profile;
 
-	const member = data.member;
+	let member = data.member;
 
 	const farmingXp = getLevelProgress(
 		'farming',
