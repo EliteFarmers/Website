@@ -69,3 +69,11 @@ export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
 		}
 	}
 });
+
+export const GetContests = async (timestamp: number) => await get('/api/Contests/{timestamp}', {
+	params: {
+		path: {
+			timestamp
+		}
+	}
+});
