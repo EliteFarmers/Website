@@ -12,10 +12,10 @@
 	};
 	export let rank = -1;
 
-	let percent = 100;
-	let readable = '';
-	let expanded = '';
-	let hovering = false;
+	$: percent = 100;
+	$: readable = '';
+	$: expanded = '';
+	$: hovering = false;
 
 	onMount(() => {
 		percent = Math.round(progress.ratio * 100);

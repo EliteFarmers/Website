@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import type { components } from '$lib/eliteapi/api';
 
 	export let jacob: components['schemas']['JacobDataDto'] | undefined;

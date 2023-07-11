@@ -8,24 +8,27 @@
 	$: bonusSources = weight?.bonusWeight ?? {};
 	$: cropSources = weight?.cropWeight ?? {};
 
-
-	if (!weight) {
-		weight = {
-			totalWeight: 0,
-			cropWeight: {},
-			bonusWeight: {}
-		};
+	$: {
+		if (!weight) {
+			weight = {
+				totalWeight: 0,
+				cropWeight: {},
+				bonusWeight: {}
+			};
+		}
 	}
 
-	const sources = Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0));
-	const bonuses = Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
+	$: sources = Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0));
+	$: bonuses = Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
 
-	if (sources.length === 0) {
+	$: {
+		if (sources.length === 0) {
 		sources.push(['None Found - API might be off', 0]);
-	}
+		}
 
-	if (bonuses.length === 0) {
-		bonuses.push(['No bonuses unlocked yet!', 0]);
+		if (bonuses.length === 0) {
+			bonuses.push(['No bonuses unlocked yet!', 0]);
+		}
 	}
 </script>
 

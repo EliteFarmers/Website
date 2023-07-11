@@ -4,7 +4,7 @@
 
 	export let xp: number;
 
-	const [, color] = Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? [];
+	$: ([, color] = Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? []);
 </script>
 
 <div

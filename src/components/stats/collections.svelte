@@ -13,9 +13,9 @@
 	}[];
 	export let ranks: components['schemas']['LeaderboardPositionsDto']['collections'];
 
-	let list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
+	$: list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
+	$: weightSort = true;
 
-	let weightSort = true;
 	function swap() {
 		weightSort = !weightSort;
 

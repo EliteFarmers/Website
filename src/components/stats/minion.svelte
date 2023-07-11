@@ -6,9 +6,11 @@
 	export let tierField: number;
 
 	// Turn tierField into its binary representation
-	const tiers = tierField?.toString(2).substring(0, 12).split('') ?? [];
+	$: tiers = tierField?.toString(2).substring(0, 12).split('') ?? [];
 	// Add 0s to the end of the array if it's less than 12 in length
-	while (tiers.length < 12) tiers.push('0');
+	$: { 
+		while (tiers.length < 12) tiers.push('0');
+	}
 </script>
 
 <div class="image-container bg-gray-100 dark:bg-zinc-800 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">

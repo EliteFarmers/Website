@@ -4,16 +4,16 @@
 
 	export let contest: components['schemas']['ContestParticipationDto'];
 
-	const { crop, position, participants, collected, timestamp, medal } = contest;
+	$: ({ crop, position, participants, collected, timestamp, medal } = contest);
 
-	const cropName = crop ?? 'Not Found';
-	const ranking = position && position !== -1;
+	$: cropName = crop ?? 'Not Found';
+	$: ranking = position && position !== -1;
 </script>
 
 <a href="/contest/{timestamp}" data-sveltekit-preload-data="off" class="p-2 flex flex-col hover:shadow-lg hover:bg-gray-100 dark:hover:bg-zinc-900 gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop?.replace(' ', '')}">
 	<h3 class="first-letter:uppercase text-sm">
 		<span class="p-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md">{cropName}</span>
-		<span class="text-sm font-semibold">{ranking ? `#${position + 1}` : 'Unclaimed'}</span>
+		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
 	<h3 class="text-lg font-semibold">

@@ -3,9 +3,9 @@
 
 	export let api: APISettings;
 
-	const entries = Object.entries(api);
-	const collectionOff = api?.collections?.enabled === false;
-	const anyOff = entries.some(([, value]) => !value.enabled);
+	$: entries = Object.entries(api);
+	$: collectionOff = api?.collections?.enabled === false;
+	$: anyOff = entries.some(([, value]) => !value.enabled);
 </script>
 
 {#if collectionOff}

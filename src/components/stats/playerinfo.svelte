@@ -9,24 +9,23 @@
 	import Skyblocklevel from './player/skyblocklevel.svelte';
 	import type { components } from '$lib/eliteapi/api';
 
-	export let player: components['schemas']['PlayerDataDto'];
+	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileIds: { id: string; name: string }[];
 	export let members: components['schemas']['MemberDetailsDto'][] | null | undefined;
 	export let linked: boolean;
-	export let weightInfo: components['schemas']['FarmingWeight'] | undefined;
+	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
 	export let weightRank: number;
 	export let skyblockXP: number;
 
 	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
 
-	$: discordName = player.socialMedia?.discord;
+	$: discordName = player?.socialMedia?.discord;
 
-	const profilesData = { ign: player.displayname ?? '', profiles: profiles, selected: profileIds[0] };
+	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileIds[0] };
 
-	const rankName =
-		player.rank ??
-		(player.monthlyPackageRank !== 'NONE' ? player.monthlyPackageRank : player.newPackageRank) ?? undefined;
-	const rank = getRankDefaults(rankName as RankName);
+	$: rankName = player?.rank 
+		?? (player?.monthlyPackageRank !== 'NONE' ? player?.monthlyPackageRank : player?.newPackageRank) ?? undefined;
+	$: rank = getRankDefaults(rankName as RankName);
 </script>
 
 <section class="flex justify-center w-full my-8">
@@ -37,12 +36,12 @@
 			<div>
 				<img
 					class="w-16 min-h-full object-cover"
-					src={`https://mc-heads.net/body/${player.uuid}`}
+					src={`https://mc-heads.net/body/${player?.uuid}`}
 					alt="User's Minecraft appearance"
 				/>
 			</div>
 			<div class="flex flex-col gap-1 justify-start">
-				<PlayerName ign={player.displayname} {rank} members={members ?? undefined} profileId={profileIds[0].id} />
+				<PlayerName ign={player?.displayname} {rank} members={members ?? undefined} profileId={profileIds[0].id} />
 				<div class="flex justify-start">
 					<Skyblocklevel xp={skyblockXP} />
 					<Discord username={discordName} {linked} />
@@ -50,13 +49,13 @@
 				<div class="flex justify-start">
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
-						href="https://sky.shiiyu.moe{$page.url.pathname}"
+						href="https://sky.shiiyu.moe/stats/{$page.params.id}/{$page.params.profile}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
-						href="https://plancke.io/hypixel/player/stats/{player.displayname}"
+						href="https://plancke.io/hypixel/player/stats/{$page.params.id}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">Plancke</a
 					>
