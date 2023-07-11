@@ -1,20 +1,20 @@
-import { GetPlayer, GetProfileMember, GetProfiles } from '$lib/eliteapi/eliteapi';
+import { GetAccount, GetProfileMember } from '$lib/eliteapi/eliteapi';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ params }) => {
     const { id, profile } = params;
-    const { data } = await GetPlayer(id); 
 
-    if (!data?.displayname || !data.uuid) {
+    const { data: account } = await GetAccount(id); 
+
+    if (!account?.id || !account.name) {
         throw error(404, 'Player not found');
     }
 
-    const { data: profilesData } = await GetProfiles(data.uuid);
-    const profiles = profilesData?.filter((p) => p.members?.some(m => m.uuid === data.uuid && m.active));
+    const profiles = account.profiles?.filter((p) => p.members?.some(m => m.uuid === account.id && m.active));
 
     if (!profiles?.length) {
-        throw error(404, 'No profiles found for ' + data.displayname);
+        throw error(404, 'No profiles found for ' + account.name);
     }
 
     const selectedProfile = profile 
@@ -25,7 +25,9 @@ export const load: LayoutServerLoad = async ({ params }) => {
         throw error(404, 'Profile not found');
     }
 
-    const { data: member } = await GetProfileMember(data.uuid, selectedProfile.profileId);
+    console.log(selectedProfile);
+
+    const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId);
 
     if (!member) {
         throw error(404, 'Profile data not found');
@@ -42,7 +44,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
     profileIds.unshift({ id: selectedProfile.profileId, name: selectedProfile.profileName ?? 'Unknown' });
 
     return {
-        player: data,
+        account,
         profile: selectedProfile,
         profiles: profileIds,
         member,

@@ -11,6 +11,22 @@ const { get } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
 });
 
+export const GetAccount = async (playerUuidOrIgn: string) => await get('/api/Account/{playerUuidOrIgn}', {
+	params: {
+		path: {
+			playerUuidOrIgn,
+		}
+	}
+});
+
+export const GetAccountByDiscordId = async (discordId: number) => await get('/api/Account/{discordId}', {
+	params: {
+		path: {
+			discordId,
+		}
+	}
+});
+
 export const GetPlayer = async (playerUuidOrIgn: string) => await get('/api/Player/{playerUuidOrIgn}', {
 	params: {
 		path: {

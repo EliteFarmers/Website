@@ -20,11 +20,11 @@
 	
 	export let data: PageData;
 
-	$: uuid = data.player.uuid;
-	$: ign = data.player.displayname;
+	$: uuid = data.account.id;
+	$: ign = data.account.name;
 
 	$: profileIds = data.profiles;
-	$: player = data.player;
+	$: player = data.account.playerData;
 	$: collections = data.collections;
 
 	$: weightRank = data.ranks?.misc?.farmingweight ?? -1;
@@ -32,25 +32,25 @@
 	$: profileName = data.profile.profileName;
 	$: profile = data.profile;
 
-	let member = data.member;
+	$: member = data.member;
 
-	const farmingXp = getLevelProgress(
+	$: farmingXp = getLevelProgress(
 		'farming',
 		member.skills?.farming ?? 0,
 		(member.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 	);
-	let showSkills = $page.url.href.includes('#Skills');
+	$: showSkills = $page.url.href.includes('#Skills');
 
 	onMount(async () => {
-		const url = `/stats/${ign}/${profileName}`;
+		const url = `/@${ign}/${profileName}`;
 		if ($page.url.pathname !== url) {
 			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
 		}
 	});
 
-	const weightStr =
+	$: weightStr =
 		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "hasn't loaded their";
-	const description = `${ign} has ${weightStr} Farming Weight${
+	$: description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
 </script>
@@ -113,7 +113,7 @@
 
 	<Collections {collections} ranks={data.ranks?.collections} />
 
-	<JacobInfo jacob={member.jacob} ign={player.displayname ?? ''} />
+	<JacobInfo jacob={member.jacob} ign={data.account.name ?? ''} />
 
 	<Breakdown weight={member.farmingWeight} />
 </main>

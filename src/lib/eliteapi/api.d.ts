@@ -19,7 +19,43 @@ export interface paths {
       };
     };
   };
+  "/api/Account/{discordId}": {
+    get: {
+      parameters: {
+        path: {
+          discordId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["MinecraftAccountDto"];
+            "application/json": components["schemas"]["MinecraftAccountDto"];
+            "text/json": components["schemas"]["MinecraftAccountDto"];
+          };
+        };
+      };
+    };
+  };
   "/api/Account/{playerUuidOrIgn}": {
+    get: {
+      parameters: {
+        path: {
+          playerUuidOrIgn: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["MinecraftAccountDto"];
+            "application/json": components["schemas"]["MinecraftAccountDto"];
+            "text/json": components["schemas"]["MinecraftAccountDto"];
+          };
+        };
+      };
+    };
     post: {
       parameters: {
         path: {
@@ -466,9 +502,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": components["schemas"]["ProfileDto"];
-            "application/json": components["schemas"]["ProfileDto"];
-            "text/json": components["schemas"]["ProfileDto"];
+            "text/plain": components["schemas"]["ProfileDetailsDto"];
+            "application/json": components["schemas"]["ProfileDetailsDto"];
+            "text/json": components["schemas"]["ProfileDetailsDto"];
           };
         };
       };
@@ -485,9 +521,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["ProfileDto"])[];
-            "application/json": (components["schemas"]["ProfileDto"])[];
-            "text/json": (components["schemas"]["ProfileDto"])[];
+            "text/plain": (components["schemas"]["ProfileDetailsDto"])[];
+            "application/json": (components["schemas"]["ProfileDetailsDto"])[];
+            "text/json": (components["schemas"]["ProfileDetailsDto"])[];
           };
         };
       };
@@ -594,26 +630,6 @@ export interface components {
       settings?: components["schemas"]["EliteSettings"];
       minecraftAccounts?: (components["schemas"]["MinecraftAccount"])[] | null;
     };
-    /**
-     * Format: int32 
-     * @enum {integer}
-     */
-    ContestMedal: 0 | 1 | 2 | 3;
-    ContestParticipation: {
-      /** Format: int32 */
-      id?: number;
-      /** Format: int32 */
-      collected?: number;
-      /** Format: int32 */
-      position?: number;
-      medalEarned?: components["schemas"]["ContestMedal"];
-      /** Format: uuid */
-      profileMemberId?: string;
-      profileMember?: components["schemas"]["ProfileMember"];
-      /** Format: int64 */
-      jacobContestId?: number;
-      jacobContest?: components["schemas"]["JacobContest"];
-    };
     ContestParticipationDto: {
       crop?: string | null;
       /** Format: int64 */
@@ -626,11 +642,6 @@ export interface components {
       participants?: number;
       medal?: string | null;
     };
-    /**
-     * Format: int32 
-     * @enum {integer}
-     */
-    Crop: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     EliteInventory: {
       totalEarnedMedals?: components["schemas"]["MedalInventory"];
       spentMedals?: components["schemas"]["MedalInventory"];
@@ -647,21 +658,6 @@ export interface components {
     EliteSettings: {
       defaultPlayerUuid?: string | null;
       hideDiscordTag?: boolean;
-    };
-    FarmingWeight: {
-      /** Format: int32 */
-      id?: number;
-      /** Format: double */
-      totalWeight?: number;
-      cropWeight?: ({
-        [key: string]: number | undefined;
-      }) | null;
-      bonusWeight?: ({
-        [key: string]: number | undefined;
-      }) | null;
-      /** Format: uuid */
-      profileMemberId?: string;
-      profileMember?: components["schemas"]["ProfileMember"];
     };
     FarmingWeightDto: {
       /** Format: double */
@@ -685,15 +681,6 @@ export interface components {
         [key: string]: number | undefined;
       }) | null;
     };
-    JacobContest: {
-      /** Format: int64 */
-      id?: number;
-      crop?: components["schemas"]["Crop"];
-      /** Format: int64 */
-      timestamp?: number;
-      /** Format: int32 */
-      participants?: number;
-    };
     JacobContestDto: {
       crop?: string | null;
       /** Format: int64 */
@@ -709,21 +696,6 @@ export interface components {
       participants?: number;
       participations?: (components["schemas"]["StrippedContestParticipationDto"])[] | null;
     };
-    JacobData: {
-      /** Format: int32 */
-      id?: number;
-      medals?: components["schemas"]["MedalInventory"];
-      earnedMedals?: components["schemas"]["MedalInventory"];
-      perks?: components["schemas"]["JacobPerks"];
-      /** Format: int32 */
-      participations?: number;
-      contests?: (components["schemas"]["ContestParticipation"])[] | null;
-      /** Format: int64 */
-      contestsLastUpdated?: number;
-      /** Format: uuid */
-      profileMemberId?: string;
-      profileMember?: components["schemas"]["ProfileMember"];
-    };
     JacobDataDto: {
       medals?: components["schemas"]["MedalInventoryDto"];
       earnedMedals?: components["schemas"]["MedalInventoryDto"];
@@ -731,12 +703,6 @@ export interface components {
       /** Format: int32 */
       participations?: number;
       contests?: (components["schemas"]["ContestParticipationDto"])[] | null;
-    };
-    JacobPerks: {
-      /** Format: int32 */
-      doubleDrops?: number;
-      /** Format: int32 */
-      levelCap?: number;
     };
     JacobPerksDto: {
       /** Format: int32 */
@@ -804,31 +770,32 @@ export interface components {
     MinecraftAccount: {
       id?: string | null;
       name?: string | null;
+      /** Format: int64 */
+      accountId?: number | null;
       selected?: boolean;
-      profiles?: (components["schemas"]["ProfileMember"])[] | null;
       playerData?: components["schemas"]["PlayerData"];
       properties?: (components["schemas"]["MinecraftAccountProperty"])[] | null;
-      previousNames?: ({
-        [key: string]: number | undefined;
-      }) | null;
       /** Format: int64 */
       lastUpdated?: number;
+    };
+    MinecraftAccountDto: {
+      id?: string | null;
+      name?: string | null;
+      primaryAccount?: boolean;
+      /** Format: int64 */
+      discordId?: number | null;
+      discordUsername?: string | null;
+      properties?: (components["schemas"]["MinecraftAccountPropertyDto"])[] | null;
+      profiles?: (components["schemas"]["ProfileDetailsDto"])[] | null;
+      playerData?: components["schemas"]["PlayerDataDto"];
     };
     MinecraftAccountProperty: {
       name?: string | null;
       value?: string | null;
     };
-    Pet: {
-      uuid?: string | null;
-      type?: string | null;
-      /** Format: double */
-      exp?: number;
-      active?: boolean;
-      tier?: string | null;
-      heldItem?: string | null;
-      /** Format: int32 */
-      candyUsed?: number;
-      skin?: string | null;
+    MinecraftAccountPropertyDto: {
+      name?: string | null;
+      value?: string | null;
     };
     PetDto: {
       uuid?: string | null;
@@ -909,59 +876,14 @@ export interface components {
       monthlyRankColor?: string | null;
       socialMedia?: components["schemas"]["SocialMediaLinksDto"];
     };
-    Profile: {
-      profileId?: string | null;
-      profileName?: string | null;
-      gameMode?: string | null;
-      isDeleted?: boolean;
-      /** Format: double */
-      bankBalance?: number;
-      members?: (components["schemas"]["ProfileMember"])[] | null;
-      craftedMinions?: ({
-        [key: string]: number | undefined;
-      }) | null;
-      /** Format: int64 */
-      lastUpdated?: number;
-    };
-    ProfileDto: {
+    ProfileDetailsDto: {
       profileId?: string | null;
       profileName?: string | null;
       gameMode?: string | null;
       selected?: boolean;
-      isDeleted?: boolean;
       /** Format: double */
       bankBalance?: number;
       members?: (components["schemas"]["MemberDetailsDto"])[] | null;
-    };
-    ProfileMember: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: int32 */
-      skyblockXp?: number;
-      /** Format: double */
-      purse?: number;
-      jacobData?: components["schemas"]["JacobData"];
-      skills?: components["schemas"]["Skills"];
-      farmingWeight?: components["schemas"]["FarmingWeight"];
-      isSelected?: boolean;
-      wasRemoved?: boolean;
-      /** Format: int64 */
-      lastUpdated?: number;
-      collections?: Record<string, unknown> | null;
-      collectionTiers?: ({
-        [key: string]: number | undefined;
-      }) | null;
-      stats?: ({
-        [key: string]: number | undefined;
-      }) | null;
-      essence?: ({
-        [key: string]: number | undefined;
-      }) | null;
-      pets?: (components["schemas"]["Pet"])[] | null;
-      playerUuid?: string | null;
-      minecraftAccount?: components["schemas"]["MinecraftAccount"];
-      profileId?: string | null;
-      profile?: components["schemas"]["Profile"];
     };
     ProfileMemberDto: {
       profileId?: string | null;
@@ -1007,35 +929,6 @@ export interface components {
       cost?: string | null;
       /** Format: date-time */
       timestamp?: string;
-    };
-    Skills: {
-      /** Format: int32 */
-      id?: number;
-      /** Format: double */
-      combat?: number;
-      /** Format: double */
-      mining?: number;
-      /** Format: double */
-      foraging?: number;
-      /** Format: double */
-      fishing?: number;
-      /** Format: double */
-      enchanting?: number;
-      /** Format: double */
-      alchemy?: number;
-      /** Format: double */
-      carpentry?: number;
-      /** Format: double */
-      runecrafting?: number;
-      /** Format: double */
-      taming?: number;
-      /** Format: double */
-      farming?: number;
-      /** Format: double */
-      social?: number;
-      /** Format: uuid */
-      profileMemberId?: string;
-      profileMember?: components["schemas"]["ProfileMember"];
     };
     SkillsDto: {
       /** Format: double */

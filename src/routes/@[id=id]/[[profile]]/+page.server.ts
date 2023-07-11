@@ -6,17 +6,17 @@ import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 import { GetPlayerRanks } from '$lib/eliteapi/eliteapi';
 
 export const load: PageServerLoad = async ({ parent, setHeaders }) => {
-	const { player, profile, profiles, member } = await parent();
+	const { account, profile, member } = await parent();
 
-	if (!player.uuid || !profile.profileId || !player.displayname) {
+	if (!account.id || !account.name || !profile.profileId) {
 		throw error(404, 'Player not found');
 	}
 
-	if (!player.displayname || !member || !member.profileId) {
+	if (!member.profileId) {
 		throw error(404, 'Skyblock profile not found for this player!');
 	}
 
-	const { data: ranks } = await GetPlayerRanks(player.uuid, profile.profileId);
+	const { data: ranks } = await GetPlayerRanks(account.id, profile.profileId);
 
 	const collections = Object.entries(member.collections ?? {})
 		.filter(([key]) => PROPER_CROP_NAME[key])
@@ -44,10 +44,6 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	});
 
 	return {
-		player,
-		profile,
-		member,
-		profiles,
 		ranks,
 		collections,
 	}
