@@ -25,7 +25,6 @@
 	<div slot="rest" class="grid col-span-1">
 		{#each members?.filter(m => m?.active) ?? [] as member}
 			<a
-				data-sveltekit-reload
 				href={`/stats/${member.username ?? member.uuid}/${profileId}`}
 				class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
 				>{member.username}</a
