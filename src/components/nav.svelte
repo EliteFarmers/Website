@@ -27,16 +27,8 @@
 	let searchVal = '';
 
 	async function search() {
-		const isAtStats = $page.url.pathname.startsWith('/stats');
+		await goto(`/@${searchVal}`);
 
-		const url = `${$page.url.origin}/stats/${searchVal}`;
-
-		if (isAtStats) {
-			window.location.href = url;
-			goto(url);
-		} else {
-			await goto(url);
-		}
 		searchVal = '';
 	}
 </script>

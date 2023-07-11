@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import type { components } from '$lib/eliteapi/api';
 
@@ -38,4 +39,5 @@
 	<button class="block lg:hidden rounded-md p-3 bg-gray-200 dark:bg-zinc-700" on:click={() => (showMore = !showMore)}
 		>Show {showMore ? 'Less' : 'More'}</button
 	>
+	<a class="block rounded-md p-3 bg-gray-200 dark-zinc-700" href={$page.url.pathname + '/contests'}>View All Contests</a>
 </div>

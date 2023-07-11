@@ -4,7 +4,7 @@
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>
 
-<a href="/stats/{entry.playerName}" data-sveltekit-preload-data="off" class="bg-gray-200 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-900 rounded-lg">
+<a href="/@{entry.playerName}" data-sveltekit-preload-data="off" class="bg-gray-200 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-900 rounded-lg">
 	<div class="flex gap-0 md:gap-2 justify-between">
 		<div
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"

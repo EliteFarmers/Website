@@ -3,11 +3,12 @@
 	import { getReadableSkyblockDate } from '$lib/format';
 
 	export let contest: components['schemas']['ContestParticipationDto'];
+	export let irlTime = false;
 
 	$: ({ crop, position, participants, collected, timestamp, medal } = contest);
 
 	$: cropName = crop ?? 'Not Found';
-	$: ranking = position && position !== -1;
+	$: ranking = (position ?? 0) > -1;
 </script>
 
 <a href="/contest/{timestamp}" data-sveltekit-preload-data="off" class="p-2 flex flex-col hover:shadow-lg hover:bg-gray-100 dark:hover:bg-zinc-900 gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop?.replace(' ', '')}">
@@ -16,7 +17,7 @@
 		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
-	<h3 class="text-lg font-semibold">
+	<h3 class="text-lg font-semibold flex flex-row items-center gap-1">
 		{#if medal === 'gold'}
 			<img class="inline-block w-5 h-5" src="/images/medals/gold.webp" alt="Earned Medal" />
 		{:else if medal === 'silver'}
@@ -26,7 +27,14 @@
 		{/if}
 		{(collected ?? 0).toLocaleString()}
 	</h3>
-	<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</h6>
+	{#if irlTime}
+		<h6 class="text-xs font-mono font-semibold">{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
+			timeStyle: 'short',
+			dateStyle: 'medium',
+		})}</h6>
+	{:else}
+		<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</h6>
+	{/if}
 </a>
 
 <style lang="postcss">

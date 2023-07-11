@@ -24,9 +24,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
     if (!selectedProfile.profileId) {
         throw error(404, 'Profile not found');
     }
-
-    console.log(selectedProfile);
-
+    
     const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId);
 
     if (!member) {

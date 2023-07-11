@@ -7,7 +7,7 @@
 
 <div class="block max-w-fit p-2 px-3 m-1 rounded-md bg-gray-200 dark:bg-zinc-700">
 	<div class="flex items-center gap-2">
-		<h1 class="whitespace-nowrap text-base">{username}</h1>
+		<h1 class="whitespace-nowrap text-base">{username ?? 'Discord N/A'}</h1>
 		<div class="relative">
 			{#if linked}
 				<!-- Verified checkmark -->
