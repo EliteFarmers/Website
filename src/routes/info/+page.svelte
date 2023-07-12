@@ -158,7 +158,7 @@
 				Feedback and support from the <a
 					class="underline"
 					rel="nofollow noreferrer noopener"
-					href={PUBLIC_COMMUNITY_INVITE}>Elite Skyblock Farmers</a
+					href="/discord">Elite Skyblock Farmers</a
 				>.
 			</p>
 			<br /><br />

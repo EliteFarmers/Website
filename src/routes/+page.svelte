@@ -1,7 +1,5 @@
 <script lang="ts">
 	import {
-		PUBLIC_BOT_INVITE,
-		PUBLIC_COMMUNITY_INVITE,
 		PUBLIC_DONATION_URL,
 		PUBLIC_WEIGHT_REQ,
 	} from '$env/static/public';
@@ -36,7 +34,7 @@
 						farming weight. Also home to support for the bot/website, and thousands of fellow farmers!
 					</p>
 					<Button
-						href={PUBLIC_COMMUNITY_INVITE}
+						href="/discord"
 						class="w-fit font-semibold"
 						color="blue"
 						target="_blank"
@@ -65,7 +63,7 @@
 						the website for now, leaderboards and stats may be out of sync.
 					</p>
 					<Button
-						href={PUBLIC_BOT_INVITE}
+						href='/invite'
 						class="w-fit font-semibold"
 						target="_blank"
 						color="blue"
