@@ -41,7 +41,7 @@
 	<div class="hidden relative md:flex lg:order-1 w-1/3" id="mobile-menu-3">
 		<div class="relative md:block w-full">
 			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
-				<Input let:props placeholder="Player name" size="md">
+				<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
 					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
 				<Button class="!p-2.5 h-full" type="submit" name="Search">
@@ -93,7 +93,7 @@
 	<Dropdown class="w-full" color="none" placement="bottom-end" triggeredBy="#search-button">
 		<DropdownItem defaultClass="w-full">
 			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
-				<Input let:props placeholder="Player name" size="md">
+				<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
 					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
 				<Button class="!p-2.5 h-full" type="submit" name="Search">

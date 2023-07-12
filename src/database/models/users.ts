@@ -8,8 +8,6 @@ import type {
 	WhereAttributeHash,
 } from 'sequelize';
 
-
-
 export interface WeightBreakdown {
 	total: number;
 	bonus: number;

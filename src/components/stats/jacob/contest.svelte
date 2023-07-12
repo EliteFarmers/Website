@@ -11,7 +11,14 @@
 	$: ranking = (position ?? 0) > -1;
 </script>
 
-<a href="/contest/{timestamp}" data-sveltekit-preload-data="off" class="p-2 flex flex-col hover:shadow-lg hover:bg-gray-100 dark:hover:bg-zinc-900 gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop?.replace(' ', '')}">
+<a
+	href="/contest/{timestamp}"
+	data-sveltekit-preload-data="off"
+	class="p-2 flex flex-col hover:shadow-lg hover:bg-gray-100 dark:hover:bg-zinc-900 gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop?.replace(
+		' ',
+		''
+	)}"
+>
 	<h3 class="first-letter:uppercase text-sm">
 		<span class="p-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md">{cropName}</span>
 		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
@@ -28,10 +35,12 @@
 		{(collected ?? 0).toLocaleString()}
 	</h3>
 	{#if irlTime}
-		<h6 class="text-xs font-mono font-semibold">{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
-			timeStyle: 'short',
-			dateStyle: 'medium',
-		})}</h6>
+		<h6 class="text-xs font-mono font-semibold">
+			{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
+				timeStyle: 'short',
+				dateStyle: 'medium',
+			})}
+		</h6>
 	{:else}
 		<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</h6>
 	{/if}

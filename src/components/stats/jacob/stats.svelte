@@ -4,7 +4,7 @@
 	export let jacob: components['schemas']['JacobDataDto'] | undefined;
 
 	$: firstPlaces = jacob?.contests?.filter((contest) => contest.position === 0).length ?? 0;
-	
+
 	// Calculate which crop has the most contests and get the count
 	$: highest = Object.entries(
 		jacob?.contests?.reduce((acc, contest) => {
@@ -17,13 +17,16 @@
 			}
 			return acc;
 		}, {} as Record<string, number>) ?? {}
-	).reduce((acc, [crop, count]) => {
-		if (count > acc[1]) {
-			acc[0] = crop;
-			acc[1] = count;
-		}
-		return acc;
-	}, ['', 0]);
+	).reduce(
+		(acc, [crop, count]) => {
+			if (count > acc[1]) {
+				acc[0] = crop;
+				acc[1] = count;
+			}
+			return acc;
+		},
+		['', 0]
+	);
 </script>
 
 <div class="flex flex-col my-4 gap-2">

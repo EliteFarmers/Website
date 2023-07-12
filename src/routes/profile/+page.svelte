@@ -43,45 +43,45 @@
 		</div>
 		<!-- Form to input username to link account -->
 
-			<form method="POST" class="w-full max-w-md mb-16" use:enhance>
-				<div class="flex flex-col gap-4 items-center w-full">
-					<div class="grid col-span-1 relative w-full">
-						<input
-							type="text"
-							name="username"
-							class="w-full px-4 py-2 border-2 rounded text-black"
-							placeholder="Username"
-						/>
-						<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>
-					</div>
-					<button
-						type="submit"
-						formaction="?/link"
-						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-					>
-						Link Account
-					</button>
-						<button
-						type="submit"
-						formaction="?/unlink"
-						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-					>
-						Unlink Account
-					</button>
+		<form method="POST" class="w-full max-w-md mb-16" use:enhance>
+			<div class="flex flex-col gap-4 items-center w-full">
+				<div class="grid col-span-1 relative w-full">
+					<input
+						type="text"
+						name="username"
+						class="w-full px-4 py-2 border-2 rounded text-black"
+						placeholder="Username"
+					/>
+					<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>
 				</div>
-			</form>
-			{#if !user?.minecraftAccounts?.length}
-				<div class="text-center flex flex-col">
-					<h1 class="text-lg py-2">
-						Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
-					</h1>
-					<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
-					<h1 class="text-md py-2">
-						(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
-						example)
-					</h1>
-				</div>
-			{/if}
+				<button
+					type="submit"
+					formaction="?/link"
+					class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+				>
+					Link Account
+				</button>
+				<button
+					type="submit"
+					formaction="?/unlink"
+					class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+				>
+					Unlink Account
+				</button>
+			</div>
+		</form>
+		{#if !user?.minecraftAccounts?.length}
+			<div class="text-center flex flex-col">
+				<h1 class="text-lg py-2">
+					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
+				</h1>
+				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
+				<h1 class="text-md py-2">
+					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
+					example)
+				</h1>
+			</div>
+		{/if}
 	</div>
 	<section class="flex flex-col lg:w-[70%]">
 		<h1 class="text-2xl mb-4">Events</h1>

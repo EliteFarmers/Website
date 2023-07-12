@@ -1,8 +1,5 @@
 <script lang="ts">
-	import {
-		PUBLIC_DONATION_URL,
-		PUBLIC_WEIGHT_REQ,
-	} from '$env/static/public';
+	import { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } from '$env/static/public';
 
 	import Head from '$comp/head.svelte';
 	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
@@ -63,7 +60,7 @@
 						the website for now, leaderboards and stats may be out of sync.
 					</p>
 					<Button
-						href='/invite'
+						href="/invite"
 						class="w-fit font-semibold"
 						target="_blank"
 						color="blue"

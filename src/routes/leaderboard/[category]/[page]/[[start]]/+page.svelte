@@ -12,16 +12,18 @@
 	$: firstHalf = data.lb.slice(0, Math.ceil(data.lb.length / 2)) as LeaderboardEntry[];
 	$: secondHalf = data.lb.slice(Math.ceil(data.lb.length / 2)) as LeaderboardEntry[];
 
-	const formatting = data.formatting;
+	$: formatting = data.formatting;
 
-	const entry = data.lb.find((e) => e.ign === data.jump && e.cute_name === data.profileName);
+	$: entry = data.lb.find((e) => e.ign === data.jump && e.cute_name === data.profileName);
 
 	const options: Intl.NumberFormatOptions = {
 		maximumFractionDigits: 1,
 	};
 
-	if (formatting === 'decimal') {
-		options.minimumFractionDigits = 1;
+	$: {
+		if (formatting === 'decimal') {
+			options.minimumFractionDigits = 1;
+		}
 	}
 
 	// Scroll back down to the buttons after navigating to prevent page jumping

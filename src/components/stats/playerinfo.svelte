@@ -23,8 +23,10 @@
 
 	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileIds[0] };
 
-	$: rankName = player?.rank 
-		?? (player?.monthlyPackageRank !== 'NONE' ? player?.monthlyPackageRank : player?.newPackageRank) ?? undefined;
+	$: rankName =
+		player?.rank ??
+		(player?.monthlyPackageRank !== 'NONE' ? player?.monthlyPackageRank : player?.newPackageRank) ??
+		undefined;
 	$: rank = getRankDefaults(rankName as RankName);
 </script>
 
@@ -41,7 +43,12 @@
 				/>
 			</div>
 			<div class="flex flex-col gap-1 justify-start">
-				<PlayerName ign={player?.displayname} {rank} members={members ?? undefined} profileId={profileIds[0].id} />
+				<PlayerName
+					ign={player?.displayname}
+					{rank}
+					members={members ?? undefined}
+					profileId={profileIds[0].id}
+				/>
 				<div class="flex justify-start">
 					<Skyblocklevel xp={skyblockXP} />
 					<Discord username={discordName} {linked} />

@@ -1,9 +1,9 @@
-import createClient from "openapi-fetch";
-import type { components, paths } from "./api";
-import { ELITE_API_URL, NODE_ENV } from "$env/static/private";
+import createClient from 'openapi-fetch';
+import type { components, paths } from './api';
+import { ELITE_API_URL, NODE_ENV } from '$env/static/private';
 
-if (NODE_ENV === "development") {
-	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+if (NODE_ENV === 'development') {
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -11,135 +11,149 @@ const { get, post, del } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
 });
 
-export const GetAuthorizedAccount = async (accessToken: string) => await get('/api/Account', {
-	headers: {
-		Authorization: `Bearer ${accessToken}`
-	}
-});
+export const GetAuthorizedAccount = async (accessToken: string) =>
+	await get('/api/Account', {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
 
-export const GetAccount = async (playerUuidOrIgn: string) => await get('/api/Account/{playerUuidOrIgn}', {
-	params: {
-		path: {
-			playerUuidOrIgn,
-		}
-	}
-});
+export const GetAccount = async (playerUuidOrIgn: string) =>
+	await get('/api/Account/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				playerUuidOrIgn,
+			},
+		},
+	});
 
-export const GetAccountByDiscordId = async (discordId: number) => await get('/api/Account/{discordId}', {
-	params: {
-		path: {
-			discordId,
-		}
-	}
-});
+export const GetAccountByDiscordId = async (discordId: number) =>
+	await get('/api/Account/{discordId}', {
+		params: {
+			path: {
+				discordId,
+			},
+		},
+	});
 
-export const GetPlayer = async (playerUuidOrIgn: string) => await get('/api/Player/{playerUuidOrIgn}', {
-	params: {
-		path: {
-			playerUuidOrIgn,
-		}
-	}
-});
+export const GetPlayer = async (playerUuidOrIgn: string) =>
+	await get('/api/Player/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				playerUuidOrIgn,
+			},
+		},
+	});
 
+export const GetPlayerByDiscordId = async (id: string) =>
+	await get('/api/Player/{discordId}', {
+		params: {
+			path: {
+				discordId: id as unknown as number,
+			},
+		},
+	});
 
-export const GetPlayerByDiscordId = async (id: string) => await get('/api/Player/{discordId}', {
-	params: {
-		path: {
-			discordId: id as unknown as number,
-		}
-	}
-});
+export const GetProfiles = async (playerUuid: string) =>
+	await get('/api/Profiles/{playerUuid}', {
+		params: {
+			path: {
+				playerUuid,
+			},
+		},
+	});
 
-export const GetProfiles = async (playerUuid: string) => await get('/api/Profiles/{playerUuid}', {
-	params: {
-		path: {
-			playerUuid
-		}
-	}
-});
+export const GetProfile = async (profileUuid: string) =>
+	await get('/api/Profile/{profileUuid}', {
+		params: {
+			path: {
+				profileUuid,
+			},
+		},
+	});
 
-export const GetProfile = async (profileUuid: string) => await get('/api/Profile/{profileUuid}', {
-	params: {
-		path: {
-			profileUuid
-		}
-	}
-});
+export const GetProfileMember = async (playerUuid: string, profileUuid: string) =>
+	await get('/api/Profile/{playerUuid}/{profileUuid}', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+		},
+	});
 
-export const GetProfileMember = async (playerUuid: string, profileUuid: string) => await get('/api/Profile/{playerUuid}/{profileUuid}', {
-	params: {
-		path: {
-			playerUuid,
-			profileUuid
-		}
-	}
-});
+export const GetSelectedProfileMember = async (playerUuid: string) =>
+	await get('/api/Profile/{uuid}/Selected', {
+		params: {
+			path: {
+				uuid: playerUuid,
+			},
+		},
+	});
 
-export const GetSelectedProfileMember = async (playerUuid: string) => await get('/api/Profile/{uuid}/Selected', {
-	params: {
-		path: {
-			uuid: playerUuid
-		}
-	}
-});
+export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
+	await get('/api/Leaderboard/ranks/{playerUuid}/{profileUuid}', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+		},
+	});
 
-export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) => await get('/api/Leaderboard/ranks/{playerUuid}/{profileUuid}', {
-	params: {
-		path: {
-			playerUuid,
-			profileUuid
-		}
-	}
-});
+export const GetPlayerContests = async (playerUuid: string, profileUuid: string) =>
+	await get('/api/Contests/{playerUuid}/{profileUuid}', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+		},
+	});
 
-export const GetPlayerContests = async (playerUuid: string, profileUuid: string) => await get('/api/Contests/{playerUuid}/{profileUuid}', {
-	params: {
-		path: {
-			playerUuid,
-			profileUuid
-		}
-	}
-});
+export const GetContests = async (timestamp: number) =>
+	await get('/api/Contests/{timestamp}', {
+		params: {
+			path: {
+				timestamp,
+			},
+		},
+	});
 
-export const GetContests = async (timestamp: number) => await get('/api/Contests/{timestamp}', {
-	params: {
-		path: {
-			timestamp
-		}
-	}
-});
+export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) =>
+	await post('/api/Account/primary/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				playerUuidOrIgn,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
 
-export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) => await post('/api/Account/primary/{playerUuidOrIgn}', {
-	params: {
-		path: {
-			playerUuidOrIgn,
-		}
-	},
-	headers: {
-		Authorization: `Bearer ${accessToken}`
-	}
-});
+export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) =>
+	await post('/api/Account/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				playerUuidOrIgn,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
 
-export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) => await post('/api/Account/{playerUuidOrIgn}', {
-	params: {
-		path: {
-			playerUuidOrIgn,
-		}
-	},
-	headers: {
-		Authorization: `Bearer ${accessToken}`
-	}
-});
-
-export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string) => await del('/api/Account/{playerUuidOrIgn}', {
-	params: {
-		path: {
-			playerUuidOrIgn,
-		}
-	},
-	headers: {
-		Authorization: `Bearer ${accessToken}`
-	}
-});
+export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string) =>
+	await del('/api/Account/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				playerUuidOrIgn,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
 
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];

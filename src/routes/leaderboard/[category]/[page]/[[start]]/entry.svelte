@@ -12,15 +12,16 @@
 		maximumFractionDigits: 1,
 	};
 
-	if (formatting === 'decimal') {
-		options.minimumFractionDigits = 1;
+	$: {
+		if (formatting === 'decimal') {
+			options.minimumFractionDigits = 1;
+		}
 	}
-
-	const { ign, amount, profile, uuid, cute_name } = entry;
+	$: ({ ign, amount, profile, uuid, cute_name } = entry);
 </script>
 
 <a
-	href="/stats/{uuid ?? encodeURIComponent(ign)}/{profile ?? encodeURIComponent(cute_name)}"
+	href="/@{uuid ?? encodeURIComponent(ign)}/{profile ?? encodeURIComponent(cute_name)}"
 	class="inline-block w-full hover:shadow-lg hover:bg-gray-100 hover:dark:bg-zinc-600 align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"

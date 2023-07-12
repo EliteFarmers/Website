@@ -155,10 +155,8 @@
 				>.
 			</p>
 			<p class="text-lg my-4">
-				Feedback and support from the <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="/discord">Elite Skyblock Farmers</a
+				Feedback and support from the <a class="underline" rel="nofollow noreferrer noopener" href="/discord"
+					>Elite Skyblock Farmers</a
 				>.
 			</p>
 			<br /><br />

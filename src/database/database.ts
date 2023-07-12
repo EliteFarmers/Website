@@ -2,12 +2,7 @@ import { fetchProfiles } from '$lib/data';
 import { RateLimiter } from '$lib/limiter/RateLimiter';
 import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
-import {
-	UsersInit,
-	type UserInfo,
-	type UserUpdateOptions,
-	type UserWhereOptions,
-} from './models/users';
+import { UsersInit, type UserInfo, type UserUpdateOptions, type UserWhereOptions } from './models/users';
 import { client } from './redis';
 import dbConfig from './database.json';
 import { building } from '$app/environment';
@@ -28,7 +23,7 @@ export const sequelize = new Sequelize(settings.database, settings.username, set
 	logging: false,
 });
 
- export const User = UsersInit(sequelize);
+export const User = UsersInit(sequelize);
 // export const Server = ServersInit(sequelize);
 // export const Event = EventsInit(sequelize);
 

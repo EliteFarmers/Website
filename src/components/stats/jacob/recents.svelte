@@ -39,5 +39,10 @@
 	<button class="block lg:hidden rounded-md p-3 bg-gray-200 dark:bg-zinc-700" on:click={() => (showMore = !showMore)}
 		>Show {showMore ? 'Less' : 'More'}</button
 	>
-	<a class="block rounded-md p-3 bg-gray-200 dark-zinc-700" href={$page.url.pathname + '/contests'}>View All Contests</a>
+	<div class="flex w-full items-center justify-center">
+		<a
+			class="block rounded-md p-3 px-8 bg-gray-200 dark:bg-zinc-700 text-center"
+			href={$page.url.pathname + '/contests'}>View All Contests</a
+		>
+	</div>
 </div>

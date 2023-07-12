@@ -16,6 +16,8 @@ export const load: LayoutServerLoad = async ({ locals, parent }) => {
 	return {
 		user: locals.user,
 		premium: premium,
-		mcUuid: locals.user.minecraftAccounts?.find((account) => account.primaryAccount)?.name ?? locals.user.minecraftAccounts?.[0]?.name,
+		mcUuid:
+			locals.user.minecraftAccounts?.find((account) => account.primaryAccount)?.name ??
+			locals.user.minecraftAccounts?.[0]?.name,
 	};
 };

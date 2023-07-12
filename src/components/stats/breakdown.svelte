@@ -13,7 +13,7 @@
 			weight = {
 				totalWeight: 0,
 				cropWeight: {},
-				bonusWeight: {}
+				bonusWeight: {},
 			};
 		}
 	}
@@ -23,7 +23,7 @@
 
 	$: {
 		if (sources.length === 0) {
-		sources.push(['None Found - API might be off', 0]);
+			sources.push(['None Found - API might be off', 0]);
 		}
 
 		if (bonuses.length === 0) {
@@ -39,9 +39,7 @@
 			<div class="w-full md:w-1/3">
 				<h3>
 					Crops
-					<span class="text-gray-500 dark:text-zinc-300 pl-2"
-						>({(total - bonus).toLocaleString()})</span
-					>
+					<span class="text-gray-500 dark:text-zinc-300 pl-2">({(total - bonus).toLocaleString()})</span>
 				</h3>
 				{#each sources as [source, value] (source)}
 					<div class="item">

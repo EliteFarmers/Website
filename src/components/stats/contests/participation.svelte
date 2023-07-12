@@ -1,10 +1,14 @@
 <script lang="ts">
-	import type { components } from "$lib/eliteapi/api";
+	import type { components } from '$lib/eliteapi/api';
 
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>
 
-<a href="/@{entry.playerName}" data-sveltekit-preload-data="off" class="bg-gray-200 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-900 rounded-lg">
+<a
+	href="/@{entry.playerName}"
+	data-sveltekit-preload-data="off"
+	class="bg-gray-200 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-900 rounded-md"
+>
 	<div class="flex gap-0 md:gap-2 justify-between">
 		<div
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
@@ -12,8 +16,8 @@
 			<div class="text-green-800 dark:text-green-300">
 				<h1>
 					{#if entry.position !== -1}
-						<span class="text-sm xs:text-md sm:text-2xl">#</span><span class="text-lg xs:text-xl sm:text-3xl"
-							>{(entry.position ?? 0) + 1}</span
+						<span class="text-sm xs:text-md sm:text-2xl">#</span><span
+							class="text-lg xs:text-xl sm:text-3xl">{(entry.position ?? 0) + 1}</span
 						>
 					{:else}
 						<span class="text-sm xs:text-md sm:text-2xl">???</span>
@@ -26,7 +30,7 @@
 			</div>
 		</div>
 		<div class="flex gap-2 p-1 justify-end align-middle items-center mr-2 md:mx-2">
-			<div class="text-sm xs:text-xl sm:text-2xl">
+			<div class="text-sm xs:text-xl sm:text-2xl font-mono">
 				{entry.collected?.toLocaleString()}
 			</div>
 		</div>

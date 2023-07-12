@@ -17,7 +17,8 @@
 	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
-	
+	import { browser } from '$app/environment';
+
 	export let data: PageData;
 
 	$: uuid = data.account.id;
@@ -41,15 +42,18 @@
 	);
 	$: showSkills = $page.url.href.includes('#Skills');
 
-	onMount(async () => {
-		const url = `/@${ign}/${profileName}`;
-		if ($page.url.pathname !== url) {
-			history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
+	$: {
+		if (browser) {
+			const url = `/@${ign}/${profileName}`;
+			if ($page.url.pathname !== url) {
+				history.replaceState(history.state, document.title, url + ($page.url.hash ?? ''));
+			}
 		}
-	});
+	}
 
 	$: weightStr =
-		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? "hasn't loaded their";
+		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ??
+		"hasn't loaded their";
 	$: description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
@@ -62,21 +66,23 @@
 <main class="m-0 p-0 w-full">
 	<PlayerInfo
 		{player}
-		members={profile.members?.filter(m => m.uuid !== uuid)}
+		members={profile.members?.filter((m) => m.uuid !== uuid)}
 		{profileIds}
-		linked={false}
+		linked={(data.account.discordId ?? null) !== null}
 		weightInfo={member.farmingWeight}
 		{weightRank}
 		skyblockXP={member.skyblockXp ?? 0}
 	/>
 
 	<!-- API settings not in API yet, will be soon:tm: -->
-	<APIstatus api={{
-		skills: { enabled: !!member.skills },
-		collections: { enabled: !!member.collections },
-		vault: { enabled: true },
-		inventory: { enabled: true },
-	}} />
+	<APIstatus
+		api={{
+			skills: { enabled: (member.skills?.combat ?? 0) > 0 },
+			collections: { enabled: Object.keys(member.collections ?? {}).length > 0 },
+			vault: { enabled: true },
+			inventory: { enabled: true },
+		}}
+	/>
 
 	<section class="flex items-center justify-center w-full py-4">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">

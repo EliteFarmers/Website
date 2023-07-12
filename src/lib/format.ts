@@ -103,7 +103,7 @@ export function getContestTimeStamp(contestKey: string) {
 	const split = contestKey.split(':');
 	const skyblockYear = +split[0];
 	const skyblockMonth = +split[1].split('_')[0] - 1;
-	const skyblockDay = +split[1].split('_')[1];
+	const skyblockDay = +split[1].split('_')[1] - 1;
 
 	return getTimeStamp(skyblockYear, skyblockMonth, skyblockDay);
 }
@@ -125,22 +125,18 @@ export function getSkyblockDate(unixSeconds: string | number) {
 	const totalDays = realLifeSeconds / (20 * 60);
 
 	// Convert skyblock days to skyblock year, month, and day
-	const sbYear = Math.floor(totalDays / 372);
-	const sbMonth = Math.floor((totalDays % 372) / 31);
+	const year = Math.floor(totalDays / 372);
+	const month = Math.floor((totalDays % 372) / 31);
 
-	const sbDay = Math.floor((totalDays % 372) % 31);
+	const day = Math.floor((totalDays % 372) % 31);
 
-	return {
-		year: sbYear,
-		month: sbDay !== 0 ? sbMonth : sbMonth - 1,
-		day: sbDay !== 0 ? sbDay : 31,
-	};
+	return { year, month, day };
 }
 
 export function getReadableSkyblockDate(unixSeconds: string | number) {
 	const { year, month, day } = getSkyblockDate(unixSeconds);
 
-	const suffix = appendOrdinalSuffix(day);
+	const suffix = appendOrdinalSuffix(day + 1);
 
 	return `${SKYBLOCK_MONTHS[+month]} ${suffix}, Year ${+year + 1}`; // Year is 1 behind in api
 }

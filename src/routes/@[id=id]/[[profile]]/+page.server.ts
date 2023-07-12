@@ -28,16 +28,16 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 			weight: 0,
 		})) as Collection[];
 
-		for (const collection of collections) {
-			if (!collection.name) continue;
+	for (const collection of collections) {
+		if (!collection.name) continue;
 
-			const minion = PROPER_CROP_TO_MINION[collection.name] ?? 'no';
-			collection.minionTierField = member.craftedMinions?.[minion] ?? 0;
-			collection.weight = member.farmingWeight?.cropWeight?.[collection.name] ?? 0;
-			collection.maxTier = FarmingCollections.crops[collection.name].length;
-			collection.tier = FarmingCollections.crops[collection.name].findIndex((t) => t > collection.value) + 1;
-			if (collection.tier === 0) collection.tier = collection.maxTier;
-		}
+		const minion = PROPER_CROP_TO_MINION[collection.name] ?? 'no';
+		collection.minionTierField = member.craftedMinions?.[minion] ?? 0;
+		collection.weight = member.farmingWeight?.cropWeight?.[collection.name] ?? 0;
+		collection.maxTier = FarmingCollections.crops[collection.name].length;
+		collection.tier = FarmingCollections.crops[collection.name].findIndex((t) => t > collection.value) + 1;
+		if (collection.tier === 0) collection.tier = collection.maxTier;
+	}
 
 	setHeaders({
 		'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
@@ -46,7 +46,7 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	return {
 		ranks,
 		collections,
-	}
+	};
 };
 
 interface Collection {
