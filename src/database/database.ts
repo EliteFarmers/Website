@@ -4,7 +4,6 @@ import type { Profiles, AccountInfo, PlayerInfo } from '$lib/skyblock';
 import { Op, Sequelize } from 'sequelize';
 import {
 	UsersInit,
-	type DiscordUser,
 	type UserInfo,
 	type UserUpdateOptions,
 	type UserWhereOptions,
@@ -29,7 +28,7 @@ export const sequelize = new Sequelize(settings.database, settings.username, set
 	logging: false,
 });
 
-export const User = UsersInit(sequelize);
+ export const User = UsersInit(sequelize);
 // export const Server = ServersInit(sequelize);
 // export const Event = EventsInit(sequelize);
 
@@ -42,17 +41,17 @@ export async function SyncTables() {
 	DBReady = true;
 
 	try {
-		await sequelize.authenticate();
+		// await sequelize.authenticate();
 		if (!client.isOpen) {
 			await client.connect();
 		}
 
-		await User.sync({ force: false });
+		//await User.sync({ force: false });
 		//await Server.sync({ force: false });
 		//await Event.sync({ force: false });
 
 		limiter = new RateLimiter({ tokensPerInterval: 4, interval: 'minute' });
-		void RefreshDataTask();
+		//void RefreshDataTask();
 
 		console.log('Connected to database.');
 	} catch (error) {
@@ -63,7 +62,7 @@ export async function SyncTables() {
 }
 
 // Runs once on startup
-await SyncTables();
+// await SyncTables();
 // ==================== //
 
 export async function GetUser(uuid: string) {
@@ -114,7 +113,7 @@ async function findOne(options: UserWhereOptions) {
 	return user;
 }
 
-export async function FindUserToLink(discordUser: DiscordUser) {
+export async function FindUserToLink(discordUser: unknown) {
 	const username =
 		discordUser.discriminator && discordUser.discriminator !== '0'
 			? `${discordUser.username}#${discordUser.discriminator}`

@@ -8,26 +8,7 @@ import type {
 	WhereAttributeHash,
 } from 'sequelize';
 
-export interface DiscordUser {
-	id: string;
-	username: string;
-	discriminator?: string;
-	global_name: string;
-	display_name: string;
-	avatar: string;
-	avatar_decoration?: string | null;
-	email: string;
-	verified: boolean;
-	mfa_enabled: boolean;
-	locale: string;
-	premium_type?: string;
-	public_flags: number;
-	flags: number;
-	premium_since?: string;
-	banner?: string | null;
-	banner_color?: string | null;
-	accent_color?: string | null;
-}
+
 
 export interface WeightBreakdown {
 	total: number;
@@ -81,7 +62,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 
 	// Discord
 	declare id: CreationOptional<string | null>;
-	declare user: CreationOptional<DiscordUser | null>;
+	declare user: CreationOptional<null>;
 }
 
 export function UsersInit(sequelize: Sequelize) {

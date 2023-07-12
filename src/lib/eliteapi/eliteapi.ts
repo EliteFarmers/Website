@@ -1,5 +1,5 @@
 import createClient from "openapi-fetch";
-import type { paths } from "./api";
+import type { components, paths } from "./api";
 import { ELITE_API_URL, NODE_ENV } from "$env/static/private";
 
 if (NODE_ENV === "development") {
@@ -7,8 +7,14 @@ if (NODE_ENV === "development") {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-const { get } = createClient<paths>({
+const { get, post, del } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
+});
+
+export const GetAuthorizedAccount = async (accessToken: string) => await get('/api/Account', {
+	headers: {
+		Authorization: `Bearer ${accessToken}`
+	}
 });
 
 export const GetAccount = async (playerUuidOrIgn: string) => await get('/api/Account/{playerUuidOrIgn}', {
@@ -102,3 +108,38 @@ export const GetContests = async (timestamp: number) => await get('/api/Contests
 		}
 	}
 });
+
+export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) => await post('/api/Account/primary/{playerUuidOrIgn}', {
+	params: {
+		path: {
+			playerUuidOrIgn,
+		}
+	},
+	headers: {
+		Authorization: `Bearer ${accessToken}`
+	}
+});
+
+export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) => await post('/api/Account/{playerUuidOrIgn}', {
+	params: {
+		path: {
+			playerUuidOrIgn,
+		}
+	},
+	headers: {
+		Authorization: `Bearer ${accessToken}`
+	}
+});
+
+export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string) => await del('/api/Account/{playerUuidOrIgn}', {
+	params: {
+		path: {
+			playerUuidOrIgn,
+		}
+	},
+	headers: {
+		Authorization: `Bearer ${accessToken}`
+	}
+});
+
+export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];

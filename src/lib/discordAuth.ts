@@ -1,14 +1,14 @@
 import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL, PUBLIC_HOST_URL } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
+import { GetAuthorizedAccount, type AuthorizedUser } from './eliteapi/eliteapi';
 import crypto from 'crypto';
-import type { DiscordUser } from '$db/models/users';
 
 export type DiscordUpdateResponse = {
 	accessToken: string;
 	accessTokenExpires?: string;
 	refreshToken: string;
 	refreshTokenExpires?: string;
-	user: DiscordUser | null;
+	user: AuthorizedUser | null;
 } | null;
 
 export async function FetchDiscordUser(tokens: {
@@ -46,18 +46,13 @@ export async function FetchDiscordUser(tokens: {
 	};
 }
 
-async function fetchDiscordUser(accessToken: string): Promise<DiscordUser | null> {
-	const request = await fetch(`${PUBLIC_DISCORD_URL}/users/@me`, {
-		headers: { Authorization: `Bearer ${accessToken}` },
-	});
+async function fetchDiscordUser(accessToken: string): Promise<AuthorizedUser | null> {
+	const { data } = await GetAuthorizedAccount(accessToken);
 
-	if (!request.ok) return null;
+	if (!data) return null;
 
 	try {
-		const response = (await request.json()) as DiscordUser;
-		const discordUser = { ...response };
-
-		return discordUser;
+		return data;
 	} catch (_) {
 		return null;
 	}

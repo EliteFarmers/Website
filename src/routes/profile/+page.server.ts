@@ -1,89 +1,85 @@
-import { GetAccountFromDiscord, GetUserByIGN, LinkDiscordUser, UnlinkDiscordUser } from '$db/database';
-// import { FetchGuilds, FetchPremiumStatus } from '$lib/discord';
-import { IsIGN } from '$params/ign';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
+import { IsIGNOrUUID } from '$params/id';
+import { LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/eliteapi/eliteapi';
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const discordUser = locals.discordUser;
+export const load: PageServerLoad = ({ locals }) => {
+	const user = locals.user;
 	const token = locals.discord_access_token;
 
-	if (!discordUser?.id || !token) {
+	if (!user?.id || !token) {
 		throw redirect(302, '/login?redirect=/profile');
 	}
 
-	//const guilds = await FetchGuilds(token);
-	//const status = await FetchPremiumStatus(discordUser.id);
-
-	// if (!guilds) {
-	// 	throw error(500, 'Failed to fetch guilds.');
-	// }
-
-	const account = await GetAccountFromDiscord(discordUser.id);
+	const account = user.minecraftAccounts?.find((account) => account.primaryAccount) ?? user.minecraftAccounts?.[0];
 
 	return {
 		guildsWithBot: [], // guilds.filter((guild) => guild.hasBot),
 		guilds: [], // guilds.filter((guild) => !guild.hasBot),
 		premium: 'none' as string,
-		mcAccount: account?.account ?? null,
+		mcAccount: account ?? null,
 	};
 };
 
 export const actions: Actions = {
 	link: async ({ locals, request }) => {
-		if (!locals.discordUser?.id) {
+		if (!locals.discord_access_token) {
 			throw error(401, 'Unauthorized');
 		}
 
 		const data = await request.formData();
 		const username = data.get('username')?.toString();
 
-		if (!username || !IsIGN(username)) {
+		if (!username || !IsIGNOrUUID(username)) {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const foundUser = await GetUserByIGN(username);
+		const req = await LinkAccount(username, locals.discord_access_token);
 
-		if (!foundUser) {
-			return fail(404, { error: 'User not found.' });
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
 		}
-
-		const linkedName = foundUser.player?.player.socialMedia?.links?.DISCORD;
-
-		if (!linkedName) {
-			return fail(400, { error: 'User has no linked account on Hypixel.' });
-		}
-
-		const user = locals.discordUser;
-
-		// Support migrated accounts
-		const discordName =
-			user.discriminator && user.discriminator !== '0' ? `${user.username}#${user.discriminator}` : user.username;
-
-		if (discordName !== linkedName) {
-			return fail(400, { error: 'User has a different linked account on Hypixel.' });
-		}
-
-		// Success!
-		await LinkDiscordUser(foundUser.uuid, locals.discordUser);
 
 		return { success: true };
 	},
-	unlink: async ({ locals }) => {
-		if (!locals.discordUser) {
+	unlink: async ({ locals, request }) => {
+		if (!locals.discord_access_token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		const account = await GetAccountFromDiscord(locals.discordUser.id);
+		const data = await request.formData();
+		const username = data.get('username')?.toString();
 
-		if (!account?.account.id) {
-			return fail(400, { error: 'User not linked.' });
+		if (!username || !IsIGNOrUUID(username)) {
+			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const uuid = account.account.id;
+		const req = await UnlinkAccount(username, locals.discord_access_token);
 
-		await UnlinkDiscordUser(uuid);
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
+		}
 
 		return { success: true };
 	},
+	setPrimary: async ({ locals, request }) => {
+		if (!locals.discord_access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const username = data.get('username')?.toString();
+
+		if (!username || !IsIGNOrUUID(username)) {
+			return fail(400, { error: 'Invalid username.' });
+		}
+
+		const req = await SetPrimaryAccount(username, locals.discord_access_token);
+
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
+		}
+
+		return { success: true };
+	}
 };

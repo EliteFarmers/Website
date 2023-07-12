@@ -11,7 +11,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	locals.discord_refresh_token = refresh;
 
 	if (!locals.discord_access_token && !locals.discord_refresh_token) {
-		locals.discordUser = undefined;
+		locals.user = undefined;
 
 		return await resolve(event);
 	}
@@ -22,17 +22,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 	});
 
 	if (!discord) {
-		locals.discordUser = undefined;
+		locals.user = undefined;
 
 		cookies.delete('discord_access_token');
 		cookies.delete('discord_refresh_token');
-		// Log them out of PocketBase in order to get Discord tokens again on login
-		cookies.delete('pocketbase_auth');
 
 		return await resolve(event);
 	}
 
-	locals.discordUser = discord.user ?? undefined;
+	locals.user = discord.user ?? undefined;
 
 	updateCookies(event, discord);
 

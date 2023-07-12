@@ -11,9 +11,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": components["schemas"]["AccountEntities"];
-            "application/json": components["schemas"]["AccountEntities"];
-            "text/json": components["schemas"]["AccountEntities"];
+            "text/plain": components["schemas"]["AuthorizedAccountDto"];
+            "application/json": components["schemas"]["AuthorizedAccountDto"];
+            "text/json": components["schemas"]["AuthorizedAccountDto"];
           };
         };
       };
@@ -64,13 +64,7 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["AccountEntities"];
-            "application/json": components["schemas"]["AccountEntities"];
-            "text/json": components["schemas"]["AccountEntities"];
-          };
-        };
+        200: never;
       };
     };
     delete: {
@@ -81,13 +75,20 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["AccountEntities"];
-            "application/json": components["schemas"]["AccountEntities"];
-            "text/json": components["schemas"]["AccountEntities"];
-          };
+        200: never;
+      };
+    };
+  };
+  "/api/Account/primary/{playerUuidOrIgn}": {
+    post: {
+      parameters: {
+        path: {
+          playerUuidOrIgn: string;
         };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
       };
     };
   };
@@ -613,25 +614,21 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    AccountEntities: {
-      /** Format: int64 */
-      id?: number;
-      /** Format: int32 */
-      permissions?: number;
-      displayName?: string | null;
-      username?: string | null;
+    AuthorizedAccountDto: {
+      id?: string;
+      displayName?: string;
+      username?: string;
       discriminator?: string | null;
-      avatar?: string | null;
       email?: string | null;
       locale?: string | null;
-      purchases?: (components["schemas"]["Purchase"])[] | null;
-      redemptions?: (components["schemas"]["Redemption"])[] | null;
-      inventory?: components["schemas"]["EliteInventory"];
-      settings?: components["schemas"]["EliteSettings"];
-      minecraftAccounts?: (components["schemas"]["MinecraftAccount"])[] | null;
+      avatar?: string | null;
+      redemptions?: (components["schemas"]["RedemptionDto"])[];
+      inventory?: components["schemas"]["EliteInventoryDto"];
+      settings?: components["schemas"]["EliteSettingsDto"];
+      minecraftAccounts?: (components["schemas"]["MinecraftAccountDetailsDto"])[];
     };
     ContestParticipationDto: {
-      crop?: string | null;
+      crop?: string;
       /** Format: int64 */
       timestamp?: number;
       /** Format: int32 */
@@ -642,9 +639,9 @@ export interface components {
       participants?: number;
       medal?: string | null;
     };
-    EliteInventory: {
-      totalEarnedMedals?: components["schemas"]["MedalInventory"];
-      spentMedals?: components["schemas"]["MedalInventory"];
+    EliteInventoryDto: {
+      totalEarnedMedals?: components["schemas"]["MedalInventoryDto"];
+      spentMedals?: components["schemas"]["MedalInventoryDto"];
       /** Format: int32 */
       eventTokens?: number;
       /** Format: int32 */
@@ -653,48 +650,48 @@ export interface components {
       leaderboardTokens?: number;
       /** Format: int32 */
       leaderboardTokensSpent?: number;
-      unlockedCosmetics?: (string)[] | null;
+      unlockedCosmetics?: (string)[];
     };
-    EliteSettings: {
-      defaultPlayerUuid?: string | null;
+    EliteSettingsDto: {
+      defaultPlayerUuid?: string;
       hideDiscordTag?: boolean;
     };
     FarmingWeightDto: {
       /** Format: double */
       totalWeight?: number;
-      cropWeight?: ({
+      cropWeight?: {
         [key: string]: number | undefined;
-      }) | null;
-      bonusWeight?: ({
+      };
+      bonusWeight?: {
         [key: string]: number | undefined;
-      }) | null;
+      };
     };
     FarmingWeightWithProfileDto: {
-      profileId?: string | null;
-      profileName?: string | null;
+      profileId?: string;
+      profileName?: string;
       /** Format: double */
       totalWeight?: number;
-      cropWeight?: ({
+      cropWeight?: {
         [key: string]: number | undefined;
-      }) | null;
-      bonusWeight?: ({
+      };
+      bonusWeight?: {
         [key: string]: number | undefined;
-      }) | null;
+      };
     };
     JacobContestDto: {
-      crop?: string | null;
+      crop?: string;
       /** Format: int64 */
       timestamp?: number;
       /** Format: int32 */
       participants?: number;
     };
     JacobContestWithParticipationsDto: {
-      crop?: string | null;
+      crop?: string;
       /** Format: int64 */
       timestamp?: number;
       /** Format: int32 */
       participants?: number;
-      participations?: (components["schemas"]["StrippedContestParticipationDto"])[] | null;
+      participations?: (components["schemas"]["StrippedContestParticipationDto"])[];
     };
     JacobDataDto: {
       medals?: components["schemas"]["MedalInventoryDto"];
@@ -702,7 +699,7 @@ export interface components {
       perks?: components["schemas"]["JacobPerksDto"];
       /** Format: int32 */
       participations?: number;
-      contests?: (components["schemas"]["ContestParticipationDto"])[] | null;
+      contests?: (components["schemas"]["ContestParticipationDto"])[];
     };
     JacobPerksDto: {
       /** Format: int32 */
@@ -711,16 +708,16 @@ export interface components {
       levelCap?: number;
     };
     LeaderboardDto: {
-      id?: string | null;
-      title?: string | null;
+      id?: string;
+      title?: string;
       /** Format: int32 */
       limit?: number;
       /** Format: int32 */
       offset?: number;
-      entries?: (components["schemas"]["LeaderboardEntry"])[] | null;
+      entries?: (components["schemas"]["LeaderboardEntry"])[];
     };
     LeaderboardEntry: {
-      memberId?: string | null;
+      memberId?: string;
       ign?: string | null;
       profile?: string | null;
       /** Format: double */
@@ -732,27 +729,19 @@ export interface components {
       upcomingPlayers?: (components["schemas"]["LeaderboardEntry"])[] | null;
     };
     LeaderboardPositionsDto: {
-      misc?: ({
+      misc?: {
         [key: string]: number | undefined;
-      }) | null;
-      skills?: ({
+      };
+      skills?: {
         [key: string]: number | undefined;
-      }) | null;
-      collections?: ({
+      };
+      collections?: {
         [key: string]: number | undefined;
-      }) | null;
+      };
     };
     LinkedAccountsDto: {
       selectedUuid?: string | null;
-      players?: (components["schemas"]["PlayerDataDto"])[] | null;
-    };
-    MedalInventory: {
-      /** Format: int32 */
-      bronze?: number;
-      /** Format: int32 */
-      silver?: number;
-      /** Format: int32 */
-      gold?: number;
+      players?: (components["schemas"]["PlayerDataDto"])[];
     };
     MedalInventoryDto: {
       /** Format: int32 */
@@ -763,43 +752,34 @@ export interface components {
       gold?: number;
     };
     MemberDetailsDto: {
-      uuid?: string | null;
-      username?: string | null;
+      uuid?: string;
+      username?: string;
       active?: boolean;
     };
-    MinecraftAccount: {
-      id?: string | null;
-      name?: string | null;
-      /** Format: int64 */
-      accountId?: number | null;
-      selected?: boolean;
-      playerData?: components["schemas"]["PlayerData"];
-      properties?: (components["schemas"]["MinecraftAccountProperty"])[] | null;
-      /** Format: int64 */
-      lastUpdated?: number;
+    MinecraftAccountDetailsDto: {
+      id?: string;
+      name?: string;
+      primaryAccount?: boolean;
+      properties?: (components["schemas"]["MinecraftAccountPropertyDto"])[];
     };
     MinecraftAccountDto: {
-      id?: string | null;
-      name?: string | null;
+      id?: string;
+      name?: string;
       primaryAccount?: boolean;
-      /** Format: int64 */
-      discordId?: number | null;
+      discordId?: string | null;
       discordUsername?: string | null;
-      properties?: (components["schemas"]["MinecraftAccountPropertyDto"])[] | null;
-      profiles?: (components["schemas"]["ProfileDetailsDto"])[] | null;
+      discordAvatar?: string | null;
+      properties?: (components["schemas"]["MinecraftAccountPropertyDto"])[];
+      profiles?: (components["schemas"]["ProfileDetailsDto"])[];
       playerData?: components["schemas"]["PlayerDataDto"];
     };
-    MinecraftAccountProperty: {
-      name?: string | null;
-      value?: string | null;
-    };
     MinecraftAccountPropertyDto: {
-      name?: string | null;
-      value?: string | null;
+      name?: string;
+      value?: string;
     };
     PetDto: {
       uuid?: string | null;
-      type?: string | null;
+      type?: string;
       /** Format: double */
       exp?: number;
       active?: boolean;
@@ -809,44 +789,8 @@ export interface components {
       candyUsed?: number;
       skin?: string | null;
     };
-    PlayerData: {
-      /** Format: int32 */
-      id?: number;
-      uuid?: string | null;
-      minecraftAccount?: components["schemas"]["MinecraftAccount"];
-      displayName?: string | null;
-      /** Format: int64 */
-      firstLogin?: number;
-      /** Format: int64 */
-      lastLogin?: number;
-      /** Format: int64 */
-      lastLogout?: number;
-      /** Format: int32 */
-      karma?: number;
-      /** Format: double */
-      networkExp?: number;
-      /** Format: int32 */
-      rewardHighScore?: number;
-      /** Format: int32 */
-      rewardScore?: number;
-      /** Format: int32 */
-      rewardStreak?: number;
-      /** Format: int32 */
-      totalDailyRewards?: number;
-      /** Format: int32 */
-      totalRewards?: number;
-      rank?: string | null;
-      newPackageRank?: string | null;
-      rankPlusColor?: string | null;
-      monthlyPackageRank?: string | null;
-      mostRecentMonthlyPackageRank?: string | null;
-      monthlyRankColor?: string | null;
-      socialMedia?: components["schemas"]["SocialMediaLinks"];
-      /** Format: int64 */
-      lastUpdated?: number;
-    };
     PlayerDataDto: {
-      uuid?: string | null;
+      uuid?: string;
       displayname?: string | null;
       /** Format: int64 */
       firstLogin?: number;
@@ -877,33 +821,33 @@ export interface components {
       socialMedia?: components["schemas"]["SocialMediaLinksDto"];
     };
     ProfileDetailsDto: {
-      profileId?: string | null;
-      profileName?: string | null;
-      gameMode?: string | null;
+      profileId?: string;
+      profileName?: string;
+      gameMode?: string;
       selected?: boolean;
       /** Format: double */
       bankBalance?: number;
-      members?: (components["schemas"]["MemberDetailsDto"])[] | null;
+      members?: (components["schemas"]["MemberDetailsDto"])[];
     };
     ProfileMemberDto: {
-      profileId?: string | null;
-      playerUuid?: string | null;
+      profileId?: string;
+      playerUuid?: string;
       /** Format: int32 */
       skyblockXp?: number;
       /** Format: double */
       purse?: number;
       /** Format: double */
       bankBalance?: number;
-      collections?: ({
+      collections?: {
         [key: string]: number | undefined;
-      }) | null;
-      collectionTiers?: ({
+      };
+      collectionTiers?: {
         [key: string]: number | undefined;
-      }) | null;
-      craftedMinions?: ({
+      };
+      craftedMinions?: {
         [key: string]: number | undefined;
-      }) | null;
-      pets?: (components["schemas"]["PetDto"])[] | null;
+      };
+      pets?: (components["schemas"]["PetDto"])[];
       jacob?: components["schemas"]["JacobDataDto"];
       farmingWeight?: components["schemas"]["FarmingWeightDto"];
       skills?: components["schemas"]["SkillsDto"];
@@ -912,21 +856,9 @@ export interface components {
       /** Format: int64 */
       lastUpdated?: number;
     };
-    Purchase: {
-      purchaseType?: components["schemas"]["PurchaseType"];
-      /** Format: date-time */
-      timestamp?: string;
-      /** Format: double */
-      price?: number;
-    };
-    /**
-     * Format: int32 
-     * @enum {integer}
-     */
-    PurchaseType: 0 | 1 | 2 | 3;
-    Redemption: {
-      itemId?: string | null;
-      cost?: string | null;
+    RedemptionDto: {
+      itemId?: string;
+      cost?: string;
       /** Format: date-time */
       timestamp?: string;
     };
@@ -954,11 +886,6 @@ export interface components {
       /** Format: double */
       social?: number;
     };
-    SocialMediaLinks: {
-      discord?: string | null;
-      hypixel?: string | null;
-      youtube?: string | null;
-    };
     SocialMediaLinksDto: {
       discord?: string | null;
       hypixel?: string | null;
@@ -970,8 +897,8 @@ export interface components {
       /** Format: int32 */
       position?: number;
       medal?: string | null;
-      playerUuid?: string | null;
-      playerName?: string | null;
+      playerUuid?: string;
+      playerName?: string;
     };
     YearlyContestsDto: {
       /** Format: int32 */
@@ -979,9 +906,9 @@ export interface components {
       /** Format: int32 */
       count?: number;
       complete?: boolean;
-      contests?: ({
+      contests?: {
         [key: string]: (string)[] | undefined;
-      }) | null;
+      };
     };
   };
   responses: never;
