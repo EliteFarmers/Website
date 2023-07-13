@@ -41,7 +41,7 @@
 		</div>
 	{/if}
 
-	<div class="flex flex-row gap-4 mt-4 mb-16">
+	<div class="flex flex-col md:flex-row gap-4 mt-4 mb-16">
 		{#each contests as contest}
 			<div class="bg-gray-100 rounded-md shadow-md dark:bg-zinc-800">
 				<div class="flex flex-col flex-1 items-center justify-start p-4 space-y-2">
