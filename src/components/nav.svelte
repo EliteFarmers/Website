@@ -22,8 +22,6 @@
 		Input,
 	} from 'flowbite-svelte';
 
-	$: discordUser = $page.data.user;
-
 	let searchVal = '';
 
 	async function search() {
@@ -121,16 +119,16 @@
 		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
 		<DarkMode initialTheme="dark" />
 
-		{#if discordUser}
+		{#if $page.data.userInfo}
 			<div class="flex items-center lg:order-2 cursor-pointer">
 				<Avatar
 					id="avatar-menu"
-					src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
+					src="https://cdn.discordapp.com/avatars/{$page.data.userInfo.id}/{$page.data.userInfo.avatar}.png"
 				/>
 			</div>
 			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
 				<DropdownHeader>
-					<span class="block text-sm"> {discordUser.username} </span>
+					<span class="block text-sm"> {$page.data.userInfo.username} </span>
 				</DropdownHeader>
 				<DropdownItem href="/profile">Profile</DropdownItem>
 				<DropdownItem href="/stats">My Stats</DropdownItem>
