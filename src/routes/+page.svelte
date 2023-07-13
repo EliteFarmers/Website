@@ -2,12 +2,16 @@
 	import { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } from '$env/static/public';
 
 	import Head from '$comp/head.svelte';
-	import Entry from './leaderboard/[category]/[page]/[[start]]/entry.svelte';
+	import Entry from '$comp/leaderboards/entry.svelte';
 
-	import { Card, Button, Input } from 'flowbite-svelte';
+	import { Card, Button } from 'flowbite-svelte';
+
+	import type { LeaderboardEntry } from '$db/leaderboards';
 
 	import type { PageData } from './$types';
 	export let data: PageData;
+
+	$: entries = data.lb as LeaderboardEntry[];
 
 	let donationClicked = false;
 </script>
@@ -117,9 +121,9 @@
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-			{#each data.lb as e, i}
+			{#each entries as e, i}
 				<Entry
-					entry={{ ign: e.ign ?? '', cute_name: e.cute_name ?? '', amount: e.amount }}
+					entry={e}
 					rank={i + 1}
 					formatting={'decimal'}
 				/>

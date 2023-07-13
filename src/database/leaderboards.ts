@@ -4,15 +4,9 @@ import { client } from '$db/redis';
 import { fetchProfiles } from '$lib/data';
 export interface LeaderboardEntry {
 	ign: string;
-	uuid: string;
 	profile: string;
-	cute_name: string;
-	rank: number;
+	rank?: number;
 	amount: number;
-	face?: {
-		base: string;
-		overlay: string;
-	};
 }
 
 export interface LeaderboardPage {

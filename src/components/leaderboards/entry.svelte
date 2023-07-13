@@ -1,9 +1,7 @@
 <script lang="ts">
-	import type { LeaderboardEntry } from '$db/leaderboards';
-	import type { Optional } from 'sequelize';
-	// import Face from './face.svelte';
-
-	export let entry: Optional<LeaderboardEntry, 'uuid' | 'profile' | 'rank'>;
+	import type { LeaderboardEntry } from "$db/leaderboards";
+	
+	export let entry: LeaderboardEntry;
 	export let highlight = false;
 	export let rank: number;
 	export let formatting: 'number' | 'decimal' = 'number';
@@ -17,11 +15,11 @@
 			options.minimumFractionDigits = 1;
 		}
 	}
-	$: ({ ign, amount, profile, uuid, cute_name } = entry);
+	$: ({ ign, amount, profile } = entry);
 </script>
 
 <a
-	href="/@{uuid ?? encodeURIComponent(ign)}/{profile ?? encodeURIComponent(cute_name)}"
+	href="/@{encodeURIComponent(ign)}/{encodeURIComponent(profile)}"
 	class="inline-block w-full hover:shadow-lg hover:bg-gray-100 hover:dark:bg-zinc-600 align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
@@ -43,7 +41,7 @@
 				<h4
 					class="inline text-xs xs:text-sm sm:text-md text-start overflow-hidden whitespace-nowrap text-ellipsis"
 				>
-					{cute_name}
+					{profile}
 				</h4>
 			</div>
 		</div>
