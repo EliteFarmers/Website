@@ -6,7 +6,7 @@
 
 	export let current = false;
 	export let timestamp: number;
-	export let crops: string[] | string;
+	export let crops: string[];
 	export let currentSeconds: number;
 
 	$: time = timestamp;
