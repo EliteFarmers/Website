@@ -141,6 +141,10 @@ export function getReadableSkyblockDate(unixSeconds: string | number) {
 	return `${SKYBLOCK_MONTHS[+month]} ${suffix}, Year ${+year + 1}`; // Year is 1 behind in api
 }
 
+export function getSkyblockMonth(month: number) {
+	return SKYBLOCK_MONTHS[month - 1];
+}
+
 export function appendOrdinalSuffix(i: number) {
 	const j = i % 10;
 	const k = i % 100;

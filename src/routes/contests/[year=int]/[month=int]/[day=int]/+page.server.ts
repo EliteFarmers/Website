@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 
 	const date = getSkyblockDate(timestamp);
 	if (date.year !== +year - 1 || date.month !== +month - 1 || date.day !== +day - 1) {
-		throw redirect(308, `/contests/${date.year}/${date.month}/${date.day}`);
+		throw redirect(308, `/contests/${date.year + 1}/${date.month + 1}/${date.day + 1}`);
 	}
 
 	const { data: contests } = await GetContests(timestamp);

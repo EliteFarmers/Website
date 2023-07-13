@@ -21,10 +21,14 @@
 	<div class="font-semibold text-center mt-16 mb-4 flex flex-col gap-4">
 		<h1 class="text-4xl">{getReadableSkyblockDate(timestamp ?? 0)}</h1>
 
-		<div class="flex flex-row justify-center gap-8 my-4">
+		<div class="flex flex-col md:flex-row justify-center gap-2 md:gap-4 my-4">
 			<a
 				class="flex-1 bg-gray-200 dark:bg-zinc-800 p-2 rounded-lg"
 				href="/contests/{$page.params.year}/{$page.params.month}/{+$page.params.day - 3}">Previous</a
+			>
+			<a
+				class="flex-1 bg-gray-200 dark:bg-zinc-800 p-2 rounded-lg"
+				href="/contests/{$page.params.year}/{$page.params.month}">View&nbsp;Month</a
 			>
 			<a
 				class="flex-1 bg-gray-200 dark:bg-zinc-800 p-2 rounded-lg"

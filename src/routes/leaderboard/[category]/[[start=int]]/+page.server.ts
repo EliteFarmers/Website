@@ -25,7 +25,7 @@ export const load = (async ({ params, parent }) => {
 		startNum = settings.limit - 20;
 	}
 
-	const type = settings.type as LeaderboardType;
+	const type = settings.type;
 
 	const { data: lb } =
 		type === LeaderboardType.Skill
