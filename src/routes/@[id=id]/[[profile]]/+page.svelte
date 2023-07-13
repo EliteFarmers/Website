@@ -72,6 +72,7 @@
 		weightInfo={member.farmingWeight}
 		{weightRank}
 		skyblockXP={member.skyblockXp ?? 0}
+		skyblockRank={data.ranks?.misc?.skyblockxp ?? -1}
 	/>
 
 	<!-- API settings not in API yet, will be soon:tm: -->
@@ -119,7 +120,11 @@
 
 	<Collections {collections} ranks={data.ranks?.collections} />
 
-	<JacobInfo jacob={member.jacob} ign={data.account.name ?? ''} />
+	<JacobInfo jacob={member.jacob} ign={data.account.name ?? ''} ranks={{ 
+		gold: data.ranks?.misc?.goldmedals ?? -1,
+		silver: data.ranks?.misc?.silvermedals ?? -1,
+		bronze: data.ranks?.misc?.bronzemedals ?? -1
+	}} />
 
 	<Breakdown weight={member.farmingWeight} />
 </main>

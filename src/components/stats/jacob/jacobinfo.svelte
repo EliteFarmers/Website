@@ -6,13 +6,22 @@
 
 	export let jacob: components['schemas']['JacobDataDto'] | undefined;
 	export let ign: string;
+	export let ranks: {
+		bronze: number;
+		silver: number;
+		gold: number;
+	} = {
+		bronze: -1,
+		silver: -1,
+		gold: -1
+	};
 </script>
 
 <section class="py-4 flex justify-center align-middle" aria-labelledby="Jacob">
 	<div class="w-[90%] md:w-[70%] bg-gray-100 dark:bg-zinc-800 rounded-lg p-4">
 		<h1 id="Jacob" class="text-3xl text-center pt-2">{ign} | Jacob Stats</h1>
 
-		<Medals total={jacob?.medals} earned={jacob?.earnedMedals} />
+		<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
 
 		<Stats {jacob} />
 

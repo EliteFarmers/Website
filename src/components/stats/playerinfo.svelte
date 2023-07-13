@@ -16,6 +16,7 @@
 	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
 	export let weightRank: number;
 	export let skyblockXP: number;
+	export let skyblockRank = -1;
 
 	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
 
@@ -50,7 +51,7 @@
 					profileId={profileIds[0].id}
 				/>
 				<div class="flex justify-start">
-					<Skyblocklevel xp={skyblockXP} />
+					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />
 					<Discord username={discordName} {linked} />
 				</div>
 				<div class="flex justify-start">
