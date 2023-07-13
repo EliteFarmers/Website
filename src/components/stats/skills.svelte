@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLevelProgress } from '$lib/format';
 	import Skillbar from './skillbar.svelte';
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 
 	export let skills: components['schemas']['ProfileMemberDto']['skills'];
 	export let skillRanks: components['schemas']['LeaderboardPositionsDto']['skills'];

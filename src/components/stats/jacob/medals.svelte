@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 
 	export let total: components['schemas']['MedalInventoryDto'] | undefined;
 	export let earned: components['schemas']['MedalInventoryDto'] | undefined;

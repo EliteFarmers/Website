@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 	import { Button, Popover, Star } from 'flowbite-svelte';
 
 	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};

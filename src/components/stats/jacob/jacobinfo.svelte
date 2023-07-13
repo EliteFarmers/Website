@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 	import Medals from './medals.svelte';
 	import Recents from './recents.svelte';
 	import Stats from './stats.svelte';

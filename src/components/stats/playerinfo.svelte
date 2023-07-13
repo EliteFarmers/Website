@@ -7,7 +7,7 @@
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
 	import Skyblocklevel from './player/skyblocklevel.svelte';
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileIds: { id: string; name: string }[];

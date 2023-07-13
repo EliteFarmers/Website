@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>

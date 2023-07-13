@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Contest from '$comp/stats/jacob/contest.svelte';
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 
 	export let contests: components['schemas']['JacobDataDto']['contests'];
 

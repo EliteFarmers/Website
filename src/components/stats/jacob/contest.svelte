@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 
 	export let contest: components['schemas']['ContestParticipationDto'];
