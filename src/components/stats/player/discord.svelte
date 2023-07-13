@@ -7,9 +7,14 @@
 	$: validName = true;
 
 	$: {
-		// Check if name has anything other than letters, numbers, underscores, and periods
-		const regex = /[^a-zA-Z0-9_.#]/g;
-		validName = !(username && regex.test(username))
+		// Less strict check for old usernames with #
+		if (username?.includes('#')) {
+			validName = !username.includes('://') && !username.includes('discord');
+		} else {
+			// Check if name has anything other than letters, numbers, underscores, and periods
+			const regex = /[^a-zA-Z0-9_.#]/g;
+			validName = !(username && regex.test(username))
+		}
 	}
 </script>
 
