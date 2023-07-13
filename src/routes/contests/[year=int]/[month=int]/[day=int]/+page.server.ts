@@ -1,4 +1,4 @@
-import { GetContests } from '$lib/eliteapi/eliteapi';
+import { GetContests } from '$lib/api/elite';
 import { getSkyblockDate, getTimeStamp } from '$lib/format';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';

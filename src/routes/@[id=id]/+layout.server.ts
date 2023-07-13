@@ -1,4 +1,4 @@
-import { GetAccount, GetProfileMember } from '$lib/eliteapi/eliteapi';
+import { GetAccount, GetProfileMember } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 

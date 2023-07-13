@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 	import Profiles from './profiles.svelte';
 
 	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Dropdown from '$comp/generic/dropdown.svelte';
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 
 	export let ign: string | null | undefined;
 	export let rank: { color: string; tag: string; plus?: string; plusColor?: string } | undefined;

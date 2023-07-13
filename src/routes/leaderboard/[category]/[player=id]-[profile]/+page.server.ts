@@ -1,4 +1,4 @@
-import { GetAccount, GetPlayersRank } from '$lib/eliteapi/eliteapi';
+import { GetAccount, GetPlayersRank } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

@@ -3,7 +3,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 
-import type { AuthorizedUser, UserInfo } from '$lib/eliteapi/eliteapi';
+import type { AuthorizedUser, UserInfo } from '$lib/api/elite';
 
 declare global {
 	declare namespace App {

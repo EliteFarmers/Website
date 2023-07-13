@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
-import type { components } from '$lib/eliteapi/api';
+import type { components } from '$lib/api/api';
 import { getSkyblockDate } from '$lib/format';
 
 export const load = (async ({ parent, setHeaders }) => {

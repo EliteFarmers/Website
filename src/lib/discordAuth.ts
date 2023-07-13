@@ -1,6 +1,6 @@
 import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL, PUBLIC_HOST_URL } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
-import { GetAuthorizedAccount, type AuthorizedUser } from './eliteapi/eliteapi';
+import { GetAuthorizedAccount, type AuthorizedUser } from '$lib/api/elite';
 import crypto from 'crypto';
 
 export type DiscordUpdateResponse = {

@@ -3,7 +3,7 @@ import FarmingCollections from '$lib/collections';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
-import { GetPlayerRanks } from '$lib/eliteapi/eliteapi';
+import { GetPlayerRanks } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	const { account, profile, member } = await parent();

@@ -1,4 +1,4 @@
-import { GetCollectionLeaderboardSlice, GetLeaderboardSlice, GetSkillLeaderboardSlice } from '$lib/eliteapi/eliteapi';
+import { GetCollectionLeaderboardSlice, GetLeaderboardSlice, GetSkillLeaderboardSlice } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import { LeaderboardType } from '$lib/constants/leaderboards';
 

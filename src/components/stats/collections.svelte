@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/eliteapi/api';
+	import type { components } from '$lib/api/api';
 	import CollectionBar from './collectionbar.svelte';
 
 	export let collections: {

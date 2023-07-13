@@ -1,6 +1,6 @@
 import type { Handle, RequestEvent } from '@sveltejs/kit';
 import { FetchDiscordUser, type DiscordUpdateResponse } from '$lib/discordAuth';
-import type { UserInfo } from '$lib/eliteapi/eliteapi';
+import type { UserInfo } from '$lib/api/elite';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const { locals, cookies } = event;

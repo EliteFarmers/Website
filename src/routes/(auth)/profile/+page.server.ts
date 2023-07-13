@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { IsIGNOrUUID } from '$params/id';
-import { LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/eliteapi/eliteapi';
+import { LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
 
 export const load: PageServerLoad = ({ locals }) => {
 	const user = locals.user;
