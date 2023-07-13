@@ -156,4 +156,65 @@ export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string
 		},
 	});
 
+export const GetLeaderboardSlice = async (leaderboardId: string, offset: number, limit: number) =>
+	await get('/api/Leaderboard/{id}', {
+		params: {
+			path: {
+				id: leaderboardId,
+			},
+			query: {
+				offset,
+				limit,
+			},
+		},
+	});
+
+export const GetSkillLeaderboardSlice = async (skillName: string, offset: number, limit: number) =>
+	await get('/api/Leaderboard/skill/{skillName}', {
+		params: {
+			path: {
+				skillName,
+			},
+			query: {
+				offset,
+				limit,
+			},
+		},
+	});
+
+export const GetCollectionLeaderboardSlice = async (collection: string, offset: number, limit: number) =>
+	await get('/api/Leaderboard/collection/{collection}', {
+		params: {
+			path: {
+				collection,
+			},
+			query: {
+				offset,
+				limit,
+			},
+		},
+	});
+
+export const GetPlayersRank = async (leaderboardId: string, playerUuid: string, profileUuid: string, upcoming = false) =>
+	await get('/api/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}', {
+		params: {
+			path: {
+				leaderboardId,
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				includeUpcoming: upcoming,
+			}
+		},
+	});
+
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
+export interface UserInfo {
+	id: string;
+	username: string;
+	avatar: string;
+	primaryUuid?: string;
+	primaryName?: string;
+}
