@@ -125,7 +125,7 @@
 				Crop Icons by <a
 					class="underline"
 					rel="nofollow noreferrer noopener"
-					href="https://www.redbubble.com/people/Luumini/shop"
+					href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
 				>
 					Lumini</a
 				>.

@@ -107,7 +107,7 @@
 		</div>
 		<a
 			class="lumini flex flex-row gap-8 w-1/2 hover:shadow-xl rounded-md"
-			href="https://www.redbubble.com/people/Luumini/shop"
+			href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
 			target="_blank"
 			rel="noopener noreferrer nofollow"
 		>
