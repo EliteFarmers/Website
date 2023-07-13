@@ -120,6 +120,27 @@ export const GetContests = async (timestamp: number) =>
 		},
 	});
 
+export const GetYearlyContests = async (year: number) =>
+	await get('/api/Contests/at/{year}', {
+		params: {
+			path: {
+				year,
+			},
+		},
+	});
+
+export const GetMonthlyContests = async (year: number, month: number) =>
+	await get('/api/Contests/at/{year}/{month}', {
+		params: {
+			path: {
+				year,
+				month,
+			},
+		},
+	});
+
+export const GetCurrentYearContests = async () => await get('/api/Contests/at/now', {});
+
 export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) =>
 	await post('/api/Account/primary/{playerUuidOrIgn}', {
 		params: {

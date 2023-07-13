@@ -116,6 +116,7 @@
 	<NavUl {hidden} class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center">
 		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>
 		<NavLi href="/info" active={$page.url.pathname === '/info'}>Info</NavLi>
+		<NavLi href="/contests" active={$page.url.pathname === '/contests'}>Contests</NavLi>
 		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
 		<DarkMode initialTheme="dark" />
 
