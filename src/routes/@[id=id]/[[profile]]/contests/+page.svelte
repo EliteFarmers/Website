@@ -19,10 +19,11 @@
 
 <main class="flex flex-col justify-center items-center w-full">
 	<section class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
-		<h1 class="text-4xl font-semibold text-center mt-16 mb-4">Jacob's Contests</h1>
-		<h3 class="my-4">{data.account.name} has participated in {data.contestsCount} contests</h3>
-
+		<h1 class="text-4xl font-semibold text-center my-16">
+			{data.account.name} | Jacob's Contests
+		</h1>
 		<MedalCounts
+			participations={data.contestsCount}
 			gold={data.member.jacob?.earnedMedals?.gold}
 			silver={data.member.jacob?.earnedMedals?.silver}
 			bronze={data.member.jacob?.earnedMedals?.bronze}
@@ -51,6 +52,7 @@
 						<AccordionItem open={i < 5}>
 							<span slot="header" class="w-full px-4">
 								<MedalCounts
+									participations={conts?.length}
 									gold={conts?.filter((c) => c.medal === 'gold').length}
 									silver={conts?.filter((c) => c.medal === 'silver').length}
 									bronze={conts?.filter((c) => c.medal === 'bronze').length}
