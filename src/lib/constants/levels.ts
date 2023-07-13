@@ -275,7 +275,7 @@ export const SKYBLOCK_LEVEL_COLORS = {
 	320: '#5555FF',
 	360: '#FF55FF',
 	400: '#AA00AA',
-	440: '#FFAA00', 
+	440: '#FFAA00',
 	480: '#FF5555',
 	1000: '#AA0000', // Also a catch all for anything above 480
 };

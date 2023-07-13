@@ -13,7 +13,7 @@
 	} = {
 		bronze: -1,
 		silver: -1,
-		gold: -1
+		gold: -1,
 	};
 </script>
 

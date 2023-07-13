@@ -19,10 +19,9 @@
 			href="/leaderboard/skyblockxp/{$page.params.id}-{profile}"
 			class="px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
 		>
-			<span class="text-sm xs:text-md sm:text-lg">#</span><span
-				class="text-md xs:text-lg sm:text-xl">{rank}</span
+			<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl">{rank}</span
 			>
-	</a>
+		</a>
 	{/if}
 	<span class="font-mono font-bold text-2xl px-1" style="color: {color};">{Math.floor(xp / 100)}</span>
 	<Popover>

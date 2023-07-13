@@ -13,14 +13,14 @@
 		} else {
 			// Check if name has anything other than letters, numbers, underscores, and periods
 			const regex = /[^a-zA-Z0-9_.#]/g;
-			validName = !(username && regex.test(username))
+			validName = !(username && regex.test(username));
 		}
 	}
 </script>
 
 <div class="block max-w-fit p-2 px-3 m-1 rounded-md bg-gray-200 dark:bg-zinc-700">
 	<div class="flex items-center gap-2">
-		<h1 class="whitespace-nowrap text-base">{validName ? (username ?? 'Discord N/A') : 'Invalid Discord Name'}</h1>
+		<h1 class="whitespace-nowrap text-base">{validName ? username ?? 'Discord N/A' : 'Invalid Discord Name'}</h1>
 		{#if validName}
 			<div class="block w-4 h-4 mt-1">
 				{#if linked}
@@ -50,7 +50,8 @@
 		{:else}
 			<Popover>
 				<p class="max-w-sm">
-					User has a name that contains invalid characters entered on Hypixel. This probably means that they entered an invite URL, which we don't want to display here.
+					User has a name that contains invalid characters entered on Hypixel. This probably means that they
+					entered an invite URL, which we don't want to display here.
 				</p>
 			</Popover>
 		{/if}

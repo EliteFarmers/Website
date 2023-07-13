@@ -38,10 +38,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return await ResolveWithSecurityHeaders(resolve, event);
 	}
 
-	discord = discord ?? await FetchDiscordUser({
-		accessToken: locals.discord_access_token,
-		refreshToken: locals.discord_refresh_token,
-	});
+	discord =
+		discord ??
+		(await FetchDiscordUser({
+			accessToken: locals.discord_access_token,
+			refreshToken: locals.discord_refresh_token,
+		}));
 
 	if (!discord) {
 		locals.user = undefined;
@@ -59,7 +61,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return await ResolveWithSecurityHeaders(resolve, event);
 };
 
-async function ResolveWithSecurityHeaders(resolve: Parameters<Handle>[0]['resolve'], event: Parameters<Handle>[0]['event']): Promise<ReturnType<Handle>> {
+async function ResolveWithSecurityHeaders(
+	resolve: Parameters<Handle>[0]['resolve'],
+	event: Parameters<Handle>[0]['event']
+): Promise<ReturnType<Handle>> {
 	const response = await resolve(event);
 
 	// Security headers
@@ -104,15 +109,19 @@ function updateCookies(event: RequestEvent, discord: DiscordUpdateResponse) {
 	if (!user?.id || !user.avatar || !user.username) return;
 
 	const primary = user.minecraftAccounts?.find((account) => account.primaryAccount);
-	
-	event.cookies.set('user_info', JSON.stringify({
-		id: user.id,
-		username: user.username,
-		avatar: user.avatar,
-		primaryName: primary?.name ?? undefined,
-		primaryUuid: primary?.id ?? undefined,
-	} satisfies UserInfo), {
-		path: '/',
-		expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
-	});
+
+	event.cookies.set(
+		'user_info',
+		JSON.stringify({
+			id: user.id,
+			username: user.username,
+			avatar: user.avatar,
+			primaryName: primary?.name ?? undefined,
+			primaryUuid: primary?.id ?? undefined,
+		} satisfies UserInfo),
+		{
+			path: '/',
+			expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+		}
+	);
 }

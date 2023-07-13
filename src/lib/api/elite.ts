@@ -195,7 +195,12 @@ export const GetCollectionLeaderboardSlice = async (collection: string, offset: 
 		},
 	});
 
-export const GetPlayersRank = async (leaderboardId: string, playerUuid: string, profileUuid: string, upcoming = false) =>
+export const GetPlayersRank = async (
+	leaderboardId: string,
+	playerUuid: string,
+	profileUuid: string,
+	upcoming = false
+) =>
 	await get('/api/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -205,12 +210,12 @@ export const GetPlayersRank = async (leaderboardId: string, playerUuid: string, 
 			},
 			query: {
 				includeUpcoming: upcoming,
-			}
+			},
 		},
 	});
 
-
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
+export type LeaderboardEntry = components['schemas']['LeaderboardEntry'];
 export interface UserInfo {
 	id: string;
 	username: string;

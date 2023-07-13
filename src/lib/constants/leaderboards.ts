@@ -35,78 +35,91 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		limit: 1_000,
 		title: 'Gold Medals Earned',
 		name: 'Gold Medals',
+		icon: '/images/medals/gold.webp',
 		type: LeaderboardType.Misc,
 	},
 	silvermedals: {
 		limit: 1_000,
 		title: 'Silver Medals Earned',
 		name: 'Silver Medals',
+		icon: '/images/medals/silver.webp',
 		type: LeaderboardType.Misc,
 	},
 	bronzemedals: {
 		limit: 1_000,
 		title: 'Bronze Medals Earned',
 		name: 'Bronze Medals',
+		icon: '/images/medals/bronze.webp',
 		type: LeaderboardType.Misc,
 	},
 	cactus: {
 		limit: 1_000,
 		title: 'Cactus Collection',
 		name: 'Cactus',
+		icon: '/images/crops/cactus.webp',
 		type: LeaderboardType.Collection,
 	},
 	carrot: {
 		limit: 1_000,
 		title: 'Carrot Collection',
 		name: 'Carrot',
+		icon: '/images/crops/carrot.webp',
 		type: LeaderboardType.Collection,
 	},
 	potato: {
 		limit: 1_000,
 		title: 'Potato Collection',
 		name: 'Potato',
+		icon: '/images/crops/potato.webp',
 		type: LeaderboardType.Collection,
 	},
 	pumpkin: {
 		limit: 1_000,
 		title: 'Pumpkin Collection',
 		name: 'Pumpkin',
+		icon: '/images/crops/pumpkin.webp',
 		type: LeaderboardType.Collection,
 	},
 	wheat: {
 		limit: 1_000,
 		title: 'Wheat Collection',
 		name: 'Wheat',
+		icon: '/images/crops/wheat.webp',
 		type: LeaderboardType.Collection,
 	},
 	melon: {
 		limit: 1_000,
 		title: 'Melon Collection',
 		name: 'Melon',
+		icon: '/images/crops/melon.webp',
 		type: LeaderboardType.Collection,
 	},
 	mushroom: {
 		limit: 1_000,
 		title: 'Mushroom Collection',
 		name: 'Mushroom',
+		icon: '/images/crops/mushroom.webp',
 		type: LeaderboardType.Collection,
 	},
 	cocoa: {
 		limit: 1_000,
 		title: 'Cocoa Bean Collection',
 		name: 'Cocoa Bean',
+		icon: '/images/crops/cocoa.webp',
 		type: LeaderboardType.Collection,
 	},
 	sugarcane: {
 		limit: 1_000,
 		title: 'Sugar Cane Collection',
 		name: 'Sugar Cane',
+		icon: '/images/crops/sugarcane.webp',
 		type: LeaderboardType.Collection,
 	},
 	netherwart: {
 		limit: 1_000,
 		title: 'Nether Wart Collection',
 		name: 'Nether Wart',
+		icon: '/images/crops/netherwart.webp',
 		type: LeaderboardType.Collection,
 	},
 	combat: {
@@ -175,7 +188,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Farming',
 		type: LeaderboardType.Skill,
 	},
-}
+};
 
 export const REDIRECT_ROUTES: Record<string, string> = {
 	'/weight/farming': '/farmingweight',
@@ -201,4 +214,4 @@ export const REDIRECT_ROUTES: Record<string, string> = {
 	'/skills/runecrafting': '/runecrafting',
 	'/skills/social': '/social',
 	'/skills/farming': '/farming',
-}
+};

@@ -2,10 +2,9 @@
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 	import Entry from '$comp/leaderboards/entry.svelte';
-	import type { LeaderboardEntry } from '$db/leaderboards';
 	import { afterNavigate } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import Head from '$comp/head.svelte';
+	import type { LeaderboardEntry } from '$lib/api/elite';
 
 	export let data: PageData;
 
@@ -35,33 +34,22 @@
 	});
 </script>
 
-<Head
-	{title}
-	description={`${title} for Hypixel Skyblock.`}
-/>
+<Head {title} description={`${title} for Hypixel Skyblock.`} />
 
 <section class="flex flex-col mt-16 justify-center w-full">
 	<h1 class="text-4xl text-center my-8">{title}</h1>
 	<div
 		data-sveltekit-preload-data="tap"
-		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8 sm:bg-gray-100 sm:dark:bg-zinc-800"
+		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg my-8 sm:m-8"
 	>
 		<div class="flex flex-col gap-2 p-2 w-full">
 			{#each firstHalf as entry, i (entry)}
-				<Entry
-					rank={i + offset}
-					{entry}
-					{formatting}
-				/>
+				<Entry rank={i + offset} {entry} {formatting} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full">
 			{#each secondHalf as entry, i (entry)}
-				<Entry
-					rank={i + firstHalf.length + offset}
-					{entry}
-					{formatting}
-				/>
+				<Entry rank={i + firstHalf.length + offset} {entry} {formatting} />
 			{/each}
 		</div>
 	</div>
@@ -76,7 +64,7 @@
 		<a
 			id="navigate"
 			href="/leaderboard/{$page.params.category}/{Math.min(
-				Math.max(1, (+($page.params.start ?? 1)) - 20),
+				Math.max(1, +($page.params.start ?? 1) - 20),
 				$page.data.leaderboard.limit - 19
 			)}"
 			class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6"
@@ -86,7 +74,7 @@
 		<a
 			id="navigate"
 			href="/leaderboard/{$page.params.category}/{Math.min(
-				Math.max(1, (+($page.params.start ?? 1)) + 20),
+				Math.max(1, +($page.params.start ?? 1) + 20),
 				$page.data.leaderboard.limit - 19
 			)}"
 			class="p-3 bg-gray-300 dark:bg-zinc-600 rounded-md w-1/6"

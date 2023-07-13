@@ -11,7 +11,7 @@
 	} = {
 		bronze: -1,
 		silver: -1,
-		gold: -1
+		gold: -1,
 	};
 
 	$: totalBronze = total?.bronze ?? 0;
@@ -34,8 +34,8 @@
 					href="/leaderboard/goldmedals/+{$page.params.id}-{profile}"
 					class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
 				>
-					<span class="text-sm xs:text-md sm:text-lg">#</span><span
-						class="text-md xs:text-lg sm:text-xl">{ranks.gold}</span
+					<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						>{ranks.gold}</span
 					>
 				</a>
 			{/if}
@@ -51,8 +51,8 @@
 					href="/leaderboard/silvermedals/+{$page.params.id}-{profile}"
 					class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
 				>
-					<span class="text-sm xs:text-md sm:text-lg">#</span><span
-						class="text-md xs:text-lg sm:text-xl">{ranks.silver}</span
+					<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						>{ranks.silver}</span
 					>
 				</a>
 			{/if}
@@ -68,8 +68,8 @@
 					href="/leaderboard/bronzemedals/+{$page.params.id}-{profile}"
 					class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
 				>
-					<span class="text-sm xs:text-md sm:text-lg">#</span><span
-						class="text-md xs:text-lg sm:text-xl">{ranks.bronze}</span
+					<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						>{ranks.bronze}</span
 					>
 				</a>
 			{/if}

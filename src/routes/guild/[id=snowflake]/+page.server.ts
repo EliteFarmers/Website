@@ -6,7 +6,9 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ parent, locals, params }) => {
 	throw error(404, 'This page is a WIP, check back soon!');
 
-	const { user } = await parent();
+	await parent();
+
+	const { user } = locals;
 	const token = locals.discord_access_token;
 
 	if (!user || !token) {

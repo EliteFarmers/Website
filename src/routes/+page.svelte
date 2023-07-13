@@ -3,12 +3,11 @@
 
 	import Head from '$comp/head.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
-
 	import { Card, Button } from 'flowbite-svelte';
 
-	import type { LeaderboardEntry } from '$db/leaderboards';
-
+	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { PageData } from './$types';
+
 	export let data: PageData;
 
 	$: entries = data.lb as LeaderboardEntry[];
@@ -122,11 +121,7 @@
 		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
 			{#each entries as e, i}
-				<Entry
-					entry={e}
-					rank={i + 1}
-					formatting={'decimal'}
-				/>
+				<Entry entry={e} rank={i + 1} formatting={'decimal'} />
 			{/each}
 			<div class="flex justify-center w-full">
 				<a

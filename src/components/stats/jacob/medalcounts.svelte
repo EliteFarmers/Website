@@ -7,7 +7,9 @@
 
 <div class="flex flex-col md:flex-row gap-2 md:gap-4 justify-evenly w-full">
 	{#if participations}
-		<div class="flex items-baseline flex-1 justify-center gap-2 rounded-md p-2 md:px-4 bg-gray-200 dark:bg-zinc-800">
+		<div
+			class="flex items-baseline flex-1 justify-center gap-2 rounded-md p-2 md:px-4 bg-gray-200 dark:bg-zinc-800"
+		>
 			<h1 class="text-2xl font-semibold text-red-700">
 				{participations.toLocaleString()}
 			</h1>

@@ -1,3 +1,5 @@
+// Only used for display, calculations are done in the API
+
 export const CROPS_PER_ONE_WEIGHT = {
 	wheat: 100_000,
 	carrot: 300_000,

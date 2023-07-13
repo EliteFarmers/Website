@@ -120,11 +120,15 @@
 
 	<Collections {collections} ranks={data.ranks?.collections} />
 
-	<JacobInfo jacob={member.jacob} ign={data.account.name ?? ''} ranks={{ 
-		gold: data.ranks?.misc?.goldmedals ?? -1,
-		silver: data.ranks?.misc?.silvermedals ?? -1,
-		bronze: data.ranks?.misc?.bronzemedals ?? -1
-	}} />
+	<JacobInfo
+		jacob={member.jacob}
+		ign={data.account.name ?? ''}
+		ranks={{
+			gold: data.ranks?.misc?.goldmedals ?? -1,
+			silver: data.ranks?.misc?.silvermedals ?? -1,
+			bronze: data.ranks?.misc?.bronzemedals ?? -1,
+		}}
+	/>
 
 	<Breakdown weight={member.farmingWeight} />
 </main>

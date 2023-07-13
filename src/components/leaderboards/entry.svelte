@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { LeaderboardEntry } from "$db/leaderboards";
-	
+	import type { LeaderboardEntry } from "$lib/api/elite";
+
 	export let entry: LeaderboardEntry;
 	export let highlight = false;
 	export let rank: number;
@@ -19,8 +19,8 @@
 </script>
 
 <a
-	href="/@{encodeURIComponent(ign)}/{encodeURIComponent(profile)}"
-	class="inline-block w-full hover:shadow-lg hover:bg-gray-100 hover:dark:bg-zinc-600 align-middle py-1 sm:p-1 bg-gray-200 dark:bg-zinc-700 border-2 {highlight
+	href="/@{encodeURIComponent(ign ?? '')}/{encodeURIComponent(profile ?? '')}"
+	class="inline-block w-full hover:shadow-lg hover:bg-gray-200 hover:dark:bg-zinc-700 align-middle py-1 sm:p-1 bg-gray-100 dark:bg-zinc-800 border-2 {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
 >

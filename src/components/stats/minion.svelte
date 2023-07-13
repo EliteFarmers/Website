@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Popover } from "flowbite-svelte";
+	import { Popover } from 'flowbite-svelte';
 
 	export let name: string;
 	export let index: number;
