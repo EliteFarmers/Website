@@ -45,10 +45,10 @@
 		</div>
 	{/if}
 
-	<div class="flex flex-col md:flex-row gap-4 mt-4 mb-16">
+	<div class="flex flex-wrap md:flex-row w-full md:w-[90%] gap-4 mt-4 mx-8 mb-16 justify-center">
 		{#each contests as contest}
-			<div class="bg-gray-100 rounded-md shadow-md dark:bg-zinc-800">
-				<div class="flex flex-col flex-1 items-center justify-start p-4 space-y-2">
+			<div class="flex-1 basis-1/4 rounded-md shadow-md bg-gray-100 dark:bg-zinc-800">
+				<div class="flex flex-col items-center justify-start p-4 space-y-2">
 					<h2 class="text-3xl font-semibold text-center">
 						{contest.crop ?? 'Not Found'}
 					</h2>
@@ -57,7 +57,7 @@
 							? contest.participants
 							: 'Unknown'} Participants
 					</h4>
-					<div class="flex flex-col justify-center space-y-2">
+					<div class="flex flex-col w-full justify-center space-y-2">
 						{#each contest.participations?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)) ?? [] as participant}
 							<Participation entry={participant} />
 						{/each}
