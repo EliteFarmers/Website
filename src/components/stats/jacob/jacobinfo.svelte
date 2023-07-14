@@ -10,10 +10,12 @@
 		bronze: number;
 		silver: number;
 		gold: number;
+		participations: number;
 	} = {
 		bronze: -1,
 		silver: -1,
 		gold: -1,
+		participations: -1
 	};
 </script>
 
@@ -23,7 +25,7 @@
 
 		<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
 
-		<Stats {jacob} />
+		<Stats {jacob} participationsRank={ranks.participations} />
 
 		<Recents contests={jacob?.contests} />
 	</div>

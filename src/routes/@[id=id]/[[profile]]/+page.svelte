@@ -127,6 +127,7 @@
 			gold: data.ranks?.misc?.goldmedals ?? -1,
 			silver: data.ranks?.misc?.silvermedals ?? -1,
 			bronze: data.ranks?.misc?.bronzemedals ?? -1,
+			participations: data.ranks?.misc?.participations ?? -1,
 		}}
 	/>
 
