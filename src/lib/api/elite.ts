@@ -12,14 +12,14 @@ const { get, post, del } = createClient<paths>({
 });
 
 export const GetAuthorizedAccount = async (accessToken: string) =>
-	await get('/api/Account', {
+	await get('/Account', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
 	});
 
 export const GetAccount = async (playerUuidOrIgn: string) =>
-	await get('/api/Account/{playerUuidOrIgn}', {
+	await get('/Account/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -28,7 +28,7 @@ export const GetAccount = async (playerUuidOrIgn: string) =>
 	});
 
 export const GetAccountByDiscordId = async (discordId: number) =>
-	await get('/api/Account/{discordId}', {
+	await get('/Account/{discordId}', {
 		params: {
 			path: {
 				discordId,
@@ -37,7 +37,7 @@ export const GetAccountByDiscordId = async (discordId: number) =>
 	});
 
 export const GetPlayer = async (playerUuidOrIgn: string) =>
-	await get('/api/Player/{playerUuidOrIgn}', {
+	await get('/Player/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -46,7 +46,7 @@ export const GetPlayer = async (playerUuidOrIgn: string) =>
 	});
 
 export const GetPlayerByDiscordId = async (id: string) =>
-	await get('/api/Player/{discordId}', {
+	await get('/Player/{discordId}', {
 		params: {
 			path: {
 				discordId: id as unknown as number,
@@ -55,7 +55,7 @@ export const GetPlayerByDiscordId = async (id: string) =>
 	});
 
 export const GetProfiles = async (playerUuid: string) =>
-	await get('/api/Profiles/{playerUuid}', {
+	await get('/Profiles/{playerUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -64,7 +64,7 @@ export const GetProfiles = async (playerUuid: string) =>
 	});
 
 export const GetProfile = async (profileUuid: string) =>
-	await get('/api/Profile/{profileUuid}', {
+	await get('/Profile/{profileUuid}', {
 		params: {
 			path: {
 				profileUuid,
@@ -73,7 +73,7 @@ export const GetProfile = async (profileUuid: string) =>
 	});
 
 export const GetProfileMember = async (playerUuid: string, profileUuid: string) =>
-	await get('/api/Profile/{playerUuid}/{profileUuid}', {
+	await get('/Profile/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -83,7 +83,7 @@ export const GetProfileMember = async (playerUuid: string, profileUuid: string) 
 	});
 
 export const GetSelectedProfileMember = async (playerUuid: string) =>
-	await get('/api/Profile/{uuid}/Selected', {
+	await get('/Profile/{uuid}/Selected', {
 		params: {
 			path: {
 				uuid: playerUuid,
@@ -92,7 +92,7 @@ export const GetSelectedProfileMember = async (playerUuid: string) =>
 	});
 
 export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
-	await get('/api/Leaderboard/ranks/{playerUuid}/{profileUuid}', {
+	await get('/Leaderboard/ranks/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -102,7 +102,7 @@ export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
 	});
 
 export const GetPlayerContests = async (playerUuid: string, profileUuid: string) =>
-	await get('/api/Contests/{playerUuid}/{profileUuid}', {
+	await get('/Contests/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -112,7 +112,7 @@ export const GetPlayerContests = async (playerUuid: string, profileUuid: string)
 	});
 
 export const GetContests = async (timestamp: number) =>
-	await get('/api/Contests/{timestamp}', {
+	await get('/Contests/{timestamp}', {
 		params: {
 			path: {
 				timestamp,
@@ -121,7 +121,7 @@ export const GetContests = async (timestamp: number) =>
 	});
 
 export const GetYearlyContests = async (year: number) =>
-	await get('/api/Contests/at/{year}', {
+	await get('/Contests/at/{year}', {
 		params: {
 			path: {
 				year,
@@ -130,7 +130,7 @@ export const GetYearlyContests = async (year: number) =>
 	});
 
 export const GetMonthlyContests = async (year: number, month: number) =>
-	await get('/api/Contests/at/{year}/{month}', {
+	await get('/Contests/at/{year}/{month}', {
 		params: {
 			path: {
 				year,
@@ -139,10 +139,10 @@ export const GetMonthlyContests = async (year: number, month: number) =>
 		},
 	});
 
-export const GetCurrentYearContests = async () => await get('/api/Contests/at/now', {});
+export const GetCurrentYearContests = async () => await get('/Contests/at/now', {});
 
 export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) =>
-	await post('/api/Account/primary/{playerUuidOrIgn}', {
+	await post('/Account/primary/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -154,7 +154,7 @@ export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: st
 	});
 
 export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) =>
-	await post('/api/Account/{playerUuidOrIgn}', {
+	await post('/Account/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -166,7 +166,7 @@ export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) 
 	});
 
 export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string) =>
-	await del('/api/Account/{playerUuidOrIgn}', {
+	await del('/Account/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -178,7 +178,7 @@ export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string
 	});
 
 export const GetLeaderboardSlice = async (leaderboardId: string, offset: number, limit: number) =>
-	await get('/api/Leaderboard/{id}', {
+	await get('/Leaderboard/{id}', {
 		params: {
 			path: {
 				id: leaderboardId,
@@ -191,7 +191,7 @@ export const GetLeaderboardSlice = async (leaderboardId: string, offset: number,
 	});
 
 export const GetSkillLeaderboardSlice = async (skillName: string, offset: number, limit: number) =>
-	await get('/api/Leaderboard/skill/{skillName}', {
+	await get('/Leaderboard/skill/{skillName}', {
 		params: {
 			path: {
 				skillName,
@@ -204,7 +204,7 @@ export const GetSkillLeaderboardSlice = async (skillName: string, offset: number
 	});
 
 export const GetCollectionLeaderboardSlice = async (collection: string, offset: number, limit: number) =>
-	await get('/api/Leaderboard/collection/{collection}', {
+	await get('/Leaderboard/collection/{collection}', {
 		params: {
 			path: {
 				collection,
@@ -222,7 +222,7 @@ export const GetPlayersRank = async (
 	profileUuid: string,
 	upcoming = false
 ) =>
-	await get('/api/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}', {
+	await get('/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				leaderboardId,
