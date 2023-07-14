@@ -60,7 +60,7 @@
 							</span>
 							<div class="flex flex-wrap gap-4">
 								{#each conts ?? [] as contest (`${contest.timestamp ?? 0}${contest?.crop ?? 0}`)}
-									<div class="w-64">
+									<div class="basis-64">
 										<Contest {contest} irlTime={timeType} />
 									</div>
 								{/each}
