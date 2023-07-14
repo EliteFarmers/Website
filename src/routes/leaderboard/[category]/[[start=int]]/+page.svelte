@@ -90,7 +90,7 @@
 		</a>
 	</div>
 	<h3 class="text-sm text-center w-1/2 mx-auto py-4">
-		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched on this website. New entries are
-		recalculated every 10 minutes.
+		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched
+		on this website. New entries are recalculated every 10 minutes.
 	</h3>
 </section>

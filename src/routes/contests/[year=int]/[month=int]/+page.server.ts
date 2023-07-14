@@ -16,7 +16,7 @@ export const load = (async ({ params, setHeaders }) => {
 	if (isNaN(+params.year) || isNaN(+params.month) || +params.year < 1 || +params.month < 1 || +params.month > 12) {
 		throw error(400, 'Invalid year or month');
 	}
-	
+
 	const { data } = await GetMonthlyContests(+params.year, +params.month);
 
 	if (!data) {

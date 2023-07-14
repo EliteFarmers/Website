@@ -27,7 +27,10 @@ export const load: LayoutServerLoad = async ({ params, url }) => {
 	}
 
 	if (selectedProfile.profileName !== profile) {
-		throw redirect(302, `/@${id}/${selectedProfile.profileName}${url.pathname.includes('/contests') ? '/contests' : ''}`);
+		throw redirect(
+			302,
+			`/@${id}/${selectedProfile.profileName}${url.pathname.includes('/contests') ? '/contests' : ''}`
+		);
 	}
 
 	const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId);

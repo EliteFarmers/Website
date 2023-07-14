@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ setHeaders }) => {
-	const { data, response } = await GetCurrentYearContests(); 
+	const { data, response } = await GetCurrentYearContests();
 
 	if (!data) {
 		try {
@@ -19,6 +19,6 @@ export const load = (async ({ setHeaders }) => {
 	});
 
 	return {
-		...data
+		...data,
 	};
 }) satisfies PageServerLoad;

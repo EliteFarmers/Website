@@ -13,13 +13,13 @@ export const load: PageServerLoad = ({ setHeaders }) => {
 		skills: lbs.filter((lb) => lb.type === LeaderboardType.Skill),
 		collections: lbs.filter((lb) => lb.type === LeaderboardType.Collection),
 		general: lbs.filter((lb) => lb.type === LeaderboardType.Misc),
-	}
+	};
 
 	setHeaders({
 		'Cache-Control': 'max-age=86400, public',
 	});
 
 	return {
-		categories
+		categories,
 	};
 };

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LeaderboardEntry } from "$lib/api/elite";
+	import type { LeaderboardEntry } from '$lib/api/elite';
 
 	export let entry: LeaderboardEntry;
 	export let highlight = false;

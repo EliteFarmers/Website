@@ -7,7 +7,7 @@
 
 	$: categories = data.categories;
 
-	$: ({ skills, general, collections } = categories)
+	$: ({ skills, general, collections } = categories);
 </script>
 
 <Head
@@ -20,7 +20,11 @@
 
 	<div class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 w-full">
 		<Category leaderboards={general} title="General" />
-		<Category leaderboards={collections.sort((a, b) => a.name.localeCompare(b.name))} title="Collections" grow={2} />
+		<Category
+			leaderboards={collections.sort((a, b) => a.name.localeCompare(b.name))}
+			title="Collections"
+			grow={2}
+		/>
 		<Category leaderboards={skills.sort((a, b) => a.name.localeCompare(b.name))} title="Skills" />
 	</div>
 </main>

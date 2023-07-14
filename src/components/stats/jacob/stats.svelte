@@ -49,7 +49,8 @@
 						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
 						class="px-1.5 mb-1 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600 flex"
 					>
-						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl">{participationsRank}</span
+						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+							>{participationsRank}</span
 						>
 					</a>
 				{/if}

@@ -12,7 +12,10 @@
 	$: seconds = Math.floor(Date.now() / 1000);
 
 	$: current = contests.find(([time]) => +time < seconds && seconds <= +time + 1200);
-	$: upcoming = contests.filter(([time]) => +time > seconds).map(([time, contest]) => [time, contest.sort()]) as [string, string[]][];
+	$: upcoming = contests.filter(([time]) => +time > seconds).map(([time, contest]) => [time, contest.sort()]) as [
+		string,
+		string[]
+	][];
 
 	$: crops = Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b));
 	$: cactus = false;
@@ -29,16 +32,16 @@
 	$: anySelected = false;
 
 	$: selected = {
-		'Cactus': cactus,
-		'Carrot': carrot,
+		Cactus: cactus,
+		Carrot: carrot,
 		'Cocoa Beans': cocoa,
-		'Melon': melon,
-		'Mushroom': mushroom,
+		Melon: melon,
+		Mushroom: mushroom,
 		'Nether Wart': netherwart,
-		'Potato': potato,
-		'Pumpkin': pumpkin,
+		Potato: potato,
+		Pumpkin: pumpkin,
 		'Sugar Cane': sugarcane,
-		'Wheat': wheat,
+		Wheat: wheat,
 	} as Record<string, boolean>;
 
 	$: {
@@ -54,7 +57,7 @@
 	});
 </script>
 
-<Head title={"Upcoming Contests"} description={'Upcoming Jacob\'s Contests for Hypixel Skyblock.'} />
+<Head title={'Upcoming Contests'} description={"Upcoming Jacob's Contests for Hypixel Skyblock."} />
 
 <main class="flex flex-col justify-center items-center">
 	<h1 class="text-4xl my-16">Upcoming Contests - Year {data.year}</h1>
@@ -79,7 +82,7 @@
 			{#if current && (!anySelected || current[1].some((c) => selected[c]))}
 				<Upcoming current={true} timestamp={+current[0]} crops={current[1]} currentSeconds={seconds} />
 			{/if}
-			{#each upcoming as [ timestamp, contest ] (timestamp)}
+			{#each upcoming as [timestamp, contest] (timestamp)}
 				{#if !anySelected || contest.some((c) => selected[c])}
 					<Upcoming timestamp={+timestamp} crops={contest} currentSeconds={seconds} />
 				{/if}
@@ -87,6 +90,9 @@
 		</div>
 	{/if}
 
-	<p class="py-16">This data is supplied by users of the mod <a class="underline" href="https://github.com/hannibal002/SkyHanni/">SkyHanni</a>. Thank you!</p>
+	<p class="py-16">
+		This data is supplied by users of the mod <a class="underline" href="https://github.com/hannibal002/SkyHanni/"
+			>SkyHanni</a
+		>. Thank you!
+	</p>
 </main>
-
