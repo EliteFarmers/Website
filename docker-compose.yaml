@@ -5,7 +5,6 @@ services:
             - .env
         environment:
             - NODE_ENV=production
-            - POSTGRES_URI=postgres://user:postgres123@database:5432/elite
         build: .
         ports:
             - 3000:3000
@@ -13,22 +12,6 @@ services:
             - database
             - cache
         restart: always
-        networks:
-            - elite-network
-    database:
-        image: postgres:13.8
-        restart: always
-        environment:
-            - POSTGRES_USER=user
-            - POSTGRES_PASSWORD=postgres123
-            - POSTGRES_DB=elite
-        ports:
-            - '5434:5432'
-        expose:
-            - '5434'
-        volumes:
-            - db-data:/var/lib/postgresql/data
-            - ./src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
             - elite-network
     cache:
@@ -49,5 +32,4 @@ networks:
         driver: bridge
 
 volumes:
-    db-data: {}
     redis-data: {}
