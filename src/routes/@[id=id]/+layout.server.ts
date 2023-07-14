@@ -1,8 +1,8 @@
 import { GetAccount, GetProfileMember } from '$lib/api/elite';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ params }) => {
+export const load: LayoutServerLoad = async ({ params, url }) => {
 	const { id, profile } = params;
 
 	const { data: account } = await GetAccount(id);
@@ -22,8 +22,12 @@ export const load: LayoutServerLoad = async ({ params }) => {
 		  profiles[0]
 		: profiles.find((p) => p.selected) ?? profiles[0];
 
-	if (!selectedProfile.profileId) {
+	if (!selectedProfile.profileId || !selectedProfile.profileName) {
 		throw error(404, 'Profile not found');
+	}
+
+	if (selectedProfile.profileName !== profile) {
+		throw redirect(302, `/@${id}/${selectedProfile.profileName}${url.pathname.includes('/contests') ? '/contests' : ''}`);
 	}
 
 	const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId);
@@ -40,7 +44,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
 			name: p.profileName ?? 'Unknown',
 		}));
 
-	profileIds.unshift({ id: selectedProfile.profileId, name: selectedProfile.profileName ?? 'Unknown' });
+	profileIds.unshift({ id: selectedProfile.profileId, name: selectedProfile.profileName });
 
 	return {
 		account,
