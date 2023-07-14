@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import Head from '$comp/head.svelte';
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
 
     let searchVal = '';
@@ -23,6 +24,11 @@
         goto(`/contests/${yearVal}/${monthVal}`);
     }
 </script>
+
+<Head
+	title="Elite | Contests"
+	description="Browse hundreds of thousands of contest participations set by fellow players!"
+/>
 
 <main class="flex flex-col justify-center items-center">
 	<h1 class="text-4xl my-16">Jacob's Contests</h1>

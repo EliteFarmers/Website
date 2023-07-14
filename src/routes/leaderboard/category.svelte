@@ -6,12 +6,12 @@
 	export let grow = 1;
 </script>
 
-<section class="flex flex-col flex-1 col-span-{grow} items-center justify-center gap-4 bg-gray-100 dark:bg-zinc-800 rounded-lg w-full">
+<section class="flex flex-col flex-1 col-span-{grow} items-center justify-center gap-4 w-full">
 	<h2 class="text-3xl pt-8 py-6">{title}</h2>
 
 	<div class="flex flex-col gap-2 h-full px-4 pb-4 w-full">
 		{#each leaderboards as leaderboard (leaderboard.id)}
-			<a href='/leaderboard/{leaderboard.id}' class="flex-1 p-4 items-center rounded-md bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 hover:dark:bg-zinc-600">
+			<a href='/leaderboard/{leaderboard.id}' class="flex-1 p-4 items-center rounded-md bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 hover:dark:bg-zinc-700">
 				<div class="flex flex-row gap-4 items-center">
 					{#if leaderboard.icon}
 						<img src={leaderboard.icon} class="w-12 h-12 rounded-md" alt="{leaderboard.name}" />
