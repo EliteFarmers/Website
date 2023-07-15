@@ -4,6 +4,7 @@
 
 	export let jacob: components['schemas']['JacobDataDto'] | undefined;
 	export let participationsRank = -1;
+	export let firstPlacesRank = -1;
 
 	$: firstPlaces = jacob?.contests?.filter((contest) => contest.position === 0).length ?? 0;
 
@@ -37,17 +38,29 @@
 		<div
 			class="flex flex-row md:flex-col justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-gray-200 dark:bg-zinc-700"
 		>
-			<p class="text-2xl">{firstPlaces.toLocaleString()}</p>
+			<div class="flex flex-row gap-2 items-baseline justify-center">
+				{#if firstPlacesRank !== -1}
+					<a
+						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
+						class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
+					>
+						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+							>{firstPlacesRank}</span
+						>
+					</a>
+				{/if}
+				<p class="text-2xl mt-0">{firstPlaces.toLocaleString() ?? 0}</p>
+			</div>
 			<h2 class="text-sm md:text-md">First Place Contests</h2>
 		</div>
 		<div
 			class="flex flex-row md:flex-col align-bottom justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-gray-200 dark:bg-zinc-700"
 		>
-			<div class="flex flex-row gap-2 align-bottom justify-center">
+			<div class="flex flex-row gap-2 items-baseline justify-center">
 				{#if participationsRank !== -1}
 					<a
 						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
-						class="px-1.5 mb-1 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600 flex"
+						class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
 					>
 						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{participationsRank}</span

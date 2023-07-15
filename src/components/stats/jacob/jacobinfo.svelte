@@ -11,11 +11,13 @@
 		silver: number;
 		gold: number;
 		participations: number;
+		firstPlaces: number;
 	} = {
 		bronze: -1,
 		silver: -1,
 		gold: -1,
 		participations: -1,
+		firstPlaces: -1,
 	};
 </script>
 
@@ -25,7 +27,7 @@
 
 		<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
 
-		<Stats {jacob} participationsRank={ranks.participations} />
+		<Stats {jacob} participationsRank={ranks.participations} firstPlacesRank={ranks.firstPlaces} />
 
 		<Recents contests={jacob?.contests} />
 	</div>

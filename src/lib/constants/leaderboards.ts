@@ -31,6 +31,12 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Jacob Contests',
 		type: LeaderboardType.Misc,
 	},
+	firstplace: {
+		limit: 1_000,
+		title: 'Jacob Contest First Places',
+		name: 'First Place Contests',
+		type: LeaderboardType.Misc,
+	},
 	goldmedals: {
 		limit: 1_000,
 		title: 'Gold Medals Earned',
