@@ -41,7 +41,7 @@
 			<div class="flex flex-row gap-2 items-baseline justify-center">
 				{#if firstPlacesRank !== -1}
 					<a
-						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
+						href="/leaderboard/firstplace/{$page.params.id}-{$page.params.profile}"
 						class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
 					>
 						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
