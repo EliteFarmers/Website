@@ -47,9 +47,9 @@
 
 	<div class="flex flex-wrap md:flex-row w-full md:w-[90%] gap-4 mt-4 mx-8 mb-16 justify-center">
 		{#each contests as contest}
-			<Singlecontest 
+			<Singlecontest
 				timestamp={contest.timestamp ?? 0}
-				crop={contest.crop} 
+				crop={contest.crop}
 				participants={contest.participants}
 				entries={contest.participations}
 			/>
