@@ -1,4 +1,4 @@
-import { building } from "$app/environment";
+import { building } from '$app/environment';
 
 const backup_data: CollectionInfo = {
 	name: 'Farming',

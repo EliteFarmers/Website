@@ -23,6 +23,4 @@ export const GET = (async ({ params, url }) => {
 	} catch (error) {
 		return json({ success: true, rank: -1 });
 	}
-
-
 }) as RequestHandler;
