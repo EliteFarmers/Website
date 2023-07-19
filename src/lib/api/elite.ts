@@ -177,6 +177,15 @@ export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string
 		},
 	});
 
+export const GetProfilesWeights = async (playerUuid: string) =>
+	await get('/Weight/{playerUuid}', {
+		params: {
+			path: {
+				playerUuid,
+			},
+		},
+	});
+
 export const GetLeaderboardSlice = async (leaderboardId: string, offset: number, limit: number) =>
 	await get('/Leaderboard/{id}', {
 		params: {

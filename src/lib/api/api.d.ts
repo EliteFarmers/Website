@@ -541,9 +541,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["FarmingWeightWithProfileDto"])[];
-            "application/json": (components["schemas"]["FarmingWeightWithProfileDto"])[];
-            "text/json": (components["schemas"]["FarmingWeightWithProfileDto"])[];
+            "text/plain": components["schemas"]["FarmingWeightAllProfilesDto"];
+            "application/json": components["schemas"]["FarmingWeightAllProfilesDto"];
+            "text/json": components["schemas"]["FarmingWeightAllProfilesDto"];
           };
         };
       };
@@ -656,6 +656,10 @@ export interface components {
       defaultPlayerUuid?: string;
       hideDiscordTag?: boolean;
     };
+    FarmingWeightAllProfilesDto: {
+      selectedProfileId?: string | null;
+      profiles?: (components["schemas"]["FarmingWeightWithProfileDto"])[];
+    };
     FarmingWeightDto: {
       /** Format: double */
       totalWeight?: number;
@@ -714,10 +718,11 @@ export interface components {
       limit?: number;
       /** Format: int32 */
       offset?: number;
-      entries?: (components["schemas"]["LeaderboardEntry"])[];
+      /** Format: int32 */
+      maxEntries?: number;
+      entries?: (components["schemas"]["LeaderboardEntryDto"])[];
     };
-    LeaderboardEntry: {
-      memberId?: string;
+    LeaderboardEntryDto: {
       ign?: string | null;
       profile?: string | null;
       /** Format: double */
@@ -726,7 +731,7 @@ export interface components {
     LeaderboardPositionDto: {
       /** Format: int32 */
       rank?: number;
-      upcomingPlayers?: (components["schemas"]["LeaderboardEntry"])[] | null;
+      upcomingPlayers?: (components["schemas"]["LeaderboardEntryDto"])[] | null;
     };
     LeaderboardPositionsDto: {
       misc?: {

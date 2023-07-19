@@ -1307,26 +1307,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
-                  }
+                  "$ref": "#/components/schemas/FarmingWeightAllProfilesDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
-                  }
+                  "$ref": "#/components/schemas/FarmingWeightAllProfilesDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
-                  }
+                  "$ref": "#/components/schemas/FarmingWeightAllProfilesDto"
                 }
               }
             }
@@ -1609,6 +1600,22 @@
         },
         "additionalProperties": false
       },
+      "FarmingWeightAllProfilesDto": {
+        "type": "object",
+        "properties": {
+          "selectedProfileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FarmingWeightWithProfileDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "FarmingWeightDto": {
         "type": "object",
         "properties": {
@@ -1759,21 +1766,22 @@
             "type": "integer",
             "format": "int32"
           },
+          "maxEntries": {
+            "type": "integer",
+            "format": "int32"
+          },
           "entries": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LeaderboardEntry"
+              "$ref": "#/components/schemas/LeaderboardEntryDto"
             }
           }
         },
         "additionalProperties": false
       },
-      "LeaderboardEntry": {
+      "LeaderboardEntryDto": {
         "type": "object",
         "properties": {
-          "memberId": {
-            "type": "string"
-          },
           "ign": {
             "type": "string",
             "nullable": true
@@ -1799,7 +1807,7 @@
           "upcomingPlayers": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LeaderboardEntry"
+              "$ref": "#/components/schemas/LeaderboardEntryDto"
             },
             "nullable": true
           }
