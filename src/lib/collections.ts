@@ -1,3 +1,5 @@
+import { building } from "$app/environment";
+
 const backup_data: CollectionInfo = {
 	name: 'Farming',
 	items: {
@@ -702,6 +704,8 @@ class FarmingCollections {
 export default new FarmingCollections(backup_data, backup_crops);
 
 async function fetchCollections() {
+	if (building) return undefined;
+
 	console.log('Fetching farming collections...');
 	const data = await fetch('https://api.hypixel.net/resources/skyblock/collections');
 
