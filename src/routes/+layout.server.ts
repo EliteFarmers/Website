@@ -4,17 +4,10 @@ import type { LayoutServerLoad } from './$types';
 export const load: LayoutServerLoad = async ({ locals, parent }) => {
 	await parent();
 
-	if (!locals.user?.id) {
-		return {
-			userInfo: locals.userInfo,
-			premium: PremiumStatus.None,
-		};
-	}
-
 	return {
 		userInfo:
 			locals.userInfo ??
-			(locals.user.id
+			(locals.user?.id
 				? {
 						id: locals.user.id,
 						username: locals.user.username,
@@ -22,8 +15,6 @@ export const load: LayoutServerLoad = async ({ locals, parent }) => {
 				  }
 				: undefined),
 		premium: PremiumStatus.None,
-		mcUuid:
-			locals.user.minecraftAccounts?.find((account) => account.primaryAccount)?.name ??
-			locals.user.minecraftAccounts?.[0]?.name,
+		mcUuid: locals.userInfo?.primaryUuid,
 	};
 };
