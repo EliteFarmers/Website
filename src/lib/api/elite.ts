@@ -245,7 +245,7 @@ export const GetPlayersRank = async (
 	});
 
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
-export type LeaderboardEntry = components['schemas']['LeaderboardEntry'];
+export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
 	id: string;
 	username: string;
