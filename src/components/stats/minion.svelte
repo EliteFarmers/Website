@@ -1,43 +1,45 @@
 <script lang="ts">
-	import Tooltip from '$comp/generic/tooltip.svelte';
+	import { Popover } from 'flowbite-svelte';
 
 	export let name: string;
 	export let index: number;
 	export let tierField: number;
 
 	// Turn tierField into its binary representation
-	const tiers = tierField?.toString(2).substring(0, 12).split('') ?? [];
+	$: tiers = tierField?.toString(2).substring(0, 12).split('') ?? [];
 	// Add 0s to the end of the array if it's less than 12 in length
-	while (tiers.length < 12) tiers.push('0');
+	$: {
+		while (tiers.length < 12) tiers.push('0');
+	}
 </script>
 
-<div class="image-container bg-gray-100 dark:bg-zinc-800 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
-	<Tooltip>
-		<div class="text-body">{name} Minion</div>
-		<div class="flex gap-1">
+<div>
+	<div class="image-container bg-gray-100 dark:bg-zinc-800 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
+		<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
+		<div class="tier-border">
 			{#each tiers as tier, i}
-				<div class="flex align-middle text-center justify-center">
-					<div
-						class="w-4 h-6 mx-0 text-body rounded-sm {tier === '1'
-							? 'bg-green-500'
-							: 'bg-gray-200 dark:bg-zinc-700'}"
-					>
-						{i + 1}
-					</div>
+				<div
+					class="tier {tier === '1' ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}"
+					style="grid-area: a{i};"
+				/>
+			{/each}
+		</div>
+		<div class="bg-gray-100 dark:bg-zinc-800 absolute tier-cover" />
+	</div>
+	<Popover placement="left">
+		<div slot="title" class="text-lg text-center">Unlocked {name} Minion Tiers</div>
+		<div class="flex gap-1 justify-center items-center text-black dark:text-white">
+			{#each tiers as tier, i}
+				<div
+					class="block flex-1 px-1 text-center text-lg rounded-sm {tier === '1'
+						? 'bg-green-500'
+						: 'bg-gray-200 dark:bg-zinc-700'}"
+				>
+					<p>{i + 1}</p>
 				</div>
 			{/each}
 		</div>
-	</Tooltip>
-	<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
-	<div class="tier-border">
-		{#each tiers as tier, i}
-			<div
-				class="tier {tier === '1' ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}"
-				style="grid-area: a{i};"
-			/>
-		{/each}
-	</div>
-	<div class="bg-gray-100 dark:bg-zinc-800 absolute tier-cover" />
+	</Popover>
 </div>
 
 <style lang="postcss">

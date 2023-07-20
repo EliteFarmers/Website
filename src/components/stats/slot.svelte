@@ -4,7 +4,7 @@
 
 	export let itemstack: ItemStack;
 
-	let id: number;
+	$: id = 0;
 
 	onMount(() => {
 		console.log(itemstack);

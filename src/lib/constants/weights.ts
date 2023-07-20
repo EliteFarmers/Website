@@ -1,11 +1,13 @@
+// Only used for display, calculations are done in the API
+
 export const CROPS_PER_ONE_WEIGHT = {
 	wheat: 100_000,
-	carrot: 300_000,
+	carrot: 302_061.86,
 	potato: 300_000,
 	sugarcane: 200_000,
 	netherwart: 250_000,
-	pumpkin: 90_066.27,
-	melon: 450_324.6,
+	pumpkin: 98_284.71,
+	melon: 485_308.47,
 	mushroom: 90_178.06,
 	cocoa: 267_174.04,
 	cactus: 177_254.45,

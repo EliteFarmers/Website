@@ -1,34 +1,34 @@
 <script lang="ts">
-	import type { AccountData, MemberData, PlayerInfo } from '$lib/skyblock';
+	import type { RankName } from '$lib/skyblock';
 	import { getRankDefaults } from '$lib/format';
 	import { page } from '$app/stores';
 
 	import Weight from '$comp/stats/player/weight.svelte';
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
-	import type { WeightInfo } from '$db/models/users';
 	import Skyblocklevel from './player/skyblocklevel.svelte';
+	import type { components } from '$lib/api/api';
 
-	export let account: AccountData;
-	export let player: PlayerInfo;
+	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileIds: { id: string; name: string }[];
-	export let members: MemberData[] | undefined;
+	export let members: components['schemas']['MemberDetailsDto'][] | null | undefined;
 	export let linked: boolean;
-	export let weightInfo: WeightInfo;
+	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
 	export let weightRank: number;
 	export let skyblockXP: number;
+	export let skyblockRank = -1;
 
-	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name));
+	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
 
-	const playerData = player.player;
-	const discordName = playerData.socialMedia?.links?.DISCORD;
+	$: discordName = player?.socialMedia?.discord;
 
-	const profilesData = { ign: account.name, profiles: profiles, selected: profileIds[0] };
+	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileIds[0] };
 
-	const rankName =
-		playerData.rank ??
-		(playerData.monthlyPackageRank !== 'NONE' ? playerData.monthlyPackageRank : playerData.newPackageRank);
-	const rank = getRankDefaults(rankName);
+	$: rankName =
+		player?.rank ??
+		(player?.monthlyPackageRank !== 'NONE' ? player?.monthlyPackageRank : player?.newPackageRank) ??
+		undefined;
+	$: rank = getRankDefaults(rankName as RankName);
 </script>
 
 <section class="flex justify-center w-full my-8">
@@ -39,26 +39,31 @@
 			<div>
 				<img
 					class="w-16 min-h-full object-cover"
-					src={`https://mc-heads.net/body/${account.id}`}
+					src={`https://mc-heads.net/body/${player?.uuid}`}
 					alt="User's Minecraft appearance"
 				/>
 			</div>
 			<div class="flex flex-col gap-1 justify-start">
-				<PlayerName ign={account.name} {rank} {members} profileId={profileIds[0].id} />
+				<PlayerName
+					ign={player?.displayname}
+					{rank}
+					members={members ?? undefined}
+					profileId={profileIds[0].id}
+				/>
 				<div class="flex justify-start">
-					<Skyblocklevel xp={skyblockXP} />
+					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />
 					<Discord username={discordName} {linked} />
 				</div>
 				<div class="flex justify-start">
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
-						href="https://sky.shiiyu.moe{$page.url.pathname}"
+						href="https://sky.shiiyu.moe/stats/{$page.params.id}/{$page.params.profile}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
 					<a
 						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
-						href="https://plancke.io/hypixel/player/stats/{account.name}"
+						href="https://plancke.io/hypixel/player/stats/{$page.params.id}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">Plancke</a
 					>
@@ -66,7 +71,7 @@
 			</div>
 		</div>
 		<div class="flex justify-center lg:justify-start w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
-			<Weight {weightInfo} rank={weightRank} profiles={profilesData} />
+			<Weight weightInfo={weightInfo ?? undefined} rank={weightRank} profiles={profilesData} />
 		</div>
 	</div>
 </section>

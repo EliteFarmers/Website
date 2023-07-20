@@ -6,10 +6,12 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ parent, locals, params }) => {
 	throw error(404, 'This page is a WIP, check back soon!');
 
-	const { discordUser } = await parent();
+	await parent();
+
+	const { user } = locals;
 	const token = locals.discord_access_token;
 
-	if (!discordUser || !token) {
+	if (!user || !token) {
 		throw redirect(302, `/login?redirect=/guild/${params.id}`);
 	}
 
@@ -28,7 +30,7 @@ export const actions: Actions = {
 	create: async ({ locals, params }) => {
 		const guildId = params.id;
 
-		if (!locals.discordUser || !guildId || !locals.discord_access_token) {
+		if (!locals.user || !guildId || !locals.discord_access_token) {
 			throw error(401, 'Unauthorized');
 		}
 

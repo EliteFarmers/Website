@@ -1,27 +1,35 @@
 <script lang="ts">
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
-	import type { JacobData } from '$lib/skyblock';
+	import { page } from '$app/stores';
+	import type { components } from '$lib/api/api';
 
-	export let jacob: JacobData;
+	export let jacob: components['schemas']['JacobDataDto'] | undefined;
+	export let participationsRank = -1;
+	export let firstPlacesRank = -1;
 
-	let firstPlaces = 0;
+	$: firstPlaces = jacob?.contests?.filter((contest) => contest.position === 0).length ?? 0;
 
-	let highestNumber = 0;
-	let highest = 'No Contests Yet';
-	for (const crop in jacob.contests) {
-		const contests = jacob.contests[crop as keyof typeof jacob.contests];
+	// Calculate which crop has the most contests and get the count
+	$: highest = Object.entries(
+		jacob?.contests?.reduce((acc, contest) => {
+			if (!contest?.crop) return acc;
 
-		if (contests.length > highestNumber) {
-			highest = PROPER_CROP_NAME[crop] ?? 'No Contests Yet';
-			highestNumber = contests.length;
-		}
-
-		for (const contest of contests) {
-			if (contest.position === 0) {
-				firstPlaces++;
+			if (contest.crop in acc) {
+				acc[contest.crop]++;
+			} else {
+				acc[contest.crop] = 1;
 			}
-		}
-	}
+			return acc;
+		}, {} as Record<string, number>) ?? {}
+	).reduce(
+		(acc, [crop, count]) => {
+			if (count > acc[1]) {
+				acc[0] = crop;
+				acc[1] = count;
+			}
+			return acc;
+		},
+		['', 0]
+	);
 </script>
 
 <div class="flex flex-col my-4 gap-2">
@@ -30,21 +38,45 @@
 		<div
 			class="flex flex-row md:flex-col justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-gray-200 dark:bg-zinc-700"
 		>
-			<p class="text-2xl">{firstPlaces.toLocaleString()}</p>
+			<div class="flex flex-row gap-2 items-baseline justify-center">
+				{#if firstPlacesRank !== -1}
+					<a
+						href="/leaderboard/firstplace/{$page.params.id}-{$page.params.profile}"
+						class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
+					>
+						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+							>{firstPlacesRank}</span
+						>
+					</a>
+				{/if}
+				<p class="text-2xl mt-0">{firstPlaces.toLocaleString() ?? 0}</p>
+			</div>
 			<h2 class="text-sm md:text-md">First Place Contests</h2>
 		</div>
 		<div
-			class="flex flex-row md:flex-col justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-gray-200 dark:bg-zinc-700"
+			class="flex flex-row md:flex-col align-bottom justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-gray-200 dark:bg-zinc-700"
 		>
-			<p class="text-2xl">{jacob.participations.toLocaleString()}</p>
+			<div class="flex flex-row gap-2 items-baseline justify-center">
+				{#if participationsRank !== -1}
+					<a
+						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
+						class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-600"
+					>
+						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+							>{participationsRank}</span
+						>
+					</a>
+				{/if}
+				<p class="text-2xl mt-0">{jacob?.participations?.toLocaleString() ?? 0}</p>
+			</div>
 			<h2 class="text-sm md:text-md">Contests Participated</h2>
 		</div>
 		<div
 			class="flex flex-row md:flex-col justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-gray-200 dark:bg-zinc-700"
 		>
-			<p class="text-2xl">{highestNumber !== 0 ? highestNumber.toLocaleString() : 'N/A'}</p>
+			<p class="text-2xl">{highest[1] !== 0 ? highest[1].toLocaleString() : 'N/A'}</p>
 			<h2 class="text-sm md:text-md">
-				{highestNumber !== 0 ? `${highest} Contest${highestNumber > 1 ? 's' : ''}` : highest}
+				{highest[1] !== 0 ? `${highest[0]} Contest${highest[1] > 1 ? 's' : ''}` : highest[0]}
 			</h2>
 		</div>
 	</div>

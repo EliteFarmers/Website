@@ -1,52 +1,48 @@
-import { GetUser } from '$db/database';
-import type { UserInfo } from '$db/models/users';
-import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
-import { accountFromUUID, fetchProfiles } from '$lib/data';
+import { GetProfilesWeights } from '$lib/api/elite';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params, setHeaders }) => {
-	const uuid = params.uuid.replaceAll('-', '');
+//! Temporary route for SkyHanni users until most have updated to the new route
+export const GET = (async ({ params }) => {
+	const { uuid } = params;
 
-	if (!uuid || uuid.length !== 32) {
-		return json({ error: 'Not a valid UUID' }, { status: 400 });
-	}
+	try {
+		const { data } = await GetProfilesWeights(uuid);
 
-	let user = await GetUser(uuid);
-
-	if (!user) {
-		// Create a new user
-		const account = await accountFromUUID(uuid);
-
-		if (!account) {
-			return json({ error: 'Account not found' }, { status: 404 });
+		if (!data) {
+			return json({
+				error: 'Account not found',
+			});
 		}
 
-		await fetchProfiles(uuid);
-		user = await GetUser(uuid);
+		const transformed = {
+			id: '',
+			linked: false,
+			profiles: {} as Record<
+				string,
+				{
+					farming: {
+						total: number;
+					};
+					cute_name: string;
+				}
+			>,
+		};
+
+		for (const profile of data.profiles ?? []) {
+			transformed.profiles[profile.profileId ?? ''] = {
+				cute_name: profile.profileName ?? '',
+				farming: {
+					total: profile.totalWeight ?? 0,
+				},
+			};
+		}
+
+		return json(transformed);
+	} catch (error) {
+		return json({
+			success: false,
+			error: error,
+		});
 	}
-
-	const profiles = user?.info?.profiles;
-
-	if (!profiles || !Array.isArray(profiles)) {
-		await fetchProfiles(uuid);
-
-		user = await GetUser(uuid);
-	}
-
-	if (!user) {
-		return json({ error: 'User not found.' }, { status: 404 });
-	}
-
-	const info = user.info as Partial<UserInfo> | undefined;
-
-	if (!info) {
-		return json({ error: 'User info not found' }, { status: 404 });
-	}
-
-	setHeaders({
-		'Cache-Control': `max-age=${PROFILE_UPDATE_INTERVAL / 1000}, public`,
-	});
-
-	return json(info);
-};
+}) as RequestHandler;

@@ -125,7 +125,7 @@
 				Crop Icons by <a
 					class="underline"
 					rel="nofollow noreferrer noopener"
-					href="https://www.redbubble.com/people/Luumini/shop"
+					href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
 				>
 					Lumini</a
 				>.
@@ -155,10 +155,8 @@
 				>.
 			</p>
 			<p class="text-lg my-4">
-				Feedback and support from the <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href={PUBLIC_COMMUNITY_INVITE}>Elite Skyblock Farmers</a
+				Feedback and support from the <a class="underline" rel="nofollow noreferrer noopener" href="/discord"
+					>Elite Skyblock Farmers</a
 				>.
 			</p>
 			<br /><br />

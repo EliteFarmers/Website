@@ -11,7 +11,6 @@
 	<div slot="rest" class="grid col-span-1">
 		{#each profiles ?? [] as pId}
 			<a
-				data-sveltekit-reload
 				href={`/stats/${ign}/${pId.name}`}
 				class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
 				>{pId.name}</a

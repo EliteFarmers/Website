@@ -48,4 +48,17 @@ export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
 	Wheat: 'WHEAT',
 };
 
+export const PROPER_CROP_TO_IMG: Partial<Record<string, string>> = {
+	Cactus: '/images/crops/cactus.png',
+	Carrot: '/images/crops/carrot.png',
+	'Cocoa Beans': '/images/crops/cocoa.png',
+	Melon: '/images/crops/melon.png',
+	Mushroom: '/images/crops/mushroom.png',
+	'Nether Wart': '/images/crops/netherwart.png',
+	Potato: '/images/crops/potato.png',
+	Pumpkin: '/images/crops/pumpkin.png',
+	'Sugar Cane': '/images/crops/sugarcane.png',
+	Wheat: '/images/crops/wheat.png',
+};
+
 export const PROPER_CROP_NAMES = Object.keys(PROPER_CROP_TO_MINION);

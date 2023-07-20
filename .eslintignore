@@ -1,3 +1,14 @@
+.DS_Store
+node_modules
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
 *.cjs
 svelte.config.js
 vite.config.js
@@ -7,3 +18,5 @@ build/*
 node_modules/*
 src/lib/limiter/*
 *.cjs
+src/lib/api/swagger.json
+src/lib/api/api.d.ts

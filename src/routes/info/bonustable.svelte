@@ -24,8 +24,8 @@
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">
 			<td>Farming 60</td>
-			<td>Rewarded after reaching both the XP required and unlocking the level cap.</td>
-			<td>{FARMING_LEVEL_60_BONUS}</td>
+			<td>Additional weight rewarded after reaching both the XP required and unlocking the level cap.</td>
+			<td class="whitespace-nowrap">{FARMING_LEVEL_60_BONUS - FARMING_LEVEL_50_BONUS} (250 total)</td>
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">
 			<td>Anita Bonus</td>

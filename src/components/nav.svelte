@@ -22,21 +22,11 @@
 		Input,
 	} from 'flowbite-svelte';
 
-	$: discordUser = $page.data.discordUser;
-
 	let searchVal = '';
 
 	async function search() {
-		const isAtStats = $page.url.pathname.startsWith('/stats');
+		await goto(`/@${searchVal}`);
 
-		const url = `${$page.url.origin}/stats/${searchVal}`;
-
-		if (isAtStats) {
-			window.location.href = url;
-			goto(url);
-		} else {
-			await goto(url);
-		}
 		searchVal = '';
 	}
 </script>
@@ -49,7 +39,7 @@
 	<div class="hidden relative md:flex lg:order-1 w-1/3" id="mobile-menu-3">
 		<div class="relative md:block w-full">
 			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
-				<Input let:props placeholder="Player name" size="md">
+				<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
 					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
 				<Button class="!p-2.5 h-full" type="submit" name="Search">
@@ -101,7 +91,7 @@
 	<Dropdown class="w-full" color="none" placement="bottom-end" triggeredBy="#search-button">
 		<DropdownItem defaultClass="w-full">
 			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
-				<Input let:props placeholder="Player name" size="md">
+				<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
 					<input type="text" {...props} bind:value={searchVal} />
 				</Input>
 				<Button class="!p-2.5 h-full" type="submit" name="Search">
@@ -126,19 +116,20 @@
 	<NavUl {hidden} class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center">
 		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>
 		<NavLi href="/info" active={$page.url.pathname === '/info'}>Info</NavLi>
+		<NavLi href="/contests" active={$page.url.pathname === '/contests'}>Contests</NavLi>
 		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
 		<DarkMode initialTheme="dark" />
 
-		{#if discordUser}
+		{#if $page.data.userInfo}
 			<div class="flex items-center lg:order-2 cursor-pointer">
 				<Avatar
 					id="avatar-menu"
-					src="https://cdn.discordapp.com/avatars/{discordUser.id}/{discordUser.avatar}.png"
+					src="https://cdn.discordapp.com/avatars/{$page.data.userInfo.id}/{$page.data.userInfo.avatar}.png"
 				/>
 			</div>
 			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
 				<DropdownHeader>
-					<span class="block text-sm"> {discordUser.username} </span>
+					<span class="block text-sm"> {$page.data.userInfo.username} </span>
 				</DropdownHeader>
 				<DropdownItem href="/profile">Profile</DropdownItem>
 				<DropdownItem href="/stats">My Stats</DropdownItem>

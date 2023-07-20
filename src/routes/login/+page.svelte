@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		// await invalidateAll();
+		//await invalidate('custom:auth');
 		goto('/');
 	});
 </script>

@@ -1,6 +1,7 @@
-import { json } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { ELITE_API_URL } from '$env/static/private';
 
-export const GET: RequestHandler = () => {
-	return json({ success: false, error: 'Route not found.' }, { status: 404 });
+export const GET: RequestHandler = ({ url }) => {
+	throw redirect(308, ELITE_API_URL + url.href.substring(url.origin.length));
 };

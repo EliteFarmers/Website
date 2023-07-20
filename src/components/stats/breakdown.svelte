@@ -1,54 +1,59 @@
 <script lang="ts">
-	import type { WeightBreakdown } from '$db/models/users';
-	import { PROPER_BONUS_NAME } from '$lib/constants/weights';
+	import type { components } from '$lib/api/api';
 
-	export let weight: WeightBreakdown;
+	export let weight: components['schemas']['FarmingWeightDto'] | undefined;
 
-	if (!weight) {
-		weight = {
-			total: 0,
-			bonus: 0,
-			sources: {},
-			bonuses: {},
-		};
+	$: total = weight?.totalWeight ?? 0;
+	$: bonus = Object.values(bonusSources).reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0;
+	$: bonusSources = weight?.bonusWeight ?? {};
+	$: cropSources = weight?.cropWeight ?? {};
+
+	$: {
+		if (!weight) {
+			weight = {
+				totalWeight: 0,
+				cropWeight: {},
+				bonusWeight: {},
+			};
+		}
 	}
 
-	const sources = Object.entries(weight?.sources ?? {}).sort((a, b) => b[1] - a[1]);
-	const bonuses = Object.entries(weight?.bonuses ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
+	$: sources = Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0));
+	$: bonuses = Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
 
-	if (sources.length === 0) {
-		sources.push(['None Found - API might be off', 0]);
-	}
+	$: {
+		if (sources.length === 0) {
+			sources.push(['None Found - API might be off', 0]);
+		}
 
-	if (bonuses.length === 0) {
-		bonuses.push(['No bonuses unlocked yet!', 0]);
+		if (bonuses.length === 0) {
+			bonuses.push(['No bonuses unlocked yet!', 0]);
+		}
 	}
 </script>
 
 <section class="py-4 flex justify-center align-middle" aria-labelledby="Breakdown">
 	<div class="w-[90%] md:w-[70%] bg-gray-100 dark:bg-zinc-800 rounded-lg p-4">
-		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown - {weight?.total.toLocaleString()}</h1>
+		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown - {total.toLocaleString()}</h1>
 		<div class="block md:flex justify-evenly py-4">
 			<div class="w-full md:w-1/3">
 				<h3>
 					Crops
-					<span class="text-gray-500 dark:text-zinc-300 pl-2"
-						>({((weight?.total ?? 0) - weight.bonus).toLocaleString()})</span
-					>
+					<span class="text-gray-500 dark:text-zinc-300 pl-2">({(total - bonus).toLocaleString()})</span>
 				</h3>
 				{#each sources as [source, value] (source)}
 					<div class="item">
 						<div class="flex-grow">{source}</div>
-						<div class="flex-none">{value.toLocaleString()}</div>
+						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{/each}
 			</div>
 			<div class="w-full md:w-1/3">
-				<h3>Bonus<span>({weight.bonus.toLocaleString()})</span></h3>
+				<h3>Bonus<span>({bonus.toLocaleString()})</span></h3>
 				{#each bonuses as [bonus, value] (bonus)}
 					<div class="item">
-						<div class="flex-grow capitalize">{PROPER_BONUS_NAME[bonus] ?? bonus}</div>
-						<div class="flex-none">{value.toLocaleString()}</div>
+						<div class="flex-grow capitalize">{bonus}</div>
+						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{/each}
 				<br />

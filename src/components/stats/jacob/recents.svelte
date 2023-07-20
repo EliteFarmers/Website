@@ -1,27 +1,11 @@
 <script lang="ts">
-	import type { ContestData, JacobContest } from '$lib/skyblock';
+	import { page } from '$app/stores';
 	import Contest from '$comp/stats/jacob/contest.svelte';
+	import type { components } from '$lib/api/api';
 
-	export let contests: ContestData;
+	export let contests: components['schemas']['JacobDataDto']['contests'];
 
-	// const { cactus, carrot, cocoa, melon, mushroom, nether_wart, potato, pumpkin, sugar_cane, wheat } = contests;
-
-	type JacobContestCrop = JacobContest & { crop: string };
-	let recentContests: JacobContestCrop[] = [];
-
-	// Get the 10 most recent contests, by looking through each crop array
-	// and finding the most recent contest.
-	for (const [crop, arrays] of Object.entries(contests)) {
-		recentContests.push(
-			...arrays.slice(-10).map((c) => {
-				(c as JacobContestCrop).crop = crop;
-				return c as JacobContestCrop;
-			})
-		);
-	}
-
-	recentContests.sort((a, b) => b.timestamp - a.timestamp);
-	recentContests = recentContests.slice(0, 10);
+	$: recentContests = contests?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0)).slice(0, 10) ?? [];
 
 	let showMore = false;
 </script>
@@ -55,4 +39,10 @@
 	<button class="block lg:hidden rounded-md p-3 bg-gray-200 dark:bg-zinc-700" on:click={() => (showMore = !showMore)}
 		>Show {showMore ? 'Less' : 'More'}</button
 	>
+	<div class="flex w-full items-center justify-center">
+		<a
+			class="block rounded-md p-3 px-8 bg-gray-200 dark:bg-zinc-700 text-center"
+			href={$page.url.pathname + '/contests'}>View All Contests</a
+		>
+	</div>
 </div>

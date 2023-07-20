@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 	import { onMount } from 'svelte';
@@ -12,25 +13,28 @@
 	};
 	export let rank = -1;
 
-	let percent = 100;
-	let readable = '';
-	let expanded = '';
-	let hovering = false;
+	$: percent = Math.round(progress.ratio * 100);
+	$: readable = '';
+	$: expanded = '';
+	$: hovering = false;
 
-	onMount(() => {
-		percent = Math.round(progress.ratio * 100);
-		const lang = navigator.language;
+	$: {
+		if (browser) {
+			const lang = navigator.language;
 
-		readable =
-			progress.goal !== undefined
-				? toReadable(progress.progress, lang) + ' / ' + toReadable(progress.goal, lang)
-				: toReadable(progress.progress, lang);
+			readable =
+				progress.goal !== undefined
+					? toReadable(progress.progress, lang) + ' / ' + toReadable(progress.goal, lang)
+					: toReadable(progress.progress, lang);
 
-		expanded =
-			progress.goal !== undefined
-				? Math.floor(progress.progress).toLocaleString() + ' / ' + Math.floor(progress.goal).toLocaleString()
-				: Math.floor(progress.progress).toLocaleString();
-	});
+			expanded =
+				progress.goal !== undefined
+					? Math.floor(progress.progress).toLocaleString() +
+					  ' / ' +
+					  Math.floor(progress.goal).toLocaleString()
+					: Math.floor(progress.progress).toLocaleString();
+		}
+	}
 </script>
 
 <section class="flex justify-center">

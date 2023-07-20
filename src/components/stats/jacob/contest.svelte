@@ -1,45 +1,50 @@
 <script lang="ts">
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
+	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
-	import type { JacobContest } from '$lib/skyblock';
-	type JacobContestCrop = JacobContest & { crop?: string };
 
-	export let contest: JacobContestCrop;
-	const { crop, position, participants, collected, timestamp } = contest;
+	export let contest: components['schemas']['ContestParticipationDto'];
+	export let irlTime = false;
 
-	const cropName = (crop ? PROPER_CROP_NAME[crop] : undefined) ?? 'Not Found';
-	const ranking = position !== undefined;
+	$: ({ crop, position, participants, collected, timestamp, medal } = contest);
 
-	let medal = '';
-	if (position !== undefined && participants) {
-		if (position <= participants * 0.05 + 1) {
-			medal = 'Gold';
-		} else if (position <= participants * 0.25 + 1) {
-			medal = 'Silver';
-		} else if (position <= participants * 0.6 + 1) {
-			medal = 'Bronze';
-		}
-	}
+	$: cropName = crop ?? 'Not Found';
+	$: ranking = (position ?? 0) > -1;
 </script>
 
-<div class="p-2 flex flex-col gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop}">
+<a
+	href="/contest/{timestamp}"
+	data-sveltekit-preload-data="off"
+	class="p-2 flex flex-col hover:shadow-lg hover:bg-gray-100 dark:hover:bg-zinc-900 gap-0.5 rounded-md bg-gray-200 dark:bg-zinc-700 border-l-4 {crop?.replace(
+		' ',
+		''
+	)}"
+>
 	<h3 class="first-letter:uppercase text-sm">
 		<span class="p-0.5 px-1.5 bg-gray-100 dark:bg-zinc-800 rounded-md">{cropName}</span>
-		<span class="text-sm font-semibold">{ranking ? `#${position + 1}` : 'Unclaimed'}</span>
+		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
-	<h3 class="text-lg font-semibold">
-		{#if medal === 'Gold'}
+	<h3 class="text-lg font-semibold flex flex-row items-center gap-1">
+		{#if medal === 'gold'}
 			<img class="inline-block w-5 h-5" src="/images/medals/gold.webp" alt="Earned Medal" />
-		{:else if medal === 'Silver'}
+		{:else if medal === 'silver'}
 			<img class="inline-block w-5 h-5" src="/images/medals/silver.webp" alt="Earned Medal" />
-		{:else if medal === 'Bronze'}
+		{:else if medal === 'bronze'}
 			<img class="inline-block w-5 h-5" src="/images/medals/bronze.webp" alt="Earned Medal" />
 		{/if}
-		{collected.toLocaleString()}
+		{(collected ?? 0).toLocaleString()}
 	</h3>
-	<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp)}</h6>
-</div>
+	{#if irlTime}
+		<h6 class="text-xs font-mono font-semibold">
+			{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
+				timeStyle: 'short',
+				dateStyle: 'medium',
+			})}
+		</h6>
+	{:else}
+		<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</h6>
+	{/if}
+</a>
 
 <style lang="postcss">
 	img {
@@ -47,43 +52,43 @@
 		aspect-ratio: 1 / 1;
 	}
 
-	.cactus {
+	.Cactus {
 		@apply border-cactus;
 	}
 
-	.carrot {
+	.Carrot {
 		@apply border-carrot;
 	}
 
-	.cocoa {
+	.CocoaBeans {
 		@apply border-cocoa;
 	}
 
-	.melon {
+	.Melon {
 		@apply border-melon;
 	}
 
-	.mushroom {
+	.Mushroom {
 		@apply border-mushroom;
 	}
 
-	.netherwart {
+	.NetherWart {
 		@apply border-netherwart;
 	}
 
-	.potato {
+	.Potato {
 		@apply border-potato;
 	}
 
-	.pumpkin {
+	.Pumpkin {
 		@apply border-pumpkin;
 	}
 
-	.sugarcane {
+	.SugarCane {
 		@apply border-sugarcane;
 	}
 
-	.wheat {
+	.Wheat {
 		@apply border-wheat;
 	}
 </style>

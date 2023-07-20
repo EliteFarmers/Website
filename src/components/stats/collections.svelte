@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { components } from '$lib/api/api';
 	import CollectionBar from './collectionbar.svelte';
 
 	export let collections: {
@@ -10,11 +11,11 @@
 		maxTier: number;
 		key: string;
 	}[];
-	export let ranks: Record<string, number> | undefined;
+	export let ranks: components['schemas']['LeaderboardPositionsDto']['collections'];
 
-	let list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
+	$: list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
+	$: weightSort = true;
 
-	let weightSort = true;
 	function swap() {
 		weightSort = !weightSort;
 
