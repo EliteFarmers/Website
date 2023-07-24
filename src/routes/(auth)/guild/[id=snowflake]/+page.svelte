@@ -1,10 +1,34 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { Card } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 
-	//export let data: PageData;
-	//export let form: FormData;
+	export let data: PageData;
+	$: features = data.guild?.features;
 </script>
+
+<main class="flex flex-col items-center">
+	<div class="flex flex-row items-center gap-4">
+		<img class="w-16 h-16" src="https://cdn.discordapp.com/icons/{data.guildId}/{data.guild?.icon}.webp" alt="Guild Icon">
+		<h1 class="text-4xl my-16">
+			{data.guild?.name}
+		</h1>
+	</div>
+	
+	<div class="">
+		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800">
+			<h2 class="text-2xl">Server Jacob Leaderboards</h2>
+			{#if !features?.jacobLeaderboardEnabled}
+				<p class="text-gray-500 dark:text-gray-400">This server does not have the Jacob Leaderboard feature enabled.</p>
+			{:else}
+				<p class="text-gray-500 dark:text-gray-400">This server has the Jacob Leaderboard feature enabled.</p>
+			{/if}
+		</Card>
+	</div>
+
+
+
+</main>
 
 <form method="POST" action="?/create" class="flex w-full mb-16 justify-center items-center" use:enhance>
 	<div class="flex flex-col gap-4 items-center justify-center">

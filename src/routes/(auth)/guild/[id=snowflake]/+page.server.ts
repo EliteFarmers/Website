@@ -1,29 +1,19 @@
 // import { GetOrCreateGuild } from '$db/events';
-import { CanEditFetchedGuild, FetchGuilds, GuildContainsBot } from '$lib/discord';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { CanEditFetchedGuild, GuildContainsBot } from '$lib/discord';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { CanManageGuild } from '$lib/utils';
 
-export const load: PageServerLoad = async ({ parent, locals, params }) => {
-	throw error(404, 'This page is a WIP, check back soon!');
+export const load: PageServerLoad = async ({ parent }) => {
+	const { userPermissions } = await parent();
 
-	await parent();
+	const hasPerms = CanManageGuild(userPermissions);
 
-	const { user } = locals;
-	const token = locals.discord_access_token;
-
-	if (!user || !token) {
-		throw redirect(302, `/login?redirect=/guild/${params.id}`);
+	if (!hasPerms) {
+		throw error(403, 'You do not have permission to edit this guild.');
 	}
 
-	const guilds = await FetchGuilds(token ?? '');
-
-	if (!guilds) {
-		throw error(500, 'Failed to fetch guilds.');
-	}
-
-	return {
-		guilds,
-	};
+	return {};
 };
 
 export const actions: Actions = {

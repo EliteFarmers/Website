@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Guild } from '$lib/discord';
+	import type { components } from '$lib/api/api';
 	import { Button, Card } from 'flowbite-svelte';
 
-	export let guild: Guild;
+	export let guild: components['schemas']['UserGuildDto'];
 </script>
 
-<Card class="m-1 p-4 inline-block">
+<Card class="m-1 p-4 inline-block" color="gray">
 	<div class="flex justify-between items-center">
 		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
 			{#if guild.icon == null}
@@ -13,8 +13,7 @@
 					class="w-12 h-12 flex items-center justify-center select-none bg-blend-darken bg-black rounded-full"
 				>
 					<h1>
-						{guild.name
-							.split(' ')
+						{guild.name?.split(' ')
 							.slice(0, 3)
 							.map((word) => word[0])
 							.join('')}

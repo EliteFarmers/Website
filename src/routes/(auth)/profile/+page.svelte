@@ -4,6 +4,8 @@
 	import { Button } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
+	import Guild from './guild.svelte';
+	import { CanManageGuild } from '$lib/utils';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -94,24 +96,24 @@
 			{/each} -->
 		</div>
 
-		<h1 class="text-2xl mb-4">Your Servers</h1>
+		<h1 class="text-2xl mb-4">Manage Servers</h1>
 		{#if data.guildsWithBot.length === 0}
-			<p>This feature is a work in progress, check back later!</p>
+			<p>You don't manage any servers with the bot invited!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			<!-- {#each data.guildsWithBot as guild (guild.id)}
+			{#each data.guildsWithBot as guild (guild.id)}
 				<Guild {guild} />
-			{/each} -->
+			{/each}
 		</div>
 
 		<h1 class="text-2xl mb-4">Other Servers</h1>
-		{#if data.guildsWithBot.length === 0}
-			<p>This feature is a work in progress, check back later!</p>
+		{#if data.guilds.length === 0}
+			<p>No servers found! Try refreshing the page if this is wrong.</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			<!-- {#each data.guilds as guild (guild.id)}
+			{#each data.guilds as guild (guild.id)}
 				<Guild {guild} />
-			{/each} -->
+			{/each}
 		</div>
 	</section>
 </div>
