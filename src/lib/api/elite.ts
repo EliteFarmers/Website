@@ -177,6 +177,25 @@ export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string
 		},
 	});
 
+export const GetUsersGuilds = async (accessToken: string) =>
+	await get('/User/Guilds', {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetGuild = async (guildId: string, accessToken: string) =>
+	await get('/User/Guild/{guildId}', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetProfilesWeights = async (playerUuid: string) =>
 	await get('/Weight/{playerUuid}', {
 		params: {

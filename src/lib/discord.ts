@@ -119,9 +119,9 @@ export function CanEditGuild(guild: Guild) {
 	const perms = BigInt(guild.permissions);
 
 	const manageGuild = BigInt(0x20);
-	const manageEvents = BigInt(0x200000000);
+	const administrator = BigInt(0x08);
 
-	return (perms & manageGuild) === manageGuild || (perms & manageEvents) === manageEvents;
+	return (perms & manageGuild) === manageGuild || (perms & administrator) === administrator;
 }
 
 export async function FetchPremiumStatus(memberId: string): Promise<PremiumStatus> {
