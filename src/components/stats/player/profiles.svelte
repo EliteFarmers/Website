@@ -9,7 +9,7 @@
 <Dropdown hasItems={profiles.length > 0}>
 	<h1 slot="top">{selected.name}</h1>
 	<div slot="rest" class="grid col-span-1">
-		{#each profiles ?? [] as pId}
+		{#each profiles ?? [] as pId (pId.id)}
 			<a
 				href={`/stats/${ign}/${pId.name}`}
 				class="p-1 text-body text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
