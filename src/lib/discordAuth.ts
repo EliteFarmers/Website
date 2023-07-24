@@ -1,7 +1,8 @@
 import { PUBLIC_DISCORD_CLIENT_ID as CLIENT_ID, PUBLIC_DISCORD_URL, PUBLIC_HOST_URL } from '$env/static/public';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
-import { GetAuthorizedAccount, type AuthorizedUser } from '$lib/api/elite';
+import { GetAuthorizedAccount, type AuthorizedUser, type UserInfo } from '$lib/api/elite';
 import crypto from 'crypto';
+import type { RequestEvent } from '@sveltejs/kit';
 
 export type DiscordUpdateResponse = {
 	accessToken: string;
@@ -102,4 +103,51 @@ export async function RefreshDiscordUser(refreshToken: string, redirect: string)
 		refreshTokenExpires: refreshTokenExpires.toUTCString(),
 		user: null,
 	};
+}
+
+export function UpdateCookies(event: RequestEvent, discord: DiscordUpdateResponse) {
+	if (!discord) return;
+
+	const { accessToken, refreshToken, accessTokenExpires, refreshTokenExpires, user } = discord;
+
+	if (accessToken && accessTokenExpires) {
+		event.cookies.set('discord_access_token', accessToken, {
+			path: '/',
+			expires: new Date(accessTokenExpires),
+		});
+
+		event.locals.discord_access_token = accessToken;
+	} else if (!accessToken) {
+		event.cookies.delete('discord_access_token');
+	}
+
+	if (refreshToken && refreshTokenExpires) {
+		event.cookies.set('discord_refresh_token', refreshToken, {
+			path: '/',
+			expires: new Date(refreshTokenExpires),
+		});
+
+		event.locals.discord_refresh_token = refreshToken;
+	} else if (!refreshToken) {
+		event.cookies.delete('discord_refresh_token');
+	}
+
+	if (!user?.id || !user.avatar || !user.username) return;
+
+	const primary = user.minecraftAccounts?.find((account) => account.primaryAccount);
+
+	event.cookies.set(
+		'user_info',
+		JSON.stringify({
+			id: user.id,
+			username: user.username,
+			avatar: user.avatar,
+			primaryName: primary?.name ?? undefined,
+			primaryUuid: primary?.id ?? undefined,
+		} satisfies UserInfo),
+		{
+			path: '/',
+			expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+		}
+	);
 }

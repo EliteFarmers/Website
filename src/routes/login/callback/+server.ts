@@ -29,7 +29,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		scope: 'identify guilds',
 	};
 
-	const request = await fetch('https://discord.com/api/oauth2/token', {
+	const request = await fetch('https://discord.com/api/v10/oauth2/token', {
 		method: 'POST',
 		body: new URLSearchParams(data),
 		headers: {
@@ -64,12 +64,6 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	const redirectUrl = cookies.get('auth_redirect');
-	cookies.delete('auth_redirect');
-
-	if (!redirectUrl || redirectUrl === '/') {
-		throw redirect(303, '/profile');
-	}
-
-	throw redirect(303, `/login?redirect=${redirectUrl}`);
+	
+	throw redirect(303, '/login?success=true&redirect=/profile');
 };

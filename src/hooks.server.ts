@@ -1,5 +1,5 @@
-import type { Handle, RequestEvent } from '@sveltejs/kit';
-import { FetchDiscordUser, type DiscordUpdateResponse } from '$lib/discordAuth';
+import type { Handle } from '@sveltejs/kit';
+import { FetchDiscordUser, UpdateCookies } from '$lib/discordAuth';
 import type { UserInfo } from '$lib/api/elite';
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -25,7 +25,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			refreshToken: refresh,
 		});
 
-		if (discord) updateCookies(event, discord);
+		if (discord) UpdateCookies(event, discord);
 	}
 
 	locals.discord_access_token = access;
@@ -56,7 +56,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	locals.user = discord.user ?? undefined;
 
-	updateCookies(event, discord);
+	UpdateCookies(event, discord);
 
 	return await ResolveWithSecurityHeaders(resolve, event);
 };
@@ -77,51 +77,4 @@ async function ResolveWithSecurityHeaders(
 	response.headers.set('X-Content-Type-Options', 'nosniff');
 
 	return response;
-}
-
-function updateCookies(event: RequestEvent, discord: DiscordUpdateResponse) {
-	if (!discord) return;
-
-	const { accessToken, refreshToken, accessTokenExpires, refreshTokenExpires, user } = discord;
-
-	if (accessToken && accessTokenExpires) {
-		event.cookies.set('discord_access_token', accessToken, {
-			path: '/',
-			expires: new Date(accessTokenExpires),
-		});
-
-		event.locals.discord_access_token = accessToken;
-	} else if (!accessToken) {
-		event.cookies.delete('discord_access_token');
-	}
-
-	if (refreshToken && refreshTokenExpires) {
-		event.cookies.set('discord_refresh_token', refreshToken, {
-			path: '/',
-			expires: new Date(refreshTokenExpires),
-		});
-
-		event.locals.discord_refresh_token = refreshToken;
-	} else if (!refreshToken) {
-		event.cookies.delete('discord_refresh_token');
-	}
-
-	if (!user?.id || !user.avatar || !user.username) return;
-
-	const primary = user.minecraftAccounts?.find((account) => account.primaryAccount);
-
-	event.cookies.set(
-		'user_info',
-		JSON.stringify({
-			id: user.id,
-			username: user.username,
-			avatar: user.avatar,
-			primaryName: primary?.name ?? undefined,
-			primaryUuid: primary?.id ?? undefined,
-		} satisfies UserInfo),
-		{
-			path: '/',
-			expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
-		}
-	);
 }

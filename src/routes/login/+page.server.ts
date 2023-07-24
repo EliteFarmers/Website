@@ -32,10 +32,5 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		maxAge: 60 * 60 * 24 * 7,
 	});
 
-	cookies.set('auth_redirect', redirectTo ?? '/', {
-		path: '/',
-		maxAge: 60 * 60 * 24 * 7,
-	});
-
 	throw redirect(303, endpoint);
 };
