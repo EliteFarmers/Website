@@ -699,6 +699,102 @@ export interface paths {
       };
     };
   };
+  "/User/Guild/{guildId}/Jacob": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboardFeature"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Jacob/Leaderboard": {
+    post: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboard"];
+          "text/json": components["schemas"]["GuildJacobLeaderboard"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboard"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Jacob/{lbId}": {
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboard"];
+          "text/json": components["schemas"]["GuildJacobLeaderboard"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboard"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
   "/Weight/{playerUuid}": {
     get: {
       parameters: {
