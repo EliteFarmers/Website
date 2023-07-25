@@ -1,6 +1,7 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
+import { GetGuild } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { userPermissions, guild } = await parent();
@@ -21,24 +22,26 @@ export const load: PageServerLoad = async ({ parent }) => {
 };
 
 export const actions: Actions = {
-	create: ({ locals, params }) => {
+	create: async ({ locals, params, request }) => {
 		const guildId = params.id;
+		const { discord_access_token: token } = locals;
 
-		if (!locals.user || !guildId || !locals.discord_access_token) {
+		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
-
-		const hasPerms = undefined;//await CanEditFetchedGuild(locals.discord_access_token, guildId);
-
-		if (!hasPerms) {
-			return fail(403, { error: 'You do not have permission to edit this guild.' });
+		
+		const guild = await GetGuild(guildId, token).then((guild) => guild.data ?? undefined).catch(() => undefined);
+		if (!guild) throw error(404, 'Guild not found');
+		
+		const hasPerms = CanManageGuild(guild.permissions);
+		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
+		
+		if (!guild.guild?.features?.jacobLeaderboardEnabled) {
+			throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
 		}
-
-		const containsBot = undefined;//await GuildContainsBot(guildId);
-
-		if (!containsBot) {
-			return fail(400, { error: 'This guild does not contain the bot.' });
-		}
+		
+		const data = await request.formData();
+	
 
 		// Do stuff here
 
