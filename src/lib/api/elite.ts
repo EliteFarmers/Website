@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-const { GET, POST, DELETE } = createClient<paths>({
+const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
 });
 
@@ -189,6 +189,71 @@ export const GetGuild = async (guildId: string, accessToken: string) =>
 		params: {
 			path: {
 				guildId: guildId as unknown as number
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetGuildJacob = async (guildId: string, accessToken: string) =>
+	await GET('/User/Guild/{guildId}/Jacob', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const PatchGuildJacob = async (guildId: string, accessToken: string, jacob: components['schemas']['GuildJacobLeaderboardFeature']) =>
+	await PATCH('/User/Guild/{guildId}/Jacob', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number
+			},
+		},
+		body: jacob,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AddGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboard: components['schemas']['GuildJacobLeaderboard']) =>
+	await POST('/User/Guild/{guildId}/Jacob/Leaderboard', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number
+			},
+		},
+		body: leaderboard,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const UpdateGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboard: components['schemas']['GuildJacobLeaderboard']) =>
+	await PUT('/User/Guild/{guildId}/Jacob/{lbId}', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				lbId: leaderboard.id ?? '' 
+			},
+		},
+		body: leaderboard,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const DeleteGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboardId: string) =>
+	await DELETE('/User/Guild/{guildId}/Jacob/{lbId}', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				lbId: leaderboardId
 			},
 		},
 		headers: {
