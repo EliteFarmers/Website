@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Card } from 'flowbite-svelte';
+	import { Button, Card } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -15,13 +15,16 @@
 		</h1>
 	</div>
 	
-	<div class="">
-		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800">
+	<div class="flex flex-col md:flex-row gap-8">
+		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800 flex flex-col gap-4">
 			<h2 class="text-2xl">Server Jacob Leaderboards</h2>
 			{#if !features?.jacobLeaderboardEnabled}
-				<p class="text-gray-500 dark:text-gray-400">This server does not have the Jacob Leaderboard feature enabled.</p>
+				<p>This server does not have the Jacob Leaderboard feature enabled. For now please ask "kaeso.dev" on Discord to gain access to this feature.</p>
 			{:else}
-				<p class="text-gray-500 dark:text-gray-400">This server has the Jacob Leaderboard feature enabled.</p>
+				<p>Manage your sever specific Jacob Leaderboards!</p>
+				<Button href="/guild/{data.guildId}/jacob">
+					Manage
+				</Button>
 			{/if}
 		</Card>
 	</div>

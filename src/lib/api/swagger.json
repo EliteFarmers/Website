@@ -2351,11 +2351,12 @@
       "GuildJacobLeaderboard": {
         "type": "object",
         "properties": {
-          "channelId": {
+          "id": {
             "type": "string"
           },
-          "messageId": {
-            "type": "string"
+          "channelId": {
+            "type": "string",
+            "nullable": true
           },
           "startCutoff": {
             "type": "integer",

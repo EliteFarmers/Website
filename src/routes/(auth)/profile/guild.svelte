@@ -5,7 +5,7 @@
 	export let guild: components['schemas']['UserGuildDto'];
 </script>
 
-<Card class="m-1 p-4 inline-block" color="gray">
+<Card class="m-1 p-4 inline-block bg-gray-200 dark:bg-zinc-800" color="none" border={false}>
 	<div class="flex justify-between items-center">
 		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
 			{#if guild.icon == null}

@@ -943,8 +943,8 @@ export interface components {
       verifiedRole?: components["schemas"]["VerifiedRoleFeature"];
     };
     GuildJacobLeaderboard: {
-      channelId?: string;
-      messageId?: string;
+      id?: string;
+      channelId?: string | null;
       /** Format: int64 */
       startCutoff?: number;
       /** Format: int64 */

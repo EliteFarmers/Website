@@ -1,10 +1,9 @@
-// import { GetOrCreateGuild } from '$db/events';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
 
 export const load: PageServerLoad = async ({ parent }) => {
-	const { userPermissions } = await parent();
+	const { userPermissions, guild } = await parent();
 
 	const hasPerms = CanManageGuild(userPermissions);
 
@@ -12,7 +11,13 @@ export const load: PageServerLoad = async ({ parent }) => {
 		throw error(403, 'You do not have permission to edit this guild.');
 	}
 
-	return {};
+	if (!guild?.features?.jacobLeaderboardEnabled) {
+		throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
+	}
+
+	return {
+		...guild.features.jacobLeaderboard
+	};
 };
 
 export const actions: Actions = {
@@ -34,16 +39,8 @@ export const actions: Actions = {
 		if (!containsBot) {
 			return fail(400, { error: 'This guild does not contain the bot.' });
 		}
-		/*
-		const guild = await GetOrCreateGuild(guildId);
 
-		if (!guild) {
-			return fail(500, { error: 'An error occurred while creating the guild.' });
-		}
-
-		const data = await request.formData();
-		const name = data.get('name')?.toString();
-		*/
+		// Do stuff here
 
 		return {
 			success: true,

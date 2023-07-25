@@ -3,8 +3,6 @@ export function CanManageGuild(permissions?: string) {
 	
 	const perms = BigInt(permissions);
 
-	console.log(perms, permissions);
-
 	const admin = BigInt(0x8);
 	const manageGuild = BigInt(0x20);
 
