@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import { Button } from 'flowbite-svelte';
+	import { Button, Input } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
@@ -9,6 +9,7 @@
 
 	export let data: PageData;
 	export let form: ActionData;
+	let loading = false;
 
 	$: user = data.user || undefined;
 	$: mc = data.mcAccount;
@@ -19,8 +20,8 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<div class="flex flex-col lg:flex-row justify-center gap-16 m-16">
-	<div class="flex flex-col items-start">
+<main class="flex flex-col lg:flex-row justify-center gap-16 m-16 justify-items-center">
+	<div class="flex flex-col items-center">
 		<div class="w-full max-w-2xl mb-8">
 			<DiscordAccount account={user} />
 		</div>
@@ -45,31 +46,48 @@
 		</div>
 		<!-- Form to input username to link account -->
 
-		<form method="POST" class="w-full max-w-md mb-16" use:enhance>
+		<form method="POST" class="w-full max-w-md mb-16"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result, update }) => {
+					// Wait for a bit so the user can see the loading state
+					await new Promise((r) => setTimeout(r, 500));
+					if (result) loading = false;
+					update();
+				}
+			}}
+		>
 			<div class="flex flex-col gap-4 items-center w-full">
 				<div class="grid col-span-1 relative w-full">
-					<input
+					<Input
 						type="text"
 						name="username"
-						class="w-full px-4 py-2 border-2 rounded text-black"
-						placeholder="Username"
+						class="w-full px-4 py-2 border-2 rounded text-black text-center"
+						placeholder="Enter your Minecraft username"
+						disabled={loading}
 					/>
-					<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>
 				</div>
-				<button
-					type="submit"
-					formaction="?/link"
-					class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-				>
-					Link Account
-				</button>
-				<button
-					type="submit"
-					formaction="?/unlink"
-					class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-				>
-					Unlink Account
-				</button>
+				<div class="flex flex-col lg:flex-row gap-2 w-full">
+					<Button
+						type="submit"
+						formaction="?/link"
+						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+						disabled={loading}
+					>
+						Link Account
+					</Button>
+					<Button
+						type="submit"
+						formaction="?/unlink"
+						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+						disabled={loading}
+					>
+						Unlink Account
+					</Button>
+				</div>
+				{#if form?.error}
+					<span class="text-red-600 text-sm">{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span>
+				{/if}
 			</div>
 		</form>
 		{#if !user?.minecraftAccounts?.length}
@@ -116,4 +134,4 @@
 			{/each}
 		</div>
 	</section>
-</div>
+</main>

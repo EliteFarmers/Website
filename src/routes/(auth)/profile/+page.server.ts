@@ -17,11 +17,11 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 	const guilds = (await GetUsersGuilds(token).then((guilds) => guilds.data ?? undefined).catch(() => undefined)) ?? [] as components['schemas']['UserGuildDto'][];
 
-	console.log('guilds', guilds?.filter((guild) => guild.hasBot));
+	console.log('guilds', guilds.filter((guild) => guild.hasBot));
 
 	return {
-		guildsWithBot: guilds?.filter((guild) => guild.hasBot) ?? [],
-		guilds: guilds.filter((guild) => !guild.hasBot) ?? [],
+		guildsWithBot: guilds.filter((guild) => guild.hasBot),
+		guilds: guilds.filter((guild) => !guild.hasBot),
 		premium: 'none' as string,
 		mcAccount: account ?? null,
 	};
@@ -34,7 +34,7 @@ export const actions: Actions = {
 		}
 
 		const data = await request.formData();
-		const username = data.get('username')?.toString();
+		const username = data.get('username')?.toString().trim();
 
 		if (!username || !IsIGNOrUUID(username)) {
 			return fail(400, { error: 'Invalid username.' });
@@ -57,6 +57,7 @@ export const actions: Actions = {
 		const username = data.get('username')?.toString();
 
 		if (!username || !IsIGNOrUUID(username)) {
+			console.log('username', username);
 			return fail(400, { error: 'Invalid username.' });
 		}
 
