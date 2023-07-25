@@ -8,27 +8,10 @@ services:
         build: .
         ports:
             - 3000:3000
-        depends_on:
-            - cache
         restart: always
-        networks:
-            - elite-network
-    cache:
-        image: redis:7.0.7
-        restart: always
-        ports:
-            - '6379:6379'
-        command: redis-server --save 20 1 --loglevel warning --requirepass redisCachePassword123
-        expose:
-            - '6379'
-        volumes:
-            - redis-data:/data
         networks:
             - elite-network
 
 networks:
     elite-network:
         driver: bridge
-
-volumes:
-    redis-data: {}
