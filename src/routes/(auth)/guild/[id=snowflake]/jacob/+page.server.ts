@@ -1,7 +1,7 @@
-import { error, fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
-import { GetGuild } from '$lib/api/elite';
+import { AddGuildJacobLeadeboard, GetGuild } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { userPermissions, guild } = await parent();
@@ -23,6 +23,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 export const actions: Actions = {
 	create: async ({ locals, params, request }) => {
+		console.log('create');
+
 		const guildId = params.id;
 		const { discord_access_token: token } = locals;
 
@@ -41,9 +43,40 @@ export const actions: Actions = {
 		}
 		
 		const data = await request.formData();
-	
 
-		// Do stuff here
+		const title = data.get('title') as string;
+		const sendToChannelId = data.get('sendToChannelId') as string;
+		const mentionRoleId = data.get('mentionRoleId') as string;
+		const updatesChannelId = data.get('updatesChannelId') as string;
+		const tinyUpdatesPing = data.get('tinyUpdatesPing') === 'on';
+		const requiredRoleId = data.get('requiredRoleId') as string;
+		const blockedRoleId = data.get('blockedRoleId') as string;
+		const startDate = data.get('startDate') as string;
+		const endDate = data.get('endDate') as string;
+
+		const { response } = await AddGuildJacobLeadeboard(guildId, token, {
+			id: (parseInt(guildId) + Math.floor(Math.random() * 1000000)).toString(),
+			title,
+			channelId: sendToChannelId,
+			updateChannelId: updatesChannelId,
+			updateRoleId: mentionRoleId,
+			pingForSmallImprovements: tinyUpdatesPing,
+			startCutoff: startDate ? new Date(startDate).getTime() / 1000 : undefined,
+			endCutoff: endDate ? new Date(endDate).getTime() / 1000 : undefined,
+			requiredRole: requiredRoleId, 
+			blockedRole: blockedRoleId,
+		}).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		console.log(response);
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			throw error(response.status, msg);
+		}
+
 
 		return {
 			success: true,

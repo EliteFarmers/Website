@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte/internal';
 	import { page } from '$app/stores';
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';

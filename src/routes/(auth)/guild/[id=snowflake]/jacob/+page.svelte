@@ -5,9 +5,12 @@
 	import { ChannelType } from '$lib/utils';
 
 	export let data: PageData;
+	export let form: FormData;
 
-	let clickOutsideModal = true;
+	let clickOutsideModal = false;
+
 	let sendUpdates = true;
+	let tinyLbPing = false;
 
 	$: channels = (data.guildData?.channels ?? [])
 		// Only allow text channels 
@@ -49,16 +52,20 @@
 		{/if}
 	</section>
 
-	{#each data.leaderboards ?? [] as lb (lb.id)}
-		<section>
-			<h3>
-				{data.guild?.name} Jacob Leaderboard
-			</h3>
-		</section>
-	{/each}
+	<section class="flex flex-col gap-8 justify-center justify-items-center">
+		{#each data.leaderboards ?? [] as lb (lb.id)}
+			<Card border={false} color="none" class="flex flex-row justify-between gap-4 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
+				<h3>{lb.title}</h3>
+				<div>
+					<Button href="?/edit/{lb.id}" color="dark">Edit</Button>
+					<Button formaction="?/delete/{lb.id}" color="red">Delete</Button>
+				</div>
+			</Card>
+		{/each}
+	</section>
 </main>
 
-<Modal title="New Server Jacob Leaderboard" bind:open={clickOutsideModal} autoclose>
+<Modal title="New Server Jacob Leaderboard" bind:open={clickOutsideModal} autoclose={false}>
 	<form method="post" action="?/create" class="flex flex-col gap-2" use:enhance>
 		<Label class="space-y-2">
 			<span>Leaderboard Name</span>
@@ -82,7 +89,7 @@
 				<span>Channel to send leaderboard updates in</span>
 				<Select items={channels} value="" placeholder="Select a channel" name="updatesChannelId" />
 			</Label>
-			<Checkbox name="tinyUpdatesPing" class="mb-4">
+			<Checkbox name="tinyUpdatesPing" class="mb-4" bind:checked={tinyLbPing}>
 				<span>Ping for updates with tiny improvements</span>
 			</Checkbox>
 		{/if}
@@ -108,9 +115,9 @@
 			</Input>
 		</Label>
 
-		<Button type="submit">Create</Button>
+		<Button formaction="?/create" type="submit">Create</Button>
+		<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
+		</p>
 	</form>
-	<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-		Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
-	</p>
 </Modal>
