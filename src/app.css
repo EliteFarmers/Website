@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:global(body) {
+		@apply bg-zinc-900;
+	}	
+}
+
+@layer components {
+	.pixelated {
+		image-rendering: pixelated;
+	}
+}

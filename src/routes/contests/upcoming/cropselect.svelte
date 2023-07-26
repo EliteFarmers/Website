@@ -8,11 +8,5 @@
 	on:click={() => (clicked = !clicked)}
 	class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-zinc-700 {clicked ? 'bg-zinc-800' : ''}"
 >
-	<img class="w-12 h-12" {src} {alt} title={'Filter this crop'} />
+	<img class="w-12 h-12 pixelated" {src} {alt} title={'Filter this crop'} />
 </button>
-
-<style lang="postcss">
-	img {
-		image-rendering: pixelated;
-	}
-</style>

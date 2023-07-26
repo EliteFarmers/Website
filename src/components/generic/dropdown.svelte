@@ -16,6 +16,8 @@
 			collapse = !collapse;
 		}
 	}}
+	role="button"
+	tabindex="0"
 >
 	<div class="p-3 bg-gray-200 dark:bg-zinc-700 rounded-lg">
 		<slot name="top" />

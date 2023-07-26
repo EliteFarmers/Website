@@ -56,6 +56,7 @@
 			class="relative w-[100%] bg-slate-300 dark:bg-zinc-500 h-8 rounded-lg"
 			on:mouseenter={() => (hovering = true)}
 			on:mouseleave={() => (hovering = false)}
+			role="none"
 		>
 			<div
 				class="absolute top-0 bottom-0 left-0 rounded-lg bg-yellow-100 dark:bg-yellow-600"

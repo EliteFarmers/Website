@@ -2,6 +2,8 @@
 	import { page } from '$app/stores';
 	import { navigating } from '$app/stores';
 
+	import "../app.css";
+
 	import Nav from '$comp/nav.svelte';
 	import Footer from '$comp/footer.svelte';
 </script>
@@ -28,7 +30,7 @@
 </div>
 
 <style lang="postcss">
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+	:global(html) {
+		@apply bg-zinc-900
+	}
 </style>

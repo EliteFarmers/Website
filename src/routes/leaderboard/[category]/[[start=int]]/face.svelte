@@ -8,15 +8,8 @@
 </script>
 
 <div class="relative aspect-square h-[70%] md:h-[80%] lg:h-[90%] flex justify-center items-center">
-	<img class="w-[80%] absolute" src="data:image/png;base64,{base || steve}" alt={ign} aria-hidden="true" />
+	<img class="w-[80%] absolute pixelated" src="data:image/png;base64,{base || steve}" alt={ign} aria-hidden="true" />
 	{#if overlay && overlay !== ''}
-		<img class="w-[90%] absolute" src="data:image/png;base64,{overlay}" alt="" aria-hidden="true" />
+		<img class="w-[90%] absolute pixelated" src="data:image/png;base64,{overlay}" alt="" aria-hidden="true" />
 	{/if}
 </div>
-
-<style>
-	img {
-		image-rendering: pixelated;
-		aspect-ratio: 1 / 1;
-	}
-</style>
