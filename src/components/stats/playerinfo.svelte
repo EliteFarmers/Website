@@ -10,7 +10,7 @@
 	import type { components } from '$lib/api/api';
 
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
-	export let profileIds: { id: string; name: string }[];
+	export let profileIds: { id: string; name: string, gameMode: string, selected: boolean }[];
 	export let members: components['schemas']['MemberDetailsDto'][] | null | undefined;
 	export let linked: boolean;
 	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;

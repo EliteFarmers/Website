@@ -1,11 +1,11 @@
-import { GetAccount, GetProfileMember } from '$lib/api/elite';
+import { GetAccount, GetProfileMember, GetProfilesWeights } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ params, url }) => {
 	const { id, profile } = params;
 
-	const { data: account } = await GetAccount(id);
+	const { data: account } = await GetAccount(id).catch(() => ({ data: undefined }));
 
 	if (!account?.id || !account.name) {
 		throw error(404, 'Player not found');
@@ -45,9 +45,16 @@ export const load: LayoutServerLoad = async ({ params, url }) => {
 		.map((p) => ({
 			id: p.profileId ?? 'Unknown',
 			name: p.profileName ?? 'Unknown',
+			selected: p.selected ?? false,
+			gameMode: p.gameMode ?? 'Classic',
 		}));
 
-	profileIds.unshift({ id: selectedProfile.profileId, name: selectedProfile.profileName });
+	profileIds.unshift({ 
+		id: selectedProfile.profileId,
+		name: selectedProfile.profileName,
+		selected: selectedProfile.selected ?? false,
+		gameMode: selectedProfile.gameMode ?? 'Classic',
+	});
 
 	return {
 		account,

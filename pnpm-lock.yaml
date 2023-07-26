@@ -64,6 +64,9 @@ devDependencies:
   flowbite-svelte:
     specifier: ^0.40.2
     version: 0.40.2(svelte@4.1.1)
+  flowbite-svelte-icons:
+    specifier: ^0.2.6
+    version: 0.2.6(svelte@4.1.1)(tailwind-merge@1.14.0)(tailwindcss@3.3.3)
   postcss:
     specifier: ^8.4.27
     version: 8.4.27
@@ -1649,6 +1652,18 @@ packages:
 
   /flatted@3.2.7:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
+    dev: true
+
+  /flowbite-svelte-icons@0.2.6(svelte@4.1.1)(tailwind-merge@1.14.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-ln3VLVTj3RGtNU6Es95nr7GKYPg9yLBFo97cqLzn4ViuTMjfFxV1KCUhKOuqfjt1R2bFY7BScn36wly6bkjAgA==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0
+      tailwind-merge: ^1.13.2
+      tailwindcss: ^3.3.2
+    dependencies:
+      svelte: 4.1.1
+      tailwind-merge: 1.14.0
+      tailwindcss: 3.3.3
     dev: true
 
   /flowbite-svelte@0.40.2(svelte@4.1.1):
