@@ -37,7 +37,7 @@
 			arrow={false}
 			transition={slide}
 		>
-			<div class="flex flex-col gap-2">
+			<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
 				{#each activeMembers ?? [] as member}
 					<a
 						href={`/@${member.uuid}/${profileId}`}

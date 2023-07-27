@@ -29,7 +29,7 @@
 			arrow={false}
 			transition={slide}
 		>
-			<div class="flex flex-col gap-1">
+			<div class="flex flex-col gap-1" data-sveltekit-preload-data="tap">
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
 						href={`/@${ign}/${pId.name}`}
