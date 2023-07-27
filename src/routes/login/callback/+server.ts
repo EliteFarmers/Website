@@ -64,6 +64,5 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	
 	throw redirect(303, '/login?success=true&redirect=/profile');
 };

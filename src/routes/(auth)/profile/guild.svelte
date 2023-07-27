@@ -13,7 +13,8 @@
 					class="w-12 h-12 flex items-center justify-center select-none bg-blend-darken bg-black rounded-full"
 				>
 					<h1>
-						{guild.name?.split(' ')
+						{guild.name
+							?.split(' ')
 							.slice(0, 3)
 							.map((word) => word[0])
 							.join('')}

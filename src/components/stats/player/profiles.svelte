@@ -1,10 +1,12 @@
 <script lang="ts">
+	import type { ProfileDetails } from '$lib/api/elite';
 	import { Popover } from 'flowbite-svelte';
 	import { slide } from 'svelte/transition';
+	import Gamemode from './gamemode.svelte';
 
 	export let ign: string;
-	export let selected: { id: string; name: string, gameMode: string, selected: boolean };
-	export let profiles: { id: string; name: string, gameMode: string, selected: boolean }[];
+	export let selected: ProfileDetails;
+	export let profiles: ProfileDetails[];
 </script>
 
 <div class="grid col-span-1 z-10" id="profileName">
@@ -14,27 +16,30 @@
 				{selected.name}
 			</h2>
 		</div>
-		<span class="first-letter:capitalize font-semibold text-lg text-gray-500">{selected.gameMode}</span>
+		<Gamemode class="first-letter:capitalize font-semibold text-2xl text-gray-500" gameMode={selected.gameMode} />
 	</div>
 	{#if profiles.length > 0}
-		<Popover 
-			triggeredBy="#profileName" 
-			class="w-64 text-sm font-light z-10 bg-gray-200 dark:bg-zinc-700" 
-			placement="bottom" color="none" border={false} offset={0} arrow={false}
+		<Popover
+			triggeredBy="#profileName"
+			class="text-sm font-light z-10 bg-gray-200 dark:bg-zinc-700"
+			placement="bottom"
+			color="none"
+			border={false}
+			offset={0}
+			arrow={false}
 			transition={slide}
 		>
 			<div class="flex flex-col gap-1">
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
 						href={`/@${ign}/${pId.name}`}
-						class="p-2 text-xl font-semibold flex justify-between text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
-						>
-						<span>{pId.name}</span>	
-						<span class="first-letter:capitalize">{pId.gameMode}</span>
+						class="p-2 text-xl font-semibold flex gap-4 justify-between text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
+					>
+						<span>{pId.name} <Gamemode gameMode={pId.gameMode} /></span>
+						<span class="font-normal">{pId.weight.toLocaleString()}</span>
 					</a>
 				{/each}
 			</div>
 		</Popover>
 	{/if}
 </div>
-

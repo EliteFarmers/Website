@@ -188,7 +188,7 @@ export const GetGuild = async (guildId: string, accessToken: string) =>
 	await GET('/User/Guild/{guildId}', {
 		params: {
 			path: {
-				guildId: guildId as unknown as number
+				guildId: guildId as unknown as number,
 			},
 		},
 		headers: {
@@ -200,7 +200,7 @@ export const GetGuildJacob = async (guildId: string, accessToken: string) =>
 	await GET('/User/Guild/{guildId}/Jacob', {
 		params: {
 			path: {
-				guildId: guildId as unknown as number
+				guildId: guildId as unknown as number,
 			},
 		},
 		headers: {
@@ -208,11 +208,15 @@ export const GetGuildJacob = async (guildId: string, accessToken: string) =>
 		},
 	});
 
-export const PatchGuildJacob = async (guildId: string, accessToken: string, jacob: components['schemas']['GuildJacobLeaderboardFeature']) =>
+export const PatchGuildJacob = async (
+	guildId: string,
+	accessToken: string,
+	jacob: components['schemas']['GuildJacobLeaderboardFeature']
+) =>
 	await PATCH('/User/Guild/{guildId}/Jacob', {
 		params: {
 			path: {
-				guildId: guildId as unknown as number
+				guildId: guildId as unknown as number,
 			},
 		},
 		body: jacob,
@@ -221,11 +225,15 @@ export const PatchGuildJacob = async (guildId: string, accessToken: string, jaco
 		},
 	});
 
-export const AddGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboard: components['schemas']['GuildJacobLeaderboard']) =>
+export const AddGuildJacobLeadeboard = async (
+	guildId: string,
+	accessToken: string,
+	leaderboard: components['schemas']['GuildJacobLeaderboard']
+) =>
 	await POST('/User/Guild/{guildId}/Jacob/Leaderboard', {
 		params: {
 			path: {
-				guildId: guildId as unknown as number
+				guildId: guildId as unknown as number,
 			},
 		},
 		body: leaderboard,
@@ -234,12 +242,16 @@ export const AddGuildJacobLeadeboard = async (guildId: string, accessToken: stri
 		},
 	});
 
-export const UpdateGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboard: components['schemas']['GuildJacobLeaderboard']) =>
+export const UpdateGuildJacobLeadeboard = async (
+	guildId: string,
+	accessToken: string,
+	leaderboard: components['schemas']['GuildJacobLeaderboard']
+) =>
 	await PUT('/User/Guild/{guildId}/Jacob/{lbId}', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
-				lbId: leaderboard.id ?? '' 
+				lbId: leaderboard.id ?? '',
 			},
 		},
 		body: leaderboard,
@@ -253,7 +265,7 @@ export const DeleteGuildJacobLeadeboard = async (guildId: string, accessToken: s
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
-				lbId: leaderboardId
+				lbId: leaderboardId,
 			},
 		},
 		headers: {
@@ -336,4 +348,14 @@ export interface UserInfo {
 	avatar: string;
 	primaryUuid?: string;
 	primaryName?: string;
+}
+
+export type ProfileGameMode = 'island' | 'bingo' | 'ironman' | 'classic';
+
+export interface ProfileDetails {
+	id: string;
+	name: string;
+	selected: boolean;
+	gameMode?: ProfileGameMode;
+	weight: number;
 }

@@ -5,7 +5,7 @@
 @layer base {
 	:global(body) {
 		@apply bg-zinc-900;
-	}	
+	}
 }
 
 @layer components {

@@ -2991,6 +2991,10 @@
           },
           "active": {
             "type": "boolean"
+          },
+          "farmingWeight": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

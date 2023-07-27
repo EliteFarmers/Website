@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 	}
 
 	return {
-		...guild.features.jacobLeaderboard
+		...guild.features.jacobLeaderboard,
 	};
 };
 
@@ -31,17 +31,19 @@ export const actions: Actions = {
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
-		
-		const guild = await GetGuild(guildId, token).then((guild) => guild.data ?? undefined).catch(() => undefined);
+
+		const guild = await GetGuild(guildId, token)
+			.then((guild) => guild.data ?? undefined)
+			.catch(() => undefined);
 		if (!guild) throw error(404, 'Guild not found');
-		
+
 		const hasPerms = CanManageGuild(guild.permissions);
 		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
-		
+
 		if (!guild.guild?.features?.jacobLeaderboardEnabled) {
 			throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
 		}
-		
+
 		const data = await request.formData();
 
 		const title = data.get('title') as string;
@@ -63,7 +65,7 @@ export const actions: Actions = {
 			pingForSmallImprovements: tinyUpdatesPing,
 			startCutoff: startDate ? new Date(startDate).getTime() / 1000 : undefined,
 			endCutoff: endDate ? new Date(endDate).getTime() / 1000 : undefined,
-			requiredRole: requiredRoleId, 
+			requiredRole: requiredRoleId,
 			blockedRole: blockedRoleId,
 		}).catch((e) => {
 			console.log(e);
@@ -76,7 +78,6 @@ export const actions: Actions = {
 			const msg = await response.text();
 			throw error(response.status, msg);
 		}
-
 
 		return {
 			success: true,

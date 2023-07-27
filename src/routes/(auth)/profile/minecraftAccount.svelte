@@ -29,17 +29,19 @@
 	<div class="flex flex-row justify-between items-baseline gap-4">
 		<p class="text-sm text-gray-500">{mc.id}</p>
 		{#if !mc.primaryAccount}
-			<form method="POST" action="?/setPrimary" use:enhance={() => {
-				loading = true;
-				return async ({ result, update }) => {
-					if (result) loading = false;
-					update();
-				}
-			}}>
+			<form
+				method="POST"
+				action="?/setPrimary"
+				use:enhance={() => {
+					loading = true;
+					return async ({ result, update }) => {
+						if (result) loading = false;
+						update();
+					};
+				}}
+			>
 				<input type="hidden" name="username" value={mc.id} />
-				<button 
-					disabled={loading}
-					class="text-sm underline text-gray-600 dark:text-gray-400 whitespace-nowrap"
+				<button disabled={loading} class="text-sm underline text-gray-600 dark:text-gray-400 whitespace-nowrap"
 					>Set As Primary</button
 				>
 			</form>

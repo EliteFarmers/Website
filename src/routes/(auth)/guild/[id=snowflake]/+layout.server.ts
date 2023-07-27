@@ -4,30 +4,32 @@ import { CanManageGuild } from '$lib/utils';
 import { GetGuild } from '$lib/api/elite';
 
 export const load = (async ({ params, parent, locals }) => {
-    const { user } = await parent();
-    const { discord_access_token: token } = locals;
-    const { id } = params;
+	const { user } = await parent();
+	const { discord_access_token: token } = locals;
+	const { id } = params;
 
-    if (!user.id || !token) {
-        throw error(401, 'Unauthorized');
-    }
+	if (!user.id || !token) {
+		throw error(401, 'Unauthorized');
+	}
 
-    const guild = await GetGuild(id, token).then((guild) => guild.data ?? undefined).catch(() => undefined);
+	const guild = await GetGuild(id, token)
+		.then((guild) => guild.data ?? undefined)
+		.catch(() => undefined);
 
-    if (!guild) {
-        throw error(404, 'Guild not found');
-    }
+	if (!guild) {
+		throw error(404, 'Guild not found');
+	}
 
-    const hasPerms = CanManageGuild(guild.permissions);
+	const hasPerms = CanManageGuild(guild.permissions);
 
-    if (!hasPerms) {
-        throw error(403, 'You do not have permission to edit this guild.');
-    }
+	if (!hasPerms) {
+		throw error(403, 'You do not have permission to edit this guild.');
+	}
 
-    return {
-        guildId: guild.id,
-        guild: guild.guild,
-        guildData: guild.discordGuild,
-        userPermissions: guild.permissions,
-    };
+	return {
+		guildId: guild.id,
+		guild: guild.guild,
+		guildData: guild.discordGuild,
+		userPermissions: guild.permissions,
+	};
 }) satisfies LayoutServerLoad;

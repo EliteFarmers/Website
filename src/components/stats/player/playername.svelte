@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Dropdown from '$comp/generic/dropdown.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button, Popover } from 'flowbite-svelte';
 	import { slide } from 'svelte/transition';
@@ -28,22 +27,27 @@
 		</h1>
 	</div>
 	{#if activeMembers.length > 0}
-		<Popover 
-			triggeredBy="#playerName" 
-			class="w-64 text-sm font-light z-10 bg-gray-200 dark:bg-zinc-700" 
-			placement="bottom" color="none" border={false} offset={0} arrow={false}
+		<Popover
+			triggeredBy="#playerName"
+			class="text-sm font-light z-10 bg-gray-200 dark:bg-zinc-700"
+			placement="bottom"
+			color="none"
+			border={false}
+			offset={0}
+			arrow={false}
 			transition={slide}
 		>
 			<div class="flex flex-col gap-2">
 				{#each activeMembers ?? [] as member}
 					<a
-						href={`/@${member.username ?? member.uuid}/${profileId}`}
-						class="p-1 text-2xl font-semibold text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
-						>{member.username}</a
+						href={`/@${member.uuid}/${profileId}`}
+						class="p-2 text-xl font-semibold flex gap-4 justify-between text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
 					>
+						<span>{member.username}</span>
+						<span class="font-normal">{member.farmingWeight?.toLocaleString()}</span>
+					</a>
 				{/each}
 			</div>
-
 		</Popover>
 	{/if}
 </div>

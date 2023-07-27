@@ -8,7 +8,7 @@ https://elitebot.dev/
 
 ## Developing
 
-Note that this website requires the backend API to be running as well. You can find the repository for that [here](https://github.com/EliteFarmers/API). You *can* use the actual API at https://api.elitebot.dev, but your access to that will be limited by the ratelimiting policies, and won't be suitable for work with any authenticated routes. (An included docker container for the API is planned for the future)
+Note that this website requires the backend API to be running as well. You can find the repository for that [here](https://github.com/EliteFarmers/API). You _can_ use the actual API at https://api.elitebot.dev, but your access to that will be limited by the ratelimiting policies, and won't be suitable for work with any authenticated routes. (An included docker container for the API is planned for the future)
 
 1. Download the code, open the project, and run `pnpm i` to install dependencies
 
@@ -27,9 +27,9 @@ Note that this website requires the backend API to be running as well. You can f
 
     ![image](https://user-images.githubusercontent.com/24925519/210026662-1cea4e7d-64dc-4655-93c7-705c399d02df.png)
 
-5. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
+4. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
 
-6. Run the website in dev mode with the following:
+5. Run the website in dev mode with the following:
 
     ```
     pnpm run dev

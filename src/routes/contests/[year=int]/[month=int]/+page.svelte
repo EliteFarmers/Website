@@ -48,7 +48,12 @@
 				>
 					<h4 class="text-lg mb-2">Day {day}</h4>
 					{#each contests?.sort((a, b) => a?.crop?.localeCompare(b?.crop ?? '') ?? 0) ?? [] as crop}
-						<img class="w-12 pixelated" src={PROPER_CROP_TO_IMG[crop.crop ?? '']} alt={crop.crop} title={crop.crop} />
+						<img
+							class="w-12 pixelated"
+							src={PROPER_CROP_TO_IMG[crop.crop ?? '']}
+							alt={crop.crop}
+							title={crop.crop}
+						/>
 					{/each}
 				</a>
 			{/each}

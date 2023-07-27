@@ -46,7 +46,9 @@
 		</div>
 		<!-- Form to input username to link account -->
 
-		<form method="POST" class="w-full max-w-md mb-16"
+		<form
+			method="POST"
+			class="w-full max-w-md mb-16"
 			use:enhance={() => {
 				loading = true;
 				return async ({ result, update }) => {
@@ -54,7 +56,7 @@
 					await new Promise((r) => setTimeout(r, 500));
 					if (result) loading = false;
 					update();
-				}
+				};
 			}}
 		>
 			<div class="flex flex-col gap-4 items-center w-full">
@@ -86,7 +88,9 @@
 					</Button>
 				</div>
 				{#if form?.error}
-					<span class="text-red-600 text-sm">{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span>
+					<span class="text-red-600 text-sm"
+						>{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span
+					>
 				{/if}
 			</div>
 		</form>

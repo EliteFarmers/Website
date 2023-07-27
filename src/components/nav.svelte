@@ -113,7 +113,9 @@
 		</DropdownItem>
 	</Dropdown>
 
-	<NavUl {hidden} class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center"
+	<NavUl
+		{hidden}
+		class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center"
 		ulClass="flex flex-col p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:items-center"
 	>
 		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>

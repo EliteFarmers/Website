@@ -1,4 +1,4 @@
-import { GetAccount, GetProfileMember, GetProfilesWeights } from '$lib/api/elite';
+import { GetAccount, GetProfileMember, type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
@@ -39,21 +39,23 @@ export const load: LayoutServerLoad = async ({ params, url }) => {
 		throw error(404, 'Profile data not found');
 	}
 
-	const profileIds = profiles
+	const profileIds: ProfileDetails[] = profiles
 		// Filter out the current profile
 		.filter((p) => p.profileId !== selectedProfile.profileId)
 		.map((p) => ({
 			id: p.profileId ?? 'Unknown',
 			name: p.profileName ?? 'Unknown',
 			selected: p.selected ?? false,
-			gameMode: p.gameMode ?? 'Classic',
+			gameMode: p.gameMode as ProfileGameMode | undefined,
+			weight: p.members?.find((m) => m.uuid === account.id)?.farmingWeight ?? 0,
 		}));
 
-	profileIds.unshift({ 
+	profileIds.unshift({
 		id: selectedProfile.profileId,
 		name: selectedProfile.profileName,
 		selected: selectedProfile.selected ?? false,
-		gameMode: selectedProfile.gameMode ?? 'Classic',
+		gameMode: selectedProfile.gameMode as ProfileGameMode | undefined,
+		weight: selectedProfile.members?.find((m) => m.uuid === account.id)?.farmingWeight ?? 0,
 	});
 
 	return {

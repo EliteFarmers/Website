@@ -1166,6 +1166,8 @@ export interface components {
       uuid?: string;
       username?: string;
       active?: boolean;
+      /** Format: double */
+      farmingWeight?: number;
     };
     MinecraftAccountDetailsDto: {
       id?: string;

@@ -15,9 +15,15 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 	const account = user.minecraftAccounts?.find((account) => account.primaryAccount) ?? user.minecraftAccounts?.[0];
 
-	const guilds = (await GetUsersGuilds(token).then((guilds) => guilds.data ?? undefined).catch(() => undefined)) ?? [] as components['schemas']['UserGuildDto'][];
+	const guilds =
+		(await GetUsersGuilds(token)
+			.then((guilds) => guilds.data ?? undefined)
+			.catch(() => undefined)) ?? ([] as components['schemas']['UserGuildDto'][]);
 
-	console.log('guilds', guilds.filter((guild) => guild.hasBot));
+	console.log(
+		'guilds',
+		guilds.filter((guild) => guild.hasBot)
+	);
 
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot),

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import type { ProfileDetails } from '$lib/api/elite';
 	import Profiles from './profiles.svelte';
 
 	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
@@ -7,8 +8,8 @@
 
 	export let profiles: {
 		ign: string;
-		selected: { id: string; name: string, gameMode: string, selected: boolean };
-		profiles: { id: string; name: string, gameMode: string, selected: boolean }[];
+		selected: ProfileDetails;
+		profiles: ProfileDetails[];
 	};
 
 	$: rankText = rank !== -1 ? `#${rank}` : 'Unranked';
