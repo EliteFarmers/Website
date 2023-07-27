@@ -110,7 +110,7 @@
 				Website and Bot Maintained and Created by <a
 					class="underline"
 					rel="nofollow noreferrer noopener"
-					href="https://elitebot.dev/stats/Ke5o/7da0c47581dc42b4962118f8049147b7"
+					href="/@7da0c47581dc42b4962118f8049147b7"
 				>
 					Kaeso</a
 				>.
@@ -118,7 +118,7 @@
 			<p class="text-lg my-4">
 				Original Weight Calculations and Max Farming Fortune Rates by <a
 					class="underline"
-					href="/stats/ac01147ed01a47d1b5777b31ccf5e616">Bankhier</a
+					href="/@ac01147ed01a47d1b5777b31ccf5e616">Bankhier</a
 				>.
 			</p>
 			<p class="text-lg my-4">
@@ -131,7 +131,7 @@
 				>.
 			</p>
 			<p class="text-lg my-4">
-				Website logo by <a class="underline" href="/stats/bd082a55373e4305bee348b9060e16c9">MelonKingDe</a>.
+				Website logo by <a class="underline" href="/@bd082a55373e4305bee348b9060e16c9">MelonKingDe</a>.
 			</p>
 			<p class="text-lg my-4">
 				Minion Icons (and base API) from <a
@@ -145,6 +145,13 @@
 					class="underline"
 					rel="nofollow noreferrer noopener"
 					href="https://mc-heads.net/">MCHeads</a
+				>.
+			</p>
+			<p class="text-lg my-4">
+				Icons provided by <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href="https://flowbite.com/icons/">Flowbite</a
 				>.
 			</p>
 			<p class="text-lg my-4">
