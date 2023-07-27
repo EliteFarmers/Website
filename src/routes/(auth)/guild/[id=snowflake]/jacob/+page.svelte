@@ -3,10 +3,10 @@
 	import { Button, Card, Checkbox, Input, Label, Modal, Select } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import { ChannelType } from '$lib/utils';
-	import { getReadableSkyblockDate } from '$lib/format';
+	import Jacobsettings from './jacobsettings.svelte';
 
 	export let data: PageData;
-	export let form: FormData;
+	//export let form: FormData;
 
 	let clickOutsideModal = false;
 
@@ -58,43 +58,9 @@
 		{/if}
 	</section>
 
-	<section class="flex flex-col gap-8 justify-center justify-items-center">
+	<section class="flex flex-col gap-8 justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg">
 		{#each data.leaderboards ?? [] as lb (lb.id)}
-			<Card
-				border={false}
-				color="none"
-				class="flex flex-row justify-between gap-4 p-4 rounded-md bg-gray-100 dark:bg-zinc-800"
-			>
-				<div class="flex flex-row gap-4">
-					<div class="flex flex-col gap-2">
-						<h3 class="text-2xl">{lb.title}</h3>
-						<p>
-							<span class="font-semibold">Start:</span>
-							{lb.startCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.startCutoff ?? 0)}
-						</p>
-						<p>
-							<span class="font-semibold">End:</span>
-							{lb.endCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.endCutoff ?? 0)}
-						</p>
-					</div>
-					<div class="flex flex-col gap-2">
-						<p>
-							<span class="font-semibold">Channel:</span>
-							{channels.find((c) => c.value === lb.channelId)?.name ?? 'Not Set'}
-						</p>
-						{#if lb.updateChannelId}
-							<p>
-								<span class="font-semibold">Updates:</span>
-								{channels.find((c) => c.value === lb.updateChannelId)?.name ?? 'Not Set'}
-							</p>
-						{/if}
-					</div>
-				</div>
-				<div>
-					<Button href="?/edit/{lb.id}" color="dark">Edit</Button>
-					<Button formaction="?/delete/{lb.id}" color="red">Delete</Button>
-				</div>
-			</Card>
+			<Jacobsettings {lb} {channels} {roles} />
 		{/each}
 	</section>
 </main>

@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
-import { AddGuildJacobLeadeboard, GetGuild } from '$lib/api/elite';
+import { AddGuildJacobLeadeboard, DeleteGuildJacobLeadeboard, GetGuild } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { userPermissions, guild } = await parent();
@@ -68,6 +68,48 @@ export const actions: Actions = {
 			requiredRole: requiredRoleId,
 			blockedRole: blockedRoleId,
 		}).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		console.log(response);
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			throw error(response.status, msg);
+		}
+
+		return {
+			success: true,
+		};
+	},
+	delete: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { discord_access_token: token } = locals;
+
+		if (!locals.user || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const guild = await GetGuild(guildId, token)
+			.then((guild) => guild.data ?? undefined)
+			.catch(() => undefined);
+		if (!guild) throw error(404, 'Guild not found');
+
+		const hasPerms = CanManageGuild(guild.permissions);
+		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
+
+		if (!guild.guild?.features?.jacobLeaderboardEnabled) {
+			throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
+		}
+
+		const data = await request.formData();
+
+		const lbId = data.get('id') as string;
+
+		if (!lbId) throw error(400, 'Missing required field: id');
+
+		const { response } = await DeleteGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { Button, Card } from 'flowbite-svelte';
+	import { GearSolid } from 'flowbite-svelte-icons';
 
 	export let guild: components['schemas']['UserGuildDto'];
 </script>
@@ -33,7 +34,7 @@
 		<div class="flex justify-end min-w-0 items-center gap-4">
 			{#if guild.hasBot}
 				<Button href={`/guild/${guild.id}`} variant="raised" class="m-1">
-					<p>Manage</p>
+					<GearSolid />
 				</Button>
 			{:else}
 				<Button href={`/invite?guild_id=${guild.id}`} variant="outlined" class="m-1">
