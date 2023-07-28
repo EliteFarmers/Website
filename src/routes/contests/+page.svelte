@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Head from '$comp/head.svelte';
+	import { getSkyblockDate } from '$lib/format';
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
 
 	let searchVal = '';
@@ -8,9 +9,10 @@
 		goto(`/@${searchVal}/contests`);
 	}
 
-	let yearVal = 101;
-	let monthVal = 10;
-	let dayVal = 26;
+	const date = getSkyblockDate(Date.now() / 1000);
+	let yearVal = date.year - 1;
+	let monthVal = date.month;
+	let dayVal = date.day;
 
 	function searchContest() {
 		goto(`/contests/${yearVal}/${monthVal}/${dayVal}`);
