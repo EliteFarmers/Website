@@ -49,7 +49,7 @@
 			You have {data.leaderboards?.length ?? 0} / {data.maxLeaderboards} available Jacob Leaderboards created
 		</p>
 		<p>
-			{data.blockedUsers?.map((u) => u).join(', ') || 'No'} users are blocked from creating Jacob Leaderboards
+			{data.excludedParticipations?.map((u) => u).join(', ') || 'No'} users are blocked from creating Jacob Leaderboards
 		</p>
 		{#if (data.leaderboards?.length ?? 0) < (data.maxLeaderboards ?? 0)}
 			<div class="flex w-full mb-16 justify-center items-center">
@@ -58,14 +58,14 @@
 		{/if}
 	</section>
 
-	<section class="flex flex-col gap-8 justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg">
+	<section class="flex flex-col gap-8 justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16">
 		{#each data.leaderboards ?? [] as lb (lb.id)}
 			<Jacobsettings {lb} {channels} {roles} />
 		{/each}
 	</section>
 </main>
 
-<Modal title="New Server Jacob Leaderboard" bind:open={clickOutsideModal} autoclose={false}>
+<Modal title="Server Jacob Leaderboard Settings" bind:open={clickOutsideModal} autoclose={false}>
 	<form
 		method="post"
 		action="?/create"
@@ -125,7 +125,7 @@
 			</Input>
 		</Label>
 
-		<Button formaction="?/create" type="submit">Create</Button>
+		<Button formaction="?/create" type="submit">Edit/Create</Button>
 		<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
 			Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 		</p>

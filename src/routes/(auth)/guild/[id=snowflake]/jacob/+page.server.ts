@@ -196,8 +196,7 @@ export const actions: Actions = {
 		if (!feature || !lb?.crops || lbIndex === -1) return fail(404, { error: 'Leaderboard not found' });
 
 		// Reset all fields in lb.crops to empty arrays
-		for (const crop in lb.crops ?? {}) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		for (const crop in lb.crops) {
 			lb.crops[crop as keyof components['schemas']['CropRecords']] = [];
 		}
 
@@ -253,9 +252,13 @@ export const actions: Actions = {
 		const lb = feature.leaderboards?.find((lb) => lb.id === lbId);
 		if (!lb) return fail(404, { error: 'Leaderboard not found' });
 
+		const key = `${timestamp}-${crop}-${uuid}`;
 
+		//if (feature.excludedParticipations?.includes(key)) return fail(409, { error: 'Already banned' });
+		feature.excludedParticipations ??= [];
+
+		feature.excludedParticipations.push(key);
 		
-
 		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
@@ -264,6 +267,22 @@ export const actions: Actions = {
 		if (response.status !== 200) {
 			const msg = await response.text();
 			throw error(response.status, msg);
+		}
+
+
+		lb.crops ??= {};
+		lb.crops[crop as keyof components['schemas']['CropRecords']] ??= [];
+		lb.crops[crop as keyof components['schemas']['CropRecords']] = lb.crops[crop as keyof components['schemas']['CropRecords']]
+			?.filter((p) => !(p.uuid === uuid && p.record?.crop === crop && p.record.timestamp === +timestamp)) ?? [];
+
+		const { response: response2 } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (response2.status !== 200) {
+			const msg = await response2.text();
+			throw error(response2.status, msg);
 		}
 
 		return {
