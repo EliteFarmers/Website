@@ -2,24 +2,15 @@
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { Accordion, AccordionItem, Button, Card, Modal, Popover } from 'flowbite-svelte';
-	import { GearSolid, MailBoxSolid, TrashBinSolid } from 'flowbite-svelte-icons';
+	import { GearSolid, MailBoxSolid, RotateOutline, TrashBinSolid } from 'flowbite-svelte-icons';
 
 	export let lb: components['schemas']['GuildJacobLeaderboard'];
 	export let channels: { value: string; name: string }[];
 	export let roles: { value: string; name: string }[];
 
-	$: crops = {
-		cactus: lb.cactus ?? [],
-		carrot: lb.carrot ?? [],
-		potato: lb.potato ?? [],
-		wheat: lb.wheat ?? [],
-		melon: lb.melon ?? [],
-		pumpkin: lb.pumpkin ?? [],
-		mushroom: lb.mushroom ?? [],
-		'Cocoa Beans': lb.cocoaBeans ?? [],
-		'Sugar Cane': lb.sugarCane ?? [],
-		'Nether Wart': lb.netherWart ?? [],
-	};
+	$: crops = Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0);
+
+	$: console.log(crops);
 
 	let confirmModal = false;
 </script>
@@ -70,30 +61,54 @@
 					<p>Edit Leaderboard</p>
 				</Popover>
 			</Button>
-			<Button class="send" href="?/edit/{lb.id}" color="yellow">
-				<MailBoxSolid />
-				<Popover triggeredBy=".send" placement="left">
-					<p>Send Leaderboard in Discord</p>
-				</Popover>
-			</Button>
+			<form method="post" action="?/send">
+				<input type="hidden" name="id" value={lb.id} />
+				<Button class="send" type="submit" color="alternative">
+					<MailBoxSolid />
+					<Popover triggeredBy=".send" placement="left">
+						<p>Send Leaderboard in Discord</p>
+					</Popover>
+				</Button>
+			</form>
+			<form method="post" action="?/clear">
+				<input type="hidden" name="id" value={lb.id} />
+				<Button class="clear" type="submit" color="yellow">
+					<RotateOutline />
+					<Popover triggeredBy=".clear" placement="left">
+						<p>Clear all scores, but they can be submitted again</p>
+					</Popover>
+				</Button>
+			</form>
 			<Button class="delete" on:click={() => (confirmModal = true)} color="red">
 				<TrashBinSolid />
 				<Popover triggeredBy=".delete" placement="left">
-					<p>Send Leaderboard in Discord</p>
+					<p>Delete Leaderboard</p>
 				</Popover>
 			</Button>
 		</div>
 	</div>
 
-	{#if Object.values(crops).some(a => a.length > 0)}
+	{#if crops.length > 0}
 		<Accordion flush={true}>
-			{#each Object.entries(crops) as [crop, entries] (crop)}
+			{#each crops as [crop, entries] (crop)}
 				<AccordionItem paddingFlush="p-2">
 					<span slot="header" class="text-lg first-letter:capitalize">{crop}</span>
 					{#each entries as entry (entry)}
-						<div class="flex flex-row justify-between">
-							<p>{entry.ign}</p>
+						<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
+							<p class="text-lg">{entry.ign}</p>
 							<p>{entry.record?.collected}</p>
+							<form method="POST" action="?/banparticipation">
+								<input type="hidden" name="id" value={lb.id} />
+								<input type="hidden" name="uuid" value={entry.uuid} />
+								<input type="hidden" name="crop" value={entry.record?.crop} />
+								<input type="hidden" name="time" value={entry.record?.timestamp} />
+								<Button type="submit" color="red" class="ban" size="sm">
+									<TrashBinSolid size="sm" />
+									<Popover triggeredBy=".ban" placement="left">
+										<p>Remove and block this Participation</p>
+									</Popover>
+								</Button>
+							</form>
 						</div>
 					{/each}
 				</AccordionItem>

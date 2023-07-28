@@ -1,7 +1,8 @@
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
-import { AddGuildJacobLeadeboard, DeleteGuildJacobLeadeboard, GetGuild } from '$lib/api/elite';
+import { AddGuildJacobLeadeboard, DeleteGuildJacobLeadeboard, GetGuild, PatchGuildJacob, SendGuildJacobLeadeboard, UpdateGuildJacobLeadeboard } from '$lib/api/elite';
+import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { userPermissions, guild } = await parent();
@@ -114,7 +115,45 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		console.log(response);
+		if (response.status !== 200) {
+			const msg = await response.text();
+			throw error(response.status, msg);
+		}
+
+		return {
+			success: true,
+		};
+	},
+	send: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { discord_access_token: token } = locals;
+
+		if (!locals.user || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const guild = await GetGuild(guildId, token)
+			.then((guild) => guild.data ?? undefined)
+			.catch(() => undefined);
+		if (!guild) throw error(404, 'Guild not found');
+
+		const hasPerms = CanManageGuild(guild.permissions);
+		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
+
+		if (!guild.guild?.features?.jacobLeaderboardEnabled) {
+			throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
+		}
+
+		const data = await request.formData();
+
+		const lbId = data.get('id') as string;
+
+		if (!lbId) throw error(400, 'Missing required field: id');
+
+		const { response } = await SendGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
 
 		if (response.status !== 200) {
 			const msg = await response.text();
@@ -125,4 +164,110 @@ export const actions: Actions = {
 			success: true,
 		};
 	},
+	clear : async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { discord_access_token: token } = locals;
+
+		if (!locals.user || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const guild = await GetGuild(guildId, token)
+			.then((guild) => guild.data ?? undefined)
+			.catch(() => undefined);
+		if (!guild) throw error(404, 'Guild not found');
+
+		const hasPerms = CanManageGuild(guild.permissions);
+		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
+
+		if (!guild.guild?.features?.jacobLeaderboardEnabled) {
+			throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
+		}
+
+		const data = await request.formData();
+		const lbId = data.get('id') as string;
+
+		if (!lbId) return fail(400, { error: 'Missing required field: id' });
+
+		const feature = guild.guild.features.jacobLeaderboard;
+		const lbIndex = feature?.leaderboards?.findIndex((lb) => lb.id === lbId) ?? -1;
+		const lb = feature?.leaderboards?.[lbIndex];
+
+		if (!feature || !lb?.crops || lbIndex === -1) return fail(404, { error: 'Leaderboard not found' });
+
+		// Reset all fields in lb.crops to empty arrays
+		for (const crop in lb.crops ?? {}) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			lb.crops[crop as keyof components['schemas']['CropRecords']] = [];
+		}
+
+		const { response } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		})
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			throw error(response.status, msg);
+		}
+
+		return {
+			success: true,
+		};
+	},
+	banparticipation: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { discord_access_token: token } = locals;
+
+		if (!locals.user || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const guild = await GetGuild(guildId, token)
+			.then((guild) => guild.data ?? undefined)
+			.catch(() => undefined);
+		if (!guild) throw error(404, 'Guild not found');
+
+		const hasPerms = CanManageGuild(guild.permissions);
+		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
+
+		if (!guild.guild?.features?.jacobLeaderboardEnabled) {
+			throw error(402, 'This guild does not have the Jacob Leaderboard feature enabled.');
+		}
+
+		const data = await request.formData();
+
+		const lbId = data.get('id') as string;
+		const uuid = data.get('uuid') as string;
+		const crop = data.get('crop') as string;
+		const timestamp = data.get('time') as string;
+
+		if (!lbId) return fail(400, { error: 'Missing required field: id' });
+		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
+		if (!crop) return fail(400, { error: 'Missing required field: crop' });
+		if (!timestamp) return fail(400, { error: 'Missing required field: time' });
+
+		const feature = guild.guild.features.jacobLeaderboard;
+		if (!feature) throw error(404, 'Jacob Leaderboard feature not found');
+
+		const lb = feature.leaderboards?.find((lb) => lb.id === lbId);
+		if (!lb) return fail(404, { error: 'Leaderboard not found' });
+
+
+		
+
+		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			throw error(response.status, msg);
+		}
+
+		return {
+			success: true,
+		};
+	}
 };
