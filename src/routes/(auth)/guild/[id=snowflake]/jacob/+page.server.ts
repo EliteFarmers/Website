@@ -254,7 +254,7 @@ export const actions: Actions = {
 
 		const key = `${timestamp}-${crop}-${uuid}`;
 
-		//if (feature.excludedParticipations?.includes(key)) return fail(409, { error: 'Already banned' });
+		if (feature.excludedParticipations?.includes(key)) return fail(409, { error: 'Already banned' });
 		feature.excludedParticipations ??= [];
 
 		feature.excludedParticipations.push(key);

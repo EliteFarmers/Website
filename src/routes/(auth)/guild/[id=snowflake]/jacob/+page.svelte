@@ -6,7 +6,7 @@
 	import Jacobsettings from './jacobsettings.svelte';
 
 	export let data: PageData;
-	//export let form: FormData;
+	export let form: FormData;
 
 	let clickOutsideModal = false;
 
@@ -64,6 +64,12 @@
 		{/each}
 	</section>
 </main>
+
+{#if form?.error}
+	<h5 class="text-xl font-semibold text-red-700">
+		<p>{form?.error}</p>
+	</h5>
+{/if}
 
 <Modal title="Server Jacob Leaderboard Settings" bind:open={clickOutsideModal} autoclose={false}>
 	<form
