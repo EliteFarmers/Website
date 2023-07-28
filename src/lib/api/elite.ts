@@ -273,6 +273,28 @@ export const DeleteGuildJacobLeadeboard = async (guildId: string, accessToken: s
 		},
 	});
 
+export const SendGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboardId: string) =>
+	await POST('/User/Guild/{guildId}/Jacob/{lbId}/Send', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				lbId: leaderboardId,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetPublicGuild = async (guildId: string) => 
+	await GET('/Guild/{guildId}', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+		},
+	});
+
 export const GetProfilesWeights = async (playerUuid: string) =>
 	await GET('/Weight/{playerUuid}', {
 		params: {

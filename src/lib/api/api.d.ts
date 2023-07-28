@@ -423,6 +423,25 @@ export interface paths {
       };
     };
   };
+  "/Guild/{guildId}": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["PublicGuildDto"];
+            "application/json": components["schemas"]["PublicGuildDto"];
+            "text/json": components["schemas"]["PublicGuildDto"];
+          };
+        };
+      };
+    };
+  };
   "/Leaderboard/{id}": {
     get: {
       parameters: {
@@ -795,6 +814,20 @@ export interface paths {
       };
     };
   };
+  "/User/Guild/{guildId}/Jacob/{lbId}/Send": {
+    post: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
   "/Weight/{playerUuid}": {
     get: {
       parameters: {
@@ -919,6 +952,18 @@ export interface components {
       /** Format: int32 */
       participants?: number;
       medal?: string | null;
+    };
+    CropRecords: {
+      cactus?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      carrot?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      potato?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      wheat?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      melon?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      pumpkin?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      mushroom?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      cocoaBeans?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      sugarCane?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      netherWart?: components["schemas"]["GuildJacobLeaderboardEntry"][];
     };
     DiscordChannel: {
       id?: string;
@@ -1052,16 +1097,7 @@ export interface components {
       updateChannelId?: string | null;
       updateRoleId?: string | null;
       pingForSmallImprovements?: boolean;
-      cactus?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      carrot?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      potato?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      wheat?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      melon?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      pumpkin?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      mushroom?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      cocoaBeans?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      sugarCane?: components["schemas"]["GuildJacobLeaderboardEntry"][];
-      netherWart?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      crops?: components["schemas"]["CropRecords"];
     };
     GuildJacobLeaderboardEntry: {
       uuid?: string;
@@ -1268,6 +1304,43 @@ export interface components {
       wasRemoved?: boolean;
       /** Format: int64 */
       lastUpdated?: number;
+    };
+    PublicGuildDto: {
+      id?: string;
+      name?: string;
+      icon?: string | null;
+      banner?: string | null;
+      inviteCode?: string | null;
+      description?: string | null;
+      features?: components["schemas"]["PublicGuildFeaturesDto"];
+    };
+    PublicGuildFeaturesDto: {
+      jacobLeaderboardEnabled?: boolean;
+      jacobLeaderboard?: components["schemas"]["PublicJacobLeaderboardFeatureDto"];
+    };
+    PublicJacobLeaderboardDto: {
+      id?: string;
+      channelId?: string | null;
+      /** Format: int64 */
+      startCutoff?: number;
+      /** Format: int64 */
+      endCutoff?: number;
+      title?: string | null;
+      active?: boolean;
+      requiredRole?: string | null;
+      blockedRole?: string | null;
+      updateChannelId?: string | null;
+      updateRoleId?: string | null;
+      pingForSmallImprovements?: boolean;
+      cropRecords?: components["schemas"]["CropRecords"];
+    };
+    PublicJacobLeaderboardFeatureDto: {
+      /** Format: int32 */
+      maxLeaderboards?: number;
+      blockedRoles?: components["schemas"]["DiscordRole"][];
+      requiredRoles?: components["schemas"]["DiscordRole"][];
+      excludedTimespans?: components["schemas"]["ExcludedTimespan"][];
+      leaderboards?: components["schemas"]["PublicJacobLeaderboardDto"][];
     };
     RedemptionDto: {
       itemId?: string;
