@@ -10,6 +10,8 @@
 
 	$: crops = Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0);
 
+	$: console.log(crops);
+
 	let confirmModal = false;
 </script>
 
@@ -93,6 +95,8 @@
 					<span slot="header" class="text-lg first-letter:capitalize">{crop}</span>
 					{#each entries as entry (entry)}
 						<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
+							<p class="text-lg">{entry.ign}</p>
+							<p>{entry.record?.collected}</p>
 							<form method="POST" action="?/banparticipation">
 								<input type="hidden" name="id" value={lb.id} />
 								<input type="hidden" name="uuid" value={entry.uuid} />
@@ -105,8 +109,6 @@
 									</Popover>
 								</Button>
 							</form>
-							<p class="text-lg">{entry.ign}</p>
-							<p>{entry.record?.collected}</p>
 						</div>
 					{/each}
 				</AccordionItem>
