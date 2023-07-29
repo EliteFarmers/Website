@@ -2,10 +2,16 @@
 	import { enhance } from '$app/forms';
 	import { Button, Card } from 'flowbite-svelte';
 	import type { PageData } from './$types';
+	import Head from '$comp/head.svelte';
 
 	export let data: PageData;
 	$: features = data.guild?.features;
 </script>
+
+<Head
+	title="Server Settings"
+	description="Manage server settings for your guild!"	
+/>
 
 <main class="flex flex-col items-center">
 	<div class="flex flex-row items-center gap-4">
