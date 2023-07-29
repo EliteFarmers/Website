@@ -91,7 +91,7 @@
 	{/if}
 
 	<p class="py-16">
-		This data is supplied by users of the mod <a class="underline" href="https://github.com/hannibal002/SkyHanni/"
+		This data will soon be supplied by users of the mod <a class="underline" href="https://github.com/hannibal002/SkyHanni/"
 			>SkyHanni</a
 		>. Thank you!
 	</p>
