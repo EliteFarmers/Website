@@ -16,7 +16,7 @@ build/*
 .github/workflows/*
 .svelte-kit/*
 node_modules/*
-src/lib/limiter/*
+pnpm-lock.yaml
 *.cjs
 src/lib/api/swagger.json
 src/lib/api/api.d.ts
