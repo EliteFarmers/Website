@@ -47,14 +47,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Make dummy env for types
         run: |
             echo "ls -a ."
             ls -a .
             mv .env.example .env
-            
-      - name: Install dependencies
-        run: pnpm install
 
-      - name: Run Linters
+      - name: Lint
         run: pnpm run lint
