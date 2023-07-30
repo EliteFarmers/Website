@@ -718,6 +718,26 @@ export interface paths {
       };
     };
   };
+  "/User/Guild/{guildId}/Invite": {
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
   "/User/Guild/{guildId}/Jacob": {
     get: {
       parameters: {
@@ -1332,7 +1352,7 @@ export interface components {
       updateChannelId?: string | null;
       updateRoleId?: string | null;
       pingForSmallImprovements?: boolean;
-      cropRecords?: components["schemas"]["CropRecords"];
+      crops?: components["schemas"]["CropRecords"];
     };
     PublicJacobLeaderboardFeatureDto: {
       /** Format: int32 */

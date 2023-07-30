@@ -286,7 +286,20 @@ export const SendGuildJacobLeadeboard = async (guildId: string, accessToken: str
 		},
 	});
 
-export const GetPublicGuild = async (guildId: string) => 
+export const SetGuildInvite = async (guildId: string, accessToken: string, invite: string) =>
+	await PUT('/User/Guild/{guildId}/Invite', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+		},
+		body: invite,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetPublicGuild = async (guildId: string) =>
 	await GET('/Guild/{guildId}', {
 		params: {
 			path: {

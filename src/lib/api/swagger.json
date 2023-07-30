@@ -1716,6 +1716,49 @@
         }
       }
     },
+    "/User/Guild/{guildId}/Invite": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/User/Guild/{guildId}/Jacob": {
       "patch": {
         "tags": [
@@ -3475,7 +3518,7 @@
           "pingForSmallImprovements": {
             "type": "boolean"
           },
-          "cropRecords": {
+          "crops": {
             "$ref": "#/components/schemas/CropRecords"
           }
         },
