@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { Accordion, AccordionItem, Button, Modal, Popover } from 'flowbite-svelte';
-	import { GearSolid, MailBoxSolid, RotateOutline, TrashBinSolid } from 'flowbite-svelte-icons';
+	import { MailBoxSolid, RotateOutline, TrashBinSolid } from 'flowbite-svelte-icons';
 
 	export let lb: components['schemas']['GuildJacobLeaderboard'];
 	export let channels: { value: string; name: string }[];
@@ -51,22 +53,22 @@
 			</p>
 		</div>
 		<div class="flex flex-col justify-between gap-2">
-			<Button class="edit" href="?/edit/{lb.id}" color="green">
+			<!-- <Button class="edit" href="?/edit/{lb.id}" color="green">
 				<GearSolid />
 				<Popover triggeredBy=".edit" placement="left">
 					<p>Edit Leaderboard</p>
 				</Popover>
-			</Button>
-			<form method="post" action="?/send">
+			</Button> -->
+			<form method="post" action="{$page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<Button class="send" type="submit" color="alternative">
+				<Button class="send" type="submit" color="green">
 					<MailBoxSolid />
 					<Popover triggeredBy=".send" placement="left">
 						<p>Send Leaderboard in Discord</p>
 					</Popover>
 				</Button>
 			</form>
-			<form method="post" action="?/clear">
+			<form method="post" action="{$page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Button class="clear" type="submit" color="yellow">
 					<RotateOutline />
@@ -91,7 +93,7 @@
 					<span slot="header" class="text-lg first-letter:capitalize">{crop}</span>
 					{#each entries as entry (entry)}
 						<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
-							<form method="POST" action="?/banparticipation">
+							<form method="POST" action="{$page.url.pathname}?/banparticipation" use:enhance>
 								<input type="hidden" name="id" value={lb.id} />
 								<input type="hidden" name="uuid" value={entry.uuid} />
 								<input type="hidden" name="crop" value={entry.record?.crop} />
@@ -121,7 +123,7 @@
 			Are you sure you want to delete this leaderboard?
 		</h3>
 		<div class="flex flex-row items-center justify-center">
-			<form method="POST" action="?/delete">
+			<form method="POST" action="{$page.url.pathname}?/delete" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Button color="red" class="mr-2" type="submit">Yes, I'm sure</Button>
 			</form>
