@@ -10,19 +10,53 @@ on:
         branches:
             - main
 
+env:
+    NODE_VERSION: '19'
+    CONTAINER_REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
 jobs:
+    pnpm:
+        name: install dependencies (pnpm)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Git checkout
+              uses: actions/checkout@v3
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 7
+                  run_install: true
+
+            - name: Use Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+                  cache-dependency-path: 'frontend'
+
     run-linters:
         name: Run Linters
+        needs: [pnpm]
         runs-on: ubuntu-latest
 
         steps:
-            - name: Check out Git repository
-              uses: actions/checkout@v2
+            - name: Git checkout
+              uses: actions/checkout@v3
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v1
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
               with:
-                  node-version: 18.8
+                  version: 7
+                  run_install: true
+
+            - name: Use Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'pnpm'
+                  cache-dependency-path: 'frontend'
 
             - name: Make dummy env for types
               run: |
@@ -32,7 +66,7 @@ jobs:
 
             # ESLint and Prettier must be in `package.json`
             - name: Install Node.js dependencies
-              run: npm ci
+              run: pnpm i
 
             - name: Run Linters
-              run: npm run lint
+              run: pnpm run lint
