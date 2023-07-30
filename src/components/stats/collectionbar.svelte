@@ -42,8 +42,8 @@
 
 <div class="p-1 m-1 flex gap-4 w-full">
 	<div class="bg-gray-100 dark:bg-zinc-800 rounded-lg flex justify-center align-middle w-full max-h-20">
-		<div class="hidden md:flex crop-container p-1 md:p-3" style={frameStyle}>
-			<img src="/images/crops/{key}.png" class="crop" alt={name} />
+		<div class="hidden md:flex crop-container p-1 md:p-3 pixelated" style={frameStyle}>
+			<img src="/images/crops/{key}.png" class="rounded-lg pixelated aspect-square w-full" alt={name} />
 		</div>
 		<div class="flex flex-col gap-2 w-[100%] px-3 py-1">
 			<div class="flex justify-between">
@@ -72,7 +72,7 @@
 				</h1>
 			</div>
 			<div class="hidden md:flex flex-row gap-[0.15rem] md:gap-1 segments h-6">
-				{#each Array.from({ length: maxTier }) as _, i}
+				{#each Array.from(Array(maxTier), (_, i) => i) as i}
 					<div class="w-1/6 h-[100%] {i < tier ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}" />
 				{/each}
 			</div>
@@ -89,14 +89,6 @@
 		background-size: 85% 85%;
 		background-position: center;
 		background-blend-mode: color;
-		image-rendering: pixelated;
-	}
-	.crop {
-		@apply rounded-lg;
-		display: inline-block;
-		width: 100%;
-		aspect-ratio: 1;
-		image-rendering: pixelated;
 	}
 
 	/* Mobile styles */

@@ -1,12 +1,11 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { Button } from 'flowbite-svelte';
 	import MinecraftAccount from './minecraftAccount.svelte';
 
 	export let account: components['schemas']['AuthorizedAccountDto'] = {};
 </script>
 
-<section class="bg-gray-200 dark:bg-zinc-800 rounded-md p-4 flex flex-col align-middle gap-4">
+<section class="bg-gray-100 dark:bg-zinc-800 rounded-md p-4 flex flex-col align-middle gap-4">
 	<div class="flex flex-row items-center gap-4">
 		<img
 			class="w-14 h-14 rounded-full"

@@ -92,6 +92,123 @@ export interface paths {
       };
     };
   };
+  "/Bot/{guildId}": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildDto"];
+            "application/json": components["schemas"]["GuildDto"];
+            "text/json": components["schemas"]["GuildDto"];
+          };
+        };
+      };
+    };
+  };
+  "/Bot/{guildId}/jacob": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          };
+        };
+      };
+    };
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboardFeature"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/Bot/account": {
+    patch: {
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["IncomingAccountDto"];
+          "text/json": components["schemas"]["IncomingAccountDto"];
+          "application/*+json": components["schemas"]["IncomingAccountDto"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["AuthorizedAccountDto"];
+            "application/json": components["schemas"]["AuthorizedAccountDto"];
+            "text/json": components["schemas"]["AuthorizedAccountDto"];
+          };
+        };
+      };
+    };
+  };
+  "/Bot/account/{discordId}/{playerIgnOrUuid}": {
+    post: {
+      parameters: {
+        path: {
+          discordId: number;
+          playerIgnOrUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          discordId: number;
+          playerIgnOrUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/Bot/account/{discordId}/{playerIgnOrUuid}/primary": {
+    post: {
+      parameters: {
+        path: {
+          discordId: number;
+          playerIgnOrUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
   "/Contests/at/{year}": {
     get: {
       parameters: {
@@ -128,13 +245,13 @@ export interface paths {
       requestBody?: {
         content: {
           "application/json": {
-            [key: string]: (string)[] | undefined;
+            [key: string]: string[] | undefined;
           };
           "text/json": {
-            [key: string]: (string)[] | undefined;
+            [key: string]: string[] | undefined;
           };
           "application/*+json": {
-            [key: string]: (string)[] | undefined;
+            [key: string]: string[] | undefined;
           };
         };
       };
@@ -157,9 +274,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["JacobContestWithParticipationsDto"])[];
-            "application/json": (components["schemas"]["JacobContestWithParticipationsDto"])[];
-            "text/json": (components["schemas"]["JacobContestWithParticipationsDto"])[];
+            "text/plain": components["schemas"]["JacobContestWithParticipationsDto"][];
+            "application/json": components["schemas"]["JacobContestWithParticipationsDto"][];
+            "text/json": components["schemas"]["JacobContestWithParticipationsDto"][];
           };
         };
       };
@@ -178,13 +295,13 @@ export interface paths {
         200: {
           content: {
             "text/plain": {
-              [key: string]: (components["schemas"]["JacobContestDto"])[] | undefined;
+              [key: string]: components["schemas"]["JacobContestDto"][] | undefined;
             };
             "application/json": {
-              [key: string]: (components["schemas"]["JacobContestDto"])[] | undefined;
+              [key: string]: components["schemas"]["JacobContestDto"][] | undefined;
             };
             "text/json": {
-              [key: string]: (components["schemas"]["JacobContestDto"])[] | undefined;
+              [key: string]: components["schemas"]["JacobContestDto"][] | undefined;
             };
           };
         };
@@ -202,9 +319,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["JacobContestWithParticipationsDto"])[];
-            "application/json": (components["schemas"]["JacobContestWithParticipationsDto"])[];
-            "text/json": (components["schemas"]["JacobContestWithParticipationsDto"])[];
+            "text/plain": components["schemas"]["JacobContestWithParticipationsDto"][];
+            "application/json": components["schemas"]["JacobContestWithParticipationsDto"][];
+            "text/json": components["schemas"]["JacobContestWithParticipationsDto"][];
           };
         };
       };
@@ -240,9 +357,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["ContestParticipationDto"])[];
-            "application/json": (components["schemas"]["ContestParticipationDto"])[];
-            "text/json": (components["schemas"]["ContestParticipationDto"])[];
+            "text/plain": components["schemas"]["ContestParticipationDto"][];
+            "application/json": components["schemas"]["ContestParticipationDto"][];
+            "text/json": components["schemas"]["ContestParticipationDto"][];
           };
         };
       };
@@ -260,9 +377,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["ContestParticipationDto"])[];
-            "application/json": (components["schemas"]["ContestParticipationDto"])[];
-            "text/json": (components["schemas"]["ContestParticipationDto"])[];
+            "text/plain": components["schemas"]["ContestParticipationDto"][];
+            "application/json": components["schemas"]["ContestParticipationDto"][];
+            "text/json": components["schemas"]["ContestParticipationDto"][];
           };
         };
       };
@@ -279,9 +396,61 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["ContestParticipationDto"])[];
-            "application/json": (components["schemas"]["ContestParticipationDto"])[];
-            "text/json": (components["schemas"]["ContestParticipationDto"])[];
+            "text/plain": components["schemas"]["ContestParticipationDto"][];
+            "application/json": components["schemas"]["ContestParticipationDto"][];
+            "text/json": components["schemas"]["ContestParticipationDto"][];
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}": {
+    get: {
+      parameters: {
+        path: {
+          eventId: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+      };
+    };
+  };
+  "/Guilds": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildDetailsDto"][];
+            "application/json": components["schemas"]["GuildDetailsDto"][];
+            "text/json": components["schemas"]["GuildDetailsDto"][];
+          };
+        };
+      };
+    };
+  };
+  "/Guild/{guildId}": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["PublicGuildDto"];
+            "application/json": components["schemas"]["PublicGuildDto"];
+            "text/json": components["schemas"]["PublicGuildDto"];
           };
         };
       };
@@ -522,11 +691,174 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": (components["schemas"]["ProfileDetailsDto"])[];
-            "application/json": (components["schemas"]["ProfileDetailsDto"])[];
-            "text/json": (components["schemas"]["ProfileDetailsDto"])[];
+            "text/plain": components["schemas"]["ProfileDetailsDto"][];
+            "application/json": components["schemas"]["ProfileDetailsDto"][];
+            "text/json": components["schemas"]["ProfileDetailsDto"][];
           };
         };
+      };
+    };
+  };
+  "/User/Guilds": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["UserGuildDto"][];
+            "application/json": components["schemas"]["UserGuildDto"][];
+            "text/json": components["schemas"]["UserGuildDto"][];
+          };
+        };
+      };
+    };
+  };
+  "/User/Guild/{guildId}": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["AuthorizedGuildDto"];
+            "application/json": components["schemas"]["AuthorizedGuildDto"];
+            "text/json": components["schemas"]["AuthorizedGuildDto"];
+          };
+        };
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Invite": {
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Jacob": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboardFeature"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Jacob/Leaderboard": {
+    post: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboard"];
+          "text/json": components["schemas"]["GuildJacobLeaderboard"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboard"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Jacob/{lbId}": {
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["GuildJacobLeaderboard"];
+          "text/json": components["schemas"]["GuildJacobLeaderboard"];
+          "application/*+json": components["schemas"]["GuildJacobLeaderboard"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+      };
+    };
+  };
+  "/User/Guild/{guildId}/Jacob/{lbId}/Send": {
+    post: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
       };
     };
   };
@@ -622,11 +954,27 @@ export interface components {
       email?: string | null;
       locale?: string | null;
       avatar?: string | null;
-      redemptions?: (components["schemas"]["RedemptionDto"])[];
+      redemptions?: components["schemas"]["RedemptionDto"][];
       inventory?: components["schemas"]["EliteInventoryDto"];
       settings?: components["schemas"]["EliteSettingsDto"];
-      minecraftAccounts?: (components["schemas"]["MinecraftAccountDetailsDto"])[];
+      minecraftAccounts?: components["schemas"]["MinecraftAccountDetailsDto"][];
     };
+    AuthorizedGuildDto: {
+      id?: string;
+      permissions?: string;
+      guild?: components["schemas"]["GuildDto"];
+      discordGuild?: components["schemas"]["FullDiscordGuild"];
+    };
+    AutoRoles: {
+      roleId?: string | null;
+      /** Format: int32 */
+      requiredWeight?: number;
+    };
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    ChannelType: 0 | 1 | 2 | 3 | 4 | 5 | 10 | 11 | 12 | 13 | 14 | 15;
     ContestParticipationDto: {
       crop?: string;
       /** Format: int64 */
@@ -639,6 +987,42 @@ export interface components {
       participants?: number;
       medal?: string | null;
     };
+    CropRecords: {
+      cactus?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      carrot?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      potato?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      wheat?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      melon?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      pumpkin?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      mushroom?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      cocoaBeans?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      sugarCane?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+      netherWart?: components["schemas"]["GuildJacobLeaderboardEntry"][];
+    };
+    DiscordChannel: {
+      id?: string;
+      name?: string;
+      type?: components["schemas"]["ChannelType"];
+      /** Format: int32 */
+      flags?: number;
+      /** Format: int32 */
+      position?: number;
+      guild_id?: string | null;
+      parent_id?: string | null;
+    };
+    DiscordRole: {
+      name?: string;
+      id?: string;
+    };
+    DiscordRoleData: {
+      id?: string;
+      name?: string;
+      permissions?: string | null;
+      /** Format: int32 */
+      position?: number;
+      /** Format: int32 */
+      color?: number;
+    };
     EliteInventoryDto: {
       totalEarnedMedals?: components["schemas"]["MedalInventoryDto"];
       spentMedals?: components["schemas"]["MedalInventoryDto"];
@@ -650,15 +1034,23 @@ export interface components {
       leaderboardTokens?: number;
       /** Format: int32 */
       leaderboardTokensSpent?: number;
-      unlockedCosmetics?: (string)[];
+      unlockedCosmetics?: string[];
     };
     EliteSettingsDto: {
       defaultPlayerUuid?: string;
       hideDiscordTag?: boolean;
     };
+    EventDetailsDto: Record<string, never>;
+    ExcludedTimespan: {
+      /** Format: int64 */
+      start?: number;
+      /** Format: int64 */
+      end?: number;
+      reason?: string | null;
+    };
     FarmingWeightAllProfilesDto: {
       selectedProfileId?: string | null;
-      profiles?: (components["schemas"]["FarmingWeightWithProfileDto"])[];
+      profiles?: components["schemas"]["FarmingWeightWithProfileDto"][];
     };
     FarmingWeightDto: {
       /** Format: double */
@@ -682,6 +1074,103 @@ export interface components {
         [key: string]: number | undefined;
       };
     };
+    FullDiscordGuild: {
+      id?: string;
+      name?: string;
+      icon?: string | null;
+      description?: string | null;
+      splash?: string | null;
+      discovery_splash?: string | null;
+      features?: string[];
+      banner?: string | null;
+      owner_id?: string | null;
+      /** Format: int32 */
+      application_id?: number | null;
+      region?: string | null;
+      /** Format: int32 */
+      verification_level?: number;
+      roles?: components["schemas"]["DiscordRoleData"][];
+      channels?: components["schemas"]["DiscordChannel"][];
+      vanity_url_code?: string | null;
+      /** Format: int32 */
+      premium_tier?: number;
+      /** Format: int32 */
+      premium_subscription_count?: number;
+      preferred_locale?: string | null;
+      /** Format: int32 */
+      approximate_member_count?: number;
+    };
+    GuildDetailsDto: {
+      id?: string;
+      name?: string;
+      icon?: string | null;
+      banner?: string | null;
+      inviteCode?: string | null;
+      /** Format: int32 */
+      memberCount?: number;
+    };
+    GuildDto: {
+      id?: string;
+      name?: string;
+      features?: components["schemas"]["GuildFeatures"];
+      icon?: string | null;
+      inviteCode?: string | null;
+      banner?: string | null;
+      description?: string | null;
+      adminRole?: string | null;
+      botPermissions?: string | null;
+      botPermissionsNew?: string;
+      discordFeatures?: string[];
+      /** Format: int32 */
+      memberCount?: number;
+    };
+    GuildFeatures: {
+      jacobLeaderboardEnabled?: boolean;
+      jacobLeaderboard?: components["schemas"]["GuildJacobLeaderboardFeature"];
+      verifiedRoleEnabled?: boolean;
+      verifiedRole?: components["schemas"]["VerifiedRoleFeature"];
+    };
+    GuildJacobLeaderboard: {
+      id?: string;
+      channelId?: string | null;
+      /** Format: int64 */
+      startCutoff?: number;
+      /** Format: int64 */
+      endCutoff?: number;
+      title?: string | null;
+      active?: boolean;
+      requiredRole?: string | null;
+      blockedRole?: string | null;
+      updateChannelId?: string | null;
+      updateRoleId?: string | null;
+      pingForSmallImprovements?: boolean;
+      crops?: components["schemas"]["CropRecords"];
+    };
+    GuildJacobLeaderboardEntry: {
+      uuid?: string;
+      ign?: string;
+      discordId?: string;
+      record?: components["schemas"]["ContestParticipationDto"];
+    };
+    GuildJacobLeaderboardFeature: {
+      /** Format: int32 */
+      maxLeaderboards?: number;
+      blockedRoles?: components["schemas"]["DiscordRole"][];
+      blockedUsers?: number[];
+      requiredRoles?: components["schemas"]["DiscordRole"][];
+      excludedParticipations?: string[];
+      excludedTimespans?: components["schemas"]["ExcludedTimespan"][];
+      leaderboards?: components["schemas"]["GuildJacobLeaderboard"][];
+    };
+    IncomingAccountDto: {
+      /** Format: int64 */
+      id?: number;
+      username?: string;
+      displayName?: string | null;
+      discriminator?: string | null;
+      avatar?: string | null;
+      locale?: string | null;
+    };
     JacobContestDto: {
       crop?: string;
       /** Format: int64 */
@@ -695,7 +1184,7 @@ export interface components {
       timestamp?: number;
       /** Format: int32 */
       participants?: number;
-      participations?: (components["schemas"]["StrippedContestParticipationDto"])[];
+      participations?: components["schemas"]["StrippedContestParticipationDto"][];
     };
     JacobDataDto: {
       medals?: components["schemas"]["MedalInventoryDto"];
@@ -703,7 +1192,7 @@ export interface components {
       perks?: components["schemas"]["JacobPerksDto"];
       /** Format: int32 */
       participations?: number;
-      contests?: (components["schemas"]["ContestParticipationDto"])[];
+      contests?: components["schemas"]["ContestParticipationDto"][];
     };
     JacobPerksDto: {
       /** Format: int32 */
@@ -720,7 +1209,7 @@ export interface components {
       offset?: number;
       /** Format: int32 */
       maxEntries?: number;
-      entries?: (components["schemas"]["LeaderboardEntryDto"])[];
+      entries?: components["schemas"]["LeaderboardEntryDto"][];
     };
     LeaderboardEntryDto: {
       ign?: string | null;
@@ -731,7 +1220,7 @@ export interface components {
     LeaderboardPositionDto: {
       /** Format: int32 */
       rank?: number;
-      upcomingPlayers?: (components["schemas"]["LeaderboardEntryDto"])[] | null;
+      upcomingPlayers?: components["schemas"]["LeaderboardEntryDto"][] | null;
     };
     LeaderboardPositionsDto: {
       misc?: {
@@ -746,7 +1235,7 @@ export interface components {
     };
     LinkedAccountsDto: {
       selectedUuid?: string | null;
-      players?: (components["schemas"]["PlayerDataDto"])[];
+      players?: components["schemas"]["PlayerDataDto"][];
     };
     MedalInventoryDto: {
       /** Format: int32 */
@@ -760,12 +1249,14 @@ export interface components {
       uuid?: string;
       username?: string;
       active?: boolean;
+      /** Format: double */
+      farmingWeight?: number;
     };
     MinecraftAccountDetailsDto: {
       id?: string;
       name?: string;
       primaryAccount?: boolean;
-      properties?: (components["schemas"]["MinecraftAccountPropertyDto"])[];
+      properties?: components["schemas"]["MinecraftAccountPropertyDto"][];
     };
     MinecraftAccountDto: {
       id?: string;
@@ -774,8 +1265,8 @@ export interface components {
       discordId?: string | null;
       discordUsername?: string | null;
       discordAvatar?: string | null;
-      properties?: (components["schemas"]["MinecraftAccountPropertyDto"])[];
-      profiles?: (components["schemas"]["ProfileDetailsDto"])[];
+      properties?: components["schemas"]["MinecraftAccountPropertyDto"][];
+      profiles?: components["schemas"]["ProfileDetailsDto"][];
       playerData?: components["schemas"]["PlayerDataDto"];
     };
     MinecraftAccountPropertyDto: {
@@ -832,7 +1323,7 @@ export interface components {
       selected?: boolean;
       /** Format: double */
       bankBalance?: number;
-      members?: (components["schemas"]["MemberDetailsDto"])[];
+      members?: components["schemas"]["MemberDetailsDto"][];
     };
     ProfileMemberDto: {
       profileId?: string;
@@ -852,7 +1343,7 @@ export interface components {
       craftedMinions?: {
         [key: string]: number | undefined;
       };
-      pets?: (components["schemas"]["PetDto"])[];
+      pets?: components["schemas"]["PetDto"][];
       jacob?: components["schemas"]["JacobDataDto"];
       farmingWeight?: components["schemas"]["FarmingWeightDto"];
       skills?: components["schemas"]["SkillsDto"];
@@ -860,6 +1351,45 @@ export interface components {
       wasRemoved?: boolean;
       /** Format: int64 */
       lastUpdated?: number;
+    };
+    PublicGuildDto: {
+      id?: string;
+      name?: string;
+      icon?: string | null;
+      banner?: string | null;
+      inviteCode?: string | null;
+      description?: string | null;
+      /** Format: int32 */
+      memberCount?: number;
+      features?: components["schemas"]["PublicGuildFeaturesDto"];
+    };
+    PublicGuildFeaturesDto: {
+      jacobLeaderboardEnabled?: boolean;
+      jacobLeaderboard?: components["schemas"]["PublicJacobLeaderboardFeatureDto"];
+    };
+    PublicJacobLeaderboardDto: {
+      id?: string;
+      channelId?: string | null;
+      /** Format: int64 */
+      startCutoff?: number;
+      /** Format: int64 */
+      endCutoff?: number;
+      title?: string | null;
+      active?: boolean;
+      requiredRole?: string | null;
+      blockedRole?: string | null;
+      updateChannelId?: string | null;
+      updateRoleId?: string | null;
+      pingForSmallImprovements?: boolean;
+      crops?: components["schemas"]["CropRecords"];
+    };
+    PublicJacobLeaderboardFeatureDto: {
+      /** Format: int32 */
+      maxLeaderboards?: number;
+      blockedRoles?: components["schemas"]["DiscordRole"][];
+      requiredRoles?: components["schemas"]["DiscordRole"][];
+      excludedTimespans?: components["schemas"]["ExcludedTimespan"][];
+      leaderboards?: components["schemas"]["PublicJacobLeaderboardDto"][];
     };
     RedemptionDto: {
       itemId?: string;
@@ -905,6 +1435,17 @@ export interface components {
       playerUuid?: string;
       playerName?: string;
     };
+    UserGuildDto: {
+      id?: string;
+      name?: string;
+      icon?: string | null;
+      hasBot?: boolean;
+      permissions?: string;
+    };
+    VerifiedRoleFeature: {
+      enabled?: boolean;
+      autoRoles?: components["schemas"]["AutoRoles"][];
+    };
     YearlyContestsDto: {
       /** Format: int32 */
       year?: number;
@@ -912,7 +1453,7 @@ export interface components {
       count?: number;
       complete?: boolean;
       contests?: {
-        [key: string]: (string)[] | undefined;
+        [key: string]: string[] | undefined;
       };
     };
   };

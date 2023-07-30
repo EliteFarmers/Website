@@ -52,7 +52,7 @@
 	<div class="flex flex-row gap-4 mx-4 w-[1/1] md:w-[1/2]">
 		{#each crops as name (name)}
 			<div class="flex-col flex-1 items-center text-center max-w-2xl rounded-md bg-zinc-700">
-				<img class="w-16" src={PROPER_CROP_TO_IMG[name]} alt="" />
+				<img class="w-16 pixelated" src={PROPER_CROP_TO_IMG[name]} alt="" />
 				<Popover>
 					{name}
 				</Popover>
@@ -60,9 +60,3 @@
 		{/each}
 	</div>
 </div>
-
-<style lang="postcss">
-	img {
-		image-rendering: pixelated;
-	}
-</style>

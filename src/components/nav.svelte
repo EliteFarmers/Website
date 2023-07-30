@@ -113,9 +113,13 @@
 		</DropdownItem>
 	</Dropdown>
 
-	<NavUl {hidden} class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center">
-		<NavLi href="/" active={$page.url.pathname === '/'}>Home</NavLi>
+	<NavUl
+		{hidden}
+		class="lg:order-3 mx-auto items-end justify-center lg:mx-0 md:items-center"
+		ulClass="flex flex-col p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:items-center"
+	>
 		<NavLi href="/info" active={$page.url.pathname === '/info'}>Info</NavLi>
+		<NavLi href="/servers" active={$page.url.pathname === '/servers'}>Servers</NavLi>
 		<NavLi href="/contests" active={$page.url.pathname === '/contests'}>Contests</NavLi>
 		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
 		<DarkMode initialTheme="dark" />
@@ -127,9 +131,9 @@
 					src="https://cdn.discordapp.com/avatars/{$page.data.userInfo.id}/{$page.data.userInfo.avatar}.png"
 				/>
 			</div>
-			<Dropdown placement="bottom" triggeredBy="#avatar-menu">
+			<Dropdown placement="bottom-end" triggeredBy="#avatar-menu">
 				<DropdownHeader>
-					<span class="block text-sm"> {$page.data.userInfo.username} </span>
+					<span class="block text-sm w-32"> {$page.data.userInfo.username}</span>
 				</DropdownHeader>
 				<DropdownItem href="/profile">Profile</DropdownItem>
 				<DropdownItem href="/stats">My Stats</DropdownItem>

@@ -7,6 +7,7 @@
 
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { PageData } from './$types';
+	import Serverbar from '$comp/stats/discord/serverbar.svelte';
 
 	export let data: PageData;
 
@@ -22,9 +23,14 @@
 
 <main>
 	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
-	<p class="text-body-xl text-center mb-32">View stats of any skyblock player!</p>
+	<p class="text-body-xl text-center mb-16">View stats of any skyblock player!</p>
 
 	<div class="flex flex-col w-full items-center gap-8">
+		{#if data.eliteGuild}
+			<div class="w-full max-w-3xl">
+				<Serverbar guild={data.eliteGuild} />
+			</div>
+		{/if}
 		<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
 			<div class="flex flex-col items-center gap-8">
 				<Card color="none" border={false}>

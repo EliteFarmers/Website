@@ -10,29 +10,51 @@ on:
         branches:
             - main
 
+env:
+  # Set below
+  STORE_PATH: ''
+
 jobs:
-    run-linters:
-        name: Run Linters
-        runs-on: ubuntu-latest
+  cache-and-install:
+    name: Run Linters
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Check out Git repository
-              uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v1
-              with:
-                  node-version: 18.8
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-            - name: Make dummy env for types
-              run: |
-                  echo "ls -a ."
-                  ls -a .
-                  mv .env.example .env
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
 
-            # ESLint and Prettier must be in `package.json`
-            - name: Install Node.js dependencies
-              run: npm ci
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-            - name: Run Linters
-              run: npm run lint
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Make dummy env for types
+        run: |
+            echo "ls -a ."
+            ls -a .
+            mv .env.example .env
+
+      - name: Lint
+        run: pnpm run lint

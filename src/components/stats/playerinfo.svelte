@@ -8,9 +8,10 @@
 	import PlayerName from '$comp/stats/player/playername.svelte';
 	import Skyblocklevel from './player/skyblocklevel.svelte';
 	import type { components } from '$lib/api/api';
+	import type { ProfileDetails } from '$lib/api/elite';
 
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
-	export let profileIds: { id: string; name: string }[];
+	export let profileDetails: ProfileDetails[];
 	export let members: components['schemas']['MemberDetailsDto'][] | null | undefined;
 	export let linked: boolean;
 	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
@@ -18,11 +19,11 @@
 	export let skyblockXP: number;
 	export let skyblockRank = -1;
 
-	const profiles = profileIds.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
+	$: profiles = profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
 
 	$: discordName = player?.socialMedia?.discord;
 
-	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileIds[0] };
+	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileDetails[0] };
 
 	$: rankName =
 		player?.rank ??
@@ -48,7 +49,7 @@
 					ign={player?.displayname}
 					{rank}
 					members={members ?? undefined}
-					profileId={profileIds[0].id}
+					profileId={profileDetails[0].id}
 				/>
 				<div class="flex justify-start">
 					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />

@@ -2,7 +2,7 @@
 	"name": "elitedev",
 	"version": "1.0.0",
 	"engines": {
-		"node": ">=18.8.0"
+		"node": ">=20.0.0"
 	},
 	"scripts": {
 		"dev": "vite dev",
@@ -15,42 +15,42 @@
 		"lint": "prettier --ignore-path .eslintignore --check --plugin-search-dir=. . && eslint --max-warnings=0 .",
 		"format": "prettier --ignore-path .eslintignore --write --plugin-search-dir=. .",
 		"up": "docker-compose up -d database cache",
-		"down": "docker-compose down"
+		"down": "docker-compose down",
+		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-node": "next",
-		"@sveltejs/kit": "^1.18.0",
-		"@typescript-eslint/eslint-plugin": "^5.39.0",
-		"@typescript-eslint/parser": "^5.10.1",
+		"@sveltejs/kit": "^1.22.3",
+		"@typescript-eslint/eslint-plugin": "^5.62.0",
+		"@typescript-eslint/parser": "^5.62.0",
 		"autoprefixer": "10.4.7",
-		"eslint": "^8.41.0",
-		"eslint-config-prettier": "^8.8.0",
+		"eslint": "^8.46.0",
+		"eslint-config-prettier": "^8.9.0",
 		"eslint-config-standard-with-typescript": "^34.0.1",
-		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-n": "^15.0.0",
+		"eslint-plugin-import": "^2.28.0",
+		"eslint-plugin-n": "^15.7.0",
 		"eslint-plugin-promise": "^6.1.1",
-		"eslint-plugin-svelte3": "^4.0.0",
+		"eslint-plugin-svelte": "^2.32.4",
+		"flowbite-svelte": "^0.40.2",
+		"flowbite-svelte-icons": "^0.2.6",
+		"postcss": "^8.4.27",
 		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.0",
-		"redis": "^4.6.6",
-		"svelte": "^3.59.1",
-		"svelte-check": "^3.3.2",
-		"svelte-preprocess": "^5.0.3",
-		"tailwindcss": "^3.3.2",
-		"tslib": "^2.5.2",
-		"typescript": "^5.0.4",
-		"vite": "^4.3.8"
+		"prettier-plugin-svelte": "^2.10.1",
+		"svelte": "^4.1.1",
+		"svelte-check": "^3.4.6",
+		"svelte-preprocess": "^5.0.4",
+		"tailwindcss": "^3.3.3",
+		"tslib": "^2.6.1",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.7"
 	},
 	"type": "module",
 	"dependencies": {
-		"@popperjs/core": "^2.11.7",
+		"@popperjs/core": "^2.11.8",
 		"classnames": "^2.3.2",
-		"flowbite": "^1.6.5",
-		"flowbite-svelte": "^0.36.2",
-		"openapi-fetch": "^0.6.1",
-		"pg": "^8.7.3",
-		"prismarine-nbt": "^2.2.1",
-		"sequelize": "^6.21.3"
+		"flowbite": "^1.8.0",
+		"openapi-fetch": "^0.7.1",
+		"prismarine-nbt": "^2.2.1"
 	}
 }

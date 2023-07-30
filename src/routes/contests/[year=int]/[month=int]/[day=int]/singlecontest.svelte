@@ -20,7 +20,7 @@
 <div class="flex-1 basis-1/4 justify-between h-full items-center rounded-md shadow-md bg-gray-100 dark:bg-zinc-800">
 	<div class="flex flex-col items-center justify-start p-4 space-y-2">
 		<div class="flex flex-row gap-2">
-			<img src={cropUrl} alt={crop} class="w-10 h-10" />
+			<img src={cropUrl} alt={crop} class="w-10 h-10 pixelated" />
 			<h2 class="text-3xl font-semibold text-center">
 				{crop ?? 'Not Found'}
 			</h2>
@@ -55,9 +55,3 @@
 		{/if}
 	</div>
 </div>
-
-<style lang="postcss">
-	img {
-		image-rendering: pixelated;
-	}
-</style>

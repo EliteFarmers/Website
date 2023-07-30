@@ -190,6 +190,277 @@
         }
       }
     },
+    "/Bot/{guildId}": {
+      "get": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Bot/{guildId}/jacob": {
+      "get": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Bot/account": {
+      "patch": {
+        "tags": [
+          "Bot"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingAccountDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingAccountDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedAccountDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedAccountDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedAccountDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Bot/account/{discordId}/{playerIgnOrUuid}": {
+      "post": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "playerIgnOrUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "playerIgnOrUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Bot/account/{discordId}/{playerIgnOrUuid}/primary": {
+      "post": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "playerIgnOrUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/Contests/at/{year}": {
       "get": {
         "tags": [
@@ -685,6 +956,125 @@
                   "items": {
                     "$ref": "#/components/schemas/ContestParticipationDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Event/{eventId}": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Guilds": {
+      "get": {
+        "tags": [
+          "Guild"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuildDetailsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuildDetailsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuildDetailsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Guild/{guildId}": {
+      "get": {
+        "tags": [
+          "Guild"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicGuildDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicGuildDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicGuildDto"
                 }
               }
             }
@@ -1285,6 +1675,386 @@
         }
       }
     },
+    "/User/Guilds": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserGuildDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserGuildDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserGuildDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/User/Guild/{guildId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedGuildDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedGuildDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizedGuildDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/User/Guild/{guildId}/Invite": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/User/Guild/{guildId}/Jacob": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/User/Guild/{guildId}/Jacob/Leaderboard": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboard"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboard"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboard"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/User/Guild/{guildId}/Jacob/{lbId}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lbId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboard"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboard"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuildJacobLeaderboard"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lbId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/User/Guild/{guildId}/Jacob/{lbId}/Send": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lbId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/Weight/{playerUuid}": {
       "get": {
         "tags": [
@@ -1516,6 +2286,56 @@
         },
         "additionalProperties": false
       },
+      "AuthorizedGuildDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "string"
+          },
+          "guild": {
+            "$ref": "#/components/schemas/GuildDto"
+          },
+          "discordGuild": {
+            "$ref": "#/components/schemas/FullDiscordGuild"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AutoRoles": {
+        "type": "object",
+        "properties": {
+          "roleId": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredWeight": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChannelType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "ContestParticipationDto": {
         "type": "object",
         "properties": {
@@ -1541,6 +2361,139 @@
           "medal": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CropRecords": {
+        "type": "object",
+        "properties": {
+          "cactus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "carrot": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "potato": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "wheat": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "melon": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "pumpkin": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "mushroom": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "cocoaBeans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "sugarCane": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          },
+          "netherWart": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboardEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "DiscordChannel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "flags": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "guild_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "parent_id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DiscordRole": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DiscordRoleData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "color": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1596,6 +2549,28 @@
           },
           "hideDiscordTag": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EventDetailsDto": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ExcludedTimespan": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1666,6 +2641,336 @@
               "type": "number",
               "format": "double"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FullDiscordGuild": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "splash": {
+            "type": "string",
+            "nullable": true
+          },
+          "discovery_splash": {
+            "type": "string",
+            "nullable": true
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "application_id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "verification_level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordRoleData"
+            }
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordChannel"
+            }
+          },
+          "vanity_url_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "premium_tier": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "premium_subscription_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "preferred_locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "approximate_member_count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "inviteCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "features": {
+            "$ref": "#/components/schemas/GuildFeatures"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "inviteCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "botPermissions": {
+            "type": "string",
+            "nullable": true
+          },
+          "botPermissionsNew": {
+            "type": "string"
+          },
+          "discordFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildFeatures": {
+        "type": "object",
+        "properties": {
+          "jacobLeaderboardEnabled": {
+            "type": "boolean"
+          },
+          "jacobLeaderboard": {
+            "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+          },
+          "verifiedRoleEnabled": {
+            "type": "boolean"
+          },
+          "verifiedRole": {
+            "$ref": "#/components/schemas/VerifiedRoleFeature"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildJacobLeaderboard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "channelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "startCutoff": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "endCutoff": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "maxLength": 64,
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "requiredRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "blockedRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateChannelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateRoleId": {
+            "type": "string",
+            "nullable": true
+          },
+          "pingForSmallImprovements": {
+            "type": "boolean"
+          },
+          "crops": {
+            "$ref": "#/components/schemas/CropRecords"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildJacobLeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "ign": {
+            "type": "string"
+          },
+          "discordId": {
+            "type": "string"
+          },
+          "record": {
+            "$ref": "#/components/schemas/ContestParticipationDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildJacobLeaderboardFeature": {
+        "type": "object",
+        "properties": {
+          "maxLeaderboards": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blockedRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordRole"
+            }
+          },
+          "blockedUsers": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "requiredRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordRole"
+            }
+          },
+          "excludedParticipations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "excludedTimespans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExcludedTimespan"
+            }
+          },
+          "leaderboards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildJacobLeaderboard"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "IncomingAccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "discriminator": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1886,6 +3191,10 @@
           },
           "active": {
             "type": "boolean"
+          },
+          "farmingWeight": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -2196,6 +3505,137 @@
         },
         "additionalProperties": false
       },
+      "PublicGuildDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "inviteCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "features": {
+            "$ref": "#/components/schemas/PublicGuildFeaturesDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicGuildFeaturesDto": {
+        "type": "object",
+        "properties": {
+          "jacobLeaderboardEnabled": {
+            "type": "boolean"
+          },
+          "jacobLeaderboard": {
+            "$ref": "#/components/schemas/PublicJacobLeaderboardFeatureDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicJacobLeaderboardDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "channelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "startCutoff": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "endCutoff": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "requiredRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "blockedRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateChannelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateRoleId": {
+            "type": "string",
+            "nullable": true
+          },
+          "pingForSmallImprovements": {
+            "type": "boolean"
+          },
+          "crops": {
+            "$ref": "#/components/schemas/CropRecords"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicJacobLeaderboardFeatureDto": {
+        "type": "object",
+        "properties": {
+          "maxLeaderboards": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blockedRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordRole"
+            }
+          },
+          "requiredRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscordRole"
+            }
+          },
+          "excludedTimespans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExcludedTimespan"
+            }
+          },
+          "leaderboards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicJacobLeaderboardDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "RedemptionDto": {
         "type": "object",
         "properties": {
@@ -2300,6 +3740,43 @@
           },
           "playerName": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserGuildDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasBot": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VerifiedRoleFeature": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "autoRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AutoRoles"
+            }
           }
         },
         "additionalProperties": false

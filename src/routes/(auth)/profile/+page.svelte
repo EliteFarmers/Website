@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import { Button } from 'flowbite-svelte';
+	import { Button, Input } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
+	import Guild from './guild.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
+	let loading = false;
 
 	$: user = data.user || undefined;
-	$: mc = data.mcAccount;
 
 	$: discordUsername =
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
@@ -17,8 +18,8 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<div class="flex flex-col lg:flex-row justify-center gap-16 m-16">
-	<div class="flex flex-col items-start">
+<main class="flex flex-col lg:flex-row justify-center gap-16 m-16 justify-items-center">
+	<div class="flex flex-col items-center">
 		<div class="w-full max-w-2xl mb-8">
 			<DiscordAccount account={user} />
 		</div>
@@ -30,7 +31,7 @@
 					<h2 class="text-lg text-yellow-500 font-semibold">Gold</h2>
 				{:else if data.premium === 'silver'}
 					<h2 class="text-lg text-zinc-400 font-semibold">Silver</h2>
-				{:else if data.premium === 'gold'}
+				{:else if data.premium === 'bronze'}
 					<h2 class="text-lg text-orange-700 font-semibold">Bronze</h2>
 				{:else}
 					<h2 class="text-lg text-gray-500 font-semibold">None!</h2>
@@ -43,31 +44,52 @@
 		</div>
 		<!-- Form to input username to link account -->
 
-		<form method="POST" class="w-full max-w-md mb-16" use:enhance>
+		<form
+			method="POST"
+			class="w-full max-w-md mb-16"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result, update }) => {
+					// Wait for a bit so the user can see the loading state
+					await new Promise((r) => setTimeout(r, 500));
+					if (result) loading = false;
+					update();
+				};
+			}}
+		>
 			<div class="flex flex-col gap-4 items-center w-full">
 				<div class="grid col-span-1 relative w-full">
-					<input
+					<Input
 						type="text"
 						name="username"
-						class="w-full px-4 py-2 border-2 rounded text-black"
-						placeholder="Username"
+						class="w-full px-4 py-2 border-2 rounded text-black text-center"
+						placeholder="Enter your Minecraft username"
+						disabled={loading}
 					/>
-					<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>
 				</div>
-				<button
-					type="submit"
-					formaction="?/link"
-					class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-				>
-					Link Account
-				</button>
-				<button
-					type="submit"
-					formaction="?/unlink"
-					class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-				>
-					Unlink Account
-				</button>
+				<div class="flex flex-col lg:flex-row gap-2 w-full">
+					<Button
+						type="submit"
+						formaction="?/link"
+						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+						disabled={loading}
+					>
+						Link Account
+					</Button>
+					<Button
+						type="submit"
+						formaction="?/unlink"
+						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
+						disabled={loading}
+					>
+						Unlink Account
+					</Button>
+				</div>
+				{#if form?.error}
+					<span class="text-red-600 text-sm"
+						>{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span
+					>
+				{/if}
 			</div>
 		</form>
 		{#if !user?.minecraftAccounts?.length}
@@ -84,34 +106,34 @@
 		{/if}
 	</div>
 	<section class="flex flex-col lg:w-[70%]">
-		<h1 class="text-2xl mb-4">Events</h1>
-		{#if true}
-			<p>You're not a part of any currently running events!</p>
+		<h1 class="text-2xl mb-4">Servers With Leaderboards</h1>
+		{#if data.publicGuilds.length === 0}
+			<p>You're not a member of any public guilds!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			<!-- {#each data.events as event (event.id)}
-				<Event {event} />
-			{/each} -->
+			{#each data.publicGuilds as guild (guild.id)}
+				<Guild {guild} link={true} />
+			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4">Your Servers</h1>
+		<h1 class="text-2xl mb-4">Manage Servers</h1>
 		{#if data.guildsWithBot.length === 0}
-			<p>This feature is a work in progress, check back later!</p>
+			<p>You don't manage any servers with the bot invited!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			<!-- {#each data.guildsWithBot as guild (guild.id)}
+			{#each data.guildsWithBot as guild (guild.id)}
 				<Guild {guild} />
-			{/each} -->
+			{/each}
 		</div>
 
 		<h1 class="text-2xl mb-4">Other Servers</h1>
-		{#if data.guildsWithBot.length === 0}
-			<p>This feature is a work in progress, check back later!</p>
+		{#if data.guilds.length === 0}
+			<p>No servers found! Try refreshing the page if this is wrong.</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			<!-- {#each data.guilds as guild (guild.id)}
+			{#each data.guilds as guild (guild.id)}
 				<Guild {guild} />
-			{/each} -->
+			{/each}
 		</div>
 	</section>
-</div>
+</main>

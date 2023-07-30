@@ -2,7 +2,6 @@
 	import Head from '$comp/head.svelte';
 	import Plan from './plan.svelte';
 
-	import type { PageData } from './$types';
 	import { Card } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import { error } from '@sveltejs/kit';

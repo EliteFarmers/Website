@@ -1,21 +1,31 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { IsIGNOrUUID } from '$params/id';
-import { LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
+import { GetPublicGuilds, GetUsersGuilds, LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
+import type { components } from '$lib/api/api';
 
-export const load: PageServerLoad = ({ locals }) => {
-	const user = locals.user;
-	const token = locals.discord_access_token;
+export const load: PageServerLoad = async ({ locals, parent }) => {
+	const { user } = await parent();
+	const { discord_access_token: token } = locals;
 
-	if (!user?.id || !token) {
-		throw redirect(302, '/login?redirect=/profile');
+	if (!user.id || !token) {
+		throw redirect(302, '/');
+		//throw redirect(302, '/login?redirect=/profile');
 	}
 
 	const account = user.minecraftAccounts?.find((account) => account.primaryAccount) ?? user.minecraftAccounts?.[0];
 
+	const guilds =
+		(await GetUsersGuilds(token)
+			.then((guilds) => guilds.data ?? undefined)
+			.catch(() => undefined)) ?? ([] as components['schemas']['UserGuildDto'][]);
+
+	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
+
 	return {
-		guildsWithBot: [], // guilds.filter((guild) => guild.hasBot),
-		guilds: [], // guilds.filter((guild) => !guild.hasBot),
+		guildsWithBot: guilds.filter((guild) => guild.hasBot),
+		guilds: guilds.filter((guild) => !guild.hasBot),
+		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
 		mcAccount: account ?? null,
 	};
@@ -28,7 +38,7 @@ export const actions: Actions = {
 		}
 
 		const data = await request.formData();
-		const username = data.get('username')?.toString();
+		const username = data.get('username')?.toString().trim();
 
 		if (!username || !IsIGNOrUUID(username)) {
 			return fail(400, { error: 'Invalid username.' });
@@ -51,6 +61,7 @@ export const actions: Actions = {
 		const username = data.get('username')?.toString();
 
 		if (!username || !IsIGNOrUUID(username)) {
+			console.log('username', username);
 			return fail(400, { error: 'Invalid username.' });
 		}
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte/internal';
 	import { page } from '$app/stores';
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
@@ -24,7 +23,7 @@
 	$: uuid = data.account.id;
 	$: ign = data.account.name;
 
-	$: profileIds = data.profiles;
+	$: profileDetails = data.profiles;
 	$: player = data.account.playerData;
 	$: collections = data.collections;
 
@@ -67,7 +66,7 @@
 	<PlayerInfo
 		{player}
 		members={profile.members?.filter((m) => m.uuid !== uuid)}
-		{profileIds}
+		{profileDetails}
 		linked={(data.account.discordId ?? null) !== null}
 		weightInfo={member.farmingWeight}
 		{weightRank}

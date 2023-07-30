@@ -1,11 +1,13 @@
 <script lang="ts">
-	import type { Guild } from '$lib/discord';
+	import type { components } from '$lib/api/api';
 	import { Button, Card } from 'flowbite-svelte';
+	import { ArrowUpRightFromSquareOutline, GearSolid } from 'flowbite-svelte-icons';
 
-	export let guild: Guild;
+	export let guild: components['schemas']['UserGuildDto'];
+	export let link = false;
 </script>
 
-<Card class="m-1 p-4 inline-block">
+<Card class="m-1 p-4 inline-block bg-gray-100 dark:bg-zinc-800" color="none" border={false}>
 	<div class="flex justify-between items-center">
 		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
 			{#if guild.icon == null}
@@ -14,7 +16,7 @@
 				>
 					<h1>
 						{guild.name
-							.split(' ')
+							?.split(' ')
 							.slice(0, 3)
 							.map((word) => word[0])
 							.join('')}
@@ -24,16 +26,22 @@
 				<img
 					loading="lazy"
 					class="w-12 h-12 rounded-full"
-					src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=96`}
+					src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${
+						guild.icon.startsWith('a_') ? 'gif' : 'webp'
+					}?size=96`}
 					alt="Server Icon"
 				/>
 			{/if}
 			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis pr-4">{guild.name}</h1>
 		</div>
 		<div class="flex justify-end min-w-0 items-center gap-4">
-			{#if guild.hasBot}
+			{#if link}
+				<Button href={`/server/${guild.id}`} color="blue" class="m-1">
+					<ArrowUpRightFromSquareOutline />
+				</Button>
+			{:else if guild.hasBot}
 				<Button href={`/guild/${guild.id}`} variant="raised" class="m-1">
-					<p>Manage</p>
+					<GearSolid />
 				</Button>
 			{:else}
 				<Button href={`/invite?guild_id=${guild.id}`} variant="outlined" class="m-1">

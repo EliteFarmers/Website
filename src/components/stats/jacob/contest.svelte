@@ -26,11 +26,11 @@
 	</h3>
 	<h3 class="text-lg font-semibold flex flex-row items-center gap-1">
 		{#if medal === 'gold'}
-			<img class="inline-block w-5 h-5" src="/images/medals/gold.webp" alt="Earned Medal" />
+			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/gold.webp" alt="Earned Medal" />
 		{:else if medal === 'silver'}
-			<img class="inline-block w-5 h-5" src="/images/medals/silver.webp" alt="Earned Medal" />
+			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/silver.webp" alt="Earned Medal" />
 		{:else if medal === 'bronze'}
-			<img class="inline-block w-5 h-5" src="/images/medals/bronze.webp" alt="Earned Medal" />
+			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/bronze.webp" alt="Earned Medal" />
 		{/if}
 		{(collected ?? 0).toLocaleString()}
 	</h3>
@@ -47,11 +47,6 @@
 </a>
 
 <style lang="postcss">
-	img {
-		image-rendering: pixelated;
-		aspect-ratio: 1 / 1;
-	}
-
 	.Cactus {
 		@apply border-cactus;
 	}

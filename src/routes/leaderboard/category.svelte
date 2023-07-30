@@ -17,7 +17,11 @@
 			>
 				<div class="flex flex-row gap-4 items-center">
 					{#if leaderboard.icon}
-						<img src={leaderboard.icon} class="w-12 h-12 rounded-md" alt={leaderboard.name} />
+						<img
+							src={leaderboard.icon}
+							class="w-12 h-12 rounded-md inline-block aspect-square pixelated"
+							alt={leaderboard.name}
+						/>
 					{/if}
 					<h6 class="text-center text-2xl">{leaderboard.name}</h6>
 				</div>
@@ -25,11 +29,3 @@
 		{/each}
 	</div>
 </section>
-
-<style lang="postcss">
-	img {
-		display: inline-block;
-		aspect-ratio: 1;
-		image-rendering: pixelated;
-	}
-</style>
