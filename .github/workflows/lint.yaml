@@ -34,7 +34,7 @@ jobs:
               with:
                   node-version: ${{ env.NODE_VERSION }}
                   cache: 'pnpm'
-                  cache-dependency-path: 'pnpn-lock.yaml'
+                  cache-dependency-path: '**/pnpn-lock.yaml'
 
     run-linters:
         name: Run Linters
@@ -56,7 +56,7 @@ jobs:
               with:
                   node-version: ${{ env.NODE_VERSION }}
                   cache: 'pnpm'
-                  cache-dependency-path: 'pnpm-lock.yaml'
+                  cache-dependency-path: '**/pnpm-lock.yaml'
 
             - name: Make dummy env for types
               run: |
