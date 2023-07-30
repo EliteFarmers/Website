@@ -1,20 +1,36 @@
 import { GetPublicGuild } from '$lib/api/elite';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params }) => {
-    const { guild } = params;
+export const load = (async ({ params, setHeaders }) => {
+	const { guild } = params;
 
-    // Remove everything before the last dash
-    const guildId = guild.slice(guild.lastIndexOf('-') + 1);
+	// Remove everything before the last dash
+	const guildId = guild.slice(guild.lastIndexOf('-') + 1);
 
-    const { data: guildData } = await GetPublicGuild(guildId).catch(() => ({ data: undefined }));
+	const { data: guildData } = await GetPublicGuild(guildId).catch(() => ({ data: undefined }));
 
-    if (!guildData) {
-        throw error(404, 'Guild not found');
-    }
+	if (!guildData?.id || !guildData.name) {
+		throw error(404, 'Guild not found');
+	}
 
-    return {
-        guild: guildData,
-    };
+	// If the guild doesn't have features enabled or an invite set, throw same 404
+	// This is to prevent people from knowing if a guild exists or not by just trying to access the page
+	if (!guildData.features?.jacobLeaderboardEnabled && !guildData.inviteCode) {
+		throw error(404, 'Guild not found');
+	}
+
+	const properUrl = guildData.name.replaceAll(' ', '-') + '-' + guildData.id;
+
+	if (properUrl !== guild) {
+		throw redirect(302, `/server/${properUrl}`);
+	}
+
+	setHeaders({
+		'Cache-Control': 'public, max-age=300',
+	});
+
+	return {
+		guild: guildData,
+	};
 }) satisfies LayoutServerLoad;
