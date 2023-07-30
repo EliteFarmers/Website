@@ -14,4 +14,5 @@ services:
 
 networks:
     elite-network:
-        driver: bridge
+        name: elite-network
+        external: true

@@ -2,7 +2,7 @@
 	"name": "elitedev",
 	"version": "1.0.0",
 	"engines": {
-		"node": ">=18.8.0"
+		"node": ">=20.0.0"
 	},
 	"scripts": {
 		"dev": "vite dev",
