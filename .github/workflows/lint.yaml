@@ -16,29 +16,8 @@ env:
     IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-    pnpm:
-        name: install dependencies (pnpm)
-        runs-on: ubuntu-latest
-        steps:
-            - name: Git checkout
-              uses: actions/checkout@v3
-
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-                  run_install: false
-
-            - name: Use Node.js ${{ env.NODE_VERSION }}
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
-                  cache: 'pnpm'
-                  cache-dependency-path: '**/pnpn-lock.yaml'
-
     run-linters:
         name: Run Linters
-        needs: [pnpm]
         runs-on: ubuntu-latest
 
         steps:
@@ -55,8 +34,6 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ env.NODE_VERSION }}
-                  cache: 'pnpm'
-                  cache-dependency-path: '**/pnpm-lock.yaml'
 
             - name: Make dummy env for types
               run: |
