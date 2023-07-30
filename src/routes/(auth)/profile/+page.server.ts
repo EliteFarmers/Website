@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { IsIGNOrUUID } from '$params/id';
-import { GetUsersGuilds, LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
+import { GetPublicGuilds, GetUsersGuilds, LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
@@ -20,14 +20,12 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 			.then((guilds) => guilds.data ?? undefined)
 			.catch(() => undefined)) ?? ([] as components['schemas']['UserGuildDto'][]);
 
-	console.log(
-		'guilds',
-		guilds.filter((guild) => guild.hasBot)
-	);
+	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
 
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot),
 		guilds: guilds.filter((guild) => !guild.hasBot),
+		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
 		mcAccount: account ?? null,
 	};

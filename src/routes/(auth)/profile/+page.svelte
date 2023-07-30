@@ -108,14 +108,14 @@
 		{/if}
 	</div>
 	<section class="flex flex-col lg:w-[70%]">
-		<h1 class="text-2xl mb-4">Events</h1>
-		{#if true}
-			<p>You're not a part of any currently running events!</p>
+		<h1 class="text-2xl mb-4">Servers With Leaderboards</h1>
+		{#if data.publicGuilds.length === 0}
+			<p>You're not a member of any public guilds!</p>
 		{/if}
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			<!-- {#each data.events as event (event.id)}
-				<Event {event} />
-			{/each} -->
+			{#each data.publicGuilds as guild (guild.id)}
+				<Guild {guild} link={true} />
+			{/each}
 		</div>
 
 		<h1 class="text-2xl mb-4">Manage Servers</h1>

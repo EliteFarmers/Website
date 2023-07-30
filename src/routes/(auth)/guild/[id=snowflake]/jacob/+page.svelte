@@ -73,7 +73,7 @@
 
 	<section class="flex flex-col gap-8 w-full justify-center items-center">
 		<div
-			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16 bg-gray-200 dark:bg-zinc-800 rounded-md"
+			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-gray-100 dark:bg-zinc-800 rounded-md"
 		>
 			<h2 class="text-3xl p-4">Manage Shared Settings</h2>
 			<Accordion flush={true} class="mx-4" multiple={true}>

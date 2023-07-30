@@ -7,7 +7,7 @@
 	let loading = false;
 </script>
 
-<div class="flex flex-col p-4 rounded-md bg-gray-300 dark:bg-zinc-700">
+<div class="flex flex-col p-4 rounded-md bg-gray-200 dark:bg-zinc-700">
 	<div class="flex flex-row justify-between items-center gap-2">
 		<div class="flex flex-row items-center gap-4">
 			<img class="pixel w-12" src="https://mc-heads.net/head/{mc.id}" alt="{mc.name} player skull" />
