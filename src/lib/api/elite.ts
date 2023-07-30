@@ -308,6 +308,8 @@ export const GetPublicGuild = async (guildId: string) =>
 		},
 	});
 
+export const GetPublicGuilds = async () => await GET('/Guilds', {});
+
 export const GetProfilesWeights = async (playerUuid: string) =>
 	await GET('/Weight/{playerUuid}', {
 		params: {

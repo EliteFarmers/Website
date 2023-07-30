@@ -423,6 +423,20 @@ export interface paths {
       };
     };
   };
+  "/Guilds": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildDetailsDto"][];
+            "application/json": components["schemas"]["GuildDetailsDto"][];
+            "text/json": components["schemas"]["GuildDetailsDto"][];
+          };
+        };
+      };
+    };
+  };
   "/Guild/{guildId}": {
     get: {
       parameters: {
@@ -1083,6 +1097,17 @@ export interface components {
       /** Format: int32 */
       premium_subscription_count?: number;
       preferred_locale?: string | null;
+      /** Format: int32 */
+      approximate_member_count?: number;
+    };
+    GuildDetailsDto: {
+      id?: string;
+      name?: string;
+      icon?: string | null;
+      banner?: string | null;
+      inviteCode?: string | null;
+      /** Format: int32 */
+      memberCount?: number;
     };
     GuildDto: {
       id?: string;
@@ -1096,6 +1121,8 @@ export interface components {
       botPermissions?: string | null;
       botPermissionsNew?: string;
       discordFeatures?: string[];
+      /** Format: int32 */
+      memberCount?: number;
     };
     GuildFeatures: {
       jacobLeaderboardEnabled?: boolean;
@@ -1332,6 +1359,8 @@ export interface components {
       banner?: string | null;
       inviteCode?: string | null;
       description?: string | null;
+      /** Format: int32 */
+      memberCount?: number;
       features?: components["schemas"]["PublicGuildFeaturesDto"];
     };
     PublicGuildFeaturesDto: {

@@ -1003,6 +1003,44 @@
         }
       }
     },
+    "/Guilds": {
+      "get": {
+        "tags": [
+          "Guild"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuildDetailsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuildDetailsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GuildDetailsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Guild/{guildId}": {
       "get": {
         "tags": [
@@ -2686,6 +2724,38 @@
           "preferred_locale": {
             "type": "string",
             "nullable": true
+          },
+          "approximate_member_count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "inviteCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2734,6 +2804,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -3455,6 +3529,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
           },
           "features": {
             "$ref": "#/components/schemas/PublicGuildFeaturesDto"
