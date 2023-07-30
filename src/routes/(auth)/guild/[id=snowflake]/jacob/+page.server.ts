@@ -1,7 +1,14 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
-import { AddGuildJacobLeadeboard, DeleteGuildJacobLeadeboard, GetGuild, PatchGuildJacob, SendGuildJacobLeadeboard, UpdateGuildJacobLeadeboard } from '$lib/api/elite';
+import {
+	AddGuildJacobLeadeboard,
+	DeleteGuildJacobLeadeboard,
+	GetGuild,
+	PatchGuildJacob,
+	SendGuildJacobLeadeboard,
+	UpdateGuildJacobLeadeboard,
+} from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent }) => {
@@ -134,7 +141,7 @@ export const actions: Actions = {
 			success: true,
 		};
 	},
-	clear : async ({ locals, params, request }) => {
+	clear: async ({ locals, params, request }) => {
 		const guildId = params.id;
 		const { discord_access_token: token } = locals;
 
@@ -163,7 +170,7 @@ export const actions: Actions = {
 		const { response } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
-		})
+		});
 
 		if (response.status !== 200) {
 			const msg = await response.text();
@@ -207,7 +214,7 @@ export const actions: Actions = {
 		feature.excludedParticipations ??= [];
 
 		feature.excludedParticipations.push(key);
-		
+
 		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
@@ -218,11 +225,12 @@ export const actions: Actions = {
 			throw error(response.status, msg);
 		}
 
-
 		lb.crops ??= {};
 		lb.crops[crop as keyof components['schemas']['CropRecords']] ??= [];
-		lb.crops[crop as keyof components['schemas']['CropRecords']] = lb.crops[crop as keyof components['schemas']['CropRecords']]
-			?.filter((p) => !(p.uuid === uuid && p.record?.crop === crop && p.record.timestamp === +timestamp)) ?? [];
+		lb.crops[crop as keyof components['schemas']['CropRecords']] =
+			lb.crops[crop as keyof components['schemas']['CropRecords']]?.filter(
+				(p) => !(p.uuid === uuid && p.record?.crop === crop && p.record.timestamp === +timestamp)
+			) ?? [];
 
 		const { response: response2 } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
 			console.log(e);
@@ -257,9 +265,9 @@ export const actions: Actions = {
 
 		feature.excludedParticipations ??= [];
 		if (!feature.excludedParticipations.includes(pId)) {
-			return fail(404, { error: 'This banned participation wasn\'t found!' });
+			return fail(404, { error: "This banned participation wasn't found!" });
 		}
-		
+
 		feature.excludedParticipations = feature.excludedParticipations.filter((p) => p !== pId);
 
 		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
@@ -311,12 +319,11 @@ export const actions: Actions = {
 			reason,
 		};
 
-		if (feature.excludedTimespans.some(t =>
-			t.start === span.start && t.end === span.end
-		)) return fail(409, { error: 'Timespan already excluded' });
+		if (feature.excludedTimespans.some((t) => t.start === span.start && t.end === span.end))
+			return fail(409, { error: 'Timespan already excluded' });
 
 		feature.excludedTimespans.push(span);
-		
+
 		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
@@ -342,8 +349,8 @@ export const actions: Actions = {
 		const guild = await getGuild(guildId, token);
 		const data = await request.formData();
 
-		const startTime = +(data.get('startTime') as string | undefined ?? 0);
-		const endTime = +(data.get('endTime') as string | undefined ?? 0);
+		const startTime = +((data.get('startTime') as string | undefined) ?? 0);
+		const endTime = +((data.get('endTime') as string | undefined) ?? 0);
 
 		if (!startTime) return fail(400, { error: 'Missing required field: startTime' });
 		if (!endTime) return fail(400, { error: 'Missing required field: endTime' });
@@ -353,14 +360,11 @@ export const actions: Actions = {
 
 		feature.excludedTimespans ??= [];
 
-		if (!feature.excludedTimespans.some(t =>
-			t.start === startTime && t.end === endTime
-		)) return fail(409, { error: 'Timespan already excluded' });
+		if (!feature.excludedTimespans.some((t) => t.start === startTime && t.end === endTime))
+			return fail(409, { error: 'Timespan already excluded' });
 
-		feature.excludedTimespans = feature.excludedTimespans.filter(t =>
-			t.start !== startTime || t.end !== endTime
-		);
-		
+		feature.excludedTimespans = feature.excludedTimespans.filter((t) => t.start !== startTime || t.end !== endTime);
+
 		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
@@ -374,9 +378,8 @@ export const actions: Actions = {
 		return {
 			success: true,
 		};
-	}
+	},
 };
-
 
 async function getGuild(guildId: string, token: string) {
 	const guild = await GetGuild(guildId, token)

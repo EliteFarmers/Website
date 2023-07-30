@@ -35,15 +35,12 @@
 		.filter((r) => r.value && r.name !== '@everyone');
 
 	$: excluded = (data.excludedParticipations ?? []).map((p) => {
-			const [ timestamp, crop, uuid ] = p.split('-');
-			return { timestamp, crop, uuid };
-		});
+		const [timestamp, crop, uuid] = p.split('-');
+		return { timestamp, crop, uuid };
+	});
 </script>
 
-<Head
-	title="Jacob Leaderboards"
-	description="Manage Jacob Leaderboards for your guild"	
-/>
+<Head title="Jacob Leaderboards" description="Manage Jacob Leaderboards for your guild" />
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
@@ -68,7 +65,6 @@
 		{/if}
 	</section>
 
-	
 	{#if form?.error}
 		<h5 class="text-xl font-semibold text-red-700">
 			<p>{form?.error}</p>
@@ -76,7 +72,9 @@
 	{/if}
 
 	<section class="flex flex-col gap-8 w-full justify-center items-center">
-		<div class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16 bg-gray-200 dark:bg-zinc-800 rounded-md">
+		<div
+			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16 bg-gray-200 dark:bg-zinc-800 rounded-md"
+		>
 			<h2 class="text-3xl p-4">Manage Shared Settings</h2>
 			<Accordion flush={true} class="mx-4" multiple={true}>
 				<AccordionItem>
@@ -88,7 +86,12 @@
 							{#each excluded as p (p)}
 								<div class="flex flex-row items-center gap-4">
 									<form method="post" action="?/unbanparticipation">
-										<input type="text" value="{p.timestamp}-{p.crop}-{p.uuid}" name="participationId" hidden>
+										<input
+											type="text"
+											value="{p.timestamp}-{p.crop}-{p.uuid}"
+											name="participationId"
+											hidden
+										/>
 										<Button type="submit" size="sm">
 											<TrashBinOutline size="sm" />
 										</Button>
@@ -114,11 +117,11 @@
 					</div>
 					{#if (data.excludedTimespans ?? []).length > 0}
 						<div class="flex flex-col gap-4">
-							{#each (data.excludedTimespans ?? []) as t (t)}
+							{#each data.excludedTimespans ?? [] as t (t)}
 								<div class="flex flex-row items-center gap-4">
 									<form method="post" action="?/unbantimespan">
-										<input type="text" value="{t.start}" name="startTime" hidden>
-										<input type="text" value="{t.end}" name="endTime" hidden>
+										<input type="text" value={t.start} name="startTime" hidden />
+										<input type="text" value={t.end} name="endTime" hidden />
 										<Button type="submit" size="sm">
 											<TrashBinOutline size="sm" />
 										</Button>

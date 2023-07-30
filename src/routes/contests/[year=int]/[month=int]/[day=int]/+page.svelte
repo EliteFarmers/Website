@@ -58,6 +58,10 @@
 
 	<div class="max-w-xl mb-8 text-center text-sm flex flex-col gap-4">
 		<p><strong>???</strong> - The player hasn't claimed this contest yet, their true position is unknown.</p>
-		<p><strong>Disclaimer:</strong> These contest participations are collected when a players profile is loaded on the website, they aren't automatically scraped. Crops may be missing if no one known to the website has participated in the contest, or their profile hasn't been loaded since.</p>
+		<p>
+			<strong>Disclaimer:</strong> These contest participations are collected when a players profile is loaded on the
+			website, they aren't automatically scraped. Crops may be missing if no one known to the website has participated
+			in the contest, or their profile hasn't been loaded since.
+		</p>
 	</div>
 </div>

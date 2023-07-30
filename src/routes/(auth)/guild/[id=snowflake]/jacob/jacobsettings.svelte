@@ -13,9 +13,7 @@
 	let confirmModal = false;
 </script>
 
-<div
-	class="flex flex-col justify-between gap-4 p-4 rounded-md bg-gray-100 dark:bg-zinc-800 w-full rounded-lgs"
->
+<div class="flex flex-col justify-between gap-4 p-4 rounded-md bg-gray-100 dark:bg-zinc-800 w-full rounded-lgs">
 	<div class="flex flex-row justify-between gap-4 w-full">
 		<div class="flex flex-col gap-2">
 			<h3 class="text-2xl">{lb.title}</h3>
