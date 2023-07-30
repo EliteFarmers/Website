@@ -11,39 +11,50 @@ on:
             - main
 
 env:
-    NODE_VERSION: '20'
-    CONTAINER_REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}
+  # Set below
+  STORE_PATH: ''
 
 jobs:
-    run-linters:
-        name: Run Linters
-        runs-on: ubuntu-latest
+  cache-and-install:
+    name: Run Linters
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Git checkout
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Use Node.js ${{ env.NODE_VERSION }}
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-                  run_install: true
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
 
-            - name: Make dummy env for types
-              run: |
-                  echo "ls -a ."
-                  ls -a .
-                  mv .env.example .env
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-            # ESLint and Prettier must be in `package.json`
-            - name: Install Node.js dependencies
-              run: pnpm i
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
-            - name: Run Linters
-              run: pnpm run lint
+      - name: Make dummy env for types
+        run: |
+            echo "ls -a ."
+            ls -a .
+            mv .env.example .env
+            
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Linters
+        run: pnpm run lint
