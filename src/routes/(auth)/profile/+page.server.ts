@@ -3,6 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { IsIGNOrUUID } from '$params/id';
 import { GetPublicGuilds, GetUsersGuilds, LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
+import { CanEditGuild, type Guild } from '$lib/discord';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
 	const { user } = await parent();
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot),
-		guilds: guilds.filter((guild) => !guild.hasBot),
+		guilds: guilds.filter((guild) => !guild.hasBot || !CanEditGuild(guild as Guild)),
 		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
 		mcAccount: account ?? null,
