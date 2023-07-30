@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
-	import { Accordion, AccordionItem, Button, Card, Modal, Popover } from 'flowbite-svelte';
+	import { Accordion, AccordionItem, Button, Modal, Popover } from 'flowbite-svelte';
 	import { GearSolid, MailBoxSolid, RotateOutline, TrashBinSolid } from 'flowbite-svelte-icons';
 
 	export let lb: components['schemas']['GuildJacobLeaderboard'];

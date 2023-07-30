@@ -5,14 +5,12 @@
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
-	import { CanManageGuild } from '$lib/utils';
 
 	export let data: PageData;
 	export let form: ActionData;
 	let loading = false;
 
 	$: user = data.user || undefined;
-	$: mc = data.mcAccount;
 
 	$: discordUsername =
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
@@ -33,7 +31,7 @@
 					<h2 class="text-lg text-yellow-500 font-semibold">Gold</h2>
 				{:else if data.premium === 'silver'}
 					<h2 class="text-lg text-zinc-400 font-semibold">Silver</h2>
-				{:else if data.premium === 'gold'}
+				{:else if data.premium === 'bronze'}
 					<h2 class="text-lg text-orange-700 font-semibold">Bronze</h2>
 				{:else}
 					<h2 class="text-lg text-gray-500 font-semibold">None!</h2>

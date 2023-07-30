@@ -2,7 +2,6 @@
 	import CropTable from './croptable.svelte';
 	import BonusTable from './bonustable.svelte';
 	import Head from '$comp/head.svelte';
-	import { PUBLIC_COMMUNITY_INVITE } from '$env/static/public';
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />

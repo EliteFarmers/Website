@@ -2,7 +2,6 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
-	import { onMount } from 'svelte';
 
 	export let name: string;
 	export let progress: {

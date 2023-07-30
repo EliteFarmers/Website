@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { UserGroupSolid } from 'flowbite-svelte-icons';
 	import type { PageData } from './$types';
 	import Serverbar from '$comp/stats/discord/serverbar.svelte';
 

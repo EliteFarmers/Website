@@ -9,11 +9,12 @@
 		classic: '',
 	};
 
+	let classes = '';
 	export { classes as class };
 	export let gameMode: ProfileGameMode = 'classic';
 </script>
 
-<span class={`${$$props.class}`}>{icons[gameMode ?? 'classic']}</span>
+<span class={`${$$props.class ?? classes}`}>{icons[gameMode ?? 'classic']}</span>
 <Popover>
 	<h5 slot="title">Profile Game Mode</h5>
 

@@ -3,7 +3,7 @@
 	import { Button } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import Leaderboard from './leaderboard.svelte';
-	import { ArrowUpRightFromSquareOutline, LinkSolid } from 'flowbite-svelte-icons';
+	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	export let data: PageData;
 

@@ -3,7 +3,6 @@
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { Accordion, AccordionItem, Button } from 'flowbite-svelte';
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
-	import Jacobentry from './jacobentry.svelte';
 
 	export let record: components['schemas']['GuildJacobLeaderboardEntry'];
 

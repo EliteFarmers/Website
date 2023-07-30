@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { Button, Popover } from 'flowbite-svelte';
+	import { Popover } from 'flowbite-svelte';
 	import { slide } from 'svelte/transition';
 
 	export let ign: string | null | undefined;

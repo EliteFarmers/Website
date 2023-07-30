@@ -72,7 +72,7 @@
 				</h1>
 			</div>
 			<div class="hidden md:flex flex-row gap-[0.15rem] md:gap-1 segments h-6">
-				{#each Array.from({ length: maxTier }) as _, i}
+				{#each Array.from(Array(maxTier), (_, i) => i) as i}
 					<div class="w-1/6 h-[100%] {i < tier ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}" />
 				{/each}
 			</div>
