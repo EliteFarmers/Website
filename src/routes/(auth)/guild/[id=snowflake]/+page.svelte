@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Button, Card } from 'flowbite-svelte';
+	import { Button, Card, Input } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
+	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	export let data: PageData;
 	$: features = data.guild?.features;
 </script>
 
-<Head
-	title="Server Settings"
-	description="Manage server settings for your guild!"	
-/>
+<Head title="Server Settings" description="Manage server settings for your guild!" />
 
-<main class="flex flex-col items-center">
+<main class="flex flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">
 		<img
 			class="w-16 h-16"
@@ -25,8 +23,43 @@
 		</h1>
 	</div>
 
-	<div class="flex flex-col md:flex-row gap-8">
-		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800 flex flex-col gap-4">
+	<div class="flex flex-row gap-4 items-middle">
+		<h2 class="text-lg">View Public Page</h2>
+		<Button size="sm" href="/server/{data.guildId}" color="blue">
+			<ArrowUpRightFromSquareOutline size="sm" />
+		</Button>
+	</div>
+
+	<section class="flex flex-col md:flex-row gap-8">
+		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800">
+			<form
+				method="POST"
+				action="?/setInvite"
+				class="flex flex-col gap-4 w-full justify-center items-center"
+				use:enhance
+			>
+				<h2 class="text-2xl">Server Invite</h2>
+				{#if data.guild?.inviteCode}
+					<div class="flex flex-row gap-2 items-center">
+						<p>Current: <strong>{data.guild.inviteCode}</strong></p>
+						<Button size="xs" href="https://discord.gg/{data.guild.inviteCode}" color="blue">
+							<ArrowUpRightFromSquareOutline size="xs" />
+						</Button>
+					</div>
+				{:else}
+					<p class="text-red-500">No invite set! This is required for your public page.</p>
+				{/if}
+				<p>Set the invite code for your server!</p>
+				<div class="flex flex-row gap-4">
+					<Input let:props name="invite" placeholder="Invite Code">
+						<input {...props} maxlength="16" required />
+					</Input>
+
+					<Button type="submit">Set</Button>
+				</div>
+			</form>
+		</Card>
+		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800 flex flex-col gap-4 justify-between">
 			<h2 class="text-2xl">Server Jacob Leaderboards</h2>
 			{#if !features?.jacobLeaderboardEnabled}
 				<p>
@@ -38,118 +71,5 @@
 				<Button href="/guild/{data.guildId}/jacob">Manage</Button>
 			{/if}
 		</Card>
-	</div>
+	</section>
 </main>
-
-<form method="POST" action="?/create" class="flex w-full mb-16 justify-center items-center" use:enhance>
-	<div class="flex flex-col gap-4 items-center justify-center">
-		<div class="grid col-span-1 relative w-full gap-1">
-			<label for="name" class="required">Event Name</label>
-			<input
-				id="name"
-				type="text"
-				name="event_name"
-				class="w-full px-4 py-2 border-2 rounded text-black"
-				placeholder="Event Name"
-				required={true}
-			/>
-			<label for="description" class="required">Event Description</label>
-			<textarea
-				id="description"
-				name="event_description"
-				class="w-full px-4 py-2 border-2 rounded text-black"
-				placeholder="Event Description"
-				required={true}
-			/>
-			<label for="type">Event Type</label>
-			<select id="type" name="event_type" class="w-full px-4 py-2 border-2 rounded text-black">
-				<option value="jacob" selected>Jacob Leaderboard</option>
-				<option value="weightgain">Weight Gain</option>
-				<option value="collectiongain">Collection Gain</option>
-				<option value="weight">Weight Leaderboard</option>
-				<option value="collection">Collection Leaderboard</option>
-			</select>
-			<div class="flex flex-row gap-2 items-center justify-center">
-				<div>
-					<label for="start">Start Date/Time</label>
-					<input
-						id="start"
-						type="datetime-local"
-						name="start_date"
-						class="w-full px-4 py-2 border-2 rounded text-black"
-						placeholder=""
-					/>
-				</div>
-
-				<div class="flex flex-row gap-2">
-					<div>
-						<label for="year">Skyblock Year</label>
-						<input
-							id="year"
-							type="number"
-							min="1"
-							max="999"
-							name="start_sb_year"
-							class="w-full px-4 py-2 border-2 rounded text-black"
-							placeholder=""
-						/>
-					</div>
-					<div>
-						<label for="month">Skyblock Month</label>
-						<select id="month" name="start_sb_month" class="w-full px-4 py-2 border-2 rounded text-black">
-							<option value="1" selected>Early Spring</option>
-							<option value="2">Spring</option>
-							<option value="3">Late Spring</option>
-							<option value="4">Early Summer</option>
-							<option value="5">Summer</option>
-							<option value="6">Late Summer</option>
-							<option value="7">Early Autumn</option>
-							<option value="8">Autumn</option>
-							<option value="9">Late Autumn</option>
-							<option value="10">Early Winter</option>
-							<option value="11">Winter</option>
-							<option value="12">Late Winter</option>
-						</select>
-					</div>
-					<div>
-						<label for="day">Skyblock Day</label>
-						<input
-							id="day"
-							type="number"
-							min="1"
-							max="31"
-							name="start_sb_day"
-							class="w-full px-4 py-2 border-2 rounded text-black"
-							placeholder=""
-						/>
-					</div>
-				</div>
-			</div>
-
-			<label for="end">End Date/Time</label>
-			<input
-				id="end"
-				type="datetime-local"
-				name="end_date"
-				class="w-full px-4 py-2 border-2 rounded text-black"
-				placeholder="Event Reward"
-			/>
-
-			<!--<span class="text-red-600 text-sm absolute bottom-0 select-none">{form?.error ?? ''}</span>-->
-		</div>
-		<button
-			type="submit"
-			class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-		>
-			Link Account
-		</button>
-	</div>
-</form>
-
-<style lang="postcss">
-	/* Add asterick to label with a required field sibling */
-	label.required:after {
-		content: ' *';
-		color: red;
-	}
-</style>
