@@ -24,8 +24,8 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
 
 	return {
-		guildsWithBot: guilds.filter((guild) => guild.hasBot),
-		guilds: guilds.filter((guild) => !guild.hasBot || !CanEditGuild(guild as Guild)),
+		guildsWithBot: guilds.filter((guild) => guild.hasBot && CanEditGuild(guild as Guild)),
+		guilds: guilds.filter((guild) => !guild.hasBot),
 		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
 		mcAccount: account ?? null,
