@@ -85,7 +85,7 @@
 						<div class="flex flex-col gap-4">
 							{#each excluded as p (p)}
 								<div class="flex flex-row items-center gap-4">
-									<form method="post" action="?/unbanparticipation">
+									<form method="post" action="?/unbanparticipation" use:enhance>
 										<input
 											type="text"
 											value="{p.timestamp}-{p.crop}-{p.uuid}"
@@ -119,7 +119,7 @@
 						<div class="flex flex-col gap-4">
 							{#each data.excludedTimespans ?? [] as t (t)}
 								<div class="flex flex-row items-center gap-4">
-									<form method="post" action="?/unbantimespan">
+									<form method="post" action="?/unbantimespan" use:enhance>
 										<input type="text" value={t.start} name="startTime" hidden />
 										<input type="text" value={t.end} name="endTime" hidden />
 										<Button type="submit" size="sm">
@@ -144,7 +144,7 @@
 						<p class="p-4">No time spans are excluded from being on Jacob Leaderboards</p>
 					{/if}
 
-					<form method="post" action="?/bantimespan">
+					<form method="post" action="?/bantimespan" use:enhance>
 						<div class="flex flex-col md:flex-row gap-4 items-center mt-4">
 							<Label class="">
 								<span>Start Time</span>
