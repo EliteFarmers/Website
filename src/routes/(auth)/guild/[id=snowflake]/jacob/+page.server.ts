@@ -227,8 +227,16 @@ export const actions: Actions = {
 
 		lb.crops ??= {};
 
-		const cropKey = crop as keyof components['schemas']['CropRecords'];
-		lb.crops[cropKey] ??= [];
+		const keys = {
+			'Sugar Cane': 'sugarCane',
+			'Cocoa Beans': 'cocoaBeans',
+			'Nether Wart': 'netherWart',
+		};
+
+		const cropKey = (
+			crop in keys ? keys[crop as keyof typeof keys] : crop.toLowerCase()
+		) as keyof components['schemas']['CropRecords'];
+
 		lb.crops[cropKey] =
 			lb.crops[cropKey]?.filter((p) => p.uuid !== uuid && p.record?.timestamp !== +timestamp) ?? [];
 
