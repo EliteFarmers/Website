@@ -226,11 +226,11 @@ export const actions: Actions = {
 		}
 
 		lb.crops ??= {};
-		lb.crops[crop as keyof components['schemas']['CropRecords']] ??= [];
-		lb.crops[crop as keyof components['schemas']['CropRecords']] =
-			lb.crops[crop as keyof components['schemas']['CropRecords']]?.filter(
-				(p) => !(p.uuid === uuid && p.record?.crop === crop && p.record.timestamp === +timestamp)
-			) ?? [];
+
+		const cropKey = crop as keyof components['schemas']['CropRecords'];
+		lb.crops[cropKey] ??= [];
+		lb.crops[cropKey] =
+			lb.crops[cropKey]?.filter((p) => p.uuid !== uuid && p.record?.timestamp !== +timestamp) ?? [];
 
 		const { response: response2 } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
 			console.log(e);
