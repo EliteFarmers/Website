@@ -74,15 +74,7 @@
 		skyblockRank={data.ranks?.misc?.skyblockxp ?? -1}
 	/>
 
-	<!-- API settings not in API yet, will be soon:tm: -->
-	<APIstatus
-		api={{
-			skills: { enabled: (member.skills?.combat ?? 0) > 0 },
-			collections: { enabled: Object.keys(member.collections ?? {}).length > 0 },
-			vault: { enabled: true },
-			inventory: { enabled: true },
-		}}
-	/>
+	<APIstatus api={member.api} />
 
 	<section class="flex items-center justify-center w-full py-4">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">

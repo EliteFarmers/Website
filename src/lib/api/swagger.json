@@ -1352,6 +1352,16 @@
               "type": "boolean",
               "default": false
             }
+          },
+          {
+            "name": "atRank",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": -1
+            }
           }
         ],
         "responses": {
@@ -2228,6 +2238,24 @@
   },
   "components": {
     "schemas": {
+      "ApiAccessDto": {
+        "type": "object",
+        "properties": {
+          "inventories": {
+            "type": "boolean"
+          },
+          "collections": {
+            "type": "boolean"
+          },
+          "skills": {
+            "type": "boolean"
+          },
+          "vault": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "AuthorizedAccountDto": {
         "required": [
           "DisplayName",
@@ -2575,6 +2603,30 @@
         },
         "additionalProperties": false
       },
+      "FarmingInventoryDto": {
+        "type": "object",
+        "properties": {
+          "armor": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemDto"
+            }
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemDto"
+            }
+          },
+          "equipment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "FarmingWeightAllProfilesDto": {
         "type": "object",
         "properties": {
@@ -2611,6 +2663,9 @@
               "type": "number",
               "format": "double"
             }
+          },
+          "inventory": {
+            "$ref": "#/components/schemas/FarmingInventoryDto"
           }
         },
         "additionalProperties": false
@@ -2975,6 +3030,55 @@
         },
         "additionalProperties": false
       },
+      "ItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "skyblockId": {
+            "type": "string",
+            "nullable": true
+          },
+          "uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "lore": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "enchantments": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JacobContestDto": {
         "type": "object",
         "properties": {
@@ -3106,6 +3210,10 @@
         "type": "object",
         "properties": {
           "rank": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upcomingRank": {
             "type": "integer",
             "format": "int32"
           },
@@ -3444,6 +3552,9 @@
           "playerUuid": {
             "type": "string"
           },
+          "api": {
+            "$ref": "#/components/schemas/ApiAccessDto"
+          },
           "skyblockXp": {
             "type": "integer",
             "format": "int32"
@@ -3482,6 +3593,9 @@
             "items": {
               "$ref": "#/components/schemas/PetDto"
             }
+          },
+          "unparsed": {
+            "$ref": "#/components/schemas/UnparsedApiDataDto"
           },
           "jacob": {
             "$ref": "#/components/schemas/JacobDataDto"
@@ -3740,6 +3854,53 @@
           },
           "playerName": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TempStatBuff": {
+        "type": "object",
+        "properties": {
+          "stat": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expire_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnparsedApiDataDto": {
+        "type": "object",
+        "properties": {
+          "perks": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "tempStatBuffs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TempStatBuff"
+            },
+            "nullable": true
+          },
+          "accessoryBagSettings": {
+            "nullable": true
           }
         },
         "additionalProperties": false
