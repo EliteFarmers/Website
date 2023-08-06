@@ -550,6 +550,7 @@ export interface paths {
       parameters: {
         query?: {
           includeUpcoming?: boolean;
+          atRank?: number;
         };
         path: {
           leaderboardId: string;
@@ -946,6 +947,12 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    ApiAccessDto: {
+      inventories?: boolean;
+      collections?: boolean;
+      skills?: boolean;
+      vault?: boolean;
+    };
     AuthorizedAccountDto: {
       id?: string;
       displayName?: string;
@@ -1048,6 +1055,11 @@ export interface components {
       end?: number;
       reason?: string | null;
     };
+    FarmingInventoryDto: {
+      armor?: components["schemas"]["ItemDto"][];
+      tools?: components["schemas"]["ItemDto"][];
+      equipment?: components["schemas"]["ItemDto"][];
+    };
     FarmingWeightAllProfilesDto: {
       selectedProfileId?: string | null;
       profiles?: components["schemas"]["FarmingWeightWithProfileDto"][];
@@ -1061,6 +1073,7 @@ export interface components {
       bonusWeight?: {
         [key: string]: number | undefined;
       };
+      inventory?: components["schemas"]["FarmingInventoryDto"];
     };
     FarmingWeightWithProfileDto: {
       profileId?: string;
@@ -1171,6 +1184,22 @@ export interface components {
       avatar?: string | null;
       locale?: string | null;
     };
+    ItemDto: {
+      /** Format: int32 */
+      id?: number;
+      /** Format: int32 */
+      count?: number;
+      skyblockId?: string | null;
+      uuid?: string | null;
+      name?: string | null;
+      lore?: string[] | null;
+      enchantments?: ({
+        [key: string]: (number | null) | undefined;
+      }) | null;
+      attributes?: ({
+        [key: string]: string | undefined;
+      }) | null;
+    };
     JacobContestDto: {
       crop?: string;
       /** Format: int64 */
@@ -1220,6 +1249,8 @@ export interface components {
     LeaderboardPositionDto: {
       /** Format: int32 */
       rank?: number;
+      /** Format: int32 */
+      upcomingRank?: number;
       upcomingPlayers?: components["schemas"]["LeaderboardEntryDto"][] | null;
     };
     LeaderboardPositionsDto: {
@@ -1328,6 +1359,7 @@ export interface components {
     ProfileMemberDto: {
       profileId?: string;
       playerUuid?: string;
+      api?: components["schemas"]["ApiAccessDto"];
       /** Format: int32 */
       skyblockXp?: number;
       /** Format: double */
@@ -1344,6 +1376,7 @@ export interface components {
         [key: string]: number | undefined;
       };
       pets?: components["schemas"]["PetDto"][];
+      unparsed?: components["schemas"]["UnparsedApiDataDto"];
       jacob?: components["schemas"]["JacobDataDto"];
       farmingWeight?: components["schemas"]["FarmingWeightDto"];
       skills?: components["schemas"]["SkillsDto"];
@@ -1434,6 +1467,22 @@ export interface components {
       medal?: string | null;
       playerUuid?: string;
       playerName?: string;
+    };
+    TempStatBuff: {
+      /** Format: int32 */
+      stat?: number;
+      key?: string | null;
+      /** Format: int32 */
+      amount?: number;
+      /** Format: int64 */
+      expire_at?: number;
+    };
+    UnparsedApiDataDto: {
+      perks?: ({
+        [key: string]: (number | null) | undefined;
+      }) | null;
+      tempStatBuffs?: components["schemas"]["TempStatBuff"][] | null;
+      accessoryBagSettings?: Record<string, unknown> | null;
     };
     UserGuildDto: {
       id?: string;
