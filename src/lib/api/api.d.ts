@@ -267,7 +267,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/bans/{playerUuid}": {
-    get: {
+    post: {
       parameters: {
         path: {
           eventId: number;
@@ -789,6 +789,41 @@ export interface paths {
       };
     };
   };
+  "/Event/{eventId}/leave": {
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
   "/Graph/{playerUuid}/crops": {
     get: {
       parameters: {
@@ -857,6 +892,57 @@ export interface paths {
             "text/plain": components["schemas"]["PublicGuildDto"];
             "application/json": components["schemas"]["PublicGuildDto"];
             "text/json": components["schemas"]["PublicGuildDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Guild/{guildId}/Events": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"][];
+            "application/json": components["schemas"]["EventDetailsDto"][];
+            "text/json": components["schemas"]["EventDetailsDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1536,7 +1622,7 @@ export interface components {
      * Format: int32
      * @enum {integer}
      */
-    EventMemberStatus: 0 | 1 | 2;
+    EventMemberStatus: 0 | 1 | 2 | 3;
     ExcludedTimespan: {
       /** Format: int64 */
       start?: number;
