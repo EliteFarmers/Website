@@ -1,32 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Accordion, AccordionItem, Button, Checkbox, Input, Label, Modal, Select } from 'flowbite-svelte';
+	import { Accordion, AccordionItem, Button, Checkbox, Input, Label, Modal, Popover, Select } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import { ChannelType } from '$lib/utils';
 	import Head from '$comp/head.svelte';
+	import { ArrowUpRightFromSquareOutline, GearSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 
 	export let data: PageData;
 	export let form: ActionData;
 
 	let clickOutsideModal = false;
-
-	$: channels = (data.guildData?.channels ?? [])
-		// Only allow text channels
-		.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
-		.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-		.map((c) => ({
-			value: c.id ?? '',
-			name: '#' + (c.name ?? ''),
-		}))
-		.filter((c) => c.value);
-
-	$: roles = (data.guildData?.roles ?? [])
-		.sort((a, b) => (b.position ?? 0) - (a.position ?? 0))
-		.map((r) => ({
-			value: r.id ?? '',
-			name: r.name ?? '',
-		}))
-		.filter((r) => r.value && r.name !== '@everyone');
 
 	// Filter out events made more than a month ago
 	$: recentEvents = data.createdEvents?.filter((e) => new Date(e.createdAt ?? 0).getTime() > Date.now() - 2592000000) ?? [];
@@ -63,24 +46,85 @@
 		</h5>
 	{/if}
 
-	<section class="flex flex-col gap-8 w-full justify-center items-center">
-		<div
-			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-gray-100 dark:bg-zinc-800 rounded-md"
-		>
-			<h2 class="text-3xl p-4">Manage Shared Settings</h2>
-		</div>
-	</section>
+	<section class="flex flex-col gap-8 justify-center items-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16">
+		{#each data.events ?? [] as { event, members, bans } (event.id)}
+			<div
+				class="flex p-4 flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-gray-100 dark:bg-zinc-800 rounded-md"
+			>
+				<div class="flex flex-row justify-between">
+					<div>
+						<h2 class="text-3xl p-4">{event.name}</h2>
 
-	<section class="flex flex-col gap-8 justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16">
-		{#each data.events ?? [] as event (event.id)}
-			<p>{event.name}</p>	
-		<!-- <Jacobsettings {lb} {channels} {roles} /> -->
+						<p class="text-lg p-4">{event.description}</p>
+						<p class="text-lg p-4">{event.rules}</p>
+						<p class="text-lg p-4">{event.prizeInfo}</p>
+					</div>
+					<div class="p-4 flex flex-col gap-2">
+						<form method="post" action="?/edit" use:enhance>
+							<input type="hidden" name="id" value={event.id} />
+							<Button class="send" type="submit" color="green">
+								<GearSolid />
+								<Popover triggeredBy=".send" placement="left">
+									<p>Edit Event</p>
+								</Popover>
+							</Button>
+						</form>
+						<Button class="send" href="/event/{event.id}" color="blue">
+							<ArrowUpRightFromSquareOutline />
+							<Popover triggeredBy=".send" placement="left">
+								<p>View Event Page</p>
+							</Popover>
+						</Button>
+					</div>
+				</div>
+				<Accordion flush={true}>
+					<AccordionItem paddingFlush="p-2">
+						<span slot="header" class="text-lg first-letter:capitalize">Event Members</span>
+						{#each members as member (member.playerUuid)}
+							<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
+								<form method="POST" action="?/banmember" use:enhance>
+									<input type="hidden" name="id" value={event.id} />
+									<input type="hidden" name="uuid" value={member.playerUuid} />
+									<Button type="submit" color="red" class="ban" size="sm">
+										<TrashBinSolid size="sm" />
+										<Popover triggeredBy=".ban" placement="left">
+											<p>Ban this user from the event</p>
+										</Popover>
+									</Button>
+								</form>
+								<p class="text-lg">{member.playerName}</p>
+								<p>{member.amountGained}</p>
+							</div>
+						{/each}
+					</AccordionItem>
+					<AccordionItem paddingFlush="p-2">
+						<span slot="header" class="text-lg first-letter:capitalize">Banned Event Members</span>
+						{#each bans as member (member.playerUuid)}
+							<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
+								<form method="POST" action="?/banmember" use:enhance>
+									<input type="hidden" name="id" value={event.id} />
+									<input type="hidden" name="uuid" value={member.playerUuid} />
+									<Button type="submit" color="red" class="ban" size="sm">
+										<TrashBinSolid size="sm" />
+										<Popover triggeredBy=".ban" placement="left">
+											<p>Ban this user from the event</p>
+										</Popover>
+									</Button>
+								</form>
+								<p class="text-lg">{member.playerName}</p>
+								<p>{member.amountGained}</p>
+								<p>{member.notes}</p>
+							</div>
+						{/each}
+					</AccordionItem>
+				</Accordion>
+			</div>
 		{/each}
 	</section>
 </main>
 
 <Modal title="Create New Event" bind:open={clickOutsideModal} autoclose={false}>
-	<p>Events cannot be deleted after being created (right now), be sure you want to do this.</p>
+	<p>Events cannot be deleted after being created (right now), be sure that you want to do this.</p>
 	<form
 		method="post"
 		action="?/create"
@@ -116,14 +160,14 @@
 				<textarea {...props} maxlength="1024" />
 			</Input>
 		</Label>
-		<Label class="space-y-2">
+		<!-- <Label class="space-y-2">
 			<span>Role required to join event</span>
 			<Select items={roles} value="" placeholder="Select a role" name="requiredRoleId" />
 		</Label>
 		<Label class="space-y-2">
 			<span>Role blocked from joining</span>
 			<Select items={roles} value="" placeholder="Select a role" name="blockedRoleId" />
-		</Label>
+		</Label> -->
 		<Label class="space-y-2 mt-4">
 			<span>Event Start Time</span>
 			<Input let:props name="startDate">
