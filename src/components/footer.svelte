@@ -6,7 +6,7 @@
 		</div>
 		<div class="flex flex-col items-center justify-center">
 			<h1>
-				Made by <a class="underline" href="/stats/7da0c47581dc42b4962118f8049147b7">Kaeso</a> |
+				Made by <a class="underline" href="/@7da0c47581dc42b4962118f8049147b7">Kaeso</a> |
 				<a
 					rel="nofollow noreferrer noopener"
 					href="https://github.com/ptlthg/EliteWebsite/"
