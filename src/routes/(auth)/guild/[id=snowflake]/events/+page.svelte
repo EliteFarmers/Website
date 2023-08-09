@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Accordion, AccordionItem, Button, Checkbox, Input, Label, Modal, Popover, Select } from 'flowbite-svelte';
+	import { Accordion, AccordionItem, Button, Input, Label, Modal, Popover } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
-	import { ChannelType } from '$lib/utils';
 	import Head from '$comp/head.svelte';
 	import { ArrowUpRightFromSquareOutline, GearSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 
@@ -10,9 +9,13 @@
 	export let form: ActionData;
 
 	let clickOutsideModal = false;
+	let clickOutsideModalEdit = false;
+
+	let selectedEventId = '';
 
 	// Filter out events made more than a month ago
-	$: recentEvents = data.createdEvents?.filter((e) => new Date(e.createdAt ?? 0).getTime() > Date.now() - 2592000000) ?? [];
+	$: recentEvents =
+		data.createdEvents?.filter((e) => new Date(e.createdAt ?? 0).getTime() > Date.now() - 2592000000) ?? [];
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -46,7 +49,9 @@
 		</h5>
 	{/if}
 
-	<section class="flex flex-col gap-8 justify-center items-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16">
+	<section
+		class="flex flex-col gap-8 justify-center items-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16"
+	>
 		{#each data.events ?? [] as { event, members, bans } (event.id)}
 			<div
 				class="flex p-4 flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-gray-100 dark:bg-zinc-800 rounded-md"
@@ -60,15 +65,19 @@
 						<p class="text-lg p-4">{event.prizeInfo}</p>
 					</div>
 					<div class="p-4 flex flex-col gap-2">
-						<form method="post" action="?/edit" use:enhance>
-							<input type="hidden" name="id" value={event.id} />
-							<Button class="send" type="submit" color="green">
-								<GearSolid />
-								<Popover triggeredBy=".send" placement="left">
-									<p>Edit Event</p>
-								</Popover>
-							</Button>
-						</form>
+						<Button
+							class="edit"
+							color="green"
+							on:click={() => {
+								clickOutsideModalEdit = true;
+								selectedEventId = event.id ?? '';
+							}}
+						>
+							<GearSolid />
+							<Popover triggeredBy=".edit" placement="left">
+								<p>Edit Event</p>
+							</Popover>
+						</Button>
 						<Button class="send" href="/event/{event.id}" color="blue">
 							<ArrowUpRightFromSquareOutline />
 							<Popover triggeredBy=".send" placement="left">
@@ -101,13 +110,13 @@
 						<span slot="header" class="text-lg first-letter:capitalize">Banned Event Members</span>
 						{#each bans as member (member.playerUuid)}
 							<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
-								<form method="POST" action="?/banmember" use:enhance>
+								<form method="POST" action="?/unbanmember" use:enhance>
 									<input type="hidden" name="id" value={event.id} />
 									<input type="hidden" name="uuid" value={member.playerUuid} />
-									<Button type="submit" color="red" class="ban" size="sm">
+									<Button type="submit" color="green" class="unban" size="sm">
 										<TrashBinSolid size="sm" />
-										<Popover triggeredBy=".ban" placement="left">
-											<p>Ban this user from the event</p>
+										<Popover triggeredBy=".unban" placement="left">
+											<p>Unban this user from the event</p>
 										</Popover>
 									</Button>
 								</form>
@@ -182,6 +191,64 @@
 		</Label>
 
 		<Button formaction="?/create" type="submit">Create</Button>
+		<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
+		</p>
+	</form>
+</Modal>
+
+<Modal title="Edit Event" bind:open={clickOutsideModalEdit} autoclose={false}>
+	<p>Only fill in fields that you want to be changed.</p>
+	<form
+		method="post"
+		action="?/edit"
+		class="flex flex-col gap-2"
+		use:enhance={() => {
+			return async ({ result, update }) => {
+				if (result) clickOutsideModalEdit = false;
+				update();
+			};
+		}}
+	>
+		<input type="text" name="id" bind:value={selectedEventId} hidden />
+		<Label class="space-y-2">
+			<span>Event Name</span>
+			<Input let:props name="title" placeholder="Farming Weight Challenge">
+				<input {...props} type="text" maxlength="64" />
+			</Input>
+		</Label>
+		<Label class="space-y-2">
+			<span>Event Description</span>
+			<Input let:props name="description" placeholder="Farm as much as you can in 24 hours!">
+				<textarea {...props} maxlength="1024" />
+			</Input>
+		</Label>
+		<Label class="space-y-2">
+			<span>Event Rules</span>
+			<Input let:props name="rules" placeholder="No cheating.">
+				<textarea {...props} maxlength="1024" />
+			</Input>
+		</Label>
+		<Label class="space-y-2">
+			<span>Event Prizes</span>
+			<Input let:props name="prizes" placeholder="First Place: $20 in Gems!">
+				<textarea {...props} maxlength="1024" />
+			</Input>
+		</Label>
+		<Label class="space-y-2 mt-4">
+			<span>Event Start Time</span>
+			<Input let:props name="startDate">
+				<input {...props} type="datetime-local" />
+			</Input>
+		</Label>
+		<Label class="space-y-2 mb-4">
+			<span>Event End Time</span>
+			<Input let:props name="endDate">
+				<input {...props} type="datetime-local" />
+			</Input>
+		</Label>
+
+		<Button type="submit">Edit Event</Button>
 		<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
 			Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 		</p>

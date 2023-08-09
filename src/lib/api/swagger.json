@@ -2,10 +2,10 @@
   "openapi": "3.0.1",
   "info": {
     "title": "EliteAPI",
-    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data. Use of this API requires following the TOS linked below. This API is not affiliated with Hypixel or Mojang.",
+    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data. Use of this API requires following the TOS. This API is not affiliated with Hypixel or Mojang.",
     "termsOfService": "https://elitebot.dev/apiterms",
     "contact": {
-      "name": "GitHub",
+      "name": "- GitHub",
       "url": "https://github.com/EliteFarmers/API"
     },
     "license": {
@@ -636,7 +636,17 @@
         ],
         "requestBody": {
           "content": {
-            "text/plain": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
               "schema": {
                 "type": "string"
               }
@@ -1848,6 +1858,14 @@
           },
           {
             "name": "playerUuid",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileId",
             "in": "query",
             "style": "form",
             "schema": {
@@ -3823,13 +3841,13 @@
             "nullable": true
           },
           "startTime": {
-            "type": "string",
-            "format": "date-time",
+            "type": "integer",
+            "format": "int64",
             "nullable": true
           },
           "endTime": {
-            "type": "string",
-            "format": "date-time",
+            "type": "integer",
+            "format": "int64",
             "nullable": true
           },
           "dynamicStartTime": {
@@ -3954,11 +3972,11 @@
           },
           "startTime": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
           "endTime": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
           "dynamicStartTime": {
             "type": "boolean"
@@ -4002,7 +4020,6 @@
           },
           "lastUpdated": {
             "type": "string",
-            "format": "date-time",
             "nullable": true
           }
         },
@@ -4026,6 +4043,10 @@
             "$ref": "#/components/schemas/EventMemberStatus"
           },
           "amountGained": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastUpdated": {
             "type": "string",
             "nullable": true
           }
@@ -4058,15 +4079,7 @@
           },
           "lastUpdated": {
             "type": "string",
-            "format": "date-time"
-          },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
           "disqualified": {
             "type": "boolean"
@@ -5201,6 +5214,9 @@
           },
           "eventsEnabled": {
             "type": "boolean"
+          },
+          "eventSettings": {
+            "$ref": "#/components/schemas/GuildEventSettings"
           }
         },
         "additionalProperties": false

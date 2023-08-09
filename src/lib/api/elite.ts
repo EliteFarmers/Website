@@ -379,11 +379,11 @@ export const GetPlayersRank = async (
 
 export const GetUpcomingEvents = async () => await GET('/Events', {});
 
-export const GetGuildEvents = async (guildId: string) => 
+export const GetGuildEvents = async (guildId: string) =>
 	await GET('/Guild/{guildId}/Events', {
 		params: {
 			path: {
-				guildId: guildId as unknown as number
+				guildId: guildId as unknown as number,
 			},
 		},
 	});
@@ -392,7 +392,7 @@ export const GetEventDetails = async (eventId: string) =>
 	await GET('/Event/{eventId}', {
 		params: {
 			path: {
-				eventId: eventId as unknown as number
+				eventId: eventId as unknown as number,
 			},
 		},
 	});
@@ -401,7 +401,7 @@ export const GetEventMembers = async (eventId: string) =>
 	await GET('/Event/{eventId}/members', {
 		params: {
 			path: {
-				eventId: eventId as unknown as number
+				eventId: eventId as unknown as number,
 			},
 		},
 	});
@@ -411,20 +411,21 @@ export const GetEventMember = async (eventId: string, playerUuid: string) =>
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
-				playerUuid
+				playerUuid,
 			},
 		},
 	});
 
-export const JoinEvent = async (eventId: string, accessToken: string, playerUuid?: string) =>
+export const JoinEvent = async (eventId: string, accessToken: string, playerUuid?: string, profileId?: string) =>
 	await POST('/Event/{eventId}/join', {
 		params: {
 			path: {
-				eventId: eventId as unknown as number
+				eventId: eventId as unknown as number,
 			},
 			query: {
-				playerUuid
-			}
+				playerUuid,
+				profileId,
+			},
 		},
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -435,7 +436,7 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 	await POST('/Event/{eventId}/leave', {
 		params: {
 			path: {
-				eventId: eventId as unknown as number
+				eventId: eventId as unknown as number,
 			},
 		},
 		headers: {
@@ -456,7 +457,7 @@ export const EditEvent = async (accessToken: string, eventId: string, event: com
 		body: event,
 		params: {
 			path: {
-				eventId: eventId as unknown as number
+				eventId: eventId as unknown as number,
 			},
 		},
 		headers: {
@@ -468,7 +469,7 @@ export const GetEventBans = async (accessToken: string, eventId: string) =>
 	await GET('/Event/{eventId}/bans', {
 		params: {
 			path: {
-				eventId: eventId as unknown as number
+				eventId: eventId as unknown as number,
 			},
 		},
 		headers: {
@@ -481,7 +482,7 @@ export const BanEventMember = async (accessToken: string, eventId: string, playe
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
-				playerUuid
+				playerUuid,
 			},
 		},
 		body: reason,
@@ -495,7 +496,7 @@ export const UnbanEventMember = async (accessToken: string, eventId: string, pla
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
-				playerUuid
+				playerUuid,
 			},
 		},
 		headers: {

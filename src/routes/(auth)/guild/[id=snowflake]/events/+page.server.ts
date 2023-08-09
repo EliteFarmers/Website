@@ -9,7 +9,7 @@ import {
 	BanEventMember,
 	UnbanEventMember,
 	GetEventMembers,
-	GetEventBans
+	GetEventBans,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
@@ -82,8 +82,8 @@ export const actions: Actions = {
 		if (!rules) throw error(400, 'Missing required field: rules');
 		if (!prizes) throw error(400, 'Missing required field: prizes');
 
-		const startTime = startDate ? (new Date(startDate).getTime() / 1000).toString() : undefined;
-		const endTime = endDate ? (new Date(endDate).getTime() / 1000).toString() : undefined;
+		const startTime = startDate ? (new Date(startDate + '+00:00').getTime() / 1000).toString() : undefined;
+		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
 
 		if (!startTime) throw error(400, 'Missing required field: startDate');
 		if (!endTime) throw error(400, 'Missing required field: endDate');
@@ -93,10 +93,10 @@ export const actions: Actions = {
 			rules,
 			description,
 			prizeInfo: prizes,
-			startTime,
-			endTime,
+			startTime: startTime as unknown as number, // These are parsed into numbers in the API
+			endTime: endTime as unknown as number,
 			guildId: guildId,
-		}
+		};
 
 		const { response } = await CreateEvent(token, body).catch((e) => {
 			console.log(e);
@@ -127,25 +127,25 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const title = data.get('title') as string;
-		const description = data.get('description') as string;
-		const rules = data.get('rules') as string;
-		const prizes = data.get('prizes') as string;
-		const startDate = data.get('startDate') as string;
-		const endDate = data.get('endDate') as string;
+		const title = (data.get('title') as string) || undefined;
+		const description = (data.get('description') as string) || undefined;
+		const rules = (data.get('rules') as string) || undefined;
+		const prizes = (data.get('prizes') as string) || undefined;
+		const startDate = (data.get('startDate') as string) || undefined;
+		const endDate = (data.get('endDate') as string) || undefined;
 
-		const startTime = startDate ? (new Date(startDate).getTime() / 1000).toString() : undefined;
-		const endTime = endDate ? (new Date(endDate).getTime() / 1000).toString() : undefined;
+		const startTime = startDate ? (new Date(startDate + '+00:00').getTime() / 1000).toString() : undefined;
+		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
 
-		const body = {
+		const body: components['schemas']['EditEventDto'] = {
 			name: title,
 			rules,
 			description,
 			prizeInfo: prizes,
-			startTime,
-			endTime,
+			startTime: startTime as unknown as number, // These are parsed into numbers in the API
+			endTime: endTime as unknown as number,
 			guildId: guildId,
-		}
+		};
 
 		const { response } = await EditEvent(token, eventId, body).catch((e) => {
 			console.log(e);
@@ -176,14 +176,19 @@ export const actions: Actions = {
 		if (!eventId) throw error(400, 'Missing required field: id');
 
 		const uuid = data.get('uuid') as string;
-		const reason = data.get('reason') as string || 'No reason provided';
+		const reason = (data.get('reason') as string) || 'No reason provided';
 
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		await BanEventMember(token, eventId, uuid, reason).catch((e) => {
+		const { response } = await BanEventMember(token, eventId, uuid, reason).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			return fail(response.status, { error: msg });
+		}
 
 		return {
 			success: true,

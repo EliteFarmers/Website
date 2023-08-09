@@ -276,7 +276,9 @@ export interface paths {
       };
       requestBody?: {
         content: {
-          "text/plain": string;
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
         };
       };
       responses: {
@@ -756,6 +758,7 @@ export interface paths {
       parameters: {
         query?: {
           playerUuid?: string;
+          profileId?: string;
         };
         path: {
           eventId: number;
@@ -1537,10 +1540,10 @@ export interface components {
       prizeInfo?: string | null;
       banner?: string | null;
       thumbnail?: string | null;
-      /** Format: date-time */
-      startTime?: string | null;
-      /** Format: date-time */
-      endTime?: string | null;
+      /** Format: int64 */
+      startTime?: number | null;
+      /** Format: int64 */
+      endTime?: number | null;
       dynamicStartTime?: boolean | null;
       active?: boolean | null;
       requiredRole?: string | null;
@@ -1577,10 +1580,8 @@ export interface components {
       prizeInfo?: string | null;
       banner?: string | null;
       thumbnail?: string | null;
-      /** Format: date-time */
-      startTime?: string;
-      /** Format: date-time */
-      endTime?: string;
+      startTime?: string | null;
+      endTime?: string | null;
       dynamicStartTime?: boolean;
       active?: boolean;
       requiredRole?: string | null;
@@ -1592,7 +1593,6 @@ export interface components {
       playerName?: string | null;
       amountGained?: string | null;
       notes?: string | null;
-      /** Format: date-time */
       lastUpdated?: string | null;
     };
     EventMemberDetailsDto: {
@@ -1601,6 +1601,7 @@ export interface components {
       eventId?: string;
       status?: components["schemas"]["EventMemberStatus"];
       amountGained?: string | null;
+      lastUpdated?: string | null;
     };
     EventMemberDto: {
       playerUuid?: string | null;
@@ -1609,12 +1610,7 @@ export interface components {
       status?: components["schemas"]["EventMemberStatus"];
       amountGained?: string | null;
       startConditions?: components["schemas"]["StartConditions"];
-      /** Format: date-time */
-      lastUpdated?: string;
-      /** Format: date-time */
-      startTime?: string;
-      /** Format: date-time */
-      endTime?: string;
+      lastUpdated?: string | null;
       disqualified?: boolean;
       notes?: string | null;
     };
@@ -1984,6 +1980,7 @@ export interface components {
       jacobLeaderboardEnabled?: boolean;
       jacobLeaderboard?: components["schemas"]["PublicJacobLeaderboardFeatureDto"];
       eventsEnabled?: boolean;
+      eventSettings?: components["schemas"]["GuildEventSettings"];
     };
     PublicJacobLeaderboardDto: {
       id?: string;

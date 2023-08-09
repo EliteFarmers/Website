@@ -75,8 +75,8 @@
 			<h2 class="text-2xl">Server Events</h2>
 			{#if !features?.eventsEnabled}
 				<p>
-					This server does not have the Event feature enabled. For now please ask "kaeso.dev" on
-					Discord to gain access to this feature.
+					This server does not have the Event feature enabled. For now please ask "kaeso.dev" on Discord to
+					gain access to this feature.
 				</p>
 			{:else}
 				<p>Create or manage your Events!</p>
