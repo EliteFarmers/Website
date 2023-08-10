@@ -4,13 +4,13 @@
 	import type { PageData } from './$types';
 	import { ArrowUpRightFromSquareOutline, UserGroupSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import { getCountdown, getRelativeTimeString } from '$lib/format';
+	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
 	import Eventmember from './eventmember.svelte';
 
 	export let data: PageData;
 
-	$: ({ event, guild, members } = data);
+	$: ({ event, members } = data);
 
 	$: banner =
 		'https://cdn.discordapp.com/splashes/1096051612373487687/dc2f5296bdb34b3adc580df6c50c56cf.png?size=1280';

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { Accordion, AccordionItem, Button } from 'flowbite-svelte';
+	import { AccordionItem, Button } from 'flowbite-svelte';
 
 	export let member: components['schemas']['EventMemberDetailsDto'];
 	export let rank: number;
