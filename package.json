@@ -6,6 +6,7 @@
 	},
 	"scripts": {
 		"dev": "vite dev",
+		"devhost": "vite dev --host",
 		"build": "vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
