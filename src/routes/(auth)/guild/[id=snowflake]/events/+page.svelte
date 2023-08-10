@@ -52,17 +52,24 @@
 	<section
 		class="flex flex-col gap-8 justify-center items-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16"
 	>
-		{#each data.events ?? [] as { event, members, bans } (event.id)}
+		{#each data.events?.sort((a, b) => b?.event?.endTime?.localeCompare(a?.event?.endTime ?? '') ?? 0) ?? [] as { event, members, bans } (event.id)}
 			<div
 				class="flex p-4 flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-gray-100 dark:bg-zinc-800 rounded-md"
 			>
-				<div class="flex flex-row justify-between">
-					<div>
-						<h2 class="text-3xl p-4">{event.name}</h2>
+				<div class="flex flex-row justify-between p-4 gap-2">
+					<div class="flex flex-col gap-2">
+						<h2 class="text-3xl">{event.name}</h2>
 
-						<p class="text-lg p-4">{event.description}</p>
-						<p class="text-lg p-4">{event.rules}</p>
-						<p class="text-lg p-4">{event.prizeInfo}</p>
+						<p class="text-lg">{event.description}</p>
+						<p class="text-lg">{event.rules}</p>
+						<p class="text-lg">{event.prizeInfo}</p>
+						<div class="flex flex-row gap-2 font-semibold items-center text-lg">
+							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
+							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
+							<span> - </span>
+							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleDateString()}</span>
+							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
+						</div>
 					</div>
 					<div class="p-4 flex flex-col gap-2">
 						<Button
@@ -103,11 +110,12 @@
 								</form>
 								<p class="text-lg">{member.playerName}</p>
 								<p>{member.amountGained}</p>
+								<p>"{member.notes || (member.status === 2 ? 'Member Left' : '')}"</p>
 							</div>
 						{/each}
 					</AccordionItem>
 					<AccordionItem paddingFlush="p-2">
-						<span slot="header" class="text-lg first-letter:capitalize">Banned Event Members</span>
+						<span slot="header" class="text-lg first-letter:capitalize">Removed Event Members</span>
 						{#each bans as member (member.playerUuid)}
 							<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
 								<form method="POST" action="?/unbanmember" use:enhance>
@@ -122,7 +130,7 @@
 								</form>
 								<p class="text-lg">{member.playerName}</p>
 								<p>{member.amountGained}</p>
-								<p>{member.notes}</p>
+								<p>"{member.notes || 'Member Left'}"</p>
 							</div>
 						{/each}
 					</AccordionItem>
