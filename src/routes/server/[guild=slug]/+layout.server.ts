@@ -1,8 +1,8 @@
-import { GetPublicGuild } from '$lib/api/elite';
+import { GetGuildEvents, GetPublicGuild } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders }) => {
+export const load = (async ({ params, setHeaders, url }) => {
 	const { guild } = params;
 
 	// Remove everything before the last dash
@@ -22,9 +22,11 @@ export const load = (async ({ params, setHeaders }) => {
 
 	const properUrl = guildData.name.replaceAll(' ', '-') + '-' + guildData.id;
 
-	if (properUrl !== guild) {
+	if (properUrl !== guild && !url.pathname.endsWith('/join')) {
 		throw redirect(302, `/server/${properUrl}`);
 	}
+
+	const { data: events } = await GetGuildEvents(guildData.id).catch(() => ({ data: undefined }));
 
 	setHeaders({
 		'Cache-Control': 'public, max-age=300',
@@ -32,5 +34,6 @@ export const load = (async ({ params, setHeaders }) => {
 
 	return {
 		guild: guildData,
+		events: events ?? [],
 	};
 }) satisfies LayoutServerLoad;

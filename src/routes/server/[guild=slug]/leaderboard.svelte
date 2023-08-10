@@ -11,10 +11,10 @@
 
 <div class="flex flex-col items-center gap-4 p-6 bg-gray-100 dark:bg-zinc-800 rounded-md">
 	<h4 class="text-3xl font-semibold my-4">{leaderboard.title}</h4>
-	<div class="flex flex-wrap">
+	<div class="flex flex-wrap justify-center">
 		{#each crops as [crop, records]}
 			<div
-				class="flex flex-1 basis-64 xl:basis-[18%] p-2 flex-col m-2 gap-2 bg-gray-200 dark:bg-zinc-900 rounded-md"
+				class="flex basis-64 xl:basis-96 p-2 flex-col m-1 md:m-2 gap-1 md:gap-2 bg-gray-200 dark:bg-zinc-900 rounded-md"
 			>
 				<div class="flex flex-row gap-2 items-center">
 					<img class="pixelated w-12" src={PROPER_CROP_TO_IMG[records[0].record?.crop ?? crop]} alt={crop} />
@@ -31,7 +31,7 @@
 	</div>
 	<div>
 		<p>
-			<span class="font-semibold">Contests From:</span>
+			<span class="font-semibold">Contests Starting From:</span>
 			{leaderboard.startCutoff === -1
 				? 'Beginning of SkyBlock'
 				: getReadableSkyblockDate(leaderboard.startCutoff ?? 0)}

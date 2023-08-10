@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import { Button } from 'flowbite-svelte';
+	import { Accordion, AccordionItem, Button } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import Leaderboard from './leaderboard.svelte';
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import Event from '$comp/stats/discord/event.svelte';
 
 	export let data: PageData;
 
@@ -50,6 +51,27 @@
 				</div>
 			</Button>
 		</div>
+	{/if}
+
+	{#if data.events.length > 0}
+		<section class="flex flex-col gap-4 items-center max-w-5xl w-full">
+			<h2 class="text-3xl my-4">Upcoming Events</h2>
+			<div class="flex flex-col md:mx-32 gap-4 w-full">
+				{#each data.events.filter((e) => e.endTime && +e.endTime >= Date.now() / 1000) as event}
+					<Event {event} guild={data.guild} />
+				{/each}
+			</div>
+			<Accordion flush={true} class="w-full">
+				<AccordionItem defaultClass="flex flex-row items-center justify-center gap-4 w-full">
+					<div slot="header">
+						<h2 class="text-3xl">Past Events</h2>
+					</div>
+					{#each data.events.filter((e) => e.endTime && +e.endTime < Date.now() / 1000) as event}
+						<Event {event} guild={data.guild} />
+					{/each}
+				</AccordionItem>
+			</Accordion>
+		</section>
 	{/if}
 
 	<!-- Features -->
