@@ -2,7 +2,7 @@ import { GetEventDetails, GetEventMembers, GetPublicGuild } from '$lib/api/elite
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders }) => {
+export const load = (async ({ params, setHeaders, url }) => {
 	const { event } = params;
 
 	// Remove everything before the last dash
@@ -16,7 +16,7 @@ export const load = (async ({ params, setHeaders }) => {
 
 	const properUrl = eventData.name.replaceAll(' ', '-') + '-' + eventData.id;
 
-	if (properUrl !== event) {
+	if (properUrl !== event && !url.pathname.includes('join') && !url.pathname.includes('leaderboard')) {
 		throw redirect(302, `/event/${properUrl}`);
 	}
 
