@@ -17,7 +17,7 @@
 		<p>You have no Minecraft accounts linked to your account.</p>
 		<p>Link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
 	{:else}
-		<form method="post" action="?/join" class="flex flex-col gap-4 max-w-lg mb-16">
+		<form method="post" action="{$page.params.pathname}?/join" class="flex flex-col gap-4 max-w-lg mb-16">
 			<p>Choose the profile you want to join the event with.</p>
 
 			{#each profiles as profile (profile)}
@@ -92,7 +92,7 @@
 			{/if}
 		</form>
 
-		<form method="post" action="?/leave" class="my-8 mb-16 max-w-xl">
+		<form method="post" action="{$page.params.pathname}?/leave" class="my-8 mb-16 max-w-xl">
 			<div class="flex flex-row gap-2 items-center justify-center">
 				<p>Already joined?</p>
 				<Button type="submit" color="alternative" size="xs">Leave Event</Button>
