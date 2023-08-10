@@ -119,7 +119,7 @@
 		ulClass="flex flex-col p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:items-center"
 	>
 		<NavLi href="/info" active={$page.url.pathname === '/info'}>Info</NavLi>
-		<NavLi href="/servers" active={$page.url.pathname === '/servers'}>Servers</NavLi>
+		<NavLi href="/browse" active={$page.url.pathname === '/browse'}>Browse</NavLi>
 		<NavLi href="/contests" active={$page.url.pathname === '/contests'}>Contests</NavLi>
 		<NavLi href="/leaderboard" active={$page.url.pathname === '/leaderboard'}>Top Players</NavLi>
 		<DarkMode initialTheme="dark" />

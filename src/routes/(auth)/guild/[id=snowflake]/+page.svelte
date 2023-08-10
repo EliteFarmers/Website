@@ -30,7 +30,7 @@
 		</Button>
 	</div>
 
-	<section class="flex flex-col md:flex-row gap-8">
+	<section class="flex flex-col lg:flex-row gap-8 text-center">
 		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800">
 			<form
 				method="POST"
@@ -67,8 +67,20 @@
 					Discord to gain access to this feature.
 				</p>
 			{:else}
-				<p>Manage your sever specific Jacob Leaderboards!</p>
+				<p>Manage your server specific Jacob Leaderboards!</p>
 				<Button href="/guild/{data.guildId}/jacob">Manage</Button>
+			{/if}
+		</Card>
+		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800 flex flex-col gap-4 justify-between">
+			<h2 class="text-2xl">Server Events</h2>
+			{#if !features?.eventsEnabled}
+				<p>
+					This server does not have the Event feature enabled. For now please ask "kaeso.dev" on Discord to
+					gain access to this feature.
+				</p>
+			{:else}
+				<p>Create or manage your Events!</p>
+				<Button href="/guild/{data.guildId}/events">Manage</Button>
 			{/if}
 		</Card>
 	</section>

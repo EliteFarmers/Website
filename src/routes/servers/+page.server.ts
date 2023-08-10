@@ -1,16 +1,6 @@
-import { GetPublicGuilds } from '$lib/api/elite';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ setHeaders }) => {
-	const { data: guilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
-
-	if (guilds) {
-		setHeaders({
-			'Cache-Control': 'public, max-age=3600',
-		});
-	}
-
-	return {
-		guilds,
-	};
+export const load = (() => {
+	throw redirect(308, '/browse');
 }) satisfies PageServerLoad;

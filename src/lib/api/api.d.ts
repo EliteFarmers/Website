@@ -16,6 +16,14 @@ export interface paths {
             "text/json": components["schemas"]["AuthorizedAccountDto"];
           };
         };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -33,6 +41,22 @@ export interface paths {
             "text/plain": components["schemas"]["MinecraftAccountDto"];
             "application/json": components["schemas"]["MinecraftAccountDto"];
             "text/json": components["schemas"]["MinecraftAccountDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -54,6 +78,14 @@ export interface paths {
             "text/json": components["schemas"]["MinecraftAccountDto"];
           };
         };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
     post: {
@@ -65,6 +97,14 @@ export interface paths {
       responses: {
         /** @description Success */
         200: never;
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
     delete: {
@@ -76,6 +116,14 @@ export interface paths {
       responses: {
         /** @description Success */
         200: never;
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -89,6 +137,203 @@ export interface paths {
       responses: {
         /** @description Success */
         200: never;
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/create": {
+    post: {
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["EditEventDto"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/edit": {
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["EditEventDto"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/bans": {
+    get: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventMemberBannedDto"][];
+            "application/json": components["schemas"]["EventMemberBannedDto"][];
+            "text/json": components["schemas"]["EventMemberBannedDto"][];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/bans/{playerUuid}": {
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+          playerUuid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventMemberBannedDto"][];
+            "application/json": components["schemas"]["EventMemberBannedDto"][];
+            "text/json": components["schemas"]["EventMemberBannedDto"][];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          eventId: number;
+          playerUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: never;
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -404,11 +649,25 @@ export interface paths {
       };
     };
   };
+  "/Events": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"][];
+            "application/json": components["schemas"]["EventDetailsDto"][];
+            "text/json": components["schemas"]["EventDetailsDto"][];
+          };
+        };
+      };
+    };
+  };
   "/Event/{eventId}": {
     get: {
       parameters: {
         path: {
-          eventId: string;
+          eventId: number;
         };
       };
       responses: {
@@ -418,6 +677,191 @@ export interface paths {
             "text/plain": components["schemas"]["EventDetailsDto"];
             "application/json": components["schemas"]["EventDetailsDto"];
             "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/members": {
+    get: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventMemberDto"][];
+            "application/json": components["schemas"]["EventMemberDto"][];
+            "text/json": components["schemas"]["EventMemberDto"][];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/member/{playerUuid}": {
+    get: {
+      parameters: {
+        path: {
+          eventId: number;
+          playerUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventMemberDto"][];
+            "application/json": components["schemas"]["EventMemberDto"][];
+            "text/json": components["schemas"]["EventMemberDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/join": {
+    post: {
+      parameters: {
+        query?: {
+          playerUuid?: string;
+          profileId?: string;
+        };
+        path: {
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/leave": {
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Graph/{playerUuid}/crops": {
+    get: {
+      parameters: {
+        query?: {
+          profileId?: string;
+          start?: number;
+          end?: number;
+        };
+        path: {
+          playerUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["CropCollectionsDataPointDto"][];
+            "application/json": components["schemas"]["CropCollectionsDataPointDto"][];
+            "text/json": components["schemas"]["CropCollectionsDataPointDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -451,6 +895,57 @@ export interface paths {
             "text/plain": components["schemas"]["PublicGuildDto"];
             "application/json": components["schemas"]["PublicGuildDto"];
             "text/json": components["schemas"]["PublicGuildDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Guild/{guildId}/Events": {
+    get: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"][];
+            "application/json": components["schemas"]["EventDetailsDto"][];
+            "text/json": components["schemas"]["EventDetailsDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -964,6 +1459,7 @@ export interface components {
       redemptions?: components["schemas"]["RedemptionDto"][];
       inventory?: components["schemas"]["EliteInventoryDto"];
       settings?: components["schemas"]["EliteSettingsDto"];
+      eventEntries?: components["schemas"]["EventMemberDetailsDto"][];
       minecraftAccounts?: components["schemas"]["MinecraftAccountDetailsDto"][];
     };
     AuthorizedGuildDto: {
@@ -993,6 +1489,13 @@ export interface components {
       /** Format: int32 */
       participants?: number;
       medal?: string | null;
+    };
+    CropCollectionsDataPointDto: {
+      /** Format: int64 */
+      timestamp?: number;
+      crops?: {
+        [key: string]: number | undefined;
+      };
     };
     CropRecords: {
       cactus?: components["schemas"]["GuildJacobLeaderboardEntry"][];
@@ -1030,6 +1533,23 @@ export interface components {
       /** Format: int32 */
       color?: number;
     };
+    EditEventDto: {
+      name?: string | null;
+      description?: string | null;
+      rules?: string | null;
+      prizeInfo?: string | null;
+      banner?: string | null;
+      thumbnail?: string | null;
+      /** Format: int64 */
+      startTime?: number | null;
+      /** Format: int64 */
+      endTime?: number | null;
+      dynamicStartTime?: boolean | null;
+      active?: boolean | null;
+      requiredRole?: string | null;
+      blockedRole?: string | null;
+      guildId?: string | null;
+    };
     EliteInventoryDto: {
       totalEarnedMedals?: components["schemas"]["MedalInventoryDto"];
       spentMedals?: components["schemas"]["MedalInventoryDto"];
@@ -1047,7 +1567,58 @@ export interface components {
       defaultPlayerUuid?: string;
       hideDiscordTag?: boolean;
     };
-    EventDetailsDto: Record<string, never>;
+    EventCreatedDto: {
+      id?: string;
+      /** Format: date-time */
+      createdAt?: string;
+    };
+    EventDetailsDto: {
+      id?: string;
+      name?: string;
+      description?: string | null;
+      rules?: string | null;
+      prizeInfo?: string | null;
+      banner?: string | null;
+      thumbnail?: string | null;
+      startTime?: string | null;
+      endTime?: string | null;
+      dynamicStartTime?: boolean;
+      active?: boolean;
+      requiredRole?: string | null;
+      blockedRole?: string | null;
+      guildId?: string | null;
+    };
+    EventMemberBannedDto: {
+      playerUuid?: string | null;
+      playerName?: string | null;
+      amountGained?: string | null;
+      notes?: string | null;
+      lastUpdated?: string | null;
+    };
+    EventMemberDetailsDto: {
+      playerUuid?: string | null;
+      playerName?: string | null;
+      eventId?: string;
+      status?: components["schemas"]["EventMemberStatus"];
+      amountGained?: string | null;
+      lastUpdated?: string | null;
+    };
+    EventMemberDto: {
+      playerUuid?: string | null;
+      playerName?: string | null;
+      eventId?: string;
+      status?: components["schemas"]["EventMemberStatus"];
+      amountGained?: string | null;
+      startConditions?: components["schemas"]["StartConditions"];
+      lastUpdated?: string | null;
+      disqualified?: boolean;
+      notes?: string | null;
+    };
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    EventMemberStatus: 0 | 1 | 2 | 3;
     ExcludedTimespan: {
       /** Format: int64 */
       start?: number;
@@ -1137,11 +1708,19 @@ export interface components {
       /** Format: int32 */
       memberCount?: number;
     };
+    GuildEventSettings: {
+      /** Format: int32 */
+      maxMonthlyEvents?: number;
+      publicEventsEnabled?: boolean;
+      createdEvents?: components["schemas"]["EventCreatedDto"][];
+    };
     GuildFeatures: {
       jacobLeaderboardEnabled?: boolean;
       jacobLeaderboard?: components["schemas"]["GuildJacobLeaderboardFeature"];
       verifiedRoleEnabled?: boolean;
       verifiedRole?: components["schemas"]["VerifiedRoleFeature"];
+      eventsEnabled?: boolean;
+      eventSettings?: components["schemas"]["GuildEventSettings"];
     };
     GuildJacobLeaderboard: {
       id?: string;
@@ -1297,6 +1876,7 @@ export interface components {
       discordUsername?: string | null;
       discordAvatar?: string | null;
       properties?: components["schemas"]["MinecraftAccountPropertyDto"][];
+      eventEntries?: components["schemas"]["EventMemberDetailsDto"][];
       profiles?: components["schemas"]["ProfileDetailsDto"][];
       playerData?: components["schemas"]["PlayerDataDto"];
     };
@@ -1399,6 +1979,8 @@ export interface components {
     PublicGuildFeaturesDto: {
       jacobLeaderboardEnabled?: boolean;
       jacobLeaderboard?: components["schemas"]["PublicJacobLeaderboardFeatureDto"];
+      eventsEnabled?: boolean;
+      eventSettings?: components["schemas"]["GuildEventSettings"];
     };
     PublicJacobLeaderboardDto: {
       id?: string;
@@ -1458,6 +2040,14 @@ export interface components {
       discord?: string | null;
       hypixel?: string | null;
       youtube?: string | null;
+    };
+    StartConditions: {
+      collection?: {
+        [key: string]: number | undefined;
+      };
+      tools?: {
+        [key: string]: number | undefined;
+      };
     };
     StrippedContestParticipationDto: {
       /** Format: int32 */
