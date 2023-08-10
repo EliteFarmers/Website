@@ -11,8 +11,7 @@ export const load = (async ({ params, setHeaders }) => {
 	const { data: eventData } = await GetEventDetails(eventId).catch(() => ({ data: undefined }));
 
 	if (!eventData?.id || !eventData.name || !eventData.guildId) {
-		console.log(eventData);
-		throw error(404, 'Guild not found');
+		throw error(404, 'Event not found');
 	}
 
 	const properUrl = eventData.name.replaceAll(' ', '-') + '-' + eventData.id;
