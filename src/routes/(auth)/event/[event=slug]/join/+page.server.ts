@@ -2,16 +2,22 @@ import { error, redirect, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { GetAccount, GetEventDetails, JoinEvent, LeaveEvent } from '$lib/api/elite';
 
-export const load = (async ({ locals, parent }) => {
-	const { event } = await parent();
-	const { discord_access_token: token, user } = locals;
+export const load = (async ({ locals, parent, params }) => {
+	const { user } = await parent();
+	const { discord_access_token: token } = locals;
+	const { event: eventRoute } = params;
 
-	if (!token || !user) {
-		throw redirect(302, '/login');
-	}
+	// Remove everything before the last dash
+	const eventId = eventRoute.slice(eventRoute.lastIndexOf('-') + 1);
+
+	const { data: event } = await GetEventDetails(eventId).catch(() => ({ data: undefined }));
 
 	if (!event?.id || !event.name || !event.guildId || !event.startTime || !event.endTime) {
 		throw error(404, 'Event not found');
+	}
+
+	if (!token || !user) {
+		throw redirect(302, '/login');
 	}
 
 	if (+event.endTime <= Date.now() / 1000) {
