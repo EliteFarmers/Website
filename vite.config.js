@@ -4,6 +4,9 @@ import path from 'path';
 /** @type {import('vite').UserConfig} */
 const config = {
 	plugins: [sveltekit()],
+	ssr: {
+		noExternal: process.env.NODE_ENV === 'production' ? ['@carbon/charts'] : []
+	},
 	resolve: {
 		alias: {
 			$comp: path.resolve('./src/components'),

@@ -513,6 +513,15 @@ export const GetYearlyContestRecords = async (year: number) =>
 		},
 	});
 
+export const GetCropCollectionPoints = async (playerUuid: string) =>
+	await GET('/Graph/{playerUuid}/crops', {
+		params: {
+			path: {
+				playerUuid,
+			},
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
