@@ -8,20 +8,18 @@
 	let chart: typeof LineChart;
 
 	$: errored = false;
-	$: data = [] as { group: string, value: number, date: string }[];
-	
-	$: {
-		data = points.map(p => {
-			const crops = Object.entries(p.crops ?? {});
-			const date = new Date((p.timestamp ?? 0) * 1000).toUTCString();
+	$: data = points.map(p => {
+		const crops = Object.entries(p.crops ?? {});
+		const date = new Date((p.timestamp ?? 0) * 1000).toUTCString();
 
-			return crops.map(([crop, value]) => ({
-				group: crop,
-				value: value ?? 0,
-				date,
-			}));
-		}).flat();
-	}
+		console.log(date);
+
+		return crops.map(([crop, value]) => ({
+			group: crop,
+			value: value ?? 0,
+			date,
+		}));
+	}).flat();
 
 	onMount(async () => {
 		const charts = await import('@carbon/charts-svelte');
@@ -32,7 +30,7 @@
 {#if errored}
 	<p>Failed to load graph data.</p>
 {/if}
-<div class="graph">
+<div class="graph mx-4">
 	<svelte:component
 		this={chart}
 		{data}
