@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { getSkyblockDate } from '$lib/format';
 
-export const load = (({ params }) => {
+export const load = (({ params, url }) => {
 	const { year, month } = params;
 
 	if (+year < 100) {
@@ -11,10 +11,14 @@ export const load = (({ params }) => {
 
 	const maxYear = getSkyblockDate(Date.now() / 1000).year + 1;
 	if (+year > maxYear) {
-		throw redirect(308, `/contests/${maxYear}/1`);
+		if (url.pathname.endsWith('records')) {
+			throw redirect(308, `/contests/${maxYear}/records`);
+		} else {
+			throw redirect(308, `/contests/${maxYear}/1`);
+		}
 	}
 
-	if (!month) {
+	if (!month && !url.pathname.endsWith('records')) {
 		throw redirect(308, `/contests/${year}/1`);
 	}
 
