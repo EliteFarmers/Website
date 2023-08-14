@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { getReadableSkyblockDate } from '$lib/format';
+	import { getReadableSkyblockMonthDay } from '$lib/format';
 	import { AccordionItem, Button } from 'flowbite-svelte';
 
 	export let rank = 0;
@@ -56,7 +56,7 @@
 					})}
 				</span>
 				<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
-					{getReadableSkyblockDate(entry.timestamp ?? 0)}
+					{getReadableSkyblockMonthDay(entry.timestamp ?? 0)}
 				</span>
 			</p>
 		</div>

@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
+	import { getTimeStamp } from '$lib/format';
 
 	$: year = +$page.params.year;
 </script>
@@ -11,9 +12,11 @@
 <main class="flex flex-col items-center justify-center">
 	<div class="font-semibold text-center mt-16 mb-4 flex flex-col items-center gap-4">
 		<h1 class="text-4xl">Contest Records - Year {year}</h1>
-		<h4 class="font-normal max-w-xl text-center">
-			View the highest records for each crop set this year! Each player can only hold one position per crop.
-		</h4>
+		<p>
+			{new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString() +
+				' - ' +
+				new Date(getTimeStamp(+year + 1, 0, 0) * 1000).toLocaleDateString()}
+		</p>
 		<Cropselector />
 		<div class="flex flex-col md:flex-row justify-center gap-2 md:gap-4 mb-2 w-full">
 			<a class="flex-1 bg-gray-200 dark:bg-zinc-800 p-2 rounded-lg" href="/contests/{year - 1}/records"
@@ -29,6 +32,7 @@
 	</div>
 
 	<div class="max-w-xl mb-8 text-center text-sm flex flex-col gap-4">
+		<p>Each player can only hold one position per profile, per crop.</p>
 		<p><strong>???</strong> - The player hasn't claimed this contest yet, their true position is unknown.</p>
 		<p>
 			<strong>Disclaimer:</strong> These contest participations are collected when a players profile is loaded on the

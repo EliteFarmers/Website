@@ -68,7 +68,7 @@
 							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
 							<span> - </span>
 							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleDateString()}</span>
-							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
+							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleTimeString()}</span>
 						</div>
 					</div>
 					<div class="p-4 flex flex-col gap-2">
