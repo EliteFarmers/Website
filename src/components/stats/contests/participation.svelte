@@ -6,7 +6,7 @@
 
 <a
 	href="/@{entry.playerName}"
-	data-sveltekit-preload-data="off"
+	data-sveltekit-preload-data="tap"
 	class="bg-gray-200 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-900 rounded-md"
 >
 	<div class="flex gap-0 md:gap-2 justify-between">

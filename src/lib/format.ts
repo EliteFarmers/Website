@@ -145,6 +145,14 @@ export function getSkyblockMonth(month: number) {
 	return SKYBLOCK_MONTHS[month - 1];
 }
 
+export function getReadableSkyblockMonthDay(unixSeconds: string | number) {
+	const { month, day } = getSkyblockDate(unixSeconds);
+
+	const suffix = appendOrdinalSuffix(day + 1);
+
+	return `${SKYBLOCK_MONTHS[+month]} ${suffix}`;
+}
+
 export function appendOrdinalSuffix(i: number) {
 	const j = i % 10;
 	const k = i % 100;

@@ -4,7 +4,7 @@
 
 	import Head from '$comp/head.svelte';
 	import { page } from '$app/stores';
-	import Singlecontest from './singlecontest.svelte';
+	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 
 	export let data: PageData;
 

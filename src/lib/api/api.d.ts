@@ -96,7 +96,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
         /** @description Unauthorized */
         401: {
           content: {
@@ -115,7 +117,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
         /** @description Unauthorized */
         401: {
           content: {
@@ -136,7 +140,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
         /** @description Unauthorized */
         401: {
           content: {
@@ -317,7 +323,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
         /** @description Unauthorized */
         401: {
           content: {
@@ -353,6 +361,14 @@ export interface paths {
             "text/json": components["schemas"]["GuildDto"];
           };
         };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -372,6 +388,22 @@ export interface paths {
             "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
     put: {
@@ -389,7 +421,25 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -424,7 +474,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
     delete: {
@@ -436,7 +488,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -450,7 +504,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -468,6 +524,33 @@ export interface paths {
             "text/plain": components["schemas"]["YearlyContestsDto"];
             "application/json": components["schemas"]["YearlyContestsDto"];
             "text/json": components["schemas"]["YearlyContestsDto"];
+          };
+        };
+      };
+    };
+  };
+  "/Contests/Records/{year}": {
+    get: {
+      parameters: {
+        path: {
+          year: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["YearlyCropRecordsDto"];
+            "application/json": components["schemas"]["YearlyCropRecordsDto"];
+            "text/json": components["schemas"]["YearlyCropRecordsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -502,7 +585,17 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -522,6 +615,14 @@ export interface paths {
             "text/plain": components["schemas"]["JacobContestWithParticipationsDto"][];
             "application/json": components["schemas"]["JacobContestWithParticipationsDto"][];
             "text/json": components["schemas"]["JacobContestWithParticipationsDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -550,6 +651,14 @@ export interface paths {
             };
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -569,10 +678,18 @@ export interface paths {
             "text/json": components["schemas"]["JacobContestWithParticipationsDto"][];
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
-  "/contest/{contestKey}": {
+  "/Contest/{contestKey}": {
     get: {
       parameters: {
         path: {
@@ -588,62 +705,20 @@ export interface paths {
             "text/json": components["schemas"]["JacobContestWithParticipationsDto"];
           };
         };
-      };
-    };
-  };
-  "/Contests/{playerUuid}": {
-    get: {
-      parameters: {
-        path: {
-          playerUuid: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
+        /** @description Bad Request */
+        400: {
           content: {
-            "text/plain": components["schemas"]["ContestParticipationDto"][];
-            "application/json": components["schemas"]["ContestParticipationDto"][];
-            "text/json": components["schemas"]["ContestParticipationDto"][];
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
-      };
-    };
-  };
-  "/Contests/{playerUuid}/{profileUuid}": {
-    get: {
-      parameters: {
-        path: {
-          playerUuid: string;
-          profileUuid: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
+        /** @description Not Found */
+        404: {
           content: {
-            "text/plain": components["schemas"]["ContestParticipationDto"][];
-            "application/json": components["schemas"]["ContestParticipationDto"][];
-            "text/json": components["schemas"]["ContestParticipationDto"][];
-          };
-        };
-      };
-    };
-  };
-  "/Contests/{playerUuid}/Selected": {
-    get: {
-      parameters: {
-        path: {
-          playerUuid: string;
-        };
-      };
-      responses: {
-        /** @description Success */
-        200: {
-          content: {
-            "text/plain": components["schemas"]["ContestParticipationDto"][];
-            "application/json": components["schemas"]["ContestParticipationDto"][];
-            "text/json": components["schemas"]["ContestParticipationDto"][];
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -971,6 +1046,14 @@ export interface paths {
             "text/json": components["schemas"]["LeaderboardDto"];
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -992,6 +1075,14 @@ export interface paths {
             "text/plain": components["schemas"]["LeaderboardDto"];
             "application/json": components["schemas"]["LeaderboardDto"];
             "text/json": components["schemas"]["LeaderboardDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1017,6 +1108,14 @@ export interface paths {
             "text/json": components["schemas"]["LeaderboardDto"];
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -1035,6 +1134,14 @@ export interface paths {
             "text/plain": components["schemas"]["LeaderboardPositionsDto"];
             "application/json": components["schemas"]["LeaderboardPositionsDto"];
             "text/json": components["schemas"]["LeaderboardPositionsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1062,6 +1169,14 @@ export interface paths {
             "text/json": components["schemas"]["LeaderboardPositionDto"];
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -1076,7 +1191,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -1094,6 +1211,14 @@ export interface paths {
             "text/plain": components["schemas"]["PlayerDataDto"];
             "application/json": components["schemas"]["PlayerDataDto"];
             "text/json": components["schemas"]["PlayerDataDto"];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1115,6 +1240,104 @@ export interface paths {
             "text/json": components["schemas"]["LinkedAccountsDto"];
           };
         };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Contests/{playerUuid}": {
+    get: {
+      parameters: {
+        path: {
+          playerUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ContestParticipationDto"][];
+            "application/json": components["schemas"]["ContestParticipationDto"][];
+            "text/json": components["schemas"]["ContestParticipationDto"][];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Contests/{playerUuid}/{profileUuid}": {
+    get: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          profileUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ContestParticipationDto"][];
+            "application/json": components["schemas"]["ContestParticipationDto"][];
+            "text/json": components["schemas"]["ContestParticipationDto"][];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Contests/{playerUuid}/Selected": {
+    get: {
+      parameters: {
+        path: {
+          playerUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ContestParticipationDto"][];
+            "application/json": components["schemas"]["ContestParticipationDto"][];
+            "text/json": components["schemas"]["ContestParticipationDto"][];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -1132,6 +1355,22 @@ export interface paths {
             "text/plain": components["schemas"]["ProfileMemberDto"];
             "application/json": components["schemas"]["ProfileMemberDto"];
             "text/json": components["schemas"]["ProfileMemberDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1154,6 +1393,14 @@ export interface paths {
             "text/json": components["schemas"]["ProfileMemberDto"];
           };
         };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -1173,6 +1420,14 @@ export interface paths {
             "text/json": components["schemas"]["ProfileDetailsDto"];
           };
         };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -1190,6 +1445,14 @@ export interface paths {
             "text/plain": components["schemas"]["ProfileDetailsDto"][];
             "application/json": components["schemas"]["ProfileDetailsDto"][];
             "text/json": components["schemas"]["ProfileDetailsDto"][];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1244,7 +1507,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -1281,7 +1546,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -1301,7 +1568,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -1340,7 +1609,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -1354,7 +1625,9 @@ export interface paths {
       };
       responses: {
         /** @description Success */
-        200: never;
+        200: {
+          content: never;
+        };
       };
     };
   };
@@ -1372,6 +1645,14 @@ export interface paths {
             "text/plain": components["schemas"]["FarmingWeightAllProfilesDto"];
             "application/json": components["schemas"]["FarmingWeightAllProfilesDto"];
             "text/json": components["schemas"]["FarmingWeightAllProfilesDto"];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1393,6 +1674,14 @@ export interface paths {
             "text/json": components["schemas"]["FarmingWeightDto"];
           };
         };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
       };
     };
   };
@@ -1411,6 +1700,14 @@ export interface paths {
             "text/plain": components["schemas"]["FarmingWeightDto"];
             "application/json": components["schemas"]["FarmingWeightDto"];
             "text/json": components["schemas"]["FarmingWeightDto"];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -1489,6 +1786,19 @@ export interface components {
       /** Format: int32 */
       participants?: number;
       medal?: string | null;
+    };
+    ContestParticipationWithTimestampDto: {
+      playerUuid?: string;
+      playerName?: string;
+      profileUuid?: string;
+      /** Format: int64 */
+      timestamp?: number;
+      /** Format: int32 */
+      collected?: number;
+      /** Format: int32 */
+      position?: number;
+      /** Format: int32 */
+      participants?: number;
     };
     CropCollectionsDataPointDto: {
       /** Format: int64 */
@@ -2093,6 +2403,13 @@ export interface components {
       complete?: boolean;
       contests?: {
         [key: string]: string[] | undefined;
+      };
+    };
+    YearlyCropRecordsDto: {
+      /** Format: int32 */
+      year?: number;
+      crops?: {
+        [key: string]: components["schemas"]["ContestParticipationWithTimestampDto"][] | undefined;
       };
     };
   };

@@ -29,6 +29,10 @@
 				>
 				<a
 					class="w-32 bg-gray-200 dark:bg-zinc-800 hover:bg-gray-100 hover:dark:bg-zinc-700 p-2 rounded-lg"
+					href="/contests/{$page.params.year}/records">Records</a
+				>
+				<a
+					class="w-32 bg-gray-200 dark:bg-zinc-800 hover:bg-gray-100 hover:dark:bg-zinc-700 p-2 rounded-lg"
 					href="/contests/{$page.params.year}/{+$page.params.month + 1}">Next</a
 				>
 			</div>

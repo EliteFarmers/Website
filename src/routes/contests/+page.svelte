@@ -2,7 +2,8 @@
 	import { goto } from '$app/navigation';
 	import Head from '$comp/head.svelte';
 	import { getSkyblockDate } from '$lib/format';
-	import { Button, Card, Input, Label } from 'flowbite-svelte';
+	import { Button, Card, Input, Label, Popover } from 'flowbite-svelte';
+	import { OrdoredListOutline } from 'flowbite-svelte-icons';
 
 	let searchVal = '';
 	function search() {
@@ -104,6 +105,10 @@
 								class="dark:bg-zinc-700"
 							/>
 						</div>
+						<Button class="!p-2.5 mt-4" href="/contests/{yearVal}/records" color="green" name="Top Scores">
+							<OrdoredListOutline class="w-5 h-5" />
+							<Popover>Top Scores</Popover>
+						</Button>
 						<Button class="!p-2.5 mt-4" type="submit" name="Search">
 							<svg
 								class="w-5 h-5"

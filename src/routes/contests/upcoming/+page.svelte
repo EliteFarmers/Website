@@ -4,7 +4,7 @@
 	import type { PageData } from './$types';
 	import Upcoming from './upcoming.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import Cropselect from './cropselect.svelte';
+	import Cropselect from '$comp/stats/contests/cropselect.svelte';
 
 	export let data: PageData;
 
@@ -62,7 +62,7 @@
 <main class="flex flex-col justify-center items-center">
 	<h1 class="text-4xl my-16">Upcoming Contests - Year {data.year}</h1>
 
-	{#if contests.length === 0}
+	{#if upcoming.length === 0}
 		<p>No upcoming contests have been provided yet! Try again later!</p>
 	{:else}
 		<div class="flex flex-wrap gap-2 mb-8">
