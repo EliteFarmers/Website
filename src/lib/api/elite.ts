@@ -504,6 +504,15 @@ export const UnbanEventMember = async (accessToken: string, eventId: string, pla
 		},
 	});
 
+export const GetYearlyContestRecords = async (year: number) =>
+	await GET('/Contests/Records/{year}', {
+		params: {
+			path: {
+				year,
+			},
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
