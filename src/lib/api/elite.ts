@@ -513,12 +513,35 @@ export const GetYearlyContestRecords = async (year: number) =>
 		},
 	});
 
-export const GetCropCollectionPoints = async (playerUuid: string) =>
-	await GET('/Graph/{playerUuid}/crops', {
+export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
+	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
 		params: {
 			path: {
 				playerUuid,
+				profileUuid,
 			},
+			query: {
+				days: 14,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetAdminSkillPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
+	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/skills', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				days: 14,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
 		},
 	});
 

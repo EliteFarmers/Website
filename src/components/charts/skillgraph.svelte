@@ -3,14 +3,14 @@
 	import { onMount } from 'svelte';
 	import type { LineChart } from '@carbon/charts-svelte';
 
-	export let points: components['schemas']['CropCollectionsDataPointDto'][];
+	export let points: components['schemas']['SkillsDataPointDto'][];
 
 	let chart: typeof LineChart;
 
 	$: errored = false;
 	$: data = points
 		.map((p) => {
-			const crops = Object.entries(p.crops ?? {});
+			const crops = Object.entries(p.skills ?? {});
 			const date = new Date((p.timestamp ?? 0) * 1000).toUTCString();
 
 			return crops.map(([crop, value]) => ({
@@ -28,7 +28,7 @@
 
 	let options = {
 		theme: 'g90',
-		title: 'Crop Collections',
+		title: 'Skill Experience',
 		height: '400px',
 		axes: {
 			left: {
@@ -42,7 +42,7 @@
 				title: 'Date',
 			},
 		},
-	} as LineChart['$$prop_def']['options'];
+	} as LineChart['options'];
 </script>
 
 {#if errored}

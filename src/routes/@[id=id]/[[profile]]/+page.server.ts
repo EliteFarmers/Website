@@ -3,7 +3,7 @@ import FarmingCollections from '$lib/collections';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
-import { GetCropCollectionPoints, GetPlayerRanks } from '$lib/api/elite';
+import { GetPlayerRanks } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	const { account, profile, member } = await parent();
@@ -39,8 +39,6 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 		if (collection.tier === 0) collection.tier = collection.maxTier;
 	}
 
-	const { data: cropCollections } = await GetCropCollectionPoints(account.id).catch(() => ({ data: undefined }));
-
 	setHeaders({
 		'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
 	});
@@ -48,7 +46,6 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	return {
 		ranks,
 		collections,
-		cropCollections,
 	};
 };
 

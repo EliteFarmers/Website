@@ -112,7 +112,7 @@
 
 	<Collections {collections} ranks={data.ranks?.collections} />
 
-	<Graph points={data.cropCollections ?? []}></Graph>
+	<Graph points={data.cropCollections ?? []} />
 
 	<JacobInfo
 		jacob={member.jacob}
