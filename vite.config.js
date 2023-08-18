@@ -5,7 +5,7 @@ import path from 'path';
 const config = {
 	plugins: [sveltekit()],
 	ssr: {
-		noExternal: process.env.NODE_ENV === 'production' ? ['@carbon/charts'] : []
+		noExternal: process.env.NODE_ENV === 'production' ? ['apexcharts'] : []
 	},
 	resolve: {
 		alias: {

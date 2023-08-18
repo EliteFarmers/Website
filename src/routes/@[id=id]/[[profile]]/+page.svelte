@@ -17,7 +17,6 @@
 
 	import type { PageData } from './$types';
 	import { browser } from '$app/environment';
-	import Graph from '$comp/charts/graph.svelte';
 
 	export let data: PageData;
 
@@ -111,8 +110,6 @@
 	{/if}
 
 	<Collections {collections} ranks={data.ranks?.collections} />
-
-	<Graph points={data.cropCollections ?? []} />
 
 	<JacobInfo
 		jacob={member.jacob}
