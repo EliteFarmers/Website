@@ -3,7 +3,7 @@
 	import { Accordion, AccordionItem, Button, Input, Label, Modal, Popover } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import Head from '$comp/head.svelte';
-	import { ArrowUpRightFromSquareOutline, GearSolid, TrashBinSolid } from 'flowbite-svelte-icons';
+	import { ArrowUpRightFromSquareOutline, ArrowUpSolid, GearSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -109,8 +109,8 @@
 									</Button>
 								</form>
 								<p class="text-lg">{member.playerName}</p>
-								<p>{member.amountGained}</p>
-								<p>"{member.notes || (member.status === 2 ? 'Member Left' : '')}"</p>
+								<p>{+(member.amountGained ?? 0).toLocaleString()}</p>
+								<p>{member.notes || (member.status === 2 ? 'Member Left' : '')}</p>
 							</div>
 						{/each}
 					</AccordionItem>
@@ -122,15 +122,15 @@
 									<input type="hidden" name="id" value={event.id} />
 									<input type="hidden" name="uuid" value={member.playerUuid} />
 									<Button type="submit" color="green" class="unban" size="sm">
-										<TrashBinSolid size="sm" />
+										<ArrowUpSolid size="sm" />
 										<Popover triggeredBy=".unban" placement="left">
 											<p>Unban this user from the event</p>
 										</Popover>
 									</Button>
 								</form>
 								<p class="text-lg">{member.playerName}</p>
-								<p>{member.amountGained}</p>
-								<p>"{member.notes || 'Member Left'}"</p>
+								<p>{+(member.amountGained ?? 0).toLocaleString()}</p>
+								<p>{member.notes || 'Member Left'}</p>
 							</div>
 						{/each}
 					</AccordionItem>

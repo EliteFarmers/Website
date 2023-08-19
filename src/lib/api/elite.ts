@@ -2,10 +2,6 @@ import createClient from 'openapi-fetch';
 import type { components, paths } from './api';
 import { ELITE_API_URL } from '$env/static/private';
 
-if (process.env.NODE_ENV === 'development') {
-	process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
-
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
@@ -510,6 +506,38 @@ export const GetYearlyContestRecords = async (year: number) =>
 			path: {
 				year,
 			},
+		},
+	});
+
+export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
+	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				days: 14,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetAdminSkillPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
+	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/skills', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				days: 14,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
 		},
 	});
 

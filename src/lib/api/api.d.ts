@@ -573,13 +573,13 @@ export interface paths {
       requestBody?: {
         content: {
           "application/json": {
-            [key: string]: string[] | undefined;
+            [key: string]: string[];
           };
           "text/json": {
-            [key: string]: string[] | undefined;
+            [key: string]: string[];
           };
           "application/*+json": {
-            [key: string]: string[] | undefined;
+            [key: string]: string[];
           };
         };
       };
@@ -641,13 +641,13 @@ export interface paths {
         200: {
           content: {
             "text/plain": {
-              [key: string]: components["schemas"]["JacobContestDto"][] | undefined;
+              [key: string]: components["schemas"]["JacobContestDto"][];
             };
             "application/json": {
-              [key: string]: components["schemas"]["JacobContestDto"][] | undefined;
+              [key: string]: components["schemas"]["JacobContestDto"][];
             };
             "text/json": {
-              [key: string]: components["schemas"]["JacobContestDto"][] | undefined;
+              [key: string]: components["schemas"]["JacobContestDto"][];
             };
           };
         };
@@ -902,16 +902,16 @@ export interface paths {
       };
     };
   };
-  "/Graph/{playerUuid}/crops": {
+  "/Graph/{playerUuid}/{profileUuid}/crops": {
     get: {
       parameters: {
         query?: {
-          profileId?: string;
-          start?: number;
-          end?: number;
+          days?: number;
+          from?: number;
         };
         path: {
           playerUuid: string;
+          profileUuid: string;
         };
       };
       responses: {
@@ -925,6 +925,142 @@ export interface paths {
         };
         /** @description Bad Request */
         400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Graph/{playerUuid}/{profileUuid}/skills": {
+    get: {
+      parameters: {
+        query?: {
+          days?: number;
+          from?: number;
+        };
+        path: {
+          playerUuid: string;
+          profileUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["CropCollectionsDataPointDto"][];
+            "application/json": components["schemas"]["CropCollectionsDataPointDto"][];
+            "text/json": components["schemas"]["CropCollectionsDataPointDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Graph/Admin/{playerUuid}/{profileUuid}/crops": {
+    get: {
+      parameters: {
+        query?: {
+          days?: number;
+          from?: number;
+        };
+        path: {
+          playerUuid: string;
+          profileUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["CropCollectionsDataPointDto"][];
+            "application/json": components["schemas"]["CropCollectionsDataPointDto"][];
+            "text/json": components["schemas"]["CropCollectionsDataPointDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Graph/Admin/{playerUuid}/{profileUuid}/skills": {
+    get: {
+      parameters: {
+        query?: {
+          days?: number;
+          from?: number;
+        };
+        path: {
+          playerUuid: string;
+          profileUuid: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["SkillsDataPointDto"][];
+            "application/json": components["schemas"]["SkillsDataPointDto"][];
+            "text/json": components["schemas"]["SkillsDataPointDto"][];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
           content: {
             "text/plain": string;
             "application/json": string;
@@ -1720,13 +1856,13 @@ export interface paths {
         200: {
           content: {
             "text/plain": {
-              [key: string]: number | undefined;
+              [key: string]: number;
             };
             "application/json": {
-              [key: string]: number | undefined;
+              [key: string]: number;
             };
             "text/json": {
-              [key: string]: number | undefined;
+              [key: string]: number;
             };
           };
         };
@@ -1749,6 +1885,8 @@ export interface components {
       id?: string;
       displayName?: string;
       username?: string;
+      /** Format: int32 */
+      permissions?: number;
       discriminator?: string | null;
       email?: string | null;
       locale?: string | null;
@@ -1804,7 +1942,7 @@ export interface components {
       /** Format: int64 */
       timestamp?: number;
       crops?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
     };
     CropRecords: {
@@ -1949,10 +2087,10 @@ export interface components {
       /** Format: double */
       totalWeight?: number;
       cropWeight?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       bonusWeight?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       inventory?: components["schemas"]["FarmingInventoryDto"];
     };
@@ -1962,10 +2100,10 @@ export interface components {
       /** Format: double */
       totalWeight?: number;
       cropWeight?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       bonusWeight?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
     };
     FullDiscordGuild: {
@@ -2083,11 +2221,11 @@ export interface components {
       name?: string | null;
       lore?: string[] | null;
       enchantments?: ({
-        [key: string]: (number | null) | undefined;
+        [key: string]: number | null;
       }) | null;
-      attributes?: ({
-        [key: string]: string | undefined;
-      }) | null;
+      attributes?: {
+        [key: string]: string;
+      } | null;
     };
     JacobContestDto: {
       crop?: string;
@@ -2144,13 +2282,13 @@ export interface components {
     };
     LeaderboardPositionsDto: {
       misc?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       skills?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       collections?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
     };
     LinkedAccountsDto: {
@@ -2257,13 +2395,13 @@ export interface components {
       /** Format: double */
       bankBalance?: number;
       collections?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       collectionTiers?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       craftedMinions?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       pets?: components["schemas"]["PetDto"][];
       unparsed?: components["schemas"]["UnparsedApiDataDto"];
@@ -2322,6 +2460,13 @@ export interface components {
       /** Format: date-time */
       timestamp?: string;
     };
+    SkillsDataPointDto: {
+      /** Format: int64 */
+      timestamp?: number;
+      skills?: {
+        [key: string]: number;
+      };
+    };
     SkillsDto: {
       /** Format: double */
       farming?: number;
@@ -2353,10 +2498,10 @@ export interface components {
     };
     StartConditions: {
       collection?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
       tools?: {
-        [key: string]: number | undefined;
+        [key: string]: number;
       };
     };
     StrippedContestParticipationDto: {
@@ -2379,7 +2524,7 @@ export interface components {
     };
     UnparsedApiDataDto: {
       perks?: ({
-        [key: string]: (number | null) | undefined;
+        [key: string]: number | null;
       }) | null;
       tempStatBuffs?: components["schemas"]["TempStatBuff"][] | null;
       accessoryBagSettings?: Record<string, unknown> | null;
@@ -2402,14 +2547,14 @@ export interface components {
       count?: number;
       complete?: boolean;
       contests?: {
-        [key: string]: string[] | undefined;
+        [key: string]: string[];
       };
     };
     YearlyCropRecordsDto: {
       /** Format: int32 */
       year?: number;
       crops?: {
-        [key: string]: components["schemas"]["ContestParticipationWithTimestampDto"][] | undefined;
+        [key: string]: components["schemas"]["ContestParticipationWithTimestampDto"][];
       };
     };
   };

@@ -49,6 +49,7 @@
 	"type": "module",
 	"dependencies": {
 		"@popperjs/core": "^2.11.8",
+		"apexcharts": "^3.41.1",
 		"classnames": "^2.3.2",
 		"flowbite": "^1.8.0",
 		"openapi-fetch": "^0.7.1",

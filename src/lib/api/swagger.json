@@ -2143,7 +2143,7 @@
         }
       }
     },
-    "/Graph/{playerUuid}/crops": {
+    "/Graph/{playerUuid}/{profileUuid}/crops": {
       "get": {
         "tags": [
           "Graph"
@@ -2161,25 +2161,28 @@
             }
           },
           {
-            "name": "profileId",
-            "in": "query",
-            "style": "form",
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
             "schema": {
+              "maxLength": 32,
+              "minLength": 32,
               "type": "string"
             }
           },
           {
-            "name": "start",
+            "name": "days",
             "in": "query",
             "style": "form",
             "schema": {
               "type": "integer",
-              "format": "int64",
-              "default": 0
+              "format": "int32",
+              "default": 7
             }
           },
           {
-            "name": "end",
+            "name": "from",
             "in": "query",
             "style": "form",
             "schema": {
@@ -2215,6 +2218,412 @@
                   "items": {
                     "$ref": "#/components/schemas/CropCollectionsDataPointDto"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Graph/{playerUuid}/{profileUuid}/skills": {
+      "get": {
+        "tags": [
+          "Graph"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "maxLength": 32,
+              "minLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "maxLength": 32,
+              "minLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropCollectionsDataPointDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropCollectionsDataPointDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropCollectionsDataPointDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Graph/Admin/{playerUuid}/{profileUuid}/crops": {
+      "get": {
+        "tags": [
+          "Graph"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "maxLength": 32,
+              "minLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "maxLength": 32,
+              "minLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropCollectionsDataPointDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropCollectionsDataPointDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropCollectionsDataPointDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Graph/Admin/{playerUuid}/{profileUuid}/skills": {
+      "get": {
+        "tags": [
+          "Graph"
+        ],
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "maxLength": 32,
+              "minLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "maxLength": 32,
+              "minLength": 32,
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SkillsDataPointDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SkillsDataPointDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SkillsDataPointDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -4208,6 +4617,10 @@
           "username": {
             "type": "string"
           },
+          "permissions": {
+            "type": "integer",
+            "format": "int32"
+          },
           "discriminator": {
             "type": "string",
             "nullable": true
@@ -6015,6 +6428,23 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SkillsDataPointDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "skills": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
           }
         },
         "additionalProperties": false

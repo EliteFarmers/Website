@@ -67,7 +67,7 @@
 		{player}
 		members={profile.members?.filter((m) => m.uuid !== uuid)}
 		{profileDetails}
-		linked={(data.account.discordId ?? null) !== null}
+		linked={data.account.discordUsername ?? null}
 		weightInfo={member.farmingWeight}
 		{weightRank}
 		skyblockXP={member.skyblockXp ?? 0}

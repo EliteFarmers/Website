@@ -13,9 +13,9 @@
 	<div class="font-semibold text-center mt-16 mb-4 flex flex-col items-center gap-4">
 		<h1 class="text-4xl">Contest Records - Year {year}</h1>
 		<p>
-			{new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString() +
+			{new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
 				' - ' +
-				new Date(getTimeStamp(+year + 1, 0, 0) * 1000).toLocaleDateString()}
+				new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString()}
 		</p>
 		<Cropselector />
 		<div class="flex flex-col md:flex-row justify-center gap-2 md:gap-4 mb-2 w-full">
