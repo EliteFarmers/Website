@@ -116,11 +116,6 @@
 					</Accordion>
 				</div>
 				<div class="flex flex-row gap-2 justify-center">
-					{#if memberLimit === 10 && members.length > 10}
-						<Button on:click={() => (memberLimit = 100)} color="alternative">Show More</Button>
-					{:else if memberLimit === 100 && members.length > 10}
-						<Button on:click={() => (memberLimit = 10)} color="alternative">Show Less</Button>
-					{/if}
 					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
 						<span class="mr-2">Leaderboard</span>
 						<ArrowUpRightFromSquareOutline size="md" />

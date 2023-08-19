@@ -13,7 +13,7 @@
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileDetails: ProfileDetails[];
 	export let members: components['schemas']['MemberDetailsDto'][] | null | undefined;
-	export let linked: boolean;
+	export let linked: string | null;
 	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
 	export let weightRank: number;
 	export let skyblockXP: number;
@@ -21,7 +21,7 @@
 
 	$: profiles = profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
 
-	$: discordName = player?.socialMedia?.discord;
+	$: discordName = linked ?? player?.socialMedia?.discord;
 
 	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileDetails[0] };
 
@@ -53,7 +53,7 @@
 				/>
 				<div class="flex justify-start">
 					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />
-					<Discord username={discordName} {linked} />
+					<Discord username={discordName} linked={linked !== null} />
 				</div>
 				<div class="flex justify-start">
 					<a

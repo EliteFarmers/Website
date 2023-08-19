@@ -97,12 +97,13 @@
 					return val.toLocaleString();
 				},
 			},
+			x: {
+				formatter: function (val) {
+					return new Date(val).toLocaleString();
+				},
+			},
 		},
 	} satisfies ApexOptions;
 </script>
 
-{#key $selectedCrops}
-	<div class="graph mx-4 rounded-md">
-		<Apex {options} />
-	</div>
-{/key}
+<Apex {options} />
