@@ -1,20 +1,26 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	export let member: components['schemas']['EventMemberDto'];
 </script>
 
-<div class="flex items-center justify-between flex-row gap-4 max-w-2xl w-full space-y-2 text-black dark:text-white">
-	<div class="flex flex-row gap-4">
+<div
+	class="flex justify-start lg:justify-between flex-col lg:flex-row gap-1 lg:gap-4 max-w-2xl w-full space-y-2 text-black dark:text-white"
+>
+	<div class="flex flex-row gap-2 lg:gap-4">
 		<slot />
 		<img
 			src="https://mc-heads.net/avatar/{member.playerUuid}"
 			class="w-8 aspect-square rounded-sm"
 			alt="Player Head"
 		/>
-		<p class="text-lg">{member.playerName}</p>
+		<a href="/@{member.playerUuid}" class="text-lg underline flex flex-row items-center gap-1">
+			{member.playerName}
+			<ArrowUpRightFromSquareOutline size="sm" />
+		</a>
 	</div>
-	<div class="flex flex-row gap-4">
+	<div class="flex flex-row gap-2 lg:gap-4">
 		{#if member.notes || member.status === 2}
 			<p>{member.notes || (member.status === 2 ? 'Member Left' : '')}</p>
 		{/if}
