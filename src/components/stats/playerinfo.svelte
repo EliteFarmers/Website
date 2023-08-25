@@ -34,36 +34,36 @@
 
 <section class="flex justify-center w-full my-8">
 	<div
-		class="flex col-span-1 flex-col md:flex-row justify-center gap-2 md:gap-8 p-0 sm:p-4 rounded-lg w-[98%] md:w-[90%] md:bg-gray-100 md:dark:bg-zinc-800"
+		class="flex flex-col lg:flex-row justify-center items-center gap-2 lg:gap-8 p-0 sm:p-4 rounded-lg w-[98%] lg:w-[90%] lg:bg-gray-100 lg:dark:bg-zinc-800"
 	>
-		<div class="flex justify-center gap-4 w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
-			<div>
+		<div class="flex justify-center items-start gap-4 w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
+			<div class="flex justify-end">
 				<img
-					class="w-16 min-h-full object-cover"
+					class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
 					src={`https://mc-heads.net/body/${player?.uuid}`}
 					alt="User's Minecraft appearance"
 				/>
 			</div>
-			<div class="flex flex-col gap-1 justify-start">
+			<div class="flex flex-wrap xs:flex-col gap-1 justify-start items-start">
 				<PlayerName
 					ign={player?.displayname}
 					{rank}
 					members={members ?? undefined}
 					profileId={profileDetails[0].id}
 				/>
-				<div class="flex justify-start">
+				<div class="flex flex-wrap md:flex-row justify-start gap-1">
 					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />
 					<Discord username={discordName} linked={linked !== null} />
 				</div>
-				<div class="flex justify-start">
+				<div class="flex justify-start gap-1">
 					<a
-						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
+						class="p-2 px-3 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
 						href="https://sky.shiiyu.moe/stats/{$page.params.id}/{$page.params.profile}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
 					<a
-						class="p-2 px-3 mx-1 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
+						class="p-2 px-3 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
 						href="https://plancke.io/hypixel/player/stats/{$page.params.id}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">Plancke</a

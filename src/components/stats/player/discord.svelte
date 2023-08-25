@@ -19,13 +19,13 @@
 	}
 </script>
 
-<div class="block max-w-fit p-2 px-3 m-1 rounded-md bg-gray-200 dark:bg-zinc-700" id="discordId">
+<div class="block max-w-fit p-2 px-3 rounded-md bg-gray-200 dark:bg-zinc-700" id="discordId">
 	<div class="flex flex-row items-center gap-2">
 		<span class="mt-[0.1rem]">
 			<DiscordSolid />
 		</span>
 		<h3 class="whitespace-nowrap text-lg leading-none">
-			{validName ? username ?? 'Discord N/A' : 'Invalid Discord Name'}
+			{validName ? username ?? 'Discord N/A' : 'Invalid!'}
 		</h3>
 		{#if validName}
 			<div class="block w-4 h-4">
@@ -46,10 +46,7 @@
 			</Popover>
 		{:else}
 			<Popover triggeredBy="#discordId" placement="top">
-				<p class="max-w-sm">
-					User has a name that contains invalid characters entered on Hypixel. This probably means that they
-					entered an invite URL, which we don't want to display here.
-				</p>
+				<p class="max-w-sm">User entered a name that contains invalid characters on Hypixel.</p>
 			</Popover>
 		{/if}
 	</div>

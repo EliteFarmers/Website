@@ -1,3 +1,4 @@
+import { MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
 import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
 import type { RankName, Skill, PlusColor } from './skyblock';
@@ -183,6 +184,21 @@ export function RoundToFixed(num: number | null, fixed = 2) {
 	const rounded = Math.round((num + Number.EPSILON) * divider) / divider;
 
 	return isNaN(rounded) ? 0 : rounded;
+}
+
+export function FormatMinecraftText(line: string) {
+	if (line === '') return '<br>';
+
+	return line
+		.replaceAll(/§([g-z])/g, (_, code) => `⠀${code}`)
+		.replaceAll(/(§[0-9a-f])([^§]*)/g, (_, code, text) => {
+			return `<span style="${MINECRAFT_FORMATTING_STYLE[code as FormattingCode]}">${text}</span>`;
+		})
+		.replaceAll(/(⠀[g-z])([^⠀]*)/g, (_, code, text) => {
+			return `<span style="${
+				MINECRAFT_FORMATTING_STYLE[code.replace('⠀', '§') as FormattingCode]
+			}">${text}</span>`;
+		});
 }
 
 // https://www.builder.io/blog/relative-time

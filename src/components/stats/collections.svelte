@@ -25,16 +25,14 @@
 	}
 </script>
 
-<section class="py-4">
-	<div class="flex justify-center align-middle">
-		<div class="w-[90%] lg:w-[70%]">
-			<button
-				class="ml-2 -mt-4 py-1 rounded-md w-20 bg-gray-100 dark:bg-zinc-800 whitespace-nowrap text-sm hover:font-semibold"
-				on:click={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
-			>
-			{#each list as item (item.name)}
-				<CollectionBar {...item} rank={ranks?.[item.key]} />
-			{/each}
-		</div>
+<div class="flex-1 flex flex-col gap-2 -mt-5 max-w-4xl">
+	<button
+		class="ml-2 -mt-4 py-1 rounded-md w-20 bg-gray-100 dark:bg-zinc-800 whitespace-nowrap text-sm hover:font-semibold"
+		on:click={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
+	>
+	<div class="flex flex-col gap-2 w-full">
+		{#each list as item (item.name)}
+			<CollectionBar {...item} rank={ranks?.[item.key]} />
+		{/each}
 	</div>
-</section>
+</div>

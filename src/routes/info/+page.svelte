@@ -130,7 +130,15 @@
 				>.
 			</p>
 			<p class="text-lg my-4">
-				Website logo by <a class="underline" href="/@bd082a55373e4305bee348b9060e16c9">MelonKingDe</a>.
+				Farming Tool textures from <a
+					class="underline"
+					rel="nofollow noreferrer noopener"
+					href="https://hypixel.net/threads/4174260/">Hypixel+</a
+				>
+				by <a class="underline" rel="nofollow noreferrer noopener" href="https://ko-fi.com/ic22487">ic22487</a>.
+			</p>
+			<p class="text-lg my-4">
+				Website logo by <a class="underline" href="ic22487">MelonKingDe</a>.
 			</p>
 			<p class="text-lg my-4">
 				Minion Icons (and base API) from <a

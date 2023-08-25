@@ -40,42 +40,37 @@
 	}
 </script>
 
-<div class="p-1 m-1 flex gap-4 w-full">
-	<div class="bg-gray-100 dark:bg-zinc-800 rounded-lg flex justify-center align-middle w-full max-h-20">
-		<div class="hidden md:flex crop-container p-1 md:p-3 pixelated" style={frameStyle}>
-			<img src="/images/crops/{key}.png" class="rounded-lg pixelated aspect-square w-full" alt={name} />
+<div class="flex flex-row justify-between gap-2 w-full align-middle items-center">
+	<div class="flex flex-1 justify-between align-middle w-full max-h-30 bg-gray-100 dark:bg-zinc-800 rounded-lg p-1">
+		<div class="flex flex-row justify-start items-center gap-2 w-full">
+			<div class="flex crop-container pixelated w-14 md:w-20 md:h-20 aspect-square" style={frameStyle}>
+				<img
+					src="/images/crops/{key}.png"
+					class="rounded-lg pixelated aspect-square w-full p-[16%]"
+					alt={name}
+				/>
+			</div>
+			<div class="flex flex-col align-middle justify-center w-full">
+				<div class="flex flex-row items-center gap-1">
+					{#if rank > 0}
+						<a
+							href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
+							class="px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+						>
+							<span class="text-sm xs:text-md sm:text-lg">#</span><span
+								class="text-md xs:text-lg sm:text-xl">{rank}</span
+							>
+						</a>
+					{/if}
+					<p class="text-md sm:text-lg font-semibold whitespace-nowrap">{name}</p>
+				</div>
+				<p class="text-lg md:text-xl lg:text-2xl whitespace-nowrap">{value.toLocaleString()}</p>
+			</div>
 		</div>
-		<div class="flex flex-col gap-2 w-[100%] px-3 py-1">
-			<div class="flex justify-between">
-				<span>
-					<h1 class="w-1 md:w-fit text-xl md:text-2xl">
-						<span class="whitespace-nowrap">
-							{#if rank > 0}
-								<a
-									href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
-									class="pd-0.5 px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
-								>
-									<span class="text-sm xs:text-md sm:text-lg">#</span><span
-										class="text-md xs:text-lg sm:text-xl">{rank}</span
-									>
-								</a>
-							{/if}
-							<span class="hidden md:inline">{value.toLocaleString()}</span>
-							<span class="text-lg">{name}</span>
-						</span>
-						<span class="inline md:hidden">{value.toLocaleString()}</span>
-					</h1>
-				</span>
-				<h1 class="flex flex-col-reverse md:flex-row justify-end">
-					<span class="text-lg text-right text-gray-600">{tier} / {maxTier}</span>
-					<span class="md:ml-2 text-right font-semibold text-xl">{weight.toLocaleString()}</span>
-				</h1>
-			</div>
-			<div class="hidden md:flex flex-row gap-[0.15rem] md:gap-1 segments h-6">
-				{#each Array.from(Array(maxTier), (_, i) => i) as i}
-					<div class="w-1/6 h-[100%] {i < tier ? 'bg-green-500' : 'bg-gray-200 dark:bg-zinc-700'}" />
-				{/each}
-			</div>
+
+		<div class="flex flex-col justify-center align-middle w-full p-1">
+			<p class="md:ml-2 text-right font-semibold text-lg md:text-xl lg:text-2xl">{weight.toLocaleString()}</p>
+			<p class="md:ml-2 text-right text-md md:text-lg text-gray-500">{tier} / {maxTier}</p>
 		</div>
 	</div>
 	<Minion name={name ?? ''} {index} tierField={minionTierField} />
@@ -83,31 +78,11 @@
 
 <style lang="postcss">
 	.crop-container {
-		@apply align-middle justify-center aspect-square object-contain w-20 h-20;
+		@apply align-middle justify-center aspect-square object-contain;
 		aspect-ratio: 1 / 1;
 		background-repeat: no-repeat;
 		background-size: 85% 85%;
 		background-position: center;
 		background-blend-mode: color;
-	}
-
-	/* Mobile styles */
-	@media (max-width: 640px) {
-		.crop-container {
-			width: 8vw;
-			height: 8vw;
-		}
-	}
-
-	/* Round left corners on first child of .segments */
-	.segments > :first-child {
-		border-top-left-radius: 0.25rem;
-		border-bottom-left-radius: 0.25rem;
-	}
-
-	/* Round right corners on last child of .segments */
-	.segments > :last-child {
-		border-top-right-radius: 0.25rem;
-		border-bottom-right-radius: 0.25rem;
 	}
 </style>

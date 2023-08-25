@@ -52,24 +52,24 @@
 			<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level}</strong></span>
 		</div>
 		<div
-			class="relative w-[100%] bg-slate-300 dark:bg-zinc-500 h-8 rounded-lg"
+			class="relative w-[100%] bg-gray-100 dark:bg-zinc-800 h-8 rounded-lg"
 			on:mouseenter={() => (hovering = true)}
 			on:mouseleave={() => (hovering = false)}
 			role="none"
 		>
 			<div
-				class="absolute top-0 bottom-0 left-0 rounded-lg bg-yellow-100 dark:bg-yellow-600"
+				class="absolute top-0 bottom-0 left-0 rounded-lg bg-yellow-200 dark:bg-yellow-700"
 				style="width: {Math.max(2, percent)}%;"
 			/>
 			{#if percent >= 100}
 				<!-- Gold color to show completion -->
 				<div
-					class="absolute top-0 left-0 w-full h-full rounded-lg bg-yellow-300 dark:bg-yellow-400"
+					class="absolute top-0 left-0 w-full h-full rounded-lg bg-yellow-400 dark:bg-yellow-600"
 					style="opacity: 0.7;"
 				/>
 			{/if}
-			<div class="absolute text-black grid align-middle justify-center w-[100%] h-[100%]">
-				<span>{hovering ? expanded : readable}</span>
+			<div class="absolute flex items-center justify-center w-full h-full">
+				<p class="text-lg leading-none font-semibold">{hovering ? expanded : readable}</p>
 			</div>
 		</div>
 	</div>

@@ -11,8 +11,8 @@
 
 <div class="grid col-span-1 z-10" id="profileName">
 	<div class="flex flex-row gap-2 items-center">
-		<div class="p-2 mx-1 bg-gray-200 dark:bg-zinc-700 rounded-md">
-			<h2 class="text-3xl">
+		<div class="p-1 lg:p-2 px-2 mx-1 bg-gray-200 dark:bg-zinc-700 rounded-md">
+			<h2 class="text-2xl md:text-3xl">
 				{selected.name}
 			</h2>
 		</div>
