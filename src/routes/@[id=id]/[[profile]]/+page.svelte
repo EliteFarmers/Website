@@ -17,6 +17,7 @@
 
 	import type { PageData } from './$types';
 	import { browser } from '$app/environment';
+	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 
 	export let data: PageData;
 
@@ -76,7 +77,7 @@
 
 	<APIstatus api={member.api} />
 
-	<section class="flex items-center justify-center w-full py-4">
+	<section class="flex items-center justify-center w-full my-4 mb-12">
 		<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
 			<div class="w-[90%]">
 				<Skillbar name="Farming" progress={farmingXp} rank={data.ranks?.skills?.farming} />
@@ -109,7 +110,12 @@
 		</div>
 	{/if}
 
-	<Collections {collections} ranks={data.ranks?.collections} />
+	<section class="flex w-full justify-center align-middle">
+		<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
+			<Collections {collections} ranks={data.ranks?.collections} />
+			<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
+		</div>
+	</section>
 
 	<JacobInfo
 		jacob={member.jacob}
@@ -124,15 +130,19 @@
 	/>
 
 	<Breakdown weight={member.farmingWeight} />
-</main>
 
-<h1 class="text-center text-md m-16 flex flex-col">
-	<span>
-		<span class="select-none text-gray-500">Player UUID:</span>
-		{uuid}
-	</span>
-	<span>
-		<span class="select-none text-gray-500">Last Updated:</span>
-		{new Date((member?.lastUpdated ?? 0) * 1000).toLocaleString()}
-	</span>
-</h1>
+	<div class="text-center text-md my-16 flex flex-col justify-center w-full">
+		<p>
+			<span class="select-none text-gray-500">Player UUID:</span>
+			<span class="select-all">{uuid}</span>
+		</p>
+		<p>
+			<span class="select-none text-gray-500">Profile UUID:</span>
+			<span class="select-all">{profile.profileId}</span>
+		</p>
+		<p>
+			<span class="select-none text-gray-500">Last Updated:</span>
+			{new Date((member?.lastUpdated ?? 0) * 1000).toLocaleString()}
+		</p>
+	</div>
+</main>
