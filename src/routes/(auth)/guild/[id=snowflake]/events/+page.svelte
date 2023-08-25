@@ -1,15 +1,20 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Accordion, AccordionItem, Button, Input, Label, Modal, Popover } from 'flowbite-svelte';
+	import { ArrowUpRightFromSquareOutline, ArrowUpSolid, GearSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 	import type { PageData, ActionData } from './$types';
 	import Head from '$comp/head.svelte';
-	import { ArrowUpRightFromSquareOutline, ArrowUpSolid, GearSolid, TrashBinSolid } from 'flowbite-svelte-icons';
+	import Member from './member.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
 
 	let clickOutsideModal = false;
 	let clickOutsideModalEdit = false;
+	let banMemberModal = false;
+
+	let banMemberName = '';
+	let banMemberUuid = '';
 
 	let selectedEventId = '';
 
@@ -96,49 +101,79 @@
 				<Accordion flush={true}>
 					<AccordionItem paddingFlush="p-2">
 						<span slot="header" class="text-lg first-letter:capitalize">Event Members</span>
-						{#each members as member (member.playerUuid)}
-							<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
-								<form method="POST" action="?/banmember" use:enhance>
-									<input type="hidden" name="id" value={event.id} />
-									<input type="hidden" name="uuid" value={member.playerUuid} />
-									<Button type="submit" color="red" class="ban" size="sm">
+						<div class="flex flex-col w-full justify-center items-center gap-2 justify-items-center">
+							{#each members as member (member.playerUuid)}
+								<Member {member}>
+									<Button
+										color="red"
+										class="ban"
+										size="sm"
+										on:click={() => {
+											banMemberName = member.playerName ?? '';
+											banMemberUuid = member.playerUuid ?? '';
+											selectedEventId = event.id ?? '';
+											banMemberModal = true;
+										}}
+									>
 										<TrashBinSolid size="sm" />
-										<Popover triggeredBy=".ban" placement="left">
-											<p>Ban this user from the event</p>
-										</Popover>
 									</Button>
-								</form>
-								<p class="text-lg">{member.playerName}</p>
-								<p>{+(member.amountGained ?? 0).toLocaleString()}</p>
-								<p>{member.notes || (member.status === 2 ? 'Member Left' : '')}</p>
-							</div>
-						{/each}
+								</Member>
+							{/each}
+						</div>
+						<Popover triggeredBy=".ban" placement="left">
+							<p>Ban this user from the event</p>
+						</Popover>
 					</AccordionItem>
 					<AccordionItem paddingFlush="p-2">
 						<span slot="header" class="text-lg first-letter:capitalize">Removed Event Members</span>
-						{#each bans as member (member.playerUuid)}
-							<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
-								<form method="POST" action="?/unbanmember" use:enhance>
-									<input type="hidden" name="id" value={event.id} />
-									<input type="hidden" name="uuid" value={member.playerUuid} />
-									<Button type="submit" color="green" class="unban" size="sm">
-										<ArrowUpSolid size="sm" />
-										<Popover triggeredBy=".unban" placement="left">
-											<p>Unban this user from the event</p>
-										</Popover>
-									</Button>
-								</form>
-								<p class="text-lg">{member.playerName}</p>
-								<p>{+(member.amountGained ?? 0).toLocaleString()}</p>
-								<p>{member.notes || 'Member Left'}</p>
-							</div>
-						{/each}
+						<div class="flex flex-col w-full justify-center items-center gap-2 justify-items-center">
+							{#each bans as member (member.playerUuid)}
+								<Member {member}>
+									<form method="POST" action="?/unbanmember" use:enhance>
+										<input type="hidden" name="id" value={event.id} />
+										<input type="hidden" name="uuid" value={member.playerUuid} />
+										<Button type="submit" color="green" class="unban" size="sm">
+											<ArrowUpSolid size="sm" />
+										</Button>
+									</form>
+								</Member>
+							{/each}
+						</div>
+						<Popover triggeredBy=".unban" placement="left">
+							<p>Unban this user from the event</p>
+						</Popover>
 					</AccordionItem>
 				</Accordion>
 			</div>
 		{/each}
 	</section>
 </main>
+
+<Modal title="Ban Event Member" bind:open={banMemberModal} autoclose={false}>
+	<form
+		method="post"
+		action="?/banmember"
+		class="flex flex-col gap-2"
+		use:enhance={() => {
+			return async ({ result, update }) => {
+				if (result) banMemberModal = false;
+				update();
+			};
+		}}
+	>
+		<h3 class="text-lg mb-2 text-black dark:text-white">{banMemberName} - {banMemberUuid}</h3>
+		<input type="hidden" name="id" bind:value={selectedEventId} />
+		<input type="hidden" name="uuid" bind:value={banMemberUuid} />
+		<Label class="space-y-2">
+			<span>Ban Reason</span>
+			<Input let:props name="reason" placeholder="Cheating - Macro">
+				<input {...props} type="text" maxlength="64" required />
+			</Input>
+		</Label>
+
+		<Button type="submit">Ban</Button>
+	</form>
+</Modal>
 
 <Modal title="Create New Event" bind:open={clickOutsideModal} autoclose={false}>
 	<p>Events cannot be deleted after being created (right now), be sure that you want to do this.</p>
