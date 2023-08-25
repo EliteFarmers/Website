@@ -36,9 +36,7 @@
 	<div
 		class="flex flex-col lg:flex-row justify-center items-center gap-2 lg:gap-8 p-0 sm:p-4 rounded-lg w-[98%] lg:w-[90%] lg:bg-gray-100 lg:dark:bg-zinc-800"
 	>
-		<div
-			class="flex justify-center items-start gap-4 w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800"
-		>
+		<div class="flex justify-center items-start gap-4 w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
 			<div class="flex justify-end">
 				<img
 					class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
