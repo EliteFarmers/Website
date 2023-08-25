@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="relative flex flex-row justify-between items-center gap-1 max-w-fit p-1 m-1 text-lg bg-gray-200 dark:bg-zinc-700 rounded-md"
+	class="relative flex flex-row justify-between items-center gap-1 max-w-fit p-1 text-lg bg-gray-200 dark:bg-zinc-700 rounded-md"
 	aria-label="Skyblock Level"
 >
 	{#if rank !== -1}
