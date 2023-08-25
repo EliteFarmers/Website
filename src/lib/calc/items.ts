@@ -1,7 +1,8 @@
-import type { components } from "$lib/api/api";
-import { Rarity } from "$lib/constants/rates";
+import type { components } from '$lib/api/api';
+import { Rarity } from '$lib/constants/rates';
+import { REFORGES, type Reforge } from '$lib/constants/reforges';
 
-export type Item = components["schemas"]['ItemDto'];
+export type Item = components['schemas']['ItemDto'];
 
 export function GetRarity(item: Item): Rarity {
 	const line = item?.lore?.at(-1);
@@ -27,4 +28,13 @@ export function GetRarity(item: Item): Rarity {
 		default:
 			return Rarity.Common;
 	}
+}
+
+export function GetReforge(item: Item): Reforge | undefined {
+	const modifier = item.attributes?.modifier;
+	if (!modifier) return undefined;
+
+	const reforge = REFORGES[modifier];
+
+	return reforge;
 }
