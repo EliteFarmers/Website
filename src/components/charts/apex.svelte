@@ -4,6 +4,7 @@
 	import { Spinner } from 'flowbite-svelte';
 
 	export let options: ApexCharts.ApexOptions;
+	export let animate = true;
 
 	let charts: typeof ApexCharts | null = null;
 	let loaded = false;
@@ -11,14 +12,26 @@
 	const apex = (node: HTMLElement, options: ApexCharts.ApexOptions) => {
 		if (!charts || !loaded) return;
 
+		if (!animate) {
+			options.chart = {
+				...options.chart,
+				animations: {
+					...(options.chart?.animations ?? {}),
+					enabled: false,
+				},
+			};
+		}
+
 		const chart = new charts(node, options);
 		chart.render();
 
 		return {
 			update: (newOptions: ApexCharts.ApexOptions) => {
-				chart.updateOptions(newOptions, true);
+				chart.updateOptions(newOptions, animate, animate);
 			},
-			destroy: chart.destroy,
+			destroy: () => {
+				chart.destroy();
+			},
 		};
 	};
 

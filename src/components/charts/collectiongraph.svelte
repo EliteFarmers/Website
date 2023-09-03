@@ -36,9 +36,6 @@
 
 	$: options = {
 		series: [...graphData],
-		theme: {
-			mode: 'dark',
-		},
 		chart: {
 			type: 'area',
 			stacked: false,
@@ -106,4 +103,4 @@
 	} satisfies ApexOptions;
 </script>
 
-<Apex {options} />
+<Apex {options} animate={false} />

@@ -1,4 +1,4 @@
-import type { FarmingTool } from "./fortune";
+import type { FarmingTool } from './fortune';
 
 export function GetFarmingAbilityFortune(tool: FarmingTool) {
 	let fortune = 0;

@@ -1,4 +1,4 @@
-import { FARMING_TOOLS, type Crop, Rarity, type FarmingToolInfo, FarmingToolAbility } from '$lib/constants/rates';
+import { FARMING_TOOLS, type Crop, Rarity, type FarmingToolInfo } from '$lib/constants/rates';
 import { Stat, type Reforge, type ReforgeTier } from '$lib/constants/reforges';
 import { GetFarmingAbilityFortune } from './abilities';
 import { GetRarity, GetReforge, PreviousRarity, type Item } from './items';
@@ -40,7 +40,7 @@ export class FarmingTool {
 
 	private sumFortune(): number {
 		let sum = 0;
-		
+
 		// Base
 		const baseRarity = this.recombobulated ? PreviousRarity(this.rarity) : this.rarity;
 		sum += this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune] ?? 0;
