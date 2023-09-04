@@ -1,18 +1,27 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, PageServerParentData } from './$types';
 import { GetAccount, GetAdminCropCollectionPoints, GetAdminSkillPoints } from '$lib/api/elite';
+import type { components } from '$lib/api/api';
 
 export const load = (async ({ params, parent, locals }) => {
-	const { user } = await parent();
+	const { user, account: aData } = (await parent()) as PageServerParentData & {
+		account?: components['schemas']['MinecraftAccountDto'];
+	};
 	const { discord_access_token: token } = locals;
+	const { id, profile } = params;
+	let account = aData;
 
-	if (!token || (user.permissions !== 64 && user.permissions !== 17)) {
+	if (!token || (user.permissions ?? 0) < 17) {
 		throw error(404, 'Not Found');
 	}
 
-	const { id, profile } = params;
-
-	const { data: account } = await GetAccount(id).catch(() => ({ data: undefined }));
+	if (!account?.id) {
+		const { data: accountData } = await GetAccount(id).catch(() => ({ data: undefined }));
+		if (!accountData?.id) {
+			throw error(404, 'Account not found');
+		}
+		account = accountData;
+	}
 
 	if (!account?.id) {
 		throw error(404, 'Account not found');

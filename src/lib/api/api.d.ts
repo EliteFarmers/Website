@@ -154,6 +154,114 @@ export interface paths {
       };
     };
   };
+  "/Admins": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["AccountWithPermsDto"][];
+            "application/json": components["schemas"]["AccountWithPermsDto"][];
+            "text/json": components["schemas"]["AccountWithPermsDto"][];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Admin/Permissions/{memberId}/{permission}": {
+    post: {
+      parameters: {
+        path: {
+          memberId: number;
+          permission: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          memberId: number;
+          permission: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
   "/Event/create": {
     post: {
       requestBody?: {
@@ -1875,6 +1983,15 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    AccountWithPermsDto: {
+      id?: string;
+      displayName?: string;
+      username?: string;
+      /** Format: int32 */
+      permissions?: number;
+      discriminator?: string | null;
+      avatar?: string | null;
+    };
     ApiAccessDto: {
       inventories?: boolean;
       collections?: boolean;
@@ -2046,6 +2163,7 @@ export interface components {
     EventMemberDetailsDto: {
       playerUuid?: string | null;
       playerName?: string | null;
+      profileId?: string | null;
       eventId?: string;
       status?: components["schemas"]["EventMemberStatus"];
       amountGained?: string | null;
@@ -2054,6 +2172,7 @@ export interface components {
     EventMemberDto: {
       playerUuid?: string | null;
       playerName?: string | null;
+      profileId?: string | null;
       eventId?: string;
       status?: components["schemas"]["EventMemberStatus"];
       amountGained?: string | null;
@@ -2306,6 +2425,7 @@ export interface components {
     MemberDetailsDto: {
       uuid?: string;
       username?: string;
+      profileName?: string | null;
       active?: boolean;
       /** Format: double */
       farmingWeight?: number;
@@ -2387,6 +2507,7 @@ export interface components {
     ProfileMemberDto: {
       profileId?: string;
       playerUuid?: string;
+      profileName?: string;
       api?: components["schemas"]["ApiAccessDto"];
       /** Format: int32 */
       skyblockXp?: number;
@@ -2564,6 +2685,8 @@ export interface components {
   headers: never;
   pathItems: never;
 }
+
+export type $defs = Record<string, never>;
 
 export type external = Record<string, never>;
 

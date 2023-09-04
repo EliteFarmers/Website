@@ -110,7 +110,7 @@
 		</div>
 	{/if}
 
-	<section class="flex w-full justify-center align-middle">
+	<section class="flex w-full justify-center align-middle mb-8">
 		<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
 			<Collections {collections} ranks={data.ranks?.collections} />
 			<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />

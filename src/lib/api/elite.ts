@@ -2,8 +2,7 @@ import createClient from 'openapi-fetch';
 import type { components, paths } from './api';
 import { ELITE_API_URL } from '$env/static/private';
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
-const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
+export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
 });
 
