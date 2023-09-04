@@ -1,4 +1,13 @@
-import { Rarity } from './rates';
+export enum Rarity {
+	Common = 'Common',
+	Uncommon = 'Uncommon',
+	Rare = 'Rare',
+	Epic = 'Epic',
+	Legendary = 'Legendary',
+	Mythic = 'Mythic',
+	Special = 'Special',
+	Divine = 'Divine',
+}
 
 export enum Stat {
 	Strength = 'Strength',

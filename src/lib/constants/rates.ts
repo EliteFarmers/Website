@@ -1,4 +1,4 @@
-import { ReforgeTarget, Stat } from './reforges';
+import { Rarity, ReforgeTarget, Stat } from './reforges';
 
 export enum Crop {
 	Cactus = 'Cactus',
@@ -12,17 +12,6 @@ export enum Crop {
 	SugarCane = 'Sugar Cane',
 	Wheat = 'Wheat',
 	Seeds = 'Seeds',
-}
-
-export enum Rarity {
-	Common = 'Common',
-	Uncommon = 'Uncommon',
-	Rare = 'Rare',
-	Epic = 'Epic',
-	Legendary = 'Legendary',
-	Mythic = 'Mythic',
-	Special = 'Special',
-	Divine = 'Divine',
 }
 
 export const NPC_SELL_PRICES = {

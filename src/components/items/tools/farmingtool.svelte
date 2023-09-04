@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { FarmingTool } from '$lib/calc/fortune';
 	import { FormatMinecraftText } from '$lib/format';
-	import { Button, Modal } from 'flowbite-svelte';
+	import { Button, Modal, Popover } from 'flowbite-svelte';
 	import Lore from '../lore.svelte';
 	import { FileLinesSolid } from 'flowbite-svelte-icons';
+	import { STAT_ICONS, Stat } from '$lib/constants/reforges';
 
 	export let tool: FarmingTool;
 
@@ -11,11 +12,11 @@
 </script>
 
 <div
-	class="flex basis-[5rem] w-full max-h-30 flex-row gap-2 justify-between bg-gray-100 dark:bg-zinc-800 rounded-md p-2"
+	class="flex basis-[5rem] w-full max-h-30 flex-row gap-2 justify-between bg-gray-100 dark:bg-zinc-800 rounded-md p-1"
 >
 	<div class="flex flex-row gap-2 items-center">
 		<img
-			class="w-8 sm:w-12 md:w-16 aspect-square pixelated"
+			class="w-14 md:w-20 md:h-20 aspect-square pixelated"
 			src={`/packs/hypixelplus/tools/farming/${tool.item.skyblockId?.toLowerCase()}.png`}
 			alt="Tool"
 		/>
@@ -25,7 +26,36 @@
 			<div class="text-md md:text-lg">{tool.farmed.toLocaleString()}</div>
 		</div>
 	</div>
-	<div class="flex flex-col justify-center">
+	<div class="flex flex-row items-center justify-end gap-2">
+		<div class="flex flex-col items-end justify-between gap-1 py-1">
+			<div class="relative rounded-md bg-gray-200 dark:bg-zinc-700 min-h-4 h-full">
+				{#if tool.farmingForDummies > 0}
+					<div
+						style="width: {(tool.farmingForDummies / 5) * 100}%;"
+						class="absolute rounded-md h-full l-0 bg-green-300 dark:bg-green-600"
+					/>
+				{/if}
+				<p class="relative text-md md:text-lg px-1 z-10 font-mono">
+					{STAT_ICONS[Stat.FarmingFortune]}
+					{tool.farmingForDummies}/5 FFF
+				</p>
+				<Popover strategy="fixed" class="z-50" placement="left">
+					<p class="whitespace-nowrap">Farming For Dummies</p>
+				</Popover>
+			</div>
+			<div class="relative rounded-md bg-gray-200 dark:bg-zinc-700 min-h-4 h-full">
+				{#if tool.getCultivatingLevel() > 0}
+					<div
+						style="width: {(tool.getCultivatingLevel() / 10) * 100}%;"
+						class="absolute rounded-md h-full l-0 bg-green-300 dark:bg-green-600"
+					/>
+				{/if}
+				<p class="relative text-md md:text-lg px-1 z-10 font-mono">{tool.getCultivatingLevel()}/10</p>
+				<Popover strategy="fixed" class="z-50" placement="left">
+					<p class="whitespace-nowrap">Cultivating Enchant</p>
+				</Popover>
+			</div>
+		</div>
 		<Button size="xs" on:click={() => (openModal = true)} color="none">
 			<FileLinesSolid size="md" />
 		</Button>

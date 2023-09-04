@@ -1,9 +1,12 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, PageServerParentData } from './$types';
 import { GetAccount, GetAdminCropCollectionPoints, GetAdminSkillPoints } from '$lib/api/elite';
+import type { components } from '$lib/api/api';
 
 export const load = (async ({ params, parent, locals }) => {
-	const { user, account: aData } = await parent();
+	const { user, account: aData } = (await parent()) as PageServerParentData & {
+		account?: components['schemas']['MinecraftAccountDto'];
+	};
 	const { discord_access_token: token } = locals;
 	const { id, profile } = params;
 	let account = aData;

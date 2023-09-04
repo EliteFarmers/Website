@@ -1,6 +1,5 @@
 import type { components } from '$lib/api/api';
-import { Rarity } from '$lib/constants/rates';
-import { REFORGES, type Reforge } from '$lib/constants/reforges';
+import { REFORGES, Rarity, type Reforge } from '$lib/constants/reforges';
 
 export type Item = components['schemas']['ItemDto'];
 

@@ -1,5 +1,5 @@
-import { FARMING_TOOLS, type Crop, Rarity, type FarmingToolInfo } from '$lib/constants/rates';
-import { Stat, type Reforge, type ReforgeTier } from '$lib/constants/reforges';
+import { FARMING_TOOLS, type Crop, type FarmingToolInfo } from '$lib/constants/rates';
+import { Stat, type Reforge, type ReforgeTier, Rarity } from '$lib/constants/reforges';
 import { GetFarmingAbilityFortune } from './abilities';
 import { GetRarity, GetReforge, PreviousRarity, type Item } from './items';
 
@@ -10,7 +10,7 @@ export class FarmingTool {
 
 	public declare readonly rarity: Rarity;
 	public declare readonly counter: number | undefined;
-	public declare readonly cultivating: number | undefined;
+	public declare readonly cultivating: number;
 	public declare readonly reforge: Reforge | undefined;
 	public declare readonly reforgeStats: ReforgeTier | undefined;
 
@@ -30,11 +30,11 @@ export class FarmingTool {
 
 		this.rarity = GetRarity(item);
 		this.counter = this.getCounter();
-		this.cultivating = this.getCultivating();
+		this.cultivating = this.getCultivating() ?? 0;
 		this.reforge = GetReforge(item);
-		this.reforgeStats = this.reforge?.tiers[this.rarity];
+		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
 
-		this.farmingForDummies = +(this.item.attributes?.farming_for_dummies ?? 0);
+		this.farmingForDummies = +(this.item.attributes?.farming_for_dummies_count ?? 0);
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 	}
 
@@ -62,6 +62,10 @@ export class FarmingTool {
 	private getCultivating(): number | undefined {
 		const cultivating = +(this.item?.attributes?.farmed_cultivating ?? 0);
 		return cultivating && !isNaN(cultivating) ? cultivating : undefined;
+	}
+
+	getCultivatingLevel(): number {
+		return this.item.enchantments?.cultivating ?? 0;
 	}
 
 	get farmed(): number {
