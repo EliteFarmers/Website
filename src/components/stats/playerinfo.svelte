@@ -31,7 +31,7 @@
 		undefined;
 	$: rank = getRankDefaults(rankName as RankName);
     
-    let dashId = i => i.substr(0,8)+"-"+i.substr(8,4)+"-"+i.substr(12,4)+"-"+i.substr(16,4)+"-"+i.substr(20);
+    let dashId = (i: string) => i.substring(0,8)+"-"+i.substring(8,4)+"-"+i.substring(12,4)+"-"+i.substring(16,4)+"-"+i.substring(20);
     $: dashedProfileId = dashId(profileDetails[0].id);
 </script>
 
