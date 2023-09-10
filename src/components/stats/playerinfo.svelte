@@ -30,6 +30,9 @@
 		(player?.monthlyPackageRank !== 'NONE' ? player?.monthlyPackageRank : player?.newPackageRank) ??
 		undefined;
 	$: rank = getRankDefaults(rankName as RankName);
+    
+    let dashId = i => i.substr(0,8)+"-"+i.substr(8,4)+"-"+i.substr(12,4)+"-"+i.substr(16,4)+"-"+i.substr(20);
+    $: dashedProfileId = dashId(profileDetails[0].id);
 </script>
 
 <section class="flex justify-center w-full my-8">
@@ -58,7 +61,7 @@
 				<div class="flex justify-start gap-1">
 					<a
 						class="p-2 px-3 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
-						href="https://sky.shiiyu.moe/stats/{player?.uuid}/{profileDetails[0].id}"
+						href="https://sky.shiiyu.moe/stats/{player?.uuid}/{dashedProfileId}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
