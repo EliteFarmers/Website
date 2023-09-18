@@ -37,7 +37,7 @@
 				{/if}
 				<p class="relative text-md md:text-lg px-1 z-10 font-mono">
 					{STAT_ICONS[Stat.FarmingFortune]}
-					{tool.farmingForDummies}/5 FFF
+					{tool.farmingForDummies}/5 FFD
 				</p>
 				<Popover strategy="fixed" class="z-50" placement="left">
 					<p class="whitespace-nowrap">Farming For Dummies</p>
