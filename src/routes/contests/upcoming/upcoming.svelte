@@ -39,7 +39,9 @@
 			})}
 		</h4>
 		<!-- Countdown/relative time -->
-		<h4 class="text-xl text-center whitespace-nowrap font-semibold bg-zinc-900 max-w-fit px-2 rounded-md">
+		<h4
+			class="text-xl text-center whitespace-nowrap font-semibold bg-gray-200 dark:bg-zinc-900 max-w-fit px-2 rounded-md"
+		>
 			{#if current}
 				Started
 			{:else}
@@ -51,7 +53,7 @@
 	</div>
 	<div class="flex flex-row gap-4 mx-4 w-[1/1] md:w-[1/2]">
 		{#each crops as name (name)}
-			<div class="flex-col flex-1 items-center text-center max-w-2xl rounded-md bg-zinc-700">
+			<div class="flex-col flex-1 items-center text-center max-w-2xl rounded-md bg-gray-300 dark:bg-zinc-700">
 				<img class="w-16 pixelated" src={PROPER_CROP_TO_IMG[name]} alt="" />
 				<Popover>
 					{name}

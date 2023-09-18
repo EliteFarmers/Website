@@ -35,7 +35,7 @@
 						href={`/@${ign}/${pId.name}`}
 						class="p-2 text-xl font-semibold flex gap-4 justify-between text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
 					>
-						<span>{pId.name} <Gamemode gameMode={pId.gameMode} /></span>
+						<span>{pId.name} <Gamemode popover={false} gameMode={pId.gameMode} /></span>
 						<span class="font-normal">{pId.weight.toLocaleString()}</span>
 					</a>
 				{/each}

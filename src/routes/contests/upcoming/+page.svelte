@@ -90,10 +90,10 @@
 		</div>
 	{/if}
 
-	<p class="py-16">
-		This data will soon be supplied by users of the mod <a
-			class="underline"
-			href="https://github.com/hannibal002/SkyHanni/">SkyHanni</a
-		>. Thank you!
+	<p class="py-16 max-w-2xl text-center">
+		This data is supplied by users of the mod <a class="underline" href="https://github.com/hannibal002/SkyHanni/"
+			>SkyHanni</a
+		>. Open your calender at the start of the skyblock year to share them with the website and other SkyHanni users!
+		No data is sent without your consent when using the mod.
 	</p>
 </main>

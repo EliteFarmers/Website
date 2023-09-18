@@ -4,6 +4,9 @@ import { ELITE_API_URL } from '$env/static/private';
 
 export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	baseUrl: ELITE_API_URL,
+	headers: {
+		'User-Agent': 'EliteWebsite',
+	},
 });
 
 export const GetAuthorizedAccount = async (accessToken: string) =>

@@ -54,23 +54,36 @@
 	{/if}
 
 	{#if data.events.length > 0}
+		{@const now = Date.now() / 1000}
+		{@const upcoming = data.events.filter((e) => e.endTime && +e.endTime >= now)}
+		{@const past = data.events.filter((e) => e.endTime && +e.endTime < now)}
+
 		<section class="flex flex-col gap-4 items-center max-w-5xl w-full">
 			<h2 class="text-3xl my-4">Upcoming Events</h2>
-			<div class="flex flex-col md:mx-32 gap-4 w-full">
-				{#each data.events.filter((e) => e.endTime && +e.endTime >= Date.now() / 1000) as event}
-					<Event {event} guild={data.guild} />
-				{/each}
-			</div>
-			<Accordion flush={true} class="w-full">
-				<AccordionItem defaultClass="flex flex-row items-center justify-center gap-4 w-full">
-					<div slot="header">
-						<h2 class="text-3xl">Past Events</h2>
-					</div>
-					{#each data.events.filter((e) => e.endTime && +e.endTime < Date.now() / 1000) as event}
+			{#if upcoming.length > 0}
+				<div class="flex flex-col md:mx-32 gap-4 w-full">
+					{#each upcoming as event}
 						<Event {event} guild={data.guild} />
 					{/each}
-				</AccordionItem>
-			</Accordion>
+				</div>
+			{:else}
+				<p class="max-w-xl text-center my-2">This server does not have any upcoming events right now!</p>
+			{/if}
+
+			{#if past.length > 0}
+				<Accordion flush={true} class="w-full">
+					<AccordionItem defaultClass="flex flex-row items-center justify-center gap-4 w-full">
+						<div slot="header">
+							<h2 class="text-3xl text-black dark:text-white">Past Events</h2>
+						</div>
+						<div class="flex flex-col gap-2">
+							{#each past as event}
+								<Event {event} guild={data.guild} />
+							{/each}
+						</div>
+					</AccordionItem>
+				</Accordion>
+			{/if}
 		</section>
 	{/if}
 
