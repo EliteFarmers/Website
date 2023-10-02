@@ -98,7 +98,7 @@
 						<iframe
 							id="kofiframe"
 							src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
-							style="border:none;width:100%;padding:4px;"
+							style="border:none;width:100%;"
 							height="570px"
 							title="kaeso"
 						/>
