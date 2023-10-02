@@ -99,12 +99,12 @@
 							id="kofiframe"
 							src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
 							style="border:none;width:100%;padding:4px;"
-							height="512"
+							height="570px"
 							title="kaeso"
 						/>
 					{:else}
 						<button on:click={() => (donationClicked = true)}>
-							<img src="images/SupportKaeso.webp" alt="Support The Website" /></button
+							<img src="images/SupportKaeso.webp" alt="Support The Website" style="height:570px;"/></button
 						>
 					{/if}
 				</Card>
