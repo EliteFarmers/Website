@@ -8,6 +8,7 @@
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { PageData } from './$types';
 	import Serverbar from '$comp/stats/discord/serverbar.svelte';
+	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 
 	export let data: PageData;
 
@@ -37,30 +38,31 @@
 					<h1 class="mb-4 w-full text-xl font-semibold">Join The Discord</h1>
 					<p class="w-full mb-6">
 						Join an exclusive community of Elite Farmers! Full membership unlocked after reaching {PUBLIC_WEIGHT_REQ}
-						farming weight. Also home to support for the bot/website, and thousands of fellow farmers!
+						farming weight. Talk to the best of the best with thousands of fellow farmers! Also, join the support
+						server for suggestions, bug reports, and coding talk!
 					</p>
-					<Button
-						href="/discord"
-						class="w-fit font-semibold"
-						color="blue"
-						target="_blank"
-						rel="noopener noreferrer nofollow"
-					>
-						Join Elite Farmers
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-5 h-5 ml-2"
-							><path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-							/></svg
+					<div class="flex flex-col md:flex-row gap-2 justify-center">
+						<Button
+							href="/discord"
+							class="w-fit font-semibold"
+							color="blue"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
 						>
-					</Button>
+							Elite farmers
+							<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+						</Button>
+						<Button
+							href="/support"
+							class="w-fit font-semibold"
+							color="blue"
+							target="_blank"
+							rel="noopener noreferrer nofollow"
+						>
+							Support Server
+							<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+						</Button>
+					</div>
 				</Card>
 				<Card color="none" border={false}>
 					<h1 class="mb-4 w-full text-xl font-semibold">Add To Discord</h1>
@@ -68,28 +70,18 @@
 						Quickly access stats and leaderboards in Discord! Please note that the bot runs seperately from
 						the website for now, leaderboards and stats may be out of sync.
 					</p>
-					<Button
-						href="/invite"
-						class="w-fit font-semibold"
-						target="_blank"
-						color="blue"
-						rel="noopener noreferrer nofollow"
-					>
-						Invite Elite Bot
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-5 h-5 ml-2"
-							><path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-							/></svg
+					<div class="flex justify-center">
+						<Button
+							href="/invite"
+							class="w-fit font-semibold"
+							target="_blank"
+							color="blue"
+							rel="noopener noreferrer nofollow"
 						>
-					</Button>
+							Invite Elite Bot
+							<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+						</Button>
+					</div>
 				</Card>
 			</div>
 			<div class="flex flex-col items-center">
