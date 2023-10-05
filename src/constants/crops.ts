@@ -75,3 +75,18 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 1.5,
 	},
 };
+
+// TODO: Calculate this from a list of sources
+export const MAX_CROP_FORTUNE: Record<Crop, number> = {
+	[Crop.Cactus]: 1575,
+	[Crop.Carrot]: 1784,
+	[Crop.CocoaBeans]: 1584,
+	[Crop.Melon]: 1567.8,
+	[Crop.Mushroom]: 1603,
+	[Crop.NetherWart]: 1772,
+	[Crop.Potato]: 1772,
+	[Crop.Pumpkin]: 1567.5,
+	[Crop.SugarCane]: 1772,
+	[Crop.Wheat]: 1772,
+	[Crop.Seeds]: 1772, // Not a crop, same as wheat
+};

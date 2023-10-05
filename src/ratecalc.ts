@@ -1,7 +1,9 @@
-import { CROP_INFO, Crop, CropInfo } from './constants/crops';
+import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from './constants/crops';
+import { MelonPerkBonus } from './crops/melon';
+import { PumpkinPerkBonus } from './crops/pumpkin';
 
 interface CalculateDropsOptions {
-	farmingFortune: number;
+	farmingFortune?: number;
 	blocksBroken: number;
 }
 
@@ -41,11 +43,14 @@ interface CalculateExpectedDropsOptions extends CalculateDropsOptions {
 export function CalculateExpectedDrops(options: CalculateExpectedDropsOptions): number {
 	const { farmingFortune, blocksBroken, crop } = options;
 
-	if (farmingFortune <= 0 || blocksBroken < 0) return 0;
+	const fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
+
+	if (fortune <= 0 || blocksBroken < 0) return 0;
 
 	const { drops } = GetCropInfo(crop);
 	if (!drops) return 0;
 
+	const normal = blocksBroken * drops * (fortune * 0.1);
 	switch (crop) {
 		case Crop.Cactus:
 		case Crop.Carrot:
@@ -56,11 +61,11 @@ export function CalculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 		case Crop.SugarCane:
 		case Crop.Wheat:
 		case Crop.Seeds:
-			return blocksBroken * drops * (farmingFortune * 0.1);
+			return normal;
 		case Crop.Pumpkin:
-			return blocksBroken * drops * (farmingFortune * 0.1) * 0.5;
+			return normal + PumpkinPerkBonus(blocksBroken);
 		case Crop.Melon:
-			return blocksBroken * drops * (farmingFortune * 0.1) * 0.5;
+			return normal + MelonPerkBonus(blocksBroken);
 		default:
 			return 0;
 	}
