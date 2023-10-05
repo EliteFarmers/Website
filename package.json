@@ -1,0 +1,42 @@
+{
+  "name": "farming-weight",
+  "version": "0.1.0",
+  "description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint"
+  },
+  "keywords": [
+    "farming",
+    "weight",
+    "farming-weight",
+    "skyblock",
+    "hypixel",
+    "hypixel-skyblock",
+    "fortune"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliteFarmers/Tools.git"
+  },
+  "files": [ "lib/**/*" ],
+  "bugs": {
+    "url": "https://github.com/EliteFarmers/Tools/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "homepage": "https://github.com/EliteFarmers/Tools#readme",
+  "author": "Kaeso",
+  "license": "LGPL-3.0-only",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  }
+}

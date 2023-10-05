@@ -1,0 +1,26 @@
+{
+	"env": {
+		"node": true
+	},
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"rules": {
+		"indent": [ "error", "tab" ],
+		"no-console": "off",
+		"no-tabs": "off",
+		"no-shadow-restricted-names": "error",
+		"no-warning-comments": "warn",
+		"no-var": "error",
+		"prefer-const": "error",
+		"semi": "off",
+		"space-before-function-paren": "off"
+	}
+}
