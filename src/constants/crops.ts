@@ -16,6 +16,7 @@ export interface CropInfo {
 	name: string;
 	npc: number;
 	drops: number;
+	breaks?: number;
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -23,6 +24,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Cactus',
 		npc: 3,
 		drops: 2,
+		breaks: 2,
 	},
 	[Crop.Carrot]: {
 		name: 'Carrot',
@@ -61,8 +63,9 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 	},
 	[Crop.SugarCane]: {
 		name: 'Sugar Cane',
-		npc: 2,
-		drops: 4,
+		npc: 4,
+		drops: 2,
+		breaks: 2,
 	},
 	[Crop.Wheat]: {
 		name: 'Wheat',
@@ -80,7 +83,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.Cactus]: 1575,
 	[Crop.Carrot]: 1784,
-	[Crop.CocoaBeans]: 1584,
+	[Crop.CocoaBeans]: 1584.5,
 	[Crop.Melon]: 1567.8,
 	[Crop.Mushroom]: 1603,
 	[Crop.NetherWart]: 1772,

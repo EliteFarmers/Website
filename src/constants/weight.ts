@@ -14,3 +14,27 @@ export const CROP_WEIGHT: Record<Crop, number> = {
 	[Crop.Wheat]: 100_000,
 	[Crop.Seeds]: 0, // Byproduct of wheat farming, not counted
 };
+
+export const TIER_12_MINIONS: readonly string[] = [
+	'WHEAT_12',
+	'CARROT_12',
+	'POTATO_12',
+	'PUMPKIN_12',
+	'MELON_12',
+	'MUSHROOM_12',
+	'COCOA_12',
+	'CACTUS_12',
+	'SUGAR_CANE_12',
+	'NETHER_WARTS_12',
+] as const;
+
+export const BONUS_WEIGHT = {
+	Farming60Bonus: 250,
+	Farming50Bonus: 100,
+	AnitaBuffBonusMultiplier: 2,
+	MaxMedalsCounted: 1000,
+	GoldMedalRewardInterval: 50,
+	WeightPerGoldMedal: 0.5,
+	MinionRewardTier: 12,
+	MinionRewardWeight: 5,
+} as const;
