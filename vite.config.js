@@ -15,6 +15,7 @@ const config = {
 			$lib: path.resolve('./src/lib'),
 			$params: path.resolve('./src/params'),
 		},
+		preserveSymlinks: true,
 	},
 };
 
