@@ -64,7 +64,7 @@ export function CalculateDetailedAverageDrops(options: CalculateDetailedDropsOpt
 	wheat.otherCollection['Seeds'] = seeds.collection;
 	wheat.coinSources['Seeds'] = seeds.collection * CROP_INFO[Crop.Seeds].npc;
 	if (options.bountiful) {
-		wheat.coinSources['Bountiful (Seeds)'] = seeds.coinSources['Bountiful'];
+		wheat.coinSources['Bountiful (Seeds)'] = seeds.coinSources['Bountiful'] ?? 0;
 	}
 	wheat.npcCoins = Object.values(wheat.coinSources).reduce((a, b) => a + b, 0);
 

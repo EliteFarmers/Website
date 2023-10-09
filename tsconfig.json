@@ -1,12 +1,22 @@
 {
 	"compilerOptions": {
+		"esModuleInterop": true,
 		"allowJs": false,
+
 		"target": "ESNext",
-		"module": "commonjs",
-        "strictNullChecks": true,
+		"moduleDetection": "force",
+		"moduleResolution": "Node",
+		"module": "CommonJS",
+		
+		"rootDir": "./src",
+		"outDir": "./dist",
 		"declaration": true,
-		"outDir": "./lib",
-		"strict": true
+		"sourceMap": true,
+
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+
+		"lib": [ "ES2022" ]
 	},
 	"include": [ "src" ],
 	"exclude": [ "node_modules" ]

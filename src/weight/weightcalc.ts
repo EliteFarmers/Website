@@ -98,6 +98,11 @@ class FarmingWeight {
 		return this;
 	};
 
+	setEarnedGoldMedals = (count: number) => {
+		this.earnedGoldMedals = count;
+		return this;
+	}
+
 	setTier12MinionCount = (count: number) => {
 		this.tier12MinionCount = count;
 		return this;
