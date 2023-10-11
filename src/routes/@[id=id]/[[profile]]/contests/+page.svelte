@@ -38,9 +38,9 @@
 			{#each Object.entries(data.years).sort((a, b) => +b[0] - +a[0]) as [year, conts], i (year)}
 				<TimelineItemVertical
 					title={'Year ' + year}
-					date={new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString() +
+					date={new Date((getTimeStamp(+year, 0, 0) - 446400) * 1000).toLocaleDateString() +
 						' - ' +
-						new Date(getTimeStamp(+year + 1, 0, 0) * 1000).toLocaleDateString()}
+						new Date((getTimeStamp(+year, 0, 0) - 446400) * 1000).toLocaleDateString()}
 				>
 					<svelte:fragment slot="icon">
 						<span
