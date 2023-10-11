@@ -154,7 +154,6 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	}
 
 	const specialCrops = CalculateAverageSpecialCrops(blocksBroken, crop, 4);
-	specialCrops.amount *= breaks;
 
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
 	result.coinSources[specialCrops.type] = Math.round(specialCrops.npc);
@@ -165,11 +164,13 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			extraDrops = Math.round(PumpkinPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.collection = Math.round(baseDrops + extraDrops);
+			result.coinSources['Collection'] = Math.round(result.collection * npc);
 			break;
 		case Crop.Melon:
 			extraDrops = Math.round(MelonPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.collection = Math.round(baseDrops + extraDrops);
+			result.coinSources['Collection'] = Math.round(result.collection * npc);
 			break;
 		default:
 			if (replenish) {
