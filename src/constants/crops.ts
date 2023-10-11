@@ -17,6 +17,7 @@ export interface CropInfo {
 	npc: number;
 	drops: number;
 	breaks?: number;
+	replenish?: boolean;
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -30,11 +31,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Carrot',
 		npc: 3,
 		drops: 3,
+		replenish: true,
 	},
 	[Crop.CocoaBeans]: {
 		name: 'Cocoa Beans',
 		npc: 3,
 		drops: 3,
+		replenish: true,
 	},
 	[Crop.Melon]: {
 		name: 'Melon',
@@ -50,11 +53,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Nether Wart',
 		npc: 4,
 		drops: 2.5,
+		replenish: true,
 	},
 	[Crop.Potato]: {
 		name: 'Potato',
 		npc: 3,
 		drops: 3,
+		replenish: true,
 	},
 	[Crop.Pumpkin]: {
 		name: 'Pumpkin',
@@ -76,6 +81,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Seeds',
 		npc: 3,
 		drops: 1.5,
+		replenish: true,
 	},
 };
 

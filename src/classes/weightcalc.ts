@@ -18,7 +18,7 @@ const crops = [
 	Crop.Wheat,
 ];
 
-interface FarmingWeightInfo {
+export interface FarmingWeightInfo {
 	collection?: Record<string, number>;
 	farmingXp?: number;
 	levelCapUpgrade?: number;
@@ -101,7 +101,7 @@ class FarmingWeight {
 	setEarnedGoldMedals = (count: number) => {
 		this.earnedGoldMedals = count;
 		return this;
-	}
+	};
 
 	setTier12MinionCount = (count: number) => {
 		this.tier12MinionCount = count;
@@ -143,7 +143,7 @@ class FarmingWeight {
 			cropWeight: cropTotal,
 			bonusSources: bonus,
 		};
-	}
+	};
 
 	getBonusWeights = () => {
 		if (this.farmingXp >= 111_672_425 && this.levelCapUpgrade >= 10) {

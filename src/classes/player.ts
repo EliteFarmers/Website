@@ -1,4 +1,4 @@
-import { Crop } from './constants/crops';
+import { Crop } from '../constants/crops';
 
 interface PlayerOptions {
 	collection?: Record<string, number>;

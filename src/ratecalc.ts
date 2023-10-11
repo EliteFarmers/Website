@@ -133,14 +133,17 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 	result.fortune = fortune;
 
-	const { drops, npc, breaks = 1 } = GetCropInfo(crop);
+	const { 
+		drops, 
+		npc, 
+		breaks = 1, 
+		replenish = false 
+	} = GetCropInfo(crop);
 	if (!drops) return result;
 
 	const baseDrops = blocksBroken * drops * (fortune * 0.01);
 
 	// Coin sources
-	result.coinSources['Collection'] = Math.round(baseDrops * npc);
-
 	if (bountiful) {
 		result.coinSources['Bountiful'] = Math.round(baseDrops * 0.2);
 	}
@@ -151,24 +154,13 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	}
 
 	const specialCrops = CalculateAverageSpecialCrops(blocksBroken, crop, 4);
+	specialCrops.amount *= breaks;
+
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
 	result.coinSources[specialCrops.type] = Math.round(specialCrops.npc);
 
 	let extraDrops = 0;
 	switch (crop) {
-		case Crop.Cactus:
-		case Crop.Wheat:
-		case Crop.Mushroom:
-		case Crop.SugarCane:
-			result.collection = Math.round(baseDrops);
-			break;
-		case Crop.Carrot:
-		case Crop.CocoaBeans:
-		case Crop.NetherWart:
-		case Crop.Potato:
-		case Crop.Seeds:
-			result.collection = Math.round(baseDrops - blocksBroken); // Replenish takes away one drop per block broken
-			break;
 		case Crop.Pumpkin:
 			extraDrops = Math.round(PumpkinPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
@@ -178,6 +170,17 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			extraDrops = Math.round(MelonPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.collection = Math.round(baseDrops + extraDrops);
+			break;
+		default:
+			if (replenish) {
+				// Replenish takes away one drop per block broken
+				result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
+				result.collection = Math.round(baseDrops - blocksBroken * breaks); 
+				break;
+			}
+
+			result.coinSources['Collection'] = Math.round(baseDrops * npc);
+			result.collection = Math.round(baseDrops);
 			break;
 	}
 
