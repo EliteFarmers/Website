@@ -40,7 +40,7 @@
 					title={'Year ' + year}
 					date={new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
 						' - ' +
-						new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString()}
+						new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString()}
 				>
 					<svelte:fragment slot="icon">
 						<span
