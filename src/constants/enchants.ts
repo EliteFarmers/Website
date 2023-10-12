@@ -1,3 +1,4 @@
+import { Crop } from "./crops";
 import { ReforgeTarget, Stat } from "./reforges";
 
 export interface FarmingEnchant {
@@ -110,4 +111,43 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
+	'sunder': {
+		name: 'Sunder',
+		appliesTo: [ ReforgeTarget.Axe ],
+		wiki: 'https://wiki.hypixel.net/Sunder_Enchantment',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				[Stat.FarmingFortune]: 12.5,
+			},
+			2: {
+				[Stat.FarmingFortune]: 25,
+			},
+			3: {
+				[Stat.FarmingFortune]: 37.5,
+			},
+			4: {
+				[Stat.FarmingFortune]: 50,
+			},
+			5: {
+				[Stat.FarmingFortune]: 62.5,
+			},
+		},
+	}
 } as const;
+
+export const TURBO_ENCHANTS: Record<string, Crop> = {
+	'turbo_cactus': Crop.Cactus,
+	'turbo_cane': Crop.SugarCane,
+	'turbo_carrot': Crop.Carrot,
+	'turbo_coco': Crop.CocoaBeans,
+	'turbo_melon': Crop.Melon,
+	'turbo_mushrooms': Crop.Mushroom,
+	'turbo_potato': Crop.Potato,
+	'turbo_pumpkin': Crop.Pumpkin,
+	'turbo_warts': Crop.NetherWart,
+	'turbo_wheat': Crop.Wheat,
+};
+
+export const TURBO_ENCHANT_FORTUNE = 5;

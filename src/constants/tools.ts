@@ -272,7 +272,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
-		type: FarmingToolType.Other,
+		type: FarmingToolType.MathematicalHoe,
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
 		stats: HoeStats,

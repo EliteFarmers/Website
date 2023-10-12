@@ -1,5 +1,5 @@
 import { Crop } from '../constants/crops';
-import { FARMING_ENCHANTS } from '../constants/enchants';
+import { FARMING_ENCHANTS, TURBO_ENCHANTS, TURBO_ENCHANT_FORTUNE } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
 import { GetRarityFromLore, PreviousRarity } from '../util/itemstats';
@@ -93,6 +93,19 @@ export class FarmingTool {
 		// Enchantments
 		const enchantments = Object.entries(this.item.enchantments ?? {});
 		for (const [ enchant, level ] of enchantments) {
+			if (!level) continue;
+
+			if (enchant in TURBO_ENCHANTS) {
+				const matchingCrop = TURBO_ENCHANTS[enchant];
+				if (!matchingCrop || matchingCrop !== this.crop) continue;
+
+				const gain = TURBO_ENCHANT_FORTUNE * level;
+				this.fortuneBreakdown['Turbo'] = gain;
+				sum += gain;
+
+				continue;
+			}
+
 			const enchantment = FARMING_ENCHANTS[enchant];
 			if (!enchantment || !level) continue;
 
