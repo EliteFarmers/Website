@@ -1,4 +1,5 @@
 import { Crop } from '../constants/crops';
+import { FARMING_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
 import { GetRarityFromLore, PreviousRarity } from '../util/itemstats';
@@ -89,7 +90,46 @@ export class FarmingTool {
 			}
 		}
 
+		// Enchantments
+		const enchantments = Object.entries(this.item.enchantments ?? {});
+		for (const [ enchant, level ] of enchantments) {
+			const enchantment = FARMING_ENCHANTS[enchant];
+			if (!enchantment || !level) continue;
+
+			const fortune = enchantment.levels?.[level]?.[Stat.FarmingFortune] ?? 0;
+			if (fortune > 0) {
+				this.fortuneBreakdown[enchantment.name] = fortune;
+				sum += fortune;
+			}
+		}
+
 		return sum;
+	}
+
+	private getFortuneInfo(options?: { milestone?: number }) {
+		const result = {
+			total: this.fortune,
+			breakdown: this.fortuneBreakdown,
+		};
+
+		if (!options?.milestone) return result;
+
+		const enchantments = this.item?.enchantments ?? {};
+
+		if ('dedication' in enchantments) {
+			const level = enchantments.dedication;
+			const enchantment = FARMING_ENCHANTS.dedication;
+
+			if (!level || !enchantment) return result;
+
+			const multiplier = enchantment.multipliedLevels?.[level]?.[Stat.FarmingFortune] ?? 0;
+			if (multiplier > 0 && !isNaN(options.milestone)) {
+				result.total += multiplier * options.milestone;
+				result.breakdown[enchantment.name] = multiplier * options.milestone;
+			}
+		}
+
+		return result;
 	}
 
 	private getCounter(): number | undefined {
