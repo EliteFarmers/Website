@@ -37,6 +37,8 @@
 
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
+	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
+
 	$: options = {
 		tools: data.member?.farmingWeight?.inventory?.tools ?? [],
 		armor: data.member?.farmingWeight?.inventory?.armor ?? [],

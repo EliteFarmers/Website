@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { FarmingTool as FT } from 'farming-weight';
+	import type { FarmingTool as FT } from 'farming-weight';
 	import { FormatMinecraftText } from '$lib/format';
 	import { Button, Modal, Popover } from 'flowbite-svelte';
 	import { FileLinesSolid } from 'flowbite-svelte-icons';
@@ -8,7 +9,12 @@
 	import Fortunebreakdown from './fortunebreakdown.svelte';
 
 	export let tool: FT;
+	import Lore from '../lore.svelte';
+	import Fortunebreakdown from './fortunebreakdown.svelte';
 
+	export let tool: FT;
+
+	$: breakdown = Object.entries(tool.fortuneBreakdown).sort(([, a], [, b]) => b - a);
 	$: breakdown = Object.entries(tool.fortuneBreakdown).sort(([, a], [, b]) => b - a);
 
 	let openModal = false;
