@@ -2,11 +2,14 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from 'flowbite-svelte';
 	import Farmingtool from './farmingtool.svelte';
-	import { FarmingTool } from '$lib/calc/fortune';
+	import { FarmingTool as FT } from 'farming-weight';
 
 	export let tools: components['schemas']['ItemDto'][];
 
-	$: actualTools = tools.map((t) => new FarmingTool(t)).sort((a, b) => b.farmed - a.farmed);
+	$: actualTools = tools
+		.filter((i) => FT.isValid(i))
+		.map((t) => new FT(t))
+		.sort((a, b) => b.farmed - a.farmed);
 
 	let count = 10;
 </script>
