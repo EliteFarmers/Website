@@ -26,7 +26,7 @@ export const load = (async ({ url }) => {
 
 	const selected = profile
 		? playerProfiles?.find((p) => p.profileId === profile || p.profileName?.toLowerCase() === profile)
-		: playerProfiles?.find((p) => p.selected);
+		: playerProfiles?.find((p) => p.selected) ?? playerProfiles[0];
 
 	if (!selected?.profileId) {
 		return {
@@ -36,7 +36,7 @@ export const load = (async ({ url }) => {
 		};
 	}
 
-	const { data: member } = await GetProfileMember(selected.profileId, account.id).catch(() => ({ data: undefined }));
+	const { data: member } = await GetProfileMember(account.id, selected.profileId).catch(() => ({ data: undefined }));
 
 	if (!member) {
 		return {

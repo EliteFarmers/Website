@@ -1,7 +1,6 @@
-import type { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 import { writable } from 'svelte/store';
 
-export const selectedCrops = writable<Record<keyof typeof PROPER_CROP_TO_IMG, boolean>>({
+export const DEFAULT_SELECTED_CROPS = {
 	Cactus: false,
 	Carrot: false,
 	'Cocoa Beans': false,
@@ -12,7 +11,9 @@ export const selectedCrops = writable<Record<keyof typeof PROPER_CROP_TO_IMG, bo
 	Pumpkin: false,
 	'Sugar Cane': false,
 	Wheat: false,
-});
+};
+
+export const selectedCrops = writable<Record<string, boolean>>(DEFAULT_SELECTED_CROPS);
 
 export const anyCropSelected = writable(false);
 
