@@ -1,12 +1,15 @@
 <script lang="ts">
-	import type { FarmingTool } from '$lib/calc/fortune';
+	import type { FarmingTool as FT } from 'farming-weight';
 	import { FormatMinecraftText } from '$lib/format';
 	import { Button, Modal, Popover } from 'flowbite-svelte';
-	import Lore from '../lore.svelte';
 	import { FileLinesSolid } from 'flowbite-svelte-icons';
 	import { STAT_ICONS, Stat } from '$lib/constants/reforges';
+	import Lore from '../lore.svelte';
+	import Fortunebreakdown from './fortunebreakdown.svelte';
 
-	export let tool: FarmingTool;
+	export let tool: FT;
+
+	$: breakdown = Object.entries(tool.fortuneBreakdown).sort(([, a], [, b]) => b - a);
 
 	let openModal = false;
 </script>
@@ -28,21 +31,14 @@
 	</div>
 	<div class="flex flex-row items-center justify-end gap-2">
 		<div class="flex flex-col items-end justify-between gap-1 py-1">
-			<div class="relative rounded-md bg-gray-200 dark:bg-zinc-700 min-h-4 h-full">
-				{#if tool.farmingForDummies > 0}
-					<div
-						style="width: {(tool.farmingForDummies / 5) * 100}%;"
-						class="absolute rounded-md h-full l-0 bg-green-300 dark:bg-green-600"
-					/>
+			<Fortunebreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown}>
+				{#if tool.item?.enchantments?.dedication}
+					<p class="text-xs flex-wrap">
+						Dedication is not included in the breakdown because crop milestones are not available in
+						Hypixel's API.
+					</p>
 				{/if}
-				<p class="relative text-md md:text-lg px-1 z-10 font-mono">
-					{STAT_ICONS[Stat.FarmingFortune]}
-					{tool.farmingForDummies}/5 FFD
-				</p>
-				<Popover strategy="fixed" class="z-50" placement="left">
-					<p class="whitespace-nowrap">Farming For Dummies</p>
-				</Popover>
-			</div>
+			</Fortunebreakdown>
 			<div class="relative rounded-md bg-gray-200 dark:bg-zinc-700 min-h-4 h-full">
 				{#if tool.getCultivatingLevel() > 0}
 					<div
