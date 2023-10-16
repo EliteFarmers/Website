@@ -396,42 +396,42 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 		tiers: {
 			[Rarity.Common]: {
 				stats: {
-					[Stat.FarmingFortune]: 4,
+					[Stat.FarmingFortune]: 6,
 					[Stat.Health]: 2,
 				},
 				cost: 20_000,
 			},
 			[Rarity.Uncommon]: {
 				stats: {
-					[Stat.FarmingFortune]: 6,
+					[Stat.FarmingFortune]: 9,
 					[Stat.Health]: 5,
 				},
 				cost: 40_000,
 			},
 			[Rarity.Rare]: {
 				stats: {
-					[Stat.FarmingFortune]: 8,
+					[Stat.FarmingFortune]: 12,
 					[Stat.Health]: 8,
 				},
 				cost: 80_000,
 			},
 			[Rarity.Epic]: {
 				stats: {
-					[Stat.FarmingFortune]: 10,
+					[Stat.FarmingFortune]: 15,
 					[Stat.Health]: 11,
 				},
 				cost: 150_000,
 			},
 			[Rarity.Legendary]: {
 				stats: {
-					[Stat.FarmingFortune]: 12,
+					[Stat.FarmingFortune]: 18,
 					[Stat.Health]: 14,
 				},
 				cost: 300_000,
 			},
 			[Rarity.Mythic]: {
 				stats: {
-					[Stat.FarmingFortune]: 14,
+					[Stat.FarmingFortune]: 21,
 					[Stat.Health]: 17,
 				},
 				cost: 600_000,

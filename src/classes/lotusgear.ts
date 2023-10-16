@@ -89,7 +89,7 @@ export class LotusGear {
 			const number = ExtractNumberFromLine(line, regex) ?? 0;
 			if (!number) continue;
 
-			found = number;
+			found = +number;
 			break;
 		}
 
