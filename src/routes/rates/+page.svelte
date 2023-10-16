@@ -3,7 +3,7 @@
 	import { Accordion, AccordionItem, Button, Input, Label, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { selectedCrops } from '$lib/stores/selectedCrops';
-	import { getLevelProgress } from '$lib/format';
+	import { FormatMinecraftText, getLevelProgress } from '$lib/format';
 	import { SearchOutline } from 'flowbite-svelte-icons';
 	import { goto } from '$app/navigation';
 
@@ -34,8 +34,6 @@
 		mooshroom: mooshroom,
 		blocksBroken: blocksBroken,
 	});
-
-	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
@@ -140,20 +138,20 @@
 						<Toolconfig	{tool} {options} />
 					{/if}
 				{/each}
-				{#if tools.length === 0}
+				{#if tools.length === 0 && data.account?.id}
 					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Armorselect {options} />
-				{#if tools.length === 0}
+				{#if tools.length === 0 && data.account?.id}
 					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#if lotus.length === 0}
+				{#if lotus.length === 0 && data.account?.id}
 					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
 				{:else}
 					<div class="flex justify-between items-center w-full px-4 py-2">
@@ -162,7 +160,13 @@
 						<Fortunebreakdown total={lotus.reduce((acc, l) => acc + l.fortune, 0)} />
 					</div>
 				{/if}
-				<Lotusgear items={lotus} />
+				{#each lotus as item (item.item.uuid)}
+					<div class="flex justify-between items-center w-full px-4 py-2">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>
+						<Fortunebreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />
+					</div>
+				{/each}
 			</div>
 		</section>
 		<section class="flex-1 w-full p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
