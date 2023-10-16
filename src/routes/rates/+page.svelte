@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { CalculateDetailedAverageDrops, FarmingTool } from 'farming-weight';
+	import { CalculateDetailedAverageDrops, FarmingTool, type PlayerOptions } from 'farming-weight';
 	import { Button, Input, Label, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { selectedCrops } from '$lib/stores/selectedCrops';
-	import { FormatMinecraftText } from '$lib/format';
+	import { FormatMinecraftText, getLevelProgress } from '$lib/format';
 	import { SearchOutline } from 'flowbite-svelte-icons';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
@@ -11,6 +11,9 @@
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import Head from '$comp/head.svelte';
+	import Armorselect from './armorselect.svelte';
+	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
+	import { LotusGear } from 'farming-weight/dist/classes/lotusgear';
 
 	export let data: PageData;
 	let enteredIgn = data.account?.name ?? '';
@@ -27,11 +30,26 @@
 
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
-	$: sorted = Object.entries(calculator).sort((a, b) => b[1].npcCoins - a[1].npcCoins);
+	$: options = {
+		tools: data.member?.farmingWeight?.inventory?.tools ?? [],
+		armor: data.member?.farmingWeight?.inventory?.armor ?? [],
+		equipment: data.member?.farmingWeight?.inventory?.equipment ?? [],
+		pets: data.member?.pets ?? [],
+		farmingXp: data.member?.skills?.farming,
+		farmingLevel: getLevelProgress(
+			'farming', 
+			data.member?.skills?.farming ?? 0,
+			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
+		).level,
+	} satisfies PlayerOptions;
 
 	$: tools = (data.member?.farmingWeight?.inventory?.tools ?? [])
 		.filter((t) => FarmingTool.isValid(t))
-		.map((t) => new FarmingTool(t));
+		.map((t) => new FarmingTool(t, options));
+
+	$: lotus = (data.member?.farmingWeight?.inventory?.equipment ?? [])
+		.filter((t) => LotusGear.isValid(t))
+		.map((t) => new LotusGear(t, options));
 
 	function search() {
 		const url = new URL(window.location.href);
@@ -101,9 +119,35 @@
 						</div>
 					{/if}
 				{/each}
-				{#if tools.length === 0}
+				{#if tools.length === 0 && data.account?.id}
 					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
 				{/if}
+			</div>
+
+			<div class="flex flex-col gap-2 max-w-lg w-full">
+				<Armorselect {options} />
+				{#if tools.length === 0 && data.account?.id}
+					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
+				{/if}
+			</div>
+
+			<div class="flex flex-col gap-2 max-w-lg w-full">
+				{#if lotus.length === 0 && data.account?.id}
+					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
+				{:else}
+					<div class="flex justify-between items-center w-full px-4 py-2">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<span class="text-lg font-semibold">Lotus Gear Total</span>
+						<Fortunebreakdown total={lotus.reduce((acc, l) => acc + l.fortune, 0)} />
+					</div>
+				{/if}
+				{#each lotus as item (item.item.uuid)}
+					<div class="flex justify-between items-center w-full px-4 py-2">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>
+						<Fortunebreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />
+					</div>
+				{/each}
 			</div>
 		</section>
 		<section class="flex-1 w-full p-4 rounded-md bg-gray-200 dark:bg-zinc-800">
