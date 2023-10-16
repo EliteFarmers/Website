@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { FormatMinecraftText } from '$lib/format';
 	import { STAT_ICONS, Stat } from 'farming-weight';
 	import { Popover } from 'flowbite-svelte';
 
-	export let total: number | undefined;
-	export let breakdown: Record<string, number>;
+	export let total: number | undefined = undefined;
+	export let breakdown: Record<string, number> | undefined = undefined;
 
-	$: list = Object.entries(breakdown).sort(([, a], [, b]) => b - a);
+	$: list = Object.entries(breakdown ?? {}).sort(([, a], [, b]) => b - a);
 	$: sum = total ?? list.reduce((acc, [, value]) => acc + value, 0);
 </script>
 
@@ -14,19 +15,26 @@
 		{STAT_ICONS[Stat.FarmingFortune]}
 		{sum}&nbsp;
 	</p>
-	<Popover strategy="fixed" class="z-50 max-w-xs" placement="left" title="Farming Fortune Breakdown">
-		<div class="flex flex-col gap-2">
-			{#each list as [key, value] (key)}
-				<div class="flex flex-row justify-between">
-					<p>{key}</p>
-					<p>{value}</p>
+	{#if list.length > 0}
+		<Popover strategy="fixed" class="z-50 max-w-xs" placement="left" title="Farming Fortune Breakdown">
+			<div class="flex flex-col gap-2">
+				{#each list as [key, value] (key)}
+					<div class="flex flex-row gap-2 justify-between">
+						{#if key.includes('§')}
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							<p>{@html FormatMinecraftText(key ?? '')}</p>
+						{:else}
+							<p>{key}</p>
+						{/if}
+						<p>{value}</p>
+					</div>
+				{/each}
+				<div class="flex flex-row justify-between font-semibold text-black dark:text-white">
+					<p>Total</p>
+					<p>{sum}</p>
 				</div>
-			{/each}
-			<div class="flex flex-row justify-between font-semibold text-black dark:text-white">
-				<p>Total</p>
-				<p>{sum}</p>
+				<slot />
 			</div>
-			<slot />
-		</div>
-	</Popover>
+		</Popover>
+	{/if}
 </div>
