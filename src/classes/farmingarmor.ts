@@ -21,7 +21,7 @@ export class ArmorSet {
 	public declare readonly leggings?: FarmingArmor;
 	public declare readonly boots?: FarmingArmor;
 
-	public declare readonly setBonuses: ActiveArmorSetBonus[];
+	public declare setBonuses: ActiveArmorSetBonus[];
 
 	constructor(armor: FarmingArmor[]) {
 		this.helmet = armor.find((a) => a.slot === GearSlot.Helmet);
@@ -34,6 +34,7 @@ export class ArmorSet {
 	private recalculateFamilies() {
 		const families = new Map<string, number>();
 		const armor = this.armor.filter((a) => a) as FarmingArmor[];
+		this.setBonuses = [];
 
 		for (const piece of armor) {
 			if (!piece.armor.family) continue;
