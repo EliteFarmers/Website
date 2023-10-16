@@ -10,4 +10,5 @@ export enum Skill {
 	Carpentry = 'Carpentry',
 	Runecrafting = 'Runecrafting',
 	Social = 'Social',
+	Garden = 'Garden',
 }

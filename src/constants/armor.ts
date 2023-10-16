@@ -7,9 +7,13 @@ export enum GearSlot {
 	Leggings = 'Leggings',
 	Chestplate = 'Chestplate',
 	Helmet = 'Helmet',
+	Necklace = 'Necklace',
+	Cloak = 'Cloak',
+	Belt = 'Belt',
+	Gloves = 'Gloves',
 }
 
-interface ArmorInfo {
+export interface FarmingArmorInfo {
 	special?: SpecialCrop[];
 	slot: GearSlot;
 	family?: string;
@@ -26,7 +30,7 @@ interface ArmorInfo {
 	skillReq?: Partial<Record<Skill, number>>;
 }
 
-export const ARMOR_INFO: Record<string, ArmorInfo> = {
+export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARMER_BOOTS: {
 		name: 'Farmer Boots',
 		upgrade: 'RANCHERS_BOOTS',
@@ -413,5 +417,84 @@ export const ARMOR_INFO: Record<string, ArmorInfo> = {
 		skillReq: {
 			[Skill.Farming]: 40,
 		},
+	},
+};
+
+export type ArmorSetBonusStats = Partial<Record<number, Partial<Record<Stat, number>>>>;
+
+export interface ArmorSetBonus {
+	name: string;
+	stats: ArmorSetBonusStats;
+	special?: SpecialCrop[];
+}
+
+export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
+	RABBIT: {
+		name: 'Bonus Farming Fortune',
+		stats: {
+			4: {
+				[Stat.FarmingFortune]: 10,
+			},
+		},
+	},
+	MELON: {
+		name: 'Cropier Crops',
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 10,
+			},
+			3: {
+				[Stat.FarmingFortune]: 20,
+			},
+			4: {
+				[Stat.FarmingFortune]: 30,
+			},
+		},
+		special: [SpecialCrop.Cropie],
+	},
+	CROPIE: {
+		name: 'Squashbuckle',
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 15,
+			},
+			3: {
+				[Stat.FarmingFortune]: 30,
+			},
+			4: {
+				[Stat.FarmingFortune]: 45,
+			},
+		},
+		special: [SpecialCrop.Squash],
+	},
+	SQUASH: {
+		name: 'Mento Fermento',
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 20,
+			},
+			3: {
+				[Stat.FarmingFortune]: 40,
+			},
+			4: {
+				[Stat.FarmingFortune]: 60,
+			},
+		},
+		special: [SpecialCrop.Fermento],
+	},
+	FERMENTO: {
+		name: 'Feast',
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 25,
+			},
+			3: {
+				[Stat.FarmingFortune]: 50,
+			},
+			4: {
+				[Stat.FarmingFortune]: 75,
+			},
+		},
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 	},
 };

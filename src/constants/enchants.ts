@@ -1,5 +1,5 @@
-import { Crop } from "./crops";
-import { ReforgeTarget, Stat } from "./reforges";
+import { Crop } from './crops';
+import { ReforgeTarget, Stat } from './reforges';
 
 export interface FarmingEnchant {
 	name: string;
@@ -10,12 +10,12 @@ export interface FarmingEnchant {
 	levels?: Record<number, Partial<Record<Stat, number>>>;
 	multipliedLevels?: Record<number, Partial<Record<Stat, number>>>;
 	levelRequirement?: number;
-} 
+}
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
-	'harvesting': {
+	harvesting: {
 		name: 'Harvesting',
-		appliesTo: [ ReforgeTarget.Hoe ],
+		appliesTo: [ReforgeTarget.Hoe],
 		wiki: 'https://wiki.hypixel.net/Harvesting_Enchantment',
 		levelRequirement: 2,
 		minLevel: 1,
@@ -41,9 +41,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
-	'cultivating': {
+	cultivating: {
 		name: 'Cultivating',
-		appliesTo: [ ReforgeTarget.Hoe, ReforgeTarget.Axe ],
+		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
 		wiki: 'https://wiki.hypixel.net/Cultivating_Enchantment',
 		minLevel: 1,
 		maxLevel: 10,
@@ -90,9 +90,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
-	'dedication': {
+	dedication: {
 		name: 'Dedication',
-		appliesTo: [ ReforgeTarget.Hoe, ReforgeTarget.Axe ],
+		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
 		wiki: 'https://wiki.hypixel.net/Dedication_Enchantment',
 		minLevel: 1,
 		maxLevel: 4,
@@ -111,9 +111,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
-	'sunder': {
+	sunder: {
 		name: 'Sunder',
-		appliesTo: [ ReforgeTarget.Axe ],
+		appliesTo: [ReforgeTarget.Axe],
 		wiki: 'https://wiki.hypixel.net/Sunder_Enchantment',
 		minLevel: 1,
 		maxLevel: 5,
@@ -134,20 +134,20 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				[Stat.FarmingFortune]: 62.5,
 			},
 		},
-	}
+	},
 } as const;
 
 export const TURBO_ENCHANTS: Record<string, Crop> = {
-	'turbo_cactus': Crop.Cactus,
-	'turbo_cane': Crop.SugarCane,
-	'turbo_carrot': Crop.Carrot,
-	'turbo_coco': Crop.CocoaBeans,
-	'turbo_melon': Crop.Melon,
-	'turbo_mushrooms': Crop.Mushroom,
-	'turbo_potato': Crop.Potato,
-	'turbo_pumpkin': Crop.Pumpkin,
-	'turbo_warts': Crop.NetherWart,
-	'turbo_wheat': Crop.Wheat,
+	turbo_cactus: Crop.Cactus,
+	turbo_cane: Crop.SugarCane,
+	turbo_carrot: Crop.Carrot,
+	turbo_coco: Crop.CocoaBeans,
+	turbo_melon: Crop.Melon,
+	turbo_mushrooms: Crop.Mushroom,
+	turbo_potato: Crop.Potato,
+	turbo_pumpkin: Crop.Pumpkin,
+	turbo_warts: Crop.NetherWart,
+	turbo_wheat: Crop.Wheat,
 };
 
 export const TURBO_ENCHANT_FORTUNE = 5;

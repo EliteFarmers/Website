@@ -133,12 +133,7 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 	result.fortune = fortune;
 
-	const { 
-		drops, 
-		npc, 
-		breaks = 1, 
-		replenish = false 
-	} = GetCropInfo(crop);
+	const { drops, npc, breaks = 1, replenish = false } = GetCropInfo(crop);
 	if (!drops) return result;
 
 	const baseDrops = blocksBroken * drops * (fortune * 0.01);
@@ -176,7 +171,7 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			if (replenish) {
 				// Replenish takes away one drop per block broken
 				result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
-				result.collection = Math.round(baseDrops - blocksBroken * breaks); 
+				result.collection = Math.round(baseDrops - blocksBroken * breaks);
 				break;
 			}
 

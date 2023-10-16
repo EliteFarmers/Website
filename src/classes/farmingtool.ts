@@ -3,7 +3,9 @@ import { FARMING_ENCHANTS, TURBO_ENCHANTS, TURBO_ENCHANT_FORTUNE } from '../cons
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
 import { GetRarityFromLore, PreviousRarity } from '../util/itemstats';
+import { ExtractNumberFromLine } from '../util/lore';
 import { Item } from './item';
+import { PlayerOptions } from './player';
 
 export class FarmingTool {
 	public declare readonly item: Item;
@@ -22,7 +24,10 @@ export class FarmingTool {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
-	constructor(item: Item) {
+	private declare options?: PlayerOptions;
+
+	constructor(item: Item, options?: PlayerOptions) {
+		this.options = options;
 		this.item = item;
 		const tool = FARMING_TOOLS[item.skyblockId as keyof typeof FARMING_TOOLS];
 
@@ -92,7 +97,7 @@ export class FarmingTool {
 
 		// Enchantments
 		const enchantments = Object.entries(this.item.enchantments ?? {});
-		for (const [ enchant, level ] of enchantments) {
+		for (const [enchant, level] of enchantments) {
 			if (!level) continue;
 
 			if (enchant in TURBO_ENCHANTS) {
@@ -116,33 +121,22 @@ export class FarmingTool {
 			}
 		}
 
-		return sum;
-	}
-
-	private getFortuneInfo(options?: { milestone?: number }) {
-		const result = {
-			total: this.fortune,
-			breakdown: this.fortuneBreakdown,
-		};
-
-		if (!options?.milestone) return result;
-
-		const enchantments = this.item?.enchantments ?? {};
-
-		if ('dedication' in enchantments) {
-			const level = enchantments.dedication;
+		const milestone = this.options?.milestones?.[this.crop] ?? 0;
+		if (milestone && 'dedication' in (this.item.enchantments ?? {})) {
+			const level = this.item.enchantments?.dedication;
 			const enchantment = FARMING_ENCHANTS.dedication;
 
-			if (!level || !enchantment) return result;
-
-			const multiplier = enchantment.multipliedLevels?.[level]?.[Stat.FarmingFortune] ?? 0;
-			if (multiplier > 0 && !isNaN(options.milestone)) {
-				result.total += multiplier * options.milestone;
-				result.breakdown[enchantment.name] = multiplier * options.milestone;
+			if (level && enchantment) {
+				const multiplier = enchantment.multipliedLevels?.[level]?.[Stat.FarmingFortune] ?? 0;
+				if (multiplier > 0 && !isNaN(milestone)) {
+					this.fortuneBreakdown[enchantment.name] = multiplier * milestone;
+					sum += multiplier * milestone;
+				}
 			}
 		}
 
-		return result;
+		this.fortune = sum;
+		return sum;
 	}
 
 	private getCounter(): number | undefined {
@@ -165,17 +159,10 @@ export class FarmingTool {
 
 	private getFarmingAbilityFortune(tool: FarmingTool) {
 		let fortune = 0;
-
 		const regex = /§7You have §6\+(\d+)☘ Farming Fortune/g;
 
 		for (const line of tool.item.lore ?? []) {
-			const match = regex.exec(line);
-			if (!match?.length || !match[1]) continue;
-
-			const found = +match[1];
-			if (isNaN(found)) continue;
-
-			fortune += found;
+			fortune += ExtractNumberFromLine(line, regex) ?? 0;
 		}
 
 		return fortune;

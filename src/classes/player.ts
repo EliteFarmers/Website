@@ -1,11 +1,28 @@
 import { Crop } from '../constants/crops';
+import { FarmingPetType } from '../constants/pets';
+import { FarmingArmor } from './farmingarmor';
+import { FarmingTool } from './farmingtool';
+import { Item } from './item';
+import { LotusGear } from './lotusgear';
 
-interface PlayerOptions {
+export interface FortuneMissingFromAPI {
+	cropUpgrades?: Record<Crop, number>;
+	gardenLevel?: number;
+	plotsUnlocked?: number;
+	uniqueVisitors?: number;
+	milestones?: Partial<Record<Crop, number>>;
+}
+
+export interface PlayerOptions extends FortuneMissingFromAPI {
 	collection?: Record<string, number>;
-	fortuneSources?: Record<string, number>;
-	cropSpecificFortune?: Record<Crop, number>;
 	farmingXp?: number;
 	farmingLevel?: number;
+	strength?: number;
+
+	tools: Item[];
+	armor: Item[];
+	equipment: Item[];
+	pets: FarmingPetType[];
 }
 
 export function CreatePlayer(options: PlayerOptions) {
@@ -13,35 +30,19 @@ export function CreatePlayer(options: PlayerOptions) {
 }
 
 class Player {
-	declare collection: Partial<Record<Crop, number>>;
-	declare fortuneSources: Record<string, number>;
-	declare cropSpecificFortune: Partial<Record<Crop, number>>;
-	declare farmingXp: number;
-	declare farmingLevel: number;
+	declare options: PlayerOptions;
+
+	declare armor: FarmingArmor[];
+	declare tools: FarmingTool[];
+	declare equipment: LotusGear[];
 
 	constructor(options: PlayerOptions) {
-		this.collection = options.collection ?? {};
-		this.fortuneSources = options.fortuneSources ?? {};
-		this.cropSpecificFortune = options.cropSpecificFortune ?? {};
-		this.farmingXp = options.farmingXp ?? 0;
-		this.farmingLevel = options.farmingLevel ?? 0;
-	}
+		this.options = options;
+		this.armor = options.armor.filter((item) => FarmingArmor.isValid(item)).map((item) => new FarmingArmor(item));
 
-	addFortune(name: string, amount: number) {
-		this.fortuneSources[name] = amount;
-		return this;
-	}
+		this.tools = options.tools.filter((item) => FarmingTool.isValid(item)).map((item) => new FarmingTool(item));
 
-	addCropFortune(crop: Crop, amount: number) {
-		this.cropSpecificFortune[crop] = amount;
-		return this;
-	}
-
-	setLotusGear() {}
-
-	getFortune() {
-		const general = Object.values(this.fortuneSources).reduce((a, b) => a + b, 0);
-		return general;
+		this.equipment = options.equipment.filter((item) => LotusGear.isValid(item)).map((item) => new LotusGear(item));
 	}
 }
 
