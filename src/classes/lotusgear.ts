@@ -81,7 +81,7 @@ export class LotusGear {
 
 	private getFortuneFromVisitors(base: number, reforge: number): number {
 		if (!this.item.enchantments?.green_thumb) return 0;
-		
+
 		const regex = /§7Farming Fortune: §a\+(\d+.?\d+)/g;
 		let found = 0;
 
