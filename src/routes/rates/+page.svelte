@@ -37,7 +37,7 @@
 		pets: data.member?.pets ?? [],
 		farmingXp: data.member?.skills?.farming,
 		farmingLevel: getLevelProgress(
-			'farming', 
+			'farming',
 			data.member?.skills?.farming ?? 0,
 			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
