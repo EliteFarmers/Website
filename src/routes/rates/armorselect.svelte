@@ -1,12 +1,11 @@
 <script lang="ts">
-	import Fortunebreakdown from "$comp/items/tools/fortunebreakdown.svelte";
-	import { FormatMinecraftText } from "$lib/format";
-	import { ArmorSet, FarmingArmor, GearSlot, type PlayerOptions } from "farming-weight";
+	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
+	import { FormatMinecraftText } from '$lib/format';
+	import { ArmorSet, FarmingArmor, GearSlot, type PlayerOptions } from 'farming-weight';
 
 	export let options: PlayerOptions;
 
-	$: armor = options.armor.filter((i) => FarmingArmor.isValid(i))
-		.map((i) => new FarmingArmor(i, options));
+	$: armor = options.armor.filter((i) => FarmingArmor.isValid(i)).map((i) => new FarmingArmor(i, options));
 
 	$: helmet = armor.filter((a) => a.slot === GearSlot.Helmet)?.sort((a, b) => b.fortune - a.fortune);
 	$: chestplate = armor.filter((a) => a.slot === GearSlot.Chestplate)?.sort((a, b) => b.fortune - a.fortune);
@@ -20,12 +19,7 @@
 		boots: boots[0],
 	};
 
-	$: set = new ArmorSet([
-		selected.helmet, 
-		selected.chestplate, 
-		selected.leggings, 
-		selected.boots
-	]);
+	$: set = new ArmorSet([selected.helmet, selected.chestplate, selected.leggings, selected.boots]);
 </script>
 
 <div class="flex flex-col gap-2">
