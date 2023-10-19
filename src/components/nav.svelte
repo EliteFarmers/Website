@@ -138,10 +138,10 @@
 				<DropdownItem href="/profile">Profile</DropdownItem>
 				<DropdownItem href="/stats">My Stats</DropdownItem>
 				<DropdownDivider />
-				<DropdownItem href="/logout">Sign out</DropdownItem>
+				<DropdownItem href="/logout" data-sveltekit-preload-data="off">Sign out</DropdownItem>
 			</Dropdown>
 		{:else}
-			<div class="flex lg:order-2 my-0">
+			<div class="flex lg:order-2 my-0" data-sveltekit-preload-data="off">
 				<Button href="/login" size="sm">Login</Button>
 			</div>
 		{/if}
