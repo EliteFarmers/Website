@@ -17,25 +17,23 @@
 
 	$: cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
 
-	$: frameStyle = '';
-
-	$: {
+	function getFrameStyle() {
 		if (crop && name) {
 			index = cropArray.indexOf(name);
 		}
 
-		if (rank > 0) {
-			if (rank <= 5) {
-				frameStyle = 'background-image: url(/images/frames/rainbow.webp);';
-			} else if (rank <= 10) {
-				frameStyle = 'background-image: url(/images/frames/mithril.webp);';
-			} else if (rank <= 50) {
-				frameStyle = 'background-image: url(/images/frames/gold.webp);';
-			} else if (rank <= 100) {
-				frameStyle = 'background-image: url(/images/frames/silver.webp);';
-			} else if (rank <= 500) {
-				frameStyle = 'background-image: url(/images/frames/bronze.webp);';
-			}
+		if (rank <= 0) return '';
+
+		if (rank <= 5) {
+			return 'background-image: url(/images/frames/rainbow.webp);';
+		} else if (rank <= 10) {
+			return 'background-image: url(/images/frames/mithril.webp);';
+		} else if (rank <= 50) {
+			return 'background-image: url(/images/frames/gold.webp);';
+		} else if (rank <= 100) {
+			return 'background-image: url(/images/frames/silver.webp);';
+		} else if (rank <= 500) {
+			return 'background-image: url(/images/frames/bronze.webp);';
 		}
 	}
 </script>
@@ -43,13 +41,15 @@
 <div class="flex flex-row justify-between gap-2 w-full align-middle items-center">
 	<div class="flex flex-1 justify-between align-middle w-full max-h-30 bg-gray-100 dark:bg-zinc-800 rounded-lg p-1">
 		<div class="flex flex-row justify-start items-center gap-2 w-full">
-			<div class="flex crop-container pixelated w-14 md:w-20 md:h-20 aspect-square" style={frameStyle}>
-				<img
-					src="/images/crops/{key}.png"
-					class="rounded-lg pixelated aspect-square w-full p-[16%]"
-					alt={name}
-				/>
-			</div>
+			{#key rank}
+				<div class="flex crop-container pixelated w-14 md:w-20 md:h-20 aspect-square" style={getFrameStyle()}>
+					<img
+						src="/images/crops/{key}.png"
+						class="rounded-lg pixelated aspect-square w-full p-[16%]"
+						alt={name}
+					/>
+				</div>
+			{/key}
 			<div class="flex flex-col align-middle justify-center w-full">
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
