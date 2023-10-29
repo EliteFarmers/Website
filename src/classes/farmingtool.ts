@@ -8,18 +8,18 @@ import { Item } from './item';
 import { PlayerOptions } from './player';
 
 export class FarmingTool {
-	public declare readonly item: Item;
-	public declare readonly crop: Crop;
-	public declare readonly tool: FarmingToolInfo;
+	public declare item: Item;
+	public declare crop: Crop;
+	public declare tool: FarmingToolInfo;
 
-	public declare readonly rarity: Rarity;
-	public declare readonly counter: number | undefined;
-	public declare readonly cultivating: number;
-	public declare readonly reforge: Reforge | undefined;
-	public declare readonly reforgeStats: ReforgeTier | undefined;
+	public declare rarity: Rarity;
+	public declare counter: number | undefined;
+	public declare cultivating: number;
+	public declare reforge: Reforge | undefined;
+	public declare reforgeStats: ReforgeTier | undefined;
 
-	public declare readonly farmingForDummies: number;
-	public declare readonly recombobulated: boolean;
+	public declare farmingForDummies: number;
+	public declare recombobulated: boolean;
 
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
@@ -27,8 +27,13 @@ export class FarmingTool {
 	private declare options?: PlayerOptions;
 
 	constructor(item: Item, options?: PlayerOptions) {
+		this.rebuildTool(item, options);
+	}
+
+	rebuildTool(item: Item, options?: PlayerOptions) {
 		this.options = options;
 		this.item = item;
+
 		const tool = FARMING_TOOLS[item.skyblockId as keyof typeof FARMING_TOOLS];
 
 		if (!tool) {
@@ -44,13 +49,17 @@ export class FarmingTool {
 
 		this.counter = this.getCounter();
 		this.cultivating = this.getCultivating() ?? 0;
-		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
-		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
+		this.setReforge(item.attributes?.modifier ?? '');
 
 		this.farmingForDummies = +(this.item.attributes?.farming_for_dummies_count ?? 0);
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
 		this.fortune = this.sumFortune();
+	}
+
+	setReforge(reforgeId: string) {
+		this.reforge = REFORGES[reforgeId] ?? undefined;
+		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
 	}
 
 	private sumFortune(): number {
