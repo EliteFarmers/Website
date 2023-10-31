@@ -3,19 +3,24 @@
 	import { Button, Input, Label, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { selectedCrops } from '$lib/stores/selectedCrops';
-	import { FormatMinecraftText, getLevelProgress } from '$lib/format';
+	import { getLevelProgress } from '$lib/format';
 	import { SearchOutline } from 'flowbite-svelte-icons';
 	import { goto } from '$app/navigation';
-	import type { PageData } from './$types';
 
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import Head from '$comp/head.svelte';
-	import Armorselect from './armorselect.svelte';
+	import Armorselect from '$comp/rates/armorselect.svelte';
+	import Lotusgear from '$comp/rates/lotusgear.svelte';
+	import Toolconfig from '$comp/rates/toolconfig.svelte';
+
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { LotusGear } from 'farming-weight/dist/classes/lotusgear';
 
+	import type { PageData } from './$types';
+	import Cropdetails from '$comp/rates/cropdetails.svelte';
 	export let data: PageData;
+
 	let enteredIgn = data.account?.name ?? '';
 	let bountiful = true;
 	let mooshroom = true;
@@ -55,6 +60,8 @@
 		const url = new URL(window.location.href);
 		url.searchParams.set('ign', enteredIgn);
 
+		console.log(url.toString());
+
 		goto(url.toString());
 	}
 </script>
@@ -68,9 +75,11 @@
 
 	<Cropselector radio={true} />
 
+	<Cropdetails />
+
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
-		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-200 dark:bg-zinc-800">
-			<h2 class="text-2xl text-center">Settings</h2>
+		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
+			<h2 class="text-2xl text-center">Load From Player</h2>
 
 			<div class="flex md:flex-row gap-2 align-middle max-h-4 p-2 items-center justify-center">
 				{#if data.account}
@@ -80,7 +89,7 @@
 					<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
 						<input type="text" {...props} bind:value={enteredIgn} />
 					</Input>
-					<Button class="!p-2.5 h-full" type="submit" name="Search">
+					<Button class="!p-2.5 h-full" type="submit" name="ign">
 						<SearchOutline />
 					</Button>
 				</form>
@@ -103,36 +112,25 @@
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#each tools as tool (tool.item.uuid)}
+				{#each tools as tool (tool)}
 					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
-						<div class="flex justify-between items-center w-full px-4 py-2">
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.item.name ?? '')}</span>
-							<Fortunebreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown}>
-								{#if tool.item?.enchantments?.dedication}
-									<p class="text-xs flex-wrap">
-										Dedication is not included in the breakdown because crop milestones are not
-										available in Hypixel's API.
-									</p>
-								{/if}
-							</Fortunebreakdown>
-						</div>
+						<Toolconfig	{tool} {options} />
 					{/if}
 				{/each}
-				{#if tools.length === 0 && data.account?.id}
+				{#if tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Armorselect {options} />
-				{#if tools.length === 0 && data.account?.id}
+				{#if tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#if lotus.length === 0 && data.account?.id}
+				{#if lotus.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
 				{:else}
 					<div class="flex justify-between items-center w-full px-4 py-2">
@@ -141,16 +139,10 @@
 						<Fortunebreakdown total={lotus.reduce((acc, l) => acc + l.fortune, 0)} />
 					</div>
 				{/if}
-				{#each lotus as item (item.item.uuid)}
-					<div class="flex justify-between items-center w-full px-4 py-2">
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>
-						<Fortunebreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />
-					</div>
-				{/each}
+				<Lotusgear items={lotus} />
 			</div>
 		</section>
-		<section class="flex-1 w-full p-4 rounded-md bg-gray-200 dark:bg-zinc-800">
+		<section class="flex-1 w-full p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
 			<div class="flex flex-col gap-2 max-w-lg w-full p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
