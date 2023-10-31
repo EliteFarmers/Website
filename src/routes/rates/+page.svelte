@@ -3,7 +3,7 @@
 	import { Accordion, AccordionItem, Button, Input, Label, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { selectedCrops } from '$lib/stores/selectedCrops';
-	import { FormatMinecraftText, getLevelProgress } from '$lib/format';
+	import { getLevelProgress } from '$lib/format';
 	import { SearchOutline } from 'flowbite-svelte-icons';
 	import { goto } from '$app/navigation';
 
@@ -81,22 +81,7 @@
 
 	<Cropselector radio={true} />
 
-	<Accordion flush={true} class="w-full text-black dark:text-white border-none">
-		<AccordionItem
-			defaultClass="flex flex-row items-center justify-center gap-4 w-full"
-			textFlushDefault="text-black dark:text-white py-1 border-none"
-			paddingFlush="py-1 px-4"
-			borderSharedClass="border-none"
-			>
-			<div slot="header">
-				Crop Milestones/Upgrades
-			</div>
-			<Cropdetails />
-		</AccordionItem>
-
-	<Uploadconfig />
-
-	</Accordion>
+	<Cropdetails />
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
@@ -138,20 +123,20 @@
 						<Toolconfig	{tool} {options} />
 					{/if}
 				{/each}
-				{#if tools.length === 0 && data.account?.id}
+				{#if tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Armorselect {options} />
-				{#if tools.length === 0 && data.account?.id}
+				{#if tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#if lotus.length === 0 && data.account?.id}
+				{#if lotus.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
 				{:else}
 					<div class="flex justify-between items-center w-full px-4 py-2">
@@ -160,13 +145,7 @@
 						<Fortunebreakdown total={lotus.reduce((acc, l) => acc + l.fortune, 0)} />
 					</div>
 				{/if}
-				{#each lotus as item (item.item.uuid)}
-					<div class="flex justify-between items-center w-full px-4 py-2">
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>
-						<Fortunebreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />
-					</div>
-				{/each}
+				<Lotusgear items={lotus} />
 			</div>
 		</section>
 		<section class="flex-1 w-full p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
