@@ -94,7 +94,7 @@ export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.Mushroom]: 1603,
 	[Crop.NetherWart]: 1772,
 	[Crop.Potato]: 1772,
-	[Crop.Pumpkin]: 1567.5,
+	[Crop.Pumpkin]: 1579.5,
 	[Crop.SugarCane]: 1772,
 	[Crop.Wheat]: 1772,
 	[Crop.Seeds]: 1772, // Not a crop, same as wheat
