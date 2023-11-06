@@ -17,3 +17,7 @@ export * from './constants/weight.js';
 export * from './util/itemstats.js';
 export * from './util/jacob.js';
 export * from './util/names.js';
+
+export * from './crops/special.js';
+export * from './crops/pumpkin.js';
+export * from './crops/melon.js';

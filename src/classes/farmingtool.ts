@@ -166,6 +166,10 @@ export class FarmingTool {
 		return this.counter ?? this.cultivating ?? 0;
 	}
 
+	get isMissingDedication() {
+		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) > 0;
+	}
+
 	private getFarmingAbilityFortune(tool: FarmingTool) {
 		let fortune = 0;
 		const regex = /§7You have §6\+(\d+)☘ Farming Fortune/g;

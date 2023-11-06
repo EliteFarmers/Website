@@ -19,7 +19,7 @@ const PUMPKIN_DICER_ROLLEM = {
 	],
 };
 
-export function PumpkinPerkBonus(blocksBroken: number, level: 3 = 3): number {
+export function CalculatePumpkinPerkBonus(blocksBroken: number, level: 3 = 3): number {
 	let total = 0;
 
 	for (const { drops, chance } of PUMPKIN_DICER_ROLLEM[level]) {

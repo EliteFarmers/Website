@@ -1,9 +1,7 @@
 import { Crop } from '../constants/crops';
 import { FarmingPetType } from '../constants/pets';
-import { FarmingArmor } from './farmingarmor';
-import { FarmingTool } from './farmingtool';
+import { FORTUNE_PER_CROP_UPGRADE, FORTUNE_PER_PLOT } from '../constants/specific';
 import { Item } from './item';
-import { LotusGear } from './lotusgear';
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Record<Crop, number>;
@@ -32,17 +30,29 @@ export function CreatePlayer(options: PlayerOptions) {
 class Player {
 	declare options: PlayerOptions;
 
-	declare armor: FarmingArmor[];
-	declare tools: FarmingTool[];
-	declare equipment: LotusGear[];
-
 	constructor(options: PlayerOptions) {
 		this.options = options;
-		this.armor = options.armor.filter((item) => FarmingArmor.isValid(item)).map((item) => new FarmingArmor(item));
+	}
 
-		this.tools = options.tools.filter((item) => FarmingTool.isValid(item)).map((item) => new FarmingTool(item));
+	getCropFortune(crop: Crop) {
+		let sum = 0;
+		const breakdown = {} as Record<string, number>;
 
-		this.equipment = options.equipment.filter((item) => LotusGear.isValid(item)).map((item) => new LotusGear(item));
+		// Crop upgrades
+		const upgrade = FORTUNE_PER_CROP_UPGRADE * (this.options.cropUpgrades?.[crop] ?? 0);
+		if (upgrade > 0) {
+			breakdown['Crop Upgrade'] = upgrade;
+			sum += upgrade;
+		}
+
+		// Plots
+		const plots = FORTUNE_PER_PLOT * (this.options.plotsUnlocked ?? 0);
+		if (plots > 0) {
+			breakdown['Unlocked Plots'] = plots;
+			sum += plots;
+		}
+
+		return sum;
 	}
 }
 

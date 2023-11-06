@@ -1,6 +1,6 @@
 import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from './constants/crops';
-import { MelonPerkBonus } from './crops/melon';
-import { PumpkinPerkBonus } from './crops/pumpkin';
+import { CalculateMelonPerkBonus } from './crops/melon';
+import { CalculatePumpkinPerkBonus } from './crops/pumpkin';
 import { CalculateAverageSpecialCrops } from './crops/special';
 
 interface CalculateDropsOptions {
@@ -105,9 +105,9 @@ export function CalculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 		case Crop.Seeds:
 			return Math.round(baseDrops - blocksBroken); // Replenish takes away one drop per block broken
 		case Crop.Pumpkin:
-			return Math.round(baseDrops + PumpkinPerkBonus(blocksBroken));
+			return Math.round(baseDrops + CalculatePumpkinPerkBonus(blocksBroken));
 		case Crop.Melon:
-			return Math.round(baseDrops + MelonPerkBonus(blocksBroken));
+			return Math.round(baseDrops + CalculateMelonPerkBonus(blocksBroken));
 		default:
 			return 0;
 	}
@@ -156,13 +156,13 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	let extraDrops = 0;
 	switch (crop) {
 		case Crop.Pumpkin:
-			extraDrops = Math.round(PumpkinPerkBonus(blocksBroken));
+			extraDrops = Math.round(CalculatePumpkinPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.collection = Math.round(baseDrops + extraDrops);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			break;
 		case Crop.Melon:
-			extraDrops = Math.round(MelonPerkBonus(blocksBroken));
+			extraDrops = Math.round(CalculateMelonPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.collection = Math.round(baseDrops + extraDrops);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
