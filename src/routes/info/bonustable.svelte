@@ -33,9 +33,9 @@
 			<td>2 (Max 30)</td>
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">
-			<td>Gold Medals</td>
-			<td>Each 50 claimed gold medals earns you 25 weight each, up to {MAX_MEDAL_BONUS} medals.</td>
-			<td>25 (Max 500)</td>
+			<td>Contest Medals</td>
+			<td>Your best Gold/Platinum/Diamond medals are counted at rates of 0.25/0.5/0.75 weight respectively, up to {MAX_MEDAL_BONUS} medals.</td>
+			<td>(Max 750)</td>
 		</tr>
 		<tr class="bg-gray-100 dark:bg-zinc-800">
 			<td>Farming Minions</td>
