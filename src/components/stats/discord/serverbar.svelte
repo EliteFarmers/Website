@@ -24,6 +24,7 @@
 				? 'gif'
 				: 'webp'}"
 			alt="Guild Icon"
+			loading="lazy"
 		/>
 		<h2 class="text-3xl font-semibold">{guild.name}</h2>
 	</div>

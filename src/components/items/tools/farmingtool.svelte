@@ -32,7 +32,7 @@
 	<div class="flex flex-row items-center justify-end gap-2">
 		<div class="flex flex-col items-end justify-between gap-1 py-1">
 			<Fortunebreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown}>
-				{#if tool.item?.enchantments?.dedication}
+				{#if tool.item?.enchantments?.dedication && tool.fortuneBreakdown['Dedication'] === undefined}
 					<p class="text-xs flex-wrap">
 						Dedication is not included in the breakdown because crop milestones are not available in
 						Hypixel's API.

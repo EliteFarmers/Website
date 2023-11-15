@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CalculateDetailedAverageDrops, FarmingTool, type PlayerOptions } from 'farming-weight';
-	import { Button, Input, Label, Select } from 'flowbite-svelte';
+	import { Accordion, AccordionItem, Button, Input, Label, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { selectedCrops } from '$lib/stores/selectedCrops';
 	import { getLevelProgress } from '$lib/format';
@@ -19,6 +19,8 @@
 
 	import type { PageData } from './$types';
 	import Cropdetails from '$comp/rates/cropdetails.svelte';
+	import { ratesData } from '$lib/stores/ratesData';
+	import Uploadconfig from './uploadconfig.svelte';
 	export let data: PageData;
 
 	let enteredIgn = data.account?.name ?? '';
@@ -46,6 +48,10 @@
 			data.member?.skills?.farming ?? 0,
 			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
+		milestones: $ratesData.milestones,
+		cropUpgrades: $ratesData.cropUpgrades as Record<string, number>,
+		plotsUnlocked: $ratesData.plotsUnlocked,
+		gardenLevel: $ratesData.gardenLevel,
 	} satisfies PlayerOptions;
 
 	$: tools = (data.member?.farmingWeight?.inventory?.tools ?? [])
@@ -75,7 +81,22 @@
 
 	<Cropselector radio={true} />
 
-	<Cropdetails />
+	<Accordion flush={true} class="w-full text-black dark:text-white border-none">
+		<AccordionItem
+			defaultClass="flex flex-row items-center justify-center gap-4 w-full"
+			textFlushDefault="text-black dark:text-white py-1 border-none"
+			paddingFlush="py-1 px-4"
+			borderSharedClass="border-none"
+			>
+			<div slot="header">
+				Crop Milestones/Upgrades
+			</div>
+			<Cropdetails />
+		</AccordionItem>
+
+	<Uploadconfig />
+
+	</Accordion>
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">

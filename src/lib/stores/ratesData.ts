@@ -7,6 +7,7 @@ interface RatesData {
 	cropUpgrades: Partial<Record<Crop, number>>;
 	gardenLevel: number;
 	plotsUnlocked: number;
+	strength: number;
 }
 
 // Initialize the store with the data from localStorage if it exists
@@ -15,6 +16,7 @@ let defaultData = {
 	cropUpgrades: {},
 	gardenLevel: 0,
 	plotsUnlocked: 0,
+	strength: 0,
 } satisfies RatesData;
 
 if (browser) {
