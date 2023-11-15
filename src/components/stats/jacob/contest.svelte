@@ -25,7 +25,11 @@
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
 	<h3 class="text-lg font-semibold flex flex-row items-center gap-1">
-		{#if medal === 'gold'}
+		{#if medal === 'diamond'}
+			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/diamond.webp" alt="Earned Medal" />
+		{:else if medal === 'platinum'}
+			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/platinum.webp" alt="Earned Medal" />
+		{:else if medal === 'gold'}
 			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/gold.webp" alt="Earned Medal" />
 		{:else if medal === 'silver'}
 			<img class="inline-block w-5 h-5 pixelated" src="/images/medals/silver.webp" alt="Earned Medal" />

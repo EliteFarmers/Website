@@ -37,6 +37,20 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'First Place Contests',
 		type: LeaderboardType.Misc,
 	},
+	diamondmedals: {
+		limit: 1_000,
+		title: 'Diamond Medals Earned',
+		name: 'Diamond Medals',
+		icon: '/images/medals/diamond.webp',
+		type: LeaderboardType.Misc,
+	},
+	platinummedals: {
+		limit: 1_000,
+		title: 'Platinum Medals Earned',
+		name: 'Platinum Medals',
+		icon: '/images/medals/platinum.webp',
+		type: LeaderboardType.Misc,
+	},
 	goldmedals: {
 		limit: 1_000,
 		title: 'Gold Medals Earned',
