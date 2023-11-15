@@ -81,7 +81,22 @@
 
 	<Cropselector radio={true} />
 
-	<Cropdetails />
+	<Accordion flush={true} class="w-full text-black dark:text-white border-none">
+		<AccordionItem
+			defaultClass="flex flex-row items-center justify-center gap-4 w-full"
+			textFlushDefault="text-black dark:text-white py-1 border-none"
+			paddingFlush="py-1 px-4"
+			borderSharedClass="border-none"
+			>
+			<div slot="header">
+				Crop Milestones/Upgrades
+			</div>
+			<Cropdetails />
+		</AccordionItem>
+
+	<Uploadconfig />
+
+	</Accordion>
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
