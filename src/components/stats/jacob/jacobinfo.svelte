@@ -10,12 +10,16 @@
 		bronze: number;
 		silver: number;
 		gold: number;
+		platinum: number;
+		diamond: number;
 		participations: number;
 		firstPlaces: number;
 	} = {
 		bronze: -1,
 		silver: -1,
 		gold: -1,
+		platinum: -1,
+		diamond: -1,
 		participations: -1,
 		firstPlaces: -1,
 	};

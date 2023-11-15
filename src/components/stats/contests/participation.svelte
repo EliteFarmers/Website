@@ -33,6 +33,13 @@
 			<div class="text-sm xs:text-xl sm:text-2xl font-mono">
 				{entry.collected?.toLocaleString()}
 			</div>
+			{#if entry.medal && entry.medal !== 'none'}
+				<img
+					class="inline-block w-6 h-6 pixelated"
+					src="/images/medals/{entry.medal}.webp"
+					alt="Earned Medal"
+				/>
+			{/if}
 		</div>
 	</div>
 </a>
