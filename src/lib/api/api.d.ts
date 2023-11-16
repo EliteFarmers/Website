@@ -621,6 +621,9 @@ export interface paths {
   "/Contests/at/{year}": {
     get: {
       parameters: {
+        query?: {
+          now?: boolean;
+        };
         path: {
           year: number;
         };
@@ -2055,6 +2058,11 @@ export interface components {
       /** Format: int32 */
       participants?: number;
     };
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    Crop: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
     CropCollectionsDataPointDto: {
       /** Format: int64 */
       timestamp?: number;
@@ -2097,6 +2105,18 @@ export interface components {
       position?: number;
       /** Format: int32 */
       color?: number;
+    };
+    EarnedMedalInventoryDto: {
+      /** Format: int32 */
+      bronze?: number;
+      /** Format: int32 */
+      silver?: number;
+      /** Format: int32 */
+      gold?: number;
+      /** Format: int32 */
+      platinum?: number;
+      /** Format: int32 */
+      diamond?: number;
     };
     EditEventDto: {
       name?: string | null;
@@ -2176,16 +2196,54 @@ export interface components {
       eventId?: string;
       status?: components["schemas"]["EventMemberStatus"];
       amountGained?: string | null;
-      startConditions?: components["schemas"]["StartConditions"];
+      startConditions?: components["schemas"]["EventMemberStartConditions"];
       lastUpdated?: string | null;
       disqualified?: boolean;
       notes?: string | null;
+    };
+    EventMemberStartConditions: {
+      initialCollection?: {
+        [key: string]: number;
+      };
+      increasedCollection?: {
+        [key: string]: number;
+      };
+      countedCollection?: {
+        [key: string]: number;
+      };
+      toolStates?: {
+        [key: string]: components["schemas"]["EventToolState"];
+      };
+      tools?: {
+        [key: string]: number;
+      };
     };
     /**
      * Format: int32
      * @enum {integer}
      */
     EventMemberStatus: 0 | 1 | 2 | 3;
+    EventToolCounterState: {
+      /** Format: int64 */
+      initial?: number;
+      /** Format: int64 */
+      previous?: number;
+      /** Format: int64 */
+      current?: number;
+      /** Format: int64 */
+      uncounted?: number;
+    };
+    EventToolState: {
+      skyblockId?: string;
+      crop?: components["schemas"]["Crop"];
+      /** Format: int64 */
+      firstSeen?: number;
+      /** Format: int64 */
+      lastSeen?: number;
+      isActive?: boolean;
+      counter?: components["schemas"]["EventToolCounterState"];
+      cultivating?: components["schemas"]["EventToolCounterState"];
+    };
     ExcludedTimespan: {
       /** Format: int64 */
       start?: number;
@@ -2197,6 +2255,7 @@ export interface components {
       armor?: components["schemas"]["ItemDto"][];
       tools?: components["schemas"]["ItemDto"][];
       equipment?: components["schemas"]["ItemDto"][];
+      accessories?: components["schemas"]["ItemDto"][];
     };
     FarmingWeightAllProfilesDto: {
       selectedProfileId?: string | null;
@@ -2363,7 +2422,7 @@ export interface components {
     };
     JacobDataDto: {
       medals?: components["schemas"]["MedalInventoryDto"];
-      earnedMedals?: components["schemas"]["MedalInventoryDto"];
+      earnedMedals?: components["schemas"]["EarnedMedalInventoryDto"];
       perks?: components["schemas"]["JacobPerksDto"];
       /** Format: int32 */
       participations?: number;
@@ -2616,14 +2675,6 @@ export interface components {
       discord?: string | null;
       hypixel?: string | null;
       youtube?: string | null;
-    };
-    StartConditions: {
-      collection?: {
-        [key: string]: number;
-      };
-      tools?: {
-        [key: string]: number;
-      };
     };
     StrippedContestParticipationDto: {
       /** Format: int32 */

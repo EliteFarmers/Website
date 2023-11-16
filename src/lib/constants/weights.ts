@@ -18,9 +18,11 @@ export const CROPS_PER_ONE_WEIGHT = {
 // Rewards for farming level
 export const FARMING_LEVEL_50_BONUS = 100;
 export const FARMING_LEVEL_60_BONUS = 250;
-// For every gold medal <= max, add 0.5 to the weight
+// Contest medal bonuses
 export const MAX_MEDAL_BONUS = 1000;
-export const WEIGHT_PER_GOLD_MEDAL = 0.5;
+export const WEIGHT_PER_DIAMOND_MEDAL = 0.75;
+export const WEIGHT_PER_PLATINUM_MEDAL = 0.5;
+export const WEIGHT_PER_GOLD_MEDAL = 0.25;
 // Get 5 bonus weight for every tier 12 farming minion
 export const MINION_REWARD_AT_TIER = 12;
 export const MINION_REWARD_WEIGHT = 5;
