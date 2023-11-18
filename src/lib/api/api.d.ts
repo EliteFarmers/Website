@@ -2033,6 +2033,11 @@ export interface components {
      * @enum {integer}
      */
     ChannelType: 0 | 1 | 2 | 3 | 4 | 5 | 10 | 11 | 12 | 13 | 14 | 15;
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    ContestMedal: 0 | 1 | 2 | 3 | 4 | 5;
     ContestParticipationDto: {
       crop?: string;
       /** Format: int64 */
@@ -2424,8 +2429,11 @@ export interface components {
       medals?: components["schemas"]["MedalInventoryDto"];
       earnedMedals?: components["schemas"]["EarnedMedalInventoryDto"];
       perks?: components["schemas"]["JacobPerksDto"];
+      stats?: components["schemas"]["JacobStatsDto"];
       /** Format: int32 */
       participations?: number;
+      /** Format: int32 */
+      firstPlaceScores?: number;
       contests?: components["schemas"]["ContestParticipationDto"][];
     };
     JacobPerksDto: {
@@ -2433,6 +2441,14 @@ export interface components {
       doubleDrops?: number;
       /** Format: int32 */
       levelCap?: number;
+    };
+    JacobStatsDto: {
+      brackets?: {
+        [key: string]: components["schemas"]["ContestMedal"];
+      };
+      personalBests?: {
+        [key: string]: number;
+      };
     };
     LeaderboardDto: {
       id?: string;
@@ -2700,6 +2716,7 @@ export interface components {
       }) | null;
       tempStatBuffs?: components["schemas"]["TempStatBuff"][] | null;
       accessoryBagSettings?: Record<string, unknown> | null;
+      bestiary?: Record<string, unknown> | null;
     };
     UserGuildDto: {
       id?: string;
