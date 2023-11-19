@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import Cropstats from './cropstats.svelte';
 	import Medals from './medals.svelte';
 	import Recents from './recents.svelte';
 	import Stats from './stats.svelte';
@@ -25,14 +26,21 @@
 	};
 </script>
 
-<section class="py-4 flex justify-center align-middle" aria-labelledby="Jacob">
-	<div class="w-[90%] md:w-[70%] bg-gray-100 dark:bg-zinc-800 rounded-lg p-4">
-		<h1 id="Jacob" class="text-3xl text-center pt-2">{ign} | Jacob Stats</h1>
+<section class="py-4 flex md:flex-col gap-4 justify-center align-middle" aria-labelledby="Jacob">
+	<h1 id="Jacob" class="text-3xl text-center pt-2">{ign} | Jacob Stats</h1>
 
-		<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
+	<div class="flex flex-row justify-center">
+		<Cropstats {jacob} />
+	</div>
 
-		<Stats {jacob} participationsRank={ranks.participations} firstPlacesRank={ranks.firstPlaces} />
-
-		<Recents contests={jacob?.contests} />
+	<div class=" flex md:flex-row gap-4 md:gap-8 justify-center align-middle">
+		<div class="flex-1 max-w-2xl">
+			<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
+	
+			<Stats {jacob} participationsRank={ranks.participations} firstPlacesRank={ranks.firstPlaces} />
+		</div>
+		<div class="flex-1 max-w-2xl">
+			<Recents contests={jacob?.contests} />
+		</div>
 	</div>
 </section>
