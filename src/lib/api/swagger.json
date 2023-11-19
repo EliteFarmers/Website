@@ -5014,6 +5014,18 @@
         "type": "integer",
         "format": "int32"
       },
+      "ContestMedal": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "ContestParticipationDto": {
         "type": "object",
         "properties": {
@@ -6232,7 +6244,14 @@
           "perks": {
             "$ref": "#/components/schemas/JacobPerksDto"
           },
+          "stats": {
+            "$ref": "#/components/schemas/JacobStatsDto"
+          },
           "participations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstPlaceScores": {
             "type": "integer",
             "format": "int32"
           },
@@ -6255,6 +6274,25 @@
           "levelCap": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JacobStatsDto": {
+        "type": "object",
+        "properties": {
+          "brackets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ContestMedal"
+            }
+          },
+          "personalBests": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         },
         "additionalProperties": false
@@ -7038,6 +7076,9 @@
             "nullable": true
           },
           "accessoryBagSettings": {
+            "nullable": true
+          },
+          "bestiary": {
             "nullable": true
           }
         },
