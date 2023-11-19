@@ -39,7 +39,7 @@
 		<a
 			href={$page.url.pathname + '/contests'}
 			data-sveltekit-preload-data="off"
-			class="p-2 flex flex-row items-center justify-center hover:shadow-lg hover:bg-gray-200 dark:hover:bg-zinc-700 gap-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 border-l-4"
+			class="p-2 flex flex-row items-center justify-center hover:shadow-lg hover:bg-gray-200 dark:hover:bg-zinc-700 gap-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 border-l-4 dark:border-zinc-700"
 		>
 			<h3 class="text-lg font-semibold flex flex-row items-center gap-2">
 				View all

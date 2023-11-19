@@ -29,8 +29,6 @@
 		const medal = jacob?.stats?.brackets?.[crop.replace(' ', '')];
 		return medal ? medals[+medal - 1] : undefined;
 	}
-
-	$: console.log(jacob?.stats?.brackets);
 </script>
 
 <div class="flex flex-wrap gap-4 items-center justify-center max-w-5xl">

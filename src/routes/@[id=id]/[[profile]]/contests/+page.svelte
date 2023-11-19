@@ -24,9 +24,13 @@
 		</h1>
 		<MedalCounts
 			participations={data.contestsCount}
-			gold={data.member.jacob?.earnedMedals?.gold}
-			silver={data.member.jacob?.earnedMedals?.silver}
-			bronze={data.member.jacob?.earnedMedals?.bronze}
+			medals={{
+				diamond: data.member.jacob?.earnedMedals?.diamond ?? 0,
+				platinum: data.member.jacob?.earnedMedals?.platinum ?? 0,
+				gold: data.member.jacob?.earnedMedals?.gold ?? 0,
+				silver: data.member.jacob?.earnedMedals?.silver ?? 0,
+				bronze: data.member.jacob?.earnedMedals?.bronze ?? 0,
+			}}
 		/>
 
 		<div class="flex flex-row align-middle my-2 mt-4">
@@ -53,9 +57,13 @@
 							<span slot="header" class="w-full px-4">
 								<MedalCounts
 									participations={conts?.length}
-									gold={conts?.filter((c) => c.medal === 'gold').length}
-									silver={conts?.filter((c) => c.medal === 'silver').length}
-									bronze={conts?.filter((c) => c.medal === 'bronze').length}
+									medals={{
+										diamond: conts?.filter((c) => c.medal === 'diamond').length ?? 0,
+										platinum: conts?.filter((c) => c.medal === 'platinum').length ?? 0,
+										gold: conts?.filter((c) => c.medal === 'gold').length ?? 0,
+										silver: conts?.filter((c) => c.medal === 'silver').length ?? 0,
+										bronze: conts?.filter((c) => c.medal === 'bronze').length ?? 0,
+									}}
 								/>
 							</span>
 							<div class="flex flex-wrap gap-4">
