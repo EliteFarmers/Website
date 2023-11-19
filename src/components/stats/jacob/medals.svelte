@@ -86,7 +86,7 @@
 						<span class="text-2xl leading-none">{count.toLocaleString()}</span>
 					</div>
 
-					<span class="bg-gray-700 dark:bg-zinc-900 px-1 py-0.5 rounded-md">
+					<span class="bg-gray-300 dark:bg-zinc-900 px-1 py-0.5 rounded-md">
 						<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl">{ranks[medal]}</span>
 					</span>
 				</a>
