@@ -30,7 +30,7 @@
 {#if activeMembers.length > 0}
 	<Popover
 		triggeredBy="#playerName"
-		class="text-sm font-light z-10 bg-gray-200 dark:bg-zinc-700"
+		class="text-sm font-light z-20 bg-gray-200 dark:bg-zinc-700"
 		placement="bottom"
 		color="none"
 		border={false}

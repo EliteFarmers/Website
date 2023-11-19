@@ -16,7 +16,7 @@
 >
 	<div class="flex flex-row gap-2 items-center">
 		<img
-			class="w-14 md:w-20 md:h-20 aspect-square pixelated"
+			class="w-14 md:w-20 md:h-20 aspect-square pixelated p-1"
 			src={`/packs/hypixelplus/tools/farming/${tool.item.skyblockId?.toLowerCase()}.png`}
 			alt="Tool"
 		/>
