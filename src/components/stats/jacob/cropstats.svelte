@@ -63,10 +63,10 @@
 			{/if}
 		</div>
 	{/each}
-	<Popover triggeredBy=".participation-count" placement="bottom">
-		<p>The amount of participations for this crop!</p>
-	</Popover>
-	<Popover triggeredBy=".highest-bracket" placement="bottom">
-		<p>The highest placement earned for this crop!</p>
-	</Popover>
 </div>
+<Popover triggeredBy=".participation-count" placement="bottom">
+	<p>The amount of participations for this crop!</p>
+</Popover>
+<Popover triggeredBy=".highest-bracket" placement="bottom">
+	<p>The highest placement earned for this crop!</p>
+</Popover>
