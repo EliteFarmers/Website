@@ -26,7 +26,7 @@
 	</h3>
 	<h3 class="text-lg font-semibold flex flex-row items-center gap-1">
 		{#if medal && medal !== 'none'}
-			<img class="inline-block w-6 h-6 pixelated" src="/images/medals/{medal}.webp" alt="Earned Medal" />
+			<img class="inline-block w-6 h-6 pixelated p-0.5" src="/images/medals/{medal}.webp" alt="Earned Medal" />
 		{/if}
 		{(collected ?? 0).toLocaleString()}
 	</h3>

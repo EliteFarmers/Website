@@ -20,9 +20,9 @@
 	};
 
 	$: medals = {
-		'gold': total?.gold ?? 0,
-		'silver': total?.silver ?? 0,
-		'bronze': total?.bronze ?? 0
+		gold: total?.gold ?? 0,
+		silver: total?.silver ?? 0,
+		bronze: total?.bronze ?? 0,
 	} as Record<keyof typeof ranks, number>;
 
 	$: earnedMedals = [
@@ -36,16 +36,16 @@
 	$: profile = $page.params.profile;
 </script>
 
-<div id="Medals">
+<div id="Medals" class="flex flex-col">
 	<h3 class="text-2xl my-2">Jacob Contest Rankings</h3>
 	<div class="flex flex-wrap md:flex-row gap-2 md:gap-4 justify-evenly w-full">
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
 			{#if ranks[medal] > -1}
 				<a
 					href="/leaderboard/{medal}medals/+{$page.params.id}-{profile}"
-					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-between xs:justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 				>
-					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated" />
+					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
 					<span class="text-2xl">{count.toLocaleString()}</span>
 
@@ -55,15 +55,20 @@
 				</a>
 			{:else}
 				<div
-					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md"
+					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-between xs:justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md"
 				>
-					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated" />
+					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
 					<span class="text-2xl">{count.toLocaleString()}</span>
+
+					<div />
 				</div>
 			{/if}
 			<Popover>
-				<p>Placed in <span class="first-letter:capitalize inline-block">{medal}</span> Bracket {count.toLocaleString()} times!</p>
+				<p>
+					Placed in <span class="first-letter:capitalize inline-block">{medal}</span> Bracket {count.toLocaleString()}
+					times!
+				</p>
 			</Popover>
 		{/each}
 	</div>
@@ -72,9 +77,9 @@
 			{#if ranks[medal] > -1}
 				<a
 					href="/leaderboard/{medal}medals/+{$page.params.id}-{profile}"
-					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-between xs:justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 				>
-					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated" />
+					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
 					<div class="flex flex-col">
 						<span class="text-xl leading-none">{medals[medal].toLocaleString()}</span>
@@ -87,19 +92,21 @@
 				</a>
 			{:else}
 				<div
-					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md"
+					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-between xs:justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md"
 				>
-					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated" />
+					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
 					<div class="flex flex-col">
 						<span class="text-xl leading-none">{medals[medal].toLocaleString()}</span>
 						<span class="text-2xl leading-none">{count.toLocaleString()}</span>
 					</div>
+
+					<div />
 				</div>
 			{/if}
 			<Popover>
 				<div class="flex flex-col">
-					<span>{medals[medal].toLocaleString()} - Medals in Inventory</span>
+					<span>{medals[medal].toLocaleString()} - Medals in inventory</span>
 					<span>{count.toLocaleString()} - Placements in {medal} bracket</span>
 				</div>
 			</Popover>

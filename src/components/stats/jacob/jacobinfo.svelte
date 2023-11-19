@@ -26,20 +26,20 @@
 	};
 </script>
 
-<section class="py-4 flex md:flex-col gap-4 justify-center align-middle" aria-labelledby="Jacob">
-	<h1 id="Jacob" class="text-3xl text-center pt-2">{ign} | Jacob Stats</h1>
+<section class="py-4 flex-col gap-4 justify-center align-middle mx-2 mb-8" aria-labelledby="Jacob">
+	<h1 id="Jacob" class="text-3xl text-center pt-2">{ign} &nbsp;-&nbsp; Jacob Stats</h1>
 
-	<div class="flex flex-row justify-center">
+	<div class="flex flex-row justify-center my-8 items-center">
 		<Cropstats {jacob} />
 	</div>
 
-	<div class=" flex md:flex-row gap-4 md:gap-8 justify-center align-middle">
-		<div class="flex-1 max-w-2xl">
+	<div class="flex flex-col lg:flex-row gap-4 md:gap-8 justify-center items-center">
+		<div class="flex-1 lg:max-w-2xl">
 			<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
-	
+
 			<Stats {jacob} participationsRank={ranks.participations} firstPlacesRank={ranks.firstPlaces} />
 		</div>
-		<div class="flex-1 max-w-2xl">
+		<div class="flex-1 lg:max-w-2xl">
 			<Recents contests={jacob?.contests} />
 		</div>
 	</div>
