@@ -6,7 +6,7 @@
 	export let participationsRank = -1;
 	export let firstPlacesRank = -1;
 
-	$: firstPlaces = jacob?.contests?.filter((contest) => contest.position === 0).length ?? 0;
+	$: firstPlaces = jacob?.firstPlaceScores ?? 0;
 
 	// Calculate which crop has the most contests and get the count
 	$: highest = Object.entries(
