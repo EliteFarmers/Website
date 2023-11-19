@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex flex-col">
-	<h1 class="text-2xl my-2">Recent Contests</h1>
+	<h1 class="text-2xl my-1">Recent Contests</h1>
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
 		{#if recentContests.length < 1}
 			<h1 class="text-lg">No recent contests found.</h1>
