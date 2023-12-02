@@ -1,5 +1,6 @@
 import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GearSlot } from '../constants/armor';
 import { Crop } from '../constants/crops';
+import { FARMING_ARMOR_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { Skill } from '../constants/skills';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
@@ -166,6 +167,21 @@ export class FarmingArmor {
 		if (reforge > 0) {
 			this.fortuneBreakdown[this.reforge?.name ?? 'Reforge'] = reforge;
 			sum += reforge;
+		}
+
+		// Enchantments
+		const enchantments = Object.entries(this.item.enchantments ?? {});
+		for (const [enchant, level] of enchantments) {
+			if (!level) continue;
+
+			const enchantment = FARMING_ARMOR_ENCHANTS[enchant];
+			if (!enchantment || !level) continue;
+
+			const fortune = enchantment.levels?.[level]?.[Stat.FarmingFortune] ?? 0;
+			if (fortune > 0) {
+				this.fortuneBreakdown[enchantment.name] = fortune;
+				sum += fortune;
+			}
 		}
 
 		this.fortune = sum;

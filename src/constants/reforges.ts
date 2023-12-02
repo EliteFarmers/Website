@@ -32,6 +32,7 @@ export enum Stat {
 	FarmingWisdom = 'Farming Wisdom',
 	ForagingWisdom = 'Foraging Wisdom',
 	Pristine = 'Pristine',
+	BonusPestChance = 'Bonus Pest Chance',
 }
 
 export enum ReforgeTarget {
@@ -463,4 +464,5 @@ export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.FarmingWisdom]: '☯',
 	[Stat.ForagingWisdom]: '☯',
 	[Stat.Pristine]: '✧',
+	[Stat.BonusPestChance]: 'ൠ',
 };

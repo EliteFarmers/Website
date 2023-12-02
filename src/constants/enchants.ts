@@ -116,7 +116,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		appliesTo: [ReforgeTarget.Axe],
 		wiki: 'https://wiki.hypixel.net/Sunder_Enchantment',
 		minLevel: 1,
-		maxLevel: 5,
+		maxLevel: 6,
 		levels: {
 			1: {
 				[Stat.FarmingFortune]: 12.5,
@@ -132,6 +132,42 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 			5: {
 				[Stat.FarmingFortune]: 62.5,
+			},
+			6: {
+				[Stat.FarmingFortune]: 75,
+			},
+		},
+	},
+} as const;
+
+export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
+	pesterminator: {
+		name: 'Pesterminator',
+		appliesTo: [ReforgeTarget.Armor],
+		wiki: 'https://wiki.hypixel.net/Pesterminator_Enchantment',
+		levelRequirement: 10,
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				[Stat.FarmingFortune]: 1,
+				[Stat.BonusPestChance]: 2,
+			},
+			2: {
+				[Stat.FarmingFortune]: 2,
+				[Stat.BonusPestChance]: 4,
+			},
+			3: {
+				[Stat.FarmingFortune]: 3,
+				[Stat.BonusPestChance]: 6,
+			},
+			4: {
+				[Stat.FarmingFortune]: 4,
+				[Stat.BonusPestChance]: 8,
+			},
+			5: {
+				[Stat.FarmingFortune]: 5,
+				[Stat.BonusPestChance]: 10,
 			},
 		},
 	},

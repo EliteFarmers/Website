@@ -1,7 +1,7 @@
-import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from './constants/crops';
-import { CalculateMelonPerkBonus } from './crops/melon';
-import { CalculatePumpkinPerkBonus } from './crops/pumpkin';
-import { CalculateAverageSpecialCrops } from './crops/special';
+import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops';
+import { CalculateMelonPerkBonus } from '../crops/melon';
+import { CalculatePumpkinPerkBonus } from '../crops/pumpkin';
+import { CalculateAverageSpecialCrops } from '../crops/special';
 
 interface CalculateDropsOptions {
 	farmingFortune?: number;
@@ -20,7 +20,7 @@ const crops = [
 	Crop.SugarCane,
 	Crop.Wheat,
 	Crop.Seeds,
-];
+] as const;
 
 export function CalculateAverageDrops(options: CalculateDropsOptions): Record<Crop, number> {
 	const result = {} as Record<Crop, number>;
@@ -171,7 +171,7 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			if (replenish) {
 				// Replenish takes away one drop per block broken
 				result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
-				result.collection = Math.round(baseDrops - blocksBroken * breaks);
+				result.collection = Math.round(baseDrops);
 				break;
 			}
 
@@ -183,6 +183,38 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
 
 	return result;
+}
+
+export interface FortuneRequiredCalculatorOptions {
+	blocksBroken: number;
+	crop: Crop;
+	collection: number;
+	useDicers?: boolean;
+	useMooshroom?: boolean;
+}
+
+export function GetFortuneRequiredForCollection(options: FortuneRequiredCalculatorOptions): number {
+	const { blocksBroken, crop, useDicers, useMooshroom } = options;
+	let { collection } = options;
+
+	const { drops } = GetCropInfo(options.crop);
+
+	if (useDicers)
+		switch (crop) {
+			case Crop.Pumpkin:
+				collection -= CalculatePumpkinPerkBonus(blocksBroken);
+				break;
+			case Crop.Melon:
+				collection -= CalculateMelonPerkBonus(blocksBroken);
+				break;
+		}
+
+	if (useMooshroom && crop === Crop.Mushroom) {
+		collection -= blocksBroken; // "* breaks" not needed because it's always 1 for mushroom
+	}
+
+	const fortune = (collection * 100) / (drops * blocksBroken) - 100;
+	return Math.ceil(fortune);
 }
 
 export function GetNPCProfit(crop: Crop, amount: number): number {
