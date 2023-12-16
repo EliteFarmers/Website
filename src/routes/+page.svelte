@@ -24,7 +24,7 @@
 
 <main>
 	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
-	<p class="text-body-xl text-center mb-16">View stats of any skyblock player!</p>
+	<p class="text-body-xl text-center mb-16">View farming stats of any skyblock player!</p>
 
 	<div class="flex flex-col w-full items-center gap-8">
 		{#if data.eliteGuild}
@@ -32,14 +32,13 @@
 				<Serverbar guild={data.eliteGuild} />
 			</div>
 		{/if}
-		<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
-			<div class="flex flex-col items-center gap-8">
-				<Card color="none" border={false}>
+		<div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+			<div class="flex flex-col items-center gap-4">
+				<Card color="none" border={false} class="dark:bg-zinc-800">
 					<h1 class="mb-4 w-full text-xl font-semibold">Join The Discord</h1>
 					<p class="w-full mb-6">
-						Join an exclusive community of Elite Farmers! Full membership unlocked after reaching {PUBLIC_WEIGHT_REQ}
-						farming weight. Talk to the best of the best with thousands of fellow farmers! Also, join the support
-						server for suggestions, bug reports, and coding talk!
+						Full membership unlocked after reaching {(+PUBLIC_WEIGHT_REQ).toLocaleString()}
+						farming weight. Also, join the support server for suggestions, bug reports!
 					</p>
 					<div class="flex flex-col md:flex-row gap-2 justify-center">
 						<Button
@@ -49,7 +48,7 @@
 							target="_blank"
 							rel="noopener noreferrer nofollow"
 						>
-							Elite farmers
+							Elite Farmers
 							<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
 						</Button>
 						<Button
@@ -64,11 +63,32 @@
 						</Button>
 					</div>
 				</Card>
-				<Card color="none" border={false}>
+				<Card color="none" border={false} class="dark:bg-zinc-800">
+					<h1 class="mb-4 w-full text-xl font-semibold">Support Development!</h1>
+					<p class="w-full mb-6">
+						Donate on Ko-Fi to support the development of Elite! Also check Server Subscriptions on the
+						development server to unlock some perks!
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href={PUBLIC_DONATION_URL}
+							class="w-fit font-semibold"
+							target="_blank"
+							color="green"
+							rel="noopener noreferrer nofollow"
+						>
+							Donate on Ko-Fi
+							<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+						</Button>
+					</div>
+				</Card>
+			</div>
+			<div class="flex flex-col items-center gap-4">
+				<Card color="none" border={false} class="dark:bg-zinc-800">
 					<h1 class="mb-4 w-full text-xl font-semibold">Add To Discord</h1>
 					<p class="w-full mb-6">
-						Quickly access stats and leaderboards in Discord! Please note that the bot runs seperately from
-						the website for now, leaderboards and stats may be out of sync.
+						Quickly access stats and leaderboards in Discord! Try out commands like <strong>/weight</strong
+						>, <strong>/rates</strong>, and <strong>/leaderboard</strong>!
 					</p>
 					<div class="flex justify-center">
 						<Button
@@ -83,36 +103,27 @@
 						</Button>
 					</div>
 				</Card>
-			</div>
-			<div class="flex flex-col items-center">
-				<Card class="!p-0 overflow-hidden" size="sm">
-					{#if donationClicked}
-						<iframe
-							id="kofiframe"
-							src="{PUBLIC_DONATION_URL}/?hidefeed=true&widget=true&embed=true&preview=true"
-							style="border:none;width:100%;padding:4px;"
-							height="512"
-							title="kaeso"
-						/>
-					{:else}
-						<button on:click={() => (donationClicked = true)}>
-							<img src="images/SupportKaeso.webp" alt="Support The Website" /></button
+				<Card color="none" border={false} class="dark:bg-zinc-800">
+					<h1 class="mb-4 w-full text-xl font-semibold">Purchase Crop Stickers!</h1>
+					<p class="w-full mb-6">
+						Direcly support the art on Elite by purchasing crop stickers! All proceeds go to the artist, and
+						you get a cool sticker!
+					</p>
+					<div class="flex justify-center">
+						<Button
+							href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
+							class="w-fit font-semibold"
+							target="_blank"
+							color="green"
+							rel="noopener noreferrer nofollow"
 						>
-					{/if}
+							Open Lumini's Shop
+							<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+						</Button>
+					</div>
 				</Card>
 			</div>
 		</div>
-		<a
-			class="lumini flex flex-row gap-8 w-1/2 hover:shadow-xl rounded-md"
-			href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
-			target="_blank"
-			rel="noopener noreferrer nofollow"
-		>
-			<h1 class="p-8 text-3xl font-semibold">
-				Art By Lumini
-				<span class="text-sm font-xl">Click Me To Check Out Their Shop!</span>
-			</h1>
-		</a>
 	</div>
 
 	<section class="flex justify-center mt-4 mb-10">
@@ -131,17 +142,3 @@
 		</div>
 	</section>
 </main>
-
-<style>
-	.lumini {
-		display: block;
-		background-image: url('/images/LuminiBanner.webp');
-		background-size: cover;
-		background-position: center;
-		height: fit-content;
-	}
-
-	.lumini h1 {
-		color: black;
-	}
-</style>
