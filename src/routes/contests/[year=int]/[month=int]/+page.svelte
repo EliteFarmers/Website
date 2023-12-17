@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { getSkyblockMonth } from '$lib/format';
+	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -20,7 +20,17 @@
 <main class="flex flex-col justify-center items-center px-2">
 	<div class="font-semibold text-center mt-16 mb-4 flex flex-col gap-4">
 		<h1 class="text-4xl">{getSkyblockMonth(month)}, Year {year}</h1>
-
+		<p>
+			{new Date(getTimeStamp(+year - 1, month - 1, 0) * 1000).toLocaleString(undefined, {
+				timeStyle: 'short',
+				dateStyle: 'medium',
+			}) +
+				' - ' +
+				new Date(getTimeStamp(+year - 1, month, 0) * 1000).toLocaleString(undefined, {
+					timeStyle: 'short',
+					dateStyle: 'medium',
+				})}
+		</p>
 		<div class="flex flex-col justify-center items-center gap-2 md:gap-4 my-4">
 			<div class="flex flex-row gap-4">
 				<a
