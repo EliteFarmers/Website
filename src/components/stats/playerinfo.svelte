@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { RankName } from '$lib/skyblock';
-	import { getRankDefaults } from '$lib/format';
+	import { GetRankName, GetRankDefaults } from '$lib/format';
 	import { page } from '$app/stores';
 
 	import Weight from '$comp/stats/player/weight.svelte';
@@ -25,11 +25,8 @@
 
 	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileDetails[0] };
 
-	$: rankName =
-		player?.rank ??
-		(player?.monthlyPackageRank !== 'NONE' ? player?.monthlyPackageRank : player?.newPackageRank) ??
-		undefined;
-	$: rank = getRankDefaults(rankName as RankName);
+	$: rankName = GetRankName(player);
+	$: rank = GetRankDefaults(rankName as RankName);
 </script>
 
 <section class="flex justify-center w-full my-8">

@@ -1,3 +1,4 @@
+import type { components } from './api/api';
 import { MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
 import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
@@ -165,7 +166,34 @@ export function appendOrdinalSuffix(i: number) {
 	return `${i}th`;
 }
 
-export function getRankDefaults(rank?: RankName) {
+export function GetRankName(player?: components['schemas']['PlayerDataDto'] | null) {
+	if (!player) return undefined;
+
+	if (player.prefix) {
+		// Example: §c[OWNER] -> OWNER
+		// Also removes color codes between brackets for PIG+++
+		const match = player.prefix.replace(/§\w/g, '').match(/\[(.+?)\]/);
+		if (match) {
+			return match[1];
+		}
+	}
+
+	if (player.rank && player.rank !== 'NORMAL') {
+		return player.rank;
+	}
+
+	if (player.monthlyPackageRank && player.monthlyPackageRank !== 'NONE') {
+		return player.monthlyPackageRank;
+	}
+
+	if (player.newPackageRank && player.newPackageRank !== 'NONE') {
+		return player.newPackageRank;
+	}
+
+	return undefined;
+}
+
+export function GetRankDefaults(rank?: RankName) {
 	if (!rank) return undefined;
 
 	return RANKS[rank];
