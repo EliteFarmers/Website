@@ -38,13 +38,8 @@
 			</p>
 			<p>
 				Collection gain is cross checked with your tool usage. If you gain collection progress without using a
-				tool, it will not count towards your progress. <span class="text-red-500"
-					>If you remove a tool from one of your inventories during the event, all collection gained from its
-					use will be wiped from your score.</span
-				>
-				It is safe to move tools between inventories (e.g. from your inventory to your ender chest) as long as you
-				do not remove them from your inventories (by placing them in a chest on your island, trading them to another
-				player, voiding it, etc). New tools can be added to your inventories at any time.
+				tool, it will not count towards your progress. This also means a Daedalus Axe won't count either, as
+				there's no way to differentiate it from minions.
 			</p>
 			<p class="text-red-500">
 				Tools that do not have a built in counter require the Cultivating enchantment or your progress with that
@@ -56,24 +51,22 @@
 			</p>
 
 			<Checkbox name="confirm" value="true" class="mt-8" required>
-				I confirm that I have read all of <a
-					href="https://hypixel.net/rules"
-					class="underline text-blue-500 mx-1"
-				>
-					Hypixel's Server Rules
-				</a> and that I agree to them.
+				<p>
+					I confirm that I have read all of <a
+						href="https://hypixel.net/rules"
+						class="underline text-blue-500"
+					>
+						Hypixel's Server Rules
+					</a> and that I agree to them.
+				</p>
 			</Checkbox>
 
 			<Checkbox name="confirm" value="true" required>
-				I confirm that I have read the event's rules and that I agree to them.
+				I confirm that I have read the event's rules and disclaimers and that I agree to them.
 			</Checkbox>
 
 			<Checkbox name="confirm" value="true" required>
 				I confirm that I have read the rules of the related Discord Server and that I agree to them.
-			</Checkbox>
-
-			<Checkbox name="confirm" value="true" required>
-				I understand that this website does not act as a middleman nor is responsible for distributing prizes.
 			</Checkbox>
 
 			<Checkbox name="confirm" value="true" required>

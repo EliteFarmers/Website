@@ -5,6 +5,7 @@
 	import { ArrowUpRightFromSquareOutline, UserGroupSolid } from 'flowbite-svelte-icons';
 	import Eventmember from '../eventmember.svelte';
 	import { page } from '$app/stores';
+	import Linebreaks from '$comp/events/linebreaks.svelte';
 
 	export let data: PageData;
 
@@ -24,7 +25,7 @@
 		class="flex flex-col gap-4 max-w-64 bg-gray-100 dark:bg-zinc-800 rounded-md p-8 mt-16 max-w-5xl w-full items-center"
 	>
 		<h2 class="text-2xl md:text-4xl text-center">{event.name}</h2>
-		<p class="md:text-lg text-center">{event.description}</p>
+		<p class="md:text-lg text-center"><Linebreaks text={event.description ?? ''} /></p>
 		<div class="flex flex-row justify-center gap-2 mt-4 max-w-2xl w-full items-center">
 			<Button href="/server/{guild.id}/join" color="blue" size="sm" class="flex-1">
 				<p class="mr-2">Join Discord</p>
