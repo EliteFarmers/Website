@@ -74,7 +74,7 @@
 	</div>
 
 	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl">
-		<section class="flex flex-col gap-4 max-w-64 bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
+		<section class="flex flex-1 flex-col gap-4 max-w-64 bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-row gap-2 font-semibold items-center text-lg">
@@ -115,7 +115,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="flex flex-col gap-4 items-center bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
+		<section class="flex flex-1 flex-col gap-4 items-center bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				<h2 class="text-2xl">Members</h2>
 				<div class="flex flex-row gap-2 font-semibold items-center z-10">
