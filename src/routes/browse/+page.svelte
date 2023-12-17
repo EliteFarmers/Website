@@ -10,6 +10,8 @@
 
 	$: pinned = (data.guilds ?? []).find((g) => g.id === PUBLIC_COMMUNITY_ID);
 	$: guilds = (data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID);
+
+	$: console.log(guilds, events);
 </script>
 
 <Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />
@@ -20,7 +22,7 @@
 			<h1 class="text-4xl">Join Public Events</h1>
 			<p class="text-xl my-4">Join Farming Weight Events!</p>
 			{#each events ?? [] as event (event.id)}
-				<Event {event} guild={guilds.find((g) => g.id === event.guildId)} />
+				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} />
 			{/each}
 		</section>
 	{/if}
