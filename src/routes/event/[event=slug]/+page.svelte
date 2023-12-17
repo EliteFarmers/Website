@@ -7,6 +7,7 @@
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
 	import Eventmember from './eventmember.svelte';
+	import Linebreaks from '$comp/events/linebreaks.svelte';
 
 	export let data: PageData;
 
@@ -73,20 +74,37 @@
 	</div>
 
 	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl">
-		<section class="flex flex-1 basis-1/3 flex-col gap-4 max-w-64 bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
+		<section class="flex flex-1 flex-col gap-4 max-w-64 bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
-				<p>{event.description}</p>
+				<div class="flex flex-row gap-2 font-semibold items-center text-lg">
+					<span>{new Date(start).toLocaleDateString()}</span>
+					<span
+						>{new Date(start).toLocaleTimeString(undefined, {
+							hour: 'numeric',
+							minute: '2-digit',
+						})}</span
+					>
+					<span> - </span>
+					<span>{new Date(end).toLocaleDateString()}</span>
+					<span
+						>{new Date(end).toLocaleTimeString(undefined, {
+							hour: 'numeric',
+							minute: '2-digit',
+						})}</span
+					>
+				</div>
+				<p><Linebreaks text={event.description ?? ''} /></p>
 				<p><strong>Rules</strong></p>
 				{#if event.rules}
 					<p>
-						{event.rules}
+						<Linebreaks text={event.rules ?? ''} />
 					</p>
 				{/if}
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
 				{#if event.prizeInfo}
 					<p><strong>Prizes</strong></p>
-					<p>{event.prizeInfo}</p>
+					<p><Linebreaks text={event.prizeInfo ?? ''} /></p>
 				{/if}
 				<div class="flex flex-row justify-center gap-2 mt-4">
 					<Button href="{$page.url.pathname}/join" color="blue">
@@ -97,7 +115,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="flex flex-1 basis-1/3 flex-col gap-4 items-center bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
+		<section class="flex flex-1 flex-col gap-4 items-center bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				<h2 class="text-2xl">Members</h2>
 				<div class="flex flex-row gap-2 font-semibold items-center z-10">

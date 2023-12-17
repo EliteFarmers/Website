@@ -211,6 +211,10 @@
 							>
 						</Button>
 					</form>
+					<a
+						href="/contests/{yearVal + 2}/{monthVal + 1}/{dayVal + 1}"
+						class="underline text-gray-500 text-sm leading-none">Jump to most recent contest</a
+					>
 				</div>
 			</div>
 		</Card>

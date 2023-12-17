@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 
 	export let entry: LeaderboardEntry;
@@ -6,13 +7,16 @@
 	export let rank: number;
 	export let formatting: 'number' | 'decimal' = 'number';
 
-	const options: Intl.NumberFormatOptions = {
+	$: options = {
 		maximumFractionDigits: 1,
-	};
+	} as Intl.NumberFormatOptions;
 
 	$: {
 		if (formatting === 'decimal') {
 			options.minimumFractionDigits = 1;
+		} else if ($page.params.category === 'skyblockxp') {
+			options.minimumFractionDigits = 2;
+			options.maximumFractionDigits = 2;
 		}
 	}
 	$: ({ ign, amount, profile } = entry);

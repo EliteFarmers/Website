@@ -23,5 +23,7 @@ export const load = (async ({ params }) => {
 		throw error(404, "This player isn't on the leaderboard!");
 	}
 
-	throw redirect(302, `/leaderboard/${category}/${rank.rank}`);
+	const pageRank = Math.max(1, rank.rank - 10);
+
+	throw redirect(302, `/leaderboard/${category}/${pageRank}`);
 }) satisfies PageServerLoad;
