@@ -14,9 +14,6 @@
 <div class="flex flex-col">
 	<h1 class="text-2xl my-1">Recent Contests</h1>
 	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
-		{#if recentContests.length < 1}
-			<h1 class="text-lg">No recent contests found.</h1>
-		{/if}
 		{#each recentContests as contest, i (`${contest.crop}${contest.timestamp}`)}
 			{#if i < 3 || (showMore && i < 9)}
 				<div class="block">
@@ -36,15 +33,19 @@
 				</div>
 			{/if}
 		{/each}
-		<a
-			href={$page.url.pathname + '/contests'}
-			data-sveltekit-preload-data="off"
-			class="p-2 flex flex-row items-center justify-center hover:shadow-lg hover:bg-gray-200 dark:hover:bg-zinc-700 gap-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 border-l-4 dark:border-zinc-700"
-		>
-			<h3 class="text-lg font-semibold flex flex-row items-center gap-2">
-				View all
-				<ArrowUpRightFromSquareOutline />
-			</h3>
-		</a>
+		{#if recentContests.length > 0}
+			<a
+				href={$page.url.pathname + '/contests'}
+				data-sveltekit-preload-data="off"
+				class="p-2 flex flex-row items-center justify-center hover:shadow-lg hover:bg-gray-200 dark:hover:bg-zinc-700 gap-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 border-l-4 dark:border-zinc-700"
+			>
+				<h3 class="text-lg font-semibold flex flex-row items-center gap-2">
+					View all
+					<ArrowUpRightFromSquareOutline />
+				</h3>
+			</a>
+		{:else}
+			<p class="text-lg">No contests found.</p>
+		{/if}
 	</div>
 </div>

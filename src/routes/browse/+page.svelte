@@ -10,8 +10,6 @@
 
 	$: pinned = (data.guilds ?? []).find((g) => g.id === PUBLIC_COMMUNITY_ID);
 	$: guilds = (data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID);
-
-	$: console.log(guilds, events);
 </script>
 
 <Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />
