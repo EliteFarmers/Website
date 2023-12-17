@@ -20,7 +20,7 @@
 			<h1 class="text-4xl">Join Public Events</h1>
 			<p class="text-xl my-4">Join Farming Weight Events!</p>
 			{#each events ?? [] as event (event.id)}
-				<Event {event} guild={guilds.find((g) => g.id === event.guildId)} />
+				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} />
 			{/each}
 		</section>
 	{/if}
