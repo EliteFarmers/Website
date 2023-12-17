@@ -14,16 +14,15 @@
 
 	$: firstHalf = entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
-
 	$: formatting = data.formatting;
 
-	const options: Intl.NumberFormatOptions = {
-		maximumFractionDigits: 1,
-	};
-
 	$: {
-		if (formatting === 'decimal') {
-			options.minimumFractionDigits = 1;
+		if (data.lb.id === 'skyblockxp') {
+			entries = entries.map((entry) => ({
+				ign: entry.ign,
+				profile: entry.profile,
+				amount: (entry.amount ?? 0) / 100,
+			}));
 		}
 	}
 

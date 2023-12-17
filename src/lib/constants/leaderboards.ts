@@ -21,8 +21,8 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 	},
 	skyblockxp: {
 		limit: 5_000,
-		title: 'Skyblock XP',
-		name: 'Skyblock XP',
+		title: 'Skyblock Level',
+		name: 'Skyblock Level',
 		type: LeaderboardType.Misc,
 	},
 	participations: {

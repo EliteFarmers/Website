@@ -1,6 +1,6 @@
 import { GetCollectionLeaderboardSlice, GetLeaderboardSlice, GetSkillLeaderboardSlice } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
-import { LeaderboardType } from '$lib/constants/leaderboards';
+import { LEADERBOARDS, LeaderboardType } from '$lib/constants/leaderboards';
 
 import type { PageServerLoad } from './$types';
 export const load = (async ({ params, parent }) => {
@@ -39,9 +39,15 @@ export const load = (async ({ params, parent }) => {
 			throw error(500, "Leaderboard data couldn't be fetched");
 		}
 
+		const lbSettings = LEADERBOARDS[lb.id as keyof typeof LEADERBOARDS];
+
+		if (lbSettings) {
+			lb.title = lbSettings.title;
+		}
+
 		return {
 			lb,
-			formatting: type === LeaderboardType.Skill ? 'decimal' : ('number' as 'decimal' | 'number'),
+			formatting: (type === LeaderboardType.Skill ? 'decimal' : 'number') as 'decimal' | 'number',
 		};
 	} catch (e) {
 		throw error(500, "Leaderboard data couldn't be fetched. Please try again later.");
