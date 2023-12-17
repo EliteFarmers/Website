@@ -13,8 +13,6 @@
 	export let data: PageData;
 
 	$: entries = data.lb as LeaderboardEntry[];
-
-	let donationClicked = false;
 </script>
 
 <Head
