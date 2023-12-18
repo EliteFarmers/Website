@@ -38,7 +38,7 @@
 	</div>
 
 	{#if contests.length === 0}
-		<div class="flex flex-col items-center justify-center p-4 space-y-2">
+		<div class="flex flex-col items-center justify-center p-4 space-y-2 mb-16">
 			<h2 class="text-3xl font-semibold text-center">No Contests Found</h2>
 			<h4>Try a different timestamp!</h4>
 			<p>Data will be loaded once a player has participated in one of these contests!</p>

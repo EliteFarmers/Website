@@ -50,7 +50,7 @@
 	</div>
 
 	{#if !days.length}
-		<h3 class="text-center mx-4">
+		<h3 class="text-center mx-4 mb-16">
 			No contests found! Contest data is collected from players who have been searched on the website.
 		</h3>
 	{:else}
