@@ -12,6 +12,7 @@
 	$: event = data.event ?? {};
 	$: guild = data.guild ?? {};
 	$: members = data.members ?? [];
+	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
 </script>
 
 <Head
@@ -53,7 +54,7 @@
 					<Accordion flush={true} class="w-full text-black dark:text-white">
 						{#each members as member, i}
 							<div id={`${i + 1}`}>
-								<Eventmember {member} rank={i + 1} />
+								<Eventmember {member} rank={i + 1} {running} />
 							</div>
 						{/each}
 					</Accordion>

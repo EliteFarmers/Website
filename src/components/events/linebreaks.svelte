@@ -5,7 +5,7 @@
 	$: lines = text.split('\n');
 </script>
 
-{#each lines as line, i (line)}
+{#each lines as line, i (line + i)}
 	{line}
 	{#if i !== lines.length - 1}
 		<br />

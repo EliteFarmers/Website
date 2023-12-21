@@ -23,6 +23,7 @@
 	$: time = Date.now();
 	$: start = +(event.startTime ?? 0) * 1000;
 	$: end = +(event.endTime ?? 0) * 1000;
+	$: running = start < time && end > time;
 
 	let memberLimit = 10;
 
@@ -95,6 +96,10 @@
 					>
 				</div>
 				<p><Linebreaks text={event.description ?? ''} /></p>
+				{#if event.prizeInfo}
+					<p><strong>Prizes</strong></p>
+					<p><Linebreaks text={event.prizeInfo ?? ''} /></p>
+				{/if}
 				<p><strong>Rules</strong></p>
 				{#if event.rules}
 					<p>
@@ -102,10 +107,6 @@
 					</p>
 				{/if}
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
-				{#if event.prizeInfo}
-					<p><strong>Prizes</strong></p>
-					<p><Linebreaks text={event.prizeInfo ?? ''} /></p>
-				{/if}
 				<div class="flex flex-row justify-center gap-2 mt-4">
 					<Button href="{$page.url.pathname}/join" color="blue">
 						<p class="mr-2">Join Discord Server</p>
@@ -118,7 +119,7 @@
 		<section class="flex flex-1 flex-col gap-4 items-center bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				<h2 class="text-2xl">Members</h2>
-				<div class="flex flex-row gap-2 font-semibold items-center z-10">
+				<div class="flex flex-row gap-2 font-semibold items-center">
 					<p class="text-2xl">
 						{members.length?.toLocaleString()}
 					</p>
@@ -129,7 +130,7 @@
 				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
 					<Accordion flush={true} class="w-full text-black dark:text-white">
 						{#each members.slice(0, memberLimit) as member, i}
-							<Eventmember {member} rank={i + 1} />
+							<Eventmember {member} rank={i + 1} {running} />
 						{/each}
 					</Accordion>
 				</div>
