@@ -23,6 +23,7 @@
 	$: time = Date.now();
 	$: start = +(event.startTime ?? 0) * 1000;
 	$: end = +(event.endTime ?? 0) * 1000;
+	$: running = start < time && end > time;
 
 	let memberLimit = 10;
 
@@ -129,7 +130,7 @@
 				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
 					<Accordion flush={true} class="w-full text-black dark:text-white">
 						{#each members.slice(0, memberLimit) as member, i}
-							<Eventmember {member} rank={i + 1} />
+							<Eventmember {member} rank={i + 1} {running} />
 						{/each}
 					</Accordion>
 				</div>
