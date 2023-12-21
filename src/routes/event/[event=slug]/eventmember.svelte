@@ -26,7 +26,7 @@
 			<!-- Active/inactive dot -->
 			<div class="flex flex-col items-center justify-center status-{rank}">
 				{#if member.status === 0}
-					<div class="w-2 h-2 rounded-full bg-gray-400 dark:bg-zinc-700" />
+					<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
 					<Popover triggeredBy=".status-{rank}">
 						<p slot="title" class="text-black dark:text-white">Inactive Farmer</p>
 						<p class="max-w-xs">{member.playerName} has not increased their score since last checked.</p>
@@ -51,7 +51,7 @@
 	</div>
 	<div class="flex flex-row justify-between items-center">
 		<div class="text-lg">
-			<p class="text-gray-700">Last Updated</p>
+			<p class="text-gray-500">Last Updated</p>
 			<p>
 				{member.lastUpdated
 					? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +
