@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import { Popover } from 'flowbite-svelte';
+	import { ExclamationCircleSolid } from 'flowbite-svelte-icons';
 
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>
@@ -24,6 +26,17 @@
 					{/if}
 				</h1>
 			</div>
+			{#if entry.removed}
+				<div class="text-center">
+					<ExclamationCircleSolid class="text-red-800 dark:text-red-500" size="md" />
+					<Popover>
+						<p slot="title" class="text-black dark:text-white">This participation no longer exists!</p>
+						<p class="max-w-xs break-words whitespace-normal">
+							{entry.playerName} may have been banned or deleted their profile.
+						</p>
+					</Popover>
+				</div>
+			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
 				<h1 class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{entry.playerName}</h1>
