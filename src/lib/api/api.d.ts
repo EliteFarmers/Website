@@ -2188,6 +2188,7 @@ export interface components {
       playerUuid?: string;
       playerName?: string;
       profileUuid?: string;
+      removed?: boolean;
       /** Format: int64 */
       timestamp?: number;
       /** Format: int32 */
@@ -2834,6 +2835,7 @@ export interface components {
       /** Format: int32 */
       position?: number;
       medal?: string | null;
+      removed?: boolean;
       playerUuid?: string;
       playerName?: string;
     };

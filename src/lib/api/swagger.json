@@ -5395,6 +5395,9 @@
           "profileUuid": {
             "type": "string"
           },
+          "removed": {
+            "type": "boolean"
+          },
           "timestamp": {
             "type": "integer",
             "format": "int64"
@@ -7359,6 +7362,9 @@
           "medal": {
             "type": "string",
             "nullable": true
+          },
+          "removed": {
+            "type": "boolean"
           },
           "playerUuid": {
             "type": "string"

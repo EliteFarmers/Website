@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockMonthDay } from '$lib/format';
-	import { AccordionItem, Button } from 'flowbite-svelte';
+	import { AccordionItem, Button, Popover } from 'flowbite-svelte';
+	import { ExclamationCircleSolid } from 'flowbite-svelte-icons';
 
 	export let rank = 0;
 	export let entry: components['schemas']['ContestParticipationWithTimestampDto'];
@@ -23,6 +24,17 @@
 					>
 				</h3>
 			</div>
+			{#if entry.removed}
+				<div>
+					<ExclamationCircleSolid class="text-red-800 dark:text-red-500" size="md" />
+					<Popover>
+						<p slot="title" class="text-black dark:text-white">This participation no longer exists!</p>
+						<p class="max-w-xs break-words whitespace-normal">
+							{entry.playerName} may have been banned or deleted their profile.
+						</p>
+					</Popover>
+				</div>
+			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
 				<p class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{entry.playerName}</p>
