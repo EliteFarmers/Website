@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { CalculateDetailedAverageDrops, FarmingTool, type PlayerOptions } from 'farming-weight';
-	import { Accordion, AccordionItem, Button, Input, Label, Select } from 'flowbite-svelte';
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
-	import { selectedCrops } from '$lib/stores/selectedCrops';
+	import { CalculateDetailedAverageDrops, Crop, FarmingTool, type PlayerOptions } from 'farming-weight';
+	import { Accordion, AccordionItem, Button, Input, Label, NumberInput, Select } from 'flowbite-svelte';
+	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { getRatesData } from '$lib/stores/ratesData';
 	import { getLevelProgress } from '$lib/format';
 	import { SearchOutline } from 'flowbite-svelte-icons';
 	import { goto } from '$app/navigation';
@@ -19,7 +20,6 @@
 
 	import type { PageData } from './$types';
 	import Cropdetails from '$comp/rates/cropdetails.svelte';
-	import { ratesData } from '$lib/stores/ratesData';
 	import Uploadconfig from './uploadconfig.svelte';
 	export let data: PageData;
 
@@ -27,6 +27,9 @@
 	let bountiful = true;
 	let mooshroom = true;
 	let blocksBroken = 24_000 * 3;
+
+	const ratesData = getRatesData();
+	const selectedCrops = getSelectedCrops();
 
 	$: calculator = CalculateDetailedAverageDrops({
 		// farmingFortune: 1700,
@@ -70,6 +73,9 @@
 
 		goto(url.toString());
 	}
+
+	const cropKey = (crop: string) =>
+		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
 </script>
 
 <Head title="Rate Calculator" description="Calculate your expected farming rates in Hypixel Skyblock!" />
@@ -87,15 +93,12 @@
 			textFlushDefault="text-black dark:text-white py-1 border-none"
 			paddingFlush="py-1 px-4"
 			borderSharedClass="border-none"
-			>
-			<div slot="header">
-				Crop Milestones/Upgrades
-			</div>
+		>
+			<div slot="header">Crop Milestones/Upgrades</div>
 			<Cropdetails />
 		</AccordionItem>
 
-	<Uploadconfig />
-
+		<Uploadconfig />
 	</Accordion>
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
@@ -134,8 +137,15 @@
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				{#each tools as tool (tool)}
+					{@const key = cropKey(tool.crop)}
 					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
-						<Toolconfig	{tool} {options} />
+						<Toolconfig {tool} {options} />
+
+						<div class="flex flex-row items-center gap-2">
+							<img src={PROPER_CROP_TO_IMG[tool.crop]} alt={tool.crop} class="w-12 h-12 pixelated" />
+							<NumberInput bind:value={$ratesData.milestones[key]} />
+							<NumberInput bind:value={$ratesData.cropUpgrades[key]} />
+						</div>
 					{/if}
 				{/each}
 				{#if tools.length === 0}
@@ -155,7 +165,6 @@
 					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
 				{:else}
 					<div class="flex justify-between items-center w-full px-4 py-2">
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						<span class="text-lg font-semibold">Lotus Gear Total</span>
 						<Fortunebreakdown total={lotus.reduce((acc, l) => acc + l.fortune, 0)} />
 					</div>
@@ -207,7 +216,7 @@
 						{/each}
 					</div>
 
-					<h3 class="text-xl my-2">Other Collections</h3>
+					<h3 class="text-xl my-2">Collection Breakdown</h3>
 					<div class="flex flex-col">
 						{#each otherBreakdown as [name, value] (name)}
 							<div class="flex justify-between items-center w-full px-4 py-2">

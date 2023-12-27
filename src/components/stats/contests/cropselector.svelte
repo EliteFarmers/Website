@@ -1,15 +1,9 @@
 <script lang="ts">
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { DEFAULT_SELECTED_CROPS, selectedCrops } from '$lib/stores/selectedCrops';
-	import { onMount } from 'svelte';
+	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
+	const selectedCrops = getSelectedCrops();
 
 	export let radio = false;
-
-	onMount(() => {
-		if (radio) {
-			selectedCrops.set(DEFAULT_SELECTED_CROPS);
-		}
-	});
 
 	function click(crop: string) {
 		if (radio) {

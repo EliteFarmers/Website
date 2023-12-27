@@ -4,10 +4,13 @@
 	import type { ApexOptions } from 'apexcharts';
 	import { toReadable } from '$lib/format';
 	import { browser } from '$app/environment';
-	import { anyCropSelected, selectedCrops } from '$lib/stores/selectedCrops';
+	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { CROP_TO_HEX, PROPER_CROP_NAME } from '$lib/constants/crops';
 
 	export let points: components['schemas']['CropCollectionsDataPointDto'][];
+
+	const anyCropSelected = getAnyCropSelected();
+	const selectedCrops = getSelectedCrops();
 
 	$: data = {} as Record<string, { name: string; data: { x: number; y: number }[] }>;
 	$: graphData = Object.values(data).filter(

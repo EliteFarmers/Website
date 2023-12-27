@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { navigating } from '$app/stores';
+	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
+	import { initRatesData } from '$lib/stores/ratesData';
 
 	import '../app.css';
 
 	import Nav from '$comp/nav.svelte';
 	import Footer from '$comp/footer.svelte';
+
+	initAnyCropSelected();
+	initSelectedCrops(getAnyCropSelected());
+	initRatesData();
 </script>
 
 <svelte:head>
