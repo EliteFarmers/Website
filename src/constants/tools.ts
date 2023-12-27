@@ -278,3 +278,16 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: HoeStats,
 	},
 };
+
+export const BEST_FARMING_TOOLS: Partial<Record<Crop, FarmingToolInfo>> = {
+	[Crop.Cactus]: FARMING_TOOLS.CACTUS_KNIFE,
+	[Crop.CocoaBeans]: FARMING_TOOLS.COCO_CHOPPER,
+	[Crop.Mushroom]: FARMING_TOOLS.FUNGI_CUTTER,
+	[Crop.Melon]: FARMING_TOOLS.MELON_DICER_3,
+	[Crop.Pumpkin]: FARMING_TOOLS.PUMPKIN_DICER_3,
+	[Crop.Carrot]: FARMING_TOOLS.THEORETICAL_HOE_CARROT_3,
+	[Crop.NetherWart]: FARMING_TOOLS.THEORETICAL_HOE_WARTS_3,
+	[Crop.Potato]: FARMING_TOOLS.THEORETICAL_HOE_POTATO_3,
+	[Crop.SugarCane]: FARMING_TOOLS.THEORETICAL_HOE_CANE_3,
+	[Crop.Wheat]: FARMING_TOOLS.THEORETICAL_HOE_WHEAT_3,
+};

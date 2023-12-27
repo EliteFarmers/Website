@@ -1,4 +1,6 @@
 import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops';
+import { REFORGES, Rarity, Stat } from '../constants/reforges';
+import { BEST_FARMING_TOOLS } from '../constants/tools';
 import { CalculateMelonPerkBonus } from '../crops/melon';
 import { CalculatePumpkinPerkBonus } from '../crops/pumpkin';
 import { CalculateAverageSpecialCrops } from '../crops/special';
@@ -61,12 +63,24 @@ export function CalculateDetailedAverageDrops(options: CalculateDetailedDropsOpt
 	const wheat = result[Crop.Wheat];
 	const seeds = result[Crop.Seeds];
 
-	wheat.otherCollection['Seeds'] = seeds.collection;
-	wheat.coinSources['Seeds'] = seeds.collection * CROP_INFO[Crop.Seeds].npc;
+	// Combine seeds into wheat
+	const seedCollection = seeds.collection - options.blocksBroken;
+	wheat.otherCollection['Seeds'] = seedCollection;
+	wheat.coinSources['Seeds'] = seedCollection * CROP_INFO[Crop.Seeds].npc;
 	if (options.bountiful) {
 		wheat.coinSources['Bountiful (Seeds)'] = seeds.coinSources['Bountiful'] ?? 0;
 	}
 	wheat.npcCoins = Object.values(wheat.coinSources).reduce((a, b) => a + b, 0);
+
+	// Count mooshroom mushrooms as normal mushroom collection
+	if (options.mooshroom) {
+		const mushroom = result[Crop.Mushroom];
+		const mooshroom = mushroom.otherCollection['Mushroom'] ?? 0;
+		
+		mushroom.collection += mooshroom;
+		mushroom.otherCollection['Mooshroom'] = mooshroom;
+		delete mushroom.otherCollection['Mushroom'];
+	}
 
 	return result;
 }
@@ -91,7 +105,7 @@ export function CalculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 	const { drops } = GetCropInfo(crop);
 	if (!drops) return 0;
 
-	const baseDrops = blocksBroken * drops * (fortune * 0.01);
+	const baseDrops = blocksBroken * drops * ((fortune + 100) * 0.01);
 	switch (crop) {
 		case Crop.Cactus:
 		case Crop.Wheat:
@@ -128,7 +142,12 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	if (fortune <= 0 || blocksBroken < 0) return result;
 
 	if (!bountiful && !farmingFortune) {
-		fortune += 5;
+		// Add the difference in farming fortune if the user has blessed instead of bountiful
+		const maxRarity = BEST_FARMING_TOOLS[crop]?.maxRarity ?? Rarity.Mythic;
+		const bountifulFortune = REFORGES.bountiful?.tiers[maxRarity]?.stats?.[Stat.FarmingFortune] ?? 0;
+		const blessedFortune = REFORGES.blessed?.tiers[maxRarity]?.stats?.[Stat.FarmingFortune] ?? 0;
+
+		fortune += blessedFortune - bountifulFortune;
 	}
 
 	result.fortune = fortune;
@@ -136,7 +155,8 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	const { drops, npc, breaks = 1, replenish = false } = GetCropInfo(crop);
 	if (!drops) return result;
 
-	const baseDrops = blocksBroken * drops * (fortune * 0.01);
+	const baseDrops = blocksBroken * drops * ((fortune + 100) * 0.01);
+	result.otherCollection['Normal'] = Math.round(baseDrops);
 
 	// Coin sources
 	if (bountiful) {
@@ -144,11 +164,13 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	}
 
 	if (options.mooshroom) {
-		result.coinSources['Mooshroom'] = Math.round(blocksBroken * breaks * CROP_INFO[Crop.Mushroom].npc);
-		result.otherCollection['Mushroom'] = Math.round(blocksBroken * breaks);
+		const mushroomDrops = Math.round(blocksBroken * breaks);
+		result.coinSources['Mooshroom'] = mushroomDrops * CROP_INFO[Crop.Mushroom].npc;
+		result.otherCollection['Mushroom'] = mushroomDrops;
 	}
 
-	const specialCrops = CalculateAverageSpecialCrops(blocksBroken, crop, 4);
+	const armorPieces = crop === Crop.Cactus ? 3 : 4;
+	const specialCrops = CalculateAverageSpecialCrops(blocksBroken, crop, armorPieces);
 
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
 	result.coinSources[specialCrops.type] = Math.round(specialCrops.npc);
@@ -158,19 +180,22 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		case Crop.Pumpkin:
 			extraDrops = Math.round(CalculatePumpkinPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
-			result.collection = Math.round(baseDrops + extraDrops);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
+			result.otherCollection['RNG Pumpkin'] = Math.round(extraDrops);
+			result.collection = Math.round(baseDrops + extraDrops);
 			break;
 		case Crop.Melon:
 			extraDrops = Math.round(CalculateMelonPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
-			result.collection = Math.round(baseDrops + extraDrops);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
+			result.otherCollection['RNG Melon'] = Math.round(extraDrops);
+			result.collection = Math.round(baseDrops + extraDrops);
 			break;
 		default:
 			if (replenish) {
 				// Replenish takes away one drop per block broken
 				result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
+				result.otherCollection['Replenish'] = -Math.round(blocksBroken * breaks);
 				result.collection = Math.round(baseDrops);
 				break;
 			}
