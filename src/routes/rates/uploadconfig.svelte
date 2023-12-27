@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
-	import { AccordionItem, Button, Drawer, Input, Label } from "flowbite-svelte";
+	import { browser } from '$app/environment';
+	import { AccordionItem, Button, Drawer, Input, Label } from 'flowbite-svelte';
 
 	$: files = undefined;
 	$: error = undefined as string | undefined;
 
-	$: loadFile(files)
+	$: loadFile(files);
 
 	function loadFile(files?: FileList) {
 		console.log(files);
@@ -30,23 +30,27 @@
 	interface SkyHanniConfig {
 		storage: {
 			players?: {
-				[uuid: string]: {
-					profiles?: {
-						[profile: string]: {
-							garden?: {
-								experience?: number;
-								cropUpgrades?: Record<string, number>;
-								fortune?: {
-									carrotFortune?: number;
-									pumpkinFortune?: number;
-									plotsUnlocked?: number;
-								}
-							},
-						} | undefined
-					},
-					gardenCommunityUpgrade?: number;
-				} | undefined
-			}
+				[uuid: string]:
+					| {
+							profiles?: {
+								[profile: string]:
+									| {
+											garden?: {
+												experience?: number;
+												cropUpgrades?: Record<string, number>;
+												fortune?: {
+													carrotFortune?: number;
+													pumpkinFortune?: number;
+													plotsUnlocked?: number;
+												};
+											};
+									  }
+									| undefined;
+							};
+							gardenCommunityUpgrade?: number;
+					  }
+					| undefined;
+			};
 		};
 	}
 
@@ -59,7 +63,6 @@
 		if ('storage' in config) {
 			const storage = config?.storage as Record<string, unknown>;
 			if ('players' in storage) {
-
 			}
 		}
 	}
@@ -71,9 +74,7 @@
 	paddingFlush="py-1 px-4"
 	borderSharedClass="border-none"
 >
-	<div slot="header">
-		Load From SkyHanni Config
-	</div>
+	<div slot="header">Load From SkyHanni Config</div>
 	<div class="flex flex-col items-center justify-center gap-2">
 		<div class="flex flex-row items-center gap-2">
 			<Input type="file" accept=".json" let:props>
@@ -83,4 +84,3 @@
 		<Button color="primary">Upload</Button>
 	</div>
 </AccordionItem>
-

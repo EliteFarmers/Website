@@ -12,13 +12,8 @@
 	$: leggings = armor.filter((a) => a.slot === GearSlot.Leggings)?.sort((a, b) => b.fortune - a.fortune);
 	$: boots = armor.filter((a) => a.slot === GearSlot.Boots)?.sort((a, b) => b.fortune - a.fortune);
 
-	$: selected = [
-		helmet[0],
-		chestplate[0],
-		leggings[0],
-		boots[0],
- 	] as (FarmingArmor | undefined)[];
- 
+	$: selected = [helmet[0], chestplate[0], leggings[0], boots[0]] as (FarmingArmor | undefined)[];
+
 	$: set = new ArmorSet(selected.filter((a) => a) as FarmingArmor[]);
 </script>
 
@@ -27,7 +22,7 @@
 		<span class="text-lg font-semibold">Total Armor Fortune</span>
 		<Fortunebreakdown breakdown={set.getFortuneBreakdown()} />
 	</div>
-	{#each selected.filter(a => a) as piece (piece)}
+	{#each selected.filter((a) => a) as piece (piece)}
 		{#if piece}
 			<div class="flex justify-between items-center w-full px-4 py-2">
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->

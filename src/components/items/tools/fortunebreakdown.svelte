@@ -26,12 +26,12 @@
 						{:else}
 							<p>{key}</p>
 						{/if}
-						<p>{value}</p>
+						<p>{value.toLocaleString()}</p>
 					</div>
 				{/each}
 				<div class="flex flex-row justify-between font-semibold text-black dark:text-white">
 					<p>Total</p>
-					<p>{sum}</p>
+					<p>{sum.toLocaleString()}</p>
 				</div>
 				<slot />
 			</div>
