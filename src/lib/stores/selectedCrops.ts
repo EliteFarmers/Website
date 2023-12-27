@@ -1,4 +1,5 @@
-import { writable } from 'svelte/store';
+import { getContext, setContext } from 'svelte';
+import { writable, type Writable } from 'svelte/store';
 
 export const DEFAULT_SELECTED_CROPS = {
 	Cactus: false,
@@ -13,10 +14,24 @@ export const DEFAULT_SELECTED_CROPS = {
 	Wheat: false,
 };
 
-export const selectedCrops = writable<Record<string, boolean>>(DEFAULT_SELECTED_CROPS);
+export function initAnyCropSelected() {
+	setContext('anyCropSelected', writable(false));
+}
 
-export const anyCropSelected = writable(false);
+export function getAnyCropSelected() {
+	return getContext<Writable<boolean>>('anyCropSelected');
+}
 
-selectedCrops.subscribe((crops) => {
-	anyCropSelected.set(Object.values(crops).some((selected) => selected));
-});
+export function initSelectedCrops(anyStore: Writable<boolean>) {
+	const store = writable<Record<string, boolean>>(DEFAULT_SELECTED_CROPS);
+
+	store.subscribe((crops) => {
+		anyStore.set(Object.values(crops).some((selected) => selected));
+	});
+
+	setContext('selectedCrops', store);
+}
+
+export function getSelectedCrops() {
+	return getContext<Writable<Record<string, boolean>>>('selectedCrops');
+}

@@ -1,8 +1,9 @@
-import { browser } from "$app/environment";
-import type { Crop } from "farming-weight";
-import { writable } from "svelte/store";
+import { browser } from '$app/environment';
+import type { Crop } from 'farming-weight';
+import { getContext, setContext } from 'svelte';
+import { writable, type Writable } from 'svelte/store';
 
-interface RatesData { 
+interface RatesData {
 	milestones: Partial<Record<Crop, number>>;
 	cropUpgrades: Partial<Record<Crop, number>>;
 	gardenLevel: number;
@@ -11,7 +12,7 @@ interface RatesData {
 }
 
 // Initialize the store with the data from localStorage if it exists
-let defaultData = {
+const defaultData = {
 	milestones: {},
 	cropUpgrades: {},
 	gardenLevel: 0,
@@ -19,18 +20,30 @@ let defaultData = {
 	strength: 0,
 } satisfies RatesData;
 
-if (browser) {
-	const savedRatesData = localStorage.getItem('ratesData');
+export function initRatesData(data = defaultData) {
+	if (browser) {
+		const savedRatesData = localStorage.getItem('ratesData');
 
-	if (savedRatesData) {
-		defaultData = JSON.parse(savedRatesData) as RatesData;
+		if (savedRatesData) {
+			data = JSON.parse(savedRatesData) as RatesData;
+		}
 	}
+
+	const store = writable<RatesData>(data);
+
+	store.subscribe((rates) => {
+		if (browser) {
+			localStorage.setItem('ratesData', JSON.stringify(rates));
+		}
+	});
+
+	setContext('ratesData', store);
 }
 
-export const ratesData = writable<RatesData>(defaultData);
+export function getRatesData() {
+	const store = getContext<Writable<RatesData>>('ratesData');
+	if (store) return store;
 
-ratesData.subscribe((rates) => {
-	if (browser) {
-		localStorage.setItem('ratesData', JSON.stringify(rates));
-	}
-});
+	initRatesData();
+	return getContext<Writable<RatesData>>('ratesData');
+}

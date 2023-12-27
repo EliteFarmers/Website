@@ -3,7 +3,6 @@
 	import { FormatMinecraftText } from '$lib/format';
 	import { Button, Modal, Popover } from 'flowbite-svelte';
 	import { FileLinesSolid } from 'flowbite-svelte-icons';
-	import { STAT_ICONS, Stat } from '$lib/constants/reforges';
 	import Lore from '../lore.svelte';
 	import Fortunebreakdown from './fortunebreakdown.svelte';
 
