@@ -34,8 +34,8 @@ export const actions: Actions = {
 		await getGuild(guildId, token);
 
 		const data = await request.formData();
-
-		const { response } = await UpdateUpcomingContestPings(token, guildId, {
+		
+		const body = {
 			enabled: true,
 			guildId: guildId,
 			channelId: data.get('channel') as string,
@@ -52,7 +52,9 @@ export const actions: Actions = {
 				sugarCane: (data.get('cane') as string) ?? null,
 				netherWart: (data.get('wart') as string) ?? null,
 			},
-		}).catch((e) => {
+		};
+
+		const { response } = await UpdateUpcomingContestPings(token, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
