@@ -1338,6 +1338,96 @@
         }
       }
     },
+    "/Bot/ContestPings": {
+      "get": {
+        "tags": [
+          "Bot"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestPingsFeatureDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestPingsFeatureDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContestPingsFeatureDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Bot/ContestPings/{guildId}": {
+      "delete": {
+        "tags": [
+          "Bot"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Bot/account": {
       "patch": {
         "tags": [
@@ -4902,6 +4992,179 @@
         }
       }
     },
+    "/User/Guild/{guildId}/ContestPings": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContestPingsFeatureDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContestPingsFeatureDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContestPingsFeatureDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Weight/{playerUuid}": {
       "get": {
         "tags": [
@@ -5413,6 +5676,66 @@
           "participants": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContestPingsFeature": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "channelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "alwaysPingRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "cropPingRoles": {
+            "$ref": "#/components/schemas/StringCropSettings"
+          },
+          "delaySeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "disabledReason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContestPingsFeatureDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "guildId": {
+            "type": "string",
+            "nullable": true
+          },
+          "channelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "alwaysPingRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "cropPingRoles": {
+            "$ref": "#/components/schemas/StringCropSettings"
+          },
+          "delaySeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "disabledReason": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6325,6 +6648,12 @@
           },
           "eventSettings": {
             "$ref": "#/components/schemas/GuildEventSettings"
+          },
+          "contestPingsEnabled": {
+            "type": "boolean"
+          },
+          "contestPings": {
+            "$ref": "#/components/schemas/ContestPingsFeature"
           }
         },
         "additionalProperties": false
@@ -7342,6 +7671,52 @@
             "nullable": true
           },
           "youtube": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringCropSettings": {
+        "type": "object",
+        "properties": {
+          "cactus": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrot": {
+            "type": "string",
+            "nullable": true
+          },
+          "potato": {
+            "type": "string",
+            "nullable": true
+          },
+          "wheat": {
+            "type": "string",
+            "nullable": true
+          },
+          "melon": {
+            "type": "string",
+            "nullable": true
+          },
+          "pumpkin": {
+            "type": "string",
+            "nullable": true
+          },
+          "mushroom": {
+            "type": "string",
+            "nullable": true
+          },
+          "cocoaBeans": {
+            "type": "string",
+            "nullable": true
+          },
+          "sugarCane": {
+            "type": "string",
+            "nullable": true
+          },
+          "netherWart": {
             "type": "string",
             "nullable": true
           }

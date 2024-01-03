@@ -511,6 +511,38 @@ export const GetYearlyContestRecords = async (year: number) =>
 		},
 	});
 
+export const DisableUpcomingContestPings = async (accessToken: string, guildId: string, reason: string) =>
+	await DELETE('/User/Guild/{guildId}/ContestPings', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+			query: {
+				reason,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const UpdateUpcomingContestPings = async (
+	accessToken: string,
+	guildId: string,
+	body: components['schemas']['ContestPingsFeatureDto']
+) =>
+	await PUT('/User/Guild/{guildId}/ContestPings', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+		},
+		body,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
 	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
 		params: {

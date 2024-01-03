@@ -30,7 +30,7 @@
 		</Button>
 	</div>
 
-	<section class="flex flex-col lg:flex-row gap-8 text-center">
+	<section class="flex flex-wrap gap-8 text-center align-middle justify-center mb-16">
 		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800">
 			<form
 				method="POST"
@@ -81,6 +81,18 @@
 			{:else}
 				<p>Create or manage your Events!</p>
 				<Button href="/guild/{data.guildId}/events">Manage</Button>
+			{/if}
+		</Card>
+		<Card color="none" border={false} class="bg-gray-100 dark:bg-zinc-800 flex flex-col gap-4 justify-between">
+			<h2 class="text-2xl">Upcoming Contest Pings</h2>
+			{#if !features?.contestPingsEnabled}
+				<p>
+					This server does not have the Upcoming Contest Pings feature enabled. For now please ask "kaeso.dev"
+					on Discord to gain access to this feature.
+				</p>
+			{:else}
+				<p>Manage upcoming Jacob Contest pings within your Discord Server!</p>
+				<Button href="/guild/{data.guildId}/pings">Manage</Button>
 			{/if}
 		</Card>
 	</section>
