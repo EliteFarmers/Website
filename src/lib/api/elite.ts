@@ -511,7 +511,7 @@ export const GetYearlyContestRecords = async (year: number) =>
 		},
 	});
 
-export const DisableUpcomingContestPings = async (accessToken: string, guildId: string, reason: string) => 
+export const DisableUpcomingContestPings = async (accessToken: string, guildId: string, reason: string) =>
 	await DELETE('/User/Guild/{guildId}/ContestPings', {
 		params: {
 			path: {
@@ -526,12 +526,16 @@ export const DisableUpcomingContestPings = async (accessToken: string, guildId: 
 		},
 	});
 
-export const UpdateUpcomingContestPings = async (accessToken: string, guildId: string, body: components['schemas']['ContestPingsFeatureDto']) => 
+export const UpdateUpcomingContestPings = async (
+	accessToken: string,
+	guildId: string,
+	body: components['schemas']['ContestPingsFeatureDto']
+) =>
 	await PUT('/User/Guild/{guildId}/ContestPings', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
-			}
+			},
 		},
 		body,
 		headers: {

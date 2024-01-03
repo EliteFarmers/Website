@@ -39,19 +39,19 @@ export const actions: Actions = {
 			enabled: true,
 			guildId: guildId,
 			channelId: data.get('channel') as string,
-			alwaysPingRole: data.get('pingrole') as string ?? null,
+			alwaysPingRole: (data.get('pingrole') as string) ?? null,
 			cropPingRoles: {
-				cactus: data.get('cactus') as string ?? null,
-				carrot: data.get('carrot') as string ?? null,
-				potato: data.get('potato') as string ?? null,
-				wheat: data.get('wheat') as string ?? null,
-				melon: data.get('melon') as string ?? null,
-				pumpkin: data.get('pumpkin') as string ?? null,
-				mushroom: data.get('mushroom') as string ?? null,
-				cocoaBeans: data.get('cocoaBeans') as string ?? null,
-				sugarCane: data.get('sugarCane') as string ?? null,
-				netherWart: data.get('netherWart') as string ?? null,
-			}
+				cactus: (data.get('cactus') as string) ?? null,
+				carrot: (data.get('carrot') as string) ?? null,
+				potato: (data.get('potato') as string) ?? null,
+				wheat: (data.get('wheat') as string) ?? null,
+				melon: (data.get('melon') as string) ?? null,
+				pumpkin: (data.get('pumpkin') as string) ?? null,
+				mushroom: (data.get('mushroom') as string) ?? null,
+				cocoaBeans: (data.get('cocoa') as string) ?? null,
+				sugarCane: (data.get('cane') as string) ?? null,
+				netherWart: (data.get('wart') as string) ?? null,
+			},
 		}).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
