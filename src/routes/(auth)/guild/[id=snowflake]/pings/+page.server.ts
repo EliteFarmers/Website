@@ -34,7 +34,7 @@ export const actions: Actions = {
 		await getGuild(guildId, token);
 
 		const data = await request.formData();
-		
+
 		const body = {
 			enabled: true,
 			guildId: guildId,
