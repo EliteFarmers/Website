@@ -35,12 +35,13 @@
 					<CloseCircleSolid size="sm" />
 				{/if}
 			</div>
-			<Popover triggeredBy="#discordId" placement="right">
+			<Popover triggeredBy="#discordId" placement="bottom" class="z-20">
 				<p>
 					{#if linked}
 						Verified
 					{:else}
-						Not&nbsp;Verified
+						Not&nbsp;Verified.<br />
+						To verify follow instructions on <a href="/profile" class="text-blue-500">profile page</a>
 					{/if}
 				</p>
 			</Popover>
