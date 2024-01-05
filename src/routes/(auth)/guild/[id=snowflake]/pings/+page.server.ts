@@ -105,7 +105,7 @@ async function getGuild(guildId: string, token: string) {
 	const hasPerms = CanManageGuild(guild.permissions);
 	if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
 
-	if (!guild.guild?.features?.jacobLeaderboardEnabled) {
+	if (!guild.guild?.features?.contestPingsEnabled) {
 		throw error(402, 'This guild does not have the Jacob Contest Pings feature enabled.');
 	}
 
