@@ -8,6 +8,7 @@
 	import { page } from '$app/stores';
 	import Eventmember from './eventmember.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let data: PageData;
 
@@ -15,10 +16,6 @@
 
 	$: banner =
 		'https://cdn.discordapp.com/splashes/1096051612373487687/dc2f5296bdb34b3adc580df6c50c56cf.png?size=1280';
-
-	$: iconUrl = `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild.icon}.${
-		data.guild.icon?.startsWith('a_') ? `gif` : `webp`
-	}`;
 
 	$: time = Date.now();
 	$: start = +(event.startTime ?? 0) * 1000;
@@ -39,7 +36,9 @@
 <Head
 	title={event.name || 'Farming Weight Event'}
 	description={`View the Event happening in ${data.guild.name}!\n${event.description}`}
-	imageUrl={`https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`}
+	imageUrl={data.guild.icon
+		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
+		: undefined}
 />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
@@ -48,7 +47,7 @@
 		style="background-image: url('{banner}')"
 	>
 		<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 mt-32 rounded-lg">
-			<img class="w-16 h-16" src={iconUrl} alt="Guild Icon" />
+			<Guildicon guild={data.guild} size={16} />
 			<h1 class="text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>
@@ -56,7 +55,7 @@
 				<ArrowUpRightFromSquareOutline size="md" />
 			</Button>
 		</div>
-		<div class="flex flex-col p-4 items-center bg-zinc-900/75 mb-32 rounded-lg">
+		<div class="flex flex-col p-4 items-center bg-zinc-900/75 mb-32 rounded-lg text-white">
 			<p class="text-lg font-light">
 				{#if start > time}
 					Event Starts In
@@ -64,7 +63,7 @@
 					Event Ends In
 				{/if}
 			</p>
-			<h1 class="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-semibold font-sans text-white select-none">
+			<h1 class="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-semibold font-sans select-none">
 				{#if start > time}
 					{getCountdown(start - time + time) ?? 'Event Started!'}
 				{:else}

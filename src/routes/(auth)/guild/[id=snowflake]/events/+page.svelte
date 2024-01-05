@@ -5,6 +5,7 @@
 	import type { PageData, ActionData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -27,11 +28,7 @@
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<img
-			class="w-16 h-16"
-			src="https://cdn.discordapp.com/icons/{data.guildId}/{data.guild?.icon}.webp"
-			alt="Guild Icon"
-		/>
+		<Guildicon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>

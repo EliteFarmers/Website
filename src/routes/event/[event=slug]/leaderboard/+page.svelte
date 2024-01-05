@@ -18,7 +18,9 @@
 <Head
 	title={(event.name || 'Farming Weight Event') + ' Leaderboard'}
 	description={`View the leaderboard of "${data.guild.name}"!\n${event.description}`}
-	imageUrl={`https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`}
+	imageUrl={data.guild.icon
+		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
+		: undefined}
 />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">

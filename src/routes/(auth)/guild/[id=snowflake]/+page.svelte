@@ -4,6 +4,7 @@
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let data: PageData;
 	$: features = data.guild?.features;
@@ -13,11 +14,7 @@
 
 <main class="flex flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">
-		<img
-			class="w-16 h-16"
-			src="https://cdn.discordapp.com/icons/{data.guildId}/{data.guild?.icon}.webp"
-			alt="Guild Icon"
-		/>
+		<Guildicon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>
