@@ -7,7 +7,6 @@
 	import { quadInOut } from 'svelte/easing';
 
 	import {
-		Avatar,
 		DarkMode,
 		Dropdown,
 		DropdownDivider,
