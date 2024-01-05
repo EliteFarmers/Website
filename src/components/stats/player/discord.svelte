@@ -36,14 +36,16 @@
 				{/if}
 			</div>
 			<Popover triggeredBy="#discordId" placement="bottom" class="z-20">
-				<p>
+				<div class="text-center">
 					{#if linked}
-						Verified
+						<p class="text-black dark:text-white">Linked</p>
 					{:else}
-						Not&nbsp;Verified.<br />
-						To verify follow instructions on <a href="/profile" class="text-blue-500">profile page</a>
+						<p class="text-black dark:text-white">Not Linked</p>
+						<p>
+							Link your account on the <a href="/profile" class="text-blue-500">profile page</a>
+						</p>
 					{/if}
-				</p>
+				</div>
 			</Popover>
 		{:else}
 			<Popover triggeredBy="#discordId" placement="top">
