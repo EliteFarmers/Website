@@ -58,7 +58,12 @@
 			<form class="flex flex-col gap-2" method="post" action="?/enable" use:enhance>
 				<Label>
 					<span>Channel to send pings in</span>
-					<Select items={channels} value="" placeholder="Select a channel" name="channel" />
+					<Select
+						items={channels}
+						value={pings.channelId ?? ''}
+						placeholder="Select a channel"
+						name="channel"
+					/>
 				</Label>
 
 				<Label>
