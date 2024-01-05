@@ -7,7 +7,9 @@
 
 <a
 	href={`/server/${guild.id}`}
-	class="relative flex flex-row justify-between flex-1 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full text-white bg-zinc-800"
+	class="relative flex flex-row justify-between flex-1 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full bg-gray-200 dark:bg-zinc-800 {guild.banner
+		? 'text-white'
+		: ''}"
 	style={guild.banner
 		? `background-image: url('https://cdn.discordapp.com/splashes/${guild.id}/${guild?.banner}.png?size=1280')`
 		: ''}
