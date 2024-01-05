@@ -5,20 +5,20 @@
 	import Leaderboard from './leaderboard.svelte';
 	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
 	import Event from '$comp/stats/discord/event.svelte';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let data: PageData;
 
 	$: jacob = data.guild.features?.jacobLeaderboard;
 	$: leaderboards = jacob?.leaderboards ?? [];
-	$: iconUrl = `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild.icon}.${
-		data.guild.icon?.startsWith('a_') ? `gif` : `webp`
-	}`;
 </script>
 
 <Head
 	title={data.guild.name ?? 'Server'}
 	description={`View all features and events happening in the Discord server: "${data.guild.name ?? 'Unknown'}"!`}
-	imageUrl={`https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`}
+	imageUrl={data.guild.icon
+		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
+		: undefined}
 />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16">
@@ -30,7 +30,7 @@
 				?.banner}.png?size=1280')"
 		>
 			<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 my-32 rounded-lg">
-				<img class="w-16 h-16" src={iconUrl} alt="Guild Icon" />
+				<Guildicon guild={data.guild} size={16} />
 				<h1 class="text-4xl text-white">
 					{data.guild?.name}
 				</h1>
@@ -41,7 +41,7 @@
 		</div>
 	{:else}
 		<div class="flex flex-row items-center gap-4 my-16">
-			<img class="w-16 h-16" src={iconUrl} alt="Guild Icon" />
+			<Guildicon guild={data.guild} size={16} />
 			<h1 class="text-4xl">
 				{data.guild?.name}
 			</h1>

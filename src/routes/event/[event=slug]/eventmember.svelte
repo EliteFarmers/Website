@@ -64,6 +64,6 @@
 					: 'Never Updated!'}
 			</p>
 		</div>
-		<Button href="/@{member.playerUuid}">View Stats</Button>
+		<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 	</div>
 </AccordionItem>

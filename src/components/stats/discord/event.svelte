@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let event: components['schemas']['EventDetailsDto'];
 	export let guild: components['schemas']['GuildDetailsDto'] | undefined;
@@ -18,13 +19,7 @@
 		/>
 	{/if}
 	<div class="flex flex-row gap-4 z-10 items-center">
-		<img
-			class="w-16 h-16"
-			src="https://cdn.discordapp.com/icons/{guild?.id}/{guild?.icon}.{guild?.icon?.startsWith('a_')
-				? 'gif'
-				: 'webp'}"
-			alt="Guild Icon"
-		/>
+		<Guildicon {guild} size={16} />
 		<h2 class="text-3xl font-semibold">{event.name}</h2>
 	</div>
 	<div class="flex flex-row gap-2 font-semibold items-center z-10 text-lg">

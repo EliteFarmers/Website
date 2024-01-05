@@ -4,6 +4,7 @@
 	import { Button, Label, Select } from 'flowbite-svelte';
 	import type { PageData, ActionData } from './$types';
 	import { enhance } from '$app/forms';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -33,11 +34,7 @@
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<img
-			class="w-16 h-16"
-			src="https://cdn.discordapp.com/icons/{data.guildId}/{data.guild?.icon}.webp"
-			alt="Guild Icon"
-		/>
+		<Guildicon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>
@@ -58,7 +55,12 @@
 			<form class="flex flex-col gap-2" method="post" action="?/enable" use:enhance>
 				<Label>
 					<span>Channel to send pings in</span>
-					<Select items={channels} value="" placeholder="Select a channel" name="channel" />
+					<Select
+						items={channels}
+						value={pings.channelId ?? ''}
+						placeholder="Select a channel"
+						name="channel"
+					/>
 				</Label>
 
 				<Label>

@@ -7,7 +7,6 @@
 	import { quadInOut } from 'svelte/easing';
 
 	import {
-		Avatar,
 		DarkMode,
 		Dropdown,
 		DropdownDivider,
@@ -21,6 +20,7 @@
 		Button,
 		Input,
 	} from 'flowbite-svelte';
+	import Usericon from '$comp/stats/discord/usericon.svelte';
 
 	let searchVal = '';
 
@@ -125,11 +125,8 @@
 		<DarkMode initialTheme="dark" />
 
 		{#if $page.data.userInfo}
-			<div class="flex items-center lg:order-2 cursor-pointer">
-				<Avatar
-					id="avatar-menu"
-					src="https://cdn.discordapp.com/avatars/{$page.data.userInfo.id}/{$page.data.userInfo.avatar}.png"
-				/>
+			<div class="flex items-center lg:order-2 cursor-pointer" id="avatar-menu">
+				<Usericon user={$page.data.userInfo} size={10} />
 			</div>
 			<Dropdown placement="bottom-end" triggeredBy="#avatar-menu">
 				<DropdownHeader>

@@ -1,13 +1,16 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { UserGroupSolid } from 'flowbite-svelte-icons';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let guild: components['schemas']['GuildDetailsDto'];
 </script>
 
 <a
 	href={`/server/${guild.id}`}
-	class="relative flex flex-row justify-between flex-1 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full text-white bg-zinc-800"
+	class="relative flex flex-row justify-between flex-1 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full bg-gray-200 dark:bg-zinc-800 {guild.banner
+		? 'text-white'
+		: ''}"
 	style={guild.banner
 		? `background-image: url('https://cdn.discordapp.com/splashes/${guild.id}/${guild?.banner}.png?size=1280')`
 		: ''}
@@ -18,13 +21,7 @@
 		/>
 	{/if}
 	<div class="flex flex-row gap-4 z-10 items-center">
-		<img
-			class="w-16 h-16"
-			src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.{guild.icon?.startsWith('a_')
-				? 'gif'
-				: 'webp'}"
-			alt="Guild Icon"
-		/>
+		<Guildicon {guild} size={16} />
 		<h2 class="text-3xl font-semibold">{guild.name}</h2>
 	</div>
 	<div class="flex flex-row gap-2 font-semibold items-center z-10">
