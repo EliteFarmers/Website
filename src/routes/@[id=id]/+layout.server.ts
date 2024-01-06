@@ -1,8 +1,8 @@
 import { GetAccount, GetProfileMember, type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ params, url }) => {
+export const load: LayoutServerLoad = async ({ params }) => {
 	const { id, profile } = params;
 
 	const { data: account } = await GetAccount(id).catch(() => ({ data: undefined }));
@@ -24,14 +24,6 @@ export const load: LayoutServerLoad = async ({ params, url }) => {
 
 	if (!selectedProfile.profileId || !selectedProfile.profileName) {
 		throw error(404, 'Profile not found');
-	}
-
-	if (selectedProfile.profileName !== profile) {
-		console.log('Redirecting to correct profile name', selectedProfile.profileName, profile);
-		// throw redirect(
-		// 	302,
-		// 	`/@${id}/${selectedProfile.profileName}${url.pathname.includes('/contests') ? '/contests' : ''}`
-		// );
 	}
 
 	const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId).catch(() => ({

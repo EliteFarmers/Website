@@ -10,22 +10,28 @@ export const load = (async ({ parent, setHeaders }) => {
 		'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
 	});
 
-	const years = {} as Partial<Record<number, components['schemas']['ContestParticipationDto'][]>>;
+	const yearsPromise = new Promise<Partial<Record<number, components['schemas']['ContestParticipationDto'][]>>>((resolve) => {
+		const years = {} as Partial<Record<number, components['schemas']['ContestParticipationDto'][]>>;
 
-	for (const contest of member.jacob?.contests ?? []) {
-		const year = getSkyblockDate(contest.timestamp ?? 0).year + 1;
-		if (!years[year]) years[year] = [];
+		for (const contest of member.jacob?.contests ?? []) {
+			const year = getSkyblockDate(contest.timestamp ?? 0).year + 1;
+			if (!years[year]) years[year] = [];
 
-		years[year]?.push(contest);
-	}
+			years[year]?.push(contest);
+		}
 
-	// Sort each year by timestamp
-	for (const year in years) {
-		years[year] = years[year]?.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
-	}
+		// Sort each year by timestamp
+		for (const year in years) {
+			years[year] = years[year]?.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
+		}
+
+		resolve(years);
+	});
 
 	return {
-		years,
+		years: {
+			yearsPromise,
+		},
 		contestsCount: member.jacob?.contests?.length ?? 0,
 	};
 }) satisfies PageServerLoad;

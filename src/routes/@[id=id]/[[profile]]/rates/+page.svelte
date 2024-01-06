@@ -19,8 +19,7 @@
 	import { LotusGear } from 'farming-weight/dist/classes/lotusgear';
 
 	import type { PageData } from './$types';
-	import Cropdetails from '$comp/rates/cropdetails.svelte';
-	import Uploadconfig from './uploadconfig.svelte';
+
 	export let data: PageData;
 
 	let enteredIgn = data.account?.name ?? '';
@@ -82,12 +81,12 @@
 
 <main class="flex flex-col justify-center items-center w-full pb-16">
 	<section class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
-		<h1 class="text-4xl font-semibold text-center mt-16 mb-12">Farming Rate Calculator</h1>
+		<h1 class="text-4xl font-semibold text-center mt-16 mb-12">Farming Rates Calculator</h1>
 	</section>
 
 	<Cropselector radio={true} />
 
-	<Accordion flush={true} class="w-full text-black dark:text-white border-none">
+	<!-- <Accordion flush={true} class="w-full text-black dark:text-white border-none">
 		<AccordionItem
 			defaultClass="flex flex-row items-center justify-center gap-4 w-full"
 			textFlushDefault="text-black dark:text-white py-1 border-none"
@@ -99,7 +98,7 @@
 		</AccordionItem>
 
 		<Uploadconfig />
-	</Accordion>
+	</Accordion> -->
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
@@ -118,9 +117,9 @@
 					</Button>
 				</form>
 			</div>
-			{#if data.error}
+			<!-- {#if data.error}
 				<p class="text-red-500 text-center">{data.error}</p>
-			{/if}
+			{/if} -->
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Label>Reforge</Label>

@@ -19,8 +19,8 @@
 
 <main class="flex flex-col justify-center items-center w-full">
 	<section class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
-		<h1 class="text-4xl font-semibold text-center my-16">
-			{data.account.name} | Jacob's Contests
+		<h1 class="text-4xl font-semibold text-center mb-16">
+			{data.account.name} | All Jacob's Contests
 		</h1>
 		<MedalCounts
 			participations={data.contestsCount}
@@ -38,8 +38,11 @@
 			Show Real Life Time
 		</div>
 
+		{#await data.years.yearsPromise}
+			HI
+		{:then years} 
 		<Timeline order="vertical" customClass="w-full">
-			{#each Object.entries(data.years).sort((a, b) => +b[0] - +a[0]) as [year, conts], i (year)}
+			{#each Object.entries(years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts], i (year)}
 				<TimelineItemVertical
 					title={'Year ' + year}
 					date={new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
@@ -77,6 +80,7 @@
 					</Accordion>
 				</TimelineItemVertical>
 			{/each}
-		</Timeline>
+			</Timeline>
+		{/await}
 	</section>
 </main>

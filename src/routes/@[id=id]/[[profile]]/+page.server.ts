@@ -3,7 +3,6 @@ import FarmingCollections from '$lib/collections';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
-import { GetPlayerRanks } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	const { account, profile, member } = await parent();
@@ -15,8 +14,6 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	if (!member.profileId) {
 		throw error(404, 'Skyblock profile not found for this player!');
 	}
-
-	const { data: ranks } = await GetPlayerRanks(account.id, profile.profileId);
 
 	const collections = Object.entries(member.collections ?? {})
 		.filter(([key]) => PROPER_CROP_NAME[key])
@@ -44,7 +41,6 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 	});
 
 	return {
-		ranks,
 		collections,
 	};
 };

@@ -63,6 +63,7 @@
 		if ('storage' in config) {
 			const storage = config?.storage as Record<string, unknown>;
 			if ('players' in storage) {
+				
 			}
 		}
 	}
