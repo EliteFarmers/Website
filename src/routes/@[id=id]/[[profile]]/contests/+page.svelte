@@ -17,32 +17,28 @@
 	description="View all {data.contestsCount} Jacob's Contests participated in by {data.account.name}"
 />
 
-<main class="flex flex-col justify-center items-center w-full">
-	<section class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
-		<h1 class="text-4xl font-semibold text-center mb-16">
-			{data.account.name} | All Jacob's Contests
-		</h1>
-		<MedalCounts
-			participations={data.contestsCount}
-			medals={{
-				diamond: data.member.jacob?.earnedMedals?.diamond ?? 0,
-				platinum: data.member.jacob?.earnedMedals?.platinum ?? 0,
-				gold: data.member.jacob?.earnedMedals?.gold ?? 0,
-				silver: data.member.jacob?.earnedMedals?.silver ?? 0,
-				bronze: data.member.jacob?.earnedMedals?.bronze ?? 0,
-			}}
-		/>
+<section class="flex flex-col justify-center items-center w-full">
+	<div class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
+		<div class="my-8 flex flex-col items-center">
+			<MedalCounts
+				participations={data.contestsCount}
+				medals={{
+					diamond: data.member.jacob?.earnedMedals?.diamond ?? 0,
+					platinum: data.member.jacob?.earnedMedals?.platinum ?? 0,
+					gold: data.member.jacob?.earnedMedals?.gold ?? 0,
+					silver: data.member.jacob?.earnedMedals?.silver ?? 0,
+					bronze: data.member.jacob?.earnedMedals?.bronze ?? 0,
+				}}
+			/>
 
-		<div class="flex flex-row align-middle my-2 mt-4">
-			<Toggle bind:checked={timeType} label="Show All" size="large" />
-			Show Real Life Time
+			<div class="flex flex-row align-middle my-2 mt-4">
+				<Toggle bind:checked={timeType} label="Show All" size="large" />
+				Show Real Life Time
+			</div>
 		</div>
 
-		{#await data.years.yearsPromise}
-			HI
-		{:then years} 
 		<Timeline order="vertical" customClass="w-full">
-			{#each Object.entries(years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts], i (year)}
+			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts], i (year)}
 				<TimelineItemVertical
 					title={'Year ' + year}
 					date={new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
@@ -80,7 +76,6 @@
 					</Accordion>
 				</TimelineItemVertical>
 			{/each}
-			</Timeline>
-		{/await}
-	</section>
-</main>
+		</Timeline>
+	</div>
+</section>

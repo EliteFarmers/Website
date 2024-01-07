@@ -5,6 +5,7 @@
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
+	import { LotusGear } from 'farming-weight';
 
 	import Skills from '$comp/stats/skills.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
@@ -12,23 +13,18 @@
 	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
+	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
+	import Lotusgear from '$comp/rates/lotusgear.svelte';
 	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
-	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
-
 	export let data: PageData;
 
 	$: uuid = data.account.id;
 	$: ign = data.account.name;
-
 	$: collections = data.collections;
-
 	$: weightRank = data.ranks?.misc?.farmingweight ?? -1;
-
-	$: profileName = data.profile.profileName;
 	$: profile = data.profile;
-
 	$: member = data.member;
 
 	$: farmingXp = getLevelProgress(
@@ -44,6 +40,10 @@
 	$: description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
+
+	$: lotus = (data.member?.farmingWeight?.inventory?.equipment ?? [])
+		.filter((t) => LotusGear.isValid(t))
+		.map((t) => new LotusGear(t));
 </script>
 
 <Head title={ign + ' | Farming Weight'} {description}>
@@ -78,7 +78,7 @@
 </section>
 
 {#if showSkills}
-	<div class="flex justify-center w-full mb-4" transition:slide={{ duration: 1000, easing: quadInOut }}>
+	<div class="flex justify-center w-full mb-4 -mt-8" transition:slide={{ duration: 1000, easing: quadInOut }}>
 		<div class="block w-[90%] mb-4">
 			<Skills skills={member.skills} skillRanks={data.ranks?.skills} />
 		</div>
@@ -88,7 +88,10 @@
 <section class="flex w-full justify-center align-middle my-8">
 	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
 		<Collections {collections} ranks={data.ranks?.collections} />
-		<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
+		<div class="flex flex-1 flex-col gap-4">
+			<Lotusgear items={lotus} />
+			<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
+		</div>
 	</div>
 </section>
 

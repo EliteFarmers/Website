@@ -1,12 +1,16 @@
 <script lang="ts">
-	import { CalculateDetailedAverageDrops, Crop, FarmingTool, type PlayerOptions } from 'farming-weight';
-	import { Accordion, AccordionItem, Button, Input, Label, NumberInput, Select } from 'flowbite-svelte';
+	import {
+		CalculateDetailedAverageDrops,
+		CreatePlayer,
+		Crop,
+		CropFromName,
+		type PlayerOptions,
+	} from 'farming-weight';
+	import { Input, Label, Radio, Range, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getLevelProgress } from '$lib/format';
-	import { SearchOutline } from 'flowbite-svelte-icons';
-	import { goto } from '$app/navigation';
 
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
@@ -16,16 +20,15 @@
 	import Toolconfig from '$comp/rates/toolconfig.svelte';
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-	import { LotusGear } from 'farming-weight/dist/classes/lotusgear';
 
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	let enteredIgn = data.account?.name ?? '';
 	let bountiful = true;
 	let mooshroom = true;
 	let blocksBroken = 24_000 * 3;
+	$: selectedToolIndex = 0;
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
@@ -37,40 +40,42 @@
 		blocksBroken: blocksBroken,
 	});
 
+	$: selectedCrop = Object.entries($selectedCrops).find(([key, value]) => value)?.[0] ?? '';
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
 	$: options = {
 		tools: data.member?.farmingWeight?.inventory?.tools ?? [],
 		armor: data.member?.farmingWeight?.inventory?.armor ?? [],
 		equipment: data.member?.farmingWeight?.inventory?.equipment ?? [],
+		accessories: data.member?.farmingWeight?.inventory?.accessories ?? [],
 		pets: data.member?.pets ?? [],
+
+		personalBests: data.member.jacob?.stats?.personalBests ?? {},
+		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
+		milestones: $ratesData.milestones,
+		cropUpgrades: $ratesData.cropUpgrades as Record<string, number>,
+		plotsUnlocked: $ratesData.plotsUnlocked,
+		gardenLevel: $ratesData.gardenLevel,
+
 		farmingXp: data.member?.skills?.farming,
+		bestiaryKills: (data.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
 		farmingLevel: getLevelProgress(
 			'farming',
 			data.member?.skills?.farming ?? 0,
 			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
-		milestones: $ratesData.milestones,
-		cropUpgrades: $ratesData.cropUpgrades as Record<string, number>,
-		plotsUnlocked: $ratesData.plotsUnlocked,
-		gardenLevel: $ratesData.gardenLevel,
 	} satisfies PlayerOptions;
 
-	$: tools = (data.member?.farmingWeight?.inventory?.tools ?? [])
-		.filter((t) => FarmingTool.isValid(t))
-		.map((t) => new FarmingTool(t, options));
+	$: player = CreatePlayer(options);
+	$: cropFortune = player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat);
 
-	$: lotus = (data.member?.farmingWeight?.inventory?.equipment ?? [])
-		.filter((t) => LotusGear.isValid(t))
-		.map((t) => new LotusGear(t, options));
+	$: if (selectedToolIndex || selectedCrop) {
+		if (player.tools[selectedToolIndex]?.crop !== CropFromName(selectedCrop)) {
+			selectedToolIndex = player.tools.findIndex((t) => t.crop === CropFromName(selectedCrop));
+		}
 
-	function search() {
-		const url = new URL(window.location.href);
-		url.searchParams.set('ign', enteredIgn);
-
-		console.log(url.toString());
-
-		goto(url.toString());
+		player.selectTool(player.tools[selectedToolIndex]);
+		cropFortune = player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat);
 	}
 
 	const cropKey = (crop: string) =>
@@ -79,54 +84,19 @@
 
 <Head title="Rate Calculator" description="Calculate your expected farming rates in Hypixel Skyblock!" />
 
-<main class="flex flex-col justify-center items-center w-full pb-16">
-	<section class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
-		<h1 class="text-4xl font-semibold text-center mt-16 mb-12">Farming Rates Calculator</h1>
-	</section>
-
+<div class="flex flex-col justify-center items-center w-full pb-16">
 	<Cropselector radio={true} />
-
-	<!-- <Accordion flush={true} class="w-full text-black dark:text-white border-none">
-		<AccordionItem
-			defaultClass="flex flex-row items-center justify-center gap-4 w-full"
-			textFlushDefault="text-black dark:text-white py-1 border-none"
-			paddingFlush="py-1 px-4"
-			borderSharedClass="border-none"
-		>
-			<div slot="header">Crop Milestones/Upgrades</div>
-			<Cropdetails />
-		</AccordionItem>
-
-		<Uploadconfig />
-	</Accordion> -->
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
-			<h2 class="text-2xl text-center">Load From Player</h2>
-
-			<div class="flex md:flex-row gap-2 align-middle max-h-4 p-2 items-center justify-center">
-				{#if data.account}
-					<img src="https://mc-heads.net/head/{data.account?.id}" alt="Player head" class="w-16 h-16" />
-				{/if}
-				<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
-					<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
-						<input type="text" {...props} bind:value={enteredIgn} />
-					</Input>
-					<Button class="!p-2.5 h-full" type="submit" name="ign">
-						<SearchOutline />
-					</Button>
-				</form>
-			</div>
-			<!-- {#if data.error}
-				<p class="text-red-500 text-center">{data.error}</p>
-			{/if} -->
+			<Fortunebreakdown
+				title="Total Farming Fortune"
+				total={player.fortune + cropFortune.fortune}
+				breakdown={{ ...player.breakdown, ...cropFortune.breakdown }}
+				placement="right"
+			/>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				<Label>Reforge</Label>
-				<Select bind:value={bountiful} size="sm" placeholder="Select a reforge!" class="dark:bg-zinc-800">
-					<option value={false}>Blessed</option>
-					<option value={true}>Bountiful</option>
-				</Select>
 				<Label>Farming Pet</Label>
 				<Select bind:value={mooshroom} size="sm" placeholder="Select a pet!" class="dark:bg-zinc-800">
 					<option value={false}>Elephant</option>
@@ -134,41 +104,75 @@
 				</Select>
 			</div>
 
-			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#each tools as tool (tool)}
-					{@const key = cropKey(tool.crop)}
-					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
-						<Toolconfig {tool} {options} />
+			{#if selectedCrop}
+				{#key selectedToolIndex + selectedCrop}
+					<div class="flex flex-row gap-2">
+						<Fortunebreakdown
+							title="{selectedCrop} Fortune"
+							total={player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat).fortune}
+							breakdown={player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
+							placement="right"
+						/>
+					</div>
+				{/key}
+				<div class="flex flex-row items-center gap-2 mx-4">
+					<img
+						src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
+						alt={selectedCrop}
+						class="w-12 h-12 pixelated m-1 p-1"
+					/>
+					<div class="flex flex-1 flex-col gap-2">
+						<Label defaultClass="flex-1">
+							Garden Milestone
+							<div class="flex flex-row gap-1 items-center">
+								<Range min={0} max={46} bind:value={$ratesData.milestones[cropKey(selectedCrop)]} step={1} />
+								<p class="text-lg p-2">{$ratesData.milestones[cropKey(selectedCrop)]}</p>
+							</div>
+						</Label>
+						<Label defaultClass="flex-1">
+							Crop Upgrade 
+							<div class="flex flex-row gap-1 items-center">
+								<Range min={0} max={10} bind:value={$ratesData.cropUpgrades[cropKey(selectedCrop)]} step={1} />
+								<p class="text-lg p-2">{$ratesData.cropUpgrades[cropKey(selectedCrop)]}</p>
+							</div>
+						</Label>
+					</div>
+				</div>
+			{/if}
 
-						<div class="flex flex-row items-center gap-2">
-							<img src={PROPER_CROP_TO_IMG[tool.crop]} alt={tool.crop} class="w-12 h-12 pixelated" />
-							<NumberInput bind:value={$ratesData.milestones[key]} />
-							<NumberInput bind:value={$ratesData.cropUpgrades[key]} />
-						</div>
-					{/if}
+			<div class="flex flex-col gap-2 max-w-lg w-full px-4">
+				{#each player.tools.filter((t) => $selectedCrops[PROPER_CROP_NAME[t.crop] ?? '']) as tool (tool.item.uuid)}
+					<div class="flex flex-row gap-2 justify-between items-center">
+						<Radio type="radio" name="tool" on:change={() => {
+							selectedToolIndex = player.tools.findIndex((t) => t.item.uuid === tool.item.uuid);
+							player.selectTool(tool);
+						}} />
+						<Toolconfig {options} {tool} />
+					</div>
 				{/each}
-				{#if tools.length === 0}
+
+				{#if player.tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Armorselect {options} />
-				{#if tools.length === 0}
+				{#if player.tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#if lotus.length === 0}
+				{#if player.equipment.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
 				{:else}
 					<div class="flex justify-between items-center w-full px-4 py-2">
 						<span class="text-lg font-semibold">Lotus Gear Total</span>
-						<Fortunebreakdown total={lotus.reduce((acc, l) => acc + l.fortune, 0)} />
+						<Fortunebreakdown total={player.equipment.reduce((acc, l) => acc + l.fortune, 0)} />
 					</div>
 				{/if}
-				<Lotusgear items={lotus} />
+				<Lotusgear items={player.equipment} />
 			</div>
 		</section>
 		<section class="flex-1 w-full p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
@@ -238,4 +242,4 @@
 			make sure to check!
 		</p>
 	</div>
-</main>
+</div>
