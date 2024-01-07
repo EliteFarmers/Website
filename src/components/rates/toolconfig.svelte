@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import type { FarmingTool, PlayerOptions } from 'farming-weight';
@@ -8,6 +9,7 @@
 
 	export let tool: FarmingTool;
 	export let options: PlayerOptions;
+	export let fortune = 0;
 
 	const counterOptions = [10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000];
 
@@ -46,6 +48,8 @@
 		changed.rebuildTool(changed.item, options);
 		changed = changed;
 	}
+
+	$: fortune = changed.fortune;
 </script>
 
 <div class="flex flex-col gap-2 p-4 {expanded ? 'border-zinc-100 border-solid border-2 rounded-md' : ''}">
@@ -54,9 +58,18 @@
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(changed.item.name ?? '')}</span>
 
 		<div class="flex items-center gap-2">
-			<Button color="none" size="sm" on:click={() => (expanded = !expanded)}>
+			<Button color="none" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
 				<EditOutline size="sm" />
 			</Button>
+
+			<Lorebtn item={changed.item}>
+				{#if changed.cultivating}
+					<p>
+						<span class="font-semibold select-none">Cultivating:</span>
+						<span class="select-all">{changed.cultivating.toLocaleString()}</span>
+					</p>
+				{/if}
+			</Lorebtn>
 
 			<Fortunebreakdown total={changed.fortune} breakdown={changed.fortuneBreakdown}>
 				{#if changed.item?.enchantments?.dedication}

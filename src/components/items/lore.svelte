@@ -4,9 +4,10 @@
 	export let name: string | undefined = undefined;
 	export let lore: string[];
 
-	const formatted = name
-		? [name, '', ...lore].map((l) => FormatMinecraftText(l))
-		: lore.map((l) => FormatMinecraftText(l));
+	$: formatted =
+		name && lore.length > 1
+			? [name, '', ...lore].map((l) => FormatMinecraftText(l))
+			: lore.map((l) => FormatMinecraftText(l));
 </script>
 
 <div class="p-2 font-mono rounded-sm font-bold line-t">
