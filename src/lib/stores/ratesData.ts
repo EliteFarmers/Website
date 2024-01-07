@@ -1,11 +1,12 @@
 import { browser } from '$app/environment';
-import type { Crop } from 'farming-weight';
+import type { Crop, FarmingTool } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 
 interface RatesData {
-	milestones: Partial<Record<Crop, number>>;
-	cropUpgrades: Partial<Record<Crop, number>>;
+	milestones: Record<Crop, number>;
+	cropUpgrades: Record<Crop, number>;
+	tool?: FarmingTool;
 	gardenLevel: number;
 	plotsUnlocked: number;
 	strength: number;
@@ -13,8 +14,8 @@ interface RatesData {
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	milestones: {},
-	cropUpgrades: {},
+	milestones: {} as Record<Crop, number>,
+	cropUpgrades: {} as Record<Crop, number>,
 	gardenLevel: 0,
 	plotsUnlocked: 0,
 	strength: 0,

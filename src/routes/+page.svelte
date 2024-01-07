@@ -36,7 +36,7 @@
 					<h1 class="mb-4 w-full text-xl font-semibold">Join The Discord</h1>
 					<p class="w-full mb-6">
 						Full membership unlocked after reaching {(+PUBLIC_WEIGHT_REQ).toLocaleString()}
-						farming weight. Also, join the support server for suggestions, bug reports!
+						farming weight. Also, join the support server for suggestions and bug reports!
 					</p>
 					<div class="flex flex-col md:flex-row gap-2 justify-center">
 						<Button

@@ -7,7 +7,7 @@
 
 	export let data: LayoutData;
 
-	$: path = `@${data.account.name}/${data.profile.profileName}`;
+	$: path = `/@${data.account.name}/${data.profile.profileName}`;
 	$: updateUrl($page.params);
 
 	$: url = $page.url.pathname;
@@ -15,12 +15,12 @@
 	function updateUrl(params = $page.params) {
 		if (!browser) return;
 
-		const current = `${params.id}/${params.profile}`;
+		const current = `${params.id}${params.profile ? `/${params.profile}` : ''}`;
 		const wanted = `${data.account.name}/${data.profile.profileName}`;
 
 		if (current !== wanted) {
-			url = $page.url.href.replace(current, wanted);
-			history.replaceState(history.state, document.title, url);
+			url = $page.url.pathname.replace(current, wanted);
+			history.replaceState(history.state, document.title, $page.url.href.replace(current, wanted));
 		}
 	}
 </script>
@@ -37,20 +37,22 @@
 		skyblockRank={data.ranks?.misc?.skyblockxp ?? -1}
 	/>
 
-	<Navbar rounded color="none" classNavDiv="flex justify-center">
-		<NavUl
-			class="flex lg:order-3 mx-auto justify-center lg:mx-0 md:items-center my-2"
-			ulClass="flex p-4 gap-4 flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:items-center justify-between bg-gray-100 dark:bg-zinc-800 rounded-md border-none max-w-xl w-full"
-			activeClass="text-red-500 dark:text-red-400"
-			hidden={false}
-			color="none"
-		>
-			<NavLi href="/{path}/contests" nonActiveClass="flex-1" active={url.endsWith('/contests')}>All Contests</NavLi>
-			<NavLi href="/{path}" nonActiveClass="flex-1" active={url === `/${path}`}>Stats</NavLi>
-			<NavLi href="/{path}/rates" nonActiveClass="flex-1" active={url.endsWith('/rates')}>Rate Calculator</NavLi>
-		</NavUl>
-	</Navbar>
-
+	{#key url}
+		<Navbar rounded color="none" classNavDiv="flex justify-center">
+			<NavUl
+				class="flex lg:order-3 mx-auto justify-center lg:mx-0 md:items-center my-2"
+				ulClass="flex p-4 gap-4 flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:items-center justify-between bg-gray-100 dark:bg-zinc-800 rounded-md border-none max-w-xl w-full"
+				activeClass="text-red-600 dark:text-red-500 flex-1"
+				nonActiveClass="flex-1"
+				hidden={false}
+				color="none"
+			>
+				<NavLi href="{path}/contests" active={url.endsWith('/contests')}>All Contests</NavLi>
+				<NavLi href={path} active={url === path}>Stats</NavLi>
+				<NavLi href="{path}/rates" active={url.endsWith('/rates')}>Rate Calculator</NavLi>
+			</NavUl>
+		</Navbar>
+	{/key}
 
 	<slot />
 </main>
