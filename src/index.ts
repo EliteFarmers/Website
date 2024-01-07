@@ -1,8 +1,11 @@
 export * from './classes/farmingarmor.js';
 export * from './classes/farmingtool.js';
+export * from './classes/farmingpet.js';
+export * from './classes/farmingaccessory.js';
 export * from './classes/item.js';
 export * from './classes/player.js';
 export * from './classes/weightcalc.js';
+export * from './classes/lotusgear.js';
 
 export * from './constants/armor.js';
 export * from './constants/crops.js';

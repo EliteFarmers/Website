@@ -172,7 +172,7 @@ export class FarmingTool {
 
 	private getFarmingAbilityFortune(tool: FarmingTool) {
 		let fortune = 0;
-		const regex = /§7You have §6\+(\d+)☘ Farming Fortune/g;
+		const regex = /§7You have §6\+(\d+)☘/g;
 
 		for (const line of tool.item.lore ?? []) {
 			fortune += ExtractNumberFromLine(line, regex) ?? 0;

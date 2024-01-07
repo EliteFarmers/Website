@@ -11,6 +11,9 @@ export function CropFromName(name: string) {
 	const fromShort = SHORT_NAMES_TO_CROP[name];
 	if (fromShort) return fromShort;
 
+	const fromFull = FULL_NAMES_TO_CROP[name.toLowerCase().replace(/ /g, '')];
+	if (fromFull) return fromFull;
+
 	return CropFromItemId(name);
 }
 
@@ -60,6 +63,22 @@ const SHORT_NAMES_TO_CROP: Record<string, Crop> = {
 	potato: Crop.Potato,
 	pumpkin: Crop.Pumpkin,
 	cane: Crop.SugarCane,
+	wheat: Crop.Wheat,
+	seeds: Crop.Seeds,
+};
+
+const FULL_NAMES_TO_CROP: Record<string, Crop> = {
+	cactus: Crop.Cactus,
+	carrot: Crop.Carrot,
+	cocoabeans: Crop.CocoaBeans,
+	cocoabean: Crop.CocoaBeans,
+	melon: Crop.Melon,
+	mushroom: Crop.Mushroom,
+	netherwart: Crop.NetherWart,
+	netherwarts: Crop.NetherWart,
+	potato: Crop.Potato,
+	pumpkin: Crop.Pumpkin,
+	sugarcane: Crop.SugarCane,
 	wheat: Crop.Wheat,
 	seeds: Crop.Seeds,
 };

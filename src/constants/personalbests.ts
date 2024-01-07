@@ -4,7 +4,7 @@ export function FortuneFromPersonalBestContest(crop: Crop, personalBest: number)
 	const cropsPerTier = PERSONAL_BESTS_CROPS_PER_TIER[crop];
 	const tiers = Math.floor(personalBest / cropsPerTier);
 
-	return tiers * PERSONAL_BEST_FORTUNE_PER_TIER;
+	return Math.min(tiers * PERSONAL_BEST_FORTUNE_PER_TIER, 100);
 }
 
 export const PERSONAL_BEST_FORTUNE_PER_TIER = 0.1;

@@ -22,6 +22,7 @@ export class ArmorSet {
 	public declare readonly leggings?: FarmingArmor;
 	public declare readonly boots?: FarmingArmor;
 
+	public declare fortune: number;
 	public declare setBonuses: ActiveArmorSetBonus[];
 
 	constructor(armor: FarmingArmor[]) {
@@ -56,9 +57,12 @@ export class ArmorSet {
 				special: bonus.special,
 			});
 		}
+
+		this.getFortuneBreakdown();
 	}
 
 	getFortuneBreakdown() {
+		let sum = 0;
 		const breakdown: Record<string, number> = {};
 
 		for (const piece of this.armor) {
@@ -67,6 +71,7 @@ export class ArmorSet {
 			const fortune = piece.fortune;
 			if (fortune > 0) {
 				breakdown[piece.item.name ?? ''] = fortune;
+				sum += fortune;
 			}
 		}
 
@@ -75,9 +80,11 @@ export class ArmorSet {
 			const fortune = bonus.stats?.[count]?.[Stat.FarmingFortune] ?? 0;
 			if (fortune > 0) {
 				breakdown[bonus.name] = fortune;
+				sum += fortune;
 			}
 		}
 
+		this.fortune = sum;
 		return breakdown;
 	}
 

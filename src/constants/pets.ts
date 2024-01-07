@@ -12,19 +12,31 @@ export interface FarmingPetType {
 	skin?: string | null;
 }
 
+export enum FarmingPetStatType {
+	Base = 'base',
+	Ability = 'ability',
+}
+
 export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
-	stats: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
+	stats?: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
+	perLevelStats?: Partial<Record<Stat, {
+		name: string;
+		multiplier: number;
+		type?: FarmingPetStatType;
+	}>>;
 }
 
 export const FARMING_PETS: Record<string, FarmingPetInfo> = {
 	ELEPHANT: {
 		name: 'Elephant',
 		wiki: 'https://wiki.hypixel.net/Elephant_Pet',
-		stats: {
-			[Rarity.Legendary]: {
-				[Stat.FarmingFortune]: 150,
+		perLevelStats: {
+			[Stat.FarmingFortune]: {
+				name: 'Farming Fortune',
+				multiplier: 0.5,
+				type: FarmingPetStatType.Ability,
 			},
 		},
 	},

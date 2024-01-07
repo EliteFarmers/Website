@@ -2,8 +2,10 @@ import { Rarity } from '../constants/reforges';
 
 export function GetRarityFromLore(lore: string[]) {
 	const line = lore.at(-1);
-	if (!line) return Rarity.Common;
+	return getRarity(line ?? '');
+}
 
+function getRarity(line: string) {
 	switch (true) {
 		case line.includes('COMMON'):
 			return Rarity.Common;
