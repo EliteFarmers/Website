@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import { ArmorSet, FarmingArmor, GearSlot, type PlayerOptions } from 'farming-weight';
@@ -27,7 +28,10 @@
 			<div class="flex justify-between items-center w-full px-4 py-2">
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<span class="text-lg font-semibold">{@html FormatMinecraftText(piece.item.name ?? '')}</span>
-				<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+				<div class="flex flex-row gap-1 items-center">
+					<Lorebtn item={piece.item} />
+					<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+				</div>
 			</div>
 		{/if}
 	{/each}

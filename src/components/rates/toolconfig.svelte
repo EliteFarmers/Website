@@ -17,62 +17,53 @@
 	let bountiful = tool.reforge?.name === 'Bountiful';
 	let counter = counterOptions.findLast((c) => c < tool.farmed) ?? 10_000;
 
-	$: changed = tool;
-
-	$: {
-		changed.item.attributes ??= {};
-
-		if (bountiful) {
-			changed.item.attributes['modifier'] = 'bountiful';
-			changed.item.name = changed.item.name?.replace('Blessed', 'Bountiful');
-		} else {
-			changed.item.attributes['modifier'] = 'blessed';
-			changed.item.name = changed.item.name?.replace('Bountiful', 'Blessed');
-		}
-		changed.rebuildTool(changed.item, options);
-
-		changed = tool;
+	$: if (bountiful) {
+		tool.changeReforgeTo('bountiful');
+		console.log('bountiful');
+	} else {
+		tool.changeReforgeTo('blessed');
+		console.log('blessed');
 	}
 
 	$: {
-		changed.item.attributes ??= {};
+		tool.item.attributes ??= {};
 
-		if (changed.item.attributes?.['mined_crops']) {
-			changed.item.attributes['mined_crops'] = counter.toString();
+		if (tool.item.attributes?.['mined_crops']) {
+			tool.item.attributes['mined_crops'] = counter.toString();
 		}
 
-		if (changed.item.attributes?.['cultivating']) {
-			changed.item.attributes['cultivating'] = counter.toString();
+		if (tool.item.attributes?.['cultivating']) {
+			tool.item.attributes['cultivating'] = counter.toString();
 		}
 
-		changed.rebuildTool(changed.item, options);
-		changed = changed;
+		tool.rebuildTool(tool.item, options);
+		tool = tool;
 	}
 
-	$: fortune = changed.fortune;
+	$: fortune = tool.fortune;
 </script>
 
-<div class="flex flex-col gap-2 p-4 {expanded ? 'border-zinc-100 border-solid border-2 rounded-md' : ''}">
+<div class="flex flex-col gap-2 w-full {expanded ? 'border-zinc-100 border-solid border-2 rounded-md' : ''}">
 	<div class="flex justify-between items-center w-full">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		<span class="text-lg font-semibold">{@html FormatMinecraftText(changed.item.name ?? '')}</span>
+		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.item.name ?? '')}</span>
 
 		<div class="flex items-center gap-2">
 			<Button color="none" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
 				<EditOutline size="sm" />
 			</Button>
 
-			<Lorebtn item={changed.item}>
-				{#if changed.cultivating}
+			<Lorebtn item={tool.item}>
+				{#if tool.cultivating}
 					<p>
 						<span class="font-semibold select-none">Cultivating:</span>
-						<span class="select-all">{changed.cultivating.toLocaleString()}</span>
+						<span class="select-all">{tool.cultivating.toLocaleString()}</span>
 					</p>
 				{/if}
 			</Lorebtn>
 
-			<Fortunebreakdown total={changed.fortune} breakdown={changed.fortuneBreakdown}>
-				{#if changed.item?.enchantments?.dedication}
+			<Fortunebreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown}>
+				{#if tool.isMissingDedication()}
 					<p class="text-xs flex-wrap">
 						Dedication is not included in the breakdown because crop milestones are not available in
 						Hypixel's API.

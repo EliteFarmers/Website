@@ -9,6 +9,7 @@ interface RatesData {
 	tool?: FarmingTool;
 	gardenLevel: number;
 	plotsUnlocked: number;
+	communityCenter: number;
 	strength: number;
 }
 
@@ -17,7 +18,8 @@ const defaultData = {
 	milestones: {} as Record<Crop, number>,
 	cropUpgrades: {} as Record<Crop, number>,
 	gardenLevel: 0,
-	plotsUnlocked: 0,
+	plotsUnlocked: 24,
+	communityCenter: 0,
 	strength: 0,
 } satisfies RatesData;
 
