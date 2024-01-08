@@ -2,10 +2,11 @@ import { Crop } from '../constants/crops';
 import { FortuneFromPersonalBestContest } from '../constants/personalbests';
 import { FortuneFromPestBestiary } from '../constants/pests';
 import { FarmingPetType } from '../constants/pets';
-import { FORTUNE_PER_ANITA_BONUS, FORTUNE_PER_CROP_UPGRADE, FORTUNE_PER_FARMING_LEVEL, FORTUNE_PER_PLOT } from '../constants/specific';
+import { FORTUNE_PER_ANITA_BONUS, FORTUNE_PER_COMMUNITY_CENTER, FORTUNE_PER_CROP_UPGRADE, FORTUNE_PER_FARMING_LEVEL, FORTUNE_PER_PLOT } from '../constants/specific';
 import { CropDisplayName, ItemIdFromCrop } from '../util/names';
 import { FarmingAccessory } from './farmingaccessory';
 import { ArmorSet, FarmingArmor } from './farmingarmor';
+import { FarmingPet } from './farmingpet';
 import { FarmingTool } from './farmingtool';
 import { Item } from './item';
 import { LotusGear } from './lotusgear';
@@ -15,6 +16,7 @@ export interface FortuneMissingFromAPI {
 	gardenLevel?: number;
 	plotsUnlocked?: number;
 	uniqueVisitors?: number;
+	communityCenter?: number;
 	milestones?: Partial<Record<Crop, number>>;
 }
 
@@ -49,8 +51,10 @@ class Player {
 	declare armorSet: ArmorSet;
 	declare equipment: LotusGear[];
 	declare accessories: FarmingAccessory[];
+	declare pets: FarmingPet[];
 
 	declare selectedTool?: FarmingTool;
+	declare selectedPet?: FarmingPet;
 
 	constructor(options: PlayerOptions) {
 		this.options = options;
@@ -77,6 +81,13 @@ class Player {
 			.map((item) => new FarmingAccessory(item))
 			.sort((a, b) => b.fortune - a.fortune);
 
+		this.pets = options.pets
+			.filter((pet) => FarmingPet.isValid(pet))
+			.map((pet) => new FarmingPet(pet, options))
+			.sort((a, b) => b.fortune - a.fortune);
+
+		this.selectedPet = this.pets[0];
+
 		this.fortune = this.getGeneralFortune();
 	}
 
@@ -86,6 +97,10 @@ class Player {
 
 	selectTool(tool: FarmingTool) {
 		this.selectedTool = tool;
+	}
+
+	selectPet(pet: FarmingPet) {
+		this.selectedPet = pet;
 	}
 
 	getGeneralFortune() {
@@ -134,6 +149,20 @@ class Player {
 		if (anitaBonus > 0) {
 			breakdown['Anita Bonus Drops'] = anitaBonus;
 			sum += anitaBonus;
+		}
+
+		// Community Center
+		const communityCenter = (this.options.communityCenter ?? 0) * FORTUNE_PER_COMMUNITY_CENTER;
+		if (communityCenter > 0) {
+			breakdown['Community Center'] = communityCenter;
+			sum += communityCenter;
+		}
+
+		// Selected Pet
+		const pet = this.selectedPet;
+		if (pet && pet.fortune > 0) {
+			breakdown[pet.info.name ?? 'Selected Pet'] = pet.fortune;
+			sum += pet.fortune;
 		}
 
 		// Accessories

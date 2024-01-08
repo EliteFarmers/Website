@@ -54,15 +54,20 @@ export class FarmingTool {
 		this.farmingForDummies = +(this.item.attributes?.farming_for_dummies_count ?? 0);
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
-		this.fortune = this.sumFortune();
+		this.fortune = this.getFortune();
 	}
 
-	setReforge(reforgeId: string) {
+	private setReforge(reforgeId: string) {
 		this.reforge = REFORGES[reforgeId] ?? undefined;
 		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
 	}
 
-	private sumFortune(): number {
+	changeReforgeTo(reforgeId: string) {
+		this.setReforge(reforgeId);
+		this.fortune = this.getFortune();
+	}
+
+	getFortune(): number {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 
@@ -166,7 +171,7 @@ export class FarmingTool {
 		return this.counter ?? this.cultivating ?? 0;
 	}
 
-	get isMissingDedication() {
+	isMissingDedication() {
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) > 0;
 	}
 

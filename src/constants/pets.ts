@@ -1,12 +1,17 @@
 import { Rarity, Stat } from './reforges';
 import { Skill } from './skills';
 
+export enum FarmingPets {
+	Elephant = 'ELEPHANT',
+	MooshroomCow = 'MOOSHROOM_COW',
+}
+
 export interface FarmingPetType {
 	uuid?: string | null;
 	type?: string;
 	exp?: number;
 	active?: boolean;
-	tier?: string | null;
+	tier?: string | Rarity | null;
 	heldItem?: string | null;
 	candyUsed?: number;
 	skin?: string | null;
@@ -20,22 +25,27 @@ export enum FarmingPetStatType {
 export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
-	stats?: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
+	stats?: Partial<Record<Stat, number>>;
 	perLevelStats?: Partial<Record<Stat, {
+		name: string;
+		multiplier: number;
+		type?: FarmingPetStatType;
+	}>>;
+	perStatStats?: Partial<Record<Stat, {
 		name: string;
 		multiplier: number;
 		type?: FarmingPetStatType;
 	}>>;
 }
 
-export const FARMING_PETS: Record<string, FarmingPetInfo> = {
+export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	ELEPHANT: {
 		name: 'Elephant',
 		wiki: 'https://wiki.hypixel.net/Elephant_Pet',
 		perLevelStats: {
 			[Stat.FarmingFortune]: {
 				name: 'Farming Fortune',
-				multiplier: 0.5,
+				multiplier: 1.5,
 				type: FarmingPetStatType.Ability,
 			},
 		},
@@ -44,8 +54,13 @@ export const FARMING_PETS: Record<string, FarmingPetInfo> = {
 		name: 'Mooshroom Cow',
 		wiki: 'https://wiki.hypixel.net/Mooshroom_Cow_Pet',
 		stats: {
-			[Rarity.Legendary]: {
-				[Stat.FarmingFortune]: 150,
+			[Stat.FarmingFortune]: 10,
+		},
+		perLevelStats: {
+			[Stat.FarmingFortune]: {
+				name: 'Farming Fortune',
+				multiplier: 1,
+				type: FarmingPetStatType.Base,
 			},
 		},
 	},
