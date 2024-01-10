@@ -198,6 +198,13 @@ export class FarmingArmor {
 	static isValid(item: Item): boolean {
 		return IsValidFarmingArmor(item);
 	}
+
+	static fromArray(items: Item[], options?: PlayerOptions): FarmingArmor[] {
+		return items
+			.filter((item) => FarmingArmor.isValid(item))
+			.map((item) => new FarmingArmor(item, options))
+			.sort((a, b) => b.fortune - a.fortune);
+	}
 }
 
 export function IsValidFarmingArmor(item: Item): boolean {

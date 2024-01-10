@@ -26,11 +26,11 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	farmingLevel?: number;
 	strength?: number;
 
-	tools: Item[];
-	armor: Item[];
-	equipment: Item[];
-	accessories: Item[];
-	pets: FarmingPetType[];
+	tools: Item[] | FarmingTool[];
+	armor: Item[] | FarmingArmor[];
+	equipment: Item[] | LotusGear[];
+	accessories: Item[] | FarmingAccessory[];
+	pets: FarmingPetType[] | FarmingPet[];
 
 	personalBests?: Record<string, number>;
 	bestiaryKills?: Record<string, number>;
@@ -41,7 +41,7 @@ export function CreatePlayer(options: PlayerOptions) {
 	return new Player(options);
 }
 
-class Player {
+export class Player {
 	declare options: PlayerOptions;
 	declare fortune: number;
 	declare breakdown: Record<string, number>;
@@ -59,34 +59,43 @@ class Player {
 	constructor(options: PlayerOptions) {
 		this.options = options;
 
-		this.tools = options.tools
-			.filter((item) => FarmingTool.isValid(item))	
-			.map((item) => new FarmingTool(item, options))
-			.sort((a, b) => b.fortune - a.fortune);
+		if (options.tools[0] instanceof FarmingTool) {
+			this.tools = options.tools as FarmingTool[];
+		} else {
+			this.tools = FarmingTool.fromArray(options.tools as Item[], options);
+		}
 
-		this.armor = options.armor
-			.filter((item) => FarmingArmor.isValid(item))
-			.map((item) => new FarmingArmor(item, options))
-			.sort((a, b) => b.fortune - a.fortune);
-
-		this.armorSet = new ArmorSet(this.armor.sort((a, b) => b.fortune - a.fortune));
-
-		this.equipment = options.equipment
-			.filter((item) => LotusGear.isValid(item))
-			.map((item) => new LotusGear(item, options))
-			.sort((a, b) => b.fortune - a.fortune);
-
-		this.accessories = options.accessories
-			.filter((item) => FarmingAccessory.isValid(item))
-			.map((item) => new FarmingAccessory(item))
-			.sort((a, b) => b.fortune - a.fortune);
-
-		this.pets = options.pets
-			.filter((pet) => FarmingPet.isValid(pet))
-			.map((pet) => new FarmingPet(pet, options))
-			.sort((a, b) => b.fortune - a.fortune);
+		if (options.pets[0] instanceof FarmingPet) {
+			this.pets = (options.pets as FarmingPet[])
+				.sort((a, b) => b.fortune - a.fortune);
+		} else {
+			this.pets = FarmingPet.fromArray(options.pets as Item[], options);
+		}
 
 		this.selectedPet = this.pets[0];
+
+		if (options.armor[0] instanceof FarmingArmor) {
+			this.armor = (options.armor as FarmingArmor[])
+				.sort((a, b) => b.fortune - a.fortune);
+		} else {
+			this.armor = FarmingArmor.fromArray(options.armor as Item[], options);
+		}
+
+		this.armorSet = new ArmorSet(this.armor);
+
+		if (options.equipment[0] instanceof LotusGear) {
+			this.equipment = (options.equipment as LotusGear[])
+				.sort((a, b) => b.fortune - a.fortune);
+		} else {
+			this.equipment = LotusGear.fromArray(options.equipment as Item[], options);
+		}
+
+		if (options.accessories[0] instanceof FarmingAccessory) {
+			this.accessories = (options.accessories as FarmingAccessory[])
+				.sort((a, b) => b.fortune - a.fortune);
+		} else {
+			this.accessories = FarmingAccessory.fromArray(options.accessories as Item[]);
+		}
 
 		this.fortune = this.getGeneralFortune();
 	}

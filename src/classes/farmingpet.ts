@@ -1,6 +1,7 @@
 import { FARMING_PETS, FARMING_PET_ITEMS, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType, FarmingPets, PET_LEVELS } from '../constants/pets';
 import { Rarity, Stat } from '../constants/reforges';
 import { Skill } from '../constants/skills';
+import { Item } from './item';
 import { PlayerOptions } from './player';
 
 export function CreateFarmingPet(pet: FarmingPetType) {
@@ -90,6 +91,13 @@ export class FarmingPet {
 
 	static isValid(pet: FarmingPetType) {
 		return IsValidFarmingPet(pet);
+	}
+
+	static fromArray(items: Item[], options?: PlayerOptions): FarmingPet[] {
+		return items
+			.filter((item) => FarmingPet.isValid(item))
+			.map((item) => new FarmingPet(item, options))
+			.sort((a, b) => b.fortune - a.fortune);
 	}
 }
 

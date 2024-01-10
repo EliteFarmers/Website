@@ -115,6 +115,13 @@ export class LotusGear {
 	static isValid(item: Item): boolean {
 		return IsValidLotusGear(item);
 	}
+
+	static fromArray(items: Item[], options?: PlayerOptions): LotusGear[] {
+		return items
+			.filter((item) => LotusGear.isValid(item))
+			.map((item) => new LotusGear(item, options))
+			.sort((a, b) => b.fortune - a.fortune);
+	}
 }
 
 export function IsValidLotusGear(item: Item): boolean {

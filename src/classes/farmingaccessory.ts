@@ -49,6 +49,13 @@ export class FarmingAccessory {
 	static isValid(item: Item): boolean {
 		return IsValidFarmingAccessory(item);
 	}
+
+	static fromArray(items: Item[]): FarmingAccessory[] {
+		return items
+			.filter((item) => FarmingAccessory.isValid(item))
+			.map((item) => new FarmingAccessory(item))
+			.sort((a, b) => b.fortune - a.fortune);
+	}
 }
 
 export function IsValidFarmingAccessory(item: Item): boolean {

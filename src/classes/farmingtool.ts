@@ -12,6 +12,12 @@ export class FarmingTool {
 	public declare crop: Crop;
 	public declare tool: FarmingToolInfo;
 
+	public declare itemname: string;
+	private declare colorPrefix: string;
+	public get name() {
+		return this.colorPrefix + (this.reforge?.name ?? '') + ' ' + this.itemname;
+	}
+
 	public declare rarity: Rarity;
 	public declare counter: number | undefined;
 	public declare cultivating: number;
@@ -55,6 +61,15 @@ export class FarmingTool {
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
 		this.fortune = this.getFortune();
+
+		if (this.reforge?.name && item.name) {
+			const [ prefix, name ] = item.name.split(this.reforge.name);
+			this.colorPrefix = prefix ?? '';
+			this.itemname = name?.trim() ?? '';
+		} else {
+			this.colorPrefix = '';
+			this.itemname = item.name ?? '';
+		}
 	}
 
 	private setReforge(reforgeId: string) {
@@ -186,11 +201,19 @@ export class FarmingTool {
 		return fortune;
 	}
 
-	static isValid(item: Item): boolean {
+	static isValid(item: Item | FarmingTool): boolean {
 		return IsValidFarmingTool(item);
+	}
+
+	static fromArray(items: Item[], options?: PlayerOptions): FarmingTool[] {
+		return items
+			.filter((item) => FarmingTool.isValid(item))
+			.map((item) => new FarmingTool(item, options))
+			.sort((a, b) => b.fortune - a.fortune);
 	}
 }
 
-export function IsValidFarmingTool(item: Item): boolean {
+export function IsValidFarmingTool(item: Item | FarmingTool): boolean {
+	if (item instanceof FarmingTool) return true;
 	return FARMING_TOOLS[item.skyblockId as keyof typeof FARMING_TOOLS] !== undefined;
 }
