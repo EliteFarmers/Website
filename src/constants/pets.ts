@@ -26,16 +26,26 @@ export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
 	stats?: Partial<Record<Stat, number>>;
-	perLevelStats?: Partial<Record<Stat, {
-		name: string;
-		multiplier: number;
-		type?: FarmingPetStatType;
-	}>>;
-	perStatStats?: Partial<Record<Stat, {
-		name: string;
-		multiplier: number;
-		type?: FarmingPetStatType;
-	}>>;
+	perLevelStats?: Partial<
+		Record<
+			Stat,
+			{
+				name: string;
+				multiplier: number;
+				type?: FarmingPetStatType;
+			}
+		>
+	>;
+	perStatStats?: Partial<
+		Record<
+			Stat,
+			{
+				name: string;
+				multiplier: number;
+				type?: FarmingPetStatType;
+			}
+		>
+	>;
 }
 
 export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {

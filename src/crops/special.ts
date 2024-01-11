@@ -1,7 +1,7 @@
 import { CROP_INFO, Crop } from '../constants/crops';
 import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcrops';
 
-export function CalculateAverageSpecialCrops(blocksBroken: number, crop: Crop, armor: 1 | 2 | 3 | 4) {
+export function calculateAverageSpecialCrops(blocksBroken: number, crop: Crop, armor: 1 | 2 | 3 | 4) {
 	const type = MATCHING_SPECIAL_CROP[crop];
 
 	const { rates, npc } = SPECIAL_CROP_INFO[type];

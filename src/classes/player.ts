@@ -1,14 +1,20 @@
 import { Crop } from '../constants/crops';
-import { FortuneFromPersonalBestContest } from '../constants/personalbests';
-import { FortuneFromPestBestiary } from '../constants/pests';
+import { fortuneFromPersonalBestContest } from '../constants/personalbests';
+import { fortuneFromPestBestiary } from '../constants/pests';
 import { FarmingPetType } from '../constants/pets';
-import { FORTUNE_PER_ANITA_BONUS, FORTUNE_PER_COMMUNITY_CENTER, FORTUNE_PER_CROP_UPGRADE, FORTUNE_PER_FARMING_LEVEL, FORTUNE_PER_PLOT } from '../constants/specific';
-import { CropDisplayName, ItemIdFromCrop } from '../util/names';
+import {
+	FORTUNE_PER_ANITA_BONUS,
+	FORTUNE_PER_COMMUNITY_CENTER,
+	FORTUNE_PER_CROP_UPGRADE,
+	FORTUNE_PER_FARMING_LEVEL,
+	FORTUNE_PER_PLOT,
+} from '../constants/specific';
+import { getCropDisplayName, getItemIdFromCrop } from '../util/names';
 import { FarmingAccessory } from './farmingaccessory';
 import { ArmorSet, FarmingArmor } from './farmingarmor';
 import { FarmingPet } from './farmingpet';
 import { FarmingTool } from './farmingtool';
-import { Item } from './item';
+import { EliteItemDto } from './item';
 import { LotusGear } from './lotusgear';
 
 export interface FortuneMissingFromAPI {
@@ -26,10 +32,10 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	farmingLevel?: number;
 	strength?: number;
 
-	tools: Item[] | FarmingTool[];
-	armor: Item[] | FarmingArmor[];
-	equipment: Item[] | LotusGear[];
-	accessories: Item[] | FarmingAccessory[];
+	tools: EliteItemDto[] | FarmingTool[];
+	armor: EliteItemDto[] | FarmingArmor[];
+	equipment: EliteItemDto[] | LotusGear[];
+	accessories: EliteItemDto[] | FarmingAccessory[];
 	pets: FarmingPetType[] | FarmingPet[];
 
 	personalBests?: Record<string, number>;
@@ -37,11 +43,11 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	anitaBonus?: number;
 }
 
-export function CreatePlayer(options: PlayerOptions) {
-	return new Player(options);
+export function createFarmingPlayer(options: PlayerOptions) {
+	return new FarmingPlayer(options);
 }
 
-export class Player {
+export class FarmingPlayer {
 	declare options: PlayerOptions;
 	declare fortune: number;
 	declare breakdown: Record<string, number>;
@@ -62,39 +68,35 @@ export class Player {
 		if (options.tools[0] instanceof FarmingTool) {
 			this.tools = options.tools as FarmingTool[];
 		} else {
-			this.tools = FarmingTool.fromArray(options.tools as Item[], options);
+			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
 		}
 
 		if (options.pets[0] instanceof FarmingPet) {
-			this.pets = (options.pets as FarmingPet[])
-				.sort((a, b) => b.fortune - a.fortune);
+			this.pets = (options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.pets = FarmingPet.fromArray(options.pets as Item[], options);
+			this.pets = FarmingPet.fromArray(options.pets as EliteItemDto[], options);
 		}
 
 		this.selectedPet = this.pets[0];
 
 		if (options.armor[0] instanceof FarmingArmor) {
-			this.armor = (options.armor as FarmingArmor[])
-				.sort((a, b) => b.fortune - a.fortune);
+			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.armor = FarmingArmor.fromArray(options.armor as Item[], options);
+			this.armor = FarmingArmor.fromArray(options.armor as EliteItemDto[], options);
 		}
 
 		this.armorSet = new ArmorSet(this.armor);
 
 		if (options.equipment[0] instanceof LotusGear) {
-			this.equipment = (options.equipment as LotusGear[])
-				.sort((a, b) => b.fortune - a.fortune);
+			this.equipment = (options.equipment as LotusGear[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.equipment = LotusGear.fromArray(options.equipment as Item[], options);
+			this.equipment = LotusGear.fromArray(options.equipment as EliteItemDto[], options);
 		}
 
 		if (options.accessories[0] instanceof FarmingAccessory) {
-			this.accessories = (options.accessories as FarmingAccessory[])
-				.sort((a, b) => b.fortune - a.fortune);
+			this.accessories = (options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.accessories = FarmingAccessory.fromArray(options.accessories as Item[]);
+			this.accessories = FarmingAccessory.fromArray(options.accessories as EliteItemDto[]);
 		}
 
 		this.fortune = this.getGeneralFortune();
@@ -132,7 +134,7 @@ export class Player {
 
 		// Bestiary
 		if (this.options.bestiaryKills) {
-			const bestiary = FortuneFromPestBestiary(this.options.bestiaryKills);
+			const bestiary = fortuneFromPestBestiary(this.options.bestiaryKills);
 			if (bestiary > 0) {
 				breakdown['Pest Bestiary'] = bestiary;
 				sum += bestiary;
@@ -188,7 +190,7 @@ export class Player {
 
 	getCropFortune(crop: Crop, tool = this.selectedTool) {
 		if (tool) {
-			this.selectTool(tool);	
+			this.selectTool(tool);
 		}
 
 		let sum = 0;
@@ -202,11 +204,11 @@ export class Player {
 		}
 
 		// Personal bests
-		const personalBest = 
-			this.options.personalBests?.[ItemIdFromCrop(crop)]
-			?? this.options.personalBests?.[CropDisplayName(crop).replace(/ /g, '')]
+		const personalBest =
+			this.options.personalBests?.[getItemIdFromCrop(crop)] ??
+			this.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
 		if (personalBest) {
-			const fortune = FortuneFromPersonalBestContest(crop, personalBest);
+			const fortune = fortuneFromPersonalBestContest(crop, personalBest);
 			if (fortune > 0) {
 				breakdown['Personal Best'] = fortune;
 				sum += fortune;

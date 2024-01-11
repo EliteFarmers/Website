@@ -1,10 +1,10 @@
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from "../constants/accessories";
-import { Rarity, Stat } from "../constants/reforges";
-import { GetRarityFromLore } from "../util/itemstats";
-import { Item } from "./item";
+import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/accessories';
+import { Rarity, Stat } from '../constants/reforges';
+import { getRarityFromLore } from '../util/itemstats';
+import { EliteItemDto } from './item';
 
 export class FarmingAccessory {
-	public readonly item: Item;
+	public readonly item: EliteItemDto;
 	public readonly info: FarmingAccessoryInfo;
 
 	public declare readonly rarity: Rarity;
@@ -13,7 +13,7 @@ export class FarmingAccessory {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
-	constructor(item: Item) {
+	constructor(item: EliteItemDto) {
 		this.item = item;
 
 		const info = FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO];
@@ -23,7 +23,7 @@ export class FarmingAccessory {
 		this.info = info;
 
 		if (item.lore) {
-			this.rarity = GetRarityFromLore(item.lore);
+			this.rarity = getRarityFromLore(item.lore);
 		}
 
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
@@ -46,18 +46,14 @@ export class FarmingAccessory {
 		return sum;
 	}
 
-	static isValid(item: Item): boolean {
-		return IsValidFarmingAccessory(item);
+	static isValid(item: EliteItemDto): boolean {
+		return FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO] !== undefined;
 	}
 
-	static fromArray(items: Item[]): FarmingAccessory[] {
+	static fromArray(items: EliteItemDto[]): FarmingAccessory[] {
 		return items
 			.filter((item) => FarmingAccessory.isValid(item))
 			.map((item) => new FarmingAccessory(item))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
-}
-
-export function IsValidFarmingAccessory(item: Item): boolean {
-	return FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO] !== undefined;
 }

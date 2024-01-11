@@ -1,13 +1,13 @@
 import { FarmingArmorInfo } from '../constants/armor';
 import { LOTUS_GEAR_INFO } from '../constants/lotus';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
-import { GetRarityFromLore } from '../util/itemstats';
-import { ExtractNumberFromLine } from '../util/lore';
-import { Item } from './item';
+import { getRarityFromLore } from '../util/itemstats';
+import { extractNumberFromLine } from '../util/lore';
+import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
 
 export class LotusGear {
-	public readonly item: Item;
+	public readonly item: EliteItemDto;
 	public readonly info: FarmingArmorInfo;
 	public get slot() {
 		return this.info.slot;
@@ -22,7 +22,7 @@ export class LotusGear {
 	public declare fortuneBreakdown: Record<string, number>;
 	private declare options?: PlayerOptions;
 
-	constructor(item: Item, options?: PlayerOptions) {
+	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.options = options;
 		this.item = item;
 
@@ -33,7 +33,7 @@ export class LotusGear {
 		this.info = info;
 
 		if (item.lore) {
-			this.rarity = GetRarityFromLore(item.lore);
+			this.rarity = getRarityFromLore(item.lore);
 		}
 
 		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
@@ -86,7 +86,7 @@ export class LotusGear {
 		let found = 0;
 
 		for (const line of this.item.lore ?? []) {
-			const number = ExtractNumberFromLine(line, regex) ?? 0;
+			const number = extractNumberFromLine(line, regex) ?? 0;
 			if (!number) continue;
 
 			found = +number;
@@ -102,7 +102,7 @@ export class LotusGear {
 		let found = 0;
 
 		for (const line of (this.item.lore ?? []).reverse()) {
-			const number = ExtractNumberFromLine(line, regex) ?? 0;
+			const number = extractNumberFromLine(line, regex) ?? 0;
 			if (!number) continue;
 
 			found = number;
@@ -112,18 +112,14 @@ export class LotusGear {
 		return found;
 	}
 
-	static isValid(item: Item): boolean {
-		return IsValidLotusGear(item);
+	static isValid(item: EliteItemDto): boolean {
+		return LOTUS_GEAR_INFO[item.skyblockId as keyof typeof LOTUS_GEAR_INFO] !== undefined;
 	}
 
-	static fromArray(items: Item[], options?: PlayerOptions): LotusGear[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): LotusGear[] {
 		return items
 			.filter((item) => LotusGear.isValid(item))
 			.map((item) => new LotusGear(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
-}
-
-export function IsValidLotusGear(item: Item): boolean {
-	return LOTUS_GEAR_INFO[item.skyblockId as keyof typeof LOTUS_GEAR_INFO] !== undefined;
 }

@@ -1,6 +1,6 @@
 import { Rarity } from '../constants/reforges';
 
-export function GetRarityFromLore(lore: string[]) {
+export function getRarityFromLore(lore: string[]) {
 	const line = lore.at(-1);
 	return getRarity(line ?? '');
 }
@@ -28,7 +28,7 @@ function getRarity(line: string) {
 	}
 }
 
-export function NextRarity(rarity: Rarity): Rarity {
+export function nextRarity(rarity: Rarity): Rarity {
 	switch (rarity) {
 		case Rarity.Common:
 			return Rarity.Uncommon;
@@ -49,7 +49,7 @@ export function NextRarity(rarity: Rarity): Rarity {
 	}
 }
 
-export function PreviousRarity(rarity: Rarity): Rarity {
+export function previousRarity(rarity: Rarity): Rarity {
 	switch (rarity) {
 		case Rarity.Common:
 			return Rarity.Common;

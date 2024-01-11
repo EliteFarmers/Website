@@ -21,6 +21,12 @@
 		"no-var": "error",
 		"prefer-const": "error",
 		"semi": "off",
-		"space-before-function-paren": "off"
+		"space-before-function-paren": "off",
+		"@typescript-eslint/naming-convention": [
+			"warn",
+			{ "selector": "variableLike", "format": ["camelCase"] },
+			{ "selector": "variable", "modifiers": ["const", "exported"], "format": ["UPPER_CASE"] },
+			{ "selector": "typeLike", "format": ["PascalCase"] }
+		]
 	}
 }

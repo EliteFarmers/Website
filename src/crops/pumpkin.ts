@@ -1,4 +1,4 @@
-const PUMPKIN_DICER_ROLLEM = {
+const pumkinDicerRollem = {
 	3: [
 		{
 			drops: 480,
@@ -19,10 +19,10 @@ const PUMPKIN_DICER_ROLLEM = {
 	],
 };
 
-export function CalculatePumpkinPerkBonus(blocksBroken: number, level: 3 = 3): number {
+export function calculatePumpkinPerkBonus(blocksBroken: number, level: 3 = 3): number {
 	let total = 0;
 
-	for (const { drops, chance } of PUMPKIN_DICER_ROLLEM[level]) {
+	for (const { drops, chance } of pumkinDicerRollem[level]) {
 		total += drops * chance * blocksBroken;
 	}
 

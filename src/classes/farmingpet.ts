@@ -1,10 +1,18 @@
-import { FARMING_PETS, FARMING_PET_ITEMS, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType, FarmingPets, PET_LEVELS } from '../constants/pets';
+import {
+	FARMING_PETS,
+	FARMING_PET_ITEMS,
+	FarmingPetInfo,
+	FarmingPetItemInfo,
+	FarmingPetType,
+	FarmingPets,
+	PET_LEVELS,
+} from '../constants/pets';
 import { Rarity, Stat } from '../constants/reforges';
 import { Skill } from '../constants/skills';
-import { Item } from './item';
+import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
 
-export function CreateFarmingPet(pet: FarmingPetType) {
+export function createFarmingPet(pet: FarmingPetType) {
 	return new FarmingPet(pet);
 }
 
@@ -33,10 +41,10 @@ export class FarmingPet {
 		this.type = pet.type as FarmingPets;
 
 		this.rarity = (pet.tier as Rarity) ?? Rarity.Common;
-		this.level = GetPetLevel(pet);
+		this.level = getPetLevel(pet);
 
 		this.item = pet.heldItem ? FARMING_PET_ITEMS[pet.heldItem as keyof typeof FARMING_PET_ITEMS] : undefined;
-	
+
 		this.fortune = this.getFortune();
 	}
 
@@ -61,10 +69,10 @@ export class FarmingPet {
 
 		// Mooshroom Cow Perk
 		if (this.type === FarmingPets.MooshroomCow && this.options?.strength) {
-			const strengthPer = 40 - (this.level * 0.2);
+			const strengthPer = 40 - this.level * 0.2;
 			const strength = this.options.strength;
 
-			const amount = Math.floor(strength / strengthPer * 0.7);
+			const amount = Math.floor((strength / strengthPer) * 0.7);
 
 			fortune += amount;
 			breakdown['Farming Strength'] = amount;
@@ -90,10 +98,10 @@ export class FarmingPet {
 	}
 
 	static isValid(pet: FarmingPetType) {
-		return IsValidFarmingPet(pet);
+		return pet.type && pet.type in FARMING_PETS;
 	}
 
-	static fromArray(items: Item[], options?: PlayerOptions): FarmingPet[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingPet[] {
 		return items
 			.filter((item) => FarmingPet.isValid(item))
 			.map((item) => new FarmingPet(item, options))
@@ -101,11 +109,7 @@ export class FarmingPet {
 	}
 }
 
-export function IsValidFarmingPet(pet: FarmingPetType) {
-	return pet.type && pet.type in FARMING_PETS;
-}
-
-export function GetPetLevel(pet: FarmingPetType, max = 100) {
+export function getPetLevel(pet: FarmingPetType, max = 100) {
 	const levels = PET_LEVELS;
 	const xp = pet.exp ?? 0;
 

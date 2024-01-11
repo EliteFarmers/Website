@@ -1,11 +1,11 @@
-export function FortuneFromPests(pests: number): number {
+export function fortuneFromPests(pests: number): number {
 	return PEST_EXCHANGE_RATES[pests as keyof typeof PEST_EXCHANGE_RATES] ?? 0;
 }
 
-export function FortuneFromPestBestiary(bestiaryKills: Record<string, number>): number {
+export function fortuneFromPestBestiary(bestiaryKills: Record<string, number>): number {
 	let reachedBrackets = 0;
 
-	const brackets = Object.entries(KILLS_PER_BRACKET).sort((a, b) => b[1] - a[1]);
+	const brackets = Object.entries(killsPerBracket).sort((a, b) => b[1] - a[1]);
 
 	for (const pestId of PEST_IDS) {
 		const kills = bestiaryKills[`pest_${pestId}_1`];
@@ -17,7 +17,7 @@ export function FortuneFromPestBestiary(bestiaryKills: Record<string, number>): 
 		reachedBrackets += bracket ? +bracket[0] : 0;
 	}
 
-	return reachedBrackets * FORTUNE_PER_BRACKET;
+	return reachedBrackets * fortunePerBracket;
 }
 
 export const PEST_EXCHANGE_RATES = {
@@ -77,9 +77,9 @@ export const PEST_IDS = [
 	'slug',
 ] as const;
 
-const FORTUNE_PER_BRACKET = 0.4;
+const fortunePerBracket = 0.4;
 
-const KILLS_PER_BRACKET: Record<number, number> = {
+const killsPerBracket: Record<number, number> = {
 	1: 1,
 	2: 2,
 	3: 3,

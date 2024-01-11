@@ -19,7 +19,7 @@ export interface FarmingToolInfo {
 	baseStats?: Partial<Record<Stat, number>>;
 }
 
-const HoeStats = {
+const hoeStats = {
 	[Rarity.Uncommon]: {
 		[Stat.FarmingFortune]: 25,
 		[Stat.FarmingWisdom]: 2,
@@ -136,7 +136,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_CARROT_2',
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_CARROT_2: {
 		crop: Crop.Carrot,
@@ -146,7 +146,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_CARROT_3',
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_CARROT_3: {
 		crop: Crop.Carrot,
@@ -155,7 +155,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 
 	THEORETICAL_HOE_WARTS_1: {
@@ -166,7 +166,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_WARTS_2',
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_WARTS_2: {
 		crop: Crop.NetherWart,
@@ -176,7 +176,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_WARTS_3',
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_WARTS_3: {
 		crop: Crop.NetherWart,
@@ -185,7 +185,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 
 	THEORETICAL_HOE_POTATO_1: {
@@ -196,7 +196,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_POTATO_2',
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_POTATO_2: {
 		crop: Crop.Potato,
@@ -206,7 +206,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_POTATO_3',
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_POTATO_3: {
 		crop: Crop.Potato,
@@ -215,7 +215,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 
 	THEORETICAL_HOE_CANE_1: {
@@ -226,7 +226,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_CANE_2',
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_CANE_2: {
 		crop: Crop.SugarCane,
@@ -236,7 +236,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_CANE_3',
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_CANE_3: {
 		crop: Crop.SugarCane,
@@ -245,7 +245,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 
 	THEORETICAL_HOE_WHEAT_1: {
@@ -256,7 +256,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_WHEAT_2',
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_WHEAT_2: {
 		crop: Crop.Wheat,
@@ -266,7 +266,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: 'THEORETICAL_HOE_WHEAT_3',
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 	THEORETICAL_HOE_WHEAT_3: {
 		crop: Crop.Wheat,
@@ -275,7 +275,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
-		stats: HoeStats,
+		stats: hoeStats,
 	},
 };
 

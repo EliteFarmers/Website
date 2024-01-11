@@ -1,4 +1,4 @@
-export function ExtractNumberFromLine(line: string, regex: RegExp) {
+export function extractNumberFromLine(line: string, regex: RegExp) {
 	const match = regex.exec(line);
 	if (!match?.length || !match[1]) return;
 

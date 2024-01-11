@@ -1,4 +1,4 @@
-export interface Item {
+export interface EliteItemDto {
 	id?: number | null;
 	count?: number | null;
 	skyblockId?: string | null;

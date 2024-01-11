@@ -21,7 +21,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		maxRarity: Rarity.Epic,
 		stats: {
 			[Stat.FarmingFortune]: 30,
-		}
+		},
 	},
 	SQUASH_RING: {
 		name: 'Squash Ring',
@@ -29,10 +29,10 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		family: 'Fermento',
 		upgrade: 'FERMENTO_ARTIFACT',
 		maxRarity: Rarity.Rare,
-		crops: [ Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans ],
+		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
 		stats: {
 			[Stat.FarmingFortune]: 20,
-		}
+		},
 	},
 	CROPIE_TALISMAN: {
 		name: 'Cropie Talisman',
@@ -40,9 +40,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		family: 'Fermento',
 		upgrade: 'SQUASH_RING',
 		maxRarity: Rarity.Uncommon,
-		crops: [ Crop.Wheat, Crop.Carrot, Crop.Potato ],
+		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],
 		stats: {
 			[Stat.FarmingFortune]: 10,
-		}
-	}
+		},
+	},
 };

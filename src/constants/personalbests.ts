@@ -1,6 +1,6 @@
 import { Crop } from './crops';
 
-export function FortuneFromPersonalBestContest(crop: Crop, personalBest: number) {
+export function fortuneFromPersonalBestContest(crop: Crop, personalBest: number) {
 	const cropsPerTier = PERSONAL_BESTS_CROPS_PER_TIER[crop];
 	const tiers = Math.floor(personalBest / cropsPerTier);
 

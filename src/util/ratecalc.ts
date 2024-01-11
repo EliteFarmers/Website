@@ -1,9 +1,9 @@
 import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops';
 import { REFORGES, Rarity, Stat } from '../constants/reforges';
 import { BEST_FARMING_TOOLS } from '../constants/tools';
-import { CalculateMelonPerkBonus } from '../crops/melon';
-import { CalculatePumpkinPerkBonus } from '../crops/pumpkin';
-import { CalculateAverageSpecialCrops } from '../crops/special';
+import { calculateMelonPerkBonus } from '../crops/melon';
+import { calculatePumpkinPerkBonus } from '../crops/pumpkin';
+import { calculateAverageSpecialCrops } from '../crops/special';
 
 interface CalculateDropsOptions {
 	farmingFortune?: number;
@@ -24,11 +24,11 @@ const crops = [
 	Crop.Seeds,
 ] as const;
 
-export function CalculateAverageDrops(options: CalculateDropsOptions): Record<Crop, number> {
+export function calculateAverageDrops(options: CalculateDropsOptions): Record<Crop, number> {
 	const result = {} as Record<Crop, number>;
 
 	for (const crop of crops) {
-		result[crop] = CalculateExpectedDrops({
+		result[crop] = calculateExpectedDrops({
 			crop: crop,
 			...options,
 		});
@@ -50,11 +50,11 @@ interface DetailedDrops {
 	otherCollection: Record<string, number>;
 }
 
-export function CalculateDetailedAverageDrops(options: CalculateDetailedDropsOptions): Record<Crop, DetailedDrops> {
+export function calculateDetailedAverageDrops(options: CalculateDetailedDropsOptions): Record<Crop, DetailedDrops> {
 	const result = {} as Record<Crop, DetailedDrops>;
 
 	for (const crop of crops) {
-		result[crop] = CalculateDetailedDrops({
+		result[crop] = calculateDetailedDrops({
 			crop: crop,
 			...options,
 		});
@@ -76,7 +76,7 @@ export function CalculateDetailedAverageDrops(options: CalculateDetailedDropsOpt
 	if (options.mooshroom) {
 		const mushroom = result[Crop.Mushroom];
 		const mooshroom = mushroom.otherCollection['Mushroom'] ?? 0;
-		
+
 		mushroom.collection += mooshroom;
 		mushroom.otherCollection['Mooshroom'] = mooshroom;
 		delete mushroom.otherCollection['Mushroom'];
@@ -95,14 +95,14 @@ interface CalculateCropDetailedDropsOptions extends CalculateDetailedDropsOption
 	crop: Crop;
 }
 
-export function CalculateExpectedDrops(options: CalculateExpectedDropsOptions): number {
+export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): number {
 	const { farmingFortune, blocksBroken, crop } = options;
 
 	const fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
 
 	if (fortune <= 0 || blocksBroken < 0) return 0;
 
-	const { drops } = GetCropInfo(crop);
+	const { drops } = getCropInfo(crop);
 	if (!drops) return 0;
 
 	const baseDrops = blocksBroken * drops * ((fortune + 100) * 0.01);
@@ -119,15 +119,15 @@ export function CalculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 		case Crop.Seeds:
 			return Math.round(baseDrops - blocksBroken); // Replenish takes away one drop per block broken
 		case Crop.Pumpkin:
-			return Math.round(baseDrops + CalculatePumpkinPerkBonus(blocksBroken));
+			return Math.round(baseDrops + calculatePumpkinPerkBonus(blocksBroken));
 		case Crop.Melon:
-			return Math.round(baseDrops + CalculateMelonPerkBonus(blocksBroken));
+			return Math.round(baseDrops + calculateMelonPerkBonus(blocksBroken));
 		default:
 			return 0;
 	}
 }
 
-export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDrops {
+export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDrops {
 	const result = {
 		collection: 0,
 		npcCoins: 0,
@@ -152,7 +152,7 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 	result.fortune = fortune;
 
-	const { drops, npc, breaks = 1, replenish = false } = GetCropInfo(crop);
+	const { drops, npc, breaks = 1, replenish = false } = getCropInfo(crop);
 	if (!drops) return result;
 
 	const baseDrops = blocksBroken * drops * ((fortune + 100) * 0.01);
@@ -170,7 +170,7 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	}
 
 	const armorPieces = crop === Crop.Cactus ? 3 : 4;
-	const specialCrops = CalculateAverageSpecialCrops(blocksBroken, crop, armorPieces);
+	const specialCrops = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces);
 
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
 	result.coinSources[specialCrops.type] = Math.round(specialCrops.npc);
@@ -178,14 +178,14 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	let extraDrops = 0;
 	switch (crop) {
 		case Crop.Pumpkin:
-			extraDrops = Math.round(CalculatePumpkinPerkBonus(blocksBroken));
+			extraDrops = Math.round(calculatePumpkinPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.otherCollection['RNG Pumpkin'] = Math.round(extraDrops);
 			result.collection = Math.round(baseDrops + extraDrops);
 			break;
 		case Crop.Melon:
-			extraDrops = Math.round(CalculateMelonPerkBonus(blocksBroken));
+			extraDrops = Math.round(calculateMelonPerkBonus(blocksBroken));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.otherCollection['RNG Melon'] = Math.round(extraDrops);
@@ -218,19 +218,19 @@ export interface FortuneRequiredCalculatorOptions {
 	useMooshroom?: boolean;
 }
 
-export function GetFortuneRequiredForCollection(options: FortuneRequiredCalculatorOptions): number {
+export function getFortuneRequiredForCollection(options: FortuneRequiredCalculatorOptions): number {
 	const { blocksBroken, crop, useDicers, useMooshroom } = options;
 	let { collection } = options;
 
-	const { drops } = GetCropInfo(options.crop);
+	const { drops } = getCropInfo(options.crop);
 
 	if (useDicers)
 		switch (crop) {
 			case Crop.Pumpkin:
-				collection -= CalculatePumpkinPerkBonus(blocksBroken);
+				collection -= calculatePumpkinPerkBonus(blocksBroken);
 				break;
 			case Crop.Melon:
-				collection -= CalculateMelonPerkBonus(blocksBroken);
+				collection -= calculateMelonPerkBonus(blocksBroken);
 				break;
 		}
 
@@ -242,12 +242,12 @@ export function GetFortuneRequiredForCollection(options: FortuneRequiredCalculat
 	return Math.ceil(fortune);
 }
 
-export function GetNPCProfit(crop: Crop, amount: number): number {
-	const { npc } = GetCropInfo(crop);
+export function getNPCProfitFromCrops(crop: Crop, amount: number): number {
+	const { npc } = getCropInfo(crop);
 	if (!npc) return 0;
 	return npc * amount;
 }
 
-export function GetCropInfo(crop: Crop): CropInfo {
+export function getCropInfo(crop: Crop): CropInfo {
 	return CROP_INFO[crop] ?? {};
 }

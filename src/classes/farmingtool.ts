@@ -2,13 +2,13 @@ import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS, TURBO_ENCHANTS, TURBO_ENCHANT_FORTUNE } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
-import { GetRarityFromLore, PreviousRarity } from '../util/itemstats';
-import { ExtractNumberFromLine } from '../util/lore';
-import { Item } from './item';
+import { getRarityFromLore, previousRarity } from '../util/itemstats';
+import { extractNumberFromLine } from '../util/lore';
+import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
 
 export class FarmingTool {
-	public declare item: Item;
+	public declare item: EliteItemDto;
 	public declare crop: Crop;
 	public declare tool: FarmingToolInfo;
 
@@ -32,11 +32,11 @@ export class FarmingTool {
 
 	private declare options?: PlayerOptions;
 
-	constructor(item: Item, options?: PlayerOptions) {
+	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.rebuildTool(item, options);
 	}
 
-	rebuildTool(item: Item, options?: PlayerOptions) {
+	rebuildTool(item: EliteItemDto, options?: PlayerOptions) {
 		this.options = options;
 		this.item = item;
 
@@ -50,7 +50,7 @@ export class FarmingTool {
 		this.crop = tool.crop;
 
 		if (item.lore) {
-			this.rarity = GetRarityFromLore(item.lore);
+			this.rarity = getRarityFromLore(item.lore);
 		}
 
 		this.counter = this.getCounter();
@@ -63,7 +63,7 @@ export class FarmingTool {
 		this.fortune = this.getFortune();
 
 		if (this.reforge?.name && item.name) {
-			const [ prefix, name ] = item.name.split(this.reforge.name);
+			const [prefix, name] = item.name.split(this.reforge.name);
 			this.colorPrefix = prefix ?? '';
 			this.itemname = name?.trim() ?? '';
 		} else {
@@ -94,7 +94,7 @@ export class FarmingTool {
 		}
 
 		// Tool rarity stats
-		const baseRarity = this.recombobulated ? PreviousRarity(this.rarity) : this.rarity;
+		const baseRarity = this.recombobulated ? previousRarity(this.rarity) : this.rarity;
 		const rarityStats = this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune] ?? 0;
 
 		if (rarityStats > 0) {
@@ -195,25 +195,21 @@ export class FarmingTool {
 		const regex = /§7You have §6\+(\d+)☘/g;
 
 		for (const line of tool.item.lore ?? []) {
-			fortune += ExtractNumberFromLine(line, regex) ?? 0;
+			fortune += extractNumberFromLine(line, regex) ?? 0;
 		}
 
 		return fortune;
 	}
 
-	static isValid(item: Item | FarmingTool): boolean {
-		return IsValidFarmingTool(item);
+	static isValid(item: EliteItemDto | FarmingTool): boolean {
+		if (item instanceof FarmingTool) return true;
+		return FARMING_TOOLS[item.skyblockId as keyof typeof FARMING_TOOLS] !== undefined;
 	}
 
-	static fromArray(items: Item[], options?: PlayerOptions): FarmingTool[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingTool[] {
 		return items
 			.filter((item) => FarmingTool.isValid(item))
 			.map((item) => new FarmingTool(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
-}
-
-export function IsValidFarmingTool(item: Item | FarmingTool): boolean {
-	if (item instanceof FarmingTool) return true;
-	return FARMING_TOOLS[item.skyblockId as keyof typeof FARMING_TOOLS] !== undefined;
 }

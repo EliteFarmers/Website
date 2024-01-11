@@ -1,4 +1,4 @@
-const MELON_DICER_ROLLEM = {
+const melonDicerRollem = {
 	3: [
 		{
 			drops: 640,
@@ -19,10 +19,10 @@ const MELON_DICER_ROLLEM = {
 	],
 };
 
-export function CalculateMelonPerkBonus(blocksBroken: number, level: 3 = 3): number {
+export function calculateMelonPerkBonus(blocksBroken: number, level: 3 = 3): number {
 	let total = 0;
 
-	for (const { drops, chance } of MELON_DICER_ROLLEM[level]) {
+	for (const { drops, chance } of melonDicerRollem[level]) {
 		total += drops * chance * blocksBroken;
 	}
 

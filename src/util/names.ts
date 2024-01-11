@@ -1,31 +1,31 @@
 import { Crop } from '../constants/crops';
 
-export function CropDisplayName(crop: Crop) {
-	return CROP_DISPLAY_NAMES[crop] ?? 'Unknown Crop';
+export function getCropDisplayName(crop: Crop) {
+	return cropDisplayNames[crop] ?? 'Unknown Crop';
 }
 
-export function CropFromName(name: string) {
-	const fromDisplay = DISPLAY_NAMES_TO_CROP[name];
+export function getCropFromName(name: string) {
+	const fromDisplay = displayNamesToCrop[name];
 	if (fromDisplay) return fromDisplay;
 
-	const fromShort = SHORT_NAMES_TO_CROP[name];
+	const fromShort = shortNamesToCrop[name];
 	if (fromShort) return fromShort;
 
-	const fromFull = FULL_NAMES_TO_CROP[name.toLowerCase().replace(/ /g, '')];
+	const fromFull = fullNamesToCrop[name.toLowerCase().replace(/ /g, '')];
 	if (fromFull) return fromFull;
 
-	return CropFromItemId(name);
+	return getCropFromItemId(name);
 }
 
-export function CropFromItemId(itemId: string) {
-	return CROP_ITEM_IDS[itemId];
+export function getCropFromItemId(itemId: string) {
+	return cropItemIds[itemId];
 }
 
-export function ItemIdFromCrop(crop: Crop) {
-	return ITEM_IDS_TO_CROP[crop];
+export function getItemIdFromCrop(crop: Crop) {
+	return itemIdsToCrop[crop];
 }
 
-const CROP_DISPLAY_NAMES: Record<Crop, string> = {
+const cropDisplayNames: Record<Crop, string> = {
 	[Crop.Cactus]: 'Cactus',
 	[Crop.Carrot]: 'Carrot',
 	[Crop.CocoaBeans]: 'Cocoa Beans',
@@ -39,7 +39,7 @@ const CROP_DISPLAY_NAMES: Record<Crop, string> = {
 	[Crop.Seeds]: 'Seeds',
 };
 
-const DISPLAY_NAMES_TO_CROP: Record<string, Crop> = {
+const displayNamesToCrop: Record<string, Crop> = {
 	Cactus: Crop.Cactus,
 	Carrot: Crop.Carrot,
 	'Cocoa Beans': Crop.CocoaBeans,
@@ -53,7 +53,7 @@ const DISPLAY_NAMES_TO_CROP: Record<string, Crop> = {
 	Seeds: Crop.Seeds,
 };
 
-const SHORT_NAMES_TO_CROP: Record<string, Crop> = {
+const shortNamesToCrop: Record<string, Crop> = {
 	cactus: Crop.Cactus,
 	carrot: Crop.Carrot,
 	cocoa: Crop.CocoaBeans,
@@ -67,7 +67,7 @@ const SHORT_NAMES_TO_CROP: Record<string, Crop> = {
 	seeds: Crop.Seeds,
 };
 
-const FULL_NAMES_TO_CROP: Record<string, Crop> = {
+const fullNamesToCrop: Record<string, Crop> = {
 	cactus: Crop.Cactus,
 	carrot: Crop.Carrot,
 	cocoabeans: Crop.CocoaBeans,
@@ -83,7 +83,7 @@ const FULL_NAMES_TO_CROP: Record<string, Crop> = {
 	seeds: Crop.Seeds,
 };
 
-const CROP_ITEM_IDS: Record<string, Crop> = {
+const cropItemIds: Record<string, Crop> = {
 	CACTUS: Crop.Cactus,
 	CARROT_ITEM: Crop.Carrot,
 	'INK_SACK:3': Crop.CocoaBeans,
@@ -97,7 +97,7 @@ const CROP_ITEM_IDS: Record<string, Crop> = {
 	SEEDS: Crop.Seeds,
 };
 
-const ITEM_IDS_TO_CROP: Record<Crop, string> = {
+const itemIdsToCrop: Record<Crop, string> = {
 	[Crop.Cactus]: 'CACTUS',
 	[Crop.Carrot]: 'CARROT_ITEM',
 	[Crop.CocoaBeans]: 'INK_SACK:3',

@@ -1,7 +1,7 @@
 import { Crop } from '../constants/crops';
 import { BONUS_WEIGHT, CROP_WEIGHT, TIER_12_MINIONS } from '../constants/weight';
 
-export function CreateFarmingWeightCalculator(info?: FarmingWeightInfo) {
+export function createFarmingWeightCalculator(info?: FarmingWeightInfo) {
 	return new FarmingWeight(info);
 }
 

@@ -15,18 +15,18 @@ export interface JacobContest {
 	medal?: JacobContestMedal;
 }
 
-export function FormatJacobContests(contests: RawJacobContest[]): JacobContest[] {
+export function formatJacobContests(contests: RawJacobContest[]): JacobContest[] {
 	return contests.map((contest) => {
 		return {
 			collected: contest.collected,
 			position: contest.claimed_position,
 			participants: contest.claimed_participants,
-			medal: CalculateJacobContestMedal(contest),
+			medal: calculateJacobContestMedal(contest),
 		};
 	});
 }
 
-export function CalculateJacobContestMedal(contest: RawJacobContest): JacobContestMedal | undefined {
+export function calculateJacobContestMedal(contest: RawJacobContest): JacobContestMedal | undefined {
 	if (contest.claimed_medal) {
 		return contest.claimed_medal;
 	}

@@ -4,9 +4,9 @@ import { FARMING_ARMOR_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { Skill } from '../constants/skills';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
-import { CalculateAverageSpecialCrops } from '../crops/special';
-import { GetRarityFromLore } from '../util/itemstats';
-import { Item } from './item';
+import { calculateAverageSpecialCrops } from '../crops/special';
+import { getRarityFromLore } from '../util/itemstats';
+import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
 
 export interface ActiveArmorSetBonus {
@@ -103,7 +103,7 @@ export class ArmorSet {
 			count += bonus.count;
 		}
 
-		return CalculateAverageSpecialCrops(blocksBroken, crop, count);
+		return calculateAverageSpecialCrops(blocksBroken, crop, count);
 	}
 
 	public get armor(): (FarmingArmor | null)[] {
@@ -112,7 +112,7 @@ export class ArmorSet {
 }
 
 export class FarmingArmor {
-	public declare readonly item: Item;
+	public declare readonly item: EliteItemDto;
 	public declare readonly armor: FarmingArmorInfo;
 	public get slot() {
 		return this.armor.slot;
@@ -128,7 +128,7 @@ export class FarmingArmor {
 
 	private declare options?: { farmingLevel?: number };
 
-	constructor(item: Item, options?: PlayerOptions) {
+	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.options = options;
 		this.item = item;
 		const armor = ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO];
@@ -139,7 +139,7 @@ export class FarmingArmor {
 		this.armor = armor;
 
 		if (item.lore) {
-			this.rarity = GetRarityFromLore(item.lore);
+			this.rarity = getRarityFromLore(item.lore);
 		}
 
 		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
@@ -195,18 +195,14 @@ export class FarmingArmor {
 		return sum;
 	}
 
-	static isValid(item: Item): boolean {
-		return IsValidFarmingArmor(item);
+	static isValid(item: EliteItemDto): boolean {
+		return ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO] !== undefined;
 	}
 
-	static fromArray(items: Item[], options?: PlayerOptions): FarmingArmor[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingArmor[] {
 		return items
 			.filter((item) => FarmingArmor.isValid(item))
 			.map((item) => new FarmingArmor(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
-}
-
-export function IsValidFarmingArmor(item: Item): boolean {
-	return ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO] !== undefined;
 }
