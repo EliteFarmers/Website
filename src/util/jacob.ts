@@ -1,4 +1,4 @@
-export type JacobContestMedal = 'bronze' | 'silver' | 'gold';
+export type JacobContestMedal = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
 export interface RawJacobContest {
 	collected: number;
@@ -37,9 +37,11 @@ export function calculateJacobContestMedal(contest: RawJacobContest): JacobConte
 		return undefined;
 	}
 
-	if (position <= participants * 0.05 + 1) return 'gold';
-	if (position <= participants * 0.25 + 1) return 'silver';
-	if (position <= participants * 0.6 + 1) return 'bronze';
+	if (position <= Math.floor(participants * 0.02)) return 'diamond';
+	if (position <= Math.floor(participants * 0.05)) return 'platinum';
+	if (position <= Math.floor(participants * 0.10)) return 'gold';
+	if (position <= Math.floor(participants * 0.30)) return 'silver';
+	if (position <= Math.floor(participants * 0.60)) return 'bronze';
 
 	return undefined;
 }
