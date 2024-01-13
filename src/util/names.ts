@@ -21,6 +21,18 @@ export function getCropFromItemId(itemId: string) {
 	return cropItemIds[itemId];
 }
 
+export function getCropFromContestKey(contestKey: string) {
+	const split = contestKey.split(':');
+	if (!split.length) return undefined;
+
+	const crop = split.at(-1);
+	if (!crop) return undefined;
+
+	if (crop === '3') return Crop.CocoaBeans;
+
+	return cropItemIds[crop];
+}
+
 export function getItemIdFromCrop(crop: Crop) {
 	return itemIdsToCrop[crop];
 }
@@ -89,6 +101,8 @@ const cropItemIds: Record<string, Crop> = {
 	'INK_SACK:3': Crop.CocoaBeans,
 	MELON: Crop.Melon,
 	BROWN_MUSHROOM: Crop.Mushroom,
+	RED_MUSHROOM: Crop.Mushroom,
+	MUSHROOM_COLLECTION: Crop.Mushroom,
 	NETHER_STALK: Crop.NetherWart,
 	POTATO_ITEM: Crop.Potato,
 	PUMPKIN: Crop.Pumpkin,

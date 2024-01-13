@@ -46,6 +46,15 @@ export class SkyBlockTime {
 		return new SkyBlockTime((elapsedSeconds + SkyBlockTime.SkyBlockEpochSeconds) * 1000);
 	}
 
+	static fromContestKey(contestKey: string) {
+		// Contest keys are in this format: '160:6_30:CROP_ID'
+		// Year counts from zero, month and day start at 1 (for some reason)
+		const [ year, monthDay ] = contestKey.split(':') ?? [];
+		const [ month, day ] = monthDay?.split('_').map(Number) ?? [];
+	
+		return this.fromZeroIndexed(+(year ?? 0), (month ?? 0) - 1, (day ?? 0) - 1);
+	}
+
 	get monthName() {
 		return SkyBlockTime.MonthNames[this.month - 1];
 	}

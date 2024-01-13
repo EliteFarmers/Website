@@ -99,3 +99,21 @@ export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.Wheat]: 1833,
 	[Crop.Seeds]: 1833, // Not a crop, same as wheat
 };
+
+export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
+	Crop.Cactus,
+	Crop.Carrot,
+	Crop.CocoaBeans,
+	Crop.Melon,
+	Crop.Mushroom,
+	Crop.NetherWart,
+	Crop.Potato,
+	Crop.Pumpkin,
+	Crop.SugarCane,
+	Crop.Wheat,
+];
+
+export const LIST_OF_CROPS_WITH_SEEDS: Crop[] = [
+	...LIST_OF_CROPS,
+	Crop.Seeds,
+];
