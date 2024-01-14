@@ -23,6 +23,8 @@ export class FarmingTool {
 	public declare cultivating: number;
 	public declare reforge: Reforge | undefined;
 	public declare reforgeStats: ReforgeTier | undefined;
+	public declare logCounter: number;
+	public declare collAnalysis: number;
 
 	public declare farmingForDummies: number;
 	public declare recombobulated: boolean;
@@ -55,6 +57,9 @@ export class FarmingTool {
 
 		this.counter = this.getCounter();
 		this.cultivating = this.getCultivating() ?? 0;
+		this.logCounter = 0;
+		this.collAnalysis = 0;
+
 		this.setReforge(item.attributes?.modifier ?? '');
 
 		this.farmingForDummies = +(this.item.attributes?.farming_for_dummies_count ?? 0);
@@ -79,6 +84,22 @@ export class FarmingTool {
 
 	changeReforgeTo(reforgeId: string) {
 		this.setReforge(reforgeId);
+		this.fortune = this.getFortune();
+	}
+
+	changeFarmedCropsTo(crops: number) {
+		if (this.tool.type !== FarmingToolType.MathematicalHoe) return;
+
+		const digits = Math.floor(crops).toString().length - 4;
+
+		if (this.logCounter > 0) {
+			this.logCounter = digits * 16;
+		}
+
+		if (this.collAnalysis > 0) {
+			this.collAnalysis = digits * 8;
+		}
+
 		this.fortune = this.getFortune();
 	}
 
@@ -117,10 +138,16 @@ export class FarmingTool {
 
 		// Collection analysis and digit bonuses
 		if (this.tool.type === FarmingToolType.MathematicalHoe) {
-			const ability = this.getFarmingAbilityFortune(this);
-			if (ability > 0) {
-				this.fortuneBreakdown['Tool Ability'] = ability;
-				sum += ability;
+			this.getFarmingAbilityFortune(this);
+
+			if (this.logCounter > 0) {
+				this.fortuneBreakdown['Logarithmic Counter'] = this.logCounter;
+				sum += this.logCounter;
+			}
+
+			if (this.collAnalysis > 0) {
+				this.fortuneBreakdown['Collection Analysis'] = this.collAnalysis;
+				sum += this.collAnalysis;
 			}
 		}
 
@@ -191,14 +218,20 @@ export class FarmingTool {
 	}
 
 	private getFarmingAbilityFortune(tool: FarmingTool) {
-		let fortune = 0;
 		const regex = /§7You have §6\+(\d+)☘/g;
 
 		for (const line of tool.item.lore ?? []) {
-			fortune += extractNumberFromLine(line, regex) ?? 0;
+			const found = extractNumberFromLine(line, regex) ?? 0;
+			if (!found) continue;
+
+			if (!this.logCounter) {
+				this.logCounter = found;
+			} else if (!this.collAnalysis) {
+				this.collAnalysis = found;
+			}
 		}
 
-		return fortune;
+		return this.logCounter + this.collAnalysis;
 	}
 
 	static isValid(item: EliteItemDto | FarmingTool): boolean {

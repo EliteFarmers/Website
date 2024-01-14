@@ -108,10 +108,12 @@ export class FarmingPlayer {
 
 	selectTool(tool: FarmingTool) {
 		this.selectedTool = tool;
+		this.fortune = this.getGeneralFortune();
 	}
 
 	selectPet(pet: FarmingPet) {
 		this.selectedPet = pet;
+		this.fortune = this.getGeneralFortune();
 	}
 
 	getGeneralFortune() {
