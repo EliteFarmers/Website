@@ -2,51 +2,29 @@
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
-	import type { FarmingTool, PlayerOptions } from 'farming-weight';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
+	import type { FarmingTool } from 'farming-weight';
 	import { Button, Label, Select } from 'flowbite-svelte';
 	import { EditOutline } from 'flowbite-svelte-icons';
 	import { slide } from 'svelte/transition';
 
 	export let tool: FarmingTool;
-	export let options: PlayerOptions;
-	export let fortune = 0;
+	export let player: RatesPlayerStore;
 
-	const counterOptions = [10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000];
+	const counterOptions = [10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000];
 
 	let expanded = false;
-	let bountiful = tool.reforge?.name === 'Bountiful';
+	let reforge = tool.reforge?.name.toLowerCase() ?? 'bountiful';
+
 	let counter = counterOptions.findLast((c) => c < tool.farmed) ?? 10_000;
-
-	$: if (bountiful) {
-		tool.changeReforgeTo('bountiful');
-		console.log('bountiful');
-	} else {
-		tool.changeReforgeTo('blessed');
-		console.log('blessed');
-	}
-
-	$: {
-		tool.item.attributes ??= {};
-
-		if (tool.item.attributes?.['mined_crops']) {
-			tool.item.attributes['mined_crops'] = counter.toString();
-		}
-
-		if (tool.item.attributes?.['cultivating']) {
-			tool.item.attributes['cultivating'] = counter.toString();
-		}
-
-		tool.rebuildTool(tool.item, options);
-		tool = tool;
-	}
 
 	$: fortune = tool.fortune;
 </script>
 
-<div class="flex flex-col gap-2 w-full {expanded ? 'border-zinc-100 border-solid border-2 rounded-md' : ''}">
+<div class="flex flex-col gap-2 w-full rounded-md">
 	<div class="flex justify-between items-center w-full">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.item.name ?? '')}</span>
+		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.name ?? '')}</span>
 
 		<div class="flex items-center gap-2">
 			<Button color="none" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
@@ -75,9 +53,33 @@
 	{#if expanded}
 		<div class="flex flex-col gap-2" transition:slide>
 			<Label>Reforge</Label>
-			<Select bind:value={bountiful} size="sm" placeholder="Reforge" class="dark:bg-zinc-800">
-				<option value={true}>Bountiful</option>
-				<option value={false}>Blessed</option>
+			<Select
+				bind:value={reforge}
+				size="sm"
+				placeholder="Reforge"
+				class="dark:bg-zinc-800"
+				on:change={() => {
+					tool.changeReforgeTo(reforge);
+					player.refresh();
+				}}
+			>
+				<option value="bountiful">Bountiful</option>
+				<option value="blessed">Blessed</option>
+			</Select>
+			<Label>Farmed Crops</Label>
+			<Select
+				bind:value={counter}
+				size="sm"
+				placeholder="Farmed Crops"
+				class="dark:bg-zinc-800"
+				on:change={() => {
+					tool.changeFarmedCropsTo(counter);
+					player.refresh();
+				}}
+			>
+				{#each counterOptions as c (c)}
+					<option value={c}>{c.toLocaleString()}</option>
+				{/each}
 			</Select>
 			<p class="text-gray-500 text-sm">More config options coming soon!</p>
 		</div>

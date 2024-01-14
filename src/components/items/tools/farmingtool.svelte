@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CropDisplayName, type FarmingTool as FT } from 'farming-weight';
+	import { getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
 	import { FormatMinecraftText } from '$lib/format';
 	import Fortunebreakdown from './fortunebreakdown.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
@@ -21,7 +21,7 @@
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<div class="font-semibold text-md md:text-lg">{@html FormatMinecraftText(tool.item.name ?? '')}</div>
 			<div class="flex flex-row gap-1 items-center">
-				<img src={PROPER_CROP_TO_IMG[CropDisplayName(tool.crop)]} alt="Crop" class="pixelated w-5 h-5" />
+				<img src={PROPER_CROP_TO_IMG[getCropDisplayName(tool.crop)]} alt="Crop" class="pixelated w-5 h-5" />
 				<div class="text-md md:text-lg">{tool.farmed.toLocaleString()}</div>
 			</div>
 		</div>

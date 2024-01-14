@@ -1,15 +1,19 @@
 <script lang="ts">
 	import {
-		CalculateDetailedAverageDrops,
-		CreatePlayer,
+		calculateDetailedAverageDrops,
 		Crop,
-		CropFromName,
+		getCropFromName,
+		FarmingArmor,
+		FarmingPet,
+		FarmingTool,
+		LotusGear,
 		type PlayerOptions,
 	} from 'farming-weight';
-	import { Input, Label, Radio, Range, Select } from 'flowbite-svelte';
+	import { Label, Radio, Range, Select } from 'flowbite-svelte';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getRatesData } from '$lib/stores/ratesData';
+	import { getRatesPlayer } from '$lib/stores/ratesPlayer';
 	import { getLevelProgress } from '$lib/format';
 
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
@@ -25,20 +29,25 @@
 
 	export let data: PageData;
 
-	let bountiful = true;
 	let mooshroom = true;
 	let blocksBroken = 24_000 * 3;
+
 	$: selectedToolIndex = 0;
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 
+	$: tools = FarmingTool.fromArray(data.member?.farmingWeight?.inventory?.tools ?? []);
+	$: armor = FarmingArmor.fromArray(data.member?.farmingWeight?.inventory?.armor ?? []);
+	$: equipment = LotusGear.fromArray(data.member?.farmingWeight?.inventory?.equipment ?? []);
+	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
+
 	$: options = {
-		tools: data.member?.farmingWeight?.inventory?.tools ?? [],
-		armor: data.member?.farmingWeight?.inventory?.armor ?? [],
-		equipment: data.member?.farmingWeight?.inventory?.equipment ?? [],
+		tools: tools,
+		armor: armor,
+		equipment: equipment,
 		accessories: data.member?.farmingWeight?.inventory?.accessories ?? [],
-		pets: data.member?.pets ?? [],
+		pets: pets,
 
 		personalBests: data.member.jacob?.stats?.personalBests ?? {},
 		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
@@ -57,28 +66,28 @@
 		).level,
 	} satisfies PlayerOptions;
 
-	$: player = CreatePlayer(options);
-	$: cropFortune = player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat);
+	$: player = getRatesPlayer(options);
+	$: cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
 
-	$: if (selectedToolIndex || selectedCrop) {
-		if (player.tools[selectedToolIndex]?.crop !== CropFromName(selectedCrop)) {
-			selectedToolIndex = player.tools.findIndex((t) => t.crop === CropFromName(selectedCrop));
+	$: if (player) {
+		console.log(selectedToolIndex, selectedCrop);
+		if ($player.tools[selectedToolIndex]?.crop !== getCropFromName(selectedCrop)) {
+			selectedToolIndex = $player.tools.findIndex((t) => t.crop === getCropFromName(selectedCrop));
 		}
 
-		player.selectTool(player.tools[selectedToolIndex]);
-		cropFortune = player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat);
+		$player.selectTool($player.tools[selectedToolIndex]);
+		cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
 	}
 
-	$: calculator = CalculateDetailedAverageDrops({
-		farmingFortune: player.fortune + cropFortune.fortune,
-		bountiful: player.selectedTool?.reforge?.name === 'Bountiful',
+	$: calculator = calculateDetailedAverageDrops({
+		farmingFortune: $player.fortune + cropFortune.fortune,
+		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
 		mooshroom: mooshroom,
 		blocksBroken: blocksBroken,
 	});
-	
+
 	$: selectedCrop = Object.entries($selectedCrops).find(([key, value]) => value)?.[0] ?? '';
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
-
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
@@ -96,8 +105,8 @@
 
 				<Fortunebreakdown
 					title="Total Farming Fortune"
-					total={player.fortune + cropFortune.fortune}
-					breakdown={{ ...player.breakdown, ...cropFortune.breakdown }}
+					total={$player.fortune + cropFortune.fortune}
+					breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
 					placement="right"
 				/>
 			</div>
@@ -111,7 +120,7 @@
 					</div>
 				</Label>
 				<Label defaultClass="flex-1">
-					Community Center Upgrade  
+					Community Center Upgrade
 					<div class="flex flex-row gap-1 items-center">
 						<Range min={0} max={10} bind:value={$ratesData.communityCenter} step={1} />
 						<p class="text-lg p-2 w-6">{$ratesData.communityCenter}</p>
@@ -128,9 +137,19 @@
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Label>Farming Pet</Label>
-				<Select bind:value={mooshroom} size="sm" placeholder="Select a pet!" class="dark:bg-zinc-800">
-					<option value={false}>Elephant</option>
-					<option value={true}>Mooshroom</option>
+				<Select
+					bind:value={$player.selectedPet}
+					size="sm"
+					placeholder="Select a pet!"
+					class="dark:bg-zinc-800"
+					on:change={() => {
+						$player.selectPet($player.selectedPet ?? $player.pets[0]);
+						player.refresh();
+					}}
+				>
+					{#each $player.pets as pet (pet.pet.uuid)}
+						<option value={pet}>{pet.info.name} [{pet.level}]</option>
+					{/each}
 				</Select>
 			</div>
 
@@ -141,8 +160,8 @@
 
 						<Fortunebreakdown
 							title="{selectedCrop} Fortune"
-							total={player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat).fortune}
-							breakdown={player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
+							total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
+							breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
 							placement="right"
 						/>
 					</div>
@@ -157,14 +176,24 @@
 						<Label defaultClass="flex-1">
 							Garden Milestone
 							<div class="flex flex-row gap-1 items-center">
-								<Range min={0} max={46} bind:value={$ratesData.milestones[cropKey(selectedCrop)]} step={1} />
+								<Range
+									min={0}
+									max={46}
+									bind:value={$ratesData.milestones[cropKey(selectedCrop)]}
+									step={1}
+								/>
 								<p class="text-lg p-2 w-6">{$ratesData.milestones[cropKey(selectedCrop)]}</p>
 							</div>
 						</Label>
 						<Label defaultClass="flex-1">
-							Crop Upgrade 
+							Crop Upgrade
 							<div class="flex flex-row gap-1 items-center">
-								<Range min={0} max={10} bind:value={$ratesData.cropUpgrades[cropKey(selectedCrop)]} step={1} />
+								<Range
+									min={0}
+									max={10}
+									bind:value={$ratesData.cropUpgrades[cropKey(selectedCrop)]}
+									step={1}
+								/>
 								<p class="text-lg p-2 w-6">{$ratesData.cropUpgrades[cropKey(selectedCrop)]}</p>
 							</div>
 						</Label>
@@ -173,38 +202,46 @@
 			{/if}
 
 			<div class="flex flex-col gap-2 max-w-lg w-full px-4">
-				{#each player.tools.filter((t) => $selectedCrops[PROPER_CROP_NAME[t.crop] ?? '']) as tool (tool.item.uuid)}
-					<div class="flex flex-row gap-2 justify-start items-center w-full">
-						<Radio type="radio" name="tool" on:change={() => {
-							selectedToolIndex = player.tools.findIndex((t) => t.item.uuid === tool.item.uuid);
-							player.selectTool(tool);
-						}} />
-						<Toolconfig {options} {tool} />
-					</div>
+				{#each $player.tools as tool (tool.item.uuid)}
+					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
+						<div class="flex flex-row gap-2 justify-start items-center w-full">
+							<Radio
+								type="radio"
+								name="tool"
+								on:change={() => {
+									selectedToolIndex = $player.tools.findIndex((t) => t.item.uuid === tool.item.uuid);
+									// cropFortune = player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat);
+									$player.selectTool(tool);
+									player.refresh();
+								}}
+							/>
+							<Toolconfig {tool} {player} />
+						</div>
+					{/if}
 				{/each}
 
-				{#if player.tools.length === 0}
+				{#if $player.tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Armorselect {options} />
-				{#if player.tools.length === 0}
+				{#if $player.tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#if player.equipment.length === 0}
+				{#if $player.equipment.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
 				{:else}
 					<div class="flex justify-between items-center w-full px-4 py-2">
 						<span class="text-lg font-semibold">Lotus Gear Total</span>
-						<Fortunebreakdown total={player.equipment.reduce((acc, l) => acc + l.fortune, 0)} />
+						<Fortunebreakdown total={$player.equipment.reduce((acc, l) => acc + l.fortune, 0)} />
 					</div>
 				{/if}
-				<Lotusgear items={player.equipment} />
+				<Lotusgear items={$player.equipment} />
 			</div>
 		</section>
 		<section class="flex-1 w-full p-4 rounded-md bg-gray-100 dark:bg-zinc-800">

@@ -6,7 +6,7 @@
 
 	export let options: PlayerOptions;
 
-	$: armor = options.armor.filter((i) => FarmingArmor.isValid(i)).map((i) => new FarmingArmor(i, options));
+	$: armor = options.armor as FarmingArmor[];
 
 	$: helmet = armor.filter((a) => a.slot === GearSlot.Helmet)?.sort((a, b) => b.fortune - a.fortune);
 	$: chestplate = armor.filter((a) => a.slot === GearSlot.Chestplate)?.sort((a, b) => b.fortune - a.fortune);
