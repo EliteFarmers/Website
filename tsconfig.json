@@ -6,7 +6,7 @@
 		"target": "ESNext",
 		"moduleDetection": "force",
 		"moduleResolution": "Node",
-		"module": "ESNext",
+		"module": "CommonJS",
 		
 		"rootDir": "./src",
 		"outDir": "./dist",
