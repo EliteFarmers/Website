@@ -12,7 +12,7 @@
 	$: sum = total ?? list.reduce((acc, [, value]) => acc + value, 0);
 </script>
 
-<div class="relative rounded-md bg-green-300 dark:bg-green-600 min-h-4 h-full">
+<div class="flex flex-row items-center relative rounded-md bg-green-300 dark:bg-green-600 min-h-4 h-full">
 	<p class="relative text-md md:text-lg px-1 z-10 font-mono">
 		{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{sum.toLocaleString()}&nbsp;
 	</p>

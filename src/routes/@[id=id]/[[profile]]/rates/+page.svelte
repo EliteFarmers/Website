@@ -7,6 +7,7 @@
 		FarmingPet,
 		FarmingTool,
 		LotusGear,
+		FarmingPets,
 		type PlayerOptions,
 	} from 'farming-weight';
 	import { Label, Radio, Range, Select } from 'flowbite-svelte';
@@ -42,12 +43,18 @@
 	$: equipment = LotusGear.fromArray(data.member?.farmingWeight?.inventory?.equipment ?? []);
 	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
 
+	$: selectedPet = undefined as FarmingPet | undefined;
+	$: selectedTool = undefined as FarmingTool | undefined;
+
 	$: options = {
 		tools: tools,
 		armor: armor,
 		equipment: equipment,
 		accessories: data.member?.farmingWeight?.inventory?.accessories ?? [],
 		pets: pets,
+
+		selectedTool: selectedTool,
+		selectedPet: selectedPet,
 
 		personalBests: data.member.jacob?.stats?.personalBests ?? {},
 		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
@@ -56,6 +63,7 @@
 		plotsUnlocked: $ratesData.plotsUnlocked,
 		gardenLevel: $ratesData.gardenLevel,
 		communityCenter: $ratesData.communityCenter,
+		strength: $ratesData.strength,
 
 		farmingXp: data.member?.skills?.farming,
 		bestiaryKills: (data.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
@@ -69,25 +77,18 @@
 	$: player = getRatesPlayer(options);
 	$: cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
 
-	$: if (player) {
-		console.log(selectedToolIndex, selectedCrop);
-		if ($player.tools[selectedToolIndex]?.crop !== getCropFromName(selectedCrop)) {
-			selectedToolIndex = $player.tools.findIndex((t) => t.crop === getCropFromName(selectedCrop));
-		}
-
-		$player.selectTool($player.tools[selectedToolIndex]);
-		cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
-	}
-
 	$: calculator = calculateDetailedAverageDrops({
 		farmingFortune: $player.fortune + cropFortune.fortune,
 		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
-		mooshroom: mooshroom,
+		mooshroom: selectedPet?.type === FarmingPets.MooshroomCow,
+		dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
 		blocksBroken: blocksBroken,
 	});
 
 	$: selectedCrop = Object.entries($selectedCrops).find(([key, value]) => value)?.[0] ?? '';
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
+
+	$: selectedToolId = $player.selectedTool?.item.uuid?.slice() ?? '';
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
@@ -100,8 +101,8 @@
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col items-center w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
-			<div class="flex flex-row gap-2">
-				<p>Total Farming Fortune</p>
+			<div class="flex flex-row gap-2 my-2 items-center">
+				<h2 class="text-2xl">Total Farming Fortune</h2>
 
 				<Fortunebreakdown
 					title="Total Farming Fortune"
@@ -111,61 +112,64 @@
 				/>
 			</div>
 
-			<div class="flex flex-1 flex-col gap-2 w-full">
-				<Label defaultClass="flex-1">
-					Unlocked Plots
-					<div class="flex flex-row gap-1 items-center">
-						<Range min={0} max={24} bind:value={$ratesData.plotsUnlocked} step={1} />
-						<p class="text-lg p-2 w-6">{$ratesData.plotsUnlocked}</p>
-					</div>
-				</Label>
-				<Label defaultClass="flex-1">
-					Community Center Upgrade
-					<div class="flex flex-row gap-1 items-center">
-						<Range min={0} max={10} bind:value={$ratesData.communityCenter} step={1} />
-						<p class="text-lg p-2 w-6">{$ratesData.communityCenter}</p>
-					</div>
-				</Label>
-				<Label defaultClass="flex-1">
-					Garden Level
-					<div class="flex flex-row gap-1 items-center">
-						<Range min={0} max={15} bind:value={$ratesData.gardenLevel} step={1} />
-						<p class="text-lg p-2 w-6">{$ratesData.gardenLevel}</p>
-					</div>
-				</Label>
-			</div>
+			<div class="hidden">
+				<div class="flex flex-1 flex-col gap-2 w-full">
+					<Label defaultClass="flex-1">
+						Unlocked Plots
+						<div class="flex flex-row gap-1 items-center">
+							<Range min={0} max={24} bind:value={$ratesData.plotsUnlocked} step={1} />
+							<p class="text-lg p-2 w-12">{$ratesData.plotsUnlocked}</p>
+						</div>
+					</Label>
+					<Label defaultClass="flex-1">
+						Community Center Upgrade
+						<div class="flex flex-row gap-1 items-center">
+							<Range min={0} max={10} bind:value={$ratesData.communityCenter} step={1} />
+							<p class="text-lg p-2 w-12">{$ratesData.communityCenter}</p>
+						</div>
+					</Label>
+					<Label defaultClass="flex-1">
+						Garden Level
+						<div class="flex flex-row gap-1 items-center">
+							<Range min={0} max={15} bind:value={$ratesData.gardenLevel} step={1} />
+							<p class="text-lg p-2 w-12">{$ratesData.gardenLevel}</p>
+						</div>
+					</Label>
+					<Label defaultClass="flex-1">
+						Strength
+						<div class="flex flex-row gap-1 items-center">
+							<Range min={0} max={1500} bind:value={$ratesData.strength} step={1} />
+							<p class="text-lg p-2 w-12">{$ratesData.strength}</p>
+						</div>
+					</Label>
+				</div>
 
-			<div class="flex flex-col gap-2 max-w-lg w-full">
-				<Label>Farming Pet</Label>
-				<Select
-					bind:value={$player.selectedPet}
-					size="sm"
-					placeholder="Select a pet!"
-					class="dark:bg-zinc-800"
-					on:change={() => {
-						$player.selectPet($player.selectedPet ?? $player.pets[0]);
-						player.refresh();
-					}}
-				>
-					{#each $player.pets as pet (pet.pet.uuid)}
-						<option value={pet}>{pet.info.name} [{pet.level}]</option>
-					{/each}
-				</Select>
+				<div class="flex flex-col gap-2 max-w-lg w-full">
+					<Label>Farming Pet</Label>
+					<Select bind:value={selectedPet} size="sm" placeholder="Select a pet!" class="dark:bg-zinc-800">
+						{#each $player.pets as pet (pet.pet.uuid)}
+							<option value={pet}>
+								<span>
+									{pet.rarity}
+									{pet.info.name} [{pet.level}] + {pet.item?.name ?? 'No Fortune Item'}
+								</span>
+							</option>
+						{/each}
+					</Select>
+				</div>
 			</div>
 
 			{#if selectedCrop}
-				{#key selectedToolIndex + selectedCrop}
-					<div class="flex flex-row gap-2">
-						<p>{selectedCrop} Fortune</p>
+				<div class="flex flex-row gap-2 items-center">
+					<h3 class="text-xl">{selectedCrop} Fortune</h3>
 
-						<Fortunebreakdown
-							title="{selectedCrop} Fortune"
-							total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
-							breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
-							placement="right"
-						/>
-					</div>
-				{/key}
+					<Fortunebreakdown
+						title="{selectedCrop} Fortune"
+						total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
+						breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
+						placement="right"
+					/>
+				</div>
 				<div class="flex flex-row items-center gap-2 md:gap-4 w-full max-w-lg">
 					<img
 						src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
@@ -208,11 +212,10 @@
 							<Radio
 								type="radio"
 								name="tool"
+								bind:group={selectedToolId}
+								value={tool.item.uuid ?? ''}
 								on:change={() => {
-									selectedToolIndex = $player.tools.findIndex((t) => t.item.uuid === tool.item.uuid);
-									// cropFortune = player.getCropFortune(CropFromName(selectedCrop) ?? Crop.Wheat);
-									$player.selectTool(tool);
-									player.refresh();
+									selectedTool = tool;
 								}}
 							/>
 							<Toolconfig {tool} {player} />
