@@ -3,13 +3,16 @@
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { Accordion, AccordionItem } from 'flowbite-svelte';
 	import Recordparticipation from './recordparticipation.svelte';
-	import { anyCropSelected, selectedCrops } from '$lib/stores/selectedCrops';
+	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 
 	export let crop = 'Wheat';
 	export let entries: components['schemas']['ContestParticipationWithTimestampDto'][] = [];
 
 	let expand = false;
 	export let collapsed = true;
+
+	const anyCropSelected = getAnyCropSelected();
+	const selectedCrops = getSelectedCrops();
 
 	$: cropUrl = PROPER_CROP_TO_IMG[crop];
 	$: sorted =

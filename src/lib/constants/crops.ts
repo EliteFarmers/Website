@@ -37,6 +37,19 @@ export const API_CROP_TO_CROP = {
 	NETHER_STALK: 'netherwart',
 };
 
+export const PROPER_CROP_TO_API_CROP = {
+	Cactus: 'CACTUS',
+	Carrot: 'CARROT_ITEM',
+	'Cocoa Beans': 'INK_SACK:3',
+	Melon: 'MELON',
+	Mushroom: 'MUSHROOM_COLLECTION',
+	'Nether Wart': 'NETHER_STALK',
+	Potato: 'POTATO_ITEM',
+	Pumpkin: 'PUMPKIN',
+	'Sugar Cane': 'SUGAR_CANE',
+	Wheat: 'WHEAT',
+};
+
 export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
 	Cactus: 'CACTUS',
 	Carrot: 'CARROT',

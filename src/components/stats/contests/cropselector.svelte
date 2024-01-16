@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { selectedCrops } from '$lib/stores/selectedCrops';
+	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
+	const selectedCrops = getSelectedCrops();
+
+	export let radio = false;
+
+	function click(crop: string) {
+		if (radio) {
+			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [crop]: true });
+		} else {
+			selectedCrops.update((crops) => ({ ...crops, [crop]: !crops[crop] }));
+		}
+	}
 
 	$: crops = Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b));
 </script>
@@ -13,7 +24,7 @@
 			]
 				? 'bg-gray-300 dark:bg-zinc-700'
 				: 'bg-gray-100 dark:bg-zinc-800'}"
-			on:click={() => ($selectedCrops[crop] = !$selectedCrops[crop])}
+			on:click={() => click(crop)}
 		>
 			<img {src} alt={crop[0]} class="w-12 h-12 pixelated" />
 		</button>

@@ -1,7 +1,7 @@
-import type { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-import { writable } from 'svelte/store';
+import { getContext, setContext } from 'svelte';
+import { writable, type Writable } from 'svelte/store';
 
-export const selectedCrops = writable<Record<keyof typeof PROPER_CROP_TO_IMG, boolean>>({
+export const DEFAULT_SELECTED_CROPS = {
 	Cactus: false,
 	Carrot: false,
 	'Cocoa Beans': false,
@@ -12,10 +12,26 @@ export const selectedCrops = writable<Record<keyof typeof PROPER_CROP_TO_IMG, bo
 	Pumpkin: false,
 	'Sugar Cane': false,
 	Wheat: false,
-});
+};
 
-export const anyCropSelected = writable(false);
+export function initAnyCropSelected() {
+	setContext('anyCropSelected', writable(false));
+}
 
-selectedCrops.subscribe((crops) => {
-	anyCropSelected.set(Object.values(crops).some((selected) => selected));
-});
+export function getAnyCropSelected() {
+	return getContext<Writable<boolean>>('anyCropSelected');
+}
+
+export function initSelectedCrops(anyStore: Writable<boolean>) {
+	const store = writable<Record<string, boolean>>(DEFAULT_SELECTED_CROPS);
+
+	store.subscribe((crops) => {
+		anyStore.set(Object.values(crops).some((selected) => selected));
+	});
+
+	setContext('selectedCrops', store);
+}
+
+export function getSelectedCrops() {
+	return getContext<Writable<Record<string, boolean>>>('selectedCrops');
+}

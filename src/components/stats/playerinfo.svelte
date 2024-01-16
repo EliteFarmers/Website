@@ -29,7 +29,7 @@
 	$: rank = GetRankDefaults(rankName as RankName);
 </script>
 
-<section class="flex justify-center w-full my-8">
+<section class="flex justify-center w-full mt-8">
 	<div
 		class="flex flex-col lg:flex-row justify-center items-center gap-2 lg:gap-8 xl:gap-16 p-0 sm:p-4 rounded-lg w-[98%] lg:w-[90%] lg:bg-gray-100 lg:dark:bg-zinc-800"
 	>
