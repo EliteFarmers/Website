@@ -15,8 +15,8 @@ dependencies:
     specifier: ^2.3.2
     version: 2.3.2
   farming-weight:
-    specifier: ^0.2.13
-    version: 0.2.13
+    specifier: ^0.3.4
+    version: 0.3.4
   flowbite:
     specifier: ^1.8.1
     version: 1.8.1
@@ -1657,8 +1657,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /farming-weight@0.2.13:
-    resolution: {integrity: sha512-tEpnVcZspoOogQLPuFn/dLbYzGfPMYEWCFHgmYYDyclxePCMUWNXUwHmtRyP/JqH9YtmaDjUgeI1XZfFKr8hpQ==}
+  /farming-weight@0.3.4:
+    resolution: {integrity: sha512-fV8oEI/r2qqxQ6gjUeaSgYjWWMblvapWDUkqAfeqGh3csuFx0XzGDxsHDJxcVgm1VnCjcVwt4TyXHJ7mjWWMeg==}
     dev: false
 
   /fast-deep-equal@3.1.3:

@@ -5,7 +5,6 @@
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
-	import { LotusGear } from 'farming-weight';
 
 	import Skills from '$comp/stats/skills.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
@@ -14,7 +13,6 @@
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
-	import Lotusgear from '$comp/rates/lotusgear.svelte';
 	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
@@ -40,10 +38,6 @@
 	$: description = `${ign} has ${weightStr} Farming Weight${
 		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
 	} View the site to see full information.`;
-
-	$: lotus = (data.member?.farmingWeight?.inventory?.equipment ?? [])
-		.filter((t) => LotusGear.isValid(t))
-		.map((t) => new LotusGear(t));
 </script>
 
 <Head title={ign + ' | Farming Weight'} {description}>
@@ -89,7 +83,6 @@
 	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
 		<Collections {collections} ranks={data.ranks?.collections} />
 		<div class="flex flex-1 flex-col gap-4">
-			<Lotusgear items={lotus} />
 			<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
 		</div>
 	</div>

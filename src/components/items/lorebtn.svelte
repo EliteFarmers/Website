@@ -3,9 +3,9 @@
 	import { Button, Modal } from 'flowbite-svelte';
 	import Lore from './lore.svelte';
 	import { FileLinesSolid } from 'flowbite-svelte-icons';
-	import type { Item } from 'farming-weight';
+	import type { EliteItemDto } from 'farming-weight';
 
-	export let item: Item;
+	export let item: EliteItemDto;
 
 	let openModal = false;
 </script>

@@ -17,8 +17,6 @@
 	let reforge = tool.reforge?.name.toLowerCase() ?? 'bountiful';
 
 	let counter = counterOptions.findLast((c) => c < tool.farmed) ?? 10_000;
-
-	$: fortune = tool.fortune;
 </script>
 
 <div class="flex flex-col gap-2 w-full rounded-md">

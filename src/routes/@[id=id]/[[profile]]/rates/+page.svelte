@@ -10,7 +10,8 @@
 		FarmingPets,
 		type PlayerOptions,
 	} from 'farming-weight';
-	import { Label, Radio, Range, Select } from 'flowbite-svelte';
+	import { Label, Radio, Range, Select, Button } from 'flowbite-svelte';
+	import { GearSolid } from 'flowbite-svelte-icons';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getRatesData } from '$lib/stores/ratesData';
@@ -30,10 +31,8 @@
 
 	export let data: PageData;
 
-	let mooshroom = true;
+	let optionsShown = true;
 	let blocksBroken = 24_000 * 3;
-
-	$: selectedToolIndex = 0;
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
@@ -85,7 +84,7 @@
 		blocksBroken: blocksBroken,
 	});
 
-	$: selectedCrop = Object.entries($selectedCrops).find(([key, value]) => value)?.[0] ?? '';
+	$: selectedCrop = Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '';
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
 	$: selectedToolId = $player.selectedTool?.item.uuid?.slice() ?? '';
@@ -101,18 +100,26 @@
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col items-center w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
-			<div class="flex flex-row gap-2 my-2 items-center">
-				<h2 class="text-2xl">Total Farming Fortune</h2>
+			<div class="flex flex-row justify-between items-center w-full">
+				<div class="flex-1 hidden sm:block" />
+				<div class="flex flex-3 flex-row gap-2 my-2 items-center">
+					<h2 class="text-lg md:text-2xl">Total Farming Fortune</h2>
 
-				<Fortunebreakdown
-					title="Total Farming Fortune"
-					total={$player.fortune + cropFortune.fortune}
-					breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
-					placement="right"
-				/>
+					<Fortunebreakdown
+						title="Total Farming Fortune"
+						total={$player.fortune + cropFortune.fortune}
+						breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
+						placement="right"
+					/>
+				</div>
+				<div class="flex-1 flex justify-end">
+					<Button variant="raised" class="m-1" size="sm" on:click={() => (optionsShown = !optionsShown)}>
+						<GearSolid size="sm" />
+					</Button>
+				</div>
 			</div>
 
-			<div class="hidden">
+			{#if optionsShown}
 				<div class="flex flex-1 flex-col gap-2 w-full">
 					<Label defaultClass="flex-1">
 						Unlocked Plots
@@ -143,21 +150,7 @@
 						</div>
 					</Label>
 				</div>
-
-				<div class="flex flex-col gap-2 max-w-lg w-full">
-					<Label>Farming Pet</Label>
-					<Select bind:value={selectedPet} size="sm" placeholder="Select a pet!" class="dark:bg-zinc-800">
-						{#each $player.pets as pet (pet.pet.uuid)}
-							<option value={pet}>
-								<span>
-									{pet.rarity}
-									{pet.info.name} [{pet.level}] + {pet.item?.name ?? 'No Fortune Item'}
-								</span>
-							</option>
-						{/each}
-					</Select>
-				</div>
-			</div>
+			{/if}
 
 			{#if selectedCrop}
 				<div class="flex flex-row gap-2 items-center">
@@ -203,8 +196,22 @@
 						</Label>
 					</div>
 				</div>
+			{:else}
+				<p class="text-lg font-semibold text-center">Select a crop to see its fortune!</p>
 			{/if}
-
+			<div class="flex flex-col gap-2 max-w-lg w-full">
+				<Label>Farming Pet</Label>
+				<Select bind:value={selectedPet} size="sm" placeholder="Select a pet!" class="dark:bg-zinc-800">
+					{#each $player.pets as pet (pet.pet.uuid)}
+						<option value={pet}>
+							<span>
+								{pet.rarity}
+								{pet.info.name} [{pet.level}] + {pet.item?.name ?? 'No Fortune Item'}
+							</span>
+						</option>
+					{/each}
+				</Select>
+			</div>
 			<div class="flex flex-col gap-2 max-w-lg w-full px-4">
 				{#each $player.tools as tool (tool.item.uuid)}
 					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}

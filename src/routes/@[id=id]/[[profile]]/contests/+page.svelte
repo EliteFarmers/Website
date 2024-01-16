@@ -77,5 +77,11 @@
 				</TimelineItemVertical>
 			{/each}
 		</Timeline>
+		{#if data.contestsCount === 0}
+			<div class="flex flex-col justify-center items-center w-full">
+				<p class="text-2xl font-bold">No Contests</p>
+				<p class="text-lg">This player has not participated in any contests.</p>
+			</div>
+		{/if}
 	</div>
 </section>
