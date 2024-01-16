@@ -113,7 +113,4 @@ export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
 	Crop.Wheat,
 ];
 
-export const LIST_OF_CROPS_WITH_SEEDS: Crop[] = [
-	...LIST_OF_CROPS,
-	Crop.Seeds,
-];
+export const LIST_OF_CROPS_WITH_SEEDS: Crop[] = [...LIST_OF_CROPS, Crop.Seeds];

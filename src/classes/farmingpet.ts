@@ -9,6 +9,7 @@ import {
 } from '../constants/pets';
 import { Rarity, Stat } from '../constants/reforges';
 import { Skill } from '../constants/skills';
+import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
 
@@ -27,7 +28,7 @@ export class FarmingPet {
 	public declare fortune: number;
 	public declare breakdown: Record<string, number>;
 
-	private declare readonly options?: PlayerOptions;
+	private declare options?: PlayerOptions;
 
 	constructor(pet: FarmingPetType, options?: PlayerOptions) {
 		this.options = options;
@@ -40,11 +41,16 @@ export class FarmingPet {
 
 		this.type = pet.type as FarmingPets;
 
-		this.rarity = (pet.tier as Rarity) ?? Rarity.Common;
+		this.rarity = getRarityFromLore([pet.tier ?? '']) ?? Rarity.Common;
 		this.level = getPetLevel(pet);
 
 		this.item = pet.heldItem ? FARMING_PET_ITEMS[pet.heldItem as keyof typeof FARMING_PET_ITEMS] : undefined;
 
+		this.fortune = this.getFortune();
+	}
+
+	setOptions(options: PlayerOptions) {
+		this.options = options;
 		this.fortune = this.getFortune();
 	}
 
@@ -85,8 +91,10 @@ export class FarmingPet {
 
 			if (stats) {
 				fortune += stats;
-				breakdown[this.item.name] = stats;
-			} else if (perLevelStats && perLevelStats.skill === Skill.Garden) {
+				breakdown[this.item.name + ' Stats'] = stats;
+			}
+
+			if (perLevelStats && perLevelStats.skill === Skill.Garden) {
 				const amount = (perLevelStats?.stats?.[Stat.FarmingFortune] ?? 0) * (this.options?.gardenLevel ?? 0);
 				fortune += amount;
 				breakdown[this.item.name] = amount;
@@ -94,6 +102,7 @@ export class FarmingPet {
 		}
 
 		this.breakdown = breakdown;
+		this.fortune = fortune;
 		return fortune;
 	}
 

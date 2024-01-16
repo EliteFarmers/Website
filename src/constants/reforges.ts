@@ -5,8 +5,11 @@ export enum Rarity {
 	Epic = 'Epic',
 	Legendary = 'Legendary',
 	Mythic = 'Mythic',
-	Special = 'Special',
 	Divine = 'Divine',
+	Special = 'Special',
+	VerySpecial = 'Very Special',
+	Ultimate = 'Ultimate',
+	Admin = 'Admin',
 }
 
 export enum Stat {
@@ -465,4 +468,18 @@ export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.ForagingWisdom]: '☯',
 	[Stat.Pristine]: '✧',
 	[Stat.BonusPestChance]: 'ൠ',
+};
+
+export const RARITY_COLORS: Record<Rarity, string> = {
+	[Rarity.Common]: '§f',
+	[Rarity.Uncommon]: '§a',
+	[Rarity.Rare]: '§9',
+	[Rarity.Epic]: '§5',
+	[Rarity.Legendary]: '§6',
+	[Rarity.Mythic]: '§d',
+	[Rarity.Divine]: '§b',
+	[Rarity.Special]: '§c',
+	[Rarity.VerySpecial]: '§c',
+	[Rarity.Ultimate]: '§4',
+	[Rarity.Admin]: '§4',
 };

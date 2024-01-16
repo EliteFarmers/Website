@@ -19,10 +19,16 @@ function getRarity(line: string) {
 			return Rarity.Legendary;
 		case line.includes('MYTHIC'):
 			return Rarity.Mythic;
-		case line.includes('SPECIAL'):
-			return Rarity.Special;
 		case line.includes('DIVINE'):
 			return Rarity.Divine;
+		case line.includes('SPECIAL'):
+			return Rarity.Special;
+		case line.includes('VERY SPECIAL'):
+			return Rarity.VerySpecial;
+		case line.includes('ULTIMATE'):
+			return Rarity.Ultimate;
+		case line.includes('ADMIN'):
+			return Rarity.Admin;
 		default:
 			return Rarity.Common;
 	}
@@ -41,11 +47,13 @@ export function nextRarity(rarity: Rarity): Rarity {
 		case Rarity.Legendary:
 			return Rarity.Mythic;
 		case Rarity.Mythic:
-			return Rarity.Special;
-		case Rarity.Special:
 			return Rarity.Divine;
 		case Rarity.Divine:
-			return Rarity.Divine;
+			return Rarity.Special;
+		case Rarity.Special:
+			return Rarity.VerySpecial;
+		default:
+			return rarity;
 	}
 }
 
@@ -63,9 +71,13 @@ export function previousRarity(rarity: Rarity): Rarity {
 			return Rarity.Epic;
 		case Rarity.Mythic:
 			return Rarity.Legendary;
-		case Rarity.Special:
-			return Rarity.Mythic;
 		case Rarity.Divine:
+			return Rarity.Mythic;
+		case Rarity.Special:
+			return Rarity.Divine;
+		case Rarity.VerySpecial:
 			return Rarity.Special;
+		default:
+			return rarity;
 	}
 }

@@ -8,6 +8,7 @@ import { calculateAverageSpecialCrops } from '../crops/special';
 interface CalculateDropsOptions {
 	farmingFortune?: number;
 	blocksBroken: number;
+	dicerLevel?: 1 | 2 | 3;
 }
 
 const crops = [
@@ -119,9 +120,9 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 		case Crop.Seeds:
 			return Math.round(baseDrops - blocksBroken); // Replenish takes away one drop per block broken
 		case Crop.Pumpkin:
-			return Math.round(baseDrops + calculatePumpkinPerkBonus(blocksBroken));
+			return Math.round(baseDrops + calculatePumpkinPerkBonus(blocksBroken, options.dicerLevel));
 		case Crop.Melon:
-			return Math.round(baseDrops + calculateMelonPerkBonus(blocksBroken));
+			return Math.round(baseDrops + calculateMelonPerkBonus(blocksBroken, options.dicerLevel));
 		default:
 			return 0;
 	}
@@ -178,14 +179,14 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	let extraDrops = 0;
 	switch (crop) {
 		case Crop.Pumpkin:
-			extraDrops = Math.round(calculatePumpkinPerkBonus(blocksBroken));
+			extraDrops = Math.round(calculatePumpkinPerkBonus(blocksBroken, options.dicerLevel));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.otherCollection['RNG Pumpkin'] = Math.round(extraDrops);
 			result.collection = Math.round(baseDrops + extraDrops);
 			break;
 		case Crop.Melon:
-			extraDrops = Math.round(calculateMelonPerkBonus(blocksBroken));
+			extraDrops = Math.round(calculateMelonPerkBonus(blocksBroken, options.dicerLevel));
 			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.otherCollection['RNG Melon'] = Math.round(extraDrops);

@@ -40,10 +40,15 @@ export class LotusGear {
 		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
-		this.sumFortune();
+		this.getFortune();
 	}
 
-	private sumFortune() {
+	setOptions(options: PlayerOptions) {
+		this.options = options;
+		this.getFortune();
+	}
+
+	getFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 

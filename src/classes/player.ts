@@ -38,6 +38,9 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	accessories: EliteItemDto[] | FarmingAccessory[];
 	pets: FarmingPetType[] | FarmingPet[];
 
+	selectedTool?: FarmingTool;
+	selectedPet?: FarmingPet;
+
 	personalBests?: Record<string, number>;
 	bestiaryKills?: Record<string, number>;
 	anitaBonus?: number;
@@ -67,17 +70,25 @@ export class FarmingPlayer {
 
 		if (options.tools[0] instanceof FarmingTool) {
 			this.tools = options.tools as FarmingTool[];
+			for (const tool of this.tools) {
+				tool.setOptions(options);
+			}
 		} else {
 			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
 		}
 
+		this.selectedTool = this.options.selectedTool ?? this.tools[0];
+
 		if (options.pets[0] instanceof FarmingPet) {
 			this.pets = (options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
+			for (const pet of this.pets) {
+				pet.setOptions(options);
+			}
 		} else {
 			this.pets = FarmingPet.fromArray(options.pets as EliteItemDto[], options);
 		}
 
-		this.selectedPet = this.pets[0];
+		this.selectedPet = this.options.selectedPet;
 
 		if (options.armor[0] instanceof FarmingArmor) {
 			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.fortune - a.fortune);
@@ -113,6 +124,14 @@ export class FarmingPlayer {
 
 	selectPet(pet: FarmingPet) {
 		this.selectedPet = pet;
+		this.fortune = this.getGeneralFortune();
+	}
+
+	setStrength(strength: number) {
+		this.options.strength = strength;
+		for (const pet of this.pets) {
+			pet.fortune = pet.getFortune();
+		}
 		this.fortune = this.getGeneralFortune();
 	}
 

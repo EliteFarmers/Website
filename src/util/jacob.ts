@@ -39,9 +39,9 @@ export function calculateJacobContestMedal(contest: RawJacobContest): JacobConte
 
 	if (position <= Math.floor(participants * 0.02)) return 'diamond';
 	if (position <= Math.floor(participants * 0.05)) return 'platinum';
-	if (position <= Math.floor(participants * 0.10)) return 'gold';
-	if (position <= Math.floor(participants * 0.30)) return 'silver';
-	if (position <= Math.floor(participants * 0.60)) return 'bronze';
+	if (position <= Math.floor(participants * 0.1)) return 'gold';
+	if (position <= Math.floor(participants * 0.3)) return 'silver';
+	if (position <= Math.floor(participants * 0.6)) return 'bronze';
 
 	return undefined;
 }

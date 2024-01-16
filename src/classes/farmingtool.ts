@@ -38,6 +38,11 @@ export class FarmingTool {
 		this.rebuildTool(item, options);
 	}
 
+	setOptions(options: PlayerOptions) {
+		this.options = options;
+		this.fortune = this.getFortune();
+	}
+
 	rebuildTool(item: EliteItemDto, options?: PlayerOptions) {
 		this.options = options;
 		this.item = item;
@@ -214,7 +219,7 @@ export class FarmingTool {
 	}
 
 	isMissingDedication() {
-		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) > 0;
+		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
 	}
 
 	private getFarmingAbilityFortune(tool: FarmingTool) {

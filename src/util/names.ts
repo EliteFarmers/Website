@@ -1,4 +1,5 @@
 import { Crop } from '../constants/crops';
+import { RARITY_COLORS, Rarity } from '../constants/reforges';
 
 export function getCropDisplayName(crop: Crop) {
 	return cropDisplayNames[crop] ?? 'Unknown Crop';
@@ -35,6 +36,10 @@ export function getCropFromContestKey(contestKey: string) {
 
 export function getItemIdFromCrop(crop: Crop) {
 	return itemIdsToCrop[crop];
+}
+
+export function getRarityColor(rarity: Rarity) {
+	return RARITY_COLORS[rarity];
 }
 
 const cropDisplayNames: Record<Crop, string> = {
