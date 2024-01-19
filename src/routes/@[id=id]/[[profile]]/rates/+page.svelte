@@ -114,7 +114,7 @@
 						title="Total Farming Fortune"
 						total={$player.fortune + cropFortune.fortune}
 						breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
-						placement="right"
+						placement="bottom"
 					/>
 				</div>
 				<div class="flex-1 flex justify-end">
@@ -165,7 +165,7 @@
 						title="{selectedCrop} Fortune"
 						total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
 						breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
-						placement="right"
+						placement="bottom"
 					/>
 				</div>
 				<div class="flex flex-row items-center gap-2 md:gap-4 w-full max-w-lg">
