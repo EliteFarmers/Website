@@ -24,6 +24,12 @@ const config = {
 			// Only disable if in development mode
 			checkOrigin: process.env.NODE_ENV !== 'development',
 		},
+		alias: {
+			'$comp': './src/components',
+			'$stores': './src/stores',
+			'$lib': './src/lib',
+			'$params': './src/params',
+		}
 	},
 };
 

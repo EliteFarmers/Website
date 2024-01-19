@@ -7,7 +7,7 @@
 
 	export let data: LayoutData;
 
-	$: path = `/@${data.account.name}/${data.profile.profileName}`;
+	$: path = `/@${data.account?.name}/${data.profile?.profileName}`;
 	$: updateUrl($page.params);
 
 	$: url = $page.url.pathname;
@@ -16,7 +16,7 @@
 		if (!browser) return;
 
 		const current = `${params.id}${params.profile ? `/${params.profile}` : ''}`;
-		const wanted = `${data.account.name}/${data.profile.profileName}`;
+		const wanted = `${data.account?.name}/${data.profile?.profileName}`;
 
 		if (current !== wanted) {
 			url = $page.url.pathname.replace(current, wanted);
@@ -27,13 +27,13 @@
 
 <main class="m-0 p-0 w-full">
 	<PlayerInfo
-		player={data.account.playerData}
-		members={data.profile.members?.filter((m) => m.uuid !== data.account.id)}
-		profileDetails={data.profiles}
-		linked={data.account.discordUsername ?? null}
-		weightInfo={data.member.farmingWeight}
+		player={data.account?.playerData}
+		members={data.profile?.members?.filter((m) => m.uuid !== data.account?.id)}
+		profileDetails={data.profiles ?? []}
+		linked={data.account?.discordUsername ?? null}
+		weightInfo={data.member?.farmingWeight}
 		weightRank={data.ranks?.misc?.farmingweight ?? -1}
-		skyblockXP={data.member.skyblockXp ?? 0}
+		skyblockXP={data.member?.skyblockXp ?? 0}
 		skyblockRank={data.ranks?.misc?.skyblockxp ?? -1}
 	/>
 

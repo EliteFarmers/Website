@@ -60,7 +60,7 @@
 		selectedTool: selectedTool,
 		selectedPet: selectedPet,
 
-		personalBests: data.member.jacob?.stats?.personalBests ?? {},
+		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
 		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
 		milestones: $ratesData.milestones,
 		cropUpgrades: $ratesData.cropUpgrades as Record<string, number>,

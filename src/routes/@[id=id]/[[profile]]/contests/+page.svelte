@@ -13,8 +13,8 @@
 </script>
 
 <Head
-	title="{data.account.name} | Jacob's Contests"
-	description="View all {data.contestsCount} Jacob's Contests participated in by {data.account.name}"
+	title="{data.account?.name ?? 'Unknown'} | Jacob's Contests"
+	description="View all {data.contestsCount} Jacob's Contests participated in by {data.account?.name ?? 'Unknown'}!"
 />
 
 <section class="flex flex-col justify-center items-center w-full">
@@ -23,11 +23,11 @@
 			<MedalCounts
 				participations={data.contestsCount}
 				medals={{
-					diamond: data.member.jacob?.earnedMedals?.diamond ?? 0,
-					platinum: data.member.jacob?.earnedMedals?.platinum ?? 0,
-					gold: data.member.jacob?.earnedMedals?.gold ?? 0,
-					silver: data.member.jacob?.earnedMedals?.silver ?? 0,
-					bronze: data.member.jacob?.earnedMedals?.bronze ?? 0,
+					diamond: data.member?.jacob?.earnedMedals?.diamond ?? 0,
+					platinum: data.member?.jacob?.earnedMedals?.platinum ?? 0,
+					gold: data.member?.jacob?.earnedMedals?.gold ?? 0,
+					silver: data.member?.jacob?.earnedMedals?.silver ?? 0,
+					bronze: data.member?.jacob?.earnedMedals?.bronze ?? 0,
 				}}
 			/>
 

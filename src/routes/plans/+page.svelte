@@ -9,7 +9,7 @@
 	//export let data: PageData;
 
 	onMount(() => {
-		throw error(404, 'This page is currently under construction!');
+		error(404, 'This page is currently under construction!');
 	});
 
 	const premium = 'none' as PremiumStatus; //data.premium;

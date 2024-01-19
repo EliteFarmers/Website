@@ -12,7 +12,7 @@
 
 	export let data: PageData;
 
-	$: ({ event, members } = data);
+	$: ({ event = {}, members } = data);
 
 	$: banner =
 		'https://cdn.discordapp.com/splashes/1096051612373487687/dc2f5296bdb34b3adc580df6c50c56cf.png?size=1280';

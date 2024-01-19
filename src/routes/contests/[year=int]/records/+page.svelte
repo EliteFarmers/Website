@@ -17,7 +17,7 @@
 		wart: 'Nether Wart',
 	};
 
-	$: crops = Object.entries(data.crops).map(([crop, entries]) => ({
+	$: crops = Object.entries(data.crops ?? {}).map(([crop, entries]) => ({
 		crop: cropNames[crop as keyof typeof cropNames] as string,
 		entries,
 	}));

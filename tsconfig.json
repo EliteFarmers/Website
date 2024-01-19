@@ -8,15 +8,6 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true,
-		"paths": {
-			"$comp/*": ["./src/components/*"],
-			"$stores/*": ["./src/stores/*"],
-			"$lib/*": ["./src/lib/*"],
-			"$lib": ["./src/lib"],
-			"$db/*": ["./src/database/*"],
-			"$params/*": ["./src/params/*"]
-		}
-	},
-	"exclude": ["./src/database/migrations", "src/database/pocketbase/pb_migrations"]
+		"strict": true
+	}
 }

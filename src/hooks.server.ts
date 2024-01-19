@@ -48,8 +48,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (!discord) {
 		locals.user = undefined;
 
-		cookies.delete('discord_access_token');
-		cookies.delete('discord_refresh_token');
+		cookies.delete('discord_access_token', { path: '/' });
+		cookies.delete('discord_refresh_token', { path: '/' });
 
 		return await ResolveWithSecurityHeaders(resolve, event);
 	}

@@ -37,7 +37,7 @@
 		</div>
 	</div>
 
-	{#if contests.length === 0}
+	{#if !contests?.length}
 		<div class="flex flex-col items-center justify-center p-4 space-y-2 mb-16">
 			<h2 class="text-3xl font-semibold text-center">No Contests Found</h2>
 			<h4>Try a different timestamp!</h4>
@@ -46,7 +46,7 @@
 	{/if}
 
 	<div class="flex flex-wrap md:flex-row w-full md:w-[90%] gap-4 mt-4 mx-8 mb-16 justify-center">
-		{#each contests as contest ((contest.timestamp ?? 0) + (contest.crop ?? ''))}
+		{#each contests ?? [] as contest ((contest.timestamp ?? 0) + (contest.crop ?? ''))}
 			<Singlecontest
 				timestamp={contest.timestamp ?? 0}
 				crop={contest.crop}
