@@ -54,7 +54,7 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
-							href="/leaderboard/crops/{key}/+{$page.params.id}-{$page.params.profile}"
+							href="/leaderboard/crops/{key}/{$page.params.id}-{$page.params.profile}"
 							class="px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 						>
 							<span class="text-sm xs:text-md sm:text-lg">#</span><span

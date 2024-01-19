@@ -4,6 +4,7 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { NavLi, NavUl, Navbar } from 'flowbite-svelte';
+	import { goto, replaceState } from '$app/navigation';
 
 	export let data: LayoutData;
 
@@ -20,7 +21,7 @@
 
 		if (current !== wanted) {
 			url = $page.url.pathname.replace(current, wanted);
-			history.replaceState(history.state, document.title, $page.url.href.replace(current, wanted));
+			goto(url, { replaceState: true });
 		}
 	}
 </script>
