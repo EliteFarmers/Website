@@ -8,16 +8,16 @@
 
 	export let data: PageData;
 
-	$: title = `${data.lb.title} Leaderboard`;
-	$: entries = data.lb.entries ?? [];
-	$: offset = (data.lb.offset ?? 0) + 1;
+	$: title = `${data.lb?.title} Leaderboard`;
+	$: entries = data.lb?.entries ?? [];
+	$: offset = (data.lb?.offset ?? 0) + 1;
 
 	$: firstHalf = entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: formatting = data.formatting;
 
 	$: {
-		if (data.lb.id === 'skyblockxp') {
+		if (data.lb?.id === 'skyblockxp') {
 			entries = entries.map((entry) => ({
 				ign: entry.ign,
 				profile: entry.profile,

@@ -42,7 +42,7 @@
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
 			{#if ranks[medal] > -1}
 				<a
-					href="/leaderboard/{medal}medals/+{$page.params.id}-{profile}"
+					href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
 					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-between xs:justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 				>
 					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
@@ -76,7 +76,7 @@
 		{#each earnedMedals.slice(2) as [medal, count] (medal)}
 			{#if ranks[medal] > -1}
 				<a
-					href="/leaderboard/{medal}medals/+{$page.params.id}-{profile}"
+					href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
 					class="flex-1 basis-48 flex flex-row gap-3 items-center justify-between xs:justify-center p-2 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
 				>
 					<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />

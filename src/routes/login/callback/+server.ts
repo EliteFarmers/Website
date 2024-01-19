@@ -9,7 +9,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	const errorMsg = url.searchParams.get('error');
 
 	const storedState = cookies.get('auth_state');
-	cookies.delete('auth_state');
+	cookies.delete('auth_state', { path: '/' });
 
 	if (errorMsg) {
 		throw error(400, errorMsg);

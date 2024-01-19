@@ -18,12 +18,12 @@
 	import type { PageData } from './$types';
 	export let data: PageData;
 
-	$: uuid = data.account.id;
-	$: ign = data.account.name;
+	$: uuid = data.account?.id;
+	$: ign = data.account?.name;
 	$: collections = data.collections;
 	$: weightRank = data.ranks?.misc?.farmingweight ?? -1;
 	$: profile = data.profile;
-	$: member = data.member;
+	$: member = data.member ?? {};
 
 	$: farmingXp = getLevelProgress(
 		'farming',
@@ -90,7 +90,7 @@
 
 <JacobInfo
 	jacob={member.jacob}
-	ign={data.account.name ?? ''}
+	ign={data.account?.name ?? ''}
 	ranks={{
 		gold: data.ranks?.misc?.goldmedals ?? -1,
 		silver: data.ranks?.misc?.silvermedals ?? -1,
@@ -111,7 +111,7 @@
 	</p>
 	<p>
 		<span class="select-none text-gray-500">Profile UUID:</span>
-		<span class="select-all">{profile.profileId}</span>
+		<span class="select-all">{profile?.profileId}</span>
 	</p>
 	<p>
 		<span class="select-none text-gray-500">Last Updated:</span>

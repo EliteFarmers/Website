@@ -11,7 +11,11 @@ export const load = (async ({ params }) => {
 		throw error(404, 'Player not found');
 	}
 
-	const profile = player.profiles?.find((p) => p.profileName === profileName || p.profileId === profileName);
+	const profile = player.profiles?.find(
+		(p) =>
+			p.members?.some((m) => m.active && m.uuid === player.id) &&
+			(p.profileName === profileName || p.profileId === profileName)
+	);
 
 	if (!profile?.profileId) {
 		throw error(404, 'Profile not found');

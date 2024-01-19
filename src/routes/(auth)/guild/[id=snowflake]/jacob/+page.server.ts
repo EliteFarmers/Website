@@ -1,4 +1,4 @@
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
 import {
@@ -73,7 +73,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -103,7 +103,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -134,7 +134,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -174,7 +174,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -222,7 +222,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		lb.crops ??= {};
@@ -247,7 +247,7 @@ export const actions: Actions = {
 
 		if (response2.status !== 200) {
 			const msg = await response2.text();
-			throw error(response2.status, msg);
+			throw error(response2.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -285,7 +285,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -339,7 +339,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {
@@ -380,7 +380,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
 		return {

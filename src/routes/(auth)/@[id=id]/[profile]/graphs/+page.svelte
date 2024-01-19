@@ -10,9 +10,9 @@
 <Head title="Player Charts" description="Admin page to view player stats" />
 
 <main class="flex flex-col gap-2 justify-center items-center my-16">
-	<h1 class="text-4xl">{data.account.name} | {data.selectedProfile.profileName}</h1>
-	<p>Discord ID: {data.account.discordId}</p>
-	<p>Discord: {data.account.discordUsername}</p>
+	<h1 class="text-4xl">{data.account?.name} | {data.selectedProfile?.profileName}</h1>
+	<p>Discord ID: {data.account?.discordId}</p>
+	<p>Discord: {data.account?.discordUsername}</p>
 
 	<Cropselector />
 
