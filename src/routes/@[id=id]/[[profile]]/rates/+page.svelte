@@ -42,6 +42,11 @@
 	$: equipment = LotusGear.fromArray(data.member?.farmingWeight?.inventory?.equipment ?? []);
 	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
 
+	// Deselect pet if it's not on this player
+	$: $ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
+		? $ratesData.selectedPet
+		: undefined;
+
 	$: selectedPet = undefined as FarmingPet | undefined;
 	$: selectedTool = undefined as FarmingTool | undefined;
 
@@ -179,7 +184,7 @@
 									bind:value={$ratesData.milestones[cropKey(selectedCrop)]}
 									step={1}
 								/>
-								<p class="text-lg p-2 w-6">{$ratesData.milestones[cropKey(selectedCrop)]}</p>
+								<p class="text-lg p-2 w-6">{$ratesData.milestones[cropKey(selectedCrop)] ?? 0}</p>
 							</div>
 						</Label>
 						<Label defaultClass="flex-1">
@@ -187,11 +192,11 @@
 							<div class="flex flex-row gap-1 items-center">
 								<Range
 									min={0}
-									max={10}
+									max={9}
 									bind:value={$ratesData.cropUpgrades[cropKey(selectedCrop)]}
 									step={1}
 								/>
-								<p class="text-lg p-2 w-6">{$ratesData.cropUpgrades[cropKey(selectedCrop)]}</p>
+								<p class="text-lg p-2 w-6">{$ratesData.cropUpgrades[cropKey(selectedCrop)] ?? 0}</p>
 							</div>
 						</Label>
 					</div>
@@ -201,9 +206,17 @@
 			{/if}
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Label>Farming Pet</Label>
-				<Select bind:value={selectedPet} size="sm" placeholder="Select a pet!" class="dark:bg-zinc-800">
+				<Select
+					bind:value={$ratesData.selectedPet}
+					on:change={() => {
+						selectedPet = pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet) ?? undefined;
+					}}
+					size="sm"
+					placeholder="Select a pet!"
+					class="dark:bg-zinc-800"
+				>
 					{#each $player.pets as pet (pet.pet.uuid)}
-						<option value={pet}>
+						<option value={pet.pet.uuid}>
 							<span>
 								{pet.rarity}
 								{pet.info.name} [{pet.level}] + {pet.item?.name ?? 'No Fortune Item'}

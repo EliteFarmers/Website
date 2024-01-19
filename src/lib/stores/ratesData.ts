@@ -10,6 +10,7 @@ interface RatesData {
 	gardenLevel: number;
 	plotsUnlocked: number;
 	communityCenter: number;
+	selectedPet?: string;
 	strength: number;
 }
 
