@@ -16,6 +16,6 @@
 		src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${
 			user.avatar.startsWith('a_') ? 'gif' : 'webp'
 		}?size=96`}
-		alt="Server Icon"
+		alt="User Icon"
 	/>
 {/if}

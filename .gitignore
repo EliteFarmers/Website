@@ -12,4 +12,3 @@ static/packs
 
 # Admin routes
 src/routes/(auth)/**/graphs/+l*
-src/routes/(auth)/admin
