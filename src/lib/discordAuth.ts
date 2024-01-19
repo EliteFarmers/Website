@@ -118,7 +118,7 @@ export function UpdateCookies(event: RequestEvent, discord: DiscordUpdateRespons
 
 		event.locals.discord_access_token = accessToken;
 	} else if (!accessToken) {
-		event.cookies.delete('discord_access_token');
+		event.cookies.delete('discord_access_token', { path: '/' });
 	}
 
 	if (refreshToken && refreshTokenExpires) {
@@ -129,7 +129,7 @@ export function UpdateCookies(event: RequestEvent, discord: DiscordUpdateRespons
 
 		event.locals.discord_refresh_token = refreshToken;
 	} else if (!refreshToken) {
-		event.cookies.delete('discord_refresh_token');
+		event.cookies.delete('discord_refresh_token', { path: '/' });
 	}
 
 	if (!user?.id || !user.avatar || !user.username) return;

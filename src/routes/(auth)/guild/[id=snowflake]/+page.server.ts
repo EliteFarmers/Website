@@ -1,4 +1,4 @@
-import { error, type Actions } from '@sveltejs/kit';
+import { error, type Actions, type NumericRange } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
 import { GetGuild, SetGuildInvite } from '$lib/api/elite';
@@ -49,7 +49,7 @@ export const actions: Actions = {
 
 		if (response.status !== 200) {
 			const msg = await response.text();
-			throw error(response.status, msg);
+			throw error(response.status as NumericRange<400, 499>, msg);
 		}
 
 		return {
