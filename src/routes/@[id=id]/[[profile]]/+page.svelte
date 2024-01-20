@@ -5,6 +5,8 @@
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
+	import { CROP_UNICODE_EMOJIS } from '$lib/constants/crops';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	import Skills from '$comp/stats/skills.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
@@ -33,14 +35,38 @@
 	$: showSkills = $page.url.href.includes('#Skills');
 
 	$: weightStr =
-		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ??
-		"hasn't loaded their";
-	$: description = `${ign} has ${weightStr} Farming Weight${
-		weightRank > 0 ? `, earning rank #${weightRank} in the world!` : '!'
-	} View the site to see full information.`;
+		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!';
+
+	$: description =
+		`🌾 Farming Weight - ${weightStr}` +
+		`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
+		`📜 Farming Level - ${farmingXp.level}` +
+		`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming.toLocaleString()})` : ''}\n` +
+		`⠀⤷ ${(member.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
+		`\n⭐ Skyblock Level - ${(member.skyblockXp ?? 0) / 100}` +
+		`${
+			(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp.toLocaleString()})` : ''
+		}\n\n` +
+		data.collections
+			.sort((a, b) => b.weight - a.weight)
+			.slice(0, 3)
+			.map((c) => {
+				const crop = getCropFromName(c.key) ?? Crop.Wheat;
+				const rank = data.ranks?.collections?.[c.key] ?? -1;
+
+				return (
+					`${CROP_UNICODE_EMOJIS[crop]} ${getCropDisplayName(crop)} - ${c.value.toLocaleString()}` +
+					`${rank > 0 ? ` (#${rank.toLocaleString()})` : ''}`
+				);
+			})
+			.join('\n');
 </script>
 
-<Head title={ign + ' | Farming Weight'} {description}>
+<Head
+	title="{ign} ({profile.profileName}) | Farming Weight"
+	{description}
+	imageUrl="https://mc-heads.net/head/{uuid}/left.png"
+>
 	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>
 
