@@ -1,18 +1,18 @@
 <script lang="ts">
-	import emblaCarouselSvelte from "embla-carousel-svelte";
-	import { setEmblaContex, type CarouselProps, type CarouselAPI } from "./context.js";
-	import { cn } from "$lib/utils.js";
-	import { writable } from "svelte/store";
-	import { onDestroy } from "svelte";
+	import emblaCarouselSvelte from 'embla-carousel-svelte';
+	import { setEmblaContex, type CarouselProps, type CarouselAPI } from './context.js';
+	import { cn } from '$lib/utils.js';
+	import { writable } from 'svelte/store';
+	import { onDestroy } from 'svelte';
 
 	type $$Props = CarouselProps;
 
 	export let opts = {};
-	export let plugins: NonNullable<$$Props["plugins"]> = [];
-	export let api: $$Props["api"] = undefined;
-	export let orientation: NonNullable<$$Props["orientation"]> = "horizontal";
+	export let plugins: NonNullable<$$Props['plugins']> = [];
+	export let api: $$Props['api'] = undefined;
+	export let orientation: NonNullable<$$Props['orientation']> = 'horizontal';
 
-	let className: $$Props["class"] = undefined;
+	let className: $$Props['class'] = undefined;
 	export { className as class };
 
 	const apiStore = writable<CarouselAPI | undefined>(undefined);
@@ -37,15 +37,15 @@
 
 	$: if (api) {
 		onSelect(api);
-		api.on("select", onSelect);
-		api.on("reInit", onSelect);
+		api.on('select', onSelect);
+		api.on('reInit', onSelect);
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		if (e.key === "ArrowLeft") {
+		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 			scrollPrev();
-		} else if (e.key === "ArrowRight") {
+		} else if (e.key === 'ArrowRight') {
 			e.preventDefault();
 			scrollNext();
 		}
@@ -58,7 +58,7 @@
 		orientation: orientationStore,
 		canScrollNext,
 		canScrollPrev,
-		handleKeyDown
+		handleKeyDown,
 	});
 
 	function onInit(event: CustomEvent<CarouselAPI>) {
@@ -68,20 +68,20 @@
 	}
 
 	onDestroy(() => {
-		api?.off("select", onSelect);
+		api?.off('select', onSelect);
 	});
 </script>
 
 <div
-	class={cn("relative", className)}
+	class={cn('relative', className)}
 	use:emblaCarouselSvelte={{
 		options: {
-			container: "[data-embla-container]",
-			slides: "[data-embla-slide]",
+			container: '[data-embla-container]',
+			slides: '[data-embla-slide]',
 			...opts,
-			axis: $orientationStore === "horizontal" ? "x" : "y"
+			axis: $orientationStore === 'horizontal' ? 'x' : 'y',
 		},
-		plugins
+		plugins,
 	}}
 	on:emblaInit={onInit}
 	on:mouseenter
