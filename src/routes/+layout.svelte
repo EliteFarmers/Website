@@ -4,7 +4,7 @@
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initRatesData } from '$lib/stores/ratesData';
 
-	import '../app.css';
+	import '../app.pcss';
 
 	import Nav from '$comp/nav.svelte';
 	import Footer from '$comp/footer.svelte';
