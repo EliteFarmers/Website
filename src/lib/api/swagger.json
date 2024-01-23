@@ -64,6 +64,82 @@
         }
       }
     },
+    "/Account/Search": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Account/{discordId}": {
       "get": {
         "tags": [
@@ -7488,6 +7564,12 @@
           },
           "eventSettings": {
             "$ref": "#/components/schemas/GuildEventSettings"
+          },
+          "contestPingsEnabled": {
+            "type": "boolean"
+          },
+          "contestPings": {
+            "$ref": "#/components/schemas/ContestPingsFeatureDto"
           }
         },
         "additionalProperties": false

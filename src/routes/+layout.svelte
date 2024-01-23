@@ -6,8 +6,9 @@
 
 	import '../app.pcss';
 
-	import Nav from '$comp/nav.svelte';
+	import Nav from '$comp/header/nav.svelte';
 	import Footer from '$comp/footer.svelte';
+	import { ModeWatcher } from 'mode-watcher';
 
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -20,7 +21,8 @@
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
-<div class="bg-white dark:bg-zinc-900 relative min-h-screen pb-16 text-black dark:text-white">
+<ModeWatcher />
+<div class="relative min-h-screen pb-16 text-black dark:text-white">
 	<Nav />
 
 	{#if $navigating}

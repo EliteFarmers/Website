@@ -22,6 +22,11 @@
 	} from 'flowbite-svelte';
 	import Usericon from '$comp/stats/discord/usericon.svelte';
 
+	import ModeToggle from '$comp/header/mode-toggle.svelte';
+	import MainNav from '$comp/header/main-nav.svelte';
+	import MobileNav from '$comp/header/mobile-nav.svelte';
+	import SearchMenu from '$comp/header/search-menu.svelte';
+
 	let searchVal = '';
 
 	async function search() {
@@ -31,10 +36,55 @@
 	}
 </script>
 
+<header
+	class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+>
+	<div class="container flex h-14 max-w-screen-2xl items-center">
+		<MainNav />
+		<MobileNav />
+		<div class="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+			<div class="w-full flex-1 md:w-auto md:flex-none">
+				<SearchMenu />
+			</div>
+			<nav class="flex items-center">
+				<!-- <a href={siteConfig.links.github} target="_blank" rel="noopener noreferrer">
+					<div
+						class={cn(
+							buttonVariants({
+								size: "sm",
+								variant: "ghost"
+							}),
+							"w-9 px-0"
+						)}
+					>
+						<Icons.gitHub class="h-4 w-4" />
+						<span class="sr-only">GitHub</span>
+					</div>
+				</a>
+				<a href={siteConfig.links.twitter} target="_blank" rel="noreferrer">
+					<div
+						class={cn(
+							buttonVariants({
+								size: "sm",
+								variant: "ghost"
+							}),
+							"w-9 px-0"
+						)}
+					>
+						<Icons.twitter class="h-3 w-3 fill-current" />
+						<span class="sr-only">X (formerly known as Twitter)</span>
+					</div>
+				</a> -->
+				<ModeToggle />
+			</nav>
+		</div>
+	</div>
+</header>
+
 <Navbar let:hidden let:toggle class="flex items-center align-middle" color="none">
 	<NavBrand href="/">
 		<img src="/favicon.webp" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
-		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"> EliteWebsite </span>
+		<span class="self-center whitespace-nowrap text-xl font-semibold px-1">Elite Farmers</span>
 	</NavBrand>
 	<div class="hidden relative md:flex lg:order-1 w-1/3" id="mobile-menu-3">
 		<div class="relative md:block w-full">

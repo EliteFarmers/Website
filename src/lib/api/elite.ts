@@ -543,6 +543,15 @@ export const UpdateUpcomingContestPings = async (
 		},
 	});
 
+export const SearchPlayers = async (query: string) =>
+	await GET('/Account/Search', {
+		params: {
+			query: {
+				q: query,
+			},
+		},
+	});
+
 export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
 	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
 		params: {
