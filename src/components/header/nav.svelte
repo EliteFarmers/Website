@@ -1,40 +1,13 @@
 <script lang="ts">
 	import { navigating } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
-
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
-
-	import {
-		DarkMode,
-		Dropdown,
-		DropdownDivider,
-		DropdownHeader,
-		DropdownItem,
-		Navbar,
-		NavBrand,
-		NavLi,
-		NavUl,
-		NavHamburger,
-		Button,
-		Input,
-	} from 'flowbite-svelte';
-	import Usericon from '$comp/stats/discord/usericon.svelte';
 
 	import ModeToggle from '$comp/header/mode-toggle.svelte';
 	import MainNav from '$comp/header/main-nav.svelte';
 	import MobileNav from '$comp/header/mobile-nav.svelte';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import UserDropdown from './user-dropdown.svelte';
-
-	let searchVal = '';
-
-	async function search() {
-		await goto(`/@${searchVal}`);
-
-		searchVal = '';
-	}
 </script>
 
 <header

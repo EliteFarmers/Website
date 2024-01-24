@@ -7,7 +7,8 @@
 	import '../app.pcss';
 
 	import Nav from '$comp/header/nav.svelte';
-	import Footer from '$comp/footer.svelte';
+	import Footer from '$comp/footer/footer.svelte';
+
 	import { ModeWatcher } from 'mode-watcher';
 
 	initAnyCropSelected();
@@ -22,7 +23,7 @@
 </svelte:head>
 
 <ModeWatcher />
-<div class="relative min-h-screen pb-16">
+<div class="relative min-h-screen pb-32">
 	<Nav />
 
 	{#if $navigating}
