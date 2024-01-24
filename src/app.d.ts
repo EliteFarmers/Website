@@ -17,6 +17,10 @@ declare global {
 		interface Session {
 			userInfo?: UserInfo;
 		}
+
+		interface PageData {
+			userInfo?: UserInfo;
+		}
 		// interface Stuff {}
 	}
 }
