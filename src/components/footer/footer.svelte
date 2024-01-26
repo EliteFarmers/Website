@@ -5,7 +5,7 @@
 </script>
 
 <footer
-	class="absolute bottom-0 z-50 w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+	class="bottom-0 mt-16 z-50 w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
 	<div class="container flex flex-wrap max-w-screen-lg items-start justify-between">
 		<div class="flex flex-1 basis-32 py-4 flex-col gap-2 items-start">

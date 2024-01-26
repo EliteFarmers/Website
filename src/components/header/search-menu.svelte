@@ -43,7 +43,7 @@
 </Button>
 <Command.Dialog bind:open>
 	<Command.Root shouldFilter={false}>
-		<Command.Input placeholder="Type a command or search" bind:value={searchStr} />
+		<Command.Input placeholder="Search for a player" bind:value={searchStr} />
 		<Command.List>
 			<Command.Empty>No results found.</Command.Empty>
 			<Command.Group heading="Players">

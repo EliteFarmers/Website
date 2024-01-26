@@ -23,7 +23,7 @@
 </svelte:head>
 
 <ModeWatcher />
-<div class="relative min-h-screen pb-32">
+<div class="relative min-h-screen">
 	<Nav />
 
 	{#if $navigating}

@@ -7,7 +7,7 @@
 	import MainNav from '$comp/header/main-nav.svelte';
 	import MobileNav from '$comp/header/mobile-nav.svelte';
 	import SearchMenu from '$comp/header/search-menu.svelte';
-	import UserDropdown from './user-dropdown.svelte';
+	import UserDropdown from '$comp/header/user-dropdown.svelte';
 </script>
 
 <header
