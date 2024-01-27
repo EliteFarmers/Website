@@ -2,6 +2,9 @@
 	import CropTable from './croptable.svelte';
 	import BonusTable from './bonustable.svelte';
 	import Head from '$comp/head.svelte';
+	import { CREDITS } from '$content/credits';
+	import * as Card from '$ui/card';
+	import { FAQ } from '$content/faq';
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
@@ -52,128 +55,40 @@
 			<p class="text-sm my-4">More bonus weight sources may be added in the future.</p>
 		</article>
 	</section>
-	<section class="flex flex-col justify-center items-center w-full">
+	<section class="flex flex-col justify-center items-center w-full" id="FAQ">
 		<h1 class="text-center text-3xl mt-16 mb-8">F.A.Q.</h1>
-		<article class="w-10/12 md:w-1/2">
-			<h2 class="text-2xl my-8">How do I verify my account?</h2>
-			<p class="text-lg my-4">
-				To verify your account, you must link your Minecraft account to your Discord account through Hypixel.
-				There is a tutorial on how to do this on the <a class="underline" href="/profile">profile page</a> once you've
-				logged in.
-			</p>
-		</article>
-		<article class="w-10/12 md:w-1/2">
-			<h2 class="text-2xl my-8">Why are there cheaters on the leaderboard?</h2>
-			<p class="text-lg my-4">
-				Unfortunately, it's hard to identify cheaters. The only way to do so is to manually check every player's
-				farming habits and responsiveness in-game. This is a very time-consuming process, and isn't something
-				that is conclusive. Despite this, cheaters will be removed from the leaderboard if they are found and
-				reported with truly undeniable proof.
-			</p>
-		</article>
-		<article class="w-10/12 md:w-1/2">
-			<h2 class="text-2xl my-8">Are crop collections accurate?</h2>
-			<p class="text-lg my-4">
-				Yes! Hypixel seems to be counting the amount of farmed crops accurately, so the crop collections are
-				accurate. However, that was not always the case. In the past, Hypixel has had issues with counting
-				farmed crops when a player was in a shared island with another player. This has since been fixed as of
-				November 2nd, 2021. Sadly, there is no way to add back the crops that were lost during this time as the
-				amount lost differed wildly from player to player.
-			</p>
-		</article>
-		<article class="w-10/12 md:w-1/2">
-			<h2 class="text-2xl my-8">Why isn't farming XP counted?</h2>
-			<p class="text-lg my-4">
-				Farming XP is not counted because it is not a good representation of how much a player has farmed.
-				Outside of one time bonus weight amounts (see above table), farming xp isn't considered. This is to
-				ensure that players who farm using rabbit or who farm higher XP crops don't have an unfair advantage
-				over players who farm using other methods. Farming Weight is meant to balance the skill and time taken
-				to farm each crop.
-			</p>
-		</article>
-		<article class="w-10/12 md:w-1/2">
-			<h2 class="text-2xl my-8">Why is there an API disabled warning?</h2>
-			<p class="text-lg my-4">
-				In order for the site to see a player's data, the player must enable API access in their Skyblock
-				settings. To do this, go to the Skyblock menu, and click the settings redstone torch button in the
-				bottom row. Then, click the "API Settings" button and enable all API settings (do this for each of your
-				profiles). This will allow the site to see your data. Only collections and skill APIs are used, but it
-				is recommended to enable all APIs for credibility and future-proofing.
-			</p>
-		</article>
+		{#each FAQ as faq}
+			<article class="w-10/12 md:w-1/2">
+				<h2 class="text-2xl my-8">{faq.question}</h2>
+				<p class="text-lg my-4">
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					{@html faq.answer}
+				</p>
+			</article>
+		{/each}
 	</section>
-	<section class="flex flex-col justify-center items-center w-full">
+	<section class="flex flex-col justify-center items-center w-full" id="Credits">
 		<h1 class="text-center text-3xl mt-16 mb-8">Credits</h1>
-		<article class="w-10/12 md:w-1/2">
-			<p class="text-lg my-4">
-				Website and Bot Maintained and Created by <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="/@7da0c47581dc42b4962118f8049147b7"
-				>
-					Kaeso</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Original Weight Calculations and Max Farming Fortune Rates by <a
-					class="underline"
-					href="/@ac01147ed01a47d1b5777b31ccf5e616">Bankhier</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Crop Icons by <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
-				>
-					Lumini</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Farming Tool textures from <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="https://hypixel.net/threads/4174260/">Hypixel+</a
-				>
-				by <a class="underline" rel="nofollow noreferrer noopener" href="https://ko-fi.com/ic22487">ic22487</a>.
-			</p>
-			<p class="text-lg my-4">
-				Website logo by <a class="underline" href="/@bd082a55373e4305bee348b9060e16c9">MelonKingDe</a>.
-			</p>
-			<p class="text-lg my-4">
-				Minion Icons (and base API) from <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="https://hypixel.net/">Hypixel</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Player models provided by <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="https://mc-heads.net/">MCHeads</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Icons provided by <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="https://flowbite.com/icons/">Flowbite</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Some inspiration from <a
-					class="underline"
-					rel="nofollow noreferrer noopener"
-					href="https://github.com/SkyCryptWebsite/SkyCrypt">SkyCrypt</a
-				>.
-			</p>
-			<p class="text-lg my-4">
-				Feedback and support from the <a class="underline" rel="nofollow noreferrer noopener" href="/discord"
-					>Elite Skyblock Farmers</a
-				>.
-			</p>
-			<br /><br />
+		<article class="w-full max-w-4xl px-4">
+			<div class="flex flex-col gap-2">
+				{#each CREDITS as credit}
+					<Card.Root class="flex-1 w-full">
+						<Card.Header class="pb-4">
+							<p class="text-xl font-semibold">{credit.name}</p>
+						</Card.Header>
+						<Card.Content>
+							<div class="flex flex-col items-start">
+								<p class="text-lg">{credit.role}</p>
+								<div class="flex flex-row gap-4">
+									{#each credit.links as link}
+										<a class="text-lg my-3 underline" href={link.url}>{link.name}</a>
+									{/each}
+								</div>
+							</div>
+						</Card.Content>
+					</Card.Root>
+				{/each}
+			</div>
 		</article>
 	</section>
 </main>

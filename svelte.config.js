@@ -30,6 +30,7 @@ const config = {
 			'$stores': './src/stores',
 			'$lib': './src/lib',
 			'$params': './src/params',
+			'$content': './src/content',
 		}
 	},
 };
