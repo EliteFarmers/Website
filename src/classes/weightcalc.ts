@@ -49,6 +49,7 @@ class FarmingWeight {
 		this.farmingXp = info?.farmingXp ?? 0;
 		this.earnedGoldMedals = 0;
 		this.tier12MinionCount = 0;
+		this.bonusSources = {} as Record<string, number>;
 
 		this.setCropsFromCollections(info?.collection ?? {});
 		this.addMinions(info?.minions ?? []);
