@@ -147,6 +147,8 @@ class FarmingWeight {
 	};
 
 	getBonusWeights = () => {
+		this.bonusSources = {} as Record<string, number>;
+
 		if (this.farmingXp >= 111_672_425 && this.levelCapUpgrade >= 10) {
 			// Farming 60 bonus
 			this.bonusSources['Farming 60'] = BONUS_WEIGHT.Farming60Bonus;
