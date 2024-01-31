@@ -26,6 +26,12 @@ export interface FortuneMissingFromAPI {
 	milestones?: Partial<Record<Crop, number>>;
 }
 
+export interface ExtraFarmingFortune {
+	crop?: Crop;
+	name?: string;
+	fortune: number;
+}
+
 export interface PlayerOptions extends FortuneMissingFromAPI {
 	collection?: Record<string, number>;
 	farmingXp?: number;
@@ -44,6 +50,8 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	personalBests?: Record<string, number>;
 	bestiaryKills?: Record<string, number>;
 	anitaBonus?: number;
+
+	extraFortune?: ExtraFarmingFortune[];
 }
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -205,6 +213,14 @@ export class FarmingPlayer {
 			sum += accessory.fortune ?? 0;
 		}
 
+		// Extra Fortune
+		for (const extra of this.options.extraFortune ?? []) {
+			if (extra.crop) continue;
+
+			breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
+			sum += extra.fortune;
+		}
+
 		this.breakdown = breakdown;
 		return sum;
 	}
@@ -249,6 +265,14 @@ export class FarmingPlayer {
 		if (accessory && accessory.fortune > 0) {
 			breakdown[accessory.item.name ?? 'Accessories'] = accessory.fortune ?? 0;
 			sum += accessory.fortune ?? 0;
+		}
+
+		// Extra Fortune
+		for (const extra of this.options.extraFortune ?? []) {
+			if (extra.crop !== crop) continue;
+
+			breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
+			sum += extra.fortune;
 		}
 
 		return {
