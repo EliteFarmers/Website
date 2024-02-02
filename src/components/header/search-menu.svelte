@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Laptop, Moon, Sun } from 'lucide-svelte';
+	import { Laptop, Moon, Sun } from 'lucide-svelte/icons';
 	import * as Command from '$ui/command';
 	import { Button } from '$ui/button';
 	import cn from 'classnames';
