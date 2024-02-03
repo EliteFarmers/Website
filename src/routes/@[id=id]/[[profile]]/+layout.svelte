@@ -3,7 +3,7 @@
 	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
-	import { NavLi, NavUl, Navbar } from 'flowbite-svelte';
+	import * as Menubar from '$ui/menubar';
 	import { goto } from '$app/navigation';
 
 	export let data: LayoutData;
@@ -24,6 +24,11 @@
 			goto(url, { replaceState: true });
 		}
 	}
+
+	function active(path: string) {
+		if (!url.endsWith(path)) return '';
+		return 'text-red-700 dark:text-red-600';
+	}
 </script>
 
 <main class="m-0 p-0 w-full">
@@ -39,23 +44,22 @@
 	/>
 
 	{#key url}
-		<Navbar rounded color="none" classNavDiv="flex justify-center">
-			<NavUl
-				class="flex lg:order-3 mx-auto justify-center lg:mx-0 md:items-center mt-3"
-				ulClass="flex p-2 md:p-4 text-sm md:text-md text-center items-center gap-4 flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:items-center justify-between bg-gray-100 dark:bg-zinc-800 rounded-md border-none max-w-xl w-full"
-				activeClass="text-red-600 dark:text-red-500 flex-1"
-				nonActiveClass="flex-1"
-				hidden={false}
-				color="none"
-			>
-				<NavLi class="p-2" href="{path}/contests" active={url.endsWith('/contests')}>All Contests</NavLi>
-				<NavLi class="p-2" href={path} active={url === path}>Stats</NavLi>
-				<NavLi class="p-2" href="{path}/rates" active={url.endsWith('/rates')}>Rate Calculator</NavLi>
-				{#if data.authorized}
-					<NavLi class="p-2" href="{path}/graphs" active={url.endsWith('/rates')}>Admin</NavLi>
-				{/if}
-			</NavUl>
-		</Navbar>
+		<div class="flex flex-row w-full justify-center mx-2 my-4">
+			<Menubar.Root class="font-semibold max-w-xl justify-center">
+				<Menubar.Menu>
+					<Menubar.Item href="{path}/contests" class={active('/contests')}
+						>All Contests</Menubar.Item
+					>
+					<Menubar.Item href={path} class={active(path)}>Stats</Menubar.Item>
+					<Menubar.Item href="{path}/rates" class={active('/rates')}
+						>Rate Calculator</Menubar.Item
+					>
+					{#if data.authorized}
+						<Menubar.Item href="{path}/graphs">Admin</Menubar.Item>
+					{/if}
+				</Menubar.Menu>
+			</Menubar.Root>
+		</div>
 	{/key}
 
 	<slot />
