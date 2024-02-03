@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as Tooltip from '$ui/tooltip';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { Popover } from 'flowbite-svelte';
@@ -35,22 +36,32 @@
 	{#each highest as [crop, amount] (crop)}
 		{@const unique = medal(crop)}
 
-		<div
-			class="flex-1 basis-48 flex flex-row justify-between bg-gray-100 dark:bg-zinc-800 rounded-md p-2 items-center"
-		>
+		<div class="flex-1 basis-48 flex flex-row justify-between bg-primary-foreground rounded-md p-2 items-center">
 			<div class="flex flex-row gap-2 items-center">
 				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="w-12 h-12 pixelated p-1" />
 
-				<div class="flex flex-col gap-1">
-					<div class="">
-						<p class="text-lg leading-none">
-							{pb(crop)?.toLocaleString() ?? 'Not Set!'}
-						</p>
-					</div>
+				<div class="flex flex-col items-start gap-1">
+					<Tooltip.Root openDelay={50}>
+						<Tooltip.Trigger>
+							<p class="text-lg leading-none">
+								{pb(crop)?.toLocaleString() ?? 'Not Set!'}
+							</p>
+						</Tooltip.Trigger>
+						<Tooltip.Content side="top">
+							<p>The highest placement earned for {crop}!</p>
+						</Tooltip.Content>
+					</Tooltip.Root>
 
-					<p class="text-lg leading-none participation-count">
-						x{amount.toLocaleString()}
-					</p>
+					<Tooltip.Root openDelay={50}>
+						<Tooltip.Trigger>
+							<p class="text-lg leading-none participation-count">
+								x{amount.toLocaleString()}
+							</p>
+						</Tooltip.Trigger>
+						<Tooltip.Content side="bottom">
+							<p>The amount of participations for {crop}!</p>
+						</Tooltip.Content>
+					</Tooltip.Root>
 				</div>
 			</div>
 
@@ -64,9 +75,3 @@
 		</div>
 	{/each}
 </div>
-<Popover triggeredBy=".participation-count" placement="bottom">
-	<p>The amount of participations for this crop!</p>
-</Popover>
-<Popover triggeredBy=".highest-bracket" placement="bottom">
-	<p>The highest placement earned for this crop!</p>
-</Popover>

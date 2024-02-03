@@ -14,13 +14,13 @@
 <a
 	href="/contest/{timestamp}"
 	data-sveltekit-preload-data="off"
-	class="p-2 flex flex-col hover:shadow-lg hover:bg-gray-200 dark:hover:bg-zinc-700 gap-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 border-l-4 {crop?.replace(
+	class="p-2 flex flex-col hover:shadow-lg hover:bg-muted gap-0.5 rounded-md bg-primary-foreground border-l-4 {crop?.replace(
 		' ',
 		''
 	)}"
 >
 	<h3 class="first-letter:uppercase text-sm">
-		<span class="p-0.5 px-1.5 bg-gray-200 dark:bg-zinc-900 rounded-md">{cropName}</span>
+		<span class="p-0.5 px-1.5 bg-card rounded-md">{cropName}</span>
 		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
