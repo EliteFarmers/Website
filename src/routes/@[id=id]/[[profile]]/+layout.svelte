@@ -51,6 +51,9 @@
 				<NavLi class="p-2" href="{path}/contests" active={url.endsWith('/contests')}>All Contests</NavLi>
 				<NavLi class="p-2" href={path} active={url === path}>Stats</NavLi>
 				<NavLi class="p-2" href="{path}/rates" active={url.endsWith('/rates')}>Rate Calculator</NavLi>
+				{#if data.authorized}
+					<NavLi class="p-2" href="{path}/graphs" active={url.endsWith('/rates')}>Admin</NavLi>
+				{/if}
 			</NavUl>
 		</Navbar>
 	{/key}

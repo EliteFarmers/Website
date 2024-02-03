@@ -4,8 +4,13 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
-export const load: PageServerLoad = async ({ parent, setHeaders }) => {
+export const load: PageServerLoad = async ({ parent, setHeaders, locals }) => {
 	const { account, profile, member } = await parent();
+
+	let authorized = false;
+	if (locals.discord_access_token && (locals.user?.permissions ?? 0) < 17) {
+		authorized = true;
+	}
 
 	if (!account.id || !account.name || !profile.profileId) {
 		throw error(404, 'Player not found');
@@ -36,12 +41,19 @@ export const load: PageServerLoad = async ({ parent, setHeaders }) => {
 		if (collection.tier === 0) collection.tier = collection.maxTier;
 	}
 
-	setHeaders({
-		'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
-	});
+	if (!authorized) {
+		setHeaders({
+			'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
+		});
+	} else {
+		setHeaders({
+			'Cache-Control': 'no-store',
+		});
+	}
 
 	return {
 		collections,
+		authorized,
 	};
 };
 
