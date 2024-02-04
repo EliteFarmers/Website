@@ -30,7 +30,9 @@
 </script>
 
 <section class="flex justify-center w-full mt-8 items-center">
-	<div class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-primary-foreground p-4 md:p-8 mx-2 w-full max-w-7xl">
+	<div
+		class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-primary-foreground p-4 md:p-8 mx-2 w-full max-w-7xl"
+	>
 		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-center">
 			<img
 				class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"

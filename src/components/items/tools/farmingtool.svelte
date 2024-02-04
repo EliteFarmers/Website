@@ -8,9 +8,7 @@
 	export let tool: FT;
 </script>
 
-<div
-	class="flex basis-[5rem] w-full max-h-30 flex-row gap-2 justify-between bg-gray-100 dark:bg-zinc-800 rounded-md p-1"
->
+<div class="flex basis-[5rem] w-full max-h-30 flex-row gap-2 justify-between bg-primary-foreground rounded-md p-1">
 	<div class="flex flex-row gap-2 items-center">
 		<img
 			class="w-14 md:w-20 md:h-20 aspect-square pixelated p-1"

@@ -42,7 +42,7 @@
 			{#if rank >= 0}
 				<a
 					href="/leaderboard/skills/{name.toLowerCase()}/{$page.params.id}-{$page.params.profile}"
-					class="py-1 pt-1.5 px-1.5 font-semibold text-green-700 dark:text-yellow-400 bg-gray-100 dark:bg-zinc-800 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+					class="py-1 pt-1.5 px-1.5 font-semibold text-green-700 dark:text-yellow-400 bg-primary-foreground rounded-md hover:bg-muted"
 				>
 					<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 						>{rank}</span
@@ -52,7 +52,7 @@
 			<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level}</strong></span>
 		</div>
 		<div
-			class="relative w-[100%] bg-gray-100 dark:bg-zinc-800 h-8 rounded-lg"
+			class="relative w-[100%] bg-primary-foreground h-8 rounded-lg"
 			on:mouseenter={() => (hovering = true)}
 			on:mouseleave={() => (hovering = false)}
 			role="none"

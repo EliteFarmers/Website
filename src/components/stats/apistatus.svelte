@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import * as Alert from '$ui/alert';
 
 	export let api: components['schemas']['ApiAccessDto'] = {};
 
@@ -7,37 +8,34 @@
 </script>
 
 {#if !api.collections}
-	<section class="flex justify-center align-middle py-8">
-		<div
-			class="border-4 rounded-lg border-red-400 w-[95%] lg:w-[80%] xl:w-[70%] bg-red-300 dark:border-red-800 dark:bg-red-900 text-center p-3"
-		>
-			<div class="flex flex-col md:flex-row gap-2 md:gap-6 justify-center align-middle whitespace-nowrap">
+	<div class="flex w-full justify-center">
+		<Alert.Root class="flex flex-col items-centers w-full max-w-xl bg-destructive/80">
+			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}
-						<h1 class="flex justify-center align-middle capitalize">
+						<p class="flex-1 basis-1/2 my-1 flex justify-center align-middle capitalize">
 							<strong>{key} API&nbsp;</strong> - Disabled
-						</h1>
+						</p>
 					{/if}
 				{/each}
-			</div>
-		</div>
-	</section>
+			</Alert.Title>
+			<Alert.Description>
+				<p class="text-center">Most data is missing due to the user's API settings.</p>
+			</Alert.Description>
+		</Alert.Root>
+	</div>
 {:else if entries.some(([, value]) => !value)}
-	<section
-		class="absolute flex justify-left align-middle pl-[2vw] sm:pl-[4vw] md:pl-[6vw] pb-4 -mt-8 sm:-mt-12 md:-mt-8"
-	>
-		<div
-			class="border-4 border-t-0 rounded-lg rounded-t-none pt-1 border-yellow-300 bg-yellow-100 dark:border-yellow-600 dark:bg-yellow-700 text-center p-1"
-		>
-			<div class="flex flex-col md:flex-row gap-4 md:gap-6 justify-center align-middle whitespace-nowrap">
+	<div class="flex w-full justify-center">
+		<Alert.Root class="flex flex-col items-centers w-full max-w-xl bg-yellow-100 dark:bg-yellow-600">
+			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}
-						<h1 class="flex justify-center align-middle capitalize text-sm">
+						<p class="flex-1 basis-1/2 my-1 flex justify-center align-middle capitalize">
 							<strong>{key} API&nbsp;</strong> - Disabled
-						</h1>
+						</p>
 					{/if}
 				{/each}
-			</div>
-		</div>
-	</section>
+			</Alert.Title>
+		</Alert.Root>
+	</div>
 {/if}

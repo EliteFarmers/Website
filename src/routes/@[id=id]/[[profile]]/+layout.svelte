@@ -44,18 +44,18 @@
 	/>
 
 	{#key url}
-		<div class="flex flex-row w-full justify-center mx-2 my-4">
-			<Menubar.Root class="font-semibold max-w-xl justify-center">
+		<div class="flex flex-row w-full justify-center my-4">
+			<Menubar.Root class="font-semibold max-w-xl justify-center mx-2">
 				<Menubar.Menu>
-					<Menubar.Item href="{path}/contests" class={active('/contests')}
+					<Menubar.Item href="{path}/contests" class={active('/contests') + ' cursor-pointer'}
 						>All Contests</Menubar.Item
 					>
-					<Menubar.Item href={path} class={active(path)}>Stats</Menubar.Item>
-					<Menubar.Item href="{path}/rates" class={active('/rates')}
+					<Menubar.Item href={path} class={active(path) + ' cursor-pointer'}>Stats</Menubar.Item>
+					<Menubar.Item href="{path}/rates" class={active('/rates') + ' cursor-pointer'}
 						>Rate Calculator</Menubar.Item
 					>
 					{#if data.authorized}
-						<Menubar.Item href="{path}/graphs">Admin</Menubar.Item>
+						<Menubar.Item href="{path}/graphs" class="cursor-pointer">Admin</Menubar.Item>
 					{/if}
 				</Menubar.Menu>
 			</Menubar.Root>

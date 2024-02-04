@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { Button } from 'flowbite-svelte';
-	import Farmingtool from './farmingtool.svelte';
+	import { Button } from '$ui/button';
+	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
 	import { FarmingTool as FT } from 'farming-weight';
 
 	export let tools: components['schemas']['ItemDto'][];
@@ -20,9 +20,9 @@
 			<Farmingtool {tool} />
 		{/each}
 		{#if count < tools.length}
-			<Button color="alternative" size="sm" on:click={() => (count = tools.length)}>Show All</Button>
+			<Button variant="outline" size="sm" on:click={() => (count = tools.length)}>Show All</Button>
 		{:else if tools.length > 10}
-			<Button color="alternative" size="sm" on:click={() => (count = 10)}>Show Less</Button>
+			<Button variant="outline" size="sm" on:click={() => (count = 10)}>Show Less</Button>
 		{/if}
 	</div>
 {/if}

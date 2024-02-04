@@ -19,9 +19,12 @@
 						{selected.name}
 					</h2>
 				</div>
-				<Gamemode class="first-letter:capitalize font-semibold text-2xl text-muted-foreground" gameMode={selected.gameMode} />
+				<Gamemode
+					class="first-letter:capitalize font-semibold text-2xl text-muted-foreground"
+					gameMode={selected.gameMode}
+				/>
 			</div>
-		</div>		
+		</div>
 	</Tooltip.Trigger>
 	{#if profiles.length > 0}
 		<Tooltip.Content side="bottom">

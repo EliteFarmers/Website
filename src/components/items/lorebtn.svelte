@@ -1,34 +1,38 @@
 <script lang="ts">
-	import { FormatMinecraftText } from '$lib/format';
-	import { Button, Modal } from 'flowbite-svelte';
-	import Lore from './lore.svelte';
-	import { FileLinesSolid } from 'flowbite-svelte-icons';
 	import type { EliteItemDto } from 'farming-weight';
+	import { FormatMinecraftText } from '$lib/format';
+	import { buttonVariants } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
+	import FileText from 'lucide-svelte/icons/file-text';
+	import Lore from './lore.svelte';
 
 	export let item: EliteItemDto;
-
-	let openModal = false;
 </script>
 
-<Button size="xs" on:click={() => (openModal = true)} color="none">
-	<FileLinesSolid size="md" />
-</Button>
-
-<Modal bind:open={openModal} autoclose={true} outsideclose={true} class="bg-zinc-800" color="none">
-	<h3 slot="header" class="font-mono text-xl">
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		{@html FormatMinecraftText(item.name ?? '')}
-	</h3>
-	<Lore lore={item.lore?.slice() ?? []} />
-	<div class="text-gray-400">
-		<slot />
-		<p>
-			<span class="font-semibold select-none">UUID:</span>
-			<span class="select-all">{item.uuid ?? 'N/A'}</span>
-		</p>
-		<p>
-			<span class="font-semibold select-none">Skyblock ID:</span>
-			<span class="select-all">{item.skyblockId}</span>
-		</p>
-	</div>
-</Modal>
+<Dialog.Root>
+	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
+		<FileText size={20} />
+	</Dialog.Trigger>
+	<Dialog.Content class="max-h-[90%] overflow-y-scroll">
+		<Dialog.Header>
+			<h3 class="font-mono text-xl">
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html FormatMinecraftText(item.name ?? '')}
+			</h3>
+		</Dialog.Header>
+		<div>
+			<Lore lore={item.lore?.slice() ?? []} />
+			<div class="text-gray-400">
+				<slot />
+				<p>
+					<span class="font-semibold select-none">UUID:</span>
+					<span class="select-all">{item.uuid ?? 'N/A'}</span>
+				</p>
+				<p>
+					<span class="font-semibold select-none">Skyblock ID:</span>
+					<span class="select-all">{item.skyblockId}</span>
+				</p>
+			</div>
+		</div>
+	</Dialog.Content>
+</Dialog.Root>
