@@ -10,7 +10,7 @@
 </script>
 
 <Dialog.Root>
-	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
+	<Dialog.Trigger class={buttonVariants({ variant: 'ghost' })}>
 		<FileText size={20} />
 	</Dialog.Trigger>
 	<Dialog.Content class="max-h-[90%] overflow-y-scroll">

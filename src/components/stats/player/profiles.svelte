@@ -1,9 +1,7 @@
 <script lang="ts">
 	import type { ProfileDetails } from '$lib/api/elite';
-	import { Popover } from 'flowbite-svelte';
 	import * as Tooltip from '$ui/tooltip';
-	import { slide } from 'svelte/transition';
-	import Gamemode from './gamemode.svelte';
+	import Gamemode from '$comp/stats/player/gamemode.svelte';
 
 	export let ign: string;
 	export let selected: ProfileDetails;

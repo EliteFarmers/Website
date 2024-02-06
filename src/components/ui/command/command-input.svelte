@@ -7,7 +7,7 @@
 
 	let className: string | undefined | null = undefined;
 	export { className as class };
-	export let value: string = '';
+	export let value = '';
 </script>
 
 <div class="flex items-center border-b px-2" data-cmdk-input-wrapper="">

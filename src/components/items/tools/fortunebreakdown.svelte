@@ -14,7 +14,7 @@
 
 <Tooltip.Root openDelay={50}>
 	<Tooltip.Trigger>
-		<div class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-600 min-h-4 h-full">
+		<div class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-700 min-h-4 h-full">
 			<p class="relative text-md md:text-lg px-1 z-10 font-mono">
 				{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{sum.toLocaleString()}&nbsp;
 			</p>
@@ -43,7 +43,7 @@
 					{/each}
 				</div>
 
-				<div class="flex flex-row justify-between font-semibold text-black dark:text-white">
+				<div class="flex flex-row justify-between font-semibold text-base text-black dark:text-white p-1">
 					<p>Total</p>
 					<p>{sum.toLocaleString()}</p>
 				</div>

@@ -1,7 +1,14 @@
 {
 	"rules": {
 		"@typescript-eslint/no-unused-vars": [
-			"warn",
+			"off",
+			{
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^$$(Props|Events|Slots|Generic)$"
+			}
+		],
+		"no-undef": [
+			"off",
 			{
 				"argsIgnorePattern": "^_",
 				"varsIgnorePattern": "^$$(Props|Events|Slots|Generic)$"

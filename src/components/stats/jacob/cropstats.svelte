@@ -2,7 +2,6 @@
 	import * as Tooltip from '$ui/tooltip';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { Popover } from 'flowbite-svelte';
 
 	export let jacob: components['schemas']['JacobDataDto'] | undefined | null;
 
