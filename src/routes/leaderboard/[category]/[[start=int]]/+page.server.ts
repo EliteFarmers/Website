@@ -47,6 +47,7 @@ export const load = (async ({ params, parent }) => {
 
 		return {
 			lb,
+			settings: lbSettings,
 			formatting: (type === LeaderboardType.Skill ? 'decimal' : 'number') as 'decimal' | 'number',
 		};
 	} catch (e) {
