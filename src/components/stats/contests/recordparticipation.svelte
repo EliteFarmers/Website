@@ -1,19 +1,17 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockMonthDay } from '$lib/format';
-	import { AccordionItem, Button, Popover } from 'flowbite-svelte';
-	import { ExclamationCircleSolid } from 'flowbite-svelte-icons';
+	import { Button } from '$ui/button';
+	import * as Accordion from '$ui/accordion';
+	import * as Tooltip from '$ui/tooltip';
+	import AlertCircle from 'lucide-svelte/icons/alert-circle';
 
 	export let rank = 0;
 	export let entry: components['schemas']['ContestParticipationWithTimestampDto'];
 </script>
 
-<AccordionItem
-	defaultClass="flex flex-row items-center justify-center gap-4 w-full"
-	textFlushDefault="text-black dark:text-white py-1"
-	paddingFlush="py-1"
->
-	<div slot="header" class="flex gap-0 md:gap-2 justify-between w-full">
+<Accordion.Item value={entry.timestamp + '' + entry.collected} class="mx-4">
+	<Accordion.Trigger class="flex gap-0 md:gap-2 justify-between w-full py-1">
 		<div
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
 		>
@@ -25,15 +23,17 @@
 				</h3>
 			</div>
 			{#if entry.removed}
-				<div>
-					<ExclamationCircleSolid class="text-red-800 dark:text-red-500" size="md" />
-					<Popover>
-						<p slot="title" class="text-black dark:text-white">This participation no longer exists!</p>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<AlertCircle class="text-destructive" />
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p class="text-lg font-semibold">This participation no longer exists!</p>
 						<p class="max-w-xs break-words whitespace-normal">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
-					</Popover>
-				</div>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
@@ -45,36 +45,40 @@
 				{entry.collected?.toLocaleString()}
 			</div>
 		</div>
-	</div>
-	<div class="flex flex-row justify-between items-center px-2">
-		<div class="flex flex-col text-lg">
-			<p class="text-lg p-1">
-				{#if entry.position !== -1}
-					<span class="text-sm xs:text-lg sm:text-xl text-green-800 dark:text-green-300">#</span><span
-						class="text-lg xs:text-xl sm:text-2xl text-green-800 dark:text-green-300"
-						>{(entry.position ?? 0) + 1}</span
+	</Accordion.Trigger>
+	<Accordion.Content>
+		<div class="flex flex-row justify-between items-center px-2">
+			<div class="flex flex-col text-lg">
+				<p class="text-lg p-1">
+					{#if entry.position !== -1}
+						<span class="text-sm xs:text-lg sm:text-xl text-green-800 dark:text-green-300">#</span><span
+							class="text-lg xs:text-xl sm:text-2xl text-green-800 dark:text-green-300"
+							>{(entry.position ?? 0) + 1}</span
+						>
+					{:else}
+						<span class="text-sm xs:text-md sm:text-2xl text-green-800 dark:text-green-300">???</span>
+					{/if}
+					<span class="text-sm xs:text-md sm:text-2xl">
+						/ {entry.participants?.toLocaleString() ?? '???'}</span
 					>
-				{:else}
-					<span class="text-sm xs:text-md sm:text-2xl text-green-800 dark:text-green-300">???</span>
-				{/if}
-				<span class="text-sm xs:text-md sm:text-2xl"> / {entry.participants?.toLocaleString() ?? '???'}</span>
-			</p>
-			<p class="text-sm font-light font-mono text-center">
-				<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
-					{new Date((entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
-						timeStyle: 'short',
-						dateStyle: 'short',
-						timeZone: 'UTC',
-					})}
-				</span>
-				<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
-					{getReadableSkyblockMonthDay(entry.timestamp ?? 0)}
-				</span>
-			</p>
+				</p>
+				<p class="text-sm font-light font-mono text-center">
+					<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
+						{new Date((entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
+							timeStyle: 'short',
+							dateStyle: 'short',
+							timeZone: 'UTC',
+						})}
+					</span>
+					<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
+						{getReadableSkyblockMonthDay(entry.timestamp ?? 0)}
+					</span>
+				</p>
+			</div>
+			<div class="flex flex-col sm:flex-row gap-1">
+				<Button href="/contest/{entry.timestamp}" color="alternative" size="sm">Contest</Button>
+				<Button href="/@{entry.playerUuid}/{entry.profileUuid}" color="alternative" size="sm">Stats</Button>
+			</div>
 		</div>
-		<div class="flex flex-col sm:flex-row gap-1">
-			<Button href="/contest/{entry.timestamp}" color="alternative" size="sm">Contest</Button>
-			<Button href="/@{entry.playerUuid}/{entry.profileUuid}" color="alternative" size="sm">Stats</Button>
-		</div>
-	</div>
-</AccordionItem>
+	</Accordion.Content>
+</Accordion.Item>

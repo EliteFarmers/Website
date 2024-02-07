@@ -91,12 +91,16 @@ export const CREDITS: Credit[] = [
 		],
 	},
 	{
-		name: 'Flowbite',
-		role: 'UI Framework and Icons',
+		name: 'Shadcn-Svelte',
+		role: 'UI Framework with Lucide icons',
 		links: [
 			{
 				name: 'Website',
-				url: 'https://flowbite-svelte.com/',
+				url: 'https://www.shadcn-svelte.com/',
+			},
+			{
+				name: 'Lucide',
+				url: 'https://lucide.dev/',
 			},
 		],
 	},

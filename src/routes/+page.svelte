@@ -9,7 +9,7 @@
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { PageData } from './$types';
 	import Serverbar from '$comp/stats/discord/serverbar.svelte';
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let data: PageData;
 
@@ -51,7 +51,7 @@
 								rel="noopener noreferrer nofollow"
 							>
 								Elite Farmers
-								<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+								<ExternalLink class="ml-2" size={20} />
 							</Button>
 							<Button
 								href="/support"
@@ -61,7 +61,7 @@
 								rel="noopener noreferrer nofollow"
 							>
 								Support Server
-								<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
 					</Card.Content>
@@ -84,7 +84,7 @@
 								rel="noopener noreferrer nofollow"
 							>
 								Donate on Ko-Fi
-								<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
 					</Card.Content>
@@ -110,7 +110,7 @@
 								rel="noopener noreferrer nofollow"
 							>
 								Invite Elite Bot
-								<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
 					</Card.Content>
@@ -133,7 +133,7 @@
 								rel="noopener noreferrer nofollow"
 							>
 								Open Lumini's Shop
-								<ArrowUpRightFromSquareOutline class="ml-2" size="sm" />
+								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
 					</Card.Content>

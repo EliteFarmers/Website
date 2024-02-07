@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import type { components } from '$lib/api/api';
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let contests: components['schemas']['JacobDataDto']['contests'];
 
@@ -41,7 +41,7 @@
 			>
 				<h3 class="text-lg font-semibold flex flex-row items-center gap-2">
 					View all
-					<ArrowUpRightFromSquareOutline />
+					<ExternalLink />
 				</h3>
 			</a>
 		{:else}

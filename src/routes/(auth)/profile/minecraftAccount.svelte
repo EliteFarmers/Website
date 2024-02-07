@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { components } from '$lib/api/api';
-	import { Popover } from 'flowbite-svelte';
 	import { Button } from '$ui/button';
 	import * as Tooltip from '$ui/tooltip';
 	import StarIcon from 'lucide-svelte/icons/star';

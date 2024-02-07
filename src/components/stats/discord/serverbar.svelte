@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { UserGroupSolid } from 'flowbite-svelte-icons';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import Users from 'lucide-svelte/icons/users';
 
 	export let guild: components['schemas']['GuildDetailsDto'];
 </script>
@@ -28,6 +28,6 @@
 		<p class="text-xl">
 			{guild.memberCount?.toLocaleString()}
 		</p>
-		<UserGroupSolid size="lg" />
+		<Users />
 	</div>
 </a>

@@ -93,8 +93,8 @@
 			</form>
 			<Tooltip.Root>
 				<Tooltip.Trigger>
-					<Button on:click={() => (confirmModal = true)} color="red">
-						<Trash2 />
+					<Button on:click={() => (confirmModal = true)}>
+						<Trash2 class="text-destructive" />
 					</Button>
 				</Tooltip.Trigger>
 				<Tooltip.Content>
@@ -124,7 +124,7 @@
 									<Tooltip.Root>
 										<Tooltip.Trigger>
 											<Button type="submit" variant="destructive" size="icon">
-												<Trash2 size={20} />
+												<Trash2 size={20} class="text-destructive" />
 											</Button>
 										</Tooltip.Trigger>
 										<Tooltip.Content side="right">

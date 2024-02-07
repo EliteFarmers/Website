@@ -4,9 +4,11 @@
 	import { FormatMinecraftText } from '$lib/format';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
 	import type { FarmingTool } from 'farming-weight';
-	import { Button, Label, Select } from 'flowbite-svelte';
-	import { EditOutline } from 'flowbite-svelte-icons';
+	import { Button } from '$ui/button';
+	import { Label } from '$ui/label';
+	import * as Select from '$ui/select';
 	import { slide } from 'svelte/transition';
+	import { Edit } from 'lucide-svelte';
 
 	export let tool: FarmingTool;
 	export let player: RatesPlayerStore;
@@ -25,8 +27,8 @@
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.name ?? '')}</span>
 
 		<div class="flex items-center gap-2">
-			<Button color="none" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
-				<EditOutline size="sm" />
+			<Button variant="ghost" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
+				<Edit size={16} />
 			</Button>
 
 			<Lorebtn item={tool.item}>
@@ -51,34 +53,33 @@
 	{#if expanded}
 		<div class="flex flex-col gap-2" transition:slide>
 			<Label>Reforge</Label>
-			<Select
+			<Select.Simple
 				bind:value={reforge}
-				size="sm"
+				options={[
+					{ value: 'bountiful', label: 'Bountiful' },
+					{ value: 'blessed', label: 'Blessed' },
+				]}
 				placeholder="Reforge"
 				class="dark:bg-zinc-800"
-				on:change={() => {
+				change={() => {
 					tool.changeReforgeTo(reforge);
 					player.refresh();
 				}}
-			>
-				<option value="bountiful">Bountiful</option>
-				<option value="blessed">Blessed</option>
-			</Select>
+			/>
 			<Label>Farmed Crops</Label>
-			<Select
+			<Select.Simple
 				bind:value={counter}
-				size="sm"
 				placeholder="Farmed Crops"
 				class="dark:bg-zinc-800"
-				on:change={() => {
+				options={counterOptions.map((c) => ({
+					value: c,
+					label: c.toLocaleString(),
+				}))}
+				change={() => {
 					tool.changeFarmedCropsTo(counter);
 					player.refresh();
 				}}
-			>
-				{#each counterOptions as c (c)}
-					<option value={c}>{c.toLocaleString()}</option>
-				{/each}
-			</Select>
+			/>
 			<p class="text-gray-500 text-sm">More config options coming soon!</p>
 		</div>
 	{/if}

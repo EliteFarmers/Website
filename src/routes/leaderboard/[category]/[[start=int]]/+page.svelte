@@ -17,7 +17,7 @@
 	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: formatting = data.formatting;
 
-	let currentPage = Math.floor((data.lb.offset ?? 0) / 20) + 1;
+	let initialPage = Math.floor((data.lb.offset ?? 0) / 20) + 1;
 
 	$: {
 		if (data.lb?.id === 'skyblockxp') {
@@ -44,7 +44,7 @@
 		<Pagination.Root
 			count={data.lb.maxEntries ?? 1000}
 			perPage={20}
-			bind:page={currentPage}
+			bind:page={initialPage}
 			let:pages
 			let:currentPage
 			onPageChange={(newPage) => {

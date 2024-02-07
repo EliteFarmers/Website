@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { AuthorizedUser } from '$lib/api/elite';
-	import { UserOutline } from 'flowbite-svelte-icons';
+	import UserRound from 'lucide-svelte/icons/circle-user-round';
 	export let user: AuthorizedUser;
 	export let size = 12;
 </script>
 
 {#if !user.avatar}
 	<div class="w-{size} h-{size} rounded-full flex items-center justify-center select-none bg-blend-darken bg-black">
-		<UserOutline />
+		<UserRound />
 	</div>
 {:else}
 	<img
