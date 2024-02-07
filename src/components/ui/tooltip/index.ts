@@ -1,7 +1,8 @@
+import Tooltip from './tooltip.svelte';
 import { Tooltip as TooltipPrimitive } from 'bits-ui';
 import Content from './tooltip-content.svelte';
 
-const Root = TooltipPrimitive.Root;
+const Root = Tooltip;
 const Trigger = TooltipPrimitive.Trigger;
 
 export {

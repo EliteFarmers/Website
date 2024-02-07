@@ -41,11 +41,11 @@
 	<h1 class="text-4xl my-16">Jacob's Contests</h1>
 
 	<div class="flex flex-col md:flex-row gap-8 items-stretch max-w-4xl">
-		<Card.Root class="max-w-md">
+		<Card.Root class="flex flex-col max-w-md">
 			<Card.Header>
 				<Card.Title class="text-xl">View upcoming contests!</Card.Title>
 			</Card.Header>
-			<Card.Content>
+			<Card.Content class="flex-1 flex flex-col justify-between">
 				<p class="w-full mb-6 text-md">
 					Contests coming this SkyBlock year! May take a moment to update after the new year.
 				</p>

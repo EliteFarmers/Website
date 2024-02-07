@@ -1,12 +1,19 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Accordion, AccordionItem, Button, Checkbox, Input, Label, Modal, Select } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
+	import { Checkbox } from '$ui/checkbox';
+	import { Label } from '$ui/label';
+	import * as Select from '$ui/select';
+	import * as Accordion from '$ui/accordion';
+	import * as Dialog from '$ui/dialog';
 	import type { PageData, ActionData } from './$types';
 	import { ChannelType } from '$lib/utils';
 	import Jacobsettings from './jacobsettings.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
-	import { PlusOutline, TrashBinOutline } from 'flowbite-svelte-icons';
 	import Head from '$comp/head.svelte';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -22,7 +29,7 @@
 		.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
 		.map((c) => ({
 			value: c.id ?? '',
-			name: '#' + (c.name ?? ''),
+			label: '#' + (c.name ?? ''),
 		}))
 		.filter((c) => c.value);
 
@@ -30,9 +37,9 @@
 		.sort((a, b) => (b.position ?? 0) - (a.position ?? 0))
 		.map((r) => ({
 			value: r.id ?? '',
-			name: r.name ?? '',
+			label: r.name ?? '',
 		}))
-		.filter((r) => r.value && r.name !== '@everyone');
+		.filter((r) => r.value && r.label !== '@everyone');
 
 	$: excluded = (data.excludedParticipations ?? []).map((p) => {
 		const [timestamp, crop, uuid] = p.split('-');
@@ -73,104 +80,107 @@
 
 	<section class="flex flex-col gap-8 w-full justify-center items-center">
 		<div
-			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-gray-100 dark:bg-zinc-800 rounded-md"
+			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-primary-foreground rounded-md"
 		>
 			<h2 class="text-3xl p-4">Manage Shared Settings</h2>
-			<Accordion flush={true} class="mx-4" multiple={true}>
-				<AccordionItem>
-					<div slot="header" class="text-black dark:text-white">
+			<Accordion.Root class="mx-4" multiple={true}>
+				<Accordion.Item value="banned">
+					<Accordion.Trigger>
 						<h4>Banned Participations</h4>
-					</div>
-					{#if (data.excludedParticipations ?? []).length > 0}
-						<div class="flex flex-col gap-4">
-							{#each excluded as p (p)}
-								<div class="flex flex-row items-center gap-4">
-									<form method="post" action="?/unbanparticipation" use:enhance>
-										<input
-											type="text"
-											value="{p.timestamp}-{p.crop}-{p.uuid}"
-											name="participationId"
-											hidden
+					</Accordion.Trigger>
+					<Accordion.Content>
+						{#if (data.excludedParticipations ?? []).length > 0}
+							<div class="flex flex-col gap-4">
+								{#each excluded as p (p)}
+									<div class="flex flex-row items-center gap-4">
+										<form method="post" action="?/unbanparticipation" use:enhance>
+											<input
+												type="text"
+												value="{p.timestamp}-{p.crop}-{p.uuid}"
+												name="participationId"
+												hidden
+											/>
+											<Button type="submit" size="sm" variant="destructive">
+												<Trash2 size={16} />
+											</Button>
+										</form>
+										<img
+											class="w-8 h-8 pixelated"
+											src="https://mc-heads.net/avatar/{p.uuid}/8"
+											alt="User Avatar"
 										/>
-										<Button type="submit" size="sm">
-											<TrashBinOutline size="sm" />
-										</Button>
-									</form>
-									<img
-										class="w-8 h-8 pixelated"
-										src="https://mc-heads.net/avatar/{p.uuid}/8"
-										alt="User Avatar"
-									/>
-									<p>{p.crop}</p>
-									<p>{getReadableSkyblockDate(p.timestamp)}</p>
-									<Button size="sm" href="/contest/{p.timestamp}" color="alternative">View</Button>
-								</div>
-							{/each}
-						</div>
-					{:else}
-						<p class="p-4">No participations are blocked from being on Jacob Leaderboards</p>
-					{/if}
-				</AccordionItem>
-				<AccordionItem>
-					<div slot="header" class="text-black dark:text-white">
-						<h4>Excluded Time Spans</h4>
-					</div>
-					{#if (data.excludedTimespans ?? []).length > 0}
-						<div class="flex flex-col gap-4">
-							{#each data.excludedTimespans ?? [] as t (t)}
-								<div class="flex flex-row items-center gap-4">
-									<form method="post" action="?/unbantimespan" use:enhance>
-										<input type="text" value={t.start} name="startTime" hidden />
-										<input type="text" value={t.end} name="endTime" hidden />
-										<Button type="submit" size="sm">
-											<TrashBinOutline size="sm" />
-										</Button>
-									</form>
-									<div class="flex flex-col md:flex-row gap-8">
-										<div class="flex flex-col gap-2">
-											<p>{new Date((t.start ?? 0) * 1000).toLocaleDateString()}</p>
-											<p>{getReadableSkyblockDate(t.start ?? 0)}</p>
-										</div>
-										<div class="flex flex-col gap-2">
-											<p>{new Date((t.end ?? 0) * 1000).toLocaleDateString()}</p>
-											<p>{getReadableSkyblockDate(t.end ?? 0)}</p>
-										</div>
+										<p>{p.crop}</p>
+										<p>{getReadableSkyblockDate(p.timestamp)}</p>
+										<Button size="sm" href="/contest/{p.timestamp}" color="alternative">View</Button
+										>
 									</div>
-									<p>{t.reason ?? 'No reason provided'}</p>
+								{/each}
+							</div>
+						{:else}
+							<p class="p-4">No participations are blocked from being on Jacob Leaderboards</p>
+						{/if}
+					</Accordion.Content>
+				</Accordion.Item>
+				<Accordion.Item value="ranges">
+					<Accordion.Trigger>
+						<h4>Excluded Time Spans</h4>
+					</Accordion.Trigger>
+					<Accordion.Content>
+						{#if (data.excludedTimespans ?? []).length > 0}
+							<div class="flex flex-col gap-4">
+								{#each data.excludedTimespans ?? [] as t (t)}
+									<div class="flex flex-row items-center gap-4">
+										<form method="post" action="?/unbantimespan" use:enhance>
+											<input type="text" value={t.start} name="startTime" hidden />
+											<input type="text" value={t.end} name="endTime" hidden />
+											<Button type="submit" size="sm" variant="destructive">
+												<Trash2 size={16} />
+											</Button>
+										</form>
+										<div class="flex flex-col md:flex-row gap-8">
+											<div class="flex flex-col gap-2">
+												<p>{new Date((t.start ?? 0) * 1000).toLocaleDateString()}</p>
+												<p>{getReadableSkyblockDate(t.start ?? 0)}</p>
+											</div>
+											<div class="flex flex-col gap-2">
+												<p>{new Date((t.end ?? 0) * 1000).toLocaleDateString()}</p>
+												<p>{getReadableSkyblockDate(t.end ?? 0)}</p>
+											</div>
+										</div>
+										<p>{t.reason ?? 'No reason provided'}</p>
+									</div>
+								{/each}
+							</div>
+						{:else}
+							<p class="p-4">No time spans are excluded from being on Jacob Leaderboards</p>
+						{/if}
+						<form method="post" action="?/bantimespan" use:enhance>
+							<div class="flex flex-col md:flex-row gap-4 items-center mt-8">
+								<div class="flex-1 flex flex-col items-start gap-1">
+									<Label for="startDate">Start Time</Label>
+									<Input name="startDate" type="datetime-local" />
 								</div>
-							{/each}
-						</div>
-					{:else}
-						<p class="p-4">No time spans are excluded from being on Jacob Leaderboards</p>
-					{/if}
-
-					<form method="post" action="?/bantimespan" use:enhance>
-						<div class="flex flex-col md:flex-row gap-4 items-center mt-4">
-							<Label class="">
-								<span>Start Time</span>
-								<Input let:props name="startDate">
-									<input {...props} type="datetime-local" />
-								</Input>
-							</Label>
-							<Label class="">
-								<span>End Time</span>
-								<Input let:props name="endDate">
-									<input {...props} type="datetime-local" />
-								</Input>
-							</Label>
-							<Label class="w-full">
-								<span>Reason</span>
-								<Input let:props name="reason" placeholder="Enter reason for block">
-									<input {...props} type="text" maxlength="64" />
-								</Input>
-							</Label>
-							<Button type="submit" color="red" size="lg" class="md:mt-4">
-								<PlusOutline size="sm" />
-							</Button>
-						</div>
-					</form>
-				</AccordionItem>
-			</Accordion>
+								<div class="flex-1 flex flex-col items-start gap-1">
+									<Label for="endDate">End Time</Label>
+									<Input name="endDate" type="datetime-local" />
+								</div>
+								<div class="flex-1 flex flex-col items-start gap-1">
+									<Label for="reason">Reason</Label>
+									<Input
+										name="reason"
+										placeholder="Enter reason for block"
+										type="text"
+										maxlength={64}
+									/>
+								</div>
+								<Button type="submit" size="lg" class="md:mt-4">
+									<Plus size={16} />
+								</Button>
+							</div>
+						</form>
+					</Accordion.Content>
+				</Accordion.Item>
+			</Accordion.Root>
 		</div>
 	</section>
 
@@ -181,69 +191,77 @@
 	</section>
 </main>
 
-<Modal title="Server Jacob Leaderboard Settings" bind:open={clickOutsideModal} autoclose={false}>
-	<form
-		method="post"
-		action="?/create"
-		class="flex flex-col gap-2"
-		use:enhance={() => {
-			return async ({ result, update }) => {
-				if (result) clickOutsideModal = false;
-				update();
-			};
-		}}
-	>
-		<Label class="space-y-2">
-			<span>Leaderboard Name</span>
-			<Input let:props name="title" placeholder="Title">
-				<input {...props} type="text" maxlength="64" />
-			</Input>
-		</Label>
-		<Label class="space-y-2">
-			<span>Channel to display leaderboard in</span>
-			<Select items={channels} value="" placeholder="Select a channel" name="sendToChannelId" />
-		</Label>
-		<Checkbox name="enableUpdates" class="my-4" bind:checked={sendUpdates}>
-			<span>Send update messages</span>
-		</Checkbox>
-		{#if sendUpdates}
-			<Label class="space-y-2 -mt-4">
-				<span>Role to mention when leaderboard updates</span>
-				<Select items={roles} value="" placeholder="Select a role" name="mentionRoleId" />
-			</Label>
-			<Label class="space-y-2">
-				<span>Channel to send leaderboard updates in</span>
-				<Select items={channels} value="" placeholder="Select a channel" name="updatesChannelId" />
-			</Label>
-			<Checkbox name="tinyUpdatesPing" class="mb-4" bind:checked={tinyLbPing}>
-				<span>Ping for updates with tiny improvements</span>
-			</Checkbox>
-		{/if}
-		<Label class="space-y-2">
-			<span>Role required to submit scores</span>
-			<Select items={roles} value="" placeholder="Select a role" name="requiredRoleId" />
-		</Label>
-		<Label class="space-y-2">
-			<span>Role blacklisted from this leaderboard</span>
-			<Select items={roles} value="" placeholder="Select a role" name="blockedRoleId" />
-		</Label>
+<Dialog.Root bind:open={clickOutsideModal}>
+	<Dialog.Content class="max-h-[90%] overflow-y-scroll">
+		<Dialog.Header>
+			<h3 class="text-xl">Server Jacob Leaderboard Settings</h3>
+		</Dialog.Header>
+		<form
+			method="post"
+			action="?/create"
+			class="flex flex-col gap-4"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result) clickOutsideModal = false;
+					update();
+				};
+			}}
+		>
+			<div class="flex flex-col items-start gap-1">
+				<Label for="title">Leaderboard Name</Label>
+				<Input name="title" placeholder="Title" maxlength={64} />
+			</div>
 
-		<Label class="space-y-2 mt-4">
-			<span>Allow scores only after</span>
-			<Input let:props name="startDate">
-				<input {...props} type="datetime-local" />
-			</Input>
-		</Label>
-		<Label class="space-y-2 mb-4">
-			<span>Allow scores until</span>
-			<Input let:props name="endDate">
-				<input {...props} type="datetime-local" />
-			</Input>
-		</Label>
+			<div class="flex flex-col items-start gap-1">
+				<Label for="sendToChannelId">Channel to display leaderboard in</Label>
+				<Select.Simple options={channels} value="" placeholder="Select a channel" name="sendToChannelId" />
+			</div>
 
-		<Button formaction="?/create" type="submit">Edit/Create</Button>
-		<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-			Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
-		</p>
-	</form>
-</Modal>
+			<div class="flex items-center gap-2">
+				<Checkbox name="enableUpdates" bind:checked={sendUpdates} />
+				<Label for="enableUpdates">Send update messages</Label>
+			</div>
+
+			{#if sendUpdates}
+				<div class="flex flex-col items-start gap-1">
+					<Label for="mentionRoleId">Role to mention when leaderboard updates</Label>
+					<Select.Simple options={roles} value="" placeholder="Select a role" name="mentionRoleId" />
+				</div>
+
+				<div class="flex flex-col items-start gap-1">
+					<Label for="updatesChannelId">Channel to send leaderboard updates in</Label>
+					<Select.Simple options={channels} value="" placeholder="Select a channel" name="updatesChannelId" />
+				</div>
+
+				<div class="flex items-center gap-2">
+					<Checkbox name="tinyUpdatesPing" bind:checked={tinyLbPing} />
+					<Label for="tinyUpdatesPing">Ping for updates with tiny improvements</Label>
+				</div>
+			{/if}
+			<div class="flex flex-col items-start gap-1">
+				<Label for="requiredRoleId">Role required to submit scores</Label>
+				<Select.Simple options={roles} value="" placeholder="Select a role" name="requiredRoleId" />
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="blockedRoleId">Role blacklisted from this leaderboard</Label>
+				<Select.Simple options={roles} value="" placeholder="Select a role" name="blockedRoleId" />
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="startDate">Allow scores only after</Label>
+				<Input name="startDate" type="datetime-local" />
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="endDate">Allow scores until</Label>
+				<Input name="endDate" type="datetime-local" />
+			</div>
+
+			<Button formaction="?/create" type="submit">Edit/Create</Button>
+			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
+			</p>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>
