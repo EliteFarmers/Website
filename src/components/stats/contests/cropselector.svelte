@@ -19,11 +19,9 @@
 <div class="flex flex-wrap items-center justify-center p-4 gap-2">
 	{#each crops as [crop, src] (crop)}
 		<button
-			class="flex flex-row items-center justify-center gap-2 p-2 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-900 {$selectedCrops[
-				crop
-			]
-				? 'bg-gray-300 dark:bg-zinc-700'
-				: 'bg-gray-100 dark:bg-zinc-800'}"
+			class="flex flex-row items-center justify-center gap-2 p-2 rounded-md hover:bg-muted {$selectedCrops[crop]
+				? 'bg-primary-foreground'
+				: 'bg-primary-foreground/50'}"
 			on:click={() => click(crop)}
 		>
 			<img {src} alt={crop[0]} class="w-12 h-12 pixelated" />

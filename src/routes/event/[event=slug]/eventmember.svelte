@@ -1,17 +1,16 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { AccordionItem, Button, Popover } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import * as Accordion from '$ui/accordion';
+	import * as Tooltip from '$ui/tooltip';
 
 	export let member: components['schemas']['EventMemberDetailsDto'];
 	export let rank: number;
 	export let running: boolean;
 </script>
 
-<AccordionItem
-	defaultClass="flex flex-row items-center justify-center gap-4 w-full"
-	textFlushDefault="text-black dark:text-white"
->
-	<div slot="header" class="flex flex-row justify-between align-middle w-full">
+<Accordion.Trigger class="w-full">
+	<div class="flex flex-row justify-between align-middle w-full">
 		<div class="flex flex-row gap-2 align-middle">
 			<div class="text-green-800 dark:text-green-300">
 				<h1>
@@ -25,27 +24,33 @@
 			/>
 			<p class="text-lg">{member.playerName}</p>
 			{#if running}
-				<div class="flex flex-col items-center justify-center status-{rank}">
-					{#if member.status === 0}
-						<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
-						<Popover triggeredBy=".status-{rank}">
-							<p slot="title" class="text-black dark:text-white">Inactive Farmer</p>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<div class="flex flex-col items-center justify-center">
+							{#if member.status === 0}
+								<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
+							{/if}
+							{#if member.status === 1}
+								<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300" />
+							{/if}
+						</div>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						{#if member.status === 0}
+							<p class="text-lg font-semibold">Inactive Farmer</p>
 							<p class="max-w-xs">
 								{member.playerName} has not increased their score since last checked.
 							</p>
-						</Popover>
-					{/if}
-					{#if member.status === 1}
-						<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300" />
-						<Popover triggeredBy=".status-{rank}">
-							<p slot="title" class="text-black dark:text-white">Actively Farming!</p>
+						{/if}
+						{#if member.status === 1}
+							<p class="text-lg font-semibold">Actively Farming!</p>
 							<p class="max-w-xs">{member.playerName} has increased their score since last checked!</p>
-						</Popover>
-					{/if}
-				</div>
+						{/if}
+					</Tooltip.Content>
+				</Tooltip.Root>
 			{/if}
 		</div>
-		<p class="text-lg block">
+		<p class="text-lg block pr-2">
 			{#if member.amountGained && +member.amountGained > 0}
 				{(+(member.amountGained ?? 0)).toLocaleString()}
 			{:else}
@@ -53,6 +58,8 @@
 			{/if}
 		</p>
 	</div>
+</Accordion.Trigger>
+<Accordion.Content>
 	<div class="flex flex-row justify-between items-center">
 		<div class="text-lg">
 			<p class="text-gray-500">Last Updated</p>
@@ -66,4 +73,4 @@
 		</div>
 		<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 	</div>
-</AccordionItem>
+</Accordion.Content>

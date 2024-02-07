@@ -33,8 +33,6 @@
 		"eslint-plugin-n": "^15.7.0",
 		"eslint-plugin-promise": "^6.1.1",
 		"eslint-plugin-svelte": "^2.35.1",
-		"flowbite-svelte": "^0.40.2",
-		"flowbite-svelte-icons": "^0.2.6",
 		"postcss": "^8.4.33",
 		"prettier": "^2.8.8",
 		"prettier-plugin-svelte": "^2.10.1",
@@ -48,12 +46,25 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@internationalized/date": "^3.5.1",
 		"@popperjs/core": "^2.11.8",
 		"apexcharts": "^3.45.1",
+		"bits-ui": "^0.15.1",
 		"classnames": "^2.5.1",
+		"clsx": "^2.1.0",
+		"cmdk-sv": "^0.0.13",
+		"embla-carousel-svelte": "8.0.0-rc19",
 		"farming-weight": "^0.3.4",
-		"flowbite": "^1.8.1",
+		"formsnap": "^0.4.2",
+		"lucide-svelte": "^0.314.0",
+		"mode-watcher": "^0.1.2",
 		"openapi-fetch": "^0.7.10",
-		"prismarine-nbt": "^2.5.0"
+		"prismarine-nbt": "^2.5.0",
+		"svelte-sonner": "^0.3.11",
+		"sveltekit-superforms": "^1.13.4",
+		"tailwind-merge": "^2.2.1",
+		"tailwind-variants": "^0.1.20",
+		"vaul-svelte": "^0.1.0",
+		"zod": "^3.22.4"
 	}
 }

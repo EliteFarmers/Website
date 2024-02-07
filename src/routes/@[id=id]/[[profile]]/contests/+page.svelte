@@ -4,8 +4,8 @@
 	import MedalCounts from '$comp/stats/jacob/medalcounts.svelte';
 	import { getTimeStamp } from '$lib/format';
 	import type { PageData } from './$types';
-
-	import { Accordion, AccordionItem, Timeline, TimelineItemVertical, Toggle } from 'flowbite-svelte';
+	import * as Accordion from '$ui/accordion';
+	import { Toggle } from '$ui/toggle';
 
 	let timeType = false;
 
@@ -32,51 +32,51 @@
 			/>
 
 			<div class="flex flex-row align-middle my-2 mt-4">
-				<Toggle bind:checked={timeType} label="Show All" size="large" />
+				<Toggle bind:pressed={timeType} />
 				Show Real Life Time
 			</div>
 		</div>
 
-		<Timeline order="vertical" customClass="w-full">
-			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts], i (year)}
-				<TimelineItemVertical
-					title={'Year ' + year}
-					date={new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
-						' - ' +
-						new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString()}
-				>
-					<svelte:fragment slot="icon">
-						<span
-							class="flex absolute justify-center items-center w-6 h-6 bg-primary-200 rounded-full ring-8 ring-white dark:ring-gray-900 dark:bg-primary-900"
-						/>
-					</svelte:fragment>
-
-					<Accordion flush multiple defaultClass="">
-						<AccordionItem open={i < 5}>
-							<span slot="header" class="w-full px-4">
-								<MedalCounts
-									participations={conts?.length}
-									medals={{
-										diamond: conts?.filter((c) => c.medal === 'diamond').length ?? 0,
-										platinum: conts?.filter((c) => c.medal === 'platinum').length ?? 0,
-										gold: conts?.filter((c) => c.medal === 'gold').length ?? 0,
-										silver: conts?.filter((c) => c.medal === 'silver').length ?? 0,
-										bronze: conts?.filter((c) => c.medal === 'bronze').length ?? 0,
-									}}
-								/>
-							</span>
-							<div class="flex flex-wrap gap-4">
-								{#each conts ?? [] as contest (`${contest.timestamp ?? 0}${contest?.crop ?? 0}`)}
-									<div class="basis-64">
-										<Contest {contest} irlTime={timeType} />
-									</div>
-								{/each}
+		<Accordion.Root multiple class="max-w-6xl w-full mx-4 items-center">
+			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
+				<Accordion.Item value="{year} ">
+					<Accordion.Trigger class="flex justify-center hover:no-underline">
+						<div class="flex flex-col gap-2 justify-center items-center mr-4">
+							<div class="flex flex-row justify-between items-center w-full">
+								<p class="text-xl font-semibold flex-1 text-start">Year {year}</p>
+								<span class="text-normal font-mono">
+									{new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
+										' - ' +
+										new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString()}
+								</span>
 							</div>
-						</AccordionItem>
-					</Accordion>
-				</TimelineItemVertical>
+
+							<MedalCounts
+								participations={conts?.length}
+								medals={{
+									diamond: conts?.filter((c) => c.medal === 'diamond').length ?? 0,
+									platinum: conts?.filter((c) => c.medal === 'platinum').length ?? 0,
+									gold: conts?.filter((c) => c.medal === 'gold').length ?? 0,
+									silver: conts?.filter((c) => c.medal === 'silver').length ?? 0,
+									bronze: conts?.filter((c) => c.medal === 'bronze').length ?? 0,
+								}}
+							/>
+						</div>
+					</Accordion.Trigger>
+
+					<Accordion.Content>
+						<div class="flex flex-wrap gap-4 justify-center">
+							{#each conts ?? [] as contest (`${contest.timestamp ?? 0}${contest?.crop ?? 0}`)}
+								<div class="basis-64">
+									<Contest {contest} irlTime={timeType} />
+								</div>
+							{/each}
+						</div>
+					</Accordion.Content>
+				</Accordion.Item>
 			{/each}
-		</Timeline>
+		</Accordion.Root>
+
 		{#if data.contestsCount === 0}
 			<div class="flex flex-col justify-center items-center w-full">
 				<p class="text-2xl font-bold">No Contests</p>

@@ -1,16 +1,12 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { Popover } from 'flowbite-svelte';
-	import { ExclamationCircleSolid } from 'flowbite-svelte-icons';
+	import * as Tooltip from '$ui/tooltip';
+	import AlertCircle from 'lucide-svelte/icons/alert-circle';
 
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>
 
-<a
-	href="/@{entry.playerName}"
-	data-sveltekit-preload-data="tap"
-	class="bg-gray-200 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-900 rounded-md"
->
+<a href="/@{entry.playerName}" data-sveltekit-preload-data="tap" class="bg-card-primary hover:bg-muted rounded-md">
 	<div class="flex gap-0 md:gap-2 justify-between">
 		<div
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
@@ -27,15 +23,17 @@
 				</h1>
 			</div>
 			{#if entry.removed}
-				<div class="text-center">
-					<ExclamationCircleSolid class="text-red-800 dark:text-red-500" size="md" />
-					<Popover>
-						<p slot="title" class="text-black dark:text-white">This participation no longer exists!</p>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<AlertCircle class="text-destructive" />
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p class="text-lg font-semibold">This participation no longer exists!</p>
 						<p class="max-w-xs break-words whitespace-normal">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
-					</Popover>
-				</div>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">

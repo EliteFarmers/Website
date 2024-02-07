@@ -1,34 +1,31 @@
 <script lang="ts">
 	import type { ProfileDetails } from '$lib/api/elite';
-	import { Popover } from 'flowbite-svelte';
-	import { slide } from 'svelte/transition';
-	import Gamemode from './gamemode.svelte';
+	import * as Tooltip from '$ui/tooltip';
+	import Gamemode from '$comp/stats/player/gamemode.svelte';
 
 	export let ign: string;
 	export let selected: ProfileDetails;
 	export let profiles: ProfileDetails[];
 </script>
 
-<div class="grid col-span-1 z-10" id="profileName">
-	<div class="flex flex-row gap-2 items-center">
-		<div class="p-1 lg:p-2 px-2 mx-1 bg-gray-200 dark:bg-zinc-700 rounded-md">
-			<h2 class="text-2xl md:text-3xl">
-				{selected.name}
-			</h2>
+<Tooltip.Root openDelay={50}>
+	<Tooltip.Trigger>
+		<div class="grid col-span-1 z-10">
+			<div class="flex flex-row gap-2 items-center">
+				<div class="p-1 lg:p-2 px-2 mx-1 bg-card rounded-md">
+					<h2 class="text-2xl md:text-3xl">
+						{selected.name}
+					</h2>
+				</div>
+				<Gamemode
+					class="first-letter:capitalize font-semibold text-2xl text-muted-foreground"
+					gameMode={selected.gameMode}
+				/>
+			</div>
 		</div>
-		<Gamemode class="first-letter:capitalize font-semibold text-2xl text-gray-500" gameMode={selected.gameMode} />
-	</div>
+	</Tooltip.Trigger>
 	{#if profiles.length > 0}
-		<Popover
-			triggeredBy="#profileName"
-			class="text-sm font-light z-10 bg-gray-200 dark:bg-zinc-700"
-			placement="bottom"
-			color="none"
-			border={false}
-			offset={0}
-			arrow={false}
-			transition={slide}
-		>
+		<Tooltip.Content side="bottom">
 			<div class="flex flex-col gap-1" data-sveltekit-preload-data="tap">
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
@@ -40,6 +37,6 @@
 					</a>
 				{/each}
 			</div>
-		</Popover>
+		</Tooltip.Content>
 	{/if}
-</div>
+</Tooltip.Root>

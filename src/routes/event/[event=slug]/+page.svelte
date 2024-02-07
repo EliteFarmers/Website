@@ -1,8 +1,10 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import { Accordion, Button } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import * as Accordion from '$ui/accordion';
 	import type { PageData } from './$types';
-	import { ArrowUpRightFromSquareOutline, UserGroupSolid } from 'flowbite-svelte-icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import Users from 'lucide-svelte/icons/users';
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
@@ -51,8 +53,8 @@
 			<h1 class="text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>
-			<Button size="md" href="https://discord.gg/{data.guild.inviteCode}" color="blue">
-				<ArrowUpRightFromSquareOutline size="md" />
+			<Button href="https://discord.gg/{data.guild.inviteCode}" variant="secondary">
+				<ExternalLink size={16} />
 			</Button>
 		</div>
 		<div class="flex flex-col p-4 items-center bg-zinc-900/75 mb-32 rounded-lg text-white">
@@ -73,8 +75,8 @@
 		</div>
 	</div>
 
-	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl">
-		<section class="flex flex-1 flex-col gap-4 max-w-64 bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
+	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl w-full">
+		<section class="flex flex-1 flex-col gap-4 max-w-md bg-primary-foreground rounded-md p-8">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-row gap-2 font-semibold items-center text-lg">
@@ -107,36 +109,38 @@
 				{/if}
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
 				<div class="flex flex-row justify-center gap-2 mt-4">
-					<Button href="{$page.url.pathname}/join" color="blue">
+					<Button href="{$page.url.pathname}/join" variant="secondary">
 						<p class="mr-2">Join Discord Server</p>
-						<ArrowUpRightFromSquareOutline size="md" />
+						<ExternalLink size={16} />
 					</Button>
 					<Button href="{$page.url.pathname}/join" color="green">Join Event</Button>
 				</div>
 			</div>
 		</section>
-		<section class="flex flex-1 flex-col gap-4 items-center bg-gray-100 dark:bg-zinc-800 rounded-md p-8">
+		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				<h2 class="text-2xl">Members</h2>
 				<div class="flex flex-row gap-2 font-semibold items-center">
 					<p class="text-2xl">
 						{members.length?.toLocaleString()}
 					</p>
-					<UserGroupSolid size="lg" />
+					<Users />
 				</div>
 			</div>
 			{#if members.length > 0}
 				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion flush={true} class="w-full text-black dark:text-white">
+					<Accordion.Root class="w-full text-black dark:text-white">
 						{#each members.slice(0, memberLimit) as member, i}
-							<Eventmember {member} rank={i + 1} {running} />
+							<Accordion.Item value={i.toString()}>
+								<Eventmember {member} rank={i + 1} {running} />
+							</Accordion.Item>
 						{/each}
-					</Accordion>
+					</Accordion.Root>
 				</div>
 				<div class="flex flex-row gap-2 justify-center">
 					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
 						<span class="mr-2">Leaderboard</span>
-						<ArrowUpRightFromSquareOutline size="md" />
+						<ExternalLink size={20} />
 					</Button>
 				</div>
 			{:else}

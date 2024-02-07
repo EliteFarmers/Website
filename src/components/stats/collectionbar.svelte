@@ -39,7 +39,7 @@
 </script>
 
 <div class="flex flex-row justify-between gap-2 w-full align-middle items-center">
-	<div class="flex flex-1 justify-between align-middle w-full max-h-30 bg-gray-100 dark:bg-zinc-800 rounded-lg p-1">
+	<div class="flex flex-1 justify-between align-middle w-full max-h-30 bg-primary-foreground rounded-lg p-1">
 		<div class="flex flex-row justify-start items-center gap-2 w-full">
 			{#key rank}
 				<div class="flex crop-container pixelated w-14 md:w-20 md:h-20 aspect-square" style={getFrameStyle()}>
@@ -55,7 +55,7 @@
 					{#if rank > 0}
 						<a
 							href="/leaderboard/crops/{key}/{$page.params.id}-{$page.params.profile}"
-							class="px-1.5 bg-gray-100 dark:bg-zinc-900 rounded-md hover:bg-gray-200 hover:dark:bg-zinc-700"
+							class="px-1.5 bg-card rounded-md hover:bg-muted"
 						>
 							<span class="text-sm xs:text-md sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span

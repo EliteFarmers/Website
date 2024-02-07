@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import { Accordion, AccordionItem, Button } from 'flowbite-svelte';
+	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 	import Leaderboard from './leaderboard.svelte';
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Event from '$comp/stats/discord/event.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
@@ -32,8 +33,8 @@
 				<h1 class="text-4xl text-white">
 					{guild?.name}
 				</h1>
-				<Button size="md" href="https://discord.gg/{guild.inviteCode}" color="blue">
-					<ArrowUpRightFromSquareOutline size="md" />
+				<Button href="https://discord.gg/{guild.inviteCode}" variant="secondary">
+					<ExternalLink size={20} />
 				</Button>
 			</div>
 		</div>
@@ -43,9 +44,9 @@
 			<h1 class="text-4xl">
 				{guild?.name}
 			</h1>
-			<Button size="md" href="https://discord.gg/{guild.inviteCode}" color="blue">
+			<Button href="https://discord.gg/{guild.inviteCode}" color="blue">
 				<div class="flex flex-row items-center gap-2">
-					<ArrowUpRightFromSquareOutline size="md" />
+					<ExternalLink size={20} />
 				</div>
 			</Button>
 		</div>
@@ -69,18 +70,20 @@
 			{/if}
 
 			{#if past.length > 0}
-				<Accordion flush={true} class="w-full">
-					<AccordionItem defaultClass="flex flex-row items-center justify-center gap-4 w-full">
-						<div slot="header">
-							<h2 class="text-3xl text-black dark:text-white">Past Events</h2>
-						</div>
-						<div class="flex flex-col gap-2">
-							{#each past as event}
-								<Event {event} {guild} />
-							{/each}
-						</div>
-					</AccordionItem>
-				</Accordion>
+				<Accordion.Root>
+					<Accordion.Item value="val" class="w-full">
+						<Accordion.Trigger>
+							<h2 class="text-3xl text-black dark:text-white w-full px-4">Past Events</h2>
+						</Accordion.Trigger>
+						<Accordion.Content>
+							<div class="flex flex-col gap-2">
+								{#each past as event}
+									<Event {event} {guild} />
+								{/each}
+							</div>
+						</Accordion.Content>
+					</Accordion.Item>
+				</Accordion.Root>
 			{/if}
 		</section>
 	{/if}

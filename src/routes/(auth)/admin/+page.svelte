@@ -1,8 +1,14 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import { Button, Input, Label, Modal, Popover, Select } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
+	import * as Select from '$ui/select';
+	import * as Tooltip from '$ui/tooltip';
+	import * as Dialog from '$ui/dialog';
 	import type { ActionData, PageData } from './$types';
-	import { GearSolid, PlusSolid } from 'flowbite-svelte-icons';
+	import Settings from 'lucide-svelte/icons/settings';
+	import Plus from 'lucide-svelte/icons/plus';
 	import { enhance } from '$app/forms';
 	import Usericon from '$comp/stats/discord/usericon.svelte';
 
@@ -49,31 +55,31 @@
 								<p>{permission[1].description}</p>
 							{/each}
 						</div>
-						<Button
-							class="add max-h-12"
-							color="green"
-							size="sm"
-							on:click={() => {
-								manageMemberModal = true;
-								selectedMemberId = user.id ?? '';
-							}}
-						>
-							<GearSolid size="sm" />
-						</Button>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									class="max-h-12"
+									on:click={() => {
+										manageMemberModal = true;
+										selectedMemberId = user.id ?? '';
+									}}
+								>
+									<Settings size={16} />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content>Manage Permissions</Tooltip.Content>
+						</Tooltip.Root>
 					</div>
 				</div>
 			{/each}
 		</div>
 		<Button
-			class="max-h-12 max-w-16"
-			color="green"
-			size="sm"
 			on:click={() => {
 				promoteMemberModal = true;
 			}}
 		>
 			<span class="mr-2">Promote New Member</span>
-			<PlusSolid size="sm" />
+			<Plus size={16} />
 		</Button>
 
 		<form method="post" action="?/clearcontests" class="flex flex-col gap-2" use:enhance>
@@ -82,76 +88,73 @@
 	</section>
 </main>
 
-<Popover triggeredBy=".add" placement="left">
-	<p>Manage Permissions</p>
-</Popover>
+<Dialog.Root bind:open={manageMemberModal}>
+	<Dialog.Content>
+		<Dialog.Title>Manage {selectedMember?.username} - {selectedMemberId}</Dialog.Title>
+		<form
+			method="post"
+			action="?/{selectedMember?.permissions === +selectedPermission ? 'demote' : 'promote'}"
+			class="flex flex-col gap-2"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result) manageMemberModal = false;
+					update();
+				};
+			}}
+		>
+			<input type="hidden" name="id" bind:value={selectedMemberId} />
 
-<Modal title="Manage Member Permissions" bind:open={manageMemberModal} autoclose={false}>
-	<form
-		method="post"
-		action="?/{selectedMember?.permissions === +selectedPermission ? 'demote' : 'promote'}"
-		class="flex flex-col gap-2"
-		use:enhance={() => {
-			return async ({ result, update }) => {
-				if (result) manageMemberModal = false;
-				update();
-			};
-		}}
-	>
-		<h3 class="text-lg mb-2 text-black dark:text-white">{selectedMember?.username} - {selectedMemberId}</h3>
-		<input type="hidden" name="id" bind:value={selectedMemberId} />
+			<div class="space-y-2">
+				<Label>Permission</Label>
+				<Select.Simple
+					options={permissions.map((p) => ({
+						value: p[0],
+						label: p[1].name,
+					}))}
+					bind:value={selectedPermission}
+					placeholder="Select a permission"
+					name="permission"
+				/>
+			</div>
 
-		<Label class="space-y-2">
-			<span>Permission</span>
-			<Select
-				items={permissions.map((p) => ({
-					value: p[0],
-					name: p[1].name,
-				}))}
-				bind:value={selectedPermission}
-				placeholder="Select a permission"
-				name="permission"
-			/>
-		</Label>
+			<Button type="submit">Toggle Permission</Button>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>
 
-		<Button type="submit">Toggle Permission</Button>
-	</form>
-</Modal>
+<Dialog.Root bind:open={promoteMemberModal}>
+	<Dialog.Content>
+		<Dialog.Title>Promote New Member</Dialog.Title>
+		<form
+			method="post"
+			action="?/promote"
+			class="flex flex-col gap-2"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result) promoteMemberModal = false;
+					update();
+				};
+			}}
+		>
+			<div class="flex flex-col gap-2 items-start">
+				<Label>Discord User ID</Label>
+				<Input name="id" placeholder="Discord User ID" maxlength={20} />
+			</div>
 
-<Modal title="Promote New Member" bind:open={promoteMemberModal} autoclose={false}>
-	<form
-		method="post"
-		action="?/promote"
-		class="flex flex-col gap-2"
-		use:enhance={() => {
-			return async ({ result, update }) => {
-				if (result) promoteMemberModal = false;
-				update();
-			};
-		}}
-	>
-		<h3 class="text-lg mb-2 text-black dark:text-white">Promote New Member</h3>
+			<div class="flex flex-col gap-2 items-start">
+				<Label>Permission</Label>
+				<Select.Simple
+					options={permissions.map((p) => ({
+						value: p[0],
+						label: p[1].name,
+					}))}
+					bind:value={selectedPermission}
+					placeholder="Select a permission"
+					name="permission"
+				/>
+			</div>
 
-		<Label class="space-y-2">
-			<span>Discord User ID</span>
-			<Input let:props name="id" placeholder="Discord User ID">
-				<input {...props} type="text" maxlength="20" />
-			</Input>
-		</Label>
-
-		<Label class="space-y-2">
-			<span>Permission</span>
-			<Select
-				items={permissions.map((p) => ({
-					value: p[0],
-					name: p[1].name,
-				}))}
-				bind:value={selectedPermission}
-				placeholder="Select a permission"
-				name="permission"
-			/>
-		</Label>
-
-		<Button type="submit">Promote</Button>
-	</form>
-</Modal>
+			<Button type="submit">Promote</Button>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>

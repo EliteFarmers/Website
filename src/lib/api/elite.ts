@@ -543,6 +543,43 @@ export const UpdateUpcomingContestPings = async (
 		},
 	});
 
+export const SearchPlayers = async (query: string) =>
+	await GET('/Account/Search', {
+		params: {
+			query: {
+				q: query,
+			},
+		},
+	});
+
+export const GetCropCollectionPoints = async (playerUuid: string, profileUuid: string, start?: string, days = 7) =>
+	await GET('/Graph/{playerUuid}/{profileUuid}/crops', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				from: start as unknown as number,
+				days: days,
+			},
+		},
+	});
+
+export const GetSkillPoints = async (playerUuid: string, profileUuid: string, start?: string, days = 7) =>
+	await GET('/Graph/{playerUuid}/{profileUuid}/crops', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				from: start as unknown as number,
+				days: days,
+			},
+		},
+	});
+
 export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
 	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
 		params: {
@@ -552,6 +589,29 @@ export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUu
 			},
 			query: {
 				days: 14,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetAdminCropCollectionPointsTimeSpan = async (
+	playerUuid: string,
+	profileUuid: string,
+	accessToken: string,
+	start: number,
+	days: number
+) =>
+	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+			query: {
+				from: start,
+				days: days,
 			},
 		},
 		headers: {

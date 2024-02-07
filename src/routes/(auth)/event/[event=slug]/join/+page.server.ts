@@ -21,7 +21,7 @@ export const load = (async ({ locals, parent, params }) => {
 	}
 
 	if (+event.endTime <= Date.now() / 1000) {
-		throw error(403, 'Event has already ended.');
+		// throw error(403, 'Event has already ended.');
 	}
 
 	const selectedAccount = user.minecraftAccounts?.find((a) => a.primaryAccount);

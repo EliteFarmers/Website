@@ -3,19 +3,25 @@
 	import { page } from '$app/stores';
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
-	import { Accordion, AccordionItem, Button, Modal, Popover } from 'flowbite-svelte';
-	import { MailBoxSolid, RotateOutline, TrashBinSolid } from 'flowbite-svelte-icons';
+	import Mail from 'lucide-svelte/icons/mail';
+	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import * as Accordion from '$ui/accordion';
+	import * as Tooltip from '$ui/tooltip';
+	import * as AlertDialog from '$ui/alert-dialog';
+	import { Button } from '$ui/button';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	export let lb: components['schemas']['GuildJacobLeaderboard'];
-	export let channels: { value: string; name: string }[];
-	export let roles: { value: string; name: string }[];
+	export let channels: { value: string; label: string }[];
+	export let roles: { value: string; label: string }[];
 
 	$: crops = Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0);
 
 	let confirmModal = false;
 </script>
 
-<div class="flex flex-col justify-between gap-4 p-4 rounded-md bg-gray-100 dark:bg-zinc-800 w-full rounded-lgs">
+<div class="flex flex-col justify-between gap-4 p-4 rounded-md bg-primary-foreground w-full rounded-lgs">
 	<div class="flex flex-row justify-between gap-4 w-full">
 		<div class="flex flex-col gap-2">
 			<h3 class="text-2xl">{lb.title}</h3>
@@ -31,25 +37,25 @@
 		<div class="flex flex-col gap-2">
 			<p>
 				<span class="font-semibold">Channel:</span>
-				{channels.find((c) => c.value === lb.channelId)?.name ?? 'Not Set'}
+				{channels.find((c) => c.value === lb.channelId)?.label ?? 'Not Set'}
 			</p>
 			<p>
 				<span class="font-semibold">Updates:</span>
-				{channels.find((c) => c.value === lb.updateChannelId)?.name ?? 'Not Set'}
+				{channels.find((c) => c.value === lb.updateChannelId)?.label ?? 'Not Set'}
 			</p>
 			<p>
 				<span class="font-semibold">Update Role:</span>
-				@{roles.find((c) => c.value === lb.updateRoleId)?.name ?? 'Not Set'}
+				@{roles.find((c) => c.value === lb.updateRoleId)?.label ?? 'Not Set'}
 			</p>
 		</div>
 		<div class="flex flex-col gap-2">
 			<p>
 				<span class="font-semibold">Required Role:</span>
-				@{roles.find((c) => c.value === lb.requiredRole)?.name ?? 'Not Set'}
+				@{roles.find((c) => c.value === lb.requiredRole)?.label ?? 'Not Set'}
 			</p>
 			<p>
 				<span class="font-semibold">Banned Role:</span>
-				@{roles.find((c) => c.value === lb.blockedRole)?.name ?? 'Not Set'}
+				@{roles.find((c) => c.value === lb.blockedRole)?.label ?? 'Not Set'}
 			</p>
 		</div>
 		<div class="flex flex-col justify-between gap-2">
@@ -61,73 +67,99 @@
 			</Button> -->
 			<form method="post" action="{$page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<Button class="send" type="submit" color="green">
-					<MailBoxSolid />
-					<Popover triggeredBy=".send" placement="left">
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<Button type="submit" color="green">
+							<Mail />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
 						<p>Send Leaderboard in Discord</p>
-					</Popover>
-				</Button>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			</form>
 			<form method="post" action="{$page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<Button class="clear" type="submit" color="yellow">
-					<RotateOutline />
-					<Popover triggeredBy=".clear" placement="left">
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<Button type="submit" color="yellow">
+							<RefreshCcw />
+						</Button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
 						<p>Clear all scores, but they can be submitted again</p>
-					</Popover>
-				</Button>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			</form>
-			<Button class="delete" on:click={() => (confirmModal = true)} color="red">
-				<TrashBinSolid />
-				<Popover triggeredBy=".delete" placement="left">
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button on:click={() => (confirmModal = true)}>
+						<Trash2 class="text-destructive" />
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content>
 					<p>Delete Leaderboard</p>
-				</Popover>
-			</Button>
+				</Tooltip.Content>
+			</Tooltip.Root>
 		</div>
 	</div>
 
 	{#if crops.length > 0}
-		<Accordion flush={true}>
+		<Accordion.Root>
 			{#each crops as [crop, entries] (crop)}
-				<AccordionItem paddingFlush="p-2">
-					<span slot="header" class="text-lg first-letter:capitalize">{crop}</span>
-					{#each entries as entry (entry)}
-						<div class="flex items-center flex-row gap-8 space-y-2 text-black dark:text-white">
-							<form method="POST" action="{$page.url.pathname}?/banparticipation" use:enhance>
-								<input type="hidden" name="id" value={lb.id} />
-								<input type="hidden" name="uuid" value={entry.uuid} />
-								<input type="hidden" name="crop" value={entry.record?.crop} />
-								<input type="hidden" name="time" value={entry.record?.timestamp} />
-								<Button type="submit" color="red" class="ban" size="sm">
-									<TrashBinSolid size="sm" />
-									<Popover triggeredBy=".ban" placement="left">
-										<p>Remove and block this Participation</p>
-									</Popover>
-								</Button>
-							</form>
-							<p class="text-lg">{entry.ign}</p>
-							<p>{entry.record?.collected}</p>
-						</div>
-					{/each}
-				</AccordionItem>
+				<Accordion.Item value={crop}>
+					<Accordion.Trigger class="py-2">
+						<p class="text-lg first-letter:capitalize">
+							{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)}
+						</p>
+					</Accordion.Trigger>
+					<Accordion.Content>
+						{#each entries as entry (entry)}
+							<div class="flex items-center flex-row gap-8 my-2">
+								<form method="POST" action="{$page.url.pathname}?/banparticipation" use:enhance>
+									<input type="hidden" name="id" value={lb.id} />
+									<input type="hidden" name="uuid" value={entry.uuid} />
+									<input type="hidden" name="crop" value={entry.record?.crop} />
+									<input type="hidden" name="time" value={entry.record?.timestamp} />
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<Button type="submit" variant="destructive" size="icon">
+												<Trash2 size={20} class="text-destructive" />
+											</Button>
+										</Tooltip.Trigger>
+										<Tooltip.Content side="right">
+											<p>Remove and block this Participation</p>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								</form>
+								<p class="text-lg">{entry.ign}</p>
+								<p class="text-lg font-mono">{entry.record?.collected?.toLocaleString()}</p>
+							</div>
+						{/each}
+					</Accordion.Content>
+				</Accordion.Item>
 			{/each}
-		</Accordion>
+		</Accordion.Root>
 	{:else}
 		<p class="text-center">No scores submitted yet</p>
 	{/if}
 </div>
 
-<Modal bind:open={confirmModal} size="xs">
-	<div class="text-center my-5">
-		<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-			Are you sure you want to delete this leaderboard?
-		</h3>
-		<div class="flex flex-row items-center justify-center">
+<AlertDialog.Root bind:open={confirmModal}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>Are you sure you want to delete this leaderboard?</AlertDialog.Title>
+			<AlertDialog.Description>
+				This action cannot be undone. This will permanently delete the leaderboard and all scores associated
+				with it.
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
 			<form method="POST" action="{$page.url.pathname}?/delete" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<Button color="red" class="mr-2" type="submit">Yes, I'm sure</Button>
+				<AlertDialog.Action type="submit">Delete</AlertDialog.Action>
 			</form>
-			<Button color="alternative" on:click={() => (confirmModal = false)}>No, cancel</Button>
-		</div>
-	</div>
-</Modal>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>

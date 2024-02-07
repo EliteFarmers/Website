@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { ArrowUpRightFromSquareOutline } from 'flowbite-svelte-icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let member: components['schemas']['EventMemberDto'];
 </script>
@@ -17,7 +17,7 @@
 		/>
 		<a href="/@{member.playerUuid}" class="text-lg underline flex flex-row items-center gap-1">
 			{member.playerName}
-			<ArrowUpRightFromSquareOutline size="sm" />
+			<ExternalLink size={20} />
 		</a>
 	</div>
 	<div class="flex flex-row gap-2 lg:gap-4">

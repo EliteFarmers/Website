@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Popover } from 'flowbite-svelte';
+	import * as Tooltip from '$ui/tooltip';
 
 	export let name: string;
 	export let index: number;
@@ -13,31 +13,33 @@
 	}
 </script>
 
-<div>
-	<div class="image-container bg-green-500 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
-		<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
-		<div class="tier-border">
-			{#each tiers as tier, i}
-				<div class="tier {tier === '1' ? '' : 'bg-gray-200 dark:bg-zinc-700'}" style="grid-area: a{i};" />
-			{/each}
+<Tooltip.Root openDelay={50}>
+	<Tooltip.Trigger>
+		<div class="image-container bg-green-500 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
+			<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
+			<div class="tier-border">
+				{#each tiers as tier, i}
+					<div class="tier {tier === '1' ? '' : 'bg-muted'}" style="grid-area: a{i};" />
+				{/each}
+			</div>
+			<div class="bg-primary-foreground absolute tier-cover" />
 		</div>
-		<div class="bg-green-100 dark:bg-zinc-800 absolute tier-cover" />
-	</div>
-	<Popover placement="left">
-		<div slot="title" class="text-lg text-center">Unlocked {name} Minion Tiers</div>
+	</Tooltip.Trigger>
+	<Tooltip.Content>
+		<div class="text-lg text-center">Unlocked {name} Minion Tiers</div>
 		<div class="flex gap-1 justify-center items-center text-black dark:text-white">
 			{#each tiers as tier, i}
 				<div
 					class="block flex-1 px-1 text-center text-lg rounded-sm {tier === '1'
-						? 'bg-green-500'
-						: 'bg-gray-200 dark:bg-zinc-700'}"
+						? 'bg-muted'
+						: 'bg-primary-foreground'}"
 				>
 					<p>{i + 1}</p>
 				</div>
 			{/each}
 		</div>
-	</Popover>
-</div>
+	</Tooltip.Content>
+</Tooltip.Root>
 
 <style lang="postcss">
 	.image-container {

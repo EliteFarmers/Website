@@ -29,21 +29,17 @@
 	$: rank = GetRankDefaults(rankName as RankName);
 </script>
 
-<section class="flex justify-center w-full mt-8">
+<section class="flex justify-center w-full mt-8 items-center">
 	<div
-		class="flex flex-col lg:flex-row justify-center items-center gap-2 lg:gap-8 xl:gap-16 p-0 sm:p-4 rounded-lg w-[98%] lg:w-[90%] lg:bg-gray-100 lg:dark:bg-zinc-800"
+		class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-primary-foreground p-4 md:p-8 mx-2 w-full max-w-7xl"
 	>
-		<div
-			class="flex justify-center xl:justify-end items-start gap-4 w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800"
-		>
-			<div class="flex justify-end">
-				<img
-					class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
-					src={`https://mc-heads.net/body/${player?.uuid}`}
-					alt="User's Minecraft appearance"
-				/>
-			</div>
-			<div class="flex flex-wrap xs:flex-col gap-1 justify-start items-start">
+		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-center">
+			<img
+				class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
+				src={`https://mc-heads.net/body/${player?.uuid}`}
+				alt="User's Minecraft appearance"
+			/>
+			<div class="flex flex-col gap-1 justify-start items-start">
 				<PlayerName
 					ign={player?.displayname}
 					{rank}
@@ -56,13 +52,13 @@
 				</div>
 				<div class="flex justify-start gap-1">
 					<a
-						class="p-2 px-3 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
+						class="p-2 px-3 text-body bg-card rounded-md"
 						href="https://sky.shiiyu.moe/stats/{player?.uuid}/{$page.params.profile}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
 					<a
-						class="p-2 px-3 text-body bg-gray-200 dark:bg-zinc-700 rounded-md"
+						class="p-2 px-3 text-body bg-card rounded-md"
 						href="https://plancke.io/hypixel/player/stats/{$page.params.id}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">Plancke</a
@@ -70,7 +66,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-center xl:justify-start w-full p-2 sm:p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
+		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-start items-center">
 			<Weight weightInfo={weightInfo ?? undefined} rank={weightRank} profiles={profilesData} />
 		</div>
 	</div>

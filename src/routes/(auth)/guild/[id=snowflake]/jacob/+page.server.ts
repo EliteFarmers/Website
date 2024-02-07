@@ -55,7 +55,7 @@ export const actions: Actions = {
 		const startDate = data.get('startDate') as string;
 		const endDate = data.get('endDate') as string;
 
-		const { response } = await AddGuildJacobLeadeboard(guildId, token, {
+		const body = {
 			id: (parseInt(guildId) + Math.floor(Math.random() * 1000000)).toString(),
 			title,
 			channelId: sendToChannelId,
@@ -66,7 +66,9 @@ export const actions: Actions = {
 			endCutoff: endDate ? new Date(endDate).getTime() / 1000 : undefined,
 			requiredRole: requiredRoleId,
 			blockedRole: blockedRoleId,
-		}).catch((e) => {
+		};
+
+		const { response } = await AddGuildJacobLeadeboard(guildId, token, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

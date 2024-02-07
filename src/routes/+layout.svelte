@@ -4,10 +4,13 @@
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initRatesData } from '$lib/stores/ratesData';
 
-	import '../app.css';
+	import '../app.pcss';
 
-	import Nav from '$comp/nav.svelte';
-	import Footer from '$comp/footer.svelte';
+	import Nav from '$comp/header/nav.svelte';
+	import Footer from '$comp/footer/footer.svelte';
+
+	import { ModeWatcher } from 'mode-watcher';
+	import { Toaster } from '$ui/sonner';
 
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -20,7 +23,8 @@
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
-<div class="bg-white dark:bg-zinc-900 relative min-h-screen pb-16 text-black dark:text-white">
+<ModeWatcher />
+<div class="relative min-h-screen">
 	<Nav />
 
 	{#if $navigating}
@@ -31,6 +35,8 @@
 	<div>
 		<slot />
 	</div>
+
+	<Toaster richColors position="bottom-center" />
 
 	<Footer />
 </div>

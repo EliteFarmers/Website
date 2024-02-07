@@ -1,17 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import Head from '$comp/head.svelte';
-	import { getSkyblockDate } from '$lib/format';
-	import { Button, Card, Input, Label, Popover } from 'flowbite-svelte';
-	import { OrdoredListOutline } from 'flowbite-svelte-icons';
+	import * as Card from '$ui/card';
+	import { Label } from '$ui/label';
+	import { SkyBlockTime } from 'farming-weight';
 
-	let searchVal = '';
-	function search() {
-		goto(`/@${searchVal}/contests`);
-	}
-
-	const date = getSkyblockDate(Date.now() / 1000);
-	let yearVal = date.year - 1;
+	const date = SkyBlockTime.now;
+	let yearVal = date.year;
 	let monthVal = date.month;
 	let dayVal = date.day;
 
@@ -26,6 +23,13 @@
 	function searchContestYearMonth() {
 		goto(`/contests/${yearVal}/${monthVal}`);
 	}
+
+	$: searchStr = '';
+
+	function lookUpPlayer() {
+		if (!searchStr) return;
+		goto(`/@${searchStr}/contests`);
+	}
 </script>
 
 <Head
@@ -36,80 +40,59 @@
 <main class="flex flex-col justify-center items-center">
 	<h1 class="text-4xl my-16">Jacob's Contests</h1>
 
-	<div class="flex flex-col md:flex-row gap-8 items-center">
-		<Card color="none" class="bg-gray-100 dark:bg-zinc-800" border={false}>
-			<h2 class="font-semibold text-lg">View upcoming contests from this Skyblock Year!</h2>
-			<p class="text-md my-4">May take some time for the contests to appear when the year resets.</p>
-			<Button href="/contests/upcoming" color="blue" size="xs">
-				<span class="font-semibold text-lg">Upcoming Contests</span>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-5 h-5 ml-2"
-					><path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-					/></svg
-				>
-			</Button>
-		</Card>
-		<Card color="none" class="bg-gray-100 dark:bg-zinc-800" border={false}>
-			<h2 class="font-semibold text-lg">View all contest participations from a player!</h2>
-			<p class="text-md my-4">May take a moment to load for some players with thousands of contests.</p>
-			<form on:submit|preventDefault={search} class="flex gap-2 items-center justify-center">
-				<Input let:props placeholder="Player name" size="md" class="dark:bg-zinc-800">
-					<input type="text" {...props} bind:value={searchVal} />
-				</Input>
-				<Button class="!p-2.5 h-full" type="submit" name="Search">
-					<svg
-						class="w-5 h-5"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-						/></svg
+	<div class="flex flex-col md:flex-row gap-8 items-stretch max-w-4xl">
+		<Card.Root class="flex flex-col max-w-md">
+			<Card.Header>
+				<Card.Title class="text-xl">View upcoming contests!</Card.Title>
+			</Card.Header>
+			<Card.Content class="flex-1 flex flex-col justify-between">
+				<p class="w-full mb-6 text-md">
+					Contests coming this SkyBlock year! May take a moment to update after the new year.
+				</p>
+				<div class="flex justify-center">
+					<Button href="/contests/upcoming" variant="default" size="lg">Upcoming Contests</Button>
+				</div>
+			</Card.Content>
+		</Card.Root>
+		<Card.Root class="max-w-md">
+			<Card.Header>
+				<Card.Title class="text-xl">View all contest participations from a player!</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="flex flex-col justify-between gap-4 h-full">
+					<p class="w-full text-md">May take a moment to load for some players with thousands of contests.</p>
+					<form
+						class="flex flex-row gap-2 justify-center items-center"
+						on:submit|preventDefault={lookUpPlayer}
 					>
-				</Button>
-			</form>
-		</Card>
+						<Input placeholder="Search for a player" bind:value={searchStr} type="text" />
+						<Button variant="default" type="submit" size="lg">Search</Button>
+					</form>
+				</div>
+			</Card.Content>
+		</Card.Root>
 	</div>
 
-	<div class="my-8 mb-32 flex justify-center md:w-[50rem]">
-		<Card color="none" class="bg-gray-100 dark:bg-zinc-800 min-w-full" border={false}>
-			<div class="flex flex-col md:flex-row gap-8 items-center justify-center">
-				<div class="flex-1">
-					<h2 class="font-semibold text-lg">Delve Through The Archives</h2>
-					<p class="text-md my-4">
-						Look through the rankings of every known participant in every known contest. Also try clicking
-						on contest participations elsewhere on the site to jump to that contest.
-					</p>
-				</div>
+	<div class="my-8 mb-32 flex justify-center w-full max-w-4xl">
+		<Card.Root class="w-full">
+			<Card.Title class="text-xl p-6 pb-0">Delve Through The Archives</Card.Title>
+			<div class="flex flex-col md:flex-row p-6 gap-8 items-start justify-between w-full">
+				<p class="flex-1 text-md my-4">
+					Look through the rankings of every known participant in every known contest. Also try clicking on
+					contest participations elsewhere on the site to jump to that contest.
+				</p>
 				<div class="flex-1 flex flex-col gap-4 items-end">
 					<form on:submit|preventDefault={searchContestYear} class="flex gap-2 items-center justify-center">
 						<div>
 							<Label for="yearOnly"><span class="text-sm">Skyblock Year</span></Label>
-							<Input
-								id="yearOnly"
-								placeholder="Day"
-								size="md"
-								bind:value={yearVal}
-								class="dark:bg-zinc-700"
-							/>
+							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
 						</div>
-						<Button class="!p-2.5 mt-4" href="/contests/{yearVal}/records" color="green" name="Top Scores">
-							<OrdoredListOutline class="w-5 h-5" />
-							<Popover>Top Scores</Popover>
+						<Button class="!p-2.5 mt-6" href="/contests/{yearVal}/records" color="green">
+							<!-- <OrdoredListOutline class="w-5 h-5" />
+							<Popover>Top Scores</Popover> -->
+							Records
 						</Button>
-						<Button class="!p-2.5 mt-4" type="submit" name="Search">
+						<Button class="!p-2.5 mt-6" type="submit" name="Search">
 							<svg
 								class="w-5 h-5"
 								fill="none"
@@ -131,27 +114,15 @@
 					>
 						<div>
 							<Label for="yearMonth"><span class="text-sm">Skyblock Year</span></Label>
-							<Input
-								id="yearMonth"
-								placeholder="Day"
-								size="md"
-								bind:value={yearVal}
-								class="dark:bg-zinc-700"
-							/>
+							<Input id="yearMonth" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
 						</div>
-						/
+						<span class="mt-4">/</span>
 						<div>
 							<Label for="monthYear"><span class="text-sm">Skyblock Month</span></Label>
-							<Input
-								id="monthYear"
-								placeholder="Day"
-								size="md"
-								bind:value={monthVal}
-								class="dark:bg-zinc-700"
-							/>
+							<Input id="monthYear" placeholder="Day" bind:value={monthVal} class="dark:bg-zinc-700" />
 						</div>
 
-						<Button class="!p-2.5 mt-4" type="submit" name="Search">
+						<Button class="!p-2.5 mt-6" type="submit" name="Search">
 							<svg
 								class="w-5 h-5"
 								fill="none"
@@ -170,32 +141,20 @@
 					<form on:submit|preventDefault={searchContest} class="flex gap-2 items-center justify-center">
 						<div>
 							<Label for="year"><span class="text-sm">SB Year</span></Label>
-							<Input
-								id="year"
-								placeholder="Day"
-								size="md"
-								bind:value={yearVal}
-								class="dark:bg-zinc-700"
-							/>
+							<Input id="year" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
 						</div>
-						/
+						<span class="mt-4">/</span>
 						<div>
 							<Label for="month"><span class="text-sm">SB Month</span></Label>
-							<Input
-								id="month"
-								placeholder="Day"
-								size="md"
-								bind:value={monthVal}
-								class="dark:bg-zinc-700"
-							/>
+							<Input id="month" placeholder="Day" bind:value={monthVal} class="dark:bg-zinc-700" />
 						</div>
-						/
+						<span class="mt-4">/</span>
 						<div>
 							<Label for="day"><span class="text-sm">SB Day</span></Label>
-							<Input id="day" placeholder="Day" size="md" bind:value={dayVal} class="dark:bg-zinc-700" />
+							<Input id="day" placeholder="Day" bind:value={dayVal} class="dark:bg-zinc-700" />
 						</div>
 
-						<Button class="!p-2.5 mt-4" type="submit" name="Search">
+						<Button class="!p-2.5 mt-6" type="submit" name="Search">
 							<svg
 								class="w-5 h-5"
 								fill="none"
@@ -211,12 +170,8 @@
 							>
 						</Button>
 					</form>
-					<a
-						href="/contests/{yearVal + 2}/{monthVal + 1}/{dayVal + 1}"
-						class="underline text-gray-500 text-sm leading-none">Jump to most recent contest</a
-					>
 				</div>
 			</div>
-		</Card>
+		</Card.Root>
 	</div>
 </main>

@@ -2,7 +2,7 @@
 	import { PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import type { Crop } from 'farming-weight';
-	import { NumberInput } from 'flowbite-svelte';
+	import { Input } from '$ui/input';
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
@@ -22,8 +22,8 @@
 
 		<div class="flex flex-row items-center gap-2">
 			<img {src} alt={crop} class="w-12 h-12 pixelated" />
-			<NumberInput bind:value={$ratesData.milestones[key]} />
-			<NumberInput bind:value={$ratesData.cropUpgrades[key]} />
+			<Input bind:value={$ratesData.milestones[key]} type="number" />
+			<Input bind:value={$ratesData.cropUpgrades[key]} type="number" />
 		</div>
 	{/each}
 </div>

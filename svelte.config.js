@@ -26,9 +26,11 @@ const config = {
 		},
 		alias: {
 			'$comp': './src/components',
+			'$ui': './src/components/ui',
 			'$stores': './src/stores',
 			'$lib': './src/lib',
 			'$params': './src/params',
+			'$content': './src/content',
 		}
 	},
 };

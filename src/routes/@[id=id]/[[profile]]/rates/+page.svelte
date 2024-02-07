@@ -10,13 +10,17 @@
 		FarmingPets,
 		type PlayerOptions,
 	} from 'farming-weight';
-	import { Label, Radio, Range, Select, Button } from 'flowbite-svelte';
-	import { GearSolid } from 'flowbite-svelte-icons';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer';
 	import { getLevelProgress } from '$lib/format';
+
+	import { Label } from '$ui/label';
+	import { Button } from '$ui/button';
+	import { SliderSimple } from '$ui/slider';
+	import * as Select from '$ui/select';
+	import Settings from 'lucide-svelte/icons/settings';
 
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
@@ -44,8 +48,14 @@
 
 	// Deselect pet if it's not on this player
 	$: $ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
-		? $ratesData.selectedPet
+		? setPet($ratesData.selectedPet)
 		: undefined;
+
+	function setPet(uuid?: string) {
+		$ratesData.selectedPet = uuid;
+		selectedPet = pets.find((pet) => pet.pet.uuid === uuid) ?? undefined;
+		return uuid;
+	}
 
 	$: selectedPet = undefined as FarmingPet | undefined;
 	$: selectedTool = undefined as FarmingTool | undefined;
@@ -104,7 +114,7 @@
 	<Cropselector radio={true} />
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
-		<section class="flex-1 flex flex-col items-center w-full gap-8 p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
+		<section class="flex-1 flex flex-col items-center w-full gap-8 p-4 rounded-md bg-primary-foreground">
 			<div class="flex flex-row justify-between items-center w-full">
 				<div class="flex-1 hidden sm:block" />
 				<div class="flex flex-3 flex-row gap-2 my-2 items-center">
@@ -114,43 +124,43 @@
 						title="Total Farming Fortune"
 						total={$player.fortune + cropFortune.fortune}
 						breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
-						placement="bottom"
+						side="bottom"
 					/>
 				</div>
 				<div class="flex-1 flex justify-end">
-					<Button variant="raised" class="m-1" size="sm" on:click={() => (optionsShown = !optionsShown)}>
-						<GearSolid size="sm" />
+					<Button variant="outline" class="m-1" size="sm" on:click={() => (optionsShown = !optionsShown)}>
+						<Settings size={20} />
 					</Button>
 				</div>
 			</div>
 
 			{#if optionsShown}
 				<div class="flex flex-1 flex-col gap-2 w-full">
-					<Label defaultClass="flex-1">
+					<Label class="flex-1">
 						Unlocked Plots
 						<div class="flex flex-row gap-1 items-center">
-							<Range min={0} max={24} bind:value={$ratesData.plotsUnlocked} step={1} />
+							<SliderSimple min={0} max={24} bind:value={$ratesData.plotsUnlocked} step={1} />
 							<p class="text-lg p-2 w-12">{$ratesData.plotsUnlocked}</p>
 						</div>
 					</Label>
-					<Label defaultClass="flex-1">
+					<Label class="flex-1">
 						Community Center Upgrade
 						<div class="flex flex-row gap-1 items-center">
-							<Range min={0} max={10} bind:value={$ratesData.communityCenter} step={1} />
+							<SliderSimple min={0} max={10} bind:value={$ratesData.communityCenter} step={1} />
 							<p class="text-lg p-2 w-12">{$ratesData.communityCenter}</p>
 						</div>
 					</Label>
-					<Label defaultClass="flex-1">
+					<Label class="flex-1">
 						Garden Level
 						<div class="flex flex-row gap-1 items-center">
-							<Range min={0} max={15} bind:value={$ratesData.gardenLevel} step={1} />
+							<SliderSimple min={0} max={15} bind:value={$ratesData.gardenLevel} step={1} />
 							<p class="text-lg p-2 w-12">{$ratesData.gardenLevel}</p>
 						</div>
 					</Label>
-					<Label defaultClass="flex-1">
+					<Label class="flex-1">
 						Strength
 						<div class="flex flex-row gap-1 items-center">
-							<Range min={0} max={1500} bind:value={$ratesData.strength} step={1} />
+							<SliderSimple min={0} max={1500} bind:value={$ratesData.strength} step={1} />
 							<p class="text-lg p-2 w-12">{$ratesData.strength}</p>
 						</div>
 					</Label>
@@ -165,7 +175,7 @@
 						title="{selectedCrop} Fortune"
 						total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
 						breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
-						placement="bottom"
+						side="bottom"
 					/>
 				</div>
 				<div class="flex flex-row items-center gap-2 md:gap-4 w-full max-w-lg">
@@ -175,10 +185,10 @@
 						class="w-12 h-12 pixelated m-1 p-1"
 					/>
 					<div class="flex flex-1 flex-col gap-2">
-						<Label defaultClass="flex-1">
+						<Label class="flex-1">
 							Garden Milestone
 							<div class="flex flex-row gap-1 items-center">
-								<Range
+								<SliderSimple
 									min={0}
 									max={46}
 									bind:value={$ratesData.milestones[cropKey(selectedCrop)]}
@@ -187,10 +197,10 @@
 								<p class="text-lg p-2 w-6">{$ratesData.milestones[cropKey(selectedCrop)] ?? 0}</p>
 							</div>
 						</Label>
-						<Label defaultClass="flex-1">
+						<Label class="flex-1">
 							Crop Upgrade
 							<div class="flex flex-row gap-1 items-center">
-								<Range
+								<SliderSimple
 									min={0}
 									max={9}
 									bind:value={$ratesData.cropUpgrades[cropKey(selectedCrop)]}
@@ -206,34 +216,26 @@
 			{/if}
 			<div class="flex flex-col gap-2 max-w-lg w-full">
 				<Label>Farming Pet</Label>
-				<Select
+				<Select.Simple
 					bind:value={$ratesData.selectedPet}
-					on:change={() => {
-						selectedPet = pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet) ?? undefined;
+					options={$player.pets.map((pet) => ({
+						value: pet.pet.uuid ?? '',
+						label: `${pet.info.name} [${pet.level}] + ${pet.item?.name ?? 'No Fortune Item'}`,
+					}))}
+					change={() => {
+						setPet($ratesData.selectedPet);
 					}}
-					size="sm"
-					placeholder="Select a pet!"
-					class="dark:bg-zinc-800"
-				>
-					{#each $player.pets as pet (pet.pet.uuid)}
-						<option value={pet.pet.uuid}>
-							<span>
-								{pet.rarity}
-								{pet.info.name} [{pet.level}] + {pet.item?.name ?? 'No Fortune Item'}
-							</span>
-						</option>
-					{/each}
-				</Select>
+				/>
 			</div>
 			<div class="flex flex-col gap-2 max-w-lg w-full px-4">
 				{#each $player.tools as tool (tool.item.uuid)}
 					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
 						<div class="flex flex-row gap-2 justify-start items-center w-full">
-							<Radio
+							<input
 								type="radio"
 								name="tool"
+								value={tool.item.uuid}
 								bind:group={selectedToolId}
-								value={tool.item.uuid ?? ''}
 								on:change={() => {
 									selectedTool = tool;
 								}}
@@ -267,7 +269,7 @@
 				<Lotusgear items={$player.equipment} />
 			</div>
 		</section>
-		<section class="flex-1 w-full p-4 rounded-md bg-gray-100 dark:bg-zinc-800">
+		<section class="flex-1 w-full p-4 rounded-md bg-primary-foreground">
 			<div class="flex flex-col gap-2 max-w-lg w-full p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
@@ -275,20 +277,20 @@
 					{@const otherBreakdown = Object.entries(info.otherCollection).sort(([, a], [, b]) => b - a)}
 
 					<div class="flex flex-row gap-2 items-center align-middle">
-						<h2 class="text-2xl pb-1">{PROPER_CROP_NAME[cropId]} Rates</h2>
-						<Select
+						<h2 class="text-2xl pb-1 flex-2">{PROPER_CROP_NAME[cropId]} Rates</h2>
+
+						<Select.Simple
+							class="flex-1"
 							bind:value={blocksBroken}
-							underline
-							size="sm"
-							class="text-black dark:text-white dark:bg-zinc-800 max-w-[10rem] text-xl"
-						>
-							<option value={24_000}>Per Contest</option>
-							<option value={72_000}>Per Hour</option>
-							<option value={72_000 * 4}>Per 4 Hours</option>
-							<option value={72_000 * 8}>Per 8 Hours</option>
-							<option value={72_000 * 12}>Per 12 Hours</option>
-							<option value={72_000 * 24}>Per 24 Hours</option>
-						</Select>
+							options={[
+								{ value: 24_000, label: 'Per Contest' },
+								{ value: 72_000, label: 'Per Hour' },
+								{ value: 72_000 * 4, label: 'Per 4 Hours' },
+								{ value: 72_000 * 8, label: 'Per 8 Hours' },
+								{ value: 72_000 * 12, label: 'Per 12 Hours' },
+								{ value: 72_000 * 24, label: 'Per 24 Hours' },
+							]}
+						/>
 					</div>
 					<div class="flex flex-col text-lg font-semibold">
 						<div class="flex justify-between items-center w-full px-4 py-2">

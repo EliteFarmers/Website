@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type ApexCharts from 'apexcharts';
-	import { Spinner } from 'flowbite-svelte';
+	import Loader from 'lucide-svelte/icons/loader';
 
 	export let options: ApexCharts.ApexOptions;
 	export let animate = true;
@@ -49,6 +49,6 @@
 	{#if loaded}
 		<div class="w-full chart" use:apex={options} />
 	{:else}
-		<Spinner />
+		<Loader class="animate-spin my-4" />
 	{/if}
 </div>

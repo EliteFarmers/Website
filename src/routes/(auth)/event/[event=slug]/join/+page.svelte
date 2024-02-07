@@ -1,11 +1,19 @@
 <script lang="ts">
-	import { Button, Checkbox, Radio } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import * as Checkbox from '$ui/checkbox';
+	import { Label } from '$ui/label';
 	import type { ActionData, PageData } from './$types';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 
 	export let data: PageData;
 	export let form: ActionData;
+	let checks = {
+		1: false,
+		2: false,
+		3: false,
+		4: false,
+	};
 
 	$: profiles =
 		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? [];
@@ -22,11 +30,14 @@
 			<p>Choose the profile you want to join the event with.</p>
 
 			{#each profiles as profile (profile)}
-				<Radio name="profile" value={profile.profileId}>
-					{profile.profileName} - {profile.members
-						?.find((m) => m.uuid === data.account?.id)
-						?.farmingWeight?.toLocaleString()} Farming Weight
-				</Radio>
+				<div class="flex flex-row gap-2 items-center">
+					<input type="radio" name="profile" value={profile.profileId} required class="w-4 h-4" />
+					<p>
+						{profile.profileName} - {profile.members
+							?.find((m) => m.uuid === data.account?.id)
+							?.farmingWeight?.toLocaleString()} Farming Weight
+					</p>
+				</div>
 			{/each}
 
 			<h3 class="mt-2 text-lg">How is progress counted?</h3>
@@ -50,29 +61,41 @@
 				count.
 			</p>
 
-			<Checkbox name="confirm" value="true" class="mt-8" required>
-				<p>
+			<div class="flex gap-2 items-center mt-8">
+				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[1]} />
+				<Checkbox.Root bind:checked={checks[1]} />
+				<Label>
 					I confirm that I have read all of <a
 						href="https://hypixel.net/rules"
 						class="underline text-blue-500"
 					>
 						Hypixel's Server Rules
 					</a> and that I agree to them.
-				</p>
-			</Checkbox>
+				</Label>
+			</div>
 
-			<Checkbox name="confirm" value="true" required>
-				I confirm that I have read the event's rules and disclaimers and that I agree to them.
-			</Checkbox>
+			<div class="flex gap-2 items-center">
+				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[2]} />
+				<Checkbox.Root bind:checked={checks[2]} />
+				<Label>I confirm that I have read the event's rules and disclaimers and that I agree to them.</Label>
+			</div>
 
-			<Checkbox name="confirm" value="true" required>
-				I confirm that I have read the rules of the related Discord Server and that I agree to them.
-			</Checkbox>
+			<div class="flex gap-2 items-center">
+				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[3]} />
+				<Checkbox.Root bind:checked={checks[3]} />
+				<Label>
+					I confirm that I have read the rules of the related Discord Server and that I agree to them.
+				</Label>
+			</div>
 
-			<Checkbox name="confirm" value="true" required>
-				I understand that I may be removed from the event at any time for breaking any rules, or appearing to
-				break them at the discretion of the event moderators.
-			</Checkbox>
+			<div class="flex gap-2 items-center">
+				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[4]} />
+				<Checkbox.Root bind:checked={checks[4]} />
+				<Label>
+					I understand that I may be removed from the event at any time for breaking any rules, or appearing
+					to break them at the discretion of the event moderators.
+				</Label>
+			</div>
 
 			<div class="flex flex-col md:flex-row gap-8 justify-center">
 				<Button class="flex-1" href="/event/{$page.params.event}" color="alternative">Go Back</Button>
@@ -89,7 +112,7 @@
 		<form method="post" action="?/leave" class="my-8 mb-16 max-w-xl" use:enhance>
 			<div class="flex flex-row gap-2 items-center justify-center">
 				<p>Already joined?</p>
-				<Button type="submit" color="alternative" size="xs">Leave Event</Button>
+				<Button type="submit" variant="secondary">Leave Event</Button>
 			</div>
 			<p class="mt-2 text-center">
 				Leaving the event will remove you from the leaderboard. Be sure you want to leave before doing so. There
