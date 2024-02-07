@@ -1,30 +1,37 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { components } from '$lib/api/api';
-	import { Button, Popover, Star } from 'flowbite-svelte';
+	import { Popover } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import * as Tooltip from '$ui/tooltip';
+	import StarIcon from 'lucide-svelte/icons/star';
 
 	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};
 	let loading = false;
 </script>
 
-<div class="flex flex-col p-4 rounded-md bg-gray-200 dark:bg-zinc-700">
+<div class="flex flex-col p-4 rounded-md bg-primary-foreground">
 	<div class="flex flex-row justify-between items-center gap-2">
 		<div class="flex flex-row items-center gap-4">
 			<img class="pixel w-12" src="https://mc-heads.net/head/{mc.id}" alt="{mc.name} player skull" />
 			<h1 class="text-xl font-semibold font-mono">{mc.name}</h1>
 
 			{#if mc.primaryAccount}
-				<Star class="-ml-4" />
-				<Popover>
-					<p slot="title">Primary Account</p>
-					<div class="p-4">
-						<p>All Elite features will show stats of this account by default.</p>
-					</div>
-				</Popover>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<StarIcon size={16} class="text-yellow-500 fill-current" />
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<p class="font-semibold">Primary Account</p>
+						<div class="pt-2">
+							<p>All Elite features will show stats of this account by default.</p>
+						</div>
+					</Tooltip.Content>
+				</Tooltip.Root>
 			{/if}
 		</div>
 
-		<Button href="/@{mc.name}" size="sm">Stats</Button>
+		<Button href="/@{mc.name}" size="sm" variant="outline">Stats</Button>
 	</div>
 	<div class="flex flex-row justify-between items-baseline gap-4">
 		<p class="text-sm text-gray-500">{mc.id}</p>

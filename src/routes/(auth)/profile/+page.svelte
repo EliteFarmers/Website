@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import { Button, Input } from 'flowbite-svelte';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
+	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -20,40 +23,46 @@
 
 <main class="flex flex-col lg:flex-row justify-center gap-16 m-16 justify-items-center">
 	<div class="flex flex-col items-center">
-		<div class="w-full max-w-2xl mb-8">
-			<DiscordAccount account={user} />
-		</div>
-
-		<div class="flex flex-col items-start mb-8">
-			<div class="flex gap-8 items-baseline">
-				<h1 class="text-xl">Premium Status</h1>
-				{#if data.premium === 'gold'}
-					<h2 class="text-lg text-yellow-500 font-semibold">Gold</h2>
-				{:else if data.premium === 'silver'}
-					<h2 class="text-lg text-zinc-400 font-semibold">Silver</h2>
-				{:else if data.premium === 'bronze'}
-					<h2 class="text-lg text-orange-700 font-semibold">Bronze</h2>
-				{:else}
-					<h2 class="text-lg text-gray-500 font-semibold">None!</h2>
-				{/if}
-				<Button class="m-1" href="/plans" rel="noopener noreferrer" disabled>Upgrade</Button>
+		{#key loading}
+			<div class="w-full max-w-2xl mb-8">
+				<DiscordAccount account={user} />
 			</div>
-			{#if data.premium !== '' && data.premium !== 'none'}
-				<h2 class="text-lg text-center">Thank You!</h2>
-			{/if}
-		</div>
-		<!-- Form to input username to link account -->
+		{/key}
 
+		<!-- Form to input username to link account -->
 		<form
 			method="POST"
 			class="w-full max-w-md mb-16"
 			use:enhance={() => {
 				loading = true;
-				return async ({ result, update }) => {
+				return async ({ result }) => {
 					// Wait for a bit so the user can see the loading state
 					await new Promise((r) => setTimeout(r, 500));
-					if (result) loading = false;
-					update();
+					await applyAction(result);
+
+					if (result) {
+						loading = false;
+					}
+
+					if (result.type === 'redirect') {
+						throw goto(result.location);
+					}
+
+					if (result.type === 'error' || result.type === 'failure') {
+						if ('error' in result) {
+							toast.error(result.error.replaceAll('`', '"'), {
+								duration: 5000,
+							});
+						} else if ('data' in result && result.data?.error && typeof result.data.error === 'string') {
+							toast.error(result.data?.error.replaceAll('`', '"') ?? 'Something went wrong!', {
+								duration: 5000,
+							});
+						}
+					} else if (typeof result.data?.message === 'string') {
+						toast.success(result.data.message ?? 'Success!', {
+							duration: 5000,
+						});
+					}
 				};
 			}}
 		>
@@ -62,26 +71,16 @@
 					<Input
 						type="text"
 						name="username"
-						class="w-full px-4 py-2 border-2 rounded text-black text-center"
+						class="w-full px-4 py-2 border-2 roundedtext-center"
 						placeholder="Enter your Minecraft username"
 						disabled={loading}
 					/>
 				</div>
 				<div class="flex flex-col lg:flex-row gap-2 w-full">
-					<Button
-						type="submit"
-						formaction="?/link"
-						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-						disabled={loading}
-					>
+					<Button type="submit" formaction="?/link" class="flex-1" variant="secondary" disabled={loading}>
 						Link Account
 					</Button>
-					<Button
-						type="submit"
-						formaction="?/unlink"
-						class="w-full bg-gray-200 p-3 rounded-md dark:bg-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-600"
-						disabled={loading}
-					>
+					<Button type="submit" formaction="?/unlink" class="flex-1" variant="secondary" disabled={loading}>
 						Unlink Account
 					</Button>
 				</div>

@@ -1,14 +1,15 @@
 <script lang="ts">
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import type { components } from '$lib/api/api';
-	import { Button, Card } from 'flowbite-svelte';
-	import { ArrowUpRightFromSquareOutline, GearSolid } from 'flowbite-svelte-icons';
+	import { Button } from '$ui/button';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import Settings from 'lucide-svelte/icons/settings';
 
 	export let guild: components['schemas']['UserGuildDto'];
 	export let link = false;
 </script>
 
-<Card class="m-1 p-4 inline-block bg-gray-100 dark:bg-zinc-800" color="none" border={false}>
+<div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">
 	<div class="flex justify-between items-center">
 		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
 			<Guildicon {guild} />
@@ -16,18 +17,18 @@
 		</div>
 		<div class="flex justify-end min-w-0 items-center gap-4">
 			{#if link}
-				<Button href="/server/{guild.id}" color="blue" class="m-1">
-					<ArrowUpRightFromSquareOutline />
+				<Button href="/server/{guild.id}" class="m-1" variant="ghost">
+					<ExternalLink />
 				</Button>
 			{:else if guild.hasBot}
-				<Button href="/guild/{guild.id}" variant="raised" class="m-1">
-					<GearSolid />
+				<Button href="/guild/{guild.id}" variant="ghost" class="m-1">
+					<Settings />
 				</Button>
 			{:else}
-				<Button href="/invite?guild_id=${guild.id}" variant="outlined" class="m-1">
+				<Button href="/invite?guild_id=${guild.id}" variant="outline" class="m-1">
 					<p>Invite</p>
 				</Button>
 			{/if}
 		</div>
 	</div>
-</Card>
+</div>
