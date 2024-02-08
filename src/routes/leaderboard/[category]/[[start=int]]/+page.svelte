@@ -17,7 +17,7 @@
 	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: formatting = data.formatting;
 
-	let initialPage = Math.floor((data.lb.offset ?? 0) / 20) + 1;
+	$: initialPage = (data.lb.offset ?? 0) / 20 + 1;
 
 	$: {
 		if (data.lb?.id === 'skyblockxp') {
@@ -46,8 +46,8 @@
 			perPage={20}
 			bind:page={initialPage}
 			let:pages
-			let:currentPage
 			onPageChange={(newPage) => {
+				console.log(newPage);
 				goto(`/leaderboard/${$page.params.category}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
@@ -62,7 +62,7 @@
 						</Pagination.Item>
 					{:else}
 						<Pagination.Item>
-							<Pagination.Link {page} isActive={currentPage === page.value}>
+							<Pagination.Link {page} isActive={(page.value - 1) * 20 + 1 === offset}>
 								{page.value}
 							</Pagination.Link>
 						</Pagination.Item>
