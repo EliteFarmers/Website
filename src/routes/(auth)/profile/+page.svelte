@@ -21,7 +21,7 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="flex flex-col lg:flex-row justify-center gap-16 m-16 justify-items-center">
+<main class="flex flex-col lg:flex-row justify-center gap-16 my-16 mx-2 justify-items-center">
 	<div class="flex flex-col items-center">
 		{#key loading}
 			<div class="w-full max-w-2xl mb-8">
@@ -104,8 +104,8 @@
 			</div>
 		{/if}
 	</div>
-	<section class="flex flex-col lg:w-[70%]">
-		<h1 class="text-2xl mb-4">Servers With Leaderboards</h1>
+	<section class="flex flex-col max-w-3xl w-full">
+		<h1 class="text-2xl mb-4 mx-4">Servers With Leaderboards</h1>
 		{#if data.publicGuilds.length === 0}
 			<p>You're not a member of any public guilds!</p>
 		{/if}
@@ -115,7 +115,7 @@
 			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4">Manage Servers</h1>
+		<h1 class="text-2xl mb-4 mx-4">Manage Servers</h1>
 		{#if data.guildsWithBot.length === 0}
 			<p>You don't manage any servers with the bot invited!</p>
 		{/if}
@@ -125,7 +125,7 @@
 			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4">Other Servers</h1>
+		<h1 class="text-2xl mb-4 mx-4">Other Servers</h1>
 		{#if data.guilds.length === 0}
 			<p>No servers found! Try refreshing the page if this is wrong.</p>
 		{/if}

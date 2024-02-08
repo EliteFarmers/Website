@@ -42,7 +42,10 @@
 	<div class="flex flex-1 justify-between align-middle w-full max-h-30 bg-primary-foreground rounded-lg p-1">
 		<div class="flex flex-row justify-start items-center gap-2 w-full">
 			{#key rank}
-				<div class="flex crop-container pixelated w-14 md:w-20 md:h-20 aspect-square" style={getFrameStyle()}>
+				<div
+					class="flex crop-container pixelated w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 aspect-square"
+					style={getFrameStyle()}
+				>
 					<img
 						src="/images/crops/{key}.png"
 						class="rounded-lg pixelated aspect-square w-full p-[16%]"
@@ -64,13 +67,13 @@
 					{/if}
 					<p class="text-md sm:text-lg font-semibold whitespace-nowrap">{name}</p>
 				</div>
-				<p class="text-lg md:text-xl lg:text-2xl whitespace-nowrap">{value.toLocaleString()}</p>
+				<p class="text-normal sm:text-lg md:text-xl lg:text-2xl whitespace-nowrap">{value.toLocaleString()}</p>
 			</div>
 		</div>
 
 		<div class="flex flex-col justify-center align-middle w-full p-1">
-			<p class="md:ml-2 text-right font-semibold text-lg md:text-xl lg:text-2xl">{weight.toLocaleString()}</p>
-			<p class="md:ml-2 text-right text-md md:text-lg text-gray-500">{tier} / {maxTier}</p>
+			<p class="md:ml-2 text-right font-semibold sm:text-lg md:text-xl lg:text-2xl">{weight.toLocaleString()}</p>
+			<p class="md:ml-2 text-right sm:text-md md:text-lg text-gray-500">{tier} / {maxTier}</p>
 		</div>
 	</div>
 	<Minion name={name ?? ''} {index} tierField={minionTierField} />
