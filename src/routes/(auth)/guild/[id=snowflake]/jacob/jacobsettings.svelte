@@ -3,9 +3,7 @@
 	import { page } from '$app/stores';
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
-	import Mail from 'lucide-svelte/icons/mail';
-	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import { Mail, RefreshCcw, Trash2 } from 'lucide-svelte/icons';
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
 	import * as AlertDialog from '$ui/alert-dialog';

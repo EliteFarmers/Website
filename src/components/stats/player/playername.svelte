@@ -15,7 +15,7 @@
 </script>
 
 <Popover.Mobile hasContent={activeMembers.length > 0}>
-	<div slot="trigger" class="p-2 bg-card rounded-md" id="playerName">
+	<div slot="trigger" class="p-2 bg-primary-foreground rounded-md" id="playerName">
 		<h1 class="text-2xl md:text-3xl">
 			{#if rank && plus}
 				<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span

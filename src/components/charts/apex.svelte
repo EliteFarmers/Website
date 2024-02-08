@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type ApexCharts from 'apexcharts';
-	import Loader from 'lucide-svelte/icons/loader';
+	import { Loader } from 'lucide-svelte/icons';
 
 	export let options: ApexCharts.ApexOptions;
 	export let animate = true;

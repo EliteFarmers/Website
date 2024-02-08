@@ -4,7 +4,7 @@
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
-	import AlertCircle from 'lucide-svelte/icons/alert-circle';
+	import { AlertCircle } from 'lucide-svelte/icons';
 
 	export let rank = 0;
 	export let entry: components['schemas']['ContestParticipationWithTimestampDto'];

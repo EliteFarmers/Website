@@ -30,9 +30,7 @@
 </script>
 
 <section class="flex justify-center w-full mt-8 items-center">
-	<div
-		class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-primary-foreground p-4 md:p-8 mx-2 w-full max-w-7xl"
-	>
+	<div class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-card p-4 md:p-8 mx-2 w-full max-w-7xl">
 		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-center">
 			<img
 				class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
@@ -52,13 +50,13 @@
 				</div>
 				<div class="flex justify-start gap-1">
 					<a
-						class="p-2 px-3 text-body bg-card rounded-md"
+						class="p-2 px-3 text-body bg-primary-foreground rounded-md"
 						href="https://sky.shiiyu.moe/stats/{player?.uuid}/{$page.params.profile}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">SkyCrypt</a
 					>
 					<a
-						class="p-2 px-3 text-body bg-card rounded-md"
+						class="p-2 px-3 text-body bg-primary-foreground rounded-md"
 						href="https://plancke.io/hypixel/player/stats/{$page.params.id}"
 						target="_blank"
 						rel="noopener noreferrer nofollow">Plancke</a

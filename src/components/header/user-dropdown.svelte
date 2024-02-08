@@ -4,7 +4,7 @@
 	import { Button } from '$ui/button';
 	import { page } from '$app/stores';
 	import Usericon from '$comp/stats/discord/usericon.svelte';
-	import UserRound from 'lucide-svelte/icons/user-round';
+	import { UserRound } from 'lucide-svelte/icons';
 
 	$: user = $page.data.userInfo;
 </script>

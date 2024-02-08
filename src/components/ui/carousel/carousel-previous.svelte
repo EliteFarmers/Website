@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button, type Props, buttonVariants } from '$comp/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
+	import { ArrowLeft } from 'lucide-svelte/icons';
 	import type { VariantProps } from 'tailwind-variants';
 	import { getEmblaContext } from './context.js';
 

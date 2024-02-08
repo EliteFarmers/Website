@@ -22,7 +22,7 @@
 
 <Popover.Mobile>
 	<div slot="trigger">
-		<div class="block max-w-fit p-2 px-3 rounded-md bg-card" id="discordId">
+		<div class="block max-w-fit p-2 px-3 rounded-md bg-primary-foreground" id="discordId">
 			<div class="flex flex-row items-center gap-2">
 				<span class="text-primary mt-1 w-5 h-5">
 					<DiscordIcon />

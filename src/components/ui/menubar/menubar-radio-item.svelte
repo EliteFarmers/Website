@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Menubar as MenubarPrimitive } from 'bits-ui';
 	import { cn } from '$lib/utils';
-	import Circle from 'lucide-svelte/icons/circle';
+	import { Circle } from 'lucide-svelte/icons';
 
 	type $$Props = MenubarPrimitive.RadioItemProps;
 	type $$Events = MenubarPrimitive.RadioItemEvents;

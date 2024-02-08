@@ -3,7 +3,7 @@
 	import { getReadableSkyblockDate } from '$lib/format';
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { ExternalLink } from 'lucide-svelte/icons';
 
 	export let record: components['schemas']['GuildJacobLeaderboardEntry'];
 

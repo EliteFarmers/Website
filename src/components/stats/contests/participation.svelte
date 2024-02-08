@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
-	import AlertCircle from 'lucide-svelte/icons/alert-circle';
+	import { AlertCircle } from 'lucide-svelte/icons';
 
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>

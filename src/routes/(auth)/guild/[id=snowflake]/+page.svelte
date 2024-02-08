@@ -6,7 +6,7 @@
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { ExternalLink } from 'lucide-svelte/icons';
 
 	export let data: PageData;
 	$: features = data.guild?.features;

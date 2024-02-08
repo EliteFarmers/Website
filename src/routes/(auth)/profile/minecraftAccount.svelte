@@ -3,7 +3,7 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
-	import StarIcon from 'lucide-svelte/icons/star';
+	import { StarIcon } from 'lucide-svelte/icons';
 
 	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};
 	let loading = false;
@@ -30,8 +30,8 @@
 
 		<Button href="/@{mc.name}" size="sm" variant="outline">Stats</Button>
 	</div>
-	<div class="flex flex-row justify-between items-baseline gap-4">
-		<p class="text-sm text-gray-500">{mc.id}</p>
+	<div class="flex flex-wrap justify-between items-baseline">
+		<p class="text-xs sm:text-sm text-gray-500">{mc.id}</p>
 		{#if !mc.primaryAccount}
 			<form
 				method="POST"
