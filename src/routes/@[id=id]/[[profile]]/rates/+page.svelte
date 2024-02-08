@@ -20,7 +20,7 @@
 	import { Button } from '$ui/button';
 	import { SliderSimple } from '$ui/slider';
 	import * as Select from '$ui/select';
-	import Settings from 'lucide-svelte/icons/settings';
+	import { Settings } from 'lucide-svelte/icons';
 
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
@@ -124,7 +124,6 @@
 						title="Total Farming Fortune"
 						total={$player.fortune + cropFortune.fortune}
 						breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
-						side="bottom"
 					/>
 				</div>
 				<div class="flex-1 flex justify-end">
@@ -175,7 +174,6 @@
 						title="{selectedCrop} Fortune"
 						total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
 						breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
-						side="bottom"
 					/>
 				</div>
 				<div class="flex flex-row items-center gap-2 md:gap-4 w-full max-w-lg">

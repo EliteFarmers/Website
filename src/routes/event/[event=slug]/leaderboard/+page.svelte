@@ -3,8 +3,7 @@
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Users from 'lucide-svelte/icons/users';
+	import { ExternalLink, Users } from 'lucide-svelte/icons';
 	import Eventmember from '../eventmember.svelte';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';

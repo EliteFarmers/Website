@@ -7,10 +7,7 @@
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import ArrowUp from 'lucide-svelte/icons/arrow-up';
-	import Settings from 'lucide-svelte/icons/settings';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import { ExternalLink, Trash2, ArrowUp, Settings } from 'lucide-svelte/icons';
 	import type { PageData, ActionData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';

@@ -3,8 +3,7 @@
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
 	import type { PageData } from './$types';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Users from 'lucide-svelte/icons/users';
+	import { ExternalLink, Users } from 'lucide-svelte/icons';
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';

@@ -7,8 +7,7 @@
 	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
 	import type { ActionData, PageData } from './$types';
-	import Settings from 'lucide-svelte/icons/settings';
-	import Plus from 'lucide-svelte/icons/plus';
+	import { Settings, Plus } from 'lucide-svelte/icons';
 	import { enhance } from '$app/forms';
 	import Usericon from '$comp/stats/discord/usericon.svelte';
 

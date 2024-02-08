@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AuthorizedUser } from '$lib/api/elite';
-	import UserRound from 'lucide-svelte/icons/circle-user-round';
+	import { UserRound } from 'lucide-svelte/icons';
 	export let user: AuthorizedUser;
 	export let size = 12;
 </script>

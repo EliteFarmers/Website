@@ -3,7 +3,7 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
-	import StarIcon from 'lucide-svelte/icons/star';
+	import { StarIcon } from 'lucide-svelte/icons';
 
 	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};
 	let loading = false;

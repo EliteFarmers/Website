@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { ExternalLink } from 'lucide-svelte/icons';
 
 	export let member: components['schemas']['EventMemberDto'];
 </script>
