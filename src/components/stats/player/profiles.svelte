@@ -29,9 +29,12 @@
 			{#each profiles ?? [] as pId (pId.id)}
 				<a
 					href={`/@${ign}/${pId.name}`}
-					class="p-2 text-xl font-semibold flex flex-row gap-4 justify-between text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
+					class="p-2 text-xl font-semibold flex flex-row gap-4 justify-between hover:bg-muted rounded-sm"
 				>
-					<span>{pId.name} <Gamemode popover={false} gameMode={pId.gameMode} /></span>
+					<div class="flex flex-row gap-2 items-center">
+						<span>{pId.name}</span>
+						<Gamemode popover={false} gameMode={pId.gameMode} />
+					</div>
 					<span class="font-normal">{pId.weight.toLocaleString()}</span>
 				</a>
 			{/each}

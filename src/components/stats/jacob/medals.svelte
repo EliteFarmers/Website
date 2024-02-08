@@ -40,92 +40,88 @@
 	<h3 class="text-2xl my-2">Jacob Contest Rankings</h3>
 	<div class="flex flex-wrap md:flex-row gap-2 md:gap-4 justify-evenly w-full">
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
-			<div class="flex-1 basis-48">
-				<Popover.Mobile>
-					<div slot="trigger" class="w-full">
-						{#if ranks[medal] > -1}
-							<a
-								href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
-								class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
-							>
-								<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
+			<Popover.Mobile triggerRootClass="flex-1 basis-48" triggerClass="w-full">
+				<div slot="trigger" class="w-full">
+					{#if ranks[medal] > -1}
+						<a
+							href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
+							class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
+						>
+							<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
-								<span class="text-2xl">{count.toLocaleString()}</span>
+							<span class="text-2xl">{count.toLocaleString()}</span>
 
-								<span class="bg-card px-1 py-0.5 rounded-md">
-									<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
-										>{ranks[medal]}</span
-									>
-								</span>
-							</a>
-						{:else}
-							<div
-								class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
-							>
-								<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
+							<span class="bg-card px-1 py-0.5 rounded-md">
+								<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
+									>{ranks[medal]}</span
+								>
+							</span>
+						</a>
+					{:else}
+						<div
+							class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
+						>
+							<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
-								<span class="text-2xl">{count.toLocaleString()}</span>
+							<span class="text-2xl">{count.toLocaleString()}</span>
 
-								<div />
-							</div>
-						{/if}
-					</div>
-					<div>
-						<p>
-							Placed in <span class="first-letter:capitalize inline-block">{medal}</span> Bracket {count.toLocaleString()}
-							times!
-						</p>
-					</div>
-				</Popover.Mobile>
-			</div>
+							<div />
+						</div>
+					{/if}
+				</div>
+				<div>
+					<p>
+						Placed in <span class="first-letter:capitalize inline-block">{medal}</span> Bracket {count.toLocaleString()}
+						times!
+					</p>
+				</div>
+			</Popover.Mobile>
 		{/each}
 	</div>
 	<div class="flex flex-wrap md:flex-row gap-2 md:gap-4 justify-evenly w-full my-4">
 		{#each earnedMedals.slice(2) as [medal, count] (medal)}
-			<div class="flex-1 basis-48">
-				<Popover.Mobile>
-					<div slot="trigger" class="w-full">
-						{#if ranks[medal] > -1}
-							<a
-								href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
-								class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
-							>
-								<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
+			<Popover.Mobile triggerRootClass="flex-1 basis-48" triggerClass="w-full">
+				<div slot="trigger" class="w-full">
+					{#if ranks[medal] > -1}
+						<a
+							href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
+							class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
+						>
+							<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
 
-								<div class="flex flex-col">
-									<span class="text-xl leading-none">{medals[medal].toLocaleString()}</span>
-									<span class="text-2xl leading-none">{count.toLocaleString()}</span>
-								</div>
-
-								<span class="bg-card px-1 py-0.5 rounded-md">
-									<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
-										>{ranks[medal]}</span
-									>
-								</span>
-							</a>
-						{:else}
-							<div
-								class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
-							>
-								<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
-
-								<div class="flex flex-col">
-									<span class="text-xl leading-none">{medals[medal].toLocaleString()}</span>
-									<span class="text-2xl leading-none">{count.toLocaleString()}</span>
-								</div>
-
-								<div />
+							<div class="flex flex-col">
+								<span class="text-xl leading-none">{medals[medal].toLocaleString()}</span>
+								<span class="text-2xl leading-none">{count.toLocaleString()}</span>
 							</div>
-						{/if}
-					</div>
-					<div>
-						<div class="flex flex-col">
-							<span>{medals[medal].toLocaleString()} - Medals in inventory</span>
-							<span>{count.toLocaleString()} - Placements in {medal} bracket</span>
+
+							<span class="bg-card px-1 py-0.5 rounded-md">
+								<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
+									>{ranks[medal]}</span
+								>
+							</span>
+						</a>
+					{:else}
+						<div
+							class="flex-1 basis-48 flex flex-row gap-3 items-center justify-center xs:justify-center p-2 rounded-md bg-primary-foreground hover:bg-muted"
+						>
+							<img src="/images/medals/{medal}.webp" alt="Medal" class="w-12 h-12 pixelated p-1" />
+
+							<div class="flex flex-col">
+								<span class="text-xl leading-none">{medals[medal].toLocaleString()}</span>
+								<span class="text-2xl leading-none">{count.toLocaleString()}</span>
+							</div>
+
+							<div />
 						</div>
+					{/if}
+				</div>
+				<div>
+					<div class="flex flex-col">
+						<span>{medals[medal].toLocaleString()} - Medals in inventory</span>
+						<span>{count.toLocaleString()} - Placements in {medal} bracket</span>
 					</div>
-				</Popover.Mobile>
-			</div>
+				</div>
+			</Popover.Mobile>
 		{/each}
 	</div>
 </div>

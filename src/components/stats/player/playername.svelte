@@ -32,7 +32,7 @@
 			{#each activeMembers ?? [] as member}
 				<a
 					href={`/@${member.uuid}/${profileId}`}
-					class="p-2 text-xl font-semibold flex gap-4 justify-between text-gray-600 hover:text-gray-900 dark:text-zinc-200 dark:hover:text-zinc-400"
+					class="p-2 text-xl font-semibold flex gap-4 justify-between hover:bg-muted rounded-sm"
 				>
 					<span>{member.username}</span>
 					<span class="font-normal">{member.farmingWeight?.toLocaleString()}</span>
