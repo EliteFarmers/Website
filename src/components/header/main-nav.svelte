@@ -4,7 +4,7 @@
 </script>
 
 <div class="mr-4 hidden md:flex gap-6">
-	<a href="/" class="flex items-center space-x-2">
+	<a href="/" class="flex items-center gap-2">
 		<a class="flex flex-row gap-2 items-center" href="/">
 			<img src="/favicon.webp" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
 		</a>
