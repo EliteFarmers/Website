@@ -3,7 +3,7 @@
 	import { getReadableSkyblockMonthDay } from '$lib/format';
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import AlertCircle from 'lucide-svelte/icons/alert-circle';
 
 	export let rank = 0;
@@ -23,17 +23,17 @@
 				</h3>
 			</div>
 			{#if entry.removed}
-				<Tooltip.Root>
-					<Tooltip.Trigger>
+				<Popover.Mobile>
+					<div slot="trigger">
 						<AlertCircle class="text-destructive" />
-					</Tooltip.Trigger>
-					<Tooltip.Content>
+					</div>
+					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
 						<p class="max-w-xs break-words whitespace-normal">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+				</Popover.Mobile>
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">

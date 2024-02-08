@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 
 	export let member: components['schemas']['EventMemberDetailsDto'];
 	export let rank: number;
@@ -24,8 +24,8 @@
 			/>
 			<p class="text-lg">{member.playerName}</p>
 			{#if running}
-				<Tooltip.Root>
-					<Tooltip.Trigger>
+				<Popover.Mobile>
+					<div slot="trigger">
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
 								<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
@@ -34,8 +34,8 @@
 								<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300" />
 							{/if}
 						</div>
-					</Tooltip.Trigger>
-					<Tooltip.Content>
+					</div>
+					<div>
 						{#if member.status === 0}
 							<p class="text-lg font-semibold">Inactive Farmer</p>
 							<p class="max-w-xs">
@@ -46,8 +46,8 @@
 							<p class="text-lg font-semibold">Actively Farming!</p>
 							<p class="max-w-xs">{member.playerName} has increased their score since last checked!</p>
 						{/if}
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+				</Popover.Mobile>
 			{/if}
 		</div>
 		<p class="text-lg block pr-2">

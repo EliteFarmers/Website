@@ -5,7 +5,7 @@
 	import { Input } from '$ui/input';
 	import { Textarea } from '$ui/textarea';
 	import * as Accordion from '$ui/accordion';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import ArrowUp from 'lucide-svelte/icons/arrow-up';
@@ -83,8 +83,8 @@
 						</div>
 					</div>
 					<div class="p-4 flex flex-col gap-2">
-						<Tooltip.Root>
-							<Tooltip.Trigger>
+						<Popover.Mobile>
+							<div slot="trigger">
 								<Button
 									on:click={() => {
 										clickOutsideModalEdit = true;
@@ -93,22 +93,22 @@
 								>
 									<Settings />
 								</Button>
-							</Tooltip.Trigger>
-							<Tooltip.Content>
+							</div>
+							<div>
 								<p>Edit Event</p>
-							</Tooltip.Content>
-						</Tooltip.Root>
+							</div>
+						</Popover.Mobile>
 
-						<Tooltip.Root>
-							<Tooltip.Trigger>
+						<Popover.Mobile>
+							<div slot="trigger">
 								<Button href="/event/{event.id}">
 									<ExternalLink />
 								</Button>
-							</Tooltip.Trigger>
-							<Tooltip.Content>
+							</div>
+							<div>
 								<p>View Event Page</p>
-							</Tooltip.Content>
-						</Tooltip.Root>
+							</div>
+						</Popover.Mobile>
 					</div>
 				</div>
 				<Accordion.Root>
@@ -120,8 +120,8 @@
 							<div class="flex flex-col w-full justify-center items-center gap-2 justify-items-center">
 								{#each members as member (member.playerUuid)}
 									<Member {member}>
-										<Tooltip.Root>
-											<Tooltip.Trigger>
+										<Popover.Mobile>
+											<div slot="trigger">
 												<Button
 													size="sm"
 													on:click={() => {
@@ -133,11 +133,11 @@
 												>
 													<Trash2 size={16} class="text-destructive" />
 												</Button>
-											</Tooltip.Trigger>
-											<Tooltip.Content>
+											</div>
+											<div>
 												<p>Ban this user from the event</p>
-											</Tooltip.Content>
-										</Tooltip.Root>
+											</div>
+										</Popover.Mobile>
 									</Member>
 								{/each}
 							</div>
@@ -154,16 +154,16 @@
 										<form method="POST" action="?/unbanmember" use:enhance>
 											<input type="hidden" name="id" value={event.id} />
 											<input type="hidden" name="uuid" value={member.playerUuid} />
-											<Tooltip.Root>
-												<Tooltip.Trigger>
+											<Popover.Mobile>
+												<div slot="trigger">
 													<Button type="submit" color="green" class="unban" size="sm">
 														<ArrowUp size={16} />
 													</Button>
-												</Tooltip.Trigger>
-												<Tooltip.Content>
+												</div>
+												<div>
 													<p>Unban this user from the event</p>
-												</Tooltip.Content>
-											</Tooltip.Root>
+												</div>
+											</Popover.Mobile>
 										</form>
 									</Member>
 								{/each}

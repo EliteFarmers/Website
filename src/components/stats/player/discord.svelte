@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import DiscordIcon from './discord-icon.svelte';
 	import { CheckIcon, XCircle } from 'lucide-svelte/icons';
 
@@ -20,8 +20,8 @@
 	}
 </script>
 
-<Tooltip.Root openDelay={50}>
-	<Tooltip.Trigger>
+<Popover.Mobile>
+	<div slot="trigger">
 		<div class="block max-w-fit p-2 px-3 rounded-md bg-card" id="discordId">
 			<div class="flex flex-row items-center gap-2">
 				<span class="text-primary mt-1 w-5 h-5">
@@ -39,21 +39,19 @@
 				{/if}
 			</div>
 		</div>
-	</Tooltip.Trigger>
-	<Tooltip.Content side="bottom">
-		{#if validName}
-			<div class="text-center text-md">
-				{#if linked}
-					<p class="font-semibold">Account Linked</p>
-				{:else}
-					<p class="font-semibold">Not Linked</p>
-					<p>
-						Link your account on the <a href="/profile" class="text-blue-500">profile page</a>
-					</p>
-				{/if}
-			</div>
-		{:else}
-			<p class="max-w-sm text-center">User entered a name that contains invalid characters on Hypixel.</p>
-		{/if}
-	</Tooltip.Content>
-</Tooltip.Root>
+	</div>
+	{#if validName}
+		<div class="text-center text-md">
+			{#if linked}
+				<p class="font-semibold">Account Linked</p>
+			{:else}
+				<p class="font-semibold">Not Linked</p>
+				<p>
+					Link your account on the <a href="/profile" class="text-blue-500">profile page</a>
+				</p>
+			{/if}
+		</div>
+	{:else}
+		<p class="max-w-sm text-center">User entered a name that contains invalid characters on Hypixel.</p>
+	{/if}
+</Popover.Mobile>

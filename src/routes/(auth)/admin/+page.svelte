@@ -4,7 +4,7 @@
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
 	import type { ActionData, PageData } from './$types';
 	import Settings from 'lucide-svelte/icons/settings';
@@ -55,8 +55,8 @@
 								<p>{permission[1].description}</p>
 							{/each}
 						</div>
-						<Tooltip.Root>
-							<Tooltip.Trigger>
+						<Popover.Mobile>
+							<div slot="trigger">
 								<Button
 									class="max-h-12"
 									on:click={() => {
@@ -66,9 +66,9 @@
 								>
 									<Settings size={16} />
 								</Button>
-							</Tooltip.Trigger>
-							<Tooltip.Content>Manage Permissions</Tooltip.Content>
-						</Tooltip.Root>
+							</div>
+							<div>Manage Permissions</div>
+						</Popover.Mobile>
 					</div>
 				</div>
 			{/each}

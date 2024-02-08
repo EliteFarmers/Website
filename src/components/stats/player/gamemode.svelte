@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ProfileGameMode } from '$lib/api/elite';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 
 	const icons: Record<ProfileGameMode, string> = {
 		island: '☀',
@@ -19,15 +19,15 @@
 	export let popover = true;
 </script>
 
-<Tooltip.Root openDelay={50}>
-	<Tooltip.Trigger>
+<Popover.Mobile hasContent={popover}>
+	<div slot="trigger">
 		<span class="{$$props.class ?? classes} font-mono">{icons[gameMode ?? 'classic']}</span>
-	</Tooltip.Trigger>
+	</div>
 	{#if popover}
-		<Tooltip.Content side="bottom">
+		<div>
 			<h5 class="font-semibold">Profile Game Mode</h5>
 
 			<p class="first-letter:capitalize text-center">{gameModeRename[gameMode] ?? gameMode}</p>
-		</Tooltip.Content>
+		</div>
 	{/if}
-</Tooltip.Root>
+</Popover.Mobile>

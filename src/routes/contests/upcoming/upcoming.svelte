@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate, getRelativeTimeString } from '$lib/format';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 
 	export let current = false;
 	export let timestamp: number;
@@ -51,16 +51,16 @@
 	</div>
 	<div class="flex flex-row gap-4 mx-4 w-[1/1] md:w-[1/2]">
 		{#each crops as name (name)}
-			<Tooltip.Root>
-				<Tooltip.Trigger>
+			<Popover.Mobile>
+				<div slot="trigger">
 					<div class="flex-col flex-1 items-center text-center max-w-2xl rounded-md bg-card">
 						<img class="w-16 pixelated" src={PROPER_CROP_TO_IMG[name]} alt="" />
 					</div>
-				</Tooltip.Trigger>
-				<Tooltip.Content>
+				</div>
+				<div>
 					{name}
-				</Tooltip.Content>
-			</Tooltip.Root>
+				</div>
+			</Popover.Mobile>
 		{/each}
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 
 	export let name: string;
 	export let index: number;
@@ -13,33 +13,30 @@
 	}
 </script>
 
-<Tooltip.Root openDelay={50}>
-	<Tooltip.Trigger>
-		<div class="image-container bg-green-500 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
-			<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
-			<div class="tier-border">
-				{#each tiers as tier, i}
-					<div class="tier {tier === '1' ? '' : 'bg-muted'}" style="grid-area: a{i};" />
-				{/each}
-			</div>
-			<div class="bg-primary-foreground absolute tier-cover" />
-		</div>
-	</Tooltip.Trigger>
-	<Tooltip.Content>
-		<div class="text-lg text-center">Unlocked {name} Minion Tiers</div>
-		<div class="flex gap-1 justify-center items-center text-black dark:text-white">
+<Popover.Mobile>
+	<div slot="trigger" class="image-container bg-green-500 p-1 md:p-2 lg:p-3 w-16 h-16 md:w-20 md:h-20">
+		<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
+		<div class="tier-border">
 			{#each tiers as tier, i}
-				<div
-					class="block flex-1 px-1 text-center text-lg rounded-sm {tier === '1'
-						? 'bg-muted'
-						: 'bg-primary-foreground'}"
-				>
-					<p>{i + 1}</p>
-				</div>
+				<div class="tier {tier === '1' ? '' : 'bg-muted'}" style="grid-area: a{i};" />
 			{/each}
 		</div>
-	</Tooltip.Content>
-</Tooltip.Root>
+		<div class="bg-primary-foreground absolute tier-cover" />
+	</div>
+
+	<div class="text-lg text-center">Unlocked {name} Minion Tiers</div>
+	<div class="flex gap-1 justify-center items-center text-black dark:text-white">
+		{#each tiers as tier, i}
+			<div
+				class="block flex-1 px-1 text-center text-lg rounded-sm {tier === '1'
+					? 'bg-muted'
+					: 'bg-primary-foreground'}"
+			>
+				<p>{i + 1}</p>
+			</div>
+		{/each}
+	</div>
+</Popover.Mobile>
 
 <style lang="postcss">
 	.image-container {
