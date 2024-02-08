@@ -7,7 +7,7 @@
 	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import * as Accordion from '$ui/accordion';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import * as AlertDialog from '$ui/alert-dialog';
 	import { Button } from '$ui/button';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
@@ -67,40 +67,38 @@
 			</Button> -->
 			<form method="post" action="{$page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<Tooltip.Root>
-					<Tooltip.Trigger>
+				<Popover.Mobile>
+					<div slot="trigger">
 						<Button type="submit" color="green">
 							<Mail />
 						</Button>
-					</Tooltip.Trigger>
-					<Tooltip.Content>
+					</div>
+					<div>
 						<p>Send Leaderboard in Discord</p>
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+				</Popover.Mobile>
 			</form>
 			<form method="post" action="{$page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<Tooltip.Root>
-					<Tooltip.Trigger>
+				<Popover.Mobile>
+					<div slot="trigger">
 						<Button type="submit" color="yellow">
 							<RefreshCcw />
 						</Button>
-					</Tooltip.Trigger>
-					<Tooltip.Content>
-						<p>Clear all scores, but they can be submitted again</p>
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+					<p>Clear all scores, but they can be submitted again</p>
+				</Popover.Mobile>
 			</form>
-			<Tooltip.Root>
-				<Tooltip.Trigger>
+			<Popover.Mobile>
+				<div slot="trigger">
 					<Button on:click={() => (confirmModal = true)}>
 						<Trash2 class="text-destructive" />
 					</Button>
-				</Tooltip.Trigger>
-				<Tooltip.Content>
+				</div>
+				<div>
 					<p>Delete Leaderboard</p>
-				</Tooltip.Content>
-			</Tooltip.Root>
+				</div>
+			</Popover.Mobile>
 		</div>
 	</div>
 
@@ -121,16 +119,14 @@
 									<input type="hidden" name="uuid" value={entry.uuid} />
 									<input type="hidden" name="crop" value={entry.record?.crop} />
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
-									<Tooltip.Root>
-										<Tooltip.Trigger>
+									<Popover.Mobile>
+										<div slot="trigger">
 											<Button type="submit" variant="destructive" size="icon">
 												<Trash2 size={20} class="text-destructive" />
 											</Button>
-										</Tooltip.Trigger>
-										<Tooltip.Content side="right">
-											<p>Remove and block this Participation</p>
-										</Tooltip.Content>
-									</Tooltip.Root>
+										</div>
+										<p>Remove and block this Participation</p>
+									</Popover.Mobile>
 								</form>
 								<p class="text-lg">{entry.ign}</p>
 								<p class="text-lg font-mono">{entry.record?.collected?.toLocaleString()}</p>

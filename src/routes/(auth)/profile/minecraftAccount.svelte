@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import StarIcon from 'lucide-svelte/icons/star';
 
 	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};
@@ -16,17 +16,15 @@
 			<h1 class="text-xl font-semibold font-mono">{mc.name}</h1>
 
 			{#if mc.primaryAccount}
-				<Tooltip.Root>
-					<Tooltip.Trigger>
+				<Popover.Mobile>
+					<div slot="trigger">
 						<StarIcon size={16} class="text-yellow-500 fill-current" />
-					</Tooltip.Trigger>
-					<Tooltip.Content>
-						<p class="font-semibold">Primary Account</p>
-						<div class="pt-2">
-							<p>All Elite features will show stats of this account by default.</p>
-						</div>
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+					<p class="font-semibold">Primary Account</p>
+					<div class="pt-2">
+						<p>All Elite features will show stats of this account by default.</p>
+					</div>
+				</Popover.Mobile>
 			{/if}
 		</div>
 

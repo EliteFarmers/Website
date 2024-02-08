@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
@@ -40,27 +40,27 @@
 				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="w-12 h-12 pixelated p-1" />
 
 				<div class="flex flex-col items-start gap-1">
-					<Tooltip.Root openDelay={50}>
-						<Tooltip.Trigger>
+					<Popover.Mobile>
+						<div slot="trigger">
 							<p class="text-lg leading-none">
 								{pb(crop)?.toLocaleString() ?? 'Not Set!'}
 							</p>
-						</Tooltip.Trigger>
-						<Tooltip.Content side="top">
+						</div>
+						<div>
 							<p>The highest placement earned for {crop}!</p>
-						</Tooltip.Content>
-					</Tooltip.Root>
+						</div>
+					</Popover.Mobile>
 
-					<Tooltip.Root openDelay={50}>
-						<Tooltip.Trigger>
+					<Popover.Mobile>
+						<div slot="trigger">
 							<p class="text-lg leading-none participation-count">
 								x{amount.toLocaleString()}
 							</p>
-						</Tooltip.Trigger>
-						<Tooltip.Content side="bottom">
+						</div>
+						<div>
 							<p>The amount of participations for {crop}!</p>
-						</Tooltip.Content>
-					</Tooltip.Root>
+						</div>
+					</Popover.Mobile>
 				</div>
 			</div>
 

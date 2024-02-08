@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { components } from '$lib/api/api';
-	import * as Tooltip from '$ui/tooltip';
+	import * as Popover from '$ui/popover';
 
 	export let total: components['schemas']['MedalInventoryDto'] | undefined;
 	export let earned: components['schemas']['EarnedMedalInventoryDto'] | undefined;
@@ -41,8 +41,8 @@
 	<div class="flex flex-wrap md:flex-row gap-2 md:gap-4 justify-evenly w-full">
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
-				<Tooltip.Root openDelay={50}>
-					<Tooltip.Trigger class="w-full">
+				<Popover.Mobile>
+					<div slot="trigger" class="w-full">
 						{#if ranks[medal] > -1}
 							<a
 								href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
@@ -69,22 +69,22 @@
 								<div />
 							</div>
 						{/if}
-					</Tooltip.Trigger>
-					<Tooltip.Content side="bottom">
+					</div>
+					<div>
 						<p>
 							Placed in <span class="first-letter:capitalize inline-block">{medal}</span> Bracket {count.toLocaleString()}
 							times!
 						</p>
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+				</Popover.Mobile>
 			</div>
 		{/each}
 	</div>
 	<div class="flex flex-wrap md:flex-row gap-2 md:gap-4 justify-evenly w-full my-4">
 		{#each earnedMedals.slice(2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
-				<Tooltip.Root openDelay={50}>
-					<Tooltip.Trigger class="w-full">
+				<Popover.Mobile>
+					<div slot="trigger" class="w-full">
 						{#if ranks[medal] > -1}
 							<a
 								href="/leaderboard/{medal}medals/{$page.params.id}-{profile}"
@@ -117,14 +117,14 @@
 								<div />
 							</div>
 						{/if}
-					</Tooltip.Trigger>
-					<Tooltip.Content side="bottom">
+					</div>
+					<div>
 						<div class="flex flex-col">
 							<span>{medals[medal].toLocaleString()} - Medals in inventory</span>
 							<span>{count.toLocaleString()} - Placements in {medal} bracket</span>
 						</div>
-					</Tooltip.Content>
-				</Tooltip.Root>
+					</div>
+				</Popover.Mobile>
 			</div>
 		{/each}
 	</div>
