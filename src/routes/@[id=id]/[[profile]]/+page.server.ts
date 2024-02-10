@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ parent, setHeaders, locals }) => {
 	const { account, profile, member } = await parent();
 
 	let authorized = false;
-	if (locals.discord_access_token && (locals.user?.permissions ?? 0) < 17) {
+	if (locals.discord_access_token && (locals.user?.permissions ?? 0) >= 17) {
 		authorized = true;
 	}
 
