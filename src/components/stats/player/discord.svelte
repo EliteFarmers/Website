@@ -27,9 +27,9 @@
 				<span class="text-primary mt-1 w-5 h-5">
 					<DiscordIcon />
 				</span>
-				<h3 class="whitespace-nowrap text-lg leading-none">
+				<span class="whitespace-nowrap text-lg leading-none">
 					{validName ? username ?? 'Discord N/A' : 'Invalid!'}
-				</h3>
+				</span>
 				{#if validName && username}
 					{#if linked}
 						<CheckIcon />
