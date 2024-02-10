@@ -1,12 +1,13 @@
 import { GetPlayerRanks } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import { PermissionFlags, hasPermission } from '$lib/auth';
 
 export const load = (async ({ parent, locals }) => {
 	const { account, profile } = await parent();
 
 	let authorized = false;
-	if (locals.discord_access_token && (locals.user?.permissions ?? 0) < 17) {
+	if (locals.discord_access_token && hasPermission(locals.user, PermissionFlags.ViewGraphs)) {
 		authorized = true;
 	}
 

@@ -7,6 +7,7 @@ import {
 	GetCropCollectionPoints,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
+import { PermissionFlags, hasPermission } from '$lib/auth';
 
 export const load = (async ({ params, parent, locals }) => {
 	const { user, account: aData } = (await parent()) as PageServerParentData & {
@@ -16,7 +17,7 @@ export const load = (async ({ params, parent, locals }) => {
 	const { id, profile } = params;
 	let account = aData;
 
-	if (!token || (user.permissions ?? 0) < 17) {
+	if (!token || !hasPermission(user, PermissionFlags.ViewGraphs)) {
 		throw error(404, 'Not Found');
 	}
 
@@ -67,7 +68,7 @@ export const actions: Actions = {
 	collectiongraph: async ({ request, locals }) => {
 		const { discord_access_token: token, user } = locals;
 
-		if (!token || (user?.permissions ?? 0) < 17) {
+		if (!token || !hasPermission(user, PermissionFlags.ViewGraphs)) {
 			throw fail(403);
 		}
 

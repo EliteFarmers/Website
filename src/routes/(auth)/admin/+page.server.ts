@@ -1,6 +1,7 @@
 import { error, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { DELETE, GET, POST } from '$lib/api/elite';
+import { hasPermission, PermissionFlags, PERMISSIONS } from '$lib/auth';
 
 export const load = (async ({ parent, locals, setHeaders }) => {
 	const { user } = await parent();
@@ -10,7 +11,7 @@ export const load = (async ({ parent, locals, setHeaders }) => {
 		'Cache-Control': 'no-store',
 	});
 
-	if (!token || user.permissions !== PermissionFlags.Admin) {
+	if (!token || !hasPermission(user, PermissionFlags.Admin)) {
 		throw error(404, 'Not Found');
 	}
 
@@ -21,40 +22,9 @@ export const load = (async ({ parent, locals, setHeaders }) => {
 	return {
 		user,
 		admins: admins ?? [],
-		permissions,
+		permissions: PERMISSIONS,
 	};
 }) satisfies PageServerLoad;
-
-enum PermissionFlags {
-	None = 0,
-	Helper = 16,
-	ViewGraphs = 17,
-	Moderator = 32,
-	Admin = 64,
-}
-
-const permissions = {
-	[PermissionFlags.None]: {
-		name: 'None',
-		description: 'No permissions',
-	},
-	[PermissionFlags.Helper]: {
-		name: 'Helper',
-		description: 'Currently no permissions',
-	},
-	[PermissionFlags.ViewGraphs]: {
-		name: 'View Stats',
-		description: 'View some player stats',
-	},
-	[PermissionFlags.Moderator]: {
-		name: 'Moderator',
-		description: 'Moderator permissions',
-	},
-	[PermissionFlags.Admin]: {
-		name: 'Admin',
-		description: 'All permissions, super user',
-	},
-};
 
 export const actions: Actions = {
 	promote: async ({ request, locals }) => {

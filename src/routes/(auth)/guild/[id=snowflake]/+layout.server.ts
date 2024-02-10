@@ -20,7 +20,7 @@ export const load = (async ({ params, parent, locals }) => {
 		throw error(404, 'Guild not found');
 	}
 
-	const hasPerms = CanManageGuild(guild.permissions);
+	const hasPerms = CanManageGuild(guild.permissions, locals.user);
 
 	if (!hasPerms) {
 		throw error(403, 'You do not have permission to edit this guild.');
