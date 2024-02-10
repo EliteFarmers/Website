@@ -15,9 +15,9 @@ import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { userPermissions, guild } = await parent();
-	const { discord_access_token: token } = locals;
+	const { discord_access_token: token, user } = locals;
 
-	const hasPerms = CanManageGuild(userPermissions);
+	const hasPerms = CanManageGuild(userPermissions, user);
 
 	if (!hasPerms || !token) {
 		throw error(403, 'You do not have permission to edit this guild.');
@@ -66,7 +66,7 @@ export const actions: Actions = {
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token);
+		await getGuild(guildId, token, locals.user);
 
 		const data = await request.formData();
 
@@ -121,7 +121,7 @@ export const actions: Actions = {
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token);
+		await getGuild(guildId, token, locals.user);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -169,7 +169,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		await getGuild(guildId, token);
+		await getGuild(guildId, token, locals.user);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -202,7 +202,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		await getGuild(guildId, token);
+		await getGuild(guildId, token, locals.user);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -222,14 +222,14 @@ export const actions: Actions = {
 	},
 };
 
-async function getGuild(guildId: string, token: string) {
+async function getGuild(guildId: string, token: string, user?: App.Locals['user']) {
 	const guild = await GetGuild(guildId, token)
 		.then((guild) => guild.data ?? undefined)
 		.catch(() => undefined);
 
 	if (!guild) throw error(404, 'Guild not found');
 
-	const hasPerms = CanManageGuild(guild.permissions);
+	const hasPerms = CanManageGuild(guild.permissions, user);
 	if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
 
 	if (!guild.guild?.features?.eventsEnabled) {
