@@ -40,7 +40,7 @@
 	<Sheet.Content side="left" class="pr-0">
 		<MobileLink href="/" class="flex items-center" bind:open>
 			<a class="flex flex-row gap-2 items-center" href="/">
-				<img src="/favicon.webp" class="mr-3 h-4 w-4" alt="Elite Logo" />
+				<img src="/favicon.webp" class="mr-3 h-4 w-4" alt="Elite Logo" loading="lazy" />
 			</a>
 			<span class="font-semibold">Elite Farmers</span>
 		</MobileLink>

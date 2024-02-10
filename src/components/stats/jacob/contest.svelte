@@ -31,14 +31,14 @@
 		{(collected ?? 0).toLocaleString()}
 	</h3>
 	{#if irlTime}
-		<h6 class="text-xs font-mono font-semibold">
+		<span class="text-xs font-mono font-semibold">
 			{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
 				timeStyle: 'short',
 				dateStyle: 'medium',
 			})}
-		</h6>
+		</span>
 	{:else}
-		<h6 class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</h6>
+		<span class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</span>
 	{/if}
 </a>
 
