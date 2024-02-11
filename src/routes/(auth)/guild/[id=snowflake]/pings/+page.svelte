@@ -107,7 +107,7 @@
 							<Label>Wheat Ping Role</Label>
 							<Select.Simple
 								options={roles}
-								value={pings.cropPingRoles?.sugarCane ?? ''}
+								value={pings.cropPingRoles?.wheat ?? ''}
 								placeholder="Select a role for Wheat"
 								name="wheat"
 							/>
