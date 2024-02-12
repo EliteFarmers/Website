@@ -62,8 +62,11 @@
 						</Pagination.Item>
 					{:else}
 						<Pagination.Item>
-							<Pagination.Link {page} isActive={(page.value - 1) * 20 + 1 === offset}>
-								{page.value}
+							<Pagination.Link
+								page={{ ...page, value: Math.floor(page.value) }}
+								isActive={(page.value - 1) * 20 + 1 === offset}
+							>
+								{Math.floor(page.value)}
 							</Pagination.Link>
 						</Pagination.Item>
 					{/if}

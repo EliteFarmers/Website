@@ -5,7 +5,7 @@
 	import { getTimeStamp } from '$lib/format';
 	import type { PageData } from './$types';
 	import * as Accordion from '$ui/accordion';
-	import { Toggle } from '$ui/toggle';
+	import { Switch } from '$ui/switch';
 
 	let timeType = false;
 
@@ -31,9 +31,9 @@
 				}}
 			/>
 
-			<div class="flex flex-row align-middle my-2 mt-4">
-				<Toggle bind:pressed={timeType} />
-				Show Real Life Time
+			<div class="flex flex-row items-center gap-2 my-2 mt-4">
+				<Switch bind:checked={timeType} />
+				<span>Show Real Life Time</span>
 			</div>
 		</div>
 
