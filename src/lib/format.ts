@@ -30,11 +30,15 @@ export function getSkillLevel(skill: Skill, xp: number, max?: number) {
 		}
 	}
 
-	return [level, xp];
+	return {
+		level,
+		xp,
+		chart: XP_CHART,
+	};
 }
 
 export function getLevelProgress(skill: Skill, xp: number, max?: number) {
-	const [level, remainder] = getSkillLevel(skill, xp, max);
+	const { level, xp: remainder, chart } = getSkillLevel(skill, xp, max);
 
 	if ((max && level >= max) || level === getLevelCap(skill)) {
 		return {
@@ -44,8 +48,7 @@ export function getLevelProgress(skill: Skill, xp: number, max?: number) {
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const nextReq = (LEVEL_XP as Record<number, number>)[level + 1];
+	const nextReq = chart[level + 1];
 
 	return {
 		level: level,
