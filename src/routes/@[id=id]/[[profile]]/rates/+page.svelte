@@ -102,15 +102,33 @@
 	$: selectedCrop = Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '';
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
+	$: delayedUpdateSelectedTool(selectedCrop);
 	$: selectedToolId = $player.selectedTool?.item.uuid?.slice() ?? '';
+
+	function updateSelectedTool(c: string) {
+		const crop = cropKey(c);
+		if (selectedTool?.crop === crop) return;
+
+		selectedTool = tools.find((tool) => tool.crop === crop);
+		selectedToolId = selectedTool?.item.uuid ?? '';
+
+		player.refresh();
+	}
+
+	function delayedUpdateSelectedTool(c: string) {
+		setTimeout(() => updateSelectedTool(c), 0);
+	}
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
 </script>
 
-<Head title="Rate Calculator" description="Calculate your expected farming rates in Hypixel Skyblock!" />
+<Head
+	title="{data.account.name} | Rate Calculator"
+	description="Calculate your expected farming rates in Hypixel Skyblock!"
+/>
 
-<div class="flex flex-col justify-center items-center w-full pb-16">
+<div class="flex flex-col justify-center items-center w-full">
 	<Cropselector radio={true} />
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">

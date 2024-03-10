@@ -12,12 +12,14 @@
 	$: title = `${data.lb?.title} Leaderboard`;
 	$: entries = data.lb?.entries ?? [];
 	$: offset = (data.lb?.offset ?? 0) + 1;
+	$: lbId = data.lb.id;
 
 	$: firstHalf = entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: formatting = data.formatting;
 
-	$: initialPage = (data.lb.offset ?? 0) / 20 + 1;
+	$: initialPage = Math.floor((data.lb.offset ?? 0) / 20 + 1);
+	$: noneActive = (data.lb.offset ?? 0) / 20 + 1 !== initialPage;
 
 	$: {
 		if (data.lb?.id === 'skyblockxp') {
@@ -34,6 +36,12 @@
 		if (!from?.url.pathname.startsWith('/leaderboard/')) return;
 		(document.querySelector('#navigate') as HTMLAnchorElement)?.focus();
 	});
+
+	function samePageClick(page: number) {
+		if (noneActive) {
+			goto(`/leaderboard/${lbId}/${(page - 1) * 20 + 1}`);
+		}
+	}
 </script>
 
 <Head {title} description={`${title} for Hypixel Skyblock.`} />
@@ -47,8 +55,7 @@
 			bind:page={initialPage}
 			let:pages
 			onPageChange={(newPage) => {
-				console.log(newPage);
-				goto(`/leaderboard/${$page.params.category}/${(newPage - 1) * 20 + 1}`);
+				goto(`/leaderboard/${lbId}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
 			<Pagination.Content>
@@ -64,7 +71,8 @@
 						<Pagination.Item>
 							<Pagination.Link
 								page={{ ...page, value: Math.floor(page.value) }}
-								isActive={(page.value - 1) * 20 + 1 === offset}
+								isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
+								on:click={() => samePageClick(page.value)}
 							>
 								{Math.floor(page.value)}
 							</Pagination.Link>

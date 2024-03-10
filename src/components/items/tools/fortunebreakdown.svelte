@@ -11,16 +11,22 @@
 	$: sum = total ?? list.reduce((acc, [, value]) => acc + value, 0);
 </script>
 
-<Popover.Mobile>
-	<div
-		slot="trigger"
-		class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-700 min-h-4 h-full"
-	>
+{#if list.length <= 0}
+	<div class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-700 min-h-4 h-full">
 		<p class="relative text-md md:text-lg px-1 z-10 font-mono">
 			{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{sum.toLocaleString()}&nbsp;
 		</p>
 	</div>
-	{#if list.length > 0}
+{:else}
+	<Popover.Mobile>
+		<div
+			slot="trigger"
+			class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-700 min-h-4 h-full"
+		>
+			<p class="relative text-md md:text-lg px-1 z-10 font-mono">
+				{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{sum.toLocaleString()}&nbsp;
+			</p>
+		</div>
 		<div class="flex flex-col gap-2 max-w-xs">
 			<div>
 				<p class="font-semibold text-lg">{title}</p>
@@ -50,5 +56,5 @@
 				<slot />
 			</div>
 		</div>
-	{/if}
-</Popover.Mobile>
+	</Popover.Mobile>
+{/if}
