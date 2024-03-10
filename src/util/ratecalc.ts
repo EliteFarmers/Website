@@ -139,7 +139,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 	const { farmingFortune, blocksBroken, crop, bountiful } = options;
 
-	let fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
+	let fortune = (farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0) + 100;
 	if (fortune <= 0 || blocksBroken < 0) return result;
 
 	if (!bountiful && !farmingFortune) {
@@ -156,7 +156,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	const { drops, npc, breaks = 1, replenish = false } = getCropInfo(crop);
 	if (!drops) return result;
 
-	const baseDrops = blocksBroken * drops * ((fortune + 100) * 0.01);
+	const baseDrops = blocksBroken * drops * (fortune * 0.01);
 	result.otherCollection['Normal'] = Math.round(baseDrops);
 
 	// Coin sources
