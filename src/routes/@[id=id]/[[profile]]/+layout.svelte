@@ -63,4 +63,19 @@
 	{/key}
 
 	<slot />
+
+	<div class="text-center text-md my-16 flex flex-col justify-center w-full">
+		<p>
+			<span class="select-none text-gray-500">Player UUID:</span>
+			<span class="select-all">{data.account.id}</span>
+		</p>
+		<p>
+			<span class="select-none text-gray-500">Profile UUID:</span>
+			<span class="select-all">{data.profile?.profileId}</span>
+		</p>
+		<p>
+			<span class="select-none text-gray-500">Last Updated:</span>
+			{new Date((data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}
+		</p>
+	</div>
 </main>
