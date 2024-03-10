@@ -122,9 +122,19 @@ export class LotusGear {
 	}
 
 	static fromArray(items: EliteItemDto[], options?: PlayerOptions): LotusGear[] {
-		return items
+		const gear = items
 			.filter((item) => LotusGear.isValid(item))
 			.map((item) => new LotusGear(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+
+		// Get only the best piece of each slot
+		const best: Record<string, LotusGear> = {};
+		for (const piece of gear) {
+			if (!best[piece.slot] || piece.fortune > (best[piece.slot]?.fortune ?? 0)) {
+				best[piece.slot] = piece;
+			}
+		}
+
+		return Object.values(best);
 	}
 }
