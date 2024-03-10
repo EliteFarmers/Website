@@ -12,7 +12,7 @@
 	$: title = `${data.lb?.title} Leaderboard`;
 	$: entries = data.lb?.entries ?? [];
 	$: offset = (data.lb?.offset ?? 0) + 1;
-	$: lbId = data.lb.id;
+	$: category = data.category;
 
 	$: firstHalf = entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[];
 	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
@@ -39,7 +39,7 @@
 
 	function samePageClick(page: number) {
 		if (noneActive) {
-			goto(`/leaderboard/${lbId}/${(page - 1) * 20 + 1}`);
+			goto(`/leaderboard/${category}/${(page - 1) * 20 + 1}`);
 		}
 	}
 </script>
@@ -55,7 +55,7 @@
 			bind:page={initialPage}
 			let:pages
 			onPageChange={(newPage) => {
-				goto(`/leaderboard/${lbId}/${(newPage - 1) * 20 + 1}`);
+				goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
 			<Pagination.Content>
