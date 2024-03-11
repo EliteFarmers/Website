@@ -98,7 +98,7 @@
 							<Label>Potato Ping Role</Label>
 							<Select.Simple
 								options={roles}
-								value={pings.cropPingRoles?.cocoaBeans ?? ''}
+								value={pings.cropPingRoles?.potato ?? ''}
 								placeholder="Select a role for Potato"
 								name="potato"
 							/>
