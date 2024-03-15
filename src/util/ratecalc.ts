@@ -139,7 +139,9 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 	const { farmingFortune, blocksBroken, crop, bountiful } = options;
 
-	let fortune = (farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0) + 100;
+	result.fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
+	let fortune =  result.fortune + 100;
+	
 	if (fortune <= 0 || blocksBroken < 0) return result;
 
 	if (!bountiful && !farmingFortune) {
@@ -150,8 +152,6 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 		fortune += blessedFortune - bountifulFortune;
 	}
-
-	result.fortune = fortune;
 
 	const { drops, npc, breaks = 1, replenish = false } = getCropInfo(crop);
 	if (!drops) return result;
