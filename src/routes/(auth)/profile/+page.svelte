@@ -8,12 +8,22 @@
 	import Guild from './guild.svelte';
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
+	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
+	import { Switch } from '$ui/switch';
 
 	export let data: PageData;
 	export let form: ActionData;
 	let loading = false;
 
 	$: user = data.user || undefined;
+
+	$: badges = (user?.minecraftAccounts ?? [])
+		.filter((mc) => mc.badges && mc.badges.length > 0)
+		.map((mc) => ({
+			name: mc.name,
+			uuid: mc.id,
+			badges: mc.badges?.sort((a, b) => (b.order ?? 0) - (a.order ?? 0)),
+		}));
 
 	$: discordUsername =
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
@@ -125,7 +135,40 @@
 			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4 mx-4">Other Servers</h1>
+		<h1 class="text-2xl mb-4 mx-4">Manage Badges</h1>
+		{#if !user.minecraftAccounts?.some((mc) => mc.badges && mc.badges.length > 0)}
+			<p class="mb-16">You don't have any badges yet!</p>
+		{/if}
+		{#each badges as profile (profile.uuid)}
+			<form action="?/updateBadges" method="post" class="flex flex-col gap-4 mx-4">
+				<h3 class="text-xl mt-4">Badges for {profile.name}</h3>
+				{#each profile?.badges ?? [] as badge, i (badge.id ?? i)}
+					{@const id = badge.id ?? ''}
+					<div class="flex flex-row gap-4 items-center">
+						<input type="hidden" name="badge.{id}" value={id} />
+						<input type="hidden" name="badge.{id}.order" value={i} />
+						<Switch name="badge.{id}.visible" checked={badge.visible} />
+						<img
+							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
+							alt={badge.name}
+							class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
+						/>
+						<div class="flex flex-1 flex-col gap-1 max-w-md">
+							<p class="text-lg font-semibold">{badge.name}</p>
+							<p>{badge.description}</p>
+						</div>
+						<div class="flex flex-1 flex-col gap-1 max-w-md">
+							<p class="font-semibold mt-1">Requirements</p>
+							<p>{badge.requirements}</p>
+						</div>
+					</div>
+				{/each}
+				<input type="hidden" name="uuid" value={profile.uuid} />
+				<Button type="submit" class="max-w-fit">Update Settings</Button>
+			</form>
+		{/each}
+
+		<h1 class="text-2xl mb-4 mx-4 mt-16">Other Servers</h1>
 		{#if data.guilds.length === 0}
 			<p>No servers found! Try refreshing the page if this is wrong.</p>
 		{/if}

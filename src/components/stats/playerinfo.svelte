@@ -9,6 +9,7 @@
 	import Skyblocklevel from './player/skyblocklevel.svelte';
 	import type { components } from '$lib/api/api';
 	import type { ProfileDetails } from '$lib/api/elite';
+	import Badge from './badge.svelte';
 
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileDetails: ProfileDetails[];
@@ -18,6 +19,7 @@
 	export let weightRank: number;
 	export let skyblockXP: number;
 	export let skyblockRank = -1;
+	export let badges: components['schemas']['UserBadgeDto'][] | undefined;
 
 	$: profiles = profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
 
@@ -29,7 +31,7 @@
 	$: rank = GetRankDefaults(rankName as RankName);
 </script>
 
-<section class="flex justify-center w-full mt-8 items-center">
+<section class="flex flex-col align-middle w-full mt-8 items-center">
 	<div class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-card p-4 md:p-8 mx-2 w-full max-w-7xl">
 		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-center">
 			<img
@@ -67,5 +69,10 @@
 		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-start items-center">
 			<Weight weightInfo={weightInfo ?? undefined} rank={weightRank} profiles={profilesData} />
 		</div>
+	</div>
+	<div class="flex flex-wrap gap-2 align-middle w-full mx-4 justify-center">
+		{#each (badges ?? []).filter((b) => b.visible) as badge (badge.id)}
+			<Badge {badge} />
+		{/each}
 	</div>
 </section>

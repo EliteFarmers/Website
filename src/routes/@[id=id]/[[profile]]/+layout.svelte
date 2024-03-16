@@ -41,6 +41,7 @@
 		weightRank={data.ranks?.misc?.farmingweight ?? -1}
 		skyblockXP={data.member?.skyblockXp ?? 0}
 		skyblockRank={data.ranks?.misc?.skyblockxp ?? -1}
+		badges={data.account.badges}
 	/>
 
 	{#key url}
