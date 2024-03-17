@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate, getRelativeTimeString } from '$lib/format';
 	import * as Popover from '$ui/popover';
@@ -12,6 +13,8 @@
 	$: time = timestamp;
 	$: lang = 'en';
 
+	$: selected = $page.url.hash === `#${timestamp}`;
+
 	$: {
 		if (browser) {
 			lang = navigator.language;
@@ -20,9 +23,10 @@
 </script>
 
 <div
-	class="flex flex-col md:flex-row flex-1 gap-2 w-full max-w-[116rem] rounded-md justify-between items-center p-4 {current
+	class="flex flex-col md:flex-row flex-1 gap-2 w-full max-w-[116rem] rounded-md justify-between items-center p-4 scroll-mt-32 {current
 		? 'bg-yellow-100 dark:bg-yellow-900'
-		: 'bg-primary-foreground'}"
+		: 'bg-primary-foreground'} {selected ? 'border-2 border-blue-500' : ''}"
+	id={timestamp.toString()}
 >
 	<div class="flex flex-col gap-2 items-center md:items-start">
 		<h4 class="text-2xl whitespace-nowrap font-semibold">
