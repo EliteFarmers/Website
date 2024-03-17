@@ -31,8 +31,5 @@ export const PERMISSIONS = {
 
 export const hasPermission = (user: App.Locals['user'], permission: PermissionFlags) => {
 	if (!user?.permissions) return false;
-
-	console.log(user.permissions, permission, PERMISSIONS[permission].name, user.permissions >= permission);
-
 	return user.permissions >= permission;
 };
