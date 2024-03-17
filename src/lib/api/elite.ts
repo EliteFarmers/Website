@@ -175,6 +175,25 @@ export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string
 		},
 	});
 
+export const UpdateUserBadges = async (
+	accessToken: string,
+	playerUuid: string,
+	badges: components['schemas']['EditUserBadgeDto'][]
+) =>
+	await PATCH('/User/Badges/{playerUuid}', {
+		params: {
+			path: {
+				playerUuid,
+			},
+		},
+		body: badges,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetAllBadges = async () => await GET('/Badges', {});
+
 export const GetUsersGuilds = async (accessToken: string) =>
 	await GET('/User/Guilds', {
 		headers: {

@@ -10,7 +10,6 @@
 	import Footer from '$comp/footer/footer.svelte';
 
 	import { ModeWatcher } from 'mode-watcher';
-	import { Toaster } from '$ui/sonner';
 
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -35,8 +34,6 @@
 	<div>
 		<slot />
 	</div>
-
-	<Toaster richColors position="bottom-center" />
 
 	<Footer />
 </div>

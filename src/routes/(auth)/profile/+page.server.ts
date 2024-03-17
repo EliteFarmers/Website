@@ -1,9 +1,17 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { IsIGNOrUUID } from '$params/id';
-import { GetPublicGuilds, GetUsersGuilds, LinkAccount, SetPrimaryAccount, UnlinkAccount } from '$lib/api/elite';
+import {
+	GetPublicGuilds,
+	GetUsersGuilds,
+	LinkAccount,
+	SetPrimaryAccount,
+	UnlinkAccount,
+	UpdateUserBadges,
+} from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { CanEditGuild, type Guild } from '$lib/discord';
+import { IsUUID } from '$params/uuid';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
 	const { user } = await parent();
@@ -87,6 +95,45 @@ export const actions: Actions = {
 		}
 
 		const req = await SetPrimaryAccount(username, locals.discord_access_token);
+
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
+		}
+
+		return { success: true };
+	},
+	updateBadges: async ({ locals, request }) => {
+		if (!locals.discord_access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const uuid = data.get('uuid')?.toString();
+
+		if (!uuid || !IsUUID(uuid)) {
+			return fail(400, { error: 'Invalid uuid.' });
+		}
+
+		const entries = Array.from(data.entries());
+		const badges = {} as Record<string, components['schemas']['EditUserBadgeDto']>;
+
+		for (const [key, value] of entries) {
+			if (!key.startsWith('badge.')) continue;
+			const [, id, setting] = key.split('.');
+
+			const badge = badges[+id] ?? (badges[+id] = { badgeId: +id });
+
+			if (setting === 'visible') {
+				badge.visible = value === 'true';
+			}
+
+			if (setting === 'order') {
+				badge.order = Number(value);
+			}
+		}
+
+		const body = Object.values(badges);
+		const req = await UpdateUserBadges(locals.discord_access_token, uuid, body);
 
 		if (!req.response.ok) {
 			return fail(req.response.status, { error: await req.response.text() });

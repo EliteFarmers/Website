@@ -25,7 +25,7 @@
 		{#if user}
 			<DropdownMenu.Label class="font-normal">
 				<div class="flex flex-col space-y-1">
-					<p class="text-sm font-medium leading-none">{user.primaryName}</p>
+					<p class="text-sm font-medium leading-none">{user.primaryName ?? user.username}</p>
 					<p class="text-xs leading-none text-muted-foreground">{user.username}</p>
 				</div>
 			</DropdownMenu.Label>

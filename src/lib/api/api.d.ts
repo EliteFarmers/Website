@@ -316,6 +316,208 @@ export interface paths {
       };
     };
   };
+  "/Admin/Badges/{playerUuid}/{badgeId}": {
+    post: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Admin/Badges": {
+    post: {
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["CreateBadgeDto"];
+          "text/json": components["schemas"]["CreateBadgeDto"];
+          "application/*+json": components["schemas"]["CreateBadgeDto"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Admin/Badges/{badgeId}": {
+    delete: {
+      parameters: {
+        path: {
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          badgeId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["EditBadgeDto"];
+          "text/json": components["schemas"]["EditBadgeDto"];
+          "application/*+json": components["schemas"]["EditBadgeDto"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
   "/Event/create": {
     post: {
       requestBody?: {
@@ -507,6 +709,20 @@ export interface paths {
       };
     };
   };
+  "/Badges": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["BadgeDto"][];
+            "application/json": components["schemas"]["BadgeDto"][];
+            "text/json": components["schemas"]["BadgeDto"][];
+          };
+        };
+      };
+    };
+  };
   "/Bot/{guildId}": {
     get: {
       parameters: {
@@ -661,6 +877,84 @@ export interface paths {
             "text/plain": components["schemas"]["AuthorizedAccountDto"];
             "application/json": components["schemas"]["AuthorizedAccountDto"];
             "text/json": components["schemas"]["AuthorizedAccountDto"];
+          };
+        };
+      };
+    };
+  };
+  "/Bot/Badges/{playerUuid}/{badgeId}": {
+    post: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
           };
         };
       };
@@ -2139,6 +2433,52 @@ export interface paths {
       };
     };
   };
+  "/User/Badges/{playerUuid}": {
+    patch: {
+      parameters: {
+        path: {
+          playerUuid: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["EditUserBadgeDto"][];
+          "text/json": components["schemas"]["EditUserBadgeDto"][];
+          "application/*+json": components["schemas"]["EditUserBadgeDto"][];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
   "/Weight/{playerUuid}": {
     get: {
       parameters: {
@@ -2275,7 +2615,6 @@ export interface components {
       redemptions?: components["schemas"]["RedemptionDto"][];
       inventory?: components["schemas"]["EliteInventoryDto"];
       settings?: components["schemas"]["EliteSettingsDto"];
-      eventEntries?: components["schemas"]["EventMemberDetailsDto"][];
       minecraftAccounts?: components["schemas"]["MinecraftAccountDetailsDto"][];
     };
     AuthorizedGuildDto: {
@@ -2288,6 +2627,14 @@ export interface components {
       roleId?: string | null;
       /** Format: int32 */
       requiredWeight?: number;
+    };
+    BadgeDto: {
+      /** Format: int32 */
+      id?: number;
+      imageId?: string;
+      name?: string;
+      description?: string;
+      requirements?: string;
     };
     /**
      * Format: int32
@@ -2363,6 +2710,13 @@ export interface components {
       delaySeconds?: number;
       disabledReason?: string | null;
     };
+    CreateBadgeDto: {
+      imageId?: string;
+      name?: string;
+      description?: string;
+      requirements?: string;
+      tieToAccount?: boolean;
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -2423,6 +2777,12 @@ export interface components {
       /** Format: int32 */
       diamond?: number;
     };
+    EditBadgeDto: {
+      imageId?: string | null;
+      name?: string | null;
+      description?: string | null;
+      requirements?: string | null;
+    };
     EditEventDto: {
       name?: string | null;
       description?: string | null;
@@ -2439,6 +2799,13 @@ export interface components {
       requiredRole?: string | null;
       blockedRole?: string | null;
       guildId?: string | null;
+    };
+    EditUserBadgeDto: {
+      /** Format: int32 */
+      badgeId?: number;
+      visible?: boolean | null;
+      /** Format: int32 */
+      order?: number | null;
     };
     EliteInventoryDto: {
       totalEarnedMedals?: components["schemas"]["MedalInventoryDto"];
@@ -2483,15 +2850,6 @@ export interface components {
       playerName?: string | null;
       amountGained?: string | null;
       notes?: string | null;
-      lastUpdated?: string | null;
-    };
-    EventMemberDetailsDto: {
-      playerUuid?: string | null;
-      playerName?: string | null;
-      profileId?: string | null;
-      eventId?: string;
-      status?: components["schemas"]["EventMemberStatus"];
-      amountGained?: string | null;
       lastUpdated?: string | null;
     };
     EventMemberDto: {
@@ -2812,6 +3170,7 @@ export interface components {
       id?: string;
       name?: string;
       primaryAccount?: boolean;
+      badges?: components["schemas"]["UserBadgeDto"][];
       properties?: components["schemas"]["MinecraftAccountPropertyDto"][];
     };
     MinecraftAccountDto: {
@@ -2822,8 +3181,8 @@ export interface components {
       discordUsername?: string | null;
       discordAvatar?: string | null;
       properties?: components["schemas"]["MinecraftAccountPropertyDto"][];
-      eventEntries?: components["schemas"]["EventMemberDetailsDto"][];
       profiles?: components["schemas"]["ProfileDetailsDto"][];
+      badges?: components["schemas"]["UserBadgeDto"][];
       playerData?: components["schemas"]["PlayerDataDto"];
     };
     MinecraftAccountPropertyDto: {
@@ -2851,7 +3210,7 @@ export interface components {
       lastLogin?: number;
       /** Format: int64 */
       lastLogout?: number;
-      /** Format: int32 */
+      /** Format: int64 */
       karma?: number;
       /** Format: double */
       networkExp?: number;
@@ -3036,6 +3395,18 @@ export interface components {
       tempStatBuffs?: components["schemas"]["TempStatBuff"][] | null;
       accessoryBagSettings?: unknown;
       bestiary?: unknown;
+    };
+    UserBadgeDto: {
+      /** Format: int32 */
+      id?: number;
+      imageId?: string;
+      name?: string;
+      description?: string;
+      requirements?: string;
+      timestamp?: string;
+      visible?: boolean;
+      /** Format: int32 */
+      order?: number;
     };
     UserGuildDto: {
       id?: string;

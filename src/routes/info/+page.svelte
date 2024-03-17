@@ -5,6 +5,10 @@
 	import { CREDITS } from '$content/credits';
 	import * as Card from '$ui/card';
 	import { FAQ } from '$content/faq';
+	import type { PageData } from './$types';
+	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
+
+	export let data: PageData;
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
@@ -66,6 +70,35 @@
 				</p>
 			</article>
 		{/each}
+	</section>
+	<section class="flex flex-col justify-center items-center w-full" id="Badges">
+		<h1 class="text-center text-3xl mt-16 mb-8">Badges</h1>
+		<article class="w-full max-w-4xl px-4">
+			<p class="text-lg">
+				Badges are cosmetic profile decorations players can display on the website. More may be added at any
+				time, and they are configurable in your account settings.
+			</p>
+			<div class="flex flex-col gap-4">
+				<h3 class="text-2xl mt-4">List of Badges</h3>
+				{#each data?.badges ?? [] as badge}
+					<div class="flex flex-row gap-4 items-center">
+						<img
+							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
+							alt={badge.name}
+							class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
+						/>
+						<div class="flex flex-1 flex-col gap-1 max-w-md">
+							<p class="text-lg font-semibold">{badge.name}</p>
+							<p>{badge.description}</p>
+						</div>
+						<div class="flex flex-1 flex-col gap-1 max-w-md">
+							<p class="font-semibold mt-1">Requirements</p>
+							<p>{badge.requirements}</p>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</article>
 	</section>
 	<section class="flex flex-col justify-center items-center w-full" id="Credits">
 		<h1 class="text-center text-3xl mt-16 mb-8">Credits</h1>
