@@ -6,7 +6,6 @@
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
-	import { goto } from '$app/navigation';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
