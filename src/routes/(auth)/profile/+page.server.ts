@@ -114,15 +114,17 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid uuid.' });
 		}
 
-		const entries = Array.from(data.entries()).filter(([key]) => key.startsWith('badge.'));
+		const entries = Array.from(data.entries());
 		const badges = {} as Record<string, components['schemas']['EditUserBadgeDto']>;
 
 		for (const [key, value] of entries) {
+			if (!key.startsWith('badge.')) continue;
 			const [, id, setting] = key.split('.');
+
 			const badge = badges[+id] ?? (badges[+id] = { badgeId: +id });
 
 			if (setting === 'visible') {
-				badge.visible = value === 'on';
+				badge.visible = value === 'true';
 			}
 
 			if (setting === 'order') {

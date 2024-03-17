@@ -119,6 +119,7 @@ export const actions: Actions = {
 		const badgeImageId = data.get('imageId') as string;
 		const badgeDescription = data.get('description') as string;
 		const badgeRequirements = data.get('requirements') as string;
+		const tied = data.get('tied') as string;
 
 		const { response } = await POST('/Admin/Badges', {
 			body: {
@@ -126,6 +127,7 @@ export const actions: Actions = {
 				name: badgeName,
 				description: badgeDescription,
 				requirements: badgeRequirements,
+				tieToAccount: tied === 'on',
 			},
 			headers: {
 				Authorization: `Bearer ${token}`,

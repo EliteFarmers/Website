@@ -299,43 +299,9 @@
 				<Input name="requirements" placeholder="Badge Requirements" />
 			</div>
 
-			<Button type="submit">Create</Button>
-		</form>
-	</Dialog.Content>
-</Dialog.Root>
-
-<Dialog.Root bind:open={createBadgeModal}>
-	<Dialog.Content>
-		<Dialog.Title>Create Badge</Dialog.Title>
-		<form
-			method="post"
-			action="?/createbadge"
-			class="flex flex-col gap-2"
-			use:enhance={() => {
-				return async ({ result, update }) => {
-					if (result) createBadgeModal = false;
-					update();
-				};
-			}}
-		>
 			<div class="flex flex-col gap-2 items-start">
-				<Label>Name</Label>
-				<Input name="name" placeholder="Badge Name" />
-			</div>
-
-			<div class="flex flex-col gap-2 items-start">
-				<Label>Image ID</Label>
-				<Input name="imageId" placeholder="Badge Image ID" />
-			</div>
-
-			<div class="flex flex-col gap-2 items-start">
-				<Label>Description</Label>
-				<Input name="description" placeholder="Badge Description" />
-			</div>
-
-			<div class="flex flex-col gap-2 items-start">
-				<Label>Requirements</Label>
-				<Input name="requirements" placeholder="Badge Requirements" />
+				<Label>Tie To Account</Label>
+				<Switch name="tied" />
 			</div>
 
 			<Button type="submit">Create</Button>

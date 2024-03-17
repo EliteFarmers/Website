@@ -14,9 +14,9 @@
 		alt={badge.name}
 	/>
 
-	<div class="flex flex-col gap-1 justify-center items-center max-w-md">
+	<div class="flex flex-col gap-1 justify-center items-center max-w-sm">
 		<p class="font-semibold text-lg">{badge.name}</p>
-		<p>{badge.description}</p>
+		<p class="text-center">{badge.description}</p>
 		<p class="font-semibold mt-1">Obtained</p>
 		<p>{new Date(+(badge?.timestamp ?? 0) * 1000).toLocaleString()}</p>
 		<a href="/info#Badges" class="text-blue-500">What is this?</a>

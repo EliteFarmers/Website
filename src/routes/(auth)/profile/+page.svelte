@@ -6,10 +6,10 @@
 	import type { PageData, ActionData } from './$types';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
-	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -24,6 +24,17 @@
 			uuid: mc.id,
 			badges: mc.badges?.sort((a, b) => (b.order ?? 0) - (a.order ?? 0)),
 		}));
+
+	$: visibleToggles = {} as Record<string, boolean>;
+
+	onMount(() => {
+		visibleToggles = badges.reduce<Record<string, boolean>>((acc, mc) => {
+			mc.badges?.forEach((badge) => {
+				acc[`${mc.uuid}-${badge.id}`] = badge.visible ?? false;
+			});
+			return acc;
+		}, {});
+	});
 
 	$: discordUsername =
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
@@ -48,31 +59,8 @@
 				return async ({ result }) => {
 					// Wait for a bit so the user can see the loading state
 					await new Promise((r) => setTimeout(r, 500));
+					loading = false;
 					await applyAction(result);
-
-					if (result) {
-						loading = false;
-					}
-
-					if (result.type === 'redirect') {
-						throw goto(result.location);
-					}
-
-					if (result.type === 'error' || result.type === 'failure') {
-						if ('error' in result) {
-							toast.error(result.error.replaceAll('`', '"'), {
-								duration: 5000,
-							});
-						} else if ('data' in result && result.data?.error && typeof result.data.error === 'string') {
-							toast.error(result.data?.error.replaceAll('`', '"') ?? 'Something went wrong!', {
-								duration: 5000,
-							});
-						}
-					} else if (typeof result.data?.message === 'string') {
-						toast.success(result.data.message ?? 'Success!', {
-							duration: 5000,
-						});
-					}
 				};
 			}}
 		>
@@ -140,14 +128,32 @@
 			<p class="mb-16">You don't have any badges yet!</p>
 		{/if}
 		{#each badges as profile (profile.uuid)}
-			<form action="?/updateBadges" method="post" class="flex flex-col gap-4 mx-4">
+			<form
+				action="?/updateBadges"
+				method="post"
+				class="flex flex-col gap-4 mx-4"
+				use:enhance={() => {
+					loading = true;
+					return async ({ result }) => {
+						// Wait for a bit so the user can see the loading state
+						await new Promise((r) => setTimeout(r, 500));
+						loading = false;
+						await applyAction(result);
+					};
+				}}
+			>
 				<h3 class="text-xl mt-4">Badges for {profile.name}</h3>
 				{#each profile?.badges ?? [] as badge, i (badge.id ?? i)}
 					{@const id = badge.id ?? ''}
 					<div class="flex flex-row gap-4 items-center">
 						<input type="hidden" name="badge.{id}" value={id} />
 						<input type="hidden" name="badge.{id}.order" value={i} />
-						<Switch name="badge.{id}.visible" checked={badge.visible} />
+						<Switch bind:checked={visibleToggles[`${profile.uuid}-${badge.id}`]} />
+						<input
+							type="hidden"
+							name="badge.{id}.visible"
+							value={visibleToggles[`${profile.uuid}-${badge.id}`]}
+						/>
 						<img
 							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
 							alt={badge.name}
@@ -164,7 +170,7 @@
 					</div>
 				{/each}
 				<input type="hidden" name="uuid" value={profile.uuid} />
-				<Button type="submit" class="max-w-fit">Update Settings</Button>
+				<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
 			</form>
 		{/each}
 

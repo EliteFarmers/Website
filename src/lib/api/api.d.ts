@@ -882,6 +882,84 @@ export interface paths {
       };
     };
   };
+  "/Bot/Badges/{playerUuid}/{badgeId}": {
+    post: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          playerUuid: string;
+          badgeId: number;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: never;
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
   "/Bot/account/{discordId}/{playerIgnOrUuid}": {
     post: {
       parameters: {
@@ -2637,6 +2715,7 @@ export interface components {
       name?: string;
       description?: string;
       requirements?: string;
+      tieToAccount?: boolean;
     };
     /**
      * Format: int32
