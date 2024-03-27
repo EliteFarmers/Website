@@ -2,6 +2,7 @@ export enum LeaderboardType {
 	Misc = 0,
 	Collection = 1,
 	Skill = 2,
+	Pest = 3,
 }
 
 export interface LeaderboardConfig {
@@ -207,6 +208,66 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		title: 'Farming XP',
 		name: 'Farming',
 		type: LeaderboardType.Skill,
+	},
+	mite: {
+		name: 'Mite',
+		title: 'Mite Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	cricket: {
+		name: 'Cricket',
+		title: 'Cricket Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	moth: {
+		name: 'Moth',
+		title: 'Moth Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	earthworm: {
+		name: 'Earthworm',
+		title: 'Earthworm Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	slug: {
+		name: 'Slug',
+		title: 'Slug Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	beetle: {
+		name: 'Beetle',
+		title: 'Beetle Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	locust: {
+		name: 'Locust',
+		title: 'Locust Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	rat: {
+		name: 'Rat',
+		title: 'Rat Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	mosquito: {
+		name: 'Mosquito',
+		title: 'Mosquito Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
+	fly: {
+		name: 'Fly',
+		title: 'Fly Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
 	},
 };
 
