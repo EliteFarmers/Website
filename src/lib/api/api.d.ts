@@ -2581,6 +2581,20 @@ export interface paths {
       };
     };
   };
+  "/Weights/All": {
+    get: {
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["WeightsDto"];
+            "application/json": components["schemas"]["WeightsDto"];
+            "text/json": components["schemas"]["WeightsDto"];
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -2933,6 +2947,10 @@ export interface components {
       bonusWeight?: {
         [key: string]: number;
       };
+      uncountedCrops?: {
+        [key: string]: number;
+      };
+      pests?: components["schemas"]["PestsDto"];
       inventory?: components["schemas"]["FarmingInventoryDto"];
     };
     FarmingWeightWithProfileDto: {
@@ -2946,6 +2964,10 @@ export interface components {
       bonusWeight?: {
         [key: string]: number;
       };
+      uncountedCrops?: {
+        [key: string]: number;
+      };
+      pests?: components["schemas"]["PestsDto"];
     };
     FullDiscordGuild: {
       id?: string;
@@ -3145,6 +3167,9 @@ export interface components {
       collections?: {
         [key: string]: number;
       };
+      pests?: {
+        [key: string]: number;
+      };
     };
     LinkedAccountsDto: {
       selectedUuid?: string | null;
@@ -3188,6 +3213,38 @@ export interface components {
     MinecraftAccountPropertyDto: {
       name?: string;
       value?: string;
+    };
+    PestWeightsDto: {
+      brackets?: {
+        [key: string]: number;
+      };
+      values?: {
+        [key: string]: {
+          [key: string]: number;
+        };
+      };
+    };
+    PestsDto: {
+      /** Format: int32 */
+      beetle?: number;
+      /** Format: int32 */
+      cricket?: number;
+      /** Format: int32 */
+      fly?: number;
+      /** Format: int32 */
+      locust?: number;
+      /** Format: int32 */
+      mite?: number;
+      /** Format: int32 */
+      mosquito?: number;
+      /** Format: int32 */
+      moth?: number;
+      /** Format: int32 */
+      rat?: number;
+      /** Format: int32 */
+      slug?: number;
+      /** Format: int32 */
+      earthworm?: number;
     };
     PetDto: {
       uuid?: string | null;
@@ -3418,6 +3475,12 @@ export interface components {
     VerifiedRoleFeature: {
       enabled?: boolean;
       autoRoles?: components["schemas"]["AutoRoles"][];
+    };
+    WeightsDto: {
+      crops?: {
+        [key: string]: number;
+      };
+      pests?: components["schemas"]["PestWeightsDto"];
     };
     YearlyContestsDto: {
       /** Format: int32 */

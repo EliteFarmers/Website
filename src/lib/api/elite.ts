@@ -139,6 +139,8 @@ export const GetMonthlyContests = async (year: number, month: number) =>
 
 export const GetCurrentYearContests = async () => await GET('/Contests/at/now', {});
 
+export const GetWeights = async () => await GET('/Weights/All', {});
+
 export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) =>
 	await POST('/Account/primary/{playerUuidOrIgn}', {
 		params: {

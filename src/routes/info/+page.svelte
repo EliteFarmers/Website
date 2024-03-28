@@ -7,8 +7,10 @@
 	import { FAQ } from '$content/faq';
 	import type { PageData } from './$types';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
+	import PestTable from './pest-table.svelte';
 
 	export let data: PageData;
+	$: weights = data.weights;
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
@@ -33,7 +35,7 @@
 				of crops that can be farmed in the same timespan. The following table shows the amount of each crop
 				needed to increase your farming weight by 1.
 			</p>
-			<CropTable />
+			<CropTable {weights} />
 			<p class="text-sm mt-4 mb-2">
 				Base Drops Per Break refers to the average amount of drops you get from breaking a crop without any
 				buffs. Sugar Cane and Cactus actually have a base drop of 1 per block, but because you can break 2
@@ -45,6 +47,7 @@
 				from other crops. To counter this, you get half the weight from mushrooms for the ratio of Cactus and
 				Sugar Cane farmed out of the total weight, and the remainder is calculated normally.
 			</p>
+			<PestTable {weights} />
 		</article>
 	</section>
 	<section class="flex flex-col justify-center items-center w-full">
