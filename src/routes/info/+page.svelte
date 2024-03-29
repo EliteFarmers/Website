@@ -7,8 +7,10 @@
 	import { FAQ } from '$content/faq';
 	import type { PageData } from './$types';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
+	import PestTable from './pest-table.svelte';
 
 	export let data: PageData;
+	$: weights = data.weights;
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
@@ -16,7 +18,7 @@
 <main class="flex flex-col justify-center items-center w-full">
 	<section class="flex flex-col justify-center items-center w-full">
 		<h1 class="text-center text-3xl mt-16 mb-8">Weight Information</h1>
-		<article class="w-10/12 md:w-1/2">
+		<article class="max-w-4xl w-full px-4">
 			<h2 class="text-2xl my-8">What is Farming Weight?</h2>
 			<p class="text-lg my-4">
 				Farming Weight is a number that essentially represents how long and how efficient a player has been
@@ -26,20 +28,20 @@
 				have an unfair advantage over players who farm using other methods.
 			</p>
 		</article>
-		<article class="w-10/12 md:w-1/2">
+		<article class="max-w-4xl w-full px-4">
 			<h2 class="text-2xl my-8">Farming Weight Per Crop</h2>
 			<p class="text-lg my-4">
 				Each crop has a different weight. The weight of a crop is determined by the theoretical maximum amount
 				of crops that can be farmed in the same timespan. The following table shows the amount of each crop
 				needed to increase your farming weight by 1.
 			</p>
-			<CropTable />
+			<CropTable {weights} />
 			<p class="text-sm mt-4 mb-2">
 				Base Drops Per Break refers to the average amount of drops you get from breaking a crop without any
 				buffs. Sugar Cane and Cactus actually have a base drop of 1 per block, but because you can break 2
 				blocks at once, 2 is noted here. Full calculation breakdowns will be added in the future.
 			</p>
-			<p class="text-sm">
+			<p class="text-sm mb-4">
 				* Mushroom weight is calculated dynamically because of the Mooshroom Cow pet. Because Cactus and Sugar
 				Cane are both 2 blocks per break, the cow's perk gives you twice the normal rate of mushroom drops than
 				from other crops. To counter this, you get half the weight from mushrooms for the ratio of Cactus and
@@ -47,9 +49,32 @@
 			</p>
 		</article>
 	</section>
+	<section class="flex flex-col justify-center items-center w-full" id="Pests">
+		<h1 class="text-center text-3xl mt-16 mb-8">Pest Weight Adjustment</h1>
+		<p class="text-lg my-4 max-w-4xl w-full px-4">
+			The introduction of pests to the garden has brought a new (and unreliable) source of crop collection into
+			the game which needs to be accounted for in the Farming Weight calculation. Due to the different spawn rates
+			and drop amounts per player when they kill pests, the weight calculation now subtracts a certain amount of
+			crop collections before applying the formula. Your collection numbers are still accurate, this subtraction
+			is just done during the calculation.
+		</p>
+		<article class="max-w-4xl w-full px-4">
+			<h2 class="text-2xl my-8">Pest Brackets</h2>
+			<p class="text-lg my-4">
+				The following table shows the amount of collection per crop that is subtracted based on the number of
+				pests you have killed. The amounts are calculated in brackets, with an associated farming fortune noted
+				that was used to calculate your average drops per pest kill.
+			</p>
+			<PestTable {weights} />
+			<p class="text-sm mt-4 mb-2">
+				This system is progressive, which means that as you hit the next bracket, the previous bracket's pest
+				amounts are still using their associated bracket's fortune values.
+			</p>
+		</article>
+	</section>
 	<section class="flex flex-col justify-center items-center w-full">
 		<h1 class="text-center text-3xl mt-16 mb-8">Bonus Weight</h1>
-		<article class="w-10/12 md:w-1/2">
+		<article class="max-w-4xl w-full px-4">
 			<p class="text-lg my-4">
 				There are a few sources of bonus weight that can be obtained. These are not intended to be a significant
 				source of weight, but rather a small bonus to help players who are just starting out. As well as a fun
@@ -62,7 +87,7 @@
 	<section class="flex flex-col justify-center items-center w-full" id="FAQ">
 		<h1 class="text-center text-3xl mt-16 mb-8">F.A.Q.</h1>
 		{#each FAQ as faq}
-			<article class="w-10/12 md:w-1/2">
+			<article class="max-w-4xl w-full px-4">
 				<h2 class="text-2xl my-8">{faq.question}</h2>
 				<p class="text-lg my-4">
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->

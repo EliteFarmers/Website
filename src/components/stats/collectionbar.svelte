@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import * as Popover from '$comp/ui/popover';
 	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import Minion from './minion.svelte';
 
 	export let name: string | undefined;
 	export let value: number;
 	export let weight: number;
-	export let tier: number;
-	export let maxTier: number;
+	export let pest: string;
+	export let pestKills: number;
+	export let pestRank = -1;
+	export let uncounted = 0;
 	export let minionTierField: number;
 	export let key: string;
 	export let rank = -1;
@@ -57,7 +60,7 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
-							href="/leaderboard/crops/{key}/{$page.params.id}-{$page.params.profile}"
+							href="/leaderboard/{key}/{$page.params.id}-{$page.params.profile}"
 							class="px-1.5 bg-card rounded-md hover:bg-muted"
 						>
 							<span class="text-sm xs:text-md sm:text-lg">#</span><span
@@ -71,9 +74,37 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col justify-center align-middle w-full p-1">
+		<div class="flex flex-col justify-center align-middle w-full p-1 gap-1">
 			<p class="md:ml-2 text-right font-semibold sm:text-lg md:text-xl lg:text-2xl">{weight.toLocaleString()}</p>
-			<p class="md:ml-2 text-right sm:text-md md:text-lg text-gray-500">{tier} / {maxTier}</p>
+			<div class="md:ml-2 text-right flex flex-row items-center gap-1 justify-end">
+				{#if pestRank > 0}
+					<a
+						href="/leaderboard/{pest}/{$page.params.id}-{$page.params.profile}"
+						class="px-1 bg-card rounded-md hover:bg-muted"
+					>
+						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+							>{pestRank}</span
+						>
+					</a>
+				{/if}
+				<Popover.Mobile>
+					<p slot="trigger" class="text-md sm:text-lg font-semibold whitespace-nowrap">
+						{pestKills.toLocaleString()}
+					</p>
+					<div class="flex flex-col items-center gap-2 max-w-md">
+						<p class="text-lg first-letter:capitalize font-semibold">{pest} Kills</p>
+						<p>{pestKills.toLocaleString()}</p>
+						<a class="text-lg font-semibold text-blue-500 hover:underline" href="/info#Pests"
+							>Weight Adjustment</a
+						>
+						{#if uncounted === 0}
+							<p>None!</p>
+						{:else}
+							<p>-{uncounted.toLocaleString()} {name}</p>
+						{/if}
+					</div>
+				</Popover.Mobile>
+			</div>
 		</div>
 	</div>
 	<Minion name={name ?? ''} {index} tierField={minionTierField} />

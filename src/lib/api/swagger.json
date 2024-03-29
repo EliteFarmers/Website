@@ -6263,6 +6263,35 @@
           }
         }
       }
+    },
+    "/Weights/All": {
+      "get": {
+        "tags": [
+          "Weight"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeightsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeightsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeightsDto"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7321,6 +7350,16 @@
               "format": "double"
             }
           },
+          "uncountedCrops": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "pests": {
+            "$ref": "#/components/schemas/PestsDto"
+          },
           "inventory": {
             "$ref": "#/components/schemas/FarmingInventoryDto"
           }
@@ -7353,6 +7392,16 @@
               "type": "number",
               "format": "double"
             }
+          },
+          "uncountedCrops": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "pests": {
+            "$ref": "#/components/schemas/PestsDto"
           }
         },
         "additionalProperties": false
@@ -7967,6 +8016,13 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          "pests": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         },
         "additionalProperties": false
@@ -8129,6 +8185,75 @@
           },
           "value": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PestWeightsDto": {
+        "type": "object",
+        "properties": {
+          "brackets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "values": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PestsDto": {
+        "type": "object",
+        "properties": {
+          "beetle": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cricket": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fly": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "locust": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mite": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mosquito": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rat": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "slug": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "earthworm": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8792,6 +8917,22 @@
             "items": {
               "$ref": "#/components/schemas/AutoRoles"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeightsDto": {
+        "type": "object",
+        "properties": {
+          "crops": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "pests": {
+            "$ref": "#/components/schemas/PestWeightsDto"
           }
         },
         "additionalProperties": false

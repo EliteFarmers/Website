@@ -7,11 +7,11 @@
 		value: number;
 		minionTierField: number;
 		weight: number;
-		tier: number;
-		maxTier: number;
+		pest: string;
+		pestKills: number;
 		key: string;
 	}[];
-	export let ranks: components['schemas']['LeaderboardPositionsDto']['collections'];
+	export let ranks: components['schemas']['LeaderboardPositionsDto'];
 
 	$: list = collections?.sort((a, b) => b.weight - a.weight) ?? [];
 	$: weightSort = true;
@@ -32,7 +32,7 @@
 	>
 	<div class="flex flex-col gap-2 w-full">
 		{#each list as item (item.name)}
-			<CollectionBar {...item} rank={ranks?.[item.key]} />
+			<CollectionBar {...item} rank={ranks.collections?.[item.key]} pestRank={ranks.pests?.[item.pest]} />
 		{/each}
 	</div>
 </div>
