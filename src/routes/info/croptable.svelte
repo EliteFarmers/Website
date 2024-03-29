@@ -7,34 +7,35 @@
 	$: crops = weights.crops ?? {};
 </script>
 
-<table class="w-full">
-	<thead>
-		<tr class="bg-gray-200 dark:bg-zinc-700">
-			<th class="text-left">Crop</th>
-			<th class="text-left">Collection Required Per 1 Weight</th>
-			<th class="text-left">Base Drops Per Break</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each Object.entries(crops) as [crop, value]}
-			{@const cropEnum = getCropFromName(crop) ?? Crop.Wheat}
-			<tr class="bg-gray-100 dark:bg-zinc-800">
-				<td>{crop}</td>
-				{#if cropEnum === Crop.Mushroom}
-					<td
-						>{value.toLocaleString(undefined, { maximumFractionDigits: 0 })} - {(value * 2).toLocaleString(
-							undefined,
-							{ maximumFractionDigits: 0 }
-						)}*</td
-					>
-				{:else}
-					<td>{value.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-				{/if}
-				<td>{getCropInfo(cropEnum).drops}</td>
+<div class="flex w-full overflow-x-scroll">
+	<table class="min-w-[12rem] max-w-4xl w-full flex-grow-1">
+		<thead>
+			<tr class="bg-gray-200 dark:bg-zinc-700">
+				<th class="text-left">Crop</th>
+				<th class="text-left">Collection Required Per 1 Weight</th>
+				<th class="text-left">Base Drops Per Break</th>
 			</tr>
-		{/each}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			{#each Object.entries(crops) as [crop, value]}
+				{@const cropEnum = getCropFromName(crop) ?? Crop.Wheat}
+				<tr class="bg-gray-100 dark:bg-zinc-800">
+					<td>{crop}</td>
+					{#if cropEnum === Crop.Mushroom}
+						<td
+							>{value.toLocaleString(undefined, { maximumFractionDigits: 0 })} - {(
+								value * 2
+							).toLocaleString(undefined, { maximumFractionDigits: 0 })}*</td
+						>
+					{:else}
+						<td>{value.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+					{/if}
+					<td>{getCropInfo(cropEnum).drops}</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
 
 <style lang="postcss">
 	td,
