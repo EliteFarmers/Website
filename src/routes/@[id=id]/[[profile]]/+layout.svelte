@@ -55,6 +55,9 @@
 					<Menubar.Item href="{path}/rates" class={active('/rates') + ' cursor-pointer'}
 						>Rate Calculator</Menubar.Item
 					>
+					<Menubar.Item href="{path}/charts" class={active('/charts') + ' cursor-pointer'}
+						>Charts</Menubar.Item
+					>
 					{#if data.authorized}
 						<Menubar.Item href="{path}/graphs" class="cursor-pointer">Admin</Menubar.Item>
 					{/if}

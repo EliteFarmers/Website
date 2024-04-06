@@ -48,7 +48,7 @@ export const CREDITS: Credit[] = [
 	},
 	{
 		name: 'ic22487',
-		role: 'Hypixel+ texture pack author/artist, primary seen here for farming tool textures',
+		role: 'Hypixel+ texture pack author/artist, primarily seen here for farming tool textures',
 		links: [
 			{
 				name: 'Ko-Fi',
