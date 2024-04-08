@@ -48,16 +48,36 @@ const config = {
 					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
 					foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
 				},
-				wheat: '#d5da45',
-				melon: '#bb170b',
-				cactus: '#3b5b1d',
-				pumpkin: '#a0560b',
-				carrot: '#ff8e09',
-				potato: '#e9ba62',
-				sugarcane: '#82a859',
-				netherwart: '#5c151a',
-				mushroom: '#725643',
-				cocoa: '#61381d',
+				wheat: {
+					DEFAULT: 'hsl(var(--wheat) / <alpha-value>)',
+				},
+				melon: {
+					DEFAULT: 'hsl(var(--melon) / <alpha-value>)',
+				},
+				cactus: {
+					DEFAULT: 'hsl(var(--cactus) / <alpha-value>)',
+				},
+				pumpkin: {
+					DEFAULT: 'hsl(var(--pumpkin) / <alpha-value>)',
+				},
+				carrot: {
+					DEFAULT: 'hsl(var(--carrot) / <alpha-value>)',
+				},
+				potato: {
+					DEFAULT: 'hsl(var(--potato) / <alpha-value>)',
+				},
+				sugarcane: {
+					DEFAULT: 'hsl(var(--sugarcane) / <alpha-value>)',
+				},
+				netherwart: {
+					DEFAULT: 'hsl(var(--netherwart) / <alpha-value>)',
+				},
+				mushroom: {
+					DEFAULT: 'hsl(var(--mushroom) / <alpha-value>)',
+				},
+				cocoa: {
+					DEFAULT: 'hsl(var(--cocoa) / <alpha-value>)',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
