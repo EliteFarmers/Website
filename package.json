@@ -54,7 +54,7 @@
 		"clsx": "^2.1.0",
 		"cmdk-sv": "^0.0.13",
 		"embla-carousel-svelte": "8.0.0-rc19",
-		"farming-weight": "^0.3.9",
+		"farming-weight": "^0.3.10",
 		"formsnap": "^0.4.4",
 		"lucide-svelte": "^0.314.0",
 		"mode-watcher": "^0.1.2",
