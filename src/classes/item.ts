@@ -11,4 +11,13 @@ export interface EliteItemDto {
 	attributes?: {
 		[key: string]: string | null;
 	} | null;
+	gems?: Record<string, GemRarity> | null;
+}
+
+export enum GemRarity {
+	Rough = 'ROUGH',
+	Flawed = 'FLAWED',
+	Fine = 'FINE',
+	Flawless = 'FLAWLESS',
+	Perfect = 'PERFECT',
 }

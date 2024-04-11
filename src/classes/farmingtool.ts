@@ -2,6 +2,7 @@ import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS, TURBO_ENCHANTS, TURBO_ENCHANT_FORTUNE } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
+import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore, previousRarity } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
@@ -154,6 +155,13 @@ export class FarmingTool {
 				this.fortuneBreakdown['Collection Analysis'] = this.collAnalysis;
 				sum += this.collAnalysis;
 			}
+		}
+
+		// Gems
+		const peridot = getPeridotFortune(this.rarity, this.item);
+		if (peridot > 0) {
+			this.fortuneBreakdown['Peridot Gems'] = peridot;
+			sum += peridot;
 		}
 
 		// Enchantments

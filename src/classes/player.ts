@@ -78,9 +78,7 @@ export class FarmingPlayer {
 
 		if (options.tools[0] instanceof FarmingTool) {
 			this.tools = options.tools as FarmingTool[];
-			for (const tool of this.tools) {
-				tool.setOptions(options);
-			}
+			for (const tool of this.tools) tool.setOptions(options);
 		} else {
 			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
 		}
@@ -89,9 +87,7 @@ export class FarmingPlayer {
 
 		if (options.pets[0] instanceof FarmingPet) {
 			this.pets = (options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
-			for (const pet of this.pets) {
-				pet.setOptions(options);
-			}
+			for (const pet of this.pets) pet.setOptions(options);
 		} else {
 			this.pets = FarmingPet.fromArray(options.pets as EliteItemDto[], options);
 		}
@@ -100,6 +96,7 @@ export class FarmingPlayer {
 
 		if (options.armor[0] instanceof FarmingArmor) {
 			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.fortune - a.fortune);
+			for (const a of this.armor) a.setOptions(options);
 		} else {
 			this.armor = FarmingArmor.fromArray(options.armor as EliteItemDto[], options);
 		}
@@ -108,6 +105,7 @@ export class FarmingPlayer {
 
 		if (options.equipment[0] instanceof LotusGear) {
 			this.equipment = (options.equipment as LotusGear[]).sort((a, b) => b.fortune - a.fortune);
+			for (const e of this.equipment) e.setOptions(options);
 		} else {
 			this.equipment = LotusGear.fromArray(options.equipment as EliteItemDto[], options);
 		}
@@ -205,12 +203,19 @@ export class FarmingPlayer {
 			sum += pet.fortune;
 		}
 
-		// Accessories
-		//* There's only one accessory family for farming right now
-		const accessory = this.accessories.find((a) => a.info.crops === undefined);
-		if (accessory && accessory.fortune > 0) {
-			breakdown[accessory.item.name ?? 'Accessories'] = accessory.fortune ?? 0;
-			sum += accessory.fortune ?? 0;
+		// Accessories, only count highest fortune from each family
+		const families = new Map<string, FarmingAccessory>();
+		for (const accessory of this.accessories.filter((a) => a.fortune > 0).sort((a, b) => b.fortune - a.fortune)) {
+			if (accessory.info.family) {
+				if (!families.has(accessory.info.family)) {
+					families.set(accessory.info.family, accessory);
+				} else {
+					continue;
+				}
+			}
+
+			breakdown[accessory.item.name ?? accessory.item.skyblockId ?? 'Accessory [Error]'] = accessory.fortune;
+			sum += accessory.fortune;
 		}
 
 		// Extra Fortune

@@ -45,4 +45,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 			[Stat.FarmingFortune]: 10,
 		},
 	},
+	POWER_RELIC: {
+		name: 'Relic of Power',
+		wiki: 'https://wiki.hypixel.net/Relic_Of_Power',
+		maxRarity: Rarity.Legendary,
+	},
 };

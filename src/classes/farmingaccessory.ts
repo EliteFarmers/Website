@@ -1,5 +1,6 @@
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/accessories';
 import { Rarity, Stat } from '../constants/reforges';
+import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
 
@@ -40,6 +41,15 @@ export class FarmingAccessory {
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
+		}
+
+		// Gems
+		let peridot = getPeridotFortune(this.rarity, this.item);
+		if (peridot > 0) {
+			peridot = +(peridot / 2).toFixed(2); // Only half the fortune is applied on accessories
+
+			this.fortuneBreakdown['Peridot Gems'] = peridot;
+			sum += peridot;
 		}
 
 		this.fortune = sum;

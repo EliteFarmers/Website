@@ -5,6 +5,7 @@ import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/refor
 import { Skill } from '../constants/skills';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
 import { calculateAverageSpecialCrops } from '../crops/special';
+import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
@@ -149,6 +150,11 @@ export class FarmingArmor {
 		this.sumFortune();
 	}
 
+	setOptions(options: PlayerOptions) {
+		this.options = options;
+		this.fortune = this.sumFortune();
+	}
+
 	private sumFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
@@ -162,6 +168,8 @@ export class FarmingArmor {
 
 		// Per farming level stats like Rancher's Boots
 		if (this.armor.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
+			this.fortuneBreakdown[this.options.farmingLevel ?? 'Nothing'] = 0;
+
 			const perLevel = this.armor.perLevelStats?.stats[Stat.FarmingFortune] ?? 0;
 			if (perLevel > 0) {
 				this.fortuneBreakdown['Farming Level'] = perLevel * this.options.farmingLevel;
@@ -174,6 +182,13 @@ export class FarmingArmor {
 		if (reforge > 0) {
 			this.fortuneBreakdown[this.reforge?.name ?? 'Reforge'] = reforge;
 			sum += reforge;
+		}
+
+		// Gems
+		const peridot = getPeridotFortune(this.rarity, this.item);
+		if (peridot > 0) {
+			this.fortuneBreakdown['Peridot Gems'] = peridot;
+			sum += peridot;
 		}
 
 		// Enchantments
