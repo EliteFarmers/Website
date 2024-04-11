@@ -168,8 +168,6 @@ export class FarmingArmor {
 
 		// Per farming level stats like Rancher's Boots
 		if (this.armor.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
-			this.fortuneBreakdown[this.options.farmingLevel ?? 'Nothing'] = 0;
-
 			const perLevel = this.armor.perLevelStats?.stats[Stat.FarmingFortune] ?? 0;
 			if (perLevel > 0) {
 				this.fortuneBreakdown['Farming Level'] = perLevel * this.options.farmingLevel;
