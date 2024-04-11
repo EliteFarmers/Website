@@ -6,11 +6,11 @@
 	export let data: { date: string, value: number }[];
 	export let crop: string = 'wheat';
 
-	$: color = getCropColor(crop);
-	$: console.log(color);
+	$: stroke = `stroke-${crop}`;
+	$: fill = `fill-${crop}/80`;
 </script>
 
-<div class="h-[300px] p-4 border rounded">
+<div class="h-[300px] p-4 border rounded mx-8">
 	<Chart
 		{data}
 		x="date"
@@ -27,11 +27,13 @@
 				format={(d) => new Date(d * 1000).toDateString()}
 				rule
 			/>
+			{#key crop}
 			<Area
-				line={{ class: 'stroke-2', style: `stroke: ${color};` }}
-				style="fill: {color}; opacity: 70%;"
+				line={{ class: stroke }}
+				class={fill}
 			/>
-			<Spline class="stroke-2 stroke-primary" />
+			<Spline class={stroke} />
+			{/key}
 			<Highlight points lines />
 		</Svg>
 		<Tooltip header={(d) => new Date(d.date * 1000).toDateString()} let:data>

@@ -4,14 +4,18 @@
     
     export let data: PageData;
 
-    $: crops = data.crops;
-
-    $: wheat = data.crops?.map((e, i) => ({
-        x: e.timestamp ?? 0,
-        y: e.crops?.['wheat'] ?? 0,
-        crop: 'Wheat'
-    })) ?? [];
+    $: crops = data.crops?.reduce<Record<string, { date: string, value: number }[]>>((acc, curr) => {
+        for (const [ crop, value] of Object.entries(curr.crops ?? {})) {
+            acc[crop] ??= [];
+            acc[crop].push({
+                date: (curr.timestamp ?? 0) + '',
+                value: value ?? 0
+            });
+        }
+        return acc;
+    }, {}) ?? [];
 
 </script>
 
-<CropGraph data={wheat.map(w => ({ date: w.x + '', value: w.y }))} />
+<CropGraph data={crops['wheat']} />
+<CropGraph data={crops['mushroom']} crop="mushroom" />
