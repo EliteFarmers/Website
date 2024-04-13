@@ -27,22 +27,26 @@ export const CREDITS: Credit[] = [
 		],
 	},
 	{
-		name: 'Bankhier',
-		role: 'Help with original weight calculations and max farming fortune rates',
-		links: [
-			{
-				name: 'Profile',
-				url: '/@ac01147ed01a47d1b5777b31ccf5e616',
-			},
-		],
-	},
-	{
 		name: 'Lumini',
 		role: 'Custom art for the website (crop icons, medals, etc)',
 		links: [
 			{
 				name: 'Etsy (Crop Stickers)',
 				url: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
+			},
+			{
+				name: 'Ko-Fi',
+				url: 'https://ko-fi.com/shopelumini',
+			}
+		],
+	},
+	{
+		name: 'Bankhier',
+		role: 'Help with original weight calculations and max farming fortune rates',
+		links: [
+			{
+				name: 'Profile',
+				url: '/@ac01147ed01a47d1b5777b31ccf5e616',
 			},
 		],
 	},
