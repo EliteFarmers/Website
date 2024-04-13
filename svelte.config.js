@@ -31,7 +31,13 @@ const config = {
 			'$lib': './src/lib',
 			'$params': './src/params',
 			'$content': './src/content',
-		}
+		},
+	},
+	// Only way I found to hide warnings from node_modules that doesn't break everything
+	// vitePlugin: { exclude: ['**/node_modules/**'] } doesn't work  
+	onwarn: (warning, handler) => {
+		if (warning.filename.includes('node_modules')) return;
+		handler(warning);
 	},
 };
 
