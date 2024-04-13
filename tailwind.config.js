@@ -1,10 +1,17 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
+import colors from 'tailwindcss/colors';
+import svelteUx from 'svelte-ux/plugins/tailwind.cjs';
 
 /** @type {import('tailwindcss').Config} */
 const config = {
 	darkMode: ['class'],
-	content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/layerchart/**/*.{svelte,js}'],
+	content: [
+		'./src/**/*.{html,js,svelte,ts}',
+		'./node_modules/layerchart/**/*.{svelte,js}',
+		'./node_modules/svelte-ux/**/*.{svelte,js}',
+	],
 	safelist: ['dark'],
+	plugins: [ svelteUx({ colorSpace: 'oklch' }) ],
 	theme: {
 		container: {
 			center: true,
@@ -86,6 +93,30 @@ const config = {
 			},
 			fontFamily: {
 				sans: [...fontFamily.sans],
+			},
+		},
+	},
+	ux: {
+		themes: {
+			light: {
+				primary: colors['orange']['500'],
+				'primary-content': 'black',
+				secondary: colors['blue']['500'],
+				'surface-100': colors['gray']['100'],
+				'surface-200': colors['gray']['400'],
+				'surface-300': colors['gray']['500'],
+				'surface-content': 'black',
+				'color-scheme': 'light',
+			},
+			dark: {
+				primary: colors['orange']['500'],
+				'primary-content': 'white',
+				secondary: colors['blue']['500'],
+				'surface-100': 'white',
+				'surface-200': colors['zinc']['900'],
+				'surface-300': colors['zinc']['950'],
+				'surface-content': colors['zinc']['100'],
+				'color-scheme': 'dark',
 			},
 		},
 	},

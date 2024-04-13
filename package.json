@@ -71,6 +71,7 @@
 		"openapi-fetch": "^0.7.10",
 		"prismarine-nbt": "^2.5.0",
 		"svelte-sonner": "^0.3.19",
+		"svelte-ux": "^0.62.8",
 		"sveltekit-superforms": "^1.13.4",
 		"tailwind-merge": "^2.2.1",
 		"tailwind-variants": "^0.1.20",

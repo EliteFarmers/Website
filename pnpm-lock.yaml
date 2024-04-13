@@ -80,6 +80,9 @@ dependencies:
   svelte-sonner:
     specifier: ^0.3.19
     version: 0.3.19(svelte@4.2.12)
+  svelte-ux:
+    specifier: ^0.62.8
+    version: 0.62.8(postcss@8.4.35)(svelte@4.2.12)
   sveltekit-superforms:
     specifier: ^1.13.4
     version: 1.13.4(@sveltejs/kit@2.5.3)(svelte@4.2.12)(zod@3.22.4)
@@ -2777,7 +2780,7 @@ packages:
       posthog-js: 1.118.1
       shapefile: 0.6.6
       svelte: 4.2.12
-      svelte-ux: 0.62.6(postcss@8.4.35)(svelte@4.2.12)
+      svelte-ux: 0.62.8(postcss@8.4.35)(svelte@4.2.12)
       topojson-client: 3.1.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -3829,8 +3832,8 @@ packages:
       svelte: 4.2.12
     dev: false
 
-  /svelte-ux@0.62.6(postcss@8.4.35)(svelte@4.2.12):
-    resolution: {integrity: sha512-yCmtgVraB940MQyeuarvg38o+aqomRHtg36eoA76yCh2RRy6DhKQ+WV371SrTTbK/vBbmLpXC8rarWDSIjf/Cw==}
+  /svelte-ux@0.62.8(postcss@8.4.35)(svelte@4.2.12):
+    resolution: {integrity: sha512-M+FbcMtNpJVN4zhLc54Ks2ClKfTPmF3eNzoA4CuHGGog4RwJ/Xd1d/Wn4BXCxEjSZZT5SRQzws95f78S3ZDu3w==}
     peerDependencies:
       svelte: ^3.56.0 || ^4.0.0
     dependencies:
