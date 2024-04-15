@@ -10,8 +10,6 @@
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import { getSelectedCrops, getAnyCropSelected } from '$lib/stores/selectedCrops';
 	import JumpLink from '$comp/jump-link.svelte';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -30,17 +28,6 @@
 
 	$: value = initStart;
 	$: startTime = Math.floor(value.toDate(tz).getTime() / 1000);
-
-	onMount(() => {
-		if (!$page.url.hash) return;
-		const crop = getCropFromName($page.url.hash.slice(1));
-		if (!crop) return;
-
-		const cropName = getCropDisplayName(crop);
-		if (selected(cropName)) return;
-
-		$selectedCrops[cropName] = true;
-	});
 </script>
 
 <div class="flex flex-col justify-center items-center w-full gap-4">
@@ -71,10 +58,10 @@
 	</form>
 
 	<div class="flex flex-wrap justify-center w-full">
-		{#each Object.entries(crops) as [crop, data]}
+		{#each Object.entries(crops) as [crop, data] (crop)}
 			{@const name = getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)}
 			{#if selected(name)}
-				<div class="basis-[48rem] flex flex-col gap-1 p-2">
+				<div class="basis-[46rem] flex flex-col gap-1 p-2">
 					<div class="flex flex-row gap-1 ml-4">
 						<img src={PROPER_CROP_TO_IMG[name]} alt={crop} class="pixelated aspect-square h-full" />
 						<h3 class="text-2xl">{name}</h3>

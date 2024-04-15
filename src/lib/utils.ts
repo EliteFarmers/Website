@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import { hasPermission, PermissionFlags } from '$lib/auth';
+import type { components } from './api/api';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -83,4 +84,25 @@ export enum ChannelType {
 	GuildStage = 13,
 	GuildDirectory = 14,
 	GuildForum = 15,
+}
+
+export function preprocessCropCharts(crops: components['schemas']['CropCollectionsDataPointDto'][]) {
+	return (
+		crops
+			.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0))
+			.reduce<Record<string, { date: string; value: number }[]>>((acc, curr) => {
+				for (const [crop, value] of Object.entries(curr.crops ?? {})) {
+					acc[crop] ??= [];
+
+					const last = acc[crop].at(-1);
+					if ((last && last.value > value) || +(last?.date ?? 0) > +(curr.timestamp ?? 0)) continue;
+
+					acc[crop].push({
+						date: (curr.timestamp ?? 0) + '',
+						value: value ?? 0,
+					});
+				}
+				return acc;
+			}, {}) ?? {}
+	);
 }
