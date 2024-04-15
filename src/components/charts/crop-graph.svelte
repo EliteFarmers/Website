@@ -5,7 +5,7 @@
 	import { Area, Axis, Chart, Highlight, Spline, Svg, Tooltip } from 'layerchart';
 
 	export let data: { date: string; value: number }[];
-	export let crop: string = 'wheat';
+	export let crop = 'wheat';
 
 	const dateFormatter = new Intl.DateTimeFormat(undefined, {
 		month: 'short',
