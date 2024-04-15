@@ -11,7 +11,7 @@ const config = {
 		'./node_modules/svelte-ux/**/*.{svelte,js}',
 	],
 	safelist: ['dark'],
-	plugins: [ svelteUx({ colorSpace: 'oklch' }) ],
+	plugins: [svelteUx({ colorSpace: 'oklch' })],
 	theme: {
 		container: {
 			center: true,
@@ -99,6 +99,7 @@ const config = {
 	ux: {
 		themes: {
 			light: {
+				accent: 'black',
 				primary: colors['orange']['500'],
 				'primary-content': 'black',
 				secondary: colors['blue']['500'],
@@ -109,6 +110,7 @@ const config = {
 				'color-scheme': 'light',
 			},
 			dark: {
+				accent: 'white',
 				primary: colors['orange']['500'],
 				'primary-content': 'white',
 				secondary: colors['blue']['500'],

@@ -11,7 +11,7 @@
 
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { settings, getSettings } from 'svelte-ux';
-	
+
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
@@ -25,10 +25,10 @@
 
 	settings({
 		themes: {
-			light: [ 'light' ],
-			dark: [ 'dark' ],
-		}
-	})
+			light: ['light'],
+			dark: ['dark'],
+		},
+	});
 </script>
 
 <svelte:head>
