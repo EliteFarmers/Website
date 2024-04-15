@@ -1,6 +1,7 @@
 import { GetCropCollectionPoints } from '$lib/api/elite';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { preprocessCropCharts } from '$lib/utils';
 
 export const load = (async ({ parent }) => {
 	return await parent();
@@ -27,7 +28,7 @@ export const actions: Actions = {
 		}
 
 		return {
-			graph: collectionGraph?.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0)),
+			graph: preprocessCropCharts(collectionGraph ?? []),
 		};
 	},
 };
