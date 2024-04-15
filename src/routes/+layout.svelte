@@ -9,11 +9,26 @@
 	import Nav from '$comp/header/nav.svelte';
 	import Footer from '$comp/footer/footer.svelte';
 
-	import { ModeWatcher } from 'mode-watcher';
+	import { ModeWatcher, mode } from 'mode-watcher';
+	import { settings, getSettings } from 'svelte-ux';
 
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
+
+	mode.subscribe((value) => {
+		if (!value) return;
+
+		const settings = getSettings();
+		settings.currentTheme.setTheme(value);
+	});
+
+	settings({
+		themes: {
+			light: ['light'],
+			dark: ['dark'],
+		},
+	});
 </script>
 
 <svelte:head>

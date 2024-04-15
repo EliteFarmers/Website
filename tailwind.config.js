@@ -1,10 +1,17 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
+import colors from 'tailwindcss/colors';
+import svelteUx from 'svelte-ux/plugins/tailwind.cjs';
 
 /** @type {import('tailwindcss').Config} */
 const config = {
 	darkMode: ['class'],
-	content: ['./src/**/*.{html,js,svelte,ts}'],
+	content: [
+		'./src/**/*.{html,js,svelte,ts}',
+		'./node_modules/layerchart/**/*.{svelte,js}',
+		'./node_modules/svelte-ux/**/*.{svelte,js}',
+	],
 	safelist: ['dark'],
+	plugins: [svelteUx({ colorSpace: 'oklch' })],
 	theme: {
 		container: {
 			center: true,
@@ -48,16 +55,36 @@ const config = {
 					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
 					foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
 				},
-				wheat: '#d5da45',
-				melon: '#bb170b',
-				cactus: '#3b5b1d',
-				pumpkin: '#a0560b',
-				carrot: '#ff8e09',
-				potato: '#e9ba62',
-				sugarcane: '#82a859',
-				netherwart: '#5c151a',
-				mushroom: '#725643',
-				cocoa: '#61381d',
+				wheat: {
+					DEFAULT: 'hsl(var(--wheat) / <alpha-value>)',
+				},
+				melon: {
+					DEFAULT: 'hsl(var(--melon) / <alpha-value>)',
+				},
+				cactus: {
+					DEFAULT: 'hsl(var(--cactus) / <alpha-value>)',
+				},
+				pumpkin: {
+					DEFAULT: 'hsl(var(--pumpkin) / <alpha-value>)',
+				},
+				carrot: {
+					DEFAULT: 'hsl(var(--carrot) / <alpha-value>)',
+				},
+				potato: {
+					DEFAULT: 'hsl(var(--potato) / <alpha-value>)',
+				},
+				sugarcane: {
+					DEFAULT: 'hsl(var(--sugarcane) / <alpha-value>)',
+				},
+				netherwart: {
+					DEFAULT: 'hsl(var(--netherwart) / <alpha-value>)',
+				},
+				mushroom: {
+					DEFAULT: 'hsl(var(--mushroom) / <alpha-value>)',
+				},
+				cocoa: {
+					DEFAULT: 'hsl(var(--cocoa) / <alpha-value>)',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -66,6 +93,32 @@ const config = {
 			},
 			fontFamily: {
 				sans: [...fontFamily.sans],
+			},
+		},
+	},
+	ux: {
+		themes: {
+			light: {
+				accent: 'black',
+				primary: colors['orange']['500'],
+				'primary-content': 'black',
+				secondary: colors['blue']['500'],
+				'surface-100': colors['gray']['100'],
+				'surface-200': colors['gray']['400'],
+				'surface-300': colors['gray']['500'],
+				'surface-content': 'black',
+				'color-scheme': 'light',
+			},
+			dark: {
+				accent: 'white',
+				primary: colors['orange']['500'],
+				'primary-content': 'white',
+				secondary: colors['blue']['500'],
+				'surface-100': 'white',
+				'surface-200': colors['zinc']['900'],
+				'surface-300': colors['zinc']['950'],
+				'surface-content': colors['zinc']['100'],
+				'color-scheme': 'dark',
 			},
 		},
 	},

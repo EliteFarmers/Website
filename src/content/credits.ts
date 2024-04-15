@@ -27,6 +27,20 @@ export const CREDITS: Credit[] = [
 		],
 	},
 	{
+		name: 'Lumini',
+		role: 'Custom art for the website (crop icons, medals, etc)',
+		links: [
+			{
+				name: 'Etsy (Crop Stickers)',
+				url: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
+			},
+			{
+				name: 'Ko-Fi',
+				url: 'https://ko-fi.com/shopelumini',
+			},
+		],
+	},
+	{
 		name: 'Bankhier',
 		role: 'Help with original weight calculations and max farming fortune rates',
 		links: [
@@ -37,18 +51,8 @@ export const CREDITS: Credit[] = [
 		],
 	},
 	{
-		name: 'Lumini',
-		role: 'Custom art for the website (crop icons, medals, etc)',
-		links: [
-			{
-				name: 'Etsy (Crop Stickers)',
-				url: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
-			},
-		],
-	},
-	{
 		name: 'ic22487',
-		role: 'Hypixel+ texture pack author/artist, primary seen here for farming tool textures',
+		role: 'Hypixel+ texture pack author/artist, primarily seen here for farming tool textures',
 		links: [
 			{
 				name: 'Ko-Fi',

@@ -20,5 +20,6 @@ pnpm-lock.yaml
 *.cjs
 src/lib/api/swagger.json
 src/lib/api/api.d.ts
+node_modules/.pnpm/svelte-ux*
 
 static

@@ -1,3 +1,4 @@
+import { Crop, getCropFromName } from 'farming-weight';
 import type { components } from './api/api';
 import { MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
@@ -278,4 +279,33 @@ export function getCountdown(date: Date | number) {
 	}
 
 	return (days ? days + 'd ' : '') + (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + seconds + 's ';
+}
+
+export function getCropColor(crop: string | Crop) {
+	const cropKey = getCropFromName(crop);
+
+	switch (cropKey) {
+		case Crop.Cactus:
+			return '#3b5b1d';
+		case Crop.Carrot:
+			return '#ff8e09';
+		case Crop.CocoaBeans:
+			return '#61381d';
+		case Crop.Melon:
+			return '#bb170b';
+		case Crop.Mushroom:
+			return '#725643';
+		case Crop.NetherWart:
+			return '#5c151a';
+		case Crop.Potato:
+			return '#e9ba62';
+		case Crop.Pumpkin:
+			return '#a0560b';
+		case Crop.SugarCane:
+			return '#82a859';
+		case Crop.Seeds:
+		case Crop.Wheat:
+		default:
+			return '#d5da45';
+	}
 }
