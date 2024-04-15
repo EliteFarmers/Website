@@ -16,6 +16,7 @@
 
 	const anySelected = getAnyCropSelected();
 	const selectedCrops = getSelectedCrops();
+	const minDate = new CalendarDate(2023, 7, 1);
 
 	$: crops = form?.graph ?? data.crops;
 	$: selected = (crop: string) => $selectedCrops[crop] || !$anySelected;
@@ -51,7 +52,7 @@
 
 		<div class="flex flex-col gap-2 items-center">
 			<div class="flex flex-row gap-2 items-center">
-				<DatePicker bind:value />
+				<DatePicker bind:value maxValue={initEnd} minValue={minDate} />
 				<Button type="submit" variant="default" bind:disabled>Update</Button>
 			</div>
 		</div>

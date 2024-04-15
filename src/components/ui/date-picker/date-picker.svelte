@@ -11,6 +11,8 @@
 	});
 
 	export let value: DateValue | undefined = undefined;
+	export let minValue: DateValue | undefined = undefined;
+	export let maxValue: DateValue | undefined = undefined;
 </script>
 
 <Popover.Root openFocus>
@@ -25,6 +27,6 @@
 		</Button>
 	</Popover.Trigger>
 	<Popover.Content class="w-auto p-0">
-		<Calendar bind:value initialFocus />
+		<Calendar bind:value initialFocus {maxValue} {minValue} />
 	</Popover.Content>
 </Popover.Root>
