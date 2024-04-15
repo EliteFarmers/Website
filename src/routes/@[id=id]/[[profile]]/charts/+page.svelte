@@ -90,8 +90,8 @@
 		<h5 class="text-lg font-semibold text-center">How is this data obtained?</h5>
 		<p class="text-left">
 			Your collections are only stored when they're requested. This may result in missing data, especially if
-			collections API has been turned off for the player. Data points are limited to 4 per 24 hours intentionally to
-			minimize privacy concerns. This data originally comes from Hypixel's public API.
+			collections API has been turned off for the player. Data points are limited to 4 per 24 hours intentionally
+			to minimize privacy concerns. This data originally comes from Hypixel's public API.
 		</p>
 	</div>
 </div>

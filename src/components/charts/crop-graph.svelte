@@ -56,10 +56,10 @@
 				placement="bottom"
 				rule
 				format={(d) => dateFormatter.format(new Date(d * 1000))}
-				labelProps={{ 
+				labelProps={{
 					rotate: 330,
-          			textAnchor: "end",
-					class: '!stroke-0 !font-normal text-xs md:text-sm'
+					textAnchor: 'end',
+					class: '!stroke-0 !font-normal text-xs md:text-sm',
 				}}
 			/>
 			<Area line={{ class: colorClasses[crop][0] + ' stroke-4' }} class={colorClasses[crop][1]} />
