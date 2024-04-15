@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import CropGraph from '$comp/charts/crop-graph.svelte';
-	import { getLocalTimeZone, today } from '@internationalized/date';
+	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 	import type { ActionData, PageData } from './$types';
 	import { DatePicker } from '$ui/date-picker';
 	import { Button } from '$ui/button';
@@ -16,8 +16,10 @@
 
 	const anySelected = getAnyCropSelected();
 	const selectedCrops = getSelectedCrops();
+	const minDate = new CalendarDate(2023, 7, 1);
 
 	$: crops = form?.graph ?? data.crops;
+	$: entries = Object.entries(crops);
 	$: selected = (crop: string) => $selectedCrops[crop] || !$anySelected;
 
 	$: tz = getLocalTimeZone();
@@ -51,14 +53,24 @@
 
 		<div class="flex flex-col gap-2 items-center">
 			<div class="flex flex-row gap-2 items-center">
-				<DatePicker bind:value />
+				<DatePicker bind:value maxValue={initEnd} minValue={minDate} />
 				<Button type="submit" variant="default" bind:disabled>Update</Button>
 			</div>
 		</div>
 	</form>
 
 	<div class="flex flex-wrap justify-center w-full">
-		{#each Object.entries(crops) as [crop, data] (crop)}
+		{#if entries.length === 0}
+			<div class="flex flex-col items-center justify-center p-4 space-y-2 mb-16 max-w-lg text-center">
+				<h2 class="text-3xl font-semibold text-center">No Data Found</h2>
+				<h4>Try a different time!</h4>
+				<p>
+					There may be nothing to find if a player has kept their collections API disabled or is new to the
+					website.
+				</p>
+			</div>
+		{/if}
+		{#each entries as [crop, data] (crop)}
 			{@const name = getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)}
 			{#if selected(name)}
 				<div class="basis-[46rem] flex flex-col gap-1 p-2">

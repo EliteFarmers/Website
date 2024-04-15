@@ -19,7 +19,7 @@
 			if (!mousePresent) {
 				open = false;
 			}
-		}, 500);
+		}, 200);
 	}
 
 	export let open = false;
