@@ -4,9 +4,6 @@
 	export let clicked = false;
 </script>
 
-<button
-	on:click={() => (clicked = !clicked)}
-	class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-zinc-700 {clicked ? 'bg-gray-300 dark:bg-zinc-800' : ''}"
->
+<button on:click={() => (clicked = !clicked)} class="rounded-md p-2 hover:bg-muted {clicked ? 'bg-primary/15' : ''}">
 	<img class="w-12 h-12 pixelated" {src} {alt} title={'Filter this crop'} />
 </button>

@@ -9,6 +9,7 @@
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
+	import { ArrowDown, ArrowUp } from 'lucide-svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -16,13 +17,17 @@
 
 	$: user = data.user || undefined;
 
-	$: badges = (user?.minecraftAccounts ?? [])
-		.filter((mc) => mc.badges && mc.badges.length > 0)
-		.map((mc) => ({
-			name: mc.name,
-			uuid: mc.id,
-			badges: mc.badges?.sort((a, b) => (b.order ?? 0) - (a.order ?? 0)),
-		}));
+	$: badges = mapBadges(user?.minecraftAccounts ?? []);
+
+	function mapBadges(accounts: PageData['user']['minecraftAccounts'] = []) {
+		return accounts
+			.filter((mc) => mc.badges && mc.badges.length > 0)
+			.map((mc) => ({
+				name: mc.name,
+				uuid: mc.id,
+				badges: mc.badges?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+			}));
+	}
 
 	$: visibleToggles = {} as Record<string, boolean>;
 
@@ -127,6 +132,7 @@
 			<p class="mb-16">You don't have any badges yet!</p>
 		{/if}
 		{#each badges as profile (profile.uuid)}
+			{@const length = profile.badges?.length ?? 0}
 			<form
 				action="?/updateBadges"
 				method="post"
@@ -158,13 +164,37 @@
 							alt={badge.name}
 							class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
 						/>
+						<div class="flex flex-row gap-1">
+							<Button
+								size="sm"
+								disabled={i === 0 || length === 1}
+								on:click={() => {
+									const newOrder = Math.max(i - 1, 0);
+									const old = profile.badges?.find((b) => b.order === newOrder);
+									if (old) old.order = i;
+									badge.order = newOrder;
+									badges = badges;
+								}}
+							>
+								<ArrowUp size={16} />
+							</Button>
+							<Button
+								size="sm"
+								disabled={i === length - 1 || length === 1}
+								on:click={() => {
+									const newOrder = Math.min(i + 1, length);
+									const old = profile.badges?.find((b) => b.order === newOrder);
+									if (old) old.order = i;
+									badge.order = newOrder;
+									badges = badges;
+								}}
+							>
+								<ArrowDown size={16} />
+							</Button>
+						</div>
 						<div class="flex flex-1 flex-col gap-1 max-w-md">
 							<p class="text-lg font-semibold">{badge.name}</p>
 							<p>{badge.description}</p>
-						</div>
-						<div class="flex flex-1 flex-col gap-1 max-w-md">
-							<p class="font-semibold mt-1">Requirements</p>
-							<p>{badge.requirements}</p>
 						</div>
 					</div>
 				{/each}

@@ -7,6 +7,10 @@
 	export let data: { date: string; value: number }[];
 	export let crop = 'wheat';
 
+	$: first = data[0];
+	$: last = data.at(-1);
+	$: days = Math.ceil((+(last?.date ?? 0) - +first.date) / 86400);
+
 	const dateFormatter = new Intl.DateTimeFormat(undefined, {
 		month: 'short',
 		day: 'numeric',
@@ -61,6 +65,7 @@
 					textAnchor: 'end',
 					class: '!stroke-0 !font-normal text-xs md:text-sm',
 				}}
+				ticks={days}
 			/>
 			<Area line={{ class: colorClasses[crop][0] + ' stroke-4' }} class={colorClasses[crop][1]} />
 			<Spline class="{colorClasses[crop][0]} stroke-2" />

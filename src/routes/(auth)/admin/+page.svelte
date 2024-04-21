@@ -33,7 +33,7 @@
 	$: selectedMember = data.admins?.find((a) => a.id === selectedMemberId) ?? null;
 </script>
 
-<Head title="Player Charts" description="Admin page to view player stats" />
+<Head title="Admin Settings" description="Admin config page." />
 
 <main class="flex flex-col gap-2 justify-center items-center my-16">
 	<h1 class="text-4xl mb-16">Admin Panel</h1>

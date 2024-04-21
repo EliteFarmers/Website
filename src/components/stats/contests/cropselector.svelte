@@ -20,8 +20,8 @@
 	{#each crops as [crop, src] (crop)}
 		<button
 			class="flex flex-row items-center justify-center gap-2 p-2 rounded-md hover:bg-muted {$selectedCrops[crop]
-				? 'bg-primary-foreground'
-				: 'bg-primary-foreground/50'}"
+				? 'bg-primary/15'
+				: ''}"
 			on:click={() => click(crop)}
 		>
 			<img {src} alt={crop[0]} class="w-12 h-12 pixelated" />
