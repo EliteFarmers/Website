@@ -10,6 +10,7 @@
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import { getSelectedCrops, getAnyCropSelected } from '$lib/stores/selectedCrops';
 	import JumpLink from '$comp/jump-link.svelte';
+	import Head from '$comp/head.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -31,6 +32,8 @@
 	$: value = initStart;
 	$: startTime = Math.floor(value.toDate(tz).getTime() / 1000);
 </script>
+
+<Head title="{data.account.name} | Charts" description="See crop collection charts for Hypixel Skyblock!" />
 
 <div class="flex flex-col justify-center items-center w-full gap-4">
 	<Cropselector />
