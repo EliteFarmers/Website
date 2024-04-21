@@ -114,11 +114,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid uuid.' });
 		}
 
-		const entries = Array.from(data.entries());
+		const entries = Array.from(data.entries()).filter(([key]) => key.startsWith('badge.'));
 		const badges = {} as Record<string, components['schemas']['EditUserBadgeDto']>;
 
 		for (const [key, value] of entries) {
-			if (!key.startsWith('badge.')) continue;
 			const [, id, setting] = key.split('.');
 
 			const badge = badges[+id] ?? (badges[+id] = { badgeId: +id });
@@ -128,7 +127,10 @@ export const actions: Actions = {
 			}
 
 			if (setting === 'order') {
-				badge.order = Number(value);
+				const num = Number(value);
+				if (isNaN(num)) continue;
+
+				badge.order = Math.min(entries.length, Math.max(0, num));
 			}
 		}
 
