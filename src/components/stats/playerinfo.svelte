@@ -29,6 +29,8 @@
 
 	$: rankName = GetRankName(player);
 	$: rank = GetRankDefaults(rankName as RankName);
+
+	$: badgeList = badges?.filter((b) => b.visible).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) ?? [];
 </script>
 
 <section class="flex flex-col align-middle w-full mt-8 items-center">
@@ -71,7 +73,7 @@
 		</div>
 	</div>
 	<div class="flex flex-wrap gap-2 align-middle w-full mx-4 justify-center">
-		{#each (badges ?? []).filter((b) => b.visible) as badge (badge.id)}
+		{#each badgeList as badge (badge.id)}
 			<Badge {badge} />
 		{/each}
 	</div>
