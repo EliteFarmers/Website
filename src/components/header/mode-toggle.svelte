@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Check, Moon, Sun } from 'lucide-svelte/icons';
+	import Check from 'lucide-svelte/icons/check';
+	import Moon from 'lucide-svelte/icons/moon';
+	import Sun from 'lucide-svelte/icons/sun';
 	import { Button } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { resetMode, setMode, mode } from 'mode-watcher';

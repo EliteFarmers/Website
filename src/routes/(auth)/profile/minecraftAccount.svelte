@@ -3,7 +3,7 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
-	import { StarIcon } from 'lucide-svelte/icons';
+	import Star from 'lucide-svelte/icons/star';
 
 	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};
 	let loading = false;
@@ -18,7 +18,7 @@
 			{#if mc.primaryAccount}
 				<Popover.Mobile>
 					<div slot="trigger">
-						<StarIcon size={16} class="text-yellow-500 fill-current" />
+						<Star size={16} class="text-yellow-500 fill-current" />
 					</div>
 					<p class="font-semibold">Primary Account</p>
 					<div class="pt-2">

@@ -2,7 +2,7 @@
 	import { Form as FormPrimitive } from 'formsnap';
 	import { buttonVariants } from '$comp/ui/button';
 	import { cn } from '$lib/utils';
-	import { ChevronDown } from 'lucide-svelte/icons';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import type { HTMLSelectAttributes } from 'svelte/elements';
 
 	type $$Props = HTMLSelectAttributes;

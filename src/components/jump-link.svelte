@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
-	import { Link } from 'lucide-svelte/icons';
+	import Link from 'lucide-svelte/icons/link';
 
 	export let id: string;
 	export let size = 20;

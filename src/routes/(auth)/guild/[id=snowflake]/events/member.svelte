@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import { ExternalLink } from 'lucide-svelte/icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let member: components['schemas']['EventMemberDto'];
 </script>
@@ -24,6 +24,6 @@
 		{#if member.notes || member.status === 2}
 			<p>{member.notes || (member.status === 2 ? 'Member Left' : '')}</p>
 		{/if}
-		<p class="font-semibold text-xl">{(+(member.amountGained ?? 0)).toLocaleString()}</p>
+		<p class="font-semibold text-xl">{(+(member.score ?? 0)).toLocaleString()}</p>
 	</div>
 </div>

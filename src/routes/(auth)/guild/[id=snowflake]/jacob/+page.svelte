@@ -12,7 +12,8 @@
 	import Jacobsettings from './jacobsettings.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import Head from '$comp/head.svelte';
-	import { Plus, Trash2 } from 'lucide-svelte/icons';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
 
 	export let data: PageData;
 	export let form: ActionData;

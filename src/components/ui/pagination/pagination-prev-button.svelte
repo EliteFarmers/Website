@@ -2,7 +2,7 @@
 	import { Pagination as PaginationPrimitive } from 'bits-ui';
 	import { Button } from '$comp/ui/button';
 	import { cn } from '$lib/utils';
-	import { ChevronLeft } from 'lucide-svelte/icons';
+	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 
 	type $$Props = PaginationPrimitive.PrevButtonProps;
 	type $$Events = PaginationPrimitive.PrevButtonEvents;

@@ -4,7 +4,7 @@
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
-	import { AlertCircle } from 'lucide-svelte/icons';
+	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 
 	export let rank = 0;
 	export let entry: components['schemas']['ContestParticipationWithTimestampDto'];
@@ -25,7 +25,7 @@
 			{#if entry.removed}
 				<Popover.Mobile>
 					<div slot="trigger">
-						<AlertCircle class="text-destructive" />
+						<CircleAlert class="text-destructive" />
 					</div>
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>

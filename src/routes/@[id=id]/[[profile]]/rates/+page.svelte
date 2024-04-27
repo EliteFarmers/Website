@@ -20,7 +20,7 @@
 	import { Button } from '$ui/button';
 	import { SliderSimple } from '$ui/slider';
 	import * as Select from '$ui/select';
-	import { Settings } from 'lucide-svelte/icons';
+	import Settings from 'lucide-svelte/icons/settings';
 
 	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';

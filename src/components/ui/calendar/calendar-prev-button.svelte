@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from 'bits-ui';
-	import { ChevronLeft } from 'lucide-svelte/icons';
+	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import { buttonVariants } from '$comp/ui/button';
 	import { cn } from '$lib/utils';
 

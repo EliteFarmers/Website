@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ContextMenu as ContextMenuPrimitive } from 'bits-ui';
 	import { cn } from '$lib/utils';
-	import { Circle } from 'lucide-svelte/icons';
+	import Circle from 'lucide-svelte/icons/circle';
 
 	type $$Props = ContextMenuPrimitive.RadioItemProps;
 	type $$Events = ContextMenuPrimitive.RadioItemEvents;

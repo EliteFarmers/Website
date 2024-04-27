@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
-	import { Users } from 'lucide-svelte/icons';
+	import Users from 'lucide-svelte/icons/users';
 
 	export let guild: components['schemas']['GuildDetailsDto'];
 </script>
