@@ -463,8 +463,16 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 		},
 	});
 
-export const CreateEvent = async (accessToken: string, event: components['schemas']['EditEventDto']) =>
-	await POST('/Event/create', {
+export const CreateWeightEvent = async (accessToken: string, event: components['schemas']['CreateWeightEventDto']) =>
+	await POST('/Event/Create', {
+		body: event,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const CreateMedalEvent = async (accessToken: string, event: components['schemas']['CreateMedalEventDto']) =>
+	await POST('/Event/Create/Medals', {
 		body: event,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -472,7 +480,7 @@ export const CreateEvent = async (accessToken: string, event: components['schema
 	});
 
 export const EditEvent = async (accessToken: string, eventId: string, event: components['schemas']['EditEventDto']) =>
-	await POST('/Event/{eventId}/edit', {
+	await POST('/Event/{eventId}/Edit', {
 		body: event,
 		params: {
 			path: {

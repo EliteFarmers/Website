@@ -4,7 +4,7 @@
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
 
-	export let member: components['schemas']['EventMemberDetailsDto'];
+	export let member: components['schemas']['EventMemberDto'];
 	export let rank: number;
 	export let running: boolean;
 </script>
@@ -51,8 +51,8 @@
 			{/if}
 		</div>
 		<p class="text-lg block pr-2">
-			{#if member.amountGained && +member.amountGained > 0}
-				{(+(member.amountGained ?? 0)).toLocaleString()}
+			{#if member.score && +member.score > 0}
+				{(+(member.score ?? 0)).toLocaleString()}
 			{:else}
 				<span class="text-red-800 dark:text-red-500">Hasn't Farmed Yet</span>
 			{/if}

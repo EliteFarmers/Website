@@ -61,7 +61,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Account/Search": {
@@ -152,6 +157,7 @@
             "required": true,
             "style": "simple",
             "schema": {
+              "minLength": 17,
               "type": "integer",
               "format": "int64"
             }
@@ -319,7 +325,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -360,7 +371,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Account/primary/{playerUuidOrIgn}": {
@@ -403,7 +419,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Admins": {
@@ -481,7 +502,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Admin/Permissions/{memberId}/{permission}": {
@@ -575,7 +601,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -667,7 +698,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Admin/UpcomingContests": {
@@ -719,7 +755,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Admin/Badges/{playerUuid}/{badgeId}": {
@@ -812,7 +853,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -903,7 +949,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Admin/Badges": {
@@ -994,7 +1045,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Admin/Badges/{badgeId}": {
@@ -1097,7 +1153,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1179,19 +1240,26 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
-    "/Event/create": {
+    "/Event/Create": {
       "post": {
         "tags": [
           "AdminEvent"
         ],
+        "summary": "Create a Farming Weight Event",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditEventDto"
+                "$ref": "#/components/schemas/CreateWeightEventDto"
               }
             }
           }
@@ -1277,18 +1345,130 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
-    "/Event/{eventId}/edit": {
+    "/Event/Create/Medals": {
       "post": {
         "tags": [
           "AdminEvent"
         ],
+        "summary": "Create a Medal Collection Event",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedalEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/Event/{eventId}/Edit": {
+      "post": {
+        "tags": [
+          "AdminEvent"
+        ],
+        "summary": "Edit an Event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -1298,6 +1478,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -1367,7 +1548,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Event/{eventId}/bans": {
@@ -1375,10 +1561,12 @@
         "tags": [
           "AdminEvent"
         ],
+        "summary": "Get banned members from an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -1457,7 +1645,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Event/{eventId}/bans/{playerUuid}": {
@@ -1465,10 +1658,12 @@
         "tags": [
           "AdminEvent"
         ],
+        "summary": "Ban a member from an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -1479,6 +1674,7 @@
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -1487,6 +1683,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -1575,16 +1772,23 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
           "AdminEvent"
         ],
+        "summary": "Unban a member from an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -1595,6 +1799,7 @@
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -1648,7 +1853,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Badges": {
@@ -1747,7 +1957,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/{guildId}/jacob": {
@@ -1828,7 +2043,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1909,7 +2129,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/ContestPings": {
@@ -1947,7 +2172,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/ContestPings/{guildId}": {
@@ -1999,7 +2229,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/account": {
@@ -2047,7 +2282,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/Badges/{playerUuid}/{badgeId}": {
@@ -2140,7 +2380,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -2231,7 +2476,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/account/{discordId}/{playerIgnOrUuid}": {
@@ -2265,7 +2515,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -2297,7 +2552,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Bot/account/{discordId}/{playerIgnOrUuid}/primary": {
@@ -2331,7 +2591,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Contests/at/{year}": {
@@ -2875,6 +3140,7 @@
         "tags": [
           "Event"
         ],
+        "summary": "Get all upcoming events",
         "responses": {
           "200": {
             "description": "Success",
@@ -2913,10 +3179,12 @@
         "tags": [
           "Event"
         ],
+        "summary": "Get an event by ID",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -2974,10 +3242,12 @@
         "tags": [
           "Event"
         ],
+        "summary": "Get members of an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3044,10 +3314,12 @@
         "tags": [
           "Event"
         ],
+        "summary": "Get a member of an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3058,6 +3330,7 @@
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3143,10 +3416,12 @@
         "tags": [
           "Event"
         ],
+        "summary": "Join an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3157,6 +3432,7 @@
           {
             "name": "playerUuid",
             "in": "query",
+            "description": "",
             "style": "form",
             "schema": {
               "type": "string"
@@ -3165,6 +3441,7 @@
           {
             "name": "profileId",
             "in": "query",
+            "description": "",
             "style": "form",
             "schema": {
               "type": "string"
@@ -3232,7 +3509,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Event/{eventId}/leave": {
@@ -3240,10 +3522,12 @@
         "tags": [
           "Event"
         ],
+        "summary": "Leave an event",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3313,7 +3597,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Graph/{playerUuid}/{profileUuid}/crops": {
@@ -3321,10 +3610,12 @@
         "tags": [
           "Graph"
         ],
+        "summary": "Crop Collections Over Time",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3336,6 +3627,7 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3347,6 +3639,7 @@
           {
             "name": "days",
             "in": "query",
+            "description": "Amount of days after the \"from\" time to include",
             "style": "form",
             "schema": {
               "type": "integer",
@@ -3357,17 +3650,29 @@
           {
             "name": "from",
             "in": "query",
+            "description": "Unix timestamp in seconds for the start of the data to return",
             "style": "form",
             "schema": {
               "type": "integer",
               "format": "int64",
               "default": 0
             }
+          },
+          {
+            "name": "perDay",
+            "in": "query",
+            "description": "Data points returned per 24 hour period",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 4
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns the list of data points",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3443,10 +3748,12 @@
         "tags": [
           "Graph"
         ],
+        "summary": "Skill XP Over Time",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3458,6 +3765,7 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3479,17 +3787,29 @@
           {
             "name": "from",
             "in": "query",
+            "description": "Unix timestamp in seconds for the start of the data to return",
             "style": "form",
             "schema": {
               "type": "integer",
               "format": "int64",
               "default": 0
             }
+          },
+          {
+            "name": "perDay",
+            "in": "query",
+            "description": "Data points returned per 24 hour period",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 4
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns the list of data points",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3565,10 +3885,12 @@
         "tags": [
           "Graph"
         ],
+        "summary": "Admin: Crop Collections Over Time",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3580,6 +3902,7 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3591,6 +3914,7 @@
           {
             "name": "days",
             "in": "query",
+            "description": "",
             "style": "form",
             "schema": {
               "type": "integer",
@@ -3601,6 +3925,7 @@
           {
             "name": "from",
             "in": "query",
+            "description": "",
             "style": "form",
             "schema": {
               "type": "integer",
@@ -3699,7 +4024,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Graph/Admin/{playerUuid}/{profileUuid}/skills": {
@@ -3707,10 +4037,12 @@
         "tags": [
           "Graph"
         ],
+        "summary": "Admin: Skill XP Over Time",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3722,6 +4054,7 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -3733,6 +4066,7 @@
           {
             "name": "days",
             "in": "query",
+            "description": "",
             "style": "form",
             "schema": {
               "type": "integer",
@@ -3743,6 +4077,7 @@
           {
             "name": "from",
             "in": "query",
+            "description": "",
             "style": "form",
             "schema": {
               "type": "integer",
@@ -3841,7 +4176,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Guilds": {
@@ -5097,10 +5437,12 @@
         "tags": [
           "Profile"
         ],
+        "summary": "Selected Profile Member",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -5177,10 +5519,12 @@
         "tags": [
           "Profile"
         ],
+        "summary": "Profile Member",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -5190,6 +5534,7 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -5246,10 +5591,12 @@
         "tags": [
           "Profile"
         ],
+        "summary": "Get Profile Details",
         "parameters": [
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -5306,10 +5653,12 @@
         "tags": [
           "Profile"
         ],
+        "summary": "Get List of Profile Details",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
             "style": "simple",
             "schema": {
@@ -5370,6 +5719,57 @@
         }
       }
     },
+    "/Profiles/{playerUuidOrIgn}/Names": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Get List of Profile Names",
+        "parameters": [
+          {
+            "name": "playerUuidOrIgn",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileNamesDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileNamesDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProfileNamesDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/User/Guilds": {
       "get": {
         "tags": [
@@ -5405,7 +5805,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}": {
@@ -5446,7 +5851,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}/Invite": {
@@ -5489,7 +5899,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}/Jacob": {
@@ -5532,7 +5947,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -5571,7 +5991,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}/Jacob/Leaderboard": {
@@ -5614,7 +6039,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}/Jacob/{lbId}": {
@@ -5683,7 +6113,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -5714,7 +6149,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}/Jacob/{lbId}/Send": {
@@ -5747,7 +6187,12 @@
           "200": {
             "description": "Success"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Guild/{guildId}/ContestPings": {
@@ -5830,7 +6275,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -5920,7 +6370,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/User/Badges/{playerUuid}": {
@@ -6031,7 +6486,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/Weight/{playerUuid}": {
@@ -6675,22 +7135,177 @@
         },
         "additionalProperties": false
       },
-      "Crop": {
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
+      "CreateMedalEventDto": {
+        "required": [
+          "endTime",
+          "guildId",
+          "name",
+          "startTime"
         ],
-        "type": "integer",
-        "format": "int32"
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the event"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "guildId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The Discord server id as a string for the event"
+          },
+          "description": {
+            "maxLength": 1024,
+            "type": "string",
+            "description": "An optional description for the event",
+            "nullable": true
+          },
+          "rules": {
+            "maxLength": 1024,
+            "type": "string",
+            "description": "An optional set of rules for the event",
+            "nullable": true
+          },
+          "prizeInfo": {
+            "maxLength": 1024,
+            "type": "string",
+            "description": "An optional description of prizes for the event",
+            "nullable": true
+          },
+          "banner": {
+            "maxLength": 256,
+            "type": "string",
+            "description": "An image URL for the event banner",
+            "nullable": true
+          },
+          "thumbnail": {
+            "maxLength": 256,
+            "type": "string",
+            "description": "An image URL for the event thumbnail",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Unix timestamp for the start time of the event in seconds",
+            "format": "int64"
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "Unix timestamp for the end time of the event in seconds",
+            "format": "int64"
+          },
+          "dynamicStartTime": {
+            "type": "boolean",
+            "description": "Currently unused",
+            "nullable": true
+          },
+          "requiredRole": {
+            "maxLength": 24,
+            "type": "string",
+            "description": "A Discord role id that is required to participate in the event",
+            "nullable": true
+          },
+          "blockedRole": {
+            "maxLength": 24,
+            "type": "string",
+            "description": "A Discord role id that is blocked from participating in the event",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/MedalEventData"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateWeightEventDto": {
+        "required": [
+          "endTime",
+          "guildId",
+          "name",
+          "startTime"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the event"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "guildId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The Discord server id as a string for the event"
+          },
+          "description": {
+            "maxLength": 1024,
+            "type": "string",
+            "description": "An optional description for the event",
+            "nullable": true
+          },
+          "rules": {
+            "maxLength": 1024,
+            "type": "string",
+            "description": "An optional set of rules for the event",
+            "nullable": true
+          },
+          "prizeInfo": {
+            "maxLength": 1024,
+            "type": "string",
+            "description": "An optional description of prizes for the event",
+            "nullable": true
+          },
+          "banner": {
+            "maxLength": 256,
+            "type": "string",
+            "description": "An image URL for the event banner",
+            "nullable": true
+          },
+          "thumbnail": {
+            "maxLength": 256,
+            "type": "string",
+            "description": "An image URL for the event thumbnail",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "integer",
+            "description": "Unix timestamp for the start time of the event in seconds",
+            "format": "int64"
+          },
+          "endTime": {
+            "type": "integer",
+            "description": "Unix timestamp for the end time of the event in seconds",
+            "format": "int64"
+          },
+          "dynamicStartTime": {
+            "type": "boolean",
+            "description": "Currently unused",
+            "nullable": true
+          },
+          "requiredRole": {
+            "maxLength": 24,
+            "type": "string",
+            "description": "A Discord role id that is required to participate in the event",
+            "nullable": true
+          },
+          "blockedRole": {
+            "maxLength": 24,
+            "type": "string",
+            "description": "A Discord role id that is blocked from participating in the event",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/WeightEventData"
+          }
+        },
+        "additionalProperties": false
       },
       "CropCollectionsDataPointDto": {
         "type": "object",
@@ -6897,6 +7512,10 @@
             "type": "string",
             "nullable": true
           },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
           "description": {
             "type": "string",
             "nullable": true
@@ -7046,6 +7665,9 @@
           "name": {
             "type": "string"
           },
+          "type": {
+            "$ref": "#/components/schemas/EventType"
+          },
           "description": {
             "type": "string",
             "nullable": true
@@ -7091,6 +7713,9 @@
           "guildId": {
             "type": "string",
             "nullable": true
+          },
+          "data": {
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -7106,7 +7731,7 @@
             "type": "string",
             "nullable": true
           },
-          "amountGained": {
+          "score": {
             "type": "string",
             "nullable": true
           },
@@ -7142,12 +7767,12 @@
           "status": {
             "$ref": "#/components/schemas/EventMemberStatus"
           },
-          "amountGained": {
+          "score": {
             "type": "string",
             "nullable": true
           },
-          "startConditions": {
-            "$ref": "#/components/schemas/EventMemberStartConditions"
+          "data": {
+            "nullable": true
           },
           "lastUpdated": {
             "type": "string",
@@ -7164,46 +7789,6 @@
         },
         "additionalProperties": false
       },
-      "EventMemberStartConditions": {
-        "type": "object",
-        "properties": {
-          "initialCollection": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          "increasedCollection": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          "countedCollection": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          "toolStates": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/EventToolState"
-            }
-          },
-          "tools": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "EventMemberStatus": {
         "enum": [
           0,
@@ -7214,56 +7799,16 @@
         "type": "integer",
         "format": "int32"
       },
-      "EventToolCounterState": {
-        "type": "object",
-        "properties": {
-          "initial": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "previous": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "current": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uncounted": {
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
-      "EventToolState": {
-        "type": "object",
-        "properties": {
-          "skyblockId": {
-            "type": "string"
-          },
-          "crop": {
-            "$ref": "#/components/schemas/Crop"
-          },
-          "firstSeen": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "lastSeen": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "counter": {
-            "$ref": "#/components/schemas/EventToolCounterState"
-          },
-          "cultivating": {
-            "$ref": "#/components/schemas/EventToolCounterState"
-          }
-        },
-        "additionalProperties": false
+      "EventType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "ExcludedTimespan": {
         "type": "object",
@@ -7812,6 +8357,13 @@
               "type": "string"
             },
             "nullable": true
+          },
+          "gems": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8038,6 +8590,19 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PlayerDataDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MedalEventData": {
+        "type": "object",
+        "properties": {
+          "medalWeights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         },
@@ -8485,6 +9050,21 @@
         },
         "additionalProperties": false
       },
+      "ProfileNamesDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "selected": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "PublicGuildDto": {
         "type": "object",
         "properties": {
@@ -8921,6 +9501,20 @@
         },
         "additionalProperties": false
       },
+      "WeightEventData": {
+        "type": "object",
+        "properties": {
+          "cropWeights": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "description": "The weights of each crop in the event"
+          }
+        },
+        "additionalProperties": false
+      },
       "WeightsDto": {
         "type": "object",
         "properties": {
@@ -8991,10 +9585,5 @@
         "bearerFormat": "JWT"
       }
     }
-  },
-  "security": [
-    {
-      "Bearer": [ ]
-    }
-  ]
+  }
 }
