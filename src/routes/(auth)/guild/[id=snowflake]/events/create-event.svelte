@@ -51,7 +51,7 @@
 				<Input name="endDate" type="datetime-local" />
 			</div>
 
-			<input type="hidden" name="type" bind:value={type}>
+			<input type="hidden" name="type" bind:value={type} />
 
 			<Tabs.Root bind:value={type} class="flex flex-col justify-center my-4 items-center">
 				<Tabs.List class="gap-2 self-center text-center">
@@ -60,25 +60,21 @@
 				</Tabs.List>
 				<Tabs.Content value={EventType.FarmingWeight}>
 					<div class="flex flex-col gap-2 items-center">
-						<p class="text-center">
-							Creating a new event for farming weight.
-						</p>
+						<p class="text-center">Creating a new event for farming weight.</p>
 						<!-- <div class="flex flex-col gap-1">
 							<div class="flex items-center gap-2">
 								<Checkbox name="cropWeights" bind:checked={sendUpdates} />
 								<Label for="enableUpdates">Send update messages</Label>
 							</div>
 						</div> -->
-	
+
 						<Button formaction="?/create" type="submit" class="mt-8">Create</Button>
 					</div>
 				</Tabs.Content>
 				<Tabs.Content value={EventType.Medals}>
 					<div class="flex flex-col gap-2 items-center">
-						<p class="text-center">
-							Creating a new event for medals.
-						</p>
-	
+						<p class="text-center">Creating a new event for medals.</p>
+
 						<Button formaction="?/create" type="submit" class="mt-8">Create</Button>
 					</div>
 				</Tabs.Content>

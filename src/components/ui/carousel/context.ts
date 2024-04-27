@@ -2,7 +2,7 @@ import type { EmblaCarouselSvelteType } from 'embla-carousel-svelte';
 import type emblaCarouselSvelte from 'embla-carousel-svelte';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { Writable, Readable } from 'svelte/store';
+import type { Readable, Writable } from 'svelte/store';
 
 export type CarouselAPI = NonNullable<NonNullable<EmblaCarouselSvelteType['$$_attributes']>['on:emblaInit']> extends (
 	evt: CustomEvent<infer CarouselAPI>
@@ -34,9 +34,12 @@ type EmblaContext = {
 	canScrollNext: Readable<boolean>;
 	canScrollPrev: Readable<boolean>;
 	handleKeyDown: (e: KeyboardEvent) => void;
+	options: Writable<CarouselOptions>;
+	plugins: Writable<CarouselPlugins>;
+	onInit: (e: CustomEvent<CarouselAPI>) => void;
 };
 
-export function setEmblaContex(config: EmblaContext): EmblaContext {
+export function setEmblaContext(config: EmblaContext): EmblaContext {
 	setContext(EMBLA_CAROUSEL_CONTEXT, config);
 	return config;
 }
@@ -45,5 +48,5 @@ export function getEmblaContext(name = 'This component') {
 	if (!hasContext(EMBLA_CAROUSEL_CONTEXT)) {
 		throw new Error(`${name} must be used within a <Carousel.Root> component`);
 	}
-	return getContext<ReturnType<typeof setEmblaContex>>(EMBLA_CAROUSEL_CONTEXT);
+	return getContext<ReturnType<typeof setEmblaContext>>(EMBLA_CAROUSEL_CONTEXT);
 }

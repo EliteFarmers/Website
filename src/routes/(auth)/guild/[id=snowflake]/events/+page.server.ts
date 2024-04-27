@@ -100,10 +100,8 @@ export const actions: Actions = {
 			endTime: endTime as unknown as number,
 			guildId: guildId,
 		};
-		
-		const method = (type === EventType.Medals) 
-			? CreateMedalEvent 
-			: CreateWeightEvent;
+
+		const method = type === EventType.Medals ? CreateMedalEvent : CreateWeightEvent;
 
 		const { response } = await method(token, body).catch((e) => {
 			console.log(e);

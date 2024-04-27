@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Pagination as PaginationPrimitive } from 'bits-ui';
-	import { Button } from '$comp/ui/button';
-	import { cn } from '$lib/utils';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import { Button } from '$comp/ui/button/index.js';
+	import { cn } from '$lib/utils.js';
 
 	type $$Props = PaginationPrimitive.NextButtonProps;
 	type $$Events = PaginationPrimitive.NextButtonEvents;
@@ -14,7 +14,7 @@
 <PaginationPrimitive.NextButton asChild let:builder>
 	<Button variant="ghost" class={cn('gap-1 pr-2.5', className)} builders={[builder]} on:click {...$$restProps}>
 		<slot>
-			<span class="sm:text-sm text-normal">Next</span>
+			<span>Next</span>
 			<ChevronRight class="h-4 w-4" />
 		</slot>
 	</Button>
