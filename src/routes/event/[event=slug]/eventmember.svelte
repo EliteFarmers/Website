@@ -3,10 +3,17 @@
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
+	import { EventType } from '$lib/utils';
 
+	export let event: components['schemas']['EventDetailsDto'];
 	export let member: components['schemas']['EventMemberDto'];
 	export let rank: number;
 	export let running: boolean;
+
+	const earnedMedals = () => {
+		const data = member.data as { earnedMedals?: Record<string, number> } | undefined;
+		return Object.entries(data?.earnedMedals ?? {}).sort((a, b) => b[1] - a[1]);
+	}
 </script>
 
 <Accordion.Trigger class="w-full">
@@ -60,17 +67,30 @@
 	</div>
 </Accordion.Trigger>
 <Accordion.Content>
-	<div class="flex flex-row justify-between items-center">
-		<div class="text-lg">
-			<p class="text-gray-500">Last Updated</p>
-			<p>
-				{member.lastUpdated
-					? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +
-					  ' ' +
-					  new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleTimeString()
-					: 'Never Updated!'}
-			</p>
+	<div class="flex flex-col md:flex-row gap-2 items-center w-full">
+		{#if event.type === +EventType.Medals}
+			<div class="flex flex-col w-full gap-1">
+				{#each earnedMedals() as [medal, count]}
+					<div class="flex flex-row justify-between">
+						<p>{medal}</p>
+						<p class="font-semibold">{count}</p>
+					</div>
+				{/each}
+			</div>
+		{/if}
+		<div class="flex flex-row justify-between items-center w-full">
+			<div class="text-lg">
+				<p class="text-gray-500">Last Updated</p>
+				<p>
+					{member.lastUpdated
+						? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +
+						  ' ' +
+						  new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleTimeString()
+						: 'Never Updated!'}
+				</p>
+			</div>
+			<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 		</div>
-		<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 	</div>
+	
 </Accordion.Content>

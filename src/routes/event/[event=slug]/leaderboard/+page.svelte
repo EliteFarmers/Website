@@ -15,6 +15,8 @@
 	$: guild = data.guild ?? {};
 	$: members = data.members ?? [];
 	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
+
+	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
 </script>
 
 <Head
@@ -34,7 +36,11 @@
 				<p class="mr-2">Join Discord</p>
 				<ExternalLink size={16} />
 			</Button>
-			<Button href="/event/{$page.params.event}/join" color="green" size="sm" class="flex-1">Join Event</Button>
+			{#if joinable}
+				<Button href="/event/{$page.params.event}/join" color="green" size="sm" class="flex-1">
+					Join Event
+				</Button>
+			{/if}
 			<Button href="/event/{$page.params.event}" color="alternative" size="sm" class="flex-1">
 				Back to Event Page
 			</Button>
@@ -57,7 +63,7 @@
 						{#each members as member, i}
 							{@const key = `${i + 1}`}
 							<Accordion.Item value={key} id={key} class="w-full">
-								<Eventmember {member} rank={i + 1} {running} />
+								<Eventmember {member} rank={i + 1} {running} {event} />
 							</Accordion.Item>
 						{/each}
 					</Accordion.Root>

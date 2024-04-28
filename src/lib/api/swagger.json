@@ -3264,7 +3264,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EventMemberDto"
+                    "$ref": "#/components/schemas/EventMemberDetailsDto"
                   }
                 }
               },
@@ -3272,7 +3272,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EventMemberDto"
+                    "$ref": "#/components/schemas/EventMemberDetailsDto"
                   }
                 }
               },
@@ -3280,7 +3280,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EventMemberDto"
+                    "$ref": "#/components/schemas/EventMemberDetailsDto"
                   }
                 }
               }
@@ -7198,6 +7198,12 @@
             "description": "Unix timestamp for the end time of the event in seconds",
             "format": "int64"
           },
+          "joinTime": {
+            "type": "integer",
+            "description": "Unix timestamp for the latest time a new member can join the event in seconds",
+            "format": "int64",
+            "nullable": true
+          },
           "dynamicStartTime": {
             "type": "boolean",
             "description": "Currently unused",
@@ -7283,6 +7289,12 @@
             "type": "integer",
             "description": "Unix timestamp for the end time of the event in seconds",
             "format": "int64"
+          },
+          "joinTime": {
+            "type": "integer",
+            "description": "Unix timestamp for the latest time a new member can join the event in seconds",
+            "format": "int64",
+            "nullable": true
           },
           "dynamicStartTime": {
             "type": "boolean",
@@ -7541,6 +7553,11 @@
             "format": "int64",
             "nullable": true
           },
+          "joinUntilTime": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
           "endTime": {
             "type": "integer",
             "format": "int64",
@@ -7660,61 +7677,81 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Event id as a string"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Name of the event"
           },
           "type": {
             "$ref": "#/components/schemas/EventType"
           },
           "description": {
             "type": "string",
+            "description": "Event description",
             "nullable": true
           },
           "rules": {
             "type": "string",
+            "description": "Event rules",
             "nullable": true
           },
           "prizeInfo": {
             "type": "string",
+            "description": "Event prize information",
             "nullable": true
           },
           "banner": {
             "type": "string",
+            "description": "Image URL for the event banner",
             "nullable": true
           },
           "thumbnail": {
             "type": "string",
+            "description": "Image URL for the event thumbnail",
             "nullable": true
           },
           "startTime": {
             "type": "string",
+            "description": "Start time of the event as a string in Unix seconds",
+            "nullable": true
+          },
+          "joinUntilTime": {
+            "type": "string",
+            "description": "Join time of the event as a string in Unix seconds",
             "nullable": true
           },
           "endTime": {
             "type": "string",
+            "description": "End time of the event as a string in Unix seconds",
             "nullable": true
           },
           "dynamicStartTime": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Currently unused"
           },
           "active": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Event status"
           },
           "requiredRole": {
             "type": "string",
+            "description": "Discord role id required to participate in the event",
             "nullable": true
           },
           "blockedRole": {
             "type": "string",
+            "description": "Discord role id blocked from participating in the event",
             "nullable": true
           },
           "guildId": {
             "type": "string",
+            "description": "Discord server id as a string",
             "nullable": true
           },
           "data": {
+            "description": "Data specific to the event",
             "nullable": true
           }
         },
@@ -7741,6 +7778,41 @@
           },
           "lastUpdated": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EventMemberDetailsDto": {
+        "type": "object",
+        "properties": {
+          "playerUuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileId": {
+            "type": "string",
+            "nullable": true
+          },
+          "playerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EventMemberStatus"
+          },
+          "score": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
             "nullable": true
           }
         },

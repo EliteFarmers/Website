@@ -1327,9 +1327,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": components["schemas"]["EventMemberDto"][];
-            "application/json": components["schemas"]["EventMemberDto"][];
-            "text/json": components["schemas"]["EventMemberDto"][];
+            "text/plain": components["schemas"]["EventMemberDetailsDto"][];
+            "application/json": components["schemas"]["EventMemberDetailsDto"][];
+            "text/json": components["schemas"]["EventMemberDetailsDto"][];
           };
         };
         /** @description Not Found */
@@ -2847,6 +2847,11 @@ export interface components {
        * @description Unix timestamp for the end time of the event in seconds
        */
       endTime: number;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the latest time a new member can join the event in seconds
+       */
+      joinTime?: number | null;
       /** @description Currently unused */
       dynamicStartTime?: boolean | null;
       /** @description A Discord role id that is required to participate in the event */
@@ -2881,6 +2886,11 @@ export interface components {
        * @description Unix timestamp for the end time of the event in seconds
        */
       endTime: number;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the latest time a new member can join the event in seconds
+       */
+      joinTime?: number | null;
       /** @description Currently unused */
       dynamicStartTime?: boolean | null;
       /** @description A Discord role id that is required to participate in the event */
@@ -2961,6 +2971,8 @@ export interface components {
       /** Format: int64 */
       startTime?: number | null;
       /** Format: int64 */
+      joinUntilTime?: number | null;
+      /** Format: int64 */
       endTime?: number | null;
       dynamicStartTime?: boolean | null;
       active?: boolean | null;
@@ -2998,21 +3010,38 @@ export interface components {
       createdAt?: string;
     };
     EventDetailsDto: {
+      /** @description Event id as a string */
       id?: string;
+      /** @description Name of the event */
       name?: string;
       type?: components["schemas"]["EventType"];
+      /** @description Event description */
       description?: string | null;
+      /** @description Event rules */
       rules?: string | null;
+      /** @description Event prize information */
       prizeInfo?: string | null;
+      /** @description Image URL for the event banner */
       banner?: string | null;
+      /** @description Image URL for the event thumbnail */
       thumbnail?: string | null;
+      /** @description Start time of the event as a string in Unix seconds */
       startTime?: string | null;
+      /** @description Join time of the event as a string in Unix seconds */
+      joinUntilTime?: string | null;
+      /** @description End time of the event as a string in Unix seconds */
       endTime?: string | null;
+      /** @description Currently unused */
       dynamicStartTime?: boolean;
+      /** @description Event status */
       active?: boolean;
+      /** @description Discord role id required to participate in the event */
       requiredRole?: string | null;
+      /** @description Discord role id blocked from participating in the event */
       blockedRole?: string | null;
+      /** @description Discord server id as a string */
       guildId?: string | null;
+      /** @description Data specific to the event */
       data?: unknown;
     };
     EventMemberBannedDto: {
@@ -3021,6 +3050,16 @@ export interface components {
       score?: string | null;
       notes?: string | null;
       lastUpdated?: string | null;
+    };
+    EventMemberDetailsDto: {
+      playerUuid?: string | null;
+      profileId?: string | null;
+      playerName?: string | null;
+      eventId?: string;
+      status?: components["schemas"]["EventMemberStatus"];
+      score?: string | null;
+      lastUpdated?: string | null;
+      data?: unknown;
     };
     EventMemberDto: {
       playerUuid?: string | null;

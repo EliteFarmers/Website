@@ -11,18 +11,21 @@
 	import Eventmember from './eventmember.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import EventType from '$comp/events/event-type.svelte';
+	import EventData from './event-data.svelte';
 
 	export let data: PageData;
 
 	$: ({ event = {}, members } = data);
 
-	$: banner =
+	$: banner = event.banner ??
 		'https://cdn.discordapp.com/splashes/1096051612373487687/dc2f5296bdb34b3adc580df6c50c56cf.png?size=1280';
 
 	$: time = Date.now();
 	$: start = +(event.startTime ?? 0) * 1000;
 	$: end = +(event.endTime ?? 0) * 1000;
 	$: running = start < time && end > time;
+	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
 
 	let memberLimit = 10;
 
@@ -43,7 +46,7 @@
 		: undefined}
 />
 
-<main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
+<main class="flex flex-col justify-center items-center gap-8 mb-16 mx-4" data-sveltekit-preload-data="tap">
 	<div
 		class="relative flex flex-col items-center gap-4 justify-center w-full h-96 bg-center bg-cover bg-no-repeat"
 		style="background-image: url('{banner}')"
@@ -53,7 +56,7 @@
 			<h1 class="text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>
-			<Button href="https://discord.gg/{data.guild.inviteCode}" variant="secondary">
+			<Button href="https://discord.gg/{data.guild.inviteCode}" variant="ghost">
 				<ExternalLink size={16} />
 			</Button>
 		</div>
@@ -75,8 +78,8 @@
 		</div>
 	</div>
 
-	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl w-full">
-		<section class="flex flex-1 flex-col gap-4 max-w-md bg-primary-foreground rounded-md p-8">
+	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl w-full items-center lg:items-start">
+		<section class="flex flex-1 flex-col justify-between gap-4 max-w-md bg-primary-foreground rounded-md p-8 basis-1">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-row gap-2 font-semibold items-center text-lg">
@@ -96,6 +99,7 @@
 						})}</span
 					>
 				</div>
+				<EventType type={event.type ?? 1} />
 				<p><Linebreaks text={event.description ?? ''} /></p>
 				{#if event.prizeInfo}
 					<p><strong>Prizes</strong></p>
@@ -107,17 +111,22 @@
 						<Linebreaks text={event.rules ?? ''} />
 					</p>
 				{/if}
+				<EventData {event} />
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
 				<div class="flex flex-row justify-center gap-2 mt-4">
 					<Button href="{$page.url.pathname}/join" variant="secondary">
 						<p class="mr-2">Join Discord Server</p>
 						<ExternalLink size={16} />
 					</Button>
-					<Button href="{$page.url.pathname}/join" color="green">Join Event</Button>
+					{#if joinable}
+						<Button href="{$page.url.pathname}/join" color="green">
+							Join Event
+						</Button>
+					{/if}
 				</div>
 			</div>
 		</section>
-		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8">
+		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8 basis-1 w-full">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				<h2 class="text-2xl">Members</h2>
 				<div class="flex flex-row gap-2 font-semibold items-center">
@@ -132,7 +141,7 @@
 					<Accordion.Root class="w-full text-black dark:text-white">
 						{#each members.slice(0, memberLimit) as member, i}
 							<Accordion.Item value={i.toString()}>
-								<Eventmember {member} rank={i + 1} {running} />
+								<Eventmember {member} rank={i + 1} {running} {event} />
 							</Accordion.Item>
 						{/each}
 					</Accordion.Root>
