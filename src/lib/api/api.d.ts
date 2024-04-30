@@ -2971,7 +2971,7 @@ export interface components {
       /** Format: int64 */
       startTime?: number | null;
       /** Format: int64 */
-      joinUntilTime?: number | null;
+      joinTime?: number | null;
       /** Format: int64 */
       endTime?: number | null;
       dynamicStartTime?: boolean | null;
