@@ -37,6 +37,7 @@ export const load = (async ({ locals, parent, params }) => {
 	return {
 		user,
 		account,
+		event,
 	};
 }) satisfies PageServerLoad;
 

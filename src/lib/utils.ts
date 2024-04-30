@@ -108,6 +108,6 @@ export function preprocessCropCharts(crops: components['schemas']['CropCollectio
 }
 
 export enum EventType {
-	FarmingWeight = "1",
-	Medals = "4",
+	FarmingWeight = '1',
+	Medals = '4',
 }

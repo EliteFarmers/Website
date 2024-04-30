@@ -18,7 +18,8 @@
 
 	$: ({ event = {}, members } = data);
 
-	$: banner = event.banner ??
+	$: banner =
+		event.banner ??
 		'https://cdn.discordapp.com/splashes/1096051612373487687/dc2f5296bdb34b3adc580df6c50c56cf.png?size=1280';
 
 	$: time = Date.now();
@@ -46,7 +47,7 @@
 		: undefined}
 />
 
-<main class="flex flex-col justify-center items-center gap-8 mb-16 mx-4" data-sveltekit-preload-data="tap">
+<main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
 	<div
 		class="relative flex flex-col items-center gap-4 justify-center w-full h-96 bg-center bg-cover bg-no-repeat"
 		style="background-image: url('{banner}')"
@@ -78,8 +79,10 @@
 		</div>
 	</div>
 
-	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl w-full items-center lg:items-start">
-		<section class="flex flex-1 flex-col justify-between gap-4 max-w-md bg-primary-foreground rounded-md p-8 basis-1">
+	<div class="flex flex-col lg:flex-row gap-8 max-w-6xl w-full items-center lg:items-start mx-4">
+		<section
+			class="flex flex-1 flex-col justify-between gap-4 max-w-md bg-primary-foreground rounded-md p-8 basis-1"
+		>
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-row gap-2 font-semibold items-center text-lg">
@@ -119,9 +122,7 @@
 						<ExternalLink size={16} />
 					</Button>
 					{#if joinable}
-						<Button href="{$page.url.pathname}/join" color="green">
-							Join Event
-						</Button>
+						<Button href="{$page.url.pathname}/join" color="green">Join Event</Button>
 					{/if}
 				</div>
 			</div>

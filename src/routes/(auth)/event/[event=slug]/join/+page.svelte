@@ -5,6 +5,7 @@
 	import type { ActionData, PageData } from './$types';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+	import { EventType } from '$lib/utils';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -41,25 +42,32 @@
 			{/each}
 
 			<h3 class="mt-2 text-lg">How is progress counted?</h3>
-			<p>
-				To prevent the use of minions to gain collection progress, the event will only count progress made
-				through the use of farming tools. <span class="text-red-500"
-					>You must have collections and inventory API access enabled at all times.</span
-				> If you do turn them off, you will be automatically removed from the event.
-			</p>
-			<p>
-				Collection gain is cross checked with your tool usage. If you gain collection progress without using a
-				tool, it will not count towards your progress. This also means a Daedalus Axe won't count either, as
-				there's no way to differentiate it from minions.
-			</p>
-			<p class="text-red-500">
-				Tools that do not have a built in counter require the Cultivating enchantment or your progress with that
-				tool will not be counted.
-			</p>
-			<p class="text-gray-500">
-				The only valid tools are the specific farming tools. Normal hoes and other beginner tools will not
-				count.
-			</p>
+			{#if data.event.type === +EventType.FarmingWeight}
+				<p>
+					To prevent the use of minions to gain collection progress, the event will only count progress made
+					through the use of farming tools. <span class="text-red-500"
+						>You must have collections and inventory API access enabled at all times.</span
+					> If you do turn them off, you will be automatically removed from the event.
+				</p>
+				<p>
+					Collection gain is cross checked with your tool usage. If you gain collection progress without using
+					a tool, it will not count towards your progress. This also means a Daedalus Axe won't count either,
+					as there's no way to differentiate it from minions.
+				</p>
+				<p class="text-red-500">
+					Tools that do not have a built in counter require the Cultivating enchantment or your progress with
+					that tool will not be counted.
+				</p>
+				<p class="text-gray-500">
+					The only valid tools are the specific farming tools. Normal hoes and other beginner tools will not
+					count.
+				</p>
+			{:else if data.event.type === +EventType.Medals}
+				<p>
+					It's simple, just earn Jacob Contest placements! Make sure to claim your contests in game for them
+					to count.
+				</p>
+			{/if}
 
 			<div class="flex gap-2 items-center mt-8">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[1]} />

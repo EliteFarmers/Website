@@ -46,9 +46,13 @@
 				<Label>Event Start Time</Label>
 				<Input name="startDate" type="datetime-local" />
 			</div>
-			<div class="space-y-2 mb-4">
+			<div class="space-y-2">
 				<Label>Event End Time</Label>
 				<Input name="endDate" type="datetime-local" />
+			</div>
+			<div class="space-y-2 mb-4">
+				<Label>Join Until Time</Label>
+				<Input name="joinDate" type="datetime-local" />
 			</div>
 
 			<input type="hidden" name="type" bind:value={type} />

@@ -13,7 +13,7 @@
 	const earnedMedals = () => {
 		const data = member.data as { earnedMedals?: Record<string, number> } | undefined;
 		return Object.entries(data?.earnedMedals ?? {}).sort((a, b) => b[1] - a[1]);
-	}
+	};
 </script>
 
 <Accordion.Trigger class="w-full">
@@ -67,19 +67,20 @@
 	</div>
 </Accordion.Trigger>
 <Accordion.Content>
-	<div class="flex flex-col md:flex-row gap-2 items-center w-full">
+	<div class="flex flex-col md:flex-row gap-4 items-center w-full">
 		{#if event.type === +EventType.Medals}
 			<div class="flex flex-col w-full gap-1">
 				{#each earnedMedals() as [medal, count]}
-					<div class="flex flex-row justify-between">
+					<div class="flex flex-row justify-center items-center gap-2">
 						<p>{medal}</p>
+						<div class="border-b-2 border-dotted border-primary/70 flex-grow h-2 mb-1 w-full" />
 						<p class="font-semibold">{count}</p>
 					</div>
 				{/each}
 			</div>
 		{/if}
 		<div class="flex flex-row justify-between items-center w-full">
-			<div class="text-lg">
+			<div>
 				<p class="text-gray-500">Last Updated</p>
 				<p>
 					{member.lastUpdated
@@ -92,5 +93,4 @@
 			<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 		</div>
 	</div>
-	
 </Accordion.Content>
