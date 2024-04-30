@@ -3,7 +3,7 @@
 	import { FormatMinecraftText } from '$lib/format';
 	import { buttonVariants } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
-	import { FileText } from 'lucide-svelte/icons';
+	import FileText from 'lucide-svelte/icons/file-text';
 	import Lore from './lore.svelte';
 
 	export let item: EliteItemDto;

@@ -7,11 +7,15 @@
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
-	import { ExternalLink, Trash2, ArrowUp, Settings } from 'lucide-svelte/icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import ArrowUp from 'lucide-svelte/icons/arrow-up';
+	import Settings from 'lucide-svelte/icons/settings';
 	import type { PageData, ActionData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import CreateEvent from './create-event.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -199,53 +203,7 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<Dialog.Root bind:open={clickOutsideModal}>
-	<Dialog.Content class="overflow-scroll max-h-[80%]">
-		<Dialog.Title>Create New Event</Dialog.Title>
-		<p>Events cannot be deleted after being created (right now), be sure that you want to do this.</p>
-		<form
-			method="post"
-			action="?/create"
-			class="flex flex-col gap-2"
-			use:enhance={() => {
-				return async ({ result, update }) => {
-					if (result) clickOutsideModal = false;
-					update();
-				};
-			}}
-		>
-			<div class="space-y-2">
-				<Label>Event Name</Label>
-				<Input name="title" placeholder="Farming Weight Challenge" maxlength={64} />
-			</div>
-			<div class="space-y-2">
-				<Label>Event Description</Label>
-				<Textarea name="description" placeholder="Farm as much as you can in 24 hours!" maxlength={1024} />
-			</div>
-			<div class="space-y-2">
-				<Label>Event Rules</Label>
-				<Textarea name="rules" placeholder="No cheating." maxlength={1024} />
-			</div>
-			<div class="space-y-2">
-				<Label>Event Prizes</Label>
-				<Textarea name="prizes" placeholder="First Place: $20 in Gems!" maxlength={1024} />
-			</div>
-			<div class="space-y-2 mt-4">
-				<Label>Event Start Time</Label>
-				<Input name="startDate" type="datetime-local" />
-			</div>
-			<div class="space-y-2 mb-4">
-				<Label>Event End Time</Label>
-				<Input name="endDate" type="datetime-local" />
-			</div>
-
-			<Button formaction="?/create" type="submit">Create</Button>
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
-			</p>
-		</form>
-	</Dialog.Content>
-</Dialog.Root>
+<CreateEvent bind:open={clickOutsideModal} />
 
 <Dialog.Root bind:open={clickOutsideModalEdit}>
 	<Dialog.Content class="overflow-scroll max-h-[80%]">
@@ -283,9 +241,13 @@
 				<Label>Event Start Time</Label>
 				<Input name="startDate" type="datetime-local" />
 			</div>
-			<div class="space-y-2 mb-4">
+			<div class="space-y-2">
 				<Label>Event End Time</Label>
 				<Input name="endDate" type="datetime-local" />
+			</div>
+			<div class="space-y-2 mb-4">
+				<Label>Join Until Time</Label>
+				<Input name="joinDate" type="datetime-local" />
 			</div>
 
 			<Button type="submit">Edit Event</Button>

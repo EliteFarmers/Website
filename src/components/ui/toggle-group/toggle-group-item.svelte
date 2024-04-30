@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { ToggleGroup as ToggleGroupPrimitive } from 'bits-ui';
-	import { cn } from '$lib/utils';
-	import { getToggleGroupCtx, type ToggleVariants } from '.';
-	import { toggleVariants } from '$comp/ui/toggle';
+	import { type ToggleVariants, getToggleGroupCtx } from './index.js';
+	import { cn } from '$lib/utils.js';
+	import { toggleVariants } from '$comp/ui/toggle/index.js';
 
 	type $$Props = ToggleGroupPrimitive.ItemProps & ToggleVariants;
 

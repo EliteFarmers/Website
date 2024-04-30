@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Menubar as MenubarPrimitive } from 'bits-ui';
-	import { cn, flyAndScale } from '$lib/utils';
+	import { cn, flyAndScale } from '$lib/utils.js';
 
 	type $$Props = MenubarPrimitive.SubContentProps;
 	type $$Events = MenubarPrimitive.SubContentEvents;
@@ -14,10 +14,7 @@
 <MenubarPrimitive.SubContent
 	{transition}
 	{transitionConfig}
-	class={cn(
-		'z-50 min-w-[9rem] rounded-md border bg-popover p-1 text-popover-foreground focus:outline-none',
-		className
-	)}
+	class={cn('z-50 min-w-max rounded-md border bg-popover p-1 text-popover-foreground focus:outline-none', className)}
 	{...$$restProps}
 	on:focusout
 	on:pointermove

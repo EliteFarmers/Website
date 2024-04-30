@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import EventType from '$comp/events/event-type.svelte';
 
 	export let event: components['schemas']['EventDetailsDto'];
 	export let guild: components['schemas']['GuildDetailsDto'] | undefined;
@@ -8,7 +9,7 @@
 
 <a
 	href={`/event/${event?.id}`}
-	class="relative flex flex-row justify-between flex-1 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full text-white bg-zinc-800"
+	class="relative flex flex-row justify-between flex-1 gap-8 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full bg-primary-foreground"
 	style={guild?.banner
 		? `background-image: url('https://cdn.discordapp.com/splashes/${guild?.id}/${guild?.banner}.png?size=1280')`
 		: ''}
@@ -20,7 +21,10 @@
 	{/if}
 	<div class="flex flex-row gap-4 z-10 items-center">
 		<Guildicon {guild} size={16} />
-		<h2 class="text-3xl font-semibold">{event.name}</h2>
+		<div class="flex flex-col gap-1 items-start">
+			<h2 class="text-3xl font-semibold">{event.name}</h2>
+			<EventType type={event.type ?? 1} />
+		</div>
 	</div>
 	<div class="flex flex-row gap-2 font-semibold items-center z-10 text-lg">
 		<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>

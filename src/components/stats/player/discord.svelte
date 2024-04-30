@@ -1,7 +1,8 @@
 <script lang="ts">
 	import * as Popover from '$ui/popover';
 	import DiscordIcon from './discord-icon.svelte';
-	import { CheckIcon, XCircle } from 'lucide-svelte/icons';
+	import Check from 'lucide-svelte/icons/check';
+	import CircleX from 'lucide-svelte/icons/circle-x';
 
 	export let username: string | null | undefined = 'Discord N/A';
 	export let linked: boolean;
@@ -32,9 +33,9 @@
 				</span>
 				{#if validName && username}
 					{#if linked}
-						<CheckIcon />
+						<Check />
 					{:else}
-						<XCircle size={16} />
+						<CircleX size={16} />
 					{/if}
 				{/if}
 			</div>

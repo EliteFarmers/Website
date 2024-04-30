@@ -518,11 +518,12 @@ export interface paths {
       };
     };
   };
-  "/Event/create": {
+  "/Event/Create": {
+    /** Create a Farming Weight Event */
     post: {
       requestBody?: {
         content: {
-          "application/json": components["schemas"]["EditEventDto"];
+          "application/json": components["schemas"]["CreateWeightEventDto"];
         };
       };
       responses: {
@@ -561,7 +562,52 @@ export interface paths {
       };
     };
   };
-  "/Event/{eventId}/edit": {
+  "/Event/Create/Medals": {
+    /** Create a Medal Collection Event */
+    post: {
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["CreateMedalEventDto"];
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Event/{eventId}/Edit": {
+    /** Edit an Event */
     post: {
       parameters: {
         path: {
@@ -602,6 +648,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/bans": {
+    /** Get banned members from an event */
     get: {
       parameters: {
         path: {
@@ -637,6 +684,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/bans/{playerUuid}": {
+    /** Ban a member from an event */
     post: {
       parameters: {
         path: {
@@ -678,6 +726,7 @@ export interface paths {
         };
       };
     };
+    /** Unban a member from an event */
     delete: {
       parameters: {
         path: {
@@ -1224,6 +1273,7 @@ export interface paths {
     };
   };
   "/Events": {
+    /** Get all upcoming events */
     get: {
       responses: {
         /** @description Success */
@@ -1238,6 +1288,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}": {
+    /** Get an event by ID */
     get: {
       parameters: {
         path: {
@@ -1265,6 +1316,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/members": {
+    /** Get members of an event */
     get: {
       parameters: {
         path: {
@@ -1275,9 +1327,9 @@ export interface paths {
         /** @description Success */
         200: {
           content: {
-            "text/plain": components["schemas"]["EventMemberDto"][];
-            "application/json": components["schemas"]["EventMemberDto"][];
-            "text/json": components["schemas"]["EventMemberDto"][];
+            "text/plain": components["schemas"]["EventMemberDetailsDto"][];
+            "application/json": components["schemas"]["EventMemberDetailsDto"][];
+            "text/json": components["schemas"]["EventMemberDetailsDto"][];
           };
         };
         /** @description Not Found */
@@ -1292,6 +1344,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/member/{playerUuid}": {
+    /** Get a member of an event */
     get: {
       parameters: {
         path: {
@@ -1328,6 +1381,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/join": {
+    /** Join an event */
     post: {
       parameters: {
         query?: {
@@ -1367,6 +1421,7 @@ export interface paths {
     };
   };
   "/Event/{eventId}/leave": {
+    /** Leave an event */
     post: {
       parameters: {
         path: {
@@ -1402,11 +1457,16 @@ export interface paths {
     };
   };
   "/Graph/{playerUuid}/{profileUuid}/crops": {
+    /** Crop Collections Over Time */
     get: {
       parameters: {
         query?: {
+          /** @description Amount of days after the "from" time to include */
           days?: number;
+          /** @description Unix timestamp in seconds for the start of the data to return */
           from?: number;
+          /** @description Data points returned per 24 hour period */
+          perDay?: number;
         };
         path: {
           playerUuid: string;
@@ -1414,7 +1474,7 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Success */
+        /** @description Returns the list of data points */
         200: {
           content: {
             "text/plain": components["schemas"]["CropCollectionsDataPointDto"][];
@@ -1442,11 +1502,15 @@ export interface paths {
     };
   };
   "/Graph/{playerUuid}/{profileUuid}/skills": {
+    /** Skill XP Over Time */
     get: {
       parameters: {
         query?: {
           days?: number;
+          /** @description Unix timestamp in seconds for the start of the data to return */
           from?: number;
+          /** @description Data points returned per 24 hour period */
+          perDay?: number;
         };
         path: {
           playerUuid: string;
@@ -1454,7 +1518,7 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Success */
+        /** @description Returns the list of data points */
         200: {
           content: {
             "text/plain": components["schemas"]["CropCollectionsDataPointDto"][];
@@ -1482,6 +1546,7 @@ export interface paths {
     };
   };
   "/Graph/Admin/{playerUuid}/{profileUuid}/crops": {
+    /** Admin: Crop Collections Over Time */
     get: {
       parameters: {
         query?: {
@@ -1530,6 +1595,7 @@ export interface paths {
     };
   };
   "/Graph/Admin/{playerUuid}/{profileUuid}/skills": {
+    /** Admin: Skill XP Over Time */
     get: {
       parameters: {
         query?: {
@@ -2066,6 +2132,7 @@ export interface paths {
     };
   };
   "/Profile/{uuid}/Selected": {
+    /** Selected Profile Member */
     get: {
       parameters: {
         path: {
@@ -2101,6 +2168,7 @@ export interface paths {
     };
   };
   "/Profile/{playerUuid}/{profileUuid}": {
+    /** Profile Member */
     get: {
       parameters: {
         path: {
@@ -2129,6 +2197,7 @@ export interface paths {
     };
   };
   "/Profile/{profileUuid}": {
+    /** Get Profile Details */
     get: {
       parameters: {
         path: {
@@ -2156,6 +2225,7 @@ export interface paths {
     };
   };
   "/Profiles/{playerUuid}": {
+    /** Get List of Profile Details */
     get: {
       parameters: {
         path: {
@@ -2177,6 +2247,26 @@ export interface paths {
             "text/plain": string;
             "application/json": string;
             "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/Profiles/{playerUuidOrIgn}/Names": {
+    /** Get List of Profile Names */
+    get: {
+      parameters: {
+        path: {
+          playerUuidOrIgn: string;
+        };
+      };
+      responses: {
+        /** @description Success */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["ProfileNamesDto"][];
+            "application/json": components["schemas"]["ProfileNamesDto"][];
+            "text/json": components["schemas"]["ProfileNamesDto"][];
           };
         };
       };
@@ -2731,11 +2821,84 @@ export interface components {
       requirements?: string;
       tieToAccount?: boolean;
     };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    Crop: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+    CreateMedalEventDto: {
+      /** @description The name of the event */
+      name: string;
+      type?: components["schemas"]["EventType"];
+      /** @description The Discord server id as a string for the event */
+      guildId: string;
+      /** @description An optional description for the event */
+      description?: string | null;
+      /** @description An optional set of rules for the event */
+      rules?: string | null;
+      /** @description An optional description of prizes for the event */
+      prizeInfo?: string | null;
+      /** @description An image URL for the event banner */
+      banner?: string | null;
+      /** @description An image URL for the event thumbnail */
+      thumbnail?: string | null;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the start time of the event in seconds
+       */
+      startTime: number;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the end time of the event in seconds
+       */
+      endTime: number;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the latest time a new member can join the event in seconds
+       */
+      joinTime?: number | null;
+      /** @description Currently unused */
+      dynamicStartTime?: boolean | null;
+      /** @description A Discord role id that is required to participate in the event */
+      requiredRole?: string | null;
+      /** @description A Discord role id that is blocked from participating in the event */
+      blockedRole?: string | null;
+      data?: components["schemas"]["MedalEventData"];
+    };
+    CreateWeightEventDto: {
+      /** @description The name of the event */
+      name: string;
+      type?: components["schemas"]["EventType"];
+      /** @description The Discord server id as a string for the event */
+      guildId: string;
+      /** @description An optional description for the event */
+      description?: string | null;
+      /** @description An optional set of rules for the event */
+      rules?: string | null;
+      /** @description An optional description of prizes for the event */
+      prizeInfo?: string | null;
+      /** @description An image URL for the event banner */
+      banner?: string | null;
+      /** @description An image URL for the event thumbnail */
+      thumbnail?: string | null;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the start time of the event in seconds
+       */
+      startTime: number;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the end time of the event in seconds
+       */
+      endTime: number;
+      /**
+       * Format: int64
+       * @description Unix timestamp for the latest time a new member can join the event in seconds
+       */
+      joinTime?: number | null;
+      /** @description Currently unused */
+      dynamicStartTime?: boolean | null;
+      /** @description A Discord role id that is required to participate in the event */
+      requiredRole?: string | null;
+      /** @description A Discord role id that is blocked from participating in the event */
+      blockedRole?: string | null;
+      data?: components["schemas"]["WeightEventData"];
+    };
     CropCollectionsDataPointDto: {
       /** Format: int64 */
       timestamp?: number;
@@ -2799,6 +2962,7 @@ export interface components {
     };
     EditEventDto: {
       name?: string | null;
+      type?: string | null;
       description?: string | null;
       rules?: string | null;
       prizeInfo?: string | null;
@@ -2806,6 +2970,8 @@ export interface components {
       thumbnail?: string | null;
       /** Format: int64 */
       startTime?: number | null;
+      /** Format: int64 */
+      joinTime?: number | null;
       /** Format: int64 */
       endTime?: number | null;
       dynamicStartTime?: boolean | null;
@@ -2844,27 +3010,56 @@ export interface components {
       createdAt?: string;
     };
     EventDetailsDto: {
+      /** @description Event id as a string */
       id?: string;
+      /** @description Name of the event */
       name?: string;
+      type?: components["schemas"]["EventType"];
+      /** @description Event description */
       description?: string | null;
+      /** @description Event rules */
       rules?: string | null;
+      /** @description Event prize information */
       prizeInfo?: string | null;
+      /** @description Image URL for the event banner */
       banner?: string | null;
+      /** @description Image URL for the event thumbnail */
       thumbnail?: string | null;
+      /** @description Start time of the event as a string in Unix seconds */
       startTime?: string | null;
+      /** @description Join time of the event as a string in Unix seconds */
+      joinUntilTime?: string | null;
+      /** @description End time of the event as a string in Unix seconds */
       endTime?: string | null;
+      /** @description Currently unused */
       dynamicStartTime?: boolean;
+      /** @description Event status */
       active?: boolean;
+      /** @description Discord role id required to participate in the event */
       requiredRole?: string | null;
+      /** @description Discord role id blocked from participating in the event */
       blockedRole?: string | null;
+      /** @description Discord server id as a string */
       guildId?: string | null;
+      /** @description Data specific to the event */
+      data?: unknown;
     };
     EventMemberBannedDto: {
       playerUuid?: string | null;
       playerName?: string | null;
-      amountGained?: string | null;
+      score?: string | null;
       notes?: string | null;
       lastUpdated?: string | null;
+    };
+    EventMemberDetailsDto: {
+      playerUuid?: string | null;
+      profileId?: string | null;
+      playerName?: string | null;
+      eventId?: string;
+      status?: components["schemas"]["EventMemberStatus"];
+      score?: string | null;
+      lastUpdated?: string | null;
+      data?: unknown;
     };
     EventMemberDto: {
       playerUuid?: string | null;
@@ -2872,55 +3067,22 @@ export interface components {
       profileId?: string | null;
       eventId?: string;
       status?: components["schemas"]["EventMemberStatus"];
-      amountGained?: string | null;
-      startConditions?: components["schemas"]["EventMemberStartConditions"];
+      score?: string | null;
+      data?: unknown;
       lastUpdated?: string | null;
       disqualified?: boolean;
       notes?: string | null;
-    };
-    EventMemberStartConditions: {
-      initialCollection?: {
-        [key: string]: number;
-      };
-      increasedCollection?: {
-        [key: string]: number;
-      };
-      countedCollection?: {
-        [key: string]: number;
-      };
-      toolStates?: {
-        [key: string]: components["schemas"]["EventToolState"];
-      };
-      tools?: {
-        [key: string]: number;
-      };
     };
     /**
      * Format: int32
      * @enum {integer}
      */
     EventMemberStatus: 0 | 1 | 2 | 3;
-    EventToolCounterState: {
-      /** Format: int64 */
-      initial?: number;
-      /** Format: int64 */
-      previous?: number;
-      /** Format: int64 */
-      current?: number;
-      /** Format: int64 */
-      uncounted?: number;
-    };
-    EventToolState: {
-      skyblockId?: string;
-      crop?: components["schemas"]["Crop"];
-      /** Format: int64 */
-      firstSeen?: number;
-      /** Format: int64 */
-      lastSeen?: number;
-      isActive?: boolean;
-      counter?: components["schemas"]["EventToolCounterState"];
-      cultivating?: components["schemas"]["EventToolCounterState"];
-    };
+    /**
+     * Format: int32
+     * @enum {integer}
+     */
+    EventType: 0 | 1 | 2 | 3 | 4;
     ExcludedTimespan: {
       /** Format: int64 */
       start?: number;
@@ -3091,6 +3253,9 @@ export interface components {
       attributes?: {
         [key: string]: string;
       } | null;
+      gems?: {
+        [key: string]: string;
+      } | null;
     };
     JacobContestDto: {
       crop?: string;
@@ -3174,6 +3339,11 @@ export interface components {
     LinkedAccountsDto: {
       selectedUuid?: string | null;
       players?: components["schemas"]["PlayerDataDto"][];
+    };
+    MedalEventData: {
+      medalWeights?: {
+        [key: string]: number;
+      };
     };
     MedalInventoryDto: {
       /** Format: int32 */
@@ -3329,6 +3499,11 @@ export interface components {
       /** Format: int64 */
       lastUpdated?: number;
     };
+    ProfileNamesDto: {
+      id?: string;
+      name?: string;
+      selected?: boolean;
+    };
     PublicGuildDto: {
       id?: string;
       name?: string;
@@ -3475,6 +3650,12 @@ export interface components {
     VerifiedRoleFeature: {
       enabled?: boolean;
       autoRoles?: components["schemas"]["AutoRoles"][];
+    };
+    WeightEventData: {
+      /** @description The weights of each crop in the event */
+      cropWeights?: {
+        [key: string]: number;
+      };
     };
     WeightsDto: {
       crops?: {

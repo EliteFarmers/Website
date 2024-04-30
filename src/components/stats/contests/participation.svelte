@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
-	import { AlertCircle } from 'lucide-svelte/icons';
+	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>
@@ -25,7 +25,7 @@
 			{#if entry.removed}
 				<Popover.Mobile>
 					<div slot="trigger">
-						<AlertCircle class="text-destructive" />
+						<CircleAlert class="text-destructive" />
 					</div>
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>

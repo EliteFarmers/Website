@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from 'bits-ui';
-	import * as Calendar from '.';
-	import { cn } from '$lib/utils';
+	import * as Calendar from './index.js';
+	import { cn } from '$lib/utils.js';
 
 	type $$Props = CalendarPrimitive.Props;
 
@@ -44,7 +44,7 @@
 				</Calendar.GridHead>
 				<Calendar.GridBody>
 					{#each month.weeks as weekDates}
-						<Calendar.GridRow class="w-full mt-2">
+						<Calendar.GridRow class="mt-2 w-full">
 							{#each weekDates as date}
 								<Calendar.Cell {date}>
 									<Calendar.Day {date} month={month.value} />

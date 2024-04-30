@@ -1,15 +1,16 @@
 import { error, fail, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CanManageGuild } from '$lib/utils';
+import { CanManageGuild, EventType } from '$lib/utils';
 import {
 	GetGuild,
 	GetGuildEvents,
-	CreateEvent,
+	CreateWeightEvent,
 	EditEvent,
 	BanEventMember,
 	UnbanEventMember,
 	GetEventMembers,
 	GetEventBans,
+	CreateMedalEvent,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
@@ -51,7 +52,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	}
 
 	return {
-		...guild.features.eventSettings,
+		...(guild.features.eventSettings ?? {}),
 		events: details,
 	};
 };
@@ -70,13 +71,16 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 
+		const type = data.get('type') as EventType;
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
 		const rules = data.get('rules') as string;
 		const prizes = data.get('prizes') as string;
 		const startDate = data.get('startDate') as string;
 		const endDate = data.get('endDate') as string;
+		const joinDate = data.get('joinDate') as string;
 
+		if (!type) throw error(400, 'Missing required field: type');
 		if (!title) throw error(400, 'Missing required field: title');
 		if (!description) throw error(400, 'Missing required field: description');
 		if (!rules) throw error(400, 'Missing required field: rules');
@@ -84,6 +88,7 @@ export const actions: Actions = {
 
 		const startTime = startDate ? (new Date(startDate + '+00:00').getTime() / 1000).toString() : undefined;
 		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
+		const joinUntilTime = joinDate ? (new Date(joinDate + '+00:00').getTime() / 1000).toString() : undefined;
 
 		if (!startTime) throw error(400, 'Missing required field: startDate');
 		if (!endTime) throw error(400, 'Missing required field: endDate');
@@ -95,10 +100,13 @@ export const actions: Actions = {
 			prizeInfo: prizes,
 			startTime: startTime as unknown as number, // These are parsed into numbers in the API
 			endTime: endTime as unknown as number,
+			joinTime: joinUntilTime as unknown as number,
 			guildId: guildId,
 		};
 
-		const { response } = await CreateEvent(token, body).catch((e) => {
+		const method = type === EventType.Medals ? CreateMedalEvent : CreateWeightEvent;
+
+		const { response } = await method(token, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -133,9 +141,11 @@ export const actions: Actions = {
 		const prizes = (data.get('prizes') as string) || undefined;
 		const startDate = (data.get('startDate') as string) || undefined;
 		const endDate = (data.get('endDate') as string) || undefined;
+		const joinDate = (data.get('joinDate') as string) || undefined;
 
 		const startTime = startDate ? (new Date(startDate + '+00:00').getTime() / 1000).toString() : undefined;
 		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
+		const joinUntilTime = joinDate ? (new Date(joinDate + '+00:00').getTime() / 1000).toString() : undefined;
 
 		const body: components['schemas']['EditEventDto'] = {
 			name: title,
@@ -144,6 +154,7 @@ export const actions: Actions = {
 			prizeInfo: prizes,
 			startTime: startTime as unknown as number, // These are parsed into numbers in the API
 			endTime: endTime as unknown as number,
+			joinTime: joinUntilTime as unknown as number,
 			guildId: guildId,
 		};
 

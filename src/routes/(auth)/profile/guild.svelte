@@ -2,7 +2,8 @@
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
-	import { ExternalLink, Settings } from 'lucide-svelte/icons';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import Settings from 'lucide-svelte/icons/settings';
 
 	export let guild: components['schemas']['UserGuildDto'];
 	export let link = false;
