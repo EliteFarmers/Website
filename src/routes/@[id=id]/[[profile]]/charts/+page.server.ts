@@ -1,10 +1,22 @@
 import { GetCropCollectionPoints } from '$lib/api/elite';
-import { fail } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { preprocessCropCharts } from '$lib/utils';
 
 export const load = (async ({ parent }) => {
-	return await parent();
+	const { account, profile } = await parent();
+
+	if (!account.id || !account.name || !profile.profileId) {
+		error(404, 'Player not found');
+	}
+
+	const { data: crops } = await GetCropCollectionPoints(account.id, profile.profileId).catch(() => ({
+		data: undefined,
+	}));
+
+	return {
+		crops: preprocessCropCharts(crops ?? []),
+	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

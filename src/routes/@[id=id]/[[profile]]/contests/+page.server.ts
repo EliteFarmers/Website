@@ -1,14 +1,9 @@
 import type { PageServerLoad } from './$types';
-import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 import type { components } from '$lib/api/api';
 import { getSkyblockDate } from '$lib/format';
 
-export const load = (async ({ parent, setHeaders }) => {
+export const load = (async ({ parent }) => {
 	const { member } = await parent();
-
-	setHeaders({
-		'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
-	});
 
 	const years = {} as Partial<Record<number, components['schemas']['ContestParticipationDto'][]>>;
 
