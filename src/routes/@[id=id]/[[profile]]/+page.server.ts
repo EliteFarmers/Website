@@ -1,18 +1,11 @@
 import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
-import { hasPermission, PermissionFlags } from '$lib/auth';
 import { CROP_TO_PEST } from '$lib/constants/pests';
 import { Crop, getCropFromName } from 'farming-weight';
 
-export const load: PageServerLoad = async ({ parent, setHeaders, locals }) => {
+export const load: PageServerLoad = async ({ parent }) => {
 	const { account, profile, member } = await parent();
-
-	let authorized = false;
-	if (locals.discord_access_token && hasPermission(locals.user, PermissionFlags.ViewGraphs)) {
-		authorized = true;
-	}
 
 	if (!account.id || !account.name || !profile.profileId) {
 		throw error(404, 'Player not found');
@@ -48,19 +41,8 @@ export const load: PageServerLoad = async ({ parent, setHeaders, locals }) => {
 		collection.uncounted = member.farmingWeight?.uncountedCrops?.[collection.name] ?? 0;
 	}
 
-	if (!authorized) {
-		setHeaders({
-			'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
-		});
-	} else {
-		setHeaders({
-			'Cache-Control': 'no-store',
-		});
-	}
-
 	return {
 		collections,
-		authorized,
 	};
 };
 

@@ -1,10 +1,10 @@
-import { GetCropCollectionPoints, GetPlayerRanks } from '$lib/api/elite';
+import { GetPlayerRanks } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { PermissionFlags, hasPermission } from '$lib/auth';
-import { preprocessCropCharts } from '$lib/utils';
+import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
-export const load = (async ({ parent, locals }) => {
+export const load = (async ({ parent, locals, setHeaders }) => {
 	const { account, profile } = await parent();
 
 	let authorized = false;
@@ -17,13 +17,19 @@ export const load = (async ({ parent, locals }) => {
 	}
 
 	const { data: ranks } = await GetPlayerRanks(account.id, profile.profileId);
-	const { data: crops } = await GetCropCollectionPoints(account.id, profile.profileId).catch(() => ({
-		data: undefined,
-	}));
+
+	if (!authorized) {
+		setHeaders({
+			'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
+		});
+	} else {
+		setHeaders({
+			'Cache-Control': 'no-store',
+		});
+	}
 
 	return {
 		ranks,
 		authorized,
-		crops: preprocessCropCharts(crops ?? []),
 	};
 }) satisfies LayoutServerLoad;
