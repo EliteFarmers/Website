@@ -9,6 +9,7 @@
 		LotusGear,
 		FarmingPets,
 		type PlayerOptions,
+		ArmorSet,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
@@ -43,6 +44,7 @@
 
 	$: tools = FarmingTool.fromArray(data.member?.farmingWeight?.inventory?.tools ?? []);
 	$: armor = FarmingArmor.fromArray(data.member?.farmingWeight?.inventory?.armor ?? []);
+	$: armorSet = new ArmorSet(armor);
 	$: equipment = LotusGear.fromArray(data.member?.farmingWeight?.inventory?.equipment ?? []);
 	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
 
@@ -62,7 +64,7 @@
 
 	$: options = {
 		tools: tools,
-		armor: armor,
+		armor: armorSet,
 		equipment: equipment,
 		accessories: data.member?.farmingWeight?.inventory?.accessories ?? [],
 		pets: pets,
@@ -267,7 +269,7 @@
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				<Armorselect {options} />
+				<Armorselect {player} />
 				{#if $player.tools.length === 0}
 					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
 				{/if}

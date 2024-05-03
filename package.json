@@ -63,7 +63,7 @@
 		"d3-scale": "^4.0.2",
 		"d3-time-format": "^4.1.0",
 		"embla-carousel-svelte": "8.0.0-rc19",
-		"farming-weight": "^0.3.10",
+		"farming-weight": "^0.3.11",
 		"formsnap": "^0.4.4",
 		"layercake": "^8.1.2",
 		"layerchart": "^0.34.0",
