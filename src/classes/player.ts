@@ -39,7 +39,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	strength?: number;
 
 	tools: EliteItemDto[] | FarmingTool[];
-	armor: EliteItemDto[] | FarmingArmor[];
+	armor: EliteItemDto[] | FarmingArmor[] | ArmorSet;
 	equipment: EliteItemDto[] | LotusGear[];
 	accessories: EliteItemDto[] | FarmingAccessory[];
 	pets: FarmingPetType[] | FarmingPet[];
@@ -94,14 +94,20 @@ export class FarmingPlayer {
 
 		this.selectedPet = this.options.selectedPet;
 
-		if (options.armor[0] instanceof FarmingArmor) {
+		if (options.armor instanceof ArmorSet) {
+			this.armorSet = options.armor;
+			this.armor = this.armorSet.pieces;
+			for (const a of this.armor) a.setOptions(options);
+			this.armorSet.getFortuneBreakdown(true);
+		} else if (options.armor[0] instanceof FarmingArmor) {
 			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.fortune - a.fortune);
 			for (const a of this.armor) a.setOptions(options);
+			this.armorSet = new ArmorSet(this.armor);
 		} else {
 			this.armor = FarmingArmor.fromArray(options.armor as EliteItemDto[], options);
+			this.armorSet = new ArmorSet(this.armor);
 		}
 
-		this.armorSet = new ArmorSet(this.armor);
 
 		if (options.equipment[0] instanceof LotusGear) {
 			this.equipment = (options.equipment as LotusGear[]).sort((a, b) => b.fortune - a.fortune);

@@ -18,19 +18,64 @@ export interface ActiveArmorSetBonus {
 }
 
 export class ArmorSet {
-	public declare readonly helmet?: FarmingArmor;
-	public declare readonly chestplate?: FarmingArmor;
-	public declare readonly leggings?: FarmingArmor;
-	public declare readonly boots?: FarmingArmor;
+	public declare helmet?: FarmingArmor;
+	public declare chestplate?: FarmingArmor;
+	public declare leggings?: FarmingArmor;
+	public declare boots?: FarmingArmor;
 
+	public get armor(): (FarmingArmor | null)[] {
+		return [this.helmet ?? null, this.chestplate ?? null, this.leggings ?? null, this.boots ?? null];
+	}
+
+	public declare pieces: FarmingArmor[];
 	public declare fortune: number;
 	public declare setBonuses: ActiveArmorSetBonus[];
 
 	constructor(armor: FarmingArmor[]) {
+		armor.sort((a, b) => b.potential - a.potential);
+		this.pieces = armor;
+
 		this.helmet = armor.find((a) => a.slot === GearSlot.Helmet);
 		this.chestplate = armor.find((a) => a.slot === GearSlot.Chestplate);
 		this.leggings = armor.find((a) => a.slot === GearSlot.Leggings);
 		this.boots = armor.find((a) => a.slot === GearSlot.Boots);
+
+		this.recalculateFamilies();
+	}
+
+	getPiece(slot: GearSlot): FarmingArmor | undefined {
+		switch (slot) {
+			case GearSlot.Helmet:
+				return this.helmet;
+			case GearSlot.Chestplate:
+				return this.chestplate;
+			case GearSlot.Leggings:
+				return this.leggings;
+			case GearSlot.Boots:
+				return this.boots;
+			default:
+				return undefined;
+		}
+	}
+
+	setPiece(armor: FarmingArmor) {
+		switch (armor.slot) {
+			case GearSlot.Helmet:
+				this.helmet = armor;
+				break;
+			case GearSlot.Chestplate:
+				this.chestplate = armor;
+				break;
+			case GearSlot.Leggings:
+				this.leggings = armor;
+				break;
+			case GearSlot.Boots:
+				this.boots = armor;
+				break;
+			default:
+				return;
+		}
+
 		this.recalculateFamilies();
 	}
 
@@ -62,7 +107,11 @@ export class ArmorSet {
 		this.getFortuneBreakdown();
 	}
 
-	getFortuneBreakdown() {
+	getFortuneBreakdown(reloadFamilies = false) {
+		if (reloadFamilies) {
+			this.recalculateFamilies();
+		}
+
 		let sum = 0;
 		const breakdown: Record<string, number> = {};
 
@@ -106,10 +155,6 @@ export class ArmorSet {
 
 		return calculateAverageSpecialCrops(blocksBroken, crop, count);
 	}
-
-	public get armor(): (FarmingArmor | null)[] {
-		return [this.helmet ?? null, this.chestplate ?? null, this.leggings ?? null, this.boots ?? null];
-	}
 }
 
 export class FarmingArmor {
@@ -124,6 +169,13 @@ export class FarmingArmor {
 	public declare readonly reforgeStats: ReforgeTier | undefined;
 	public declare readonly recombobulated: boolean;
 
+	public get potential() {
+		if (!this.armor.family) {
+			return this.fortune;
+		}
+		// Add the set bonus potential to the fortune
+		return this.fortune + (ARMOR_SET_BONUS[this.armor.family]?.piecePotential?.[Stat.FarmingFortune] ?? 0);
+	}
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 

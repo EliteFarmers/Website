@@ -11,7 +11,7 @@ export interface EliteItemDto {
 	attributes?: {
 		[key: string]: string | null;
 	} | null;
-	gems?: Record<string, GemRarity> | null;
+	gems?: Record<string, string> | null;
 }
 
 export enum GemRarity {

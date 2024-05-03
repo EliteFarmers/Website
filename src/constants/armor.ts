@@ -424,6 +424,7 @@ export type ArmorSetBonusStats = Partial<Record<number, Partial<Record<Stat, num
 
 export interface ArmorSetBonus {
 	name: string;
+	piecePotential?: Partial<Record<Stat, number>>;
 	stats: ArmorSetBonusStats;
 	special?: SpecialCrop[];
 }
@@ -439,6 +440,9 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 	},
 	MELON: {
 		name: 'Cropier Crops',
+		piecePotential: {
+			[Stat.FarmingFortune]: 10,
+		},
 		stats: {
 			2: {
 				[Stat.FarmingFortune]: 10,
@@ -454,6 +458,9 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 	},
 	CROPIE: {
 		name: 'Squashbuckle',
+		piecePotential: {
+			[Stat.FarmingFortune]: 15,
+		},
 		stats: {
 			2: {
 				[Stat.FarmingFortune]: 15,
@@ -469,6 +476,9 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 	},
 	SQUASH: {
 		name: 'Mento Fermento',
+		piecePotential: {
+			[Stat.FarmingFortune]: 20,
+		},
 		stats: {
 			2: {
 				[Stat.FarmingFortune]: 20,
@@ -484,6 +494,9 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 	},
 	FERMENTO: {
 		name: 'Feast',
+		piecePotential: {
+			[Stat.FarmingFortune]: 25,
+		},
 		stats: {
 			2: {
 				[Stat.FarmingFortune]: 25,

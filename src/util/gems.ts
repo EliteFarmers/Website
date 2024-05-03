@@ -1,4 +1,4 @@
-import type { EliteItemDto } from "../classes/item";
+import type { EliteItemDto, GemRarity } from "../classes/item";
 import { PERIDOT } from "../constants/gems";
 import { Rarity } from "../constants/reforges";
 
@@ -11,5 +11,5 @@ export function getPeridotFortune(rarity: Rarity, item: EliteItemDto) {
 
 	return Object.entries(gems)
 		.filter(([ gem ]) => gem.startsWith("PERIDOT"))
-		.reduce((acc, gem) => acc + peridot[gem[1]], 0);
+		.reduce((acc, gem) => acc + peridot[gem[1] as GemRarity], 0);
 }
