@@ -9,15 +9,32 @@ export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	},
 });
 
+export const GetUserSession = async (accessToken: string) =>
+	await GET('/auth/me', {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const LoginUser = async (body: components['schemas']['DiscordLoginDto']) =>
+	await POST('/auth/login', {
+		body: body,
+	});
+
+export const RefreshUserSession = async (body: components['schemas']['AuthResponseDto']) =>
+	await POST('/auth/refresh', {
+		body: body,
+	});
+
 export const GetAuthorizedAccount = async (accessToken: string) =>
-	await GET('/Account', {
+	await GET('/account', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
 	});
 
 export const GetAccount = async (playerUuidOrIgn: string) =>
-	await GET('/Account/{playerUuidOrIgn}', {
+	await GET('/account/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -26,7 +43,7 @@ export const GetAccount = async (playerUuidOrIgn: string) =>
 	});
 
 export const GetAccountByDiscordId = async (discordId: number) =>
-	await GET('/Account/{discordId}', {
+	await GET('/account/{discordId}', {
 		params: {
 			path: {
 				discordId,
@@ -35,7 +52,7 @@ export const GetAccountByDiscordId = async (discordId: number) =>
 	});
 
 export const GetPlayer = async (playerUuidOrIgn: string) =>
-	await GET('/Player/{playerUuidOrIgn}', {
+	await GET('/player/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -44,7 +61,7 @@ export const GetPlayer = async (playerUuidOrIgn: string) =>
 	});
 
 export const GetPlayerByDiscordId = async (id: string) =>
-	await GET('/Player/{discordId}', {
+	await GET('/player/{discordId}', {
 		params: {
 			path: {
 				discordId: id as unknown as number,
@@ -53,7 +70,7 @@ export const GetPlayerByDiscordId = async (id: string) =>
 	});
 
 export const GetProfiles = async (playerUuid: string) =>
-	await GET('/Profiles/{playerUuid}', {
+	await GET('/profiles/{playerUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -62,7 +79,7 @@ export const GetProfiles = async (playerUuid: string) =>
 	});
 
 export const GetProfile = async (profileUuid: string) =>
-	await GET('/Profile/{profileUuid}', {
+	await GET('/profile/{profileUuid}', {
 		params: {
 			path: {
 				profileUuid,
@@ -71,7 +88,7 @@ export const GetProfile = async (profileUuid: string) =>
 	});
 
 export const GetProfileMember = async (playerUuid: string, profileUuid: string) =>
-	await GET('/Profile/{playerUuid}/{profileUuid}', {
+	await GET('/profile/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -81,7 +98,7 @@ export const GetProfileMember = async (playerUuid: string, profileUuid: string) 
 	});
 
 export const GetSelectedProfileMember = async (playerUuid: string) =>
-	await GET('/Profile/{uuid}/Selected', {
+	await GET('/profile/{uuid}/selected', {
 		params: {
 			path: {
 				uuid: playerUuid,
@@ -90,7 +107,7 @@ export const GetSelectedProfileMember = async (playerUuid: string) =>
 	});
 
 export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
-	await GET('/Leaderboard/ranks/{playerUuid}/{profileUuid}', {
+	await GET('/leaderboard/ranks/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -100,7 +117,7 @@ export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
 	});
 
 export const GetPlayerContests = async (playerUuid: string, profileUuid: string) =>
-	await GET('/Contests/{playerUuid}/{profileUuid}', {
+	await GET('/contests/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -110,7 +127,7 @@ export const GetPlayerContests = async (playerUuid: string, profileUuid: string)
 	});
 
 export const GetContests = async (timestamp: number) =>
-	await GET('/Contests/{timestamp}', {
+	await GET('/contests/{timestamp}', {
 		params: {
 			path: {
 				timestamp,
@@ -119,7 +136,7 @@ export const GetContests = async (timestamp: number) =>
 	});
 
 export const GetYearlyContests = async (year: number) =>
-	await GET('/Contests/at/{year}', {
+	await GET('/contests/at/{year}', {
 		params: {
 			path: {
 				year,
@@ -128,7 +145,7 @@ export const GetYearlyContests = async (year: number) =>
 	});
 
 export const GetMonthlyContests = async (year: number, month: number) =>
-	await GET('/Contests/at/{year}/{month}', {
+	await GET('/contests/at/{year}/{month}', {
 		params: {
 			path: {
 				year,
@@ -137,12 +154,12 @@ export const GetMonthlyContests = async (year: number, month: number) =>
 		},
 	});
 
-export const GetCurrentYearContests = async () => await GET('/Contests/at/now', {});
+export const GetCurrentYearContests = async () => await GET('/contests/at/now', {});
 
-export const GetWeights = async () => await GET('/Weights/All', {});
+export const GetWeights = async () => await GET('/weights/all', {});
 
 export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: string) =>
-	await POST('/Account/primary/{playerUuidOrIgn}', {
+	await POST('/account/primary/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -154,7 +171,7 @@ export const SetPrimaryAccount = async (playerUuidOrIgn: string, accessToken: st
 	});
 
 export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) =>
-	await POST('/Account/{playerUuidOrIgn}', {
+	await POST('/account/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -166,7 +183,7 @@ export const LinkAccount = async (playerUuidOrIgn: string, accessToken: string) 
 	});
 
 export const UnlinkAccount = async (playerUuidOrIgn: string, accessToken: string) =>
-	await DELETE('/Account/{playerUuidOrIgn}', {
+	await DELETE('/account/{playerUuidOrIgn}', {
 		params: {
 			path: {
 				playerUuidOrIgn,
@@ -182,7 +199,7 @@ export const UpdateUserBadges = async (
 	playerUuid: string,
 	badges: components['schemas']['EditUserBadgeDto'][]
 ) =>
-	await PATCH('/User/Badges/{playerUuid}', {
+	await PATCH('/user/badges/{playerUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -194,17 +211,17 @@ export const UpdateUserBadges = async (
 		},
 	});
 
-export const GetAllBadges = async () => await GET('/Badges', {});
+export const GetAllBadges = async () => await GET('/badges', {});
 
 export const GetUsersGuilds = async (accessToken: string) =>
-	await GET('/User/Guilds', {
+	await GET('/user/guilds', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
 	});
 
 export const GetGuild = async (guildId: string, accessToken: string) =>
-	await GET('/User/Guild/{guildId}', {
+	await GET('/user/guild/{guildId}', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -216,7 +233,7 @@ export const GetGuild = async (guildId: string, accessToken: string) =>
 	});
 
 export const GetGuildJacob = async (guildId: string, accessToken: string) =>
-	await GET('/User/Guild/{guildId}/Jacob', {
+	await GET('/user/guild/{guildId}/jacob', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -232,7 +249,7 @@ export const PatchGuildJacob = async (
 	accessToken: string,
 	jacob: components['schemas']['GuildJacobLeaderboardFeature']
 ) =>
-	await PATCH('/User/Guild/{guildId}/Jacob', {
+	await PATCH('/user/guild/{guildId}/jacob', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -249,7 +266,7 @@ export const AddGuildJacobLeadeboard = async (
 	accessToken: string,
 	leaderboard: components['schemas']['GuildJacobLeaderboard']
 ) =>
-	await POST('/User/Guild/{guildId}/Jacob/Leaderboard', {
+	await POST('/user/guild/{guildId}/jacob/leaderboard', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -266,7 +283,7 @@ export const UpdateGuildJacobLeadeboard = async (
 	accessToken: string,
 	leaderboard: components['schemas']['GuildJacobLeaderboard']
 ) =>
-	await PUT('/User/Guild/{guildId}/Jacob/{lbId}', {
+	await PUT('/user/guild/{guildId}/jacob/{lbId}', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -280,7 +297,7 @@ export const UpdateGuildJacobLeadeboard = async (
 	});
 
 export const DeleteGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboardId: string) =>
-	await DELETE('/User/Guild/{guildId}/Jacob/{lbId}', {
+	await DELETE('/user/guild/{guildId}/jacob/{lbId}', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -293,7 +310,7 @@ export const DeleteGuildJacobLeadeboard = async (guildId: string, accessToken: s
 	});
 
 export const SendGuildJacobLeadeboard = async (guildId: string, accessToken: string, leaderboardId: string) =>
-	await POST('/User/Guild/{guildId}/Jacob/{lbId}/Send', {
+	await POST('/user/guild/{guildId}/jacob/{lbId}/send', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -306,7 +323,7 @@ export const SendGuildJacobLeadeboard = async (guildId: string, accessToken: str
 	});
 
 export const SetGuildInvite = async (guildId: string, accessToken: string, invite: string) =>
-	await PUT('/User/Guild/{guildId}/Invite', {
+	await PUT('/user/guild/{guildId}/invite', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -319,7 +336,7 @@ export const SetGuildInvite = async (guildId: string, accessToken: string, invit
 	});
 
 export const GetPublicGuild = async (guildId: string) =>
-	await GET('/Guild/{guildId}', {
+	await GET('/guild/{guildId}', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -327,10 +344,10 @@ export const GetPublicGuild = async (guildId: string) =>
 		},
 	});
 
-export const GetPublicGuilds = async () => await GET('/Guilds', {});
+export const GetPublicGuilds = async () => await GET('/guilds', {});
 
 export const GetProfilesWeights = async (playerUuid: string) =>
-	await GET('/Weight/{playerUuid}', {
+	await GET('/weight/{playerUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -339,7 +356,7 @@ export const GetProfilesWeights = async (playerUuid: string) =>
 	});
 
 export const GetLeaderboardSlice = async (leaderboardId: string, offset: number, limit: number) =>
-	await GET('/Leaderboard/{id}', {
+	await GET('/leaderboard/{id}', {
 		params: {
 			path: {
 				id: leaderboardId,
@@ -352,7 +369,7 @@ export const GetLeaderboardSlice = async (leaderboardId: string, offset: number,
 	});
 
 export const GetSkillLeaderboardSlice = async (skillName: string, offset: number, limit: number) =>
-	await GET('/Leaderboard/skill/{skillName}', {
+	await GET('/leaderboard/skill/{skillName}', {
 		params: {
 			path: {
 				skillName,
@@ -365,7 +382,7 @@ export const GetSkillLeaderboardSlice = async (skillName: string, offset: number
 	});
 
 export const GetCollectionLeaderboardSlice = async (collection: string, offset: number, limit: number) =>
-	await GET('/Leaderboard/collection/{collection}', {
+	await GET('/leaderboard/collection/{collection}', {
 		params: {
 			path: {
 				collection,
@@ -383,7 +400,7 @@ export const GetPlayersRank = async (
 	profileUuid: string,
 	upcoming = false
 ) =>
-	await GET('/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}', {
+	await GET('/leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				leaderboardId,
@@ -396,10 +413,10 @@ export const GetPlayersRank = async (
 		},
 	});
 
-export const GetUpcomingEvents = async () => await GET('/Events', {});
+export const GetUpcomingEvents = async () => await GET('/events', {});
 
 export const GetGuildEvents = async (guildId: string) =>
-	await GET('/Guild/{guildId}/Events', {
+	await GET('/guild/{guildId}/events', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -408,7 +425,7 @@ export const GetGuildEvents = async (guildId: string) =>
 	});
 
 export const GetEventDetails = async (eventId: string) =>
-	await GET('/Event/{eventId}', {
+	await GET('/event/{eventId}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -417,7 +434,7 @@ export const GetEventDetails = async (eventId: string) =>
 	});
 
 export const GetEventMembers = async (eventId: string) =>
-	await GET('/Event/{eventId}/members', {
+	await GET('/event/{eventId}/members', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -426,7 +443,7 @@ export const GetEventMembers = async (eventId: string) =>
 	});
 
 export const GetEventMember = async (eventId: string, playerUuid: string) =>
-	await GET('/Event/{eventId}/member/{playerUuid}', {
+	await GET('/event/{eventId}/member/{playerUuid}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -436,7 +453,7 @@ export const GetEventMember = async (eventId: string, playerUuid: string) =>
 	});
 
 export const JoinEvent = async (eventId: string, accessToken: string, playerUuid?: string, profileId?: string) =>
-	await POST('/Event/{eventId}/join', {
+	await POST('/event/{eventId}/join', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -452,7 +469,7 @@ export const JoinEvent = async (eventId: string, accessToken: string, playerUuid
 	});
 
 export const LeaveEvent = async (eventId: string, accessToken: string) =>
-	await POST('/Event/{eventId}/leave', {
+	await POST('/event/{eventId}/leave', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -464,7 +481,7 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 	});
 
 export const CreateWeightEvent = async (accessToken: string, event: components['schemas']['CreateWeightEventDto']) =>
-	await POST('/Event/Create', {
+	await POST('/event/create', {
 		body: event,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -472,7 +489,7 @@ export const CreateWeightEvent = async (accessToken: string, event: components['
 	});
 
 export const CreateMedalEvent = async (accessToken: string, event: components['schemas']['CreateMedalEventDto']) =>
-	await POST('/Event/Create/Medals', {
+	await POST('/event/create/medals', {
 		body: event,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -480,7 +497,7 @@ export const CreateMedalEvent = async (accessToken: string, event: components['s
 	});
 
 export const EditEvent = async (accessToken: string, eventId: string, event: components['schemas']['EditEventDto']) =>
-	await POST('/Event/{eventId}/Edit', {
+	await POST('/event/{eventId}/edit', {
 		body: event,
 		params: {
 			path: {
@@ -493,7 +510,7 @@ export const EditEvent = async (accessToken: string, eventId: string, event: com
 	});
 
 export const GetEventBans = async (accessToken: string, eventId: string) =>
-	await GET('/Event/{eventId}/bans', {
+	await GET('/event/{eventId}/bans', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -505,7 +522,7 @@ export const GetEventBans = async (accessToken: string, eventId: string) =>
 	});
 
 export const BanEventMember = async (accessToken: string, eventId: string, playerUuid: string, reason?: string) =>
-	await POST('/Event/{eventId}/bans/{playerUuid}', {
+	await POST('/event/{eventId}/bans/{playerUuid}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -519,7 +536,7 @@ export const BanEventMember = async (accessToken: string, eventId: string, playe
 	});
 
 export const UnbanEventMember = async (accessToken: string, eventId: string, playerUuid: string) =>
-	await DELETE('/Event/{eventId}/bans/{playerUuid}', {
+	await DELETE('/event/{eventId}/bans/{playerUuid}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
@@ -532,7 +549,7 @@ export const UnbanEventMember = async (accessToken: string, eventId: string, pla
 	});
 
 export const GetYearlyContestRecords = async (year: number) =>
-	await GET('/Contests/Records/{year}', {
+	await GET('/contests/records/{year}', {
 		params: {
 			path: {
 				year,
@@ -541,7 +558,7 @@ export const GetYearlyContestRecords = async (year: number) =>
 	});
 
 export const DisableUpcomingContestPings = async (accessToken: string, guildId: string, reason: string) =>
-	await DELETE('/User/Guild/{guildId}/ContestPings', {
+	await DELETE('/user/guild/{guildId}/contestpings', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -560,7 +577,7 @@ export const UpdateUpcomingContestPings = async (
 	guildId: string,
 	body: components['schemas']['ContestPingsFeatureDto']
 ) =>
-	await PUT('/User/Guild/{guildId}/ContestPings', {
+	await PUT('/user/guild/{guildId}/contestpings', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,
@@ -573,7 +590,7 @@ export const UpdateUpcomingContestPings = async (
 	});
 
 export const SearchPlayers = async (query: string) =>
-	await GET('/Account/Search', {
+	await GET('/account/search', {
 		params: {
 			query: {
 				q: query,
@@ -582,7 +599,7 @@ export const SearchPlayers = async (query: string) =>
 	});
 
 export const GetCropCollectionPoints = async (playerUuid: string, profileUuid: string, start?: string, days = 7) =>
-	await GET('/Graph/{playerUuid}/{profileUuid}/crops', {
+	await GET('/graph/{playerUuid}/{profileUuid}/crops', {
 		params: {
 			path: {
 				playerUuid,
@@ -596,7 +613,7 @@ export const GetCropCollectionPoints = async (playerUuid: string, profileUuid: s
 	});
 
 export const GetSkillPoints = async (playerUuid: string, profileUuid: string, start?: string, days = 7) =>
-	await GET('/Graph/{playerUuid}/{profileUuid}/crops', {
+	await GET('/graph/{playerUuid}/{profileUuid}/crops', {
 		params: {
 			path: {
 				playerUuid,
@@ -610,7 +627,7 @@ export const GetSkillPoints = async (playerUuid: string, profileUuid: string, st
 	});
 
 export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
-	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
+	await GET('/graph/admin/{playerUuid}/{profileUuid}/crops', {
 		params: {
 			path: {
 				playerUuid,
@@ -632,7 +649,7 @@ export const GetAdminCropCollectionPointsTimeSpan = async (
 	start: number,
 	days: number
 ) =>
-	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/crops', {
+	await GET('/graph/admin/{playerUuid}/{profileUuid}/crops', {
 		params: {
 			path: {
 				playerUuid,
@@ -649,7 +666,7 @@ export const GetAdminCropCollectionPointsTimeSpan = async (
 	});
 
 export const GetAdminSkillPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
-	await GET('/Graph/Admin/{playerUuid}/{profileUuid}/skills', {
+	await GET('/graph/admin/{playerUuid}/{profileUuid}/skills', {
 		params: {
 			path: {
 				playerUuid,
