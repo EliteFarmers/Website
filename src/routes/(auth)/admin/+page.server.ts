@@ -5,7 +5,7 @@ import { hasPermission, PermissionFlags, PERMISSIONS } from '$lib/auth';
 
 export const load = (async ({ parent, locals, setHeaders }) => {
 	const { user } = await parent();
-	const { discord_access_token: token } = locals;
+	const { access_token: token } = locals;
 
 	setHeaders({
 		'Cache-Control': 'no-store',
@@ -31,7 +31,7 @@ export const load = (async ({ parent, locals, setHeaders }) => {
 
 export const actions: Actions = {
 	promote: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -60,7 +60,7 @@ export const actions: Actions = {
 		};
 	},
 	demote: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -89,7 +89,7 @@ export const actions: Actions = {
 		};
 	},
 	clearcontests: async ({ locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -108,7 +108,7 @@ export const actions: Actions = {
 		};
 	},
 	createbadge: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -143,7 +143,7 @@ export const actions: Actions = {
 		};
 	},
 	editbadge: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -182,7 +182,7 @@ export const actions: Actions = {
 		};
 	},
 	deleteBadge: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -211,7 +211,7 @@ export const actions: Actions = {
 		};
 	},
 	adduserbadge: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');
@@ -242,7 +242,7 @@ export const actions: Actions = {
 		};
 	},
 	deleteuserbadge: async ({ request, locals }) => {
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!token) {
 			throw error(404, 'Not Found');

@@ -34,7 +34,7 @@ export const actions: Actions = {
 		console.log('create');
 
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -84,7 +84,7 @@ export const actions: Actions = {
 	},
 	delete: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -114,7 +114,7 @@ export const actions: Actions = {
 	},
 	send: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -145,7 +145,7 @@ export const actions: Actions = {
 	},
 	clear: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -185,7 +185,7 @@ export const actions: Actions = {
 	},
 	banparticipation: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -258,7 +258,7 @@ export const actions: Actions = {
 	},
 	unbanparticipation: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -296,7 +296,7 @@ export const actions: Actions = {
 	},
 	bantimespan: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -350,7 +350,7 @@ export const actions: Actions = {
 	},
 	unbantimespan: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');

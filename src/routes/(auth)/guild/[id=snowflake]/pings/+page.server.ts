@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 export const actions: Actions = {
 	enable: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -70,7 +70,7 @@ export const actions: Actions = {
 	},
 	disable: async ({ locals, params }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');

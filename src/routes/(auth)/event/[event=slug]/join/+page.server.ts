@@ -4,7 +4,7 @@ import { GetAccount, GetEventDetails, JoinEvent, LeaveEvent } from '$lib/api/eli
 
 export const load = (async ({ locals, parent, params }) => {
 	const { user } = await parent();
-	const { discord_access_token: token } = locals;
+	const { access_token: token } = locals;
 	const { event: eventRoute } = params;
 
 	// Remove everything before the last dash
@@ -43,7 +43,7 @@ export const load = (async ({ locals, parent, params }) => {
 
 export const actions: Actions = {
 	join: async ({ locals, params, request }) => {
-		const { discord_access_token: token, user } = locals;
+		const { access_token: token, user } = locals;
 		const { event: eventParam } = params;
 
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
@@ -80,7 +80,7 @@ export const actions: Actions = {
 		throw redirect(302, `/event/${eventParam}`);
 	},
 	leave: async ({ locals, params }) => {
-		const { discord_access_token: token, user } = locals;
+		const { access_token: token, user } = locals;
 		const { event: eventParam } = params;
 
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);

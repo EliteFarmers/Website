@@ -15,7 +15,7 @@ import { IsUUID } from '$params/uuid';
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
 	const { user } = await parent();
-	const { discord_access_token: token } = locals;
+	const { access_token: token } = locals;
 
 	if (!user.id || !token) {
 		throw redirect(302, '/');
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 export const actions: Actions = {
 	link: async ({ locals, request }) => {
-		if (!locals.discord_access_token) {
+		if (!locals.access_token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -53,7 +53,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await LinkAccount(username, locals.discord_access_token);
+		const req = await LinkAccount(username, locals.access_token);
 
 		if (!req.response.ok) {
 			return fail(req.response.status, { error: await req.response.text() });
@@ -62,7 +62,7 @@ export const actions: Actions = {
 		return { success: true };
 	},
 	unlink: async ({ locals, request }) => {
-		if (!locals.discord_access_token) {
+		if (!locals.access_token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -74,7 +74,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await UnlinkAccount(username, locals.discord_access_token);
+		const req = await UnlinkAccount(username, locals.access_token);
 
 		if (!req.response.ok) {
 			return fail(req.response.status, { error: await req.response.text() });
@@ -83,7 +83,7 @@ export const actions: Actions = {
 		return { success: true };
 	},
 	setPrimary: async ({ locals, request }) => {
-		if (!locals.discord_access_token) {
+		if (!locals.access_token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -94,7 +94,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await SetPrimaryAccount(username, locals.discord_access_token);
+		const req = await SetPrimaryAccount(username, locals.access_token);
 
 		if (!req.response.ok) {
 			return fail(req.response.status, { error: await req.response.text() });
@@ -103,7 +103,7 @@ export const actions: Actions = {
 		return { success: true };
 	},
 	updateBadges: async ({ locals, request }) => {
-		if (!locals.discord_access_token) {
+		if (!locals.access_token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -135,7 +135,7 @@ export const actions: Actions = {
 		}
 
 		const body = Object.values(badges);
-		const req = await UpdateUserBadges(locals.discord_access_token, uuid, body);
+		const req = await UpdateUserBadges(locals.access_token, uuid, body);
 
 		if (!req.response.ok) {
 			return fail(req.response.status, { error: await req.response.text() });

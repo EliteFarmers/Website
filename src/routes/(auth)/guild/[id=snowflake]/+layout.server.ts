@@ -5,7 +5,7 @@ import { GetGuild } from '$lib/api/elite';
 
 export const load = (async ({ params, parent, locals }) => {
 	const { user } = await parent();
-	const { discord_access_token: token } = locals;
+	const { access_token: token } = locals;
 	const { id } = params;
 
 	if (!user.id || !token) {

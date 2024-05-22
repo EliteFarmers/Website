@@ -16,5 +16,6 @@ export const load: LayoutServerLoad = async ({ locals, parent }) => {
 				: undefined),
 		premium: PremiumStatus.None,
 		mcUuid: locals.userInfo?.primaryUuid,
+		session: locals.session,
 	};
 };

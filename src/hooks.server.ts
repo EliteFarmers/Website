@@ -1,65 +1,73 @@
 import type { Handle } from '@sveltejs/kit';
-import { FetchDiscordUser, UpdateCookies } from '$lib/discordAuth';
-import type { UserInfo } from '$lib/api/elite';
+import { GetUserSession, RefreshUserSession } from '$lib/api/elite';
+import type { components } from '$lib/api/api';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const { locals, cookies } = event;
 
-	const access = event.cookies.get('discord_access_token');
-	const refresh = event.cookies.get('discord_refresh_token');
+	const access = cookies.get('access_token');
+	const refresh = cookies.get('refresh_token');
 
-	let discord;
-
-	// User info is just for the navbar, it doesn't need to be perfectly secure
-	const userInfoString = event.cookies.get('user_info');
-	if (userInfoString) {
-		try {
-			locals.userInfo = JSON.parse(userInfoString) as UserInfo;
-		} catch (e) {
-			locals.userInfo = undefined;
-		}
-	} else if (access || refresh) {
-		// Update the user info cookie
-		discord = await FetchDiscordUser({
-			accessToken: access,
-			refreshToken: refresh,
-		});
-
-		if (discord) UpdateCookies(event, discord);
+	if (access && refresh) {
+		locals.session = await FetchUserSession(event, access, refresh);
 	}
 
-	locals.discord_access_token = access;
-	locals.discord_refresh_token = refresh;
-
-	// If the user has no tokens, or the route is not an auth route, we don't need to do anything
-	if (!event.route.id?.includes('/(auth)/') || (!locals.discord_access_token && !locals.discord_refresh_token)) {
-		locals.user = undefined;
-
-		return await ResolveWithSecurityHeaders(resolve, event);
-	}
-
-	discord =
-		discord ??
-		(await FetchDiscordUser({
-			accessToken: locals.discord_access_token,
-			refreshToken: locals.discord_refresh_token,
-		}));
-
-	if (!discord) {
-		locals.user = undefined;
-
-		cookies.delete('discord_access_token', { path: '/' });
-		cookies.delete('discord_refresh_token', { path: '/' });
-
-		return await ResolveWithSecurityHeaders(resolve, event);
-	}
-
-	locals.user = discord.user ?? undefined;
-
-	UpdateCookies(event, discord);
+	locals.access_token = access;
+	locals.refresh_token = refresh;
 
 	return await ResolveWithSecurityHeaders(resolve, event);
 };
+
+async function FetchUserSession(event: Parameters<Handle>[0]['event'], access: string, refresh: string) {
+	// Fetch the user session
+	const { data: session } = await GetUserSession(access).catch(() => ({ data: undefined }));
+
+	if (session) {
+		return session;
+	}
+
+	if (!session && refresh) {
+		const { data: newTokens } = await RefreshUserSession({
+			access_token: access,
+			refresh_token: refresh,
+		}).catch(() => ({ data: undefined }));
+
+		if (newTokens) {
+			UpdateAuthCookies(event, newTokens);
+
+			// Omit the refresh token to not cause infinite loop
+			return await FetchUserSession(event, newTokens.access_token, '');
+		} else {
+			DeleteAuthCookies(event);
+		}
+	}
+
+	return undefined;
+}
+
+async function DeleteAuthCookies(event: Parameters<Handle>[0]['event']) {
+	const { cookies } = event;
+
+	cookies.delete('access_token', { path: '/' });
+	cookies.delete('refresh_token', { path: '/' });
+}
+
+async function UpdateAuthCookies(
+	event: Parameters<Handle>[0]['event'],
+	tokens: components['schemas']['AuthResponseDto']
+) {
+	const { cookies } = event;
+
+	cookies.set('access_token', tokens.access_token, {
+		path: '/',
+		maxAge: 60 * 60 * 24 * 20,
+	});
+
+	cookies.set('refresh_token', tokens.refresh_token, {
+		path: '/',
+		maxAge: 60 * 60 * 24 * 20,
+	});
+}
 
 async function ResolveWithSecurityHeaders(
 	resolve: Parameters<Handle>[0]['resolve'],

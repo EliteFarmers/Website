@@ -13,7 +13,7 @@ export const load = (async ({ params, parent, locals }) => {
 	const { user, account: aData } = (await parent()) as PageServerParentData & {
 		account?: components['schemas']['MinecraftAccountDto'];
 	};
-	const { discord_access_token: token } = locals;
+	const { access_token: token } = locals;
 	const { id, profile } = params;
 	let account = aData;
 
@@ -66,7 +66,7 @@ export const load = (async ({ params, parent, locals }) => {
 
 export const actions: Actions = {
 	collectiongraph: async ({ request, locals }) => {
-		const { discord_access_token: token, user } = locals;
+		const { access_token: token, user } = locals;
 
 		if (!token || !hasPermission(user, PermissionFlags.ViewGraphs)) {
 			throw fail(403);

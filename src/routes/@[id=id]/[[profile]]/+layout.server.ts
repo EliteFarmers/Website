@@ -8,7 +8,7 @@ export const load = (async ({ parent, locals, setHeaders }) => {
 	const { account, profile } = await parent();
 
 	let authorized = false;
-	if (locals.discord_access_token && hasPermission(locals.user, PermissionFlags.ViewGraphs)) {
+	if (locals.access_token && hasPermission(locals.user, PermissionFlags.ViewGraphs)) {
 		authorized = true;
 	}
 

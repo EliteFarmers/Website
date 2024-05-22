@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 export const actions: Actions = {
 	setInvite: async ({ params, locals, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');

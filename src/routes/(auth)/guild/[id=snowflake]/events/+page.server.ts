@@ -16,7 +16,7 @@ import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { userPermissions, guild } = await parent();
-	const { discord_access_token: token, user } = locals;
+	const { access_token: token, user } = locals;
 
 	const hasPerms = CanManageGuild(userPermissions, user);
 
@@ -60,7 +60,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 export const actions: Actions = {
 	create: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -122,7 +122,7 @@ export const actions: Actions = {
 	},
 	edit: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -174,7 +174,7 @@ export const actions: Actions = {
 	},
 	banmember: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
@@ -207,7 +207,7 @@ export const actions: Actions = {
 	},
 	unbanmember: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
 		if (!locals.user || !guildId || !token) {
 			throw error(401, 'Unauthorized');
