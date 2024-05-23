@@ -32,7 +32,7 @@
 			<DropdownMenu.Separator />
 			<DropdownMenu.Group>
 				<DropdownMenu.Item href="/profile">Profile</DropdownMenu.Item>
-				<DropdownMenu.Item href="/@{user.primaryUuid}">My Stats</DropdownMenu.Item>
+				<DropdownMenu.Item href="/@{user.ign}" disabled={!user.ign}>My Stats</DropdownMenu.Item>
 			</DropdownMenu.Group>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item href="/logout">Log out</DropdownMenu.Item>

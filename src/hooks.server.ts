@@ -8,12 +8,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const access = cookies.get('access_token');
 	const refresh = cookies.get('refresh_token');
 
+	locals.access_token = access;
+	locals.refresh_token = refresh;
+
+	// Skip getting the user session if the request is /api/
+	if (event.url.pathname.startsWith('/api/')) {
+		return await ResolveWithSecurityHeaders(resolve, event);
+	}
+
+	// Fetch the user session
 	if (access && refresh) {
 		locals.session = await FetchUserSession(event, access, refresh);
 	}
-
-	locals.access_token = access;
-	locals.refresh_token = refresh;
 
 	return await ResolveWithSecurityHeaders(resolve, event);
 };

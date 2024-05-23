@@ -68,7 +68,7 @@ export async function RefreshDiscordUser(refreshToken: string, redirect: string)
 		grant_type: 'refresh_token',
 		refresh_token: refreshToken,
 		redirect_uri: redirect,
-		scope: 'identify guilds',
+		scope: 'identify guilds role_connections.write',
 		state: uuid,
 	};
 

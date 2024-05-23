@@ -28,7 +28,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		code: code,
 		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
 		state: state,
-		scope: 'identify guilds',
+		scope: 'identify guilds role_connections.write',
 	};
 
 	const request = await fetch('https://discord.com/api/v10/oauth2/token', {

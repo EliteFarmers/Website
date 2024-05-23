@@ -2107,7 +2107,7 @@
         ]
       }
     },
-    "/badge/badge/badges": {
+    "/badge": {
       "post": {
         "tags": [
           "Badge"

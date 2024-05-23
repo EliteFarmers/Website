@@ -883,7 +883,7 @@ export interface paths {
       };
     };
   };
-  "/badge/badge/badges": {
+  "/badge": {
     /** Create a new badge */
     post: {
       /** @description Badge information */

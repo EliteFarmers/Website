@@ -1,21 +1,30 @@
 import { error, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { DELETE, GET, GetAllBadges, PATCH, POST } from '$lib/api/elite';
-import { hasPermission, PermissionFlags, PERMISSIONS } from '$lib/auth';
 
 export const load = (async ({ parent, locals, setHeaders }) => {
-	const { user } = await parent();
+	const { user, session } = await parent();
 	const { access_token: token } = locals;
 
 	setHeaders({
 		'Cache-Control': 'no-store',
 	});
 
-	if (!token || !hasPermission(user, PermissionFlags.Admin)) {
+	if (!session || !session.roles.includes('Admin')) {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: admins } = await GET('/Admins', {
+	const { data: roles } = await GET('/roles', {
+		headers: { Authorization: `Bearer ${token}` },
+	}).catch(() => ({ data: undefined }));
+
+	console.log('roles', roles);
+
+	if (!roles) {
+		throw error(500, 'Failed to fetch roles');
+	}
+
+	const { data: admins } = await GET('/admins', {
 		headers: { Authorization: `Bearer ${token}` },
 	}).catch(() => ({ data: undefined }));
 
@@ -23,8 +32,8 @@ export const load = (async ({ parent, locals, setHeaders }) => {
 
 	return {
 		user,
+		roles,
 		admins: admins ?? [],
-		permissions: PERMISSIONS,
 		badges: badges ?? [],
 	};
 }) satisfies PageServerLoad;
@@ -39,13 +48,13 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const memberId = data.get('id') as string;
-		const permission = data.get('permission') as string;
+		const role = data.get('role') as string;
 
-		const { response } = await POST(`/Admin/Permissions/{memberId}/{permission}`, {
+		const { response } = await POST('/admin/user/{userId}/roles/{role}', {
 			params: {
 				path: {
-					memberId: memberId as unknown as number,
-					permission: permission as unknown as number,
+					userId: memberId,
+					role: role,
 				},
 			},
 			headers: { Authorization: `Bearer ${token}` },
@@ -68,13 +77,13 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const memberId = data.get('id') as string;
-		const permission = data.get('permission') as string;
+		const role = data.get('role') as string;
 
-		const { response } = await DELETE(`/Admin/Permissions/{memberId}/{permission}`, {
+		const { response } = await DELETE(`/admin/user/{userId}/roles/{role}`, {
 			params: {
 				path: {
-					memberId: memberId as unknown as number,
-					permission: permission as unknown as number,
+					userId: memberId,
+					role: role,
 				},
 			},
 			headers: { Authorization: `Bearer ${token}` },
@@ -95,7 +104,7 @@ export const actions: Actions = {
 			throw error(404, 'Not Found');
 		}
 
-		const { response } = await DELETE(`/Admin/UpcomingContests`, {
+		const { response } = await DELETE(`/admin/upcomingcontests`, {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 
@@ -121,7 +130,7 @@ export const actions: Actions = {
 		const badgeRequirements = data.get('requirements') as string;
 		const tied = data.get('tied') as string;
 
-		const { response } = await POST('/Admin/Badges', {
+		const { response } = await POST('/badge', {
 			body: {
 				imageId: badgeImageId,
 				name: badgeName,
@@ -156,7 +165,7 @@ export const actions: Actions = {
 		const badgeDescription = data.get('description') as string;
 		const badgeRequirements = data.get('requirements') as string;
 
-		const { response } = await PATCH('/Admin/Badges/{badgeId}', {
+		const { response } = await PATCH('/badge/{badgeId}', {
 			params: {
 				path: {
 					badgeId: badgeId as unknown as number,
@@ -191,7 +200,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const badgeId = data.get('id') as string;
 
-		const { response } = await DELETE('/Admin/Badges/{badgeId}', {
+		const { response } = await DELETE('/badge/{badgeId}', {
 			params: {
 				path: {
 					badgeId: badgeId as unknown as number,
@@ -223,7 +232,7 @@ export const actions: Actions = {
 
 		console.log(playerUuid, badgeId);
 
-		const { response } = await POST('/Admin/Badges/{playerUuid}/{badgeId}', {
+		const { response } = await POST('/badge/user/{playerUuid}/{badgeId}', {
 			params: {
 				path: {
 					playerUuid,
@@ -252,7 +261,7 @@ export const actions: Actions = {
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
 
-		const { response } = await DELETE('/Admin/Badges/{playerUuid}/{badgeId}', {
+		const { response } = await DELETE('/badge/user/{playerUuid}/{badgeId}', {
 			params: {
 				path: {
 					playerUuid,
