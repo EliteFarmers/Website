@@ -7,17 +7,16 @@ import {
 	GetCropCollectionPoints,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
-import { PermissionFlags, hasPermission } from '$lib/auth';
 
 export const load = (async ({ params, parent, locals }) => {
-	const { user, account: aData } = (await parent()) as PageServerParentData & {
+	const { session, account: aData } = (await parent()) as PageServerParentData & {
 		account?: components['schemas']['MinecraftAccountDto'];
 	};
 	const { access_token: token } = locals;
 	const { id, profile } = params;
 	let account = aData;
 
-	if (!token || !hasPermission(user, PermissionFlags.ViewGraphs)) {
+	if (!token || !session?.flags?.support) {
 		throw error(404, 'Not Found');
 	}
 
@@ -66,9 +65,9 @@ export const load = (async ({ params, parent, locals }) => {
 
 export const actions: Actions = {
 	collectiongraph: async ({ request, locals }) => {
-		const { access_token: token, user } = locals;
+		const { access_token: token, session } = locals;
 
-		if (!token || !hasPermission(user, PermissionFlags.ViewGraphs)) {
+		if (!token || !session?.flags?.support) {
 			throw fail(403);
 		}
 

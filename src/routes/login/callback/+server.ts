@@ -41,8 +41,6 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
 	const response = (await request.json()) as components['schemas']['DiscordLoginDto'] & { error?: unknown };
 
-	console.log('response', response);
-
 	if (response.error) {
 		throw error(400, new Error('Discord Authentication Error'));
 	}
@@ -56,8 +54,6 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	if (!loginResponse) {
 		throw error(500, 'Failed to login user!');
 	}
-
-	console.log('loginResponse', loginResponse);
 
 	const thirtyDays = 30 * 24 * 60 * 60;
 	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days

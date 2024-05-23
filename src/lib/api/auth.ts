@@ -20,9 +20,7 @@ export async function FetchUserSession(
 	const { data: session } = await GetUserSession(access).catch(() => ({ data: undefined }));
 
 	if (session) {
-		const value = setAuthFlags(session);
-		console.log(value);
-		return value;
+		return setAuthFlags(session);
 	}
 
 	if (!session && refresh) {

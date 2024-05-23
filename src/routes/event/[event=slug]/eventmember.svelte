@@ -10,6 +10,11 @@
 	export let rank: number;
 	export let running: boolean;
 
+	const medalWeight = (medal: string) => {
+		const data = event.data as { medalWeights?: Record<string, number> } | undefined;
+		return data?.medalWeights?.[medal] ?? 0;
+	};
+
 	const earnedMedals = () => {
 		const data = member.data as { earnedMedals?: Record<string, number> } | undefined;
 		return Object.entries(data?.earnedMedals ?? {}).sort((a, b) => b[1] - a[1]);
@@ -72,9 +77,9 @@
 			<div class="flex flex-col w-full gap-1">
 				{#each earnedMedals() as [medal, count]}
 					<div class="flex flex-row justify-center items-center gap-2">
-						<p>{medal}</p>
+						<p>{medal}&nbsp;<span class="font-semibold">x{count}</span></p>
 						<div class="border-b-2 border-dotted border-primary/70 flex-grow h-2 mb-1 w-full" />
-						<p class="font-semibold">{count}</p>
+						<p class="font-semibold">{count * medalWeight(medal)}</p>
 					</div>
 				{/each}
 			</div>

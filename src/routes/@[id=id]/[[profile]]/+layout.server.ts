@@ -1,16 +1,11 @@
 import { GetPlayerRanks } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { PermissionFlags, hasPermission } from '$lib/auth';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
-export const load = (async ({ parent, locals, setHeaders }) => {
-	const { account, profile } = await parent();
-
-	let authorized = false;
-	if (locals.access_token && hasPermission(locals.user, PermissionFlags.ViewGraphs)) {
-		authorized = true;
-	}
+export const load = (async ({ parent, setHeaders }) => {
+	const { account, profile, session } = await parent();
+	const authorized = session?.flags?.support;
 
 	if (!account.id || !account.name || !profile.profileId) {
 		throw error(404, 'Player not found');
