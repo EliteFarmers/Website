@@ -10,15 +10,13 @@ export const load = (async ({ parent, locals, setHeaders }) => {
 		'Cache-Control': 'no-store',
 	});
 
-	if (!session || !session.roles.includes('Admin')) {
+	if (!session || !session.flags.moderator) {
 		throw error(404, 'Not Found');
 	}
 
 	const { data: roles } = await GET('/roles', {
 		headers: { Authorization: `Bearer ${token}` },
 	}).catch(() => ({ data: undefined }));
-
-	console.log('roles', roles);
 
 	if (!roles) {
 		throw error(500, 'Failed to fetch roles');

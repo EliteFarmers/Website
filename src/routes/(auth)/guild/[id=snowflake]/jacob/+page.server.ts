@@ -14,7 +14,7 @@ import type { components } from '$lib/api/api';
 export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { userPermissions, guild } = await parent();
 
-	const hasPerms = CanManageGuild(userPermissions, locals.user);
+	const hasPerms = CanManageGuild(userPermissions, locals.session);
 
 	if (!hasPerms) {
 		throw error(403, 'You do not have permission to edit this guild.');
@@ -36,12 +36,12 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 
 		const data = await request.formData();
 
@@ -86,12 +86,12 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const lbId = data.get('id') as string;
@@ -116,12 +116,12 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 
 		const data = await request.formData();
 
@@ -147,11 +147,11 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.user);
+		const guild = await getGuild(guildId, token, locals.session);
 
 		const data = await request.formData();
 		const lbId = data.get('id') as string;
@@ -187,7 +187,7 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -260,11 +260,11 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.user);
+		const guild = await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const pId = data.get('participationId') as string;
@@ -298,11 +298,11 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.user);
+		const guild = await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const startDate = data.get('startDate') as string;
@@ -352,11 +352,11 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.user);
+		const guild = await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const startTime = +((data.get('startTime') as string | undefined) ?? 0);
@@ -391,14 +391,14 @@ export const actions: Actions = {
 	},
 };
 
-async function getGuild(guildId: string, token: string, user?: App.Locals['user']) {
+async function getGuild(guildId: string, token: string, session?: App.Locals['session']) {
 	const guild = await GetGuild(guildId, token)
 		.then((guild) => guild.data ?? undefined)
 		.catch(() => undefined);
 
 	if (!guild) throw error(404, 'Guild not found');
 
-	const hasPerms = CanManageGuild(guild.permissions, user);
+	const hasPerms = CanManageGuild(guild.permissions, session);
 	if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
 
 	if (!guild.guild?.features?.jacobLeaderboardEnabled) {

@@ -16,7 +16,7 @@
 
 	export let data: PageData;
 
-	$: ({ event = {}, members } = data);
+	$: ({ event = {} as typeof data.event, members } = data);
 
 	$: banner =
 		event.banner ??
@@ -41,8 +41,8 @@
 
 <Head
 	title={event.name || 'Farming Weight Event'}
-	description={`View the Event happening in ${data.guild.name}!\n${event.description}`}
-	imageUrl={data.guild.icon
+	description={`View the Event happening in ${data.guild?.name}!\n${event.description}`}
+	imageUrl={data.guild?.icon
 		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
 		: undefined}
 />
@@ -57,7 +57,7 @@
 			<h1 class="text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>
-			<Button href="https://discord.gg/{data.guild.inviteCode}" variant="ghost">
+			<Button href="https://discord.gg/{data.guild?.inviteCode}" variant="ghost">
 				<ExternalLink size={16} />
 			</Button>
 		</div>

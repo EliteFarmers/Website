@@ -55,9 +55,9 @@
 						</div>
 					</div>
 					<div class="flex flex-row gap-4 pr-2 items-center">
-						<div class="flex flex-wrap text-right">
+						<div class="flex flex-wrap gap-2 text-right">
 							{#each user.roles ?? [] as role}
-								<p class="text-lg">{role}</p>
+								<p>{role}</p>
 							{/each}
 						</div>
 						<Popover.Mobile>

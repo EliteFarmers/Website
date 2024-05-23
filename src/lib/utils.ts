@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
-import { hasPermission, PermissionFlags } from '$lib/auth';
 import type { components } from './api/api';
 
 export function cn(...inputs: ClassValue[]) {
@@ -57,8 +56,8 @@ export const flyAndScale = (
 	};
 };
 
-export function CanManageGuild(permissions?: string, user?: App.Locals['user']) {
-	if (hasPermission(user, PermissionFlags.Admin)) return true;
+export function CanManageGuild(permissions?: string, session?: App.Locals['session']) {
+	if (session?.flags?.admin) return true;
 
 	if (!permissions) return false;
 

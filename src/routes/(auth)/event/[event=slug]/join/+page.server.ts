@@ -43,12 +43,12 @@ export const load = (async ({ locals, parent, params }) => {
 
 export const actions: Actions = {
 	join: async ({ locals, params, request }) => {
-		const { access_token: token, user } = locals;
+		const { access_token: token, session } = locals;
 		const { event: eventParam } = params;
 
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
-		if (!token || !user) {
+		if (!token || !session) {
 			throw redirect(302, '/login');
 		}
 
@@ -80,12 +80,12 @@ export const actions: Actions = {
 		throw redirect(302, `/event/${eventParam}`);
 	},
 	leave: async ({ locals, params }) => {
-		const { access_token: token, user } = locals;
+		const { access_token: token, session } = locals;
 		const { event: eventParam } = params;
 
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
-		if (!token || !user) {
+		if (!token || !session) {
 			throw redirect(302, '/login');
 		}
 

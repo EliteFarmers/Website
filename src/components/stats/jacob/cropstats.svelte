@@ -19,14 +19,14 @@
 	).sort();
 
 	function pb(crop: string) {
-		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '')];
+		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '') as keyof typeof jacob.stats.personalBests];
 		return amount ? +amount : undefined;
 	}
 
 	const medals = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
 
 	function medal(crop: string) {
-		const medal = jacob?.stats?.brackets?.[crop.replace(' ', '')];
+		const medal = jacob?.stats?.brackets?.[crop.replace(' ', '') as keyof typeof jacob.stats.brackets];
 		return medal ? medals[+medal - 1] : undefined;
 	}
 </script>
