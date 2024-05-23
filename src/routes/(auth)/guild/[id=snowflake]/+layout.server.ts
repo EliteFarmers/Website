@@ -5,7 +5,7 @@ import { GetGuild } from '$lib/api/elite';
 
 export const load = (async ({ params, parent, locals }) => {
 	const { user } = await parent();
-	const { discord_access_token: token } = locals;
+	const { access_token: token } = locals;
 	const { id } = params;
 
 	if (!user.id || !token) {
@@ -20,7 +20,7 @@ export const load = (async ({ params, parent, locals }) => {
 		throw error(404, 'Guild not found');
 	}
 
-	const hasPerms = CanManageGuild(guild.permissions, locals.user);
+	const hasPerms = CanManageGuild(guild.permissions, locals.session);
 
 	if (!hasPerms) {
 		throw error(403, 'You do not have permission to edit this guild.');

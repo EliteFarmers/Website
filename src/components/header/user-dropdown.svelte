@@ -6,7 +6,7 @@
 	import Usericon from '$comp/stats/discord/usericon.svelte';
 	import UserRound from 'lucide-svelte/icons/user-round';
 
-	$: user = $page.data.userInfo;
+	$: user = $page.data.session;
 </script>
 
 <DropdownMenu.Root>
@@ -25,14 +25,14 @@
 		{#if user}
 			<DropdownMenu.Label class="font-normal">
 				<div class="flex flex-col space-y-1">
-					<p class="text-sm font-medium leading-none">{user.primaryName ?? user.username}</p>
+					<p class="text-sm font-medium leading-none">{user.ign ?? user.username}</p>
 					<p class="text-xs leading-none text-muted-foreground">{user.username}</p>
 				</div>
 			</DropdownMenu.Label>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Group>
 				<DropdownMenu.Item href="/profile">Profile</DropdownMenu.Item>
-				<DropdownMenu.Item href="/@{user.primaryUuid}">My Stats</DropdownMenu.Item>
+				<DropdownMenu.Item href="/@{user.ign}" disabled={!user.ign}>My Stats</DropdownMenu.Item>
 			</DropdownMenu.Group>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item href="/logout">Log out</DropdownMenu.Item>

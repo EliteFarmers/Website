@@ -15,10 +15,10 @@ import {
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
-	const { userPermissions, guild } = await parent();
-	const { discord_access_token: token, user } = locals;
+	const { guild, userPermissions, session } = await parent();
+	const { access_token: token } = locals;
 
-	const hasPerms = CanManageGuild(userPermissions, user);
+	const hasPerms = CanManageGuild(userPermissions, session);
 
 	if (!hasPerms || !token) {
 		throw error(403, 'You do not have permission to edit this guild.');
@@ -60,14 +60,14 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 export const actions: Actions = {
 	create: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 
 		const data = await request.formData();
 
@@ -122,14 +122,14 @@ export const actions: Actions = {
 	},
 	edit: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
 		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -174,13 +174,13 @@ export const actions: Actions = {
 	},
 	banmember: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -207,13 +207,13 @@ export const actions: Actions = {
 	},
 	unbanmember: async ({ locals, params, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
-		await getGuild(guildId, token, locals.user);
+		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -233,14 +233,14 @@ export const actions: Actions = {
 	},
 };
 
-async function getGuild(guildId: string, token: string, user?: App.Locals['user']) {
+async function getGuild(guildId: string, token: string, session?: App.Locals['session']) {
 	const guild = await GetGuild(guildId, token)
 		.then((guild) => guild.data ?? undefined)
 		.catch(() => undefined);
 
 	if (!guild) throw error(404, 'Guild not found');
 
-	const hasPerms = CanManageGuild(guild.permissions, user);
+	const hasPerms = CanManageGuild(guild.permissions, session);
 	if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
 
 	if (!guild.guild?.features?.eventsEnabled) {

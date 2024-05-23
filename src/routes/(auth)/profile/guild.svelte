@@ -5,7 +5,7 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Settings from 'lucide-svelte/icons/settings';
 
-	export let guild: components['schemas']['UserGuildDto'];
+	export let guild: components['schemas']['UserGuildDto'] | components['schemas']['GuildDetailsDto'];
 	export let link = false;
 </script>
 
@@ -20,7 +20,7 @@
 				<Button href="/server/{guild.id}" class="m-1" variant="ghost">
 					<ExternalLink />
 				</Button>
-			{:else if guild.hasBot}
+			{:else if 'hasBot' in guild && guild.hasBot}
 				<Button href="/guild/{guild.id}" variant="ghost" class="m-1">
 					<Settings />
 				</Button>

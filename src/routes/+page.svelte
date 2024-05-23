@@ -143,7 +143,7 @@
 	</div>
 
 	<section class="flex justify-center mt-4 mb-10">
-		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]">
+		<div class="flex gap-2 flex-col justify-center w-[90%] sm:w-[70%] md:w-[50%]" data-sveltekit-preload-data="tap">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
 			{#each entries as e, i}
 				<Entry entry={e} rank={i + 1} formatting={'decimal'} />

@@ -4,9 +4,9 @@ import { CanManageGuild } from '$lib/utils';
 import { GetGuild, SetGuildInvite } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent }) => {
-	const { userPermissions } = await parent();
+	const { userPermissions, session } = await parent();
 
-	const hasPerms = CanManageGuild(userPermissions);
+	const hasPerms = CanManageGuild(userPermissions, session);
 
 	if (!hasPerms) {
 		throw error(403, 'You do not have permission to edit this guild.');
@@ -18,9 +18,9 @@ export const load: PageServerLoad = async ({ parent }) => {
 export const actions: Actions = {
 	setInvite: async ({ params, locals, request }) => {
 		const guildId = params.id;
-		const { discord_access_token: token } = locals;
+		const { access_token: token } = locals;
 
-		if (!locals.user || !guildId || !token) {
+		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -30,7 +30,7 @@ export const actions: Actions = {
 
 		if (!guild) throw error(404, 'Guild not found');
 
-		const hasPerms = CanManageGuild(guild.permissions, locals.user);
+		const hasPerms = CanManageGuild(guild.permissions, locals.session);
 
 		if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
 

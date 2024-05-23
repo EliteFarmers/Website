@@ -34,7 +34,7 @@ export async function FetchDiscordUser(tokens: {
 
 	if (!accessToken || !refreshToken) return null;
 
-	const user = await fetchDiscordUser(accessToken);
+	const user = await FetchDiscordUserData(accessToken);
 
 	if (!user) return null;
 
@@ -47,7 +47,7 @@ export async function FetchDiscordUser(tokens: {
 	};
 }
 
-async function fetchDiscordUser(accessToken: string): Promise<AuthorizedUser | null> {
+export async function FetchDiscordUserData(accessToken: string): Promise<AuthorizedUser | null> {
 	const { data } = await GetAuthorizedAccount(accessToken);
 
 	if (!data) return null;
@@ -68,7 +68,7 @@ export async function RefreshDiscordUser(refreshToken: string, redirect: string)
 		grant_type: 'refresh_token',
 		refresh_token: refreshToken,
 		redirect_uri: redirect,
-		scope: 'identify guilds',
+		scope: 'identify guilds role_connections.write',
 		state: uuid,
 	};
 
@@ -116,7 +116,7 @@ export function UpdateCookies(event: RequestEvent, discord: DiscordUpdateRespons
 			expires: new Date(accessTokenExpires),
 		});
 
-		event.locals.discord_access_token = accessToken;
+		event.locals.access_token = accessToken;
 	} else if (!accessToken) {
 		event.cookies.delete('discord_access_token', { path: '/' });
 	}
@@ -127,7 +127,7 @@ export function UpdateCookies(event: RequestEvent, discord: DiscordUpdateRespons
 			expires: new Date(refreshTokenExpires),
 		});
 
-		event.locals.discord_refresh_token = refreshToken;
+		event.locals.refresh_token = refreshToken;
 	} else if (!refreshToken) {
 		event.cookies.delete('discord_refresh_token', { path: '/' });
 	}

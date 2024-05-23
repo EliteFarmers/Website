@@ -24,7 +24,7 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		`?client_id=${PUBLIC_DISCORD_CLIENT_ID}` +
 		'&redirect_uri=' +
 		encodeURIComponent(`${url.origin}${PUBLIC_DISCORD_REDIRECT_ROUTE}`) +
-		'&response_type=code&scope=identify%20guilds' +
+		'&response_type=code&scope=identify%20guilds%20role_connections.write' +
 		`&state=${uuid}`;
 
 	cookies.set('auth_state', uuid, {

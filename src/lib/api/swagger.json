@@ -15,14 +15,15 @@
     "version": "v1"
   },
   "paths": {
-    "/Account": {
+    "/account": {
       "get": {
         "tags": [
           "Account"
         ],
+        "summary": "Get logged in Minecraft account",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -37,6 +38,26 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthorizedAccountDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -69,16 +90,17 @@
         ]
       }
     },
-    "/Account/Search": {
+    "/account/search": {
       "get": {
         "tags": [
           "Account"
         ],
+        "summary": "Search for Minecraft IGNs",
         "parameters": [
           {
             "name": "q",
             "in": "query",
-            "style": "form",
+            "description": "Query string",
             "schema": {
               "type": "string"
             }
@@ -86,7 +108,7 @@
           {
             "name": "start",
             "in": "query",
-            "style": "form",
+            "description": "Start of results for pagination",
             "schema": {
               "type": "string"
             }
@@ -94,7 +116,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -145,17 +167,18 @@
         }
       }
     },
-    "/Account/{discordId}": {
+    "/account/{discordId}": {
       "get": {
         "tags": [
           "Account"
         ],
+        "summary": "Get Minecraft account by Discord ID",
         "parameters": [
           {
             "name": "discordId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "minLength": 17,
               "type": "integer",
@@ -165,7 +188,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -227,17 +250,18 @@
         }
       }
     },
-    "/Account/{playerUuidOrIgn}": {
+    "/account/{playerUuidOrIgn}": {
       "get": {
         "tags": [
           "Account"
         ],
+        "summary": "Get Minecraft account by IGN or UUID",
         "parameters": [
           {
             "name": "playerUuidOrIgn",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -245,7 +269,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -290,12 +314,13 @@
         "tags": [
           "Account"
         ],
+        "summary": "Link a Minecraft account to a Discord account",
         "parameters": [
           {
             "name": "playerUuidOrIgn",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -303,7 +328,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -336,12 +361,13 @@
         "tags": [
           "Account"
         ],
+        "summary": "Unlink a Minecraft account from a Discord account",
         "parameters": [
           {
             "name": "playerUuidOrIgn",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -349,7 +375,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -371,25 +397,21 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
+        }
       }
     },
-    "/Account/primary/{playerUuidOrIgn}": {
+    "/account/primary/{playerUuidOrIgn}": {
       "post": {
         "tags": [
           "Account"
         ],
+        "summary": "Mark a Minecraft account as primary",
         "parameters": [
           {
             "name": "playerUuidOrIgn",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -397,7 +419,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -427,14 +449,15 @@
         ]
       }
     },
-    "/Admins": {
+    "/admins": {
       "get": {
         "tags": [
           "Admin"
         ],
+        "summary": "Get list of members with roles",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -510,17 +533,18 @@
         ]
       }
     },
-    "/Admin/Permissions/{memberId}/{permission}": {
+    "/admin/permissions/{memberId}/{permission}": {
       "post": {
         "tags": [
           "Admin"
         ],
+        "summary": "Add member permissions",
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -529,8 +553,8 @@
           {
             "name": "permission",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -539,7 +563,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -612,12 +636,13 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Remove member permissions",
         "parameters": [
           {
             "name": "memberId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -626,8 +651,8 @@
           {
             "name": "permission",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -636,7 +661,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -706,14 +731,41 @@
         ]
       }
     },
-    "/Admin/UpcomingContests": {
-      "delete": {
+    "/roles": {
+      "get": {
         "tags": [
           "Admin"
         ],
+        "summary": "Get list of roles",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized",
@@ -763,35 +815,35 @@
         ]
       }
     },
-    "/Admin/Badges/{playerUuid}/{badgeId}": {
+    "/admin/user/{userId}/roles/{role}": {
       "post": {
         "tags": [
           "Admin"
         ],
+        "summary": "Add a role to a user",
         "parameters": [
           {
-            "name": "playerUuid",
+            "name": "userId",
             "in": "path",
+            "description": "Member id",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "badgeId",
+            "name": "role",
             "in": "path",
+            "description": "Role name",
             "required": true,
-            "style": "simple",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -864,30 +916,30 @@
         "tags": [
           "Admin"
         ],
+        "summary": "Remove a role from a user",
         "parameters": [
           {
-            "name": "playerUuid",
+            "name": "userId",
             "in": "path",
+            "description": "Member id",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "badgeId",
+            "name": "role",
             "in": "path",
+            "description": "Role name",
             "required": true,
-            "style": "simple",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -957,228 +1009,15 @@
         ]
       }
     },
-    "/Admin/Badges": {
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBadgeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBadgeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBadgeDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
-      }
-    },
-    "/Admin/Badges/{badgeId}": {
-      "patch": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "badgeId",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditBadgeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditBadgeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditBadgeDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
-      },
+    "/admin/upcomingcontests": {
       "delete": {
         "tags": [
           "Admin"
         ],
-        "parameters": [
-          {
-            "name": "badgeId",
-            "in": "path",
-            "required": true,
-            "style": "simple",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        "summary": "Delete cached upcoming contests",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -1219,26 +1058,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
           }
         },
         "security": [
@@ -1248,7 +1067,7 @@
         ]
       }
     },
-    "/Event/Create": {
+    "/event/create": {
       "post": {
         "tags": [
           "AdminEvent"
@@ -1266,7 +1085,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1353,7 +1172,7 @@
         ]
       }
     },
-    "/Event/Create/Medals": {
+    "/event/create/medals": {
       "post": {
         "tags": [
           "AdminEvent"
@@ -1371,7 +1190,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1458,7 +1277,7 @@
         ]
       }
     },
-    "/Event/{eventId}/Edit": {
+    "/event/{eventId}/edit": {
       "post": {
         "tags": [
           "AdminEvent"
@@ -1470,7 +1289,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1489,7 +1307,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1556,7 +1374,7 @@
         ]
       }
     },
-    "/Event/{eventId}/bans": {
+    "/event/{eventId}/bans": {
       "get": {
         "tags": [
           "AdminEvent"
@@ -1568,7 +1386,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1577,7 +1394,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1653,7 +1470,7 @@
         ]
       }
     },
-    "/Event/{eventId}/bans/{playerUuid}": {
+    "/event/{eventId}/bans/{playerUuid}": {
       "post": {
         "tags": [
           "AdminEvent"
@@ -1665,7 +1482,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1676,7 +1492,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -1704,7 +1519,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1790,7 +1605,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1801,7 +1615,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -1811,7 +1624,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -1861,14 +1674,213 @@
         ]
       }
     },
-    "/Badges": {
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get logged in account",
+        "description": "Used to get session information from the token",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSessionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login with Discord credentials",
+        "description": "Used for [the website](https://elitebot.dev/) to login users with Discord",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscordLoginDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscordLoginDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscordLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh users tokens",
+        "description": "Used for [the website](https://elitebot.dev/) to refresh user logins",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthResponseDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthResponseDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthResponseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/badges": {
       "get": {
         "tags": [
           "Badge"
         ],
+        "summary": "Get all badges",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1899,17 +1911,510 @@
         }
       }
     },
-    "/Bot/{guildId}": {
+    "/badge/user/{playerUuid}/{badgeId}": {
+      "post": {
+        "tags": [
+          "Badge"
+        ],
+        "summary": "Add a badge to a user",
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "description": "Player UUID (no hyphens)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "badgeId",
+            "in": "path",
+            "description": "Badge ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Badge"
+        ],
+        "summary": "Remove a badge from a user",
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "description": "Player UUID (no hyphens)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "badgeId",
+            "in": "path",
+            "description": "Badge ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/badge": {
+      "post": {
+        "tags": [
+          "Badge"
+        ],
+        "summary": "Create a new badge",
+        "requestBody": {
+          "description": "Badge information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBadgeDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBadgeDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBadgeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/badge/{badgeId}": {
+      "patch": {
+        "tags": [
+          "Badge"
+        ],
+        "summary": "Edit a badge",
+        "parameters": [
+          {
+            "name": "badgeId",
+            "in": "path",
+            "description": "Badge ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New values",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditBadgeDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditBadgeDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditBadgeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Badge"
+        ],
+        "summary": "Delete a badge",
+        "parameters": [
+          {
+            "name": "badgeId",
+            "in": "path",
+            "description": "Badge ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/bot/{guildId}": {
       "get": {
         "tags": [
           "Bot"
         ],
+        "summary": "Get a guild by ID",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "Discord server (guild) ID",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1918,7 +2423,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1965,17 +2470,18 @@
         ]
       }
     },
-    "/Bot/{guildId}/jacob": {
+    "/bot/{guildId}/jacob": {
       "get": {
         "tags": [
           "Bot"
         ],
+        "summary": "Get Jacob Leaderboard feature for a guild",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -1984,7 +2490,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2054,12 +2560,13 @@
         "tags": [
           "Bot"
         ],
+        "summary": "Update Jacob Leaderboard feature for a guild",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -2067,6 +2574,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -2087,7 +2595,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "404": {
             "description": "Not Found",
@@ -2137,14 +2645,15 @@
         ]
       }
     },
-    "/Bot/ContestPings": {
+    "/bot/contestpings": {
       "get": {
         "tags": [
           "Bot"
         ],
+        "summary": "Get list of guilds with Contest Pings enabled",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2180,17 +2689,18 @@
         ]
       }
     },
-    "/Bot/ContestPings/{guildId}": {
+    "/bot/contestpings/{guildId}": {
       "delete": {
         "tags": [
           "Bot"
         ],
+        "summary": "Delete Contest Pings feature for a guild",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -2199,7 +2709,7 @@
           {
             "name": "reason",
             "in": "query",
-            "style": "form",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -2207,7 +2717,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "404": {
             "description": "Not Found",
@@ -2237,12 +2747,14 @@
         ]
       }
     },
-    "/Bot/account": {
+    "/bot/account": {
       "patch": {
         "tags": [
           "Bot"
         ],
+        "summary": "Update user's Discord account",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -2263,7 +2775,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2290,17 +2802,18 @@
         ]
       }
     },
-    "/Bot/Badges/{playerUuid}/{badgeId}": {
+    "/bot/badges/{playerUuid}/{badgeId}": {
       "post": {
         "tags": [
           "Bot"
         ],
+        "summary": "Add a badge to a player",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -2308,8 +2821,8 @@
           {
             "name": "badgeId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2318,7 +2831,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -2391,12 +2904,13 @@
         "tags": [
           "Bot"
         ],
+        "summary": "Remove a badge from a player",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -2404,8 +2918,8 @@
           {
             "name": "badgeId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2414,7 +2928,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -2484,17 +2998,18 @@
         ]
       }
     },
-    "/Bot/account/{discordId}/{playerIgnOrUuid}": {
+    "/bot/account/{discordId}/{playerIgnOrUuid}": {
       "post": {
         "tags": [
           "Bot"
         ],
+        "summary": "Link a Minecraft account to a Discord account",
         "parameters": [
           {
             "name": "discordId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "minimum": 0,
               "type": "integer",
@@ -2504,8 +3019,8 @@
           {
             "name": "playerIgnOrUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -2513,7 +3028,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         },
         "security": [
@@ -2526,12 +3041,13 @@
         "tags": [
           "Bot"
         ],
+        "summary": "Unlink a Minecraft account from a Discord account",
         "parameters": [
           {
             "name": "discordId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "minimum": 0,
               "type": "integer",
@@ -2541,8 +3057,8 @@
           {
             "name": "playerIgnOrUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -2550,7 +3066,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         },
         "security": [
@@ -2560,17 +3076,18 @@
         ]
       }
     },
-    "/Bot/account/{discordId}/{playerIgnOrUuid}/primary": {
+    "/bot/account/{discordId}/{playerIgnOrUuid}/primary": {
       "post": {
         "tags": [
           "Bot"
         ],
+        "summary": "Set a Minecraft account as primary",
         "parameters": [
           {
             "name": "discordId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "minimum": 0,
               "type": "integer",
@@ -2580,8 +3097,8 @@
           {
             "name": "playerIgnOrUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -2589,7 +3106,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         },
         "security": [
@@ -2599,17 +3116,18 @@
         ]
       }
     },
-    "/Contests/at/{year}": {
+    "/contests/at/{year}": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get all contests in a year",
         "parameters": [
           {
             "name": "year",
             "in": "path",
+            "description": "Skyblock Year",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2618,7 +3136,7 @@
           {
             "name": "now",
             "in": "query",
-            "style": "form",
+            "description": "Use current year",
             "schema": {
               "type": "boolean",
               "default": false
@@ -2627,7 +3145,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2649,17 +3167,18 @@
         }
       }
     },
-    "/Contests/Records/{year}": {
+    "/contests/records/{year}": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get contest records for a specific year",
         "parameters": [
           {
             "name": "year",
             "in": "path",
+            "description": "Skyblock Year",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2668,7 +3187,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2710,14 +3229,16 @@
         }
       }
     },
-    "/Contests/at/now": {
+    "/contests/at/now": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get upcoming contests for the current year",
+        "description": "Uses crowd-sourced data, may be inaccurate.\r\nData used and provided by [SkyHanni](https://github.com/hannibal002/SkyHanni/) to display upcoming contests.",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2742,7 +3263,10 @@
         "tags": [
           "Contests"
         ],
+        "summary": "Upload upcoming contests for the current year",
+        "description": "Submit this Skyblock year's contests to the API.\r\nUsed by [SkyHanni](https://github.com/hannibal002/SkyHanni/) to crowd-source upcoming contests.",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -2781,7 +3305,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request",
@@ -2806,17 +3330,18 @@
         }
       }
     },
-    "/Contests/at/{year}/{month}/{day}": {
+    "/contests/at/{year}/{month}/{day}": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get all contests in a day",
         "parameters": [
           {
             "name": "year",
             "in": "path",
+            "description": "Skyblock Year",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2825,8 +3350,8 @@
           {
             "name": "month",
             "in": "path",
+            "description": "Skyblock Month",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2835,8 +3360,8 @@
           {
             "name": "day",
             "in": "path",
+            "description": "Skyblock Day",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2845,7 +3370,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2896,17 +3421,18 @@
         }
       }
     },
-    "/Contests/at/{year}/{month}": {
+    "/contests/at/{year}/{month}": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get all contests in a month",
         "parameters": [
           {
             "name": "year",
             "in": "path",
+            "description": "Skyblock Year",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2915,8 +3441,8 @@
           {
             "name": "month",
             "in": "path",
+            "description": "Skyblock Month",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2925,7 +3451,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2985,17 +3511,18 @@
         }
       }
     },
-    "/Contests/{timestamp}": {
+    "/contests/{timestamp}": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get the three contests for a specific skyblock day",
         "parameters": [
           {
             "name": "timestamp",
             "in": "path",
+            "description": "Unix timestamp in seconds",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -3004,7 +3531,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3055,17 +3582,19 @@
         }
       }
     },
-    "/Contest/{contestKey}": {
+    "/contest/{contestKey}": {
       "get": {
         "tags": [
           "Contests"
         ],
+        "summary": "Get contest from Hypixel contest key",
+        "description": "Example key: \"285:2_11:CACTUS\"",
         "parameters": [
           {
             "name": "contestKey",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -3073,7 +3602,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3135,7 +3664,7 @@
         }
       }
     },
-    "/Events": {
+    "/events": {
       "get": {
         "tags": [
           "Event"
@@ -3143,7 +3672,7 @@
         "summary": "Get all upcoming events",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3174,7 +3703,7 @@
         }
       }
     },
-    "/Event/{eventId}": {
+    "/event/{eventId}": {
       "get": {
         "tags": [
           "Event"
@@ -3186,7 +3715,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -3195,7 +3723,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3237,7 +3765,7 @@
         }
       }
     },
-    "/Event/{eventId}/members": {
+    "/event/{eventId}/members": {
       "get": {
         "tags": [
           "Event"
@@ -3249,7 +3777,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -3258,7 +3785,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3309,7 +3836,7 @@
         }
       }
     },
-    "/Event/{eventId}/member/{playerUuid}": {
+    "/event/{eventId}/member/{playerUuid}": {
       "get": {
         "tags": [
           "Event"
@@ -3321,7 +3848,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -3332,7 +3858,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -3340,7 +3865,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3411,7 +3936,7 @@
         }
       }
     },
-    "/Event/{eventId}/join": {
+    "/event/{eventId}/join": {
       "post": {
         "tags": [
           "Event"
@@ -3423,7 +3948,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -3433,7 +3957,6 @@
             "name": "playerUuid",
             "in": "query",
             "description": "",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -3442,7 +3965,6 @@
             "name": "profileId",
             "in": "query",
             "description": "",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -3450,7 +3972,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3517,7 +4039,7 @@
         ]
       }
     },
-    "/Event/{eventId}/leave": {
+    "/event/{eventId}/leave": {
       "post": {
         "tags": [
           "Event"
@@ -3529,7 +4051,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -3538,7 +4059,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3605,7 +4126,7 @@
         ]
       }
     },
-    "/Graph/{playerUuid}/{profileUuid}/crops": {
+    "/graph/{playerUuid}/{profileUuid}/crops": {
       "get": {
         "tags": [
           "Graph"
@@ -3617,7 +4138,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -3629,7 +4149,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -3639,8 +4158,7 @@
           {
             "name": "days",
             "in": "query",
-            "description": "Amount of days after the \"from\" time to include",
-            "style": "form",
+            "description": "Amount of days after the \"from\" timestamp to include",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -3651,7 +4169,6 @@
             "name": "from",
             "in": "query",
             "description": "Unix timestamp in seconds for the start of the data to return",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int64",
@@ -3662,7 +4179,6 @@
             "name": "perDay",
             "in": "query",
             "description": "Data points returned per 24 hour period",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -3743,7 +4259,7 @@
         }
       }
     },
-    "/Graph/{playerUuid}/{profileUuid}/skills": {
+    "/graph/{playerUuid}/{profileUuid}/skills": {
       "get": {
         "tags": [
           "Graph"
@@ -3755,7 +4271,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -3767,7 +4282,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -3777,7 +4291,7 @@
           {
             "name": "days",
             "in": "query",
-            "style": "form",
+            "description": "Amount of days after the \"from\" timestamp to include",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -3788,7 +4302,6 @@
             "name": "from",
             "in": "query",
             "description": "Unix timestamp in seconds for the start of the data to return",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int64",
@@ -3799,7 +4312,6 @@
             "name": "perDay",
             "in": "query",
             "description": "Data points returned per 24 hour period",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -3880,7 +4392,7 @@
         }
       }
     },
-    "/Graph/Admin/{playerUuid}/{profileUuid}/crops": {
+    "/graph/admin/{playerUuid}/{profileUuid}/crops": {
       "get": {
         "tags": [
           "Graph"
@@ -3892,7 +4404,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -3904,7 +4415,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -3915,7 +4425,6 @@
             "name": "days",
             "in": "query",
             "description": "",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -3926,7 +4435,6 @@
             "name": "from",
             "in": "query",
             "description": "",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int64",
@@ -3936,7 +4444,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4032,7 +4540,7 @@
         ]
       }
     },
-    "/Graph/Admin/{playerUuid}/{profileUuid}/skills": {
+    "/graph/admin/{playerUuid}/{profileUuid}/skills": {
       "get": {
         "tags": [
           "Graph"
@@ -4044,7 +4552,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -4056,7 +4563,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -4067,7 +4573,6 @@
             "name": "days",
             "in": "query",
             "description": "",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4078,7 +4583,6 @@
             "name": "from",
             "in": "query",
             "description": "",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int64",
@@ -4088,7 +4592,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4184,14 +4688,15 @@
         ]
       }
     },
-    "/Guilds": {
+    "/guilds": {
       "get": {
         "tags": [
           "Guild"
         ],
+        "summary": "Get list of public guilds",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4222,17 +4727,18 @@
         }
       }
     },
-    "/Guild/{guildId}": {
+    "/guild/{guildId}": {
       "get": {
         "tags": [
           "Guild"
         ],
+        "summary": "Get guild by ID",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "Discord server (guild) ID",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4241,7 +4747,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4303,17 +4809,18 @@
         }
       }
     },
-    "/Guild/{guildId}/Events": {
+    "/guild/{guildId}/events": {
       "get": {
         "tags": [
           "Guild"
         ],
+        "summary": "Get guild events",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "Discord server (guild) ID",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -4322,7 +4829,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4393,17 +4900,48 @@
         }
       }
     },
-    "/Leaderboard/{id}": {
+    "/leaderboards": {
       "get": {
         "tags": [
           "Leaderboard"
         ],
+        "summary": "Get a list of leaderboards",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigLeaderboardSettings"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigLeaderboardSettings"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigLeaderboardSettings"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{id}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Get a leaderboard by ID",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Any leaderboard ID",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4411,7 +4949,7 @@
           {
             "name": "offset",
             "in": "query",
-            "style": "form",
+            "description": "Starting offset for returned entries",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4421,7 +4959,7 @@
           {
             "name": "limit",
             "in": "query",
-            "style": "form",
+            "description": "Maximum amount of returned entries",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4431,7 +4969,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4473,17 +5011,18 @@
         }
       }
     },
-    "/Leaderboard/skill/{skillName}": {
+    "/leaderboard/skill/{skillName}": {
       "get": {
         "tags": [
           "Leaderboard"
         ],
+        "summary": "Get a skill leaderboard by name",
         "parameters": [
           {
             "name": "skillName",
             "in": "path",
+            "description": "A skill name",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4491,7 +5030,7 @@
           {
             "name": "offset",
             "in": "query",
-            "style": "form",
+            "description": "Starting offset for returned entries",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4501,7 +5040,7 @@
           {
             "name": "limit",
             "in": "query",
-            "style": "form",
+            "description": "Maximum amount of returned entries",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4511,7 +5050,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4553,17 +5092,18 @@
         }
       }
     },
-    "/Leaderboard/collection/{collection}": {
+    "/leaderboard/collection/{collection}": {
       "get": {
         "tags": [
           "Leaderboard"
         ],
+        "summary": "Get a crop collection leaderboard by name",
         "parameters": [
           {
             "name": "collection",
             "in": "path",
+            "description": "A crop collection name",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4571,7 +5111,7 @@
           {
             "name": "offset",
             "in": "query",
-            "style": "form",
+            "description": "Starting offset for returned entries",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4581,7 +5121,7 @@
           {
             "name": "limit",
             "in": "query",
-            "style": "form",
+            "description": "Maximum amount of returned entries",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4591,7 +5131,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4633,17 +5173,18 @@
         }
       }
     },
-    "/Leaderboard/ranks/{playerUuid}/{profileUuid}": {
+    "/leaderboard/ranks/{playerUuid}/{profileUuid}": {
       "get": {
         "tags": [
           "Leaderboard"
         ],
+        "summary": "Get a player's leaderboard ranks",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "Player Uuid (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4651,8 +5192,8 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "Profile Uuid (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4660,7 +5201,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4702,17 +5243,18 @@
         }
       }
     },
-    "/Leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}": {
+    "/leaderboard/rank/{leaderboardId}/{playerUuid}/{profileUuid}": {
       "get": {
         "tags": [
           "Leaderboard"
         ],
+        "summary": "Get a player's rank in a leaderboard",
         "parameters": [
           {
             "name": "leaderboardId",
             "in": "path",
+            "description": "Any leaderboard ID",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4720,8 +5262,8 @@
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "Player Uuid (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4729,8 +5271,8 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "Profile Uuid (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -4738,7 +5280,7 @@
           {
             "name": "includeUpcoming",
             "in": "query",
-            "style": "form",
+            "description": "Include upcoming players",
             "schema": {
               "type": "boolean",
               "default": false
@@ -4747,7 +5289,7 @@
           {
             "name": "atRank",
             "in": "query",
-            "style": "form",
+            "description": "Starting rank for upcoming players",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4757,7 +5299,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4799,54 +5341,17 @@
         }
       }
     },
-    "/Login/callback": {
-      "get": {
-        "tags": [
-          "Login"
-        ],
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "error",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/Graph/Medals/now": {
+    "/graph/medals/now": {
       "get": {
         "tags": [
           "MedalGraphs"
         ],
+        "summary": "Get current average medal brackets",
         "parameters": [
           {
             "name": "months",
             "in": "query",
-            "style": "form",
+            "description": "Amount of previous Skyblock months to include",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4856,7 +5361,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4898,17 +5403,18 @@
         }
       }
     },
-    "/Graph/Medals/{sbYear}/{sbMonth}": {
+    "/graph/medals/{sbYear}/{sbMonth}": {
       "get": {
         "tags": [
           "MedalGraphs"
         ],
+        "summary": "Get medal brackets for a specific month",
         "parameters": [
           {
             "name": "sbYear",
             "in": "path",
+            "description": "Skyblock Year",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -4917,8 +5423,8 @@
           {
             "name": "sbMonth",
             "in": "path",
+            "description": "Skyblock Month",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -4927,7 +5433,7 @@
           {
             "name": "months",
             "in": "query",
-            "style": "form",
+            "description": "Amount of previous Skyblock months to include",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -4937,7 +5443,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4979,17 +5485,18 @@
         }
       }
     },
-    "/Graph/Medals/{sbYear}": {
+    "/graph/medals/{sbYear}": {
       "get": {
         "tags": [
           "MedalGraphs"
         ],
+        "summary": "Get medal brackets for multiple years",
         "parameters": [
           {
             "name": "sbYear",
             "in": "path",
+            "description": "Starting Skyblock Year",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -4998,7 +5505,7 @@
           {
             "name": "years",
             "in": "query",
-            "style": "form",
+            "description": "Amount of years to include",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -5008,7 +5515,7 @@
           {
             "name": "months",
             "in": "query",
-            "style": "form",
+            "description": "Amount of previous Skyblock months to include for each year",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -5018,7 +5525,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5069,17 +5576,18 @@
         }
       }
     },
-    "/Player/{playerUuidOrIgn}": {
+    "/player/{playerUuidOrIgn}": {
       "get": {
         "tags": [
           "Player"
         ],
+        "summary": "Get player data by UUID or IGN",
         "parameters": [
           {
             "name": "playerUuidOrIgn",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5087,7 +5595,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5129,17 +5637,18 @@
         }
       }
     },
-    "/Player/{discordId}": {
+    "/player/{discordId}": {
       "get": {
         "tags": [
           "Player"
         ],
+        "summary": "Get linked player data by Discord ID",
         "parameters": [
           {
             "name": "discordId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5148,7 +5657,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5210,17 +5719,18 @@
         }
       }
     },
-    "/Contests/{playerUuid}": {
+    "/contests/{playerUuid}": {
       "get": {
         "tags": [
           "PlayerContests"
         ],
+        "summary": "Get all contests of a player",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "Player UUID (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -5230,7 +5740,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5281,17 +5791,18 @@
         }
       }
     },
-    "/Contests/{playerUuid}/{profileUuid}": {
+    "/contests/{playerUuid}/{profileUuid}": {
       "get": {
         "tags": [
           "PlayerContests"
         ],
+        "summary": "Get all contests for a profile member",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "Player UUID (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -5301,8 +5812,8 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "Profile UUID (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5310,7 +5821,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5361,17 +5872,18 @@
         }
       }
     },
-    "/Contests/{playerUuid}/Selected": {
+    "/contests/{playerUuid}/selected": {
       "get": {
         "tags": [
           "PlayerContests"
         ],
+        "summary": "Get all contests for a selected profile member",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "Player UUID (no hyphens)",
             "required": true,
-            "style": "simple",
             "schema": {
               "maxLength": 32,
               "minLength": 32,
@@ -5381,7 +5893,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5432,7 +5944,7 @@
         }
       }
     },
-    "/Profile/{uuid}/Selected": {
+    "/profile/{uuid}/selected": {
       "get": {
         "tags": [
           "Profile"
@@ -5444,7 +5956,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5452,7 +5963,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5514,7 +6025,7 @@
         }
       }
     },
-    "/Profile/{playerUuid}/{profileUuid}": {
+    "/profile/{playerUuid}/{profileUuid}": {
       "get": {
         "tags": [
           "Profile"
@@ -5526,7 +6037,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5536,7 +6046,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5544,7 +6053,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5586,7 +6095,7 @@
         }
       }
     },
-    "/Profile/{profileUuid}": {
+    "/profile/{profileUuid}": {
       "get": {
         "tags": [
           "Profile"
@@ -5598,7 +6107,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5606,7 +6114,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5648,7 +6156,7 @@
         }
       }
     },
-    "/Profiles/{playerUuid}": {
+    "/profiles/{playerUuid}": {
       "get": {
         "tags": [
           "Profile"
@@ -5660,7 +6168,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5668,7 +6175,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5719,7 +6226,7 @@
         }
       }
     },
-    "/Profiles/{playerUuidOrIgn}/Names": {
+    "/profiles/{playerUuidOrIgn}/names": {
       "get": {
         "tags": [
           "Profile"
@@ -5731,7 +6238,6 @@
             "in": "path",
             "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -5739,7 +6245,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5770,14 +6276,15 @@
         }
       }
     },
-    "/User/Guilds": {
+    "/user/guilds": {
       "get": {
         "tags": [
           "User"
         ],
+        "summary": "Get the user's guilds",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5804,6 +6311,26 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5813,17 +6340,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}": {
+    "/user/guild/{guildId}": {
       "get": {
         "tags": [
           "User"
         ],
+        "summary": "Get the user's guild",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5832,7 +6360,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5850,6 +6378,66 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5859,17 +6447,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}/Invite": {
+    "/user/guild/{guildId}/invite": {
       "put": {
         "tags": [
           "User"
         ],
+        "summary": "Set the guild's Discord invite",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5877,6 +6466,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -5897,7 +6487,67 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5907,17 +6557,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}/Jacob": {
+    "/user/guild/{guildId}/jacob": {
       "patch": {
         "tags": [
           "User"
         ],
+        "summary": "Update the guild's Jacob Leaderboard feature",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5925,6 +6576,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -5945,7 +6597,67 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5958,12 +6670,13 @@
         "tags": [
           "User"
         ],
+        "summary": "Get the guild's Jacob Leaderboards",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -5972,7 +6685,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5990,6 +6703,66 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5999,17 +6772,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}/Jacob/Leaderboard": {
+    "/user/guild/{guildId}/jacob/leaderboard": {
       "post": {
         "tags": [
           "User"
         ],
+        "summary": "Add a guild Jacob Leaderboard",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6017,6 +6791,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -6037,7 +6812,67 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -6047,17 +6882,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}/Jacob/{lbId}": {
+    "/user/guild/{guildId}/jacob/{lbId}": {
       "put": {
         "tags": [
           "User"
         ],
+        "summary": "Replace a guild Jacob Leaderboard",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6066,14 +6902,15 @@
           {
             "name": "lbId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -6094,7 +6931,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6109,6 +6946,66 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -6124,12 +7021,13 @@
         "tags": [
           "User"
         ],
+        "summary": "Delete a guild Jacob Leaderboard",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6138,8 +7036,8 @@
           {
             "name": "lbId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -6147,7 +7045,67 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -6157,17 +7115,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}/Jacob/{lbId}/Send": {
+    "/user/guild/{guildId}/jacob/{lbId}/send": {
       "post": {
         "tags": [
           "User"
         ],
+        "summary": "Send a guild Jacob Leaderboard to Discord",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6176,8 +7135,8 @@
           {
             "name": "lbId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -6185,7 +7144,67 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -6195,17 +7214,18 @@
         ]
       }
     },
-    "/User/Guild/{guildId}/ContestPings": {
+    "/user/guild/{guildId}/contestpings": {
       "put": {
         "tags": [
           "User"
         ],
+        "summary": "Update the guild's contest ping feature",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6213,6 +7233,7 @@
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -6286,12 +7307,13 @@
         "tags": [
           "User"
         ],
+        "summary": "Remove the guild's contest ping feature",
         "parameters": [
           {
             "name": "guildId",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -6300,7 +7322,7 @@
           {
             "name": "reason",
             "in": "query",
-            "style": "form",
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -6308,7 +7330,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "404": {
             "description": "Not Found",
@@ -6378,23 +7400,25 @@
         ]
       }
     },
-    "/User/Badges/{playerUuid}": {
+    "/user/badges/{playerUuid}": {
       "patch": {
         "tags": [
           "User"
         ],
+        "summary": "Update a user's badge settings",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -6424,7 +7448,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           },
           "404": {
             "description": "Not Found",
@@ -6494,17 +7518,18 @@
         ]
       }
     },
-    "/Weight/{playerUuid}": {
+    "/weight/{playerUuid}": {
       "get": {
         "tags": [
           "Weight"
         ],
+        "summary": "Get farming weight for all profiles of a player",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "Player UUID",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -6512,7 +7537,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6554,17 +7579,18 @@
         }
       }
     },
-    "/Weight/{playerUuid}/Selected": {
+    "/weight/{playerUuid}/selected": {
       "get": {
         "tags": [
           "Weight"
         ],
+        "summary": "Get farming weight for the selected profile of a player",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -6572,7 +7598,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6614,17 +7640,18 @@
         }
       }
     },
-    "/Weight/{playerUuid}/{profileUuid}": {
+    "/weight/{playerUuid}/{profileUuid}": {
       "get": {
         "tags": [
           "Weight"
         ],
+        "summary": "Get farming weight for a specific profile of a player",
         "parameters": [
           {
             "name": "playerUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -6632,8 +7659,8 @@
           {
             "name": "profileUuid",
             "in": "path",
+            "description": "",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "string"
             }
@@ -6641,7 +7668,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6683,14 +7710,16 @@
         }
       }
     },
-    "/Weights": {
+    "/weights": {
       "get": {
         "tags": [
           "Weight"
         ],
+        "summary": "Get crop weight constants",
+        "description": "Use /weights/all instead",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6721,17 +7750,19 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
-    "/Weights/All": {
+    "/weights/all": {
       "get": {
         "tags": [
           "Weight"
         ],
+        "summary": "Get all farming weight constants",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6757,20 +7788,30 @@
   "components": {
     "schemas": {
       "AccountWithPermsDto": {
+        "required": [
+          "displayName",
+          "id",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "displayName": {
+            "minLength": 1,
             "type": "string"
           },
           "username": {
+            "minLength": 1,
             "type": "string"
           },
-          "permissions": {
-            "type": "integer",
-            "format": "int32"
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "discriminator": {
             "type": "string",
@@ -6801,6 +7842,71 @@
         },
         "additionalProperties": false
       },
+      "AuthResponseDto": {
+        "required": [
+          "access_token",
+          "refresh_token"
+        ],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Access token for the user"
+          },
+          "expires_in": {
+            "type": "string",
+            "description": "Expiry date of the access token in Unix timestamp seconds",
+            "nullable": true
+          },
+          "refresh_token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Refresh token for the user"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthSessionDto": {
+        "required": [
+          "avatar",
+          "id",
+          "ign",
+          "roles",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Discord user ID"
+          },
+          "username": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Discord username"
+          },
+          "avatar": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Discord avatar hash"
+          },
+          "ign": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Primary Minecraft IGN"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of user roles"
+          }
+        },
+        "additionalProperties": false
+      },
       "AuthorizedAccountDto": {
         "required": [
           "DisplayName",
@@ -6814,12 +7920,15 @@
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "displayName": {
+            "minLength": 1,
             "type": "string"
           },
           "username": {
+            "minLength": 1,
             "type": "string"
           },
           "permissions": {
@@ -6864,12 +7973,18 @@
         "additionalProperties": false
       },
       "AuthorizedGuildDto": {
+        "required": [
+          "id",
+          "permissions"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "permissions": {
+            "minLength": 1,
             "type": "string"
           },
           "guild": {
@@ -6896,6 +8011,12 @@
         "additionalProperties": false
       },
       "BadgeDto": {
+        "required": [
+          "description",
+          "imageId",
+          "name",
+          "requirements"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -6903,15 +8024,19 @@
             "format": "int32"
           },
           "imageId": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "description": {
+            "minLength": 1,
             "type": "string"
           },
           "requirements": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -6934,6 +8059,40 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "ConfigLeaderboardSettings": {
+        "type": "object",
+        "properties": {
+          "completeRefreshInterval": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "leaderboards": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Leaderboard"
+            }
+          },
+          "collectionLeaderboards": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Leaderboard"
+            }
+          },
+          "skillLeaderboards": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Leaderboard"
+            }
+          },
+          "pestLeaderboards": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Leaderboard"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "ContestBracketsDetailsDto": {
         "type": "object",
@@ -7115,18 +8274,28 @@
         "additionalProperties": false
       },
       "CreateBadgeDto": {
+        "required": [
+          "description",
+          "imageId",
+          "name",
+          "requirements"
+        ],
         "type": "object",
         "properties": {
           "imageId": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "description": {
+            "minLength": 1,
             "type": "string"
           },
           "requirements": {
+            "minLength": 1,
             "type": "string"
           },
           "tieToAccount": {
@@ -7320,6 +8489,9 @@
         "additionalProperties": false
       },
       "CropCollectionsDataPointDto": {
+        "required": [
+          "crops"
+        ],
         "type": "object",
         "properties": {
           "timestamp": {
@@ -7403,12 +8575,18 @@
         "additionalProperties": false
       },
       "DiscordChannel": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "type": {
@@ -7433,25 +8611,63 @@
         },
         "additionalProperties": false
       },
+      "DiscordLoginDto": {
+        "required": [
+          "access_token",
+          "expires_in",
+          "refresh_token"
+        ],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Discord access token from OAuth2"
+          },
+          "expires_in": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Unix timestamp in seconds"
+          },
+          "refresh_token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Discord refresh token from OAuth2"
+          }
+        },
+        "additionalProperties": false
+      },
       "DiscordRole": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
       "DiscordRoleData": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "permissions": {
@@ -7661,9 +8877,13 @@
         "additionalProperties": false
       },
       "EventCreatedDto": {
+        "required": [
+          "id"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "createdAt": {
@@ -7674,13 +8894,19 @@
         "additionalProperties": false
       },
       "EventDetailsDto": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string",
             "description": "Event id as a string"
           },
           "name": {
+            "minLength": 1,
             "type": "string",
             "description": "Name of the event"
           },
@@ -7784,6 +9010,9 @@
         "additionalProperties": false
       },
       "EventMemberDetailsDto": {
+        "required": [
+          "eventId"
+        ],
         "type": "object",
         "properties": {
           "playerUuid": {
@@ -7799,6 +9028,7 @@
             "nullable": true
           },
           "eventId": {
+            "minLength": 1,
             "type": "string"
           },
           "status": {
@@ -7819,6 +9049,9 @@
         "additionalProperties": false
       },
       "EventMemberDto": {
+        "required": [
+          "eventId"
+        ],
         "type": "object",
         "properties": {
           "playerUuid": {
@@ -7834,6 +9067,7 @@
             "nullable": true
           },
           "eventId": {
+            "minLength": 1,
             "type": "string"
           },
           "status": {
@@ -7984,12 +9218,18 @@
         "additionalProperties": false
       },
       "FarmingWeightWithProfileDto": {
+        "required": [
+          "profileId",
+          "profileName"
+        ],
         "type": "object",
         "properties": {
           "profileId": {
+            "minLength": 1,
             "type": "string"
           },
           "profileName": {
+            "minLength": 1,
             "type": "string"
           },
           "totalWeight": {
@@ -8024,12 +9264,18 @@
         "additionalProperties": false
       },
       "FullDiscordGuild": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "icon": {
@@ -8111,12 +9357,18 @@
         "additionalProperties": false
       },
       "GuildDetailsDto": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "icon": {
@@ -8139,12 +9391,19 @@
         "additionalProperties": false
       },
       "GuildDto": {
+        "required": [
+          "botPermissionsNew",
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "features": {
@@ -8175,6 +9434,7 @@
             "nullable": true
           },
           "botPermissionsNew": {
+            "minLength": 1,
             "type": "string"
           },
           "discordFeatures": {
@@ -8240,9 +9500,13 @@
         "additionalProperties": false
       },
       "GuildJacobLeaderboard": {
+        "required": [
+          "id"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "channelId": {
@@ -8291,15 +9555,24 @@
         "additionalProperties": false
       },
       "GuildJacobLeaderboardEntry": {
+        "required": [
+          "discordId",
+          "ign",
+          "record",
+          "uuid"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
+            "minLength": 1,
             "type": "string"
           },
           "ign": {
+            "minLength": 1,
             "type": "string"
           },
           "discordId": {
+            "minLength": 1,
             "type": "string"
           },
           "record": {
@@ -8356,6 +9629,10 @@
         "additionalProperties": false
       },
       "IncomingAccountDto": {
+        "required": [
+          "id",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -8363,6 +9640,7 @@
             "format": "int64"
           },
           "username": {
+            "minLength": 1,
             "type": "string"
           },
           "displayName": {
@@ -8441,9 +9719,13 @@
         "additionalProperties": false
       },
       "JacobContestDto": {
+        "required": [
+          "crop"
+        ],
         "type": "object",
         "properties": {
           "crop": {
+            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
@@ -8458,9 +9740,13 @@
         "additionalProperties": false
       },
       "JacobContestWithParticipationsDto": {
+        "required": [
+          "crop"
+        ],
         "type": "object",
         "properties": {
           "crop": {
+            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
@@ -8534,27 +9820,140 @@
         "properties": {
           "brackets": {
             "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/ContestMedal"
-            }
+            "properties": {
+              "Cactus": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Carrot": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "CocoaBeans": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Melon": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Mushroom": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "NetherWart": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Potato": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Pumpkin": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "SugarCane": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Wheat": {
+                "$ref": "#/components/schemas/ContestMedal"
+              },
+              "Seeds": {
+                "$ref": "#/components/schemas/ContestMedal"
+              }
+            },
+            "additionalProperties": false
           },
           "personalBests": {
             "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "properties": {
+              "Cactus": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Carrot": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "CocoaBeans": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Melon": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Mushroom": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "NetherWart": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Potato": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Pumpkin": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "SugarCane": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Wheat": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "Seeds": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "Leaderboard": {
+        "required": [
+          "id",
+          "order",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "order": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "scoreFormat": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "LeaderboardDto": {
+        "required": [
+          "id",
+          "title"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "title": {
+            "minLength": 1,
             "type": "string"
           },
           "limit": {
@@ -8602,6 +10001,10 @@
           "rank": {
             "type": "integer",
             "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
           },
           "upcomingRank": {
             "type": "integer",
@@ -8672,10 +10075,33 @@
         "properties": {
           "medalWeights": {
             "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "properties": {
+              "None": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Bronze": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Silver": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Gold": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Platinum": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Diamond": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false
@@ -8699,12 +10125,18 @@
         "additionalProperties": false
       },
       "MemberDetailsDto": {
+        "required": [
+          "username",
+          "uuid"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
+            "minLength": 1,
             "type": "string"
           },
           "username": {
+            "minLength": 1,
             "type": "string"
           },
           "profileName": {
@@ -8731,9 +10163,11 @@
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "primaryAccount": {
@@ -8766,9 +10200,11 @@
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "primaryAccount": {
@@ -8818,9 +10254,11 @@
         "type": "object",
         "properties": {
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "value": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -8896,6 +10334,9 @@
         "additionalProperties": false
       },
       "PetDto": {
+        "required": [
+          "type"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
@@ -8903,6 +10344,7 @@
             "nullable": true
           },
           "type": {
+            "minLength": 1,
             "type": "string"
           },
           "exp": {
@@ -8932,9 +10374,13 @@
         "additionalProperties": false
       },
       "PlayerDataDto": {
+        "required": [
+          "uuid"
+        ],
         "type": "object",
         "properties": {
           "uuid": {
+            "minLength": 1,
             "type": "string"
           },
           "displayname": {
@@ -9015,13 +10461,46 @@
         },
         "additionalProperties": false
       },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
       "ProfileDetailsDto": {
+        "required": [
+          "profileId",
+          "profileName"
+        ],
         "type": "object",
         "properties": {
           "profileId": {
+            "minLength": 1,
             "type": "string"
           },
           "profileName": {
+            "minLength": 1,
             "type": "string"
           },
           "gameMode": {
@@ -9044,15 +10523,25 @@
         "additionalProperties": false
       },
       "ProfileMemberDto": {
+        "required": [
+          "farmingWeight",
+          "jacob",
+          "playerUuid",
+          "profileId",
+          "profileName"
+        ],
         "type": "object",
         "properties": {
           "profileId": {
+            "minLength": 1,
             "type": "string"
           },
           "playerUuid": {
+            "minLength": 1,
             "type": "string"
           },
           "profileName": {
+            "minLength": 1,
             "type": "string"
           },
           "api": {
@@ -9123,12 +10612,18 @@
         "additionalProperties": false
       },
       "ProfileNamesDto": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "selected": {
@@ -9138,12 +10633,18 @@
         "additionalProperties": false
       },
       "PublicGuildDto": {
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "icon": {
@@ -9197,9 +10698,13 @@
         "additionalProperties": false
       },
       "PublicJacobLeaderboardDto": {
+        "required": [
+          "id"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "channelId": {
@@ -9281,12 +10786,18 @@
         "additionalProperties": false
       },
       "RedemptionDto": {
+        "required": [
+          "cost",
+          "itemId"
+        ],
         "type": "object",
         "properties": {
           "itemId": {
+            "minLength": 1,
             "type": "string"
           },
           "cost": {
+            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
@@ -9297,6 +10808,9 @@
         "additionalProperties": false
       },
       "SkillsDataPointDto": {
+        "required": [
+          "skills"
+        ],
         "type": "object",
         "properties": {
           "timestamp": {
@@ -9505,6 +11019,13 @@
         "additionalProperties": false
       },
       "UserBadgeDto": {
+        "required": [
+          "description",
+          "imageId",
+          "name",
+          "requirements",
+          "timestamp"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -9512,18 +11033,23 @@
             "format": "int32"
           },
           "imageId": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "description": {
+            "minLength": 1,
             "type": "string"
           },
           "requirements": {
+            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
+            "minLength": 1,
             "type": "string"
           },
           "visible": {
@@ -9537,12 +11063,19 @@
         "additionalProperties": false
       },
       "UserGuildDto": {
+        "required": [
+          "id",
+          "name",
+          "permissions"
+        ],
         "type": "object",
         "properties": {
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "name": {
+            "minLength": 1,
             "type": "string"
           },
           "icon": {
@@ -9553,6 +11086,7 @@
             "type": "boolean"
           },
           "permissions": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -9578,10 +11112,53 @@
         "properties": {
           "cropWeights": {
             "type": "object",
-            "additionalProperties": {
-              "type": "number",
-              "format": "double"
+            "properties": {
+              "Cactus": {
+                "type": "number",
+                "format": "double"
+              },
+              "Carrot": {
+                "type": "number",
+                "format": "double"
+              },
+              "CocoaBeans": {
+                "type": "number",
+                "format": "double"
+              },
+              "Melon": {
+                "type": "number",
+                "format": "double"
+              },
+              "Mushroom": {
+                "type": "number",
+                "format": "double"
+              },
+              "NetherWart": {
+                "type": "number",
+                "format": "double"
+              },
+              "Potato": {
+                "type": "number",
+                "format": "double"
+              },
+              "Pumpkin": {
+                "type": "number",
+                "format": "double"
+              },
+              "SugarCane": {
+                "type": "number",
+                "format": "double"
+              },
+              "Wheat": {
+                "type": "number",
+                "format": "double"
+              },
+              "Seeds": {
+                "type": "number",
+                "format": "double"
+              }
             },
+            "additionalProperties": false,
             "description": "The weights of each crop in the event"
           }
         },
@@ -9652,7 +11229,7 @@
     "securitySchemes": {
       "Bearer": {
         "type": "http",
-        "description": "Enter Discord Bearer Token",
+        "description": "Enter Bearer Token",
         "scheme": "Bearer",
         "bearerFormat": "JWT"
       }

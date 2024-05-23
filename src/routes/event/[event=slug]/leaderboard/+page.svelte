@@ -12,7 +12,7 @@
 	export let data: PageData;
 
 	$: event = data.event ?? {};
-	$: guild = data.guild ?? {};
+	$: guild = data.guild;
 	$: members = data.members ?? [];
 	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
 
@@ -21,10 +21,8 @@
 
 <Head
 	title={(event.name || 'Farming Weight Event') + ' Leaderboard'}
-	description={`View the leaderboard of "${data.guild.name}"!\n${event.description}`}
-	imageUrl={data.guild.icon
-		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
-		: undefined}
+	description={`View the event leaderboard!\n${event.description}`}
+	imageUrl={guild?.icon ? `https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.webp` : undefined}
 />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
@@ -32,7 +30,7 @@
 		<h2 class="text-2xl md:text-4xl text-center">{event.name}</h2>
 		<p class="md:text-lg text-center"><Linebreaks text={event.description ?? ''} /></p>
 		<div class="flex flex-row justify-center gap-2 mt-4 max-w-2xl w-full items-center">
-			<Button href="/server/{guild.id}/join" color="blue" size="sm" class="flex-1">
+			<Button href="/server/{guild?.id}/join" color="blue" size="sm" class="flex-1">
 				<p class="mr-2">Join Discord</p>
 				<ExternalLink size={16} />
 			</Button>

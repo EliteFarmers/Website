@@ -2,6 +2,8 @@ import { error, redirect } from '@sveltejs/kit';
 import { DISCORD_CLIENT_SECRET } from '$env/static/private';
 import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
 import type { RequestHandler } from './$types';
+import type { components } from '$lib/api/api';
+import { LoginUser } from '$lib/api/elite';
 
 export const GET: RequestHandler = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
@@ -26,7 +28,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		code: code,
 		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
 		state: state,
-		scope: 'identify guilds',
+		scope: 'identify guilds role_connections.write',
 	};
 
 	const request = await fetch('https://discord.com/api/v10/oauth2/token', {
@@ -37,28 +39,33 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		},
 	});
 
-	const response = (await request.json()) as {
-		access_token: string;
-		expires_in: number;
-		refresh_token: string;
-		error?: unknown;
-	};
+	const response = (await request.json()) as components['schemas']['DiscordLoginDto'] & { error?: unknown };
 
 	if (response.error) {
 		throw error(400, new Error('Discord Authentication Error'));
 	}
 
+	const { data: loginResponse } = await LoginUser({
+		access_token: response.access_token,
+		expires_in: Math.floor(+response.expires_in / 1000).toString(),
+		refresh_token: response.refresh_token,
+	}).catch(() => ({ data: undefined }));
+
+	if (!loginResponse) {
+		throw error(500, 'Failed to login user!');
+	}
+
 	const thirtyDays = 30 * 24 * 60 * 60;
-	const accessTokenExpires = new Date(Date.now() + response.expires_in); // ~10 minutes
 	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days
 
-	cookies.set('discord_access_token', response.access_token, {
-		expires: accessTokenExpires,
-		maxAge: response.expires_in,
+	cookies.set('access_token', loginResponse.access_token, {
+		// The access token expires every 10 minutes, but we keep it to use with the refresh token
+		expires: refreshTokenExpires,
+		maxAge: thirtyDays,
 		path: '/',
 	});
 
-	cookies.set('discord_refresh_token', response.refresh_token, {
+	cookies.set('refresh_token', loginResponse.refresh_token, {
 		expires: refreshTokenExpires,
 		maxAge: thirtyDays,
 		path: '/',

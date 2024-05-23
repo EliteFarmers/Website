@@ -30,6 +30,6 @@ export const load = (async ({ params, setHeaders, url }) => {
 	return {
 		event: eventData,
 		members: members ?? [],
-		guild: guild ?? {},
+		guild: guild,
 	};
 }) satisfies LayoutServerLoad;

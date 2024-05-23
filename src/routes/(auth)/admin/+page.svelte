@@ -18,8 +18,6 @@
 	export let data: PageData;
 	export let form: ActionData;
 
-	let permissions = Object.entries(data.permissions);
-
 	let manageMemberModal = false;
 	let promoteMemberModal = false;
 	let manageBadgeModal = false;
@@ -57,10 +55,9 @@
 						</div>
 					</div>
 					<div class="flex flex-row gap-4 pr-2 items-center">
-						<div class="flex flex-col text-right">
-							{#each permissions.filter(([p]) => +p === +(user.permissions ?? 0)) as permission}
-								<p class="text-lg">{permission[1].name}</p>
-								<p>{permission[1].description}</p>
+						<div class="flex flex-wrap gap-2 text-right">
+							{#each user.roles ?? [] as role}
+								<p>{role}</p>
 							{/each}
 						</div>
 						<Popover.Mobile>
@@ -153,7 +150,6 @@
 		<Dialog.Title>Manage {selectedMember?.username} - {selectedMemberId}</Dialog.Title>
 		<form
 			method="post"
-			action="?/{selectedMember?.permissions === +selectedPermission ? 'demote' : 'promote'}"
 			class="flex flex-col gap-2"
 			use:enhance={() => {
 				return async ({ result, update }) => {
@@ -165,19 +161,22 @@
 			<input type="hidden" name="id" bind:value={selectedMemberId} />
 
 			<div class="space-y-2">
-				<Label>Permission</Label>
+				<Label>Remove Role</Label>
 				<Select.Simple
-					options={permissions.map((p) => ({
-						value: p[0],
-						label: p[1].name,
+					options={data.roles.map((p) => ({
+						value: p,
+						label: `${p}${selectedMember?.roles?.includes(p) ? ' (Active)' : ''}`,
 					}))}
 					bind:value={selectedPermission}
-					placeholder="Select a permission"
-					name="permission"
+					placeholder="Select a role"
+					name="role"
 				/>
 			</div>
 
-			<Button type="submit">Toggle Permission</Button>
+			<div class="flex flex-row gap-2 items-center">
+				<Button type="submit" formaction="?/promote">Add Role</Button>
+				<Button type="submit" formaction="?/demote">Remove Role</Button>
+			</div>
 		</form>
 	</Dialog.Content>
 </Dialog.Root>
@@ -202,19 +201,19 @@
 			</div>
 
 			<div class="flex flex-col gap-2 items-start">
-				<Label>Permission</Label>
+				<Label>Role</Label>
 				<Select.Simple
-					options={permissions.map((p) => ({
-						value: p[0],
-						label: p[1].name,
+					options={data.roles.map((p) => ({
+						value: p,
+						label: p,
 					}))}
 					bind:value={selectedPermission}
-					placeholder="Select a permission"
-					name="permission"
+					placeholder="Select a role"
+					name="role"
 				/>
 			</div>
 
-			<Button type="submit">Promote</Button>
+			<Button type="submit">Add Role</Button>
 		</form>
 	</Dialog.Content>
 </Dialog.Root>

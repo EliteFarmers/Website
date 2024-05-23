@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let member: components['schemas']['EventMemberDto'];
+	export let member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberBannedDto'];
 </script>
 
 <div
@@ -21,7 +21,7 @@
 		</a>
 	</div>
 	<div class="flex flex-row gap-2 lg:gap-4">
-		{#if member.notes || member.status === 2}
+		{#if 'status' in member && (member.notes || member.status === 2)}
 			<p>{member.notes || (member.status === 2 ? 'Member Left' : '')}</p>
 		{/if}
 		<p class="font-semibold text-xl">{(+(member.score ?? 0)).toLocaleString()}</p>
