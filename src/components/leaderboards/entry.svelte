@@ -24,7 +24,7 @@
 
 <a
 	href="/@{encodeURIComponent(ign ?? '')}/{encodeURIComponent(profile ?? '')}"
-	class="inline-block w-full hover:shadow-lg hover:bg-muted align-middle py-1 sm:p-1 bg-primary-foreground border-2 {highlight
+	class="inline-block w-full hover:shadow-lg hover:bg-muted align-middle py-1 sm:p-1 bg-primary-foreground border-2 max-w-2xl {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
 >
