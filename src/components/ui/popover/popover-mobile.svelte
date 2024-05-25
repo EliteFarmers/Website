@@ -46,7 +46,7 @@
 		</Trigger>
 	</div>
 	{#if hasContent}
-		<Content class={cn('p-2 min-w-fit', className)}>
+		<Content class={cn('p-2', className)}>
 			<div on:mouseenter={mouseEnter} on:mouseleave={mouseLeave} role="contentinfo" class={rootClass}>
 				<slot />
 			</div>
