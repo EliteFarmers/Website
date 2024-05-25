@@ -51,7 +51,7 @@
 				>
 					<img
 						src="/images/crops/{key}.png"
-						class="rounded-lg pixelated aspect-square w-full p-[16%]"
+						class="rounded-lg pixelated aspect-square p-[16%] object-contain"
 						alt={name}
 					/>
 				</div>
@@ -115,7 +115,7 @@
 		@apply align-middle justify-center aspect-square object-contain;
 		aspect-ratio: 1 / 1;
 		background-repeat: no-repeat;
-		background-size: 85% 85%;
+		background-size: 85%;
 		background-position: center;
 		background-blend-mode: color;
 	}

@@ -14,14 +14,11 @@
 </script>
 
 <Popover.Mobile>
-	<div
-		slot="trigger"
-		class="image-container bg-green-500 p-1 md:p-2 lg:p-3 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
-	>
+	<div slot="trigger" class="image-container bg-muted p-1 md:p-2 lg:p-3 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20">
 		<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
 		<div class="tier-border">
 			{#each tiers as tier, i}
-				<div class="tier {tier === '1' ? '' : 'bg-muted'}" style="grid-area: a{i};" />
+				<div class="tier {tier === '1' ? 'bg-green-500' : ''}" style="grid-area: a{i};" />
 			{/each}
 		</div>
 		<div class="bg-primary-foreground absolute tier-cover" />

@@ -57,11 +57,11 @@
 		{#each crops as name (name)}
 			<Popover.Mobile>
 				<div slot="trigger">
-					<div class="flex-col flex-1 items-center text-center max-w-2xl rounded-md bg-card">
+					<div class="flex-col flex-1 items-center text-center rounded-md bg-card">
 						<img class="w-16 pixelated" src={PROPER_CROP_TO_IMG[name]} alt="" />
 					</div>
 				</div>
-				<div>
+				<div class="mx-8 text-center">
 					{name}
 				</div>
 			</Popover.Mobile>

@@ -12,20 +12,20 @@
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
 		>
 			<div class="text-green-800 dark:text-green-300">
-				<h1>
+				<p>
 					{#if entry.position !== -1}
-						<span class="text-sm xs:text-md sm:text-2xl">#</span><span
-							class="text-lg xs:text-xl sm:text-3xl">{(entry.position ?? 0) + 1}</span
+						<span class="text-sm xs:text-md sm:text-xl md:text-2xl">#</span><span
+							class="text-lg xs:text-xl sm:text-2xl md:text-3xl">{(entry.position ?? 0) + 1}</span
 						>
 					{:else}
-						<span class="text-sm xs:text-md sm:text-2xl">???</span>
+						<span class="text-sm xs:text-md sm:text-xl md:text-2xl">???</span>
 					{/if}
-				</h1>
+				</p>
 			</div>
 			{#if entry.removed}
 				<Popover.Mobile>
 					<div slot="trigger">
-						<CircleAlert class="text-destructive" />
+						<CircleAlert class="text-destructive" size={24} />
 					</div>
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
@@ -37,7 +37,7 @@
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
-				<h1 class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{entry.playerName}</h1>
+				<p class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{entry.playerName}</p>
 			</div>
 		</div>
 		<div class="flex gap-2 p-1 justify-end align-middle items-center mr-2 md:mx-2">

@@ -108,9 +108,11 @@
 <section class="flex w-full justify-center align-middle my-8">
 	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
 		<Collections {collections} ranks={data.ranks ?? {}} />
-		<div class="flex flex-1 flex-col gap-4">
-			<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
-		</div>
+		{#if member.farmingWeight?.inventory?.tools?.length}
+			<div class="flex flex-1 flex-col gap-4">
+				<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
+			</div>
+		{/if}
 	</div>
 </section>
 

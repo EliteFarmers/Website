@@ -17,7 +17,13 @@
 
 	const earnedMedals = () => {
 		const data = member.data as { earnedMedals?: Record<string, number> } | undefined;
-		return Object.entries(data?.earnedMedals ?? {}).sort((a, b) => b[1] - a[1]);
+		return [
+			['Diamond', data?.earnedMedals?.['Diamond']],
+			['Platinum', data?.earnedMedals?.['Platinum']],
+			['Gold', data?.earnedMedals?.['Gold']],
+			['Silver', data?.earnedMedals?.['Silver']],
+			['Bronze', data?.earnedMedals?.['Bronze']],
+		].filter(([, count]) => count) as [string, number][];
 	};
 </script>
 
