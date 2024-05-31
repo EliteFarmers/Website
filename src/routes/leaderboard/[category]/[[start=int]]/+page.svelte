@@ -89,12 +89,12 @@
 		data-sveltekit-preload-data="tap"
 		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg mb-8 mt-2 mx-4"
 	>
-		<div class="flex flex-col gap-2 p-2 w-full items-end">
+		<div class="flex flex-col gap-2 p-2 w-full items-center lg:items-end">
 			{#each firstHalf as entry, i (entry)}
 				<Entry rank={i + offset} {entry} {formatting} />
 			{/each}
 		</div>
-		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full items-start">
+		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full items-center lg:items-start">
 			{#each secondHalf as entry, i (entry)}
 				<Entry rank={i + firstHalf.length + offset} {entry} {formatting} />
 			{/each}

@@ -26,6 +26,12 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Skyblock Level',
 		type: LeaderboardType.Misc,
 	},
+	chocolate: {
+		limit: 1_000,
+		title: 'All-Time Chocolate',
+		name: 'Chocolate',
+		type: LeaderboardType.Misc,
+	},
 	participations: {
 		limit: 1_000,
 		title: 'Jacob Contest Participations',
