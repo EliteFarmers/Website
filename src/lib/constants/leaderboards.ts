@@ -27,7 +27,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Misc,
 	},
 	chocolate: {
-		limit: 1_000,
+		limit: 5_000,
 		title: 'All-Time Chocolate',
 		name: 'Chocolate',
 		type: LeaderboardType.Misc,
