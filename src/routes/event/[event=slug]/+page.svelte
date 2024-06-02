@@ -57,8 +57,8 @@
 			<h1 class="text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>
-			<Button href="https://discord.gg/{data.guild?.inviteCode}" variant="ghost">
-				<ExternalLink size={16} />
+			<Button href="https://discord.gg/{data.guild?.inviteCode}" variant="link">
+				<ExternalLink size={16} class="text-white" />
 			</Button>
 		</div>
 		<div class="flex flex-col p-4 items-center bg-zinc-900/75 mb-32 rounded-lg text-white">
@@ -117,6 +117,9 @@
 				<EventData {event} />
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
 				<div class="flex flex-row justify-center gap-2 mt-4">
+					<Button href="/server/{event.guildId}" variant="secondary">
+						<p class="mr-2">Back To Server</p>
+					</Button>
 					<Button href="{$page.url.pathname}/join" variant="secondary">
 						<p class="mr-2">Join Discord Server</p>
 						<ExternalLink size={16} />

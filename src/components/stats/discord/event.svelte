@@ -5,6 +5,9 @@
 
 	export let event: components['schemas']['EventDetailsDto'];
 	export let guild: components['schemas']['GuildDetailsDto'] | undefined;
+
+	$: start = new Date(+(event.startTime ?? 0) * 1000);
+	$: end = new Date(+(event.endTime ?? 0) * 1000);
 </script>
 
 <a
@@ -22,13 +25,13 @@
 	<div class="flex flex-row gap-4 z-10 items-center">
 		<Guildicon {guild} size={16} />
 		<div class="flex flex-col gap-1 items-start">
-			<h2 class="text-3xl font-semibold">{event.name}</h2>
+			<h2 class="text-3xl font-semibold text-white">{event.name}</h2>
 			<EventType type={event.type ?? 1} />
 		</div>
 	</div>
-	<div class="flex flex-row gap-2 font-semibold items-center z-10 text-lg">
-		<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
+	<div class="flex flex-row gap-2 font-semibold items-center z-10 text-lg text-white">
+		<span>{start.toLocaleDateString()}</span>
 		<span> - </span>
-		<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleDateString()}</span>
+		<span>{end.toLocaleDateString()}</span>
 	</div>
 </a>

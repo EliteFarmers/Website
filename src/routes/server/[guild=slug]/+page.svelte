@@ -55,10 +55,12 @@
 	{#if data.events.length > 0}
 		{@const now = Date.now() / 1000}
 		{@const upcoming = data.events.filter((e) => e.endTime && +e.endTime >= now)}
-		{@const past = data.events.filter((e) => e.endTime && +e.endTime < now)}
+		{@const past = data.events
+			.filter((e) => e.endTime && +e.endTime < now)
+			.sort((a, b) => +(b.endTime ?? 0) - +(a.endTime ?? 0))}
 
 		<section class="flex flex-col gap-4 items-center max-w-5xl w-full">
-			<h2 class="text-3xl my-4">Upcoming Events</h2>
+			<h2 class="text-3xl my-4">Server Events</h2>
 			{#if upcoming.length > 0}
 				<div class="flex flex-col md:mx-32 gap-4 w-full">
 					{#each upcoming as event}
