@@ -32,9 +32,11 @@ export const BONUS_WEIGHT = {
 	Farming60Bonus: 250,
 	Farming50Bonus: 100,
 	AnitaBuffBonusMultiplier: 2,
-	MaxMedalsCounted: 1000,
 	GoldMedalRewardInterval: 50,
-	WeightPerGoldMedal: 0.5,
 	MinionRewardTier: 12,
 	MinionRewardWeight: 5,
+	MaxMedalsCounted: 1000,
+	WeightPerDiamondMedal: 0.75,
+	WeightPerPlatinumMedal: 0.5,
+	WeightPerGoldMedal: 0.25,
 } as const;

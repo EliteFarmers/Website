@@ -1,6 +1,6 @@
 import { Crop } from '../constants/crops';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests';
-import { fortuneFromPestBestiary } from '../constants/pests';
+import { fortuneFromPestBestiary } from '../util/pests';
 import { FarmingPetType } from '../constants/pets';
 import {
 	FORTUNE_PER_ANITA_BONUS,
@@ -15,7 +15,7 @@ import { ArmorSet, FarmingArmor } from './farmingarmor';
 import { FarmingPet } from './farmingpet';
 import { FarmingTool } from './farmingtool';
 import { EliteItemDto } from './item';
-import { LotusGear } from './lotusgear';
+import { FarmingEquipment } from './farmingequipment';
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Record<Crop, number>;
@@ -40,7 +40,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 
 	tools: EliteItemDto[] | FarmingTool[];
 	armor: EliteItemDto[] | FarmingArmor[] | ArmorSet;
-	equipment: EliteItemDto[] | LotusGear[];
+	equipment: EliteItemDto[] | FarmingEquipment[];
 	accessories: EliteItemDto[] | FarmingAccessory[];
 	pets: FarmingPetType[] | FarmingPet[];
 
@@ -52,6 +52,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	anitaBonus?: number;
 
 	extraFortune?: ExtraFarmingFortune[];
+	zorro?: boolean;
 }
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -66,7 +67,7 @@ export class FarmingPlayer {
 	declare tools: FarmingTool[];
 	declare armor: FarmingArmor[];
 	declare armorSet: ArmorSet;
-	declare equipment: LotusGear[];
+	declare equipment: FarmingEquipment[];
 	declare accessories: FarmingAccessory[];
 	declare pets: FarmingPet[];
 
@@ -109,11 +110,11 @@ export class FarmingPlayer {
 		}
 
 
-		if (options.equipment[0] instanceof LotusGear) {
-			this.equipment = (options.equipment as LotusGear[]).sort((a, b) => b.fortune - a.fortune);
+		if (options.equipment[0] instanceof FarmingEquipment) {
+			this.equipment = (options.equipment as FarmingEquipment[]).sort((a, b) => b.fortune - a.fortune);
 			for (const e of this.equipment) e.setOptions(options);
 		} else {
-			this.equipment = LotusGear.fromArray(options.equipment as EliteItemDto[], options);
+			this.equipment = FarmingEquipment.fromArray(options.equipment as EliteItemDto[], options);
 		}
 
 		if (options.accessories[0] instanceof FarmingAccessory) {
@@ -182,10 +183,10 @@ export class FarmingPlayer {
 		}
 
 		// Lotus Gear
-		const lotusGear = this.equipment.reduce((a, b) => a + b.fortune, 0);
-		if (lotusGear > 0) {
-			breakdown['Lotus Equipment'] = lotusGear;
-			sum += lotusGear;
+		const equipment = this.equipment.reduce((a, b) => a + b.fortune, 0);
+		if (equipment > 0) {
+			breakdown['Equipment'] = equipment;
+			sum += equipment;
 		}
 
 		// Anita Bonus

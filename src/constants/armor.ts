@@ -1,6 +1,7 @@
 import { Rarity, ReforgeTarget, Stat } from './reforges';
 import { Skill } from './skills';
 import { SpecialCrop } from './specialcrops';
+import { Upgrade, UpgradeReason } from './upgrades';
 
 export enum GearSlot {
 	Boots = 'Boots',
@@ -19,9 +20,10 @@ export interface FarmingArmorInfo {
 	family?: string;
 	name: string;
 	maxRarity: Rarity;
-	upgrade?: string;
+	upgrade?: Upgrade;
 	wiki: string;
 	stats?: Partial<Record<Stat, number>>;
+	contestStatsMultiplier?: number;
 	perLevelStats?: {
 		skill: Skill;
 		appliesTo?: ReforgeTarget[];
@@ -33,8 +35,11 @@ export interface FarmingArmorInfo {
 export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARMER_BOOTS: {
 		name: 'Farmer Boots',
-		upgrade: 'RANCHERS_BOOTS',
 		wiki: 'https://wiki.hypixel.net/Farmer_Boots',
+		upgrade: {
+			id: 'RANCHERS_BOOTS',
+			reason: UpgradeReason.Standard,
+		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Boots,
 		skillReq: {
@@ -50,6 +55,11 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	RANCHERS_BOOTS: {
 		name: "Rancher's Boots",
 		wiki: 'https://wiki.hypixel.net/Rancher%27s_Boots',
+		upgrade: {
+			id: 'FERMENTO_BOOTS',
+			reason: UpgradeReason.Situational,
+			why: 'Fermento Boots provide more farming fortune, with the tradeoff of not being able to control your speed.',
+		},
 		maxRarity: Rarity.Legendary,
 		slot: GearSlot.Boots,
 		skillReq: {
@@ -65,6 +75,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	ENCHANTED_JACK_O_LANTERN: {
 		name: 'Lantern Helmet',
 		wiki: 'https://wiki.hypixel.net/Lantern_Helmet',
+		upgrade: {
+			id: 'FERMENTO_HELMET',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Helmet,
 		skillReq: {
@@ -81,6 +95,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARM_ARMOR_HELMET: {
 		name: 'Farm Armor Helmet',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
+		upgrade: {
+			id: 'MELON_HELMET',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Epic,
@@ -94,6 +112,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARM_ARMOR_CHESTPLATE: {
 		name: 'Farm Armor Chestplate',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
+		upgrade: {
+			id: 'MELON_CHESTPLATE',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Epic,
@@ -107,6 +129,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARM_ARMOR_LEGGINGS: {
 		name: 'Farm Armor Leggings',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
+		upgrade: {
+			id: 'MELON_LEGGINGS',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Epic,
@@ -120,6 +146,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARM_ARMOR_BOOTS: {
 		name: 'Farm Armor Boots',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
+		upgrade: {
+			id: 'MELON_BOOTS',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Epic,
@@ -133,6 +163,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	RABBIT_HELMET: {
 		name: 'Rabbit Helmet',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
+		upgrade: {
+			id: 'MELON_HELMET',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'RABBIT',
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Uncommon,
@@ -146,6 +180,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	RABBIT_CHESTPLATE: {
 		name: 'Rabbit Chestplate',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
+		upgrade: {
+			id: 'MELON_CHESTPLATE',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'RABBIT',
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Uncommon,
@@ -159,6 +197,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	RABBIT_LEGGINGS: {
 		name: 'Rabbit Leggings',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
+		upgrade: {
+			id: 'MELON_LEGGINGS',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'RABBIT',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Uncommon,
@@ -172,6 +214,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	RABBIT_BOOTS: {
 		name: 'Rabbit Boots',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
+		upgrade: {
+			id: 'MELON_BOOTS',
+			reason: UpgradeReason.DeadEnd, 
+		},
 		family: 'RABBIT',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Uncommon,
@@ -185,7 +231,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	MELON_HELMET: {
 		name: 'Melon Helmet',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
-		upgrade: 'CROPIE_HELMET',
+		upgrade: {
+			id: 'CROPIE_HELMET',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Helmet,
@@ -200,7 +249,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	MELON_CHESTPLATE: {
 		name: 'Melon Chestplate',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
-		upgrade: 'CROPIE_CHESTPLATE',
+		upgrade: {
+			id: 'CROPIE_CHESTPLATE',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Chestplate,
@@ -215,7 +267,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	MELON_LEGGINGS: {
 		name: 'Melon Leggings',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
-		upgrade: 'CROPIE_LEGGINGS',
+		upgrade: {
+			id: 'CROPIE_LEGGINGS',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Leggings,
@@ -230,7 +285,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	MELON_BOOTS: {
 		name: 'Melon Boots',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
-		upgrade: 'CROPIE_BOOTS',
+		upgrade: {
+			id: 'CROPIE_BOOTS',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Boots,
@@ -245,7 +303,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	CROPIE_HELMET: {
 		name: 'Cropie Helmet',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
-		upgrade: 'SQUASH_HELMET',
+		upgrade: {
+			id: 'SQUASH_HELMET',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Helmet,
@@ -260,7 +321,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	CROPIE_CHESTPLATE: {
 		name: 'Cropie Chestplate',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
-		upgrade: 'SQUASH_CHESTPLATE',
+		upgrade: {
+			id: 'SQUASH_CHESTPLATE',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Chestplate,
@@ -275,7 +339,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	CROPIE_LEGGINGS: {
 		name: 'Cropie Leggings',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
-		upgrade: 'SQUASH_LEGGINGS',
+		upgrade: {
+			id: 'SQUASH_LEGGINGS',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Leggings,
@@ -290,7 +357,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	CROPIE_BOOTS: {
 		name: 'Cropie Boots',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
-		upgrade: 'SQUASH_BOOTS',
+		upgrade: {
+			id: 'SQUASH_BOOTS',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Boots,
@@ -305,7 +375,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	SQUASH_HELMET: {
 		name: 'Squash Helmet',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
-		upgrade: 'FERMENTO_HELMET',
+		upgrade: {
+			id: 'FERMENTO_HELMET',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
@@ -320,7 +393,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	SQUASH_CHESTPLATE: {
 		name: 'Squash Chestplate',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
-		upgrade: 'FERMENTO_CHESTPLATE',
+		upgrade: {
+			id: 'FERMENTO_CHESTPLATE',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
@@ -335,7 +411,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	SQUASH_LEGGINGS: {
 		name: 'Squash Leggings',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
-		upgrade: 'FERMENTO_LEGGINGS',
+		upgrade: {
+			id: 'FERMENTO_LEGGINGS',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
@@ -350,7 +429,10 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	SQUASH_BOOTS: {
 		name: 'Squash Boots',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
-		upgrade: 'FERMENTO_BOOTS',
+		upgrade: {
+			id: 'FERMENTO_BOOTS',
+			reason: UpgradeReason.Standard, 
+		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
@@ -407,6 +489,11 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FERMENTO_BOOTS: {
 		name: 'Fermento Boots',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
+		upgrade: {
+			id: 'RANCHERS_BOOTS',
+			reason: UpgradeReason.Situational,
+			why: 'Rancher\'s Boots provide less farming fortune, but allow you to control your speed for tricky farms.',
+		},
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Boots,

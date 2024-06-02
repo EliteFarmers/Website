@@ -1,5 +1,6 @@
 import { Crop } from './crops';
 import { Rarity, ReforgeTarget, Stat } from './reforges';
+import { Upgrade, UpgradeReason } from './upgrades';
 
 export enum FarmingToolType {
 	Other = 'Other',
@@ -13,7 +14,7 @@ export interface FarmingToolInfo {
 	maxRarity: Rarity;
 	reforgeType: ReforgeTarget;
 	type: FarmingToolType;
-	upgrade?: string;
+	upgrade?: Upgrade;
 	wiki: string;
 	stats?: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
 	baseStats?: Partial<Record<Stat, number>>;
@@ -137,7 +138,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: 'MELON_DICER_2',
+		upgrade: { 
+			id: 'MELON_DICER_2',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Melon Dicer',
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
 	},
@@ -146,7 +150,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: 'MELON_DICER_3',
+		upgrade: { 
+			id: 'MELON_DICER_3',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Melon Dicer 2.0',
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
 	},
@@ -164,7 +171,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: 'PUMPKIN_DICER_2',
+		upgrade: { 
+			id: 'PUMPKIN_DICER_2',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Pumpkin Dicer',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
 	},
@@ -173,7 +183,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: 'PUMPKIN_DICER_3',
+		upgrade: { 
+			id: 'PUMPKIN_DICER_3',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Pumpkin Dicer 2.0',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
 	},
@@ -191,7 +204,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_CARROT_2',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_CARROT_2',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
 		stats: t1hoeStats,
@@ -201,7 +217,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_CARROT_3',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_CARROT_3',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
 		stats: t2hoeStats,
@@ -221,7 +240,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_WARTS_2',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_WARTS_2',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
 		stats: t1hoeStats,
@@ -231,7 +253,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_WARTS_3',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_WARTS_3',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
 		stats: t2hoeStats,
@@ -251,7 +276,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_POTATO_2',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_POTATO_2',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
 		stats: t1hoeStats,
@@ -261,7 +289,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_POTATO_3',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_POTATO_3',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
 		stats: t2hoeStats,
@@ -281,7 +312,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_CANE_2',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_CANE_2',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
 		stats: t1hoeStats,
@@ -291,7 +325,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_CANE_3',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_CANE_3',
+			reason: UpgradeReason.Standard
+		},
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
 		stats: t2hoeStats,
@@ -311,7 +348,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_WHEAT_2',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_WHEAT_2',
+			reason: UpgradeReason.Standard
+		},
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
 		stats: t1hoeStats,
@@ -321,7 +361,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: 'THEORETICAL_HOE_WHEAT_3',
+		upgrade: { 
+			id: 'THEORETICAL_HOE_WHEAT_3',
+			reason: UpgradeReason.Standard
+		},
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
 		stats: t2hoeStats,

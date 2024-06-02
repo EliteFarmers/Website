@@ -15,16 +15,24 @@ npm install farming-weight
 ```js
 import { CreateFarmingWeightCalculator } from 'farming-weight';
 
-const member = // Get SkyBlock member from elsewhere
+const member = // Get SkyBlock member from elsewhere (https://api.hypixel.net/)
 
 const calculator = CreateFarmingWeightCalculator({
 	collection: member.collection,
-	farmingXp: member.experience_skill_farming,
-	levelCapUpgrade: member.jacob2?.perks?.farming_level_cap,
-	anitaBonusFarmingFortuneLevel?: member.jacob2?.perks?.anita_bonus_farming_fortune_level,
-	minions: member.crafted_generators, // You should also include minions crafted from other members on the same profile
-	contests: member.jacob2?.contests,
-}).setEarnedGoldMedals(earnedGoldMedals) // Can pass in some values instead of calculating them (you can exclude contests if you do this)
+	farmingXp: member.player_data?.experience?.SKILL_FARMING,
+	levelCapUpgrade: member.jacobs_contest?.perks?.farming_level_cap,
+	anitaBonusFarmingFortuneLevel?: member.jacobs_contest?.perks?.double_drops,
+	minions: member.player_data?.crafted_generators, // You should also include minions crafted from other members on the same profile
+	contests: member.jacob_contest?.contests,
+	pests: member.bestiary
+})
+
+// Can pass in some values instead of calculating them (you can exclude contests above if you do this)
+calculator.setEarnedMedals({
+	diamond: /* Number of diamond medals */,
+	platinum: /* Number of platinum medals */,
+	gold: /* Number of gold medals */,
+})
 
 const weight = calculator.getWeightInfo();
 

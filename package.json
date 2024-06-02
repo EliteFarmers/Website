@@ -1,13 +1,14 @@
 {
   "name": "farming-weight",
-  "version": "0.3.11",
+  "version": "0.4.0",
   "description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest"
   },
   "keywords": [
     "farming",
@@ -22,7 +23,9 @@
     "type": "git",
     "url": "git+https://github.com/EliteFarmers/Tools.git"
   },
-  "files": [ "dist/**/*" ],
+  "files": [
+    "dist/**/*"
+  ],
   "bugs": {
     "url": "https://github.com/EliteFarmers/Tools/issues"
   },
@@ -37,6 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "eslint": "^8.50.0",
     "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^1.6.0"
   }
 }

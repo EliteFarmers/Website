@@ -1,5 +1,7 @@
 import { Crop } from '../constants/crops';
 import { BONUS_WEIGHT, CROP_WEIGHT, TIER_12_MINIONS } from '../constants/weight';
+import { calculateJacobContestMedal } from '../util/jacob';
+import { uncountedCropsFromPests } from '../util/pests';
 
 export function createFarmingWeightCalculator(info?: FarmingWeightInfo) {
 	return new FarmingWeight(info);
@@ -28,8 +30,9 @@ export interface FarmingWeightInfo {
 		collected: number;
 		claimed_position?: number;
 		claimed_participants?: number;
-		claimed_medal?: 'bronze' | 'silver' | 'gold';
+		claimed_medal?: 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 	}[];
+	pests?: Record<string, number>;
 }
 
 class FarmingWeight {
@@ -38,19 +41,26 @@ class FarmingWeight {
 	declare farmingXp: number;
 	declare anitaBonusFarmingFortuneLevel: number;
 	declare tier12MinionCount: number;
-	declare earnedGoldMedals: number;
+	declare earnedMedals: Record<'diamond' | 'platinum' | 'gold', number>;
 	declare cropWeights: Record<Crop, number>;
 	declare bonusSources: Record<string, number>;
+	declare uncountedCrops: Partial<Record<Crop, number>>;
+
+	readonly info?: FarmingWeightInfo;
 
 	constructor(info?: FarmingWeightInfo) {
+		this.info = info;
+
 		this.collection = {} as Record<Crop, number>;
 		this.levelCapUpgrade = info?.levelCapUpgrade ?? 0;
 		this.anitaBonusFarmingFortuneLevel = info?.anitaBonusFarmingFortuneLevel ?? 0;
 		this.farmingXp = info?.farmingXp ?? 0;
-		this.earnedGoldMedals = 0;
+		this.earnedMedals = { diamond: 0, platinum: 0, gold: 0 };
 		this.tier12MinionCount = 0;
 		this.bonusSources = {} as Record<string, number>;
+		this.uncountedCrops = {} as Record<Crop, number>;
 
+		this.calcUncountedCrops(info?.pests ?? {});
 		this.setCropsFromCollections(info?.collection ?? {});
 		this.addMinions(info?.minions ?? []);
 	}
@@ -99,8 +109,13 @@ class FarmingWeight {
 		return this;
 	};
 
-	setEarnedGoldMedals = (count: number) => {
-		this.earnedGoldMedals = count;
+	setEarnedMedals = ({ diamond, platinum, gold }: { diamond?: number; platinum?: number; gold?: number }) => {
+		this.earnedMedals = {
+			diamond: diamond ?? this.earnedMedals.diamond,
+			platinum: platinum ?? this.earnedMedals.platinum,
+			gold: gold ?? this.earnedMedals.gold,
+		};
+
 		return this;
 	};
 
@@ -113,18 +128,15 @@ class FarmingWeight {
 		if (!contests?.length) return this;
 
 		for (const contest of contests) {
-			if (contest.claimed_medal === 'gold') {
-				this.earnedGoldMedals++;
-				continue;
-			}
+			const medal = calculateJacobContestMedal(contest);
+			if (!medal) continue;
 
-			const position = contest.claimed_position;
-			const participants = contest.claimed_participants;
-
-			if (position === undefined || participants === undefined) continue;
-
-			if (position <= participants * 0.05 + 1) {
-				this.earnedGoldMedals++;
+			if (medal === 'diamond') {
+				this.earnedMedals.diamond += contest.collected;
+			} else if (medal === 'platinum') {
+				this.earnedMedals.platinum += contest.collected;
+			} else if (medal === 'gold') {
+				this.earnedMedals.gold += contest.collected;
 			}
 		}
 
@@ -143,6 +155,7 @@ class FarmingWeight {
 			bonusWeight: bonusTotal,
 			cropWeight: cropTotal,
 			bonusSources: bonus,
+			uncountedCrops: this.uncountedCrops,
 		};
 	};
 
@@ -168,15 +181,20 @@ class FarmingWeight {
 				this.anitaBonusFarmingFortuneLevel * BONUS_WEIGHT.AnitaBuffBonusMultiplier;
 		}
 
-		if (this.earnedGoldMedals > BONUS_WEIGHT.MaxMedalsCounted) {
-			this.bonusSources['Gold Medals'] = Math.floor(
-				BONUS_WEIGHT.WeightPerGoldMedal * BONUS_WEIGHT.MaxMedalsCounted
-			);
+		const maxMedals = BONUS_WEIGHT.MaxMedalsCounted;
+		if (this.earnedMedals.diamond >= maxMedals) {
+			this.bonusSources['Contest Medals'] = BONUS_WEIGHT.WeightPerDiamondMedal * BONUS_WEIGHT.MaxMedalsCounted;
 		} else {
-			const rewardCount = Math.floor((this.earnedGoldMedals / 50) * 50);
-			if (rewardCount > 0) {
-				this.bonusSources['Gold Medals'] = Math.floor(BONUS_WEIGHT.WeightPerGoldMedal * rewardCount);
-			}
+			const diamond = this.earnedMedals.diamond;
+			const platinum = Math.min(maxMedals - diamond, this.earnedMedals.platinum);
+			const gold = Math.min(maxMedals - diamond - platinum, this.earnedMedals.gold);
+
+			const medals =
+				diamond * BONUS_WEIGHT.WeightPerDiamondMedal +
+				platinum * BONUS_WEIGHT.WeightPerPlatinumMedal +
+				gold * BONUS_WEIGHT.WeightPerGoldMedal;
+
+			this.bonusSources['Contest Medals'] = medals;
 		}
 
 		return this.bonusSources;
@@ -188,7 +206,13 @@ class FarmingWeight {
 		let doubleBreakWeight = 0;
 
 		for (const crop of crops) {
-			const collected = this.collection[crop] ?? 0;
+			let collected = this.collection[crop] ?? 0;
+
+			// Subtract uncounted crops
+			if (this.uncountedCrops[crop]) {
+				collected = Math.max(0, collected - (this.uncountedCrops[crop] ?? 0));
+			}
+
 			const weight = collected / CROP_WEIGHT[crop];
 
 			totalWeight += weight;
@@ -216,6 +240,12 @@ class FarmingWeight {
 		cropWeight[Crop.Mushroom] = mushroomWeight;
 
 		return cropWeight;
+	};
+
+	calcUncountedCrops = (bestiary: Record<string, number>) => {
+		this.uncountedCrops = uncountedCropsFromPests(bestiary);
+		this.getCropWeights();
+		return this;
 	};
 
 	getCropWeight = (crop: Crop) => {

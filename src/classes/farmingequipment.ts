@@ -1,12 +1,12 @@
 import { FarmingArmorInfo } from '../constants/armor';
-import { LOTUS_GEAR_INFO } from '../constants/lotus';
+import { EQUIPMENT_INFO } from '../constants/lotus';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { getRarityFromLore } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from './player';
 
-export class LotusGear {
+export class FarmingEquipment {
 	public readonly item: EliteItemDto;
 	public readonly info: FarmingArmorInfo;
 	public get slot() {
@@ -26,9 +26,9 @@ export class LotusGear {
 		this.options = options;
 		this.item = item;
 
-		const info = LOTUS_GEAR_INFO[item.skyblockId as keyof typeof LOTUS_GEAR_INFO];
+		const info = EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO];
 		if (!info) {
-			throw new Error(`Unknown lotus gear: ${item.name} (${item.skyblockId})`);
+			throw new Error(`Unknown equipment: ${item.name} (${item.skyblockId})`);
 		}
 		this.info = info;
 
@@ -66,18 +66,20 @@ export class LotusGear {
 			sum += reforge;
 		}
 
-		// Visitors
+		// Green Thumb Visitors
 		const visitors = this.getFortuneFromVisitors(base, reforge);
 		if (visitors > 0) {
 			this.fortuneBreakdown['Green Thumb'] = visitors;
 			sum += visitors;
 		}
 
-		// Piece bonus
-		const pieceBonus = this.getPieceBonus();
-		if (pieceBonus > 0) {
-			this.fortuneBreakdown['Salesperson'] = pieceBonus;
-			sum += pieceBonus;
+		// Lotus Piece bonus
+		if (this.info.family === 'LOTUS') {
+			const pieceBonus = this.getPieceBonus();
+			if (pieceBonus > 0) {
+				this.fortuneBreakdown['Salesperson'] = pieceBonus;
+				sum += pieceBonus;
+			}
 		}
 
 		this.fortune = sum;
@@ -118,17 +120,17 @@ export class LotusGear {
 	}
 
 	static isValid(item: EliteItemDto): boolean {
-		return LOTUS_GEAR_INFO[item.skyblockId as keyof typeof LOTUS_GEAR_INFO] !== undefined;
+		return EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO] !== undefined;
 	}
 
-	static fromArray(items: EliteItemDto[], options?: PlayerOptions): LotusGear[] {
+	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingEquipment[] {
 		const gear = items
-			.filter((item) => LotusGear.isValid(item))
-			.map((item) => new LotusGear(item, options))
+			.filter((item) => FarmingEquipment.isValid(item))
+			.map((item) => new FarmingEquipment(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 
 		// Get only the best piece of each slot
-		const best: Record<string, LotusGear> = {};
+		const best: Record<string, FarmingEquipment> = {};
 		for (const piece of gear) {
 			if (!best[piece.slot] || piece.fortune > (best[piece.slot]?.fortune ?? 0)) {
 				best[piece.slot] = piece;
@@ -138,3 +140,7 @@ export class LotusGear {
 		return Object.values(best);
 	}
 }
+
+// For backwards compatibility
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const LotusGear = FarmingEquipment;

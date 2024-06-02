@@ -1,8 +1,9 @@
 import { FarmingArmorInfo, GearSlot } from './armor';
 import { Rarity, Stat } from './reforges';
 import { Skill } from './skills';
+import { UpgradeReason } from './upgrades';
 
-export const LOTUS_GEAR_INFO: Partial<Record<string, FarmingArmorInfo>> = {
+export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	LOTUS_BRACELET: {
 		name: 'Lotus Bracelet',
 		wiki: 'https://wiki.hypixel.net/Lotus_Bracelet',
@@ -48,6 +49,11 @@ export const LOTUS_GEAR_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	LOTUS_CLOAK: {
 		name: 'Lotus Cloak',
 		wiki: 'https://wiki.hypixel.net/Lotus_Cloak',
+		upgrade: {
+			id: 'ZORROS_CAPE',
+			reason: UpgradeReason.Situational,
+			why: 'A maxed Zorro\'s Cloak provides significantly more fortune during a Jacob\'s contest, but slightly less outside of one.',
+		},
 		family: 'LOTUS',
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Epic,
@@ -58,6 +64,24 @@ export const LOTUS_GEAR_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 			[Skill.Farming]: 10,
 			[Skill.Garden]: 5,
 		},
+	},
+	ZORROS_CAPE: {
+		name: "Zorro's Cloak",
+		wiki: 'https://wiki.hypixel.net/Zorro%27s_Cape',
+		upgrade: {
+			id: 'LOTUS_CLOAK',
+			reason: UpgradeReason.Situational,
+			why: 'A maxed Zorro\'s Cape provides significantly more fortune during a Jacob\'s contest, but slightly less outside of one compared to a maxed Lotus Cloak.',
+		},
+		slot: GearSlot.Cloak,
+		maxRarity: Rarity.Mythic,
+		stats: {
+			[Stat.FarmingFortune]: 10,
+			[Stat.FarmingWisdom]: 1,
+			[Stat.Strength]: 10,
+			[Stat.Ferocity]: 2,
+		},
+		contestStatsMultiplier: 2
 	},
 };
 

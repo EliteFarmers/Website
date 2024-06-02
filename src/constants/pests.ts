@@ -1,24 +1,37 @@
-export function fortuneFromPests(pests: number): number {
-	return PEST_EXCHANGE_RATES[pests as keyof typeof PEST_EXCHANGE_RATES] ?? 0;
+import { Crop } from "./crops";
+
+export enum Pest {
+	Beetle = 'beetle',
+	Cricket = 'cricket',
+	Worm = 'worm',
+	Fly = 'fly',
+	Locust = 'locust',
+	Mite = 'mite',
+	Mosquito = 'mosquito',
+	Moth = 'moth',
+	Rat = 'rat',
+	Slug = 'slug',
 }
 
-export function fortuneFromPestBestiary(bestiaryKills: Record<string, number>): number {
-	let reachedBrackets = 0;
+export const FORTUNE_PER_PEST_BRACKET = 0.4;
 
-	const brackets = Object.entries(killsPerBracket).sort((a, b) => b[1] - a[1]);
-
-	for (const pestId of PEST_IDS) {
-		const kills = bestiaryKills[`pest_${pestId}_1`];
-		if (!kills) continue;
-
-		// Find the highest reached bracket for this pest
-		const bracket = brackets.find((b) => +kills >= b[1]);
-
-		reachedBrackets += bracket ? +bracket[0] : 0;
-	}
-
-	return reachedBrackets * fortunePerBracket;
-}
+export const KILLS_PER_PEST_BRACKET: Record<number, number> = {
+	1: 1,
+	2: 2,
+	3: 3,
+	4: 5,
+	5: 7,
+	6: 9,
+	7: 14,
+	8: 17,
+	9: 21,
+	10: 25,
+	11: 50,
+	12: 80,
+	13: 125,
+	14: 175,
+	15: 250,
+};
 
 export const PEST_EXCHANGE_RATES = {
 	0: 0,
@@ -64,35 +77,146 @@ export const PEST_EXCHANGE_RATES = {
 	40: 200,
 };
 
-export const PEST_IDS = [
-	'beetle',
-	'cricket',
-	'worm',
-	'fly',
-	'locust',
-	'mite',
-	'mosquito',
-	'moth',
-	'rat',
-	'slug',
-] as const;
+export const PEST_IDS: Pest[] = [
+	Pest.Beetle,
+	Pest.Cricket,
+	Pest.Worm,
+	Pest.Fly,
+	Pest.Locust,
+	Pest.Mite,
+	Pest.Mosquito,
+	Pest.Moth,
+	Pest.Rat,
+	Pest.Slug,
+];
 
-const fortunePerBracket = 0.4;
+export const PEST_TO_CROP: Record<Pest, Crop> = {
+	mite: Crop.Cactus,
+	cricket: Crop.Carrot,
+	moth: Crop.CocoaBeans,
+	worm: Crop.Melon,
+	slug: Crop.Mushroom,
+	beetle: Crop.NetherWart,
+	locust: Crop.Potato,
+	rat: Crop.Pumpkin,
+	mosquito: Crop.SugarCane,
+	fly: Crop.Wheat,
+};
 
-const killsPerBracket: Record<number, number> = {
-	1: 1,
-	2: 2,
-	3: 3,
-	4: 5,
-	5: 7,
-	6: 9,
-	7: 14,
-	8: 17,
-	9: 21,
-	10: 25,
-	11: 50,
-	12: 80,
-	13: 125,
-	14: 175,
-	15: 250,
+export const CROP_TO_PEST: Record<Crop, Pest> = {
+	[Crop.Cactus]: Pest.Mite,
+	[Crop.Carrot]: Pest.Cricket,
+	[Crop.CocoaBeans]: Pest.Moth,
+	[Crop.Melon]: Pest.Worm,
+	[Crop.Mushroom]: Pest.Slug,
+	[Crop.NetherWart]: Pest.Beetle,
+	[Crop.Potato]: Pest.Locust,
+	[Crop.Pumpkin]: Pest.Rat,
+	[Crop.SugarCane]: Pest.Mosquito,
+	[Crop.Wheat]: Pest.Fly,
+	[Crop.Seeds]: Pest.Fly // Same as wheat
+};
+
+export const PEST_COLLECTION_BRACKETS = [
+	0,
+	50,
+	100,
+	250,
+	500,
+	750,
+	1000,
+];
+
+// Taken from https://api.elitebot.dev/weights/all
+export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> = {
+	mite: {
+		0: 0,
+		50: 1285.333312988281,
+		100: 1898.6666259765625,
+		250: 2512,
+		500: 3125.333251953125,
+		750: 3493.333251953125,
+		1000: 3861.3333740234375,
+	},
+	cricket: {
+		0: 0,
+		50: 1430.3999755859375,
+		100: 2086.399951171875,
+		250: 2742.4,
+		500: 3398.39990234375,
+		750: 3791.99990234375,
+		1000: 4185.600048828125,
+	},
+	moth: {
+		0: 0,
+		50: 1430.3999755859375,
+		100: 2086.399951171875,
+		250: 2742.4,
+		500: 3398.39990234375,
+		750: 3791.99990234375,
+		1000: 4185.600048828125,
+	},
+	worm: {
+		0: 0,
+		50: 2010.6666259765625,
+		100: 2837.333251953125,
+		250: 3664,
+		500: 4490.66650390625,
+		750: 4986.66650390625,
+		1000: 5482.666748046875,
+	},
+	slug: {
+		0: 0,
+		50: 632.5333312988281,
+		100: 1053.8666625976562,
+		250: 1475.2,
+		500: 1896.5333251953125,
+		750: 2149.3333251953127,
+		1000: 2402.133337402344,
+	},
+	beetle: {
+		0: 0,
+		50: 1647.9999694824216,
+		100: 2367.9999389648438,
+		250: 3088,
+		500: 3807.9998779296875,
+		750: 4239.9998779296875,
+		1000: 4672.000061035156,
+	},
+	locust: {
+		0: 0,
+		50: 1647.9999694824216,
+		100: 2367.9999389648438,
+		250: 3088,
+		500: 3807.9998779296875,
+		750: 4239.9998779296875,
+		1000: 4672.000061035156,
+	},
+	rat: {
+		0: 0,
+		50: 922.6666564941406,
+		100: 1429.333312988281,
+		250: 1936,
+		500: 2442.6666259765625,
+		750: 2746.6666259765625,
+		1000: 3050.6666870117188,
+	},
+	mosquito: {
+		0: 0,
+		50: 1285.333312988281,
+		100: 1898.6666259765625,
+		250: 2512,
+		500: 3125.333251953125,
+		750: 3493.333251953125,
+		1000: 3861.3333740234375,
+	},
+	fly: {
+		0: 0,
+		50: 7179.839925842285,
+		100: 11197.43985168457,
+		250: 15215.04,
+		500: 19232.63970336914,
+		750: 21643.19970336914,
+		1000: 24053.76014831543,
+	},
 };
