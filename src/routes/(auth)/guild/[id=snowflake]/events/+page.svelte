@@ -32,6 +32,8 @@
 	// Filter out events made more than a month ago
 	$: recentEvents =
 		data.createdEvents?.filter((e) => new Date(e.createdAt ?? 0).getTime() > Date.now() - 2592000000) ?? [];
+
+	$: events = data.events?.sort((a, b) => b?.event?.endTime?.localeCompare(a?.event?.endTime ?? '') ?? 0) ?? [];
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -64,7 +66,7 @@
 	<section
 		class="flex flex-col gap-8 justify-center items-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg mb-16"
 	>
-		{#each data.events?.sort((a, b) => b?.event?.endTime?.localeCompare(a?.event?.endTime ?? '') ?? 0) ?? [] as { event, members, bans } (event.id)}
+		{#each events as { event, members, bans } (event.id)}
 			<div
 				class="flex p-4 flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-primary-foreground rounded-md"
 			>

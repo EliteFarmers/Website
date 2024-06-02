@@ -20,9 +20,9 @@
 			<ExternalLink size={20} />
 		</a>
 	</div>
-	<div class="flex flex-row gap-2 lg:gap-4">
-		{#if 'status' in member && (member.notes || member.status === 2)}
-			<p>{member.notes || (member.status === 2 ? 'Member Left' : '')}</p>
+	<div class="flex flex-row gap-2 lg:gap-4 items-center">
+		{#if 'notes' in member}
+			<p>{member.notes || 'Member Left'}</p>
 		{/if}
 		<p class="font-semibold text-xl">{(+(member.score ?? 0)).toLocaleString()}</p>
 	</div>
