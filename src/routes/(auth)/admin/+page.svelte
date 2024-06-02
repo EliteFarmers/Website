@@ -161,7 +161,7 @@
 			<input type="hidden" name="id" bind:value={selectedMemberId} />
 
 			<div class="space-y-2">
-				<Label>Remove Role</Label>
+				<Label>Select Role</Label>
 				<Select.Simple
 					options={data.roles.map((p) => ({
 						value: p,
