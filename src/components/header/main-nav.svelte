@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { NAV_PAGES } from '$content/nav';
 	import cn from 'classnames';
 </script>
 
@@ -11,41 +12,18 @@
 		</span>
 	</a>
 	<nav class="flex items-center gap-6 text-sm">
-		<a
-			href="/info"
-			class={cn(
-				'transition-colors hover:text-foreground',
-				$page.url.pathname === '/info' ? 'text-foreground' : 'text-foreground/80'
-			)}
-		>
-			Info
-		</a>
-		<a
-			href="/browse"
-			class={cn(
-				'transition-colors hover:text-foreground',
-				$page.url.pathname.startsWith('/browse') ? 'text-foreground' : 'text-foreground/80'
-			)}
-		>
-			Browse
-		</a>
-		<a
-			href="/contests"
-			class={cn(
-				'transition-colors hover:text-foreground',
-				$page.url.pathname.startsWith('/contests') ? 'text-foreground' : 'text-foreground/80'
-			)}
-		>
-			Contests
-		</a>
-		<a
-			href="/leaderboard"
-			class={cn(
-				'transition-colors hover:text-foreground',
-				$page.url.pathname.startsWith('/leaderboard') ? 'text-foreground' : 'text-foreground/80'
-			)}
-		>
-			Top Players
-		</a>
+		{#each NAV_PAGES as navItem, index (navItem + index.toString())}
+			{#if navItem.href && navItem.href !== '/'}
+				<a
+					href={navItem.href}
+					class={cn(
+						'transition-colors hover:text-foreground',
+						$page.url.pathname.startsWith(navItem.href) ? 'text-foreground' : 'text-foreground/80'
+					)}
+				>
+					{navItem.title}
+				</a>
+			{/if}
+		{/each}
 	</nav>
 </div>
