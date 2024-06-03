@@ -13,7 +13,7 @@
 	</a>
 	<nav class="flex items-center gap-6 text-sm">
 		{#each NAV_PAGES as navItem, index (navItem + index.toString())}
-			{#if navItem.href}
+			{#if navItem.href && navItem.href !== '/'}
 				<a
 					href={navItem.href}
 					class={cn(
