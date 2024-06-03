@@ -37,7 +37,6 @@
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
 
-<ModeWatcher />
 <div class="relative min-h-screen">
 	<Nav />
 
@@ -51,6 +50,7 @@
 	</div>
 
 	<Footer />
+	<ModeWatcher />
 </div>
 
 <style lang="postcss">

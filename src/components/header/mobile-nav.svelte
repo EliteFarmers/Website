@@ -3,27 +3,9 @@
 	import { Button } from '$ui/button';
 	import MobileLink from '$comp/header/mobile-link.svelte';
 	import Menu from 'lucide-svelte/icons/menu';
+	import { NAV_PAGES } from '$content/nav';
 
 	let open = false;
-
-	const pages = [
-		{
-			title: 'Home',
-			href: '/',
-		},
-		{
-			title: 'Info',
-			href: '/info',
-		},
-		{
-			title: 'Contests',
-			href: '/contests',
-		},
-		{
-			title: 'Top Players',
-			href: '/leaderboard',
-		},
-	];
 </script>
 
 <Sheet.Root bind:open>
@@ -46,7 +28,7 @@
 		</MobileLink>
 		<div class="my-4 h-[calc(100vh-8rem)] pb-10 pl-6 overflow-auto">
 			<div class="flex flex-col space-y-3">
-				{#each pages as navItem, index (navItem + index.toString())}
+				{#each NAV_PAGES as navItem, index (navItem + index.toString())}
 					{#if navItem.href}
 						<MobileLink href={navItem.href} bind:open class="text-foreground">
 							{navItem.title}
