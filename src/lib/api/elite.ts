@@ -335,6 +335,34 @@ export const SetGuildInvite = async (guildId: string, accessToken: string, invit
 		},
 	});
 
+export const SetGuildAdminRole = async (guildId: string, accessToken: string, role: string) =>
+	await PUT('/user/guild/{guildId}/adminrole', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+		},
+		body: role,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const SetGuildPublic = async (guildId: string, accessToken: string, enable: boolean) =>
+	await POST('/guild/{guildId}/public', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+			query: {
+				enable,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetPublicGuild = async (guildId: string) =>
 	await GET('/guild/{guildId}', {
 		params: {
@@ -481,7 +509,12 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 	});
 
 export const CreateWeightEvent = async (accessToken: string, event: components['schemas']['CreateWeightEventDto']) =>
-	await POST('/event/create', {
+	await POST('/guild/{guildId}/events/weight', {
+		params: {
+			path: {
+				guildId: event.guildId as unknown as number,
+			},
+		},
 		body: event,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -489,7 +522,12 @@ export const CreateWeightEvent = async (accessToken: string, event: components['
 	});
 
 export const CreateMedalEvent = async (accessToken: string, event: components['schemas']['CreateMedalEventDto']) =>
-	await POST('/event/create/medals', {
+	await POST('/guild/{guildId}/events/medals', {
+		params: {
+			path: {
+				guildId: event.guildId as unknown as number,
+			},
+		},
 		body: event,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -497,10 +535,11 @@ export const CreateMedalEvent = async (accessToken: string, event: components['s
 	});
 
 export const EditEvent = async (accessToken: string, eventId: string, event: components['schemas']['EditEventDto']) =>
-	await POST('/event/{eventId}/edit', {
+	await PATCH('/guild/{guildId}/events/{eventId}', {
 		body: event,
 		params: {
 			path: {
+				guildId: event.guildId as unknown as number,
 				eventId: eventId as unknown as number,
 			},
 		},
@@ -509,10 +548,11 @@ export const EditEvent = async (accessToken: string, eventId: string, event: com
 		},
 	});
 
-export const GetEventBans = async (accessToken: string, eventId: string) =>
-	await GET('/event/{eventId}/bans', {
+export const GetEventBans = async (accessToken: string, guildId: string, eventId: string) =>
+	await GET('/guild/{guildId}/events/{eventId}/bans', {
 		params: {
 			path: {
+				guildId: guildId as unknown as number,
 				eventId: eventId as unknown as number,
 			},
 		},
@@ -521,10 +561,17 @@ export const GetEventBans = async (accessToken: string, eventId: string) =>
 		},
 	});
 
-export const BanEventMember = async (accessToken: string, eventId: string, playerUuid: string, reason?: string) =>
-	await POST('/event/{eventId}/bans/{playerUuid}', {
+export const BanEventMember = async (
+	accessToken: string,
+	guildId: string,
+	eventId: string,
+	playerUuid: string,
+	reason?: string
+) =>
+	await POST('/guild/{guildId}/events/{eventId}/bans/{playerUuid}', {
 		params: {
 			path: {
+				guildId: guildId as unknown as number,
 				eventId: eventId as unknown as number,
 				playerUuid,
 			},
@@ -535,10 +582,11 @@ export const BanEventMember = async (accessToken: string, eventId: string, playe
 		},
 	});
 
-export const UnbanEventMember = async (accessToken: string, eventId: string, playerUuid: string) =>
-	await DELETE('/event/{eventId}/bans/{playerUuid}', {
+export const UnbanEventMember = async (accessToken: string, guildId: string, eventId: string, playerUuid: string) =>
+	await DELETE('/guild/{guildId}/events/{eventId}/bans/{playerUuid}', {
 		params: {
 			path: {
+				guildId: guildId as unknown as number,
 				eventId: eventId as unknown as number,
 				playerUuid,
 			},

@@ -14,12 +14,6 @@ export const load = (async ({ params, setHeaders, url }) => {
 		throw error(404, 'Guild not found');
 	}
 
-	// If the guild doesn't have features enabled or an invite set, throw same 404
-	// This is to prevent people from knowing if a guild exists or not by just trying to access the page
-	if (!guildData.features?.jacobLeaderboardEnabled && !guildData.inviteCode) {
-		throw error(404, 'Guild not found');
-	}
-
 	const properUrl = guildData.name.replaceAll(' ', '-') + '-' + guildData.id;
 
 	if (properUrl !== guild && !url.pathname.endsWith('/join')) {

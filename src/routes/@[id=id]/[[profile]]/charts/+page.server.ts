@@ -27,7 +27,7 @@ export const actions: Actions = {
 		const start = data.get('start') as string | undefined;
 
 		if (!uuid || !profile || !start) {
-			throw fail(400);
+			return fail(400);
 		}
 
 		const { data: collectionGraph, response } = await GetCropCollectionPoints(uuid, profile, start).catch(() => ({

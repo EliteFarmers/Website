@@ -231,7 +231,10 @@ export interface paths {
     };
   };
   "/admin/permissions/{memberId}/{permission}": {
-    /** Add member permissions */
+    /**
+     * Add member permissions
+     * @deprecated
+     */
     post: {
       parameters: {
         path: {
@@ -270,7 +273,10 @@ export interface paths {
         };
       };
     };
-    /** Remove member permissions */
+    /**
+     * Remove member permissions
+     * @deprecated
+     */
     delete: {
       parameters: {
         path: {
@@ -452,9 +458,14 @@ export interface paths {
       };
     };
   };
-  "/event/create": {
+  "/guild/{guildId}/events/weight": {
     /** Create a Farming Weight Event */
     post: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
       requestBody?: {
         content: {
           "application/json": components["schemas"]["CreateWeightEventDto"];
@@ -496,9 +507,14 @@ export interface paths {
       };
     };
   };
-  "/event/create/medals": {
+  "/guild/{guildId}/events/medals": {
     /** Create a Medal Collection Event */
     post: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
       requestBody?: {
         content: {
           "application/json": components["schemas"]["CreateMedalEventDto"];
@@ -540,11 +556,47 @@ export interface paths {
       };
     };
   };
-  "/event/{eventId}/edit": {
-    /** Edit an Event */
-    post: {
+  "/guild/{guildId}/events/{eventId}": {
+    /** Delete an Event */
+    delete: {
       parameters: {
         path: {
+          guildId: number;
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventDetailsDto"];
+            "application/json": components["schemas"]["EventDetailsDto"];
+            "text/json": components["schemas"]["EventDetailsDto"];
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    /** Edit an Event */
+    patch: {
+      parameters: {
+        path: {
+          guildId: number;
           eventId: number;
         };
       };
@@ -581,11 +633,12 @@ export interface paths {
       };
     };
   };
-  "/event/{eventId}/bans": {
+  "/guild/{guildId}/events/{eventId}/bans": {
     /** Get banned members from an event */
     get: {
       parameters: {
         path: {
+          guildId: number;
           eventId: number;
         };
       };
@@ -617,11 +670,12 @@ export interface paths {
       };
     };
   };
-  "/event/{eventId}/bans/{playerUuid}": {
+  "/guild/{guildId}/events/{eventId}/bans/{playerUuid}": {
     /** Ban a member from an event */
     post: {
       parameters: {
         path: {
+          guildId: number;
           eventId: number;
           playerUuid: string;
         };
@@ -664,6 +718,7 @@ export interface paths {
     delete: {
       parameters: {
         path: {
+          guildId: number;
           eventId: number;
           playerUuid: string;
         };
@@ -759,9 +814,9 @@ export interface paths {
     post: {
       requestBody?: {
         content: {
-          "application/json": components["schemas"]["AuthResponseDto"];
-          "text/json": components["schemas"]["AuthResponseDto"];
-          "application/*+json": components["schemas"]["AuthResponseDto"];
+          "application/json": components["schemas"]["AuthRefreshDto"];
+          "text/json": components["schemas"]["AuthRefreshDto"];
+          "application/*+json": components["schemas"]["AuthRefreshDto"];
         };
       };
       responses: {
@@ -1027,9 +1082,9 @@ export interface paths {
         /** @description OK */
         200: {
           content: {
-            "text/plain": components["schemas"]["GuildDto"];
-            "application/json": components["schemas"]["GuildDto"];
-            "text/json": components["schemas"]["GuildDto"];
+            "text/plain": components["schemas"]["PrivateGuildDto"];
+            "application/json": components["schemas"]["PrivateGuildDto"];
+            "text/json": components["schemas"]["PrivateGuildDto"];
           };
         };
         /** @description Not Found */
@@ -1176,6 +1231,89 @@ export interface paths {
             "application/json": components["schemas"]["AuthorizedAccountDto"];
             "text/json": components["schemas"]["AuthorizedAccountDto"];
           };
+        };
+      };
+    };
+  };
+  "/bot/guild/{guildId}": {
+    /** Request Discord Guild Update */
+    post: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+      };
+    };
+    /** Update Discord Guild */
+    patch: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["IncomingGuildDto"];
+          "text/json": components["schemas"]["IncomingGuildDto"];
+          "application/*+json": components["schemas"]["IncomingGuildDto"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/bot/guild/{guildId}/channels": {
+    /** Update Discord Guild */
+    post: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["IncomingGuildChannelDto"];
+          "text/json": components["schemas"]["IncomingGuildChannelDto"];
+          "application/*+json": components["schemas"]["IncomingGuildChannelDto"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/bot/guild/{guildId}/roles": {
+    /** Update Discord Guild */
+    patch: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["IncomingGuildRoleDto"];
+          "text/json": components["schemas"]["IncomingGuildRoleDto"];
+          "application/*+json": components["schemas"]["IncomingGuildRoleDto"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
         };
       };
     };
@@ -2014,6 +2152,141 @@ export interface paths {
         };
       };
     };
+    /** Enable the guild's Event feature */
+    post: {
+      parameters: {
+        query?: {
+          /** @description Max amount of Events */
+          max?: number;
+          /** @description Enable or disable feature */
+          enable?: boolean;
+        };
+        path: {
+          /** @description Discord server (guild) ID */
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/guild/{guildId}/jacob": {
+    /** Enable the guild's Jacob Leaderboard feature */
+    post: {
+      parameters: {
+        query?: {
+          /** @description Max amount of Jacob Leaderboards */
+          max?: number;
+          /** @description Enable or disable feature */
+          enable?: boolean;
+        };
+        path: {
+          /** @description Discord server (guild) ID */
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/guild/{guildId}/public": {
+    /** Set the guild's public visibility */
+    post: {
+      parameters: {
+        query?: {
+          enable?: boolean;
+        };
+        path: {
+          guildId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
   };
   "/leaderboards": {
     /** Get a list of leaderboards */
@@ -2605,9 +2878,9 @@ export interface paths {
         /** @description OK */
         200: {
           content: {
-            "text/plain": components["schemas"]["UserGuildDto"][];
-            "application/json": components["schemas"]["UserGuildDto"][];
-            "text/json": components["schemas"]["UserGuildDto"][];
+            "text/plain": components["schemas"]["GuildMemberDto"][];
+            "application/json": components["schemas"]["GuildMemberDto"][];
+            "text/json": components["schemas"]["GuildMemberDto"][];
           };
         };
         /** @description Bad Request */
@@ -2938,6 +3211,56 @@ export interface paths {
         };
       };
     };
+    /** Update a guild Jacob Leaderboard */
+    patch: {
+      parameters: {
+        path: {
+          guildId: number;
+          lbId: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["UpdateGuildJacobLeaderboardDto"];
+          "text/json": components["schemas"]["UpdateGuildJacobLeaderboardDto"];
+          "application/*+json": components["schemas"]["UpdateGuildJacobLeaderboardDto"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "application/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+            "text/json": components["schemas"]["GuildJacobLeaderboardFeature"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
   };
   "/user/guild/{guildId}/jacob/{lbId}/send": {
     /** Send a guild Jacob Leaderboard to Discord */
@@ -3026,6 +3349,54 @@ export interface paths {
         };
         path: {
           guildId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/user/guild/{guildId}/adminrole": {
+    /** Set a guild's admin role */
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+        };
+      };
+      /** @description Discord role ID */
+      requestBody?: {
+        content: {
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
         };
       };
       responses: {
@@ -3253,6 +3624,12 @@ export interface components {
       skills?: boolean;
       vault?: boolean;
     };
+    AuthRefreshDto: {
+      /** @description User ID */
+      access_token: string;
+      /** @description Refresh token for the user */
+      refresh_token: string;
+    };
     AuthResponseDto: {
       /** @description Access token for the user */
       access_token: string;
@@ -3291,8 +3668,8 @@ export interface components {
     AuthorizedGuildDto: {
       id: string;
       permissions: string;
-      guild?: components["schemas"]["GuildDto"];
-      discordGuild?: components["schemas"]["FullDiscordGuild"];
+      guild?: components["schemas"]["PrivateGuildDto"];
+      member?: components["schemas"]["GuildMemberDto"];
     };
     AutoRoles: {
       roleId?: string | null;
@@ -3307,11 +3684,39 @@ export interface components {
       description: string;
       requirements: string;
     };
-    /**
-     * Format: int32
-     * @enum {integer}
-     */
-    ChannelType: 0 | 1 | 2 | 3 | 4 | 5 | 10 | 11 | 12 | 13 | 14 | 15;
+    ChocolateFactoryDto: {
+      /** Format: int64 */
+      chocolate?: number;
+      /** Format: int64 */
+      totalChocolate?: number;
+      /** Format: int64 */
+      chocolateSincePrestige?: number;
+      /** Format: int64 */
+      chocolateSpent?: number;
+      /** Format: int32 */
+      prestige?: number;
+      /** Format: int64 */
+      lastViewed?: number;
+      uniqueRabbits?: components["schemas"]["ChocolateFactoryRabbitsDto"];
+      totalRabbits?: components["schemas"]["ChocolateFactoryRabbitsDto"];
+      unlockedZorro?: boolean;
+    };
+    ChocolateFactoryRabbitsDto: {
+      /** Format: int32 */
+      common?: number;
+      /** Format: int32 */
+      uncommon?: number;
+      /** Format: int32 */
+      rare?: number;
+      /** Format: int32 */
+      epic?: number;
+      /** Format: int32 */
+      legendary?: number;
+      /** Format: int32 */
+      mythic?: number;
+      /** Format: int32 */
+      divine?: number;
+    };
     ConfigLeaderboardSettings: {
       /** Format: int32 */
       completeRefreshInterval?: number;
@@ -3501,17 +3906,6 @@ export interface components {
       sugarCane?: components["schemas"]["GuildJacobLeaderboardEntry"][];
       netherWart?: components["schemas"]["GuildJacobLeaderboardEntry"][];
     };
-    DiscordChannel: {
-      id: string;
-      name: string;
-      type?: components["schemas"]["ChannelType"];
-      /** Format: int32 */
-      flags?: number;
-      /** Format: int32 */
-      position?: number;
-      guild_id?: string | null;
-      parent_id?: string | null;
-    };
     DiscordLoginDto: {
       /** @description Discord access token from OAuth2 */
       access_token: string;
@@ -3521,17 +3915,12 @@ export interface components {
       refresh_token: string;
     };
     DiscordRole: {
-      name: string;
-      id: string;
-    };
-    DiscordRoleData: {
       id: string;
       name: string;
-      permissions?: string | null;
       /** Format: int32 */
       position?: number;
-      /** Format: int32 */
-      color?: number;
+      /** Format: int64 */
+      permissions?: number;
     };
     EarnedMedalInventoryDto: {
       /** Format: int32 */
@@ -3722,31 +4111,13 @@ export interface components {
       };
       pests?: components["schemas"]["PestsDto"];
     };
-    FullDiscordGuild: {
+    GuildChannelDto: {
       id: string;
       name: string;
-      icon?: string | null;
-      description?: string | null;
-      splash?: string | null;
-      discovery_splash?: string | null;
-      features?: string[];
-      banner?: string | null;
-      owner_id?: string | null;
       /** Format: int32 */
-      application_id?: number | null;
-      region?: string | null;
+      type?: number;
       /** Format: int32 */
-      verification_level?: number;
-      roles?: components["schemas"]["DiscordRoleData"][];
-      channels?: components["schemas"]["DiscordChannel"][];
-      vanity_url_code?: string | null;
-      /** Format: int32 */
-      premium_tier?: number;
-      /** Format: int32 */
-      premium_subscription_count?: number;
-      preferred_locale?: string | null;
-      /** Format: int32 */
-      approximate_member_count?: number;
+      position?: number;
     };
     GuildDetailsDto: {
       id: string;
@@ -3754,21 +4125,6 @@ export interface components {
       icon?: string | null;
       banner?: string | null;
       inviteCode?: string | null;
-      /** Format: int32 */
-      memberCount?: number;
-    };
-    GuildDto: {
-      id: string;
-      name: string;
-      features?: components["schemas"]["GuildFeatures"];
-      icon?: string | null;
-      inviteCode?: string | null;
-      banner?: string | null;
-      description?: string | null;
-      adminRole?: string | null;
-      botPermissions?: string | null;
-      botPermissionsNew: string;
-      discordFeatures?: string[];
       /** Format: int32 */
       memberCount?: number;
     };
@@ -3820,6 +4176,20 @@ export interface components {
       excludedTimespans?: components["schemas"]["ExcludedTimespan"][];
       leaderboards?: components["schemas"]["GuildJacobLeaderboard"][];
     };
+    GuildMemberDto: {
+      id: string;
+      name: string;
+      icon?: string | null;
+      hasBot?: boolean;
+      permissions: string;
+      roles?: string[];
+    };
+    GuildRoleDto: {
+      id: string;
+      name: string;
+      /** Format: int32 */
+      position?: number;
+    };
     IncomingAccountDto: {
       /** Format: int64 */
       id: number;
@@ -3828,6 +4198,32 @@ export interface components {
       discriminator?: string | null;
       avatar?: string | null;
       locale?: string | null;
+    };
+    IncomingGuildChannelDto: {
+      id: string;
+      name: string;
+      /** Format: int32 */
+      type?: number;
+      /** Format: int32 */
+      position?: number;
+      permissions?: string | null;
+    };
+    IncomingGuildDto: {
+      id?: string | null;
+      name: string;
+      icon?: string | null;
+      banner?: string | null;
+      permissions?: string | null;
+      botPermissions?: string | null;
+      features?: string[] | null;
+      channels?: components["schemas"]["IncomingGuildChannelDto"][] | null;
+      roles?: components["schemas"]["IncomingGuildRoleDto"][] | null;
+    };
+    IncomingGuildRoleDto: {
+      id: string;
+      name: string;
+      /** Format: int32 */
+      position?: number;
     };
     ItemDto: {
       /** Format: int32 */
@@ -4104,6 +4500,24 @@ export interface components {
       monthlyRankColor?: string | null;
       socialMedia?: components["schemas"]["SocialMediaLinksDto"];
     };
+    PrivateGuildDto: {
+      id: string;
+      name: string;
+      public?: boolean;
+      features?: components["schemas"]["GuildFeatures"];
+      icon?: string | null;
+      inviteCode?: string | null;
+      banner?: string | null;
+      description?: string | null;
+      adminRole?: string | null;
+      botPermissions?: string | null;
+      botPermissionsNew: string;
+      discordFeatures?: string[];
+      /** Format: int32 */
+      memberCount?: number;
+      channels?: components["schemas"]["GuildChannelDto"][];
+      roles?: components["schemas"]["GuildRoleDto"][];
+    };
     ProblemDetails: {
       type?: string | null;
       title?: string | null;
@@ -4147,6 +4561,7 @@ export interface components {
       jacob: components["schemas"]["JacobDataDto"];
       farmingWeight: components["schemas"]["FarmingWeightDto"];
       skills?: components["schemas"]["SkillsDto"];
+      chocolateFactory?: components["schemas"]["ChocolateFactoryDto"];
       isSelected?: boolean;
       wasRemoved?: boolean;
       /** Format: int64 */
@@ -4281,6 +4696,19 @@ export interface components {
       accessoryBagSettings?: unknown;
       bestiary?: unknown;
     };
+    UpdateGuildJacobLeaderboardDto: {
+      channelId?: string | null;
+      /** Format: int64 */
+      startCutoff?: number | null;
+      /** Format: int64 */
+      endCutoff?: number | null;
+      title?: string | null;
+      requiredRole?: string | null;
+      blockedRole?: string | null;
+      updateChannelId?: string | null;
+      updateRoleId?: string | null;
+      pingForSmallImprovements?: boolean | null;
+    };
     UserBadgeDto: {
       /** Format: int32 */
       id?: number;
@@ -4292,13 +4720,6 @@ export interface components {
       visible?: boolean;
       /** Format: int32 */
       order?: number;
-    };
-    UserGuildDto: {
-      id: string;
-      name: string;
-      icon?: string | null;
-      hasBot?: boolean;
-      permissions: string;
     };
     VerifiedRoleFeature: {
       enabled?: boolean;

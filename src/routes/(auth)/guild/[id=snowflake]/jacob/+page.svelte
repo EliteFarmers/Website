@@ -23,21 +23,19 @@
 	let sendUpdates = true;
 	let tinyLbPing = false;
 
-	$: channels = (data.guildData?.channels ?? [])
+	$: channels = (data.guild?.channels ?? [])
 		// Only allow text channels
 		.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
-		.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
 		.map((c) => ({
 			value: c.id ?? '',
 			label: '#' + (c.name ?? ''),
 		}))
 		.filter((c) => c.value);
 
-	$: roles = (data.guildData?.roles ?? [])
-		.sort((a, b) => (b.position ?? 0) - (a.position ?? 0))
+	$: roles = (data.guild?.roles ?? [])
 		.map((r) => ({
 			value: r.id ?? '',
-			label: r.name ?? '',
+			label: '@' + (r.name ?? ''),
 		}))
 		.filter((r) => r.value && r.label !== '@everyone');
 

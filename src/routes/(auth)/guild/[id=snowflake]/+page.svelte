@@ -3,13 +3,24 @@
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
 	import * as Card from '$ui/card';
-	import type { PageData } from './$types';
+	import * as Select from '$ui/select';
+	import type { ActionData, PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let data: PageData;
+	export let form: ActionData;
+
 	$: features = data.guild?.features;
+	$: visibility = data.guild?.public !== true;
+
+	$: roles = (data.guild?.roles ?? [])
+		.map((r) => ({
+			value: r.id ?? '',
+			label: '@' + (r.name ?? ''),
+		}))
+		.filter((r) => r.value && r.label !== '@everyone');
 </script>
 
 <Head title="Server Settings" description="Manage server settings for your guild!" />
@@ -23,11 +34,19 @@
 	</div>
 
 	<div class="flex flex-row gap-4 items-center">
-		<h2 class="text-lg">View Public Page</h2>
-		<Button href="/server/{data.guildId}" variant="outline">
-			<ExternalLink size={16} />
-		</Button>
+		{#if data.guild?.public}
+			<h2 class="text-lg">View Public Page</h2>
+			<Button href="/server/{data.guildId}" variant="outline">
+				<ExternalLink size={16} />
+			</Button>
+		{:else}
+			<p class="text-red-500">Private Guild</p>
+		{/if}
 	</div>
+
+	{#if form?.error}
+		<p class="text-red-500">{form.error}</p>
+	{/if}
 
 	<section class="flex flex-wrap gap-8 text-center align-middle justify-center mb-16 max-w-4xl">
 		<Card.Root class="flex-1 basis-64 max-w-md">
@@ -100,5 +119,52 @@
 				{/if}
 			</Card.Content>
 		</Card.Root>
+		<Card.Root class="flex-1 basis-64 max-w-md">
+			<Card.Header>
+				<Card.Title class="text-xl">Admin Role</Card.Title>
+			</Card.Header>
+			<Card.Content class="flex flex-col gap-2 self-stretch items-center">
+				<div class="flex flex-row gap-2 items-center">
+					<p>
+						Current: <strong
+							>{data.guild.adminRole === '0'
+								? 'None!'
+								: roles.find((r) => r.value === data.guild.adminRole)?.label}</strong
+						>
+					</p>
+				</div>
+				<p class="text-red-600">
+					Users with this role will have access to all server settings (besides this one)
+				</p>
+				<form method="POST" action="?/setAdminRole" class="flex flex-row gap-4 w-full" use:enhance>
+					<Select.Simple
+						options={roles}
+						value={data.guild.adminRole === '0' ? undefined : data.guild.adminRole}
+						placeholder="Select a role"
+						name="role"
+					/>
+					<Button type="submit">Set</Button>
+				</form>
+			</Card.Content>
+		</Card.Root>
+		{#if data.session?.flags.admin}
+			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+				<Card.Header>
+					<Card.Title class="text-xl">Set Guild Visibility</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+					<p>Toggle this guilds public visibility.</p>
+					<form
+						method="POST"
+						action="?/setPublic"
+						class="flex flex-row gap-4 items-center justify-center"
+						use:enhance
+					>
+						<input type="hidden" bind:value={visibility} name="visibility" />
+						<Button type="submit" class="mt-4 px-8">Toggle</Button>
+					</form>
+				</Card.Content>
+			</Card.Root>
+		{/if}
 	</section>
 </main>

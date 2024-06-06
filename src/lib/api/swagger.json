@@ -626,6 +626,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "Bearer": [ ]
@@ -724,6 +725,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "Bearer": [ ]
@@ -1067,12 +1069,24 @@
         ]
       }
     },
-    "/event/create": {
+    "/guild/{guildId}/events/weight": {
       "post": {
         "tags": [
           "AdminEvent"
         ],
         "summary": "Create a Farming Weight Event",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "description": "",
           "content": {
@@ -1172,12 +1186,24 @@
         ]
       }
     },
-    "/event/create/medals": {
+    "/guild/{guildId}/events/medals": {
       "post": {
         "tags": [
           "AdminEvent"
         ],
         "summary": "Create a Medal Collection Event",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "requestBody": {
           "description": "",
           "content": {
@@ -1277,13 +1303,23 @@
         ]
       }
     },
-    "/event/{eventId}/edit": {
-      "post": {
+    "/guild/{guildId}/events/{eventId}": {
+      "patch": {
         "tags": [
           "AdminEvent"
         ],
         "summary": "Edit an Event",
         "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
           {
             "name": "eventId",
             "in": "path",
@@ -1372,15 +1408,120 @@
             "Bearer": [ ]
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "AdminEvent"
+        ],
+        "summary": "Delete an Event",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
-    "/event/{eventId}/bans": {
+    "/guild/{guildId}/events/{eventId}/bans": {
       "get": {
         "tags": [
           "AdminEvent"
         ],
         "summary": "Get banned members from an event",
         "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
           {
             "name": "eventId",
             "in": "path",
@@ -1470,13 +1611,23 @@
         ]
       }
     },
-    "/event/{eventId}/bans/{playerUuid}": {
+    "/guild/{guildId}/events/{eventId}/bans/{playerUuid}": {
       "post": {
         "tags": [
           "AdminEvent"
         ],
         "summary": "Ban a member from an event",
         "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
           {
             "name": "eventId",
             "in": "path",
@@ -1601,6 +1752,16 @@
         "summary": "Unban a member from an event",
         "parameters": [
           {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
             "name": "eventId",
             "in": "path",
             "description": "",
@@ -1616,8 +1777,6 @@
             "description": "",
             "required": true,
             "schema": {
-              "maxLength": 32,
-              "minLength": 32,
               "type": "string"
             }
           }
@@ -1813,17 +1972,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthResponseDto"
+                "$ref": "#/components/schemas/AuthRefreshDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthResponseDto"
+                "$ref": "#/components/schemas/AuthRefreshDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthResponseDto"
+                "$ref": "#/components/schemas/AuthRefreshDto"
               }
             }
           }
@@ -2427,17 +2586,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GuildDto"
+                  "$ref": "#/components/schemas/PrivateGuildDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GuildDto"
+                  "$ref": "#/components/schemas/PrivateGuildDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GuildDto"
+                  "$ref": "#/components/schemas/PrivateGuildDto"
                 }
               }
             }
@@ -2793,6 +2952,177 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/bot/guild/{guildId}": {
+      "post": {
+        "tags": [
+          "Bot"
+        ],
+        "summary": "Request Discord Guild Update",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Bot"
+        ],
+        "summary": "Update Discord Guild",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/bot/guild/{guildId}/channels": {
+      "post": {
+        "tags": [
+          "Bot"
+        ],
+        "summary": "Update Discord Guild",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildChannelDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildChannelDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildChannelDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/bot/guild/{guildId}/roles": {
+      "patch": {
+        "tags": [
+          "Bot"
+        ],
+        "summary": "Update Discord Guild",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildRoleDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildRoleDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomingGuildRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
         "security": [
@@ -4898,6 +5228,321 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Guild"
+        ],
+        "summary": "Enable the guild's Event feature",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "Discord server (guild) ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "max",
+            "in": "query",
+            "description": "Max amount of Events",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "enable",
+            "in": "query",
+            "description": "Enable or disable feature",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/guild/{guildId}/jacob": {
+      "post": {
+        "tags": [
+          "Guild"
+        ],
+        "summary": "Enable the guild's Jacob Leaderboard feature",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "Discord server (guild) ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "max",
+            "in": "query",
+            "description": "Max amount of Jacob Leaderboards",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "enable",
+            "in": "query",
+            "description": "Enable or disable feature",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/guild/{guildId}/public": {
+      "post": {
+        "tags": [
+          "Guild"
+        ],
+        "summary": "Set the guild's public visibility",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "enable",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/leaderboards": {
@@ -6290,7 +6935,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserGuildDto"
+                    "$ref": "#/components/schemas/GuildMemberDto"
                   }
                 }
               },
@@ -6298,7 +6943,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserGuildDto"
+                    "$ref": "#/components/schemas/GuildMemberDto"
                   }
                 }
               },
@@ -6306,7 +6951,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserGuildDto"
+                    "$ref": "#/components/schemas/GuildMemberDto"
                   }
                 }
               }
@@ -7017,6 +7662,140 @@
           }
         ]
       },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update a guild Jacob Leaderboard",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "lbId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGuildJacobLeaderboardDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGuildJacobLeaderboardDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGuildJacobLeaderboardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuildJacobLeaderboardFeature"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
       "delete": {
         "tags": [
           "User"
@@ -7374,6 +8153,116 @@
           },
           "400": {
             "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/user/guild/{guildId}/adminrole": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Set a guild's admin role",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Discord role ID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7842,6 +8731,26 @@
         },
         "additionalProperties": false
       },
+      "AuthRefreshDto": {
+        "required": [
+          "access_token",
+          "refresh_token"
+        ],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "User ID"
+          },
+          "refresh_token": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Refresh token for the user"
+          }
+        },
+        "additionalProperties": false
+      },
       "AuthResponseDto": {
         "required": [
           "access_token",
@@ -7988,10 +8897,10 @@
             "type": "string"
           },
           "guild": {
-            "$ref": "#/components/schemas/GuildDto"
+            "$ref": "#/components/schemas/PrivateGuildDto"
           },
-          "discordGuild": {
-            "$ref": "#/components/schemas/FullDiscordGuild"
+          "member": {
+            "$ref": "#/components/schemas/GuildMemberDto"
           }
         },
         "additionalProperties": false
@@ -8042,23 +8951,78 @@
         },
         "additionalProperties": false
       },
-      "ChannelType": {
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15
-        ],
-        "type": "integer",
-        "format": "int32"
+      "ChocolateFactoryDto": {
+        "type": "object",
+        "properties": {
+          "chocolate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalChocolate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chocolateSincePrestige": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chocolateSpent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "prestige": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastViewed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uniqueRabbits": {
+            "$ref": "#/components/schemas/ChocolateFactoryRabbitsDto"
+          },
+          "totalRabbits": {
+            "$ref": "#/components/schemas/ChocolateFactoryRabbitsDto"
+          },
+          "unlockedZorro": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChocolateFactoryRabbitsDto": {
+        "type": "object",
+        "properties": {
+          "common": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uncommon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rare": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "epic": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "legendary": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mythic": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "divine": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "ConfigLeaderboardSettings": {
         "type": "object",
@@ -8574,43 +9538,6 @@
         },
         "additionalProperties": false
       },
-      "DiscordChannel": {
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "type": {
-            "$ref": "#/components/schemas/ChannelType"
-          },
-          "flags": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "position": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "guild_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "parent_id": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "DiscordLoginDto": {
         "required": [
           "access_token",
@@ -8644,24 +9571,6 @@
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DiscordRoleData": {
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
           "id": {
             "minLength": 1,
             "type": "string"
@@ -8669,18 +9578,14 @@
           "name": {
             "minLength": 1,
             "type": "string"
-          },
-          "permissions": {
-            "type": "string",
-            "nullable": true
           },
           "position": {
             "type": "integer",
             "format": "int32"
           },
-          "color": {
+          "permissions": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -9263,7 +10168,7 @@
         },
         "additionalProperties": false
       },
-      "FullDiscordGuild": {
+      "GuildChannelDto": {
         "required": [
           "id",
           "name"
@@ -9278,78 +10183,11 @@
             "minLength": 1,
             "type": "string"
           },
-          "icon": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "splash": {
-            "type": "string",
-            "nullable": true
-          },
-          "discovery_splash": {
-            "type": "string",
-            "nullable": true
-          },
-          "features": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "banner": {
-            "type": "string",
-            "nullable": true
-          },
-          "owner_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "application_id": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "region": {
-            "type": "string",
-            "nullable": true
-          },
-          "verification_level": {
+          "type": {
             "type": "integer",
             "format": "int32"
           },
-          "roles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DiscordRoleData"
-            }
-          },
-          "channels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DiscordChannel"
-            }
-          },
-          "vanity_url_code": {
-            "type": "string",
-            "nullable": true
-          },
-          "premium_tier": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "premium_subscription_count": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "preferred_locale": {
-            "type": "string",
-            "nullable": true
-          },
-          "approximate_member_count": {
+          "position": {
             "type": "integer",
             "format": "int32"
           }
@@ -9382,66 +10220,6 @@
           "inviteCode": {
             "type": "string",
             "nullable": true
-          },
-          "memberCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "GuildDto": {
-        "required": [
-          "botPermissionsNew",
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "features": {
-            "$ref": "#/components/schemas/GuildFeatures"
-          },
-          "icon": {
-            "type": "string",
-            "nullable": true
-          },
-          "inviteCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "banner": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "adminRole": {
-            "type": "string",
-            "nullable": true
-          },
-          "botPermissions": {
-            "type": "string",
-            "nullable": true
-          },
-          "botPermissionsNew": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "discordFeatures": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "memberCount": {
             "type": "integer",
@@ -9628,6 +10406,64 @@
         },
         "additionalProperties": false
       },
+      "GuildMemberDto": {
+        "required": [
+          "id",
+          "name",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasBot": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuildRoleDto": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "IncomingAccountDto": {
         "required": [
           "id",
@@ -9658,6 +10494,112 @@
           "locale": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IncomingGuildChannelDto": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "permissions": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IncomingGuildDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "permissions": {
+            "type": "string",
+            "nullable": true
+          },
+          "botPermissions": {
+            "type": "string",
+            "nullable": true
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncomingGuildChannelDto"
+            },
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IncomingGuildRoleDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IncomingGuildRoleDto": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -10461,6 +11403,81 @@
         },
         "additionalProperties": false
       },
+      "PrivateGuildDto": {
+        "required": [
+          "botPermissionsNew",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "public": {
+            "type": "boolean"
+          },
+          "features": {
+            "$ref": "#/components/schemas/GuildFeatures"
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          },
+          "inviteCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "banner": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "adminRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "botPermissions": {
+            "type": "string",
+            "nullable": true
+          },
+          "botPermissionsNew": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "discordFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "memberCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildChannelDto"
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuildRoleDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -10597,6 +11614,9 @@
           },
           "skills": {
             "$ref": "#/components/schemas/SkillsDto"
+          },
+          "chocolateFactory": {
+            "$ref": "#/components/schemas/ChocolateFactoryDto"
           },
           "isSelected": {
             "type": "boolean"
@@ -11018,6 +12038,51 @@
         },
         "additionalProperties": false
       },
+      "UpdateGuildJacobLeaderboardDto": {
+        "type": "object",
+        "properties": {
+          "channelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "startCutoff": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "endCutoff": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "title": {
+            "maxLength": 64,
+            "type": "string",
+            "nullable": true
+          },
+          "requiredRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "blockedRole": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateChannelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateRoleId": {
+            "type": "string",
+            "nullable": true
+          },
+          "pingForSmallImprovements": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UserBadgeDto": {
         "required": [
           "description",
@@ -11058,36 +12123,6 @@
           "order": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserGuildDto": {
-        "required": [
-          "id",
-          "name",
-          "permissions"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "icon": {
-            "type": "string",
-            "nullable": true
-          },
-          "hasBot": {
-            "type": "boolean"
-          },
-          "permissions": {
-            "minLength": 1,
-            "type": "string"
           }
         },
         "additionalProperties": false
