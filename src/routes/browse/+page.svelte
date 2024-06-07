@@ -17,14 +17,14 @@
 <main class="flex flex-col justify-center items-center text-center my-16" data-sveltekit-preload-data="tap">
 	{#if events.length > 0}
 		<section class="flex flex-col gap-8 w-[90%] md:w-[70%] max-w-7xl my-16 dark:text-white">
-			<h1 class="text-4xl">Join Public Events</h1>
+			<h1 class="text-2xl md:text-4xl">Join Public Events</h1>
 			{#each events ?? [] as event (event.id)}
 				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} />
 			{/each}
 		</section>
 	{/if}
 	<section class="flex flex-col gap-8 w-[90%] md:w-[70%] max-w-7xl my-16 dark:text-white">
-		<h1 class="text-4xl">Explore Public Discord Servers</h1>
+		<h1 class="text-2xl md:text-4xl">Explore Public Discord Servers</h1>
 		{#if pinned}
 			<Serverbar guild={pinned} />
 		{/if}

@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 	const guilds =
 		(await GetUsersGuilds(token)
 			.then((guilds) => guilds.data ?? undefined)
-			.catch(() => undefined)) ?? ([] as components['schemas']['UserGuildDto'][]);
+			.catch(() => undefined)) ?? ([] as components['schemas']['GuildMemberDto'][]);
 
 	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
 

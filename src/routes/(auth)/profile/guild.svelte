@@ -5,7 +5,7 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Settings from 'lucide-svelte/icons/settings';
 
-	export let guild: components['schemas']['UserGuildDto'] | components['schemas']['GuildDetailsDto'];
+	export let guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];
 	export let link = false;
 </script>
 
