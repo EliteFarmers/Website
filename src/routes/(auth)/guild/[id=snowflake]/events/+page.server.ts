@@ -38,10 +38,10 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 	}[] = [];
 
 	for (const event of events ?? []) {
-		if (!event.id) continue;
+		if (!event.id || !event.guildId) continue;
 
 		const { data: members } = await GetEventMembers(event.id).catch(() => ({ data: undefined }));
-		const { data: bans } = await GetEventBans(token, event.id).catch(() => ({ data: undefined }));
+		const { data: bans } = await GetEventBans(token, event.guildId, event.id).catch(() => ({ data: undefined }));
 
 		details.push({
 			eventId: event.id,
@@ -222,7 +222,7 @@ export const actions: Actions = {
 		const uuid = data.get('uuid') as string;
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		await UnbanEventMember(token, eventId, uuid).catch((e) => {
+		await UnbanEventMember(token, guildId, eventId, uuid).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

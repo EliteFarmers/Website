@@ -106,8 +106,8 @@
 			</div>
 		{/if}
 	</div>
-	<section class="flex flex-col max-w-3xl w-full">
-		<h1 class="text-2xl mb-4 mx-4">Servers With Leaderboards</h1>
+	<section class="flex flex-col max-w-3xl w-full mx-4">
+		<h1 class="text-2xl mb-4">Public Servers</h1>
 		{#if data.publicGuilds.length === 0}
 			<p>You're not a member of any public guilds!</p>
 		{/if}
@@ -117,7 +117,7 @@
 			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4 mx-4">Manage Servers</h1>
+		<h1 class="text-2xl mb-4">Manage Servers</h1>
 		{#if data.guildsWithBot.length === 0}
 			<p>You don't manage any servers with the bot invited!</p>
 		{/if}
@@ -127,7 +127,7 @@
 			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4 mx-4">Manage Badges</h1>
+		<h1 class="text-2xl mb-4">Manage Badges</h1>
 		{#if !user.minecraftAccounts?.some((mc) => mc.badges && mc.badges.length > 0)}
 			<p class="mb-16">You don't have any badges yet!</p>
 		{/if}
@@ -136,7 +136,7 @@
 			<form
 				action="?/updateBadges"
 				method="post"
-				class="flex flex-col gap-4 mx-4"
+				class="flex flex-col gap-4"
 				use:enhance={() => {
 					loading = true;
 					return async ({ result }) => {
@@ -203,14 +203,7 @@
 			</form>
 		{/each}
 
-		<h1 class="text-2xl mb-4 mx-4 mt-16">Other Servers</h1>
-		{#if data.guilds.length === 0}
-			<p>No servers found! Try refreshing the page if this is wrong.</p>
-		{/if}
-		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			{#each data.guilds as guild (guild.id)}
-				<Guild {guild} />
-			{/each}
-		</div>
+		<h1 class="text-2xl mb-4 mt-16">Other Servers</h1>
+		<p>Missing a server above? <a href="invite" class="text-blue-500 underline">Invite the bot!</a></p>
 	</section>
 </main>

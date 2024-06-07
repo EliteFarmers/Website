@@ -33,8 +33,8 @@
 				<h1 class="text-4xl text-white">
 					{guild?.name}
 				</h1>
-				<Button href="https://discord.gg/{guild.inviteCode}" variant="secondary">
-					<ExternalLink size={20} />
+				<Button href="https://discord.gg/{guild.inviteCode}" variant="link">
+					<ExternalLink size={20} class="text-white" />
 				</Button>
 			</div>
 		</div>

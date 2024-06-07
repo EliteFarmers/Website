@@ -7,7 +7,7 @@
 </script>
 
 <a
-	href={`/server/${guild.id}`}
+	href="/server/{guild.id}"
 	class="relative flex flex-row justify-between flex-1 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full bg-primary-foreground {guild.banner
 		? 'text-white'
 		: ''}"
@@ -22,10 +22,10 @@
 	{/if}
 	<div class="flex flex-row gap-4 z-10 items-center">
 		<Guildicon {guild} size={16} />
-		<h2 class="text-3xl font-semibold">{guild.name}</h2>
+		<h2 class="text-xl sm:text-2xl md:text-3xl font-semibold">{guild.name}</h2>
 	</div>
 	<div class="flex flex-row gap-2 font-semibold items-center z-10">
-		<p class="text-xl">
+		<p class="text-lg md:text-xl">
 			{guild.memberCount?.toLocaleString()}
 		</p>
 		<Users />

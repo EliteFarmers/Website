@@ -68,7 +68,7 @@ export const actions: Actions = {
 		const { access_token: token, session } = locals;
 
 		if (!token || !session?.flags?.support) {
-			throw fail(403);
+			return fail(403);
 		}
 
 		const data = await request.formData();
@@ -80,7 +80,7 @@ export const actions: Actions = {
 		const showAll = data.get('all') === 'true';
 
 		if (!uuid || !profile || !start || !days) {
-			throw fail(400);
+			return fail(400);
 		}
 
 		if (!showAll) {
