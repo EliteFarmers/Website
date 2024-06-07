@@ -1297,7 +1297,7 @@ export interface paths {
   };
   "/bot/guild/{guildId}/roles": {
     /** Update Discord Guild */
-    patch: {
+    post: {
       parameters: {
         path: {
           guildId: number;
@@ -1314,6 +1314,46 @@ export interface paths {
         /** @description OK */
         200: {
           content: never;
+        };
+      };
+    };
+  };
+  "/bot/guild/{guildId}/members/{userId}/roles": {
+    /** Update Guild Memeber Roles */
+    put: {
+      parameters: {
+        path: {
+          guildId: number;
+          userId: string;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": string[];
+          "text/json": string[];
+          "application/*+json": string[];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
         };
       };
     };

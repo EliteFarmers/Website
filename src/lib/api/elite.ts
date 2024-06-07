@@ -729,6 +729,38 @@ export const GetAdminSkillPoints = async (playerUuid: string, profileUuid: strin
 		},
 	});
 
+export const EnableGuildLeaderboards = async (guildId: string, accessToken: string, max = 1, enable = true) =>
+	await POST('/guild/{guildId}/jacob', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+			query: {
+				enable,
+				max,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const EnableGuildEvents = async (guildId: string, accessToken: string, max = 1, enable = true) =>
+	await POST('/guild/{guildId}/events', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+			query: {
+				enable,
+				max,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {

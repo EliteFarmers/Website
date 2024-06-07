@@ -1,6 +1,13 @@
 import { error, fail, type Actions, type NumericRange } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetGuild, SetGuildAdminRole, SetGuildInvite, SetGuildPublic } from '$lib/api/elite';
+import {
+	EnableGuildEvents,
+	EnableGuildLeaderboards,
+	GetGuild,
+	SetGuildAdminRole,
+	SetGuildInvite,
+	SetGuildPublic,
+} from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	await parent();
@@ -82,6 +89,68 @@ export const actions: Actions = {
 		}
 
 		const { response } = await SetGuildPublic(guildId, token, enable);
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			return fail(response.status as NumericRange<400, 499>, { error: msg });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	updateJacob: async ({ params, locals, request }) => {
+		const guildId = params.id;
+		const { session, access_token: token } = locals;
+
+		if (!session?.flags.admin || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const enable = data.get('enable') === 'true';
+		const max = data.get('max') as string;
+
+		if (guildId === undefined) {
+			return fail(400, { error: 'guildId is required' });
+		}
+
+		if (max === undefined || Number.isNaN(+max)) {
+			return fail(400, { error: 'max is required' });
+		}
+
+		const { response } = await EnableGuildLeaderboards(guildId, token, +max, enable);
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			return fail(response.status as NumericRange<400, 499>, { error: msg });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	updateEvents: async ({ params, locals, request }) => {
+		const guildId = params.id;
+		const { session, access_token: token } = locals;
+
+		if (!session?.flags.admin || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const enable = data.get('enable') === 'true';
+		const max = data.get('max') as string;
+
+		if (guildId === undefined) {
+			return fail(400, { error: 'guildId is required' });
+		}
+
+		if (max === undefined || Number.isNaN(+max)) {
+			return fail(400, { error: 'max is required' });
+		}
+
+		const { response } = await EnableGuildEvents(guildId, token, +max, enable);
 
 		if (response.status !== 200) {
 			const msg = await response.text();

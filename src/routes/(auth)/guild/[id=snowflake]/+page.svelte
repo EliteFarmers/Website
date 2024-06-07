@@ -14,6 +14,10 @@
 
 	$: features = data.guild?.features;
 	$: visibility = data.guild?.public !== true;
+	$: currentLeaderboardCount = features?.jacobLeaderboard?.maxLeaderboards ?? 0;
+	$: currentEventCount = features?.eventSettings?.maxMonthlyEvents ?? 0;
+	let leaderboardCount = 3;
+	let eventCount = 1;
 
 	$: roles = (data.guild?.roles ?? [])
 		.map((r) => ({
@@ -147,7 +151,9 @@
 				</form>
 			</Card.Content>
 		</Card.Root>
-		{#if data.session?.flags.admin}
+	</section>
+	{#if data.session?.flags.admin}
+		<section class="flex flex-wrap gap-8 text-center align-middle justify-center mb-16 max-w-4xl">
 			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
 				<Card.Header>
 					<Card.Title class="text-xl">Set Guild Visibility</Card.Title>
@@ -165,6 +171,66 @@
 					</form>
 				</Card.Content>
 			</Card.Root>
-		{/if}
-	</section>
+			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+				<Card.Header>
+					<Card.Title class="text-xl">Enable Jacob Leaderboards</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+					<p>Current Max Leaderboards: <strong>{currentLeaderboardCount}</strong></p>
+					<form
+						method="POST"
+						action="?/updateJacob"
+						class="flex flex-row gap-4 items-center justify-center mt-4"
+						use:enhance
+					>
+						<Input
+							name="max"
+							placeholder="Max Leaderboards"
+							maxlength={2}
+							type="number"
+							bind:value={leaderboardCount}
+							required
+						/>
+						{#if features?.jacobLeaderboardEnabled}
+							<input type="hidden" value={false} name="enable" />
+							<Button type="submit" class="px-8">Disable</Button>
+						{:else}
+							<input type="hidden" value={true} name="enable" />
+							<Button type="submit" class="px-8">Enable</Button>
+						{/if}
+					</form>
+				</Card.Content>
+			</Card.Root>
+			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+				<Card.Header>
+					<Card.Title class="text-xl">Enable Events</Card.Title>
+				</Card.Header>
+				<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+					<p>Current Max Events: <strong>{currentEventCount}</strong></p>
+					<form
+						method="POST"
+						action="?/updateEvents"
+						class="flex flex-row gap-4 items-center justify-center mt-4"
+						use:enhance
+					>
+						<Input
+							name="max"
+							placeholder="Max Events"
+							maxlength={2}
+							type="number"
+							bind:value={eventCount}
+							required
+						/>
+						{#if features?.eventsEnabled}
+							<input type="hidden" value={false} name="enable" />
+							<Button type="submit" class="px-8">Disable</Button>
+						{:else}
+							<input type="hidden" value={true} name="enable" />
+							<Button type="submit" class="px-8">Enable</Button>
+						{/if}
+					</form>
+				</Card.Content>
+			</Card.Root>
+		</section>
+	{/if}
 </main>
