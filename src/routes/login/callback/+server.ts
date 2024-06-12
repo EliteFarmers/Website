@@ -14,11 +14,16 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	cookies.delete('auth_state', { path: '/' });
 
 	if (errorMsg) {
+		// If the user denies the request, redirect them back to the home page
+		if (errorMsg === 'access_denied') {
+			throw redirect(303, '/');
+		}
+
 		throw error(400, errorMsg);
 	}
 
 	if (!code || !state || state !== storedState) {
-		throw error(400, 'Missing code or state');
+		throw error(400, "Couldn't verify your request, please try again.");
 	}
 
 	const data = {

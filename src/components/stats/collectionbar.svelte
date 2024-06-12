@@ -76,7 +76,7 @@
 
 		<div class="flex flex-col justify-center align-middle w-full p-1 gap-1">
 			<p class="md:ml-2 text-right font-semibold sm:text-lg md:text-xl lg:text-2xl">{weight.toLocaleString()}</p>
-			<div class="md:ml-2 text-right flex flex-row items-center gap-1 justify-end">
+			<div class="md:ml-2 text-right flex flex-row items-center gap-2 justify-end">
 				{#if pestRank > 0}
 					<a
 						href="/leaderboard/{pest}/{$page.params.id}-{$page.params.profile}"
@@ -88,9 +88,16 @@
 					</a>
 				{/if}
 				<Popover.Mobile>
-					<p slot="trigger" class="text-md sm:text-lg font-semibold whitespace-nowrap">
-						{pestKills.toLocaleString()}
-					</p>
+					<div slot="trigger" class="flex flex-row items-center align-middle justify-center gap-2 h-6">
+						<p class="text-md sm:text-lg font-semibold whitespace-nowrap">
+							{pestKills.toLocaleString()}
+						</p>
+						<img
+							src="/images/pests/{pest}.png"
+							class="pixelated aspect-square object-contain h-full"
+							alt={pest}
+						/>
+					</div>
 					<div class="flex flex-col items-center gap-2 max-w-md">
 						<p class="text-lg first-letter:capitalize font-semibold">{pest} Kills</p>
 						<p>{pestKills.toLocaleString()}</p>
