@@ -199,11 +199,11 @@ export interface paths {
       };
     };
   };
-  "/admins": {
-    /** Get list of members with roles */
+  "/admin/admins": {
+    /** Get admin list */
     get: {
       responses: {
-        /** @description OK */
+        /** @description List of admins */
         200: {
           content: {
             "text/plain": components["schemas"]["AccountWithPermsDto"][];
@@ -1916,6 +1916,194 @@ export interface paths {
       };
     };
   };
+  "/event/{eventId}/teams": {
+    /** Get all teams in an event */
+    get: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventTeamWithMembersDto"][];
+            "application/json": components["schemas"]["EventTeamWithMembersDto"][];
+            "text/json": components["schemas"]["EventTeamWithMembersDto"][];
+          };
+        };
+      };
+    };
+    /** Create a team in an event */
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["CreateEventTeamDto"];
+          "text/json": components["schemas"]["CreateEventTeamDto"];
+          "application/*+json": components["schemas"]["CreateEventTeamDto"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/event/{eventId}/team/{teamId}": {
+    /** Get one team in an event */
+    get: {
+      parameters: {
+        path: {
+          eventId: number;
+          teamId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventTeamWithMembersDto"];
+            "application/json": components["schemas"]["EventTeamWithMembersDto"];
+            "text/json": components["schemas"]["EventTeamWithMembersDto"];
+          };
+        };
+        /** @description Not Found */
+        404: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    /** Delete a team */
+    delete: {
+      parameters: {
+        path: {
+          eventId: number;
+          teamId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+    /** Edit a team */
+    patch: {
+      parameters: {
+        path: {
+          eventId: number;
+          teamId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": components["schemas"]["UpdateEventTeamDto"];
+          "text/json": components["schemas"]["UpdateEventTeamDto"];
+          "application/*+json": components["schemas"]["UpdateEventTeamDto"];
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/event/{eventId}/team/{teamId}/join": {
+    /** Join a team */
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+          teamId: number;
+        };
+      };
+      requestBody?: {
+        content: {
+          "application/json": string;
+          "text/json": string;
+          "application/*+json": string;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/event/{eventId}/team/{teamId}/leave": {
+    /** Leave a team */
+    post: {
+      parameters: {
+        path: {
+          eventId: number;
+          teamId: number;
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          content: never;
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": string;
+            "application/json": string;
+            "text/json": string;
+          };
+        };
+      };
+    };
+  };
   "/graph/{playerUuid}/{profileUuid}/crops": {
     /** Crop Collections Over Time */
     get: {
@@ -2328,7 +2516,7 @@ export interface paths {
       };
     };
   };
-  "/leaderboards": {
+  "/leaderboard/leaderboards": {
     /** Get a list of leaderboards */
     get: {
       responses: {
@@ -3849,6 +4037,10 @@ export interface components {
       requirements: string;
       tieToAccount?: boolean;
     };
+    CreateEventTeamDto: {
+      name?: string | null;
+      color?: string | null;
+    };
     CreateMedalEventDto: {
       /** @description The name of the event */
       name: string;
@@ -4055,6 +4247,16 @@ export interface components {
       dynamicStartTime?: boolean;
       /** @description Event status */
       active?: boolean;
+      /**
+       * Format: int32
+       * @description Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited
+       */
+      maxTeams?: number;
+      /**
+       * Format: int32
+       * @description Max amount of members allowed in a team, 0 if solo event, -1 if unlimited
+       */
+      maxTeamMembers?: number;
       /** @description Discord role id required to participate in the event */
       requiredRole?: string | null;
       /** @description Discord role id blocked from participating in the event */
@@ -4063,6 +4265,7 @@ export interface components {
       guildId?: string | null;
       /** @description Data specific to the event */
       data?: unknown;
+      teams?: components["schemas"]["EventTeamDto"][];
     };
     EventMemberBannedDto: {
       playerUuid?: string | null;
@@ -4086,6 +4289,8 @@ export interface components {
       playerName?: string | null;
       profileId?: string | null;
       eventId: string;
+      /** Format: int32 */
+      teamId?: number | null;
       status?: components["schemas"]["EventMemberStatus"];
       score?: string | null;
       data?: unknown;
@@ -4098,6 +4303,26 @@ export interface components {
      * @enum {integer}
      */
     EventMemberStatus: 0 | 1 | 2 | 3;
+    EventTeamDto: {
+      /** Format: int32 */
+      id?: number;
+      eventId?: string | null;
+      name?: string | null;
+      color?: string | null;
+      score?: string | null;
+      ownerId?: string | null;
+    };
+    EventTeamWithMembersDto: {
+      /** Format: int32 */
+      id?: number;
+      eventId?: string | null;
+      name?: string | null;
+      color?: string | null;
+      score?: string | null;
+      ownerId?: string | null;
+      members?: components["schemas"]["EventMemberDto"][];
+      joinCode?: string | null;
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -4719,7 +4944,7 @@ export interface components {
       playerUuid?: string;
       playerName?: string;
     };
-    TempStatBuff: {
+    TempStatBuffResponse: {
       /** Format: int32 */
       stat?: number;
       key?: string | null;
@@ -4732,9 +4957,13 @@ export interface components {
       perks?: ({
         [key: string]: number | null;
       }) | null;
-      tempStatBuffs?: components["schemas"]["TempStatBuff"][] | null;
+      tempStatBuffs?: components["schemas"]["TempStatBuffResponse"][] | null;
       accessoryBagSettings?: unknown;
       bestiary?: unknown;
+    };
+    UpdateEventTeamDto: {
+      name?: string | null;
+      color?: string | null;
     };
     UpdateGuildJacobLeaderboardDto: {
       channelId?: string | null;

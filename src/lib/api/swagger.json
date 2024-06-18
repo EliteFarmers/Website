@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "EliteAPI",
+    "title": "Elite API",
     "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data. Use of this API requires following the TOS. This API is not affiliated with Hypixel or Mojang.",
     "termsOfService": "https://elitebot.dev/apiterms",
     "contact": {
@@ -12,7 +12,7 @@
       "name": "GPL-3.0",
       "url": "https://github.com/EliteFarmers/API/blob/master/LICENSE.txt"
     },
-    "version": "v1"
+    "version": "1.0"
   },
   "paths": {
     "/account": {
@@ -449,15 +449,15 @@
         ]
       }
     },
-    "/admins": {
+    "/admin/admins": {
       "get": {
         "tags": [
           "Admin"
         ],
-        "summary": "Get list of members with roles",
+        "summary": "Get admin list",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "List of admins",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4561,6 +4561,477 @@
         ]
       }
     },
+    "/event/{eventId}/teams": {
+      "get": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Get all teams in an event",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventTeamWithMembersDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventTeamWithMembersDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventTeamWithMembersDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Create a team in an event",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventTeamDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventTeamDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventTeamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/event/{eventId}/team/{teamId}": {
+      "get": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Get one team in an event",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTeamWithMembersDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTeamWithMembersDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTeamWithMembersDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Edit a team",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventTeamDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventTeamDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventTeamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Delete a team",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/event/{eventId}/team/{teamId}/join": {
+      "post": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Join a team",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/event/{eventId}/team/{teamId}/leave": {
+      "post": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Leave a team",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/graph/{playerUuid}/{profileUuid}/crops": {
       "get": {
         "tags": [
@@ -5650,7 +6121,7 @@
         ]
       }
     },
-    "/leaderboards": {
+    "/leaderboard/leaderboards": {
       "get": {
         "tags": [
           "Leaderboard"
@@ -9373,6 +9844,22 @@
         },
         "additionalProperties": false
       },
+      "CreateEventTeamDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 32,
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "maxLength": 7,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateMedalEventDto": {
         "required": [
           "endTime",
@@ -9971,6 +10458,16 @@
             "type": "boolean",
             "description": "Event status"
           },
+          "maxTeams": {
+            "type": "integer",
+            "description": "Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited",
+            "format": "int32"
+          },
+          "maxTeamMembers": {
+            "type": "integer",
+            "description": "Max amount of members allowed in a team, 0 if solo event, -1 if unlimited",
+            "format": "int32"
+          },
           "requiredRole": {
             "type": "string",
             "description": "Discord role id required to participate in the event",
@@ -9989,6 +10486,12 @@
           "data": {
             "description": "Data specific to the event",
             "nullable": true
+          },
+          "teams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventTeamDto"
+            }
           }
         },
         "additionalProperties": false
@@ -10080,6 +10583,11 @@
             "minLength": 1,
             "type": "string"
           },
+          "teamId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "status": {
             "$ref": "#/components/schemas/EventMemberStatus"
           },
@@ -10114,6 +10622,76 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "EventTeamDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "string",
+            "nullable": true
+          },
+          "ownerId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EventTeamWithMembersDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "string",
+            "nullable": true
+          },
+          "ownerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventMemberDto"
+            }
+          },
+          "joinCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "EventType": {
         "enum": [
@@ -12093,7 +12671,7 @@
         },
         "additionalProperties": false
       },
-      "TempStatBuff": {
+      "TempStatBuffResponse": {
         "type": "object",
         "properties": {
           "stat": {
@@ -12130,7 +12708,7 @@
           "tempStatBuffs": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TempStatBuff"
+              "$ref": "#/components/schemas/TempStatBuffResponse"
             },
             "nullable": true
           },
@@ -12138,6 +12716,22 @@
             "nullable": true
           },
           "bestiary": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateEventTeamDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 32,
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "maxLength": 7,
+            "type": "string",
             "nullable": true
           }
         },
