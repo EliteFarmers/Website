@@ -5,15 +5,17 @@
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Users from 'lucide-svelte/icons/users';
-	import Eventmember from '../eventmember.svelte';
+	import EventMember from '../event-member.svelte';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
+	import EventTeam from '../event-team.svelte';
 
 	export let data: PageData;
 
 	$: event = data.event ?? {};
 	$: guild = data.guild;
 	$: members = data.members ?? [];
+	$: teams = data.teams ?? [];
 	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
 
 	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
@@ -47,13 +49,23 @@
 	<div class="flex flex-col lg:flex-row gap-8 max-w-5xl w-full">
 		<section class="flex flex-col gap-4 w-full items-center bg-primary-foreground rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
-				<h2 class="text-2xl">Members</h2>
-				<div class="flex flex-row gap-2 font-semibold items-center z-10">
-					<p class="text-2xl">
-						{members.length?.toLocaleString()}
-					</p>
-					<Users />
-				</div>
+				{#if members.length > 0}
+					<h2 class="text-2xl">Members</h2>
+					<div class="flex flex-row gap-2 font-semibold items-center">
+						<p class="text-2xl">
+							{members.length?.toLocaleString()}
+						</p>
+						<Users />
+					</div>
+				{:else if teams.length > 0}
+					<h2 class="text-2xl">Teams</h2>
+					<div class="flex flex-row gap-2 font-semibold items-center">
+						<p class="text-2xl">
+							{teams.length?.toLocaleString()}
+						</p>
+						<Users />
+					</div>
+				{/if}
 			</div>
 			{#if members.length > 0}
 				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
@@ -61,10 +73,16 @@
 						{#each members as member, i}
 							{@const key = `${i + 1}`}
 							<Accordion.Item value={key} id={key} class="w-full">
-								<Eventmember {member} rank={i + 1} {running} {event} />
+								<EventMember {member} rank={i + 1} {running} {event} />
 							</Accordion.Item>
 						{/each}
 					</Accordion.Root>
+				</div>
+			{:else if teams.length > 0}
+				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
+					{#each teams as team, i}
+						<EventTeam {team} rank={i + 1} {running} {event} />
+					{/each}
 				</div>
 			{:else}
 				<p class="max-w-lg text-center my-16">

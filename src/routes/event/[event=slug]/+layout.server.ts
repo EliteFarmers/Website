@@ -1,4 +1,4 @@
-import { GetEventDetails, GetEventMembers, GetPublicGuild } from '$lib/api/elite';
+import { GetEventDetails, GetEventMembers, GetEventTeams, GetPublicGuild } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
@@ -20,12 +20,23 @@ export const load = (async ({ params, setHeaders, url }) => {
 		throw redirect(302, `/event/${properUrl}`);
 	}
 
-	const { data: members } = await GetEventMembers(eventData.id).catch(() => ({ data: undefined }));
 	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
 
 	setHeaders({
 		'Cache-Control': 'public, max-age=300',
 	});
+
+	if (eventData.maxTeamMembers !== 0 || eventData.maxTeams !== 0) {
+		const { data: teams } = await GetEventTeams(eventData.id).catch(() => ({ data: undefined }));
+
+		return {
+			event: eventData,
+			teams: teams ?? [],
+			guild: guild,
+		};
+	}
+
+	const { data: members } = await GetEventMembers(eventData.id).catch(() => ({ data: undefined }));
 
 	return {
 		event: eventData,
