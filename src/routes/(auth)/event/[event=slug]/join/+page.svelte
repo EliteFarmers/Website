@@ -6,6 +6,8 @@
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { EventType } from '$lib/utils';
+	import { Input } from '$ui/input';
+	import { SelectSimple } from '$ui/select';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -15,6 +17,18 @@
 		3: false,
 		4: false,
 	};
+
+	$: event = data.event;
+	$: teams = (data.teams ?? [])
+		.filter((t) => t.members && event && event.maxTeamMembers && (t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1))
+		.map((t) => ({ 
+			value: t.id ?? '', 
+			label: (t.name ?? '') + ` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`, 
+		}));
+
+	$: joined = data.member && data.member?.status !== 1 && data.member?.status !== 2;
+	$: ownTeamId = +(data.member?.teamId ?? '0');
+	$: ownTeam = data.teams?.find(t => t.id === ownTeamId);
 
 	$: profiles =
 		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? [];
@@ -96,7 +110,7 @@
 				</Label>
 			</div>
 
-			<div class="flex gap-2 items-center">
+			<div class="flex gap-2 items-center mb-8">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[4]} />
 				<Checkbox.Root bind:checked={checks[4]} />
 				<Label>
@@ -105,10 +119,29 @@
 				</Label>
 			</div>
 
-			<div class="flex flex-col md:flex-row gap-8 justify-center">
+			{#if data.event.maxTeamMembers !== 0}
+				<Label>
+					Join a team! Get the code from your team leader!
+				</Label>
+				<div class="flex flex-row items-center gap-2">
+					<SelectSimple options={teams} name="team" placeholder="Select Team" required />
+					<Input type="text" name="code" placeholder="Team Code" required />
+				</div>
+			{/if}
+			<div class="flex flex-col md:flex-row gap-2 justify-center">
 				<Button class="flex-1" href="/event/{$page.params.event}" color="alternative">Go Back</Button>
-				<Button class="flex-1" type="submit">Join</Button>
+				{#if data.event.maxTeamMembers !== 0}
+					<Button class="flex-1" type="submit" disabled={joined}>Join Team</Button>
+				{:else}
+					<Button class="flex-1" type="submit" disabled={joined}>Join</Button>
+				{/if}
 			</div>
+
+			
+
+			{#if joined}
+				<p class="text-green-700">You have successfully joined the event!</p>
+			{/if}
 
 			{#if form?.error}
 				<h5 class="text-xl font-semibold text-red-700">

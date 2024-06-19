@@ -4304,26 +4304,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EventMemberDto"
-                  }
+                  "$ref": "#/components/schemas/EventMemberDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EventMemberDto"
-                  }
+                  "$ref": "#/components/schemas/EventMemberDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EventMemberDto"
-                  }
+                  "$ref": "#/components/schemas/EventMemberDto"
                 }
               }
             }
@@ -5030,6 +5021,36 @@
             "Bearer": [ ]
           }
         ]
+      }
+    },
+    "/event/teams/words": {
+      "get": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Get team name words",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTeamsWordListDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTeamsWordListDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventTeamsWordListDto"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/graph/{playerUuid}/{profileUuid}/crops": {
@@ -10693,6 +10714,30 @@
         },
         "additionalProperties": false
       },
+      "EventTeamsWordListDto": {
+        "type": "object",
+        "properties": {
+          "adjectives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nouns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "EventType": {
         "enum": [
           0,
@@ -12300,6 +12345,12 @@
           },
           "chocolateFactory": {
             "$ref": "#/components/schemas/ChocolateFactoryDto"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventMemberDto"
+            }
           },
           "isSelected": {
             "type": "boolean"

@@ -1,6 +1,6 @@
 import { error, redirect, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetAccount, GetEventDetails, JoinEvent, LeaveEvent } from '$lib/api/elite';
+import { GetAccount, GetEventDetails, GetEventMember, GetEventTeams, JoinEvent, JoinEventTeam, LeaveEvent } from '$lib/api/elite';
 
 export const load = (async ({ locals, parent, params }) => {
 	const { user } = await parent();
@@ -20,10 +20,6 @@ export const load = (async ({ locals, parent, params }) => {
 		throw redirect(302, '/login');
 	}
 
-	if (+event.endTime <= Date.now() / 1000) {
-		// throw error(403, 'Event has already ended.');
-	}
-
 	const selectedAccount = user.minecraftAccounts?.find((a) => a.primaryAccount);
 
 	if (!selectedAccount?.id) {
@@ -33,10 +29,24 @@ export const load = (async ({ locals, parent, params }) => {
 	}
 
 	const { data: account } = await GetAccount(selectedAccount.id).catch(() => ({ data: undefined }));
+	const { data: member } = await GetEventMember(eventId, selectedAccount.id).catch(() => ({ data: undefined }));
+
+	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
+		const { data: teams } = await GetEventTeams(eventId).catch(() => ({ data: undefined }));
+
+		return {
+			user,
+			account,
+			member,
+			teams,
+			event,
+		};
+	}
 
 	return {
 		user,
 		account,
+		member,
 		event,
 	};
 }) satisfies PageServerLoad;
@@ -69,12 +79,23 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const uuid = (data.get('account') as string) || undefined;
 		const profile = (data.get('profile') as string) || undefined;
+		const teamId = (data.get('team') as string) || undefined;
+		const code = (data.get('code') as string) || undefined;
 
 		const { response } = await JoinEvent(eventId, token, uuid, profile);
 
 		if (response.status !== 200) {
 			const text = await response.text();
 			return fail(response.status, { error: text || 'Unknown error' });
+		}
+
+		if (code && teamId) {
+			const { response: codeResponse } = await JoinEventTeam(token, eventId, teamId, code);
+
+			if (codeResponse.status !== 200) {
+				const text = await codeResponse.text();
+				return fail(codeResponse.status, { error: text || 'Unknown error' });
+			}
 		}
 
 		throw redirect(302, `/event/${eventParam}`);
@@ -91,16 +112,6 @@ export const actions: Actions = {
 
 		if (!eventId) {
 			return fail(404, { error: 'Event not found' });
-		}
-
-		const { data: event } = await GetEventDetails(eventId).catch(() => ({ data: undefined }));
-
-		if (!event?.id || !event.name || !event.guildId || !event.startTime || !event.endTime) {
-			return fail(404, { error: 'Event not found' });
-		}
-
-		if (+event.endTime <= Date.now() / 1000) {
-			return fail(403, { error: 'Event has already ended.' });
 		}
 
 		const { response } = await LeaveEvent(eventId, token);

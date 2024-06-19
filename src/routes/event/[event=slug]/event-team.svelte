@@ -15,21 +15,27 @@
 
 <div class="flex flex-col gap-2 outline-2 rounded-lg outline p-4">
 	<div class="flex flex-row justify-between items-center">
-		<div class="flex flex-row gap-2 items-center">
-			<div class="text-green-800 dark:text-green-300">
-				<p>
-					<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
-				</p>
-			</div>
+		<div class="flex flex-row gap-4 items-center">
+			{#if running}
+				<div class="text-green-800 dark:text-green-300">
+					<p>
+						<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
+					</p>
+				</div>
+			{/if}
 			<p class="text-lg sm:text-xl">{team.name}</p>
-			<div class="flex flex-row gap-2 font-semibold items-center">
-				<p class="text-2xl">
-					{members.length?.toLocaleString()}
+			<div class="flex flex-row gap-2 font-semibold items-end">
+				<p class="text-xl leading-none">
+					{#if event.maxTeamMembers === -1 && !full}
+						{members.length?.toLocaleString()}
+					{:else}
+						{members.length?.toLocaleString()}/{event.maxTeamMembers}
+					{/if}
 				</p>
-				<Users />
+				<Users size={18} />
 			</div>
 		</div>
-		<p class="text-lg block pr-2">
+		<p class="text-lg block pr-2 font-semibold">
 			{#if team.score && +team.score > 0}
 				{(+(team.score ?? 0)).toLocaleString()}
 			{:else if running}
@@ -40,7 +46,7 @@
 
 	<Accordion.Root class="w-full text-black dark:text-white">
 		{#each members as member, i}
-			<Accordion.Item value={i.toString()}>
+			<Accordion.Item value={i.toString()} class="border-none">
 				<EventMember {member} {running} {event} />
 			</Accordion.Item>
 		{/each}

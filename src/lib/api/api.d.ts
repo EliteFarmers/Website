@@ -1816,9 +1816,9 @@ export interface paths {
         /** @description OK */
         200: {
           content: {
-            "text/plain": components["schemas"]["EventMemberDto"][];
-            "application/json": components["schemas"]["EventMemberDto"][];
-            "text/json": components["schemas"]["EventMemberDto"][];
+            "text/plain": components["schemas"]["EventMemberDto"];
+            "application/json": components["schemas"]["EventMemberDto"];
+            "text/json": components["schemas"]["EventMemberDto"];
           };
         };
         /** @description Bad Request */
@@ -2099,6 +2099,21 @@ export interface paths {
             "text/plain": string;
             "application/json": string;
             "text/json": string;
+          };
+        };
+      };
+    };
+  };
+  "/event/teams/words": {
+    /** Get team name words */
+    get: {
+      responses: {
+        /** @description OK */
+        200: {
+          content: {
+            "text/plain": components["schemas"]["EventTeamsWordListDto"];
+            "application/json": components["schemas"]["EventTeamsWordListDto"];
+            "text/json": components["schemas"]["EventTeamsWordListDto"];
           };
         };
       };
@@ -4323,6 +4338,11 @@ export interface components {
       members?: components["schemas"]["EventMemberDto"][];
       joinCode?: string | null;
     };
+    EventTeamsWordListDto: {
+      adjectives?: string[];
+      nouns?: string[];
+      verbs?: string[];
+    };
     /**
      * Format: int32
      * @enum {integer}
@@ -4827,6 +4847,7 @@ export interface components {
       farmingWeight: components["schemas"]["FarmingWeightDto"];
       skills?: components["schemas"]["SkillsDto"];
       chocolateFactory?: components["schemas"]["ChocolateFactoryDto"];
+      events?: components["schemas"]["EventMemberDto"][];
       isSelected?: boolean;
       wasRemoved?: boolean;
       /** Format: int64 */
