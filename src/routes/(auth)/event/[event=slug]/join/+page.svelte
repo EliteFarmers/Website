@@ -20,15 +20,23 @@
 
 	$: event = data.event;
 	$: teams = (data.teams ?? [])
-		.filter((t) => t.members && event && event.maxTeamMembers && (t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1))
-		.map((t) => ({ 
-			value: t.id ?? '', 
-			label: (t.name ?? '') + ` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`, 
+		.filter(
+			(t) =>
+				t.members &&
+				event &&
+				event.maxTeamMembers &&
+				(t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1)
+		)
+		.map((t) => ({
+			value: t.id ?? '',
+			label:
+				(t.name ?? '') +
+				` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`,
 		}));
 
 	$: joined = data.member && data.member?.status !== 1 && data.member?.status !== 2;
 	$: ownTeamId = +(data.member?.teamId ?? '0');
-	$: ownTeam = data.teams?.find(t => t.id === ownTeamId);
+	$: ownTeam = data.teams?.find((t) => t.id === ownTeamId);
 
 	$: profiles =
 		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? [];
@@ -120,9 +128,7 @@
 			</div>
 
 			{#if data.event.maxTeamMembers !== 0}
-				<Label>
-					Join a team! Get the code from your team leader!
-				</Label>
+				<Label>Join a team! Get the code from your team leader!</Label>
 				<div class="flex flex-row items-center gap-2">
 					<SelectSimple options={teams} name="team" placeholder="Select Team" required />
 					<Input type="text" name="code" placeholder="Team Code" required />
@@ -136,8 +142,6 @@
 					<Button class="flex-1" type="submit" disabled={joined}>Join</Button>
 				{/if}
 			</div>
-
-			
 
 			{#if joined}
 				<p class="text-green-700">You have successfully joined the event!</p>

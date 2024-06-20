@@ -80,9 +80,11 @@
 				</div>
 			{:else if teams.length > 0}
 				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					{#each teams as team, i}
-						<EventTeam {team} rank={i + 1} {running} {event} />
-					{/each}
+					<Accordion.Root class="w-full">
+						{#each teams as team, i}
+							<EventTeam {team} rank={i + 1} {running} {event} />
+						{/each}
+					</Accordion.Root>
 				</div>
 			{:else}
 				<p class="max-w-lg text-center my-16">

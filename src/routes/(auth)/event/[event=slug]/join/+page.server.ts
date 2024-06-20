@@ -1,6 +1,14 @@
 import { error, redirect, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetAccount, GetEventDetails, GetEventMember, GetEventTeams, JoinEvent, JoinEventTeam, LeaveEvent } from '$lib/api/elite';
+import {
+	GetAccount,
+	GetEventDetails,
+	GetEventMember,
+	GetEventTeams,
+	JoinEvent,
+	JoinEventTeam,
+	LeaveEvent,
+} from '$lib/api/elite';
 
 export const load = (async ({ locals, parent, params }) => {
 	const { user } = await parent();

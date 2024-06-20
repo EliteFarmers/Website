@@ -169,9 +169,11 @@
 				</div>
 			{:else if teams && teams.length > 0}
 				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					{#each teams.slice(0, memberLimit) as team, i}
-						<EventTeam {team} rank={i + 1} {running} {event} />
-					{/each}
+					<Accordion.Root class="w-full">
+						{#each teams.slice(0, memberLimit) as team, i}
+							<EventTeam {team} rank={i + 1} {running} {event} />
+						{/each}
+					</Accordion.Root>
 				</div>
 				<div class="flex flex-row gap-2 justify-center">
 					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
