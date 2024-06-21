@@ -11,7 +11,7 @@ import {
 } from '$lib/api/elite';
 
 export const load = (async ({ locals, parent, params }) => {
-	const { user } = await parent();
+	const { session } = await parent();
 	const { access_token: token } = locals;
 	const { event: eventRoute } = params;
 
@@ -24,26 +24,17 @@ export const load = (async ({ locals, parent, params }) => {
 		throw error(404, 'Event not found');
 	}
 
-	if (!token || !user) {
+	if (!token || !session?.uuid) {
 		throw redirect(302, '/login');
 	}
 
-	const selectedAccount = user.minecraftAccounts?.find((a) => a.primaryAccount);
-
-	if (!selectedAccount?.id) {
-		return {
-			user,
-		};
-	}
-
-	const { data: account } = await GetAccount(selectedAccount.id).catch(() => ({ data: undefined }));
-	const { data: member } = await GetEventMember(eventId, selectedAccount.id).catch(() => ({ data: undefined }));
+	const { data: account } = await GetAccount(session.uuid).catch(() => ({ data: undefined }));
+	const { data: member } = await GetEventMember(eventId, session.uuid).catch(() => ({ data: undefined }));
 
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventId).catch(() => ({ data: undefined }));
 
 		return {
-			user,
 			account,
 			member,
 			teams,
@@ -52,7 +43,6 @@ export const load = (async ({ locals, parent, params }) => {
 	}
 
 	return {
-		user,
 		account,
 		member,
 		event,

@@ -34,7 +34,7 @@
 				` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`,
 		}));
 
-	$: joined = data.member && data.member?.status !== 1 && data.member?.status !== 2;
+	$: joined = data.member && (data.member?.status === 0 || data.member?.status === 1);
 	$: ownTeamId = +(data.member?.teamId ?? '0');
 	$: ownTeam = data.teams?.find((t) => t.id === ownTeamId);
 
@@ -43,14 +43,23 @@
 </script>
 
 <main class="flex flex-col justify-center items-center gap-4">
-	<h1 class="my-16 text-4xl font-semibold">Join Event</h1>
+	<h1 class="my-16 text-4xl font-semibold">
+		{#if joined}
+			Manage Event Membership
+		{:else}
+			Join Event
+		{/if}
+	</h1>
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
 		<p>Link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
 	{:else}
 		<form method="post" action="?/join" class="flex flex-col gap-4 max-w-lg mb-16" use:enhance>
-			<p>Choose the profile you want to join the event with.</p>
+			<p>
+				Choose the profile you want to join the event with.
+				<span class="text-red-500">This can't be changed later on!</span>
+			</p>
 
 			{#each profiles as profile (profile)}
 				<div class="flex flex-row gap-2 items-center">
@@ -63,7 +72,7 @@
 				</div>
 			{/each}
 
-			<h3 class="mt-2 text-lg">How is progress counted?</h3>
+			<h3 class="mt-2 text-lg font-semibold">How is progress counted?</h3>
 			{#if data.event.type === +EventType.FarmingWeight}
 				<p>
 					To prevent the use of minions to gain collection progress, the event will only count progress made
@@ -88,6 +97,11 @@
 				<p>
 					It's simple, just earn Jacob Contest placements! Make sure to claim your contests in game for them
 					to count.
+				</p>
+				<p>
+					<span class="text-red-500"
+						>You must have collections and inventory API access enabled at all times.</span
+					> If you do turn either of them off, you will be automatically removed from the event.
 				</p>
 			{/if}
 
@@ -131,7 +145,7 @@
 				<Label>Join a team! Get the code from your team leader!</Label>
 				<div class="flex flex-row items-center gap-2">
 					<SelectSimple options={teams} name="team" placeholder="Select Team" required />
-					<Input type="text" name="code" placeholder="Team Code" required />
+					<Input type="text" name="code" placeholder="Join Code" required />
 				</div>
 			{/if}
 			<div class="flex flex-col md:flex-row gap-2 justify-center">

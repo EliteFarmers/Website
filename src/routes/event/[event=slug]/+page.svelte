@@ -17,7 +17,7 @@
 
 	export let data: PageData;
 
-	$: ({ event = {} as typeof data.event, members, teams } = data);
+	$: ({ event = {} as typeof data.event, members, teams, joined } = data);
 
 	$: banner =
 		event.banner ??
@@ -117,16 +117,22 @@
 				{/if}
 				<EventData {event} />
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
-				<div class="flex flex-row justify-center gap-2 mt-4">
+				<div class="flex flex-wrap justify-center gap-2 mt-4">
 					<Button href="/server/{event.guildId}" variant="secondary">
 						<p>Back To Server</p>
 					</Button>
-					<Button href="{$page.url.pathname}/join" variant="secondary">
+					<Button href="{$page.url.pathname}/membership" variant="secondary">
 						<p class="mr-2">Join Discord Server</p>
 						<ExternalLink size={16} />
 					</Button>
 					{#if joinable}
-						<Button href="{$page.url.pathname}/join" color="green">Join Event</Button>
+						<Button href="{$page.url.pathname}/membership">
+							{#if joined}
+								My Membership
+							{:else}
+								Join Event
+							{/if}
+						</Button>
 					{/if}
 				</div>
 			</div>

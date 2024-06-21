@@ -2,7 +2,7 @@ import { GetEventDetails, GetEventMembers, GetEventTeams, GetPublicGuild } from 
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders, url }) => {
+export const load = (async ({ params, setHeaders, url, locals }) => {
 	const { event } = params;
 
 	// Remove everything before the last dash
@@ -29,18 +29,26 @@ export const load = (async ({ params, setHeaders, url }) => {
 	if (eventData.maxTeamMembers !== 0 || eventData.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventData.id).catch(() => ({ data: undefined }));
 
+		const joined = locals.session?.uuid
+			? teams?.some((t) => t.members?.some((m) => m.playerUuid === locals.session?.uuid))
+			: undefined;
+
 		return {
 			event: eventData,
 			teams: teams ?? [],
-			guild: guild,
+			guild,
+			joined,
 		};
 	}
 
 	const { data: members } = await GetEventMembers(eventData.id).catch(() => ({ data: undefined }));
 
+	const joined = locals.session?.uuid ? members?.some((m) => m.playerUuid === locals.session?.uuid) : undefined;
+
 	return {
 		event: eventData,
 		members: members ?? [],
-		guild: guild,
+		guild,
+		joined,
 	};
 }) satisfies LayoutServerLoad;
