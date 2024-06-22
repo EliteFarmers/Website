@@ -10938,6 +10938,11 @@
           "type": {
             "$ref": "#/components/schemas/EventType"
           },
+          "mode": {
+            "type": "string",
+            "description": "Team mode of the event",
+            "nullable": true
+          },
           "description": {
             "type": "string",
             "description": "Event description",
@@ -11014,12 +11019,6 @@
           "data": {
             "description": "Data specific to the event",
             "nullable": true
-          },
-          "teams": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EventTeamDto"
-            }
           }
         },
         "additionalProperties": false
@@ -11150,36 +11149,6 @@
         ],
         "type": "integer",
         "format": "int32"
-      },
-      "EventTeamDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "eventId": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "color": {
-            "type": "string",
-            "nullable": true
-          },
-          "score": {
-            "type": "string",
-            "nullable": true
-          },
-          "ownerId": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "EventTeamWithMembersDto": {
         "type": "object",

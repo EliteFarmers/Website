@@ -7110,6 +7110,8 @@ export interface components {
             /** @description Name of the event */
             name: string;
             type?: components["schemas"]["EventType"];
+            /** @description Team mode of the event */
+            mode?: string | null;
             /** @description Event description */
             description?: string | null;
             /** @description Event rules */
@@ -7148,7 +7150,6 @@ export interface components {
             guildId?: string | null;
             /** @description Data specific to the event */
             data?: unknown;
-            teams?: components["schemas"]["EventTeamDto"][];
         };
         EventMemberBannedDto: {
             playerUuid?: string | null;
@@ -7186,15 +7187,6 @@ export interface components {
          * @enum {integer}
          */
         EventMemberStatus: 0 | 1 | 2 | 3;
-        EventTeamDto: {
-            /** Format: int32 */
-            id?: number;
-            eventId?: string | null;
-            name?: string | null;
-            color?: string | null;
-            score?: string | null;
-            ownerId?: string | null;
-        };
         EventTeamWithMembersDto: {
             /** Format: int32 */
             id?: number;

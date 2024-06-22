@@ -804,6 +804,8 @@ export const GetEventTeams = async (eventId: string) =>
 		},
 	});
 
+export const GetEventTeamWords = async () => await GET('/event/teams/words', {});
+
 export const JoinEventTeam = async (accessToken: string, eventId: string, teamId: string, code: string) =>
 	await POST('/event/{eventId}/team/{teamId}/join', {
 		params: {
@@ -818,15 +820,14 @@ export const JoinEventTeam = async (accessToken: string, eventId: string, teamId
 		},
 	});
 
-export const LeaveEventTeam = async (accessToken: string, eventId: string, teamId: string, code: string) =>
-	await POST('/event/{eventId}/team/{teamId}/join', {
+export const LeaveEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
+	await POST('/event/{eventId}/team/{teamId}/leave', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
 				teamId: teamId as unknown as number,
 			},
 		},
-		body: code,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
