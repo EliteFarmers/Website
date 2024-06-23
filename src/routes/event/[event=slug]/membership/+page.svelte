@@ -11,6 +11,8 @@
 	import Check from 'lucide-svelte/icons/check';
 	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash from 'lucide-svelte/icons/trash-2';
+	import Copy from 'lucide-svelte/icons/copy';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -39,7 +41,7 @@
 
 	$: joined = data.member && (data.member?.status === 0 || data.member?.status === 1);
 	$: ownTeamId = +(data.member?.teamId ?? '0');
-	$: ownTeam = data.teams?.find((t) => t.id === ownTeamId);
+	$: ownTeam = data.team;
 	$: isOwner = ownTeam?.ownerId === data.account?.discordId;
 
 	$: profiles =
@@ -74,6 +76,12 @@
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
 		<p>Link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
+	{/if}
+
+	{#if form?.error}
+		<h5 class="text-xl font-semibold text-red-700 mb-4 max-w-xl">
+			{form?.error}
+		</h5>
 	{/if}
 
 	<div class="flex flex-col md:flex-row justify-center items-start gap-8 md:gap-16">
@@ -204,12 +212,6 @@
 			{#if joined}
 				<p class="text-green-700">You have successfully joined the event!</p>
 			{/if}
-
-			{#if form?.error}
-				<h5 class="text-xl font-semibold text-red-700">
-					<p>{form?.error}</p>
-				</h5>
-			{/if}
 		</form>
 		{#if event.mode !== 'solo'}
 			<div class="flex flex-col gap-4 max-w-lg mb-16">
@@ -222,11 +224,18 @@
 				</p>
 
 				{#if ownTeam}
-					<form action="?/leaveTeam" method="post" class="flex flex-col gap-4 my-8" use:enhance>
-						<input type="hidden" name="team" bind:value={ownTeamId} />
+					<div class="flex flex-col gap-4 my-8">
 						<h3 class="text-xl">
 							Your Team: <span class="font-semibold">{ownTeam.name}</span>
 						</h3>
+						{#if ownTeam.joinCode}
+							<div class="flex flex-row gap-4 items-center">
+								<p>
+									Join Code: <span class="font-semibold">{ownTeam.joinCode}</span>
+								</p>
+								<CopyToClipboard text={ownTeam.joinCode} />
+							</div>
+						{/if}
 						{#each ownTeam.members ?? [] as member (member.playerUuid)}
 							<div class="flex flex-row justify-between">
 								<div class="flex flex-row gap-2 items-center">
@@ -240,22 +249,44 @@
 								<div class="flex flex-row gap-4 items-center">
 									<p class="font-semibold">{+(member.score ?? 0).toLocaleString()}</p>
 									{#if isOwner}
-										<Button
-											type="submit"
-											name="player"
-											size="sm"
-											value={member.playerUuid}
-											variant="destructive"
-											disabled={member.playerUuid === data.account?.id}
-										>
-											<Trash />
-										</Button>
+										<form action="?/kickMember" method="post">
+											<input type="hidden" name="team" bind:value={ownTeamId} />
+											<input type="hidden" name="member" value={member.playerUuid} />
+											<Button
+												type="submit"
+												name="player"
+												size="sm"
+												value={member.playerUuid}
+												variant="destructive"
+												disabled={member.playerUuid === data.account?.id}
+											>
+												<Trash />
+											</Button>
+										</form>
 									{/if}
 								</div>
 							</div>
 						{/each}
-						<Button type="submit" variant="secondary">Leave Team</Button>
-					</form>
+						<form action="?/leaveTeam" method="post">
+							<input type="hidden" name="team" bind:value={ownTeamId} />
+							<Button type="submit" variant="secondary" formaction="?/leaveTeam">Leave Team</Button>
+						</form>
+					</div>
+
+					{#if isOwner}
+						<form action="?/updateTeam" method="post" class="flex flex-col gap-4" use:enhance>
+							<input type="hidden" name="team" bind:value={ownTeamId} />
+							<h3 class="text-xl font-semibold">Update Your Team</h3>
+							<p>Change the name of your team!</p>
+							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
+								<Input type="text" name="name" placeholder="Team Name" value={name} required />
+								<Button variant="secondary" on:click={generateTeamName}>
+									<RefreshCcw />
+								</Button>
+							</div>
+							<Button type="submit">Update Team</Button>
+						</form>
+					{/if}
 				{:else}
 					<form action="?/joinTeam" method="post" class="flex flex-col gap-4 my-8" use:enhance>
 						<h3 class="text-xl font-semibold">Join a Team</h3>

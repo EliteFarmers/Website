@@ -5,12 +5,15 @@ import {
 	GetAccount,
 	GetEventDetails,
 	GetEventMember,
+	GetEventTeam,
 	GetEventTeamWords,
 	GetEventTeams,
 	JoinEvent,
 	JoinEventTeam,
+	KickEventTeamMember,
 	LeaveEvent,
 	LeaveEventTeam,
+	UpdateEventTeam,
 } from '$lib/api/elite';
 
 export const load = (async ({ locals, parent, params }) => {
@@ -37,6 +40,19 @@ export const load = (async ({ locals, parent, params }) => {
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventId).catch(() => ({ data: undefined }));
 		const { data: words } = await GetEventTeamWords().catch(() => ({ data: undefined }));
+
+		if (member?.teamId && token) {
+			const { data: team } = await GetEventTeam(token, eventId, member.teamId).catch(() => ({ data: undefined }));
+
+			return {
+				account,
+				member,
+				teams,
+				event,
+				words,
+				team,
+			};
+		}
 
 		return {
 			account,
@@ -153,6 +169,37 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
+	updateTeam: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { event: eventParam } = params;
+
+		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
+
+		if (!token || !session) {
+			throw redirect(302, '/login');
+		}
+
+		if (!eventId) {
+			return fail(404, { error: 'Event not found' });
+		}
+
+		const data = await request.formData();
+		const teamId = (data.get('team') as string) || undefined;
+		const teamName = (data.get('name') as string) || undefined;
+
+		if (!teamName || !teamId) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse } = await UpdateEventTeam(token, eventId, teamId, { name: teamName });
+
+		if (codeResponse.status !== 200) {
+			const text = await codeResponse.text();
+			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		}
+
+		return { success: true };
+	},
 	leave: async ({ locals, params }) => {
 		const { access_token: token, session } = locals;
 		const { event: eventParam } = params;
@@ -198,6 +245,41 @@ export const actions: Actions = {
 		}
 
 		const { response: codeResponse } = await LeaveEventTeam(token, eventId, teamId);
+
+		if (codeResponse.status !== 200) {
+			const text = await codeResponse.text();
+			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		}
+
+		return { success: true };
+	},
+	kickMember: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { event: eventParam } = params;
+
+		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
+
+		if (!token || !session) {
+			throw redirect(302, '/login');
+		}
+
+		if (!eventId) {
+			return fail(404, { error: 'Event not found' });
+		}
+
+		const data = await request.formData();
+		const teamId = (data.get('team') as string) || undefined;
+		const memberUuid = (data.get('member') as string) || undefined;
+
+		if (!teamId || !memberUuid) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse } = await KickEventTeamMember(token, {
+			eventId,
+			teamId,
+			playerUuid: memberUuid,
+		});
 
 		if (codeResponse.status !== 200) {
 			const text = await codeResponse.text();

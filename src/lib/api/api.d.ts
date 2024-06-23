@@ -3814,6 +3814,55 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/event/{eventId}/team/{teamId}/member/{playerUuidOrIgn}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Kick a team member */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventId: number;
+                    teamId: number;
+                    playerUuidOrIgn: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/event/teams/words": {
         parameters: {
             query?: never;
@@ -7154,6 +7203,7 @@ export interface components {
         EventMemberBannedDto: {
             playerUuid?: string | null;
             playerName?: string | null;
+            teamId?: string | null;
             score?: string | null;
             notes?: string | null;
             lastUpdated?: string | null;
@@ -7163,6 +7213,7 @@ export interface components {
             profileId?: string | null;
             playerName?: string | null;
             eventId: string;
+            teamId?: string | null;
             status?: components["schemas"]["EventMemberStatus"];
             score?: string | null;
             lastUpdated?: string | null;
@@ -7173,8 +7224,7 @@ export interface components {
             playerName?: string | null;
             profileId?: string | null;
             eventId: string;
-            /** Format: int32 */
-            teamId?: number | null;
+            teamId?: string | null;
             status?: components["schemas"]["EventMemberStatus"];
             score?: string | null;
             data?: unknown;

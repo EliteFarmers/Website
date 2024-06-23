@@ -5524,6 +5524,75 @@
         ]
       }
     },
+    "/event/{eventId}/team/{teamId}/member/{playerUuidOrIgn}": {
+      "delete": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Kick a team member",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "playerUuidOrIgn",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/event/teams/words": {
       "get": {
         "tags": [
@@ -11034,6 +11103,10 @@
             "type": "string",
             "nullable": true
           },
+          "teamId": {
+            "type": "string",
+            "nullable": true
+          },
           "score": {
             "type": "string",
             "nullable": true
@@ -11070,6 +11143,10 @@
           "eventId": {
             "minLength": 1,
             "type": "string"
+          },
+          "teamId": {
+            "type": "string",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/EventMemberStatus"
@@ -11111,8 +11188,7 @@
             "type": "string"
           },
           "teamId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           },
           "status": {

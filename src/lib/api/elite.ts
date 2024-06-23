@@ -778,18 +778,33 @@ export const CreateEventTeam = async (
 		},
 	});
 
-export const GetEventTeam = async (
+export const UpdateEventTeam = async (
 	accessToken: string,
 	eventId: string,
-	team: components['schemas']['CreateEventTeamDto']
+	teamId: string,
+	team: components['schemas']['UpdateEventTeamDto']
 ) =>
-	await POST('/event/{eventId}/teams', {
+	await PATCH('/event/{eventId}/team/{teamId}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
 			},
 		},
 		body: team,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
+	await GET('/event/{eventId}/team/{teamId}', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
@@ -826,6 +841,23 @@ export const LeaveEventTeam = async (accessToken: string, eventId: string, teamI
 			path: {
 				eventId: eventId as unknown as number,
 				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const KickEventTeamMember = async (
+	accessToken: string,
+	data: { eventId: string; teamId: string; playerUuid: string }
+) =>
+	await DELETE('/event/{eventId}/team/{teamId}/member/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				eventId: data.eventId as unknown as number,
+				teamId: data.teamId as unknown as number,
+				playerUuidOrIgn: data.playerUuid,
 			},
 		},
 		headers: {
