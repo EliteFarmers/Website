@@ -22,9 +22,11 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(400, errorMsg);
 	}
 
-	if (!code || !state || state !== storedState) {
+	if (!code || !state || !storedState || !state.startsWith(storedState)) {
 		throw error(400, "Couldn't verify your request, please try again.");
 	}
+
+	const [, redirectTo = ''] = state.split('|');
 
 	const data = {
 		client_id: PUBLIC_DISCORD_CLIENT_ID,
@@ -60,7 +62,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(500, 'Failed to login user!');
 	}
 
-	const thirtyDays = 30 * 24 * 60 * 60;
+	const thirtyDays = 30 * 24 * 60 * 60 * 1000;
 	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days
 
 	cookies.set('access_token', loginResponse.access_token, {
@@ -76,5 +78,5 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	throw redirect(303, '/login?success=true&redirect=/profile');
+	throw redirect(307, '/login?success=true&redirect=' + redirectTo);
 };

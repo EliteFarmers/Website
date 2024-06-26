@@ -83,7 +83,7 @@
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
-		<p>Link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
+		<p>Login and link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
 	{/if}
 
 	{#if form?.error}

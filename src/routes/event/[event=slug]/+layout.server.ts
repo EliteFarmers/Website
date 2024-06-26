@@ -2,7 +2,7 @@ import { GetEventDetails, GetEventMembers, GetEventTeams, GetPublicGuild } from 
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders, url, locals }) => {
+export const load = (async ({ params, url, locals }) => {
 	const { event } = params;
 
 	// Remove everything before the last dash
@@ -21,12 +21,6 @@ export const load = (async ({ params, setHeaders, url, locals }) => {
 	}
 
 	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
-
-	if (!locals.session?.uuid) {
-		setHeaders({
-			'Cache-Control': 'public, max-age=300',
-		});
-	}
 
 	if (eventData.maxTeamMembers !== 0 || eventData.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventData.id).catch(() => ({ data: undefined }));
