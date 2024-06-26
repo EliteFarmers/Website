@@ -11,7 +11,6 @@
 	import Check from 'lucide-svelte/icons/check';
 	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash from 'lucide-svelte/icons/trash-2';
-	import Copy from 'lucide-svelte/icons/copy';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 
 	export let data: PageData;
@@ -48,23 +47,32 @@
 		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? [];
 
 	$: name = '';
+	$: prettyName = '';
 	$: generateTeamName();
 
 	function generateTeamName() {
-		const adjectives = data.words?.adjectives ?? [];
-		const verb = data.words?.verbs ?? [];
-		const nouns = data.words?.nouns ?? [];
+		const firstWords = data.words?.first ?? [];
+		const secondWords = data.words?.second ?? [];
+		const thirdWords = data.words?.third ?? [];
 
-		const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-		const v = verb[Math.floor(Math.random() * verb.length)];
-		const n = nouns[Math.floor(Math.random() * nouns.length)];
+		const first = firstWords[Math.floor(Math.random() * firstWords.length)];
+		const second = secondWords[Math.floor(Math.random() * secondWords.length)];
+		const third = thirdWords[Math.floor(Math.random() * thirdWords.length)];
 
 		if (Math.random() > 0.5) {
-			name = `${adj} ${n}`;
+			name = `${first}_${third}`;
+			prettyName = `${first} ${third}`;
+
+			if (Math.random() > 0.5) {
+				name = `${first}_${second}`;
+				prettyName = `${first} ${second}`;
+			}
+
 			return;
 		}
 
-		name = `${adj} ${n} ${v}`;
+		name = `${first}_${third}_${second}`;
+		prettyName = `${first} ${second} ${third}`;
 	}
 </script>
 
@@ -279,12 +287,17 @@
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
 							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
-								<Input type="text" name="name" placeholder="Team Name" value={name} required />
+								<input type="hidden" name="name" value={name} hidden />
+								<Input type="text" placeholder="Team Name" value={prettyName} />
 								<Button variant="secondary" on:click={generateTeamName}>
 									<RefreshCcw />
 								</Button>
 							</div>
-							<Button type="submit">Update Team</Button>
+							<div class="flex flex-row gap-2">
+								<Button type="submit">Update Team Name</Button>
+								<Button type="submit" formaction="?/newCode" variant="secondary">Reset Join Code</Button
+								>
+							</div>
 						</form>
 					{/if}
 				{:else}
@@ -295,7 +308,7 @@
 							<SelectSimple options={teams} name="team" placeholder="Select Team" required />
 							<Input type="text" name="code" placeholder="Join Code" required />
 						</div>
-						<Button type="submit">Join Team</Button>
+						<Button type="submit" disabled={!data.member}>Join Team</Button>
 					</form>
 
 					<form action="?/createTeam" method="post" class="flex flex-col gap-4" use:enhance>
@@ -305,12 +318,13 @@
 							list.
 						</p>
 						<div class="flex flex-row items-center gap-2 text-black dark:text-white">
-							<Input type="text" name="name" placeholder="Team Name" value={name} required />
+							<input type="hidden" name="name" value={name} hidden />
+							<Input type="text" placeholder="Team Name" value={prettyName} required />
 							<Button variant="secondary" on:click={generateTeamName}>
 								<RefreshCcw />
 							</Button>
 						</div>
-						<Button type="submit">Create Team</Button>
+						<Button type="submit" disabled={!data.member}>Create Team</Button>
 					</form>
 				{/if}
 			</div>

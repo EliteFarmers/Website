@@ -3712,6 +3712,54 @@ export interface paths {
         };
         trace?: never;
     };
+    "/event/{eventId}/team/{teamId}/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generate new join code for a team */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventId: number;
+                    teamId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/event/{eventId}/team/{teamId}/join": {
         parameters: {
             query?: never;
@@ -6970,7 +7018,8 @@ export interface components {
             tieToAccount?: boolean;
         };
         CreateEventTeamDto: {
-            name?: string | null;
+            /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
+            name?: string[] | null;
             color?: string | null;
         };
         CreateMedalEventDto: {
@@ -7010,6 +7059,16 @@ export interface components {
             requiredRole?: string | null;
             /** @description A Discord role id that is blocked from participating in the event */
             blockedRole?: string | null;
+            /**
+             * Format: int32
+             * @description Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited
+             */
+            maxTeams?: number;
+            /**
+             * Format: int32
+             * @description Max amount of members allowed in a team, 0 if solo event, -1 if unlimited
+             */
+            maxTeamMembers?: number;
             data?: components["schemas"]["MedalEventData"];
         };
         CreateWeightEventDto: {
@@ -7049,6 +7108,16 @@ export interface components {
             requiredRole?: string | null;
             /** @description A Discord role id that is blocked from participating in the event */
             blockedRole?: string | null;
+            /**
+             * Format: int32
+             * @description Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited
+             */
+            maxTeams?: number;
+            /**
+             * Format: int32
+             * @description Max amount of members allowed in a team, 0 if solo event, -1 if unlimited
+             */
+            maxTeamMembers?: number;
             data?: components["schemas"]["WeightEventData"];
         };
         CropCollectionsDataPointDto: {
@@ -7249,9 +7318,9 @@ export interface components {
             joinCode?: string | null;
         };
         EventTeamsWordListDto: {
-            adjectives?: string[];
-            nouns?: string[];
-            verbs?: string[];
+            first?: string[];
+            second?: string[];
+            third?: string[];
         };
         /**
          * Format: int32
@@ -7893,7 +7962,8 @@ export interface components {
             bestiary?: unknown;
         };
         UpdateEventTeamDto: {
-            name?: string | null;
+            /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
+            name?: string[] | null;
             color?: string | null;
         };
         UpdateGuildJacobLeaderboardDto: {

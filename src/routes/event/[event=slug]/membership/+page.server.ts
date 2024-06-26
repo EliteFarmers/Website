@@ -13,6 +13,7 @@ import {
 	KickEventTeamMember,
 	LeaveEvent,
 	LeaveEventTeam,
+	RegenerateEventTeamCode,
 	UpdateEventTeam,
 } from '$lib/api/elite';
 
@@ -31,7 +32,7 @@ export const load = (async ({ locals, parent, params }) => {
 	}
 
 	if (!token || !session?.uuid) {
-		throw redirect(302, '/login');
+		throw redirect(307, '/login');
 	}
 
 	const { data: account } = await GetAccount(session.uuid).catch(() => ({ data: undefined }));
@@ -78,7 +79,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {
@@ -115,7 +116,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {
@@ -130,7 +131,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await JoinEventTeam(token, eventId, teamId, code);
+		const { response: codeResponse } = await JoinEventTeam(token, eventId, teamId, code.trim().toUpperCase());
 
 		if (codeResponse.status !== 200) {
 			const text = await codeResponse.text();
@@ -146,7 +147,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {
@@ -160,7 +161,9 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await CreateEventTeam(token, eventId, { name: teamName });
+		const { response: codeResponse } = await CreateEventTeam(token, eventId, {
+			name: teamName.split('_'),
+		});
 
 		if (codeResponse.status !== 200) {
 			const text = await codeResponse.text();
@@ -176,7 +179,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {
@@ -191,7 +194,39 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await UpdateEventTeam(token, eventId, teamId, { name: teamName });
+		const { response: codeResponse } = await UpdateEventTeam(token, eventId, teamId, {
+			name: teamName.split('_'),
+		});
+
+		if (codeResponse.status !== 200) {
+			const text = await codeResponse.text();
+			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		}
+
+		return { success: true };
+	},
+	newCode: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { event: eventParam } = params;
+
+		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
+
+		if (!token || !session) {
+			throw redirect(307, '/login');
+		}
+
+		if (!eventId) {
+			return fail(404, { error: 'Event not found' });
+		}
+
+		const data = await request.formData();
+		const teamId = (data.get('team') as string) || undefined;
+
+		if (!teamId) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse } = await RegenerateEventTeamCode(token, eventId, teamId);
 
 		if (codeResponse.status !== 200) {
 			const text = await codeResponse.text();
@@ -207,7 +242,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {
@@ -221,7 +256,7 @@ export const actions: Actions = {
 			return fail(response.status, { error: text || 'Unknown error' });
 		}
 
-		throw redirect(302, `/event/${eventParam}`);
+		throw redirect(307, `/event/${eventParam}`);
 	},
 	leaveTeam: async ({ locals, params, request }) => {
 		const { access_token: token, session } = locals;
@@ -230,7 +265,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {
@@ -260,7 +295,7 @@ export const actions: Actions = {
 		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
 
 		if (!token || !session) {
-			throw redirect(302, '/login');
+			throw redirect(307, '/login');
 		}
 
 		if (!eventId) {

@@ -5384,6 +5384,66 @@
         ]
       }
     },
+    "/event/{eventId}/team/{teamId}/code": {
+      "post": {
+        "tags": [
+          "EventTeam"
+        ],
+        "summary": "Generate new join code for a team",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/event/{eventId}/team/{teamId}/join": {
       "post": {
         "tags": [
@@ -10445,8 +10505,13 @@
         "type": "object",
         "properties": {
           "name": {
-            "maxLength": 32,
-            "type": "string",
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]",
             "nullable": true
           },
           "color": {
@@ -10543,6 +10608,16 @@
             "description": "A Discord role id that is blocked from participating in the event",
             "nullable": true
           },
+          "maxTeams": {
+            "type": "integer",
+            "description": "Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited",
+            "format": "int32"
+          },
+          "maxTeamMembers": {
+            "type": "integer",
+            "description": "Max amount of members allowed in a team, 0 if solo event, -1 if unlimited",
+            "format": "int32"
+          },
           "data": {
             "$ref": "#/components/schemas/MedalEventData"
           }
@@ -10634,6 +10709,16 @@
             "type": "string",
             "description": "A Discord role id that is blocked from participating in the event",
             "nullable": true
+          },
+          "maxTeams": {
+            "type": "integer",
+            "description": "Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited",
+            "format": "int32"
+          },
+          "maxTeamMembers": {
+            "type": "integer",
+            "description": "Max amount of members allowed in a team, 0 if solo event, -1 if unlimited",
+            "format": "int32"
           },
           "data": {
             "$ref": "#/components/schemas/WeightEventData"
@@ -11269,19 +11354,19 @@
       "EventTeamsWordListDto": {
         "type": "object",
         "properties": {
-          "adjectives": {
+          "first": {
             "type": "array",
             "items": {
               "type": "string"
             }
           },
-          "nouns": {
+          "second": {
             "type": "array",
             "items": {
               "type": "string"
             }
           },
-          "verbs": {
+          "third": {
             "type": "array",
             "items": {
               "type": "string"
@@ -13328,8 +13413,13 @@
         "type": "object",
         "properties": {
           "name": {
-            "maxLength": 32,
-            "type": "string",
+            "maxItems": 3,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]",
             "nullable": true
           },
           "color": {

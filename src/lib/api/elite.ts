@@ -797,6 +797,19 @@ export const UpdateEventTeam = async (
 		},
 	});
 
+export const RegenerateEventTeamCode = async (accessToken: string, eventId: string, teamId: string) =>
+	await POST('/event/{eventId}/team/{teamId}/code', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
 	await GET('/event/{eventId}/team/{teamId}', {
 		params: {
