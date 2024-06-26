@@ -16,8 +16,8 @@ export const load = (async ({ params, setHeaders, url, locals }) => {
 
 	const properUrl = eventData.name.replaceAll(' ', '-') + '-' + eventData.id;
 
-	if (properUrl !== event && !url.pathname.includes('join') && !url.pathname.includes('leaderboard')) {
-		throw redirect(302, `/event/${properUrl}`);
+	if (properUrl !== event && !url.pathname.includes('membership') && !url.pathname.includes('leaderboard')) {
+		throw redirect(307, `/event/${properUrl}`);
 	}
 
 	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));

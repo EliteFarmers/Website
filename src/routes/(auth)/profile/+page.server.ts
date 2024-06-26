@@ -18,8 +18,8 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 	const { access_token: token } = locals;
 
 	if (!user.id || !token) {
-		throw redirect(302, '/');
-		//throw redirect(302, '/login?redirect=/profile');
+		throw redirect(307, '/');
+		//throw redirect(307, '/login?redirect=/profile');
 	}
 
 	const account = user.minecraftAccounts?.find((account) => account.primaryAccount) ?? user.minecraftAccounts?.[0];

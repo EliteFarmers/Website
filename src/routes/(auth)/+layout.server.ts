@@ -9,7 +9,7 @@ export const load = (async (event) => {
 	locals.refresh_token ??= cookies.get('refresh_token');
 
 	if (!locals.access_token) {
-		throw redirect(302, '/login?redirect=' + url.pathname);
+		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
 	if (!locals.user && locals.access_token) {
@@ -19,7 +19,7 @@ export const load = (async (event) => {
 	}
 
 	if (!locals.user || !locals.access_token) {
-		throw redirect(302, '/login?redirect=' + url.pathname);
+		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
 	return {

@@ -17,7 +17,7 @@ export const load = (async ({ params, setHeaders, url }) => {
 	const properUrl = guildData.name.replaceAll(' ', '-') + '-' + guildData.id;
 
 	if (properUrl !== guild && !url.pathname.endsWith('/join')) {
-		throw redirect(302, `/server/${properUrl}`);
+		throw redirect(307, `/server/${properUrl}`);
 	}
 
 	const { data: events } = await GetGuildEvents(guildData.id).catch(() => ({ data: undefined }));

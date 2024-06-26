@@ -5,8 +5,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const { session } = await parent();
 
 	if (session?.ign) {
-		throw redirect(302, `/@${session.ign}`);
+		throw redirect(307, `/@${session.ign}`);
 	}
 
-	throw redirect(302, `/`);
+	throw redirect(307, `/`);
 };

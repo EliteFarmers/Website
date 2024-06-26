@@ -90,7 +90,7 @@ export function preprocessCropCharts(crops: components['schemas']['CropCollectio
 		crops
 			.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0))
 			.reduce<Record<string, { date: string; value: number }[]>>((acc, curr) => {
-				for (const [crop, value] of Object.entries(curr.crops ?? {})) {
+				for (const [crop, value = 0] of Object.entries(curr.crops ?? {})) {
 					acc[crop] ??= [];
 
 					const last = acc[crop].at(-1);
@@ -109,4 +109,9 @@ export function preprocessCropCharts(crops: components['schemas']['CropCollectio
 export enum EventType {
 	FarmingWeight = '1',
 	Medals = '4',
+}
+
+export enum EventMode {
+	Solo = '1',
+	Teams = '2',
 }
