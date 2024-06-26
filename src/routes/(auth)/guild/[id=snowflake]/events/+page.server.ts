@@ -79,12 +79,14 @@ export const actions: Actions = {
 		const startDate = data.get('startDate') as string;
 		const endDate = data.get('endDate') as string;
 		const joinDate = data.get('joinDate') as string;
+		const maxTeamSize = data.get('maxTeamSize') as string | undefined;
 
 		if (!type) throw error(400, 'Missing required field: type');
 		if (!title) throw error(400, 'Missing required field: title');
 		if (!description) throw error(400, 'Missing required field: description');
 		if (!rules) throw error(400, 'Missing required field: rules');
 		if (!prizes) throw error(400, 'Missing required field: prizes');
+		if (maxTeamSize && isNaN(parseInt(maxTeamSize))) throw error(400, 'Invalid field: maxTeamSize');
 
 		const startTime = startDate ? (new Date(startDate + '+00:00').getTime() / 1000).toString() : undefined;
 		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
@@ -102,7 +104,8 @@ export const actions: Actions = {
 			endTime: endTime as unknown as number,
 			joinTime: joinUntilTime as unknown as number,
 			guildId: guildId,
-		};
+			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : undefined,
+		} satisfies components['schemas']['CreateWeightEventDto'] | components['schemas']['CreateMedalEventDto'];
 
 		const method = type === EventType.Medals ? CreateMedalEvent : CreateWeightEvent;
 

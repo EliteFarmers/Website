@@ -6,10 +6,12 @@
 	import { Textarea } from '$ui/textarea';
 	import * as Dialog from '$ui/dialog';
 	import * as Tabs from '$ui/tabs';
-	import { EventType } from '$lib/utils';
+	import { EventMode, EventType } from '$lib/utils';
+	import Event from '$comp/stats/discord/event.svelte';
 
 	export let open = false;
 	let type = EventType.FarmingWeight;
+	let teams = EventMode.Solo;
 </script>
 
 <Dialog.Root bind:open>
@@ -28,15 +30,44 @@
 		>
 			<div class="space-y-2">
 				<Label>Event Name</Label>
-				<Input name="title" placeholder="Farming Weight Challenge" maxlength={64} />
+				<Input name="title" placeholder="Farming Weight Challenge" maxlength={64} required />
 			</div>
+
+			<input type="hidden" name="teams" bind:value={teams} />
+			<Tabs.Root bind:value={teams} class="flex flex-col justify-center my-4 items-center">
+				<Tabs.List class="gap-2 self-center text-center">
+					<Tabs.Trigger value={EventMode.Solo}>Solo Event</Tabs.Trigger>
+					<Tabs.Trigger value={EventMode.Teams}>Custom Team Event</Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value={EventMode.Solo}>
+					<div class="flex flex-col gap-2 items-center">
+						<p class="text-center">Will create a solo event. (no teams)</p>
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value={EventMode.Teams}>
+					<div class="flex flex-col gap-2">
+						<p class="text-center">Users will be able to create and join their own teams.</p>
+
+						<div class="space-y-2">
+							<Label>Max Team Size</Label>
+							<Input name="maxTeamSize" type="number" min="1" max="10" />
+						</div>
+					</div>
+				</Tabs.Content>
+			</Tabs.Root>
+
 			<div class="space-y-2">
 				<Label>Event Description</Label>
-				<Textarea name="description" placeholder="Farm as much as you can in 24 hours!" maxlength={1024} />
+				<Textarea
+					name="description"
+					placeholder="Farm as much as you can in 24 hours!"
+					maxlength={1024}
+					required
+				/>
 			</div>
 			<div class="space-y-2">
 				<Label>Event Rules</Label>
-				<Textarea name="rules" placeholder="No cheating." maxlength={1024} />
+				<Textarea name="rules" placeholder="No cheating." maxlength={1024} required />
 			</div>
 			<div class="space-y-2">
 				<Label>Event Prizes</Label>
@@ -44,11 +75,11 @@
 			</div>
 			<div class="space-y-2 mt-4">
 				<Label>Event Start Time</Label>
-				<Input name="startDate" type="datetime-local" />
+				<Input name="startDate" type="datetime-local" required />
 			</div>
 			<div class="space-y-2">
 				<Label>Event End Time</Label>
-				<Input name="endDate" type="datetime-local" />
+				<Input name="endDate" type="datetime-local" required />
 			</div>
 			<div class="space-y-2 mb-4">
 				<Label>Join Until Time</Label>
@@ -56,7 +87,6 @@
 			</div>
 
 			<input type="hidden" name="type" bind:value={type} />
-
 			<Tabs.Root bind:value={type} class="flex flex-col justify-center my-4 items-center">
 				<Tabs.List class="gap-2 self-center text-center">
 					<Tabs.Trigger value={EventType.FarmingWeight}>Farming Weight</Tabs.Trigger>
