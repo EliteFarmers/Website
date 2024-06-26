@@ -15,15 +15,13 @@
 	}
 
 	function copy() {
-		copyPromise = new Promise(async (resolve) => {
-			await navigator.clipboard.writeText(text);
-			await new Promise((r) => setTimeout(r, 250));
-			resolve();
-		});
+		copyPromise = navigator.clipboard
+			.writeText(text)
+			.then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 100)));
 
 		setTimeout(() => {
 			copyPromise = null;
-		}, 5000);
+		}, 3000);
 	}
 </script>
 
@@ -31,9 +29,9 @@
 	{#if copyPromise}
 		{#await copyPromise}
 			<LoaderCircle class="animate-spin" size={iconSize} />
-		{:then _}
+		{:then}
 			<Check size={iconSize} />
-		{:catch _}
+		{:catch}
 			<Copy size={iconSize} />
 		{/await}
 	{:else}

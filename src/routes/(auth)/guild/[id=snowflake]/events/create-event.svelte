@@ -7,7 +7,6 @@
 	import * as Dialog from '$ui/dialog';
 	import * as Tabs from '$ui/tabs';
 	import { EventMode, EventType } from '$lib/utils';
-	import Event from '$comp/stats/discord/event.svelte';
 
 	export let open = false;
 	let type = EventType.FarmingWeight;
