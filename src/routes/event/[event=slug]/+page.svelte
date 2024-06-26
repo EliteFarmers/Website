@@ -8,15 +8,16 @@
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
-	import Eventmember from './eventmember.svelte';
+	import EventMember from './event-member.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 	import EventData from './event-data.svelte';
+	import EventTeam from './event-team.svelte';
 
 	export let data: PageData;
 
-	$: ({ event = {} as typeof data.event, members } = data);
+	$: ({ event = {} as typeof data.event, members, teams, joined } = data);
 
 	$: banner =
 		event.banner ??
@@ -116,37 +117,67 @@
 				{/if}
 				<EventData {event} />
 				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
-				<div class="flex flex-row justify-center gap-2 mt-4">
+				<div class="flex flex-wrap justify-center gap-2 mt-4">
 					<Button href="/server/{event.guildId}" variant="secondary">
-						<p class="mr-2">Back To Server</p>
+						<p>Back To Server</p>
 					</Button>
-					<Button href="{$page.url.pathname}/join" variant="secondary">
+					<Button href="{$page.url.pathname}/membership" variant="secondary">
 						<p class="mr-2">Join Discord Server</p>
 						<ExternalLink size={16} />
 					</Button>
 					{#if joinable}
-						<Button href="{$page.url.pathname}/join" color="green">Join Event</Button>
+						<Button href="{$page.url.pathname}/membership">
+							{#if joined}
+								My Membership
+							{:else}
+								Join Event
+							{/if}
+						</Button>
 					{/if}
 				</div>
 			</div>
 		</section>
 		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8 basis-1 w-full">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
-				<h2 class="text-2xl">Members</h2>
-				<div class="flex flex-row gap-2 font-semibold items-center">
-					<p class="text-2xl">
-						{members.length?.toLocaleString()}
-					</p>
-					<Users />
-				</div>
+				{#if members}
+					<h2 class="text-2xl">Members</h2>
+					<div class="flex flex-row gap-2 font-semibold items-center">
+						<p class="text-2xl">
+							{members.length?.toLocaleString()}
+						</p>
+						<Users />
+					</div>
+				{:else if teams}
+					<h2 class="text-2xl">Teams</h2>
+					<div class="flex flex-row gap-2 font-semibold items-center">
+						<p class="text-2xl">
+							{teams.length?.toLocaleString()}
+						</p>
+						<Users />
+					</div>
+				{/if}
 			</div>
-			{#if members.length > 0}
+			{#if members && members.length > 0}
 				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
 					<Accordion.Root class="w-full text-black dark:text-white">
 						{#each members.slice(0, memberLimit) as member, i}
 							<Accordion.Item value={i.toString()}>
-								<Eventmember {member} rank={i + 1} {running} {event} />
+								<EventMember {member} rank={i + 1} {running} {event} />
 							</Accordion.Item>
+						{/each}
+					</Accordion.Root>
+				</div>
+				<div class="flex flex-row gap-2 justify-center">
+					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+						<span class="mr-2">Leaderboard</span>
+						<ExternalLink size={20} />
+					</Button>
+				</div>
+			{:else if teams && teams.length > 0}
+				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
+					<Accordion.Root class="w-full">
+						{#each teams.slice(0, memberLimit) as team, i}
+							<EventTeam {team} rank={i + 1} {running} {event} />
 						{/each}
 					</Accordion.Root>
 				</div>

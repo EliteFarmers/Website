@@ -29,5 +29,5 @@ export const load = (async ({ params }) => {
 
 	const pageRank = Math.max(1, rank.rank - 10);
 
-	throw redirect(302, `/leaderboard/${category}/${pageRank}`);
+	throw redirect(307, `/leaderboard/${category}/${pageRank}`);
 }) satisfies PageServerLoad;

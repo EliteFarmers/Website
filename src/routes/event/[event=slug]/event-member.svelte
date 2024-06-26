@@ -7,7 +7,7 @@
 
 	export let event: components['schemas']['EventDetailsDto'];
 	export let member: components['schemas']['EventMemberDto'];
-	export let rank: number;
+	export let rank: number | undefined = undefined;
 	export let running: boolean;
 
 	const medalWeight = (medal: string) => {
@@ -30,11 +30,13 @@
 <Accordion.Trigger class="w-full">
 	<div class="flex flex-row justify-between align-middle w-full">
 		<div class="flex flex-row gap-2 align-middle">
-			<div class="text-green-800 dark:text-green-300">
-				<h1>
-					<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
-				</h1>
-			</div>
+			{#if rank}
+				<div class="text-green-800 dark:text-green-300">
+					<p>
+						<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
+					</p>
+				</div>
+			{/if}
 			<img
 				src="https://mc-heads.net/avatar/{member.playerUuid}"
 				alt="Player Head"
@@ -71,8 +73,8 @@
 		<p class="text-lg block pr-2">
 			{#if member.score && +member.score > 0}
 				{(+(member.score ?? 0)).toLocaleString()}
-			{:else}
-				<span class="text-red-800 dark:text-red-500">Hasn't Farmed Yet</span>
+			{:else if running}
+				<span class="text-red-800 dark:text-red-500">Zero!</span>
 			{/if}
 		</p>
 	</div>

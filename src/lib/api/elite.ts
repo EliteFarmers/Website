@@ -761,6 +761,123 @@ export const EnableGuildEvents = async (guildId: string, accessToken: string, ma
 		},
 	});
 
+export const CreateEventTeam = async (
+	accessToken: string,
+	eventId: string,
+	team: components['schemas']['CreateEventTeamDto']
+) =>
+	await POST('/event/{eventId}/teams', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+			},
+		},
+		body: team,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const UpdateEventTeam = async (
+	accessToken: string,
+	eventId: string,
+	teamId: string,
+	team: components['schemas']['UpdateEventTeamDto']
+) =>
+	await PATCH('/event/{eventId}/team/{teamId}', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		body: team,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const RegenerateEventTeamCode = async (accessToken: string, eventId: string, teamId: string) =>
+	await POST('/event/{eventId}/team/{teamId}/code', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
+	await GET('/event/{eventId}/team/{teamId}', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetEventTeams = async (eventId: string) =>
+	await GET('/event/{eventId}/teams', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+			},
+		},
+	});
+
+export const GetEventTeamWords = async () => await GET('/event/teams/words', {});
+
+export const JoinEventTeam = async (accessToken: string, eventId: string, teamId: string, code: string) =>
+	await POST('/event/{eventId}/team/{teamId}/join', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		body: code,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const LeaveEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
+	await POST('/event/{eventId}/team/{teamId}/leave', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const KickEventTeamMember = async (
+	accessToken: string,
+	data: { eventId: string; teamId: string; playerUuid: string }
+) =>
+	await DELETE('/event/{eventId}/team/{teamId}/member/{playerUuidOrIgn}', {
+		params: {
+			path: {
+				eventId: data.eventId as unknown as number,
+				teamId: data.teamId as unknown as number,
+				playerUuidOrIgn: data.playerUuid,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {

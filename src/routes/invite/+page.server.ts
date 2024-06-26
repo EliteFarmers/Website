@@ -10,8 +10,8 @@ export const load: PageServerLoad = ({ url }) => {
 		const url = new URL(PUBLIC_BOT_INVITE);
 		params.forEach(([key, value]) => url.searchParams.set(key, value));
 
-		throw redirect(302, url.toString());
+		throw redirect(307, url.toString());
 	}
 
-	throw redirect(302, PUBLIC_BOT_INVITE);
+	throw redirect(307, PUBLIC_BOT_INVITE);
 };
