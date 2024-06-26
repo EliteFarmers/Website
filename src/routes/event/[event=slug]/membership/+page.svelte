@@ -67,12 +67,14 @@
 				name = `${first}_${second}`;
 				prettyName = `${first} ${second}`;
 			}
-
-			return;
+		} else {
+			name = `${first}_${second}_${third}`;
+			prettyName = `${first} ${second} ${third}`;
 		}
 
-		name = `${first}_${third}_${second}`;
-		prettyName = `${first} ${second} ${third}`;
+		if (name.length > 32) {
+			generateTeamName();
+		}
 	}
 </script>
 
@@ -83,7 +85,7 @@
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
-		<p>Link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
+		<p>Login and link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
 	{/if}
 
 	{#if form?.error}
@@ -288,10 +290,10 @@
 							<p>Change the name of your team!</p>
 							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
 								<input type="hidden" name="name" value={name} hidden />
-								<Input type="text" placeholder="Team Name" value={prettyName} />
 								<Button variant="secondary" on:click={generateTeamName}>
 									<RefreshCcw />
 								</Button>
+								<p class="text-xl font-semibold">{prettyName}</p>
 							</div>
 							<div class="flex flex-row gap-2">
 								<Button type="submit">Update Team Name</Button>
@@ -319,10 +321,10 @@
 						</p>
 						<div class="flex flex-row items-center gap-2 text-black dark:text-white">
 							<input type="hidden" name="name" value={name} hidden />
-							<Input type="text" placeholder="Team Name" value={prettyName} required />
 							<Button variant="secondary" on:click={generateTeamName}>
 								<RefreshCcw />
 							</Button>
+							<p class="text-xl font-semibold">{prettyName}</p>
 						</div>
 						<Button type="submit" disabled={!data.member}>Create Team</Button>
 					</form>

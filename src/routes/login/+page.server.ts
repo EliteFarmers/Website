@@ -9,7 +9,7 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 
 	if (success) {
 		if (redirectTo) {
-			throw redirect(303, redirectTo);
+			throw redirect(307, decodeURIComponent(redirectTo));
 		}
 
 		return {
@@ -25,7 +25,7 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		'&redirect_uri=' +
 		encodeURIComponent(`${url.origin}${PUBLIC_DISCORD_REDIRECT_ROUTE}`) +
 		'&response_type=code&scope=identify%20guilds%20role_connections.write' +
-		`&state=${uuid}`;
+		`&state=${uuid}|${encodeURIComponent(redirectTo ?? '/profile')}`;
 
 	cookies.set('auth_state', uuid, {
 		path: '/',

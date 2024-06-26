@@ -31,12 +31,16 @@ export const load = (async ({ locals, parent, params }) => {
 		throw error(404, 'Event not found');
 	}
 
-	if (!token || !session?.uuid) {
-		throw redirect(307, '/login');
+	if (!token || !session) {
+		throw redirect(307, '/login?redirect=' + encodeURIComponent(`/event/${eventRoute}`));
 	}
 
-	const { data: account } = await GetAccount(session.uuid).catch(() => ({ data: undefined }));
-	const { data: member } = await GetEventMember(eventId, session.uuid).catch(() => ({ data: undefined }));
+	const { data: account } = session.uuid
+		? await GetAccount(session.uuid).catch(() => ({ data: undefined }))
+		: { data: undefined };
+	const { data: member } = session.uuid
+		? await GetEventMember(eventId, session.uuid).catch(() => ({ data: undefined }))
+		: { data: undefined };
 
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventId).catch(() => ({ data: undefined }));
