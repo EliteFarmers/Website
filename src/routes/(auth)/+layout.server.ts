@@ -4,7 +4,7 @@ import { FetchDiscordUserData } from '$lib/discordAuth';
 
 export const load = (async ({ locals, url, cookies, parent }) => {
 	await parent();
-	
+
 	locals.access_token ??= cookies.get('access_token');
 	locals.refresh_token ??= cookies.get('refresh_token');
 

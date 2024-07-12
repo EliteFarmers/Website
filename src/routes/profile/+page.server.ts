@@ -13,17 +13,25 @@ import type { components } from '$lib/api/api';
 import { CanEditGuild, type Guild } from '$lib/discord';
 import { IsUUID } from '$params/uuid';
 import { FetchUserSession } from '$lib/api/auth';
+import { FetchDiscordUserData } from '$lib/discordAuth';
 
-export const load: PageServerLoad = async ({ locals, parent }) => {
-	const { user } = await parent();
+export const load: PageServerLoad = async ({ locals, parent, url }) => {
+	const { session } = await parent();
 	const { access_token: token } = locals;
 
-	if (!user.id || !token) {
-		throw redirect(307, '/');
-		//throw redirect(307, '/login?redirect=/profile');
+	if (!session || !token) {
+		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
-	const account = user.minecraftAccounts?.find((account) => account.primaryAccount) ?? user.minecraftAccounts?.[0];
+	const discord = await FetchDiscordUserData(token);
+
+	if (!discord) {
+		// No redirect to maybe prevent infinite loop
+		throw error(401, '/login');
+	}
+
+	const account =
+		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
 	const guilds =
 		(await GetUsersGuilds(token)
@@ -38,6 +46,7 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
 		mcAccount: account ?? null,
+		user: discord,
 	};
 };
 
