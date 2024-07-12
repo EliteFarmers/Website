@@ -277,7 +277,7 @@
 								</div>
 							</div>
 						{/each}
-						<form action="?/leaveTeam" method="post">
+						<form action="?/leaveTeam" method="post" use:enhance>
 							<input type="hidden" name="team" bind:value={ownTeamId} />
 							<Button type="submit" variant="secondary" formaction="?/leaveTeam">Leave Team</Button>
 						</form>

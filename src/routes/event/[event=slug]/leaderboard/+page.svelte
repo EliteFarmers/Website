@@ -37,7 +37,7 @@
 				<ExternalLink size={16} />
 			</Button>
 			{#if joinable}
-				<Button href="/event/{$page.params.event}/join" color="green" size="sm" class="flex-1">
+				<Button href="/event/{$page.params.event}/membership" color="green" size="sm" class="flex-1">
 					Join Event
 				</Button>
 			{/if}
