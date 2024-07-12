@@ -62,8 +62,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(500, 'Failed to login user!');
 	}
 
-	const thirtyDays = 30 * 24 * 60 * 60 * 1000;
-	const refreshTokenExpires = new Date(Date.now() + thirtyDays); // 30 days
+	const thirtyDays = 30 * 24 * 60 * 60;
+	const refreshTokenExpires = new Date(Date.now() + (thirtyDays * 1000)); // 30 days
 
 	cookies.set('access_token', loginResponse.access_token, {
 		// The access token expires every 10 minutes, but we keep it to use with the refresh token

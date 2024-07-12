@@ -1,4 +1,4 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Cookies } from '@sveltejs/kit';
 import type { components } from './api';
 import { GetUserSession, RefreshUserSession } from './elite';
 
@@ -12,34 +12,35 @@ export interface AuthFlags {
 }
 
 export async function FetchUserSession(
-	event: Parameters<Handle>[0]['event'],
+	cookies: Cookies,
 	access: string,
-	refresh: string
+	refresh = '',
+	forceRefresh = false
 ): Promise<AuthSession | undefined> {
 	// Fetch the user session
 	const { data: session } = await GetUserSession(access).catch(() => ({ data: undefined }));
 
-	if (session) {
+	if (session && !forceRefresh) {
 		return setAuthFlags(session);
 	}
 
-	if (!session && refresh) {
+	if (refresh && (!session || forceRefresh)) {
 		const { data: newTokens } = await RefreshUserSession({
 			access_token: access,
 			refresh_token: refresh,
 		}).catch(() => ({ data: undefined }));
 
 		if (newTokens) {
-			UpdateAuthCookies(event, newTokens);
+			UpdateAuthCookies(cookies, newTokens);
 
 			// Omit the refresh token to not cause infinite loop
-			return await FetchUserSession(event, newTokens.access_token, '');
+			return await FetchUserSession(cookies, newTokens.access_token);
 		} else {
-			DeleteAuthCookies(event);
+			DeleteAuthCookies(cookies);
 		}
 	}
 
-	return undefined;
+	return session ? setAuthFlags(session) : undefined;
 }
 
 function setAuthFlags(session?: components['schemas']['AuthSessionDto']): AuthSession | undefined {
@@ -62,19 +63,16 @@ function setAuthFlags(session?: components['schemas']['AuthSessionDto']): AuthSe
 	return newSession;
 }
 
-export async function DeleteAuthCookies(event: Parameters<Handle>[0]['event']) {
-	const { cookies } = event;
-
+export function DeleteAuthCookies(cookies: Cookies) {
 	cookies.delete('access_token', { path: '/' });
 	cookies.delete('refresh_token', { path: '/' });
+	cookies.delete('auth_state', { path: '/' });
 }
 
-export async function UpdateAuthCookies(
-	event: Parameters<Handle>[0]['event'],
+export function UpdateAuthCookies(
+	cookies: Cookies,
 	tokens: components['schemas']['AuthResponseDto']
 ) {
-	const { cookies } = event;
-
 	cookies.set('access_token', tokens.access_token, {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 20,
