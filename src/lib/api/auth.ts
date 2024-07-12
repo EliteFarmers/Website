@@ -69,10 +69,7 @@ export function DeleteAuthCookies(cookies: Cookies) {
 	cookies.delete('auth_state', { path: '/' });
 }
 
-export function UpdateAuthCookies(
-	cookies: Cookies,
-	tokens: components['schemas']['AuthResponseDto']
-) {
+export function UpdateAuthCookies(cookies: Cookies, tokens: components['schemas']['AuthResponseDto']) {
 	cookies.set('access_token', tokens.access_token, {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 20,

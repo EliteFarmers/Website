@@ -30,7 +30,7 @@
 
 		<Button href="/@{mc.name}" size="sm" variant="outline">Stats</Button>
 	</div>
-	<div class="flex flex-wrap justify-between items-baseline">
+	<div class="flex flex-wrap gap-2 justify-between items-baseline">
 		<p class="text-xs sm:text-sm text-gray-500">{mc.id}</p>
 		{#if !mc.primaryAccount}
 			<form
