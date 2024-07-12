@@ -12,10 +12,10 @@
 	>
 		{#if type === +EventType.FarmingWeight}
 			<img src="/favicon.webp" alt="Farming Weight" class="w-4 h-4" />
-			<p class="text-sm">Farming Weight Event</p>
+			<p class="text-xs sm:text-sm">Farming Weight Event</p>
 		{:else if type === +EventType.Medals}
 			<img src="/images/medals/diamond.webp" alt="Farming Weight" class="w-4 h-4" />
-			<p class="text-sm">Jacob Contest Event</p>
+			<p class="text-xs sm:text-sm">Jacob Contest Event</p>
 		{/if}
 	</div>
 	<div>
