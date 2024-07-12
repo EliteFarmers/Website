@@ -2,27 +2,25 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
-	import { FarmingTool as FT } from 'farming-weight';
+	import { FarmingTool as FT, type EliteItemDto } from 'farming-weight';
 
 	export let tools: components['schemas']['ItemDto'][];
+	export let shown = 10;
 
-	$: actualTools = tools
-		.filter((i) => FT.isValid(i))
-		.map((t) => new FT(t))
-		.sort((a, b) => b.farmed - a.farmed);
+	let currentShown = shown;
 
-	let count = 10;
+	$: actualTools = FT.fromArray(tools as EliteItemDto[]);
 </script>
 
 {#if actualTools.length !== 0}
 	<div class="flex flex-1 flex-col gap-2 items-center">
-		{#each actualTools.slice(0, count) as tool, i (tool.item.uuid ?? i)}
+		{#each actualTools.slice(0, currentShown) as tool, i (tool.item.uuid ?? i)}
 			<Farmingtool {tool} />
 		{/each}
-		{#if count < tools.length}
-			<Button variant="outline" size="sm" on:click={() => (count = tools.length)}>Show All</Button>
-		{:else if tools.length > 10}
-			<Button variant="outline" size="sm" on:click={() => (count = 10)}>Show Less</Button>
+		{#if currentShown < tools.length}
+			<Button variant="outline" size="sm" on:click={() => (currentShown = tools.length)}>Show All</Button>
+		{:else if tools.length > shown}
+			<Button variant="outline" size="sm" on:click={() => (currentShown = shown)}>Show Less</Button>
 		{/if}
 	</div>
 {/if}

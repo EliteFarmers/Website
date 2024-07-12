@@ -7800,6 +7800,18 @@ export interface components {
             bankBalance?: number;
             members?: components["schemas"]["MemberDetailsDto"][];
         };
+        ProfileEventMemberDto: {
+            eventId: string;
+            eventName: string;
+            teamId?: string | null;
+            status?: components["schemas"]["EventMemberStatus"];
+            /**
+             * Format: int32
+             * @description Currently not populated
+             */
+            rank?: number;
+            score?: string | null;
+        };
         ProfileMemberDto: {
             profileId: string;
             playerUuid: string;
@@ -7826,7 +7838,7 @@ export interface components {
             farmingWeight: components["schemas"]["FarmingWeightDto"];
             skills?: components["schemas"]["SkillsDto"];
             chocolateFactory?: components["schemas"]["ChocolateFactoryDto"];
-            events?: components["schemas"]["EventMemberDto"][];
+            events?: components["schemas"]["ProfileEventMemberDto"][];
             isSelected?: boolean;
             wasRemoved?: boolean;
             /** Format: int64 */
