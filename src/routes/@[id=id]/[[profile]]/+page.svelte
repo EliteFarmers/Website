@@ -15,6 +15,7 @@
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
+	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
@@ -41,11 +42,11 @@
 		`🌾 Farming Weight - ${weightStr}` +
 		`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
 		`📜 Farming Level - ${farmingXp.level}` +
-		`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming.toLocaleString()})` : ''}\n` +
+		`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming?.toLocaleString()})` : ''}\n` +
 		`⠀⤷ ${(member.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
 		`\n⭐ Skyblock Level - ${(member.skyblockXp ?? 0) / 100}` +
 		`${
-			(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp.toLocaleString()})` : ''
+			(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
 		}\n\n` +
 		data.collections
 			.sort((a, b) => b.weight - a.weight)
@@ -108,9 +109,15 @@
 <section class="flex w-full justify-center align-middle my-8">
 	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
 		<Collections {collections} ranks={data.ranks ?? {}} />
-		{#if member.farmingWeight?.inventory?.tools?.length}
-			<div class="flex flex-1 flex-col gap-4">
-				<Farmingtools tools={member.farmingWeight?.inventory?.tools ?? []} />
+		{#if member.farmingWeight?.inventory?.tools?.length || member.events?.length}
+			<div class="flex flex-1 flex-col gap-2">
+				{#each member.events ?? [] as event (event.eventId)}
+					<ProfileEventMember member={event} ign={ign || ''} />
+				{/each}
+				<Farmingtools
+					tools={member.farmingWeight?.inventory?.tools ?? []}
+					shown={10 - (member.events?.length ?? 0)}
+				/>
 			</div>
 		{/if}
 	</div>

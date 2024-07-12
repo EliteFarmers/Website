@@ -8,12 +8,12 @@
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
-	import EventMember from './event-member.svelte';
+	import EventMember from '$comp/events/event-member.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
-	import EventData from './event-data.svelte';
-	import EventTeam from './event-team.svelte';
+	import EventData from '$comp/events/event-data.svelte';
+	import EventTeam from '$comp/events/event-team.svelte';
 
 	export let data: PageData;
 

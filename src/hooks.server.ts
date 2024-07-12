@@ -17,7 +17,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	// Fetch the user session
 	if (access && refresh) {
-		locals.session = await FetchUserSession(event, access, refresh);
+		locals.session = await FetchUserSession(event.cookies, access, refresh);
 	}
 
 	return await ResolveWithSecurityHeaders(resolve, event);

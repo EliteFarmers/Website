@@ -10,6 +10,7 @@
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
 	import { ArrowDown, ArrowUp } from 'lucide-svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -64,6 +65,7 @@
 					// Wait for a bit so the user can see the loading state
 					await new Promise((r) => setTimeout(r, 500));
 					loading = false;
+					await invalidateAll();
 					await applyAction(result);
 				};
 			}}

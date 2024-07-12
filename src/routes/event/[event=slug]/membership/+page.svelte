@@ -257,7 +257,7 @@
 									<p>{member.playerName}</p>
 								</div>
 								<div class="flex flex-row gap-4 items-center">
-									<p class="font-semibold">{+(member.score ?? 0).toLocaleString()}</p>
+									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 									{#if isOwner}
 										<form action="?/kickMember" method="post">
 											<input type="hidden" name="team" bind:value={ownTeamId} />

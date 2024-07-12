@@ -12904,6 +12904,40 @@
         },
         "additionalProperties": false
       },
+      "ProfileEventMemberDto": {
+        "required": [
+          "eventId",
+          "eventName"
+        ],
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "eventName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "teamId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/EventMemberStatus"
+          },
+          "rank": {
+            "type": "integer",
+            "description": "Currently not populated",
+            "format": "int32"
+          },
+          "score": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProfileMemberDto": {
         "required": [
           "farmingWeight",
@@ -12986,7 +13020,7 @@
           "events": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EventMemberDto"
+              "$ref": "#/components/schemas/ProfileEventMemberDto"
             }
           },
           "isSelected": {

@@ -5,10 +5,10 @@
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Users from 'lucide-svelte/icons/users';
-	import EventMember from '../event-member.svelte';
+	import EventMember from '$comp/events/event-member.svelte';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import EventTeam from '../event-team.svelte';
+	import EventTeam from '$comp/events/event-team.svelte';
 
 	export let data: PageData;
 
