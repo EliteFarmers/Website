@@ -4,6 +4,7 @@
 	import MobileLink from '$comp/header/mobile-link.svelte';
 	import Menu from 'lucide-svelte/icons/menu';
 	import { NAV_PAGES } from '$content/nav';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	let open = false;
 </script>
@@ -30,8 +31,16 @@
 			<div class="flex flex-col space-y-3">
 				{#each NAV_PAGES as navItem, index (navItem + index.toString())}
 					{#if navItem.href}
-						<MobileLink href={navItem.href} bind:open class="text-foreground">
+						<MobileLink
+							href={navItem.href}
+							bind:open
+							class="flex flex-row gap-1 items-center text-foreground"
+							target={navItem.external ? '_blank' : undefined}
+						>
 							{navItem.title}
+							{#if navItem.external}
+								<ExternalLink size={14} class="mt-0.5" />
+							{/if}
 						</MobileLink>
 					{/if}
 				{/each}

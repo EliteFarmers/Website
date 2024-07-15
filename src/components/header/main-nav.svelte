@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { NAV_PAGES } from '$content/nav';
 	import cn from 'classnames';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 </script>
 
 <div class="mr-4 hidden md:flex gap-6">
@@ -17,11 +18,15 @@
 				<a
 					href={navItem.href}
 					class={cn(
-						'transition-colors hover:text-foreground',
+						'flex flex-row gap-1 items-center transition-colors hover:text-foreground',
 						$page.url.pathname.startsWith(navItem.href) ? 'text-foreground' : 'text-foreground/80'
 					)}
+					target={navItem.external ? '_blank' : undefined}
 				>
 					{navItem.title}
+					{#if navItem.external}
+						<ExternalLink size={14} class="mt-0.5" />
+					{/if}
 				</a>
 			{/if}
 		{/each}

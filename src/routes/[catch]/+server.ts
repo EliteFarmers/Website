@@ -1,4 +1,9 @@
-import { PUBLIC_COMMUNITY_INVITE, PUBLIC_DONATION_URL, PUBLIC_SUPPORT_SERVER_INVITE } from '$env/static/public';
+import {
+	PUBLIC_COMMUNITY_INVITE,
+	PUBLIC_DISCORD_CLIENT_ID,
+	PUBLIC_DONATION_URL,
+	PUBLIC_SUPPORT_SERVER_INVITE,
+} from '$env/static/public';
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -7,6 +12,7 @@ const urls: Partial<Record<string, string>> = {
 	discord: PUBLIC_COMMUNITY_INVITE,
 	support: PUBLIC_SUPPORT_SERVER_INVITE,
 	stickers: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
+	shop: `https://discord.com/application-directory/${PUBLIC_DISCORD_CLIENT_ID}/store`,
 };
 
 export const GET = (async ({ params }) => {

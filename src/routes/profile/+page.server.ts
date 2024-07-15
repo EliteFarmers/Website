@@ -26,8 +26,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const discord = await FetchDiscordUserData(token);
 
 	if (!discord) {
-		// No redirect to maybe prevent infinite loop
-		throw error(401, '/login');
+		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
 	const account =
