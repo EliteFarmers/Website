@@ -211,6 +211,21 @@ export const UpdateUserBadges = async (
 		},
 	});
 
+export const UpdateUserSettings = async (accessToken: string, settings: components['schemas']['UserSettingsDto']) =>
+	await PATCH('/account/settings', {
+		body: settings,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const RefreshPurchases = async (accessToken: string) =>
+	await POST('/account/purchases', {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetAllBadges = async () => await GET('/badges', {});
 
 export const GetUsersGuilds = async (accessToken: string) =>
