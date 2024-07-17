@@ -250,6 +250,89 @@
         }
       }
     },
+    "/account/{discordId}/settings": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get account settings",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "minLength": 17,
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/account/{playerUuidOrIgn}": {
       "get": {
         "tags": [
@@ -7948,7 +8031,7 @@
         }
       }
     },
-    "/product": {
+    "/products": {
       "get": {
         "tags": [
           "Product"
@@ -13147,11 +13230,17 @@
       },
       "ProductDto": {
         "required": [
+          "id",
           "name",
           "slug"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Product ID"
+          },
           "name": {
             "minLength": 1,
             "type": "string",

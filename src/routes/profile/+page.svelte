@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
-	import type { PageData, ActionData } from './$types';
+	import Product from '$comp/monetization/product.svelte';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
 	import { ArrowDown, ArrowUp } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
-	import Entitlement from './entitlement.svelte';
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
+	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -179,7 +179,7 @@
 		</p>
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense">
 			{#each data.user.entitlements ?? [] as purchase (purchase.id)}
-				<Entitlement entitlement={purchase} />
+				<Product product={purchase.product} />
 			{/each}
 		</div>
 		<form
@@ -200,7 +200,8 @@
 			<Button type="submit" disabled={loading} variant="secondary">Refresh Purchases</Button>
 		</form>
 
-		<h1 class="text-2xl mb-4">User Settings</h1>
+		<h1 class="text-2xl mb-2">User Settings</h1>
+		<p class="mb-4">Configure settings here! Only things that you've paid for above are available to edit.</p>
 		<form
 			action="?/updateSettings"
 			method="post"

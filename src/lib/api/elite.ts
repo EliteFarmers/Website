@@ -893,6 +893,25 @@ export const KickEventTeamMember = async (
 		},
 	});
 
+export const GetProducts = async () => await GET('/products', {});
+
+export const UpdateProduct = async (
+	accessToken: string,
+	productId: string,
+	product: components['schemas']['UpdateProductDto']
+) =>
+	await PATCH('/product/{productId}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+			},
+		},
+		body: product,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {

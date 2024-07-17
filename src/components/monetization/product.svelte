@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$comp/ui/button';
 	import type { components } from '$lib/api/api';
-	import ProductFeature from './product-feature.svelte';
+	import ProductFeature from '$comp/monetization/product-feature.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Palette from 'lucide-svelte/icons/palette';
 	import Image from 'lucide-svelte/icons/image';
@@ -10,8 +10,8 @@
 	import Replace from 'lucide-svelte/icons/replace';
 	import ScrollText from 'lucide-svelte/icons/scroll-text';
 
-	export let entitlement: components['schemas']['UserEntitlementDto'];
-	$: product = entitlement.product;
+	export let product: components['schemas']['ProductDto'];
+
 	$: features = product.features ?? {};
 </script>
 
@@ -73,7 +73,7 @@
 			</div>
 		</div>
 		<div class="flex justify-end min-w-0 items-center gap-4">
-			<Button href="/shop/{entitlement.productId}" class="m-1" variant="ghost">
+			<Button href="/shop/{product.id}" class="m-1" variant="ghost">
 				<ExternalLink />
 			</Button>
 		</div>
