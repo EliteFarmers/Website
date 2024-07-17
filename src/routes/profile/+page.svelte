@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
-	import type { PageData, ActionData } from './$types';
+	import Product from '$comp/monetization/product.svelte';
 	import DiscordAccount from './discordAccount.svelte';
 	import Guild from './guild.svelte';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
 	import { ArrowDown, ArrowUp } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
+	import { Label } from '$ui/label';
+	import { SelectSimple } from '$ui/select';
+	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -43,6 +46,40 @@
 
 	$: discordUsername =
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
+
+	$: unlockedSettings = {
+		weightStyle: data.user.entitlements?.some((e) => (e.product.features?.weightStyles?.length ?? 0) > 0) ?? false,
+		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
+		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
+		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
+		moreInfo: data.user.entitlements?.some((e) => e.product.features?.moreInfoDefault) ?? false,
+	};
+
+	let changedSettings = {
+		weightStyle: data.user.settings?.features?.weightStyle ?? '',
+		embedColor: data.user.settings?.features?.embedColor ?? '',
+		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
+		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
+		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
+	};
+
+	$: weightStyleOptions = [
+		{ label: 'Default', value: '' },
+		...(data.user.entitlements ?? [])
+			.filter((e) => (e.product.features?.weightStyles?.length ?? 0) > 0)
+			.map((e) => e.product.features?.weightStyles ?? [])
+			.flat()
+			.map((e) => ({ label: e, value: e })),
+	];
+
+	$: embedColorOptions = [
+		{ label: 'Default', value: '' },
+		...(data.user.entitlements ?? [])
+			.filter((e) => (e.product.features?.embedColors?.length ?? 0) > 0)
+			.map((e) => e.product.features?.embedColors ?? [])
+			.flat()
+			.map((e) => ({ label: e, value: e, color: '#' + e })),
+	];
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -129,6 +166,100 @@
 			{/each}
 		</div>
 
+		<h1 class="text-2xl mb-4">Purchases</h1>
+		{#if data.user.entitlements?.length === 0}
+			<p class="mb-2">
+				You don't manage any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
+					>Discord Shop!</a
+				>
+			</p>
+		{:else}
+			<p class="mb-2">
+				Check out the <a href="/shop" class="text-blue-400 hover:underline">Discord Shop!</a>
+			</p>
+		{/if}
+		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense">
+			{#each data.user.entitlements ?? [] as purchase (purchase.id)}
+				<Product product={purchase.product} />
+			{/each}
+		</div>
+		<form
+			action="?/refreshPurchases"
+			method="post"
+			class="mt-2 mb-16"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result }) => {
+					// Wait for a bit so the user can see the loading state
+					await new Promise((r) => setTimeout(r, 500));
+					loading = false;
+					await invalidateAll();
+					await applyAction(result);
+				};
+			}}
+		>
+			<Button type="submit" disabled={loading} variant="secondary">Refresh Purchases</Button>
+		</form>
+
+		<h1 class="text-2xl mb-2">User Settings</h1>
+		<p class="mb-4">Configure settings here! Only things that you've paid for above are available to edit.</p>
+		<form
+			action="?/updateSettings"
+			method="post"
+			class="flex flex-col gap-4 mb-12 max-w-md"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result }) => {
+					// Wait for a bit so the user can see the loading state
+					await new Promise((r) => setTimeout(r, 500));
+					loading = false;
+					await invalidateAll();
+					await applyAction(result);
+				};
+			}}
+		>
+			<div class="space-y-2">
+				<Label>Weight Command Style</Label>
+				<SelectSimple
+					name="style"
+					options={weightStyleOptions}
+					bind:value={changedSettings.weightStyle}
+					disabled={loading || !unlockedSettings.weightStyle}
+				/>
+			</div>
+			<div class="space-y-2">
+				<Label>Bot Embed Color</Label>
+				<SelectSimple
+					name="embed"
+					options={embedColorOptions}
+					bind:value={changedSettings.embedColor}
+					disabled={loading || !unlockedSettings.embedColor}
+				/>
+			</div>
+			<div class="flex flex-row gap-2 items-center">
+				<Switch
+					bind:checked={changedSettings.shopPromotions}
+					disabled={loading || !unlockedSettings.shopPromotions}
+				/>
+				<Label>Hide shop promotions</Label>
+				<input type="hidden" name="promotions" bind:value={changedSettings.shopPromotions} />
+			</div>
+			<div class="flex flex-row gap-2 items-center">
+				<Switch
+					bind:checked={changedSettings.styleOverride}
+					disabled={loading || !unlockedSettings.styleOverride}
+				/>
+				<Label>Apply Weight Style on everyone</Label>
+				<input type="hidden" name="override" bind:value={changedSettings.styleOverride} />
+			</div>
+			<div class="flex flex-row gap-2 items-center">
+				<Switch bind:checked={changedSettings.moreInfo} disabled={loading || !unlockedSettings.moreInfo} />
+				<Label>"More Info" in weight command by default</Label>
+				<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
+			</div>
+			<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
+		</form>
+
 		<h1 class="text-2xl mb-4">Manage Badges</h1>
 		{#if !user.minecraftAccounts?.some((mc) => mc.badges && mc.badges.length > 0)}
 			<p class="mb-16">You don't have any badges yet!</p>
@@ -145,6 +276,7 @@
 						// Wait for a bit so the user can see the loading state
 						await new Promise((r) => setTimeout(r, 500));
 						loading = false;
+						await invalidateAll();
 						await applyAction(result);
 					};
 				}}
@@ -201,7 +333,7 @@
 					</div>
 				{/each}
 				<input type="hidden" name="uuid" value={profile.uuid} />
-				<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
+				<Button type="submit" class="max-w-fit" disabled={loading}>Update Badges</Button>
 			</form>
 		{/each}
 

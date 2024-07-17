@@ -5,9 +5,11 @@ import {
 	GetPublicGuilds,
 	GetUsersGuilds,
 	LinkAccount,
+	RefreshPurchases,
 	SetPrimaryAccount,
 	UnlinkAccount,
 	UpdateUserBadges,
+	UpdateUserSettings,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { CanEditGuild, type Guild } from '$lib/discord';
@@ -26,8 +28,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const discord = await FetchDiscordUserData(token);
 
 	if (!discord) {
-		// No redirect to maybe prevent infinite loop
-		throw error(401, '/login');
+		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
 	const account =
@@ -153,6 +154,63 @@ export const actions: Actions = {
 
 		const body = Object.values(badges);
 		const req = await UpdateUserBadges(locals.access_token, uuid, body);
+
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
+		}
+
+		return { success: true };
+	},
+	updateSettings: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const body = {
+			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
+		};
+
+		const style = data.get('style')?.toString() ?? '';
+		if (style) {
+			body.features.weightStyle = style;
+		}
+
+		const embed = data.get('embed')?.toString() ?? '';
+		if (embed) {
+			body.features.embedColor = embed;
+		}
+
+		const promotions = data.get('promotions') ?? undefined;
+		if (promotions) {
+			body.features.hideShopPromotions = promotions === 'true';
+		}
+
+		const override = data.get('override') ?? undefined;
+		if (override) {
+			body.features.weightStyleOverride = override === 'true';
+		}
+
+		const info = data.get('info') ?? undefined;
+		if (info) {
+			body.features.moreInfoDefault = info === 'true';
+		}
+
+		const req = await UpdateUserSettings(locals.access_token, body);
+
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
+		}
+
+		return { success: true };
+	},
+	refreshPurchases: async ({ locals }) => {
+		if (!locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const req = await RefreshPurchases(locals.access_token);
 
 		if (!req.response.ok) {
 			return fail(req.response.status, { error: await req.response.text() });

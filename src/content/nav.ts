@@ -19,4 +19,9 @@ export const NAV_PAGES = [
 		title: 'Top Players',
 		href: '/leaderboard',
 	},
+	{
+		title: 'Shop',
+		href: '/shop',
+		external: true,
+	},
 ];

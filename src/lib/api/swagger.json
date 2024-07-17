@@ -250,6 +250,89 @@
         }
       }
     },
+    "/account/{discordId}/settings": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get account settings",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "minLength": 17,
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettingsDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/account/{playerUuidOrIgn}": {
       "get": {
         "tags": [
@@ -449,7 +532,103 @@
         ]
       }
     },
-    "/admin/admins": {
+    "/account/settings": {
+      "patch": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update user settings",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettingsDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettingsDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/account/purchases": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Refresh purchases",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/admins": {
       "get": {
         "tags": [
           "Admin"
@@ -526,206 +705,6 @@
             }
           }
         },
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
-      }
-    },
-    "/admin/permissions/{memberId}/{permission}": {
-      "post": {
-        "tags": [
-          "Admin"
-        ],
-        "summary": "Add member permissions",
-        "parameters": [
-          {
-            "name": "memberId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "permission",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true,
-        "security": [
-          {
-            "Bearer": [ ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Admin"
-        ],
-        "summary": "Remove member permissions",
-        "parameters": [
-          {
-            "name": "memberId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "permission",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true,
         "security": [
           {
             "Bearer": [ ]
@@ -4052,6 +4031,37 @@
         ]
       }
     },
+    "/bot/account/{discordId}/purchases": {
+      "post": {
+        "tags": [
+          "Bot"
+        ],
+        "summary": "Refresh user purchases",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/contests/at/{year}": {
       "get": {
         "tags": [
@@ -4598,6 +4608,112 @@
             }
           }
         }
+      }
+    },
+    "/account/{accountId}/entitlement/{productId}": {
+      "post": {
+        "tags": [
+          "Entitlement"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/EntitlementTarget"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Entitlement"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/EntitlementTarget"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/events": {
@@ -6772,6 +6888,105 @@
         ]
       }
     },
+    "/guild/{guildId}/lock": {
+      "post": {
+        "tags": [
+          "Guild"
+        ],
+        "summary": "Set the guild's locked status",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "Discord server (guild) ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "locked",
+            "in": "query",
+            "description": "If server subscriptions should overwrite feature values.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/leaderboard/leaderboards": {
       "get": {
         "tags": [
@@ -7814,6 +8029,85 @@
             }
           }
         }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get all products",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{productId}": {
+      "patch": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Update a product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/profile/{uuid}/selected": {
@@ -9634,6 +9928,55 @@
         ]
       }
     },
+    "/user/guild/{guildId}/purchases": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Refresh purchases",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/weight/{playerUuid}": {
       "get": {
         "tags": [
@@ -10053,9 +10396,7 @@
         "required": [
           "DisplayName",
           "Id",
-          "Inventory",
           "MinecraftAccounts",
-          "Redemptions",
           "Settings",
           "Username"
         ],
@@ -10063,53 +10404,55 @@
         "properties": {
           "id": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Discord user ID"
           },
           "displayName": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Discord display name"
           },
           "username": {
             "minLength": 1,
-            "type": "string"
-          },
-          "permissions": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "description": "Discord username (unique)"
           },
           "discriminator": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "email": {
             "type": "string",
+            "description": "Discord email, not asked for normally",
             "nullable": true
           },
           "locale": {
             "type": "string",
+            "description": "Discord user locale",
             "nullable": true
           },
           "avatar": {
             "type": "string",
+            "description": "Discord avatar URL hash",
             "nullable": true
           },
-          "redemptions": {
+          "settings": {
+            "$ref": "#/components/schemas/UserSettingsDto"
+          },
+          "entitlements": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RedemptionDto"
-            }
-          },
-          "inventory": {
-            "$ref": "#/components/schemas/EliteInventoryDto"
-          },
-          "settings": {
-            "$ref": "#/components/schemas/EliteSettingsDto"
+              "$ref": "#/components/schemas/UserEntitlementDto"
+            },
+            "description": "Purchased entitlements from the Discord store"
           },
           "minecraftAccounts": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/MinecraftAccountDetailsDto"
-            }
+            },
+            "description": "Linked Minecraft accounts"
           }
         },
         "additionalProperties": false
@@ -10287,6 +10630,38 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/Leaderboard"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfiguredProductFeaturesDto": {
+        "type": "object",
+        "properties": {
+          "weightStyle": {
+            "type": "string",
+            "description": "Name of weight style to use.",
+            "nullable": true
+          },
+          "weightStyleOverride": {
+            "type": "boolean",
+            "description": "Ability to override other's weight styles.",
+            "nullable": true
+          },
+          "embedColor": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "Embed color for the bot.",
+            "nullable": true
+          },
+          "moreInfoDefault": {
+            "type": "boolean",
+            "description": "Show \"More Info\" on weight command by default.",
+            "nullable": true
+          },
+          "hideShopPromotions": {
+            "type": "boolean",
+            "description": "If shop promotions should be hidden.",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11000,60 +11375,28 @@
         },
         "additionalProperties": false
       },
-      "EliteInventoryDto": {
-        "required": [
-          "EventTokens",
-          "EventTokensSpent",
-          "LeaderboardTokens",
-          "LeaderboardTokensSpent",
-          "SpentMedals",
-          "TotalEarnedMedals",
-          "UnlockedCosmetics"
+      "EntitlementTarget": {
+        "enum": [
+          0,
+          1,
+          2
         ],
-        "type": "object",
-        "properties": {
-          "totalEarnedMedals": {
-            "$ref": "#/components/schemas/MedalInventoryDto"
-          },
-          "spentMedals": {
-            "$ref": "#/components/schemas/MedalInventoryDto"
-          },
-          "eventTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "eventTokensSpent": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "leaderboardTokens": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "leaderboardTokensSpent": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "unlockedCosmetics": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false
+        "type": "integer",
+        "format": "int32"
       },
-      "EliteSettingsDto": {
-        "type": "object",
-        "properties": {
-          "defaultPlayerUuid": {
-            "type": "string"
-          },
-          "hideDiscordTag": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
+      "EntitlementType": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "EventCreatedDto": {
         "required": [
@@ -11615,6 +11958,9 @@
       "GuildFeatures": {
         "type": "object",
         "properties": {
+          "locked": {
+            "type": "boolean"
+          },
           "jacobLeaderboardEnabled": {
             "type": "boolean"
           },
@@ -12529,6 +12875,9 @@
             "type": "string",
             "nullable": true
           },
+          "settings": {
+            "$ref": "#/components/schemas/UserSettingsDto"
+          },
           "properties": {
             "type": "array",
             "items": {
@@ -12870,6 +13219,75 @@
         },
         "additionalProperties": { }
       },
+      "ProductCategory": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "ProductDto": {
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Product ID"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Product name"
+          },
+          "slug": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Slug of the product"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Icon URL",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Product description",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/ProductType"
+          },
+          "category": {
+            "$ref": "#/components/schemas/ProductCategory"
+          },
+          "features": {
+            "$ref": "#/components/schemas/UnlockedProductFeaturesDto"
+          },
+          "flags": {
+            "type": "integer",
+            "description": "Discord flags",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductType": {
+        "enum": [
+          2,
+          3,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "ProfileDetailsDto": {
         "required": [
           "profileId",
@@ -13210,28 +13628,6 @@
         },
         "additionalProperties": false
       },
-      "RedemptionDto": {
-        "required": [
-          "cost",
-          "itemId"
-        ],
-        "type": "object",
-        "properties": {
-          "itemId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "cost": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
       "SkillsDataPointDto": {
         "required": [
           "skills"
@@ -13415,6 +13811,62 @@
         },
         "additionalProperties": false
       },
+      "UnlockedProductFeaturesDto": {
+        "type": "object",
+        "properties": {
+          "badgeId": {
+            "type": "integer",
+            "description": "ID of unlocked badge.",
+            "format": "int32",
+            "nullable": true
+          },
+          "weightStyles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Name of weight style to unlock.",
+            "nullable": true
+          },
+          "weightStyleOverride": {
+            "type": "boolean",
+            "description": "Ability to override other's weight styles.",
+            "nullable": true
+          },
+          "embedColors": {
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Embed color for the bot.",
+            "nullable": true
+          },
+          "hideShopPromotions": {
+            "type": "boolean",
+            "description": "Ability to hide shop promotions.",
+            "nullable": true
+          },
+          "moreInfoDefault": {
+            "type": "boolean",
+            "description": "Show \"More Info\" on weight command by default.",
+            "nullable": true
+          },
+          "maxMonthlyEvents": {
+            "type": "integer",
+            "description": "Maximum number of events that can be created in a month. (For guilds)",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxJacobLeaderboards": {
+            "type": "integer",
+            "description": "Maximum number of jacob leaderboard that can be active at once. (For guilds)",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UnparsedApiDataDto": {
         "type": "object",
         "properties": {
@@ -13509,6 +13961,28 @@
         },
         "additionalProperties": false
       },
+      "UpdateProductDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/ProductCategory"
+          },
+          "icon": {
+            "maxLength": 256,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 1024,
+            "type": "string",
+            "nullable": true
+          },
+          "features": {
+            "$ref": "#/components/schemas/UnlockedProductFeaturesDto"
+          }
+        },
+        "additionalProperties": false
+      },
       "UserBadgeDto": {
         "required": [
           "description",
@@ -13549,6 +14023,65 @@
           "order": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserEntitlementDto": {
+        "required": [
+          "id",
+          "product",
+          "productId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Entitlement ID"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EntitlementType"
+          },
+          "target": {
+            "$ref": "#/components/schemas/EntitlementTarget"
+          },
+          "productId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "SKU ID of the product"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductDto"
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "consumed": {
+            "type": "boolean",
+            "description": "Consumed status of the entitlement if applicable",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the entitlement",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of the entitlement",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserSettingsDto": {
+        "type": "object",
+        "properties": {
+          "features": {
+            "$ref": "#/components/schemas/ConfiguredProductFeaturesDto"
           }
         },
         "additionalProperties": false

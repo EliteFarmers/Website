@@ -34,6 +34,9 @@
 				<DropdownMenu.Item href="/profile">Profile</DropdownMenu.Item>
 				<DropdownMenu.Item href="/@{user.ign}" disabled={!user.ign}>My Stats</DropdownMenu.Item>
 				<DropdownMenu.Item href="/@{user.ign}/rates" disabled={!user.ign}>My Rates</DropdownMenu.Item>
+				{#if user.flags.moderator}
+					<DropdownMenu.Item href="/admin">Admin</DropdownMenu.Item>
+				{/if}
 			</DropdownMenu.Group>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item href="/logout">Log out</DropdownMenu.Item>

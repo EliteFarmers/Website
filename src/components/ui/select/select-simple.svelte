@@ -4,6 +4,7 @@
 	export type Option<T = string | number> = {
 		value: T;
 		label: string;
+		color?: string;
 	};
 </script>
 
@@ -59,7 +60,14 @@
 
 	<Select.Content class="p-0 w-[400px] max-h-96 overflow-y-auto overscroll-y-contain">
 		{#each options as o (o.value)}
-			<Select.Item value={o.value}>{o.label}</Select.Item>
+			<Select.Item value={o.value}>
+				<div class="flex flex-row gap-1 items-center">
+					{#if o.color}
+						<div class="w-4 h-4 rounded-sm" style="background-color: {o.color}" />
+					{/if}
+					<span>{o.label}</span>
+				</div>
+			</Select.Item>
 		{/each}
 	</Select.Content>
 </Primitive.Root>

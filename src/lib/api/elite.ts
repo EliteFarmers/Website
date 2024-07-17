@@ -211,6 +211,21 @@ export const UpdateUserBadges = async (
 		},
 	});
 
+export const UpdateUserSettings = async (accessToken: string, settings: components['schemas']['UserSettingsDto']) =>
+	await PATCH('/account/settings', {
+		body: settings,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const RefreshPurchases = async (accessToken: string) =>
+	await POST('/account/purchases', {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetAllBadges = async () => await GET('/badges', {});
 
 export const GetUsersGuilds = async (accessToken: string) =>
@@ -873,6 +888,25 @@ export const KickEventTeamMember = async (
 				playerUuidOrIgn: data.playerUuid,
 			},
 		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const GetProducts = async () => await GET('/products', {});
+
+export const UpdateProduct = async (
+	accessToken: string,
+	productId: string,
+	product: components['schemas']['UpdateProductDto']
+) =>
+	await PATCH('/product/{productId}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+			},
+		},
+		body: product,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
