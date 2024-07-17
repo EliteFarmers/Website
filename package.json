@@ -17,7 +17,7 @@
 		"format": "prettier --ignore-path .eslintignore --write --plugin-search-dir=. .",
 		"up": "docker-compose up -d database cache",
 		"down": "docker-compose down",
-		"liscense": "pnpm exec pnpm-licenses generate-disclaimer --prod --output-file=./src/content/oss.txt",
+		"liscense": "pnpm exec pnpm-licenses generate-disclaimer --prod --output-file=./static/oss.txt",
 		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
 	"devDependencies": {
