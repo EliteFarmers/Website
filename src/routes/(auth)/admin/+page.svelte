@@ -8,6 +8,7 @@
 	import * as Select from '$ui/select';
 	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
+	import SelectSimple from '$ui/select/select-simple.svelte';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Plus from 'lucide-svelte/icons/plus';
 	import X from 'lucide-svelte/icons/x';
@@ -43,6 +44,7 @@
 		shopPromotions: selectedProduct?.features?.hideShopPromotions ?? false,
 		styleOverride: selectedProduct?.features?.weightStyleOverride ?? false,
 		moreInfo: selectedProduct?.features?.moreInfoDefault ?? false,
+		badgeId: selectedProduct?.features?.badgeId ?? '',
 	};
 
 	let newStyle = '';
@@ -383,12 +385,12 @@
 </Dialog.Root>
 
 <Dialog.Root bind:open={editProductModal}>
-	<Dialog.Content>
+	<Dialog.Content class="overflow-scroll max-h-[80%]">
 		<Dialog.Title>Edit Product</Dialog.Title>
 		<form
 			method="post"
 			action="?/updateProduct"
-			class="flex flex-col gap-2"
+			class="flex flex-col gap-4"
 			use:enhance={() => {
 				return async ({ result, update }) => {
 					if (result) editProductModal = false;
@@ -407,6 +409,19 @@
 				<div class="flex flex-col gap-2 items-start">
 					<Label>Product Description</Label>
 					<Input name="description" bind:value={selectedProduct.description} placeholder="Description" />
+				</div>
+
+				<div class="flex flex-col gap-2 items-start">
+					<Label>Rewarded Badge</Label>
+					<SelectSimple
+						options={data.badges.map((b) => ({
+							value: b.id ?? 0,
+							label: b.name,
+						}))}
+						bind:value={changedSettings.badgeId}
+						placeholder="Select a badge"
+						name="badge"
+					/>
 				</div>
 
 				<div class="flex flex-row gap-2 items-center">

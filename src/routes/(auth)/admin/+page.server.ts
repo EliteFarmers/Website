@@ -292,10 +292,13 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid product ID.' });
 		}
 
+		const badgeId = data.get('badge') as string | undefined;
+
 		const body = {
 			icon: (data.get('icon') as string) || undefined,
 			description: (data.get('name') as string) || undefined,
 			features: {
+				badgeId: badgeId ? +badgeId : undefined,
 				hideShopPromotions: data.get('promotions') === 'true',
 				weightStyleOverride: data.get('override') === 'true',
 				moreInfoDefault: data.get('info') === 'true',

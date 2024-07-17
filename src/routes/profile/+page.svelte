@@ -168,15 +168,16 @@
 
 		<h1 class="text-2xl mb-4">Purchases</h1>
 		{#if data.user.entitlements?.length === 0}
-			<p>
+			<p class="mb-2">
 				You don't manage any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
 					>Discord Shop!</a
 				>
 			</p>
+		{:else}
+			<p class="mb-2">
+				Check out the <a href="/shop" class="text-blue-400 hover:underline">Discord Shop!</a>
+			</p>
 		{/if}
-		<p class="mb-2">
-			Check out the <a href="/shop" class="text-blue-400 hover:underline">Discord Shop!</a>
-		</p>
 		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense">
 			{#each data.user.entitlements ?? [] as purchase (purchase.id)}
 				<Product product={purchase.product} />
