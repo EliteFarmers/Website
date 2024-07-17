@@ -18,6 +18,8 @@
 				href={PUBLIC_SUPPORT_SERVER_INVITE}>Support Discord</Button
 			>
 			<Button variant="link" class="p-0 h-8" href="/info">Site Information</Button>
+			<Button variant="link" class="p-0 h-8" href="/terms">Terms of Service</Button>
+			<Button variant="link" class="p-0 h-8" href="/privacy">Privacy Policy</Button>
 		</div>
 		<div class="flex flex-1 basis-32 py-4 flex-col gap-2 items-start">
 			<h5 class="text-lg font-semibold">Community</h5>
@@ -26,10 +28,14 @@
 				>Elite Farmers Discord</Button
 			>
 			<Button variant="link" class="p-0 h-8" href="/browse">Browse Servers</Button>
+			<Button variant="link" rel="nofollow noreferrer noopener" class="p-0 h-8" href="https://hypixel.net/forums"
+				>Hypixel Forums</Button
+			>
 		</div>
 		<div class="flex flex-1 basis-32 py-4 flex-col gap-2 items-start">
 			<h5 class="text-lg font-semibold">Help Out</h5>
 			<Separator />
+			<Button variant="link" class="p-0 h-8" href="/shop">Shop</Button>
 			<Button variant="link" rel="nofollow noreferrer noopener" class="p-0 h-8" href={PUBLIC_DONATION_URL}
 				>Donate on Ko-Fi</Button
 			>
@@ -47,9 +53,10 @@
 				variant="link"
 				rel="nofollow noreferrer noopener"
 				class="p-0 h-8"
-				href="https://github.com/EliteFarmers/Website">Open Sourced on GitHub</Button
+				href="https://github.com/EliteFarmers/Website">Open Source on GitHub</Button
 			>
-			<Button variant="link" class="p-0 h-8" href="/info#Credits">View Credits</Button>
+			<Button variant="link" class="p-0 h-8" href="/info#Credits">Website Credits</Button>
+			<Button variant="link" class="p-0 h-8" href="/oss">Open Sourced Software</Button>
 		</div>
 	</div>
 </footer>
