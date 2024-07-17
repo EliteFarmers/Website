@@ -63,22 +63,32 @@
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
 	};
 
+	$: unlockedWeightStyles = [
+		...new Set(
+			(data.user.entitlements ?? [])
+				.filter((e) => (e.product.features?.weightStyles?.length ?? 0) > 0)
+				.map((e) => e.product.features?.weightStyles ?? [])
+				.flat()
+		),
+	];
+
 	$: weightStyleOptions = [
 		{ label: 'Default', value: '' },
-		...(data.user.entitlements ?? [])
-			.filter((e) => (e.product.features?.weightStyles?.length ?? 0) > 0)
-			.map((e) => e.product.features?.weightStyles ?? [])
-			.flat()
-			.map((e) => ({ label: e, value: e })),
+		...unlockedWeightStyles.map((e) => ({ label: e, value: e })),
+	];
+
+	$: unlockedEmbedColors = [
+		...new Set(
+			(data.user.entitlements ?? [])
+				.filter((e) => (e.product.features?.embedColors?.length ?? 0) > 0)
+				.map((e) => e.product.features?.embedColors ?? [])
+				.flat()
+		),
 	];
 
 	$: embedColorOptions = [
 		{ label: 'Default', value: '' },
-		...(data.user.entitlements ?? [])
-			.filter((e) => (e.product.features?.embedColors?.length ?? 0) > 0)
-			.map((e) => e.product.features?.embedColors ?? [])
-			.flat()
-			.map((e) => ({ label: e, value: e, color: '#' + e })),
+		...unlockedEmbedColors.map((e) => ({ label: e, value: e, color: '#' + e })),
 	];
 </script>
 
