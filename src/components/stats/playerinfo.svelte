@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { RankName } from '$lib/skyblock';
-	import { GetRankName, GetRankDefaults } from '$lib/format';
 	import { page } from '$app/stores';
+	import { GetRankDefaults, GetRankName } from '$lib/format';
+	import type { RankName } from '$lib/skyblock';
 
-	import Weight from '$comp/stats/player/weight.svelte';
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
-	import Skyblocklevel from './player/skyblocklevel.svelte';
+	import Weight from '$comp/stats/player/weight.svelte';
 	import type { components } from '$lib/api/api';
 	import type { ProfileDetails } from '$lib/api/elite';
 	import Badge from './badge.svelte';
+	import Skyblocklevel from './player/skyblocklevel.svelte';
 
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileDetails: ProfileDetails[];
@@ -35,7 +35,7 @@
 
 <section class="flex flex-col align-middle w-full mt-8 items-center">
 	<div class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-card p-4 md:p-8 mx-2 w-full max-w-7xl">
-		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-center">
+		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-start">
 			<img
 				class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
 				src={`https://mc-heads.net/body/${player?.uuid}`}
@@ -68,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-start items-center">
+		<div class="flex-1 flex gap-2 flex-col items-center justify-center md:justify-start md:items-start">
 			<Weight weightInfo={weightInfo ?? undefined} rank={weightRank} profiles={profilesData} />
 		</div>
 	</div>
