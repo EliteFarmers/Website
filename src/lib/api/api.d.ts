@@ -3247,6 +3247,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/{accountId}/entitlements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all entitlements for a user or guild */
+        get: {
+            parameters: {
+                query?: {
+                    target?: components["schemas"]["EntitlementTarget"];
+                };
+                header?: never;
+                path: {
+                    accountId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["EntitlementDto"][];
+                        "application/json": components["schemas"]["EntitlementDto"][];
+                        "text/json": components["schemas"]["EntitlementDto"][];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/{accountId}/entitlement/{productId}": {
         parameters: {
             query?: never;
@@ -3256,6 +3309,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Grant a test entitlement to a user or guild */
         post: {
             parameters: {
                 query?: {
@@ -3290,6 +3344,23 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/{accountId}/entitlement/{entitlementId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a test entitlement from a user or guild */
         delete: {
             parameters: {
                 query?: {
@@ -3298,7 +3369,7 @@ export interface paths {
                 header?: never;
                 path: {
                     accountId: number;
-                    productId: number;
+                    entitlementId: number;
                 };
                 cookie?: never;
             };
@@ -6914,7 +6985,9 @@ export interface paths {
         /** Get farming weight for all profiles of a player */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    collections?: boolean;
+                };
                 header?: never;
                 path: {
                     /** @description Player UUID */
@@ -6966,7 +7039,9 @@ export interface paths {
         /** Get farming weight for the selected profile of a player */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    collections?: boolean;
+                };
                 header?: never;
                 path: {
                     playerUuid: string;
@@ -7017,7 +7092,9 @@ export interface paths {
         /** Get farming weight for a specific profile of a player */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    collections?: boolean;
+                };
                 header?: never;
                 path: {
                     playerUuid: string;
@@ -7208,7 +7285,7 @@ export interface components {
             avatar?: string | null;
             settings?: components["schemas"]["UserSettingsDto"];
             /** @description Purchased entitlements from the Discord store */
-            entitlements?: components["schemas"]["UserEntitlementDto"][];
+            entitlements?: components["schemas"]["EntitlementDto"][];
             /** @description Linked Minecraft accounts */
             minecraftAccounts?: components["schemas"]["MinecraftAccountDetailsDto"][];
         };
@@ -7263,6 +7340,36 @@ export interface components {
             mythic?: number;
             /** Format: int32 */
             divine?: number;
+        };
+        ComposterDto: {
+            /** Format: double */
+            organic_matter?: number;
+            /** Format: double */
+            fuel_units?: number;
+            /** Format: int32 */
+            compost_units?: number;
+            /** Format: int32 */
+            compost_items?: number;
+            /** Format: int32 */
+            conversion_ticks?: number;
+            upgrades?: components["schemas"]["ComposterUpgrades"];
+            /**
+             * Format: int64
+             * @description Last save time in unix seconds
+             */
+            lastSave?: number;
+        };
+        ComposterUpgrades: {
+            /** Format: int32 */
+            speed?: number;
+            /** Format: int32 */
+            multi_drop?: number;
+            /** Format: int32 */
+            fuel_cap?: number;
+            /** Format: int32 */
+            organic_matter_cap?: number;
+            /** Format: int32 */
+            cost_reduction?: number;
         };
         ConfigLeaderboardSettings: {
             /** Format: int32 */
@@ -7551,6 +7658,28 @@ export interface components {
             /** Format: int32 */
             order?: number | null;
         };
+        EntitlementDto: {
+            /** @description Entitlement ID */
+            id: string;
+            type?: components["schemas"]["EntitlementType"];
+            target?: components["schemas"]["EntitlementTarget"];
+            /** @description SKU ID of the product */
+            productId: string;
+            product: components["schemas"]["ProductDto"];
+            deleted?: boolean;
+            /** @description Consumed status of the entitlement if applicable */
+            consumed?: boolean | null;
+            /**
+             * Format: date-time
+             * @description Start date of the entitlement
+             */
+            startDate?: string | null;
+            /**
+             * Format: date-time
+             * @description End date of the entitlement
+             */
+            endDate?: string | null;
+        };
         /**
          * Format: int32
          * @enum {integer}
@@ -7691,6 +7820,9 @@ export interface components {
         FarmingWeightDto: {
             /** Format: double */
             totalWeight?: number;
+            crops?: {
+                [key: string]: (number | null) | undefined;
+            } | null;
             cropWeight?: {
                 [key: string]: number | undefined;
             };
@@ -7708,6 +7840,9 @@ export interface components {
             profileName: string;
             /** Format: double */
             totalWeight?: number;
+            crops?: {
+                [key: string]: (number | null) | undefined;
+            } | null;
             cropWeight?: {
                 [key: string]: number | undefined;
             };
@@ -7718,6 +7853,36 @@ export interface components {
                 [key: string]: number | undefined;
             };
             pests?: components["schemas"]["PestsDto"];
+        };
+        GardenDto: {
+            /** @description Profile ID */
+            profileId: string;
+            /**
+             * Format: int32
+             * @description Garden experience
+             */
+            experience?: number;
+            /**
+             * Format: int32
+             * @description Total completed visitors
+             */
+            completedVisitors?: number;
+            /**
+             * Format: int32
+             * @description Unique visitors unlocked
+             */
+            uniqueVisitors?: number;
+            crops?: components["schemas"]["StringCropSettings"];
+            cropUpgrades?: components["schemas"]["Int32CropSettings"];
+            /** @description List of unlocked plots */
+            plots?: string[];
+            composter?: components["schemas"]["ComposterDto"];
+            /** @description Visitor data */
+            visitors?: {
+                [key: string]: components["schemas"]["VisitorDto"] | undefined;
+            };
+            /** @description Last save time in unix seconds */
+            lastSave?: string;
         };
         GuildChannelDto: {
             id: string;
@@ -7833,6 +7998,28 @@ export interface components {
             name: string;
             /** Format: int32 */
             position?: number;
+        };
+        Int32CropSettings: {
+            /** Format: int32 */
+            cactus?: number;
+            /** Format: int32 */
+            carrot?: number;
+            /** Format: int32 */
+            potato?: number;
+            /** Format: int32 */
+            wheat?: number;
+            /** Format: int32 */
+            melon?: number;
+            /** Format: int32 */
+            pumpkin?: number;
+            /** Format: int32 */
+            mushroom?: number;
+            /** Format: int32 */
+            cocoaBeans?: number;
+            /** Format: int32 */
+            sugarCane?: number;
+            /** Format: int32 */
+            netherWart?: number;
         };
         ItemDto: {
             /** Format: int32 */
@@ -8212,6 +8399,7 @@ export interface components {
             unparsed?: components["schemas"]["UnparsedApiDataDto"];
             jacob: components["schemas"]["JacobDataDto"];
             farmingWeight: components["schemas"]["FarmingWeightDto"];
+            garden?: components["schemas"]["GardenDto"];
             skills?: components["schemas"]["SkillsDto"];
             chocolateFactory?: components["schemas"]["ChocolateFactoryDto"];
             events?: components["schemas"]["ProfileEventMemberDto"][];
@@ -8363,6 +8551,14 @@ export interface components {
             maxJacobLeaderboards?: number | null;
         };
         UnparsedApiDataDto: {
+            /** Format: int32 */
+            copper?: number;
+            consumed?: {
+                [key: string]: number | undefined;
+            };
+            levelCaps?: {
+                [key: string]: number | undefined;
+            };
             perks?: {
                 [key: string]: (number | null) | undefined;
             } | null;
@@ -8406,34 +8602,18 @@ export interface components {
             /** Format: int32 */
             order?: number;
         };
-        UserEntitlementDto: {
-            /** @description Entitlement ID */
-            id: string;
-            type?: components["schemas"]["EntitlementType"];
-            target?: components["schemas"]["EntitlementTarget"];
-            /** @description SKU ID of the product */
-            productId: string;
-            product: components["schemas"]["ProductDto"];
-            deleted?: boolean;
-            /** @description Consumed status of the entitlement if applicable */
-            consumed?: boolean | null;
-            /**
-             * Format: date-time
-             * @description Start date of the entitlement
-             */
-            startDate?: string | null;
-            /**
-             * Format: date-time
-             * @description End date of the entitlement
-             */
-            endDate?: string | null;
-        };
         UserSettingsDto: {
             features?: components["schemas"]["ConfiguredProductFeaturesDto"];
         };
         VerifiedRoleFeature: {
             enabled?: boolean;
             autoRoles?: components["schemas"]["AutoRoles"][];
+        };
+        VisitorDto: {
+            /** Format: int32 */
+            visits?: number;
+            /** Format: int32 */
+            accepted?: number;
         };
         WeightEventData: {
             /** @description The weights of each crop in the event */

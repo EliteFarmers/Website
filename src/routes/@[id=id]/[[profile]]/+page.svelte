@@ -101,7 +101,11 @@
 {#if showSkills}
 	<div class="flex justify-center w-full mb-4 -mt-8" transition:slide={{ duration: 1000, easing: quadInOut }}>
 		<div class="block w-[90%] mb-4">
-			<Skills skills={member.skills} skillRanks={data.ranks?.skills} />
+			<Skills
+				skills={member.skills}
+				skillRanks={data.ranks?.skills}
+				levelCaps={data.member.unparsed?.levelCaps}
+			/>
 		</div>
 	</div>
 {/if}
