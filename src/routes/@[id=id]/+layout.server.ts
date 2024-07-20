@@ -1,8 +1,33 @@
 import { GetAccount, GetProfileMember, type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
+import { RateLimiter } from 'sveltekit-rate-limiter/server';
+import { dev } from '$app/environment';
 
-export const load: LayoutServerLoad = async ({ params }) => {
+const limiter = new RateLimiter({
+	IP: [+RATE_LIMIT_IP, '10m'],
+	IPUA: [+RATE_LIMIT_IPUA, '10m'],
+	cookie: {
+		name: 'profile_rate_limit',
+		secret: RATE_LIMIT_SECRET,
+		rate: [+RATE_LIMIT_PROFILE, '10s'],
+		preflight: true,
+	},
+});
+
+export const load: LayoutServerLoad = async (event) => {
+	const { params } = event;
+
+	if (!dev) {
+		await limiter.cookieLimiter?.preflight(event);
+
+		const limited = await limiter.isLimited(event);
+		if (limited) {
+			throw error(429, 'Too Many Requests');
+		}
+	}
+
 	const { id, profile } = params;
 
 	const { data: account } = await GetAccount(id).catch(() => ({ data: undefined }));
