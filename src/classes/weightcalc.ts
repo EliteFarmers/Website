@@ -30,7 +30,7 @@ export interface FarmingWeightInfo {
 		collected: number;
 		claimed_position?: number;
 		claimed_participants?: number;
-		claimed_medal?: 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
+		claimed_medal?: 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | string;
 	}[];
 	pests?: Record<string, number>;
 }
@@ -60,6 +60,7 @@ class FarmingWeight {
 		this.bonusSources = {} as Record<string, number>;
 		this.uncountedCrops = {} as Record<Crop, number>;
 
+		this.setContests(info?.contests ?? []);
 		this.calcUncountedCrops(info?.pests ?? {});
 		this.setCropsFromCollections(info?.collection ?? {});
 		this.addMinions(info?.minions ?? []);
@@ -132,14 +133,15 @@ class FarmingWeight {
 			if (!medal) continue;
 
 			if (medal === 'diamond') {
-				this.earnedMedals.diamond += contest.collected;
+				this.earnedMedals.diamond++;
 			} else if (medal === 'platinum') {
-				this.earnedMedals.platinum += contest.collected;
+				this.earnedMedals.platinum++;
 			} else if (medal === 'gold') {
-				this.earnedMedals.gold += contest.collected;
+				this.earnedMedals.gold++;
 			}
 		}
 
+		this.getBonusWeights();
 		return this;
 	};
 

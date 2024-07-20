@@ -226,6 +226,12 @@ export class FarmingTool {
 		return this.counter ?? this.cultivating ?? 0;
 	}
 
+	isUsed(): boolean {
+		if (this.farmed > 0) return true;
+		if (this.getCultivatingLevel() > 0) return true;
+		return false;
+	}
+
 	isMissingDedication() {
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
 	}

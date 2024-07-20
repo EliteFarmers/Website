@@ -18,6 +18,7 @@ export interface CropInfo {
 	drops: number;
 	breaks?: number;
 	replenish?: boolean;
+	exportable?: boolean;
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -32,12 +33,14 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 3,
 		drops: 3,
 		replenish: true,
+		exportable: true,
 	},
 	[Crop.CocoaBeans]: {
 		name: 'Cocoa Beans',
 		npc: 3,
 		drops: 3,
 		replenish: true,
+		exportable: true,
 	},
 	[Crop.Melon]: {
 		name: 'Melon',
@@ -65,6 +68,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Pumpkin',
 		npc: 10,
 		drops: 1,
+		exportable: true,
 	},
 	[Crop.SugarCane]: {
 		name: 'Sugar Cane',
@@ -76,6 +80,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Wheat',
 		npc: 6,
 		drops: 1,
+		exportable: true,
 	},
 	[Crop.Seeds]: {
 		name: 'Seeds',

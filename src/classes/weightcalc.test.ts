@@ -64,6 +64,66 @@ test('Pest debuff weight calculation', () => {
 	expect(weight.getWeightInfo().cropWeight).toBeCloseTo(weightExpected.getWeightInfo().cropWeight);
 });
 
+test('Contest medals calculation', () => {
+	const rawContests = {
+		'350:12_9:POTATO_ITEM': {
+			collected: 1290423,
+			claimed_medal: 'diamond',
+			claimed_participants: 1472,
+			claimed_position: 19,
+			claimed_rewards: true,
+		},
+		'350:12_9:WHEAT': { collected: 19440 },
+		'351:4_17:WHEAT': {
+			collected: 77695,
+			claimed_medal: 'silver',
+			claimed_participants: 2255,
+			claimed_position: 525,
+			claimed_rewards: true,
+		},
+		'351:4_17:MUSHROOM_COLLECTION': { collected: 507 },
+		'351:7_20:SUGAR_CANE': {
+			collected: 22883,
+			claimed_medal: 'bronze',
+			claimed_participants: 1152,
+			claimed_position: 467,
+			claimed_rewards: true,
+		},
+		'352:4_11:MUSHROOM_COLLECTION': { collected: 62 },
+		'352:4_17:INK_SACK:3': {
+			collected: 44502,
+			claimed_medal: 'silver',
+			claimed_participants: 988,
+			claimed_position: 225,
+			claimed_rewards: true,
+		},
+		'352:4_17:MUSHROOM_COLLECTION': { collected: 5608 },
+		'352:4_17:SUGAR_CANE': { collected: 2240 },
+		'352:4_26:WHEAT': {
+			collected: 358095,
+			claimed_medal: 'platinum',
+			claimed_participants: 1349,
+			claimed_position: 49,
+			claimed_rewards: true,
+		},
+	};
+
+	const weight = createFarmingWeightCalculator({
+		collection: crops,
+		pests: pests,
+		farmingXp: 286958923.31966937,
+		levelCapUpgrade: 10,
+		anitaBonusFarmingFortuneLevel: 15,
+		contests: Object.values(rawContests),
+	});
+
+	const bonus = weight.getBonusWeights();
+
+	expect(weight.earnedMedals.diamond).toBe(1);
+	expect(weight.earnedMedals.platinum).toBe(1);
+	expect(bonus['Contest Medals']).toBe(0.75 + 0.5);
+});
+
 test('Full weight calculation', () => {
 	const crops = {
 		[Crop.Cactus]: 1219395,

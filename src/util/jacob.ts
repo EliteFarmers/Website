@@ -5,7 +5,7 @@ export interface RawJacobContest {
 	claimed_rewards?: boolean;
 	claimed_position?: number;
 	claimed_participants?: number;
-	claimed_medal?: JacobContestMedal;
+	claimed_medal?: JacobContestMedal | string;
 }
 
 export interface JacobContest {
@@ -28,7 +28,7 @@ export function formatJacobContests(contests: RawJacobContest[]): JacobContest[]
 
 export function calculateJacobContestMedal(contest: RawJacobContest): JacobContestMedal | undefined {
 	if (contest.claimed_medal) {
-		return contest.claimed_medal;
+		return contest.claimed_medal as JacobContestMedal;
 	}
 
 	const { claimed_position: position, claimed_participants: participants } = contest;

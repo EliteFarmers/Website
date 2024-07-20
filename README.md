@@ -23,8 +23,8 @@ const calculator = CreateFarmingWeightCalculator({
 	levelCapUpgrade: member.jacobs_contest?.perks?.farming_level_cap,
 	anitaBonusFarmingFortuneLevel?: member.jacobs_contest?.perks?.double_drops,
 	minions: member.player_data?.crafted_generators, // You should also include minions crafted from other members on the same profile
-	contests: member.jacob_contest?.contests,
-	pests: member.bestiary
+	contests: Object.values(member.jacob_contests?.contests ?? {}),
+	pests: member.bestiary.kills
 })
 
 // Can pass in some values instead of calculating them (you can exclude contests above if you do this)
