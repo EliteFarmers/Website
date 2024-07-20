@@ -5,6 +5,7 @@ import { writable, type Writable } from 'svelte/store';
 
 interface RatesData {
 	v: number;
+	settings: boolean;
 	tool?: FarmingTool;
 	communityCenter: number;
 	selectedPet?: string;
@@ -15,6 +16,7 @@ interface RatesData {
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
 	v: 1,
+	settings: true,
 	communityCenter: 0,
 	strength: 0,
 	exported: {
@@ -29,7 +31,7 @@ const defaultData = {
 		[Crop.SugarCane]: false,
 		[Crop.Wheat]: false,
 	} as Record<Crop, boolean>,
-} satisfies RatesData;
+} as RatesData;
 
 export function initRatesData(data = defaultData) {
 	if (browser) {
@@ -59,7 +61,7 @@ export function getRatesData() {
 			rates = defaultData;
 		}
 
-		return rates;	
+		return rates;
 	});
 
 	if (store) return store;
