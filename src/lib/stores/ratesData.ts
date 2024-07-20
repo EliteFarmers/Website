@@ -1,27 +1,34 @@
 import { browser } from '$app/environment';
-import type { Crop, FarmingTool } from 'farming-weight';
+import { Crop, type FarmingTool } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 
 interface RatesData {
-	milestones: Record<Crop, number>;
-	cropUpgrades: Record<Crop, number>;
+	v: number;
 	tool?: FarmingTool;
-	gardenLevel: number;
-	plotsUnlocked: number;
 	communityCenter: number;
 	selectedPet?: string;
 	strength: number;
+	exported: Record<Crop, boolean>;
 }
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	milestones: {} as Record<Crop, number>,
-	cropUpgrades: {} as Record<Crop, number>,
-	gardenLevel: 0,
-	plotsUnlocked: 24,
+	v: 1,
 	communityCenter: 0,
 	strength: 0,
+	exported: {
+		[Crop.Cactus]: false,
+		[Crop.Carrot]: false,
+		[Crop.CocoaBeans]: false,
+		[Crop.Melon]: false,
+		[Crop.Mushroom]: false,
+		[Crop.NetherWart]: false,
+		[Crop.Potato]: false,
+		[Crop.Pumpkin]: false,
+		[Crop.SugarCane]: false,
+		[Crop.Wheat]: false,
+	} as Record<Crop, boolean>,
 } satisfies RatesData;
 
 export function initRatesData(data = defaultData) {
@@ -46,6 +53,15 @@ export function initRatesData(data = defaultData) {
 
 export function getRatesData() {
 	const store = getContext<Writable<RatesData>>('ratesData');
+
+	store.update((rates) => {
+		if (!rates || rates.v !== defaultData.v) {
+			rates = defaultData;
+		}
+
+		return rates;	
+	});
+
 	if (store) return store;
 
 	initRatesData();

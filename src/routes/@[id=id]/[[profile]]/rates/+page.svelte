@@ -8,8 +8,14 @@
 		FarmingTool,
 		LotusGear,
 		FarmingPets,
-		type PlayerOptions,
 		ArmorSet,
+		type EliteItemDto,
+		type PlayerOptions,
+		getGardenLevel,
+		getCropMilestoneLevels,
+		getCropUpgrades,
+		getCropInfo,
+		type ExtraFarmingFortune,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
@@ -33,6 +39,7 @@
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 
 	import type { PageData } from './$types';
+	import { Switch } from '$comp/ui/switch';
 
 	export let data: PageData;
 
@@ -42,10 +49,10 @@
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 
-	$: tools = FarmingTool.fromArray(data.member?.farmingWeight?.inventory?.tools ?? []);
-	$: armor = FarmingArmor.fromArray(data.member?.farmingWeight?.inventory?.armor ?? []);
+	$: tools = FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]);
+	$: armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
 	$: armorSet = new ArmorSet(armor);
-	$: equipment = LotusGear.fromArray(data.member?.farmingWeight?.inventory?.equipment ?? []);
+	$: equipment = LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]);
 	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
 
 	// Deselect pet if it's not on this player
@@ -61,12 +68,21 @@
 
 	$: selectedPet = undefined as FarmingPet | undefined;
 	$: selectedTool = undefined as FarmingTool | undefined;
+	$: extra = [
+		...Object.entries($ratesData.exported)
+			.filter(([, b]) => b)
+			.map(([crop, bool]) => ({
+				crop: crop as Crop,
+				name: 'Carrolyn Fortune',
+				fortune: bool ? 12 : 0,
+			}))
+	] as ExtraFarmingFortune[];
 
 	$: options = {
 		tools: tools,
 		armor: armorSet,
 		equipment: equipment,
-		accessories: data.member?.farmingWeight?.inventory?.accessories ?? [],
+		accessories: (data.member?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
 		pets: pets,
 
 		selectedTool: selectedTool,
@@ -74,10 +90,10 @@
 
 		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
 		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
-		milestones: $ratesData.milestones,
-		cropUpgrades: $ratesData.cropUpgrades as Record<string, number>,
-		plotsUnlocked: $ratesData.plotsUnlocked,
-		gardenLevel: $ratesData.gardenLevel,
+		milestones: getCropMilestoneLevels(data.member?.garden?.crops ?? {}),
+		cropUpgrades: getCropUpgrades(data.member?.garden?.cropUpgrades ?? {}),
+		plotsUnlocked: data.member.garden?.plots?.length ?? 0,
+		gardenLevel: getGardenLevel(data.member.garden?.experience ?? 0).level,
 		communityCenter: $ratesData.communityCenter,
 		strength: $ratesData.strength,
 
@@ -88,6 +104,8 @@
 			data.member?.skills?.farming ?? 0,
 			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
+
+		extraFortune: extra
 	} satisfies PlayerOptions;
 
 	$: player = getRatesPlayer(options);
@@ -102,6 +120,7 @@
 	});
 
 	$: selectedCrop = Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '';
+	$: selectedCropKey = cropKey(selectedCrop);
 	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
 
 	$: delayedUpdateSelectedTool(selectedCrop);
@@ -155,13 +174,13 @@
 
 			{#if optionsShown}
 				<div class="flex flex-1 flex-col gap-2 w-full">
-					<Label class="flex-1">
+					<!-- <Label class="flex-1">
 						Unlocked Plots
 						<div class="flex flex-row gap-1 items-center">
 							<SliderSimple min={0} max={24} bind:value={$ratesData.plotsUnlocked} step={1} />
-							<p class="text-lg p-2 w-12">{$ratesData.plotsUnlocked}</p>
+							<p class="text-lg p-2 w-12">{options.plotsUnlocked}</p>
 						</div>
-					</Label>
+					</Label> -->
 					<Label class="flex-1">
 						Community Center Upgrade
 						<div class="flex flex-row gap-1 items-center">
@@ -169,13 +188,13 @@
 							<p class="text-lg p-2 w-12">{$ratesData.communityCenter}</p>
 						</div>
 					</Label>
-					<Label class="flex-1">
+					<!-- <Label class="flex-1">
 						Garden Level
 						<div class="flex flex-row gap-1 items-center">
 							<SliderSimple min={0} max={15} bind:value={$ratesData.gardenLevel} step={1} />
 							<p class="text-lg p-2 w-12">{$ratesData.gardenLevel}</p>
 						</div>
-					</Label>
+					</Label> -->
 					<Label class="flex-1">
 						Strength
 						<div class="flex flex-row gap-1 items-center">
@@ -192,41 +211,35 @@
 
 					<Fortunebreakdown
 						title="{selectedCrop} Fortune"
-						total={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).fortune}
-						breakdown={$player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat).breakdown}
+						total={$player.getCropFortune(selectedCropKey).fortune}
+						breakdown={$player.getCropFortune(selectedCropKey).breakdown}
 					/>
 				</div>
-				<div class="flex flex-row items-center gap-2 md:gap-4 w-full max-w-lg">
-					<img
-						src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
-						alt={selectedCrop}
-						class="w-12 h-12 pixelated m-1 p-1"
-					/>
-					<div class="flex flex-1 flex-col gap-2">
-						<Label class="flex-1">
-							Garden Milestone
-							<div class="flex flex-row gap-1 items-center">
-								<SliderSimple
-									min={0}
-									max={46}
-									bind:value={$ratesData.milestones[cropKey(selectedCrop)]}
-									step={1}
-								/>
-								<p class="text-lg p-2 w-6">{$ratesData.milestones[cropKey(selectedCrop)] ?? 0}</p>
+				<div class="flex flex-row items-center justify-center gap-2 md:gap-4 w-full max-w-lg">					
+					<div class="flex flex-1 flex-row gap-4 justify-center">
+						<img
+							src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
+							alt={selectedCrop}
+							class="w-12 h-12 pixelated m-1 p-1"
+						/>
+						<div class="flex flex-col items-center gap-2">
+							<p class="text-md">Garden Milestone</p>
+							<p class="text-lg font-semibold">
+								{options.milestones[selectedCropKey] ?? 0}
+							</p>
+						</div>
+						<div class="flex flex-col items-center gap-2">
+							<p class="text-md">Crop Upgrade</p>
+							<p class="text-lg font-semibold">
+								{options.cropUpgrades[selectedCropKey] ?? 0}
+							</p>
+						</div>
+						{#if getCropInfo(selectedCropKey).exportable}
+							<div class="flex flex-col items-center gap-2">
+								<p class="text-md">Carrolyn Fortune (+12)</p>
+								<Switch bind:checked={$ratesData.exported[selectedCropKey]} />
 							</div>
-						</Label>
-						<Label class="flex-1">
-							Crop Upgrade
-							<div class="flex flex-row gap-1 items-center">
-								<SliderSimple
-									min={0}
-									max={9}
-									bind:value={$ratesData.cropUpgrades[cropKey(selectedCrop)]}
-									step={1}
-								/>
-								<p class="text-lg p-2 w-6">{$ratesData.cropUpgrades[cropKey(selectedCrop)] ?? 0}</p>
-							</div>
-						</Label>
+						{/if}
 					</div>
 				</div>
 			{:else}
