@@ -172,13 +172,13 @@ export const actions: Actions = {
 			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
 		};
 
-		const style = data.get('style')?.toString() ?? '';
-		if (style) {
+		const style = data.get('style')?.toString() ?? undefined;
+		if (style !== undefined) {
 			body.features.weightStyle = style;
 		}
 
-		const embed = data.get('embed')?.toString() ?? '';
-		if (embed) {
+		const embed = data.get('embed')?.toString() ?? undefined;
+		if (embed !== undefined) {
 			body.features.embedColor = embed;
 		}
 
