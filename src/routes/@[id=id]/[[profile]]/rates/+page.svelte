@@ -18,6 +18,7 @@
 		type ExtraFarmingFortune,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer';
@@ -26,6 +27,8 @@
 	import { Label } from '$ui/label';
 	import { Button } from '$ui/button';
 	import { SliderSimple } from '$ui/slider';
+	import { Switch } from '$ui/switch';
+	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
 	import Settings from 'lucide-svelte/icons/settings';
 
@@ -36,14 +39,7 @@
 	import Lotusgear from '$comp/rates/lotusgear.svelte';
 	import Toolconfig from '$comp/rates/toolconfig.svelte';
 
-	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-
 	import type { PageData } from './$types';
-	import { Switch } from '$comp/ui/switch';
-	import { slide } from 'svelte/transition';
-	import Input from '$comp/ui/input/input.svelte';
-	import { NumberInput } from '$comp/ui/number-input';
-
 	export let data: PageData;
 
 	let blocksBroken = 24_000 * 3;
