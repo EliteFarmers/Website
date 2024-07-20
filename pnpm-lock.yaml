@@ -157,6 +157,9 @@ devDependencies:
   svelte-preprocess:
     specifier: ^5.1.4
     version: 5.1.4(postcss@8.4.38)(svelte@4.2.15)(typescript@5.4.5)
+  sveltekit-rate-limiter:
+    specifier: ^0.5.2
+    version: 0.5.2(@sveltejs/kit@2.5.7)
   sveltekit-superforms:
     specifier: ^1.13.4
     version: 1.13.4(@sveltejs/kit@2.5.7)(svelte@4.2.15)(zod@3.23.4)
@@ -473,6 +476,11 @@ packages:
       strip-ansi-cjs: /strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: /wrap-ansi@7.0.0
+
+  /@isaacs/ttlcache@1.4.1:
+    resolution: {integrity: sha512-RQgQ4uQ+pLbqXfOmieB91ejmLwvSgv9nLx6sT6sD83s7umBypgg+OIBOBbEUiJXrfpnp9j0mRhYYdzp9uqq3lA==}
+    engines: {node: '>=12'}
+    dev: true
 
   /@jridgewell/gen-mapping@0.3.5:
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
@@ -4022,6 +4030,15 @@ packages:
       locate-character: 3.0.0
       magic-string: 0.30.10
       periscopic: 3.1.0
+
+  /sveltekit-rate-limiter@0.5.2(@sveltejs/kit@2.5.7):
+    resolution: {integrity: sha512-7CELKmTffNjj0i/RUxT9SKYFA9IO/tQabjgT39clOlkKvlcGozNy8nqoIx+24amWfqEqC/WXYMEIek04PiFdyA==}
+    peerDependencies:
+      '@sveltejs/kit': 1.x || 2.x
+    dependencies:
+      '@isaacs/ttlcache': 1.4.1
+      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.15)(vite@5.2.10)
+    dev: true
 
   /sveltekit-superforms@1.13.4(@sveltejs/kit@2.5.7)(svelte@4.2.15)(zod@3.23.4):
     resolution: {integrity: sha512-rM2+Ictaw7OAIorCLmvg82orci/mtO9ZouI4emtx8SyYngx9aED+eNZlHPLufgB6D7geL2a+hMSFtM3zmMQixQ==}
