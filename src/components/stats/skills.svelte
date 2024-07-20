@@ -5,13 +5,18 @@
 
 	export let skills: components['schemas']['ProfileMemberDto']['skills'];
 	export let skillRanks: components['schemas']['LeaderboardPositionsDto']['skills'];
+	export let levelCaps: Record<string, number | undefined> | undefined = undefined;
 </script>
 
 <section id="Skills" class="md:flex justify-center align-middle mb-8">
 	<div class="md:w-[40%]">
 		<Skillbar name="Combat" rank={skillRanks?.combat} progress={getLevelProgress('combat', skills?.combat ?? 0)} />
 		<Skillbar name="Mining" rank={skillRanks?.mining} progress={getLevelProgress('mining', skills?.mining ?? 0)} />
-		<Skillbar name="Taming" rank={skillRanks?.taming} progress={getLevelProgress('taming', skills?.taming ?? 0)} />
+		<Skillbar
+			name="Taming"
+			rank={skillRanks?.taming}
+			progress={getLevelProgress('taming', skills?.taming ?? 0, 50 + (levelCaps?.taming ?? 0))}
+		/>
 		<Skillbar
 			name="Alchemy"
 			rank={skillRanks?.alchemy}

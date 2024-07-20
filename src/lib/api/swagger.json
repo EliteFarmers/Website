@@ -4610,24 +4610,17 @@
         }
       }
     },
-    "/account/{accountId}/entitlement/{productId}": {
-      "post": {
+    "/account/{accountId}/entitlements": {
+      "get": {
         "tags": [
           "Entitlement"
         ],
+        "summary": "Get all entitlements for a user or guild",
         "parameters": [
           {
             "name": "accountId",
             "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "productId",
-            "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4637,6 +4630,101 @@
           {
             "name": "target",
             "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/EntitlementTarget"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntitlementDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntitlementDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntitlementDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/account/{accountId}/entitlement/{productId}": {
+      "post": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Grant a test entitlement to a user or guild",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "description": "",
             "schema": {
               "$ref": "#/components/schemas/EntitlementTarget"
             }
@@ -4672,15 +4760,19 @@
             "Bearer": [ ]
           }
         ]
-      },
+      }
+    },
+    "/account/{accountId}/entitlement/{entitlementId}": {
       "delete": {
         "tags": [
           "Entitlement"
         ],
+        "summary": "Remove a test entitlement from a user or guild",
         "parameters": [
           {
             "name": "accountId",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4688,8 +4780,9 @@
             }
           },
           {
-            "name": "productId",
+            "name": "entitlementId",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4699,6 +4792,7 @@
           {
             "name": "target",
             "in": "query",
+            "description": "",
             "schema": {
               "$ref": "#/components/schemas/EntitlementTarget"
             }
@@ -9992,6 +10086,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "collections",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -10052,6 +10155,15 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "collections",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -10122,6 +10234,15 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "collections",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -10443,7 +10564,7 @@
           "entitlements": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UserEntitlementDto"
+              "$ref": "#/components/schemas/EntitlementDto"
             },
             "description": "Purchased entitlements from the Discord store"
           },
@@ -10594,6 +10715,66 @@
             "format": "int32"
           },
           "divine": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ComposterDto": {
+        "type": "object",
+        "properties": {
+          "organic_matter": {
+            "type": "number",
+            "format": "double"
+          },
+          "fuel_units": {
+            "type": "number",
+            "format": "double"
+          },
+          "compost_units": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "compost_items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conversion_ticks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upgrades": {
+            "$ref": "#/components/schemas/ComposterUpgrades"
+          },
+          "lastSave": {
+            "type": "integer",
+            "description": "Last save time in unix seconds",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ComposterUpgrades": {
+        "type": "object",
+        "properties": {
+          "speed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "multi_drop": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fuel_cap": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "organic_matter_cap": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cost_reduction": {
             "type": "integer",
             "format": "int32"
           }
@@ -11375,6 +11556,56 @@
         },
         "additionalProperties": false
       },
+      "EntitlementDto": {
+        "required": [
+          "id",
+          "product",
+          "productId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Entitlement ID"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EntitlementType"
+          },
+          "target": {
+            "$ref": "#/components/schemas/EntitlementTarget"
+          },
+          "productId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "SKU ID of the product"
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductDto"
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "consumed": {
+            "type": "boolean",
+            "description": "Consumed status of the entitlement if applicable",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the entitlement",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of the entitlement",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "EntitlementTarget": {
         "enum": [
           0,
@@ -11800,6 +12031,15 @@
             "type": "number",
             "format": "double"
           },
+          "crops": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "nullable": true
+          },
           "cropWeight": {
             "type": "object",
             "additionalProperties": {
@@ -11849,6 +12089,15 @@
             "type": "number",
             "format": "double"
           },
+          "crops": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64",
+              "nullable": true
+            },
+            "nullable": true
+          },
           "cropWeight": {
             "type": "object",
             "additionalProperties": {
@@ -11872,6 +12121,62 @@
           },
           "pests": {
             "$ref": "#/components/schemas/PestsDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GardenDto": {
+        "required": [
+          "profileId"
+        ],
+        "type": "object",
+        "properties": {
+          "profileId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Profile ID"
+          },
+          "experience": {
+            "type": "integer",
+            "description": "Garden experience",
+            "format": "int32"
+          },
+          "completedVisitors": {
+            "type": "integer",
+            "description": "Total completed visitors",
+            "format": "int32"
+          },
+          "uniqueVisitors": {
+            "type": "integer",
+            "description": "Unique visitors unlocked",
+            "format": "int32"
+          },
+          "crops": {
+            "$ref": "#/components/schemas/StringCropSettings"
+          },
+          "cropUpgrades": {
+            "$ref": "#/components/schemas/Int32CropSettings"
+          },
+          "plots": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of unlocked plots"
+          },
+          "composter": {
+            "$ref": "#/components/schemas/ComposterDto"
+          },
+          "visitors": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/VisitorDto"
+            },
+            "description": "Visitor data"
+          },
+          "lastSave": {
+            "type": "string",
+            "description": "Last save time in unix seconds"
           }
         },
         "additionalProperties": false
@@ -12309,6 +12614,52 @@
             "type": "string"
           },
           "position": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Int32CropSettings": {
+        "type": "object",
+        "properties": {
+          "cactus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "carrot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "potato": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wheat": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "melon": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pumpkin": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mushroom": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cocoaBeans": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sugarCane": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "netherWart": {
             "type": "integer",
             "format": "int32"
           }
@@ -13429,6 +13780,9 @@
           "farmingWeight": {
             "$ref": "#/components/schemas/FarmingWeightDto"
           },
+          "garden": {
+            "$ref": "#/components/schemas/GardenDto"
+          },
           "skills": {
             "$ref": "#/components/schemas/SkillsDto"
           },
@@ -13834,7 +14188,6 @@
             "nullable": true
           },
           "embedColors": {
-            "maxItems": 6,
             "type": "array",
             "items": {
               "type": "string"
@@ -13870,6 +14223,24 @@
       "UnparsedApiDataDto": {
         "type": "object",
         "properties": {
+          "copper": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "consumed": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "levelCaps": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "perks": {
             "type": "object",
             "additionalProperties": {
@@ -14027,56 +14398,6 @@
         },
         "additionalProperties": false
       },
-      "UserEntitlementDto": {
-        "required": [
-          "id",
-          "product",
-          "productId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "minLength": 1,
-            "type": "string",
-            "description": "Entitlement ID"
-          },
-          "type": {
-            "$ref": "#/components/schemas/EntitlementType"
-          },
-          "target": {
-            "$ref": "#/components/schemas/EntitlementTarget"
-          },
-          "productId": {
-            "minLength": 1,
-            "type": "string",
-            "description": "SKU ID of the product"
-          },
-          "product": {
-            "$ref": "#/components/schemas/ProductDto"
-          },
-          "deleted": {
-            "type": "boolean"
-          },
-          "consumed": {
-            "type": "boolean",
-            "description": "Consumed status of the entitlement if applicable",
-            "nullable": true
-          },
-          "startDate": {
-            "type": "string",
-            "description": "Start date of the entitlement",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endDate": {
-            "type": "string",
-            "description": "End date of the entitlement",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UserSettingsDto": {
         "type": "object",
         "properties": {
@@ -14097,6 +14418,20 @@
             "items": {
               "$ref": "#/components/schemas/AutoRoles"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VisitorDto": {
+        "type": "object",
+        "properties": {
+          "visits": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "accepted": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
