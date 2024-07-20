@@ -6,8 +6,8 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import { dev } from '$app/environment';
 
 const limiter = new RateLimiter({
-	IP: [+RATE_LIMIT_IP, 'h'],
-	IPUA: [+RATE_LIMIT_IPUA, 'h'],
+	IP: [+RATE_LIMIT_IP, '10m'],
+	IPUA: [+RATE_LIMIT_IPUA, '10m'],
 	cookie: {
 		name: 'profile_rate_limit',
 		secret: RATE_LIMIT_SECRET,
