@@ -6,8 +6,8 @@
 		"target": "ESNext",
 		"moduleDetection": "force",
 		"moduleResolution": "Node",
-		// "module": "CommonJS",
-		"module": "ESNext", // For easier local development
+		"module": "CommonJS",
+		// "module": "ESNext", // For easier local development
 		
 		"rootDir": "./src",
 		"outDir": "./dist",
