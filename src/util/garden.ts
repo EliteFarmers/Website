@@ -8,6 +8,7 @@ export interface LevelingStats {
 	progress: number;
 	goal?: number;
 	next?: number;
+	total: number;
 }
 
 /**
@@ -38,6 +39,7 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number):
 	const nextReq = expRequired[level];
 
 	return {
+		total: exp,
 		level: level,
 		ratio: maxed ? 1 : xp / (nextReq ?? xp),
 		progress: xp,
