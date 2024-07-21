@@ -1,5 +1,6 @@
 import { Crop } from "../constants/crops";
-import { CROP_MILESTONES, GARDEN_EXP_REQUIRED } from "../constants/garden";
+import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from "../constants/garden";
+import { Rarity } from "../constants/reforges";
 import { getCropFromName } from "./names";
 
 export interface LevelingStats {
@@ -91,4 +92,48 @@ export function getCropUpgrades(upgrades: Record<string, number>): Record<Crop, 
 	}
 
 	return cropUpgrades;
+}
+
+export function getGardenVisitor(visitor: string) {
+	return GARDEN_VISITORS[visitor];
+}
+
+export interface GardenVisitorStats {
+	visits: number;
+	accepted: number;
+}
+
+export interface GardenVisitorStatsWithName extends GardenVisitorStats {
+	name: string;
+	short?: string;
+	rarity: Rarity;
+}
+
+export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>) {
+	const groups = {} as Record<Rarity, GardenVisitorStatsWithName[]>;
+
+	for (const [ visitorId, stats ] of Object.entries(visitors)) {
+		const visitor = getGardenVisitor(visitorId);
+		if (!visitor) continue;
+
+		groups[visitor.rarity] ??= [];
+		groups[visitor.rarity].push({
+			...visitor,
+			...stats,
+		});
+	}
+
+	for (const group of Object.values(groups)) {
+		group.sort((a, b) => {
+			if (b.visits === a.visits) {
+				if (b.accepted === a.accepted) {
+					return a.name.localeCompare(b.name);
+				}
+				return b.accepted - a.accepted;
+			}
+			return b.visits - a.visits;
+		})
+	}
+
+	return groups;
 }

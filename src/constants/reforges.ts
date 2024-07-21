@@ -12,6 +12,24 @@ export enum Rarity {
 	Admin = 'Admin',
 }
 
+export const RARITY_VALUES = {
+	[Rarity.Common]: 1,
+	[Rarity.Uncommon]: 2,
+	[Rarity.Rare]: 3,
+	[Rarity.Epic]: 4,
+	[Rarity.Legendary]: 5,
+	[Rarity.Mythic]: 6,
+	[Rarity.Divine]: 7,
+	[Rarity.Special]: 8,
+	[Rarity.VerySpecial]: 9,
+	[Rarity.Ultimate]: 10,
+	[Rarity.Admin]: 11,
+}
+
+export function compareRarity(a: Rarity | string, b: Rarity | string) {
+	return RARITY_VALUES[a as Rarity] - RARITY_VALUES[b as Rarity];
+}
+
 export enum Stat {
 	Strength = 'Strength',
 	Health = 'Health',
