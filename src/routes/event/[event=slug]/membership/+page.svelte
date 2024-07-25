@@ -12,6 +12,7 @@
 	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash from 'lucide-svelte/icons/trash-2';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -46,35 +47,51 @@
 	$: profiles =
 		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? [];
 
+	$: picked1 = undefined as string | undefined;
+	$: picked2 = undefined as string | undefined;
+	$: picked3 = undefined as string | undefined;
+
 	$: name = '';
-	$: prettyName = '';
 	$: generateTeamName();
+
+	$: words = Array.from(
+		new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
+		(w) => ({ value: w.replaceAll(' ', '_'), label: w })
+	);
 
 	function generateTeamName() {
 		const firstWords = data.words?.first ?? [];
 		const secondWords = data.words?.second ?? [];
 		const thirdWords = data.words?.third ?? [];
 
-		const first = firstWords[Math.floor(Math.random() * firstWords.length)];
-		const second = secondWords[Math.floor(Math.random() * secondWords.length)];
-		const third = thirdWords[Math.floor(Math.random() * thirdWords.length)];
+		const first = firstWords[Math.floor(Math.random() * firstWords.length)].replaceAll(' ', '_');
+		const second = secondWords[Math.floor(Math.random() * secondWords.length)].replaceAll(' ', '_');
+		const third = thirdWords[Math.floor(Math.random() * thirdWords.length)].replaceAll(' ', '_');
 
 		if (Math.random() > 0.5) {
-			name = `${first}_${third}`;
-			prettyName = `${first} ${third}`;
+			picked1 = first;
+			picked3 = undefined;
 
 			if (Math.random() > 0.5) {
-				name = `${first}_${second}`;
-				prettyName = `${first} ${second}`;
+				picked2 = second;
+			} else {
+				picked2 = third;
 			}
 		} else {
-			name = `${first}_${second}_${third}`;
-			prettyName = `${first} ${second} ${third}`;
+			picked1 = first;
+			picked2 = second;
+			picked3 = third;
 		}
+
+		updateName();
 
 		if (name.length > 32) {
 			generateTeamName();
 		}
+	}
+
+	function updateName() {
+		name = (picked1 ?? '') + ' ' + (picked2 ?? '') + ' ' + (picked3 ?? '').trim();
 	}
 </script>
 
@@ -259,7 +276,7 @@
 								<div class="flex flex-row gap-4 items-center">
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 									{#if isOwner}
-										<form action="?/kickMember" method="post">
+										<form action="?/kickMember" method="post" use:enhance>
 											<input type="hidden" name="team" bind:value={ownTeamId} />
 											<input type="hidden" name="member" value={member.playerUuid} />
 											<Button
@@ -290,10 +307,35 @@
 							<p>Change the name of your team!</p>
 							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
 								<input type="hidden" name="name" value={name} hidden />
-								<Button variant="secondary" on:click={generateTeamName}>
-									<RefreshCcw />
-								</Button>
-								<p class="text-xl font-semibold">{prettyName}</p>
+								<div class="flex flex-col gap-2">
+									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
+									<div class="flex flex-row gap-1 max-w-sm">
+										<Button variant="secondary" on:click={generateTeamName}>
+											<RefreshCcw />
+										</Button>
+										<ComboBox
+											options={words}
+											bind:value={picked1}
+											exclude={[picked2, picked3]}
+											onChange={updateName}
+											placeholder="Select Word"
+										/>
+										<ComboBox
+											options={words}
+											bind:value={picked2}
+											exclude={[picked1, picked3]}
+											onChange={updateName}
+											placeholder="Select Word"
+										/>
+										<ComboBox
+											options={words}
+											bind:value={picked3}
+											exclude={[picked1, picked2]}
+											onChange={updateName}
+											placeholder="Select Word"
+										/>
+									</div>
+								</div>
 							</div>
 							<div class="flex flex-row gap-2">
 								<Button type="submit">Update Team Name</Button>
@@ -321,10 +363,36 @@
 						</p>
 						<div class="flex flex-row items-center gap-2 text-black dark:text-white">
 							<input type="hidden" name="name" value={name} hidden />
-							<Button variant="secondary" on:click={generateTeamName}>
-								<RefreshCcw />
-							</Button>
-							<p class="text-xl font-semibold">{prettyName}</p>
+
+							<div class="flex flex-col gap-2">
+								<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
+								<div class="flex flex-row gap-1 max-w-sm">
+									<Button variant="secondary" on:click={generateTeamName}>
+										<RefreshCcw />
+									</Button>
+									<ComboBox
+										options={words}
+										bind:value={picked1}
+										exclude={[picked2, picked3]}
+										onChange={updateName}
+										placeholder="Select Word"
+									/>
+									<ComboBox
+										options={words}
+										bind:value={picked2}
+										exclude={[picked1, picked3]}
+										onChange={updateName}
+										placeholder="Select Word"
+									/>
+									<ComboBox
+										options={words}
+										bind:value={picked3}
+										exclude={[picked1, picked2]}
+										onChange={updateName}
+										placeholder="Select Word"
+									/>
+								</div>
+							</div>
 						</div>
 						<Button type="submit" disabled={!data.member}>Create Team</Button>
 					</form>

@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import type { components } from '$lib/api/api';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let contests: components['schemas']['JacobDataDto']['contests'];
 
@@ -39,10 +38,7 @@
 				data-sveltekit-preload-data="off"
 				class="p-2 flex flex-row items-center justify-center hover:shadow-lg hover:bg-muted gap-0.5 rounded-md bg-primary-foreground border-l-4 dark:border-zinc-700"
 			>
-				<h3 class="text-lg font-semibold flex flex-row items-center gap-2">
-					View all
-					<ExternalLink />
-				</h3>
+				<h3 class="text-lg font-semibold flex flex-row items-center gap-2">View all</h3>
 			</a>
 		{:else}
 			<p class="text-lg">No contests found.</p>

@@ -121,7 +121,7 @@
 					<Button href="/server/{event.guildId}" variant="secondary">
 						<p>Back To Server</p>
 					</Button>
-					<Button href="{$page.url.pathname}/membership" variant="secondary">
+					<Button href="/server/{event.guildId}/join" variant="secondary">
 						<p class="mr-2">Join Discord Server</p>
 						<ExternalLink size={16} />
 					</Button>
@@ -169,8 +169,7 @@
 				</div>
 				<div class="flex flex-row gap-2 justify-center">
 					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
-						<span class="mr-2">Leaderboard</span>
-						<ExternalLink size={20} />
+						<span>View Leaderboard</span>
 					</Button>
 				</div>
 			{:else if teams && teams.length > 0}
@@ -183,8 +182,7 @@
 				</div>
 				<div class="flex flex-row gap-2 justify-center">
 					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
-						<span class="mr-2">Leaderboard</span>
-						<ExternalLink size={20} />
+						<span>View Leaderboard</span>
 					</Button>
 				</div>
 			{:else}

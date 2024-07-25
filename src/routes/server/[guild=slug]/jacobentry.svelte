@@ -3,7 +3,6 @@
 	import { getReadableSkyblockDate } from '$lib/format';
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let record: components['schemas']['GuildJacobLeaderboardEntry'];
 
@@ -37,17 +36,11 @@
 					</span>
 				</div>
 				<div class="flex flex-wrap align-middle gap-2">
-					<Button size="sm" href="/@{record.uuid}" color="alternative">
-						<div class="flex flex-row items-center gap-2">
-							<span>Stats</span>
-							<ExternalLink size={16} />
-						</div>
+					<Button size="sm" href="/@{record.uuid}" variant="secondary">
+						<span>View Stats</span>
 					</Button>
-					<Button size="sm" href="/contest/{contest?.timestamp}" color="alternative">
-						<div class="flex flex-row items-center gap-2">
-							<span>Contest</span>
-							<ExternalLink size={16} />
-						</div>
+					<Button size="sm" href="/contest/{contest?.timestamp}" variant="secondary">
+						<span>View Contest</span>
 					</Button>
 				</div>
 			</div>
