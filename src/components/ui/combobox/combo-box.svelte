@@ -12,13 +12,16 @@
 	export let placeholder = 'Select...';
 	export let btnClass = '';
 	export let onChange: ((value: string) => void) | undefined;
+	export let clear = false;
 
-	$: realOptions = options.filter((f) => !exclude.includes(f.value));
+	$: realOptions = clear
+		? [{ label: placeholder, value: '_' }, ...options.filter((f) => !exclude.includes(f.value))]
+		: options.filter((f) => !exclude.includes(f.value));
 
 	let open = false;
 	export let value = '';
 
-	$: selectedValue = realOptions.find((f) => f.value === value)?.label ?? placeholder;
+	$: selected = realOptions.find((f) => f.value === value) ?? { label: placeholder, value: '_' };
 
 	// We want to refocus the trigger button when the user selects
 	// an item from the list so users can continue navigating the
@@ -38,12 +41,9 @@
 			variant="outline"
 			role="combobox"
 			aria-expanded={open}
-			class={cn(
-				`w-[200px] justify-between ${selectedValue === placeholder ? 'text-muted-foreground' : ''}`,
-				btnClass
-			)}
+			class={cn(`w-[200px] justify-between ${selected.value === '_' ? 'text-muted-foreground' : ''}`, btnClass)}
 		>
-			{selectedValue}
+			{selected.label}
 			<CaretSort class="ml-2 h-4 w-4 shrink-0 opacity-50" />
 		</Button>
 	</Popover.Trigger>
