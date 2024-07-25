@@ -11,7 +11,7 @@
 	export let exclude = [] as (string | undefined)[];
 	export let placeholder = 'Select...';
 	export let btnClass = '';
-	export let onChange = (value: string) => {};
+	export let onChange: (value: string) => {} | undefined;
 
 	$: realOptions = options.filter((f) => !exclude.includes(f.value));
 
@@ -58,7 +58,7 @@
 						onSelect={(currentValue) => {
 							value = currentValue;
 							closeAndFocusTrigger(ids.trigger);
-							onChange(currentValue);
+							onChange?.(currentValue);
 						}}
 					>
 						<Check class={cn('mr-2 h-4 w-4', value !== option.value && 'text-transparent')} />

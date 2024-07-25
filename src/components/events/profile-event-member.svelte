@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let member: components['schemas']['ProfileEventMemberDto'];
 	export let ign: string;
@@ -44,6 +43,5 @@
 		{:else}
 			<span class="text-red-800 dark:text-red-500">Zero!</span>
 		{/if}
-		<ExternalLink size={20} />
 	</div>
 </a>

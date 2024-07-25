@@ -93,11 +93,6 @@
 	function updateName() {
 		name = (picked1 ?? '') + ' ' + (picked2 ?? '') + ' ' + (picked3 ?? '').trim();
 	}
-
-	function getName() {
-		const name = (picked1 ?? '') + ' ' + (picked2 ?? '') + ' ' + (picked3 ?? '');
-		return name.replaceAll('_', ' ').trim();
-	}
 </script>
 
 <main class="flex flex-col justify-center items-center gap-4">
