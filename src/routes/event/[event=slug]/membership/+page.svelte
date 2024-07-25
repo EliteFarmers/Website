@@ -333,6 +333,7 @@
 											exclude={[picked1, picked2]}
 											onChange={updateName}
 											placeholder="Select Word"
+											clear={true}
 										/>
 									</div>
 								</div>
@@ -390,6 +391,7 @@
 										exclude={[picked1, picked2]}
 										onChange={updateName}
 										placeholder="Select Word"
+										clear={true}
 									/>
 								</div>
 							</div>

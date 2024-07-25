@@ -166,7 +166,10 @@ export const actions: Actions = {
 		}
 
 		const { response: codeResponse } = await CreateEventTeam(token, eventId, {
-			name: teamName.split(' ').map((w) => w.replace('_', ' ')),
+			name: teamName
+				.split(' ')
+				.filter((w) => w)
+				.map((w) => w.replace('_', ' ')),
 		});
 
 		if (codeResponse.status !== 200) {
@@ -199,7 +202,10 @@ export const actions: Actions = {
 		}
 
 		const { response: codeResponse } = await UpdateEventTeam(token, eventId, teamId, {
-			name: teamName.split(' ').map((w) => w.replace('_', ' ')),
+			name: teamName
+				.split(' ')
+				.filter((w) => w)
+				.map((w) => w.replace('_', ' ')),
 		});
 
 		if (codeResponse.status !== 200) {
