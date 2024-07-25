@@ -22,8 +22,8 @@
 			class="absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-gradient-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
 		/>
 	{/if}
-	<Guildicon {guild} size={16} />
-	<div class="flex flex-col md:flex-row justify-between w-full gap-1">
+	<Guildicon {guild} size={16} class="z-10" />
+	<div class="flex flex-col md:flex-row justify-between w-full z-10 gap-1">
 		<div class="flex flex-col gap-1 items-start">
 			<h2 class="text-md xs:text-lg sm:text-2xl md:text-2xl font-semibold">{event.name}</h2>
 			<EventType type={event.type ?? 1} />
