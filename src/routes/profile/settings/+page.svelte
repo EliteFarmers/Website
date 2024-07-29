@@ -2,10 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
-	import DiscordAccount from './discordAccount.svelte';
-	import Guild from './guild.svelte';
 	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
@@ -14,8 +11,6 @@
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
 	import type { PageData, ActionData } from './$types';
-	import SidebarLayout from '$comp/nav/sidebar-layout.svelte';
-	import { PROFILE_NAV_PAGES } from '$content/nav';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -45,9 +40,6 @@
 			return acc;
 		}, {});
 	});
-
-	$: discordUsername =
-		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
 
 	$: unlockedSettings = {
 		weightStyle: data.user.entitlements?.some((e) => (e.product.features?.weightStyles?.length ?? 0) > 0) ?? false,
@@ -97,87 +89,7 @@
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
 <main class="flex flex-col lg:flex-row justify-center gap-16 my-16 mx-2 justify-items-center">
-	<div class="flex flex-col items-center">
-		{#key loading}
-			<div class="w-full max-w-2xl mb-8">
-				<DiscordAccount account={user} />
-			</div>
-		{/key}
-
-		<!-- Form to input username to link account -->
-		<form
-			method="POST"
-			class="w-full max-w-md mb-16"
-			use:enhance={() => {
-				loading = true;
-				return async ({ result }) => {
-					// Wait for a bit so the user can see the loading state
-					await new Promise((r) => setTimeout(r, 500));
-					loading = false;
-					await invalidateAll();
-					await applyAction(result);
-				};
-			}}
-		>
-			<div class="flex flex-col gap-4 items-center w-full">
-				<div class="grid col-span-1 relative w-full">
-					<Input
-						type="text"
-						name="username"
-						class="w-full px-4 py-2 border-2 roundedtext-center"
-						placeholder="Enter your Minecraft username"
-						disabled={loading}
-					/>
-				</div>
-				<div class="flex flex-col lg:flex-row gap-2 w-full">
-					<Button type="submit" formaction="?/link" class="flex-1" variant="secondary" disabled={loading}>
-						Link Account
-					</Button>
-					<Button type="submit" formaction="?/unlink" class="flex-1" variant="secondary" disabled={loading}>
-						Unlink Account
-					</Button>
-				</div>
-				{#if form?.error}
-					<span class="text-red-600 text-sm"
-						>{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span
-					>
-				{/if}
-			</div>
-		</form>
-		{#if !user?.minecraftAccounts?.length}
-			<div class="text-center flex flex-col">
-				<h1 class="text-lg py-2">
-					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
-				</h1>
-				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
-				<h1 class="text-md py-2">
-					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
-					example)
-				</h1>
-			</div>
-		{/if}
-	</div>
 	<section class="flex flex-col max-w-3xl w-full mx-4">
-		<h1 class="text-2xl mb-4">Public Servers</h1>
-		{#if data.publicGuilds.length === 0}
-			<p>You're not a member of any public guilds!</p>
-		{/if}
-		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			{#each data.publicGuilds as guild (guild.id)}
-				<Guild {guild} link={true} />
-			{/each}
-		</div>
-
-		<h1 class="text-2xl mb-4">Manage Servers</h1>
-		{#if data.guildsWithBot.length === 0}
-			<p>You don't manage any servers with the bot invited!</p>
-		{/if}
-		<div class="grid grid-cols-1 md:grid-cols-2 grid-flow-row-dense mb-16">
-			{#each data.guildsWithBot as guild (guild.id)}
-				<Guild {guild} />
-			{/each}
-		</div>
-
 		<h1 class="text-2xl mb-4">Purchases</h1>
 		{#if data.user.entitlements?.length === 0}
 			<p class="mb-2">
@@ -214,7 +126,7 @@
 		</form>
 
 		<h1 class="text-2xl mb-2">User Settings</h1>
-		<p class="mb-4">Configure settings here! Only things that you've paid for above are available to edit.</p>
+		<p class="mb-4">Configure settings here! Only things that you've paid for are available to edit.</p>
 		<form
 			action="?/updateSettings"
 			method="post"
@@ -348,8 +260,5 @@
 				<Button type="submit" class="max-w-fit" disabled={loading}>Update Badges</Button>
 			</form>
 		{/each}
-
-		<h1 class="text-2xl mb-4 mt-16">Other Servers</h1>
-		<p>Missing a server above? <a href="invite" class="text-blue-500 underline">Invite the bot!</a></p>
 	</section>
 </main>

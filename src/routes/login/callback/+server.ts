@@ -26,7 +26,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(400, "Couldn't verify your request, please try again.");
 	}
 
-	const [, redirectTo = ''] = state.split('|');
+	const [, redirectTo = '', attemptCount = 0] = state.split('|');
 
 	const data = {
 		client_id: PUBLIC_DISCORD_CLIENT_ID,
@@ -78,5 +78,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	throw redirect(307, '/login?success=true&redirect=' + redirectTo);
+	console.log('Redirecting to:', redirectTo);
+
+	throw redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}`);
 };
