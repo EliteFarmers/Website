@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { slide } from 'svelte/transition';
-	import { quadInOut } from 'svelte/easing';
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
@@ -9,7 +7,6 @@
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	import Skills from '$comp/stats/skills.svelte';
-	import Skillbar from '$comp/stats/skillbar.svelte';
 	import Collections from '$comp/stats/collections.svelte';
 	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
@@ -73,42 +70,17 @@
 
 <APIstatus api={member.api} />
 
-<section class="flex items-center justify-center w-full mt-2 mb-20">
-	<div class="flex w-[90%] lg:w-2/3 align-middle justify-center justify-self-center mx-2">
-		<div class="w-[90%]">
-			<Skillbar name="Farming" progress={farmingXp} rank={data.ranks?.skills?.farming} />
-		</div>
-		<div class="w-[10%]">
-			<!-- Collapse/expand button -->
-			<button
-				class="flex justify-center align-middle items-center w-full lg:h-16 h-full lg:p-4 bg-gray-200 dark:bg-zinc-800 rounded-lg"
-				on:click={() => {
-					showSkills = !showSkills;
-				}}
-			>
-				<svg class="w-6 h-6 lg:w-full lg:h-full" viewBox="0 0 24 24">
-					{#if showSkills}
-						<path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-					{:else}
-						<path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
-					{/if}
-				</svg>
-			</button>
-		</div>
+<section class="flex items-center justify-center my-2 mb-16" id="Skills">
+	<div class="flex flex-1 max-w-7xl w-full">
+		<Skills
+			open={showSkills}
+			skills={member.skills}
+			skillRanks={data.ranks?.skills}
+			levelCaps={data.member.unparsed?.levelCaps}
+			gardenXp={member.garden?.experience ?? 0}
+		/>
 	</div>
 </section>
-
-{#if showSkills}
-	<div class="flex justify-center w-full mb-4 -mt-8" transition:slide={{ duration: 1000, easing: quadInOut }}>
-		<div class="block w-[90%] mb-4">
-			<Skills
-				skills={member.skills}
-				skillRanks={data.ranks?.skills}
-				levelCaps={data.member.unparsed?.levelCaps}
-			/>
-		</div>
-	</div>
-{/if}
 
 <section class="flex w-full justify-center align-middle my-8">
 	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">

@@ -4,7 +4,7 @@
 	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
 	import { Button } from '$ui/button';
 
-	export let text: string;
+	export let text = '';
 	export let size: 'default' | 'sm' | 'lg' | 'icon' | undefined = undefined;
 	let copyPromise: Promise<void> | null = null;
 
@@ -23,9 +23,12 @@
 			copyPromise = null;
 		}, 3000);
 	}
+
+	let className: string | undefined | null = undefined;
+	export { className as class };
 </script>
 
-<Button variant="link" on:click={copy} {size}>
+<Button variant="link" on:click={copy} {size} class={className}>
 	{#if copyPromise}
 		{#await copyPromise}
 			<LoaderCircle class="animate-spin" size={iconSize} />

@@ -12,7 +12,7 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import Plus from 'lucide-svelte/icons/plus';
 	import X from 'lucide-svelte/icons/x';
-	import Usericon from '$comp/stats/discord/usericon.svelte';
+	import UserIcon from '$comp/stats/discord/user-icon.svelte';
 	import Product from '$comp/monetization/product.svelte';
 	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import type { components } from '$lib/api/api';
@@ -67,7 +67,7 @@
 					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-gray-100 dark:bg-zinc-800"
 				>
 					<div class="flex flex-row gap-4 items-center">
-						<Usericon {user} size={16} />
+						<UserIcon {user} size={16} />
 						<div class="flex flex-col">
 							<p class="text-xl">{user.username}</p>
 							<p>{user.id}</p>

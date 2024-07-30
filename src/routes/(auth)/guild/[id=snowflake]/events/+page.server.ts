@@ -194,7 +194,7 @@ export const actions: Actions = {
 
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		const { response } = await BanEventMember(token, eventId, uuid, reason).catch((e) => {
+		const { response } = await BanEventMember(token, guildId, eventId, uuid, reason).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

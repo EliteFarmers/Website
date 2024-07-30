@@ -13,6 +13,7 @@
 	export let product: components['schemas']['ProductDto'];
 
 	$: features = product.features ?? {};
+	$: styles = product.weightStyles ?? [];
 </script>
 
 <div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">
@@ -24,12 +25,12 @@
 			<div class="flex flex-col gap-2 justify-start">
 				<p class="text-xl overflow-hidden whitespace-nowrap text-ellipsis pr-4">{product.name}</p>
 				<div class="flex flex-row gap-1 items-center">
-					{#if features.weightStyles?.length}
+					{#if styles.length}
 						<ProductFeature>
 							<Image slot="icon" size={16} />
 							<p class="font-semibold">Unlocks weight styles:</p>
-							{#each features.weightStyles as style}
-								<p class="text-sm font-semibold">"{style}"</p>
+							{#each styles as style}
+								<p class="text-sm font-semibold">"{style.name}"</p>
 							{/each}
 						</ProductFeature>
 					{/if}

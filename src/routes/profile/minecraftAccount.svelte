@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
@@ -31,7 +32,10 @@
 		<Button href="/@{mc.name}" size="sm" variant="outline">Stats</Button>
 	</div>
 	<div class="flex flex-wrap gap-2 justify-between items-baseline">
-		<p class="text-xs sm:text-sm text-gray-500">{mc.id}</p>
+		<div class="flex flex-row gap-1 items-center leading-none">
+			<p class="text-xs sm:text-sm text-gray-500">{mc.id}</p>
+			<CopyToClipboard text={mc.id} size="sm" class="-m-2" />
+		</div>
 		{#if !mc.primaryAccount}
 			<form
 				method="POST"
