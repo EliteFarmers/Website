@@ -1,4 +1,4 @@
-import { GetEventDetails, GetEventMembers, GetEventTeams, GetPublicGuild } from '$lib/api/elite';
+import { GetEventDetails, GetEventMember, GetEventMembers, GetEventTeams, GetPublicGuild } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
@@ -22,6 +22,10 @@ export const load = (async ({ params, url, locals }) => {
 
 	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
 
+	const { data: self } = locals.session?.uuid 
+		? await GetEventMember(eventData.id, locals.session?.uuid).catch(() => ({ data: undefined }))
+		: { data: undefined };
+
 	if (eventData.maxTeamMembers !== 0 || eventData.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventData.id).catch(() => ({ data: undefined }));
 
@@ -34,6 +38,7 @@ export const load = (async ({ params, url, locals }) => {
 			teams: teams ?? [],
 			guild,
 			joined,
+			self
 		};
 	}
 
@@ -46,5 +51,6 @@ export const load = (async ({ params, url, locals }) => {
 		members: members ?? [],
 		guild,
 		joined,
+		self
 	};
 }) satisfies LayoutServerLoad;

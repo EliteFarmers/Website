@@ -1,16 +1,16 @@
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent, locals }) => {
-	const { members, teams } = await parent();
+	const { teams, self } = await parent();
 
-	let joined = false;
+	let ownTeam = null;
+
 	if (teams) {
-		joined = teams.some((t) => t.members?.some((m) => m.playerUuid === locals.session?.uuid)) ?? false;
-	} else if (members) {
-		joined = members.some((m) => m.playerUuid === locals.session?.uuid) ?? false;
-	}
+		ownTeam = teams.find((t) => t.members?.some((m) => m.playerUuid === locals.session?.uuid)) ?? undefined;
+	} 
 
 	return {
-		joined,
+		joined: (ownTeam ?? self) !== undefined,
+		ownTeam,
 	};
 }) satisfies PageServerLoad;

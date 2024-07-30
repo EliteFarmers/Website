@@ -2,7 +2,6 @@ import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad, PageServerParentData } from './$types';
 import {
 	GetAccount,
-	GetAdminCropCollectionPoints,
 	GetAdminCropCollectionPointsTimeSpan,
 	GetCropCollectionPoints,
 } from '$lib/api/elite';
@@ -41,7 +40,7 @@ export const load = (async ({ params, parent, locals }) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: collectionGraph, response } = await GetAdminCropCollectionPoints(
+	const { data: collectionGraph, response } = await GetCropCollectionPoints(
 		account.id,
 		selectedProfile.profileId,
 		token

@@ -17,7 +17,7 @@
 
 	export let data: PageData;
 
-	$: ({ event = {} as typeof data.event, members, teams, joined } = data);
+	$: ({ event = {} as typeof data.event, members, teams, joined, self } = data);
 
 	$: banner =
 		event.banner ??
@@ -27,7 +27,7 @@
 	$: start = +(event.startTime ?? 0) * 1000;
 	$: end = +(event.endTime ?? 0) * 1000;
 	$: running = start < time && end > time;
-	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
+	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now() && !(self?.disqualified);
 
 	let memberLimit = 10;
 
@@ -135,6 +135,13 @@
 						</Button>
 					{/if}
 				</div>
+				{#if self?.disqualified}
+					<div class="flex flex-col gap-1 justify-start text-sm">
+						<p class="text-red-500 text-lg">You have been removed from this event.</p>
+						<p>Reason</p>
+						<p class="p-2 bg-card rounded-sm">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
+					</div>
+				{/if}
 			</div>
 		</section>
 		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8 basis-1 w-full">

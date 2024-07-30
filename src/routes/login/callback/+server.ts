@@ -77,8 +77,6 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		maxAge: thirtyDays,
 		path: '/',
 	});
-
-	console.log('Redirecting to:', redirectTo);
-
+	
 	throw redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}`);
 };

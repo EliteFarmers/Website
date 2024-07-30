@@ -4,7 +4,6 @@ import {
 	CreateEventTeam,
 	GetAccount,
 	GetEventDetails,
-	GetEventMember,
 	GetEventTeam,
 	GetEventTeamWords,
 	GetEventTeams,
@@ -18,7 +17,7 @@ import {
 } from '$lib/api/elite';
 
 export const load = (async ({ locals, parent, params }) => {
-	const { session } = await parent();
+	const { session, self: member } = await parent();
 	const { access_token: token } = locals;
 	const { event: eventRoute } = params;
 
@@ -37,9 +36,6 @@ export const load = (async ({ locals, parent, params }) => {
 
 	const { data: account } = session.uuid
 		? await GetAccount(session.uuid).catch(() => ({ data: undefined }))
-		: { data: undefined };
-	const { data: member } = session.uuid
-		? await GetEventMember(eventId, session.uuid).catch(() => ({ data: undefined }))
 		: { data: undefined };
 
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
