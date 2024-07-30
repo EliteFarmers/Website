@@ -12,8 +12,8 @@
 	let className: $$Props['class'] = undefined;
 	export { className as class };
 	export let orientation = 'vertical';
-	export let scrollbarXClasses: string = '';
-	export let scrollbarYClasses: string = '';
+	export let scrollbarXClasses = '';
+	export let scrollbarYClasses = '';
 </script>
 
 <ScrollAreaPrimitive.Root {...$$restProps} class={cn('relative overflow-hidden', className)}>

@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { slide } from 'svelte/transition';
-	import { quadInOut } from 'svelte/easing';
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
@@ -9,7 +7,6 @@
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	import Skills from '$comp/stats/skills.svelte';
-	import Skillbar from '$comp/stats/skillbar.svelte';
 	import Collections from '$comp/stats/collections.svelte';
 	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';

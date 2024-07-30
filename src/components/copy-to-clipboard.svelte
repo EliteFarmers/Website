@@ -4,7 +4,7 @@
 	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
 	import { Button } from '$ui/button';
 
-	export let text: string = '';
+	export let text = '';
 	export let size: 'default' | 'sm' | 'lg' | 'icon' | undefined = undefined;
 	let copyPromise: Promise<void> | null = null;
 

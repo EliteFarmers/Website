@@ -11,7 +11,7 @@
 	export let skills: components['schemas']['ProfileMemberDto']['skills'];
 	export let skillRanks: components['schemas']['LeaderboardPositionsDto']['skills'];
 	export let levelCaps: Record<string, number | undefined> | undefined = undefined;
-	export let gardenXp: number = 0;
+	export let gardenXp = 0;
 </script>
 
 <Collapsible.Root bind:open class="w-full mx-4">

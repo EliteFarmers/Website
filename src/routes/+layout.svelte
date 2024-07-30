@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { navigating } from '$app/stores';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initRatesData } from '$lib/stores/ratesData';
 

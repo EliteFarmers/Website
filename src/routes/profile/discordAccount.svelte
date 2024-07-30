@@ -2,7 +2,6 @@
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import UserIcon from '$comp/stats/discord/user-icon.svelte';
 	import type { components } from '$lib/api/api';
-	import MinecraftAccount from './minecraftAccount.svelte';
 
 	export let account: components['schemas']['AuthorizedAccountDto'] = {};
 </script>
