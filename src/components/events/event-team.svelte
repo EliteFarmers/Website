@@ -10,7 +10,7 @@
 	export let running: boolean;
 
 	$: key = (team.id ?? '') + '-' + rank.toString();
-	$: members = team.members ?? [];
+	$: members = (team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0));
 	$: full = event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers;
 </script>
 
@@ -52,7 +52,7 @@
 		<Accordion.Root class="w-full text-black dark:text-white px-4">
 			{#each members as member, i}
 				<Accordion.Item value={team.id + i.toString()} class="border-none">
-					<EventMember {member} {running} {event} />
+					<EventMember {member} {running} {event} owner={team.ownerUuid === member.playerUuid} />
 				</Accordion.Item>
 			{/each}
 		</Accordion.Root>

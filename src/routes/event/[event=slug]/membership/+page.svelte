@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
 	import * as Checkbox from '$ui/checkbox';
+	import * as Popover from '$ui/popover';
 	import { Label } from '$ui/label';
 	import type { ActionData, PageData } from './$types';
 	import { page } from '$app/stores';
@@ -11,6 +12,7 @@
 	import Check from 'lucide-svelte/icons/check';
 	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash from 'lucide-svelte/icons/trash-2';
+	import Crown from 'lucide-svelte/icons/crown';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 
@@ -272,6 +274,14 @@
 										class="w-8 h-8 pixelated aspect-square rounded-sm"
 									/>
 									<p>{member.playerName}</p>
+									{#if ownTeam.ownerUuid === member.playerUuid}
+										<Popover.Mobile>
+											<div slot="trigger" class="flex flex-row items-end">
+												<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
+											</div>
+											<p class="text-lg font-semibold">Team Owner</p>
+										</Popover.Mobile>
+									{/if}
 								</div>
 								<div class="flex flex-row gap-4 items-center">
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
