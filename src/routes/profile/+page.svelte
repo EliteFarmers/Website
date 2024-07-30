@@ -39,7 +39,8 @@
 		{/if}
 
 		<p class="max-w-2xl text-sm">
-			Your primary account is the account that will be used for all Elite features by default. Secondary accounts essentially only exist for the purpose of confirming ownership of the account.
+			Your primary account is the account that will be used for all Elite features by default. Secondary accounts
+			essentially only exist for the purpose of confirming ownership of the account.
 		</p>
 
 		{#if !user?.minecraftAccounts?.length}

@@ -7,7 +7,7 @@ export const load = (async ({ parent, locals }) => {
 
 	if (teams) {
 		ownTeam = teams.find((t) => t.members?.some((m) => m.playerUuid === locals.session?.uuid)) ?? undefined;
-	} 
+	}
 
 	return {
 		joined: (ownTeam ?? self) !== undefined,

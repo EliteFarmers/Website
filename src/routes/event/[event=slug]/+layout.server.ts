@@ -22,7 +22,7 @@ export const load = (async ({ params, url, locals }) => {
 
 	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
 
-	const { data: self } = locals.session?.uuid 
+	const { data: self } = locals.session?.uuid
 		? await GetEventMember(eventData.id, locals.session?.uuid).catch(() => ({ data: undefined }))
 		: { data: undefined };
 
@@ -38,7 +38,7 @@ export const load = (async ({ params, url, locals }) => {
 			teams: teams ?? [],
 			guild,
 			joined,
-			self
+			self,
 		};
 	}
 
@@ -51,6 +51,6 @@ export const load = (async ({ params, url, locals }) => {
 		members: members ?? [],
 		guild,
 		joined,
-		self
+		self,
 	};
 }) satisfies LayoutServerLoad;

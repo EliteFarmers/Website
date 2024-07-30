@@ -1,10 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad, PageServerParentData } from './$types';
-import {
-	GetAccount,
-	GetAdminCropCollectionPointsTimeSpan,
-	GetCropCollectionPoints,
-} from '$lib/api/elite';
+import { GetAccount, GetAdminCropCollectionPointsTimeSpan, GetCropCollectionPoints } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load = (async ({ params, parent, locals }) => {

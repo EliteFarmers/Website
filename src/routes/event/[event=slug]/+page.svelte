@@ -27,7 +27,7 @@
 	$: start = +(event.startTime ?? 0) * 1000;
 	$: end = +(event.endTime ?? 0) * 1000;
 	$: running = start < time && end > time;
-	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now() && !(self?.disqualified);
+	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now() && !self?.disqualified;
 
 	let memberLimit = 10;
 
