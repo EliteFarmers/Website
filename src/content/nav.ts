@@ -48,10 +48,6 @@ export const PROFILE_NAV_PAGES = [
 		href: '/profile/settings',
 	},
 	{
-		title: 'Purchases',
-		href: '/profile/purchases',
-	},
-	{
 		title: 'Discord Servers',
 		href: '/profile/servers',
 	},
