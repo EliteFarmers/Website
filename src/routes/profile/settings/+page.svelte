@@ -58,19 +58,17 @@
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
 	};
 
-	$: unlockedWeightStyles = [
-		...new Set(
-			(data.user.entitlements ?? [])
-				.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
-				.map((e) => e.product?.weightStyles ?? [])
-				.flat()
-		),
-	];
+	$: unlockedWeightStyles = (data.user.entitlements ?? [])
+		.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
+		.map((e) => e.product?.weightStyles ?? [])
+		.flat()
+		.reduce((acc, e) => {
+			if (!e.id || !e.name) return acc;
+			acc[e.id] = { value: e.id.toString(), label: e.name };
+			return acc;
+		}, {} as Record<string, { label: string; value: string }>);
 
-	$: weightStyleOptions = [
-		{ label: 'Default', value: '-1' },
-		...unlockedWeightStyles.map((e) => ({ label: e.name ?? '', value: (e.id ?? '') as string })),
-	];
+	$: weightStyleOptions = [{ label: 'Default', value: '-1' }, ...Object.values(unlockedWeightStyles)];
 
 	$: unlockedEmbedColors = [
 		...new Set(
