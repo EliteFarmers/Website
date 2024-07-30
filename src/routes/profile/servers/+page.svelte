@@ -9,8 +9,8 @@
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
 <main class="flex flex-col lg:flex-row justify-center gap-16 my-16 mx-2 justify-items-center">
-	<section class="flex flex-col max-w-3xl w-full mx-4">
-		<h1 class="text-2xl mb-4">Public Servers</h1>
+	<section class="flex flex-col max-w-3xl w-full">
+		<h1 class="text-3xl mb-4">Public Servers</h1>
 		{#if data.publicGuilds.length === 0}
 			<p>You're not a member of any public guilds!</p>
 		{/if}
@@ -30,7 +30,7 @@
 			{/each}
 		</div>
 
-		<h1 class="text-2xl mb-4 mt-16">Other Servers</h1>
+		<h1 class="text-2xl mb-4">Other Servers</h1>
 		<p>Missing a server above? <a href="invite" class="text-blue-500 underline">Invite the bot!</a></p>
 	</section>
 </main>

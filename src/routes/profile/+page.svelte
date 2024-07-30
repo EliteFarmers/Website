@@ -6,12 +6,15 @@
 	import { Input } from '$ui/input';
 	import { invalidateAll } from '$app/navigation';
 	import type { PageData, ActionData } from './$types';
+	import MinecraftAccount from './minecraftAccount.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
 	let loading = false;
 
 	$: user = data.user || undefined;
+	$: primary = user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined;
+	$: secondary = user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || [];
 
 	$: discordUsername =
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
@@ -19,19 +22,57 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="flex flex-col lg:flex-row justify-start gap-16 my-16 mx-2">
-	<section class="flex flex-col items-start gap-8">
-		<h1 class="text-3xl">Linked Accounts</h1>
+<main class="flex flex-col justify-start gap-12 my-16 mx-2">
+	<section class="flex flex-col items-start gap-4">
+		<h1 class="text-3xl mb-4">Discord Account</h1>
 		{#key loading}
-			<div class="w-full max-w-2xl mb-8">
-				<DiscordAccount account={user} />
-			</div>
+			<DiscordAccount account={user} />
 		{/key}
+	</section>
+	<section class="flex flex-col items-start gap-4">
+		<h2 class="text-2xl mb-4">Primary Minecraft Account</h2>
+
+		{#if primary}
+			<MinecraftAccount mc={primary} />
+		{:else}
+			<p class="text-lg">No primary account set.</p>
+		{/if}
+
+		<p class="max-w-2xl text-sm">
+			Your primary account is the account that will be used for all Elite features by default. Secondary accounts essentially only exist for the purpose of confirming ownership of the account.
+		</p>
+
+		{#if !user?.minecraftAccounts?.length}
+			<div class="text-center flex flex-col">
+				<h1 class="text-lg py-2">
+					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
+				</h1>
+				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
+				<h1 class="text-md py-2">
+					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
+					example)
+				</h1>
+			</div>
+		{/if}
+	</section>
+	<section class="flex flex-col items-start gap-4">
+		<h2 class="text-2xl mb-4">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
+
+		{#if secondary.length > 0}
+			{#each secondary as mc, i (mc.id ?? i)}
+				<MinecraftAccount {mc} />
+			{/each}
+		{:else}
+			<p class="text-lg">No secondary accounts linked.</p>
+		{/if}
+	</section>
+	<section class="flex flex-col items-start gap-4">
+		<h2 class="text-2xl mb-4">Link/Unlink an Account</h2>
 
 		<!-- Form to input username to link account -->
 		<form
 			method="POST"
-			class="w-full max-w-md mb-16"
+			class="w-full max-w-md"
 			use:enhance={() => {
 				loading = true;
 				return async ({ result }) => {
@@ -70,14 +111,14 @@
 		</form>
 		{#if !user?.minecraftAccounts?.length}
 			<div class="text-center flex flex-col">
-				<h1 class="text-lg py-2">
+				<p class="text-lg py-2">
 					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
-				</h1>
+				</p>
 				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
-				<h1 class="text-md py-2">
+				<p class="text-md py-2">
 					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
 					example)
-				</h1>
+				</p>
 			</div>
 		{/if}
 	</section>

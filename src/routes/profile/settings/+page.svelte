@@ -93,7 +93,7 @@
 		<h1 class="text-2xl mb-4">Purchases</h1>
 		{#if data.user.entitlements?.length === 0}
 			<p class="mb-2">
-				You don't manage any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
+				You don't have any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
 					>Discord Shop!</a
 				>
 			</p>
@@ -124,6 +124,10 @@
 		>
 			<Button type="submit" disabled={loading} variant="secondary">Refresh Purchases</Button>
 		</form>
+
+		{#if form?.error}
+			<p class="text-red-500">{form.error}</p>
+		{/if}
 
 		<h1 class="text-2xl mb-2">User Settings</h1>
 		<p class="mb-4">Configure settings here! Only things that you've paid for are available to edit.</p>
