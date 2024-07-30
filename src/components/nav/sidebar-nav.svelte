@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-	
+
 	export let navItems = [] as { title: string; items: { title: string; href: string; external?: boolean }[] }[];
 </script>
 

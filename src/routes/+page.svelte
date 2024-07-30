@@ -149,11 +149,9 @@
 				<Entry entry={e} rank={i + 1} formatting={'decimal'} />
 			{/each}
 			<div class="flex justify-center w-full">
-				<a
-					href="/leaderboard/weight/farming"
-					class="text-center max-w-md px-4 py-2 m-2 rounded-md bg-gray-200 hover:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-800"
-					>View Full Leaderboard</a
-				>
+				<Button href="/leaderboard/weight/farming" class="text-center max-w-md" variant="secondary"
+					>View Full Leaderboard
+				</Button>
 			</div>
 		</div>
 	</section>

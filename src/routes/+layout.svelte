@@ -36,25 +36,14 @@
 	<meta name="robots" content="index, follow" />
 	<meta property="og:url" content={$page.url.toString()} />
 </svelte:head>
+<ModeWatcher />
 
-<div class="relative min-h-screen">
+<div class="relative flex flex-col min-h-screen">
 	<Nav />
 
-	{#if $navigating}
-		<!-- Gray out the screen -->
-		<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50" />
-	{/if}
-
-	<div>
+	<div class="flex-1">
 		<slot />
 	</div>
 
 	<Footer />
-	<ModeWatcher />
 </div>
-
-<style lang="postcss">
-	:global(html) {
-		@apply bg-zinc-900;
-	}
-</style>

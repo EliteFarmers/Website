@@ -76,5 +76,5 @@ export const MOBILE_NAV = [
 			},
 		],
 		auth: false,
-	}
+	},
 ] as NavGroup[];
