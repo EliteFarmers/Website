@@ -3,7 +3,7 @@
 	import * as Avatar from '$ui/avatar';
 	import { Button } from '$ui/button';
 	import { page } from '$app/stores';
-	import Usericon from '$comp/stats/discord/usericon.svelte';
+	import UserIcon from '$comp/stats/discord/user-icon.svelte';
 	import UserRound from 'lucide-svelte/icons/user-round';
 
 	$: user = $page.data.session;
@@ -14,7 +14,7 @@
 		<Button variant="ghost" builders={[builder]} class="relative h-8 w-8 rounded-full">
 			<Avatar.Root class="h-8 w-8 items-center justify-center">
 				{#if user}
-					<Usericon {user} size={8} />
+					<UserIcon {user} size={8} />
 				{:else}
 					<UserRound class="h-6 w-6" />
 				{/if}
