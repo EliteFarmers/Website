@@ -42,7 +42,7 @@
 	});
 
 	$: unlockedSettings = {
-		weightStyle: data.user.entitlements?.some((e) => (e.product.features?.weightStyles?.length ?? 0) > 0) ?? false,
+		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
 		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
 		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
 		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
@@ -50,7 +50,7 @@
 	};
 
 	let changedSettings = {
-		weightStyle: data.user.settings?.features?.weightStyle ?? '',
+		weightStyle: data.user.settings?.weightStyle?.id ?? -1,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
@@ -60,15 +60,15 @@
 	$: unlockedWeightStyles = [
 		...new Set(
 			(data.user.entitlements ?? [])
-				.filter((e) => (e.product.features?.weightStyles?.length ?? 0) > 0)
-				.map((e) => e.product.features?.weightStyles ?? [])
+				.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
+				.map((e) => e.product?.weightStyles ?? [])
 				.flat()
 		),
 	];
 
 	$: weightStyleOptions = [
-		{ label: 'Default', value: '' },
-		...unlockedWeightStyles.map((e) => ({ label: e, value: e })),
+		{ label: 'Default', value: -1 },
+		...unlockedWeightStyles.map((e) => ({ label: e.name ?? '', value: e.id ?? '' })),
 	];
 
 	$: unlockedEmbedColors = [

@@ -4,5 +4,5 @@
 </script>
 
 <SidebarLayout navItems={PROFILE_NAV_PAGES} title="Player Profile">
-    <slot />
+	<slot />
 </SidebarLayout>

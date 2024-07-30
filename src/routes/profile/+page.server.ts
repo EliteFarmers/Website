@@ -170,11 +170,12 @@ export const actions: Actions = {
 
 		const body = {
 			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
-		};
+			weightStyleId: undefined as number | undefined,
+		} satisfies components['schemas']['UpdateUserSettingsDto'];
 
 		const style = data.get('style')?.toString() ?? undefined;
-		if (style !== undefined) {
-			body.features.weightStyle = style;
+		if (style !== undefined && isFinite(+style)) {
+			body.weightStyleId = +style;
 		}
 
 		const embed = data.get('embed')?.toString() ?? undefined;

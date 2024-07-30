@@ -17,21 +17,21 @@
 <Collapsible.Root bind:open class="w-full mx-4">
 	<div class="flex flex-row items-center justify-center">
 		<Collapsible.Trigger asChild let:builder>
-			<div class="flex flex-row gap-4 items-center justify-center w-full">
-				<div class="flex flex-col md:flex-row gap-4 items-center justify-center w-full flex-1">
+			<div class="flex flex-row gap-4 items-end justify-center w-full">
+				<div class="flex flex-col md:flex-row gap-4 items-end justify-center w-full flex-1">
 					<Skillbar
 						name="Farming"
 						rank={skillRanks?.farming}
 						progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
 					/>
-					<Button builders={[builder]} variant="outline" class="w-10 p-0 hidden md:flex">
+					<Button builders={[builder]} variant="outline" class="w-10 p-0 -mb-1 hidden md:flex">
 						<ChevronsUpDown class="h-4 w-4" />
-						<span class="sr-only">Toggle</span>
+						<span class="sr-only">Skill Toggle</span>
 					</Button>
 					<Skillbar name="Garden" progress={getGardenLevel(gardenXp)} />
 				</div>
 				<div class="md:hidden">
-					<Button builders={[builder]} variant="outline" class="w-10 p-0">
+					<Button builders={[builder]} variant="outline" class="w-10 p-0 -mb-1">
 						<ChevronsUpDown class="h-4 w-4" />
 						<span class="sr-only">Toggle</span>
 					</Button>

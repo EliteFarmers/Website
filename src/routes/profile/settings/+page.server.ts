@@ -1,10 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import {
-	RefreshPurchases,
-	UpdateUserBadges,
-	UpdateUserSettings,
-} from '$lib/api/elite';
+import { RefreshPurchases, UpdateUserBadges, UpdateUserSettings } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { IsUUID } from '$params/uuid';
 import { FetchDiscordUserData } from '$lib/discordAuth';
@@ -83,11 +79,12 @@ export const actions: Actions = {
 
 		const body = {
 			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
-		};
+			weightStyleId: undefined as number | undefined,
+		} satisfies components['schemas']['UpdateUserSettingsDto'];
 
 		const style = data.get('style')?.toString() ?? undefined;
-		if (style !== undefined) {
-			body.features.weightStyle = style;
+		if (style !== undefined && isFinite(+style)) {
+			body.weightStyleId = +style;
 		}
 
 		const embed = data.get('embed')?.toString() ?? undefined;
