@@ -11,7 +11,7 @@
 	export let exclude = [] as (string | undefined)[];
 	export let placeholder = 'Select...';
 	export let btnClass = '';
-	export let onChange: ((value: string) => void) | undefined;
+	export let onChange: ((value: string) => void) | undefined = undefined;
 	export let clear = false;
 
 	$: realOptions = clear

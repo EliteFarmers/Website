@@ -11,6 +11,7 @@
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
 	import type { PageData, ActionData } from './$types';
+	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -50,7 +51,7 @@
 	};
 
 	let changedSettings = {
-		weightStyle: data.user.settings?.weightStyle?.id ?? -1,
+		weightStyle: (data.user.settings?.weightStyle?.id + '' ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
@@ -67,8 +68,8 @@
 	];
 
 	$: weightStyleOptions = [
-		{ label: 'Default', value: -1 },
-		...unlockedWeightStyles.map((e) => ({ label: e.name ?? '', value: e.id ?? '' })),
+		{ label: 'Default', value: '-1' },
+		...unlockedWeightStyles.map((e) => ({ label: e.name ?? '', value: (e.id ?? '') as string })),
 	];
 
 	$: unlockedEmbedColors = [
@@ -146,14 +147,14 @@
 				};
 			}}
 		>
-			<div class="space-y-2">
+			<div class="space-y-2 flex flex-col">
 				<Label>Weight Command Style</Label>
-				<SelectSimple
-					name="style"
+				<ComboBox
 					options={weightStyleOptions}
 					bind:value={changedSettings.weightStyle}
-					disabled={loading || !unlockedSettings.weightStyle}
+					placeholder="Select Style"
 				/>
+				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
 			</div>
 			<div class="space-y-2">
 				<Label>Bot Embed Color</Label>
