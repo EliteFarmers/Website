@@ -4,7 +4,9 @@
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
 	import { EventType } from '$lib/utils';
+	import Crown from 'lucide-svelte/icons/crown';
 
+	export let owner = false;
 	export let event: components['schemas']['EventDetailsDto'];
 	export let member: components['schemas']['EventMemberDto'];
 	export let rank: number | undefined = undefined;
@@ -29,7 +31,7 @@
 
 <Accordion.Trigger class="w-full">
 	<div class="flex flex-row justify-between align-middle w-full">
-		<div class="flex flex-row gap-2 align-middle">
+		<div class="flex flex-row gap-2 align-middle items-center">
 			{#if rank}
 				<div class="text-green-800 dark:text-green-300">
 					<p>
@@ -43,6 +45,14 @@
 				class="w-8 h-8 pixelated aspect-square rounded-sm"
 			/>
 			<p class="text-lg">{member.playerName}</p>
+			{#if owner}
+				<Popover.Mobile>
+					<div slot="trigger" class="flex flex-row items-end">
+						<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
+					</div>
+					<p class="text-lg font-semibold">Team Owner</p>
+				</Popover.Mobile>
+			{/if}
 			{#if running}
 				<Popover.Mobile>
 					<div slot="trigger">
