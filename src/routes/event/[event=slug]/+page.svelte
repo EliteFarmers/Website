@@ -55,10 +55,10 @@
 	>
 		<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 mt-32 rounded-lg">
 			<Guildicon guild={data.guild} size={16} />
-			<h1 class="text-4xl mx-8 text-white">
+			<h1 class="text-xl xs:text-2xl sm:text-3xl md:text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>
-			<Button href="https://discord.gg/{data.guild?.inviteCode}" variant="link">
+			<Button href="/server/{event.guildId}/join" variant="link">
 				<ExternalLink size={16} class="text-white" />
 			</Button>
 		</div>
@@ -86,7 +86,7 @@
 		>
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
-				<div class="flex flex-row gap-2 font-semibold items-center text-lg">
+				<div class="flex flex-row gap-2 font-semibold items-center text-sm md:text-lg">
 					<span>{new Date(start).toLocaleDateString()}</span>
 					<span
 						>{new Date(start).toLocaleTimeString(undefined, {
