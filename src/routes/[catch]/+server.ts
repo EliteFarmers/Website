@@ -16,6 +16,7 @@ const urls: Partial<Record<string, string>> = {
 	terms: PUBLIC_TOS_URL,
 	privacy: PUBLIC_PRIVACY_URL,
 	oss: '/oss.txt',
+	store: '/shop',
 };
 
 export const GET = (async ({ params }) => {
