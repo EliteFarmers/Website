@@ -148,6 +148,7 @@
 			<div class="space-y-2 flex flex-col">
 				<Label>Weight Command Style</Label>
 				<ComboBox
+					disabled={loading || !unlockedSettings.weightStyle}
 					options={weightStyleOptions}
 					bind:value={changedSettings.weightStyle}
 					placeholder="Select Style"
