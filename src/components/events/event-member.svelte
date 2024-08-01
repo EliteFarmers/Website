@@ -90,13 +90,19 @@
 	</div>
 </Accordion.Trigger>
 <Accordion.Content>
-	<div class="flex flex-col md:flex-row gap-4 items-center w-full">
+	<div class="flex flex-col md:flex-row gap-4 items-start w-full">
 		{#if event.type === +EventType.Medals}
 			<div class="flex flex-col w-full gap-1">
 				{#each earnedMedals() as [medal, count]}
-					<div class="flex flex-row justify-center items-center gap-2">
-						<p>{medal}&nbsp;<span class="font-semibold">x{count}</span></p>
-						<div class="border-b-2 border-dotted border-primary/70 flex-grow h-2 mb-1 w-full" />
+					<div class="flex flex-row justify-between items-center gap-2 even:bg-card even:rounded-sm p-1">
+						<div class="flex flex-row items-center gap-2">
+							<img
+								src="/images/medals/{medal.toLowerCase()}.webp"
+								alt={medal}
+								class="pixelated aspect-square"
+							/>
+							<p class="font-semibold whitespace-nowrap">{medal} <span>x{count}</span></p>
+						</div>
 						<p class="font-semibold">{count * medalWeight(medal)}</p>
 					</div>
 				{/each}

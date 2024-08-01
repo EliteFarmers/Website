@@ -1,12 +1,12 @@
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
-import { DisableUpcomingContestPings, GetGuild, UpdateUpcomingContestPings } from '$lib/api/elite';
+import { DisableUpcomingContestPings, UpdateUpcomingContestPings } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
-	const { userPermissions, guild } = await parent();
+	const { authGuild, guild } = await parent();
 
-	const hasPerms = CanManageGuild(userPermissions, locals.session);
+	const hasPerms = CanManageGuild(authGuild, locals.session);
 
 	if (!hasPerms) {
 		throw error(403, 'You do not have permission to edit this guild.');
@@ -29,9 +29,6 @@ export const actions: Actions = {
 		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
-
-		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.session);
 
 		const data = await request.formData();
 
@@ -76,9 +73,6 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.session);
-
 		const { response } = await DisableUpcomingContestPings(token, guildId, 'Manually disabled').catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
@@ -94,20 +88,3 @@ export const actions: Actions = {
 		};
 	},
 };
-
-async function getGuild(guildId: string, token: string, session?: App.Locals['session']) {
-	const guild = await GetGuild(guildId, token)
-		.then((guild) => guild.data ?? undefined)
-		.catch(() => undefined);
-
-	if (!guild) throw error(404, 'Guild not found');
-
-	const hasPerms = CanManageGuild(guild.permissions, session);
-	if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
-
-	if (!guild.guild?.features?.contestPingsEnabled) {
-		throw error(402, 'This guild does not have the Jacob Contest Pings feature enabled.');
-	}
-
-	return guild;
-}

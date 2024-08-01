@@ -13,6 +13,7 @@
 	export let btnClass = '';
 	export let onChange: ((value: string) => void) | undefined = undefined;
 	export let clear = false;
+	export let disabled = false;
 
 	$: realOptions = clear
 		? [{ label: placeholder, value: '_' }, ...options.filter((f) => !exclude.includes(f.value))]
@@ -41,6 +42,7 @@
 			variant="outline"
 			role="combobox"
 			aria-expanded={open}
+			{disabled}
 			class={cn(`w-[200px] justify-between ${selected.value === '_' ? 'text-muted-foreground' : ''}`, btnClass)}
 		>
 			{selected.label}

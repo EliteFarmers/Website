@@ -2,7 +2,6 @@ import { error, fail, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild, EventType } from '$lib/utils';
 import {
-	GetGuild,
 	GetGuildEvents,
 	CreateWeightEvent,
 	EditEvent,
@@ -15,10 +14,10 @@ import {
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
-	const { guild, userPermissions, session } = await parent();
+	const { guild, authGuild, session } = await parent();
 	const { access_token: token } = locals;
 
-	const hasPerms = CanManageGuild(userPermissions, session);
+	const hasPerms = CanManageGuild(authGuild, session);
 
 	if (!hasPerms || !token) {
 		throw error(403, 'You do not have permission to edit this guild.');
@@ -65,9 +64,6 @@ export const actions: Actions = {
 		if (!locals.session || !guildId || !token) {
 			throw error(401, 'Unauthorized');
 		}
-
-		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.session);
 
 		const data = await request.formData();
 
@@ -131,8 +127,6 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		// Check if guild exists and if user has perms
-		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -183,7 +177,6 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -216,7 +209,6 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		await getGuild(guildId, token, locals.session);
 		const data = await request.formData();
 
 		const eventId = data.get('id') as string;
@@ -235,20 +227,3 @@ export const actions: Actions = {
 		};
 	},
 };
-
-async function getGuild(guildId: string, token: string, session?: App.Locals['session']) {
-	const guild = await GetGuild(guildId, token)
-		.then((guild) => guild.data ?? undefined)
-		.catch(() => undefined);
-
-	if (!guild) throw error(404, 'Guild not found');
-
-	const hasPerms = CanManageGuild(guild.permissions, session);
-	if (!hasPerms) throw error(403, 'You do not have permission to edit this guild.');
-
-	if (!guild.guild?.features?.eventsEnabled) {
-		throw error(402, 'This guild does not have the Events feature enabled.');
-	}
-
-	return guild;
-}

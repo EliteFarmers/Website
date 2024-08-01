@@ -37,21 +37,26 @@
 				{#if event.type === +EventType.FarmingWeight}
 					{#each cropWeights() as [cropName, weight]}
 						{@const crop = getCropDisplayName(getCropFromName(cropName) ?? Crop.Wheat)}
-						<div class="flex flex-row justify-center items-center gap-2">
-							<div class="flex flex-row items-center p-1">
+						<div class="flex flex-row justify-between items-center gap-2 even:bg-card even:rounded-sm p-1">
+							<div class="flex flex-row items-center gap-2">
 								<img src={PROPER_CROP_TO_IMG[crop]} alt={crop} class="pixelated aspect-square" />
-								<p>{crop}</p>
+								<p class="font-semibold whitespace-nowrap">{crop}</p>
 							</div>
-							<div class="border-b-2 border-dotted border-primary/70 flex-grow h-2 mb-1 w-full" />
-							<p class="font-semibold">{weight}</p>
+							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
 					{/each}
 				{:else if event.type === +EventType.Medals}
 					{#each medalWeights() as [medal, weight]}
-						<div class="flex flex-row justify-center items-center gap-2">
-							<p class="">{medal}</p>
-							<div class="border-b-2 border-dotted border-primary/70 flex-grow h-2 mb-1 w-full" />
-							<p class="font-semibold">{weight}</p>
+						<div class="flex flex-row justify-between items-center gap-2 even:bg-card even:rounded-sm p-1">
+							<div class="flex flex-row items-center gap-2">
+								<img
+									src="/images/medals/{medal.toLowerCase()}.webp"
+									alt={medal}
+									class="pixelated aspect-square"
+								/>
+								<p class="font-semibold whitespace-nowrap">{medal}</p>
+							</div>
+							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
 					{/each}
 				{/if}

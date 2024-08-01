@@ -22,6 +22,6 @@ export const load = (async ({ params, parent, locals }) => {
 	return {
 		guildId: guild.id,
 		guild: guild.guild,
-		userPermissions: guild.permissions,
+		authGuild: guild,
 	};
 }) satisfies LayoutServerLoad;

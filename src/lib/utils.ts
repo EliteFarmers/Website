@@ -56,12 +56,14 @@ export const flyAndScale = (
 	};
 };
 
-export function CanManageGuild(permissions?: string, session?: App.Locals['session']) {
+export function CanManageGuild(guild: components['schemas']['AuthorizedGuildDto'], session?: App.Locals['session']) {
 	if (session?.flags?.admin) return true;
+	// Check if the user has the admin role
+	if (guild.guild?.adminRole && guild.member?.roles?.includes(guild.guild.adminRole)) return true;
 
-	if (!permissions) return false;
-
-	const perms = BigInt(permissions);
+	// Check if the user has the manage guild or admin permission
+	if (!guild.permissions) return false;
+	const perms = BigInt(guild.permissions);
 
 	const admin = BigInt(0x8);
 	const manageGuild = BigInt(0x20);
