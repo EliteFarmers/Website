@@ -7,7 +7,7 @@
 </script>
 
 <a
-	class="flex flex-row justify-between items-center w-full h-full max-h-32 p-4 px-6 gap-2 rounded-md bg-primary-foreground"
+	class="flex flex-row justify-between items-center w-full px-6 py-[1.88rem] gap-2 rounded-md bg-primary-foreground"
 	href="/event/{member.eventId}"
 >
 	<div class="flex flex-row gap-2 align-middle items-center justify-center">
