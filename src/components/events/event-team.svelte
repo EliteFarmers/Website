@@ -8,8 +8,9 @@
 	export let team: components['schemas']['EventTeamWithMembersDto'];
 	export let rank: number;
 	export let running: boolean;
+	export let highlightUuid: undefined | string = undefined;
 
-	$: key = (team.id ?? '') + '-' + rank.toString();
+	$: key = (team.id ?? '').toString() || rank.toString();
 	$: members = (team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0));
 	$: full = event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers;
 </script>
@@ -49,9 +50,14 @@
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root class="w-full text-black dark:text-white px-4">
+		<Accordion.Root class="w-full text-black dark:text-white">
 			{#each members as member, i}
-				<Accordion.Item value={team.id + i.toString()} class="border-none">
+				<Accordion.Item
+					value={team.id + i.toString()}
+					class="px-4 {highlightUuid === member.playerUuid
+						? 'border-2 border-blue-400 rounded-md'
+						: 'border-none'}"
+				>
 					<EventMember {member} {running} {event} owner={team.ownerUuid === member.playerUuid} />
 				</Accordion.Item>
 			{/each}

@@ -3,12 +3,13 @@
 	import * as Popover from '$ui/popover';
 
 	export let member: components['schemas']['ProfileEventMemberDto'];
+	export let memberUuid: string;
 	export let ign: string;
 </script>
 
 <a
 	class="flex flex-row justify-between items-center w-full px-6 py-[1.88rem] gap-2 rounded-md bg-primary-foreground"
-	href="/event/{member.eventId}"
+	href="/event/{member.eventId}/leaderboard#{memberUuid}"
 >
 	<div class="flex flex-row gap-2 align-middle items-center justify-center">
 		<p class="text-lg">{member.eventName}</p>
