@@ -88,7 +88,7 @@
 		{#if member.farmingWeight?.inventory?.tools?.length || member.events?.length}
 			<div class="flex flex-1 flex-col gap-2">
 				{#each member.events ?? [] as event (event.eventId)}
-					<ProfileEventMember member={event} ign={ign || ''} />
+					<ProfileEventMember member={event} ign={ign || ''} memberUuid={uuid ?? ''} />
 				{/each}
 				<Farmingtools
 					tools={member.farmingWeight?.inventory?.tools ?? []}

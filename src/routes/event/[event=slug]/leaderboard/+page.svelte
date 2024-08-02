@@ -16,6 +16,12 @@
 	$: guild = data.guild;
 	$: members = data.members ?? [];
 	$: teams = data.teams ?? [];
+
+	$: highlightUuid = $page.url.hash.slice(1);
+	$: highlightTeam =
+		teams?.find((team) => team.members?.some((member) => member.playerUuid === highlightUuid))?.id?.toString() ??
+		undefined;
+
 	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
 
 	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
@@ -69,10 +75,16 @@
 			</div>
 			{#if members.length > 0}
 				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full">
+					<Accordion.Root class="w-full" value={highlightUuid}>
 						{#each members as member, i}
-							{@const key = `${i + 1}`}
-							<Accordion.Item value={key} id={key} class="w-full">
+							{@const key = member.playerUuid ?? i.toString()}
+							<Accordion.Item
+								value={key}
+								id={key}
+								class="px-1 w-full {highlightUuid === member.playerUuid
+									? 'border-2 border-blue-400 rounded-md'
+									: 'border-none'}"
+							>
 								<EventMember {member} rank={i + 1} {running} {event} />
 							</Accordion.Item>
 						{/each}
@@ -80,9 +92,9 @@
 				</div>
 			{:else if teams.length > 0}
 				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full">
+					<Accordion.Root class="w-full" value={highlightTeam}>
 						{#each teams as team, i}
-							<EventTeam {team} rank={i + 1} {running} {event} />
+							<EventTeam {team} rank={i + 1} {running} {event} {highlightUuid} />
 						{/each}
 					</Accordion.Root>
 				</div>

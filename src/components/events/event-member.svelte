@@ -30,7 +30,7 @@
 </script>
 
 <Accordion.Trigger class="w-full">
-	<div class="flex flex-row justify-between align-middle w-full">
+	<div id={member.playerUuid} class="flex flex-row justify-between align-middle w-full scroll-mt-64">
 		<div class="flex flex-row gap-2 align-middle items-center">
 			{#if rank}
 				<div class="text-green-800 dark:text-green-300">
