@@ -36,11 +36,11 @@
 	$: topList = teamEvent
 		? teams
 				.slice(0, 5)
-				.map((team, i) => `${i + 1}. ${team.name} • ${+(team?.score ?? 0).toLocaleString()}`)
+				.map((team, i) => `${i + 1}. ${team.name} • ${(+(team?.score ?? 0)).toLocaleString()}`)
 				.join('\n')
 		: members
 				.slice(0, 5)
-				.map((member, i) => `${i + 1}. ${member.playerName} • ${+(member?.score ?? 0).toLocaleString()}`)
+				.map((member, i) => `${i + 1}. ${member.playerName} • ${(+(member?.score ?? 0)).toLocaleString()}`)
 				.join('\n');
 
 	$: description = `View the leaderboard for ${running ? 'the Event happening' : 'a past Event'} in ${
