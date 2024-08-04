@@ -1,14 +1,15 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
 	import Users from 'lucide-svelte/icons/users';
-	import EventMember from '$comp/events/event-member.svelte';
+	import User from 'lucide-svelte/icons/user';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import EventTeam from '$comp/events/event-team.svelte';
+	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
+	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 
 	export let data: PageData;
 
@@ -16,6 +17,13 @@
 	$: guild = data.guild;
 	$: members = data.members ?? [];
 	$: teams = data.teams ?? [];
+	$: teamEvent = teams.length > 0;
+
+	let swapMode = false;
+
+	function swapLeaderboard() {
+		swapMode = !swapMode;
+	}
 
 	$: highlightUuid = $page.url.hash.slice(1);
 	$: highlightTeam =
@@ -23,13 +31,26 @@
 		undefined;
 
 	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
-
 	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
+
+	$: topList = teamEvent
+		? teams
+				.slice(0, 5)
+				.map((team, i) => `${i + 1}. ${team.name} • ${+(team?.score ?? 0).toLocaleString()}`)
+				.join('\n')
+		: members
+				.slice(0, 5)
+				.map((member, i) => `${i + 1}. ${member.playerName} • ${+(member?.score ?? 0).toLocaleString()}`)
+				.join('\n');
+
+	$: description = `View the leaderboard for ${running ? 'the Event happening' : 'a past Event'} in ${
+		data.guild?.name
+	}!\n\n${topList}`;
 </script>
 
 <Head
 	title={(event.name || 'Farming Weight Event') + ' Leaderboard'}
-	description={`View the event leaderboard!\n${event.description}`}
+	{description}
 	imageUrl={guild?.icon ? `https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.webp` : undefined}
 />
 
@@ -55,15 +76,21 @@
 	<div class="flex flex-col lg:flex-row gap-8 max-w-5xl w-full">
 		<section class="flex flex-col gap-4 w-full items-center bg-primary-foreground rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
-				{#if members.length > 0}
+				{#if teamEvent}
+					<Button on:click={swapLeaderboard} variant="secondary" size="sm">
+						<ArrowLeftRight size={20} />
+						<span class="sr-only">Swap Leaderboard</span>
+					</Button>
+				{/if}
+				{#if !teamEvent || (teamEvent && swapMode)}
 					<h2 class="text-2xl">Members</h2>
 					<div class="flex flex-row gap-2 font-semibold items-center">
 						<p class="text-2xl">
 							{members.length?.toLocaleString()}
 						</p>
-						<Users />
+						<User />
 					</div>
-				{:else if teams.length > 0}
+				{:else}
 					<h2 class="text-2xl">Teams</h2>
 					<div class="flex flex-row gap-2 font-semibold items-center">
 						<p class="text-2xl">
@@ -73,36 +100,17 @@
 					</div>
 				{/if}
 			</div>
-			{#if members.length > 0}
-				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full" value={highlightUuid}>
-						{#each members as member, i}
-							{@const key = member.playerUuid ?? i.toString()}
-							<Accordion.Item
-								value={key}
-								id={key}
-								class="px-1 w-full {highlightUuid === member.playerUuid
-									? 'border-2 border-blue-400 rounded-md'
-									: 'border-none'}"
-							>
-								<EventMember {member} rank={i + 1} {running} {event} />
-							</Accordion.Item>
-						{/each}
-					</Accordion.Root>
-				</div>
-			{:else if teams.length > 0}
-				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full" value={highlightTeam}>
-						{#each teams as team, i}
-							<EventTeam {team} rank={i + 1} {running} {event} {highlightUuid} />
-						{/each}
-					</Accordion.Root>
-				</div>
-			{:else}
-				<p class="max-w-lg text-center my-16">
-					This Event does not have any members signed up right now! Login to be the first!
-				</p>
-			{/if}
+			<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
+				{#if (!teamEvent || swapMode) && members.length > 0}
+					<EventLeaderboard {highlightUuid} {running} {event} {members} />
+				{:else if teams.length > 0}
+					<EventTeamLeaderboard {highlightUuid} {highlightTeam} {running} {event} {teams} />
+				{:else}
+					<p class="max-w-lg text-center my-16">
+						This Event does not have any members signed up right now! Login to be the first!
+					</p>
+				{/if}
+			</div>
 		</section>
 	</div>
 </main>

@@ -1,23 +1,24 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
-	import * as Accordion from '$ui/accordion';
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Users from 'lucide-svelte/icons/users';
+	import User from 'lucide-svelte/icons/user';
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
-	import EventMember from '$comp/events/event-member.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 	import EventData from '$comp/events/event-data.svelte';
-	import EventTeam from '$comp/events/event-team.svelte';
+	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
+	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
+	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
 
 	export let data: PageData;
 
-	$: ({ event = {} as typeof data.event, members, teams, joined, self } = data);
+	$: ({ event = {} as typeof data.event, members, teams = [], joined, self } = data);
 
 	$: banner =
 		event.banner ??
@@ -28,8 +29,10 @@
 	$: end = +(event.endTime ?? 0) * 1000;
 	$: running = start < time && end > time;
 	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now() && !self?.disqualified;
+	$: teamEvent = (teams?.length ?? 0) > 0;
 
 	let memberLimit = 10;
+	let swapMode = false;
 
 	onMount(() => {
 		const interval = setInterval(() => {
@@ -38,11 +41,27 @@
 
 		return () => clearInterval(interval);
 	});
+
+	function swapLeaderboard() {
+		swapMode = !swapMode;
+	}
+
+	$: topList = teamEvent
+		? teams
+				.slice(0, 5)
+				.map((team, i) => `${i + 1}. ${team.name} • ${+(team?.score ?? 0).toLocaleString()}`)
+				.join('\n')
+		: members
+				.slice(0, 5)
+				.map((member, i) => `${i + 1}. ${member.playerName} • ${+(member?.score ?? 0).toLocaleString()}`)
+				.join('\n');
+
+	$: description = `View the ${running ? 'Event happening' : 'past Event'} in ${data.guild?.name}!\n\n${topList}`;
 </script>
 
 <Head
 	title={event.name || 'Farming Weight Event'}
-	description={`View the Event happening in ${data.guild?.name}!\n${event.description}`}
+	{description}
 	imageUrl={data.guild?.icon
 		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
 		: undefined}
@@ -146,57 +165,51 @@
 		</section>
 		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8 basis-1 w-full">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
-				{#if members}
-					<h2 class="text-2xl">Members</h2>
+				{#if teamEvent}
+					<Button on:click={swapLeaderboard} variant="secondary" size="sm">
+						<ArrowLeftRight size={20} />
+						<span class="sr-only">Swap Leaderboard</span>
+					</Button>
+				{/if}
+				{#if !teamEvent || (teamEvent && swapMode)}
+					<h2 class="text-3xl leading-none">Members</h2>
 					<div class="flex flex-row gap-2 font-semibold items-center">
 						<p class="text-2xl">
 							{members.length?.toLocaleString()}
 						</p>
-						<Users />
+						<User />
 					</div>
-				{:else if teams}
-					<h2 class="text-2xl">Teams</h2>
+				{:else}
+					<h2 class="text-3xl leading-none">Teams</h2>
 					<div class="flex flex-row gap-2 font-semibold items-center">
 						<p class="text-2xl">
-							{teams.length?.toLocaleString()}
+							{(teams?.length ?? 0).toLocaleString()}
 						</p>
 						<Users />
 					</div>
 				{/if}
 			</div>
-			{#if members && members.length > 0}
-				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full text-black dark:text-white">
-						{#each members.slice(0, memberLimit) as member, i}
-							<Accordion.Item value={i.toString()}>
-								<EventMember {member} rank={i + 1} {running} {event} />
-							</Accordion.Item>
-						{/each}
-					</Accordion.Root>
-				</div>
-				<div class="flex flex-row gap-2 justify-center">
-					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
-						<span>View Leaderboard</span>
-					</Button>
-				</div>
-			{:else if teams && teams.length > 0}
-				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full">
-						{#each teams.slice(0, memberLimit) as team, i}
-							<EventTeam {team} rank={i + 1} {running} {event} />
-						{/each}
-					</Accordion.Root>
-				</div>
-				<div class="flex flex-row gap-2 justify-center">
-					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
-						<span>View Leaderboard</span>
-					</Button>
-				</div>
-			{:else}
-				<p class="max-w-lg text-center my-16">
-					This Event does not have any members signed up right now! Login to be the first!
-				</p>
-			{/if}
+			<div class="flex flex-col justify-center md:mx-32 max-w-7xl gap-4 w-full">
+				{#if (!teamEvent || (teamEvent && swapMode)) && members.length > 0}
+					<EventLeaderboard {running} {event} members={members.slice(0, memberLimit)} />
+					<div class="flex flex-row gap-2 justify-center">
+						<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+							<span>View Leaderboard</span>
+						</Button>
+					</div>
+				{:else if teamEvent && teams.length > 0}
+					<EventTeamLeaderboard {running} {event} teams={teams.slice(0, memberLimit)} />
+					<div class="flex flex-row gap-2 justify-center">
+						<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+							<span>View Leaderboard</span>
+						</Button>
+					</div>
+				{:else}
+					<p class="max-w-lg text-center my-16">
+						This Event does not have any members signed up right now! Login to be the first!
+					</p>
+				{/if}
+			</div>
 		</section>
 	</div>
 
