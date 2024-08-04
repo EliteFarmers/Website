@@ -39,7 +39,8 @@ export const load = (async ({ params, parent, locals }) => {
 	const { data: collectionGraph, response } = await GetCropCollectionPoints(
 		account.id,
 		selectedProfile.profileId,
-		token
+		undefined,
+		14
 	).catch(() => ({ data: undefined, response: undefined }));
 
 	if (response && response.status !== 200) {
