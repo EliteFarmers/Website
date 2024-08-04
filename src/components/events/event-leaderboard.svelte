@@ -4,7 +4,7 @@
 	import * as Accordion from '$ui/accordion';
 
 	export let highlightUuid: string | undefined = undefined;
-	export let running: boolean = false;
+	export let running = false;
 	export let event: components['schemas']['EventDetailsDto'];
 	export let members: components['schemas']['EventMemberDto'][];
 </script>

@@ -5,7 +5,7 @@
 
 	export let highlightUuid: string | undefined = undefined;
 	export let highlightTeam: string | undefined = undefined;
-	export let running: boolean = false;
+	export let running = false;
 	export let event: components['schemas']['EventDetailsDto'];
 	export let teams: components['schemas']['EventTeamWithMembersDto'][];
 </script>
