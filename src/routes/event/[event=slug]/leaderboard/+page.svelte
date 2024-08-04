@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Users from 'lucide-svelte/icons/users';
-	import EventMember from '$comp/events/event-member.svelte';
+	import User from 'lucide-svelte/icons/user';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import EventTeam from '$comp/events/event-team.svelte';
+	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
+	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 
 	export let data: PageData;
 
@@ -61,7 +61,7 @@
 						<p class="text-2xl">
 							{members.length?.toLocaleString()}
 						</p>
-						<Users />
+						<User />
 					</div>
 				{:else if teams.length > 0}
 					<h2 class="text-2xl">Teams</h2>
@@ -73,36 +73,17 @@
 					</div>
 				{/if}
 			</div>
-			{#if members.length > 0}
-				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full" value={highlightUuid}>
-						{#each members as member, i}
-							{@const key = member.playerUuid ?? i.toString()}
-							<Accordion.Item
-								value={key}
-								id={key}
-								class="px-1 w-full {highlightUuid === member.playerUuid
-									? 'border-2 border-blue-400 rounded-md'
-									: 'border-none'}"
-							>
-								<EventMember {member} rank={i + 1} {running} {event} />
-							</Accordion.Item>
-						{/each}
-					</Accordion.Root>
-				</div>
-			{:else if teams.length > 0}
-				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full" value={highlightTeam}>
-						{#each teams as team, i}
-							<EventTeam {team} rank={i + 1} {running} {event} {highlightUuid} />
-						{/each}
-					</Accordion.Root>
-				</div>
-			{:else}
-				<p class="max-w-lg text-center my-16">
-					This Event does not have any members signed up right now! Login to be the first!
-				</p>
-			{/if}
+			<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
+				{#if members.length > 0}
+					<EventLeaderboard {highlightUuid} {running} {event} {members} />
+				{:else if teams.length > 0}
+					<EventTeamLeaderboard {highlightUuid} {highlightTeam} {running} {event} {teams} />
+				{:else}
+					<p class="max-w-lg text-center my-16">
+						This Event does not have any members signed up right now! Login to be the first!
+					</p>
+				{/if}
+			</div>
 		</section>
 	</div>
 </main>

@@ -1,19 +1,19 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
-	import * as Accordion from '$ui/accordion';
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Users from 'lucide-svelte/icons/users';
+	import User from 'lucide-svelte/icons/user';
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
-	import EventMember from '$comp/events/event-member.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 	import EventData from '$comp/events/event-data.svelte';
-	import EventTeam from '$comp/events/event-team.svelte';
+	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
+	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 
 	export let data: PageData;
 
@@ -152,7 +152,7 @@
 						<p class="text-2xl">
 							{members.length?.toLocaleString()}
 						</p>
-						<Users />
+						<User />
 					</div>
 				{:else if teams}
 					<h2 class="text-2xl">Teams</h2>
@@ -164,39 +164,27 @@
 					</div>
 				{/if}
 			</div>
-			{#if members && members.length > 0}
-				<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full text-black dark:text-white">
-						{#each members.slice(0, memberLimit) as member, i}
-							<Accordion.Item value={i.toString()}>
-								<EventMember {member} rank={i + 1} {running} {event} />
-							</Accordion.Item>
-						{/each}
-					</Accordion.Root>
-				</div>
-				<div class="flex flex-row gap-2 justify-center">
-					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
-						<span>View Leaderboard</span>
-					</Button>
-				</div>
-			{:else if teams && teams.length > 0}
-				<div class="flex flex-col md:mx-32 max-w-7xl gap-4 w-full">
-					<Accordion.Root class="w-full">
-						{#each teams.slice(0, memberLimit) as team, i}
-							<EventTeam {team} rank={i + 1} {running} {event} />
-						{/each}
-					</Accordion.Root>
-				</div>
-				<div class="flex flex-row gap-2 justify-center">
-					<Button href="{$page.url.pathname}/leaderboard" color="alternative">
-						<span>View Leaderboard</span>
-					</Button>
-				</div>
-			{:else}
-				<p class="max-w-lg text-center my-16">
-					This Event does not have any members signed up right now! Login to be the first!
-				</p>
-			{/if}
+			<div class="flex flex-col justify-center md:mx-32 max-w-7xl gap-4 w-full">
+				{#if members && members.length > 0}
+					<EventLeaderboard {running} {event} members={members.slice(0, memberLimit)} />
+					<div class="flex flex-row gap-2 justify-center">
+						<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+							<span>View Leaderboard</span>
+						</Button>
+					</div>
+				{:else if teams && teams.length > 0}
+					<EventTeamLeaderboard {running} {event} teams={teams.slice(0, memberLimit)} />
+					<div class="flex flex-row gap-2 justify-center">
+						<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+							<span>View Leaderboard</span>
+						</Button>
+					</div>
+				{:else}
+					<p class="max-w-lg text-center my-16">
+						This Event does not have any members signed up right now! Login to be the first!
+					</p>
+				{/if}
+			</div>
 		</section>
 	</div>
 
