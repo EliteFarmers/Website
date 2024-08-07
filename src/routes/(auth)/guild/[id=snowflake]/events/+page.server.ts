@@ -1,16 +1,7 @@
-import { error, fail, type NumericRange } from '@sveltejs/kit';
+import { error, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild, EventType } from '$lib/utils';
-import {
-	GetGuildEvents,
-	CreateWeightEvent,
-	EditEvent,
-	BanEventMember,
-	UnbanEventMember,
-	GetEventMembers,
-	GetEventBans,
-	CreateMedalEvent,
-} from '$lib/api/elite';
+import { GetGuildEvents, CreateWeightEvent, CreateMedalEvent } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
@@ -29,30 +20,9 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 
 	const { data: events } = await GetGuildEvents(guild.id).catch(() => ({ data: undefined }));
 
-	const details: {
-		eventId: string;
-		event: components['schemas']['EventDetailsDto'];
-		members: components['schemas']['EventMemberDto'][];
-		bans: components['schemas']['EventMemberBannedDto'][];
-	}[] = [];
-
-	for (const event of events ?? []) {
-		if (!event.id || !event.guildId) continue;
-
-		const { data: members } = await GetEventMembers(event.id).catch(() => ({ data: undefined }));
-		const { data: bans } = await GetEventBans(token, event.guildId, event.id).catch(() => ({ data: undefined }));
-
-		details.push({
-			eventId: event.id,
-			event,
-			members: members ?? [],
-			bans: bans ?? [],
-		});
-	}
-
 	return {
 		...(guild.features.eventSettings ?? {}),
-		events: details,
+		events: events ?? [],
 	};
 };
 
@@ -114,113 +84,6 @@ export const actions: Actions = {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 499>, msg);
 		}
-
-		return {
-			success: true,
-		};
-	},
-	edit: async ({ locals, params, request }) => {
-		const guildId = params.id;
-		const { access_token: token } = locals;
-
-		if (!locals.session || !guildId || !token) {
-			throw error(401, 'Unauthorized');
-		}
-
-		const data = await request.formData();
-
-		const eventId = data.get('id') as string;
-		if (!eventId) throw error(400, 'Missing required field: id');
-
-		const title = (data.get('title') as string) || undefined;
-		const description = (data.get('description') as string) || undefined;
-		const rules = (data.get('rules') as string) || undefined;
-		const prizes = (data.get('prizes') as string) || undefined;
-		const startDate = (data.get('startDate') as string) || undefined;
-		const endDate = (data.get('endDate') as string) || undefined;
-		const joinDate = (data.get('joinDate') as string) || undefined;
-
-		const startTime = startDate ? (new Date(startDate + '+00:00').getTime() / 1000).toString() : undefined;
-		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
-		const joinUntilTime = joinDate ? (new Date(joinDate + '+00:00').getTime() / 1000).toString() : undefined;
-
-		const body: components['schemas']['EditEventDto'] = {
-			name: title,
-			rules,
-			description,
-			prizeInfo: prizes,
-			startTime: startTime as unknown as number, // These are parsed into numbers in the API
-			endTime: endTime as unknown as number,
-			joinTime: joinUntilTime as unknown as number,
-			guildId: guildId,
-		};
-
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
-			console.log(e);
-			throw error(500, 'Internal Server Error');
-		});
-
-		if (response.status !== 200) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 499>, msg);
-		}
-
-		return {
-			success: true,
-		};
-	},
-	banmember: async ({ locals, params, request }) => {
-		const guildId = params.id;
-		const { access_token: token } = locals;
-
-		if (!locals.session || !guildId || !token) {
-			throw error(401, 'Unauthorized');
-		}
-
-		const data = await request.formData();
-
-		const eventId = data.get('id') as string;
-		if (!eventId) throw error(400, 'Missing required field: id');
-
-		const uuid = data.get('uuid') as string;
-		const reason = (data.get('reason') as string) || 'No reason provided';
-
-		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
-
-		const { response } = await BanEventMember(token, guildId, eventId, uuid, reason).catch((e) => {
-			console.log(e);
-			throw error(500, 'Internal Server Error');
-		});
-
-		if (response.status !== 200) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
-		}
-
-		return {
-			success: true,
-		};
-	},
-	unbanmember: async ({ locals, params, request }) => {
-		const guildId = params.id;
-		const { access_token: token } = locals;
-
-		if (!locals.session || !guildId || !token) {
-			throw error(401, 'Unauthorized');
-		}
-
-		const data = await request.formData();
-
-		const eventId = data.get('id') as string;
-		if (!eventId) throw error(400, 'Missing required field: id');
-
-		const uuid = data.get('uuid') as string;
-		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
-
-		await UnbanEventMember(token, guildId, eventId, uuid).catch((e) => {
-			console.log(e);
-			throw error(500, 'Internal Server Error');
-		});
 
 		return {
 			success: true,
