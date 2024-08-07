@@ -485,6 +485,19 @@ export const GetEventMembers = async (eventId: string) =>
 		},
 	});
 
+export const GetAdminEventMembers = async (token: string, guildId: string, eventId: string) =>
+	await GET('/guild/{guildId}/events/{eventId}/members', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetEventMember = async (eventId: string, playerUuid: string) =>
 	await GET('/event/{eventId}/member/{playerUuid}', {
 		params: {

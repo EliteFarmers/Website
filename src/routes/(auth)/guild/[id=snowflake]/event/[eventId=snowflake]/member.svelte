@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import * as Popover from '$ui/popover';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import FileText from 'lucide-svelte/icons/file-text';
 
 	export let member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberBannedDto'];
 </script>
@@ -15,14 +17,21 @@
 			class="w-8 aspect-square rounded-sm"
 			alt="Player Head"
 		/>
-		<a href="/@{member.playerUuid}" class="text-lg underline flex flex-row items-center gap-1">
+		<a href="/@{member.playerUuid}" target="_blank" class="text-lg underline flex flex-row items-center gap-1">
 			{member.playerName}
 			<ExternalLink size={20} />
 		</a>
 	</div>
 	<div class="flex flex-row gap-2 lg:gap-4 items-center">
 		{#if 'notes' in member}
-			<p>{member.notes || 'Member Left'}</p>
+			<Popover.Mobile>
+				<div slot="trigger">
+					<FileText size={20} class="text-destructive -mb-1" />
+				</div>
+				<div>
+					<p>{member.notes || 'Member Left'}</p>
+				</div>
+			</Popover.Mobile>
 		{/if}
 		<p class="font-semibold text-xl">{(+(member.score ?? 0)).toLocaleString()}</p>
 	</div>
