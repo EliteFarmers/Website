@@ -5,7 +5,7 @@
 	export let type: number;
 </script>
 
-<Popover.Mobile>
+<Popover.Mobile class="text-black dark:text-white">
 	<div
 		slot="trigger"
 		class="flex flex-row gap-2 items-center bg-card rounded-sm p-1 px-2 w-fit font-semibold leading-none"

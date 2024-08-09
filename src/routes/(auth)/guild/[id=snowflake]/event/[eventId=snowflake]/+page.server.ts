@@ -28,15 +28,17 @@ export const load = (async ({ parent, params, locals }) => {
 		throw error(404, 'Event not found');
 	}
 
-	const { data: members } = await GetAdminEventMembers(token, event.guildId, event.id).catch(() => ({
-		data: undefined,
-	}));
-	const { data: bans } = await GetEventBans(token, event.guildId, event.id).catch(() => ({ data: undefined }));
+	const members = GetAdminEventMembers(token, event.guildId, event.id)
+		.then((r) => r.data)
+		.catch(() => undefined);
+	const bans = GetEventBans(token, event.guildId, event.id)
+		.then((r) => r.data)
+		.catch(() => undefined);
 
 	return {
 		event,
-		members: members ?? [],
-		bans: bans ?? [],
+		members: members,
+		bans: bans,
 	};
 }) satisfies PageServerLoad;
 

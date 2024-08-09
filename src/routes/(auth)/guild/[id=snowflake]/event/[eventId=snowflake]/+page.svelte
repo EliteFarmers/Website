@@ -27,9 +27,11 @@
 	let memberLimit = 10;
 	let bansLimit = 10;
 
+	function sort(a: { score?: string | null } | undefined, b: { score?: string | null } | undefined) {
+		return +(b?.score ?? 0) - +(a?.score ?? 0);
+	}
+
 	$: event = data.event;
-	$: members = (data.members ?? []).sort((a, b) => +(b?.score ?? 0) - +(a?.score ?? 0));
-	$: bans = (data.bans ?? []).sort((a, b) => +(b?.score ?? 0) - +(a?.score ?? 0));
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -48,7 +50,7 @@
 		</h5>
 	{/if}
 
-	<section class="flex flex-col gap-8 justify-center items-center justify-items-center w-[90%] md:w-[70%] max-w-4xl">
+	<section class="flex flex-col gap-8 justify-center items-center justify-items-center max-w-4xl w-full">
 		<div
 			class="flex p-4 flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-primary-foreground rounded-md"
 		>
@@ -59,12 +61,16 @@
 					<p class="text-lg">{event.description}</p>
 					<p class="text-lg">{event.rules}</p>
 					<p class="text-lg">{event.prizeInfo}</p>
-					<div class="flex flex-row gap-2 font-semibold items-center text-lg">
-						<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
-						<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
-						<span> - </span>
-						<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleDateString()}</span>
-						<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleTimeString()}</span>
+					<div class="flex flex-col md:flex-row gap-2 font-semibold md:items-center justify-start text-lg">
+						<div>
+							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
+							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
+						</div>
+						<span class="hidden md:block"> - </span>
+						<div>
+							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleDateString()}</span>
+							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleTimeString()}</span>
+						</div>
 					</div>
 				</div>
 				<div class="p-4 flex flex-col gap-2">
@@ -98,101 +104,117 @@
 		</div>
 	</section>
 
-	<Button href="/guild/{data.guild.id}/events" variant="secondary">Back to Events</Button>
+	<div class="flex flex-row items-center justify-center max-w-md">
+		<Button href="/guild/{data.guild.id}/events" variant="secondary">Back to Events</Button>
+	</div>
 
-	<div class="flex flex-col md:flex-row gap-8 items-start justify-center max-w-6xl w-full">
-		<section class="flex flex-1 flex-col gap-4 p-4 rounded-md bg-primary-foreground">
+	<div class="flex flex-col md:flex-row gap-8 items-start justify-center max-w-6xl w-full px-4">
+		<section class="flex flex-1 flex-col gap-4 p-4 rounded-md bg-primary-foreground w-full">
 			<h3 class="text-xl">Event Members</h3>
-			<div class="flex flex-col w-full justify-center items-center gap-2 justify-items-center">
-				{#each members.slice(0, memberLimit) as member (member.playerUuid + '' + member.id)}
-					<Member {member}>
-						<Popover.Mobile>
-							<div slot="trigger">
-								<Button
-									size="sm"
-									on:click={() => {
-										banMemberName = member.playerName ?? '';
-										banMemberUuid = member.playerUuid ?? '';
-										banMemberModal = true;
-									}}
-								>
-									<Trash2 size={16} class="text-destructive" />
-								</Button>
-							</div>
-							<div>
-								<p>Ban this user from the event</p>
-							</div>
-						</Popover.Mobile>
-					</Member>
-				{/each}
+			<div class="flex flex-col flex-1 w-full justify-center items-center gap-2">
+				{#await data.members}
+					<p>Loading...</p>
+				{:then members}
+					{@const m = (members ?? []).sort(sort)}
+					{#each m.slice(0, memberLimit) as member (member.playerUuid + '' + member.id)}
+						<Member {member}>
+							<Popover.Mobile>
+								<div slot="trigger">
+									<Button
+										size="sm"
+										on:click={() => {
+											banMemberName = member.playerName ?? '';
+											banMemberUuid = member.playerUuid ?? '';
+											banMemberModal = true;
+										}}
+									>
+										<Trash2 size={16} class="text-destructive" />
+									</Button>
+								</div>
+								<div>
+									<p>Ban this user from the event</p>
+								</div>
+							</Popover.Mobile>
+						</Member>
+					{/each}
+					{#if m.length > memberLimit}
+						<Button
+							variant="secondary"
+							on:click={() => {
+								memberLimit += m.length;
+							}}
+						>
+							Show All
+						</Button>
+					{:else if memberLimit > 10}
+						<Button
+							variant="secondary"
+							on:click={() => {
+								memberLimit = 10;
+							}}
+						>
+							Show Less
+						</Button>
+					{/if}
+					{#if m.length === 0}
+						<p>No members have joined this event yet.</p>
+					{/if}
+				{:catch error}
+					<p>{error.message}</p>
+				{/await}
 			</div>
-			{#if members.length > memberLimit}
-				<Button
-					variant="secondary"
-					on:click={() => {
-						memberLimit += members.length;
-					}}
-				>
-					Show All
-				</Button>
-			{:else if memberLimit > 10}
-				<Button
-					variant="secondary"
-					on:click={() => {
-						memberLimit = 10;
-					}}
-				>
-					Show Less
-				</Button>
-			{/if}
-			{#if members.length === 0}
-				<p>No members have joined this event yet.</p>
-			{/if}
 		</section>
 		<section class="flex flex-1 flex-col gap-4 p-4 rounded-md bg-primary-foreground">
 			<h3 class="text-xl">Removed Event Members</h3>
 			<div class="flex flex-col w-full justify-center items-center gap-2 justify-items-center">
-				{#each bans.slice(0, bansLimit) as member (member.playerUuid)}
-					<Member {member}>
-						<form method="POST" action="?/unbanmember" use:enhance>
-							<input type="hidden" name="id" value={event.id} />
-							<input type="hidden" name="uuid" value={member.playerUuid} />
-							<Popover.Mobile>
-								<div slot="trigger">
-									<Button type="submit" color="green" class="unban" size="sm">
-										<ArrowUp size={16} />
-									</Button>
-								</div>
-								<div>
-									<p>Unban this user from the event</p>
-								</div>
-							</Popover.Mobile>
-						</form>
-					</Member>
-				{/each}
+				{#await data.bans}
+					<p>Loading...</p>
+				{:then bans}
+					{@const b = (bans ?? []).sort(sort)}
+					{#each b.slice(0, bansLimit) as member (member.playerUuid)}
+						<Member {member}>
+							<form method="POST" action="?/unbanmember" use:enhance>
+								<input type="hidden" name="id" value={event.id} />
+								<input type="hidden" name="uuid" value={member.playerUuid} />
+								<Popover.Mobile>
+									<div slot="trigger">
+										<Button type="submit" color="green" class="unban" size="sm">
+											<ArrowUp size={16} />
+										</Button>
+									</div>
+									<div>
+										<p>Unban this user from the event</p>
+									</div>
+								</Popover.Mobile>
+							</form>
+						</Member>
+					{/each}
+					{#if b.length > bansLimit}
+						<Button
+							variant="secondary"
+							on:click={() => {
+								bansLimit += b.length;
+							}}
+						>
+							Show All
+						</Button>
+					{:else if bansLimit > 10}
+						<Button
+							variant="secondary"
+							on:click={() => {
+								bansLimit = 10;
+							}}
+						>
+							Show Less
+						</Button>
+					{/if}
+					{#if b.length === 0}
+						<p>No members have been removed from this event yet.</p>
+					{/if}
+				{:catch error}
+					<p>{error.message}</p>
+				{/await}
 			</div>
-			{#if bans.length > bansLimit}
-				<Button
-					variant="secondary"
-					on:click={() => {
-						bansLimit += bans.length;
-					}}
-				>
-					Show All
-				</Button>
-			{:else if bansLimit > 10}
-				<Button
-					variant="secondary"
-					on:click={() => {
-						bansLimit = 10;
-					}}
-				>
-					Show Less
-				</Button>
-			{/if}
-			{#if bans.length === 0}
-				<p>No members have been removed from this event yet.</p>
-			{/if}
 		</section>
 	</div>
 </main>
