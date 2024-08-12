@@ -120,3 +120,5 @@ export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
 ];
 
 export const LIST_OF_CROPS_WITH_SEEDS: Crop[] = [...LIST_OF_CROPS, Crop.Seeds];
+
+export const EXPORTABLE_CROP_FORTUNE = 12;

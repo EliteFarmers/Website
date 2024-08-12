@@ -1,4 +1,4 @@
-import { Crop } from '../constants/crops';
+import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests';
 import { fortuneFromPestBestiary } from '../util/pests';
 import { FarmingPetType } from '../constants/pets';
@@ -24,6 +24,8 @@ export interface FortuneMissingFromAPI {
 	uniqueVisitors?: number;
 	communityCenter?: number;
 	milestones?: Partial<Record<Crop, number>>;
+	exportableCrops?: Partial<Record<Crop, boolean>>;
+	refinedTruffles?: number;
 }
 
 export interface ExtraFarmingFortune {
@@ -38,11 +40,11 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	farmingLevel?: number;
 	strength?: number;
 
-	tools: EliteItemDto[] | FarmingTool[];
-	armor: EliteItemDto[] | FarmingArmor[] | ArmorSet;
-	equipment: EliteItemDto[] | FarmingEquipment[];
-	accessories: EliteItemDto[] | FarmingAccessory[];
-	pets: FarmingPetType[] | FarmingPet[];
+	tools?: EliteItemDto[] | FarmingTool[];
+	armor?: EliteItemDto[] | FarmingArmor[] | ArmorSet;
+	equipment?: EliteItemDto[] | FarmingEquipment[];
+	accessories?: EliteItemDto[] | FarmingAccessory[];
+	pets?: FarmingPetType[] | FarmingPet[];
 
 	selectedTool?: FarmingTool;
 	selectedPet?: FarmingPet;
@@ -77,6 +79,7 @@ export class FarmingPlayer {
 	constructor(options: PlayerOptions) {
 		this.options = options;
 
+		options.tools ??= [];
 		if (options.tools[0] instanceof FarmingTool) {
 			this.tools = options.tools as FarmingTool[];
 			for (const tool of this.tools) tool.setOptions(options);
@@ -86,6 +89,7 @@ export class FarmingPlayer {
 
 		this.selectedTool = this.options.selectedTool ?? this.tools[0];
 
+		options.pets ??= [];
 		if (options.pets[0] instanceof FarmingPet) {
 			this.pets = (options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
 			for (const pet of this.pets) pet.setOptions(options);
@@ -95,6 +99,7 @@ export class FarmingPlayer {
 
 		this.selectedPet = this.options.selectedPet;
 
+		options.armor ??= [];
 		if (options.armor instanceof ArmorSet) {
 			this.armorSet = options.armor;
 			this.armor = this.armorSet.pieces;
@@ -109,7 +114,7 @@ export class FarmingPlayer {
 			this.armorSet = new ArmorSet(this.armor);
 		}
 
-
+		options.equipment ??= [];
 		if (options.equipment[0] instanceof FarmingEquipment) {
 			this.equipment = (options.equipment as FarmingEquipment[]).sort((a, b) => b.fortune - a.fortune);
 			for (const e of this.equipment) e.setOptions(options);
@@ -117,6 +122,7 @@ export class FarmingPlayer {
 			this.equipment = FarmingEquipment.fromArray(options.equipment as EliteItemDto[], options);
 		}
 
+		options.accessories ??= [];
 		if (options.accessories[0] instanceof FarmingAccessory) {
 			this.accessories = (options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
@@ -225,6 +231,13 @@ export class FarmingPlayer {
 			sum += accessory.fortune;
 		}
 
+		// Refined Truffles
+		const truffles = Math.min(5, (this.options.refinedTruffles ?? 0));
+		if (truffles > 0) {
+			breakdown['Refined Truffles'] = truffles;
+			sum += truffles;
+		}
+
 		// Extra Fortune
 		for (const extra of this.options.extraFortune ?? []) {
 			if (extra.crop) continue;
@@ -277,6 +290,15 @@ export class FarmingPlayer {
 		if (accessory && accessory.fortune > 0) {
 			breakdown[accessory.item.name ?? 'Accessories'] = accessory.fortune ?? 0;
 			sum += accessory.fortune ?? 0;
+		}
+
+		// Exportable Crops
+		if (this.options.exportableCrops?.[crop]) {
+			const exportable = this.options.exportableCrops[crop];
+			if (exportable) {
+				breakdown['Exportable Crop'] = EXPORTABLE_CROP_FORTUNE;
+				sum += EXPORTABLE_CROP_FORTUNE;
+			}
 		}
 
 		// Extra Fortune

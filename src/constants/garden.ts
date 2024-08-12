@@ -73,346 +73,431 @@ export interface GardenVisitor {
 	name: string;
 	short?: string;
 	rarity: Rarity;
+	wiki: string;
 }
 
 export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 	adventurer: {
 		name: 'Adventurer',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Adventurer',
 	},
 	alchemist: {
 		name: 'Alchemist',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Alchemist',
 	},
 	andrew: {
 		name: 'Andrew',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Andrew',
 	},
 	anita: {
 		name: 'Anita',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Anita',
 	},
 	arthur: {
 		name: 'Arthur',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Arthur',
 	},
 	baker: {
 		name: 'Baker',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Baker',
 	},
 	banker_broadjaw: {
 		name: 'Banker Broadjaw',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Banker_Broadjaw',
 	},
 	bartender: {
 		name: 'Bartender',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Bartender',
 	},
 	beth: {
 		name: 'Beth',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Beth',
 	},
 	seraphine: {
 		name: 'Clerk Seraphine',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Clerk_Seraphine',
 	},
 	dalbrek: {
 		name: 'Dalbrek',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Dalbrek',
 	},
 	duke: {
 		name: 'Duke',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Duke',
 	},
 	dusk: {
 		name: 'Dusk',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Dusk',
 	},
 	emissary_carlton: {
 		name: 'Emissary Carlton',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Emissary_Carlton',
 	},
 	emissary_ceanna: {
 		name: 'Emissary Ceanna',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Emissary_Ceanna',
 	},
 	emissary_fraiser: {
 		name: 'Emissary Fraiser',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Emissary_Fraiser',
 	},
 	emissary_sisko: {
 		name: 'Emissary Sisko',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Emissary_Sisko',
 	},
 	emissary_wilson: {
 		name: 'Emissary Wilson',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Emissary_Wilson',
 	},
 	farmer_jon: {
 		name: 'Farmer Jon',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Farmer_Jon',
 	},
 	farmhand: {
 		name: 'Farmhand',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Farmhand',
 	},
 	fear_mongerer: {
 		name: 'Fear Mongerer',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Fear_Mongerer',
 	},
 	felix: {
 		name: 'Felix',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Felix',
 	},
 	fisherman: {
 		name: 'Fisherman',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Fisherman',
 	},
 	fragilis: {
 		name: 'Fragilis',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Fragilis',
 	},
 	friendly_hiker: {
 		name: 'Friendly Hiker',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Friendly_Hiker',
 	},
 	geonathan_greatforge: {
 		name: 'Geonathan Greatforge',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Geonathan_Greatforge',
 	},
 	gimley: {
 		name: 'Gimley',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Gimley',
 	},
 	gold_forger: {
 		name: 'Gold Forger',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Gold_Forger',
 	},
 	grandma_wolf: {
 		name: 'Grandma Wolf',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Grandma_Wolf',
 	},
 	guy: {
 		name: 'Guy',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Guy',
 	},
 	gwendolyn: {
 		name: 'Gwendolyn',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Gwendolyn',
 	},
 	hornum: {
 		name: 'Hornum',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Hornum',
 	},
 	hungry_hiker: {
 		name: 'Hungry Hiker',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Hungry_Hiker',
 	},
 	iron_forger: {
 		name: 'Iron Forger',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Iron_Forger',
 	},
 	jack: {
 		name: 'Jack',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Jack',
 	},
 	jacob: {
 		name: 'Jacob',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Jacob',
 	},
 	jamie: {
 		name: 'Jamie',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Jamie',
 	},
 	jerry: {
 		name: 'Jerry',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Jerry',
 	},
 	jotraeline_greatforge: {
 		name: 'Jotraeline Greatforge',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Jotraeline_Greatforge',
 	},
 	lazy_miner: {
 		name: 'Lazy Miner',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Lazy_Miner',
 	},
 	leo: {
 		name: 'Leo',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Leo',
 	},
 	liam: {
 		name: 'Liam',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Liam',
 	},
 	librarian: {
 		name: 'Librarian',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Librarian',
 	},
 	lumberjack: {
 		name: 'Lumber Jack',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Lumber_Jack',
 	},
 	lumina: {
 		name: 'Lumina',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Lumina',
 	},
 	lynn: {
 		name: 'Lynn',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Lynn',
 	},
 	madame_eleanor: {
 		name: 'Madame Eleanor Q. Goldsworth III',
 		short: 'Madame Eleanor',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Madame_Eleanor_Q._Goldsworth_III',
 	},
 	maeve: {
 		name: 'Maeve',
 		rarity: Rarity.Mythic,
+		wiki: 'https://wiki.hypixel.net/Maeve',
 	},
 	mason: {
 		name: 'Mason',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Mason',
 	},
 	odawa: {
 		name: 'Odawa',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Odawa',
 	},
 	old_man_garry: {
 		name: 'Old Man Garry',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Old_Man_Garry',
 	},
 	oringo: {
 		name: 'Oringo',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Oringo',
 	},
 	pest_wrangler: {
 		name: 'Pest Wrangler',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Pest_Wrangler',
 	},
 	disguised_rats: {
 		name: 'Pest Wrangler?',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Pest_Wrangler%3F',
 	},
 	bear_pete: {
 		name: 'Pete',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Pete',
 	},
 	plumber_joe: {
 		name: 'Plumber Joe',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Plumber_Joe',
 	},
 	puzzler: {
 		name: 'Puzzler',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Puzzler',
 	},
 	queen_mismyla: {
 		name: 'Queen Mismyla',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Queen_Mismyla',
 	},
 	ravenous_rhino: {
 		name: 'Ravenous Rhino',
 		rarity: Rarity.Mythic,
+		wiki: 'https://wiki.hypixel.net/Ravenous_Rhino',
 	},
 	rhys: {
 		name: 'Rhys',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Rhys',
 	},
 	royal_resident_reward: {
 		name: 'Royal Resident',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Royal_Resident',
 	},
 	royal_resident_peasant: {
 		name: 'Royal Resident (Snooty)',
 		short: 'Royal Res. (Snooty)',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Royal_Residents',
 	},
 	royal_resident_neighbour: {
 		name: 'Royal Resident (Neighbor)',
 		short: 'Royal Res. (Neighbor)',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Royal_Residents',
 	},
 	rusty: {
 		name: 'Rusty',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Rusty',
 	},
 	ryu: {
 		name: 'Ryu',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Ryu',
 	},
 	sargwyn: {
 		name: 'Sargwyn',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Sargwyn',
 	},
 	seymour: {
 		name: 'Seymour',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Seymour',
 	},
 	shaggy: {
 		name: 'Shaggy',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Shaggy',
 	},
 	shifty: {
 		name: 'Shifty',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Shifty',
 	},
 	sirius: {
 		name: 'Sirius',
 		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Sirius',
 	},
 	spaceman: {
 		name: 'Spaceman',
 		rarity: Rarity.Special,
+		wiki: 'https://wiki.hypixel.net/Spaceman',
 	},
 	stella: {
 		name: 'Stella',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Stella',
 	},
 	tammy: {
 		name: 'Tammy',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Tammy',
 	},
 	tarwen: {
 		name: 'Tarwen',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Tarwen',
 	},
 	terry: {
 		name: 'Terry',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Terry',
 	},
 	tia: {
 		name: 'Tia the Fairy',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Tia_the_Fairy',
 	},
 	tom: {
 		name: 'Tom',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Tom',
 	},
 	trevor: {
 		name: 'Trevor',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Trevor',
 	},
 	vex: {
 		name: 'Vex',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Vex',
 	},
 	vinyl_collector: {
 		name: 'Vinyl Collector',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Vinyl_Collector',
 	},
 	weaponsmith: {
 		name: 'Weaponsmith',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Weaponsmith',
 	},
 	wizard: {
 		name: 'Wizard',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Wizard',
 	},
 	xalx: {
 		name: 'Xalx',
 		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Xalx',
 	},
 	zog: {
 		name: 'Zog',
 		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Zog',
 	},
 };
