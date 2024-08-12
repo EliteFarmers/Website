@@ -56,6 +56,9 @@
 					<Menubar.Item href="{path}/charts" class={active('/charts') + ' cursor-pointer'}
 						>Charts</Menubar.Item
 					>
+					<Menubar.Item href="{path}/garden" class={active('/garden') + ' cursor-pointer'}
+						>Garden</Menubar.Item
+					>
 					<Menubar.Item href="{path}/rates" class={active('/rates') + ' cursor-pointer'}>Rates</Menubar.Item>
 					{#if data.authorized}
 						<Menubar.Item href="{path}/graphs" class="cursor-pointer">Admin</Menubar.Item>
@@ -69,14 +72,14 @@
 
 	<div class="flex flex-col items-center my-16 justify-center leading-none">
 		<div class="flex flex-col gap-4 justify-start sm:justify-center sm:items-center">
-			<div class="flex flex-1 flex-col sm:flex-row gap-1 sm:items-center">
+			<div class="flex flex-1 flex-col sm:flex-row gap-2 sm:items-center">
 				<span class="select-none text-gray-500">Player UUID</span>
 				<div class="flex flex-row gap-1 items-center">
 					<span class="select-all">{data.account.id}</span>
 					<CopyToClipboard text={data.account.id} size="sm" class="-m-2" />
 				</div>
 			</div>
-			<div class="flex flex-1 flex-col sm:flex-row gap-1 sm:items-center">
+			<div class="flex flex-1 flex-col sm:flex-row gap-2 sm:items-center">
 				<span class="select-none text-gray-500">Profile UUID</span>
 				<div class="flex flex-row gap-1 items-center">
 					<span class="select-all">{data.profile?.profileId}</span>
@@ -84,7 +87,7 @@
 				</div>
 			</div>
 			{#if data.account?.discordId}
-				<div class="flex flex-1 flex-col sm:flex-row gap-1 sm:items-center">
+				<div class="flex flex-1 flex-col sm:flex-row gap-2 sm:items-center">
 					<span class="select-none text-gray-500">Linked Discord ID</span>
 					<div class="flex flex-row gap-1 items-center">
 						<span class="select-all">{data.account?.discordId}</span>
@@ -92,10 +95,18 @@
 					</div>
 				</div>
 			{/if}
-			<div class="flex flex-1 flex-col sm:flex-row gap-1 sm:items-center">
-				<span class="select-none text-gray-500">Last Updated</span>
+			<div class="flex flex-1 flex-col sm:flex-row gap-2 sm:items-center">
+				<span class="select-none text-gray-500">Profile Last Updated</span>
 				<span class="select-all">{new Date((data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span>
 			</div>
+			{#if $page.url.pathname.includes('/garden')}
+				<div class="flex flex-1 flex-col sm:flex-row gap-2 sm:items-center">
+					<span class="select-none text-gray-500">Garden Last Updated</span>
+					<span class="select-all"
+						>{new Date(+(data.member?.garden?.lastSave ?? 0) * 1000).toLocaleString()}</span
+					>
+				</div>
+			{/if}
 		</div>
 	</div>
 </main>

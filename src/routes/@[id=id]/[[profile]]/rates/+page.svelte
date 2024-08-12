@@ -67,11 +67,13 @@
 	$: selectedPet = undefined as FarmingPet | undefined;
 	$: selectedTool = undefined as FarmingTool | undefined;
 	$: extra = [
-		data.member.chocolateFactory?.cocoaFortuneUpgrades ? {
-			fortune: data.member.chocolateFactory.cocoaFortuneUpgrades,
-			name: 'Cocoa Fortune',
-			crop: Crop.CocoaBeans
-		} : undefined,
+		data.member.chocolateFactory?.cocoaFortuneUpgrades
+			? {
+					fortune: data.member.chocolateFactory.cocoaFortuneUpgrades,
+					name: 'Cocoa Fortune',
+					crop: Crop.CocoaBeans,
+			  }
+			: undefined,
 	] as ExtraFarmingFortune[];
 
 	$: options = {

@@ -42,7 +42,9 @@
 </script>
 
 <div class="flex flex-row gap-2 w-full align-middle items-center">
-	<div class="flex flex-1 gap-2 justify-start align-middle w-full max-h-30 bg-primary-foreground rounded-lg p-1">
+	<div
+		class="flex flex-1 gap-2 justify-start align-middle items-center w-full max-h-30 bg-primary-foreground rounded-lg p-1"
+	>
 		{#key rank}
 			<div
 				class="flex crop-container pixelated w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 aspect-square"

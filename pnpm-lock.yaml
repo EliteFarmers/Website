@@ -57,8 +57,8 @@ dependencies:
     specifier: 8.0.0-rc19
     version: 8.0.0-rc19(svelte@4.2.15)
   farming-weight:
-    specifier: ^0.4.7
-    version: 0.4.7
+    specifier: ^0.4.9
+    version: 0.4.9
   formsnap:
     specifier: ^0.4.4
     version: 0.4.4(svelte@4.2.15)(sveltekit-superforms@1.13.4)(zod@3.23.4)
@@ -2301,8 +2301,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /farming-weight@0.4.7:
-    resolution: {integrity: sha512-0eQWgYczkn+/kfaPax/5Duv2mJGZueda3r89QF26I6NCICLvRKRkrsku4Y58y1FkvjdvNT/D+/H1d0xH6lRP4g==}
+  /farming-weight@0.4.9:
+    resolution: {integrity: sha512-eO7ePk9dvQTk7s4mQlIn5rxCqofuTYJyqBxRaPqygq5xsmxIYt+pNN2Frr05fxioYkZwLg/7mbcBA7pEblf84A==}
     dev: false
 
   /fast-deep-equal@3.1.3:
