@@ -16,7 +16,7 @@ test('Crop Milestones', () => {
 		netherWart: '88800054',
 	};
 
-	expect(getCropMilestoneLevels(fromElite)).toEqual({
+	const expected = {
 		[Crop.Cactus]: 19,
 		[Crop.Carrot]: 25,
 		[Crop.Potato]: 29,
@@ -24,6 +24,37 @@ test('Crop Milestones', () => {
 		[Crop.Melon]: 19,
 		[Crop.Pumpkin]: 21,
 		[Crop.Mushroom]: 25,
+		[Crop.CocoaBeans]: 17,
+		[Crop.SugarCane]: 21,
+		[Crop.NetherWart]: 34
+	};
+
+	expect(getCropMilestoneLevels(fromElite)).toEqual(expected);
+	expect(getCropMilestoneLevels(fromElite, true)).toEqual(expected);
+});
+
+test('Overflow Crop Milestones', () => {
+	const fromElite = {
+		cactus: '1280825',
+		carrot: '14025750',
+		potato: '45419253',
+		wheat: '257018164',
+		melon: '18008047454',
+		pumpkin: '1225508',
+		mushroom: '233085546',
+		cocoaBeans: '674766',
+		sugarCane: '2799230',
+		netherWart: '88800054',
+	};
+
+	expect(getCropMilestoneLevels(fromElite, true)).toEqual({
+		[Crop.Cactus]: 19,
+		[Crop.Carrot]: 25,
+		[Crop.Potato]: 29,
+		[Crop.Wheat]: 110,
+		[Crop.Melon]: 1225,
+		[Crop.Pumpkin]: 21,
+		[Crop.Mushroom]: 102,
 		[Crop.CocoaBeans]: 17,
 		[Crop.SugarCane]: 21,
 		[Crop.NetherWart]: 34

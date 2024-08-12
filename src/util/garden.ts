@@ -6,6 +6,7 @@ import { getCropFromName } from "./names";
 export interface LevelingStats {
 	level: number;
 	ratio: number;
+	maxed: boolean;
 	progress: number;
 	goal?: number;
 	next?: number;
@@ -17,23 +18,33 @@ export interface LevelingStats {
  * @param exp Current experience/progress
  * @param expRequired Array of the amount of experience required to reach each level, not cumulative 
  * @param maxLevel Maximum level to return
+ * @param overflow Calculate overflow levels
  */
-export function getLevel(exp: number, expRequired: number[], maxLevel?: number): LevelingStats {
+export function getLevel(exp: number, expRequired: number[], maxLevel?: number, overflow = false): LevelingStats {
 	let level = 0;
 	let xp = exp;
-	let maxed = false;
+	let maxed = true;
 
 	for (const xpRequired of expRequired) {
 		if ((xp -= xpRequired) > 0) {
 			level++;
 
 			if (level === maxLevel) {
-				maxed = true;
 				break;
 			}
 		} else {
+			maxed = false;
 			xp += xpRequired;
 			break;
+		}
+	}
+
+	if (!maxLevel && maxed && overflow) {
+		const overflowReq = expRequired.at(-1) ?? 0;
+		if (overflowReq) {
+			const overflowLevels = Math.floor(xp / overflowReq);
+			level += overflowLevels;
+			xp -= overflowLevels * overflowReq;
 		}
 	}
 
@@ -42,6 +53,7 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number):
 	return {
 		total: exp,
 		level: level,
+		maxed: maxed,
 		ratio: maxed ? 1 : xp / (nextReq ?? xp),
 		progress: xp,
 		goal: maxed ? undefined : nextReq,
@@ -53,7 +65,7 @@ export function getGardenLevel(exp: number): LevelingStats {
 	return getLevel(exp, GARDEN_EXP_REQUIRED);
 }
 
-export function getCropMilestones(crops: Record<string, number | string>): Record<Crop, LevelingStats> {
+export function getCropMilestones(crops: Record<string, number | string>, overflow = false): Record<Crop, LevelingStats> {
 	const milestones = {} as Record<string, LevelingStats>;
 
 	for (const [ cropName, collection ] of Object.entries(crops)) {
@@ -61,13 +73,13 @@ export function getCropMilestones(crops: Record<string, number | string>): Recor
 		const col = typeof collection === 'string' ? parseInt(collection) : collection;
 		if (isNaN(col) || !crop) continue;
 
-		milestones[crop] = getLevel(col, CROP_MILESTONES[crop]);
+		milestones[crop] = getLevel(col, CROP_MILESTONES[crop], undefined, overflow);
 	}
 
 	return milestones;
 }
 
-export function getCropMilestoneLevels(crops: Record<string, number | string | null | undefined>): Record<Crop, number> {
+export function getCropMilestoneLevels(crops: Record<string, number | string | null | undefined>, overflow = false): Record<Crop, number> {
 	const milestones = {} as Record<string, number>;
 
 	for (const [ cropName, collection ] of Object.entries(crops)) {
@@ -75,7 +87,7 @@ export function getCropMilestoneLevels(crops: Record<string, number | string | n
 		const col = typeof collection === 'string' ? parseInt(collection) : collection ?? NaN;
 		if (isNaN(col) || !crop) continue;
 
-		milestones[crop] = getLevel(col, CROP_MILESTONES[crop]).level;
+		milestones[crop] = getLevel(col, CROP_MILESTONES[crop], undefined, overflow).level;
 	}
 
 	return milestones;
