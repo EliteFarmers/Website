@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { getCropMilestoneLevels } from './garden';
+import { getCropMilestoneLevels, getCropMilestones } from './garden';
 import { Crop } from '../constants/crops';
 
 test('Crop Milestones', () => {
@@ -59,4 +59,19 @@ test('Overflow Crop Milestones', () => {
 		[Crop.SugarCane]: 21,
 		[Crop.NetherWart]: 34
 	});
+
+	const milestones = getCropMilestones(fromElite, true);
+	expect(milestones[Crop.Wheat].maxed).toBe(true);
+	expect(milestones[Crop.Wheat].next).toBe(111);
+
+	expect(milestones[Crop.Melon].maxed).toBe(true);
+	expect(milestones[Crop.Melon].next).toBe(1226);
+	expect(milestones[Crop.Melon].goal).toBe(15_000_000);
+	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.155);
+	expect(milestones[Crop.Melon].progress).toBe(2331654);
+
+	expect(milestones[Crop.Mushroom].maxed).toBe(true);
+
+	expect(milestones[Crop.Pumpkin].maxed).toBe(false);
+	expect(milestones[Crop.Pumpkin].next).toBe(22);
 });

@@ -39,7 +39,9 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number, 
 		}
 	}
 
-	if (!maxLevel && maxed && overflow) {
+	const overflowing = !maxLevel && maxed && overflow;
+
+	if (overflowing) {
 		const overflowReq = expRequired.at(-1) ?? 0;
 		if (overflowReq) {
 			const overflowLevels = Math.floor(xp / overflowReq);
@@ -48,16 +50,18 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number, 
 		}
 	}
 
-	const nextReq = expRequired[level];
+	const nextReq = (overflowing) 
+		? expRequired.at(-1) ?? 0
+		: expRequired[level];
 
 	return {
 		total: exp,
 		level: level,
 		maxed: maxed,
-		ratio: maxed ? 1 : xp / (nextReq ?? xp),
+		ratio: maxed && !overflowing ? 1 : xp / (nextReq ?? xp),
 		progress: xp,
-		goal: maxed ? undefined : nextReq,
-		next: maxed ? undefined : level + 1,
+		goal: maxed && !overflowing ? undefined : nextReq,
+		next: maxed && !overflowing ? undefined : level + 1,
 	};
 }
 
