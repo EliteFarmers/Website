@@ -21,7 +21,7 @@
 			<div class="font-semibold text-md md:text-lg">{@html FormatMinecraftText(tool.item.name ?? '')}</div>
 			<div class="flex flex-row gap-1 items-center">
 				<img src={PROPER_CROP_TO_IMG[getCropDisplayName(tool.crop)]} alt="Crop" class="pixelated w-5 h-5" />
-				{#if tool.isUsed()}
+				{#if tool.isUsed() || tool.farmed < 0}
 					<div class="text-md md:text-lg">{tool.farmed.toLocaleString()}</div>
 				{:else if tool.tool.type === FarmingToolType.MathematicalHoe}
 					<div class="text-sm md:text-md text-muted-foreground">
