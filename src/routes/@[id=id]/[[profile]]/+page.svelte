@@ -91,6 +91,7 @@
 					<ProfileEventMember member={event} ign={ign || ''} memberUuid={uuid ?? ''} />
 				{/each}
 				<Farmingtools
+					garden={member.garden}
 					tools={member.farmingWeight?.inventory?.tools ?? []}
 					shown={10 - (member.events?.length ?? 0)}
 				/>
