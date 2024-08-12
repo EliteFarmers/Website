@@ -4,6 +4,7 @@ import { Skill } from './skills';
 export enum FarmingPets {
 	Elephant = 'ELEPHANT',
 	MooshroomCow = 'MOOSHROOM_COW',
+	Bee = 'BEE',
 }
 
 export interface FarmingPetType {
@@ -22,20 +23,23 @@ export enum FarmingPetStatType {
 	Ability = 'ability',
 }
 
+export type FarmingPetPerLevelStat = Partial<
+Record<
+	Stat,
+	{
+		name: string;
+		multiplier: number;
+		type?: FarmingPetStatType;
+	}
+>
+>;
+
 export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
 	stats?: Partial<Record<Stat, number>>;
-	perLevelStats?: Partial<
-		Record<
-			Stat,
-			{
-				name: string;
-				multiplier: number;
-				type?: FarmingPetStatType;
-			}
-		>
-	>;
+	perLevelStats?: FarmingPetPerLevelStat;
+	perRarityLevelStats?: Partial<Record<Rarity, FarmingPetPerLevelStat>>;
 	perStatStats?: Partial<
 		Record<
 			Stat,
@@ -71,6 +75,40 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				name: 'Farming Fortune',
 				multiplier: 1,
 				type: FarmingPetStatType.Base,
+			},
+		},
+	},
+	BEE: {
+		name: 'Bee',
+		wiki: 'https://wiki.hypixel.net/Bee_Pet',
+		perLevelStats: {
+			[Stat.Strength]: {
+				name: 'Bee Strength',
+				multiplier: 0.3,
+				type: FarmingPetStatType.Base,
+			},
+		},
+		perRarityLevelStats: {
+			[Rarity.Rare]: {
+				[Stat.FarmingFortune]: {
+					name: 'Busy Buzz Buzz',
+					multiplier: 0.2,
+					type: FarmingPetStatType.Ability,
+				},
+			},
+			[Rarity.Epic]: {
+				[Stat.FarmingFortune]: {
+					name: 'Busy Buzz Buzz',
+					multiplier: 0.3,
+					type: FarmingPetStatType.Ability,
+				},
+			},
+			[Rarity.Legendary]: {
+				[Stat.FarmingFortune]: {
+					name: 'Busy Buzz Buzz',
+					multiplier: 0.3,
+					type: FarmingPetStatType.Ability,
+				},
 			},
 		},
 	},

@@ -73,6 +73,14 @@ export class FarmingPet {
 			breakdown[perLevelStats.name] = amount;
 		}
 
+		// Per rarity fortune stats
+		const perRarityStats = this.info.perRarityLevelStats?.[this.rarity]?.[Stat.FarmingFortune];
+		if (perRarityStats) {
+			const amount = perRarityStats.multiplier * this.level;
+			fortune += amount;
+			breakdown[perRarityStats.name] = amount;
+		}
+
 		// Mooshroom Cow Perk
 		if (this.type === FarmingPets.MooshroomCow && this.options?.strength) {
 			const strengthPer = 40 - this.level * 0.2;
