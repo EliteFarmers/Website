@@ -65,8 +65,8 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number, 
 	};
 }
 
-export function getGardenLevel(exp: number): LevelingStats {
-	return getLevel(exp, GARDEN_EXP_REQUIRED);
+export function getGardenLevel(exp: number, overflow = false): LevelingStats {
+	return getLevel(exp, GARDEN_EXP_REQUIRED, undefined, overflow);
 }
 
 export function getCropMilestones(crops: Record<string, number | string>, overflow = false): Record<Crop, LevelingStats> {
