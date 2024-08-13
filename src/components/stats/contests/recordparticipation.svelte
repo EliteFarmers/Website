@@ -24,7 +24,7 @@
 			</div>
 			{#if entry.removed}
 				<Popover.Mobile>
-					<div slot="trigger">
+					<div slot="trigger" class="mt-2">
 						<CircleAlert class="text-destructive" />
 					</div>
 					<div>
