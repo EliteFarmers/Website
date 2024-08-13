@@ -17,13 +17,23 @@
 			? milestones?.sort((a, b) => b[1].total - a[1].total)
 			: milestones?.sort((a, b) => a[0].localeCompare(b[0]));
 	}
+
+	function swapOverflow() {
+		overflow = !overflow;
+	}
 </script>
 
 <div class="flex-1 flex flex-col gap-2 -mt-5 max-w-4xl">
-	<button
-		class="ml-2 -mt-4 py-1 rounded-md w-24 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
-		on:click={swap}>{highestSort ? 'Collection ↓' : 'A-Z ↓'}</button
-	>
+	<div class="flex flex-row gap-2 ml-2 -mt-4">
+		<button
+			class="rounded-md w-24 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
+			on:click={swap}>{highestSort ? 'Collection ↓' : 'A-Z ↓'}</button
+		>
+		<button
+			class="rounded-md w-20 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
+			on:click={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
+		>
+	</div>
 	<div class="flex flex-col gap-2 w-full">
 		{#each list as [crop, leveling] (crop)}
 			<MilestoneBar {crop} {leveling} />

@@ -52,10 +52,10 @@
 					<Menubar.Item href="{path}/contests" class={active('/contests') + ' cursor-pointer'}
 						>Contests</Menubar.Item
 					>
-					<Menubar.Item href={path} class={active(path) + ' cursor-pointer'}>Stats</Menubar.Item>
 					<Menubar.Item href="{path}/charts" class={active('/charts') + ' cursor-pointer'}
 						>Charts</Menubar.Item
 					>
+					<Menubar.Item href={path} class={active(path) + ' cursor-pointer'}>Stats</Menubar.Item>
 					<Menubar.Item href="{path}/garden" class={active('/garden') + ' cursor-pointer'}
 						>Garden</Menubar.Item
 					>
