@@ -2,14 +2,17 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
-	import { FarmingTool as FT, type EliteItemDto } from 'farming-weight';
+	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto } from 'farming-weight';
 
 	export let tools: components['schemas']['ItemDto'][];
+	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
 	export let shown = 10;
 
 	let currentShown = shown;
 
-	$: actualTools = FT.fromArray(tools as EliteItemDto[]);
+	$: actualTools = FT.fromArray(tools as EliteItemDto[], {
+		milestones: getCropMilestoneLevels(garden?.crops ?? {}),
+	});
 </script>
 
 {#if actualTools.length !== 0}

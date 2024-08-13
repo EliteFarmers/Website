@@ -4333,6 +4333,119 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/garden/{playerUuid}/selected": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Selected Garden Of Player */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    playerUuid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["GardenDto"];
+                        "application/json": components["schemas"]["GardenDto"];
+                        "text/json": components["schemas"]["GardenDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/garden/{profileUuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Garden */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    profileUuid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["GardenDto"];
+                        "application/json": components["schemas"]["GardenDto"];
+                        "text/json": components["schemas"]["GardenDto"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/graph/{playerUuid}/{profileUuid}/crops": {
         parameters: {
             query?: never;
@@ -9172,6 +9285,7 @@ export interface components {
             removed?: boolean;
             playerUuid?: string;
             playerName?: string;
+            profileUuid?: string;
         };
         TempStatBuffResponse: {
             /** Format: int32 */

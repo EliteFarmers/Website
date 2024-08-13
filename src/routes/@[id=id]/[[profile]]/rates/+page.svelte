@@ -67,13 +67,13 @@
 	$: selectedPet = undefined as FarmingPet | undefined;
 	$: selectedTool = undefined as FarmingTool | undefined;
 	$: extra = [
-		...Object.entries($ratesData.exported)
-			.filter(([, b]) => b)
-			.map(([crop, bool]) => ({
-				crop: crop as Crop,
-				name: 'Carrolyn Fortune',
-				fortune: bool ? 12 : 0,
-			})),
+		data.member.chocolateFactory?.cocoaFortuneUpgrades
+			? {
+					fortune: data.member.chocolateFactory.cocoaFortuneUpgrades,
+					name: 'Cocoa Fortune',
+					crop: Crop.CocoaBeans,
+			  }
+			: undefined,
 	] as ExtraFarmingFortune[];
 
 	$: options = {
@@ -86,6 +86,8 @@
 		selectedTool: selectedTool,
 		selectedPet: selectedPet,
 
+		refinedTruffles: data.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
+		exportableCrops: $ratesData.exported,
 		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
 		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
 		milestones: getCropMilestoneLevels(data.member?.garden?.crops ?? {}),
@@ -103,7 +105,7 @@
 			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
 
-		extraFortune: extra,
+		extraFortune: extra.filter((e) => e),
 	} satisfies PlayerOptions;
 
 	$: player = getRatesPlayer(options);

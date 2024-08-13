@@ -6,7 +6,9 @@
 	export let tierField: number;
 
 	// Turn tierField into its binary representation
-	$: tiers = tierField?.toString(2).substring(0, 12).split('') ?? [];
+	$: tiersString = tierField?.toString(2).substring(0, 12) ?? '';
+	$: tiers = tiersString.split('') ?? [];
+	$: maxed = tiers.every((t) => t === '1');
 	// Add 0s to the end of the array if it's less than 12 in length
 	$: {
 		while (tiers.length < 12) tiers.push('0');
@@ -18,7 +20,14 @@
 		<div class="image" style="background-position: 100% {1000 - 100 * index}%;" />
 		<div class="tier-border">
 			{#each tiers as tier, i}
-				<div class="tier {tier === '1' ? 'bg-green-500' : ''}" style="grid-area: a{i};" />
+				<div
+					class="tier {tier === '1'
+						? maxed
+							? 'bg-yellow-400 dark:bg-yellow-600'
+							: 'bg-green-400 dark:bg-green-600'
+						: ''}"
+					style="grid-area: a{i};"
+				/>
 			{/each}
 		</div>
 		<div class="bg-primary-foreground absolute tier-cover" />

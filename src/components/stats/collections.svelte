@@ -27,7 +27,7 @@
 
 <div class="flex-1 flex flex-col gap-2 -mt-5 max-w-4xl">
 	<button
-		class="ml-2 -mt-4 py-1 rounded-md w-20 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
+		class="-mt-4 py-1 rounded-md w-20 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
 		on:click={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 	>
 	<div class="flex flex-col gap-2 w-full">
