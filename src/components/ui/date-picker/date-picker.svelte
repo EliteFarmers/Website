@@ -13,13 +13,16 @@
 	export let value: DateValue | undefined = undefined;
 	export let minValue: DateValue | undefined = undefined;
 	export let maxValue: DateValue | undefined = undefined;
+
+	let className: string | undefined | null = undefined;
+	export { className as class };
 </script>
 
 <Popover.Root openFocus>
 	<Popover.Trigger asChild let:builder>
 		<Button
 			variant="outline"
-			class={cn('w-[280px] justify-start text-left font-normal', !value && 'text-muted-foreground')}
+			class={cn('w-[280px] justify-start text-left font-normal', !value && 'text-muted-foreground', className)}
 			builders={[builder]}
 		>
 			<CalendarIcon class="mr-2 h-4 w-4" />
@@ -27,6 +30,6 @@
 		</Button>
 	</Popover.Trigger>
 	<Popover.Content class="w-auto p-0">
-		<Calendar bind:value initialFocus {maxValue} {minValue} />
+		<Calendar bind:value initialFocus {maxValue} {minValue} fixedWeeks={true} />
 	</Popover.Content>
 </Popover.Root>

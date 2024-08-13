@@ -5,10 +5,12 @@
 	import { Area, Axis, Chart, Highlight, Spline, Svg, Tooltip } from 'layerchart';
 
 	export let data: { date: string; value: number }[];
+	export let ratio = 0;
 	export let crop = 'wheat';
 
 	$: first = data[0];
 	$: last = data.at(-1);
+	$: yDomain = last ? [first.value, last.value + (last.value - first.value) * (1 - ratio)] : undefined;
 	$: days = Math.ceil((+(last?.date ?? 0) - +first.date) / 86400);
 
 	const dateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -44,7 +46,7 @@
 		x="date"
 		xScale={scaleLinear()}
 		y="value"
-		yNice
+		{yDomain}
 		padding={{ left: 64, bottom: 24, top: 10, right: 10 }}
 		tooltip={{ mode: 'bisect-x' }}
 	>
