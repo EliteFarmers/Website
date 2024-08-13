@@ -53,6 +53,9 @@ dependencies:
   d3-time-format:
     specifier: ^4.1.0
     version: 4.1.0
+  date-fns:
+    specifier: ^3.6.0
+    version: 3.6.0
   embla-carousel-svelte:
     specifier: 8.0.0-rc19
     version: 8.0.0-rc19(svelte@4.2.15)

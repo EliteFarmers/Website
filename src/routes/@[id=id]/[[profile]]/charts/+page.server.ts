@@ -25,15 +25,19 @@ export const actions: Actions = {
 		const uuid = data.get('uuid') as string | undefined;
 		const profile = data.get('profile') as string | undefined;
 		const start = data.get('start') as string | undefined;
+		const days = data.get('days') as string | undefined;
+		const daysNum = days ? parseInt(days) : undefined;
 
 		if (!uuid || !profile || !start) {
 			return fail(400);
 		}
 
-		const { data: collectionGraph, response } = await GetCropCollectionPoints(uuid, profile, start).catch(() => ({
-			data: undefined,
-			response: undefined,
-		}));
+		const { data: collectionGraph, response } = await GetCropCollectionPoints(uuid, profile, start, daysNum).catch(
+			() => ({
+				data: undefined,
+				response: undefined,
+			})
+		);
 
 		if (response && response.status !== 200) {
 			console.log(response.statusText);
