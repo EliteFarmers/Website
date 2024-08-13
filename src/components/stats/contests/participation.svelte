@@ -6,7 +6,11 @@
 	export let entry: components['schemas']['StrippedContestParticipationDto'];
 </script>
 
-<a href="/@{entry.playerName}" data-sveltekit-preload-data="tap" class="bg-card-primary hover:bg-muted rounded-md">
+<a
+	href="/@{entry.playerName}/{entry.profileUuid}"
+	data-sveltekit-preload-data="tap"
+	class="bg-card-primary hover:bg-muted rounded-md"
+>
 	<div class="flex gap-0 md:gap-2 justify-between">
 		<div
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
