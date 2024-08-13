@@ -5,7 +5,7 @@
 
 	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
 
-	const upgradesList = Array.from({ length: 9 });
+	const upgradesList = [...Array(9).keys()];
 
 	$: upgrades = getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>);
 	$: crops = Object.entries(upgrades)
@@ -19,14 +19,14 @@
 		.sort((a, b) => a.name.localeCompare(b.name));
 </script>
 
-<div class="flex flex-wrap justify-start">
+<div class="flex flex-wrap justify-start -mt-0.5">
 	{#each crops as { name, img, level } (name)}
 		{@const maxed = level === upgradesList.length}
 		<div class="flex flex-row basis-16 md:basis-48 my-1.5 items-center justify-start gap-[0.1rem] md:gap-1">
 			<img src={img} class="w-6 h-6 pixelated" alt={name} />
-			{#each upgradesList as _, i (i)}
+			{#each upgradesList as tier, i (i)}
 				<div
-					class="w-3 h-5 hidden md:block md:h-6 rounded-sm {i + 1 > level
+					class="w-3 h-5 hidden md:block md:h-6 rounded-sm {tier + 1 > level
 						? 'bg-primary-foreground'
 						: maxed
 						? 'bg-yellow-400 dark:bg-yellow-600'
