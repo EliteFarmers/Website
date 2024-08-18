@@ -15,8 +15,9 @@
 	$: data = {} as Record<string, { name: string; data: { x: number; y: number }[] }>;
 	$: graphData = Object.values(data).filter(
 		({ name }) =>
-			!$anyCropSelected ||
-			$selectedCrops[PROPER_CROP_NAME[name as keyof typeof PROPER_CROP_NAME] as keyof typeof selectedCrops]
+			name !== 'seeds' &&
+			(!$anyCropSelected ||
+				$selectedCrops[PROPER_CROP_NAME[name as keyof typeof PROPER_CROP_NAME] as keyof typeof selectedCrops])
 	);
 	$: colors = graphData.map(({ name }) => CROP_TO_HEX[name] ?? '#000000');
 

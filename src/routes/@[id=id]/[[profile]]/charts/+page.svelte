@@ -29,21 +29,23 @@
 	$: entries = mapCrops(crops);
 
 	function mapCrops(crops: Record<string, { date: string; value: number }[]>) {
-		return Object.entries(crops).map(([crop, data]) => {
-			const c = getCropFromName(crop) ?? Crop.Wheat;
-			const name = getCropDisplayName(c);
+		return Object.entries(crops)
+			.filter(([crop]) => crop !== 'seeds')
+			.map(([crop, data]) => {
+				const c = getCropFromName(crop) ?? Crop.Wheat;
+				const name = getCropDisplayName(c);
 
-			if (data.length < 2) {
-				increases[crop] = 0;
-			} else {
-				const first = data[0].value;
-				const last = data.at(-1)?.value ?? first;
-				increases[crop] = (last - first) * CROP_WEIGHT[c];
-				highestIncrease = Math.max(highestIncrease, increases[crop]);
-			}
+				if (data.length < 2) {
+					increases[crop] = 0;
+				} else {
+					const first = data[0].value;
+					const last = data.at(-1)?.value ?? first;
+					increases[crop] = (last - first) * CROP_WEIGHT[c];
+					highestIncrease = Math.max(highestIncrease, increases[crop]);
+				}
 
-			return { name, data, crop };
-		});
+				return { name, data, crop };
+			});
 	}
 
 	$: selected = (crop: string) => $selectedCrops[crop] || !$anySelected;
