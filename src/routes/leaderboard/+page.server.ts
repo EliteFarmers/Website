@@ -14,6 +14,7 @@ export const load: PageServerLoad = ({ setHeaders }) => {
 		collections: lbs.filter((lb) => lb.type === LeaderboardType.Collection),
 		general: lbs.filter((lb) => lb.type === LeaderboardType.Misc),
 		pest: lbs.filter((lb) => lb.type === LeaderboardType.Pest),
+		milestones: lbs.filter((lb) => lb.type === LeaderboardType.Milestone),
 	};
 
 	setHeaders({

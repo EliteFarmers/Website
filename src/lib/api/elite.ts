@@ -456,6 +456,19 @@ export const GetPlayersRank = async (
 		},
 	});
 
+export const GetProfilesRank = async (leaderboardId: string, profileUuid: string, upcoming = false) =>
+	await GET('/leaderboard/rank/{leaderboardId}/{profileUuid}', {
+		params: {
+			path: {
+				leaderboardId,
+				profileUuid,
+			},
+			query: {
+				includeUpcoming: upcoming,
+			},
+		},
+	});
+
 export const GetUpcomingEvents = async () => await GET('/events', {});
 
 export const GetGuildEvents = async (guildId: string) =>

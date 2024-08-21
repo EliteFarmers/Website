@@ -7,7 +7,7 @@
 
 	$: categories = data.categories;
 
-	$: ({ skills, general, collections, pest } = categories);
+	$: ({ skills, general, collections, pest, milestones } = categories);
 </script>
 
 <Head
@@ -23,5 +23,6 @@
 		<Category leaderboards={collections.sort((a, b) => a.name.localeCompare(b.name))} title="Collections" />
 		<Category leaderboards={pest} title="Pests" />
 		<Category leaderboards={skills.sort((a, b) => a.name.localeCompare(b.name))} title="Skills" />
+		<Category leaderboards={milestones.sort((a, b) => a.name.localeCompare(b.name))} title="Milestones" />
 	</div>
 </main>

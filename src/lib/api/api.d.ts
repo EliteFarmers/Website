@@ -5506,6 +5506,65 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/leaderboard/rank/{leaderboardId}/{profileUuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a profile's rank in a profile leaderboard */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Include upcoming profiles */
+                    includeUpcoming?: boolean;
+                    /** @description Starting rank for upcoming profiles */
+                    atRank?: number;
+                };
+                header?: never;
+                path: {
+                    /** @description A profile leaderboard ID */
+                    leaderboardId: string;
+                    /** @description Profile Uuid (no hyphens) */
+                    profileUuid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["LeaderboardPositionDto"];
+                        "application/json": components["schemas"]["LeaderboardPositionDto"];
+                        "text/json": components["schemas"]["LeaderboardPositionDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/graph/medals/now": {
         parameters: {
             query?: never;
@@ -8141,6 +8200,9 @@ export interface components {
             pestLeaderboards?: {
                 [key: string]: components["schemas"]["Leaderboard"];
             };
+            profileLeaderboards?: {
+                [key: string]: components["schemas"]["Leaderboard"];
+            };
         };
         ConfiguredProductFeaturesDto: {
             /**
@@ -8339,7 +8401,11 @@ export interface components {
         CropCollectionsDataPointDto: {
             /** Format: int64 */
             timestamp?: number;
+            cropWeight?: string;
             crops: {
+                [key: string]: number;
+            };
+            pests: {
                 [key: string]: number;
             };
         };
@@ -8883,6 +8949,7 @@ export interface components {
             order: string;
             /** Format: int32 */
             scoreFormat?: number;
+            profile?: boolean;
         };
         LeaderboardDto: {
             id: string;
@@ -8893,14 +8960,22 @@ export interface components {
             offset?: number;
             /** Format: int32 */
             maxEntries?: number;
+            profile?: boolean;
             entries?: components["schemas"]["LeaderboardEntryDto"][];
         };
         LeaderboardEntryDto: {
+            /** @description Player's IGN if player leaderboard */
             ign?: string | null;
+            /** @description Player's profile name if player leaderboard */
             profile?: string | null;
-            uuid?: string | null;
-            /** Format: double */
+            /** @description Uuid of the player or profile */
+            uuid: string;
+            /**
+             * Format: double
+             * @description Score of the entry
+             */
             amount?: number;
+            members?: components["schemas"]["ProfileLeaderboardMemberDto"][] | null;
         };
         LeaderboardPositionDto: {
             /** Format: int32 */
@@ -8922,6 +8997,9 @@ export interface components {
                 [key: string]: number;
             };
             pests?: {
+                [key: string]: number;
+            };
+            profile?: {
                 [key: string]: number;
             };
         };
@@ -9146,6 +9224,15 @@ export interface components {
              */
             rank?: number;
             score?: string | null;
+        };
+        ProfileLeaderboardMemberDto: {
+            ign: string;
+            uuid: string;
+            /**
+             * Format: int32
+             * @description Skyblock xp of the player (used for sorting)
+             */
+            xp?: number;
         };
         ProfileMemberDto: {
             profileId: string;
