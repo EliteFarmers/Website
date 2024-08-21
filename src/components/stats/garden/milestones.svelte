@@ -2,8 +2,10 @@
 	import type { components } from '$lib/api/api';
 	import { getCropMilestones } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
+	import { API_CROP_TO_CROP } from '$lib/constants/crops';
 
 	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
+	export let ranks: components['schemas']['LeaderboardPositionsDto']['profile'] | undefined = undefined;
 	export let overflow = false;
 
 	$: milestones = Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow));
@@ -20,6 +22,10 @@
 
 	function swapOverflow() {
 		overflow = !overflow;
+	}
+
+	function getCropKey(crop: string) {
+		return API_CROP_TO_CROP[crop as keyof typeof API_CROP_TO_CROP];
 	}
 </script>
 
@@ -39,7 +45,8 @@
 	</div>
 	<div class="flex flex-col gap-2 w-full">
 		{#each list as [crop, leveling] (crop)}
-			<MilestoneBar {crop} {leveling} />
+			{@const key = getCropKey(crop)}
+			<MilestoneBar {crop} {leveling} {key} rank={ranks?.[key + '-milestone']} />
 		{/each}
 	</div>
 </div>

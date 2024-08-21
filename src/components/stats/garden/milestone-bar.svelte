@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { API_CROP_TO_CROP } from '$lib/constants/crops';
+	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';
 
 	export let crop: string;
+	export let key: string;
 	export let leveling: LevelingStats;
+	export let rank = -1;
 
 	let hovering = false;
-	$: key = API_CROP_TO_CROP[crop as keyof typeof API_CROP_TO_CROP];
 	$: displayName = getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat);
 
 	$: percent = Math.round(leveling.ratio * 100);
@@ -49,6 +50,16 @@
 		<div class="flex flex-col gap-1 justify-center flex-grow">
 			<div class="flex flex-row justify-between items-end gap-2">
 				<div class="flex flex-row items-center gap-1">
+					{#if rank > 0}
+						<a
+							href="/leaderboard/{key}-milestone/{$page.params.id}-{$page.params.profile}"
+							class="px-1.5 bg-card rounded-md hover:bg-muted"
+						>
+							<span class="text-sm xs:text-md sm:text-lg">#</span><span
+								class="text-md xs:text-lg sm:text-xl">{rank}</span
+							>
+						</a>
+					{/if}
 					<p class="text-md sm:text-lg font-semibold whitespace-nowrap">{displayName}</p>
 				</div>
 				<p class="md:ml-2 text-right font-semibold text-xl lg:text-2xl pr-1">

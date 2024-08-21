@@ -54,12 +54,12 @@
 				</p>
 				{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
 					<div class="flex flex-row gap-1.5 text-xs xs:text-sm sm:text-md text-start">
-						{#each entry.members.slice(1, 3) ?? [] as member, i}
+						{#each entry.members.slice(1, 3) ?? [] as member}
 							<p>{member.ign}</p>
 						{/each}
 						{#if entry.members.length > 3}
 							<p class="font-semibold">+{entry.members.length - 3}</p>
-							<p />{/if}
+						{/if}
 					</div>
 				{:else}
 					<div

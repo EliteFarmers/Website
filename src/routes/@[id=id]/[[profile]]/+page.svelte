@@ -75,7 +75,7 @@
 		<Skills
 			open={showSkills}
 			skills={member.skills}
-			skillRanks={data.ranks?.skills}
+			ranks={data.ranks}
 			levelCaps={data.member.unparsed?.levelCaps}
 			gardenXp={member.garden?.experience ?? 0}
 		/>

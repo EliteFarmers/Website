@@ -9,9 +9,11 @@
 
 	export let open = false;
 	export let skills: components['schemas']['ProfileMemberDto']['skills'];
-	export let skillRanks: components['schemas']['LeaderboardPositionsDto']['skills'];
+	export let ranks: components['schemas']['LeaderboardPositionsDto'] | undefined = undefined;
 	export let levelCaps: Record<string, number | undefined> | undefined = undefined;
 	export let gardenXp = 0;
+
+	$: skillRanks = ranks?.skills;
 </script>
 
 <Collapsible.Root bind:open class="w-full mx-4">
@@ -28,7 +30,7 @@
 						<ChevronsUpDown class="h-4 w-4" />
 						<span class="sr-only">Skill Toggle</span>
 					</Button>
-					<Skillbar name="Garden" progress={getGardenLevel(gardenXp)} />
+					<Skillbar name="Garden" rank={ranks?.profile?.garden} progress={getGardenLevel(gardenXp)} />
 				</div>
 				<div class="md:hidden">
 					<Button builders={[builder]} variant="outline" class="w-10 p-0 -mb-1">
