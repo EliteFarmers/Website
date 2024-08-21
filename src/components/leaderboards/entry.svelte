@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { LeaderboardEntry } from '$lib/api/elite';
+	import { type LeaderboardConfig } from '$lib/constants/leaderboards';
 
 	export let entry: LeaderboardEntry;
 	export let highlight = false;
 	export let rank: number;
 	export let formatting: 'number' | 'decimal' = 'number';
+	export let leaderboard: LeaderboardConfig | undefined = undefined;
 
 	$: options = {
 		maximumFractionDigits: 1,
@@ -19,16 +21,19 @@
 			options.maximumFractionDigits = 2;
 		}
 	}
+
 	$: ({ ign, amount, profile } = entry);
+	$: pageLink = entry.members ? entry.members[0].ign : ign;
+	$: profileLink = leaderboard?.profile ? entry.uuid : profile;
 </script>
 
 <a
-	href="/@{encodeURIComponent(ign ?? '')}/{encodeURIComponent(profile ?? '')}"
+	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profileLink ?? '')}{leaderboard?.subpage ?? ''}"
 	class="inline-block w-full hover:shadow-lg hover:bg-muted align-middle py-1 sm:p-1 bg-primary-foreground border-2 max-w-2xl {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"
 >
-	<div class="flex gap-0 md:gap-2 justify-between">
+	<div class="flex gap-0 md:gap-2 justify-between items-center">
 		<div
 			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
 		>
@@ -41,12 +46,29 @@
 			</div>
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
-				<h1 class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{ign}</h1>
-				<h4
-					class="inline text-xs xs:text-sm sm:text-md text-start overflow-hidden whitespace-nowrap text-ellipsis"
-				>
-					{profile}
-				</h4>
+				<p class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">
+					{#if leaderboard?.profile}
+						{entry.members?.[0].ign}
+					{:else}
+						{ign}
+					{/if}
+				</p>
+				{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
+					<div class="flex flex-row gap-1.5 text-xs xs:text-sm sm:text-md text-start">
+						{#each entry.members.slice(1, 3) ?? [] as member}
+							<p>{member.ign}</p>
+						{/each}
+						{#if entry.members.length > 3}
+							<p class="font-semibold">+{entry.members.length - 3}</p>
+						{/if}
+					</div>
+				{:else}
+					<div
+						class="inline overflow-hidden whitespace-nowrap text-ellipsis text-xs xs:text-sm sm:text-md text-start"
+					>
+						{profile}
+					</div>
+				{/if}
 			</div>
 		</div>
 		<div class="flex gap-2 p-1 justify-end align-middle items-center mr-2 md:mx-2">

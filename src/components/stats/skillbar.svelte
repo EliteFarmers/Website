@@ -40,7 +40,7 @@
 	<div class="flex flex-row gap-2 items-center">
 		{#if rank >= 0}
 			<a
-				href="/leaderboard/skills/{name.toLowerCase()}/{$page.params.id}-{$page.params.profile}"
+				href="/leaderboard/{name.toLowerCase()}/{$page.params.id}-{$page.params.profile}"
 				class="py-0.5 px-1.5 font-semibold text-green-700 dark:text-yellow-400 bg-primary-foreground rounded-md hover:bg-muted"
 			>
 				<span class="text-sm xs:text-md sm:text-lg leading-none">#</span><span
@@ -48,7 +48,7 @@
 				>
 			</a>
 		{/if}
-		<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level}</strong></span>
+		<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level.toLocaleString()}</strong></span>
 	</div>
 	<div
 		class="relative w-full bg-primary-foreground h-8 rounded-lg"

@@ -1,4 +1,4 @@
-import { GetCollectionLeaderboardSlice, GetLeaderboardSlice, GetSkillLeaderboardSlice } from '$lib/api/elite';
+import { GetLeaderboardSlice } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import { LEADERBOARDS, LeaderboardType } from '$lib/constants/leaderboards';
 
@@ -28,12 +28,7 @@ export const load = (async ({ params, parent }) => {
 	const type = settings.type;
 
 	try {
-		const { data: lb } =
-			type === LeaderboardType.Skill
-				? await GetSkillLeaderboardSlice(category, startNum, 20)
-				: type === LeaderboardType.Collection
-				? await GetCollectionLeaderboardSlice(category, startNum, 20)
-				: await GetLeaderboardSlice(category, startNum, 20);
+		const { data: lb } = await GetLeaderboardSlice(category, startNum, 20);
 
 		if (!lb) {
 			throw error(500, "Leaderboard data couldn't be fetched");

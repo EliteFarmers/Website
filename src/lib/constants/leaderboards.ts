@@ -3,6 +3,7 @@ export enum LeaderboardType {
 	Collection = 1,
 	Skill = 2,
 	Pest = 3,
+	Milestone = 4,
 }
 
 export interface LeaderboardConfig {
@@ -11,6 +12,9 @@ export interface LeaderboardConfig {
 	name: string;
 	icon?: string;
 	title: string;
+	profile?: boolean;
+	overflow?: boolean;
+	subpage?: string;
 }
 
 export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
@@ -19,6 +23,15 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		title: 'Farming Weight',
 		name: 'Farming Weight',
 		type: LeaderboardType.Misc,
+	},
+	garden: {
+		name: 'Garden',
+		title: 'Garden XP',
+		limit: 5_000,
+		type: LeaderboardType.Misc,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
 	},
 	skyblockxp: {
 		limit: 5_000,
@@ -37,6 +50,14 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		title: 'Jacob Contest Participations',
 		name: 'Jacob Contests',
 		type: LeaderboardType.Misc,
+	},
+	'visitors-accepted': {
+		limit: 5_000,
+		title: 'Visitors Accepted',
+		name: 'Visitors Accepted',
+		type: LeaderboardType.Misc,
+		profile: true,
+		subpage: '/garden',
 	},
 	firstplace: {
 		limit: 1_000,
@@ -284,6 +305,106 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		limit: 5_000,
 		icon: '/images/pests/fly.png',
 		type: LeaderboardType.Pest,
+	},
+	'cactus-milestone': {
+		limit: 5_000,
+		title: 'Cactus Milestone Collection',
+		name: 'Cactus Milestone',
+		icon: '/images/crops/cactus.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'carrot-milestone': {
+		limit: 5_000,
+		title: 'Carrot Milestone Collection',
+		name: 'Carrot Milestone',
+		icon: '/images/crops/carrot.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'potato-milestone': {
+		limit: 5_000,
+		title: 'Potato Milestone Collection',
+		name: 'Potato Milestone',
+		icon: '/images/crops/potato.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'pumpkin-milestone': {
+		limit: 5_000,
+		title: 'Pumpkin Milestone Collection',
+		name: 'Pumpkin Milestone',
+		icon: '/images/crops/pumpkin.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'wheat-milestone': {
+		limit: 5_000,
+		title: 'Wheat Milestone Collection',
+		name: 'Wheat Milestone',
+		icon: '/images/crops/wheat.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'melon-milestone': {
+		limit: 5_000,
+		title: 'Melon Milestone Collection',
+		name: 'Melon Milestone',
+		icon: '/images/crops/melon.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'mushroom-milestone': {
+		limit: 5_000,
+		title: 'Mushroom Milestone Collection',
+		name: 'Mushroom	Milestone',
+		icon: '/images/crops/mushroom.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'cocoa-milestone': {
+		limit: 5_000,
+		title: 'Cocoa Bean Milestone Collection',
+		name: 'Cocoa Bean Milestone',
+		icon: '/images/crops/cocoa.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'sugarcane-milestone': {
+		limit: 5_000,
+		title: 'Sugar Cane Milestone Collection',
+		name: 'Sugar Cane Milestone',
+		icon: '/images/crops/sugarcane.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
+	},
+	'netherwart-milestone': {
+		limit: 5_000,
+		title: 'Nether Wart Milestone Collection',
+		name: 'Nether Wart Milestone',
+		icon: '/images/crops/netherwart.png',
+		type: LeaderboardType.Milestone,
+		profile: true,
+		overflow: true,
+		subpage: '/garden',
 	},
 };
 

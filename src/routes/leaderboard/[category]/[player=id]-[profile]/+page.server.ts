@@ -1,9 +1,10 @@
-import { GetAccount, GetPlayersRank } from '$lib/api/elite';
+import { GetAccount, GetPlayersRank, GetProfilesRank } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params }) => {
+export const load = (async ({ params, parent }) => {
 	const { category, player: ign, profile: profileName } = params;
+	const { leaderboard } = await parent();
 
 	const { data: player } = await GetAccount(ign);
 
@@ -21,7 +22,9 @@ export const load = (async ({ params }) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: rank } = await GetPlayersRank(category, player.id, profile.profileId);
+	const { data: rank } = leaderboard?.profile
+		? await GetProfilesRank(category, profile.profileId)
+		: await GetPlayersRank(category, player.id, profile.profileId);
 
 	if (!rank?.rank || rank.rank === -1) {
 		throw error(404, "This player isn't on the leaderboard!");

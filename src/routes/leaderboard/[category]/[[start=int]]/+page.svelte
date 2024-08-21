@@ -25,6 +25,7 @@
 		if (data.lb?.id === 'skyblockxp') {
 			entries = entries.map((entry) => ({
 				ign: entry.ign,
+				uuid: entry.uuid,
 				profile: entry.profile,
 				amount: (entry.amount ?? 0) / 100,
 			}));
@@ -47,7 +48,7 @@
 <Head {title} description={`${title} for Hypixel Skyblock.`} />
 
 <section class="flex flex-col mt-16 justify-center w-full">
-	<h1 class="text-4xl text-center mt-8 mb-16">{title}</h1>
+	<h1 class="text-4xl text-center mt-8 mb-16 max-w-md self-center">{title}</h1>
 	<div class="flex w-full justify-center gap-4 text-center">
 		<Pagination.Root
 			count={data.lb.maxEntries ?? 1000}
@@ -91,17 +92,17 @@
 	>
 		<div class="flex flex-col gap-2 p-2 w-full items-center lg:items-end">
 			{#each firstHalf as entry, i (entry)}
-				<Entry rank={i + offset} {entry} {formatting} />
+				<Entry rank={i + offset} {entry} {formatting} leaderboard={data.leaderboard} />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full items-center lg:items-start">
 			{#each secondHalf as entry, i (entry)}
-				<Entry rank={i + firstHalf.length + offset} {entry} {formatting} />
+				<Entry rank={i + firstHalf.length + offset} {entry} {formatting} leaderboard={data.leaderboard} />
 			{/each}
 		</div>
 	</div>
 	<h3 class="text-sm text-center w-1/2 mx-auto py-4">
 		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched
-		on this website. New entries are recalculated every 10 minutes.
+		on this website. New entries are recalculated every 30 minutes.
 	</h3>
 </section>
