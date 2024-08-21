@@ -24,10 +24,11 @@
 
 	$: ({ ign, amount, profile } = entry);
 	$: pageLink = entry.members ? entry.members[0].ign : ign;
+	$: profileLink = leaderboard?.profile ? entry.uuid : profile;
 </script>
 
 <a
-	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profile ?? '')}"
+	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profileLink ?? '')}{leaderboard?.subpage ?? ''}"
 	class="inline-block w-full hover:shadow-lg hover:bg-muted align-middle py-1 sm:p-1 bg-primary-foreground border-2 max-w-2xl {highlight
 		? 'border-yellow-400'
 		: 'border-transparent'} rounded-md"

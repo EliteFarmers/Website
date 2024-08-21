@@ -14,6 +14,7 @@ export interface LeaderboardConfig {
 	title: string;
 	profile?: boolean;
 	overflow?: boolean;
+	subpage?: string;
 }
 
 export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
@@ -30,6 +31,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Misc,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	skyblockxp: {
 		limit: 5_000,
@@ -55,6 +57,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Visitors Accepted',
 		type: LeaderboardType.Misc,
 		profile: true,
+		subpage: '/garden',
 	},
 	firstplace: {
 		limit: 1_000,
@@ -311,6 +314,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'carrot-milestone': {
 		limit: 5_000,
@@ -320,6 +324,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'potato-milestone': {
 		limit: 5_000,
@@ -329,6 +334,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'pumpkin-milestone': {
 		limit: 5_000,
@@ -338,6 +344,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'wheat-milestone': {
 		limit: 5_000,
@@ -347,6 +354,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'melon-milestone': {
 		limit: 5_000,
@@ -356,6 +364,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'mushroom-milestone': {
 		limit: 5_000,
@@ -365,6 +374,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'cocoa-milestone': {
 		limit: 5_000,
@@ -374,6 +384,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'sugarcane-milestone': {
 		limit: 5_000,
@@ -383,6 +394,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 	'netherwart-milestone': {
 		limit: 5_000,
@@ -392,6 +404,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Milestone,
 		profile: true,
 		overflow: true,
+		subpage: '/garden',
 	},
 };
 
