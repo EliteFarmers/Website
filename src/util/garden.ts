@@ -69,6 +69,10 @@ export function getGardenLevel(exp: number, overflow = false): LevelingStats {
 	return getLevel(exp, GARDEN_EXP_REQUIRED, undefined, overflow);
 }
 
+export function getCropMilestone(crop: Crop, collection: number, overflow = false): LevelingStats {
+	return getLevel(collection, CROP_MILESTONES[crop], undefined, overflow);
+}
+
 export function getCropMilestones(crops: Record<string, number | string>, overflow = false): Record<Crop, LevelingStats> {
 	const milestones = {} as Record<string, LevelingStats>;
 
