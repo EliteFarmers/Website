@@ -23,6 +23,14 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Farming Weight',
 		type: LeaderboardType.Misc,
 	},
+	garden: {
+		name: 'Garden',
+		title: 'Garden XP',
+		limit: 5_000,
+		type: LeaderboardType.Misc,
+		profile: true,
+		overflow: true,
+	},
 	skyblockxp: {
 		limit: 5_000,
 		title: 'Skyblock Level',
@@ -40,6 +48,13 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		title: 'Jacob Contest Participations',
 		name: 'Jacob Contests',
 		type: LeaderboardType.Misc,
+	},
+	'visitors-accepted': {
+		limit: 5_000,
+		title: 'Visitors Accepted',
+		name: 'Visitors Accepted',
+		type: LeaderboardType.Misc,
+		profile: true,
 	},
 	firstplace: {
 		limit: 1_000,
@@ -287,21 +302,6 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		limit: 5_000,
 		icon: '/images/pests/fly.png',
 		type: LeaderboardType.Pest,
-	},
-	garden: {
-		name: 'Garden',
-		title: 'Garden XP',
-		limit: 5_000,
-		type: LeaderboardType.Skill,
-		profile: true,
-		overflow: true,
-	},
-	'visitors-accepted': {
-		limit: 5_000,
-		title: 'Visitors Accepted',
-		name: 'Visitors Accepted',
-		type: LeaderboardType.Misc,
-		profile: true,
 	},
 	'cactus-milestone': {
 		limit: 5_000,
