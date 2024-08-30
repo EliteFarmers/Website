@@ -9,6 +9,7 @@ interface CalculateDropsOptions {
 	farmingFortune?: number;
 	blocksBroken: number;
 	dicerLevel?: 1 | 2 | 3;
+	armorPieces?: 1 | 2 | 3 | 4;
 }
 
 const crops = [
@@ -137,7 +138,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		otherCollection: {} as Record<string, number>,
 	};
 
-	const { farmingFortune, blocksBroken, crop, bountiful } = options;
+	const { farmingFortune, blocksBroken, crop, bountiful, armorPieces = 4 } = options;
 
 	result.fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
 	let fortune =  result.fortune + 100;
@@ -170,7 +171,6 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		result.otherCollection['Mushroom'] = mushroomDrops;
 	}
 
-	const armorPieces = crop === Crop.Cactus ? 3 : 4;
 	const specialCrops = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces);
 
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
