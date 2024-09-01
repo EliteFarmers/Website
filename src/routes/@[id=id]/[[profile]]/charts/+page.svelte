@@ -5,7 +5,9 @@
 	import type { ActionData, PageData } from './$types';
 	import { DatePicker } from '$ui/date-picker';
 	import { SelectSimple } from '$ui/select';
+	import { Switch } from '$ui/switch';
 	import { Button } from '$ui/button';
+	import * as Popover from '$ui/popover';
 	import { Crop, CROP_WEIGHT, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
@@ -26,9 +28,12 @@
 	$: crops = form?.graph ?? data.crops;
 	$: increases = {} as Record<string, number>;
 	$: highestIncrease = 0;
+	$: pestIncreased = 0;
 	$: entries = mapCrops(crops);
+	$: pestToggle = false;
+	$: showPests = pestToggle && pestIncreased;
 
-	function mapCrops(crops: Record<string, { date: string; value: number }[]>) {
+	function mapCrops(crops: typeof data.crops) {
 		return Object.entries(crops)
 			.filter(([crop]) => crop !== 'seeds')
 			.map(([crop, data]) => {
@@ -38,10 +43,11 @@
 				if (data.length < 2) {
 					increases[crop] = 0;
 				} else {
-					const first = data[0].value;
-					const last = data.at(-1)?.value ?? first;
-					increases[crop] = (last - first) * CROP_WEIGHT[c];
+					const first = data[0];
+					const last = data.at(-1) ?? first;
+					increases[crop] = (last.value - first.value) * CROP_WEIGHT[c];
 					highestIncrease = Math.max(highestIncrease, increases[crop]);
+					pestIncreased = last.pests > 0;
 				}
 
 				return { name, data, crop };
@@ -117,6 +123,21 @@
 					</Button>
 				</div>
 				<div class="flex flex-row gap-2 items-center">
+					<div class="flex flex-col text-center items-center gap-1">
+						<p class="text-sm leading-none">Show Pests</p>
+						{#if !pestIncreased}
+							<Popover.Mobile>
+								<div slot="trigger">
+									<Switch bind:checked={pestToggle} disabled={true} />
+								</div>
+								<div class="p-2">
+									<p class="text-sm">Pest data not available for this time period.</p>
+								</div>
+							</Popover.Mobile>
+						{:else}
+							<Switch bind:checked={pestToggle} />
+						{/if}
+					</div>
 					<SelectSimple
 						options={[
 							{ label: '3 Days', value: 3 },
@@ -154,7 +175,7 @@
 							<h3 class="text-2xl">{name}</h3>
 							<JumpLink id={crop} />
 						</div>
-						<CropGraph {data} {crop} ratio={increases[crop] / highestIncrease} />
+						<CropGraph {data} {crop} ratio={increases[crop] / highestIncrease} pests={showPests} />
 					</div>
 				{:else}
 					<div class="flex-1 flex-col gap-1 p-2 max-w-7xl">
@@ -163,7 +184,7 @@
 							<h3 class="text-2xl">{name}</h3>
 							<JumpLink id={crop} />
 						</div>
-						<CropGraph {data} {crop} ratio={1} />
+						<CropGraph {data} {crop} ratio={1} pests={showPests} />
 					</div>
 				{/if}
 			{/if}

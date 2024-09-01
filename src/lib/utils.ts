@@ -87,11 +87,28 @@ export enum ChannelType {
 	GuildForum = 15,
 }
 
+const CROP_TO_PEST: Partial<Record<string, string>> = {
+	cactus: 'mite',
+	carrot: 'cricket',
+	cocoa: 'moth',
+	melon: 'worm',
+	mushroom: 'slug',
+	wart: 'beetle',
+	potato: 'locust',
+	pumpkin: 'rat',
+	cane: 'mosquito',
+	wheat: 'fly',
+};
+
+const cropToPest = (crop: string) => {
+	return CROP_TO_PEST[crop];
+};
+
 export function preprocessCropCharts(crops: components['schemas']['CropCollectionsDataPointDto'][]) {
 	return (
 		crops
 			.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0))
-			.reduce<Record<string, { date: string; value: number }[]>>((acc, curr) => {
+			.reduce<Record<string, { date: string; value: number; pests: number }[]>>((acc, curr) => {
 				for (const [crop, value = 0] of Object.entries(curr.crops ?? {})) {
 					acc[crop] ??= [];
 
@@ -101,11 +118,21 @@ export function preprocessCropCharts(crops: components['schemas']['CropCollectio
 					acc[crop].push({
 						date: (curr.timestamp ?? 0) + '',
 						value: value ?? 0,
+						pests: curr.pests[cropToPest(crop) as keyof typeof curr.pests] ?? 0,
 					});
 				}
 				return acc;
 			}, {}) ?? {}
 	);
+}
+
+export function preprocessWeightChart(data: components['schemas']['CropCollectionsDataPointDto'][]) {
+	return data
+		.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0))
+		.map((point) => ({
+			date: point.timestamp ?? 0,
+			value: point.cropWeight ?? 0,
+		}));
 }
 
 export enum EventType {
