@@ -1,7 +1,7 @@
 import { GetCropCollectionPoints } from '$lib/api/elite';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { preprocessCropCharts } from '$lib/utils';
+import { preprocessCropCharts, preprocessWeightChart } from '$lib/utils';
 
 export const load = (async ({ parent }) => {
 	const { account, profile } = await parent();
@@ -15,6 +15,7 @@ export const load = (async ({ parent }) => {
 	}));
 
 	return {
+		weight: preprocessWeightChart(crops ?? []),
 		crops: preprocessCropCharts(crops ?? []),
 	};
 }) satisfies PageServerLoad;
@@ -44,6 +45,7 @@ export const actions: Actions = {
 		}
 
 		return {
+			weight: preprocessWeightChart(collectionGraph ?? []),
 			graph: preprocessCropCharts(collectionGraph ?? []),
 		};
 	},
