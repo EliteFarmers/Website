@@ -921,6 +921,8 @@ export const KickEventTeamMember = async (
 
 export const GetProducts = async () => await GET('/products', {});
 
+export const GetWeightStyles = async () => await GET('/product/styles', {});
+
 export const UpdateProduct = async (
 	accessToken: string,
 	productId: string,

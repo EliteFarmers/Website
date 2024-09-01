@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import type { NavItem } from '$content/nav';
 	import { cn } from '$lib/utils';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let navItems = [] as { title: string; items: { title: string; href: string; external?: boolean }[] }[];
+	export let navItems = [] as { title: string; items: NavItem[] }[];
+	$: user = $page.data.session;
 </script>
 
 <nav class="flex w-full flex-col gap-4">
@@ -16,7 +18,7 @@
 			</span>
 			<div class="grid grid-flow-row auto-rows-max gap-0.5">
 				{#each navItem.items ?? [] as item}
-					{#if item.href}
+					{#if item.href && (!item.auth || (item.auth && user))}
 						<div class="px-1">
 							<a
 								href={item.href}

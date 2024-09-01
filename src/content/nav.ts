@@ -2,6 +2,7 @@ export interface NavItem {
 	title: string;
 	href: string;
 	external?: boolean;
+	auth?: boolean;
 }
 
 export interface NavGroup {
@@ -34,7 +35,6 @@ export const NAV_PAGES = [
 	{
 		title: 'Shop',
 		href: '/shop',
-		external: true,
 	},
 ] as NavItem[];
 
@@ -74,3 +74,23 @@ export const MOBILE_NAV = [
 		auth: false,
 	},
 ] as NavGroup[];
+
+export const SHOP_NAV_PAGES = [
+	{
+		title: 'Overview',
+		href: '/shop',
+	},
+	{
+		title: 'Premium',
+		href: '/shop/premium',
+	},
+	{
+		title: 'Weight Styles',
+		href: '/shop/styles',
+	},
+	{
+		title: 'Manage Account',
+		href: '/profile/settings',
+		auth: true,
+	},
+] as NavItem[];
