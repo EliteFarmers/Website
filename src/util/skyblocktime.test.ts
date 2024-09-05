@@ -5,8 +5,12 @@ test('SkyBlock Time Conversion', () => {
 	expect(SkyBlockTime.from(1, 1, 1).unixSeconds).toBe(SkyBlockTime.fromZeroIndexed(0, 0, 0).unixSeconds);
 	expect(SkyBlockTime.fromZeroIndexed(0, 0, 0).unixSeconds).toBe(SkyBlockTime.SkyBlockEpochSeconds);
 
-	const date = new Date(2021, 0, 1); // Check that it rounds down to the nearest day
-	expect(new SkyBlockTime(date.getTime()).unixSeconds).toBe(1609476900);
+	const date = new Date(2021, 0, 1);
+	expect(new SkyBlockTime(date.getTime()).unixSeconds).toBe(Math.floor(date.getTime() / 1000));
+	// Check that it rounds down to the nearest day
+	expect(new SkyBlockTime(date.getTime()).dayUnixSeconds).toBe(1609476900);
+	// Check that the date is correct
+	expect(new SkyBlockTime(date.getTime()).toDate()).toStrictEqual(date);
 });
 
 test('SkyBlock Time Months', () => {

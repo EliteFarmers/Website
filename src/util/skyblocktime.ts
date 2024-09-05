@@ -31,6 +31,10 @@ export class SkyBlockTime {
 	 * The Unix timestamp in seconds.
 	 */
 	declare readonly unixSeconds: number;
+	/**
+	 * The Unix timestamp in seconds at the start of the day.
+	 */
+	declare readonly dayUnixSeconds: number;
 
 	/** 
 	 * The day of the SkyBlock year, 1-indexed.
@@ -58,9 +62,9 @@ export class SkyBlockTime {
 	 * @param unixMs Unix timestamp in milliseconds
 	 */
 	constructor(unixMs: number) {
-		const seconds = Math.floor(unixMs / 1000);
+		this.unixSeconds = Math.floor(unixMs / 1000);
 
-		const elapsedSeconds = seconds - SkyBlockTime.SkyBlockEpochSeconds;
+		const elapsedSeconds = this.unixSeconds - SkyBlockTime.SkyBlockEpochSeconds;
 		const elapsedDays = Math.floor(elapsedSeconds / 1200);
 
 		this.year = Math.floor(elapsedDays / 372) + 1;
@@ -68,7 +72,7 @@ export class SkyBlockTime {
 		this.day = Math.floor((elapsedDays % 372) % 31) + 1;
 
 		// Round down to the nearest skyblock day
-		this.unixSeconds = (elapsedSeconds - (elapsedSeconds % 1200)) + SkyBlockTime.SkyBlockEpochSeconds;
+		this.dayUnixSeconds = (elapsedSeconds - (elapsedSeconds % 1200)) + SkyBlockTime.SkyBlockEpochSeconds;
 	}
 	
 	/**
