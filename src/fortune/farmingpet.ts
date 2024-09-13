@@ -11,7 +11,7 @@ import { Rarity, Stat } from '../constants/reforges';
 import { Skill } from '../constants/skills';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
-import { PlayerOptions } from './player';
+import { PlayerOptions } from '../player/player';
 
 export function createFarmingPet(pet: FarmingPetType) {
 	return new FarmingPet(pet);

@@ -6,7 +6,7 @@ import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore, previousRarity } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
-import { PlayerOptions } from './player';
+import { PlayerOptions } from '../player/player';
 
 export class FarmingTool {
 	public declare item: EliteItemDto;

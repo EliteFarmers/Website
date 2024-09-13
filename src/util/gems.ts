@@ -1,4 +1,4 @@
-import type { EliteItemDto, GemRarity } from "../classes/item";
+import type { EliteItemDto, GemRarity } from "../fortune/item";
 import { PERIDOT } from "../constants/gems";
 import { Rarity } from "../constants/reforges";
 

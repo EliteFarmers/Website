@@ -7,8 +7,9 @@ import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
 import { calculateAverageSpecialCrops } from '../crops/special';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
+import { FarmingEquipment } from './farmingequipment';
 import { EliteItemDto } from './item';
-import { PlayerOptions } from './player';
+import { PlayerOptions } from '../player/player';
 
 export interface ActiveArmorSetBonus {
 	count: number;
@@ -27,11 +28,36 @@ export class ArmorSet {
 		return [this.helmet ?? null, this.chestplate ?? null, this.leggings ?? null, this.boots ?? null];
 	}
 
+	public declare necklace?: FarmingEquipment;
+	public declare cloak?: FarmingEquipment;
+	public declare belt?: FarmingEquipment;
+	public declare gloves?: FarmingEquipment;
+
+	get equipment(): (FarmingEquipment | null)[] {
+		return [this.necklace ?? null, this.cloak ?? null, this.belt ?? null, this.gloves ?? null];
+	}
+
 	public declare pieces: FarmingArmor[];
-	public declare fortune: number;
+	public declare equipmentPieces: FarmingEquipment[];
+	public declare armorFortune: number;
+	public declare equipmentFortune: number;
+	get fortune() {
+		return this.armorFortune + this.equipmentFortune;
+	}
 	public declare setBonuses: ActiveArmorSetBonus[];
 
-	constructor(armor: FarmingArmor[]) {
+	constructor(armor: FarmingArmor[], equipment?: FarmingEquipment[], options?: PlayerOptions) {
+		this.setBonuses = [];
+
+		if (options) {
+			for (const piece of armor) {
+				piece.setOptions(options);
+			}
+			for (const piece of equipment ?? []) {
+				piece.setOptions(options);
+			}
+		}
+
 		armor.sort((a, b) => b.potential - a.potential);
 		this.pieces = armor;
 
@@ -40,10 +66,26 @@ export class ArmorSet {
 		this.leggings = armor.find((a) => a.slot === GearSlot.Leggings);
 		this.boots = armor.find((a) => a.slot === GearSlot.Boots);
 
+		if (equipment) {
+			this.setEquipment(equipment);
+		} else {
+			this.recalculateFamilies();
+		}
+	}
+
+	setEquipment(equipment: FarmingEquipment[]) {
+		equipment.sort((a, b) => b.fortune - a.fortune);
+		this.equipmentPieces = equipment;
+
+		this.necklace = equipment.find((a) => a.slot === GearSlot.Necklace);
+		this.cloak = equipment.find((a) => a.slot === GearSlot.Cloak);
+		this.belt = equipment.find((a) => a.slot === GearSlot.Belt);
+		this.gloves = equipment.find((a) => a.slot === GearSlot.Gloves);
+
 		this.recalculateFamilies();
 	}
 
-	getPiece(slot: GearSlot): FarmingArmor | undefined {
+	getPiece(slot: GearSlot): FarmingArmor | FarmingEquipment | undefined {
 		switch (slot) {
 			case GearSlot.Helmet:
 				return this.helmet;
@@ -53,30 +95,56 @@ export class ArmorSet {
 				return this.leggings;
 			case GearSlot.Boots:
 				return this.boots;
-			default:
-				return undefined;
-		}
-	}
-
-	setPiece(armor: FarmingArmor) {
-		switch (armor.slot) {
-			case GearSlot.Helmet:
-				this.helmet = armor;
-				break;
-			case GearSlot.Chestplate:
-				this.chestplate = armor;
-				break;
-			case GearSlot.Leggings:
-				this.leggings = armor;
-				break;
-			case GearSlot.Boots:
-				this.boots = armor;
-				break;
+			case GearSlot.Necklace:
+				return this.necklace;
+			case GearSlot.Cloak:
+				return this.cloak;
+			case GearSlot.Belt:
+				return this.belt;
+			case GearSlot.Gloves:
+				return this.gloves;
 			default:
 				return;
 		}
+	}
 
-		this.recalculateFamilies();
+	setPiece(armor: FarmingArmor | FarmingEquipment) {
+		if (armor instanceof FarmingArmor) {
+			switch (armor.slot) {
+				case GearSlot.Helmet:
+					this.helmet = armor as FarmingArmor;
+					break;
+				case GearSlot.Chestplate:
+					this.chestplate = armor as FarmingArmor;
+					break;
+				case GearSlot.Leggings:
+					this.leggings = armor as FarmingArmor;
+					break;
+				case GearSlot.Boots:
+					this.boots = armor as FarmingArmor;
+					break;
+			}
+
+			this.recalculateFamilies();
+			return;
+		}
+
+		switch (armor.slot) {
+			case GearSlot.Necklace:
+				this.necklace = armor;
+				break;
+			case GearSlot.Cloak:
+				this.cloak = armor;
+				break;
+			case GearSlot.Belt:
+				this.belt = armor;
+				break;
+			case GearSlot.Gloves:
+				this.gloves = armor;
+				break;
+		}
+
+		this.getFortuneBreakdown();
 	}
 
 	private recalculateFamilies() {
@@ -115,6 +183,7 @@ export class ArmorSet {
 		let sum = 0;
 		const breakdown: Record<string, number> = {};
 
+		// Armor fortune
 		for (const piece of this.armor) {
 			if (!piece) continue;
 
@@ -125,6 +194,7 @@ export class ArmorSet {
 			}
 		}
 
+		// Armor set bonuses
 		for (const { bonus, count } of this.setBonuses) {
 			if (count < 2 || count > 4) continue;
 			const fortune = bonus.stats?.[count]?.[Stat.FarmingFortune] ?? 0;
@@ -134,7 +204,24 @@ export class ArmorSet {
 			}
 		}
 
-		this.fortune = sum;
+		this.armorFortune = sum;
+
+		
+		// Equipment fortune
+		let equipmentSum = 0;
+
+		for (const piece of this.equipment) {
+			if (!piece) continue;
+
+			const fortune = piece.fortune;
+			if (fortune > 0) {
+				breakdown[piece.item.name ?? ''] = fortune;
+				equipmentSum += fortune;
+			}
+		}
+
+		this.equipmentFortune = equipmentSum;
+
 		return breakdown;
 	}
 
@@ -154,6 +241,32 @@ export class ArmorSet {
 		}
 
 		return calculateAverageSpecialCrops(blocksBroken, crop, count);
+	}
+
+	get slots(): Record<GearSlot, FarmingArmor | FarmingEquipment | undefined> {
+		return {
+			[GearSlot.Helmet]: this.helmet,
+			[GearSlot.Chestplate]: this.chestplate,
+			[GearSlot.Leggings]: this.leggings,
+			[GearSlot.Boots]: this.boots,
+			[GearSlot.Necklace]: this.necklace,
+			[GearSlot.Cloak]: this.cloak,
+			[GearSlot.Belt]: this.belt,
+			[GearSlot.Gloves]: this.gloves,
+		};
+	}
+
+	get slotOptions(): Record<GearSlot, (FarmingArmor | FarmingEquipment)[]> {
+		return {
+			[GearSlot.Helmet]: this.pieces.filter((a) => a.slot === GearSlot.Helmet),
+			[GearSlot.Chestplate]: this.pieces.filter((a) => a.slot === GearSlot.Chestplate),
+			[GearSlot.Leggings]: this.pieces.filter((a) => a.slot === GearSlot.Leggings),
+			[GearSlot.Boots]: this.pieces.filter((a) => a.slot === GearSlot.Boots),
+			[GearSlot.Necklace]: this.equipmentPieces.filter((a) => a.slot === GearSlot.Necklace),
+			[GearSlot.Cloak]: this.equipmentPieces.filter((a) => a.slot === GearSlot.Cloak),
+			[GearSlot.Belt]: this.equipmentPieces.filter((a) => a.slot === GearSlot.Belt),
+			[GearSlot.Gloves]: this.equipmentPieces.filter((a) => a.slot === GearSlot.Gloves),
+		};
 	}
 }
 

@@ -3,6 +3,7 @@ import { createFarmingWeightCalculator } from './weightcalc';
 import { Crop } from '../constants/crops';
 import { CROP_WEIGHT } from '../constants/weight';
 import { uncountedCropsFromPests } from '../util/pests';
+import { createFarmingPlayer } from '../player/player';
 
 const crops = {
 	[Crop.Cactus]: CROP_WEIGHT[Crop.Cactus] * 50,
@@ -27,6 +28,14 @@ test('Basic weight calculation', () => {
 	});
 
 	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(170);
+});
+
+test('Basic player weight calculation', () => {
+	const player = createFarmingPlayer({
+		collection: crops,
+	});
+
+	expect(player.getWeightCalc().getWeightInfo().totalWeight).toBeCloseTo(170);
 });
 
 test('Mushroom weight calculation', () => {
@@ -164,18 +173,40 @@ test('Full weight calculation', () => {
 		'NETHER_WARTS_12',
 	];
 
-	const weight = createFarmingWeightCalculator({
+	const info = {
 		collection: crops,
 		pests: pests,
 		farmingXp: 286958923.31966937,
 		levelCapUpgrade: 10,
 		anitaBonusFarmingFortuneLevel: 15,
 		minions: minions,
+	};
+
+	const weight = createFarmingWeightCalculator(info)
+		.setEarnedMedals({
+			diamond: 246,
+			platinum: 75,
+			gold: 99,
+		});
+
+	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5176.617);
+
+	const player = createFarmingPlayer({ ...info, bestiaryKills: pests });
+	const playerWeight = player.getWeightCalc({ 
+		minions, 
+		levelCapUpgrade: 10,
+		anitaBonusFarmingFortuneLevel: 15,
 	}).setEarnedMedals({
 		diamond: 246,
 		platinum: 75,
 		gold: 99,
 	});
 
-	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5176.617);
+		
+	expect(playerWeight.getCropWeights()).toStrictEqual(weight.getCropWeights());
+	expect(playerWeight.getBonusWeights()).toStrictEqual(weight.getBonusWeights());
+	expect(playerWeight.getWeightInfo().uncountedCrops).toStrictEqual(weight.getWeightInfo().uncountedCrops);
+
+	expect(playerWeight.getWeightInfo().cropWeight).toBe(weight.getWeightInfo().cropWeight);
+	expect(playerWeight.getWeightInfo().totalWeight).toBeCloseTo(weight.getWeightInfo().totalWeight);
 });

@@ -173,6 +173,34 @@ export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 } as const;
 
+export const EQUIPMENT_ENCHANTS: Record<string, FarmingEnchant> = {
+	green_thumb: {
+		name: 'Green Thumb',
+		appliesTo: [ReforgeTarget.Equipment],
+		wiki: 'https://wiki.hypixel.net/Green_Thumb_Enchantment',
+		levelRequirement: 24,
+		minLevel: 1,
+		maxLevel: 5,
+		multipliedLevels: {
+			1: {
+				[Stat.FarmingFortune]: 0.05
+			},
+			2: {
+				[Stat.FarmingFortune]: 0.1
+			},
+			3: {
+				[Stat.FarmingFortune]: 0.15
+			},
+			4: {
+				[Stat.FarmingFortune]: 0.2
+			},
+			5: {
+				[Stat.FarmingFortune]: 0.25
+			},
+		},
+	},
+} as const;
+
 export const TURBO_ENCHANTS: Record<string, Crop> = {
 	turbo_cactus: Crop.Cactus,
 	turbo_cane: Crop.SugarCane,

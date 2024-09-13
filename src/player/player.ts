@@ -10,12 +10,14 @@ import {
 	FORTUNE_PER_PLOT,
 } from '../constants/specific';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names';
-import { FarmingAccessory } from './farmingaccessory';
-import { ArmorSet, FarmingArmor } from './farmingarmor';
-import { FarmingPet } from './farmingpet';
-import { FarmingTool } from './farmingtool';
-import { EliteItemDto } from './item';
-import { FarmingEquipment } from './farmingequipment';
+import { FarmingAccessory } from '../fortune/farmingaccessory';
+import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor';
+import { FarmingPet } from '../fortune/farmingpet';
+import { FarmingTool } from '../fortune/farmingtool';
+import { EliteItemDto } from '../fortune/item';
+import { FarmingEquipment } from '../fortune/farmingequipment';
+import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune';
+import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc';
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Record<Crop, number>;
@@ -26,12 +28,20 @@ export interface FortuneMissingFromAPI {
 	milestones?: Partial<Record<Crop, number>>;
 	exportableCrops?: Partial<Record<Crop, boolean>>;
 	refinedTruffles?: number;
+
+	temporaryFortune?: TemporaryFarmingFortune;
 }
 
 export interface ExtraFarmingFortune {
 	crop?: Crop;
 	name?: string;
 	fortune: number;
+}
+
+export enum ZorroMode {
+	Normal = 'normal',
+	Averaged = 'averaged',
+	Contest = 'contest',
 }
 
 export interface PlayerOptions extends FortuneMissingFromAPI {
@@ -52,9 +62,13 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	personalBests?: Record<string, number>;
 	bestiaryKills?: Record<string, number>;
 	anitaBonus?: number;
+	uniqueVisitors?: number;
 
 	extraFortune?: ExtraFarmingFortune[];
-	zorro?: boolean;
+	zorro?: {
+		enabled: boolean;
+		mode: ZorroMode;
+	}
 }
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -63,8 +77,13 @@ export function createFarmingPlayer(options: PlayerOptions) {
 
 export class FarmingPlayer {
 	declare options: PlayerOptions;
-	declare fortune: number;
+	declare permFortune: number;
+	declare tempFortune: number;
+	get fortune() {
+		return this.permFortune + this.tempFortune;
+	}
 	declare breakdown: Record<string, number>;
+	declare tempFortuneBreakdown: Record<string, number>;
 
 	declare tools: FarmingTool[];
 	declare armor: FarmingArmor[];
@@ -102,11 +121,16 @@ export class FarmingPlayer {
 		options.armor ??= [];
 		if (options.armor instanceof ArmorSet) {
 			this.armorSet = options.armor;
+
 			this.armor = this.armorSet.pieces;
-			for (const a of this.armor) a.setOptions(options);
+			this.armor.sort((a, b) => b.fortune - a.fortune);
+
+			this.equipment = this.armorSet.equipmentPieces;
+			this.equipment.sort((a, b) => b.fortune - a.fortune);
+
 			this.armorSet.getFortuneBreakdown(true);
 		} else if (options.armor[0] instanceof FarmingArmor) {
-			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.fortune - a.fortune);
+			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.potential - a.potential);
 			for (const a of this.armor) a.setOptions(options);
 			this.armorSet = new ArmorSet(this.armor);
 		} else {
@@ -122,6 +146,11 @@ export class FarmingPlayer {
 			this.equipment = FarmingEquipment.fromArray(options.equipment as EliteItemDto[], options);
 		}
 
+		// Load in equipment to armor set if it's empty
+		if (this.armorSet.equipment.filter((e) => e).length === 0) {
+			this.armorSet.setEquipment(this.equipment);
+		}
+
 		options.accessories ??= [];
 		if (options.accessories[0] instanceof FarmingAccessory) {
 			this.accessories = (options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
@@ -129,7 +158,8 @@ export class FarmingPlayer {
 			this.accessories = FarmingAccessory.fromArray(options.accessories as EliteItemDto[]);
 		}
 
-		this.fortune = this.getGeneralFortune();
+		this.permFortune = this.getGeneralFortune();
+		this.tempFortune = this.getTempFortune();
 	}
 
 	changeArmor(armor: FarmingArmor[]) {
@@ -138,12 +168,12 @@ export class FarmingPlayer {
 
 	selectTool(tool: FarmingTool) {
 		this.selectedTool = tool;
-		this.fortune = this.getGeneralFortune();
+		this.permFortune = this.getGeneralFortune();
 	}
 
 	selectPet(pet: FarmingPet) {
 		this.selectedPet = pet;
-		this.fortune = this.getGeneralFortune();
+		this.permFortune = this.getGeneralFortune();
 	}
 
 	setStrength(strength: number) {
@@ -151,7 +181,7 @@ export class FarmingPlayer {
 		for (const pet of this.pets) {
 			pet.fortune = pet.getFortune();
 		}
-		this.fortune = this.getGeneralFortune();
+		this.permFortune = this.getGeneralFortune();
 	}
 
 	getGeneralFortune() {
@@ -182,14 +212,14 @@ export class FarmingPlayer {
 		}
 
 		// Armor Set
-		const armorSet = this.armorSet.fortune;
+		const armorSet = this.armorSet.armorFortune;
 		if (armorSet > 0) {
 			breakdown['Armor Set'] = armorSet;
 			sum += armorSet;
 		}
 
-		// Lotus Gear
-		const equipment = this.equipment.reduce((a, b) => a + b.fortune, 0);
+		// Eqiupment
+		const equipment = this.armorSet.equipmentFortune;
 		if (equipment > 0) {
 			breakdown['Equipment'] = equipment;
 			sum += equipment;
@@ -246,7 +276,36 @@ export class FarmingPlayer {
 			sum += extra.fortune;
 		}
 
+		const temp = this.getTempFortune();
+		if (temp > 0) {
+			breakdown['Temporary Fortune'] = temp;
+		}
+
 		this.breakdown = breakdown;
+		return sum;
+	}
+
+	getTempFortune() {
+		let sum = 0;
+		const breakdown = {} as Record<string, number>;
+
+		if (!this.options.temporaryFortune) {
+			this.tempFortuneBreakdown = breakdown;
+			return sum;
+		}
+
+		for (const entry of Object.keys(this.options.temporaryFortune)) {
+			const source = TEMPORARY_FORTUNE[entry as keyof TemporaryFarmingFortune];
+			if (!source) continue;
+
+			const fortune = source.fortune(this.options.temporaryFortune);
+			if (fortune) {
+				breakdown[source.name] = fortune;
+				sum += fortune;
+			}
+		}
+
+		this.tempFortuneBreakdown = breakdown;
 		return sum;
 	}
 
@@ -313,6 +372,16 @@ export class FarmingPlayer {
 			fortune: sum,
 			breakdown,
 		};
+	}
+
+	getWeightCalc(info?: FarmingWeightInfo) {
+		return createFarmingWeightCalculator({
+			collection: this.options.collection,
+			pests: this.options.bestiaryKills,
+			farmingXp: this.options.farmingXp,
+			levelCapUpgrade: Math.min((this.options.farmingLevel ?? 0) - 50, 0),
+			...info,
+		});
 	}
 }
 

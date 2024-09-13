@@ -1,10 +1,11 @@
 import { FarmingArmorInfo } from '../constants/armor';
-import { EQUIPMENT_INFO } from '../constants/lotus';
+import { EQUIPMENT_ENCHANTS } from '../constants/enchants';
+import { EQUIPMENT_INFO } from '../constants/equipment';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { getRarityFromLore } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
-import { PlayerOptions } from './player';
+import { PlayerOptions, ZorroMode } from '../player/player';
 
 export class FarmingEquipment {
 	public readonly item: EliteItemDto;
@@ -66,19 +67,68 @@ export class FarmingEquipment {
 			sum += reforge;
 		}
 
-		// Green Thumb Visitors
-		const visitors = this.getFortuneFromVisitors(base, reforge);
-		if (visitors > 0) {
-			this.fortuneBreakdown['Green Thumb'] = visitors;
-			sum += visitors;
+		// Green Thumb
+		const uniqueVisitors = this.options?.uniqueVisitors ?? 0;
+		const greenThumbLevel = this.item.enchantments?.green_thumb ?? 0;
+		if (uniqueVisitors > 0 && greenThumbLevel > 0) {
+			const greenThumb = EQUIPMENT_ENCHANTS.green_thumb?.multipliedLevels?.[greenThumbLevel]?.[Stat.FarmingFortune];
+			if (greenThumb) {
+				const greenThumbFortune = uniqueVisitors * greenThumb;
+				this.fortuneBreakdown['Green Thumb'] = greenThumbFortune;
+				sum += greenThumbFortune;
+			}
 		}
 
-		// Lotus Piece bonus
+		// Lotus Piece Specific
 		if (this.info.family === 'LOTUS') {
+			// Green thumb from lore as a fallback
+			if (!this.options?.uniqueVisitors) {
+				const visitors = this.getFortuneFromVisitors(base, reforge);
+				if (visitors > 0) {
+					this.fortuneBreakdown['Green Thumb'] = visitors;
+					sum += visitors;
+				}
+			}
+
+			// Salesperson lotus piece bonus
 			const pieceBonus = this.getPieceBonus();
 			if (pieceBonus > 0) {
 				this.fortuneBreakdown['Salesperson'] = pieceBonus;
 				sum += pieceBonus;
+			}
+		}
+
+		if (this.item.skyblockId === 'ZORROS_CAPE') {
+			// If Zorro is disabled, set fortune to 0
+			if (this.options?.zorro?.enabled === false) {
+				this.fortune = 0;
+				return 0;
+			}
+
+			// Zorro's Cape
+			const zorro = this.options?.zorro ?? {
+				enabled: true,
+				mode: ZorroMode.Normal
+			};
+
+			switch (zorro.mode) {
+				case ZorroMode.Averaged:
+					sum *= 1.3333;
+					for (const key in this.fortuneBreakdown) {
+						if (this.fortuneBreakdown[key] === undefined) continue;
+						this.fortuneBreakdown[key] *= 1.3333;
+					}
+					break;
+				case ZorroMode.Contest:
+					sum *= 2;
+					for (const key in this.fortuneBreakdown) {
+						if (this.fortuneBreakdown[key] === undefined) continue;
+						this.fortuneBreakdown[key] *= 2;
+					}
+					break;
+				case ZorroMode.Normal:
+				default:
+					break;
 			}
 		}
 
@@ -124,20 +174,10 @@ export class FarmingEquipment {
 	}
 
 	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingEquipment[] {
-		const gear = items
+		return items
 			.filter((item) => FarmingEquipment.isValid(item))
 			.map((item) => new FarmingEquipment(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
-
-		// Get only the best piece of each slot
-		const best: Record<string, FarmingEquipment> = {};
-		for (const piece of gear) {
-			if (!best[piece.slot] || piece.fortune > (best[piece.slot]?.fortune ?? 0)) {
-				best[piece.slot] = piece;
-			}
-		}
-
-		return Object.values(best);
 	}
 }
 

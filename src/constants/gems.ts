@@ -1,4 +1,4 @@
-import { GemRarity } from "../classes/item";
+import { GemRarity } from "../fortune/item";
 import { Rarity } from "./reforges";
 
 export const PERIDOT: Partial<Record<Rarity, Record<GemRarity, number>>> = {
