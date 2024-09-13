@@ -8,7 +8,7 @@
 
 	export let owner = false;
 	export let event: components['schemas']['EventDetailsDto'];
-	export let member: components['schemas']['EventMemberDto'];
+	export let member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
 	export let rank: number | undefined = undefined;
 	export let running: boolean;
 

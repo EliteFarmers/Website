@@ -6,7 +6,7 @@
 	export let highlightUuid: string | undefined = undefined;
 	export let running = false;
 	export let event: components['schemas']['EventDetailsDto'];
-	export let members: components['schemas']['EventMemberDto'][];
+	export let members: components['schemas']['EventMemberDetailsDto'][];
 </script>
 
 <Accordion.Root class="w-full" value={highlightUuid}>
