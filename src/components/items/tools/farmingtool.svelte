@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FarmingToolType, getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
 	import { FormatMinecraftText } from '$lib/format';
-	import Fortunebreakdown from './fortunebreakdown.svelte';
+	import FortuneBreakdown from './fortune-breakdown.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import Lorebtn from '../lorebtn.svelte';
 	import { UNUSED_MATHEMATICAL_HOE } from '$content/random';
@@ -43,7 +43,7 @@
 			{/if}
 		</Lorebtn>
 		<div class="flex flex-col items-end justify-between gap-1 p-1">
-			<Fortunebreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown} />
+			<FortuneBreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown} />
 		</div>
 	</div>
 </div>

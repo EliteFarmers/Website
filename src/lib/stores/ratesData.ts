@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { Crop, type FarmingTool } from 'farming-weight';
+import { Crop, ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 
@@ -11,11 +11,14 @@ interface RatesData {
 	selectedPet?: string;
 	strength: number;
 	exported: Record<Crop, boolean>;
+	useTemp: boolean;
+	temp: Required<TemporaryFarmingFortune>;
+	zorroMode: ZorroMode;
 }
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 1,
+	v: 2,
 	settings: true,
 	communityCenter: 0,
 	strength: 0,
@@ -31,6 +34,17 @@ const defaultData = {
 		[Crop.SugarCane]: false,
 		[Crop.Wheat]: false,
 	} as Record<Crop, boolean>,
+	useTemp: true,
+	temp: {
+		pestTurnIn: 0,
+		harvestPotion: false,
+		chocolateTruffle: false,
+		centuryCake: true,
+		springFilter: false,
+		magic8Ball: false,
+		flourSpray: false,
+	},
+	zorroMode: ZorroMode.Normal,
 } as RatesData;
 
 export function initRatesData(data = defaultData) {

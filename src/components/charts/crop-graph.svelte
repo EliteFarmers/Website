@@ -28,7 +28,7 @@
 		year: 'numeric',
 	});
 
-	$: pestScale = scaleLinear(extent(data, (d) => d.pests) as [number, number], yDomain);
+	$: pestScale = scaleLinear(extent(data, (d) => d.pests) as [number, number], yDomain ?? [0, 1]);
 
 	const colorClasses: Record<string, string[]> = {
 		wheat: ['stroke-wheat', 'fill-wheat/70', 'stroke-primary/80'],

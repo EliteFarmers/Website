@@ -28,7 +28,7 @@
 	$: crops = form?.graph ?? data.crops;
 	$: increases = {} as Record<string, number>;
 	$: highestIncrease = 0;
-	$: pestIncreased = 0;
+	$: pestIncreased = false;
 	$: entries = mapCrops(crops);
 	$: pestToggle = false;
 	$: showPests = pestToggle && pestIncreased;

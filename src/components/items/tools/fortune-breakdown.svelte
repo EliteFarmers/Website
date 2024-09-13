@@ -6,25 +6,26 @@
 	export let title = 'Farming Fortune Breakdown';
 	export let total: number | undefined = undefined;
 	export let breakdown: Record<string, number> | undefined = undefined;
+	export let enabled = true;
+	export let small = false;
+
+	$: background = enabled ? 'bg-green-400 dark:bg-green-700' : 'bg-green-400/40 dark:bg-green-700/40';
 
 	$: list = Object.entries(breakdown ?? {}).sort(([, a], [, b]) => b - a);
 	$: sum = total ?? list.reduce((acc, [, value]) => acc + value, 0);
 </script>
 
 {#if list.length <= 0}
-	<div class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-700 min-h-4 h-full">
-		<p class="relative text-md md:text-lg px-1 z-10 font-mono">
-			{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{sum.toLocaleString()}&nbsp;
+	<div class="flex flex-row items-center relative rounded-md min-h-4 h-full {background}">
+		<p class="relative {small ? 'text-sm md:text-md' : 'text-md md:text-lg'} px-1 z-10 font-mono">
+			{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{(+sum.toFixed(2)).toLocaleString()}&nbsp;
 		</p>
 	</div>
 {:else}
 	<Popover.Mobile>
-		<div
-			slot="trigger"
-			class="flex flex-row items-center relative rounded-md bg-green-400 dark:bg-green-700 min-h-4 h-full"
-		>
-			<p class="relative text-md md:text-lg px-1 z-10 font-mono">
-				{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{sum.toLocaleString()}&nbsp;
+		<div slot="trigger" class="flex flex-row items-center relative rounded-md min-h-4 h-full {background}">
+			<p class="relative {small ? 'text-sm md:text-md' : 'text-md md:text-lg'} px-1 z-10 font-mono">
+				{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{(+sum.toFixed(2)).toLocaleString()}&nbsp;
 			</p>
 		</div>
 		<div class="flex flex-col gap-2 max-w-xs">
@@ -43,14 +44,14 @@
 						{:else}
 							<p>{key}</p>
 						{/if}
-						<p>{value.toLocaleString()}</p>
+						<p>{(+value.toFixed(2)).toLocaleString()}</p>
 					</div>
 				{/each}
 			</div>
 
 			<div class="flex flex-row justify-between font-semibold text-base text-black dark:text-white p-1">
 				<p>Total</p>
-				<p>{sum.toLocaleString()}</p>
+				<p>{(+sum.toFixed(2)).toLocaleString()}</p>
 			</div>
 			<div class="break-words">
 				<slot />

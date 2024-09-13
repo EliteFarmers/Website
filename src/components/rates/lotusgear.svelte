@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Lorebtn from '$comp/items/lorebtn.svelte';
-	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
-	import type { LotusGear } from 'farming-weight';
+	import type { FarmingEquipment } from 'farming-weight';
 
-	export let items: LotusGear[];
+	export let items: FarmingEquipment[];
 
 	$: bySlot = items
 		.sort((a, b) => b.fortune - a.fortune)
-		.reduce<Record<string, LotusGear>>((acc, item) => {
+		.reduce<Record<string, FarmingEquipment>>((acc, item) => {
 			if (!acc[item.slot]) {
 				acc[item.slot] = item;
 			}
@@ -23,7 +23,7 @@
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>
 		<div class="flex flex-row gap-1 items-center">
 			<Lorebtn item={item.item} />
-			<Fortunebreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />
+			<FortuneBreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />
 		</div>
 	</div>
 {/each}
