@@ -16,6 +16,7 @@
 		getCropUpgrades,
 		getCropInfo,
 		type ExtraFarmingFortune,
+		ZorroMode,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
@@ -31,15 +32,16 @@
 	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
 	import Settings from 'lucide-svelte/icons/settings';
+	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 
-	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
+	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import Head from '$comp/head.svelte';
-	import Armorselect from '$comp/rates/armorselect.svelte';
-	import Lotusgear from '$comp/rates/lotusgear.svelte';
+	import FarmingGear from '$comp/rates/farming-gear.svelte';
 	import Toolconfig from '$comp/rates/toolconfig.svelte';
 
 	import type { PageData } from './$types';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	export let data: PageData;
 
 	let blocksBroken = 24_000 * 3;
@@ -47,11 +49,13 @@
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 
+	$: pestTurnInChecked = $ratesData.temp.pestTurnIn > 0;
 	$: tools = FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]);
-	$: armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
-	$: armorSet = new ArmorSet(armor);
-	$: equipment = LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]);
 	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
+
+	$: armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
+	$: equipment = LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]);
+	$: armorSet = new ArmorSet(armor, equipment);
 
 	// Deselect pet if it's not on this player
 	$: $ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
@@ -87,25 +91,35 @@
 		selectedPet: selectedPet,
 
 		refinedTruffles: data.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
-		exportableCrops: $ratesData.exported,
 		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
 		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
-		milestones: getCropMilestoneLevels(data.member?.garden?.crops ?? {}),
-		cropUpgrades: getCropUpgrades(data.member?.garden?.cropUpgrades ?? {}),
 		plotsUnlocked: data.member.garden?.plots?.length ?? 0,
-		gardenLevel: getGardenLevel(data.member.garden?.experience ?? 0).level,
-		communityCenter: $ratesData.communityCenter,
-		strength: $ratesData.strength,
-
 		farmingXp: data.member?.skills?.farming,
 		bestiaryKills: (data.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
+		uniqueVisitors: data.member?.garden?.uniqueVisitors ?? 0,
+
 		farmingLevel: getLevelProgress(
 			'farming',
 			data.member?.skills?.farming ?? 0,
 			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
+		milestones: getCropMilestoneLevels(data.member?.garden?.crops ?? {}),
+		cropUpgrades: getCropUpgrades(data.member?.garden?.cropUpgrades ?? {}),
+		gardenLevel: getGardenLevel(data.member.garden?.experience ?? 0).level,
+
+		exportableCrops: $ratesData.exported,
+		communityCenter: $ratesData.communityCenter,
+		strength: $ratesData.strength,
 
 		extraFortune: extra.filter((e) => e),
+		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
+
+		zorro: $ratesData.zorroMode
+			? {
+					enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
+					mode: $ratesData.zorroMode,
+			  }
+			: undefined,
 	} satisfies PlayerOptions;
 
 	$: player = getRatesPlayer(options);
@@ -177,49 +191,143 @@
 				</div>
 			</div>
 
-			{#if $ratesData.settings}
-				<div
-					class="flex flex-1 flex-col gap-4 w-full max-w-lg justify-center p-4 border-primary-foreground border-solid outline outline-2 rounded-md"
-				>
-					<div class="flex flex-col md:flex-row items-center justify-center gap-8">
-						<div class="flex flex-col justify-start gap-1">
-							<p class="text-sm">Community Center Upgrade</p>
-							<div class="flex flex-row gap-1 items-center">
-								<SliderSimple
-									class="h-12"
-									min={0}
-									max={10}
-									bind:value={$ratesData.communityCenter}
-									step={1}
-								/>
-								<p class="text-lg p-2 pl-4 w-12 text-center">{$ratesData.communityCenter}</p>
-							</div>
-						</div>
-						<div class="flex flex-col items-start gap-1">
-							<p class="text-sm">Strength</p>
-							<NumberInput
-								class="h-10 my-1"
-								type="text"
-								inputmode="numeric"
-								placeholder="0"
-								bind:value={$ratesData.strength}
+			<div
+				class="{$ratesData.settings
+					? 'flex'
+					: 'hidden'} flex-1 flex-col gap-4 w-full max-w-lg justify-center p-4 border-primary-foreground border-solid outline outline-2 rounded-md"
+			>
+				<div class="flex flex-col md:flex-row items-center justify-center gap-8">
+					<div class="flex flex-col justify-start gap-1">
+						<p class="text-sm">Community Center Upgrade</p>
+						<div class="flex flex-row gap-1 items-center">
+							<SliderSimple
+								class="h-12"
 								min={0}
-								max={1500}
+								max={10}
+								bind:value={$ratesData.communityCenter}
+								step={1}
+							/>
+							<p class="text-lg p-2 pl-4 w-12 text-center">{$ratesData.communityCenter}</p>
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1">
+						<p class="text-sm">Strength</p>
+						<NumberInput
+							class="h-10 my-1"
+							type="text"
+							inputmode="numeric"
+							placeholder="0"
+							bind:value={$ratesData.strength}
+							min={0}
+							max={1500}
+						/>
+					</div>
+				</div>
+				<div class="flex flex-col md:flex-row items-center justify-evenly gap-4">
+					<div class="flex flex-row gap-4 items-center align-middle">
+						<p class="text-sm">Garden Level</p>
+						<p class="font-semibold">{options.gardenLevel}</p>
+					</div>
+					<div class="flex flex-row gap-4 items-center align-middle">
+						<p class="text-sm">Unlocked Plots</p>
+						<p class="font-semibold">{options.plotsUnlocked}</p>
+					</div>
+				</div>
+				<div class="flex flex-col items-center justify-center gap-1 m-2">
+					<div class="flex flex-row gap-2 items-center min-h-10">
+						<p class="text-lg text-center leading-none">Temporary Fortune</p>
+						{#if $ratesData.useTemp}
+							<FortuneBreakdown total={$player.tempFortune} breakdown={$player.tempFortuneBreakdown} />
+						{/if}
+					</div>
+					<div class="flex flex-row items-center justify-center gap-2">
+						<p class="text-md leading-none mb-1">Enabled</p>
+						<Switch bind:checked={$ratesData.useTemp} />
+					</div>
+				</div>
+				<div class="flex flex-col md:flex-row md:flex-wrap items-center md:items-start justify-center">
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Pest Turn In (40 Pests)</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch
+								checked={$ratesData.temp.pestTurnIn > 0}
+								onCheckedChange={(check) => {
+									$ratesData.temp.pestTurnIn = check ? 200 : 0;
+								}}
+							/>
+							<FortuneBreakdown total={200} bind:enabled={pestTurnInChecked} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Chocolate Century Cake</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.centuryCake} />
+							<FortuneBreakdown total={5} bind:enabled={$ratesData.temp.centuryCake} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Fine Flour Spray</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.flourSpray} />
+							<FortuneBreakdown total={20} bind:enabled={$ratesData.temp.flourSpray} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Harvest Harbinger Potion</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.harvestPotion} />
+							<FortuneBreakdown total={50} bind:enabled={$ratesData.temp.harvestPotion} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Magic 8 Ball</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.magic8Ball} />
+							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.magic8Ball} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Spring Filter</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.springFilter} />
+							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.springFilter} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Refined Dark Cocoa Truffle</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.chocolateTruffle} />
+							<FortuneBreakdown total={30} bind:enabled={$ratesData.temp.chocolateTruffle} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none mb-1">Zorro's Cape Mode</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Select.Simple
+								class="md:w-48"
+								value={$ratesData.zorroMode}
+								change={(value) => {
+									$ratesData.zorroMode = value;
+								}}
+								options={[
+									{
+										value: ZorroMode.Normal,
+										label: 'Outside Contest',
+									},
+									{
+										value: ZorroMode.Averaged,
+										label: 'Averaged',
+									},
+									{
+										value: ZorroMode.Contest,
+										label: 'Inside Contest',
+									},
+								]}
 							/>
 						</div>
 					</div>
-					<div class="flex flex-col md:flex-row items-center justify-evenly gap-4">
-						<div class="flex flex-row gap-4 items-center align-middle">
-							<p class="text-sm">Garden Level</p>
-							<p class="font-semibold">{options.gardenLevel}</p>
-						</div>
-						<div class="flex flex-row gap-4 items-center align-middle">
-							<p class="text-sm">Unlocked Plots</p>
-							<p class="font-semibold">{options.plotsUnlocked}</p>
-						</div>
-					</div>
 				</div>
-			{/if}
+			</div>
 
 			{#if selectedCrop}
 				<div class="flex flex-row gap-2 items-center mb-2">
@@ -276,7 +384,10 @@
 					}}
 				/>
 			</div>
-			<div class="flex flex-col gap-2 max-w-lg w-full px-4">
+			<div class="flex justify-between items-center w-full px-4 pt-2">
+				<p class="text-lg font-semibold">Farming Tool</p>
+			</div>
+			<div class="flex flex-col gap-2 max-w-lg w-full px-4 mb-2">
 				{#each $player.tools as tool (tool.item.uuid)}
 					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
 						<div class="flex flex-row gap-2 justify-start items-center w-full">
@@ -300,22 +411,10 @@
 			</div>
 
 			<div class="flex flex-col gap-2 max-w-lg w-full">
-				<Armorselect {player} />
+				<FarmingGear {player} />
 				{#if $player.tools.length === 0}
-					<p class="text-lg font-semibold text-center my-8">No armor found!</p>
+					<p class="text-lg font-semibold text-center my-8">No gear found!</p>
 				{/if}
-			</div>
-
-			<div class="flex flex-col gap-2 max-w-lg w-full">
-				{#if $player.equipment.length === 0}
-					<p class="text-lg font-semibold text-center my-8">No lotus equipment found!</p>
-				{:else}
-					<div class="flex justify-between items-center w-full px-4 py-2">
-						<span class="text-lg font-semibold">Lotus Gear Total</span>
-						<Fortunebreakdown total={$player.equipment.reduce((acc, l) => acc + l.fortune, 0)} />
-					</div>
-				{/if}
-				<Lotusgear items={$player.equipment} />
 			</div>
 		</section>
 		<section class="flex-1 w-full p-4 rounded-md bg-primary-foreground">
@@ -371,6 +470,14 @@
 							</div>
 						{/each}
 					</div>
+					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
+						<div class="flex flex-row gap-2 items-center mt-2">
+							<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+							<p class="text-sm">
+								Temporary Fortune is enabled! Some sources might not last the whole time.
+							</p>
+						</div>
+					{/if}
 				{:else}
 					<p class="text-lg font-semibold text-center my-8">Select a crop to see its rates!</p>
 				{/if}

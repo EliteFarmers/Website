@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Lorebtn from '$comp/items/lorebtn.svelte';
-	import Fortunebreakdown from '$comp/items/tools/fortunebreakdown.svelte';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
 	import type { FarmingTool } from 'farming-weight';
@@ -40,14 +40,7 @@
 				{/if}
 			</Lorebtn>
 
-			<Fortunebreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown}>
-				{#if tool.isMissingDedication()}
-					<p class="text-xs flex-wrap">
-						Dedication is not included in the breakdown because crop milestones are not available in
-						Hypixel's API.
-					</p>
-				{/if}
-			</Fortunebreakdown>
+			<FortuneBreakdown total={tool.fortune} breakdown={tool.fortuneBreakdown} />
 		</div>
 	</div>
 	{#if expanded}
