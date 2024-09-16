@@ -6,8 +6,12 @@
 	import Head from '$comp/head.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import * as Pagination from '$ui/pagination';
+	import { Switch } from '$comp/ui/switch';
+	import { getShowLeaderboardName } from '$lib/stores/leaderboardName';
 
 	export let data: PageData;
+
+	$: includeLeaderboardName = getShowLeaderboardName();
 
 	$: title = `${data.lb?.title} Leaderboard`;
 	$: entries = data.lb?.entries ?? [];
@@ -59,30 +63,36 @@
 				goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
-			<Pagination.Content>
-				<Pagination.Item>
-					<Pagination.PrevButton />
-				</Pagination.Item>
-				{#each pages as page (page.key)}
-					{#if page.type === 'ellipsis'}
-						<Pagination.Item>
-							<Pagination.Ellipsis />
-						</Pagination.Item>
-					{:else}
-						<Pagination.Item>
-							<Pagination.Link
-								page={{ ...page, value: Math.floor(page.value) }}
-								isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
-								on:click={() => samePageClick(page.value)}
-							>
-								{Math.floor(page.value)}
-							</Pagination.Link>
-						</Pagination.Item>
-					{/if}
-				{/each}
-				<Pagination.Item>
-					<Pagination.NextButton />
-				</Pagination.Item>
+			<Pagination.Content class="flex justify-center">
+				<div class="flex flex-row justify-end order-1 basis-1/3 sm:basis-auto">
+					<Pagination.Item>
+						<Pagination.PrevButton />
+					</Pagination.Item>
+				</div>
+				<div class="flex flex-wrap items-center order-3 sm:order-2 justify-center flex-grow sm:flex-auto">
+					{#each pages as page (page.key)}
+						{#if page.type === 'ellipsis'}
+							<Pagination.Item>
+								<Pagination.Ellipsis />
+							</Pagination.Item>
+						{:else}
+							<Pagination.Item>
+								<Pagination.Link
+									page={{ ...page, value: Math.floor(page.value) }}
+									isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
+									on:click={() => samePageClick(page.value)}
+								>
+									{Math.floor(page.value)}
+								</Pagination.Link>
+							</Pagination.Item>
+						{/if}
+					{/each}
+				</div>
+				<div class="flex flex-row justify-start order-2 sm:order-last basis-1/3 sm:basis-auto">
+					<Pagination.Item>
+						<Pagination.NextButton />
+					</Pagination.Item>
+				</div>
 			</Pagination.Content>
 		</Pagination.Root>
 	</div>

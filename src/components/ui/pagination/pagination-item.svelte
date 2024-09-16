@@ -8,6 +8,6 @@
 	export { className as class };
 </script>
 
-<li class={cn('', className)} {...$$restProps}>
+<div class={cn('', className)} {...$$restProps}>
 	<slot />
-</li>
+</div>

@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initRatesData } from '$lib/stores/ratesData';
+	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 
 	import '../app.pcss';
 
@@ -14,6 +15,7 @@
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
+	initShowLeaderboardName();
 
 	mode.subscribe((value) => {
 		if (!value) return;

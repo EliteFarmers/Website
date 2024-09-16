@@ -123,7 +123,7 @@ export const CREDITS: Credit[] = [
 			{
 				name: 'Patreon',
 				url: 'https://www.patreon.com/shiiyu',
-			}
+			},
 		],
 	},
 	{
