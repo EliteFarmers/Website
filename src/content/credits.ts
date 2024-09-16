@@ -120,6 +120,10 @@ export const CREDITS: Credit[] = [
 				name: 'Website',
 				url: 'https://sky.shiiyu.moe/',
 			},
+			{
+				name: 'Patreon',
+				url: 'https://www.patreon.com/shiiyu',
+			}
 		],
 	},
 	{
