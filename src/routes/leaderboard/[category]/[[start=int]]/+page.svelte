@@ -6,8 +6,12 @@
 	import Head from '$comp/head.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import * as Pagination from '$ui/pagination';
+	import { Switch } from '$comp/ui/switch';
+	import { getShowLeaderboardName } from '$lib/stores/leaderboardName';
 
 	export let data: PageData;
+
+	$: includeLeaderboardName = getShowLeaderboardName();
 
 	$: title = `${data.lb?.title} Leaderboard`;
 	$: entries = data.lb?.entries ?? [];
@@ -59,30 +63,36 @@
 				goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
-			<Pagination.Content>
-				<Pagination.Item>
-					<Pagination.PrevButton />
-				</Pagination.Item>
-				{#each pages as page (page.key)}
-					{#if page.type === 'ellipsis'}
-						<Pagination.Item>
-							<Pagination.Ellipsis />
-						</Pagination.Item>
-					{:else}
-						<Pagination.Item>
-							<Pagination.Link
-								page={{ ...page, value: Math.floor(page.value) }}
-								isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
-								on:click={() => samePageClick(page.value)}
-							>
-								{Math.floor(page.value)}
-							</Pagination.Link>
-						</Pagination.Item>
-					{/if}
-				{/each}
-				<Pagination.Item>
-					<Pagination.NextButton />
-				</Pagination.Item>
+			<Pagination.Content class="flex justify-center">
+				<div class="flex flex-row justify-end order-1 basis-1/3 sm:basis-auto">
+					<Pagination.Item>
+						<Pagination.PrevButton />
+					</Pagination.Item>
+				</div>
+				<div class="flex flex-wrap items-center order-3 sm:order-2 justify-center flex-grow sm:flex-auto">
+					{#each pages as page (page.key)}
+						{#if page.type === 'ellipsis'}
+							<Pagination.Item>
+								<Pagination.Ellipsis />
+							</Pagination.Item>
+						{:else}
+							<Pagination.Item>
+								<Pagination.Link
+									page={{ ...page, value: Math.floor(page.value) }}
+									isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
+									on:click={() => samePageClick(page.value)}
+								>
+									{Math.floor(page.value)}
+								</Pagination.Link>
+							</Pagination.Item>
+						{/if}
+					{/each}
+				</div>
+				<div class="flex flex-row justify-start order-2 sm:order-last basis-1/3 sm:basis-auto">
+					<Pagination.Item>
+						<Pagination.NextButton />
+					</Pagination.Item>
+				</div>
 			</Pagination.Content>
 		</Pagination.Root>
 	</div>
@@ -92,17 +102,33 @@
 	>
 		<div class="flex flex-col gap-2 p-2 w-full items-center lg:items-end">
 			{#each firstHalf as entry, i (entry)}
-				<Entry rank={i + offset} {entry} {formatting} leaderboard={data.leaderboard} />
+				<Entry
+					rank={i + offset}
+					{entry}
+					{formatting}
+					leaderboard={data.leaderboard}
+					showLeaderboardName={$includeLeaderboardName}
+				/>
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full items-center lg:items-start">
 			{#each secondHalf as entry, i (entry)}
-				<Entry rank={i + firstHalf.length + offset} {entry} {formatting} leaderboard={data.leaderboard} />
+				<Entry
+					rank={i + firstHalf.length + offset}
+					{entry}
+					{formatting}
+					leaderboard={data.leaderboard}
+					showLeaderboardName={$includeLeaderboardName}
+				/>
 			{/each}
 		</div>
 	</div>
-	<h3 class="text-sm text-center w-1/2 mx-auto py-4">
+	<div class="flex flex-row items-center justify-center gap-2">
+		<p class="text-sm leading-none">Show Leaderboard Name In Entries</p>
+		<Switch bind:checked={$includeLeaderboardName} />
+	</div>
+	<p class="text-sm text-center w-1/2 mx-auto py-4">
 		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched
 		on this website. New entries are recalculated every 30 minutes.
-	</h3>
+	</p>
 </section>

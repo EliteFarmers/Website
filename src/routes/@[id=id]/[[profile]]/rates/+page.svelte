@@ -294,7 +294,7 @@
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Refined Dark Cocoa Truffle</p>
+						<p class="text-md leading-none mb-1">Refined Dark Cacao Truffle</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.chocolateTruffle} />
 							<FortuneBreakdown total={30} bind:enabled={$ratesData.temp.chocolateTruffle} />

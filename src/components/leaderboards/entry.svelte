@@ -8,6 +8,7 @@
 	export let rank: number;
 	export let formatting: 'number' | 'decimal' = 'number';
 	export let leaderboard: LeaderboardConfig | undefined = undefined;
+	export let showLeaderboardName = false;
 
 	$: options = {
 		maximumFractionDigits: 1,
@@ -71,10 +72,20 @@
 				{/if}
 			</div>
 		</div>
-		<div class="flex gap-2 p-1 justify-end align-middle items-center mr-2 md:mx-2">
-			<div class="text-sm xs:text-xl sm:text-2xl">
+		<div class="flex flex-col justify-center align-middle items-end mr-2 md:mx-2">
+			<span class="text-sm xs:text-xl sm:text-2xl leading-none">
 				{amount?.toLocaleString(undefined, options)}
-			</div>
+			</span>
+			{#if showLeaderboardName}
+				<!-- <span class="text-xs xs:text-sm sm:text-md text-right text-muted-foreground leading-none">
+					{leaderboard?.title}
+				</span> -->
+				<div
+					class="text-muted-foreground inline overflow-hidden whitespace-nowrap text-ellipsis text-xs xs:text-sm sm:text-md text-start"
+				>
+					{leaderboard?.title}
+				</div>
+			{/if}
 		</div>
 	</div>
 </a>
