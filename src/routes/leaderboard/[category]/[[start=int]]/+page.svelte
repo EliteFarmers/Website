@@ -92,17 +92,33 @@
 	>
 		<div class="flex flex-col gap-2 p-2 w-full items-center lg:items-end">
 			{#each firstHalf as entry, i (entry)}
-				<Entry rank={i + offset} {entry} {formatting} leaderboard={data.leaderboard} />
+				<Entry
+					rank={i + offset}
+					{entry}
+					{formatting}
+					leaderboard={data.leaderboard}
+					showLeaderboardName={$includeLeaderboardName}
+				/>
 			{/each}
 		</div>
 		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full items-center lg:items-start">
 			{#each secondHalf as entry, i (entry)}
-				<Entry rank={i + firstHalf.length + offset} {entry} {formatting} leaderboard={data.leaderboard} />
+				<Entry
+					rank={i + firstHalf.length + offset}
+					{entry}
+					{formatting}
+					leaderboard={data.leaderboard}
+					showLeaderboardName={$includeLeaderboardName}
+				/>
 			{/each}
 		</div>
 	</div>
-	<h3 class="text-sm text-center w-1/2 mx-auto py-4">
+	<div class="flex flex-row items-center justify-center gap-2">
+		<p class="text-sm leading-none">Show Leaderboard Name In Entries</p>
+		<Switch bind:checked={$includeLeaderboardName} />
+	</div>
+	<p class="text-sm text-center w-1/2 mx-auto py-4">
 		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched
 		on this website. New entries are recalculated every 30 minutes.
-	</h3>
+	</p>
 </section>
