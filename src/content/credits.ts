@@ -36,7 +36,7 @@ export const CREDITS: Credit[] = [
 			},
 			{
 				name: 'Ko-Fi',
-				url: 'https://ko-fi.com/shopelumini',
+				url: 'https://ko-fi.com/shoppelumini',
 			},
 		],
 	},
