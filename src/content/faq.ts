@@ -15,10 +15,19 @@ export const FAQ: Faq[] = [
 	{
 		question: 'Why are there cheaters on the leaderboard?',
 		answer: `
-			Unfortunately, it's hard to identify cheaters. The only way to do so is to manually check every player's
-			farming habits and responsiveness in-game. This is a very time-consuming process, and isn't something
-			that is conclusive. Despite this, cheaters will be removed from the leaderboard if they are found and
-			reported with truly undeniable proof.
+			Unfortunately, it's hard to identify cheaters. This website does not work as an authority on who is
+			cheating and who is not. Some features are also intended to be a direct representation of in-game stats
+			as well, like Jacob contest placements. It's possible a blacklisting system will be implemented in the 
+			future for the main leaderboards, but for now, we have no intention or system in place to flag and remove
+			cheaters. If you suspect someone is cheating, please report them to Hypixel using the /wdr command in-game. 
+		`,
+	},
+	{
+		question: 'How do I get on a leaderboard?',
+		answer: `
+			Once your stats qualify for a leaderboard placement, you will be automatically added to it! New entries to
+			leaderboards are only calculated every 30 minutes, so you may not see yourself on the leaderboard immediately 
+			after you qualify.
 		`,
 	},
 	{

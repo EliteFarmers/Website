@@ -21,11 +21,12 @@
 		<article class="max-w-4xl w-full px-4">
 			<h2 class="text-2xl my-8">What is Farming Weight?</h2>
 			<p class="text-lg my-4">
-				Farming Weight is a number that essentially represents how long and how efficient a player has been
-				farming. It is calculated by using a different formula for each crop that a player has farmed, and then
-				adding them all together. Farming XP is not a factor in this calculation outside of one time bonus
-				weight amounts. This is to ensure that players who farm using rabbit or who farm higher XP crops don't
-				have an unfair advantage over players who farm using other methods.
+				Farming weight is a number that essentially represents how long and how efficient a player has been
+				farming. The basic idea is to balance the collection between crops, so one player's crop collection can
+				be compared with another players collection of a different crop. The focus on crop collections means
+				that Farming XP is not a factor in this calculation outside of one time bonus weight amounts. This is to
+				ensure that players who farm for XP crops don't have an unfair advantage in farming weight gain over
+				players who farm using other methods.
 			</p>
 		</article>
 		<article class="max-w-4xl w-full px-4">
@@ -53,10 +54,12 @@
 		<h1 class="text-center text-3xl mt-16 mb-8">Pest Weight Adjustment</h1>
 		<p class="text-lg my-4 max-w-4xl w-full px-4">
 			The introduction of pests to the garden has brought a new (and unreliable) source of crop collection into
-			the game which needs to be accounted for in the Farming Weight calculation. Due to the different spawn rates
-			and drop amounts per player when they kill pests, the weight calculation now subtracts a certain amount of
-			crop collections before applying the formula. Your collection numbers are still accurate, this subtraction
-			is just done during the calculation.
+			the game which needs to be accounted for in farming weight. If pest drops were balanced in-game there would
+			be no issue with them counting towards farming weight, but they aren't. To counteract this unbalance, the
+			weight calculation subtracts an averaged amount of crop collections per pest kill before applying the
+			formula. The subtracted amount is also in brackets as shown below to compensate for fortune differences.
+			Your collection numbers on the site are still accurate, this subtraction is just done internally during the
+			farming weight calculation.
 		</p>
 		<article class="max-w-4xl w-full px-4">
 			<h2 class="text-2xl my-8">Pest Brackets</h2>
