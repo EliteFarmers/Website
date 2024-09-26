@@ -17,6 +17,7 @@ const urls: Partial<Record<string, string>> = {
 	privacy: PUBLIC_PRIVACY_URL,
 	oss: '/oss.txt',
 	store: '/shop',
+	wiki: 'https://wiki.elitebot.dev/',
 };
 
 export const GET = (async ({ params }) => {
