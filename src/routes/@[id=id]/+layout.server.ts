@@ -30,7 +30,7 @@ export const load: LayoutServerLoad = async (event) => {
 
 	const { id, profile } = params;
 
-	const { data: account } = await GetAccount(id).catch(() => ({ data: undefined }));
+	const { data: account } = await GetAccount(id.replaceAll('-', '')).catch(() => ({ data: undefined }));
 
 	if (!account?.id || !account.name) {
 		throw error(404, 'Player not found');
@@ -43,8 +43,11 @@ export const load: LayoutServerLoad = async (event) => {
 	}
 
 	const selectedProfile = profile
-		? profiles.find((p) => p.profileId === profile || p.profileName?.toUpperCase() === profile.toUpperCase()) ??
-		  profiles[0]
+		? profiles.find(
+				(p) =>
+					p.profileId === profile.replaceAll('-', '') ||
+					p.profileName?.toUpperCase() === profile.toUpperCase()
+		  ) ?? profiles[0]
 		: profiles.find((p) => p.selected) ?? profiles[0];
 
 	if (!selectedProfile.profileId || !selectedProfile.profileName) {
