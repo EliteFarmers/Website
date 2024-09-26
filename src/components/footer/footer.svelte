@@ -24,10 +24,11 @@
 		<div class="flex flex-1 basis-32 py-4 flex-col gap-2 items-start">
 			<h5 class="text-lg font-semibold">Community</h5>
 			<Separator />
+			<Button variant="link" class="p-0 h-8" href="/browse">Browse Servers</Button>
 			<Button variant="link" rel="nofollow noreferrer noopener" class="p-0 h-8" href={PUBLIC_COMMUNITY_INVITE}
 				>Elite Farmers Discord</Button
 			>
-			<Button variant="link" class="p-0 h-8" href="/browse">Browse Servers</Button>
+			<Button variant="link" class="p-0 h-8" href="/wiki">Elite Farmers Wiki</Button>
 			<Button variant="link" rel="nofollow noreferrer noopener" class="p-0 h-8" href="https://hypixel.net/forums"
 				>Hypixel Forums</Button
 			>

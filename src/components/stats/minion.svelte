@@ -33,17 +33,21 @@
 		<div class="bg-primary-foreground absolute tier-cover" />
 	</div>
 
-	<div class="text-lg text-center">Unlocked {name} Minion Tiers</div>
-	<div class="flex gap-1 justify-center items-center text-black dark:text-white">
-		{#each tiers as tier, i}
-			<div
-				class="block flex-1 px-1 text-center text-lg rounded-sm {tier === '1'
-					? 'bg-muted'
-					: 'bg-primary-foreground'}"
-			>
-				<p>{i + 1}</p>
-			</div>
-		{/each}
+	<div class="flex flex-col justify-center items-center max-w-lg">
+		<div class="text-lg text-center my-2 mx-4">Unlocked {name} Minion Tiers</div>
+		<div class="grid grid-cols-6 gap-1 justify-center items-center max-w-52">
+			{#each tiers as tier, i}
+				<div
+					class="flex flex-row px-1 justify-center text-lg rounded-sm {tier === '1'
+						? maxed
+							? 'bg-yellow-400 dark:bg-yellow-600'
+							: 'bg-green-400 dark:bg-green-600'
+						: 'bg-primary-foreground'}"
+				>
+					<p>{i + 1}</p>
+				</div>
+			{/each}
+		</div>
 	</div>
 </Popover.Mobile>
 

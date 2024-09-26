@@ -41,7 +41,7 @@
 					timeStyle: 'short',
 					dateStyle: 'short',
 					timeZone: 'UTC',
-				})}
+				})} UTC
 			</span>
 			<span class="bg-gray-200 dark:bg-zinc-900 p-1 px-2 rounded-md whitespace-nowrap">
 				{getReadableSkyblockDate(timestamp)}
