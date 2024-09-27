@@ -123,6 +123,9 @@
 	} satisfies PlayerOptions;
 
 	$: player = getRatesPlayer(options);
+	// Temporary fix for options not being initialized properly for armor
+	$: armorSet.pieces.forEach((piece) => piece.setOptions(options));
+
 	$: cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
 
 	$: calculator = calculateDetailedAverageDrops({

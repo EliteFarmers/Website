@@ -50,7 +50,11 @@
 	{#key set.fortune}
 		{#each slots as slot (slot)}
 			{@const piece = set.getPiece(slot)}
-			{@const best = !set.slotOptions[slot].some((p) => p.fortune > (piece?.fortune ?? 0))}
+			{@const best = !set.slotOptions[slot].some((p) =>
+				'potential' in p
+					? p.potential > (!piece ? 0 : 'potential' in piece ? piece.potential ?? 0 : 0)
+					: p.fortune > (piece?.fortune ?? 0)
+			)}
 			{#if piece}
 				<div class="flex justify-between items-center w-full">
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
