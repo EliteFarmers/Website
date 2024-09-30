@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';
+	import ProgressBar from '../progress-bar.svelte';
 
 	export let crop: string;
 	export let key: string;
@@ -66,28 +67,11 @@
 					{leveling.level.toLocaleString()}
 				</p>
 			</div>
-			<div class="flex flex-row justify-between items-center gap-4">
-				<p class="basis-1/3 text-normal sm:text-lg md:text-xl lg:text-2xl whitespace-nowrap leading-none">
+			<div class="flex flex-row justify-between items-center gap-4 pr-1">
+				<p class="basis-1/3 text-normal sm:text-lg md:text-xl lg:text-2xl whitespace-nowrap leading-none -pr-1">
 					{leveling.total.toLocaleString()}
 				</p>
-				<div class="flex flex-1 flex-row items-center gap-2 pr-1">
-					<div
-						class="relative block w-full h-6 md:my-1 bg-card rounded-lg"
-						on:mouseenter={() => (hovering = true)}
-						on:mouseleave={() => (hovering = false)}
-						role="none"
-					>
-						<div
-							class="absolute h-6 {maxed
-								? 'bg-yellow-400 dark:bg-yellow-600'
-								: 'bg-green-400 dark:bg-green-600'} rounded-lg"
-							style={`width: ${percent}%`}
-						/>
-						<div class="absolute flex items-center justify-center w-full h-full">
-							<p class="sm:text-lg leading-none font-semibold">{hovering ? expanded : readable}</p>
-						</div>
-					</div>
-				</div>
+				<ProgressBar {percent} {readable} {expanded} {maxed} class="text-sm font-semibold" />
 			</div>
 		</div>
 	</div>

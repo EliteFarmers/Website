@@ -17,6 +17,9 @@
 		getCropInfo,
 		type ExtraFarmingFortune,
 		ZorroMode,
+		STAT_ICONS,
+		Stat,
+		GearSlot,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
@@ -42,6 +45,9 @@
 
 	import type { PageData } from './$types';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import ProgressBar from '$comp/stats/progress-bar.svelte';
+	import FortuneProgress from '$comp/rates/fortune-progress.svelte';
+	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	export let data: PageData;
 
 	let blocksBroken = 24_000 * 3;
@@ -123,8 +129,6 @@
 	} satisfies PlayerOptions;
 
 	$: player = getRatesPlayer(options);
-	// Temporary fix for options not being initialized properly for armor
-	$: armorSet.pieces.forEach((piece) => piece.setOptions(options));
 
 	$: cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
 
@@ -484,6 +488,44 @@
 				{:else}
 					<p class="text-lg font-semibold text-center my-8">Select a crop to see its rates!</p>
 				{/if}
+			</div>
+		</section>
+	</div>
+
+	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full mt-4 justify-center">
+		<section class="flex-1 flex flex-col items-center w-full gap-4 p-4 rounded-md bg-primary-foreground">
+			<h2 class="text-2xl">Farming Fortune</h2>
+			<div class="flex flex-row gap-4 w-full">
+				<CategoryProgress name="General Fortune" progress={$player.getGeneralFortuneProgress()} />
+				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+					<h3 class="text-lg">{selectedCrop || 'Wheat'} Fortune</h3>
+					<FortuneProgress progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)} />
+				</div> -->
+				<CategoryProgress
+					name="{selectedCrop || 'Wheat'} Fortune"
+					progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)}
+				/>
+				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+					<h3 class="text-lg">Gear Fortune</h3>
+					<FortuneProgress progress={$player.armorSet.getProgress()} />
+				</div> -->
+				<CategoryProgress name="Gear Fortune" progress={$player.armorSet.getProgress()} />
+				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+					<h3 class="text-lg">Helmet Fortune</h3>
+					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Helmet)} />
+				</div> -->
+				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+					<h3 class="text-lg">Chestplate Fortune</h3>
+					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Chestplate)} />
+				</div>
+				<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+					<h3 class="text-lg">Leggings Fortune</h3>
+					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Leggings)} />
+				</div>
+				<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+					<h3 class="text-lg">Boots Fortune</h3>
+					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Boots)} />
+				</div> -->
 			</div>
 		</section>
 	</div>
