@@ -4,7 +4,7 @@
 	import { buttonVariants } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import FileText from 'lucide-svelte/icons/file-text';
-	import Lore from './lore.svelte';
+	import ItemLore from './item-lore.svelte';
 
 	export let item: EliteItemDto;
 </script>
@@ -20,19 +20,6 @@
 				{@html FormatMinecraftText(item.name ?? '')}
 			</h3>
 		</Dialog.Header>
-		<div>
-			<Lore lore={item.lore?.slice() ?? []} />
-			<div class="text-gray-400">
-				<slot />
-				<p>
-					<span class="font-semibold select-none">UUID:</span>
-					<span class="select-all">{item.uuid ?? 'N/A'}</span>
-				</p>
-				<p>
-					<span class="font-semibold select-none">Skyblock ID:</span>
-					<span class="select-all">{item.skyblockId}</span>
-				</p>
-			</div>
-		</div>
+		<ItemLore {item} title={false} />
 	</Dialog.Content>
 </Dialog.Root>

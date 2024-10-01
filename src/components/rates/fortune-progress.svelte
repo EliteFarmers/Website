@@ -2,7 +2,9 @@
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import { Stat, STAT_ICONS, type FortuneSourceProgress } from 'farming-weight';
+	import { TriangleAlert } from 'lucide-svelte';
 	import Info from 'lucide-svelte/icons/info';
+	import * as Popover from '$ui/popover';
 
 	export let progress: FortuneSourceProgress;
 	export let barBg = 'bg-card';
@@ -23,7 +25,7 @@
 	<div class="flex flex-row items-center gap-1">
 		{#if progress.item?.name}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<span>{@html FormatMinecraftText(progress.item.name)}</span>
+			<span class="font-semibold">{@html FormatMinecraftText(progress.item.name)}</span>
 		{:else}
 			<span>{progress.name}</span>
 		{/if}
@@ -32,7 +34,17 @@
 				<Info size={16} />
 			</a>
 		{/if}
+		{#if progress.api === false}
+			<Popover.Mobile>
+				<div slot="trigger" class="mt-1">
+					<TriangleAlert size={16} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+				</div>
+				<p class="text-sm max-w-sm">
+					This fortune source is not available in the Hypixel API. For it to show up you need to configure
+					settings on this page.
+				</p>
+			</Popover.Mobile>
+		{/if}
 	</div>
-
 	<ProgressBar percent={progress.ratio * 100} {readable} {expanded} maxed={progress.ratio >= 1} {barBg} />
 </div>

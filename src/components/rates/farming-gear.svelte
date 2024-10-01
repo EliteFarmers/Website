@@ -44,72 +44,74 @@
 
 <div class="flex flex-col gap-3">
 	<div class="flex justify-between items-center w-full pb-2">
-		<span class="text-lg font-semibold">Total Gear Fortune</span>
+		<span class="text-lg font-semibold">Farming Gear</span>
 		<Fortunebreakdown breakdown={set.getFortuneBreakdown()} />
 	</div>
-	{#key set.fortune}
-		{#each slots as slot (slot)}
-			{@const piece = set.getPiece(slot)}
-			{@const best = !set.slotOptions[slot].some((p) =>
-				'potential' in p
-					? p.potential > (!piece ? 0 : 'potential' in piece ? piece.potential ?? 0 : 0)
-					: p.fortune > (piece?.fortune ?? 0)
-			)}
-			{#if piece}
-				<div class="flex justify-between items-center w-full">
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					<span class="text-lg font-semibold">{@html FormatMinecraftText(piece.item.name ?? '')}</span>
-					<div class="flex flex-row gap-2 items-center">
-						{#if !best}
-							<Popover.Mobile>
-								<div slot="trigger" class="px-1">
-									<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
-								</div>
-								<div class="max-w-xs">
-									<p class="text-md">This isn't the highest fortune item!</p>
-								</div>
-							</Popover.Mobile>
-						{/if}
-						<DropdownMenu.Root>
-							<DropdownMenu.Trigger asChild let:builder>
-								<Button builders={[builder]} variant="ghost" size="sm" class="px-2">
-									<Menu size={20} />
-								</Button>
-							</DropdownMenu.Trigger>
-							<DropdownMenu.Content class="max-w-xl">
-								<DropdownMenu.Label>Swap {slot}</DropdownMenu.Label>
-								<DropdownMenu.Separator />
-								<DropdownMenu.RadioGroup
-									bind:value={selected[slot]}
-									onValueChange={(value) => {
-										const piece =
-											armor.find((a) => a.item.uuid === value) ??
-											equipment.find((e) => e.item.uuid === value);
-										if (piece) {
-											set.setPiece(piece);
-											player.refresh();
-										}
-									}}
-								>
-									{#each pieces[slot] as piece}
-										{#if piece.item.uuid}
-											<DropdownMenu.RadioItem value={piece.item.uuid}>
-												<div class="flex flex-row items-center gap-1">
-													<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-													{@html FormatMinecraftText(piece.item.name ?? '')}
-													<FortuneBreakdown total={piece.fortune} small={true} />
-												</div>
-											</DropdownMenu.RadioItem>
-										{/if}
-									{/each}
-								</DropdownMenu.RadioGroup>
-							</DropdownMenu.Content>
-						</DropdownMenu.Root>
-						<Lorebtn item={piece.item} />
-						<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+	<div class="flex flex-col gap-3 mx-2">
+		{#key set.fortune}
+			{#each slots as slot (slot)}
+				{@const piece = set.getPiece(slot)}
+				{@const best = !set.slotOptions[slot].some((p) =>
+					'potential' in p
+						? p.potential > (!piece ? 0 : 'potential' in piece ? piece.potential ?? 0 : 0)
+						: p.fortune > (piece?.fortune ?? 0)
+				)}
+				{#if piece}
+					<div class="flex justify-between items-center w-full">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+						<span class="text-lg font-semibold">{@html FormatMinecraftText(piece.item.name ?? '')}</span>
+						<div class="flex flex-row gap-2 items-center">
+							{#if !best}
+								<Popover.Mobile>
+									<div slot="trigger" class="px-1">
+										<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+									</div>
+									<div class="max-w-xs">
+										<p class="text-md">This isn't the highest fortune item!</p>
+									</div>
+								</Popover.Mobile>
+							{/if}
+							<DropdownMenu.Root>
+								<DropdownMenu.Trigger asChild let:builder>
+									<Button builders={[builder]} variant="ghost" size="sm" class="px-2">
+										<Menu size={20} />
+									</Button>
+								</DropdownMenu.Trigger>
+								<DropdownMenu.Content class="max-w-xl">
+									<DropdownMenu.Label>Swap {slot}</DropdownMenu.Label>
+									<DropdownMenu.Separator />
+									<DropdownMenu.RadioGroup
+										bind:value={selected[slot]}
+										onValueChange={(value) => {
+											const piece =
+												armor.find((a) => a.item.uuid === value) ??
+												equipment.find((e) => e.item.uuid === value);
+											if (piece) {
+												set.setPiece(piece);
+												player.refresh();
+											}
+										}}
+									>
+										{#each pieces[slot] as piece}
+											{#if piece.item.uuid}
+												<DropdownMenu.RadioItem value={piece.item.uuid}>
+													<div class="flex flex-row items-center gap-1">
+														<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+														{@html FormatMinecraftText(piece.item.name ?? '')}
+														<FortuneBreakdown total={piece.fortune} small={true} />
+													</div>
+												</DropdownMenu.RadioItem>
+											{/if}
+										{/each}
+									</DropdownMenu.RadioGroup>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+							<Lorebtn item={piece.item} />
+							<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+						</div>
 					</div>
-				</div>
-			{/if}
-		{/each}
-	{/key}
+				{/if}
+			{/each}
+		{/key}
+	</div>
 </div>

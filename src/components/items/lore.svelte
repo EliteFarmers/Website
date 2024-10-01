@@ -10,7 +10,7 @@
 			: lore.map((l) => FormatMinecraftText(l));
 </script>
 
-<div class="p-2 font-mono rounded-sm font-bold line-t">
+<div class="font-mono rounded-sm font-bold">
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html '<p>' + formatted.join('</p><p>') + '</p>'}
 </div>

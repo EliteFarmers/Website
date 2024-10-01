@@ -15,11 +15,8 @@
 		getCropMilestoneLevels,
 		getCropUpgrades,
 		getCropInfo,
-		type ExtraFarmingFortune,
 		ZorroMode,
-		STAT_ICONS,
-		Stat,
-		GearSlot,
+		TEMPORARY_FORTUNE,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
@@ -28,7 +25,6 @@
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer';
 	import { getLevelProgress } from '$lib/format';
 
-	import { Label } from '$ui/label';
 	import { Button } from '$ui/button';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
@@ -41,13 +37,12 @@
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import Head from '$comp/head.svelte';
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
-	import Toolconfig from '$comp/rates/toolconfig.svelte';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import CategoryProgress from '$comp/rates/category-progress.svelte';
+	import ToolSelector from '$comp/rates/tool-selector.svelte';
+	import PetSelector from '$comp/rates/pet-selector.svelte';
 
 	import type { PageData } from './$types';
-	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import ProgressBar from '$comp/stats/progress-bar.svelte';
-	import FortuneProgress from '$comp/rates/fortune-progress.svelte';
-	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	export let data: PageData;
 
 	let blocksBroken = 24_000 * 3;
@@ -76,15 +71,6 @@
 
 	$: selectedPet = undefined as FarmingPet | undefined;
 	$: selectedTool = undefined as FarmingTool | undefined;
-	$: extra = [
-		data.member.chocolateFactory?.cocoaFortuneUpgrades
-			? {
-					fortune: data.member.chocolateFactory.cocoaFortuneUpgrades,
-					name: 'Cocoa Fortune',
-					crop: Crop.CocoaBeans,
-			  }
-			: undefined,
-	] as ExtraFarmingFortune[];
 
 	$: options = {
 		tools: tools,
@@ -117,7 +103,7 @@
 		communityCenter: $ratesData.communityCenter,
 		strength: $ratesData.strength,
 
-		extraFortune: extra.filter((e) => e),
+		cocoaFortuneUpgrade: data.member.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 
 		zorro: $ratesData.zorroMode
@@ -174,7 +160,9 @@
 	<Cropselector radio={true} />
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
-		<section class="flex-1 flex flex-col items-center w-full gap-4 p-4 rounded-md bg-primary-foreground">
+		<section
+			class="flex-1 flex flex-col items-center w-full gap-4 p-4 md:pb-6 md:px-6 rounded-md bg-primary-foreground"
+		>
 			<div class="flex flex-row justify-between items-center w-full">
 				<div class="flex-1 hidden sm:block" />
 				<div class="flex flex-3 flex-row gap-2 my-2 items-center">
@@ -254,7 +242,7 @@
 				</div>
 				<div class="flex flex-col md:flex-row md:flex-wrap items-center md:items-start justify-center">
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Pest Turn In (40 Pests)</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch
 								checked={$ratesData.temp.pestTurnIn > 0}
@@ -266,42 +254,49 @@
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Chocolate Century Cake</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.centuryCake.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.centuryCake} />
 							<FortuneBreakdown total={5} bind:enabled={$ratesData.temp.centuryCake} />
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Fine Flour Spray</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.flourSpray.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.flourSpray} />
 							<FortuneBreakdown total={20} bind:enabled={$ratesData.temp.flourSpray} />
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Harvest Harbinger Potion</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.harvestPotion.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.harvestPotion} />
 							<FortuneBreakdown total={50} bind:enabled={$ratesData.temp.harvestPotion} />
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Magic 8 Ball</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.magic8Ball.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.magic8Ball} />
 							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.magic8Ball} />
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Spring Filter</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.springFilter.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.springFilter} />
 							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.springFilter} />
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Refined Dark Cacao Truffle</p>
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.anitaContest.name}</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							<Switch bind:checked={$ratesData.temp.anitaContest} />
+							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.anitaContest} />
+						</div>
+					</div>
+					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+						<p class="text-md leading-none">{TEMPORARY_FORTUNE.chocolateTruffle.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.chocolateTruffle} />
 							<FortuneBreakdown total={30} bind:enabled={$ratesData.temp.chocolateTruffle} />
@@ -378,49 +373,20 @@
 			{:else}
 				<p class="text-lg font-semibold text-center">Select a crop to see its fortune!</p>
 			{/if}
-			<div class="flex flex-col gap-2 max-w-lg w-full">
-				<Label>Farming Pet</Label>
-				<Select.Simple
-					bind:value={$ratesData.selectedPet}
-					options={$player.pets.map((pet) => ({
-						value: pet.pet.uuid ?? '',
-						label: `${pet.info.name} [${pet.level}] + ${pet.item?.name ?? 'No Fortune Item'}`,
-					}))}
-					change={() => {
-						setPet($ratesData.selectedPet);
-					}}
-				/>
+			<div class="flex justify-between items-center w-full pt-2">
+				<p class="text-lg font-semibold">Farming Pet</p>
 			</div>
-			<div class="flex justify-between items-center w-full px-4 pt-2">
+			<PetSelector {player} {pets} onChange={setPet} />
+
+			<div class="flex justify-between items-center w-full pt-2">
 				<p class="text-lg font-semibold">Farming Tool</p>
 			</div>
-			<div class="flex flex-col gap-2 max-w-lg w-full px-4 mb-2">
-				{#each $player.tools as tool (tool.item.uuid)}
-					{#if $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
-						<div class="flex flex-row gap-2 justify-start items-center w-full">
-							<input
-								type="radio"
-								name="tool"
-								value={tool.item.uuid}
-								bind:group={selectedToolId}
-								on:change={() => {
-									selectedTool = tool;
-								}}
-							/>
-							<Toolconfig {tool} {player} />
-						</div>
-					{/if}
-				{/each}
+			<ToolSelector {player} bind:selectedToolId />
 
-				{#if $player.tools.length === 0}
-					<p class="text-lg font-semibold text-center my-8">No matching tools found!</p>
-				{/if}
-			</div>
-
-			<div class="flex flex-col gap-2 max-w-lg w-full">
+			<div class="flex flex-col gap-2 w-full">
 				<FarmingGear {player} />
-				{#if $player.tools.length === 0}
-					<p class="text-lg font-semibold text-center my-8">No gear found!</p>
+				{#if $player.armor.length === 0 && $player.equipment.length === 0}
+					<p class="text-lg font-semibold text-center my-4">No gear found!</p>
 				{/if}
 			</div>
 		</section>
@@ -495,38 +461,42 @@
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full mt-4 justify-center">
 		<section class="flex-1 flex flex-col items-center w-full gap-4 p-4 rounded-md bg-primary-foreground">
 			<h2 class="text-2xl">Farming Fortune</h2>
-			<div class="flex flex-row gap-4 w-full">
-				<CategoryProgress name="General Fortune" progress={$player.getGeneralFortuneProgress()} />
-				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-					<h3 class="text-lg">{selectedCrop || 'Wheat'} Fortune</h3>
-					<FortuneProgress progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)} />
-				</div> -->
-				<CategoryProgress
-					name="{selectedCrop || 'Wheat'} Fortune"
-					progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)}
-				/>
-				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-					<h3 class="text-lg">Gear Fortune</h3>
-					<FortuneProgress progress={$player.armorSet.getProgress()} />
-				</div> -->
-				<CategoryProgress name="Gear Fortune" progress={$player.armorSet.getProgress()} />
-				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-					<h3 class="text-lg">Helmet Fortune</h3>
-					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Helmet)} />
-				</div> -->
-				<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-					<h3 class="text-lg">Chestplate Fortune</h3>
-					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Chestplate)} />
+			{#key $player.fortune}
+				<div class="flex flex-row gap-4 w-full">
+					<CategoryProgress name="General Fortune" progress={$player.getProgress()} />
+					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+						<h3 class="text-lg">{selectedCrop || 'Wheat'} Fortune</h3>
+						<FortuneProgress progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)} />
+					</div> -->
+					{#key $player.selectedTool}
+						<CategoryProgress
+							name="{selectedCrop || 'Wheat'} Fortune"
+							progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)}
+						/>
+					{/key}
+					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+						<h3 class="text-lg">Gear Fortune</h3>
+						<FortuneProgress progress={$player.armorSet.getProgress()} />
+					</div> -->
+					<CategoryProgress name="Gear Fortune" progress={$player.armorSet.getProgress()} />
+					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+						<h3 class="text-lg">Helmet Fortune</h3>
+						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Helmet)} />
+					</div> -->
+					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+						<h3 class="text-lg">Chestplate Fortune</h3>
+						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Chestplate)} />
+					</div>
+					<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+						<h3 class="text-lg">Leggings Fortune</h3>
+						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Leggings)} />
+					</div>
+					<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
+						<h3 class="text-lg">Boots Fortune</h3>
+						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Boots)} />
+					</div> -->
 				</div>
-				<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-					<h3 class="text-lg">Leggings Fortune</h3>
-					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Leggings)} />
-				</div>
-				<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-					<h3 class="text-lg">Boots Fortune</h3>
-					<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Boots)} />
-				</div> -->
-			</div>
+			{/key}
 		</section>
 	</div>
 

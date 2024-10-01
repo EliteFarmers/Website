@@ -27,9 +27,11 @@
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.name ?? '')}</span>
 
 		<div class="flex items-center gap-2">
-			<Button variant="ghost" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
-				<Edit size={16} />
-			</Button>
+			{#if tool.supportsCultivating()}
+				<Button variant="ghost" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
+					<Edit size={16} />
+				</Button>
+			{/if}
 
 			<Lorebtn item={tool.item}>
 				{#if tool.cultivating}
