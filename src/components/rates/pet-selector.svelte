@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
 	import { FarmingPets, type FarmingPet } from 'farming-weight';
 	import * as Popover from '$ui/popover';

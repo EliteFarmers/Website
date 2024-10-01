@@ -34,13 +34,13 @@
 			{/if}
 			<div class="flex flex-row items-center gap-1">
 				{#if progress.info?.upgrade?.reason === UpgradeReason.Situational || (progress?.info?.upgrade?.reason === UpgradeReason.NextTier && progress.item?.attributes?.rarity_upgrade)}
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<p>
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html FormatMinecraftText(RARITY_COLORS[progress.nextInfo.maxRarity] + progress.nextInfo.name)}
 					</p>
 				{:else}
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<p>
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html FormatMinecraftText(
 							RARITY_COLORS[previousRarity(progress.nextInfo.maxRarity)] + progress.nextInfo.name
 						)}
@@ -67,8 +67,8 @@
 		<div class="flex flex-col gap-2 flex-1">
 			<h3 class="text-lg">Max Item</h3>
 			<div class="flex flex-row items-center gap-1">
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<p>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html FormatMinecraftText(RARITY_COLORS[progress.maxInfo.maxRarity] + progress.maxInfo.name)}
 				</p>
 				{#if progress.maxInfo.wiki}

@@ -10,7 +10,6 @@
 	export let leveling: LevelingStats;
 	export let rank = -1;
 
-	let hovering = false;
 	$: displayName = getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat);
 
 	$: percent = Math.round(leveling.ratio * 100);
