@@ -1,17 +1,32 @@
 import { Crop } from '../constants/crops';
-import { FARMING_ENCHANTS, TURBO_ENCHANTS, TURBO_ENCHANT_FORTUNE } from '../constants/enchants';
-import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
-import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
+import { FARMING_ENCHANTS } from '../constants/enchants';
+import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges';
+import { getStatValue, Stat } from "../constants/stats";
+import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore, previousRarity } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
+import { getSourceProgress } from '../upgrades/upgrades';
+import { getFortuneFromEnchant } from '../util/enchants';
+import { FortuneSourceProgress } from '../constants/upgrades';
+import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources';
 
-export class FarmingTool {
+export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
-	public declare crop: Crop;
-	public declare tool: FarmingToolInfo;
+	public declare crop?: Crop;
+	public declare info: FarmingToolInfo;
+
+	public override get type() {
+		return this.info.reforgeType;
+	}
+	
+	// Backwards compatibility
+	public get tool(): FarmingToolInfo {
+		return this.info;
+	}
 
 	public declare itemname: string;
 	private declare colorPrefix: string;
@@ -33,10 +48,15 @@ export class FarmingTool {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
-	private declare options?: PlayerOptions;
+	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
+		super({ item, options, items: FARMING_TOOLS });
 		this.rebuildTool(item, options);
+	}
+
+	getProgress(zeroed = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed);
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -54,7 +74,7 @@ export class FarmingTool {
 			throw new Error(`Unknown farming tool: ${item.name} (${item.skyblockId})`);
 		}
 
-		this.tool = tool;
+		this.info = tool;
 		this.crop = tool.crop;
 
 		if (item.lore) {
@@ -63,8 +83,6 @@ export class FarmingTool {
 
 		this.counter = this.getCounter();
 		this.cultivating = this.getCultivating() ?? 0;
-		this.logCounter = 0;
-		this.collAnalysis = 0;
 
 		this.setReforge(item.attributes?.modifier ?? '');
 
@@ -120,9 +138,16 @@ export class FarmingTool {
 			sum += base;
 		}
 
+		// Computed stats
+		const computed = this.getCalculatedStats()?.[Stat.FarmingFortune] ?? 0;
+		if (computed > 0) {
+			this.fortuneBreakdown['Item Ability'] = computed;
+			sum += computed;
+		}
+
 		// Tool rarity stats
 		const baseRarity = this.recombobulated ? previousRarity(this.rarity) : this.rarity;
-		const rarityStats = this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune] ?? 0;
+		const rarityStats = getStatValue(this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune]);
 
 		if (rarityStats > 0) {
 			this.fortuneBreakdown['Tool Stats'] = rarityStats;
@@ -144,7 +169,7 @@ export class FarmingTool {
 
 		// Collection analysis and digit bonuses
 		if (this.tool.type === FarmingToolType.MathematicalHoe) {
-			this.getFarmingAbilityFortune(this);
+			this.getFarmingAbilityFortune();
 
 			if (this.logCounter > 0) {
 				this.fortuneBreakdown['Logarithmic Counter'] = this.logCounter;
@@ -169,38 +194,14 @@ export class FarmingTool {
 		for (const [enchant, level] of enchantments) {
 			if (!level) continue;
 
-			if (enchant in TURBO_ENCHANTS) {
-				const matchingCrop = TURBO_ENCHANTS[enchant];
-				if (!matchingCrop || matchingCrop !== this.crop) continue;
-
-				const gain = TURBO_ENCHANT_FORTUNE * level;
-				this.fortuneBreakdown['Turbo'] = gain;
-				sum += gain;
-
-				continue;
-			}
-
 			const enchantment = FARMING_ENCHANTS[enchant];
 			if (!enchantment || !level) continue;
+			if (enchantment.cropSpecific && enchantment.cropSpecific !== this.crop) continue;
 
-			const fortune = enchantment.levels?.[level]?.[Stat.FarmingFortune] ?? 0;
+			const fortune = getFortuneFromEnchant(level, enchantment, this.options, this.crop);
 			if (fortune > 0) {
 				this.fortuneBreakdown[enchantment.name] = fortune;
 				sum += fortune;
-			}
-		}
-
-		const milestone = this.options?.milestones?.[this.crop] ?? 0;
-		if (milestone && 'dedication' in (this.item.enchantments ?? {})) {
-			const level = this.item.enchantments?.dedication;
-			const enchantment = FARMING_ENCHANTS.dedication;
-
-			if (level && enchantment) {
-				const multiplier = enchantment.multipliedLevels?.[level]?.[Stat.FarmingFortune] ?? 0;
-				if (multiplier > 0 && !isNaN(milestone)) {
-					this.fortuneBreakdown[enchantment.name] = multiplier * milestone;
-					sum += multiplier * milestone;
-				}
 			}
 		}
 
@@ -232,20 +233,27 @@ export class FarmingTool {
 		return false;
 	}
 
+	supportsCultivating(): boolean {
+		return FARMING_ENCHANTS.cultivating?.appliesTo.includes(this.type) ?? false;
+	}
+
 	isMissingDedication() {
+		if (!this.crop) return false;
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
 	}
 
-	private getFarmingAbilityFortune(tool: FarmingTool) {
+	private getFarmingAbilityFortune() {
 		const regex = /§7You have §6\+(\d+)☘/g;
+		let foundCounter = false;
 
-		for (const line of tool.item.lore ?? []) {
+		for (const line of this.item.lore ?? []) {
 			const found = extractNumberFromLine(line, regex) ?? 0;
 			if (!found) continue;
 
-			if (!this.logCounter) {
+			if (!foundCounter) {
 				this.logCounter = found;
-			} else if (!this.collAnalysis) {
+				foundCounter = true;
+			} else {
 				this.collAnalysis = found;
 			}
 		}
@@ -263,5 +271,19 @@ export class FarmingTool {
 			.filter((item) => FarmingTool.isValid(item))
 			.map((item) => new FarmingTool(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingTool | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingTool.isValid(fake)) return undefined;
+
+		return new FarmingTool(fake, options);
 	}
 }

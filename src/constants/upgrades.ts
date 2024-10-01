@@ -1,16 +1,87 @@
-import type { GearSlot } from "./armor";
+import { EliteItemDto } from "../fortune/item";
+import { UpgradeableInfo } from "../fortune/upgradeable";
+import type { GearSlot } from "../items/armor";
 import { Crop } from "./crops";
-import { FARMING_TOOLS } from "./tools";
+import { Stat } from "./stats";
+import type { FARMING_TOOLS } from "../items/tools";
 
 export enum UpgradeReason {
-	Standard = 'standard', // Standard upgrade
-	DeadEnd = 'dead_end', // Not worth using, no more upgrades
+	NextTier = 'next', // Standard upgrade
+	DeadEnd = 'dead', // Not worth using, no more upgrades
 	Situational = 'situational', // Worth using in some situations
+}
+
+// export interface UpgradeCost {
+// 	items: Record<string, number>;
+// 	coins?: number;
+// 	copper?: number;
+// }
+
+export interface FortuneSource {
+	name: string;
+	fortunePerLevel: number;
+	cropSpecific?: boolean;
+	maxLevel: number;
+	wiki: string;
+	statsPerLevel?: Partial<Record<Stat, number>>;
+}
+
+export interface FortuneSourceProgress {
+	name: string;
+	fortune: number;
+	ratio: number;
+	maxLevel?: number;
+	fortunePerLevel?: number;
+	maxFortune: number;
+	wiki?: string;
+	upgrades?: FortuneUpgrade[];
+	progress?: FortuneSourceProgress[];
+	item?: EliteItemDto;
+	info?: UpgradeableInfo;
+	nextInfo?: UpgradeableInfo;
+	maxInfo?: UpgradeableInfo;
+	api?: boolean;
+}
+
+export interface UpgradeCost {
+	items: Record<string, number>;
+	coins?: number;
+	copper?: number;
+}
+
+export enum UpgradeCategory {
+	Enchant = 'enchant',
+	Rarity = 'rarity',
+	Item = 'item',
+	Gem = 'gem',
+}
+
+export enum UpgradeAction {
+	Apply = 'apply',
+	Recombobulate = 'recombobulate',
+	LevelUp = 'levelup',
+}
+
+export interface FortuneUpgradeImprovement {
+	name: string;
+	fortune: number;
+}
+
+export interface FortuneUpgrade {
+	title: string;
+	increase: number;
+	action: UpgradeAction;
+	category: UpgradeCategory;
+	cost?: UpgradeCost;
+	wiki?: string;
+	improvements?: FortuneUpgradeImprovement[];
+	// upgrade: Upgrade;
 }
 
 export interface Upgrade {
 	id: string;
 	reason: UpgradeReason;
+	cost?: UpgradeCost;
 	why?: string;
 }
 

@@ -1,5 +1,22 @@
+import { FarmingPlayer, PlayerOptions } from '../player/player';
 import { Crop } from './crops';
-import { ReforgeTarget, Stat } from './reforges';
+import { CROP_MILESTONES, GARDEN_VISITORS } from './garden';
+import { ReforgeTarget } from './reforges';
+import { Stat } from "./stats";
+
+export enum EnchantTierProcurement {
+	Normal = 'normal',
+	Loot = 'loot',
+	SelfLeveling = 'selfleveling',
+}
+
+export interface FarmingEnchantTier {
+	stats?: Partial<Record<Stat, number>>;
+	computedStats?: (opt: FarmingPlayer) => Partial<Record<Stat, number>>;
+	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
+	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
+	procurement?: EnchantTierProcurement;
+}
 
 export interface FarmingEnchant {
 	name: string;
@@ -7,9 +24,44 @@ export interface FarmingEnchant {
 	wiki: string;
 	minLevel: number;
 	maxLevel: number;
-	levels?: Record<number, Partial<Record<Stat, number>>>;
-	multipliedLevels?: Record<number, Partial<Record<Stat, number>>>;
+	cropSpecific?: Crop;
+	levels: Record<number, FarmingEnchantTier>;
+	computedLevels?: (opt: PlayerOptions) => Record<number, FarmingEnchantTier>;
+	maxStats?: Partial<Record<Stat, number>>;
 	levelRequirement?: number;
+}
+
+const turboEnchant = {
+	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+	minLevel: 1,
+	maxLevel: 5,
+	levels: {
+		1: {
+			stats: {
+				[Stat.FarmingFortune]: 5
+			}
+		},
+		2: {
+			stats: {
+				[Stat.FarmingFortune]: 10
+			}
+		},
+		3: {
+			stats: {
+				[Stat.FarmingFortune]: 15
+			}
+		},
+		4: {
+			stats: {
+				[Stat.FarmingFortune]: 20
+			}
+		},
+		5: {
+			stats: {
+				[Stat.FarmingFortune]: 25
+			}
+		},
+	},
 }
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
@@ -22,22 +74,35 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 6,
 		levels: {
 			1: {
-				[Stat.FarmingFortune]: 12.5,
+				stats: {
+					[Stat.FarmingFortune]: 12.5,
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 25,
+				stats: {
+					[Stat.FarmingFortune]: 25,
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 37.5,
+				stats: {
+					[Stat.FarmingFortune]: 37.5,
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 50,
+				stats: {
+					[Stat.FarmingFortune]: 50,
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 62.5,
+				stats: {
+					[Stat.FarmingFortune]: 62.5,
+				}
 			},
 			6: {
-				[Stat.FarmingFortune]: 75,
+				stats: {
+					[Stat.FarmingFortune]: 75,
+				},
+				procurement: EnchantTierProcurement.Loot,
 			},
 		},
 	},
@@ -49,44 +114,73 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 10,
 		levels: {
 			1: {
-				[Stat.FarmingWisdom]: 1,
-				[Stat.FarmingFortune]: 2,
+				stats: {
+					[Stat.FarmingWisdom]: 1,
+					[Stat.FarmingFortune]: 2,
+				}
 			},
 			2: {
-				[Stat.FarmingWisdom]: 2,
-				[Stat.FarmingFortune]: 4,
+				stats: {
+					[Stat.FarmingWisdom]: 2,
+					[Stat.FarmingFortune]: 4,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			3: {
-				[Stat.FarmingWisdom]: 3,
-				[Stat.FarmingFortune]: 6,
+				stats: {
+					[Stat.FarmingWisdom]: 3,
+					[Stat.FarmingFortune]: 6,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			4: {
-				[Stat.FarmingWisdom]: 4,
-				[Stat.FarmingFortune]: 8,
+				stats: {
+					[Stat.FarmingWisdom]: 4,
+					[Stat.FarmingFortune]: 8,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			5: {
-				[Stat.FarmingWisdom]: 5,
-				[Stat.FarmingFortune]: 10,
+				stats: {
+					[Stat.FarmingWisdom]: 5,
+					[Stat.FarmingFortune]: 10,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			6: {
-				[Stat.FarmingWisdom]: 6,
-				[Stat.FarmingFortune]: 12,
+				stats: {
+					[Stat.FarmingWisdom]: 6,
+					[Stat.FarmingFortune]: 12,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			7: {
-				[Stat.FarmingWisdom]: 7,
-				[Stat.FarmingFortune]: 14,
+				stats: {
+					[Stat.FarmingWisdom]: 7,
+					[Stat.FarmingFortune]: 14,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			8: {
-				[Stat.FarmingWisdom]: 8,
-				[Stat.FarmingFortune]: 16,
+				stats: {
+					[Stat.FarmingWisdom]: 8,
+					[Stat.FarmingFortune]: 16,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			9: {
-				[Stat.FarmingWisdom]: 9,
-				[Stat.FarmingFortune]: 18,
+				stats: {
+					[Stat.FarmingWisdom]: 9,
+					[Stat.FarmingFortune]: 18,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			10: {
-				[Stat.FarmingWisdom]: 10,
-				[Stat.FarmingFortune]: 20,
+				stats: {
+					[Stat.FarmingWisdom]: 10,
+					[Stat.FarmingFortune]: 20,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 		},
 	},
@@ -96,19 +190,43 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://wiki.hypixel.net/Dedication_Enchantment',
 		minLevel: 1,
 		maxLevel: 4,
-		multipliedLevels: {
+		levels: {
 			1: {
-				[Stat.FarmingFortune]: 0.5,
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 0.5 * (opt?.milestones?.[crop] ?? 0);
+					},
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 0.75,
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 0.75 * (opt?.milestones?.[crop] ?? 0);
+					},
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 1,
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 1 * (opt?.milestones?.[crop] ?? 0);
+					},
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 2,
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 2 * (opt?.milestones?.[crop] ?? 0);
+					},
+				},
+				procurement: EnchantTierProcurement.Loot,
 			},
+		},
+		maxStats: {
+			[Stat.FarmingFortune]: 2 * CROP_MILESTONES[Crop.Wheat].length,
 		},
 	},
 	sunder: {
@@ -119,28 +237,38 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 6,
 		levels: {
 			1: {
-				[Stat.FarmingFortune]: 12.5,
+				stats: {
+					[Stat.FarmingFortune]: 12.5,
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 25,
+				stats: {
+					[Stat.FarmingFortune]: 25,
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 37.5,
+				stats: {
+					[Stat.FarmingFortune]: 37.5,
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 50,
+				stats: {
+					[Stat.FarmingFortune]: 50,
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 62.5,
+				stats: {
+					[Stat.FarmingFortune]: 62.5,
+				}
 			},
 			6: {
-				[Stat.FarmingFortune]: 75,
+				stats: {
+					[Stat.FarmingFortune]: 75,
+				},
+				procurement: EnchantTierProcurement.Loot,
 			},
 		},
 	},
-} as const;
-
-export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
 	pesterminator: {
 		name: 'Pesterminator',
 		appliesTo: [ReforgeTarget.Armor],
@@ -150,30 +278,37 @@ export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 5,
 		levels: {
 			1: {
-				[Stat.FarmingFortune]: 1,
-				[Stat.BonusPestChance]: 2,
+				stats: {
+					[Stat.FarmingFortune]: 1,
+					[Stat.BonusPestChance]: 2,
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 2,
-				[Stat.BonusPestChance]: 4,
+				stats: {
+					[Stat.FarmingFortune]: 2,
+					[Stat.BonusPestChance]: 4,
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 3,
-				[Stat.BonusPestChance]: 6,
+				stats: {
+					[Stat.FarmingFortune]: 3,
+					[Stat.BonusPestChance]: 6,
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 4,
-				[Stat.BonusPestChance]: 8,
+				stats: {
+					[Stat.FarmingFortune]: 4,
+					[Stat.BonusPestChance]: 8,
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 5,
-				[Stat.BonusPestChance]: 10,
+				stats: {
+					[Stat.FarmingFortune]: 5,
+					[Stat.BonusPestChance]: 10,
+				}
 			},
 		},
 	},
-} as const;
-
-export const EQUIPMENT_ENCHANTS: Record<string, FarmingEnchant> = {
 	green_thumb: {
 		name: 'Green Thumb',
 		appliesTo: [ReforgeTarget.Equipment],
@@ -181,37 +316,130 @@ export const EQUIPMENT_ENCHANTS: Record<string, FarmingEnchant> = {
 		levelRequirement: 24,
 		minLevel: 1,
 		maxLevel: 5,
-		multipliedLevels: {
+		levels: {
 			1: {
-				[Stat.FarmingFortune]: 0.05
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.05 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 0.1
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.1 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 0.15
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.15 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 0.2
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.2 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 0.25
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.25 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 		},
+		maxStats: {
+			[Stat.FarmingFortune]: 0.25 * Object.keys(GARDEN_VISITORS).length,
+		},
+	},
+	ultimate_chimera: {
+		name: 'Chimera',
+		appliesTo: [ReforgeTarget.Sword],
+		wiki: 'https://wiki.hypixel.net/Chimera_Enchantment',
+		levelRequirement: 31,
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {},
+			2: {},
+			3: {},
+			4: {},
+			5: {},
+		},
+		computedLevels: (opt) => {
+			const pet = opt.selectedPet;
+			return {
+				1: {
+					stats: pet?.getChimeraAffectedStats(0.2) ?? {}
+				},
+				2: {
+					stats: pet?.getChimeraAffectedStats(0.4) ?? {}
+				},
+				3: {
+					stats: pet?.getChimeraAffectedStats(0.6) ?? {}
+				},
+				4: {
+					stats: pet?.getChimeraAffectedStats(0.8) ?? {}
+				},
+				5: {
+					stats: pet?.getChimeraAffectedStats(1) ?? {}
+				},
+			}
+		}
+	},
+	turbo_cactus: {
+		name: 'Turbo-Cacti',
+		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',
+		cropSpecific: Crop.Cactus,
+		...turboEnchant
+	},
+	turbo_cane: {
+		name: 'Turbo-Cane',
+		wiki: 'https://wiki.hypixel.net/Turbo-Cane_Enchantment',
+		cropSpecific: Crop.SugarCane,
+		...turboEnchant
+	},
+	turbo_carrot: {
+		name: 'Turbo-Carrot',
+		wiki: 'https://wiki.hypixel.net/Turbo-Carrot_Enchantment',
+		cropSpecific: Crop.Carrot,
+		...turboEnchant
+	},
+	turbo_coco: {
+		name: 'Turbo-Cocoa',
+		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
+		cropSpecific: Crop.CocoaBeans,
+		...turboEnchant
+	},
+	turbo_melon: {
+		name: 'Turbo-Melon',
+		wiki: 'https://wiki.hypixel.net/Turbo-Melon_Enchantment',
+		cropSpecific: Crop.Melon,
+		...turboEnchant
+	},
+	turbo_mushrooms: {
+		name: 'Turbo-Mushrooms',
+		wiki: 'https://wiki.hypixel.net/Turbo-Mushrooms_Enchantment',
+		cropSpecific: Crop.Mushroom,
+		...turboEnchant
+	},
+	turbo_potato: {
+		name: 'Turbo-Potato',
+		wiki: 'https://wiki.hypixel.net/Turbo-Potato_Enchantment',
+		cropSpecific: Crop.Potato,
+		...turboEnchant
+	},
+	turbo_pumpkin: {
+		name: 'Turbo-Pumpkin',
+		wiki: 'https://wiki.hypixel.net/Turbo-Pumpkin_Enchantment',
+		cropSpecific: Crop.Pumpkin,
+		...turboEnchant
+	},
+	turbo_warts: {
+		name: 'Turbo-Warts',
+		wiki: 'https://wiki.hypixel.net/Turbo-Warts_Enchantment',
+		cropSpecific: Crop.NetherWart,
+		...turboEnchant
+	},
+	turbo_wheat: {
+		name: 'Turbo-Wheat',
+		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
+		cropSpecific: Crop.Wheat,
+		...turboEnchant
 	},
 } as const;
-
-export const TURBO_ENCHANTS: Record<string, Crop> = {
-	turbo_cactus: Crop.Cactus,
-	turbo_cane: Crop.SugarCane,
-	turbo_carrot: Crop.Carrot,
-	turbo_coco: Crop.CocoaBeans,
-	turbo_melon: Crop.Melon,
-	turbo_mushrooms: Crop.Mushroom,
-	turbo_potato: Crop.Potato,
-	turbo_pumpkin: Crop.Pumpkin,
-	turbo_warts: Crop.NetherWart,
-	turbo_wheat: Crop.Wheat,
-};
-
-export const TURBO_ENCHANT_FORTUNE = 5;

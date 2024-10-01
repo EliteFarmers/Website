@@ -3,12 +3,13 @@ import {
 	FARMING_PET_ITEMS,
 	FarmingPetInfo,
 	FarmingPetItemInfo,
+	FarmingPetStatType,
 	FarmingPetType,
 	FarmingPets,
 	PET_LEVELS,
-} from '../constants/pets';
-import { Rarity, Stat } from '../constants/reforges';
-import { Skill } from '../constants/skills';
+} from '../items/pets';
+import { Rarity, RARITY_COLORS } from '../constants/reforges';
+import { getStatValue, Stat } from "../constants/stats";
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
@@ -33,6 +34,11 @@ export class FarmingPet {
 	constructor(pet: FarmingPetType, options?: PlayerOptions) {
 		this.options = options;
 		this.pet = pet;
+
+		if (!this.pet.uuid) {
+			// Generate a UUID for the pet
+			this.pet.uuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		}
 
 		this.info = FARMING_PETS[pet.type as keyof typeof FARMING_PETS];
 		if (!this.info) {
@@ -59,59 +65,102 @@ export class FarmingPet {
 		const breakdown: Record<string, number> = {};
 
 		// Base stats
-		const stats = this.info.stats?.[Stat.FarmingFortune];
+		const stats = getStatValue(this.info.stats?.[Stat.FarmingFortune], this.options);
 		if (stats) {
 			fortune += stats;
 			breakdown['Base Stats'] = stats;
 		}
 
-		// Per level/ability stats
+		// Per level stats
 		const perLevelStats = this.info.perLevelStats?.[Stat.FarmingFortune];
 		if (perLevelStats) {
-			const amount = perLevelStats.multiplier * this.level;
+			const amount = getStatValue(perLevelStats, this.options) * this.level;
 			fortune += amount;
-			breakdown[perLevelStats.name] = amount;
+			breakdown[perLevelStats.name ?? 'Unknown'] = amount;
 		}
 
 		// Per rarity fortune stats
 		const perRarityStats = this.info.perRarityLevelStats?.[this.rarity]?.[Stat.FarmingFortune];
 		if (perRarityStats) {
-			const amount = perRarityStats.multiplier * this.level;
+			const amount = getStatValue(perRarityStats, this.options) * this.level;
 			fortune += amount;
-			breakdown[perRarityStats.name] = amount;
+			breakdown[perRarityStats.name ?? 'Rarity Stat'] = amount;
 		}
 
-		// Mooshroom Cow Perk
-		if (this.type === FarmingPets.MooshroomCow && this.options?.strength) {
-			const strengthPer = 40 - this.level * 0.2;
-			const strength = this.options.strength;
+		// Pet abilities
+		if (this.info.abilities) {
+			for (const ability of this.info.abilities) {
+				if (ability.exists && !ability.exists(this.options ?? {}, this)) {
+					continue;
+				}
 
-			const amount = Math.floor((strength / strengthPer) * 0.7);
+				const stats = ability.computed(this.options ?? {}, this);
+				const fortuneStat = stats[Stat.FarmingFortune];
 
-			fortune += amount;
-			breakdown['Farming Strength'] = amount;
+				const value = getStatValue(fortuneStat, this.options);
+				if (!value || !fortuneStat) continue;
+
+				fortune += value;
+				breakdown[fortuneStat.name ?? ability.name] = value;
+			}
 		}
 
 		// Pet item stats
 		if (this.item) {
-			const stats = this.item.stats?.[Stat.FarmingFortune];
-			const perLevelStats = this.item.perLevelStats;
+			const fortuneStat = this.item.stats?.[Stat.FarmingFortune];
 
-			if (stats) {
-				fortune += stats;
-				breakdown[this.item.name + ' Stats'] = stats;
-			}
-
-			if (perLevelStats && perLevelStats.skill === Skill.Garden) {
-				const amount = (perLevelStats?.stats?.[Stat.FarmingFortune] ?? 0) * (this.options?.gardenLevel ?? 0);
-				fortune += amount;
-				breakdown[this.item.name] = amount;
+			const value = getStatValue(fortuneStat, this.options);
+			if (value && fortuneStat) {
+				fortune += value;
+				breakdown[this.item.name] = value;
 			}
 		}
 
 		this.breakdown = breakdown;
 		this.fortune = fortune;
 		return fortune;
+	}
+
+	getFormattedName() {
+		return '[' + this.level + '] ' + RARITY_COLORS[this.rarity] + this.info.name;
+	}
+
+	getChimeraAffectedStats(multiplier: number): Record<Stat, number> {
+		const result: Record<string, number> = {};
+
+		// Item stats
+		for (const [key, stat] of Object.entries(this.item?.stats ?? {})) {
+			const value = getStatValue(stat, this.options);
+			if (result[key]) {
+				result[key] += value * multiplier;
+			} else {
+				result[key] = value * multiplier;
+			}
+		}
+
+		// Base stats
+		for (const [key, stat] of Object.entries(this.info.stats ?? {})) {
+			if (stat.type !== FarmingPetStatType.Base) continue;
+			const value = getStatValue(stat, this.options);
+			if (result[key]) {
+				result[key] += value * multiplier;
+			} else {
+				result[key] = value * multiplier;
+			}
+		}
+
+		// Per level stats
+		for (const [key, stat] of Object.entries(this.info.perLevelStats ?? {})) {
+			if (stat.type !== FarmingPetStatType.Base) continue;
+			const value = getStatValue(stat, this.options);
+			if (result[key]) {
+				result[key] += value * this.level * multiplier;
+			} else {
+				result[key] = value * this.level * multiplier;
+			}
+		}
+
+		return result;
 	}
 
 	static isValid(pet: FarmingPetType) {

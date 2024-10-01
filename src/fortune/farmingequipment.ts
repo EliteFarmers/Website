@@ -1,47 +1,46 @@
-import { FarmingArmorInfo } from '../constants/armor';
-import { EQUIPMENT_ENCHANTS } from '../constants/enchants';
-import { EQUIPMENT_INFO } from '../constants/equipment';
-import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
-import { getRarityFromLore } from '../util/itemstats';
+import { FarmingArmorInfo } from '../items/armor';
+import { FARMING_ENCHANTS } from '../constants/enchants';
+import { EQUIPMENT_INFO } from '../items/equipment';
+import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
+import { Stat } from '../constants/stats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions, ZorroMode } from '../player/player';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
+import { getSourceProgress } from '../upgrades/upgrades';
+import { getFortuneFromEnchant } from '../util/enchants';
+import { FortuneSourceProgress } from '../constants/upgrades';
+import { FarmingArmor } from './farmingarmor';
+import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
 
-export class FarmingEquipment {
-	public readonly item: EliteItemDto;
-	public readonly info: FarmingArmorInfo;
+export class FarmingEquipment extends UpgradeableBase {
+	public declare item: EliteItemDto;
+	public declare info: FarmingArmorInfo;
+
+	public get type() { 
+		return ReforgeTarget.Equipment; 
+	}
+
 	public get slot() {
 		return this.info.slot;
 	}
 
-	public declare readonly rarity: Rarity;
-	public declare readonly reforge: Reforge | undefined;
-	public declare readonly reforgeStats: ReforgeTier | undefined;
-	public declare readonly recombobulated: boolean;
+	public declare rarity: Rarity;
+	public declare reforge: Reforge | undefined;
+	public declare reforgeStats: ReforgeTier | undefined;
+	public declare recombobulated: boolean;
 
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
-	private declare options?: PlayerOptions;
+	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		this.options = options;
-		this.item = item;
-
-		const info = EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO];
-		if (!info) {
-			throw new Error(`Unknown equipment: ${item.name} (${item.skyblockId})`);
-		}
-		this.info = info;
-
-		if (item.lore) {
-			this.rarity = getRarityFromLore(item.lore);
-		}
-
-		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
-		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
-		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
-
+		super({ item, options, items: EQUIPMENT_INFO });
 		this.getFortune();
+	}
+
+	getProgress(zereod = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zereod);
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -54,7 +53,7 @@ export class FarmingEquipment {
 		let sum = 0;
 
 		// Base fortune
-		const base = this.info.stats?.[Stat.FarmingFortune] ?? 0;
+		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
@@ -67,15 +66,15 @@ export class FarmingEquipment {
 			sum += reforge;
 		}
 
-		// Green Thumb
-		const uniqueVisitors = this.options?.uniqueVisitors ?? 0;
-		const greenThumbLevel = this.item.enchantments?.green_thumb ?? 0;
-		if (uniqueVisitors > 0 && greenThumbLevel > 0) {
-			const greenThumb = EQUIPMENT_ENCHANTS.green_thumb?.multipliedLevels?.[greenThumbLevel]?.[Stat.FarmingFortune];
-			if (greenThumb) {
-				const greenThumbFortune = uniqueVisitors * greenThumb;
-				this.fortuneBreakdown['Green Thumb'] = greenThumbFortune;
-				sum += greenThumbFortune;
+		// Enchantments
+		for (const [key, level] of Object.entries(this.item.enchantments ?? {})) {
+			const enchant = FARMING_ENCHANTS[key];
+			if (!enchant || !level || enchant.cropSpecific) continue;
+			
+			const fortune = getFortuneFromEnchant(level, enchant, this.options);
+			if (fortune > 0) {
+				this.fortuneBreakdown[enchant.name] = fortune;
+				sum += fortune;
 			}
 		}
 
@@ -154,7 +153,12 @@ export class FarmingEquipment {
 		return Math.max(0, found - base - reforge);
 	}
 
-	private getPieceBonus(): number {
+	
+	/**
+	 * Get the bonus from the Salesperson lotus piece
+	 * @returns {number} Fortune from the Salesperson lotus piece
+	 */
+	getPieceBonus(): number {
 		const regex = /§7Piece Bonus: §6\+(\d+)☘/g;
 		let found = 0;
 
@@ -178,6 +182,20 @@ export class FarmingEquipment {
 			.filter((item) => FarmingEquipment.isValid(item))
 			.map((item) => new FarmingEquipment(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingEquipment | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingEquipment.isValid(fake)) return undefined;
+
+		return new FarmingEquipment(fake, options);
 	}
 }
 

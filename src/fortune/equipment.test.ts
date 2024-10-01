@@ -107,19 +107,57 @@ const lotusNecklace = {
 	attributes: { modifier: 'rooted', timestamp: '1676441040000', rarity_upgrades: '1' },
 };
 
-test("Lotus Necklace Test", () => {
+test('Lotus Necklace Test', () => {
 	const necklace = new FarmingEquipment(lotusNecklace, {
 		uniqueVisitors: 84,
 	});
 	expect(necklace.fortuneBreakdown).toStrictEqual({
 		'Base Stats': 5,
 		'Green Thumb': 21,
-		'Reforge': 15,
-		'Salesperson': 15,
+		Reforge: 15,
+		Salesperson: 15,
 	});
 	expect(necklace.getFortune()).toBe(56);
 
 	// Test fallback to Green Thumb from lore
 	const necklace2 = new FarmingEquipment(lotusNecklace);
 	expect(necklace2.fortuneBreakdown).toStrictEqual(necklace.fortuneBreakdown);
+});
+
+const pestVest = {
+	id: 397,
+	count: 1,
+	skyblockId: 'PEST_VEST',
+	uuid: '0570d6b8-0caf-4d19-a7b6-0bcc893e4683',
+	name: '§6Rooted Pest Vest',
+	lore: [
+		'§7Health: §a+14 §9(+14)',
+		'§7Farming Fortune: §a+39 §9(+18)',
+		'§7Bonus Pest Chance: §a+10%',
+		'',
+		'§9Green Thumb V',
+		'§7Grants §60.25☘ Farming Fortune §7per',
+		'§7unique visitor served.',
+		'',
+		'§7Decreases the spawn cooldown of',
+		'§7§6Pests §7by §a20%§7.',
+		'',
+		'§8§l* §8Co-op Soulbound §8§l*',
+		'§6§l§ka§r §6§l§6§lLEGENDARY CLOAK §6§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'rooted', timestamp: '1723853114556', donated_museum: 'True', rarity_upgrades: '1' },
+};
+
+test('Pest Vest Test', () => {
+	const vest = new FarmingEquipment(pestVest, {
+		uniqueVisitors: 84,
+	});
+
+	expect(vest.fortuneBreakdown).toStrictEqual({
+		'Green Thumb': 21,
+		Reforge: 18,
+	});
+
+	expect(vest.getFortune()).toBe(39);
 });

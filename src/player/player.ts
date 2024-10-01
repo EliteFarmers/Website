@@ -1,13 +1,15 @@
 import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests';
 import { fortuneFromPestBestiary } from '../util/pests';
-import { FarmingPetType } from '../constants/pets';
+import { FarmingPetType } from '../items/pets';
 import {
-	FORTUNE_PER_ANITA_BONUS,
-	FORTUNE_PER_COMMUNITY_CENTER,
-	FORTUNE_PER_CROP_UPGRADE,
-	FORTUNE_PER_FARMING_LEVEL,
-	FORTUNE_PER_PLOT,
+	ANITA_FORTUNE_UPGRADE,
+	COMMUNITY_CENTER_UPGRADE,
+	GARDEN_CROP_UPGRADES,
+	FARMING_LEVEL,
+	UNLOCKED_PLOTS,
+	PEST_BESTIARY_SOURCE,
+	COCOA_FORTUNE_UPGRADE,
 } from '../constants/specific';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names';
 import { FarmingAccessory } from '../fortune/farmingaccessory';
@@ -18,9 +20,14 @@ import { EliteItemDto } from '../fortune/item';
 import { FarmingEquipment } from '../fortune/farmingequipment';
 import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune';
 import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc';
+import { Upgrade } from '../constants/upgrades';
+import { getFortune, getSourceProgress } from '../upgrades/upgrades';
+import { getFortuneProgress } from '../upgrades/progress';
+import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources';
+import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources';
 
 export interface FortuneMissingFromAPI {
-	cropUpgrades?: Record<Crop, number>;
+	cropUpgrades?: Partial<Record<Crop, number>>;
 	gardenLevel?: number;
 	plotsUnlocked?: number;
 	uniqueVisitors?: number;
@@ -28,6 +35,7 @@ export interface FortuneMissingFromAPI {
 	milestones?: Partial<Record<Crop, number>>;
 	exportableCrops?: Partial<Record<Crop, boolean>>;
 	refinedTruffles?: number;
+	cocoaFortuneUpgrade?: number;
 
 	temporaryFortune?: TemporaryFarmingFortune;
 }
@@ -71,6 +79,12 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	}
 }
 
+export interface FortuneProgress {
+	total: number;
+	progress: number;
+	upgrades: Upgrade[];
+}
+
 export function createFarmingPlayer(options: PlayerOptions) {
 	return new FarmingPlayer(options);
 }
@@ -90,6 +104,7 @@ export class FarmingPlayer {
 	declare armorSet: ArmorSet;
 	declare equipment: FarmingEquipment[];
 	declare accessories: FarmingAccessory[];
+	declare activeAccessories: FarmingAccessory[];
 	declare pets: FarmingPet[];
 
 	declare selectedTool?: FarmingTool;
@@ -97,16 +112,6 @@ export class FarmingPlayer {
 
 	constructor(options: PlayerOptions) {
 		this.options = options;
-
-		options.tools ??= [];
-		if (options.tools[0] instanceof FarmingTool) {
-			this.tools = options.tools as FarmingTool[];
-			for (const tool of this.tools) tool.setOptions(options);
-		} else {
-			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
-		}
-
-		this.selectedTool = this.options.selectedTool ?? this.tools[0];
 
 		options.pets ??= [];
 		if (options.pets[0] instanceof FarmingPet) {
@@ -118,6 +123,17 @@ export class FarmingPlayer {
 
 		this.selectedPet = this.options.selectedPet;
 
+		options.tools ??= [];
+		if (options.tools[0] instanceof FarmingTool) {
+			this.tools = options.tools as FarmingTool[];
+			for (const tool of this.tools) tool.setOptions(options);
+			this.tools.sort((a, b) => b.fortune - a.fortune);
+		} else {
+			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
+		}
+
+		this.selectedTool = this.options.selectedTool ?? this.tools[0];
+
 		options.armor ??= [];
 		if (options.armor instanceof ArmorSet) {
 			this.armorSet = options.armor;
@@ -128,7 +144,7 @@ export class FarmingPlayer {
 			this.equipment = this.armorSet.equipmentPieces;
 			this.equipment.sort((a, b) => b.fortune - a.fortune);
 
-			this.armorSet.getFortuneBreakdown(true);
+			this.armorSet.setOptions(options);
 		} else if (options.armor[0] instanceof FarmingArmor) {
 			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.potential - a.potential);
 			for (const a of this.armor) a.setOptions(options);
@@ -152,6 +168,8 @@ export class FarmingPlayer {
 		}
 
 		options.accessories ??= [];
+		this.activeAccessories = [];
+
 		if (options.accessories[0] instanceof FarmingAccessory) {
 			this.accessories = (options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
@@ -184,19 +202,23 @@ export class FarmingPlayer {
 		this.permFortune = this.getGeneralFortune();
 	}
 
+	getProgress() {
+		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES);
+	}
+
 	getGeneralFortune() {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
 
 		// Plots
-		const plots = FORTUNE_PER_PLOT * (this.options.plotsUnlocked ?? 0);
+		const plots = getFortune(this.options.plotsUnlocked, UNLOCKED_PLOTS);
 		if (plots > 0) {
 			breakdown['Unlocked Plots'] = plots;
 			sum += plots;
 		}
 
 		// Farming Level
-		const level = FORTUNE_PER_FARMING_LEVEL * (this.options.farmingLevel ?? 0);
+		const level = getFortune(this.options.farmingLevel, FARMING_LEVEL);
 		if (level > 0) {
 			breakdown['Farming Level'] = level;
 			sum += level;
@@ -226,14 +248,14 @@ export class FarmingPlayer {
 		}
 
 		// Anita Bonus
-		const anitaBonus = (this.options.anitaBonus ?? 0) * FORTUNE_PER_ANITA_BONUS;
+		const anitaBonus = getFortune(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE);
 		if (anitaBonus > 0) {
 			breakdown['Anita Bonus Drops'] = anitaBonus;
 			sum += anitaBonus;
 		}
 
 		// Community Center
-		const communityCenter = (this.options.communityCenter ?? 0) * FORTUNE_PER_COMMUNITY_CENTER;
+		const communityCenter = getFortune(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE);
 		if (communityCenter > 0) {
 			breakdown['Community Center'] = communityCenter;
 			sum += communityCenter;
@@ -248,10 +270,12 @@ export class FarmingPlayer {
 
 		// Accessories, only count highest fortune from each family
 		const families = new Map<string, FarmingAccessory>();
+		this.activeAccessories = [];
 		for (const accessory of this.accessories.filter((a) => a.fortune > 0).sort((a, b) => b.fortune - a.fortune)) {
 			if (accessory.info.family) {
 				if (!families.has(accessory.info.family)) {
 					families.set(accessory.info.family, accessory);
+					this.activeAccessories.push(accessory);
 				} else {
 					continue;
 				}
@@ -283,6 +307,16 @@ export class FarmingPlayer {
 
 		this.breakdown = breakdown;
 		return sum;
+	}
+
+	getGeneralFortuneProgress() {
+		return [
+			getFortuneProgress(this.options.farmingLevel, FARMING_LEVEL),
+			getFortuneProgress(fortuneFromPestBestiary(this.options.bestiaryKills ?? {}), PEST_BESTIARY_SOURCE),
+			getFortuneProgress(this.options.plotsUnlocked, UNLOCKED_PLOTS),
+			getFortuneProgress(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE),
+			getFortuneProgress(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE),
+		]
 	}
 
 	getTempFortune() {
@@ -318,7 +352,7 @@ export class FarmingPlayer {
 		const breakdown = {} as Record<string, number>;
 
 		// Crop upgrades
-		const upgrade = FORTUNE_PER_CROP_UPGRADE * (this.options.cropUpgrades?.[crop] ?? 0);
+		const upgrade = getFortune(this.options.cropUpgrades?.[crop], GARDEN_CROP_UPGRADES);
 		if (upgrade > 0) {
 			breakdown['Crop Upgrade'] = upgrade;
 			sum += upgrade;
@@ -368,10 +402,22 @@ export class FarmingPlayer {
 			sum += extra.fortune;
 		}
 
+		if (crop === Crop.CocoaBeans) {
+			const upgrade = getFortune(this.options.cocoaFortuneUpgrade, COCOA_FORTUNE_UPGRADE);
+			if (upgrade > 0) {
+				breakdown['Cocoa Fortune Upgrade'] = upgrade;
+				sum += upgrade;
+			}
+		}
+
 		return {
 			fortune: sum,
 			breakdown,
 		};
+	}
+
+	getCropProgress(crop: Crop) {
+		return getSourceProgress<{ crop: Crop, player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
 	}
 
 	getWeightCalc(info?: FarmingWeightInfo) {
@@ -382,6 +428,14 @@ export class FarmingPlayer {
 			levelCapUpgrade: Math.min((this.options.farmingLevel ?? 0) - 50, 0),
 			...info,
 		});
+	}
+
+	getBestTool(crop: Crop) {
+		return this.tools.find((t) => t.crop === crop);
+	}
+
+	getSelectedCropTool(crop: Crop) {
+		return this.selectedTool?.crop === crop ? this.selectedTool : this.getBestTool(crop);
 	}
 }
 

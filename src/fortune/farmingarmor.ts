@@ -1,15 +1,22 @@
-import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GearSlot } from '../constants/armor';
+import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../items/armor';
 import { Crop } from '../constants/crops';
-import { FARMING_ARMOR_ENCHANTS } from '../constants/enchants';
-import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
+import { FARMING_ENCHANTS } from '../constants/enchants';
+import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
+import { Stat } from "../constants/stats";
 import { Skill } from '../constants/skills';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
 import { calculateAverageSpecialCrops } from '../crops/special';
 import { getPeridotFortune } from '../util/gems';
-import { getRarityFromLore } from '../util/itemstats';
 import { FarmingEquipment } from './farmingequipment';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
+import { getLastItemUpgradeableTo, getSourceProgress, getItemUpgrades } from '../upgrades/upgrades';
+import { getFortuneFromEnchant } from '../util/enchants';
+import { FortuneSourceProgress } from '../constants/upgrades';
+import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
+import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources';
+import { EQUIPMENT_INFO } from '../items/equipment';
 
 export interface ActiveArmorSetBonus {
 	count: number;
@@ -58,6 +65,16 @@ export class ArmorSet {
 			}
 		}
 
+		this.setArmor(armor);
+
+		if (equipment) {
+			this.setEquipment(equipment);
+		} else {
+			this.recalculateFamilies();
+		}
+	}
+
+	setArmor(armor: FarmingArmor[]) {
 		armor.sort((a, b) => b.potential - a.potential);
 		this.pieces = armor;
 
@@ -66,11 +83,7 @@ export class ArmorSet {
 		this.leggings = armor.find((a) => a.slot === GearSlot.Leggings);
 		this.boots = armor.find((a) => a.slot === GearSlot.Boots);
 
-		if (equipment) {
-			this.setEquipment(equipment);
-		} else {
-			this.recalculateFamilies();
-		}
+		this.recalculateFamilies();
 	}
 
 	setEquipment(equipment: FarmingEquipment[]) {
@@ -83,6 +96,18 @@ export class ArmorSet {
 		this.gloves = equipment.find((a) => a.slot === GearSlot.Gloves);
 
 		this.recalculateFamilies();
+	}
+
+	setOptions(options: PlayerOptions) {
+		for (const piece of this.pieces) {
+			piece.setOptions(options);
+		}
+		for (const piece of this.equipmentPieces) {
+			piece.setOptions(options);
+		}
+
+		this.setArmor(this.pieces);
+		this.setEquipment(this.equipmentPieces);
 	}
 
 	getPiece(slot: GearSlot): FarmingArmor | FarmingEquipment | undefined {
@@ -153,9 +178,9 @@ export class ArmorSet {
 		this.setBonuses = [];
 
 		for (const piece of armor) {
-			if (!piece.armor.family) continue;
+			if (!piece.info.family) continue;
 
-			families.set(piece.armor.family, (families.get(piece.armor.family) ?? 0) + 1);
+			families.set(piece.info.family, (families.get(piece.info.family) ?? 0) + 1);
 		}
 
 		for (const [family, count] of families.entries()) {
@@ -166,7 +191,7 @@ export class ArmorSet {
 
 			this.setBonuses.push({
 				count,
-				from: armor.filter((a) => a.armor.family === family).map((a) => a.slot),
+				from: armor.filter((a) => a.info.family === family).map((a) => a.slot),
 				bonus,
 				special: bonus.special,
 			});
@@ -243,6 +268,22 @@ export class ArmorSet {
 		return calculateAverageSpecialCrops(blocksBroken, crop, count);
 	}
 
+	getProgress(zeroed = false) {
+		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed);
+	}
+
+	getPieceProgress(slot: GearSlot) {
+		let piece = this.getPiece(slot);
+		if (!piece) {
+			piece = GEAR_SLOTS[slot].target === ReforgeTarget.Armor
+				? FarmingArmor.fakeItem(ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
+				: FarmingEquipment.fakeItem(EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo);
+			return piece?.getProgress(true) ?? [];
+		}
+
+		return piece.getProgress() ?? [];
+	}
+
 	get slots(): Record<GearSlot, FarmingArmor | FarmingEquipment | undefined> {
 		return {
 			[GearSlot.Helmet]: this.helmet,
@@ -270,11 +311,16 @@ export class ArmorSet {
 	}
 }
 
-export class FarmingArmor {
+export class FarmingArmor extends UpgradeableBase {
 	public declare readonly item: EliteItemDto;
-	public declare readonly armor: FarmingArmorInfo;
+	public declare readonly info: FarmingArmorInfo;
+	public get type() { return ReforgeTarget.Armor }
+
+	// Backwards compatibility
+	public get armor(): FarmingArmorInfo { return this.info; }
+	
 	public get slot() {
-		return this.armor.slot;
+		return this.info.slot;
 	}
 
 	public declare readonly rarity: Rarity;
@@ -283,57 +329,41 @@ export class FarmingArmor {
 	public declare readonly recombobulated: boolean;
 
 	public get potential() {
-		if (!this.armor.family) {
+		if (!this.info.family) {
 			return this.fortune;
 		}
 		// Add the set bonus potential to the fortune
-		return this.fortune + (ARMOR_SET_BONUS[this.armor.family]?.piecePotential?.[Stat.FarmingFortune] ?? 0);
+		return this.fortune + (ARMOR_SET_BONUS[this.info.family]?.piecePotential?.[Stat.FarmingFortune] ?? 0);
 	}
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
-	private declare options?: { farmingLevel?: number };
+	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		this.options = options;
-		this.item = item;
-		const armor = ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO];
-
-		if (!armor) {
-			throw new Error(`Unknown farming armor: ${item.name} (${item.skyblockId})`);
-		}
-		this.armor = armor;
-
-		if (item.lore) {
-			this.rarity = getRarityFromLore(item.lore);
-		}
-
-		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
-		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
-		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
-
-		this.sumFortune();
+		super({ item, options, items: ARMOR_INFO });
+		this.getFortune();
 	}
 
 	setOptions(options: PlayerOptions) {
 		this.options = options;
-		this.fortune = this.sumFortune();
+		this.fortune = this.getFortune();
 	}
 
-	private sumFortune() {
+	getFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 
 		// Base fortune
-		const base = this.armor.stats?.[Stat.FarmingFortune] ?? 0;
+		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
 		}
 
 		// Per farming level stats like Rancher's Boots
-		if (this.armor.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
-			const perLevel = this.armor.perLevelStats?.stats[Stat.FarmingFortune] ?? 0;
+		if (this.info.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
+			const perLevel = this.info.perLevelStats?.stats[Stat.FarmingFortune] ?? 0;
 			if (perLevel > 0) {
 				this.fortuneBreakdown['Farming Level'] = perLevel * this.options.farmingLevel;
 				sum += perLevel * this.options.farmingLevel;
@@ -359,10 +389,10 @@ export class FarmingArmor {
 		for (const [enchant, level] of enchantments) {
 			if (!level) continue;
 
-			const enchantment = FARMING_ARMOR_ENCHANTS[enchant];
-			if (!enchantment || !level) continue;
+			const enchantment = FARMING_ENCHANTS[enchant];
+			if (!enchantment || !level || enchantment.cropSpecific) continue;
 
-			const fortune = enchantment.levels?.[level]?.[Stat.FarmingFortune] ?? 0;
+			const fortune = getFortuneFromEnchant(level, enchantment, this.options);
 			if (fortune > 0) {
 				this.fortuneBreakdown[enchantment.name] = fortune;
 				sum += fortune;
@@ -371,6 +401,22 @@ export class FarmingArmor {
 
 		this.fortune = sum;
 		return sum;
+	}
+
+	getUpgrades() {
+		return getItemUpgrades(this);
+	}
+
+	getItemUpgrade() {
+		return this.info.upgrade;
+	}
+
+	getLastItemUpgrade() {
+		return getLastItemUpgradeableTo(this, ARMOR_INFO);
+	}
+
+	getProgress(zeroed = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed);
 	}
 
 	static isValid(item: EliteItemDto): boolean {
@@ -382,5 +428,19 @@ export class FarmingArmor {
 			.filter((item) => FarmingArmor.isValid(item))
 			.map((item) => new FarmingArmor(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingArmor | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingArmor.isValid(fake)) return undefined;
+
+		return new FarmingArmor(fake, options);
 	}
 }

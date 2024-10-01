@@ -1,3 +1,7 @@
+import { Stat } from "./stats";
+
+export type RarityRecord<T> = Partial<Record<Rarity, T>>;
+
 export enum Rarity {
 	Common = 'Common',
 	Uncommon = 'Uncommon',
@@ -30,37 +34,12 @@ export function compareRarity(a: Rarity | string, b: Rarity | string) {
 	return RARITY_VALUES[a as Rarity] - RARITY_VALUES[b as Rarity];
 }
 
-export enum Stat {
-	Strength = 'Strength',
-	Health = 'Health',
-	Defense = 'Defense',
-	Speed = 'Speed',
-	Intelligence = 'Intelligence',
-	CritChance = 'Crit Chance',
-	CritDamage = 'Crit Damage',
-	AttackSpeed = 'Attack Speed',
-	AbilityDamage = 'Ability Damage',
-	MagicFind = 'Magic Find',
-	PetLuck = 'Pet Luck',
-	TrueDefense = 'True Defense',
-	SeaCreatureChance = 'Sea Creature Chance',
-	Ferocity = 'Ferocity',
-	MiningSpeed = 'Mining Speed',
-	MiningFortune = 'Mining Fortune',
-	FarmingFortune = 'Farming Fortune',
-	ForagingFortune = 'Foraging Fortune',
-	MiningWisdom = 'Mining Wisdom',
-	FarmingWisdom = 'Farming Wisdom',
-	ForagingWisdom = 'Foraging Wisdom',
-	Pristine = 'Pristine',
-	BonusPestChance = 'Bonus Pest Chance',
-}
-
 export enum ReforgeTarget {
 	Hoe = 'Hoe',
 	Axe = 'Axe',
 	Armor = 'Armor',
 	Equipment = 'Equipment',
+	Sword = 'Sword',
 }
 
 export interface ReforgeTier {

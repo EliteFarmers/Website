@@ -19,6 +19,7 @@ export interface CropInfo {
 	breaks?: number;
 	replenish?: boolean;
 	exportable?: boolean;
+	startingTool: string;
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -27,6 +28,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 3,
 		drops: 2,
 		breaks: 2,
+		startingTool: 'CACTUS_KNIFE',
 	},
 	[Crop.Carrot]: {
 		name: 'Carrot',
@@ -34,6 +36,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 3,
 		replenish: true,
 		exportable: true,
+		startingTool: 'THEORETICAL_HOE_CARROT_1',
 	},
 	[Crop.CocoaBeans]: {
 		name: 'Cocoa Beans',
@@ -41,52 +44,61 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 3,
 		replenish: true,
 		exportable: true,
+		startingTool: 'COCO_CHOPPER',
 	},
 	[Crop.Melon]: {
 		name: 'Melon',
 		npc: 2,
 		drops: 5,
+		startingTool: 'MELON_DICER',
 	},
 	[Crop.Mushroom]: {
 		name: 'Mushroom',
 		npc: 10,
 		drops: 1,
+		startingTool: 'FUNGI_CUTTER',
 	},
 	[Crop.NetherWart]: {
 		name: 'Nether Wart',
 		npc: 4,
 		drops: 2.5,
 		replenish: true,
+		startingTool: 'THEORETICAL_HOE_WARTS_1',
 	},
 	[Crop.Potato]: {
 		name: 'Potato',
 		npc: 3,
 		drops: 3,
 		replenish: true,
+		startingTool: 'THEORETICAL_HOE_POTATO_1',
 	},
 	[Crop.Pumpkin]: {
 		name: 'Pumpkin',
 		npc: 10,
 		drops: 1,
 		exportable: true,
+		startingTool: 'PUMPKIN_DICER',
 	},
 	[Crop.SugarCane]: {
 		name: 'Sugar Cane',
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		startingTool: 'THEORETICAL_HOE_CANE_1',
 	},
 	[Crop.Wheat]: {
 		name: 'Wheat',
 		npc: 6,
 		drops: 1,
 		exportable: true,
+		startingTool: 'THEORETICAL_HOE_WHEAT_1',
 	},
 	[Crop.Seeds]: {
 		name: 'Seeds',
 		npc: 3,
 		drops: 1.5,
 		replenish: true,
+		startingTool: 'THEORETICAL_HOE_WHEAT_1',
 	},
 };
 
