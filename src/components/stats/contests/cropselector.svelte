@@ -4,6 +4,8 @@
 	const selectedCrops = getSelectedCrops();
 
 	export let radio = false;
+	export let href = '';
+	export let id = '';
 
 	function click(crop: string) {
 		if (radio) {
@@ -16,7 +18,12 @@
 	$: crops = Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b));
 </script>
 
-<div class="flex flex-wrap items-center justify-center p-4 gap-2">
+<svelte:element
+	this={href ? 'a' : 'div'}
+	{href}
+	id={id ? id : undefined}
+	class="flex flex-wrap items-center justify-center p-4 gap-2 scroll-mt-32"
+>
 	{#each crops as [crop, src] (crop)}
 		<button
 			class="flex flex-row items-center justify-center gap-2 p-2 rounded-md hover:bg-muted {$selectedCrops[crop]
@@ -27,4 +34,4 @@
 			<img {src} alt={crop[0]} class="w-12 h-12 pixelated" />
 		</button>
 	{/each}
-</div>
+</svelte:element>
