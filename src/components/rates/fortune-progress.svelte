@@ -36,7 +36,7 @@
 		{/if}
 		{#if progress.api === false}
 			<Popover.Mobile>
-				<div slot="trigger" class="mt-1">
+				<div slot="trigger">
 					<TriangleAlert size={16} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
 				</div>
 				<p class="text-sm max-w-sm">

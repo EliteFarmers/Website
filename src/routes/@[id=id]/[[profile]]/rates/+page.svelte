@@ -41,11 +41,14 @@
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
+	import JumpLink from '$comp/jump-link.svelte';
 
 	import type { PageData } from './$types';
 	export let data: PageData;
 
 	let blocksBroken = 24_000 * 3;
+	let bps = 20;
+	$: blocksActuallyBroken = blocksBroken * (bps / 20);
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
@@ -123,7 +126,7 @@
 		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
 		mooshroom: selectedPet?.type === FarmingPets.MooshroomCow,
 		dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
-		blocksBroken: blocksBroken,
+		blocksBroken: blocksActuallyBroken,
 	});
 
 	$: selectedCrop = Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '';
@@ -156,7 +159,7 @@
 	description="Calculate your expected farming rates in Hypixel Skyblock!"
 />
 
-<div class="flex flex-col justify-center items-center w-full">
+<div class="flex flex-col justify-center items-center w-full gap-4">
 	<Cropselector radio={true} />
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
@@ -375,11 +378,21 @@
 			{/if}
 			<div class="flex justify-between items-center w-full pt-2">
 				<p class="text-lg font-semibold">Farming Pet</p>
+				{#if selectedPet}
+					<FortuneBreakdown breakdown={selectedPet.breakdown} />
+				{:else}
+					<FortuneBreakdown total={0} />
+				{/if}
 			</div>
 			<PetSelector {player} {pets} onChange={setPet} />
 
 			<div class="flex justify-between items-center w-full pt-2">
 				<p class="text-lg font-semibold">Farming Tool</p>
+				{#if selectedTool && selectedTool.crop === selectedCropKey}
+					<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
+				{:else}
+					<FortuneBreakdown total={0} />
+				{/if}
 			</div>
 			<ToolSelector {player} bind:selectedToolId />
 
@@ -397,22 +410,53 @@
 					{@const coinBreakdown = Object.entries(info.coinSources).sort(([, a], [, b]) => b - a)}
 					{@const otherBreakdown = Object.entries(info.otherCollection).sort(([, a], [, b]) => b - a)}
 
-					<div class="flex flex-row gap-2 items-center align-middle">
-						<h2 class="text-2xl pb-1 flex-2">{PROPER_CROP_NAME[cropId]} Rates</h2>
+					<div class="flex flex-col items-start gap-2">
+						<div class="flex flex-row gap-2 items-center align-middle">
+							<img
+								src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
+								alt={selectedCrop}
+								class="w-8 h-8 pixelated"
+							/>
 
-						<Select.Simple
-							class="flex-1"
-							bind:value={blocksBroken}
-							options={[
-								{ value: 24_000, label: 'Per Contest' },
-								{ value: 72_000, label: 'Per Hour' },
-								{ value: 72_000 * 4, label: 'Per 4 Hours' },
-								{ value: 72_000 * 8, label: 'Per 8 Hours' },
-								{ value: 72_000 * 12, label: 'Per 12 Hours' },
-								{ value: 72_000 * 24, label: 'Per 24 Hours' },
-							]}
-						/>
+							<h2 class="text-2xl pb-1 flex-2">{PROPER_CROP_NAME[cropId]} Rates</h2>
+						</div>
+						<div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+							<div class="flex flex-col gap-1 justify-start flex-1">
+								<div class="flex flex-row items-center gap-1">
+									<p class="text-sm font-semibold">Time Spent Farming</p>
+								</div>
+								<Select.Simple
+									class="flex-1"
+									bind:value={blocksBroken}
+									options={[
+										{ value: 24_000, label: 'Contest (20 minutes)' },
+										{ value: 72_000, label: '1 Hour' },
+										{ value: 72_000 * 4, label: '4 Hours' },
+										{ value: 72_000 * 8, label: '8 Hours' },
+										{ value: 72_000 * 12, label: '12 Hours' },
+										{ value: 72_000 * 24, label: '24 Hours' },
+									]}
+								/>
+							</div>
+							<div class="flex flex-col gap-1 justify-start flex-1">
+								<div class="flex flex-row items-center gap-1">
+									<p class="ml-2 text-sm font-semibold">
+										Blocks Per Second ({bps.toFixed(2)})
+									</p>
+								</div>
+								<div class="flex flex-row gap-1 items-center flex-1">
+									<SliderSimple class="h-8" min={10} max={20} bind:value={bps} step={0.05} />
+									<p class="pb-2.5 p-2 pl-4 w-20 text-center leading-none">
+										{(bps / 0.2).toFixed(1)}%
+									</p>
+								</div>
+							</div>
+						</div>
 					</div>
+
+					<hr class="mt-2" />
+
+					<h3 class="text-xl mt-2 mb-1">Results</h3>
 					<div class="flex flex-col text-lg font-semibold">
 						<div class="flex justify-between items-center w-full px-4 py-2">
 							<span class="text-xl">Coins</span>
@@ -424,7 +468,7 @@
 						</div>
 					</div>
 
-					<h3 class="text-xl my-2">Coin Breakdown</h3>
+					<h3 class="text-xl mt-2 mb-1">Coin Breakdown</h3>
 					<div class="flex flex-col">
 						{#each coinBreakdown as [name, value] (name)}
 							<div class="flex justify-between items-center w-full px-4 py-2">
@@ -458,45 +502,46 @@
 		</section>
 	</div>
 
-	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full mt-4 justify-center">
+	<Cropselector radio={true} />
+
+	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col items-center w-full gap-4 p-4 rounded-md bg-primary-foreground">
-			<h2 class="text-2xl">Farming Fortune</h2>
+			<div class="flex flex-row gap-1 items-center justify-center w-full">
+				<div class="flex-1 flex flex-row justify-end">
+					<JumpLink id="fortune" />
+				</div>
+				<h2 class="text-2xl mb-1">Farming Fortune</h2>
+				<div class="flex-1" />
+			</div>
 			{#key $player.fortune}
-				<div class="flex flex-row gap-4 w-full">
+				<div class="flex flex-wrap md:flex-row gap-4 w-full justify-start">
 					<CategoryProgress name="General Fortune" progress={$player.getProgress()} />
-					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-						<h3 class="text-lg">{selectedCrop || 'Wheat'} Fortune</h3>
-						<FortuneProgress progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)} />
-					</div> -->
-					{#key $player.selectedTool}
-						<CategoryProgress
-							name="{selectedCrop || 'Wheat'} Fortune"
-							progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)}
-						/>
-					{/key}
-					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-						<h3 class="text-lg">Gear Fortune</h3>
-						<FortuneProgress progress={$player.armorSet.getProgress()} />
-					</div> -->
 					<CategoryProgress name="Gear Fortune" progress={$player.armorSet.getProgress()} />
-					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-						<h3 class="text-lg">Helmet Fortune</h3>
-						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Helmet)} />
-					</div> -->
-					<!-- <div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-						<h3 class="text-lg">Chestplate Fortune</h3>
-						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Chestplate)} />
-					</div>
-					<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-						<h3 class="text-lg">Leggings Fortune</h3>
-						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Leggings)} />
-					</div>
-					<div class="flex flex-col max-w-lg w-full gap-2 flex-1">
-						<h3 class="text-lg">Boots Fortune</h3>
-						<FortuneProgress progress={$player.armorSet.getPieceProgress(GearSlot.Boots)} />
-					</div> -->
+					{#key $player.selectedTool}
+						{#if !selectedCrop}
+							<div class="text-center flex-1 items-center basis-64">
+								<p class="font-semibold text-center my-4 max-w-sm">
+									Select a crop above to see its fortune!
+								</p>
+							</div>
+						{:else}
+							<CategoryProgress
+								name="{selectedCrop || 'Wheat'} Fortune"
+								progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)}
+							>
+								<img
+									src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
+									alt={selectedCrop}
+									class="w-8 h-8 pixelated ml-1"
+								/>
+							</CategoryProgress>
+						{/if}
+					{/key}
 				</div>
 			{/key}
+			<div class="flex flex-row justify-start w-full text-muted-foreground">
+				<p>Farming pet fortune not included yet, check back later!</p>
+			</div>
 		</section>
 	</div>
 

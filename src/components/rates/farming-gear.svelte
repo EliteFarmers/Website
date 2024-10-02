@@ -44,7 +44,7 @@
 
 <div class="flex flex-col gap-3">
 	<div class="flex justify-between items-center w-full pb-2">
-		<span class="text-lg font-semibold">Farming Gear</span>
+		<p class="text-lg font-semibold">Farming Gear</p>
 		<Fortunebreakdown breakdown={set.getFortuneBreakdown()} />
 	</div>
 	<div class="flex flex-col gap-3 mx-2">

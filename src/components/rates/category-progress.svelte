@@ -11,9 +11,12 @@
 	$: shownProgress = undefined as FortuneSourceProgress | undefined;
 </script>
 
-<div class="flex flex-col gap-2 flex-1">
+<div class="flex flex-col gap-2 flex-1 basis-64 justify-center">
 	<div class="flex flex-col max-w-lg w-full gap-2 flex-1 mx-1">
-		<h2 class="text-xl pl-1">{name}</h2>
+		<div class="flex flex-row gap-1 items-center">
+			<slot />
+			<h2 class="text-xl pl-1">{name}</h2>
+		</div>
 		<div class="flex flex-col max-w-lg w-full gap-1.5 flex-1">
 			{#each progress as p (p.name + p.fortune + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item}
