@@ -2,17 +2,28 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
-	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto } from 'farming-weight';
+	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto, FarmingPet, Stat } from 'farming-weight';
 
 	export let tools: components['schemas']['ItemDto'][];
 	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
+	export let pets: components['schemas']['PetDto'][] = [];
 	export let shown = 10;
 
 	let currentShown = shown;
 
-	$: actualTools = FT.fromArray(tools as EliteItemDto[], {
+	$: options = {
 		milestones: getCropMilestoneLevels(garden?.crops ?? {}),
-	});
+		// Use the pet with the highest chimera farming fortune for fortune displayed on daedalus axe
+		selectedPet: FarmingPet.fromArray(pets)
+			.sort(
+				(a, b) =>
+					(b.getChimeraAffectedStats(1)?.[Stat.FarmingFortune] ?? 0) -
+					(a.getChimeraAffectedStats(1)?.[Stat.FarmingFortune] ?? 0)
+			)
+			.at(0),
+	};
+
+	$: actualTools = FT.fromArray(tools as EliteItemDto[], options);
 </script>
 
 {#if actualTools.length !== 0}

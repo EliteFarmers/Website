@@ -93,6 +93,7 @@
 				<Farmingtools
 					garden={member.garden}
 					tools={member.farmingWeight?.inventory?.tools ?? []}
+					pets={member.pets ?? []}
 					shown={10 - (member.events?.length ?? 0)}
 				/>
 			</div>
