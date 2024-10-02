@@ -39,9 +39,10 @@ export interface FarmingPetAbility {
 export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
-	stats?: StatsRecord<FarmingPetStatType>;
-	perLevelStats?: StatsRecord<FarmingPetStatType>;
-	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType>>;
+	maxLevel?: number;
+	stats?: StatsRecord<FarmingPetStatType, FarmingPet>;
+	perLevelStats?: StatsRecord<FarmingPetStatType, FarmingPet>;
+	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType, FarmingPet>>;
 	perStatStats?: StatsRecord<FarmingPetStatType>;
 	abilities?: FarmingPetAbility[];
 }
@@ -63,15 +64,8 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 		wiki: 'https://wiki.hypixel.net/Mooshroom_Cow_Pet',
 		stats: {
 			[Stat.FarmingFortune]: {
-				name: 'Farming Fortune',
-				value: 10,
-				type: FarmingPetStatType.Base,
-			},
-		},
-		perLevelStats: {
-			[Stat.FarmingFortune]: {
-				name: 'Farming Fortune',
-				value: 1,
+				name: 'Base Farming Fortune',
+				calculated: (pet) => 10 + pet.level,
 				type: FarmingPetStatType.Base,
 			},
 		},
@@ -204,15 +198,24 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					value: 0.4,
 					type: FarmingPetStatType.Ability,
 				},
-				// An option to check if this fortune is present (when a plot is sprayed) doesn't exist yet
-				[Stat.FarmingFortune]: {
-					name: 'Repungent Aroma',
-					calculated: () => 100,
-					exists: () => false,
-					type: FarmingPetStatType.Ability,
-				},
 			},
 		},
+		abilities: [
+			{
+				name: 'Repugnant Aroma',
+				// No good option to check if player is in a sprayed plot yet
+				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.temporaryFortune?.flourSpray ?? false),
+				computed: (player, pet) => {
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Repungent Aroma',
+							value: pet.level,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			}
+		]
 	},
 	[FarmingPets.TRex]: {
 		name: 'T-Rex',
@@ -293,15 +296,22 @@ export const PET_RARITY_OFFSETS = {
 	[Rarity.Epic]: 16,
 	[Rarity.Legendary]: 20,
 	[Rarity.Mythic]: 20,
-};
+} as Partial<Record<Rarity, number>>;
 
 export const PET_LEVELS = [
 	100, 110, 120, 130, 145, 160, 175, 190, 210, 230, 250, 275, 300, 330, 360, 400, 440, 490, 540, 600, 660, 730, 800,
-	880, 960, 1050, 1150, 1260, 1380, 1510, 1650, 1800, 1960, 2130, 2310, 2500, 2700, 2920, 3160, 3420, 3700, 4000,
-	4350, 4750, 5200, 5700, 6300, 7000, 7800, 8700, 9700, 10800, 12000, 13300, 14700, 16200, 17800, 19500, 21300, 23200,
-	25200, 27400, 29800, 32400, 35200, 38200, 41400, 44800, 48400, 52200, 56200, 60400, 64800, 69400, 74200, 79200,
-	84700, 90700, 97200, 104200, 111700, 119700, 128200, 137200, 146700, 156700, 167700, 179700, 192700, 206700, 221700,
-	237700, 254700, 272700, 291700, 311700, 333700, 357700, 383700, 411700, 441700, 476700, 516700, 561700, 611700,
-	666700, 726700, 791700, 861700, 936700, 1016700, 1101700, 1191700, 1286700, 1386700, 1496700, 1616700, 1746700,
-	1886700,
+	880, 960, 1050, 1150, 1260, 1380, 1510, 1650, 1800, 1960, 2130, 2310, 2500, 2700, 2920, 3160, 3420, 3700, 4000, 4350,
+	4750, 5200, 5700, 6300, 7000, 7800, 8700, 9700, 10800, 12000, 13300, 14700, 16200, 17800, 19500, 21300, 23200, 25200,
+	27400, 29800, 32400, 35200, 38200, 41400, 44800, 48400, 52200, 56200, 60400, 64800, 69400, 74200, 79200, 84700, 90700,
+	97200, 104200, 111700, 119700, 128200, 137200, 146700, 156700, 167700, 179700, 192700, 206700, 221700, 237700, 254700,
+	272700, 291700, 311700, 333700, 357700, 383700, 411700, 441700, 476700, 516700, 561700, 611700, 666700, 726700,
+	791700, 861700, 936700, 1016700, 1101700, 1191700, 1286700, 1386700, 1496700, 1616700, 1746700, 1886700, 0, 5555,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
+	1886700, 1886700, 1886700, 1886700, 1886700, 1886700, 1886700,
 ];

@@ -2,7 +2,7 @@ import { ANITA_FORTUNE_UPGRADE, COMMUNITY_CENTER_UPGRADE, FARMING_LEVEL, PEST_BE
 import { FarmingAccessory } from "../../fortune/farmingaccessory";
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from "../../items/accessories";
 import { FarmingPlayer } from "../../player/player";
-import { unlockedPestBestiaryTiers } from "../../util/pests";
+import { fortuneFromPestBestiary } from "../../util/pests";
 import { DynamicFortuneSource } from "./toolsources";
 
 export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
@@ -21,7 +21,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		exists: () => true,
 		max: () => PEST_BESTIARY_SOURCE.maxLevel * PEST_BESTIARY_SOURCE.fortunePerLevel,
 		current: (player) => {
-			return unlockedPestBestiaryTiers(player.options.bestiaryKills ?? {}) * PEST_BESTIARY_SOURCE.fortunePerLevel;
+			return fortuneFromPestBestiary(player.options.bestiaryKills ?? {});
 		}
 	},
 	{

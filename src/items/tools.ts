@@ -175,7 +175,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	CACTUS_KNIFE: {
 		skyblockId: 'CACTUS_KNIFE',
 		crop: Crop.Cactus,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.Other,
 		gemSlots: {

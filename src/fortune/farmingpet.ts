@@ -7,6 +7,7 @@ import {
 	FarmingPetType,
 	FarmingPets,
 	PET_LEVELS,
+	PET_RARITY_OFFSETS,
 } from '../items/pets';
 import { Rarity, RARITY_COLORS } from '../constants/reforges';
 import { getStatValue, Stat } from "../constants/stats";
@@ -29,7 +30,7 @@ export class FarmingPet {
 	public declare fortune: number;
 	public declare breakdown: Record<string, number>;
 
-	private declare options?: PlayerOptions;
+	public declare options?: PlayerOptions;
 
 	constructor(pet: FarmingPetType, options?: PlayerOptions) {
 		this.options = options;
@@ -48,7 +49,7 @@ export class FarmingPet {
 		this.type = pet.type as FarmingPets;
 
 		this.rarity = getRarityFromLore([pet.tier ?? '']) ?? Rarity.Common;
-		this.level = getPetLevel(pet);
+		this.level = this.getLevel();
 
 		this.item = pet.heldItem ? FARMING_PET_ITEMS[pet.heldItem as keyof typeof FARMING_PET_ITEMS] : undefined;
 
@@ -65,16 +66,17 @@ export class FarmingPet {
 		const breakdown: Record<string, number> = {};
 
 		// Base stats
-		const stats = getStatValue(this.info.stats?.[Stat.FarmingFortune], this.options);
+		const baseStat = this.info.stats?.[Stat.FarmingFortune];
+		const stats = getStatValue(baseStat, this);
 		if (stats) {
 			fortune += stats;
-			breakdown['Base Stats'] = stats;
+			breakdown[baseStat?.name ?? 'Base Stats'] = stats;
 		}
 
 		// Per level stats
 		const perLevelStats = this.info.perLevelStats?.[Stat.FarmingFortune];
 		if (perLevelStats) {
-			const amount = getStatValue(perLevelStats, this.options) * this.level;
+			const amount = getStatValue(perLevelStats, this) * this.level;
 			fortune += amount;
 			breakdown[perLevelStats.name ?? 'Unknown'] = amount;
 		}
@@ -82,7 +84,7 @@ export class FarmingPet {
 		// Per rarity fortune stats
 		const perRarityStats = this.info.perRarityLevelStats?.[this.rarity]?.[Stat.FarmingFortune];
 		if (perRarityStats) {
-			const amount = getStatValue(perRarityStats, this.options) * this.level;
+			const amount = getStatValue(perRarityStats, this) * this.level;
 			fortune += amount;
 			breakdown[perRarityStats.name ?? 'Rarity Stat'] = amount;
 		}
@@ -125,6 +127,25 @@ export class FarmingPet {
 		return '[' + this.level + '] ' + RARITY_COLORS[this.rarity] + this.info.name;
 	}
 
+	getLevel() {
+		const offset = PET_RARITY_OFFSETS[this.rarity] ?? 0;
+		const maxLevel = this.info.maxLevel ?? 100;
+		let xp = this.pet.exp ?? 0;
+
+		for (let i = offset; i < Math.min(PET_LEVELS.length, maxLevel + offset); i++) {
+			const level = PET_LEVELS[i];
+			if (level === undefined) break;
+			
+			if (xp < level) {
+				return i + 1 - offset;
+			}
+
+			xp -= level;
+		}
+	
+		return maxLevel;
+	}
+
 	getChimeraAffectedStats(multiplier: number): Record<Stat, number> {
 		const result: Record<string, number> = {};
 
@@ -141,7 +162,7 @@ export class FarmingPet {
 		// Base stats
 		for (const [key, stat] of Object.entries(this.info.stats ?? {})) {
 			if (stat.type !== FarmingPetStatType.Base) continue;
-			const value = getStatValue(stat, this.options);
+			const value = getStatValue(stat, this);
 			if (result[key]) {
 				result[key] += value * multiplier;
 			} else {
@@ -152,7 +173,7 @@ export class FarmingPet {
 		// Per level stats
 		for (const [key, stat] of Object.entries(this.info.perLevelStats ?? {})) {
 			if (stat.type !== FarmingPetStatType.Base) continue;
-			const value = getStatValue(stat, this.options);
+			const value = getStatValue(stat, this);
 			if (result[key]) {
 				result[key] += value * this.level * multiplier;
 			} else {
@@ -173,17 +194,4 @@ export class FarmingPet {
 			.map((item) => new FarmingPet(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
 	}
-}
-
-export function getPetLevel(pet: FarmingPetType, max = 100) {
-	const levels = PET_LEVELS;
-	const xp = pet.exp ?? 0;
-
-	const levelIndex = levels.findIndex((level) => level > xp);
-
-	if (levelIndex === -1 || levelIndex >= max) {
-		return max;
-	}
-
-	return levelIndex + 1;
 }

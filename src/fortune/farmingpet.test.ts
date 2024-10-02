@@ -46,16 +46,14 @@ test('Mooshroom Cow fortune test', () => {
 	expect(pet.fortune).toBe(110);
 
 	expect(pet.breakdown).toStrictEqual({
-		'Base Stats': 10,
-		'Farming Fortune': 100,
+		'Base Farming Fortune': 110,
 	});
 
 	const petWithLevel = new FarmingPet(mooshroom, { gardenLevel: 15 });
 	expect(petWithLevel.fortune).toBe(170);
 
 	expect(petWithLevel.breakdown).toStrictEqual({
-		'Base Stats': 10,
-		'Farming Fortune': 100,
+		'Base Farming Fortune': 110,
 		'Green Bandana': 60,
 	});
 
@@ -63,8 +61,7 @@ test('Mooshroom Cow fortune test', () => {
 	expect(petWithStrength.fortune).toBe(222);
 
 	expect(petWithStrength.breakdown).toStrictEqual({
-		'Base Stats': 10,
-		'Farming Fortune': 100,
+		'Base Farming Fortune': 110,
 		'Green Bandana': 60,
 		'Farming Strength Fortune': 52,
 	});

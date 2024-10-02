@@ -1,6 +1,6 @@
 {
   "name": "farming-weight",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
