@@ -420,7 +420,7 @@
 
 							<h2 class="text-2xl pb-1 flex-2">{PROPER_CROP_NAME[cropId]} Rates</h2>
 						</div>
-						<div class="flex flex-row items-center gap-2 w-full">
+						<div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
 							<div class="flex flex-col gap-1 justify-start flex-1">
 								<div class="flex flex-row items-center gap-1">
 									<p class="text-sm font-semibold">Time Spent Farming</p>
