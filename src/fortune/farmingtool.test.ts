@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import { FarmingTool } from './farmingtool';
-import { FarmingPet } from './farmingpet';
-import { Stat } from '../constants/stats';
+import { FarmingTool } from './farmingtool.js';
+import { FarmingPet } from './farmingpet.js';
+import { Stat } from '../constants/stats.js';
 
 const netherwartHoe = {
 	id: 293,

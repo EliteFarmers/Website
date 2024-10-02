@@ -1,8 +1,8 @@
-import { FarmingArmorInfo, GearSlot } from './armor';
-import { Rarity } from '../constants/reforges';
-import { Stat } from '../constants/stats';
-import { Skill } from '../constants/skills';
-import { UpgradeReason } from '../constants/upgrades';
+import { FarmingArmorInfo, GearSlot } from './armor.js';
+import { Rarity } from '../constants/reforges.js';
+import { Stat } from '../constants/stats.js';
+import { Skill } from '../constants/skills.js';
+import { UpgradeReason } from '../constants/upgrades.js';
 
 export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	LOTUS_BRACELET: {

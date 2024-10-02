@@ -1,4 +1,4 @@
-import { Rarity } from '../constants/reforges';
+import { Rarity } from '../constants/reforges.js';
 
 export function getRarityFromLore(lore: string[]) {
 	const line = lore.at(-1);

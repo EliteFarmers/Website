@@ -1,4 +1,4 @@
-import { Crop } from './crops';
+import { Crop } from './crops.js';
 
 // https://api.elitebot.dev/weights
 export const CROP_WEIGHT: Record<Crop, number> = {

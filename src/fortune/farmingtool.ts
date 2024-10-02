@@ -1,18 +1,18 @@
-import { Crop } from '../constants/crops';
-import { FARMING_ENCHANTS } from '../constants/enchants';
-import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges';
-import { getStatValue, Stat } from "../constants/stats";
-import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools';
-import { getPeridotFortune } from '../util/gems';
-import { getRarityFromLore, previousRarity } from '../util/itemstats';
-import { extractNumberFromLine } from '../util/lore';
-import { EliteItemDto } from './item';
-import { PlayerOptions } from '../player/player';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
-import { getSourceProgress } from '../upgrades/upgrades';
-import { getFortuneFromEnchant } from '../util/enchants';
-import { FortuneSourceProgress } from '../constants/upgrades';
-import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources';
+import { Crop } from '../constants/crops.js';
+import { FARMING_ENCHANTS } from '../constants/enchants.js';
+import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges.js';
+import { getStatValue, Stat } from "../constants/stats.js";
+import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools.js';
+import { getPeridotFortune } from '../util/gems.js';
+import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
+import { extractNumberFromLine } from '../util/lore.js';
+import { EliteItemDto } from './item.js';
+import { PlayerOptions } from '../player/playeroptions.js';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import { getSourceProgress } from '../upgrades/upgrades.js';
+import { getFortuneFromEnchant } from '../util/enchants.js';
+import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;

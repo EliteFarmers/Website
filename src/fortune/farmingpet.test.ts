@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { FarmingPet } from './farmingpet';
+import { FarmingPet } from './farmingpet.js';
 
 test('Elephant fortune test', () => {
 	const elephant = {

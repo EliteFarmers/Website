@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { getCropMilestoneLevels, getCropMilestones } from './garden';
-import { Crop } from '../constants/crops';
+import { getCropMilestoneLevels, getCropMilestones } from './garden.js';
+import { Crop } from '../constants/crops.js';
 
 test('Crop Milestones', () => {
 	const fromElite = {

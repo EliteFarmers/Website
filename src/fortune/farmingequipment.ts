@@ -1,17 +1,17 @@
-import { FarmingArmorInfo } from '../items/armor';
-import { FARMING_ENCHANTS } from '../constants/enchants';
-import { EQUIPMENT_INFO } from '../items/equipment';
-import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
-import { Stat } from '../constants/stats';
-import { extractNumberFromLine } from '../util/lore';
-import { EliteItemDto } from './item';
-import { PlayerOptions, ZorroMode } from '../player/player';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
-import { getSourceProgress } from '../upgrades/upgrades';
-import { getFortuneFromEnchant } from '../util/enchants';
-import { FortuneSourceProgress } from '../constants/upgrades';
-import { FarmingArmor } from './farmingarmor';
-import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
+import { FarmingArmorInfo } from '../items/armor.js';
+import { FARMING_ENCHANTS } from '../constants/enchants.js';
+import { EQUIPMENT_INFO } from '../items/equipment.js';
+import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges.js';
+import { Stat } from '../constants/stats.js';
+import { extractNumberFromLine } from '../util/lore.js';
+import { EliteItemDto } from './item.js';
+import { ZorroMode, type PlayerOptions } from '../player/playeroptions.js';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import { getSourceProgress } from '../upgrades/upgrades.js';
+import { getFortuneFromEnchant } from '../util/enchants.js';
+import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FarmingArmor } from './farmingarmor.js';
+import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 
 export class FarmingEquipment extends UpgradeableBase {
 	public declare item: EliteItemDto;

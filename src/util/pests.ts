@@ -1,4 +1,4 @@
-import { Crop } from '../constants/crops';
+import { Crop } from '../constants/crops.js';
 import {
 	FORTUNE_PER_PEST_BRACKET,
 	KILLS_PER_PEST_BRACKET,
@@ -7,7 +7,7 @@ import {
 	PEST_EXCHANGE_RATES,
 	PEST_IDS,
 	PEST_TO_CROP,
-} from '../constants/pests';
+} from '../constants/pests.js';
 
 export function fortuneFromPests(pests: number): number {
 	return PEST_EXCHANGE_RATES[pests as keyof typeof PEST_EXCHANGE_RATES] ?? 0;

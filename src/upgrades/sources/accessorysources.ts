@@ -1,9 +1,9 @@
-import { Rarity } from "../../constants/reforges";
-import { Stat } from "../../constants/stats";
-import { FarmingAccessory } from "../../fortune/farmingaccessory";
-import { GemRarity } from "../../fortune/item";
-import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
-import { DynamicFortuneSource } from "./toolsources";
+import { Rarity } from "../../constants/reforges.js";
+import { Stat } from "../../constants/stats.js";
+import { FarmingAccessory } from "../../fortune/farmingaccessory.js";
+import { GemRarity } from "../../fortune/item.js";
+import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems.js";
+import { DynamicFortuneSource } from "./toolsources.js";
 
 export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[] = [
 	{

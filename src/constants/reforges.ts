@@ -1,4 +1,4 @@
-import { Stat } from "./stats";
+import { Stat } from "./stats.js";
 
 export type RarityRecord<T> = Partial<Record<Rarity, T>>;
 

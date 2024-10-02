@@ -1,6 +1,6 @@
-import { EliteItemDto, GemRarity } from "../fortune/item";
-import { PERIDOT } from "../constants/gems";
-import { Rarity } from "../constants/reforges";
+import { EliteItemDto, GemRarity } from "../fortune/item.js";
+import { PERIDOT } from "../constants/gems.js";
+import { Rarity } from "../constants/reforges.js";
 
 export function getPeridotFortune(rarity: Rarity, item: EliteItemDto) {
 	const gems = item.gems;

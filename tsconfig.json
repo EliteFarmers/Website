@@ -3,10 +3,10 @@
 		"esModuleInterop": true,
 		"allowJs": false,
 
-		"target": "ESNext",
+		"target": "ES2022",
 		"moduleDetection": "force",
-		"moduleResolution": "Node",
-		"module": "CommonJS",
+		"moduleResolution": "NodeNext",
+		"module": "NodeNext",
 		// "module": "ESNext", // For easier local development
 		
 		"rootDir": "./src",

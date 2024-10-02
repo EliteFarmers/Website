@@ -1,5 +1,5 @@
-import { GemRarity } from "../fortune/item";
-import { Rarity } from "./reforges";
+import { GemRarity } from "../fortune/item.js";
+import { Rarity } from "./reforges.js";
 
 export const PERIDOT: Partial<Record<Rarity, Record<GemRarity, number>>> = {
 	[Rarity.Common]: {

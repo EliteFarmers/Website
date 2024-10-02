@@ -1,14 +1,14 @@
-import { Crop } from "../../constants/crops";
-import { FARMING_ENCHANTS } from "../../constants/enchants";
-import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
-import { getStatValue, Stat } from "../../constants/stats";
-import { FarmingToolType } from "../../items/tools";
-import { FortuneSourceProgress } from "../../constants/upgrades";
-import { FarmingTool } from "../../fortune/farmingtool";
-import { EliteItemDto, GemRarity } from "../../fortune/item";
-import { UpgradeableInfo } from "../../fortune/upgradeable";
-import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants";
-import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
+import { Crop } from "../../constants/crops.js";
+import { FARMING_ENCHANTS } from "../../constants/enchants.js";
+import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges.js";
+import { getStatValue, Stat } from "../../constants/stats.js";
+import { FarmingToolType } from "../../items/tools.js";
+import { FortuneSourceProgress } from "../../constants/upgrades.js";
+import { FarmingTool } from "../../fortune/farmingtool.js";
+import { EliteItemDto, GemRarity } from "../../fortune/item.js";
+import { UpgradeableInfo } from "../../fortune/upgradeable.js";
+import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants.js";
+import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems.js";
 
 export interface DynamicFortuneSource<T> {
 	name: string;

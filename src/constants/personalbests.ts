@@ -1,4 +1,4 @@
-import { Crop } from './crops';
+import { Crop } from './crops.js';
 
 export function fortuneFromPersonalBestContest(crop: Crop, personalBest: number) {
 	const cropsPerTier = PERSONAL_BESTS_CROPS_PER_TIER[crop];

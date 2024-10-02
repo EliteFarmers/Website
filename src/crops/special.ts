@@ -1,5 +1,5 @@
-import { CROP_INFO, Crop } from '../constants/crops';
-import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcrops';
+import { CROP_INFO, Crop } from '../constants/crops.js';
+import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcrops.js';
 
 export function calculateAverageSpecialCrops(blocksBroken: number, crop: Crop, armor: 1 | 2 | 3 | 4) {
 	const type = MATCHING_SPECIAL_CROP[crop];

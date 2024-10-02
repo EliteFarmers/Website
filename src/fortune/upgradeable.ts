@@ -1,11 +1,11 @@
-import { Crop } from "../constants/crops";
-import { Rarity, RarityRecord, Reforge, REFORGES, ReforgeTarget, ReforgeTier } from "../constants/reforges";
-import { Stat, StatsRecord } from "../constants/stats";
-import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from "../constants/upgrades";
-import { PlayerOptions } from "../player/player";
-import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from "../upgrades/upgrades";
-import { getRarityFromLore, previousRarity } from "../util/itemstats";
-import { EliteItemDto } from "./item";
+import { Crop } from "../constants/crops.js";
+import { Rarity, RarityRecord, Reforge, REFORGES, ReforgeTarget, ReforgeTier } from "../constants/reforges.js";
+import { Stat, StatsRecord } from "../constants/stats.js";
+import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from "../constants/upgrades.js";
+import { PlayerOptions } from "../player/playeroptions.js";
+import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from "../upgrades/upgrades.js";
+import { getRarityFromLore, previousRarity } from "../util/itemstats.js";
+import { EliteItemDto } from "./item.js";
 
 export interface UpgradeableInfo {
 	name: string;

@@ -1,9 +1,9 @@
-import { UpgradeableInfo } from '../fortune/upgradeable';
-import { Rarity, ReforgeTarget } from '../constants/reforges';
-import { Stat } from '../constants/stats';
-import { Skill } from '../constants/skills';
-import { SpecialCrop } from '../constants/specialcrops';
-import { Upgrade, UpgradeReason } from '../constants/upgrades';
+import { UpgradeableInfo } from '../fortune/upgradeable.js';
+import { Rarity, ReforgeTarget } from '../constants/reforges.js';
+import { Stat } from '../constants/stats.js';
+import { Skill } from '../constants/skills.js';
+import { SpecialCrop } from '../constants/specialcrops.js';
+import { Upgrade, UpgradeReason } from '../constants/upgrades.js';
 
 export enum GearSlot {
 	Boots = 'Boots',

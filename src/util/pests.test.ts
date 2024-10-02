@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
-import { fortuneFromPestBestiary, uncountedCropsFromPests, unlockedPestBestiaryTiers } from './pests';
-import { Crop } from '../constants/crops';
-import { PEST_COLLECTION_ADJUSTMENTS, Pest } from '../constants/pests';
-import { PEST_BESTIARY_SOURCE } from '../constants/specific';
+import { fortuneFromPestBestiary, uncountedCropsFromPests, unlockedPestBestiaryTiers } from './pests.js';
+import { Crop } from '../constants/crops.js';
+import { PEST_COLLECTION_ADJUSTMENTS, Pest } from '../constants/pests.js';
+import { PEST_BESTIARY_SOURCE } from '../constants/specific.js';
 
 test('Pest bestiary fortune', () => {
 	const bestiaryKills = {

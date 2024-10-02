@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { FarmingTool } from "../fortune/farmingtool";
+import { FarmingTool } from "../fortune/farmingtool.js";
 
 const netherwartHoe = {
 	id: 293,

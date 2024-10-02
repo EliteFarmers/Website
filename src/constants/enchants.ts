@@ -1,8 +1,9 @@
-import { FarmingPlayer, PlayerOptions } from '../player/player';
-import { Crop } from './crops';
-import { CROP_MILESTONES, GARDEN_VISITORS } from './garden';
-import { ReforgeTarget } from './reforges';
-import { Stat } from "./stats";
+import { FarmingPlayer } from '../player/player.js';
+import { PlayerOptions } from '../player/playeroptions.js';
+import { Crop } from './crops.js';
+import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
+import { ReforgeTarget } from './reforges.js';
+import { Stat } from "./stats.js";
 
 export enum EnchantTierProcurement {
 	Normal = 'normal',

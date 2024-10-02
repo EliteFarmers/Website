@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
-import { createFarmingWeightCalculator } from './weightcalc';
-import { Crop } from '../constants/crops';
-import { CROP_WEIGHT } from '../constants/weight';
-import { uncountedCropsFromPests } from '../util/pests';
-import { createFarmingPlayer } from '../player/player';
+import { createFarmingWeightCalculator } from './weightcalc.js';
+import { Crop } from '../constants/crops.js';
+import { CROP_WEIGHT } from '../constants/weight.js';
+import { uncountedCropsFromPests } from '../util/pests.js';
+import { createFarmingPlayer } from '../player/player.js';
 
 const crops = {
 	[Crop.Cactus]: CROP_WEIGHT[Crop.Cactus] * 50,

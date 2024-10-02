@@ -1,4 +1,4 @@
-import { Crop } from "./crops";
+import { Crop } from "./crops.js";
 
 export enum Pest {
 	Beetle = 'beetle',

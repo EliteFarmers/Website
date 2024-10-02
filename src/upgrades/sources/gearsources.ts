@@ -1,13 +1,13 @@
-import { FARMING_ENCHANTS } from "../../constants/enchants";
-import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
-import { Skill } from "../../constants/skills";
-import { Stat } from "../../constants/stats";
-import { FarmingArmor } from "../../fortune/farmingarmor";
-import { FarmingEquipment } from "../../fortune/farmingequipment";
-import { GemRarity } from "../../fortune/item";
-import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants";
-import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
-import { DynamicFortuneSource } from "./toolsources";
+import { FARMING_ENCHANTS } from "../../constants/enchants.js";
+import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges.js";
+import { Skill } from "../../constants/skills.js";
+import { Stat } from "../../constants/stats.js";
+import type { FarmingArmor } from "../../fortune/farmingarmor.js";
+import { FarmingEquipment } from "../../fortune/farmingequipment.js";
+import { GemRarity } from "../../fortune/item.js";
+import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants.js";
+import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems.js";
+import { DynamicFortuneSource } from "./toolsources.js";
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
 	{
@@ -61,8 +61,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		exists: (gear) => gear.type === ReforgeTarget.Equipment && gear.info.family === 'LOTUS',
 		max: () => 15,
 		current: (gear) => {
-			if (gear instanceof FarmingArmor) return 0;
-			return gear.getPieceBonus();
+			return (gear as FarmingEquipment).getPieceBonus();
 		}
 	},
 	{

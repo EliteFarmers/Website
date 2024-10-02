@@ -1,7 +1,7 @@
-import { Crop } from "../constants/crops";
-import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from "../constants/garden";
-import { Rarity } from "../constants/reforges";
-import { getCropFromName } from "./names";
+import { Crop } from "../constants/crops.js";
+import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from "../constants/garden.js";
+import { Rarity } from "../constants/reforges.js";
+import { getCropFromName } from "./names.js";
 
 export interface LevelingStats {
 	level: number;

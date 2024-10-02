@@ -1,11 +1,11 @@
-import { ARMOR_INFO, ARMOR_SET_BONUS, GEAR_SLOTS, GearSlot, GearSlotInfo } from "../../items/armor";
-import { EQUIPMENT_INFO } from "../../items/equipment";
-import { ReforgeTarget } from "../../constants/reforges";
-import { Stat } from "../../constants/stats";
-import { ArmorSet, FarmingArmor } from "../../fortune/farmingarmor";
-import { FarmingEquipment } from "../../fortune/farmingequipment";
-import { UpgradeableInfo } from "../../fortune/upgradeable";
-import { DynamicFortuneSource } from "./toolsources";
+import { ARMOR_INFO, ARMOR_SET_BONUS, GEAR_SLOTS, GearSlot, GearSlotInfo } from "../../items/armor.js";
+import { EQUIPMENT_INFO } from "../../items/equipment.js";
+import { ReforgeTarget } from "../../constants/reforges.js";
+import { Stat } from "../../constants/stats.js";
+import { ArmorSet, FarmingArmor } from "../../fortune/farmingarmor.js";
+import { FarmingEquipment } from "../../fortune/farmingequipment.js";
+import { UpgradeableInfo } from "../../fortune/upgradeable.js";
+import { DynamicFortuneSource } from "./toolsources.js";
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	...Object.entries(GEAR_SLOTS)

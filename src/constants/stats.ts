@@ -1,4 +1,4 @@
-import type { PlayerOptions } from "../player/player";
+import type { PlayerOptions } from "../player/playeroptions.js";
 
 export enum Stat {
 	Strength = 'Strength',

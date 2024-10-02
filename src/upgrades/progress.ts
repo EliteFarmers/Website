@@ -1,6 +1,6 @@
-import { FortuneSource, FortuneSourceProgress } from "../constants/upgrades";
-import { Upgradeable } from "../fortune/upgradeable";
-import { getFortune } from "./upgrades";
+import { FortuneSource, FortuneSourceProgress } from "../constants/upgrades.js";
+import { Upgradeable } from "../fortune/upgradeable.js";
+import { getFortune } from "./upgrades.js";
 
 
 export function getFortuneProgress(level: number | null | undefined, source: FortuneSource): FortuneSourceProgress {

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { SkyBlockTime } from "./skyblocktime";
+import { SkyBlockTime } from "./skyblocktime.js";
 
 test('SkyBlock Time Conversion', () => {
 	expect(SkyBlockTime.from(1, 1, 1).unixSeconds).toBe(SkyBlockTime.fromZeroIndexed(0, 0, 0).unixSeconds);

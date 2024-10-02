@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { FarmingArmor } from '../../fortune/farmingarmor';
-import { FarmingEquipment } from '../../fortune/farmingequipment';
+import { FarmingArmor } from '../../fortune/farmingarmor.js';
+import { FarmingEquipment } from '../../fortune/farmingequipment.js';
 
 const almostMaxHelmet = {
 	id: 397,

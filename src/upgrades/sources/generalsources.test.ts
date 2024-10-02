@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { FarmingPlayer } from "../../player/player";
+import { FarmingPlayer } from "../../player/player.js";
 
 test("General fortune sources", () => {
 	const player = new FarmingPlayer({

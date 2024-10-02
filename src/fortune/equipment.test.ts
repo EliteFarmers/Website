@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { FarmingEquipment } from './farmingequipment';
-import { ZorroMode } from '../player/player';
+import { FarmingEquipment } from './farmingequipment.js';
+import { ZorroMode } from '../player/player.js';
 
 const zorrosCape = {
 	id: 397,

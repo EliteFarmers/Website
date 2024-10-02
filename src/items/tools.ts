@@ -1,8 +1,8 @@
-import { UpgradeableInfo } from '../fortune/upgradeable';
-import { Crop } from '../constants/crops';
-import { Rarity, ReforgeTarget } from '../constants/reforges';
-import { Stat } from "../constants/stats";
-import { UpgradeReason } from '../constants/upgrades';
+import { UpgradeableInfo } from '../fortune/upgradeable.js';
+import { Crop } from '../constants/crops.js';
+import { Rarity, ReforgeTarget } from '../constants/reforges.js';
+import { Stat } from "../constants/stats.js";
+import { UpgradeReason } from '../constants/upgrades.js';
 
 export enum FarmingToolType {
 	Other = 'Other',

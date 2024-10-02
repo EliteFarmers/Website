@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
-import { FarmingPlayer } from '../../player/player';
-import { Crop, CROP_INFO } from '../../constants/crops';
-import { EliteItemDto } from '../../fortune/item';
-import { FarmingTool } from '../../fortune/farmingtool';
-import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools';
+import { FarmingPlayer } from '../../player/player.js';
+import { Crop, CROP_INFO } from '../../constants/crops.js';
+import { EliteItemDto } from '../../fortune/item.js';
+import { FarmingTool } from '../../fortune/farmingtool.js';
+import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
 
 const fermentoArtifact: EliteItemDto = {
 	id: 397,

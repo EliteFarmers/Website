@@ -7,6 +7,7 @@ export * from './fortune/item.js';
 export * from './fortune/upgradeable.js';
 export * from './weight/weightcalc.js';
 export * from './player/player.js';
+export * from './player/playeroptions.js';
 
 export * from './upgrades/upgrades.js';
 

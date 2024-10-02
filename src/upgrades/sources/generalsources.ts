@@ -1,9 +1,9 @@
-import { ANITA_FORTUNE_UPGRADE, COMMUNITY_CENTER_UPGRADE, FARMING_LEVEL, PEST_BESTIARY_SOURCE, REFINED_TRUFFLE_SOURCE, UNLOCKED_PLOTS } from "../../constants/specific";
-import { FarmingAccessory } from "../../fortune/farmingaccessory";
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from "../../items/accessories";
-import { FarmingPlayer } from "../../player/player";
-import { fortuneFromPestBestiary } from "../../util/pests";
-import { DynamicFortuneSource } from "./toolsources";
+import { ANITA_FORTUNE_UPGRADE, COMMUNITY_CENTER_UPGRADE, FARMING_LEVEL, PEST_BESTIARY_SOURCE, REFINED_TRUFFLE_SOURCE, UNLOCKED_PLOTS } from "../../constants/specific.js";
+import { FarmingAccessory } from "../../fortune/farmingaccessory.js";
+import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from "../../items/accessories.js";
+import { FarmingPlayer } from "../../player/player.js";
+import { fortuneFromPestBestiary } from "../../util/pests.js";
+import { DynamicFortuneSource } from "./toolsources.js";
 
 export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{

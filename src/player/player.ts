@@ -1,7 +1,6 @@
-import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops';
-import { fortuneFromPersonalBestContest } from '../constants/personalbests';
-import { fortuneFromPestBestiary } from '../util/pests';
-import { FarmingPetType } from '../items/pets';
+import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
+import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
+import { fortuneFromPestBestiary } from '../util/pests.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,
@@ -10,80 +9,21 @@ import {
 	UNLOCKED_PLOTS,
 	PEST_BESTIARY_SOURCE,
 	COCOA_FORTUNE_UPGRADE,
-} from '../constants/specific';
-import { getCropDisplayName, getItemIdFromCrop } from '../util/names';
-import { FarmingAccessory } from '../fortune/farmingaccessory';
-import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor';
-import { FarmingPet } from '../fortune/farmingpet';
-import { FarmingTool } from '../fortune/farmingtool';
-import { EliteItemDto } from '../fortune/item';
-import { FarmingEquipment } from '../fortune/farmingequipment';
-import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune';
-import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc';
-import { Upgrade } from '../constants/upgrades';
-import { getFortune, getSourceProgress } from '../upgrades/upgrades';
-import { getFortuneProgress } from '../upgrades/progress';
-import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources';
-import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources';
-
-export interface FortuneMissingFromAPI {
-	cropUpgrades?: Partial<Record<Crop, number>>;
-	gardenLevel?: number;
-	plotsUnlocked?: number;
-	uniqueVisitors?: number;
-	communityCenter?: number;
-	milestones?: Partial<Record<Crop, number>>;
-	exportableCrops?: Partial<Record<Crop, boolean>>;
-	refinedTruffles?: number;
-	cocoaFortuneUpgrade?: number;
-
-	temporaryFortune?: TemporaryFarmingFortune;
-}
-
-export interface ExtraFarmingFortune {
-	crop?: Crop;
-	name?: string;
-	fortune: number;
-}
-
-export enum ZorroMode {
-	Normal = 'normal',
-	Averaged = 'averaged',
-	Contest = 'contest',
-}
-
-export interface PlayerOptions extends FortuneMissingFromAPI {
-	collection?: Record<string, number>;
-	farmingXp?: number;
-	farmingLevel?: number;
-	strength?: number;
-
-	tools?: EliteItemDto[] | FarmingTool[];
-	armor?: EliteItemDto[] | FarmingArmor[] | ArmorSet;
-	equipment?: EliteItemDto[] | FarmingEquipment[];
-	accessories?: EliteItemDto[] | FarmingAccessory[];
-	pets?: FarmingPetType[] | FarmingPet[];
-
-	selectedTool?: FarmingTool;
-	selectedPet?: FarmingPet;
-
-	personalBests?: Record<string, number>;
-	bestiaryKills?: Record<string, number>;
-	anitaBonus?: number;
-	uniqueVisitors?: number;
-
-	extraFortune?: ExtraFarmingFortune[];
-	zorro?: {
-		enabled: boolean;
-		mode: ZorroMode;
-	}
-}
-
-export interface FortuneProgress {
-	total: number;
-	progress: number;
-	upgrades: Upgrade[];
-}
+} from '../constants/specific.js';
+import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
+import { FarmingAccessory } from '../fortune/farmingaccessory.js';
+import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
+import { FarmingPet } from '../fortune/farmingpet.js';
+import { FarmingTool } from '../fortune/farmingtool.js';
+import { EliteItemDto } from '../fortune/item.js';
+import { FarmingEquipment } from '../fortune/farmingequipment.js';
+import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
+import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc.js';
+import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
+import { getFortuneProgress } from '../upgrades/progress.js';
+import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
+import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
+import type { PlayerOptions } from './playeroptions.js';
 
 export function createFarmingPlayer(options: PlayerOptions) {
 	return new FarmingPlayer(options);

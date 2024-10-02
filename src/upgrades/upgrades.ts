@@ -1,13 +1,13 @@
-import { EnchantTierProcurement, FARMING_ENCHANTS } from "../constants/enchants";
-import { Stat } from "../constants/stats";
-import { FARMING_TOOLS, FarmingToolInfo } from "../items/tools";
-import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades";
-import { GemRarity } from "../fortune/item";
-import { Upgradeable, UpgradeableInfo } from "../fortune/upgradeable";
-import { getFortuneFromEnchant } from "../util/enchants";
-import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune, getPeridotGems } from "../util/gems";
-import { nextRarity } from "../util/itemstats";
-import { DynamicFortuneSource } from "./sources/toolsources";
+import { EnchantTierProcurement, FARMING_ENCHANTS } from "../constants/enchants.js";
+import { Stat } from "../constants/stats.js";
+import { FARMING_TOOLS, FarmingToolInfo } from "../items/tools.js";
+import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades.js";
+import { GemRarity } from "../fortune/item.js";
+import { Upgradeable, UpgradeableInfo } from "../fortune/upgradeable.js";
+import { getFortuneFromEnchant } from "../util/enchants.js";
+import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune, getPeridotGems } from "../util/gems.js";
+import { nextRarity } from "../util/itemstats.js";
+import { DynamicFortuneSource } from "./sources/toolsources.js";
 
 export function getFortune(level: number | null | undefined, source: FortuneSource) {
 	return Math.min(Math.max(level ?? 0, 0), source.maxLevel) * source.fortunePerLevel;

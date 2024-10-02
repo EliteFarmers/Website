@@ -1,13 +1,13 @@
-import { FARMING_ACCESSORIES_INFO } from "../../items/accessories";
-import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from "../../constants/crops";
-import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from "../../constants/specific";
-import { Stat } from "../../constants/stats";
-import { FARMING_TOOLS, FarmingToolInfo } from "../../items/tools";
-import { FarmingTool } from "../../fortune/farmingtool";
-import { FarmingPlayer } from "../../player/player";
-import { DynamicFortuneSource } from "./toolsources";
-import { fortuneFromPersonalBestContest } from "../../constants/personalbests";
-import { getCropDisplayName, getItemIdFromCrop } from "../../util/names";
+import { FARMING_ACCESSORIES_INFO } from "../../items/accessories.js";
+import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from "../../constants/crops.js";
+import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from "../../constants/specific.js";
+import { Stat } from "../../constants/stats.js";
+import { FARMING_TOOLS, FarmingToolInfo } from "../../items/tools.js";
+import { FarmingTool } from "../../fortune/farmingtool.js";
+import { FarmingPlayer } from "../../player/player.js";
+import { DynamicFortuneSource } from "./toolsources.js";
+import { fortuneFromPersonalBestContest } from "../../constants/personalbests.js";
+import { getCropDisplayName, getItemIdFromCrop } from "../../util/names.js";
 
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer, crop: Crop }>[] = [
 	{

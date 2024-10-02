@@ -1,7 +1,7 @@
-import { Crop } from '../constants/crops';
-import { BONUS_WEIGHT, CROP_WEIGHT, TIER_12_MINIONS } from '../constants/weight';
-import { calculateJacobContestMedal } from '../util/jacob';
-import { uncountedCropsFromPests } from '../util/pests';
+import { Crop } from '../constants/crops.js';
+import { BONUS_WEIGHT, CROP_WEIGHT, TIER_12_MINIONS } from '../constants/weight.js';
+import { calculateJacobContestMedal } from '../util/jacob.js';
+import { uncountedCropsFromPests } from '../util/pests.js';
 
 export function createFarmingWeightCalculator(info?: FarmingWeightInfo) {
 	return new FarmingWeight(info);

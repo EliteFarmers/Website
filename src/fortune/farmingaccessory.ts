@@ -1,13 +1,13 @@
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories';
-import { Rarity } from '../constants/reforges';
-import { Stat } from "../constants/stats";
-import { FortuneSourceProgress } from '../constants/upgrades';
-import { PlayerOptions } from '../player/player';
-import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources';
-import { getSourceProgress } from '../upgrades/upgrades';
-import { getPeridotFortune } from '../util/gems';
-import { EliteItemDto } from './item';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
+import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories.js';
+import { Rarity } from '../constants/reforges.js';
+import { Stat } from "../constants/stats.js";
+import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { PlayerOptions } from '../player/playeroptions.js';
+import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources.js';
+import { getSourceProgress } from '../upgrades/upgrades.js';
+import { getPeridotFortune } from '../util/gems.js';
+import { EliteItemDto } from './item.js';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
 
 export class FarmingAccessory extends UpgradeableBase {
 	public declare readonly item: EliteItemDto;

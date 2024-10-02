@@ -1,5 +1,5 @@
-import { Crop } from './crops';
-import { Rarity } from './reforges';
+import { Crop } from './crops.js';
+import { Rarity } from './reforges.js';
 
 export const GARDEN_EXP_REQUIRED = [
 	0, 70, 70, 140, 240, 600, 1500, 2000, 2500, 3000, 10000, 10000, 10000, 10000, 10000,
