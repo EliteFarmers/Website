@@ -20,6 +20,8 @@
 				{@html FormatMinecraftText(item.name ?? '')}
 			</h3>
 		</Dialog.Header>
-		<ItemLore {item} title={false} />
+		<ItemLore {item} title={false}>
+			<slot />
+		</ItemLore>
 	</Dialog.Content>
 </Dialog.Root>

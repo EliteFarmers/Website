@@ -33,7 +33,7 @@
 				<h3 class="text-lg mb-1">Upgrade To</h3>
 			{/if}
 			<div class="flex flex-row items-center gap-1">
-				{#if progress.info?.upgrade?.reason === UpgradeReason.Situational || (progress?.info?.upgrade?.reason === UpgradeReason.NextTier && progress.item?.attributes?.rarity_upgrade)}
+				{#if progress.info?.upgrade?.reason === UpgradeReason.Situational || (progress?.info?.upgrade?.reason === UpgradeReason.NextTier && progress.item?.attributes?.rarity_upgrades)}
 					<p>
 						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 						{@html FormatMinecraftText(RARITY_COLORS[progress.nextInfo.maxRarity] + progress.nextInfo.name)}
