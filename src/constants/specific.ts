@@ -31,7 +31,7 @@ export const ANITA_FORTUNE_UPGRADE: FortuneSource = {
 
 export const COMMUNITY_CENTER_UPGRADE: FortuneSource = {
 	name: 'Community Center Upgrade',
-	fortunePerLevel: 5,
+	fortunePerLevel: 4,
 	maxLevel: 10,
 	wiki: 'https://wiki.hypixel.net/Elizabeth#Garden_Farming_Fortune_'
 };

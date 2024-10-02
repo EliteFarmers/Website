@@ -48,8 +48,8 @@ test("General fortune sources", () => {
 		},
 		{
 			name: 'Community Center Upgrade',
-			fortune: 50,
-			maxFortune: 50,
+			fortune: 40,
+			maxFortune: 40,
 			ratio: 1,
 			api: false,
 		},

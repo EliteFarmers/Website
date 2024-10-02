@@ -2,14 +2,14 @@ import { Rarity } from '../constants/reforges';
 
 export function getRarityFromLore(lore: string[]) {
 	const line = lore.at(-1);
-	const found = getRarity(line ?? '', undefined);
+	const found = getRarity(line ?? '', null);
 	if (found) {
 		return found;
 	}
 	
 	// Lore gets jumbled up sometimes? So this is a backup
 	for (const line of lore) {
-		const found = getRarity(line ?? '', undefined);
+		const found = getRarity(line ?? '', null);
 		if (found) return found;
 	}
 
@@ -41,7 +41,7 @@ function getRarity<T = Rarity>(line: string, fallback?: T): Rarity | T {
 		case line.includes('ADMIN'):
 			return Rarity.Admin;
 		default:
-			return fallback ?? Rarity.Common;
+			return fallback === undefined ? Rarity.Common : fallback;
 	}
 }
 
