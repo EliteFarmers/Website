@@ -234,17 +234,17 @@
 				<div class="flex flex-col items-center justify-center gap-1 m-2">
 					<div class="flex flex-row gap-2 items-center min-h-10">
 						<p class="text-lg text-center leading-none">Temporary Fortune</p>
-						{#if $ratesData.useTemp}
-							<FortuneBreakdown total={$player.tempFortune} breakdown={$player.tempFortuneBreakdown} />
-						{/if}
+						<FortuneBreakdown total={$player.tempFortune} breakdown={$player.tempFortuneBreakdown} />
 					</div>
 					<div class="flex flex-row items-center justify-center gap-2">
 						<p class="text-md leading-none mb-1">Enabled</p>
 						<Switch bind:checked={$ratesData.useTemp} />
 					</div>
 				</div>
-				<div class="flex flex-col md:flex-row md:flex-wrap items-center md:items-start justify-center">
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+				<div
+					class="flex flex-col md:flex-row flex-wrap items-start md:items-start justify-start md:justify-center"
+				>
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch
@@ -252,60 +252,67 @@
 								onCheckedChange={(check) => {
 									$ratesData.temp.pestTurnIn = check ? 200 : 0;
 								}}
+								disabled={!$ratesData.useTemp}
 							/>
-							<FortuneBreakdown total={200} bind:enabled={pestTurnInChecked} />
+							<FortuneBreakdown total={200} enabled={pestTurnInChecked && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.centuryCake.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.centuryCake} />
-							<FortuneBreakdown total={5} bind:enabled={$ratesData.temp.centuryCake} />
+							<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.flourSpray.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.flourSpray} />
-							<FortuneBreakdown total={20} bind:enabled={$ratesData.temp.flourSpray} />
+							<Switch bind:checked={$ratesData.temp.flourSpray} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown total={20} enabled={$ratesData.temp.flourSpray && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.harvestPotion.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.harvestPotion} />
-							<FortuneBreakdown total={50} bind:enabled={$ratesData.temp.harvestPotion} />
+							<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown
+								total={50}
+								enabled={$ratesData.temp.harvestPotion && $ratesData.useTemp}
+							/>
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.magic8Ball.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.magic8Ball} />
-							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.magic8Ball} />
+							<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.springFilter.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.springFilter} />
-							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.springFilter} />
+							<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.anitaContest.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.anitaContest} />
-							<FortuneBreakdown total={25} bind:enabled={$ratesData.temp.anitaContest} />
+							<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.chocolateTruffle.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.chocolateTruffle} />
-							<FortuneBreakdown total={30} bind:enabled={$ratesData.temp.chocolateTruffle} />
+							<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
+							<FortuneBreakdown
+								total={30}
+								enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp}
+							/>
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 md:basis-48 m-2">
+					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
 						<p class="text-md leading-none mb-1">Zorro's Cape Mode</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Select.Simple
@@ -502,13 +509,13 @@
 		</section>
 	</div>
 
-	<Cropselector radio={true} />
+	<Cropselector radio={true} href="#fortune" id="fortune" />
 
 	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
 		<section class="flex-1 flex flex-col items-center w-full gap-4 p-4 rounded-md bg-primary-foreground">
 			<div class="flex flex-row gap-1 items-center justify-center w-full">
 				<div class="flex-1 flex flex-row justify-end">
-					<JumpLink id="fortune" />
+					<JumpLink id="fortune" self={false} />
 				</div>
 				<h2 class="text-2xl mb-1">Farming Fortune</h2>
 				<div class="flex-1" />
