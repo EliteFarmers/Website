@@ -46,7 +46,7 @@
 		</div>
 	</div>
 	{#if expanded}
-		<div class="flex flex-col gap-2" transition:slide>
+		<div class="flex flex-col gap-2 items-start" transition:slide>
 			<Label>Reforge</Label>
 			<Select.Simple
 				bind:value={reforge}
@@ -75,7 +75,7 @@
 					player.refresh();
 				}}
 			/>
-			<p class="text-gray-500 text-sm">More config options coming soon!</p>
+			<p class="text-gray-500 text-sm">More config options coming soon™!</p>
 		</div>
 	{/if}
 </div>
