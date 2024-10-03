@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@internationalized/date':
     specifier: ^3.5.2
-    version: 3.5.2
+    version: 3.5.6
   '@popperjs/core':
     specifier: ^2.11.8
     version: 2.11.8
@@ -482,10 +482,10 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     dev: true
 
-  /@internationalized/date@3.5.2:
-    resolution: {integrity: sha512-vo1yOMUt2hzp63IutEaTUxROdvQg1qlMRsbCvbay2AK2Gai7wIgCyK5weEX3nHkiLgo4qCXHijFNC/ILhlRpOQ==}
+  /@internationalized/date@3.5.6:
+    resolution: {integrity: sha512-jLxQjefH9VI5P9UQuqB6qNKnvFt1Ky1TPIzHGsIlCi7sZZoMR8SdYbBGRvM0y+Jtb+ez4ieBzmiAUcpmPYpyOw==}
     dependencies:
-      '@swc/helpers': 0.5.11
+      '@swc/helpers': 0.5.13
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -540,7 +540,7 @@ packages:
     dependencies:
       '@floating-ui/core': 1.6.0
       '@floating-ui/dom': 1.6.3
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.6
       dequal: 2.0.3
       focus-trap: 7.5.4
       nanoid: 4.0.2
@@ -554,7 +554,7 @@ packages:
     dependencies:
       '@floating-ui/core': 1.6.0
       '@floating-ui/dom': 1.6.3
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.6
       dequal: 2.0.3
       focus-trap: 7.5.4
       nanoid: 5.0.7
@@ -568,7 +568,7 @@ packages:
     dependencies:
       '@floating-ui/core': 1.6.0
       '@floating-ui/dom': 1.6.3
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.6
       dequal: 2.0.3
       focus-trap: 7.5.4
       nanoid: 5.0.7
@@ -903,8 +903,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@swc/helpers@0.5.11:
-    resolution: {integrity: sha512-YNlnKRWF2sVojTpIyzwou9XoTNbzbzONwRhOoniEioF1AtaitTvVZblaQRrAzChWQ1bLYyYSWzM18y4WwgzJ+A==}
+  /@swc/helpers@0.5.13:
+    resolution: {integrity: sha512-UoKGxQ3r5kYI9dALKJapMmuK+1zWM/H17Z1+iwnNmzcJRnfFuevZs375TA5rW31pu4BS4NoSy1fRsexDXfWn5w==}
     dependencies:
       tslib: 2.6.2
     dev: false
@@ -1317,7 +1317,7 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.6
       '@melt-ui/svelte': 0.68.0(svelte@4.2.15)
       nanoid: 5.0.7
       svelte: 4.2.15
@@ -1328,7 +1328,7 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.6
       '@melt-ui/svelte': 0.76.2(svelte@4.2.15)
       nanoid: 5.0.7
       svelte: 4.2.15
