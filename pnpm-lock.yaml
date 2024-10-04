@@ -122,8 +122,8 @@ devDependencies:
     specifier: ^5.62.0
     version: 5.62.0(eslint@8.57.1)(typescript@5.6.2)
   autoprefixer:
-    specifier: 10.4.7
-    version: 10.4.7(postcss@8.4.47)
+    specifier: 10.4.20
+    version: 10.4.20(postcss@8.4.47)
   eslint:
     specifier: ^8.57.1
     version: 8.57.1
@@ -1258,8 +1258,8 @@ packages:
       is-shared-array-buffer: 1.0.3
     dev: true
 
-  /autoprefixer@10.4.7(postcss@8.4.47):
-    resolution: {integrity: sha512-ypHju4Y2Oav95SipEcCcI5J7CGPuvz8oat7sUtYj3ClK44bldfvtvcxK6IEK++7rqB7YchDGzweZIBG+SD0ZAA==}
+  /autoprefixer@10.4.20(postcss@8.4.47):
+    resolution: {integrity: sha512-XY25y5xSv/wEoqzDyXXME4AFfkZI0P23z6Fs3YgymDnKJkCGOnkL0iTxCa85UTqaSgfcqyf3UA6+c7wUvx/16g==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
