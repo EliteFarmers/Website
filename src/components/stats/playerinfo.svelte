@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { RankName } from '$lib/skyblock';
+	import type { components } from '$lib/api/api';
+	import type { ProfileDetails } from '$lib/api/elite';
 	import { GetRankName, GetRankDefaults } from '$lib/format';
 	import { page } from '$app/stores';
 
@@ -7,9 +9,10 @@
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
 	import Skyblocklevel from './player/skyblocklevel.svelte';
-	import type { components } from '$lib/api/api';
-	import type { ProfileDetails } from '$lib/api/elite';
+	import * as Popover from '$ui/popover';
 	import Badge from './badge.svelte';
+	import { OTHER_SITES } from '$content/othersites';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let player: components['schemas']['PlayerDataDto'] | undefined;
 	export let profileDetails: ProfileDetails[];
@@ -53,18 +56,26 @@
 					<Discord username={discordName} linked={linked !== null} />
 				</div>
 				<div class="flex justify-start gap-1">
-					<a
-						class="p-2 px-3 text-body bg-primary-foreground rounded-md"
-						href="https://sky.shiiyu.moe/stats/{player?.uuid}/{$page.params.profile}"
-						target="_blank"
-						rel="noopener noreferrer nofollow">SkyCrypt</a
-					>
-					<a
-						class="p-2 px-3 text-body bg-primary-foreground rounded-md"
-						href="https://plancke.io/hypixel/player/stats/{$page.params.id}"
-						target="_blank"
-						rel="noopener noreferrer nofollow">Plancke</a
-					>
+					<Popover.Mobile>
+						<div slot="trigger" class="bg-primary-foreground rounded-md">
+							<p class="p-2 px-2">External Sites</p>
+						</div>
+						<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
+							{#each OTHER_SITES as site (site.name)}
+								<a
+									href={site.url(player?.uuid ?? $page.params.id, $page.params.profile)}
+									class="flex flex-row items-center justify-between gap-2 p-2 px-3 hover:bg-primary-foreground rounded-md"
+									target="_blank"
+									rel="noopener noreferrer nofollow"
+								>
+									<p>
+										{site.name}
+									</p>
+									<ExternalLink size={16} />
+								</a>
+							{/each}
+						</div>
+					</Popover.Mobile>
 				</div>
 			</div>
 		</div>
