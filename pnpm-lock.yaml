@@ -60,8 +60,8 @@ dependencies:
     specifier: ^8.3.4
     version: 8.3.4(svelte@4.2.19)(typescript@5.6.2)
   layerchart:
-    specifier: ^0.44.0
-    version: 0.44.0(postcss@8.4.47)(svelte@4.2.19)(typescript@5.6.2)
+    specifier: ^0.54.0
+    version: 0.54.0(svelte@4.2.19)(typescript@5.6.2)
   lucide-svelte:
     specifier: ^0.453.0
     version: 0.453.0(svelte@4.2.19)
@@ -507,6 +507,51 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  /@layerstack/svelte-actions@0.0.4:
+    resolution: {integrity: sha512-tC6+KfqU0t/ugj222sPljb9qkmIpZljaXh2YVKKhsyHGmTS5FRSinr3GFOONOJbQxCQjA7XhIgcSGkFHypaJig==}
+    dependencies:
+      '@floating-ui/dom': 1.6.11
+      '@layerstack/utils': 0.0.4
+      d3-array: 3.2.4
+      d3-scale: 4.0.2
+      date-fns: 3.6.0
+      lodash-es: 4.17.21
+    dev: false
+
+  /@layerstack/svelte-stores@0.0.4:
+    resolution: {integrity: sha512-pO5N+5XtSlGn1a7BhNgQJj/KQQ6IEYZImlGZbIboKJ5nlnvHpSywwqJaUvzPP7yRNGQQEDje/mnIm0m1Rbxrwg==}
+    dependencies:
+      '@layerstack/utils': 0.0.4
+      d3-array: 3.2.4
+      date-fns: 3.6.0
+      immer: 10.1.1
+      lodash-es: 4.17.21
+      zod: 3.23.8
+    dev: false
+
+  /@layerstack/tailwind@0.0.6:
+    resolution: {integrity: sha512-gmBwg3JYddylrodNd6Y4cz0xT/3HVWKsu/QEi5u2fps7hCsYMuI/gr3sil/zDCeuUXm2OOxerWosRBYfX7YqWA==}
+    dependencies:
+      '@layerstack/utils': 0.0.4
+      clsx: 2.1.1
+      culori: 4.0.1
+      d3-array: 3.2.4
+      date-fns: 3.6.0
+      lodash-es: 4.17.21
+      tailwind-merge: 2.5.2
+      tailwindcss: 3.4.13
+    transitivePeerDependencies:
+      - ts-node
+    dev: false
+
+  /@layerstack/utils@0.0.4:
+    resolution: {integrity: sha512-EjN9SoJlOo9GAX0KMy+3D3Tpw63n46owHwmo1vK4niZFpQA0gdoDfwHTw6yVkxe71mcHDKKyV62Yc/buezWXwg==}
+    dependencies:
+      d3-array: 3.2.4
+      date-fns: 3.6.0
+      lodash-es: 4.17.21
+    dev: false
 
   /@mdi/js@7.4.47:
     resolution: {integrity: sha512-KPnNOtm5i2pMabqZxpUz7iQf+mfrYZyKCZ8QNz85czgEt7cuHcGorWfdzUMWYA0SD+a6Hn4FmJ+YhzzzjkTZrQ==}
@@ -2358,17 +2403,6 @@ packages:
     dependencies:
       reusify: 1.0.4
 
-  /fdir@6.4.0(picomatch@4.0.2):
-    resolution: {integrity: sha512-3oB133prH1o4j/L5lLW7uOCF1PlD+/It2L0eL/iAqWMB91RBbqTewABqxhj0ibBd90EEmWZq7ntIWzVaWcXTGQ==}
-    peerDependencies:
-      picomatch: ^3 || ^4
-    peerDependenciesMeta:
-      picomatch:
-        optional: true
-    dependencies:
-      picomatch: 4.0.2
-    dev: false
-
   /fflate@0.4.8:
     resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
     dev: false
@@ -2911,11 +2945,15 @@ packages:
       typescript: 5.6.2
     dev: false
 
-  /layerchart@0.44.0(postcss@8.4.47)(svelte@4.2.19)(typescript@5.6.2):
-    resolution: {integrity: sha512-x5k2w3byuDm1pV5OPlmw1J2z4DTa5DrBDRlUv8xvH9tEsvJ/FSpr1EZBd9UUPimSU8uuU3Gm2wV9RSpjlISPJA==}
+  /layerchart@0.54.0(svelte@4.2.19)(typescript@5.6.2):
+    resolution: {integrity: sha512-5E4MDCjPTCkym/2yruwI/e15bQiUTVGhS1FFj2bzeYI7HgxRI3jIiqMuMwPYZ9lN0UtCS59yWb2zuZndkW5Rkg==}
     peerDependencies:
       svelte: ^3.56.0 || ^4.0.0 || ^5.0.0-next.120
     dependencies:
+      '@layerstack/svelte-actions': 0.0.4
+      '@layerstack/svelte-stores': 0.0.4
+      '@layerstack/tailwind': 0.0.6
+      '@layerstack/utils': 0.0.4
       d3-array: 3.2.4
       d3-color: 3.1.0
       d3-delaunay: 6.0.4
@@ -2941,18 +2979,9 @@ packages:
       posthog-js: 1.166.1
       shapefile: 0.6.6
       svelte: 4.2.19
-      svelte-ux: 0.74.9(postcss@8.4.47)(svelte@4.2.19)
       topojson-client: 3.1.0
     transitivePeerDependencies:
-      - '@babel/core'
-      - coffeescript
-      - less
-      - postcss
-      - postcss-load-config
-      - pug
-      - sass
-      - stylus
-      - sugarss
+      - ts-node
       - typescript
     dev: false
 
@@ -3295,11 +3324,6 @@ packages:
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
-
-  /picomatch@4.0.2:
-    resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
-    engines: {node: '>=12'}
-    dev: false
 
   /pify@2.3.0:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
@@ -3908,32 +3932,6 @@ packages:
       - sugarss
     dev: false
 
-  /sveld@0.20.2(postcss@8.4.47):
-    resolution: {integrity: sha512-pd/RZ4TR7oaX6XphE8uhwAjKIVw1lg19aysYM5lYpD97AthlAJD8kSEgtEXHXw6xFYXsfnhrj0XxGHnbKFsnlA==}
-    hasBin: true
-    dependencies:
-      '@rollup/plugin-node-resolve': 13.3.0(rollup@2.79.2)
-      acorn: 8.12.1
-      comment-parser: 1.4.1
-      prettier: 2.8.8
-      rollup: 2.79.2
-      rollup-plugin-svelte: 7.2.2(rollup@2.79.2)(svelte@4.2.19)
-      svelte: 4.2.19
-      svelte-preprocess: 6.0.3(postcss@8.4.47)(svelte@4.2.19)(typescript@5.6.2)
-      tinyglobby: 0.2.9
-      typescript: 5.6.2
-    transitivePeerDependencies:
-      - '@babel/core'
-      - coffeescript
-      - less
-      - postcss
-      - postcss-load-config
-      - pug
-      - sass
-      - stylus
-      - sugarss
-    dev: false
-
   /svelte-check@3.8.6(postcss@8.4.47)(svelte@4.2.19):
     resolution: {integrity: sha512-ij0u4Lw/sOTREP13BdWZjiXD/BlHE6/e2e34XzmVmsp5IN4kVa3PWP65NM32JAgwjZlwBg/+JtiNV1MM8khu0Q==}
     hasBin: true
@@ -4031,49 +4029,6 @@ packages:
       svelte: 4.2.19
       typescript: 5.6.2
 
-  /svelte-preprocess@6.0.3(postcss@8.4.47)(svelte@4.2.19)(typescript@5.6.2):
-    resolution: {integrity: sha512-PLG2k05qHdhmRG7zR/dyo5qKvakhm8IJ+hD2eFRQmMLHp7X3eJnjeupUtvuRpbNiF31RjVw45W+abDwHEmP5OA==}
-    engines: {node: '>= 18.0.0'}
-    requiresBuild: true
-    peerDependencies:
-      '@babel/core': ^7.10.2
-      coffeescript: ^2.5.1
-      less: ^3.11.3 || ^4.0.0
-      postcss: ^7 || ^8
-      postcss-load-config: '>=3'
-      pug: ^3.0.0
-      sass: ^1.26.8
-      stylus: '>=0.55'
-      sugarss: ^2.0.0 || ^3.0.0 || ^4.0.0
-      svelte: ^4.0.0 || ^5.0.0-next.100 || ^5.0.0
-      typescript: ^5.0.0
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      coffeescript:
-        optional: true
-      less:
-        optional: true
-      postcss:
-        optional: true
-      postcss-load-config:
-        optional: true
-      pug:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      postcss: 8.4.47
-      svelte: 4.2.19
-      typescript: 5.6.2
-    dev: false
-
   /svelte-sonner@0.3.28(svelte@4.2.19):
     resolution: {integrity: sha512-K3AmlySeFifF/cKgsYNv5uXqMVNln0NBAacOYgmkQStLa/UoU0LhfAACU6Gr+YYC8bOCHdVmFNoKuDbMEsppJg==}
     peerDependencies:
@@ -4101,40 +4056,6 @@ packages:
       prism-themes: 1.9.0
       prismjs: 1.29.0
       sveld: 0.19.2(postcss@8.4.47)
-      svelte: 4.2.19
-      tailwind-merge: 2.5.2
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - '@babel/core'
-      - coffeescript
-      - less
-      - postcss
-      - postcss-load-config
-      - pug
-      - sass
-      - stylus
-      - sugarss
-    dev: false
-
-  /svelte-ux@0.74.9(postcss@8.4.47)(svelte@4.2.19):
-    resolution: {integrity: sha512-df1F5EMPbjqGkbBuuHMmgRHp+gQspLrbQjF3foyzWss6gsRkZwFba0JkaopOwQNMMWb3Zu+2obIgQJXt1eZ/Dg==}
-    peerDependencies:
-      svelte: ^3.56.0 || ^4.0.0 || ^5.0.0-next.120
-    dependencies:
-      '@floating-ui/dom': 1.6.11
-      '@fortawesome/fontawesome-common-types': 6.6.0
-      '@mdi/js': 7.4.47
-      clsx: 2.1.1
-      culori: 4.0.1
-      d3-array: 3.2.4
-      d3-scale: 4.0.2
-      date-fns: 3.6.0
-      immer: 10.1.1
-      lodash-es: 4.17.21
-      prism-svelte: 0.5.0
-      prism-themes: 1.9.0
-      prismjs: 1.29.0
-      sveld: 0.20.2(postcss@8.4.47)
       svelte: 4.2.19
       tailwind-merge: 2.5.2
       zod: 3.23.8
@@ -4322,14 +4243,6 @@ packages:
     dependencies:
       globalyzer: 0.1.0
       globrex: 0.1.2
-
-  /tinyglobby@0.2.9:
-    resolution: {integrity: sha512-8or1+BGEdk1Zkkw2ii16qSS7uVrQJPre5A9o/XkWPATkk23FZh/15BKFxPnlTy6vkljZxLqYCzzBMj30ZrSvjw==}
-    engines: {node: '>=12.0.0'}
-    dependencies:
-      fdir: 6.4.0(picomatch@4.0.2)
-      picomatch: 4.0.2
-    dev: false
 
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
