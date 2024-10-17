@@ -58,7 +58,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	extraFortune?: ExtraFarmingFortune[];
 	zorro?: {
 		enabled: boolean;
-		mode: ZorroMode;
+		mode: ZorroMode | `${ZorroMode}`;
 	}
 }
 
