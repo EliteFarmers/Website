@@ -92,7 +92,10 @@
 			{/if}
 			<Highlight lines points={{ class: colorClasses[crop][0] }} />
 		</Svg>
-		<Tooltip header={(d) => tooltipFormatter.format(new Date(d.date * 1000))} let:data>
+		<Tooltip.Root let:data>
+			<Tooltip.Header>
+				{tooltipFormatter.format(new Date(data.date * 1000))}
+			</Tooltip.Header>
 			<div class="min-w-lg">
 				<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
 				<p class="font-mono">{(+data.value).toLocaleString()}</p>
@@ -101,6 +104,6 @@
 					<p class="font-mono">{(+data.pests).toLocaleString()}</p>
 				{/if}
 			</div>
-		</Tooltip>
+		</Tooltip.Root>
 	</Chart>
 </div>
