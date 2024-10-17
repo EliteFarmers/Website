@@ -66,8 +66,8 @@ dependencies:
     specifier: ^0.453.0
     version: 0.453.0(svelte@4.2.19)
   mode-watcher:
-    specifier: ^0.1.2
-    version: 0.1.2(svelte@4.2.19)
+    specifier: ^0.4.0
+    version: 0.4.1(svelte@4.2.19)
   openapi-fetch:
     specifier: ^0.7.10
     version: 0.7.10
@@ -3066,10 +3066,10 @@ packages:
     dependencies:
       minimist: 1.2.8
 
-  /mode-watcher@0.1.2(svelte@4.2.19):
-    resolution: {integrity: sha512-XTdPCdqC3kqSvB+Q262Kor983YJkkB2Z3vj9uqg5IqKQpOdiz+xB99Jihp8sWbyM67drC7KKp0Nt5FzCypZi2g==}
+  /mode-watcher@0.4.1(svelte@4.2.19):
+    resolution: {integrity: sha512-bNC+1NXmwEFZtziCdZSgP7HFQTpqJPcQn9GwwJQGSf6SBF3neEPYV1uRwkYuAQwbsvsXIYtzaqgedDzJ7D1mhg==}
     peerDependencies:
-      svelte: ^4.0.0
+      svelte: ^4.0.0 || ^5.0.0-next.1
     dependencies:
       svelte: 4.2.19
     dev: false
