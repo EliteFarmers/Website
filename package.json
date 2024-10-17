@@ -72,7 +72,7 @@
 		"formsnap": "^0.4.4",
 		"layercake": "^8.3.4",
 		"layerchart": "^0.44.0",
-		"lucide-svelte": "^0.375.0",
+		"lucide-svelte": "^0.453.0",
 		"mode-watcher": "^0.1.2",
 		"openapi-fetch": "^0.7.10",
 		"prismarine-nbt": "^2.5.0",
