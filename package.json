@@ -30,7 +30,7 @@
 		"@types/d3-time-format": "^4.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
-		"autoprefixer": "10.4.7",
+		"autoprefixer": "10.4.20",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^8.10.0",
 		"eslint-config-standard-with-typescript": "^34.0.1",
