@@ -54,8 +54,8 @@ dependencies:
     specifier: ^0.6.3
     version: 0.6.4
   formsnap:
-    specifier: ^0.5.0
-    version: 0.5.1(svelte@4.2.19)(sveltekit-superforms@1.13.4)
+    specifier: ^1.0.0
+    version: 1.0.1(svelte@4.2.19)(sveltekit-superforms@1.13.4)
   layercake:
     specifier: ^8.3.4
     version: 8.3.4(svelte@4.2.19)(typescript@5.6.3)
@@ -2436,10 +2436,10 @@ packages:
       cross-spawn: 7.0.3
       signal-exit: 4.1.0
 
-  /formsnap@0.5.1(svelte@4.2.19)(sveltekit-superforms@1.13.4):
-    resolution: {integrity: sha512-8ppOlOu7llBEJbV0PzUz/KWh1J8KfiGqwjiyb8emQ2m+/nYXohLBtMcLVpW3XwlMkUbYaIXM+5lhfGjw8xbGJw==}
+  /formsnap@1.0.1(svelte@4.2.19)(sveltekit-superforms@1.13.4):
+    resolution: {integrity: sha512-TvU9CoLSiacW1c7wXhLiyVpyy/LBfG0CEFDbs3M3jrsxBSrkTpsuhbQ8JYKY3CNCmIhZlgxCH+Vqr7RBF9G53w==}
     peerDependencies:
-      svelte: ^4.0.0
+      svelte: ^4.0.0 || ^5.0.0-next.1
       sveltekit-superforms: ^2.3.0
     dependencies:
       nanoid: 5.0.7
