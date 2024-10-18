@@ -21,7 +21,7 @@
 		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-node": "^4.0.1",
+		"@sveltejs/adapter-node": "^5.0.0",
 		"@sveltejs/kit": "^2.6.1",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
 		"@types/d3-array": "^3.2.1",
