@@ -88,7 +88,7 @@ devDependencies:
     version: 8.10.0(eslint@8.57.1)
   eslint-config-standard-with-typescript:
     specifier: ^34.0.1
-    version: 34.0.1(@typescript-eslint/eslint-plugin@5.62.0)(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.6.0)(eslint@8.57.1)(typescript@5.6.3)
+    version: 34.0.1(@typescript-eslint/eslint-plugin@5.62.0)(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@7.1.0)(eslint@8.57.1)(typescript@5.6.3)
   eslint-plugin-import:
     specifier: ^2.31.0
     version: 2.31.0(@typescript-eslint/parser@5.62.0)(eslint@8.57.1)
@@ -96,8 +96,8 @@ devDependencies:
     specifier: ^15.7.0
     version: 15.7.0(eslint@8.57.1)
   eslint-plugin-promise:
-    specifier: ^6.6.0
-    version: 6.6.0(eslint@8.57.1)
+    specifier: ^7.0.0
+    version: 7.1.0(eslint@8.57.1)
   eslint-plugin-svelte:
     specifier: ^2.45.1
     version: 2.45.1(eslint@8.57.1)(svelte@4.2.19)
@@ -2550,7 +2550,7 @@ packages:
       eslint: 8.57.1
     dev: true
 
-  /eslint-config-standard-with-typescript@34.0.1(@typescript-eslint/eslint-plugin@5.62.0)(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.6.0)(eslint@8.57.1)(typescript@5.6.3):
+  /eslint-config-standard-with-typescript@34.0.1(@typescript-eslint/eslint-plugin@5.62.0)(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@7.1.0)(eslint@8.57.1)(typescript@5.6.3):
     resolution: {integrity: sha512-J7WvZeLtd0Vr9F+v4dZbqJCLD16cbIy4U+alJMq4MiXdpipdBM3U5NkXaGUjePc4sb1ZE01U9g6VuTBpHHz1fg==}
     deprecated: Please use eslint-config-love, instead.
     peerDependencies:
@@ -2564,16 +2564,16 @@ packages:
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.57.1)(typescript@5.6.3)
       '@typescript-eslint/parser': 5.62.0(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
-      eslint-config-standard: 17.0.0(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.6.0)(eslint@8.57.1)
+      eslint-config-standard: 17.0.0(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@7.1.0)(eslint@8.57.1)
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0)(eslint@8.57.1)
       eslint-plugin-n: 15.7.0(eslint@8.57.1)
-      eslint-plugin-promise: 6.6.0(eslint@8.57.1)
+      eslint-plugin-promise: 7.1.0(eslint@8.57.1)
       typescript: 5.6.3
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-config-standard@17.0.0(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.6.0)(eslint@8.57.1):
+  /eslint-config-standard@17.0.0(eslint-plugin-import@2.31.0)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@7.1.0)(eslint@8.57.1):
     resolution: {integrity: sha512-/2ks1GKyqSOkH7JFvXJicu0iMpoojkwB+f5Du/1SC0PtBL+s8v30k9njRZ21pm2drKYm2342jFnGWzttxPmZVg==}
     peerDependencies:
       eslint: ^8.0.1
@@ -2584,7 +2584,7 @@ packages:
       eslint: 8.57.1
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0)(eslint@8.57.1)
       eslint-plugin-n: 15.7.0(eslint@8.57.1)
-      eslint-plugin-promise: 6.6.0(eslint@8.57.1)
+      eslint-plugin-promise: 7.1.0(eslint@8.57.1)
     dev: true
 
   /eslint-import-resolver-node@0.3.9:
@@ -2691,9 +2691,9 @@ packages:
       semver: 7.6.3
     dev: true
 
-  /eslint-plugin-promise@6.6.0(eslint@8.57.1):
-    resolution: {integrity: sha512-57Zzfw8G6+Gq7axm2Pdo3gW/Rx3h9Yywgn61uE/3elTCOePEHVrn2i5CdfBwA1BLK0Q0WqctICIUSqXZW/VprQ==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+  /eslint-plugin-promise@7.1.0(eslint@8.57.1):
+    resolution: {integrity: sha512-8trNmPxdAy3W620WKDpaS65NlM5yAumod6XeC4LOb+jxlkG4IVcp68c6dXY2ev+uT4U1PtG57YDV6EGAXN0GbQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
     dependencies:
@@ -4692,33 +4692,6 @@ packages:
     peerDependencies:
       '@sveltejs/kit': 1.x || 2.x
       svelte: 3.x || 4.x || >=5.0.0-next.51
-    peerDependenciesMeta:
-      '@effect/schema':
-        optional: true
-      '@exodus/schemasafe':
-        optional: true
-      '@sinclair/typebox':
-        optional: true
-      '@typeschema/class-validator':
-        optional: true
-      '@vinejs/vine':
-        optional: true
-      arktype:
-        optional: true
-      class-validator:
-        optional: true
-      effect:
-        optional: true
-      joi:
-        optional: true
-      superstruct:
-        optional: true
-      valibot:
-        optional: true
-      yup:
-        optional: true
-      zod:
-        optional: true
     dependencies:
       '@sveltejs/kit': 2.7.2(@sveltejs/vite-plugin-svelte@3.1.2)(svelte@4.2.19)(vite@5.4.9)
       devalue: 5.1.1
