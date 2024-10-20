@@ -7,7 +7,6 @@ import {
 	GARDEN_CROP_UPGRADES,
 	FARMING_LEVEL,
 	UNLOCKED_PLOTS,
-	PEST_BESTIARY_SOURCE,
 	COCOA_FORTUNE_UPGRADE,
 } from '../constants/specific.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
@@ -20,7 +19,6 @@ import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc.js';
 import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
-import { getFortuneProgress } from '../upgrades/progress.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import type { PlayerOptions } from './playeroptions.js';
@@ -247,16 +245,6 @@ export class FarmingPlayer {
 
 		this.breakdown = breakdown;
 		return sum;
-	}
-
-	getGeneralFortuneProgress() {
-		return [
-			getFortuneProgress(this.options.farmingLevel, FARMING_LEVEL),
-			getFortuneProgress(fortuneFromPestBestiary(this.options.bestiaryKills ?? {}), PEST_BESTIARY_SOURCE),
-			getFortuneProgress(this.options.plotsUnlocked, UNLOCKED_PLOTS),
-			getFortuneProgress(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE),
-			getFortuneProgress(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE),
-		]
 	}
 
 	getTempFortune() {

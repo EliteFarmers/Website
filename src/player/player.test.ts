@@ -36,7 +36,7 @@ test('Fortune progress test', () => {
 		plotsUnlocked: 1,
 	});
 
-	const progress = player.getGeneralFortuneProgress();
+	const progress = player.getProgress();
 	
 	const plots = progress.find((p) => p.name === 'Unlocked Plots');
 	expect(plots?.fortune).toBe(3);
