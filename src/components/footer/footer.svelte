@@ -40,16 +40,12 @@
 			<Button variant="link" rel="nofollow noreferrer noopener" class="p-0 h-8" href={PUBLIC_DONATION_URL}
 				>Donate on Ko-Fi</Button
 			>
-			<Button
-				variant="link"
-				rel="noopener"
-				class="p-0 h-8"
-				href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers">Purchase Stickers</Button
-			>
+			<Button variant="link" rel="noopener" class="p-0 h-8" href="/stickers">Purchase Stickers</Button>
 		</div>
 		<div class="flex flex-1 basis-32 py-4 flex-col gap-2 items-start md:items-end">
 			<h5 class="text-lg font-semibold">Made by Kaeso</h5>
 			<Separator />
+			<Button variant="link" class="p-0 h-8" href="/contact">Contact</Button>
 			<Button
 				variant="link"
 				rel="nofollow noreferrer noopener"

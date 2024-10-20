@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ExternalLinkButton from '$comp/external-link-button.svelte';
 	import Head from '$comp/head.svelte';
 </script>
 
@@ -7,33 +8,51 @@
 <main class="flex flex-col justify-center items-center w-full">
 	<section class="flex flex-col justify-center items-center w-full">
 		<article class="w-10/12 md:w-1/2">
-			<h1 class="text-center text-3xl mt-16 mb-8">API Terms of Service</h1>
-			<ol class="tezt-lg flex flex-col gap-2">
-				<li>
-					1. Follow <a class="underline" href="https://developer.hypixel.net/policies/"
-						>Hypixel's Developer Policies</a
-					>
-				</li>
-				<li>2. Do not use the API for commercial or illegal purposes</li>
-				<li>
-					3. For any use of the API, you must credit https://elitebot.dev/ on your website or application with
-					a clear and clickable link present on every page/display that uses the API (if within reason)
-				</li>
-				<li>4. API access may be revoked at any time for any reason</li>
-				<li>
-					5. Respect the rate limits. If you need more requests, you shouldn't be using the API. You're
-					welcome to host your own instance of the API if you need more requests, but otherwise use Hypixel's
-					API
-				</li>
-				<li>
-					6. The API should never be used purely as a Mojang API proxy. If you need to get a player's UUID,
-					use the Mojang API
-				</li>
-				<li>
-					7. Do not use the API in a public project without permission from the Elite team. If you want to use
-					the API in a public project, contact us on Discord
-				</li>
-			</ol>
+			<h1 class="text-center text-3xl my-16">Elite API Terms of Service</h1>
+			<ExternalLinkButton href="https://api.elitebot.dev">Elite API Documentation</ExternalLinkButton>
+			<div>
+				<h2 class="text-semibold text-xl my-4">Usage Restrictions</h2>
+				<ul class="flex flex-col gap-2 ml-4">
+					<li>
+						<span class="select-none">• </span>Adhere to the
+						<a class="underline" href="https://elitebot.dev/terms">Terms of Service</a>,
+						<a class="underline" href="https://elitebot.dev/privacy">Privacy Policy</a>, and
+						<a class="underline" href="https://developer.hypixel.net/policies/"
+							>Hypixel's Developer Policies</a
+						>
+					</li>
+					<li>
+						<span class="select-none">• </span>Do not use the API for commercial purposes, any feature that
+						uses the API should be free for all users.
+					</li>
+					<li>
+						<span class="select-none">• </span>This API does not serve as a Hypixel API proxy. If your goal
+						when using this API is to get Hypixel data, then you're not allowed to use it. This API is meant
+						to be used for those looking to integrate farming weight into their own projects, or using
+						endpoints that don't return player data.
+					</li>
+					<li>
+						<span class="select-none">• </span>For any use of the API, you must credit https://elitebot.dev/
+						on your website or application with a clear and clickable link present on every page/display
+						that uses the API. If this is not possible, you can contact us on Discord to discuss acceptable
+						credit.
+					</li>
+					<li><span class="select-none">• </span>API access may be revoked at any time for any reason.</li>
+					<li>
+						<span class="select-none">• </span>Respect the rate limits. If you need more requests, you
+						shouldn't be using the API. You're welcome to host your own instance of the API if you need more
+						requests, but otherwise use Hypixel's API
+					</li>
+					<li>
+						<span class="select-none">• </span>The API should never be used purely as a Mojang API proxy. If
+						you need to get a player's UUID, use the Mojang API
+					</li>
+					<li>
+						<span class="select-none">• </span>Do not use the API in a public project without permission
+						from the Elite team. If you want to use the API in a public project, contact us on Discord
+					</li>
+				</ul>
+			</div>
 		</article>
 	</section>
 </main>
