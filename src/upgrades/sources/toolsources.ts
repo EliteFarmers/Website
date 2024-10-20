@@ -69,9 +69,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		exists: (tool) => tool.type !== ReforgeTarget.Sword,
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return tool.reforge?.name === 'Blessed' 
-				? REFORGES.blessed?.tiers[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0
-				: REFORGES.bountiful?.tiers?.[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
+			return tool.reforge?.name === 'Bountiful' 
+				? REFORGES.bountiful?.tiers[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0
+				: REFORGES.blessed?.tiers?.[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
 		},
 		current: (tool) => {
 			return tool.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;

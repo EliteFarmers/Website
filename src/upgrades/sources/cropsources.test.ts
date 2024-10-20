@@ -64,7 +64,7 @@ test('Wheat fortune test', () => {
 		{
 			name: 'Farming Tool',
 			fortune: 0,
-			maxFortune: 475,
+			maxFortune: 485,
 			ratio: 0,
 			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Wheat].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
@@ -122,7 +122,7 @@ test('Potato fortune test', () => {
 		{
 			name: 'Farming Tool',
 			fortune: 0,
-			maxFortune: 475,
+			maxFortune: 485,
 			ratio: 0,
 			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Potato].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
@@ -167,7 +167,7 @@ test('Nether Wart fortune test', () => {
 		{
 			name: 'Farming Tool',
 			fortune: 0,
-			maxFortune: 475,
+			maxFortune: 485,
 			ratio: 0,
 			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
@@ -218,8 +218,8 @@ test('Carrot fortune test', () => {
 		{
 			name: 'Farming Tool',
 			fortune: 25,
-			maxFortune: 475,
-			ratio: 25 / 475,
+			maxFortune: 485,
+			ratio: 25 / 485,
 			progress: FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo)?.getProgress()
 		},
 		{
@@ -273,7 +273,7 @@ test('Melon fortune test', () => {
 		{
 			name: 'Farming Tool',
 			fortune: 0,
-			maxFortune: 257,
+			maxFortune: 267,
 			ratio: 0,
 			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},

@@ -212,7 +212,7 @@ test('Tier 1 Wheat Hoe', () => {
 		{
 			name: 'Reforge Stats',
 			fortune: 0,
-			maxFortune: 10,
+			maxFortune: 20,
 			ratio: 0,
 		},
 		{
@@ -265,5 +265,5 @@ test('Tier 1 Wheat Hoe', () => {
 		},
 	]);
 
-	expect(progress.reduce((acc, curr) => acc + curr.maxFortune, 0)).toBe(475);
+	expect(progress.reduce((acc, curr) => acc + curr.maxFortune, 0)).toBe(485);
 });
