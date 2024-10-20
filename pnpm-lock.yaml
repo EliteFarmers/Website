@@ -95,8 +95,8 @@ dependencies:
 
 devDependencies:
   '@sveltejs/adapter-node':
-    specifier: ^4.0.1
-    version: 4.0.1(@sveltejs/kit@2.7.1)
+    specifier: ^5.0.0
+    version: 5.2.8(@sveltejs/kit@2.7.1)
   '@sveltejs/kit':
     specifier: ^2.6.1
     version: 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2)(svelte@4.2.19)(vite@5.4.9)
@@ -616,9 +616,9 @@ packages:
       zod: 3.23.8
     dev: false
 
-  /@rollup/plugin-commonjs@25.0.8(rollup@4.24.0):
-    resolution: {integrity: sha512-ZEZWTK5n6Qde0to4vS9Mr5x/0UZoqCxPVR9KRUjU4kA2sO7GEUn1fop0DAwpO6z0Nw/kJON9bDmSxdWxO/TT1A==}
-    engines: {node: '>=14.0.0'}
+  /@rollup/plugin-commonjs@28.0.1(rollup@4.24.0):
+    resolution: {integrity: sha512-+tNWdlWKbpB3WgBN7ijjYkq9X5uhjmcvyjEght4NmH5fAU++zfQzAJ6wumLS+dNcvwEZhKx2Z+skY8m7v0wGSA==}
+    engines: {node: '>=16.0.0 || 14 >= 14.17'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
@@ -628,9 +628,10 @@ packages:
       '@rollup/pluginutils': 5.1.2(rollup@4.24.0)
       commondir: 1.0.1
       estree-walker: 2.0.2
-      glob: 8.1.0
+      fdir: 6.4.0(picomatch@4.0.2)
       is-reference: 1.2.1
-      magic-string: 0.30.11
+      magic-string: 0.30.12
+      picomatch: 4.0.2
       rollup: 4.24.0
     dev: true
 
@@ -830,12 +831,12 @@ packages:
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
     dev: true
 
-  /@sveltejs/adapter-node@4.0.1(@sveltejs/kit@2.7.1):
-    resolution: {integrity: sha512-IviiTtKCDp+0QoTmmMlGGZBA1EoUNsjecU6XGV9k62S3f01SNsVhpqi2e4nbI62BLGKh/YKKfFii+Vz/b9XIxg==}
+  /@sveltejs/adapter-node@5.2.8(@sveltejs/kit@2.7.1):
+    resolution: {integrity: sha512-wll164mO8pX/0Ak6/64h0OzO4Id24PBmTla3zRlGEdbdQGkGb2WZPZOuvcWi6IEpwekA4RVFe58fjbkIV0Bslw==}
     peerDependencies:
       '@sveltejs/kit': ^2.4.0
     dependencies:
-      '@rollup/plugin-commonjs': 25.0.8(rollup@4.24.0)
+      '@rollup/plugin-commonjs': 28.0.1(rollup@4.24.0)
       '@rollup/plugin-json': 6.1.0(rollup@4.24.0)
       '@rollup/plugin-node-resolve': 15.3.0(rollup@4.24.0)
       '@sveltejs/kit': 2.7.1(@sveltejs/vite-plugin-svelte@3.1.2)(svelte@4.2.19)(vite@5.4.9)
@@ -2371,7 +2372,6 @@ packages:
         optional: true
     dependencies:
       picomatch: 4.0.2
-    dev: false
 
   /fflate@0.4.8:
     resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
@@ -2532,18 +2532,6 @@ packages:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
-    dev: true
-
-  /glob@8.1.0:
-    resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
-    engines: {node: '>=12'}
-    deprecated: Glob versions prior to v9 are no longer supported
-    dependencies:
-      fs.realpath: 1.0.0
-      inflight: 1.0.6
-      inherits: 2.0.4
-      minimatch: 5.1.6
-      once: 1.4.0
     dev: true
 
   /globals@13.24.0:
@@ -3047,13 +3035,6 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
 
-  /minimatch@5.1.6:
-    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
-    engines: {node: '>=10'}
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: true
-
   /minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -3306,7 +3287,6 @@ packages:
   /picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
-    dev: false
 
   /pify@2.3.0:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
