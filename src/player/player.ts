@@ -319,7 +319,7 @@ export class FarmingPlayer {
 
 		// Accessories
 		//* There's only one accessory family for farming right now
-		const accessory = this.accessories.find((a) => a.info.crops && a.info.crops.includes(crop));
+		const accessory = this.accessories.find((a) => !a.info.crops || a.info.crops.includes(crop));
 		if (accessory && accessory.fortune > 0) {
 			breakdown[accessory.item.name ?? 'Accessories'] = accessory.fortune ?? 0;
 			sum += accessory.fortune ?? 0;

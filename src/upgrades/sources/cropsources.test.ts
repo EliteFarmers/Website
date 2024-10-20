@@ -46,6 +46,9 @@ test('Wheat fortune test', () => {
 		cropUpgrades: {
 			[Crop.Wheat]: 1,
 		},
+		personalBests: {
+			[Crop.Wheat]: 10000,
+		},
 		accessories: [ fermentoArtifact, squashRing, cropieTalisman ],
 	});
 
@@ -89,11 +92,15 @@ test('Wheat fortune test', () => {
 		},
 		{
 			name: 'Personal Best',
-			fortune: 0,
+			fortune: 1,
 			maxFortune: 100,
-			ratio: 0,
+			ratio: 1 / 100,
 		}
 	]);
+
+	const cropFortune = player.getCropFortune(Crop.Wheat);
+	console.log(cropFortune.breakdown);
+	expect(cropFortune.fortune).toBe(progress.reduce((acc, piece) => acc + piece.fortune, 0));
 });
 
 test('Potato fortune test', () => {
