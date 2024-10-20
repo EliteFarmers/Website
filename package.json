@@ -33,7 +33,7 @@
 		"@types/d3-scale": "^4.0.8",
 		"@types/d3-time-format": "^4.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
-		"@typescript-eslint/parser": "^5.62.0",
+		"@typescript-eslint/parser": "^8.0.0",
 		"apexcharts": "^3.54.1",
 		"autoprefixer": "10.4.20",
 		"bits-ui": "^0.21.16",
