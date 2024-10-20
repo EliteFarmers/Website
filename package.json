@@ -7,7 +7,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"devhost": "vite dev --host",
-		"build": "pnpm run liscense && vite build",
+		"build": "vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
 		"deploy": "node build/index.js",
@@ -17,7 +17,7 @@
 		"format": "prettier --ignore-path .eslintignore --write --plugin-search-dir=. .",
 		"up": "docker-compose up -d database cache",
 		"down": "docker-compose down",
-		"liscense": "pnpm exec pnpm-licenses generate-disclaimer --prod --output-file=./static/oss.txt",
+		"license": "pnpm exec pnpm-licenses generate-disclaimer --prod --output-file=./static/oss.txt",
 		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
 	"devDependencies": {
