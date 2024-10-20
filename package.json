@@ -63,7 +63,7 @@
 		"openapi-fetch": "^0.12.2",
 		"postcss": "^8.4.47",
 		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.1",
+		"prettier-plugin-svelte": "^3.0.0",
 		"svelte": "^4.2.19",
 		"svelte-check": "^4.0.5",
 		"svelte-preprocess": "^6.0.3",
