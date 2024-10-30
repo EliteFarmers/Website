@@ -6,7 +6,7 @@ import {
 	EditEvent,
 	GetAdminEventMembers,
 	GetEventBans,
-	GetEventDetails,
+	GetAdminEventDetails,
 	UnbanEventMember,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
@@ -22,7 +22,7 @@ export const load = (async ({ parent, params, locals }) => {
 		throw error(403, 'You do not have permission to edit this guild.');
 	}
 
-	const { data: event } = await GetEventDetails(eventId).catch(() => ({ data: undefined }));
+	const { data: event } = await GetAdminEventDetails(token, guild.id, eventId).catch(() => ({ data: undefined }));
 
 	if (!event || event.guildId !== guild.id) {
 		throw error(404, 'Event not found');

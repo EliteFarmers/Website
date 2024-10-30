@@ -27,7 +27,7 @@
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone');
 </script>
 
 <Head title="Contest Pings" description="Manage upcoming Jacob Contest pings for your guild" />

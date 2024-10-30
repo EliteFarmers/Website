@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Elite API",
-    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data. Use of this API requires following the TOS. This API is not affiliated with Hypixel or Mojang.",
+    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data. Use of this API requires following the [TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.",
     "termsOfService": "https://elitebot.dev/apiterms",
     "contact": {
       "name": "- GitHub",
@@ -1048,6 +1048,472 @@
         ]
       }
     },
+    "/admin/events/pending": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get events pending approval",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDetailsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDetailsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDetailsDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/admin/events/{eventId}/approve": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Set event approval",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "approve",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/admin/events/{eventId}": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete an event",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/guild/{guildId}/events/admin": {
+      "get": {
+        "tags": [
+          "AdminEvent"
+        ],
+        "summary": "Get events for a guild (admin)",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDetailsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDetailsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDetailsDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/guild/{guildId}/events/{eventId}/admin": {
+      "get": {
+        "tags": [
+          "AdminEvent"
+        ],
+        "summary": "Get event (admin)",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/guild/{guildId}/events/weight": {
       "post": {
         "tags": [
@@ -1322,24 +1788,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/EventDetailsDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EventDetailsDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EventDetailsDto"
-                }
-              }
-            }
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -1435,6 +1884,107 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/guild/{guildId}/events/{eventId}/banner": {
+      "put": {
+        "tags": [
+          "AdminEvent"
+        ],
+        "summary": "Set event banner image",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "eventId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "description": "",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "image": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "401": {
             "description": "Unauthorized",
@@ -3063,21 +3613,50 @@
         ],
         "summary": "Create a new badge",
         "requestBody": {
-          "description": "Badge information",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateBadgeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBadgeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBadgeDto"
+                "required": [
+                  "Description",
+                  "Name",
+                  "Requirements"
+                ],
+                "type": "object",
+                "properties": {
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "Requirements": {
+                    "type": "string"
+                  },
+                  "TieToAccount": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "encoding": {
+                "Image": {
+                  "style": "form"
+                },
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Requirements": {
+                  "style": "form"
+                },
+                "TieToAccount": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -3173,21 +3752,39 @@
           }
         ],
         "requestBody": {
-          "description": "New values",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/EditBadgeDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditBadgeDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditBadgeDto"
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Description": {
+                    "type": "string"
+                  },
+                  "Requirements": {
+                    "type": "string"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Requirements": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -7533,7 +8130,7 @@
         ]
       }
     },
-    "/leaderboard/leaderboards": {
+    "/leaderboards": {
       "get": {
         "tags": [
           "Leaderboard"
@@ -9075,11 +9672,11 @@
       }
     },
     "/product/style/{styleId}/image": {
-      "post": {
+      "put": {
         "tags": [
           "Product"
         ],
-        "summary": "Add image to a weight style",
+        "summary": "Set image for a weight style",
         "parameters": [
           {
             "name": "styleId",
@@ -9093,19 +9690,41 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/WeightStyleImageDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WeightStyleImageDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/WeightStyleImageDto"
+                "type": "object",
+                "properties": {
+                  "Title": {
+                    "maxLength": 64,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "maxLength": 512,
+                    "type": "string"
+                  },
+                  "Order": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Order": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -9163,8 +9782,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -11526,15 +12144,12 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "displayName": {
-            "minLength": 1,
             "type": "string"
           },
           "username": {
-            "minLength": 1,
             "type": "string"
           },
           "roles": {
@@ -11573,7 +12188,6 @@
             "nullable": true
           },
           "eventId": {
-            "minLength": 1,
             "type": "string"
           },
           "teamId": {
@@ -11631,12 +12245,10 @@
         "type": "object",
         "properties": {
           "access_token": {
-            "minLength": 1,
             "type": "string",
             "description": "User ID"
           },
           "refresh_token": {
-            "minLength": 1,
             "type": "string",
             "description": "Refresh token for the user"
           }
@@ -11651,7 +12263,6 @@
         "type": "object",
         "properties": {
           "access_token": {
-            "minLength": 1,
             "type": "string",
             "description": "Access token for the user"
           },
@@ -11661,7 +12272,6 @@
             "nullable": true
           },
           "refresh_token": {
-            "minLength": 1,
             "type": "string",
             "description": "Refresh token for the user"
           }
@@ -11680,27 +12290,22 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord user ID"
           },
           "username": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord username"
           },
           "avatar": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord avatar hash"
           },
           "ign": {
-            "minLength": 1,
             "type": "string",
             "description": "Primary Minecraft IGN"
           },
           "uuid": {
-            "minLength": 1,
             "type": "string",
             "description": "Primary Minecraft UUID"
           },
@@ -11725,17 +12330,14 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord user ID"
           },
           "displayName": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord display name"
           },
           "username": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord username (unique)"
           },
@@ -11787,11 +12389,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "permissions": {
-            "minLength": 1,
             "type": "string"
           },
           "guild": {
@@ -11820,7 +12420,6 @@
       "BadgeDto": {
         "required": [
           "description",
-          "imageId",
           "name",
           "requirements"
         ],
@@ -11830,20 +12429,16 @@
             "type": "integer",
             "format": "int32"
           },
-          "imageId": {
-            "minLength": 1,
-            "type": "string"
+          "image": {
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "description": {
-            "minLength": 1,
             "type": "string"
           },
           "requirements": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -12242,37 +12837,6 @@
         },
         "additionalProperties": false
       },
-      "CreateBadgeDto": {
-        "required": [
-          "description",
-          "imageId",
-          "name",
-          "requirements"
-        ],
-        "type": "object",
-        "properties": {
-          "imageId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "requirements": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "tieToAccount": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateEventTeamDto": {
         "type": "object",
         "properties": {
@@ -12333,18 +12897,6 @@
             "maxLength": 1024,
             "type": "string",
             "description": "An optional description of prizes for the event",
-            "nullable": true
-          },
-          "banner": {
-            "maxLength": 256,
-            "type": "string",
-            "description": "An image URL for the event banner",
-            "nullable": true
-          },
-          "thumbnail": {
-            "maxLength": 256,
-            "type": "string",
-            "description": "An image URL for the event thumbnail",
             "nullable": true
           },
           "startTime": {
@@ -12435,18 +12987,6 @@
             "maxLength": 1024,
             "type": "string",
             "description": "An optional description of prizes for the event",
-            "nullable": true
-          },
-          "banner": {
-            "maxLength": 256,
-            "type": "string",
-            "description": "An image URL for the event banner",
-            "nullable": true
-          },
-          "thumbnail": {
-            "maxLength": 256,
-            "type": "string",
-            "description": "An image URL for the event thumbnail",
             "nullable": true
           },
           "startTime": {
@@ -12604,17 +13144,14 @@
         "type": "object",
         "properties": {
           "access_token": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord access token from OAuth2"
           },
           "expires_in": {
-            "minLength": 1,
             "type": "string",
             "description": "Unix timestamp in seconds"
           },
           "refresh_token": {
-            "minLength": 1,
             "type": "string",
             "description": "Discord refresh token from OAuth2"
           }
@@ -12629,11 +13166,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "position": {
@@ -12673,28 +13208,6 @@
         },
         "additionalProperties": false
       },
-      "EditBadgeDto": {
-        "type": "object",
-        "properties": {
-          "imageId": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "requirements": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "EditEventDto": {
         "type": "object",
         "properties": {
@@ -12715,14 +13228,6 @@
             "nullable": true
           },
           "prizeInfo": {
-            "type": "string",
-            "nullable": true
-          },
-          "banner": {
-            "type": "string",
-            "nullable": true
-          },
-          "thumbnail": {
             "type": "string",
             "nullable": true
           },
@@ -12792,7 +13297,6 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string",
             "description": "Entitlement ID"
           },
@@ -12803,7 +13307,6 @@
             "$ref": "#/components/schemas/EntitlementTarget"
           },
           "productId": {
-            "minLength": 1,
             "type": "string",
             "description": "SKU ID of the product"
           },
@@ -12863,7 +13366,6 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "createdAt": {
@@ -12881,12 +13383,10 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string",
             "description": "Event id as a string"
           },
           "name": {
-            "minLength": 1,
             "type": "string",
             "description": "Name of the event"
           },
@@ -12914,14 +13414,7 @@
             "nullable": true
           },
           "banner": {
-            "type": "string",
-            "description": "Image URL for the event banner",
-            "nullable": true
-          },
-          "thumbnail": {
-            "type": "string",
-            "description": "Image URL for the event thumbnail",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "startTime": {
             "type": "string",
@@ -12945,6 +13438,10 @@
           "active": {
             "type": "boolean",
             "description": "Event status"
+          },
+          "approved": {
+            "type": "boolean",
+            "description": "Event approval status"
           },
           "maxTeams": {
             "type": "integer",
@@ -13031,7 +13528,6 @@
             "nullable": true
           },
           "eventId": {
-            "minLength": 1,
             "type": "string"
           },
           "teamId": {
@@ -13078,7 +13574,6 @@
             "nullable": true
           },
           "eventId": {
-            "minLength": 1,
             "type": "string"
           },
           "teamId": {
@@ -13274,8 +13769,7 @@
             "type": "object",
             "additionalProperties": {
               "type": "integer",
-              "format": "int64",
-              "nullable": true
+              "format": "int64"
             },
             "nullable": true
           },
@@ -13317,11 +13811,9 @@
         "type": "object",
         "properties": {
           "profileId": {
-            "minLength": 1,
             "type": "string"
           },
           "profileName": {
-            "minLength": 1,
             "type": "string"
           },
           "totalWeight": {
@@ -13332,8 +13824,7 @@
             "type": "object",
             "additionalProperties": {
               "type": "integer",
-              "format": "int64",
-              "nullable": true
+              "format": "int64"
             },
             "nullable": true
           },
@@ -13371,7 +13862,6 @@
         "type": "object",
         "properties": {
           "profileId": {
-            "minLength": 1,
             "type": "string",
             "description": "Profile ID"
           },
@@ -13428,11 +13918,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "type": {
@@ -13454,20 +13942,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "icon": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "banner": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "inviteCode": {
             "type": "string",
@@ -13539,7 +14023,6 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "channelId": {
@@ -13597,15 +14080,12 @@
         "type": "object",
         "properties": {
           "uuid": {
-            "minLength": 1,
             "type": "string"
           },
           "ign": {
-            "minLength": 1,
             "type": "string"
           },
           "discordId": {
-            "minLength": 1,
             "type": "string"
           },
           "record": {
@@ -13670,22 +14150,18 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "icon": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "hasBot": {
             "type": "boolean"
           },
           "permissions": {
-            "minLength": 1,
             "type": "string"
           },
           "roles": {
@@ -13709,16 +14185,42 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "position": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImageAttachmentDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "maxLength": 64,
+            "type": "string",
+            "description": "Image title",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 512,
+            "type": "string",
+            "description": "Image description",
+            "nullable": true
+          },
+          "order": {
+            "type": "integer",
+            "description": "Image ordering number",
+            "format": "int32",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "description": "Full image URL"
           }
         },
         "additionalProperties": false
@@ -13735,7 +14237,6 @@
             "format": "int64"
           },
           "username": {
-            "minLength": 1,
             "type": "string"
           },
           "displayName": {
@@ -13765,11 +14266,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "type": {
@@ -13798,7 +14297,6 @@
             "nullable": true
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "icon": {
@@ -13849,11 +14347,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "position": {
@@ -13943,8 +14439,7 @@
             "type": "object",
             "additionalProperties": {
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             },
             "nullable": true
           },
@@ -13972,7 +14467,6 @@
         "type": "object",
         "properties": {
           "crop": {
-            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
@@ -13993,7 +14487,6 @@
         "type": "object",
         "properties": {
           "crop": {
-            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
@@ -14166,11 +14659,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "title": {
-            "minLength": 1,
             "type": "string"
           },
           "limit": {
@@ -14178,7 +14669,6 @@
             "format": "int32"
           },
           "order": {
-            "minLength": 1,
             "type": "string"
           },
           "scoreFormat": {
@@ -14199,11 +14689,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "title": {
-            "minLength": 1,
             "type": "string"
           },
           "limit": {
@@ -14247,7 +14735,6 @@
             "nullable": true
           },
           "uuid": {
-            "minLength": 1,
             "type": "string",
             "description": "Uuid of the player or profile"
           },
@@ -14410,11 +14897,9 @@
         "type": "object",
         "properties": {
           "uuid": {
-            "minLength": 1,
             "type": "string"
           },
           "username": {
-            "minLength": 1,
             "type": "string"
           },
           "profileName": {
@@ -14441,11 +14926,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "primaryAccount": {
@@ -14478,11 +14961,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "primaryAccount": {
@@ -14535,11 +15016,9 @@
         "type": "object",
         "properties": {
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "value": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -14553,11 +15032,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "slug": {
@@ -14647,7 +15124,6 @@
             "nullable": true
           },
           "type": {
-            "minLength": 1,
             "type": "string"
           },
           "exp": {
@@ -14683,7 +15159,6 @@
         "type": "object",
         "properties": {
           "uuid": {
-            "minLength": 1,
             "type": "string"
           },
           "displayname": {
@@ -14773,11 +15248,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "public": {
@@ -14787,14 +15260,12 @@
             "$ref": "#/components/schemas/GuildFeatures"
           },
           "icon": {
-            "type": "string",
-            "nullable": true
-          },
-          "inviteCode": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "banner": {
+            "$ref": "#/components/schemas/ImageAttachmentDto"
+          },
+          "inviteCode": {
             "type": "string",
             "nullable": true
           },
@@ -14811,7 +15282,6 @@
             "nullable": true
           },
           "botPermissionsNew": {
-            "minLength": 1,
             "type": "string"
           },
           "discordFeatures": {
@@ -14884,17 +15354,14 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string",
             "description": "Product ID"
           },
           "name": {
-            "minLength": 1,
             "type": "string",
             "description": "Product name"
           },
           "slug": {
-            "minLength": 1,
             "type": "string",
             "description": "Slug of the product"
           },
@@ -14924,6 +15391,13 @@
             },
             "description": "Unlocked weight styles"
           },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageAttachmentDto"
+            },
+            "description": "Product Images"
+          },
           "flags": {
             "type": "integer",
             "description": "Discord flags",
@@ -14950,11 +15424,9 @@
         "type": "object",
         "properties": {
           "profileId": {
-            "minLength": 1,
             "type": "string"
           },
           "profileName": {
-            "minLength": 1,
             "type": "string"
           },
           "gameMode": {
@@ -14984,11 +15456,9 @@
         "type": "object",
         "properties": {
           "eventId": {
-            "minLength": 1,
             "type": "string"
           },
           "eventName": {
-            "minLength": 1,
             "type": "string"
           },
           "teamId": {
@@ -15018,11 +15488,9 @@
         "type": "object",
         "properties": {
           "ign": {
-            "minLength": 1,
             "type": "string"
           },
           "uuid": {
-            "minLength": 1,
             "type": "string"
           },
           "xp": {
@@ -15044,15 +15512,12 @@
         "type": "object",
         "properties": {
           "profileId": {
-            "minLength": 1,
             "type": "string"
           },
           "playerUuid": {
-            "minLength": 1,
             "type": "string"
           },
           "profileName": {
-            "minLength": 1,
             "type": "string"
           },
           "api": {
@@ -15142,11 +15607,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "selected": {
@@ -15163,20 +15626,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "icon": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "banner": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "inviteCode": {
             "type": "string",
@@ -15227,7 +15686,6 @@
         "type": "object",
         "properties": {
           "id": {
-            "minLength": 1,
             "type": "string"
           },
           "channelId": {
@@ -15574,8 +16032,7 @@
             "type": "object",
             "additionalProperties": {
               "type": "integer",
-              "format": "int32",
-              "nullable": true
+              "format": "int32"
             },
             "nullable": true
           },
@@ -15701,7 +16158,7 @@
       "UserBadgeDto": {
         "required": [
           "description",
-          "imageId",
+          "image",
           "name",
           "requirements",
           "timestamp"
@@ -15712,24 +16169,19 @@
             "type": "integer",
             "format": "int32"
           },
-          "imageId": {
-            "minLength": 1,
-            "type": "string"
+          "image": {
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "name": {
-            "minLength": 1,
             "type": "string"
           },
           "description": {
-            "minLength": 1,
             "type": "string"
           },
           "requirements": {
-            "minLength": 1,
             "type": "string"
           },
           "timestamp": {
-            "minLength": 1,
             "type": "string"
           },
           "visible": {
@@ -15855,6 +16307,10 @@
             "items": {
               "$ref": "#/components/schemas/WeightStyleBackgroundRectDto"
             },
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
             "nullable": true
           },
           "radius": {
@@ -16076,36 +16532,7 @@
             "format": "double"
           },
           "fill": {
-            "minLength": 1,
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WeightStyleImageDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "maxLength": 64,
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "maxLength": 512,
-            "type": "string",
-            "nullable": true
-          },
-          "order": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -16191,11 +16618,8 @@
             "type": "string",
             "nullable": true
           },
-          "images": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WeightStyleImageDto"
-            }
+          "image": {
+            "$ref": "#/components/schemas/ImageAttachmentDto"
           },
           "products": {
             "type": "array",
@@ -16275,7 +16699,7 @@
       "Bearer": {
         "type": "http",
         "description": "Enter Bearer Token",
-        "scheme": "Bearer",
+        "scheme": "bearer",
         "bearerFormat": "JWT"
       }
     }

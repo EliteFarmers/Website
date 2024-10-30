@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 
@@ -8,11 +7,11 @@
 
 <Popover.Root>
 	<Popover.Trigger>
-		<img
-			src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
-			class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
-			alt={badge.name}
-		/>
+		{#if badge.image.url}
+			<img src={badge.image.url} class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover" alt={badge.name} />
+		{:else}
+			<p>{badge.name}</p>
+		{/if}
 	</Popover.Trigger>
 	<Popover.Content>
 		<div class="flex flex-col gap-1 justify-center items-center max-w-sm">

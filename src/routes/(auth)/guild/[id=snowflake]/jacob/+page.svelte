@@ -14,6 +14,7 @@
 	import Head from '$comp/head.svelte';
 	import Plus from 'lucide-svelte/icons/plus';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import Guildicon from '$comp/stats/discord/guildicon.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -37,7 +38,7 @@
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone');
 
 	$: excluded = (data.excludedParticipations ?? []).map((p) => {
 		const [timestamp, crop, uuid] = p.split('-');
@@ -49,11 +50,7 @@
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<img
-			class="w-16 h-16"
-			src="https://cdn.discordapp.com/icons/{data.guildId}/{data.guild?.icon}.webp"
-			alt="Guild Icon"
-		/>
+		<Guildicon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>

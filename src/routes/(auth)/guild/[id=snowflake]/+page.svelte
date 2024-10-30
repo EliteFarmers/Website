@@ -24,7 +24,7 @@
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone');
 </script>
 
 <Head title="Server Settings" description="Manage server settings for your guild!" />

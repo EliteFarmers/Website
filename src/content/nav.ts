@@ -94,3 +94,26 @@ export const SHOP_NAV_PAGES = [
 		auth: true,
 	},
 ] as NavItem[];
+
+export const ADMIN_NAV_PAGES = [
+	{
+		title: 'Moderators',
+		href: '/admin',
+	},
+	{
+		title: 'Badges',
+		href: '/admin/badges',
+	},
+	{
+		title: 'Products',
+		href: '/admin/products',
+	},
+	{
+		title: 'Pending Events',
+		href: '/admin/events',
+	},
+	{
+		title: 'Actions',
+		href: '/admin/actions',
+	},
+] as NavItem[];

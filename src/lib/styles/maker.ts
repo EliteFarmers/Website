@@ -1,12 +1,6 @@
 import { CreateRoundCornerPath } from '../classes/Util.js';
 import { CustomFormatterOptions } from './custom.js';
-import {
-	Canvas,
-	createCanvas,
-	Image,
-	loadImage,
-	SKRSContext2D,
-} from '@napi-rs/canvas';
+import { Canvas, createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
 import { AttachmentBuilder } from 'discord.js';
 import { BackgroundGradient, BackgroundStyle, ElementPosition, Position, WeightStyleDecal } from '../schemas/style.js';
 import { components } from '../api/api.js';
@@ -42,12 +36,8 @@ export async function createFromData({
 	// Load images and avatar
 	const images = [
 		data.elements?.background?.imageUrl ? loadImage(data.elements.background.imageUrl).catch(() => null) : null,
-		data.elements.head
-			? loadImage(`https://mc-heads.net/head/${uuid}/left`).catch(() => null)
-			: null,
-		badgeUrl !== ''
-			? loadImage(badgeUrl).catch(() => null)
-			: null,
+		data.elements.head ? loadImage(`https://mc-heads.net/head/${uuid}/left`).catch(() => null) : null,
+		badgeUrl !== '' ? loadImage(badgeUrl).catch(() => null) : null,
 		getDecalImage(profile, data.decal),
 	];
 
@@ -82,15 +72,15 @@ export async function createFromData({
 		}
 	}
 
-	// Restore the clip	
+	// Restore the clip
 	ctx.restore();
 
 	// Draw avatar
 	if (avatar && data.elements.head) {
 		const { x, y } = getPosition(canvas, data.elements.head);
 		const avatarSize = getHeight(canvas, data.elements.head);
-		const xOffset = x - (avatarSize / 2);
-		const yOffset = y - (avatarSize / 2);
+		const xOffset = x - avatarSize / 2;
+		const yOffset = y - avatarSize / 2;
 
 		ctx.drawImage(avatar, xOffset, yOffset, avatarSize, avatarSize);
 		ctx.restore();
@@ -123,7 +113,7 @@ export async function createFromData({
 		ctx.save();
 		CreateRoundCornerPath(ctx, x, y, badgeHeight * 3, badgeHeight, 10);
 		ctx.clip();
-		
+
 		ctx.drawImage(badge, x, y, badgeHeight * 3, badgeHeight);
 		ctx.restore();
 		// debugDot(ctx, x, y);
@@ -131,9 +121,7 @@ export async function createFromData({
 
 	// Draw rank text
 	if (data.elements.rank && weightRank !== -1) {
-		const rank = badge && data.elements.rankWithBadge 
-			? data.elements.rankWithBadge
-			: data.elements.rank;
+		const rank = badge && data.elements.rankWithBadge ? data.elements.rankWithBadge : data.elements.rank;
 
 		if (rank.background) {
 			drawBackgroundText(ctx, '#' + weightRank.toString(), rank, true);
@@ -165,7 +153,7 @@ function drawBackground(ctx: SKRSContext2D, background: BackgroundStyle, img?: I
 	const embedColor = settings?.features?.embedColor ? '#' + settings.features.embedColor : undefined;
 
 	for (const rect of background.rects ?? []) {
-		ctx.fillStyle = (rect.useEmbedColor && embedColor) ? embedColor : rect.fill;
+		ctx.fillStyle = rect.useEmbedColor && embedColor ? embedColor : rect.fill;
 		ctx.globalAlpha = rect.opacity ?? 1;
 
 		const { x1, y1, width, height } = mapPositions(ctx.canvas, rect.start, rect.end);
@@ -220,7 +208,13 @@ interface FinalSize {
 	height: number;
 }
 
-function drawText(ctx: SKRSContext2D, text: string, element: ElementPosition, flippedAnchor = false, adjust = true): FinalSize {
+function drawText(
+	ctx: SKRSContext2D,
+	text: string,
+	element: ElementPosition,
+	flippedAnchor = false,
+	adjust = true
+): FinalSize {
 	if (adjust) {
 		adjustFontSize(ctx, text, element);
 	}
@@ -233,10 +227,13 @@ function drawText(ctx: SKRSContext2D, text: string, element: ElementPosition, fl
 	} else {
 		let { x, y } = getPosition(ctx.canvas, element);
 		const measured = ctx.measureText(text);
-		
+
 		if (flippedAnchor) {
 			x -= measured.width + (element.background?.padding ?? 0);
-			y += measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent + (element.background?.padding ?? 0);
+			y +=
+				measured.actualBoundingBoxAscent +
+				measured.actualBoundingBoxDescent +
+				(element.background?.padding ?? 0);
 		}
 
 		// debugDot(ctx, x, y);
@@ -245,9 +242,12 @@ function drawText(ctx: SKRSContext2D, text: string, element: ElementPosition, fl
 		return {
 			x,
 			y,
-			width: measured.width + ((element.background?.padding ?? 0) * 2),
-			height: measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent + ((element.background?.padding ?? 0) * 2),
-		}
+			width: measured.width + (element.background?.padding ?? 0) * 2,
+			height:
+				measured.actualBoundingBoxAscent +
+				measured.actualBoundingBoxDescent +
+				(element.background?.padding ?? 0) * 2,
+		};
 	}
 }
 
@@ -256,7 +256,7 @@ function drawBackgroundText(ctx: SKRSContext2D, text: string, element: ElementPo
 
 	let { x: bgX, y: bgY } = getPosition(ctx.canvas, element);
 	// debugDot(ctx, bgX, bgY);
-	
+
 	const measured = ctx.measureText(text);
 	const padding = element.background?.padding ?? 0;
 
@@ -267,7 +267,7 @@ function drawBackgroundText(ctx: SKRSContext2D, text: string, element: ElementPo
 
 	if (flippedAnchor) {
 		// Move the anchor to the top right corner
-		bgY += (height - padding * 2);
+		bgY += height - padding * 2;
 		bgX -= width;
 	}
 
@@ -277,7 +277,7 @@ function drawBackgroundText(ctx: SKRSContext2D, text: string, element: ElementPo
 
 	ctx.fillStyle = element.background?.fill ?? '#000000';
 	ctx.globalAlpha = element.background?.opacity ?? 0.8;
-	
+
 	CreateRoundCornerPath(ctx, bgX, bgY, width, height, element.background?.radius ?? 5);
 	ctx.clip();
 
@@ -297,31 +297,35 @@ function drawBackgroundText(ctx: SKRSContext2D, text: string, element: ElementPo
 // }
 
 function mapPosition(canvas: Canvas, position: Position, offset?: FinalSize) {
-	return offset ? {
-		x: offset.x + offset.width + getValue(position.x, canvas.width),
-		y: offset.y - offset.height + getValue(position.y, canvas.height),
-	} : {
-		x: getValue(position.x, canvas.width),
-		y: getValue(position.y, canvas.height),
-	};
+	return offset
+		? {
+				x: offset.x + offset.width + getValue(position.x, canvas.width),
+				y: offset.y - offset.height + getValue(position.y, canvas.height),
+		  }
+		: {
+				x: getValue(position.x, canvas.width),
+				y: getValue(position.y, canvas.height),
+		  };
 }
 
 function mapPositions(canvas: Canvas, start: Position, end: Position, offset?: FinalSize) {
-	const positions = offset ? {
-		x1: offset.x + offset.width + getValue(start.x, canvas.width),
-		y1: offset.y - offset.height + getValue(start.y, canvas.height),
-		x2: offset.x + offset.width + getValue(end.x, canvas.width),
-		y2: offset.y - offset.height + getValue(end.y, canvas.height),
-		width: 0,
-		height: 0,
-	} : {
-		x1: getValue(start.x, canvas.width),
-		y1: getValue(start.y, canvas.height),
-		x2: getValue(end.x, canvas.width),
-		y2: getValue(end.y, canvas.height),
-		width: 0,
-		height: 0,
-	};
+	const positions = offset
+		? {
+				x1: offset.x + offset.width + getValue(start.x, canvas.width),
+				y1: offset.y - offset.height + getValue(start.y, canvas.height),
+				x2: offset.x + offset.width + getValue(end.x, canvas.width),
+				y2: offset.y - offset.height + getValue(end.y, canvas.height),
+				width: 0,
+				height: 0,
+		  }
+		: {
+				x1: getValue(start.x, canvas.width),
+				y1: getValue(start.y, canvas.height),
+				x2: getValue(end.x, canvas.width),
+				y2: getValue(end.y, canvas.height),
+				width: 0,
+				height: 0,
+		  };
 
 	positions.width = Math.abs(positions.x2 - positions.x1);
 	positions.height = Math.abs(positions.y2 - positions.y1);
@@ -331,7 +335,7 @@ function mapPositions(canvas: Canvas, start: Position, end: Position, offset?: F
 
 function getPosition(canvas: Canvas, element: ElementPosition, padding = false) {
 	const result = mapPosition(canvas, element.position);
-	
+
 	if (padding && element.background?.padding) {
 		result.x -= element.background.padding;
 		result.y -= element.background.padding;
@@ -349,9 +353,7 @@ function getHeight(canvas: Canvas, element: ElementPosition) {
 }
 
 function getValue(provided: number, max: number) {
-	const pixels = (provided <= 1 && provided >= -1) 
-		? provided * max
-		: provided;
+	const pixels = provided <= 1 && provided >= -1 ? provided * max : provided;
 
 	if (provided >= 0) {
 		return pixels;
@@ -384,9 +386,12 @@ function drawStrokedText(ctx: SKRSContext2D, text: string, element: ElementPosit
 	return {
 		x,
 		y,
-		width: measured.width + ((element.background?.padding ?? 0) * 2),
-		height: measured.actualBoundingBoxAscent + measured.actualBoundingBoxDescent + ((element.background?.padding ?? 0) * 2),
-	}
+		width: measured.width + (element.background?.padding ?? 0) * 2,
+		height:
+			measured.actualBoundingBoxAscent +
+			measured.actualBoundingBoxDescent +
+			(element.background?.padding ?? 0) * 2,
+	};
 }
 
 function getDecalImage(weight: components['schemas']['FarmingWeightDto'], decal?: WeightStyleDecal) {
@@ -399,27 +404,21 @@ function getDecalImage(weight: components['schemas']['FarmingWeightDto'], decal?
 		return decal.imageUrl ? loadImage(decal.imageUrl) : null;
 	}
 
-	const topCollection = Object.entries(crops).sort(([,a], [,b]) => ((b ?? 0) - (a ?? 0)))[0][0];
+	const topCollection = Object.entries(crops).sort(([, a], [, b]) => (b ?? 0) - (a ?? 0))[0][0];
 	const crop = getCropFromName(topCollection);
 
 	if (!crop) {
 		return decal.imageUrl ? loadImage(decal.imageUrl) : null;
 	}
 
-	const url = Object.entries(decal.crops ?? {})
-		.find(([key]) => getCropFromName(key) === crop)?.[1] 
-		?? decal.imageUrl;
+	const url = Object.entries(decal.crops ?? {}).find(([key]) => getCropFromName(key) === crop)?.[1] ?? decal.imageUrl;
 
-	return url 
-		? loadImage(url) 
-		: decal.imageUrl 
-			? loadImage(decal.imageUrl) 
-			: null;
+	return url ? loadImage(url) : decal.imageUrl ? loadImage(decal.imageUrl) : null;
 }
 
 function drawDecal(ctx: SKRSContext2D, image: Image | null, decal?: WeightStyleDecal) {
 	if (!image || !decal) return;
-	
+
 	const { x1, y1, width, height } = mapPositions(ctx.canvas, decal.start, decal.end);
 	ctx.drawImage(image, x1, y1, width, height);
 }

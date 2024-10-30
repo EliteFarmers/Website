@@ -18,15 +18,15 @@
 <Head
 	title={guild.name ?? 'Server'}
 	description={`View all features and events happening in the Discord server: "${guild.name ?? 'Unknown'}"!`}
-	imageUrl={guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild?.icon}.webp` : undefined}
+	imageUrl={guild.icon?.url}
 />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16">
 	<!-- Banner image -->
-	{#if guild?.banner}
+	{#if guild?.banner?.url}
 		<div
 			class="relative flex flex-col items-center justify-center w-full h-64 bg-center bg-cover bg-no-repeat"
-			style="background-image: url('https://cdn.discordapp.com/splashes/{guild.id}/{guild?.banner}.png?size=1280')"
+			style="background-image: url({guild.banner.url})"
 		>
 			<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 my-32 rounded-lg">
 				<Guildicon {guild} size={16} />

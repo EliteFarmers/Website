@@ -7,11 +7,11 @@
 	export { className as class };
 </script>
 
-{#if !guild?.icon}
+{#if !guild?.icon?.url}
 	<div
 		class="w-{size} h-{size} rounded-full flex items-center justify-center select-none bg-blend-darken bg-black {className}"
 	>
-		<p>
+		<p class="text-white leading-none">
 			{guild?.name
 				?.split(' ')
 				.slice(0, 3)
@@ -20,12 +20,5 @@
 		</p>
 	</div>
 {:else}
-	<img
-		loading="lazy"
-		class="w-{size} h-{size} rounded-full {className}"
-		src={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.${
-			guild?.icon.startsWith('a_') ? 'gif' : 'webp'
-		}?size=96`}
-		alt="Server Icon"
-	/>
+	<img loading="lazy" class="w-{size} h-{size} rounded-full {className}" src={guild.icon.url} alt="Server Icon" />
 {/if}

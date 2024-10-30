@@ -12,8 +12,6 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let data: PageData;
-
-	$: entries = data.lb as LeaderboardEntry[];
 </script>
 
 <Head
@@ -145,14 +143,18 @@
 	<section class="flex justify-center mt-4 mb-10">
 		<div class="flex gap-2 flex-col items-center w-[90%] sm:w-[70%] md:w-[50%]" data-sveltekit-preload-data="tap">
 			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
-			{#each entries as e, i}
-				<Entry entry={e} rank={i + 1} formatting={'decimal'} />
-			{/each}
-			<div class="flex justify-center w-full">
-				<Button href="/leaderboard/weight/farming" class="text-center max-w-md" variant="secondary"
-					>View Full Leaderboard
-				</Button>
-			</div>
+			{#await data.lb}
+				<p>Loading...</p>
+			{:then lb}
+				{#each lb?.entries ?? [] as e, i}
+					<Entry entry={e} rank={i + 1} formatting={'decimal'} />
+				{/each}
+				<div class="flex justify-center w-full">
+					<Button href="/leaderboard/weight/farming" class="text-center max-w-md" variant="secondary"
+						>View Full Leaderboard
+					</Button>
+				</div>
+			{/await}
 		</div>
 	</section>
 </main>

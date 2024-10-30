@@ -6,7 +6,6 @@
 	import * as Card from '$ui/card';
 	import { FAQ } from '$content/faq';
 	import type { PageData } from './$types';
-	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import PestTable from './pest-table.svelte';
 
 	export let data: PageData;
@@ -110,11 +109,13 @@
 				<h3 class="text-2xl mt-4">List of Badges</h3>
 				{#each data?.badges ?? [] as badge}
 					<div class="flex flex-row gap-4 items-center">
-						<img
-							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
-							alt={badge.name}
-							class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
-						/>
+						{#if badge.image?.url}
+							<img
+								src={badge.image.url}
+								alt={badge.name}
+								class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
+							/>
+						{/if}
 						<div class="flex flex-1 flex-col gap-1 max-w-md">
 							<p class="text-lg font-semibold">{badge.name}</p>
 							<p>{badge.description}</p>

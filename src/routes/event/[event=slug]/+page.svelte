@@ -18,12 +18,9 @@
 
 	export let data: PageData;
 
-	$: ({ event = {} as typeof data.event, members, teams = [], joined, self } = data);
+	$: ({ event = {} as typeof data.event, members, teams = [], joined, self, guild } = data);
 
-	$: banner =
-		event.banner ??
-		'https://cdn.discordapp.com/splashes/1096051612373487687/dc2f5296bdb34b3adc580df6c50c56cf.png?size=1280';
-
+	$: banner = event.banner?.url ?? guild?.banner?.url;
 	$: time = Date.now();
 	$: start = +(event.startTime ?? 0) * 1000;
 	$: end = +(event.endTime ?? 0) * 1000;
@@ -59,18 +56,12 @@
 	$: description = `View the ${running ? 'Event happening' : 'past Event'} in ${data.guild?.name}!\n\n${topList}`;
 </script>
 
-<Head
-	title={event.name || 'Farming Weight Event'}
-	{description}
-	imageUrl={data.guild?.icon
-		? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild?.icon}.webp`
-		: undefined}
-/>
+<Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
 	<div
 		class="relative flex flex-col items-center gap-4 justify-center w-full h-96 bg-center bg-cover bg-no-repeat"
-		style="background-image: url('{banner}')"
+		style={banner ? `background-image: url('${banner}')` : ''}
 	>
 		<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 mt-32 rounded-lg">
 			<Guildicon guild={data.guild} size={16} />

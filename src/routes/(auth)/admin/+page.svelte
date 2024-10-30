@@ -14,7 +14,6 @@
 	import X from 'lucide-svelte/icons/x';
 	import UserIcon from '$comp/stats/discord/user-icon.svelte';
 	import Product from '$comp/monetization/product.svelte';
-	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import type { components } from '$lib/api/api';
 	import type { ActionData, PageData } from './$types';
 
@@ -53,14 +52,14 @@
 
 <Head title="Admin Settings" description="Admin config page." />
 
-<main class="flex flex-col gap-2 justify-center items-center my-16">
+<main class="flex flex-col gap-2 justify-start my-16">
 	<h1 class="text-4xl mb-16">Admin Panel</h1>
 
 	{#if form?.error}
 		<p class="text-lg text-red-500">{form.error}</p>
 	{/if}
 
-	<section class="flex flex-col gap-4 w-full max-w-2xl items-center">
+	<section class="flex flex-col gap-4 w-full max-w-2xl items-start">
 		<div class="flex flex-col gap-4 w-full">
 			{#each data.admins as user}
 				<div
@@ -107,7 +106,7 @@
 		</Button>
 	</section>
 
-	<section class="flex flex-col gap-4 w-full max-w-2xl items-center my-8">
+	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
 		<h2 class="text-2xl">Badges</h2>
 		<div class="flex flex-col gap-4 w-full">
 			{#each data.badges as badge}
@@ -115,11 +114,9 @@
 					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-gray-100 dark:bg-zinc-800"
 				>
 					<div class="flex flex-row gap-4 items-center">
-						<img
-							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
-							alt={badge.name}
-							class="w-24 h-8 rounded-sm object-cover"
-						/>
+						{#if badge.image?.url}
+							<img src={badge.image.url} alt={badge.name} class="w-24 h-8 rounded-sm object-cover" />
+						{/if}
 						<div class="flex flex-col">
 							<p class="text-xl font-semibold">{badge.name}</p>
 							<p class="text-lg">{badge.description}</p>
@@ -157,29 +154,6 @@
 			<span class="mr-2">Create New Badge</span>
 			<Plus size={16} />
 		</Button>
-	</section>
-
-	<section class="flex flex-col gap-4 w-full max-w-2xl items-center my-8">
-		<h2 class="text-2xl">Products</h2>
-		<div class="flex flex-col gap-4 w-full">
-			{#each data.products as product}
-				<div
-					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-gray-100 dark:bg-zinc-800"
-				>
-					<Product {product} />
-					<div class="flex flex-row gap-4 pr-2">
-						<Button
-							on:click={() => {
-								editProductModal = true;
-								selectedProductId = product.id;
-							}}
-						>
-							<Settings size={16} />
-						</Button>
-					</div>
-				</div>
-			{/each}
-		</div>
 	</section>
 
 	<form method="post" action="?/clearcontests" class="flex flex-col gap-2 my-16" use:enhance>
@@ -266,6 +240,7 @@
 		<form
 			method="post"
 			action="?/editbadge"
+			enctype="multipart/form-data"
 			class="flex flex-col gap-2"
 			use:enhance={() => {
 				return async ({ result, update }) => {
@@ -283,8 +258,8 @@
 				</div>
 
 				<div class="flex flex-col gap-2 items-start">
-					<Label>Image ID</Label>
-					<Input name="imageId" bind:value={selectedBadge.imageId} placeholder="Badge Image ID" />
+					<Label>Image</Label>
+					<Input name="image" type="file" />
 				</div>
 
 				<div class="flex flex-col gap-2 items-start">
@@ -313,6 +288,7 @@
 		<form
 			method="post"
 			action="?/createbadge"
+			enctype="multipart/form-data"
 			class="flex flex-col gap-2"
 			use:enhance={() => {
 				return async ({ result, update }) => {
@@ -327,8 +303,8 @@
 			</div>
 
 			<div class="flex flex-col gap-2 items-start">
-				<Label>Image ID</Label>
-				<Input name="imageId" placeholder="Badge Image ID" />
+				<Label>Image</Label>
+				<Input name="image" type="file" />
 			</div>
 
 			<div class="flex flex-col gap-2 items-start">
@@ -379,130 +355,6 @@
 				</div>
 
 				<Button type="submit">{grant ? 'Grant' : 'Remove'} Badge</Button>
-			{/if}
-		</form>
-	</Dialog.Content>
-</Dialog.Root>
-
-<Dialog.Root bind:open={editProductModal}>
-	<Dialog.Content class="overflow-scroll max-h-[80%]">
-		<Dialog.Title>Edit Product</Dialog.Title>
-		<form
-			method="post"
-			action="?/updateProduct"
-			class="flex flex-col gap-4"
-			use:enhance={() => {
-				return async ({ result, update }) => {
-					if (result) editProductModal = false;
-					update();
-				};
-			}}
-		>
-			{#if selectedProduct}
-				<input type="hidden" name="product" bind:value={selectedProduct.id} />
-
-				<div class="flex flex-col gap-2 items-start">
-					<Label>Product Icon URL</Label>
-					<Input name="icon" bind:value={selectedProduct.icon} placeholder="URL" />
-				</div>
-
-				<div class="flex flex-col gap-2 items-start">
-					<Label>Product Description</Label>
-					<Input name="description" bind:value={selectedProduct.description} placeholder="Description" />
-				</div>
-
-				<div class="flex flex-col gap-2 items-start">
-					<Label>Rewarded Badge</Label>
-					<SelectSimple
-						options={data.badges.map((b) => ({
-							value: b.id ?? 0,
-							label: b.name,
-						}))}
-						bind:value={changedSettings.badgeId}
-						placeholder="Select a badge"
-						name="badge"
-					/>
-				</div>
-
-				<div class="flex flex-row gap-2 items-center">
-					<Switch bind:checked={changedSettings.shopPromotions} />
-					<Label>Hide shop promotions</Label>
-					<input type="hidden" name="promotions" bind:value={changedSettings.shopPromotions} />
-				</div>
-				<div class="flex flex-row gap-2 items-center">
-					<Switch bind:checked={changedSettings.styleOverride} />
-					<Label>Apply Weight Style on everyone</Label>
-					<input type="hidden" name="override" bind:value={changedSettings.styleOverride} />
-				</div>
-				<div class="flex flex-row gap-2 items-center">
-					<Switch bind:checked={changedSettings.moreInfo} />
-					<Label>"More Info" in weight command by default</Label>
-					<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
-				</div>
-
-				<div class="flex flex-col gap-2 items-start">
-					<p class="mt-1 font-semibold">Unlocked Weight Styles</p>
-					{#each selectedStyles as style}
-						<input type="hidden" name="style" value={style} />
-						<div class="flex flex-row gap-2 items-center">
-							<Button
-								variant="secondary"
-								size="sm"
-								on:click={() => {
-									selectedStyles = selectedStyles.filter((s) => s !== style);
-								}}
-							>
-								<X size={16} />
-							</Button>
-							<Label>{style}</Label>
-						</div>
-					{/each}
-					<div class="flex flex-row gap-2 items-center">
-						<Input placeholder="Add Style" bind:value={newStyle} />
-						<Button
-							variant="secondary"
-							size="sm"
-							on:click={() => {
-								selectedStyles = [...selectedStyles, newStyle];
-							}}
-						>
-							<Plus size={16} />
-						</Button>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-2 items-start">
-					<p class="mt-1 font-semibold">Unlocked Embed Colors</p>
-					{#each selectedColors as color}
-						<input type="hidden" name="color" value={color} />
-						<div class="flex flex-row gap-2 items-center">
-							<Button
-								variant="secondary"
-								size="sm"
-								on:click={() => {
-									selectedColors = selectedColors.filter((c) => c !== color);
-								}}
-							>
-								<X size={16} />
-							</Button>
-							<Label>{color}</Label>
-						</div>
-					{/each}
-					<div class="flex flex-row gap-2 items-center">
-						<Input placeholder="Add Color" bind:value={newColor} />
-						<Button
-							variant="secondary"
-							size="sm"
-							on:click={() => {
-								selectedColors = [...selectedColors, newColor];
-							}}
-						>
-							<Plus size={16} />
-						</Button>
-					</div>
-				</div>
-
-				<Button type="submit">Update</Button>
 			{/if}
 		</form>
 	</Dialog.Content>

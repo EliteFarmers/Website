@@ -7,13 +7,14 @@
 	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import ArrowUp from 'lucide-svelte/icons/arrow-up';
 	import Settings from 'lucide-svelte/icons/settings';
-	import type { PageData, ActionData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';
 	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -56,7 +57,20 @@
 		>
 			<div class="flex flex-row justify-between p-4 gap-2">
 				<div class="flex flex-col gap-2">
-					<h2 class="text-3xl">{event.name}</h2>
+					<div class="flex flex-row items-center gap-2">
+						{#if !event.approved}
+							<Popover.Mobile>
+								<div slot="trigger">
+									<TriangleAlert class="text-red-500 mt-1.5" />
+								</div>
+								<div>
+									<p class="font-semibold">Pending approval!</p>
+									<p>Ask kaeso.dev to approve this event.</p>
+								</div>
+							</Popover.Mobile>
+						{/if}
+						<h2 class="text-3xl">{event.name}</h2>
+					</div>
 
 					<p class="text-lg">{event.description}</p>
 					<p class="text-lg">{event.rules}</p>
@@ -89,16 +103,18 @@
 						</div>
 					</Popover.Mobile>
 
-					<Popover.Mobile>
-						<div slot="trigger">
-							<Button href="/event/{event.id}" target="_blank">
-								<ExternalLink />
-							</Button>
-						</div>
-						<div>
-							<p>View Event Page</p>
-						</div>
-					</Popover.Mobile>
+					{#if event.approved}
+						<Popover.Mobile>
+							<div slot="trigger">
+								<Button href="/event/{event.id}" target="_blank">
+									<ExternalLink />
+								</Button>
+							</div>
+							<div>
+								<p>View Event Page</p>
+							</div>
+						</Popover.Mobile>
+					{/if}
 				</div>
 			</div>
 		</div>

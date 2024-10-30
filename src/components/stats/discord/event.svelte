@@ -13,9 +13,7 @@
 <a
 	href="/event/{event?.id}"
 	class="relative flex flex-row justify-start items-centers align-middle flex-1 gap-8 p-8 py-8 bg-cover bg-no-repeat bg-center rounded-lg w-full bg-primary-foreground"
-	style={guild?.banner
-		? `background-image: url('https://cdn.discordapp.com/splashes/${guild?.id}/${guild?.banner}.png?size=1280'); color: white;`
-		: ''}
+	style={guild?.banner?.url ? `background-image: url(${guild.banner.url}); color: white;` : ''}
 >
 	{#if guild?.banner}
 		<div

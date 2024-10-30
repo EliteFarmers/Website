@@ -9,6 +9,24 @@ export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	},
 });
 
+export const formDataSerializer = (body: Record<string, string | number | boolean> | undefined) => {
+	if (!body) return;
+	const fd = new FormData();
+
+	for (const name in body) {
+		const value = body[name];
+		if (typeof value === 'boolean') {
+			fd.append(name, value ? 'true' : 'false');
+		} else if (typeof value === 'number') {
+			fd.append(name, value.toString());
+		} else {
+			fd.append(name, body[name] as string);
+		}
+	}
+
+	return fd;
+};
+
 export const GetUserSession = async (accessToken: string) =>
 	await GET('/auth/me', {
 		headers: {
@@ -471,6 +489,13 @@ export const GetProfilesRank = async (leaderboardId: string, profileUuid: string
 
 export const GetUpcomingEvents = async () => await GET('/events', {});
 
+export const GetAdminPendingEvents = async (token: string) =>
+	await GET('/admin/events/pending', {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetGuildEvents = async (guildId: string) =>
 	await GET('/guild/{guildId}/events', {
 		params: {
@@ -480,12 +505,37 @@ export const GetGuildEvents = async (guildId: string) =>
 		},
 	});
 
+export const GetAdminGuildEvents = async (token: string, guildId: string) =>
+	await GET('/guild/{guildId}/events/admin', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetEventDetails = async (eventId: string) =>
 	await GET('/event/{eventId}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
 			},
+		},
+	});
+
+export const GetAdminEventDetails = async (token: string, guildId: string, eventId: string) =>
+	await GET('/guild/{guildId}/events/{eventId}/admin', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				guildId: guildId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
 		},
 	});
 

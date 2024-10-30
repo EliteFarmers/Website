@@ -15,6 +15,7 @@ const urls: Partial<Record<string, string>> = {
 	stickers: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
 	terms: PUBLIC_TOS_URL,
 	privacy: PUBLIC_PRIVACY_URL,
+	leaderboards: '/leaderboard',
 	oss: '/oss.txt',
 	store: '/shop',
 	wiki: 'https://wiki.elitebot.dev/',

@@ -12,11 +12,11 @@
 		? 'text-white'
 		: ''}"
 >
-	{#if guild.banner}
+	{#if guild.banner?.url}
 		<img
 			class="absolute left-0 right-0 rounded-lg w-full pixelated"
 			loading="lazy"
-			src="https://cdn.discordapp.com/splashes/{guild.id}/{guild?.banner}.png?size=640"
+			src={guild.banner.url}
 			alt="Server Banner"
 		/>
 		<div

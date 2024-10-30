@@ -1,7 +1,7 @@
 import { error, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild, EventType } from '$lib/utils';
-import { GetGuildEvents, CreateWeightEvent, CreateMedalEvent } from '$lib/api/elite';
+import { GetAdminGuildEvents, CreateWeightEvent, CreateMedalEvent } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 		throw error(402, 'This guild does not have the Events feature enabled.');
 	}
 
-	const { data: events } = await GetGuildEvents(guild.id).catch(() => ({ data: undefined }));
+	const { data: events } = await GetAdminGuildEvents(token, guild.id).catch(() => ({ data: undefined }));
 
 	return {
 		...(guild.features.eventSettings ?? {}),

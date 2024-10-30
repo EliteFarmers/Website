@@ -1,15 +1,11 @@
 import { error, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { DELETE, GET, GetAllBadges, GetProducts, PATCH, POST, UpdateProduct } from '$lib/api/elite';
+import { DELETE, formDataSerializer, GET, GetAllBadges, GetProducts, PATCH, POST, UpdateProduct } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
-export const load = (async ({ parent, locals, setHeaders }) => {
+export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
 	const { access_token: token } = locals;
-
-	setHeaders({
-		'Cache-Control': 'no-store',
-	});
 
 	if (!session || !session.flags.moderator) {
 		throw error(404, 'Not Found');
@@ -126,22 +122,23 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const badgeName = data.get('name') as string;
-		const badgeImageId = data.get('imageId') as string;
+		const badgeImage = data.get('image') as string;
 		const badgeDescription = data.get('description') as string;
 		const badgeRequirements = data.get('requirements') as string;
 		const tied = data.get('tied') as string;
 
 		const { response } = await POST('/badge', {
 			body: {
-				imageId: badgeImageId,
-				name: badgeName,
-				description: badgeDescription,
-				requirements: badgeRequirements,
-				tieToAccount: tied === 'on',
+				Image: badgeImage,
+				Name: badgeName,
+				Description: badgeDescription,
+				Requirements: badgeRequirements,
+				TieToAccount: tied === 'on',
 			},
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
+			bodySerializer: formDataSerializer,
 		});
 
 		if (!response.ok) {
@@ -162,7 +159,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const badgeId = data.get('badgeId') as string;
 		const badgeName = data.get('name') as string;
-		const badgeImageId = data.get('imageId') as string;
+		const badgeImage = data.get('image') as string;
 		const badgeDescription = data.get('description') as string;
 		const badgeRequirements = data.get('requirements') as string;
 
@@ -173,14 +170,15 @@ export const actions: Actions = {
 				},
 			},
 			body: {
-				imageId: badgeImageId,
-				name: badgeName,
-				description: badgeDescription,
-				requirements: badgeRequirements,
+				Image: badgeImage,
+				Name: badgeName,
+				Description: badgeDescription,
+				Requirements: badgeRequirements,
 			},
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
+			bodySerializer: formDataSerializer,
 		});
 
 		if (!response.ok) {
@@ -230,8 +228,6 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
-
-		console.log(playerUuid, badgeId);
 
 		const { response } = await POST('/badge/user/{playerUuid}/{badgeId}', {
 			params: {

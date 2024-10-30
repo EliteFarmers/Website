@@ -3,7 +3,6 @@
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
 	import { Button } from '$ui/button';
-	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
 	import { ArrowDown, ArrowUp } from 'lucide-svelte';
@@ -51,7 +50,7 @@
 	};
 
 	let changedSettings = {
-		weightStyle: (data.user.settings?.weightStyle?.id + '' ?? '-1') as string | undefined,
+		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
@@ -221,11 +220,13 @@
 							name="badge.{id}.visible"
 							value={visibleToggles[`${profile.uuid}-${badge.id}`]}
 						/>
-						<img
-							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
-							alt={badge.name}
-							class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
-						/>
+						{#if badge.image?.url}
+							<img
+								src={badge.image.url}
+								alt={badge.name}
+								class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
+							/>
+						{/if}
 						<div class="flex flex-row gap-1">
 							<Button
 								size="sm"
