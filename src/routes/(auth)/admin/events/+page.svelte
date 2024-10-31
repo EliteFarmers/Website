@@ -9,8 +9,10 @@
 
 <Head title="Events" description="Manage events" />
 
-<main>
+<main class="my-16">
 	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
+		<h1 class="text-4xl mb-16">Events</h1>
+
 		<h2 class="text-2xl">Pending Events</h2>
 		<div class="flex flex-col gap-4 w-full">
 			{#each data.pending as event (event.id)}
@@ -31,7 +33,7 @@
 				</div>
 			{/each}
 			{#if data.pending.length === 0}
-				<p class="mt-8 mb-16">No pending events!</p>
+				<p class="my-8">No pending events!</p>
 			{/if}
 		</div>
 	</section>
@@ -58,7 +60,7 @@
 				</div>
 			{/each}
 			{#if data.upcoming.length === 0}
-				<p class="mt-8 mb-16">No current events!</p>
+				<p class="my-8">No current events!</p>
 			{/if}
 		</div>
 	</section>

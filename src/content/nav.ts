@@ -109,7 +109,7 @@ export const ADMIN_NAV_PAGES = [
 		href: '/admin/products',
 	},
 	{
-		title: 'Pending Events',
+		title: 'Events',
 		href: '/admin/events',
 	},
 	{

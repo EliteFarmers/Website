@@ -11,10 +11,9 @@
 	import Plus from 'lucide-svelte/icons/plus';
 	import X from 'lucide-svelte/icons/x';
 	import Product from '$comp/monetization/product.svelte';
-	import type { ActionData, PageData } from './$types';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
-	export let form: ActionData;
 
 	let editProductModal = false;
 
@@ -36,9 +35,10 @@
 
 <Head title="Products" description="Manage products" />
 
-<main>
+<main class="my-16">
 	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
-		<h2 class="text-2xl">Products</h2>
+		<h1 class="text-4xl mb-16">Products</h1>
+
 		<div class="flex flex-col gap-4 w-full">
 			{#each data.products as product}
 				<div

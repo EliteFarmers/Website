@@ -1,5 +1,17 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
-	export let data: PageData;
+	import { enhance } from '$app/forms';
+	import { Button } from '$ui/button';
 </script>
+
+<main class="my-16">
+	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
+		<h1 class="text-4xl mb-16">Actions</h1>
+
+		<div class="flex flex-col w-full gap-2">
+			<p>Clear upcoming jacob's contests if wrong data was submitted.</p>
+			<form method="post" action="?/clearcontests" class="flex w-fit flex-col gap-2" use:enhance>
+				<Button type="submit" variant="destructive">Clear Upcoming Contests</Button>
+			</form>
+		</div>
+	</section>
+</main>
