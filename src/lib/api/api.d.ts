@@ -1399,8 +1399,9 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
         /** Set event banner image */
-        put: {
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -1412,9 +1413,9 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "application/x-www-form-urlencoded": {
+                    "multipart/form-data": {
                         /** Format: binary */
-                        image?: string;
+                        Image?: string;
                     };
                 };
             };
@@ -1450,8 +1451,50 @@ export interface paths {
                 };
             };
         };
-        post?: never;
-        delete?: never;
+        /** Delete event banner image */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guildId: number;
+                    eventId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;

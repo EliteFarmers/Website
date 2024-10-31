@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
@@ -12,7 +12,7 @@
 <div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">
 	<div class="flex justify-between items-center">
 		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
-			<Guildicon {guild} />
+			<GuildIcon {guild} />
 			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis pr-4">{guild.name}</h1>
 		</div>
 		<div class="flex justify-end min-w-0 items-center gap-4">

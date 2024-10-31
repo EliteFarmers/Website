@@ -11,15 +11,19 @@
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import ArrowUp from 'lucide-svelte/icons/arrow-up';
 	import Settings from 'lucide-svelte/icons/settings';
+	import Image from 'lucide-svelte/icons/image';
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
 	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
 
 	let clickOutsideModalEdit = false;
+	let clickOutsideModalEditImage = false;
+	let pending = false;
+
 	let banMemberModal = false;
 
 	let banMemberName = '';
@@ -39,7 +43,7 @@
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<Guildicon guild={data.guild} size={16} />
+		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.event?.name}
 		</h1>
@@ -100,6 +104,21 @@
 						</div>
 						<div>
 							<p>Edit Event</p>
+						</div>
+					</Popover.Mobile>
+
+					<Popover.Mobile>
+						<div slot="trigger">
+							<Button
+								on:click={() => {
+									clickOutsideModalEditImage = true;
+								}}
+							>
+								<Image />
+							</Button>
+						</div>
+						<div>
+							<p>Edit Banner Image</p>
 						</div>
 					</Popover.Mobile>
 
@@ -243,8 +262,10 @@
 			action="?/banmember"
 			class="flex flex-col gap-2"
 			use:enhance={() => {
+				pending = true;
 				return async ({ result, update }) => {
 					if (result) banMemberModal = false;
+					pending = false;
 					update();
 				};
 			}}
@@ -256,7 +277,7 @@
 				<Input name="reason" placeholder="Cheating - Macro" maxlength={64} required />
 			</div>
 
-			<Button type="submit">Ban</Button>
+			<Button type="submit" disabled={pending}>Ban</Button>
 		</form>
 	</Dialog.Content>
 </Dialog.Root>
@@ -270,8 +291,10 @@
 			action="?/edit"
 			class="flex flex-col gap-2"
 			use:enhance={() => {
+				pending = true;
 				return async ({ result, update }) => {
 					if (result) clickOutsideModalEdit = false;
+					pending = false;
 					update();
 				};
 			}}
@@ -306,7 +329,44 @@
 				<Input name="joinDate" type="datetime-local" />
 			</div>
 
-			<Button type="submit">Edit Event</Button>
+			<Button type="submit" disabled={pending}>Edit Event</Button>
+			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
+			</p>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={clickOutsideModalEditImage}>
+	<Dialog.Content class="overflow-scroll max-h-[80%]">
+		<Dialog.Title>Edit Event Banner</Dialog.Title>
+		<p>Upload a .png image for use as the event banner!</p>
+		<form
+			method="post"
+			action="?/banner"
+			class="flex flex-col gap-2"
+			enctype="multipart/form-data"
+			use:enhance={() => {
+				pending = true;
+				return async ({ result, update }) => {
+					if (result) clickOutsideModalEditImage = false;
+					pending = false;
+					update();
+				};
+			}}
+		>
+			<input type="text" name="id" bind:value={data.event.id} hidden />
+			<div class="space-y-2">
+				<Label>Banner Image File</Label>
+				<Input name="image" accept=".png" type="file" />
+			</div>
+
+			<div class="flex flex-row items-center gap-2">
+				<Button type="submit" disabled={pending}>Submit Image</Button>
+				<Button disabled={pending} type="submit" formaction="?/clearbanner" variant="destructive"
+					>Clear Banner</Button
+				>
+			</div>
 			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>

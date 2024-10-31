@@ -9,7 +9,7 @@
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 	import EventData from '$comp/events/event-data.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
@@ -64,7 +64,7 @@
 		style={banner ? `background-image: url('${banner}')` : ''}
 	>
 		<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 mt-32 rounded-lg">
-			<Guildicon guild={data.guild} size={16} />
+			<GuildIcon guild={data.guild} size={16} />
 			<h1 class="text-xl xs:text-2xl sm:text-3xl md:text-4xl mx-8 text-white">
 				{data.event?.name}
 			</h1>

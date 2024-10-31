@@ -22,7 +22,7 @@
 						<p class="text-sm">{event.description}</p>
 					</div>
 					<div class="flex flex-row gap-2">
-						<Button href="/guild/{event.guildId}/event/{event.id}">View</Button>
+						<Button href="/guild/{event.guildId}/event/{event.id}" variant="secondary">View</Button>
 						<form action="?/approveevent" use:enhance method="post">
 							<input type="hidden" name="eventId" value={event.id} />
 							<Button type="submit">Approve</Button>
@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			{/each}
-			{#if data.pending.length !== 0}
+			{#if data.pending.length === 0}
 				<p class="mt-8 mb-16">No pending events!</p>
 			{/if}
 		</div>
@@ -48,16 +48,16 @@
 						<p class="text-sm">{event.description}</p>
 					</div>
 					<div class="flex flex-row gap-2">
-						<Button href="/guild/{event.guildId}/event/{event.id}">View</Button>
+						<Button href="/guild/{event.guildId}/event/{event.id}" variant="secondary">View</Button>
 						<form action="?/approveevent" use:enhance method="post">
 							<input type="hidden" name="eventId" value={event.id} />
 							<input type="hidden" name="approve" value="false" />
-							<Button type="submit">Revoke Approval</Button>
+							<Button type="submit" variant="destructive">Revoke Approval</Button>
 						</form>
 					</div>
 				</div>
 			{/each}
-			{#if data.upcoming.length !== 0}
+			{#if data.upcoming.length === 0}
 				<p class="mt-8 mb-16">No current events!</p>
 			{/if}
 		</div>

@@ -11,20 +11,23 @@ export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 
 export const formDataSerializer = (body: Record<string, string | number | boolean> | undefined) => {
 	if (!body) return;
-	const fd = new FormData();
+	try {
+		const fd = new FormData();
 
-	for (const name in body) {
-		const value = body[name];
-		if (typeof value === 'boolean') {
-			fd.append(name, value ? 'true' : 'false');
-		} else if (typeof value === 'number') {
-			fd.append(name, value.toString());
-		} else {
-			fd.append(name, body[name] as string);
+		for (const name in body) {
+			const value = body[name];
+			if (typeof value === 'boolean') {
+				fd.append(name, value ? 'true' : 'false');
+			} else if (typeof value === 'number') {
+				fd.append(name, value.toString());
+			} else {
+				fd.append(name, body[name] as string);
+			}
 		}
+		return fd;
+	} catch (e) {
+		console.error(e);
 	}
-
-	return fd;
 };
 
 export const GetUserSession = async (accessToken: string) =>
@@ -637,6 +640,37 @@ export const EditEvent = async (accessToken: string, eventId: string, event: com
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
+	});
+
+export const SetEventBanner = async (accessToken: string, eventId: string, guildId: string, banner: string) =>
+	await POST('/guild/{guildId}/events/{eventId}/banner', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+		},
+		body: {
+			Image: banner,
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
+	});
+
+export const ClearEventBanner = async (accessToken: string, eventId: string, guildId: string) =>
+	await DELETE('/guild/{guildId}/events/{eventId}/banner', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
 	});
 
 export const GetEventBans = async (accessToken: string, guildId: string, eventId: string) =>

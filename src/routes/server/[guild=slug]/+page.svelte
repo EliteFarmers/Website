@@ -6,7 +6,7 @@
 	import Leaderboard from './leaderboard.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Event from '$comp/stats/discord/event.svelte';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
 
 	export let data: PageData;
 
@@ -29,7 +29,7 @@
 			style="background-image: url({guild.banner.url})"
 		>
 			<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 my-32 rounded-lg">
-				<Guildicon {guild} size={16} />
+				<GuildIcon {guild} size={16} />
 				<h1 class="text-4xl text-white">
 					{guild?.name}
 				</h1>
@@ -40,7 +40,7 @@
 		</div>
 	{:else}
 		<div class="flex flex-row items-center gap-4 my-16">
-			<Guildicon {guild} size={16} />
+			<GuildIcon {guild} size={16} />
 			<h1 class="text-4xl">
 				{guild?.name}
 			</h1>

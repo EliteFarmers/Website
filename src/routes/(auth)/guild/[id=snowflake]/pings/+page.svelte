@@ -6,7 +6,7 @@
 	import * as Select from '$ui/select';
 	import type { PageData, ActionData } from './$types';
 	import { enhance } from '$app/forms';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -34,7 +34,7 @@
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<Guildicon guild={data.guild} size={16} />
+		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>

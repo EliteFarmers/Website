@@ -26,7 +26,7 @@
 	<div class="flex flex-col w-full items-center gap-8">
 		{#if data.eliteGuild}
 			<div class="w-full max-w-3xl">
-				<Serverbar guild={data.eliteGuild} />
+				<Serverbar guild={data.eliteGuild} lazy={false} />
 			</div>
 		{/if}
 		<div class="flex flex-col md:flex-row gap-4 justify-center items-center">
