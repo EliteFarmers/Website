@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import type { components } from './api/api';
+import { enhance } from '$app/forms';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -54,6 +55,17 @@ export const flyAndScale = (
 		},
 		easing: cubicOut,
 	};
+};
+
+export const pending = (node: HTMLFormElement, pending: boolean) => {
+	return enhance(node, () => {
+		if (pending) return;
+		pending = true;
+		return async ({ update }) => {
+			pending = false;
+			update();
+		};
+	});
 };
 
 export function CanManageGuild(guild: components['schemas']['AuthorizedGuildDto'], session?: App.Locals['session']) {

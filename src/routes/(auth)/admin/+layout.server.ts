@@ -1,4 +1,4 @@
-import { GetAllBadges, GetProducts } from '$lib/api/elite';
+import { GetAllBadges } from '$lib/api/elite';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ setHeaders }) => {
@@ -7,10 +7,8 @@ export const load = (async ({ setHeaders }) => {
 	});
 
 	const { data: badges } = await GetAllBadges().catch(() => ({ data: undefined }));
-	const { data: products } = await GetProducts().catch(() => ({ data: undefined }));
 
 	return {
 		badges: badges ?? [],
-		products: products ?? [],
 	};
 }) satisfies LayoutServerLoad;

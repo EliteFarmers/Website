@@ -1,26 +1,40 @@
-import { CreateRoundCornerPath } from '../classes/Util.js';
-import { CustomFormatterOptions } from './custom.js';
-import { Canvas, createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
-import { AttachmentBuilder } from 'discord.js';
-import { BackgroundGradient, BackgroundStyle, ElementPosition, Position, WeightStyleDecal } from '../schemas/style.js';
-import { components } from '../api/api.js';
+import {
+	BackgroundGradient,
+	BackgroundStyle,
+	ElementPosition,
+	Position,
+	WeightStyleDecal,
+	WeightStyle,
+} from '$lib/styles/style.js';
 import { getCropFromName } from 'farming-weight';
-import { UserSettings } from '../api/elite.js';
+import type { components } from '$lib/api/api.js';
 
-export async function createFromData({
-	account,
-	profile,
-	weightRank = -1,
-	badgeUrl = '',
-	settings,
-	data,
-}: CustomFormatterOptions) {
+export interface CustomFormatterOptions {
+	account?: components['schemas']['MinecraftAccountDto'];
+	profile?: components['schemas']['FarmingWeightDto'];
+	badgeUrl?: string;
+	weightRank?: number;
+	data?: WeightStyle;
+	head?: HTMLImageElement;
+}
+
+export async function createFromData(
+	canvas: HTMLCanvasElement,
+	{
+		account = { name: 'ExampleAccount', id: undefined },
+		profile = { totalWeight: Math.random() * 5000 + 1000 },
+		weightRank = -1,
+		badgeUrl = '',
+		data,
+	}: CustomFormatterOptions
+) {
 	if (!data) {
+		console.error('No data provided!');
 		return null;
 	}
 
 	const ign = account.name ?? 'Unknown';
-	const uuid = account.id ?? 'Unknown';
+	const uuid = account.id ?? ['MHF_Steve', 'MHF_Alex'][Math.random() > 0.5 ? 1 : 0];
 
 	let result = '';
 	const rWeight = Math.round((profile.totalWeight ?? 0) * 100) / 100;
@@ -34,6 +48,7 @@ export async function createFromData({
 	}
 
 	// Load images and avatar
+
 	const images = [
 		data.elements?.background?.imageUrl ? loadImage(data.elements.background.imageUrl).catch(() => null) : null,
 		data.elements.head ? loadImage(`https://mc-heads.net/head/${uuid}/left`).catch(() => null) : null,
@@ -42,27 +57,31 @@ export async function createFromData({
 	];
 
 	const [backgroundImg, avatar, badge, decal] = await Promise.all(images);
+
 	if ((!backgroundImg && data.elements.background.imageUrl) || (data.elements.head && !avatar)) {
 		// return ErrorEmbed('Failed to load images!').setDescription(
 		// 	'Please report this if it continues to happen!'
 		// );
+
+		console.error('Images no loads!');
 	}
 
 	const backgroundStyle = data.elements.background;
 
-	// Create canvas
-	const bgWidth = data.elements.background?.size?.x ?? backgroundImg?.width ?? 1920;
-	const bgHeight = data.elements.background?.size?.y ?? backgroundImg?.height ?? 400;
+	canvas.width = data?.elements?.background?.size?.x ?? 1920;
+	canvas.height = data?.elements?.background?.size?.y ?? 400;
 
-	const canvas = createCanvas(bgWidth, bgHeight);
 	const ctx = canvas.getContext('2d');
+	if (!ctx) {
+		return null;
+	}
 
 	// Clip the corners, draw background and decal, then restore the clip
 	ctx.save();
 	CreateRoundCornerPath(ctx, 0, 0, canvas.width, canvas.height, backgroundStyle?.radius ?? 5);
 	ctx.clip();
 
-	drawBackground(ctx, backgroundStyle, backgroundImg, settings);
+	drawBackground(ctx, backgroundStyle, backgroundImg);
 	drawDecal(ctx, decal, data.decal);
 
 	// Draw gradients
@@ -129,15 +148,9 @@ export async function createFromData({
 			drawText(ctx, '#' + weightRank.toString(), rank, true);
 		}
 	}
-
-	const attachment = new AttachmentBuilder(canvas.toBuffer('image/webp'), {
-		name: `${account.name}-${account.id}-${Date.now()}.webp`,
-	});
-
-	return attachment;
 }
 
-function drawBackground(ctx: SKRSContext2D, background: BackgroundStyle, img?: Image | null, settings?: UserSettings) {
+function drawBackground(ctx: CanvasRenderingContext2D, background: BackgroundStyle, img?: CanvasImageSource | null) {
 	ctx.save();
 
 	if (background.fill) {
@@ -150,10 +163,10 @@ function drawBackground(ctx: SKRSContext2D, background: BackgroundStyle, img?: I
 		ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
 	}
 
-	const embedColor = settings?.features?.embedColor ? '#' + settings.features.embedColor : undefined;
+	// const embedColor = settings?.features?.embedColor ? '#' + settings.features.embedColor : undefined;
 
 	for (const rect of background.rects ?? []) {
-		ctx.fillStyle = rect.useEmbedColor && embedColor ? embedColor : rect.fill;
+		ctx.fillStyle = /*rect.useEmbedColor && embedColor ? embedColor :*/ rect.fill;
 		ctx.globalAlpha = rect.opacity ?? 1;
 
 		const { x1, y1, width, height } = mapPositions(ctx.canvas, rect.start, rect.end);
@@ -163,7 +176,7 @@ function drawBackground(ctx: SKRSContext2D, background: BackgroundStyle, img?: I
 	ctx.restore();
 }
 
-function drawGradient(ctx: SKRSContext2D, gradient: BackgroundGradient) {
+function drawGradient(ctx: CanvasRenderingContext2D, gradient: BackgroundGradient) {
 	const { bounds, opacity = 0.6, direction } = gradient;
 
 	ctx.save();
@@ -187,16 +200,16 @@ function drawGradient(ctx: SKRSContext2D, gradient: BackgroundGradient) {
 	ctx.restore();
 }
 
-function adjustFontSize(ctx: SKRSContext2D, text: string, element: ElementPosition) {
+function adjustFontSize(ctx: CanvasRenderingContext2D, text: string, element: ElementPosition) {
 	let fontSize = element.fontSize ?? 100;
-	const font = element.font ?? 'Open Sans';
-	ctx.font = `${fontSize}px "${font}"`;
+	const font = 'sans-serif';
+	ctx.font = `${fontSize}px ${font}`;
 
 	if (element.maxWidth) {
 		const maxWidth = getWidth(ctx.canvas, element);
 		do {
 			fontSize -= 2;
-			ctx.font = `${fontSize}px "${font}"`;
+			ctx.font = `${fontSize}px ${font}`;
 		} while (fontSize > 0 && ctx.measureText(text).width > maxWidth);
 	}
 }
@@ -209,7 +222,7 @@ interface FinalSize {
 }
 
 function drawText(
-	ctx: SKRSContext2D,
+	ctx: CanvasRenderingContext2D,
 	text: string,
 	element: ElementPosition,
 	flippedAnchor = false,
@@ -251,7 +264,12 @@ function drawText(
 	}
 }
 
-function drawBackgroundText(ctx: SKRSContext2D, text: string, element: ElementPosition, flippedAnchor = false) {
+function drawBackgroundText(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	element: ElementPosition,
+	flippedAnchor = false
+) {
 	adjustFontSize(ctx, text, element);
 
 	let { x: bgX, y: bgY } = getPosition(ctx.canvas, element);
@@ -289,14 +307,14 @@ function drawBackgroundText(ctx: SKRSContext2D, text: string, element: ElementPo
 	drawText(ctx, text, element, true);
 }
 
-// function debugDot(ctx: SKRSContext2D, x: number, y: number) {
+// function debugDot(ctx: CanvasRenderingContext2D, x: number, y: number) {
 // 	ctx.save();
 // 	ctx.fillStyle = '#ff00ff';
 // 	ctx.fillRect(x - 10, y - 10, 20, 20);
 // 	ctx.restore();
 // }
 
-function mapPosition(canvas: Canvas, position: Position, offset?: FinalSize) {
+function mapPosition(canvas: HTMLCanvasElement, position: Position, offset?: FinalSize) {
 	return offset
 		? {
 				x: offset.x + offset.width + getValue(position.x, canvas.width),
@@ -308,7 +326,7 @@ function mapPosition(canvas: Canvas, position: Position, offset?: FinalSize) {
 		  };
 }
 
-function mapPositions(canvas: Canvas, start: Position, end: Position, offset?: FinalSize) {
+function mapPositions(canvas: HTMLCanvasElement, start: Position, end: Position, offset?: FinalSize) {
 	const positions = offset
 		? {
 				x1: offset.x + offset.width + getValue(start.x, canvas.width),
@@ -333,7 +351,7 @@ function mapPositions(canvas: Canvas, start: Position, end: Position, offset?: F
 	return positions;
 }
 
-function getPosition(canvas: Canvas, element: ElementPosition, padding = false) {
+function getPosition(canvas: HTMLCanvasElement, element: ElementPosition, padding = false) {
 	const result = mapPosition(canvas, element.position);
 
 	if (padding && element.background?.padding) {
@@ -344,11 +362,11 @@ function getPosition(canvas: Canvas, element: ElementPosition, padding = false) 
 	return result;
 }
 
-function getWidth(canvas: Canvas, element: ElementPosition) {
+function getWidth(canvas: HTMLCanvasElement, element: ElementPosition) {
 	return element.maxWidth ? getValue(element.maxWidth, canvas.width) : 0;
 }
 
-function getHeight(canvas: Canvas, element: ElementPosition) {
+function getHeight(canvas: HTMLCanvasElement, element: ElementPosition) {
 	return element.maxHeight ? getValue(element.maxHeight, canvas.height) : 0;
 }
 
@@ -362,7 +380,7 @@ function getValue(provided: number, max: number) {
 	}
 }
 
-function drawStrokedText(ctx: SKRSContext2D, text: string, element: ElementPosition): FinalSize {
+function drawStrokedText(ctx: CanvasRenderingContext2D, text: string, element: ElementPosition): FinalSize {
 	const { x, y } = getPosition(ctx.canvas, element);
 
 	// Adapted from the solutions by @Simon Sarris and @Jackalope
@@ -416,9 +434,39 @@ function getDecalImage(weight: components['schemas']['FarmingWeightDto'], decal?
 	return url ? loadImage(url) : decal.imageUrl ? loadImage(decal.imageUrl) : null;
 }
 
-function drawDecal(ctx: SKRSContext2D, image: Image | null, decal?: WeightStyleDecal) {
+function drawDecal(ctx: CanvasRenderingContext2D, image: CanvasImageSource | null, decal?: WeightStyleDecal) {
 	if (!image || !decal) return;
 
 	const { x1, y1, width, height } = mapPositions(ctx.canvas, decal.start, decal.end);
 	ctx.drawImage(image, x1, y1, width, height);
+}
+
+function CreateRoundCornerPath(
+	ctx: CanvasRenderingContext2D,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	cornerRadius: number
+) {
+	ctx.beginPath();
+	ctx.moveTo(x + cornerRadius, y);
+	ctx.lineTo(x + width - cornerRadius, y);
+	ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
+	ctx.lineTo(x + width, y + height - cornerRadius);
+	ctx.quadraticCurveTo(x + width, y + height, x + width - cornerRadius, y + height);
+	ctx.lineTo(x + cornerRadius, y + height);
+	ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
+	ctx.lineTo(x, y + cornerRadius);
+	ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
+	ctx.closePath();
+}
+
+function loadImage(url: string): Promise<HTMLImageElement | null> {
+	return new Promise((resolve) => {
+		const img = new Image();
+		img.onload = () => resolve(img);
+		img.onerror = () => resolve(null);
+		img.src = url;
+	});
 }

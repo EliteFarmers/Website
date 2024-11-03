@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 
-	export let badge: components['schemas']['UserBadgeDto'];
+	export let badge: components['schemas']['UserBadgeDto'] | components['schemas']['BadgeDto'];
 </script>
 
 <Popover.Root>
@@ -17,8 +17,10 @@
 		<div class="flex flex-col gap-1 justify-center items-center max-w-sm">
 			<p class="font-semibold text-lg">{badge.name}</p>
 			<p class="text-center">{badge.description}</p>
-			<p class="font-semibold mt-1">Obtained</p>
-			<p>{new Date(+(badge?.timestamp ?? 0) * 1000).toLocaleString()}</p>
+			{#if 'timestamp' in badge}
+				<p class="font-semibold mt-1">Obtained</p>
+				<p>{new Date(+(badge.timestamp ?? 0) * 1000).toLocaleString()}</p>
+			{/if}
 			<a href="/info#Badges" class="text-blue-500">What is this?</a>
 		</div>
 	</Popover.Content>

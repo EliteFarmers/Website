@@ -9379,6 +9379,50 @@
         }
       }
     },
+    "/products/admin": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Get all products",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/product/{productId}": {
       "get": {
         "tags": [
@@ -9441,11 +9485,143 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProductDto"
+                "$ref": "#/components/schemas/EditProductDto"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/product/{productId}/images": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Add image to a product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "thumbnail",
+            "in": "query",
+            "description": "Specify if this image should be the thumbnail",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Title": {
+                    "maxLength": 64,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "maxLength": 512,
+                    "type": "string"
+                  },
+                  "Image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Title": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                },
+                "Image": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/product/{productId}/images/{imagePath}": {
+      "delete": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Delete image from a product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "imagePath",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -9779,10 +9955,6 @@
                     "maxLength": 512,
                     "type": "string"
                   },
-                  "Order": {
-                    "type": "integer",
-                    "format": "int32"
-                  },
                   "Image": {
                     "type": "string",
                     "format": "binary"
@@ -9794,9 +9966,6 @@
                   "style": "form"
                 },
                 "Description": {
-                  "style": "form"
-                },
-                "Order": {
                   "style": "form"
                 },
                 "Image": {
@@ -13346,6 +13515,37 @@
         },
         "additionalProperties": false
       },
+      "EditProductDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/ProductCategory"
+          },
+          "icon": {
+            "maxLength": 256,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 1024,
+            "type": "string",
+            "nullable": true
+          },
+          "available": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "price": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "features": {
+            "$ref": "#/components/schemas/UnlockedProductFeaturesDto"
+          }
+        },
+        "additionalProperties": false
+      },
       "EditUserBadgeDto": {
         "type": "object",
         "properties": {
@@ -15442,15 +15642,19 @@
             "type": "string",
             "description": "Slug of the product"
           },
-          "icon": {
-            "type": "string",
-            "description": "Icon URL",
-            "nullable": true
+          "price": {
+            "type": "integer",
+            "description": "Product price",
+            "format": "int32"
           },
           "description": {
             "type": "string",
             "description": "Product description",
             "nullable": true
+          },
+          "available": {
+            "type": "boolean",
+            "description": "If the product is available for purchase"
           },
           "type": {
             "$ref": "#/components/schemas/ProductType"
@@ -15468,6 +15672,9 @@
             },
             "description": "Unlocked weight styles"
           },
+          "thumbnail": {
+            "$ref": "#/components/schemas/ImageAttachmentDto"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -15479,6 +15686,15 @@
             "type": "integer",
             "description": "Discord flags",
             "format": "int32"
+          },
+          "isSubscription": {
+            "type": "boolean"
+          },
+          "isGuildSubscription": {
+            "type": "boolean"
+          },
+          "isUserSubscription": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -16191,28 +16407,6 @@
           "pingForSmallImprovements": {
             "type": "boolean",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateProductDto": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/ProductCategory"
-          },
-          "icon": {
-            "maxLength": 256,
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "maxLength": 1024,
-            "type": "string",
-            "nullable": true
-          },
-          "features": {
-            "$ref": "#/components/schemas/UnlockedProductFeaturesDto"
           }
         },
         "additionalProperties": false

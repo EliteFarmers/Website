@@ -1,12 +1,12 @@
 import { error, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { DELETE, GET, GetAllBadges, GetProducts, POST } from '$lib/api/elite';
+import { DELETE, GET, GetAdminProducts, POST } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
 	const { access_token: token } = locals;
 
-	if (!session || !session.flags.moderator) {
+	if (!session || !session.flags.moderator || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -22,14 +22,12 @@ export const load = (async ({ parent, locals }) => {
 		headers: { Authorization: `Bearer ${token}` },
 	}).catch(() => ({ data: undefined }));
 
-	const { data: badges } = await GetAllBadges().catch(() => ({ data: undefined }));
-	const { data: products } = await GetProducts().catch(() => ({ data: undefined }));
+	const { data: products } = await GetAdminProducts(token).catch(() => ({ data: undefined }));
 
 	return {
 		user,
 		roles,
 		admins: admins ?? [],
-		badges: badges ?? [],
 		products: products ?? [],
 	};
 }) satisfies PageServerLoad;

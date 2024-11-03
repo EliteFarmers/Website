@@ -6477,6 +6477,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all products */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProductDto"][];
+                        "application/json": components["schemas"]["ProductDto"][];
+                        "text/json": components["schemas"]["ProductDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/product/{productId}": {
         parameters: {
             query?: never;
@@ -6526,7 +6564,7 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["UpdateProductDto"];
+                    "application/json": components["schemas"]["EditProductDto"];
                 };
             };
             responses: {
@@ -6539,6 +6577,102 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/product/{productId}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add image to a product */
+        post: {
+            parameters: {
+                query?: {
+                    /** @description Specify if this image should be the thumbnail */
+                    thumbnail?: boolean;
+                };
+                header?: never;
+                path: {
+                    productId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        Title?: string;
+                        Description?: string;
+                        /** Format: binary */
+                        Image?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/{productId}/images/{imagePath}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete image from a product */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    productId: number;
+                    imagePath: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/product/styles": {
@@ -6783,8 +6917,6 @@ export interface paths {
                     "multipart/form-data": {
                         Title?: string;
                         Description?: string;
-                        /** Format: int32 */
-                        Order?: number;
                         /** Format: binary */
                         Image?: string;
                     };
@@ -8894,6 +9026,15 @@ export interface components {
             blockedRole?: string | null;
             guildId?: string | null;
         };
+        EditProductDto: {
+            category?: components["schemas"]["ProductCategory"];
+            icon?: string | null;
+            description?: string | null;
+            available?: boolean | null;
+            /** Format: int32 */
+            price?: number | null;
+            features?: components["schemas"]["UnlockedProductFeaturesDto"];
+        };
         EditUserBadgeDto: {
             /** Format: int32 */
             badgeId?: number;
@@ -9615,15 +9756,21 @@ export interface components {
             name: string;
             /** @description Slug of the product */
             slug: string;
-            /** @description Icon URL */
-            icon?: string | null;
+            /**
+             * Format: int32
+             * @description Product price
+             */
+            price?: number;
             /** @description Product description */
             description?: string | null;
+            /** @description If the product is available for purchase */
+            available?: boolean;
             type?: components["schemas"]["ProductType"];
             category?: components["schemas"]["ProductCategory"];
             features?: components["schemas"]["UnlockedProductFeaturesDto"];
             /** @description Unlocked weight styles */
             weightStyles?: components["schemas"]["WeightStyleLinkedDto"][];
+            thumbnail?: components["schemas"]["ImageAttachmentDto"];
             /** @description Product Images */
             images?: components["schemas"]["ImageAttachmentDto"][];
             /**
@@ -9631,6 +9778,9 @@ export interface components {
              * @description Discord flags
              */
             flags?: number;
+            isSubscription?: boolean;
+            isGuildSubscription?: boolean;
+            isUserSubscription?: boolean;
         };
         /**
          * Format: int32
@@ -9876,12 +10026,6 @@ export interface components {
             updateChannelId?: string | null;
             updateRoleId?: string | null;
             pingForSmallImprovements?: boolean | null;
-        };
-        UpdateProductDto: {
-            category?: components["schemas"]["ProductCategory"];
-            icon?: string | null;
-            description?: string | null;
-            features?: components["schemas"]["UnlockedProductFeaturesDto"];
         };
         UpdateUserSettingsDto: {
             features?: components["schemas"]["ConfiguredProductFeaturesDto"];

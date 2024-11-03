@@ -1005,12 +1005,19 @@ export const KickEventTeamMember = async (
 
 export const GetProducts = async () => await GET('/products', {});
 
+export const GetAdminProducts = async (token: string) =>
+	await GET('/products/admin', {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetWeightStyles = async () => await GET('/product/styles', {});
 
 export const UpdateProduct = async (
 	accessToken: string,
 	productId: string,
-	product: components['schemas']['UpdateProductDto']
+	product: components['schemas']['EditProductDto']
 ) =>
 	await PATCH('/product/{productId}', {
 		params: {
@@ -1019,6 +1026,41 @@ export const UpdateProduct = async (
 			},
 		},
 		body: product,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AddProductImage = async (
+	accessToken: string,
+	productId: string,
+	image: { Image: string; Title: string; Description: string },
+	thumbnail?: boolean
+) =>
+	await POST('/product/{productId}/images', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+			},
+			query: {
+				thumbnail,
+			},
+		},
+		body: image,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
+	});
+
+export const RemoveProductImage = async (accessToken: string, productId: string, imageUrl: string) =>
+	await DELETE('/product/{productId}/images/{imagePath}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+				imagePath: imageUrl,
+			},
+		},
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
