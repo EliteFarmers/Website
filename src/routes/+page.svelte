@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } from '$env/static/public';
-
 	import Head from '$comp/head.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
+	import Serverbar from '$comp/discord/serverbar.svelte';
 	import * as Card from '$ui/card';
 	import { Button } from '$ui/button';
-
-	import type { LeaderboardEntry } from '$lib/api/elite';
-	import type { PageData } from './$types';
-	import Serverbar from '$comp/discord/serverbar.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 </script>

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
-	import * as Dialog from '$ui/dialog';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Product from '$comp/monetization/product.svelte';
 	import type { PageData } from './$types';

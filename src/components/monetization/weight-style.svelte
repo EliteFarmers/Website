@@ -25,7 +25,7 @@
 	<div class="w-full items-center justify-center">
 		<p>Loading preview image...</p>
 	</div>
-{:catch error}
+{:catch}
 	<p style="color: red">Error loading preview image.</p>
 {/await}
 <canvas bind:this={canvas} class="w-full origin-top-left font-sans" />

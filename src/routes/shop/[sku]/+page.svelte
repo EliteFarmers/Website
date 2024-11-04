@@ -27,7 +27,7 @@
 
 <Head title="Shop" description="Help support development with cosmetics!" />
 
-<main class="flex flex-col justify-center md:justify-start gap-12 my-16 mx-2 w-full">
+<main class="flex flex-col items-center gap-12 my-16 mx-2 w-full">
 	<section class="flex flex-col items-start gap-4">
 		<div class="flex flex-row items-center gap-4 -mb-3">
 			<h1 class="text-4xl">{product.name}</h1>
@@ -193,7 +193,7 @@
 				{#each product.weightStyles as { id } (id)}
 					{@const style = data.styles.find((s) => s.id === id)}
 					{#if style}
-						<Card.Root class="max-w-4xl">
+						<Card.Root class="max-w-3xl">
 							<Card.Content class="p-2">
 								<p class="text-lg font-semibold mb-1">{style.name}</p>
 								{#if style?.styleFormatter === 'data'}

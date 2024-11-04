@@ -5,9 +5,6 @@
 
 	export let product: components['schemas']['ProductDto'];
 
-	$: features = product.features ?? {};
-	$: styles = product.weightStyles ?? [];
-
 	$: image = product.thumbnail?.url ?? '';
 </script>
 

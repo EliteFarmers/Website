@@ -24,7 +24,6 @@
 	let loading = false;
 	let deleteProductImageModal = false;
 
-	$: selectedStyles = product?.features?.weightStyles ?? [];
 	$: selectedColors = product?.features?.embedColors ?? [];
 	$: selectedImageId = '';
 
@@ -49,7 +48,6 @@
 		changedSettings.available = product.available ?? false;
 	});
 
-	let newStyle = '';
 	let newColor = '';
 	let isThumbnail = false;
 </script>
