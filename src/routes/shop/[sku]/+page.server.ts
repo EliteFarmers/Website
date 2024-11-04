@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetAccount, GetSelectedProfileMember } from '$lib/api/elite';
+import { GetSelectedProfileMember } from '$lib/api/elite';
 
 export const load = (async ({ params, parent }) => {
 	const { products, session } = await parent();
@@ -17,12 +17,12 @@ export const load = (async ({ params, parent }) => {
 		};
 	}
 
-	const { data: account } = await GetAccount(session.uuid).catch(() => ({ data: undefined }));
 	const { data: weight } = await GetSelectedProfileMember(session.uuid).catch(() => ({ data: undefined }));
 
 	return {
 		product: product,
-		account: account,
+		uuid: session.uuid,
+		ign: session.ign,
 		weight: weight?.farmingWeight,
 	};
 }) satisfies PageServerLoad;

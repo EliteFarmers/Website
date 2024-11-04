@@ -426,7 +426,11 @@ function getDecalImage(weight: components['schemas']['FarmingWeightDto'], decal?
 	const crop = getCropFromName(topCollection);
 
 	if (!crop) {
-		return decal.imageUrl ? loadImage(decal.imageUrl) : null;
+		if (decal.imageUrl) {
+			return loadImage(decal.imageUrl);
+		}
+		const options = Object.values(decal.crops);
+		return loadImage(options[Math.floor(Math.random() * options.length)]);
 	}
 
 	const url = Object.entries(decal.crops ?? {}).find(([key]) => getCropFromName(key) === crop)?.[1] ?? decal.imageUrl;
