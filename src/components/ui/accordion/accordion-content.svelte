@@ -3,7 +3,9 @@
 	import { slide } from 'svelte/transition';
 	import { cn } from '$lib/utils.js';
 
-	type $$Props = AccordionPrimitive.ContentProps;
+	type $$Props = AccordionPrimitive.ContentProps & {
+		wrapperClass?: string;
+	};
 
 	let className: $$Props['class'] = undefined;
 	export let transition: $$Props['transition'] = slide;
@@ -11,6 +13,7 @@
 		duration: 200,
 	};
 	export { className as class };
+	export let wrapperClass: $$Props['wrapperClass'] = 'pb-4 pt-0';
 </script>
 
 <AccordionPrimitive.Content
@@ -19,7 +22,7 @@
 	{transitionConfig}
 	{...$$restProps}
 >
-	<div class="pb-4 pt-0">
+	<div class={wrapperClass}>
 		<slot />
 	</div>
 </AccordionPrimitive.Content>

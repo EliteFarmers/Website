@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import Users from 'lucide-svelte/icons/users';
+
+	export let lazy = true;
 
 	export let guild: components['schemas']['GuildDetailsDto'];
 </script>
@@ -12,11 +14,11 @@
 		? 'text-white'
 		: ''}"
 >
-	{#if guild.banner}
+	{#if guild.banner?.url}
 		<img
 			class="absolute left-0 right-0 rounded-lg w-full pixelated"
-			loading="lazy"
-			src="https://cdn.discordapp.com/splashes/{guild.id}/{guild?.banner}.png?size=640"
+			loading={lazy ? 'lazy' : 'eager'}
+			src={guild.banner.url}
 			alt="Server Banner"
 		/>
 		<div
@@ -24,7 +26,7 @@
 		/>
 	{/if}
 	<div class="flex flex-row gap-4 z-10 items-center">
-		<Guildicon {guild} size={16} />
+		<GuildIcon {guild} size={16} />
 		<h2 class="text-xl sm:text-2xl md:text-3xl font-semibold">{guild.name}</h2>
 	</div>
 	<div class="flex flex-row gap-2 font-semibold items-center z-10">

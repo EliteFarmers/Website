@@ -36,6 +36,9 @@
 	<meta name="author" content="Kaeso" />
 	<meta name="robots" content="index, follow" />
 	<meta property="og:url" content={$page.url.toString()} />
+
+	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
+	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
 </svelte:head>
 <ModeWatcher />
 

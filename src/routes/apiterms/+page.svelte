@@ -34,22 +34,23 @@
 					<li>
 						<span class="select-none">• </span>For any use of the API, you must credit https://elitebot.dev/
 						on your website or application with a clear and clickable link present on every page/display
-						that uses the API. If this is not possible, you can contact us on Discord to discuss acceptable
-						credit.
+						that uses the API. If this is not possible, you can
+						<a class="underline" href="https://elitebot.dev/contact">contact us</a> to discuss acceptable credit.
 					</li>
 					<li><span class="select-none">• </span>API access may be revoked at any time for any reason.</li>
 					<li>
 						<span class="select-none">• </span>Respect the rate limits. If you need more requests, you
 						shouldn't be using the API. You're welcome to host your own instance of the API if you need more
-						requests, but otherwise use Hypixel's API
+						requests, but otherwise use Hypixel's API.
 					</li>
 					<li>
 						<span class="select-none">• </span>The API should never be used purely as a Mojang API proxy. If
-						you need to get a player's UUID, use the Mojang API
+						you need to get a player's UUID, use the Mojang API.
 					</li>
 					<li>
 						<span class="select-none">• </span>Do not use the API in a public project without permission
-						from the Elite team. If you want to use the API in a public project, contact us on Discord
+						from the Elite team. If you want to use the API in a public project,
+						<a class="underline" href="https://elitebot.dev/contact">contact us</a>.
 					</li>
 				</ul>
 			</div>

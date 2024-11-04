@@ -19,8 +19,8 @@
 <div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">
 	<div class="flex justify-between items-center">
 		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
-			{#if product.icon}
-				<img src={product.icon} alt={product.name} class="w-8 h-8 rounded-sm object-cover" />
+			{#if product.thumbnail?.url}
+				<img src={product.thumbnail.url} alt={product.name} class="w-8 h-8 rounded-sm object-cover" />
 			{/if}
 			<div class="flex flex-col gap-2 justify-start">
 				<p class="text-xl overflow-hidden whitespace-nowrap text-ellipsis pr-4">{product.name}</p>

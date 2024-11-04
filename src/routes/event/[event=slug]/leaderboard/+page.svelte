@@ -48,11 +48,7 @@
 	}!\n\n${topList}`;
 </script>
 
-<Head
-	title={(event.name || 'Farming Weight Event') + ' Leaderboard'}
-	{description}
-	imageUrl={guild?.icon ? `https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}.webp` : undefined}
-/>
+<Head title={(event.name || 'Farming Weight Event') + ' Leaderboard'} {description} imageUrl={guild?.icon?.url} />
 
 <main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
 	<section class="flex flex-col gap-4 max-w-4xl bg-primary-foreground rounded-md p-8 mt-16 w-full items-center">

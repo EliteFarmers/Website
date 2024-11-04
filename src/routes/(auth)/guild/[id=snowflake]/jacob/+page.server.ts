@@ -31,8 +31,6 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 
 export const actions: Actions = {
 	create: async ({ locals, params, request }) => {
-		console.log('create');
-
 		const guildId = params.id;
 		const { access_token: token } = locals;
 

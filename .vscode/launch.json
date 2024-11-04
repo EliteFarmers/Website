@@ -1,0 +1,30 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch Server",
+			"runtimeArgs": ["run", "devhost"],
+			"runtimeExecutable": "pnpm",
+			"skipFiles": ["<node_internals>/**"],
+			"console": "integratedTerminal"
+		},
+		{
+			"type": "firefox",
+			"request": "launch",
+			"name": "Launch Firefox",
+			"url": "http://localhost:5173",
+			"webRoot": "${workspaceFolder}/src"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Compound",
+			"configurations": ["Launch Server", "Launch Firefox"]
+		}
+	]
+}

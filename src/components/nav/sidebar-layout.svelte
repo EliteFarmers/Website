@@ -25,7 +25,7 @@
 	<div id="main" class="mx-auto w-full min-w-0">
 		<slot />
 
-		<div class="flex flex-row justify-between items-center md:hidden">
+		<div class="flex flex-row justify-between items-center">
 			{#key $page.url.pathname}
 				{#if previous}
 					<Button

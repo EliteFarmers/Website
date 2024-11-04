@@ -3,15 +3,16 @@
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
 	import { Button } from '$ui/button';
-	import { PUBLIC_BADGE_IMAGE_URL } from '$env/static/public';
 	import { Switch } from '$ui/switch';
 	import { onMount } from 'svelte';
 	import { ArrowDown, ArrowUp } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
+	import * as Card from '$ui/card';
 	import type { PageData, ActionData } from './$types';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
+	import WeightStyle from '$comp/monetization/weight-style.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -51,12 +52,16 @@
 	};
 
 	let changedSettings = {
-		weightStyle: (data.user.settings?.weightStyle?.id + '' ?? '-1') as string | undefined,
+		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
 	};
+
+	$: selectedStyle = changedSettings.weightStyle
+		? data.styles?.find((s) => s.id === +(changedSettings.weightStyle ?? '-1'))
+		: undefined;
 
 	$: unlockedWeightStyles = (data.user.entitlements ?? [])
 		.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
@@ -87,9 +92,9 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="flex flex-col lg:flex-row justify-center gap-16 my-16 mx-2 justify-items-center">
-	<section class="flex flex-col max-w-3xl w-full mx-4">
-		<h1 class="text-2xl mb-4">Purchases</h1>
+<main class="flex flex-col lg:flex-row justify-start gap-16 my-16 justify-items-center">
+	<section class="flex flex-col max-w-3xl w-full">
+		<h1 class="text-4xl mb-4">Purchases</h1>
 		{#if data.user.entitlements?.length === 0}
 			<p class="mb-2">
 				You don't have any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
@@ -154,6 +159,31 @@
 					placeholder="Select Style"
 				/>
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
+
+				{#if selectedStyle}
+					<Card.Root class="w-full">
+						<Card.Content class="p-2 w-full">
+							<!-- {#if selectedStyle.description}
+								<p class="text-sm pb-1">{selectedStyle.description}</p>
+							{/if} -->
+							{#if selectedStyle.styleFormatter === 'data'}
+								{#key selectedStyle.id}
+									<WeightStyle
+										style={selectedStyle}
+										ign={data.mcAccount?.name ?? ''}
+										uuid={data.mcAccount?.id ?? ''}
+										weight={data.weight ?? undefined}
+									/>
+								{/key}
+							{:else}
+								<p class="text-sm text-gray-500">
+									No preview available! You can change to this style and run the /&NoBreak;weight
+									command in Discord to see it.
+								</p>
+							{/if}
+						</Card.Content>
+					</Card.Root>
+				{/if}
 			</div>
 			<div class="space-y-2">
 				<Label>Bot Embed Color</Label>
@@ -221,11 +251,13 @@
 							name="badge.{id}.visible"
 							value={visibleToggles[`${profile.uuid}-${badge.id}`]}
 						/>
-						<img
-							src="{PUBLIC_BADGE_IMAGE_URL}{badge.imageId}.png"
-							alt={badge.name}
-							class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
-						/>
+						{#if badge.image?.url}
+							<img
+								src={badge.image.url}
+								alt={badge.name}
+								class="w-18 h-6 md:w-24 md:h-8 rounded-sm object-cover"
+							/>
+						{/if}
 						<div class="flex flex-row gap-1">
 							<Button
 								size="sm"

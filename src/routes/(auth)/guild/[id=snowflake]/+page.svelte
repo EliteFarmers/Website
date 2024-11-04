@@ -6,7 +6,7 @@
 	import * as Select from '$ui/select';
 	import type { ActionData, PageData } from './$types';
 	import Head from '$comp/head.svelte';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let data: PageData;
@@ -24,14 +24,14 @@
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone');
 </script>
 
 <Head title="Server Settings" description="Manage server settings for your guild!" />
 
 <main class="flex flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">
-		<Guildicon guild={data.guild} size={16} />
+		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>

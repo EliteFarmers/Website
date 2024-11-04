@@ -42,19 +42,6 @@
 			Your primary account is the account that will be used for all Elite features by default. Secondary accounts
 			essentially only exist for the purpose of confirming ownership of the account.
 		</p>
-
-		{#if !user?.minecraftAccounts?.length}
-			<div class="text-center flex flex-col">
-				<h1 class="text-lg py-2">
-					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
-				</h1>
-				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
-				<h1 class="text-md py-2">
-					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
-					example)
-				</h1>
-			</div>
-		{/if}
 	</section>
 	<section class="flex flex-col items-start gap-4">
 		<h2 class="text-2xl mb-4">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
@@ -110,16 +97,17 @@
 				{/if}
 			</div>
 		</form>
+
 		{#if !user?.minecraftAccounts?.length}
 			<div class="text-center flex flex-col">
-				<p class="text-lg py-2">
+				<h1 class="text-lg py-2">
 					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
-				</p>
+				</h1>
 				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
-				<p class="text-md py-2">
+				<h1 class="text-md py-2">
 					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
 					example)
-				</p>
+				</h1>
 			</div>
 		{/if}
 	</section>

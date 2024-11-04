@@ -9,6 +9,27 @@ export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
 	},
 });
 
+export const formDataSerializer = (body: Record<string, string | number | boolean> | undefined) => {
+	if (!body) return;
+	try {
+		const fd = new FormData();
+
+		for (const name in body) {
+			const value = body[name];
+			if (typeof value === 'boolean') {
+				fd.append(name, value ? 'true' : 'false');
+			} else if (typeof value === 'number') {
+				fd.append(name, value.toString());
+			} else {
+				fd.append(name, body[name] as string);
+			}
+		}
+		return fd;
+	} catch (e) {
+		console.error(e);
+	}
+};
+
 export const GetUserSession = async (accessToken: string) =>
 	await GET('/auth/me', {
 		headers: {
@@ -471,6 +492,13 @@ export const GetProfilesRank = async (leaderboardId: string, profileUuid: string
 
 export const GetUpcomingEvents = async () => await GET('/events', {});
 
+export const GetAdminPendingEvents = async (token: string) =>
+	await GET('/admin/events/pending', {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetGuildEvents = async (guildId: string) =>
 	await GET('/guild/{guildId}/events', {
 		params: {
@@ -480,12 +508,37 @@ export const GetGuildEvents = async (guildId: string) =>
 		},
 	});
 
+export const GetAdminGuildEvents = async (token: string, guildId: string) =>
+	await GET('/guild/{guildId}/events/admin', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetEventDetails = async (eventId: string) =>
 	await GET('/event/{eventId}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
 			},
+		},
+	});
+
+export const GetAdminEventDetails = async (token: string, guildId: string, eventId: string) =>
+	await GET('/guild/{guildId}/events/{eventId}/admin', {
+		params: {
+			path: {
+				eventId: eventId as unknown as number,
+				guildId: guildId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
 		},
 	});
 
@@ -587,6 +640,37 @@ export const EditEvent = async (accessToken: string, eventId: string, event: com
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
+	});
+
+export const SetEventBanner = async (accessToken: string, eventId: string, guildId: string, banner: string) =>
+	await POST('/guild/{guildId}/events/{eventId}/banner', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+		},
+		body: {
+			Image: banner,
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
+	});
+
+export const ClearEventBanner = async (accessToken: string, eventId: string, guildId: string) =>
+	await DELETE('/guild/{guildId}/events/{eventId}/banner', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
 	});
 
 export const GetEventBans = async (accessToken: string, guildId: string, eventId: string) =>
@@ -921,10 +1005,19 @@ export const KickEventTeamMember = async (
 
 export const GetProducts = async () => await GET('/products', {});
 
+export const GetAdminProducts = async (token: string) =>
+	await GET('/products/admin', {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+export const GetWeightStyles = async () => await GET('/product/styles', {});
+
 export const UpdateProduct = async (
 	accessToken: string,
 	productId: string,
-	product: components['schemas']['UpdateProductDto']
+	product: components['schemas']['EditProductDto']
 ) =>
 	await PATCH('/product/{productId}', {
 		params: {
@@ -933,6 +1026,67 @@ export const UpdateProduct = async (
 			},
 		},
 		body: product,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AddProductImage = async (
+	accessToken: string,
+	productId: string,
+	image: { Image: string; Title: string; Description: string },
+	thumbnail?: boolean
+) =>
+	await POST('/product/{productId}/images', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+			},
+			query: {
+				thumbnail,
+			},
+		},
+		body: image,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
+	});
+
+export const RemoveProductImage = async (accessToken: string, productId: string, imageUrl: string) =>
+	await DELETE('/product/{productId}/images/{imagePath}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+				imagePath: imageUrl,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AddCosmeticToProduct = async (accessToken: string, productId: string, cosmeticId: string) =>
+	await POST('/product/{productId}/styles/{styleId}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+				styleId: cosmeticId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const RemoveCosmeticFromProduct = async (accessToken: string, productId: string, cosmeticId: string) =>
+	await DELETE('/product/{productId}/styles/{styleId}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+				styleId: cosmeticId as unknown as number,
+			},
+		},
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},

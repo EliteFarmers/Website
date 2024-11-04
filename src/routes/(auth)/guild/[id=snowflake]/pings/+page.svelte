@@ -6,7 +6,7 @@
 	import * as Select from '$ui/select';
 	import type { PageData, ActionData } from './$types';
 	import { enhance } from '$app/forms';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -27,14 +27,14 @@
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone');
 </script>
 
 <Head title="Contest Pings" description="Manage upcoming Jacob Contest pings for your guild" />
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<Guildicon guild={data.guild} size={16} />
+		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>

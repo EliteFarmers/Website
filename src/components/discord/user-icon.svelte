@@ -13,9 +13,9 @@
 	<img
 		loading="lazy"
 		class="w-{size} h-{size} rounded-full"
-		src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${
-			user.avatar.startsWith('a_') ? 'gif' : 'webp'
-		}?size=96`}
+		src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.{user.avatar.startsWith('a_')
+			? 'gif'
+			: 'webp'}?size=96"
 		alt="User Icon"
 	/>
 {/if}

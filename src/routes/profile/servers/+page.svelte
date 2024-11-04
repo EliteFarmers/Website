@@ -8,7 +8,7 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="flex flex-col lg:flex-row justify-center gap-16 my-16 mx-2 justify-items-center">
+<main class="flex flex-col lg:flex-row gap-16 my-16">
 	<section class="flex flex-col max-w-3xl w-full">
 		<h1 class="text-3xl mb-4">Public Servers</h1>
 		{#if data.publicGuilds.length === 0}

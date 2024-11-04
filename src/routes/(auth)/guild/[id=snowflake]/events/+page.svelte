@@ -2,10 +2,11 @@
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import Settings from 'lucide-svelte/icons/settings';
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
-	import Guildicon from '$comp/stats/discord/guildicon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import CreateEvent from './create-event.svelte';
 
 	export let data: PageData;
@@ -23,7 +24,7 @@
 
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
-		<Guildicon guild={data.guild} size={16} />
+		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
 			{data.guild?.name}
 		</h1>
@@ -49,7 +50,20 @@
 			>
 				<div class="flex flex-row justify-between p-4 gap-2">
 					<div class="flex flex-col gap-2">
-						<h2 class="text-3xl">{event.name}</h2>
+						<div class="flex flex-row items-center gap-2">
+							{#if !event.approved}
+								<Popover.Mobile>
+									<div slot="trigger">
+										<TriangleAlert class="text-red-500 mt-1.5" />
+									</div>
+									<div>
+										<p class="font-semibold">Pending approval!</p>
+										<p>Ask kaeso.dev to approve this event.</p>
+									</div>
+								</Popover.Mobile>
+							{/if}
+							<h2 class="text-3xl">{event.name}</h2>
+						</div>
 
 						<p class="text-lg">{event.description}</p>
 						<p class="text-lg">{event.rules}</p>
@@ -74,16 +88,18 @@
 							</div>
 						</Popover.Mobile>
 
-						<Popover.Mobile>
-							<div slot="trigger">
-								<Button href="/event/{event.id}" target="_blank">
-									<ExternalLink />
-								</Button>
-							</div>
-							<div>
-								<p>View Event Page</p>
-							</div>
-						</Popover.Mobile>
+						{#if event.approved}
+							<Popover.Mobile>
+								<div slot="trigger">
+									<Button href="/event/{event.id}" target="_blank">
+										<ExternalLink />
+									</Button>
+								</div>
+								<div>
+									<p>View Event Page</p>
+								</div>
+							</Popover.Mobile>
+						{/if}
 					</div>
 				</div>
 			</div>

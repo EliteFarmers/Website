@@ -1,6 +1,12 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { RefreshPurchases, UpdateUserBadges, UpdateUserSettings } from '$lib/api/elite';
+import {
+	GetSelectedProfileMember,
+	GetWeightStyles,
+	RefreshPurchases,
+	UpdateUserBadges,
+	UpdateUserSettings,
+} from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { IsUUID } from '$params/uuid';
 import { FetchDiscordUserData } from '$lib/discordAuth';
@@ -22,9 +28,16 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const account =
 		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
+	const { data: weight } = account?.id
+		? await GetSelectedProfileMember(account?.id).catch(() => ({ data: undefined }))
+		: { data: undefined };
+	const { data: styles } = await GetWeightStyles().catch(() => ({ data: undefined }));
+
 	return {
 		mcAccount: account ?? null,
 		user: discord,
+		weight: weight?.farmingWeight ?? null,
+		styles: styles ?? null,
 	};
 };
 

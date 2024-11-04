@@ -802,6 +802,331 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/events/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get events pending approval */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["EventDetailsDto"][];
+                        "application/json": components["schemas"]["EventDetailsDto"][];
+                        "text/json": components["schemas"]["EventDetailsDto"][];
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/events/{eventId}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Set event approval */
+        post: {
+            parameters: {
+                query?: {
+                    approve?: boolean;
+                };
+                header?: never;
+                path: {
+                    eventId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/events/{eventId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete an event */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    eventId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/guild/{guildId}/events/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get events for a guild (admin) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guildId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["EventDetailsDto"][];
+                        "application/json": components["schemas"]["EventDetailsDto"][];
+                        "text/json": components["schemas"]["EventDetailsDto"][];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/guild/{guildId}/events/{eventId}/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get event (admin) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guildId: number;
+                    eventId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["EventDetailsDto"];
+                        "application/json": components["schemas"]["EventDetailsDto"];
+                        "text/json": components["schemas"]["EventDetailsDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/guild/{guildId}/events/weight": {
         parameters: {
             query?: never;
@@ -1038,11 +1363,7 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content: {
-                        "text/plain": components["schemas"]["EventDetailsDto"];
-                        "application/json": components["schemas"]["EventDetailsDto"];
-                        "text/json": components["schemas"]["EventDetailsDto"];
-                    };
+                    content?: never;
                 };
                 /** @description Unauthorized */
                 401: {
@@ -1068,6 +1389,115 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/guild/{guildId}/events/{eventId}/banner": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Set event banner image */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guildId: number;
+                    eventId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        /** Format: binary */
+                        Image?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        /** Delete event banner image */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guildId: number;
+                    eventId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/guild/{guildId}/events/{eventId}/members": {
@@ -2062,12 +2492,16 @@ export interface paths {
                 path?: never;
                 cookie?: never;
             };
-            /** @description Badge information */
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["CreateBadgeDto"];
-                    "text/json": components["schemas"]["CreateBadgeDto"];
-                    "application/*+json": components["schemas"]["CreateBadgeDto"];
+                    "multipart/form-data": {
+                        /** Format: binary */
+                        Image?: string;
+                        Name: string;
+                        Description: string;
+                        Requirements: string;
+                        TieToAccount?: boolean;
+                    };
                 };
             };
             responses: {
@@ -2197,12 +2631,15 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            /** @description New values */
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["EditBadgeDto"];
-                    "text/json": components["schemas"]["EditBadgeDto"];
-                    "application/*+json": components["schemas"]["EditBadgeDto"];
+                    "multipart/form-data": {
+                        Name?: string;
+                        Description?: string;
+                        Requirements?: string;
+                        /** Format: binary */
+                        Image?: string;
+                    };
                 };
             };
             responses: {
@@ -5182,7 +5619,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/leaderboard/leaderboards": {
+    "/leaderboards": {
         parameters: {
             query?: never;
             header?: never;
@@ -6040,6 +6477,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all products */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProductDto"][];
+                        "application/json": components["schemas"]["ProductDto"][];
+                        "text/json": components["schemas"]["ProductDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/product/{productId}": {
         parameters: {
             query?: never;
@@ -6089,7 +6564,7 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["UpdateProductDto"];
+                    "application/json": components["schemas"]["EditProductDto"];
                 };
             };
             responses: {
@@ -6102,6 +6577,102 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/product/{productId}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add image to a product */
+        post: {
+            parameters: {
+                query?: {
+                    /** @description Specify if this image should be the thumbnail */
+                    thumbnail?: boolean;
+                };
+                header?: never;
+                path: {
+                    productId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        Title?: string;
+                        Description?: string;
+                        /** Format: binary */
+                        Image?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/{productId}/images/{imagePath}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete image from a product */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    productId: number;
+                    imagePath: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/product/styles": {
@@ -6331,9 +6902,8 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
-        /** Add image to a weight style */
-        post: {
+        /** Set image for a weight style */
+        put: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -6344,9 +6914,12 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["WeightStyleImageDto"];
-                    "text/json": components["schemas"]["WeightStyleImageDto"];
-                    "application/*+json": components["schemas"]["WeightStyleImageDto"];
+                    "multipart/form-data": {
+                        Title?: string;
+                        Description?: string;
+                        /** Format: binary */
+                        Image?: string;
+                    };
                 };
             };
             responses: {
@@ -6370,6 +6943,7 @@ export interface paths {
                 };
             };
         };
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -6393,7 +6967,7 @@ export interface paths {
                 header?: never;
                 path: {
                     styleId: number;
-                    imageId: number;
+                    imageId: string;
                 };
                 cookie?: never;
             };
@@ -8113,7 +8687,7 @@ export interface components {
         BadgeDto: {
             /** Format: int32 */
             id?: number;
-            imageId: string;
+            image?: components["schemas"]["ImageAttachmentDto"];
             name: string;
             description: string;
             requirements: string;
@@ -8288,13 +8862,6 @@ export interface components {
             delaySeconds?: number;
             disabledReason?: string | null;
         };
-        CreateBadgeDto: {
-            imageId: string;
-            name: string;
-            description: string;
-            requirements: string;
-            tieToAccount?: boolean;
-        };
         CreateEventTeamDto: {
             /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
             name?: string[] | null;
@@ -8312,10 +8879,6 @@ export interface components {
             rules?: string | null;
             /** @description An optional description of prizes for the event */
             prizeInfo?: string | null;
-            /** @description An image URL for the event banner */
-            banner?: string | null;
-            /** @description An image URL for the event thumbnail */
-            thumbnail?: string | null;
             /**
              * Format: int64
              * @description Unix timestamp for the start time of the event in seconds
@@ -8361,10 +8924,6 @@ export interface components {
             rules?: string | null;
             /** @description An optional description of prizes for the event */
             prizeInfo?: string | null;
-            /** @description An image URL for the event banner */
-            banner?: string | null;
-            /** @description An image URL for the event thumbnail */
-            thumbnail?: string | null;
             /**
              * Format: int64
              * @description Unix timestamp for the start time of the event in seconds
@@ -8449,20 +9008,12 @@ export interface components {
             /** Format: int32 */
             diamond?: number;
         };
-        EditBadgeDto: {
-            imageId?: string | null;
-            name?: string | null;
-            description?: string | null;
-            requirements?: string | null;
-        };
         EditEventDto: {
             name?: string | null;
             type?: string | null;
             description?: string | null;
             rules?: string | null;
             prizeInfo?: string | null;
-            banner?: string | null;
-            thumbnail?: string | null;
             /** Format: int64 */
             startTime?: number | null;
             /** Format: int64 */
@@ -8474,6 +9025,15 @@ export interface components {
             requiredRole?: string | null;
             blockedRole?: string | null;
             guildId?: string | null;
+        };
+        EditProductDto: {
+            category?: components["schemas"]["ProductCategory"];
+            icon?: string | null;
+            description?: string | null;
+            available?: boolean | null;
+            /** Format: int32 */
+            price?: number | null;
+            features?: components["schemas"]["UnlockedProductFeaturesDto"];
         };
         EditUserBadgeDto: {
             /** Format: int32 */
@@ -8533,10 +9093,7 @@ export interface components {
             rules?: string | null;
             /** @description Event prize information */
             prizeInfo?: string | null;
-            /** @description Image URL for the event banner */
-            banner?: string | null;
-            /** @description Image URL for the event thumbnail */
-            thumbnail?: string | null;
+            banner?: components["schemas"]["ImageAttachmentDto"];
             /** @description Start time of the event as a string in Unix seconds */
             startTime?: string | null;
             /** @description Join time of the event as a string in Unix seconds */
@@ -8547,6 +9104,8 @@ export interface components {
             dynamicStartTime?: boolean;
             /** @description Event status */
             active?: boolean;
+            /** @description Event approval status */
+            approved?: boolean;
             /**
              * Format: int32
              * @description Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited
@@ -8649,7 +9208,7 @@ export interface components {
             /** Format: double */
             totalWeight?: number;
             crops?: {
-                [key: string]: number | null;
+                [key: string]: number;
             } | null;
             cropWeight?: {
                 [key: string]: number;
@@ -8669,7 +9228,7 @@ export interface components {
             /** Format: double */
             totalWeight?: number;
             crops?: {
-                [key: string]: number | null;
+                [key: string]: number;
             } | null;
             cropWeight?: {
                 [key: string]: number;
@@ -8723,8 +9282,8 @@ export interface components {
         GuildDetailsDto: {
             id: string;
             name: string;
-            icon?: string | null;
-            banner?: string | null;
+            icon?: components["schemas"]["ImageAttachmentDto"];
+            banner?: components["schemas"]["ImageAttachmentDto"];
             inviteCode?: string | null;
             /** Format: int32 */
             memberCount?: number;
@@ -8781,7 +9340,7 @@ export interface components {
         GuildMemberDto: {
             id: string;
             name: string;
-            icon?: string | null;
+            icon?: components["schemas"]["ImageAttachmentDto"];
             hasBot?: boolean;
             permissions: string;
             roles?: string[];
@@ -8792,6 +9351,19 @@ export interface components {
             name: string;
             /** Format: int32 */
             position?: number;
+        };
+        ImageAttachmentDto: {
+            /** @description Image title */
+            title?: string | null;
+            /** @description Image description */
+            description?: string | null;
+            /**
+             * Format: int32
+             * @description Image ordering number
+             */
+            order?: number | null;
+            /** @description Full image URL */
+            url?: string;
         };
         IncomingAccountDto: {
             /** Format: int64 */
@@ -8860,7 +9432,7 @@ export interface components {
             name?: string | null;
             lore?: string[] | null;
             enchantments?: {
-                [key: string]: number | null;
+                [key: string]: number;
             } | null;
             attributes?: {
                 [key: string]: string;
@@ -9149,9 +9721,9 @@ export interface components {
             name: string;
             public?: boolean;
             features?: components["schemas"]["GuildFeatures"];
-            icon?: string | null;
+            icon?: components["schemas"]["ImageAttachmentDto"];
+            banner?: components["schemas"]["ImageAttachmentDto"];
             inviteCode?: string | null;
-            banner?: string | null;
             description?: string | null;
             adminRole?: string | null;
             botPermissions?: string | null;
@@ -9184,20 +9756,31 @@ export interface components {
             name: string;
             /** @description Slug of the product */
             slug: string;
-            /** @description Icon URL */
-            icon?: string | null;
+            /**
+             * Format: int32
+             * @description Product price
+             */
+            price?: number;
             /** @description Product description */
             description?: string | null;
+            /** @description If the product is available for purchase */
+            available?: boolean;
             type?: components["schemas"]["ProductType"];
             category?: components["schemas"]["ProductCategory"];
             features?: components["schemas"]["UnlockedProductFeaturesDto"];
             /** @description Unlocked weight styles */
             weightStyles?: components["schemas"]["WeightStyleLinkedDto"][];
+            thumbnail?: components["schemas"]["ImageAttachmentDto"];
+            /** @description Product Images */
+            images?: components["schemas"]["ImageAttachmentDto"][];
             /**
              * Format: int32
              * @description Discord flags
              */
             flags?: number;
+            isSubscription?: boolean;
+            isGuildSubscription?: boolean;
+            isUserSubscription?: boolean;
         };
         /**
          * Format: int32
@@ -9275,8 +9858,8 @@ export interface components {
         PublicGuildDto: {
             id: string;
             name: string;
-            icon?: string | null;
-            banner?: string | null;
+            icon?: components["schemas"]["ImageAttachmentDto"];
+            banner?: components["schemas"]["ImageAttachmentDto"];
             inviteCode?: string | null;
             description?: string | null;
             /** Format: int32 */
@@ -9420,7 +10003,7 @@ export interface components {
                 [key: string]: number;
             };
             perks?: {
-                [key: string]: number | null;
+                [key: string]: number;
             } | null;
             tempStatBuffs?: components["schemas"]["TempStatBuffResponse"][] | null;
             accessoryBagSettings?: unknown;
@@ -9444,12 +10027,6 @@ export interface components {
             updateRoleId?: string | null;
             pingForSmallImprovements?: boolean | null;
         };
-        UpdateProductDto: {
-            category?: components["schemas"]["ProductCategory"];
-            icon?: string | null;
-            description?: string | null;
-            features?: components["schemas"]["UnlockedProductFeaturesDto"];
-        };
         UpdateUserSettingsDto: {
             features?: components["schemas"]["ConfiguredProductFeaturesDto"];
             /**
@@ -9461,7 +10038,7 @@ export interface components {
         UserBadgeDto: {
             /** Format: int32 */
             id?: number;
-            imageId: string;
+            image: components["schemas"]["ImageAttachmentDto"];
             name: string;
             description: string;
             requirements: string;
@@ -9515,6 +10092,7 @@ export interface components {
             size?: components["schemas"]["WeightStylePositionDto"];
             fill?: string | null;
             rects?: components["schemas"]["WeightStyleBackgroundRectDto"][] | null;
+            imageUrl?: string | null;
             /** Format: int32 */
             radius?: number | null;
             /** Format: double */
@@ -9588,15 +10166,6 @@ export interface components {
             position?: number;
             fill: string;
         };
-        WeightStyleImageDto: {
-            /** Format: int32 */
-            id?: number;
-            url?: string | null;
-            title?: string | null;
-            description?: string | null;
-            /** Format: int32 */
-            order?: number;
-        };
         WeightStyleLinkedDto: {
             /** Format: int32 */
             id?: number;
@@ -9624,7 +10193,7 @@ export interface components {
             name?: string | null;
             collection?: string | null;
             description?: string | null;
-            images?: components["schemas"]["WeightStyleImageDto"][];
+            image?: components["schemas"]["ImageAttachmentDto"];
             products?: components["schemas"]["ParentProductDto"][];
             data?: components["schemas"]["WeightStyleDataDto"];
         };

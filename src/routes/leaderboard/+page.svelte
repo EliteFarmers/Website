@@ -12,7 +12,7 @@
 
 <Head
 	title="Elite | Leaderboards"
-	description="View the various leaderboards available on the site! See the top thousand farmers in every crop!"
+	description="View the various leaderboards available on the site! See the 5 thousand farmers in every crop!"
 />
 
 <main class="flex flex-col gap-16 mb-16 px-8 items-center">
