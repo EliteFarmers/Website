@@ -6,7 +6,7 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import CreateEvent from './create-event.svelte';
 
 	export let data: PageData;

@@ -9,7 +9,7 @@
 	import { getCountdown } from '$lib/format';
 	import { page } from '$app/stores';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 	import EventData from '$comp/events/event-data.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';

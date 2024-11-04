@@ -8,6 +8,7 @@
 	import { SelectSimple } from '$ui/select';
 	import { Textarea } from '$ui/textarea';
 	import * as Dialog from '$ui/dialog';
+	import * as Card from '$ui/card';
 	import { pending } from '$lib/utils';
 	import Plus from 'lucide-svelte/icons/plus';
 	import X from 'lucide-svelte/icons/x';
@@ -35,6 +36,11 @@
 		available: false,
 	};
 
+	$: styles = product.weightStyles?.map((s) => ({
+		value: (s.id ?? 0).toString(),
+		label: s.name,
+	}));
+
 	onMount(() => {
 		changedSettings.shopPromotions = product?.features?.hideShopPromotions ?? false;
 		changedSettings.styleOverride = product?.features?.weightStyleOverride ?? false;
@@ -51,7 +57,7 @@
 <Head title="Product" description="Manage product" />
 
 <main class="my-16">
-	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
+	<section class="flex flex-col gap-4 w-full max-w-4xl my-8">
 		<div class="flex flex-row items-center gap-4 mb-8">
 			<h1 class="text-4xl">{product.name}</h1>
 			<ProductPrice {product} />
@@ -99,8 +105,8 @@
 			<p class="text-red-500">{form.error}</p>
 		{/if}
 
-		<div class="flex flex-row gap-4">
-			<form method="post" action="?/updateProduct" class="flex flex-col gap-4" use:enhance>
+		<div class="flex flex-col lg:flex-row gap-4 w-full">
+			<form method="post" action="?/updateProduct" class="flex flex-col gap-4 flex-1" use:enhance>
 				<input type="hidden" name="product" bind:value={product.id} />
 
 				<div class="flex flex-col gap-2 items-start">
@@ -111,12 +117,6 @@
 				<div class="flex flex-col gap-2 items-start">
 					<Label>Product Price</Label>
 					<Input name="price" bind:value={product.price} placeholder="299" />
-				</div>
-
-				<div class="flex flex-col gap-2 items-start">
-					<Label>Product Available</Label>
-					<Switch bind:checked={changedSettings.available} />
-					<input type="hidden" name="available" bind:value={changedSettings.available} />
 				</div>
 
 				<div class="flex flex-col gap-2 items-start">
@@ -146,37 +146,6 @@
 					<Switch bind:checked={changedSettings.moreInfo} />
 					<Label>"More Info" in weight command by default</Label>
 					<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
-				</div>
-
-				<div class="flex flex-col gap-2 items-start">
-					<p class="mt-1 font-semibold">Unlocked Weight Styles</p>
-					{#each selectedStyles as style}
-						<input type="hidden" name="style" value={style} />
-						<div class="flex flex-row gap-2 items-center">
-							<Button
-								variant="secondary"
-								size="sm"
-								on:click={() => {
-									selectedStyles = selectedStyles.filter((s) => s !== style);
-								}}
-							>
-								<X size={16} />
-							</Button>
-							<Label>{style}</Label>
-						</div>
-					{/each}
-					<div class="flex flex-row gap-2 items-center">
-						<Input placeholder="Add Style" bind:value={newStyle} />
-						<Button
-							variant="secondary"
-							size="sm"
-							on:click={() => {
-								selectedStyles = [...selectedStyles, newStyle];
-							}}
-						>
-							<Plus size={16} />
-						</Button>
-					</div>
 				</div>
 
 				<div class="flex flex-col gap-2 items-start">
@@ -210,13 +179,19 @@
 					</div>
 				</div>
 
+				<div class="flex flex-row gap-2 items-center">
+					<Switch bind:checked={changedSettings.available} />
+					<Label>Product Available</Label>
+					<input type="hidden" name="available" bind:value={changedSettings.available} />
+				</div>
+
 				<Button type="submit" disabled={loading}>Update</Button>
 			</form>
 			<form
 				method="post"
 				action="?/addImage"
 				enctype="multipart/form-data"
-				class="flex flex-col gap-4"
+				class="flex flex-col gap-4 flex-1"
 				use:pending={loading}
 			>
 				<input type="hidden" name="product" bind:value={product.id} />
@@ -244,6 +219,48 @@
 
 				<Button type="submit" disabled={loading}>Add Image</Button>
 			</form>
+			<div class="flex flex-col flex-1 gap-4">
+				<h2 class="text-xl font-semibold">Unlocked Styles</h2>
+
+				<div class="flex flex-col gap-2">
+					{#each styles ?? [] as style}
+						<Card.Root>
+							<Card.Content class="p-4">
+								<p>{style.label}</p>
+							</Card.Content>
+						</Card.Root>
+					{/each}
+				</div>
+
+				<form method="post" action="?/addCosmetic" class="flex flex-col gap-4" use:pending={loading}>
+					<input type="hidden" name="product" bind:value={product.id} />
+
+					<div class="flex flex-col gap-2 items-start">
+						<Label>Rewarded Cosmetic</Label>
+						<SelectSimple
+							options={data.styles.map((b) => ({
+								value: (b.id ?? 0).toString(),
+								label: b.name ?? 'Unknown',
+							}))}
+							placeholder="Select a style"
+							name="cosmetic"
+						/>
+					</div>
+
+					<div class="flex flex-row items-center gap-2">
+						<Button type="submit" class="flex-1" disabled={loading}>Add</Button>
+						<Button
+							type="submit"
+							class="flex-1"
+							formaction="?/removeCosmetic"
+							disabled={loading}
+							variant="destructive"
+						>
+							Remove
+						</Button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</section>
 </main>

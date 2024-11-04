@@ -9,7 +9,7 @@
 	import * as Dialog from '$ui/dialog';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Plus from 'lucide-svelte/icons/plus';
-	import UserIcon from '$comp/stats/discord/user-icon.svelte';
+	import UserIcon from '$comp/discord/user-icon.svelte';
 	import type { ActionData, PageData } from './$types';
 
 	export let data: PageData;

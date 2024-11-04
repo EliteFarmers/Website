@@ -8,7 +8,7 @@
 
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { PageData } from './$types';
-	import Serverbar from '$comp/stats/discord/serverbar.svelte';
+	import Serverbar from '$comp/discord/serverbar.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let data: PageData;

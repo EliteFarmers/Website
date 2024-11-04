@@ -14,7 +14,7 @@
 	import Image from 'lucide-svelte/icons/image';
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;

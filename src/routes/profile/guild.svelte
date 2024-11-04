@@ -1,5 +1,5 @@
 <script lang="ts">
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import ExternalLink from 'lucide-svelte/icons/external-link';

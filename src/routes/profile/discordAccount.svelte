@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import UserIcon from '$comp/stats/discord/user-icon.svelte';
+	import UserIcon from '$comp/discord/user-icon.svelte';
 	import type { components } from '$lib/api/api';
 
 	export let account: components['schemas']['AuthorizedAccountDto'] = {};

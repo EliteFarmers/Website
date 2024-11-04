@@ -1,7 +1,14 @@
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { components } from '$lib/api/api';
-import { AddProductImage, GetAdminProducts, RemoveProductImage, UpdateProduct } from '$lib/api/elite';
+import {
+	AddCosmeticToProduct,
+	AddProductImage,
+	GetAdminProducts,
+	RemoveCosmeticFromProduct,
+	RemoveProductImage,
+	UpdateProduct,
+} from '$lib/api/elite';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { user, session } = await parent();
@@ -50,7 +57,6 @@ export const actions: Actions = {
 				hideShopPromotions: data.get('promotions') === 'true',
 				weightStyleOverride: data.get('override') === 'true',
 				moreInfoDefault: data.get('info') === 'true',
-				weightStyles: (data.getAll('style') as string[])?.filter((s) => s) ?? undefined,
 				embedColors: (data.getAll('color') as string[])?.filter((c) => c) ?? undefined,
 			},
 		} satisfies components['schemas']['EditProductDto'];
@@ -123,6 +129,48 @@ export const actions: Actions = {
 
 		if (!response.ok) {
 			return fail(response.status, { error: await response.text() });
+		}
+
+		return { success: true };
+	},
+	addCosmetic: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const productId = data.get('product') as string;
+		const cosmeticId = data.get('cosmetic') as string;
+
+		if (!productId || !cosmeticId) {
+			return fail(400, { error: 'Invalid product Id or cosmetic.' });
+		}
+
+		const req = await AddCosmeticToProduct(locals.access_token, productId, cosmeticId);
+
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
+		}
+
+		return { success: true };
+	},
+	removeCosmetic: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const productId = data.get('product') as string;
+		const cosmeticId = data.get('cosmetic') as string;
+
+		if (!productId || !cosmeticId) {
+			return fail(400, { error: 'Invalid product Id or cosmetic.' });
+		}
+
+		const req = await RemoveCosmeticFromProduct(locals.access_token, productId, cosmeticId);
+
+		if (!req.response.ok) {
+			return fail(req.response.status, { error: await req.response.text() });
 		}
 
 		return { success: true };

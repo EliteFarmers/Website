@@ -6,7 +6,7 @@
 	import * as Select from '$ui/select';
 	import type { ActionData, PageData } from './$types';
 	import Head from '$comp/head.svelte';
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
 	export let data: PageData;

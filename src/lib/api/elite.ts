@@ -1066,6 +1066,32 @@ export const RemoveProductImage = async (accessToken: string, productId: string,
 		},
 	});
 
+export const AddCosmeticToProduct = async (accessToken: string, productId: string, cosmeticId: string) =>
+	await POST('/product/{productId}/styles/{styleId}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+				styleId: cosmeticId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const RemoveCosmeticFromProduct = async (accessToken: string, productId: string, cosmeticId: string) =>
+	await DELETE('/product/{productId}/styles/{styleId}', {
+		params: {
+			path: {
+				productId: productId as unknown as number,
+				styleId: cosmeticId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {

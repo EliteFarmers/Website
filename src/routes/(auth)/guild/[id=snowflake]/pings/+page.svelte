@@ -6,7 +6,7 @@
 	import * as Select from '$ui/select';
 	import type { PageData, ActionData } from './$types';
 	import { enhance } from '$app/forms';
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;

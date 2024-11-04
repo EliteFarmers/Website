@@ -3,7 +3,7 @@
 	import * as Avatar from '$ui/avatar';
 	import { Button } from '$ui/button';
 	import { page } from '$app/stores';
-	import UserIcon from '$comp/stats/discord/user-icon.svelte';
+	import UserIcon from '$comp/discord/user-icon.svelte';
 	import UserRound from 'lucide-svelte/icons/user-round';
 
 	$: user = $page.data.session;

@@ -38,22 +38,22 @@
 			Back to Shop
 		</a>
 
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8 w-full max-w-4xl">
+		<div class="flex flex-col items-center lg:items-start lg:grid lg:grid-cols-2 gap-8 mt-8 w-full max-w-4xl">
 			{#if product.description}
-				<p class="max-w-2xl">
+				<p class="max-w-2xl order-1">
 					{product.description}
 				</p>
 			{:else}
 				<!-- Maintain grid layout -->
-				<div />
+				<div class="order-1" />
 			{/if}
 
-			<div class="flex flex-col justify-end">
+			<div class="flex flex-col justify-end order-3 lg:order-2">
 				<h2 class="text-xl font-semibold">Unlocks Features</h2>
 			</div>
-			{#if product.images?.length}
-				<div>
-					<Carousel.Root class="w-full max-w-96 mx-10">
+			<div class="order-2 lg:order-3 w-full max-w-96">
+				{#if product.images?.length}
+					<Carousel.Root class="w-full mx-10">
 						<Carousel.Content>
 							{#each product.images ?? [] as image, i (i)}
 								<Carousel.Item>
@@ -77,9 +77,7 @@
 						<Carousel.Previous />
 						<Carousel.Next />
 					</Carousel.Root>
-				</div>
-			{:else}
-				<div>
+				{:else}
 					<Card.Root>
 						<Card.Content
 							class="flex aspect-square items-center justify-center p-0 relative overflow-hidden"
@@ -89,9 +87,9 @@
 							</div>
 						</Card.Content>
 					</Card.Root>
-				</div>
-			{/if}
-			<div class="flex flex-col gap-2 w-full">
+				{/if}
+			</div>
+			<div class="flex flex-col gap-2 w-full order-4">
 				{#if product.weightStyles?.length}
 					<ProductUnlock open={true}>
 						<svelte:fragment slot="header">

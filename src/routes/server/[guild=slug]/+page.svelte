@@ -5,8 +5,8 @@
 	import type { PageData } from './$types';
 	import Leaderboard from './leaderboard.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Event from '$comp/stats/discord/event.svelte';
-	import GuildIcon from '$comp/stats/discord/guild-icon.svelte';
+	import Event from '$comp/discord/event.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
 	export let data: PageData;
 
