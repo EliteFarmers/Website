@@ -21,7 +21,7 @@ export interface CustomFormatterOptions {
 export async function createFromData(
 	canvas: HTMLCanvasElement,
 	{
-		account = { name: 'ExampleAccount', id: undefined },
+		account = { name: 'Example Account', id: undefined },
 		profile = { totalWeight: Math.random() * 5000 + 1000 },
 		weightRank = -1,
 		badgeUrl = '',
@@ -33,7 +33,7 @@ export async function createFromData(
 		return null;
 	}
 
-	const ign = account.name ?? 'Unknown';
+	const ign = account.name || 'Example Account';
 	const uuid = account.id ?? ['MHF_Steve', 'MHF_Alex'][Math.random() > 0.5 ? 1 : 0];
 
 	let result = '';
@@ -419,7 +419,11 @@ function getDecalImage(weight: components['schemas']['FarmingWeightDto'], decal?
 
 	const crops = weight.cropWeight;
 	if (!crops) {
-		return decal.imageUrl ? loadImage(decal.imageUrl) : null;
+		if (decal.imageUrl) {
+			return loadImage(decal.imageUrl);
+		}
+		const options = Object.values(decal.crops);
+		return loadImage(options[Math.floor(Math.random() * options.length)]);
 	}
 
 	const topCollection = Object.entries(crops).sort(([, a], [, b]) => (b ?? 0) - (a ?? 0))[0][0];
