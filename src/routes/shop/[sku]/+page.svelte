@@ -27,7 +27,7 @@
 
 <Head title="Shop" description="Help support development with cosmetics!" />
 
-<main class="flex flex-col items-center gap-12 my-16 mx-2 w-full">
+<main class="flex flex-col items-center gap-12 my-16 w-full px-2">
 	<section class="flex flex-col items-start gap-4">
 		<div class="flex flex-row items-center gap-4 -mb-3">
 			<h1 class="text-4xl">{product.name}</h1>
@@ -48,35 +48,37 @@
 				<div class="order-1" />
 			{/if}
 
-			<div class="flex flex-col justify-end order-3 lg:order-2">
+			<div class="flex h-full flex-col justify-end order-3 lg:order-2">
 				<h2 class="text-xl font-semibold">Unlocks Features</h2>
 			</div>
 			<div class="order-2 lg:order-3 w-full max-w-96">
 				{#if product.images?.length}
-					<Carousel.Root class="w-full mx-10">
-						<Carousel.Content>
-							{#each product.images ?? [] as image, i (i)}
-								<Carousel.Item>
-									<div class="">
-										<Card.Root>
-											<Card.Content
-												class="flex aspect-square items-center justify-center p-0 relative overflow-hidden"
-											>
-												<img
-													src={image.url}
-													alt={product.name}
-													title={image.title}
-													class="w-full object-cover"
-												/>
-											</Card.Content>
-										</Card.Root>
-									</div>
-								</Carousel.Item>
-							{/each}
-						</Carousel.Content>
-						<Carousel.Previous />
-						<Carousel.Next />
-					</Carousel.Root>
+					<div class="w-full px-10">
+						<Carousel.Root>
+							<Carousel.Content>
+								{#each product.images ?? [] as image, i (i)}
+									<Carousel.Item>
+										<div class="w-full">
+											<Card.Root>
+												<Card.Content
+													class="flex aspect-square items-center justify-center p-0 relative overflow-hidden"
+												>
+													<img
+														src={image.url}
+														alt={product.name}
+														title={image.title}
+														class="w-full object-fit"
+													/>
+												</Card.Content>
+											</Card.Root>
+										</div>
+									</Carousel.Item>
+								{/each}
+							</Carousel.Content>
+							<Carousel.Previous />
+							<Carousel.Next />
+						</Carousel.Root>
+					</div>
 				{:else}
 					<Card.Root>
 						<Card.Content
@@ -89,7 +91,7 @@
 					</Card.Root>
 				{/if}
 			</div>
-			<div class="flex flex-col gap-2 w-full order-4">
+			<div class="flex flex-col gap-2 w-full max-w-96 order-4">
 				{#if product.weightStyles?.length}
 					<ProductUnlock open={true}>
 						<svelte:fragment slot="header">
