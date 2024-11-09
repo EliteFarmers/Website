@@ -1,5 +1,6 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
 import colors from 'tailwindcss/colors';
+import tailwindcssAnimate from 'tailwindcss-animate';
 import svelteUx from 'svelte-ux/plugins/tailwind.cjs';
 
 /** @type {import('tailwindcss').Config} */
@@ -11,7 +12,7 @@ const config = {
 		'./node_modules/svelte-ux/**/*.{svelte,js}',
 	],
 	safelist: ['dark'],
-	plugins: [svelteUx({ colorSpace: 'oklch' })],
+	plugins: [svelteUx({ colorSpace: 'oklch' }), tailwindcssAnimate],
 	theme: {
 		container: {
 			center: true,
@@ -93,6 +94,25 @@ const config = {
 			},
 			fontFamily: {
 				sans: [...fontFamily.sans],
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' },
+				},
+				'accordion-up': {
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' },
+				},
+				'caret-blink': {
+					'0%,70%,100%': { opacity: '1' },
+					'20%,50%': { opacity: '0' },
+				},
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'caret-blink': 'caret-blink 1.25s ease-out infinite',
 			},
 		},
 	},
