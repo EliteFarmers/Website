@@ -6,6 +6,7 @@
 	import { Button } from '$ui/button';
 	import type { components } from '$lib/api/api';
 	import { getGardenLevel } from 'farming-weight';
+	import { slide } from 'svelte/transition';
 
 	export let open = false;
 	export let skills: components['schemas']['ProfileMemberDto']['skills'];
@@ -18,30 +19,32 @@
 
 <Collapsible.Root bind:open class="w-full mx-4">
 	<div class="flex flex-row items-center justify-center">
-		<Collapsible.Trigger asChild let:builder>
-			<div class="flex flex-row gap-4 items-end justify-center w-full">
-				<div class="flex flex-col md:flex-row gap-4 items-end justify-center w-full flex-1">
-					<Skillbar
-						name="Farming"
-						rank={skillRanks?.farming}
-						progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
-					/>
-					<Button builders={[builder]} variant="outline" class="w-10 p-0 -mb-1 hidden md:flex">
-						<ChevronsUpDown class="h-4 w-4" />
-						<span class="sr-only">Skill Toggle</span>
-					</Button>
-					<Skillbar name="Garden" rank={ranks?.profile?.garden} progress={getGardenLevel(gardenXp)} />
+		<Collapsible.Trigger>
+			{#snippet child({ props })}
+				<div class="flex flex-row gap-4 items-end justify-center w-full">
+					<div class="flex flex-col md:flex-row gap-4 items-end justify-center w-full flex-1">
+						<Skillbar
+							name="Farming"
+							rank={skillRanks?.farming}
+							progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
+						/>
+						<Button variant="outline" class="w-10 p-0 -mb-1 hidden md:flex" {...props}>
+							<ChevronsUpDown class="h-4 w-4" />
+							<span class="sr-only">Skill Toggle</span>
+						</Button>
+						<Skillbar name="Garden" rank={ranks?.profile?.garden} progress={getGardenLevel(gardenXp)} />
+					</div>
+					<div class="md:hidden">
+						<Button variant="outline" class="w-10 p-0 -mb-1" {...props}>
+							<ChevronsUpDown class="h-4 w-4" />
+							<span class="sr-only">Toggle</span>
+						</Button>
+					</div>
 				</div>
-				<div class="md:hidden">
-					<Button builders={[builder]} variant="outline" class="w-10 p-0 -mb-1">
-						<ChevronsUpDown class="h-4 w-4" />
-						<span class="sr-only">Toggle</span>
-					</Button>
-				</div>
-			</div>
+			{/snippet}
 		</Collapsible.Trigger>
 	</div>
-	<Collapsible.Content>
+	<Collapsible.Content transition={slide} transitionConfig={{ duration: 150 }}>
 		<div class="flex flex-col gap-8 md:flex-row justify-center align-middle my-8">
 			<div class="flex flex-col gap-2 flex-1 max-w-2xl">
 				<Skillbar

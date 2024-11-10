@@ -59,13 +59,13 @@
 		<div
 			class="absolute top-0 bottom-0 left-0 rounded-lg bg-yellow-200 dark:bg-yellow-700"
 			style="width: {Math.max(2, percent)}%;"
-		/>
+		></div>
 		{#if percent >= 100}
 			<!-- Gold color to show completion -->
 			<div
 				class="absolute top-0 left-0 w-full h-full rounded-lg bg-yellow-400 dark:bg-yellow-600"
 				style="opacity: 0.7;"
-			/>
+			></div>
 		{/if}
 		<div class="absolute flex items-center justify-center w-full h-full">
 			<p class="text-lg leading-none font-semibold">{hovering ? expanded : readable}</p>

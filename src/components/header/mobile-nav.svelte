@@ -1,11 +1,12 @@
 <script lang="ts">
 	import * as Sheet from '$ui/sheet';
-	import { Button } from '$ui/button';
+	import { Button, buttonVariants } from '$ui/button';
 	import MobileLink from '$comp/header/mobile-link.svelte';
 	import Menu from 'lucide-svelte/icons/menu';
 	import { MOBILE_NAV } from '$content/nav';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import { page } from '$app/stores';
+	import { cn } from '$lib/utils';
 
 	let open = false;
 
@@ -13,15 +14,16 @@
 </script>
 
 <Sheet.Root bind:open>
-	<Sheet.Trigger asChild let:builder>
-		<Button
-			builders={[builder]}
-			variant="ghost"
-			class="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-		>
-			<Menu class="w-5 h-5" />
-			<span class="sr-only">Toggle Menu</span>
-		</Button>
+	<Sheet.Trigger
+		class={cn(
+			buttonVariants({
+				variant: "ghost",
+				class: "mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden",
+			})
+		)}
+	>
+		<Menu class="w-5 h-5" />
+		<span class="sr-only">Toggle Menu</span>
 	</Sheet.Trigger>
 	<Sheet.Content side="left" class="pr-0">
 		<MobileLink href="/" class="flex items-center" bind:open>

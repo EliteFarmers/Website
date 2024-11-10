@@ -1,18 +1,22 @@
 <script lang="ts">
 	import type { AuthorizedUser } from '$lib/api/elite';
 	import UserRound from 'lucide-svelte/icons/user-round';
-	export let user: AuthorizedUser;
-	export let size = 12;
+
+	interface props {
+		user: AuthorizedUser;
+		class?: string;
+	}
+	let { class: className = 'size-12', user }: props = $props(); 
 </script>
 
 {#if !user.avatar}
-	<div class="w-{size} h-{size} rounded-full flex items-center justify-center select-none bg-blend-darken bg-black">
+	<div class="{className} rounded-full flex items-center justify-center select-none bg-blend-darken bg-black">
 		<UserRound />
 	</div>
 {:else}
 	<img
 		loading="lazy"
-		class="w-{size} h-{size} rounded-full"
+		class="{className} rounded-full"
 		src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.{user.avatar.startsWith('a_')
 			? 'gif'
 			: 'webp'}?size=96"

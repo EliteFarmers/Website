@@ -37,7 +37,7 @@
 <Button
 	variant="outline"
 	class={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64')}
-	on:click={() => (open = true)}
+	onclick={() => (open = true)}
 	{...$$restProps}
 >
 	<span class="hidden lg:inline-flex"> Search For Player... </span>
@@ -59,20 +59,6 @@
 						{player}
 					</Command.Item>
 				{/each}
-			</Command.Group>
-			<Command.Group heading="Theme">
-				<Command.Item value="light" onSelect={() => runCommand(() => setMode('light'))}>
-					<Sun class="mr-2 h-4 w-4" />
-					Light
-				</Command.Item>
-				<Command.Item value="dark" onSelect={() => runCommand(() => setMode('dark'))}>
-					<Moon class="mr-2 h-4 w-4" />
-					Dark
-				</Command.Item>
-				<Command.Item value="system" onSelect={() => runCommand(() => resetMode())}>
-					<Laptop class="mr-2 h-4 w-4" />
-					System
-				</Command.Item>
 			</Command.Group>
 		</Command.List>
 	</Command.Root>

@@ -49,7 +49,7 @@
 					ign={player?.displayname}
 					{rank}
 					members={members ?? undefined}
-					profileId={profileDetails[0].id}
+					profileId={profileDetails[0]?.id}
 				/>
 				<div class="flex flex-wrap md:flex-row justify-start gap-1">
 					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />

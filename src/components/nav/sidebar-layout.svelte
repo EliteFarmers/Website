@@ -37,7 +37,7 @@
 						{previous.title}
 					</Button>
 				{:else}
-					<div />
+					<div></div>
 				{/if}
 				{#if next}
 					<Button href={next.href} class="flex flex-row gap-1 items-center leading-none" variant="outline">

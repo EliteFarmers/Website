@@ -16,7 +16,7 @@
 	<div class="container flex h-14 max-w-screen-2xl items-center">
 		<MainNav />
 		<MobileNav />
-		<div class="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+		<div class="flex flex-1 items-center justify-between gap-4 md:justify-end">
 			<div class="w-full flex-1 md:w-auto md:flex-none">
 				<SearchMenu />
 			</div>
@@ -33,8 +33,8 @@
 		<div
 			class="w-full h-1 bg-green-300 absolute"
 			transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
-		/>
+		></div>
 	</div>
 	<!-- Gray out the screen -->
-	<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50" />
+	<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50"></div>
 {/if}

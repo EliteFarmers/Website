@@ -65,7 +65,7 @@
 
 							<span class="text-2xl">{count.toLocaleString()}</span>
 
-							<div />
+							<div></div>
 						</div>
 					{/if}
 				</div>
@@ -111,7 +111,7 @@
 								<span class="text-2xl leading-none">{count.toLocaleString()}</span>
 							</div>
 
-							<div />
+							<div></div>
 						</div>
 					{/if}
 				</div>

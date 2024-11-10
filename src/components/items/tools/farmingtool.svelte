@@ -6,11 +6,11 @@
 	import Lorebtn from '../lorebtn.svelte';
 	import { UNUSED_MATHEMATICAL_HOE } from '$content/random';
 
-	export let tool: FT;
+	let { tool }: { tool: FT } = $props();
 
-	$: crop = tool.crop
+	const crop = $derived(tool.crop
 		? PROPER_CROP_TO_IMG[getCropDisplayName(tool.crop)]
-		: Object.values(PROPER_CROP_TO_IMG)[Math.floor(Math.random() * Object.keys(PROPER_CROP_TO_IMG).length)];
+		: Object.values(PROPER_CROP_TO_IMG)[Math.floor(Math.random() * Object.keys(PROPER_CROP_TO_IMG).length)]);
 </script>
 
 <div class="flex basis-[5rem] w-full max-h-30 flex-row gap-2 justify-between bg-primary-foreground rounded-md p-1">
