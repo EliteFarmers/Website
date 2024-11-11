@@ -980,6 +980,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cooldowns/player/{playerId}/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset a fetch cooldown on a player */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    playerId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/guild/{guildId}/events/admin": {
         parameters: {
             query?: never;
@@ -4030,6 +4088,44 @@ export interface paths {
                         "text/plain": components["schemas"]["EventDetailsDto"][];
                         "application/json": components["schemas"]["EventDetailsDto"][];
                         "text/json": components["schemas"]["EventDetailsDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/event/defaults": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all upcoming events */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["EventDefaultsDto"];
+                        "application/json": components["schemas"]["EventDefaultsDto"];
+                        "text/json": components["schemas"]["EventDefaultsDto"];
                     };
                 };
             };
@@ -9025,6 +9121,8 @@ export interface components {
             requiredRole?: string | null;
             blockedRole?: string | null;
             guildId?: string | null;
+            weightData?: components["schemas"]["WeightEventData"];
+            medalData?: components["schemas"]["MedalEventData"];
         };
         EditProductDto: {
             category?: components["schemas"]["ProductCategory"];
@@ -9078,6 +9176,46 @@ export interface components {
             id: string;
             /** Format: date-time */
             createdAt?: string;
+        };
+        EventDefaultsDto: {
+            cropWeights?: {
+                /** Format: double */
+                Cactus?: number;
+                /** Format: double */
+                Carrot?: number;
+                /** Format: double */
+                CocoaBeans?: number;
+                /** Format: double */
+                Melon?: number;
+                /** Format: double */
+                Mushroom?: number;
+                /** Format: double */
+                NetherWart?: number;
+                /** Format: double */
+                Potato?: number;
+                /** Format: double */
+                Pumpkin?: number;
+                /** Format: double */
+                SugarCane?: number;
+                /** Format: double */
+                Wheat?: number;
+                /** Format: double */
+                Seeds?: number;
+            };
+            medalValues?: {
+                /** Format: int32 */
+                None?: number;
+                /** Format: int32 */
+                Bronze?: number;
+                /** Format: int32 */
+                Silver?: number;
+                /** Format: int32 */
+                Gold?: number;
+                /** Format: int32 */
+                Platinum?: number;
+                /** Format: int32 */
+                Diamond?: number;
+            };
         };
         EventDetailsDto: {
             /** @description Event id as a string */

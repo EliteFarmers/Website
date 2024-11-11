@@ -1281,6 +1281,75 @@
         ]
       }
     },
+    "/cooldowns/player/{playerId}/reset": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Reset a fetch cooldown on a player",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/guild/{guildId}/events/admin": {
       "get": {
         "tags": [
@@ -5826,6 +5895,36 @@
                   "items": {
                     "$ref": "#/components/schemas/EventDetailsDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/event/defaults": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "summary": "Get all upcoming events",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDefaultsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDefaultsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDefaultsDto"
                 }
               }
             }
@@ -13511,6 +13610,12 @@
           "guildId": {
             "type": "string",
             "nullable": true
+          },
+          "weightData": {
+            "$ref": "#/components/schemas/WeightEventData"
+          },
+          "medalData": {
+            "$ref": "#/components/schemas/MedalEventData"
           }
         },
         "additionalProperties": false
@@ -13648,6 +13753,92 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EventDefaultsDto": {
+        "type": "object",
+        "properties": {
+          "cropWeights": {
+            "type": "object",
+            "properties": {
+              "Cactus": {
+                "type": "number",
+                "format": "double"
+              },
+              "Carrot": {
+                "type": "number",
+                "format": "double"
+              },
+              "CocoaBeans": {
+                "type": "number",
+                "format": "double"
+              },
+              "Melon": {
+                "type": "number",
+                "format": "double"
+              },
+              "Mushroom": {
+                "type": "number",
+                "format": "double"
+              },
+              "NetherWart": {
+                "type": "number",
+                "format": "double"
+              },
+              "Potato": {
+                "type": "number",
+                "format": "double"
+              },
+              "Pumpkin": {
+                "type": "number",
+                "format": "double"
+              },
+              "SugarCane": {
+                "type": "number",
+                "format": "double"
+              },
+              "Wheat": {
+                "type": "number",
+                "format": "double"
+              },
+              "Seeds": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            "additionalProperties": false
+          },
+          "medalValues": {
+            "type": "object",
+            "properties": {
+              "None": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Bronze": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Silver": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Gold": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Platinum": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "Diamond": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false

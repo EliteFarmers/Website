@@ -10,6 +10,7 @@ import {
 	UnbanEventMember,
 	SetEventBanner,
 	ClearEventBanner,
+	GetEventDefaults,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
@@ -36,11 +37,15 @@ export const load = (async ({ parent, params, locals }) => {
 	const bans = GetEventBans(token, event.guildId, event.id)
 		.then((r) => r.data)
 		.catch(() => undefined);
+	const defaults = GetEventDefaults()
+		.then((r) => r.data)
+		.catch(() => undefined);
 
 	return {
 		event,
 		members: members,
 		bans: bans,
+		defaults,
 	};
 }) satisfies PageServerLoad;
 
@@ -196,6 +201,91 @@ export const actions: Actions = {
 		if (!eventId) throw error(400, 'Missing required field: id');
 
 		const { response } = await ClearEventBanner(token, eventId, guildId).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			return fail(response.status, { error: msg });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	editCropWeights: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const eventId = data.get('id') as string;
+		if (!eventId) throw error(400, 'Missing required field: id');
+
+		const body: components['schemas']['EditEventDto'] = {
+			guildId: guildId,
+			weightData: {
+				cropWeights: {
+					Cactus: +(data.get('Cactus') as string),
+					Carrot: +(data.get('Carrot') as string),
+					CocoaBeans: +(data.get('CocoaBeans') as string),
+					Melon: +(data.get('Melon') as string),
+					Mushroom: +(data.get('Mushroom') as string),
+					NetherWart: +(data.get('NetherWart') as string),
+					Potato: +(data.get('Potato') as string),
+					Pumpkin: +(data.get('Pumpkin') as string),
+					SugarCane: +(data.get('SugarCane') as string),
+					Wheat: +(data.get('Wheat') as string),
+				},
+			},
+		};
+
+		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (response.status !== 200) {
+			const msg = await response.text();
+			return fail(response.status, { error: msg });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	editMedalWeights: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const eventId = data.get('id') as string;
+		if (!eventId) throw error(400, 'Missing required field: id');
+
+		const body: components['schemas']['EditEventDto'] = {
+			guildId: guildId,
+			medalData: {
+				medalWeights: {
+					Bronze: +(data.get('bronze') as string),
+					Silver: +(data.get('silver') as string),
+					Gold: +(data.get('gold') as string),
+					Platinum: +(data.get('platinum') as string),
+					Diamond: +(data.get('diamond') as string),
+				},
+			},
+		};
+
+		const { response } = await EditEvent(token, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
