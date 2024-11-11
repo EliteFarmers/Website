@@ -25,7 +25,7 @@ export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	wheat: 'Wheat',
 };
 
-export const API_CROP_TO_CROP = {
+export const API_CROP_TO_CROP: Record<string, string> = {
 	WHEAT: 'wheat',
 	POTATO_ITEM: 'potato',
 	CARROT_ITEM: 'carrot',
@@ -39,7 +39,7 @@ export const API_CROP_TO_CROP = {
 	NETHER_STALK: 'netherwart',
 };
 
-export const PROPER_CROP_TO_API_CROP = {
+export const PROPER_CROP_TO_API_CROP: Record<string, string> = {
 	Cactus: 'CACTUS',
 	Carrot: 'CARROT_ITEM',
 	'Cocoa Beans': 'INK_SACK:3',
@@ -76,6 +76,34 @@ export const PROPER_CROP_TO_IMG: Partial<Record<string, string>> = {
 	Pumpkin: '/images/crops/pumpkin.png',
 	'Sugar Cane': '/images/crops/sugarcane.png',
 	Wheat: '/images/crops/wheat.png',
+};
+
+export const ELITE_CROP_TO_CROP: Record<string, Crop> = {
+	Cactus: Crop.Cactus,
+	Carrot: Crop.Carrot,
+	CocoaBeans: Crop.CocoaBeans,
+	Melon: Crop.Melon,
+	Mushroom: Crop.Mushroom,
+	NetherWart: Crop.NetherWart,
+	Potato: Crop.Potato,
+	Pumpkin: Crop.Pumpkin,
+	SugarCane: Crop.SugarCane,
+	Wheat: Crop.Wheat,
+	Seeds: Crop.Seeds,
+};
+
+export const CROP_TO_ELITE_CROP: Record<Crop, string> = {
+	[Crop.Cactus]: 'Cactus',
+	[Crop.Carrot]: 'Carrot',
+	[Crop.CocoaBeans]: 'CocoaBeans',
+	[Crop.Melon]: 'Melon',
+	[Crop.Mushroom]: 'Mushroom',
+	[Crop.NetherWart]: 'NetherWart',
+	[Crop.Potato]: 'Potato',
+	[Crop.Pumpkin]: 'Pumpkin',
+	[Crop.SugarCane]: 'SugarCane',
+	[Crop.Wheat]: 'Wheat',
+	[Crop.Seeds]: 'Seeds',
 };
 
 export const CROP_TO_HEX: Partial<Record<string, string>> = {

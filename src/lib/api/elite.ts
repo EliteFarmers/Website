@@ -529,6 +529,8 @@ export const GetEventDetails = async (eventId: string) =>
 		},
 	});
 
+export const GetEventDefaults = async () => await GET('/event/defaults', {});
+
 export const GetAdminEventDetails = async (token: string, guildId: string, eventId: string) =>
 	await GET('/guild/{guildId}/events/{eventId}/admin', {
 		params: {

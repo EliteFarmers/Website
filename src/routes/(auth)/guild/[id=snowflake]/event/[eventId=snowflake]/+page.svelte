@@ -15,7 +15,12 @@
 	import Head from '$comp/head.svelte';
 	import Member from './member.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import { EventType } from '$lib/utils';
 	import type { PageData, ActionData } from './$types';
+	import { NumberInput } from '$comp/ui/number-input';
+	import type { components } from '$lib/api/api';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
+	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -37,6 +42,13 @@
 	}
 
 	$: event = data.event;
+
+	$: medalWeights = ((event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
+		| Record<string, number>
+		| undefined;
+	$: cropWeights = ((event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
+		| Record<string, number>
+		| undefined;
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -45,7 +57,7 @@
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="text-4xl my-16">
-			{data.event?.name}
+			{event?.name}
 		</h1>
 	</div>
 
@@ -251,6 +263,163 @@
 				{/await}
 			</div>
 		</section>
+	</div>
+	<div class="flex flex-col p-4 rounded-md bg-primary-foreground">
+		{#await data.defaults}
+			<p>Loading...</p>
+		{:then defaults}
+			{#if event.type === +EventType.FarmingWeight && cropWeights}
+				<form
+					action="?/editCropWeights"
+					method="post"
+					class="flex flex-col gap-2 items-center"
+					use:enhance={() => {
+						pending = true;
+						return async ({ result, update }) => {
+							if (result) {
+								pending = false;
+								update();
+							}
+						};
+					}}
+				>
+					<input type="hidden" name="id" bind:value={data.event.id} />
+					<h4 class="text-lg mb-4">Crop Weight Values</h4>
+
+					<div class="flex flex-col md:flex-row md:flex-wrap gap-1 max-w-4xl justify-center items-center">
+						{#each Object.entries(defaults?.cropWeights ?? {}) as [crop] (crop)}
+							{@const c = getCropFromName(crop) ?? Crop.Wheat}
+							{@const cropName = getCropDisplayName(c)}
+							{@const name = CROP_TO_ELITE_CROP[c]}
+
+							<div class="flex flex-row items-center gap-1 md:basis-96 px-4">
+								<img src={PROPER_CROP_TO_IMG[cropName]} alt={crop} class="w-8 h-8 pixelated" />
+								<Label class="flex-1">{cropName}</Label>
+								<NumberInput
+									min={0}
+									max={1_000_000}
+									{name}
+									value={cropWeights[name]}
+									maxlength={64}
+									class="flex-1"
+									required
+								/>
+							</div>
+						{/each}
+					</div>
+					<p class="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+						Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
+					</p>
+
+					<div class="flex flex-row gap-2">
+						<Button
+							variant="destructive"
+							disabled={pending}
+							on:click={() => {
+								cropWeights = structuredClone(defaults?.cropWeights ?? {});
+							}}>Reset Values</Button
+						>
+						<Button type="submit" disabled={pending}>Update</Button>
+					</div>
+				</form>
+			{:else if event.type === +EventType.Medals && medalWeights}
+				<form
+					action="?/editMedalWeights"
+					method="post"
+					class="flex flex-col gap-2 items-center"
+					use:enhance={() => {
+						pending = true;
+						return async ({ result, update }) => {
+							if (result) {
+								pending = false;
+								update();
+							}
+						};
+					}}
+				>
+					<input type="hidden" name="id" bind:value={data.event.id} />
+					<h4 class="text-lg mb-4">Medal Point Values</h4>
+
+					<div class="flex flex-col gap-1 max-w-4xl justify-center items-center">
+						<div class="flex flex-row items-center gap-1 px-4 w-full">
+							<img src="/images/medals/bronze.webp" alt="Bronze" class="w-8 h-8 pixelated" />
+							<Label class="flex-1">Bronze</Label>
+							<NumberInput
+								min={0}
+								max={1_000}
+								name="bronze"
+								value={medalWeights['Bronze']}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+						</div>
+						<div class="flex flex-row items-center gap-1 px-4 w-full">
+							<img src="/images/medals/silver.webp" alt="Silver" class="w-8 h-8 pixelated" />
+							<Label class="flex-1">Silver</Label>
+							<NumberInput
+								min={0}
+								max={1_000}
+								name="silver"
+								value={medalWeights['Silver']}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+						</div>
+						<div class="flex flex-row items-center gap-1 px-4 w-full">
+							<img src="/images/medals/gold.webp" alt="Gold" class="w-8 h-8 pixelated" />
+							<Label class="flex-1">Gold</Label>
+							<NumberInput
+								min={0}
+								max={1_000}
+								name="gold"
+								value={medalWeights['Gold']}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+						</div>
+						<div class="flex flex-row items-center gap-1 px-4 w-full">
+							<img src="/images/medals/platinum.webp" alt="Platinum" class="w-8 h-8 pixelated" />
+							<Label class="flex-1">Platinum</Label>
+							<NumberInput
+								min={0}
+								max={1_000}
+								name="platinum"
+								value={medalWeights['Platinum']}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+						</div>
+						<div class="flex flex-row items-center gap-1 px-4 w-full">
+							<img src="/images/medals/diamond.webp" alt="Diamond" class="w-8 h-8 pixelated" />
+							<Label class="flex-1">Diamond</Label>
+							<NumberInput
+								min={0}
+								max={1_000}
+								name="diamond"
+								value={medalWeights['Diamond']}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+						</div>
+					</div>
+					<div class="flex flex-row gap-2">
+						<Button
+							variant="destructive"
+							disabled={pending}
+							on:click={() => {
+								medalWeights = structuredClone(defaults?.medalValues ?? {});
+							}}>Reset Values</Button
+						>
+						<Button type="submit" disabled={pending}>Update</Button>
+					</div>
+				</form>
+			{/if}
+		{/await}
 	</div>
 </main>
 
