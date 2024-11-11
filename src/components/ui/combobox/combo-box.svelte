@@ -7,47 +7,62 @@
 	import { Button } from '$ui/button';
 	import { cn } from '$lib/utils.js';
 
-	export let options = [] as { label: string; value: string }[];
-	export let exclude = [] as (string | undefined)[];
-	export let placeholder = 'Select...';
-	export let btnClass = '';
-	export let onChange: ((value: string) => void) | undefined = undefined;
-	export let clear = false;
-	export let disabled = false;
+	interface Props {
+		options: { label: string; value: string }[];
+		exclude: (string | undefined)[];
+		placeholder: string;
+		btnClass: string;
+		onChange: ((value: string) => void) | undefined;
+		clear: boolean;
+		disabled: boolean;
+		value: string;
+	}
+	let {
+		options = [],
+		exclude = [],
+		placeholder,
+		btnClass,
+		onChange = undefined,
+		clear = false,
+		disabled = $bindable(false),
+		value = $bindable('_'),
+	}: Props = $props();
 
-	$: realOptions = clear
+	let realOptions = clear
 		? [{ label: placeholder, value: '_' }, ...options.filter((f) => !exclude.includes(f.value))]
 		: options.filter((f) => !exclude.includes(f.value));
 
-	let open = false;
-	export let value = '';
+	let open = $state(false);
+	let triggerRef = $state<HTMLButtonElement>(null!);
 
-	$: selected = realOptions.find((f) => f.value === value) ?? { label: placeholder, value: '_' };
+	let selected = $derived(realOptions.find((f) => f.value === value) ?? { label: placeholder, value: '_' });
 
 	// We want to refocus the trigger button when the user selects
 	// an item from the list so users can continue navigating the
 	// rest of the form with the keyboard.
-	function closeAndFocusTrigger(triggerId: string) {
+	function closeAndFocusTrigger() {
 		open = false;
 		tick().then(() => {
-			document.getElementById(triggerId)?.focus();
+			triggerRef.focus();
 		});
 	}
 </script>
 
-<Popover.Root bind:open let:ids>
-	<Popover.Trigger asChild let:builder>
-		<Button
-			builders={[builder]}
-			variant="outline"
-			role="combobox"
-			aria-expanded={open}
-			{disabled}
-			class={cn(`w-[200px] justify-between ${selected.value === '_' ? 'text-muted-foreground' : ''}`, btnClass)}
-		>
-			{selected.label}
-			<CaretSort class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-		</Button>
+<Popover.Root bind:open>
+	<Popover.Trigger bind:ref={triggerRef}>
+		{#snippet child({ props })}
+			<Button
+				variant="outline"
+				role="combobox"
+				class={cn(`w-[200px] justify-between ${selected.value === '_' ? 'text-muted-foreground' : ''}`, btnClass)}
+				aria-expanded={open}
+				{disabled}
+				{...props}
+			>
+				{selected.label}
+				<CaretSort class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+			</Button>
+		{/snippet}
 	</Popover.Trigger>
 	<Popover.Content class="w-[200px] p-0 max-h-96 overflow-y-scroll">
 		<Command.Root>
@@ -57,10 +72,10 @@
 				{#each realOptions as option}
 					<Command.Item
 						value={option.value}
-						onSelect={(currentValue) => {
-							value = currentValue;
-							closeAndFocusTrigger(ids.trigger);
-							onChange?.(currentValue);
+						onSelect={() => {
+							value = option.value;
+							closeAndFocusTrigger();
+							onChange?.(option.value);
 						}}
 					>
 						<Check class={cn('mr-2 h-4 w-4', value !== option.value && 'text-transparent')} />
