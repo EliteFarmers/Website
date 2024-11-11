@@ -5,9 +5,10 @@
 	import Recents from './recents.svelte';
 	import Stats from './stats.svelte';
 
-	export let jacob: components['schemas']['JacobDataDto'] | undefined;
-	export let ign: string;
-	export let ranks: {
+	interface Props {
+		jacob: components['schemas']['JacobDataDto'] | undefined;
+		ign: string;
+		ranks?: {
 		bronze: number;
 		silver: number;
 		gold: number;
@@ -15,7 +16,10 @@
 		diamond: number;
 		participations: number;
 		firstPlaces: number;
-	} = {
+	};
+	}
+
+	let { jacob, ign, ranks = {
 		bronze: -1,
 		silver: -1,
 		gold: -1,
@@ -23,7 +27,7 @@
 		diamond: -1,
 		participations: -1,
 		firstPlaces: -1,
-	};
+	} }: Props = $props();
 </script>
 
 <section class="py-4 flex-col gap-4 justify-center align-middle mx-2 mb-8" aria-labelledby="Jacob">

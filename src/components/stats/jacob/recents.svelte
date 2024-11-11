@@ -3,9 +3,13 @@
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import type { components } from '$lib/api/api';
 
-	export let contests: components['schemas']['JacobDataDto']['contests'];
+	interface Props {
+		contests: components['schemas']['JacobDataDto']['contests'];
+	}
 
-	$: recentContests = contests?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0)).slice(0, 8) ?? [];
+	let { contests }: Props = $props();
+
+	let recentContests = $derived(contests?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0)).slice(0, 8) ?? []);
 
 	let showMore = false;
 </script>

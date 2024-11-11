@@ -7,7 +7,7 @@
 	import UserRound from 'lucide-svelte/icons/user-round';
 	import { cn } from '$lib/utils';
 
-	$: user = $page.data.session;
+	let user = $derived($page.data.session);
 </script>
 
 <DropdownMenu.Root>

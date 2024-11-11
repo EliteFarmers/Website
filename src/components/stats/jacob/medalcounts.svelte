@@ -1,12 +1,22 @@
 <script lang="ts">
-	export let medals = {
+	interface Props {
+		medals?: {
+			diamond: number;
+			platinum: number;
+			gold: number;
+			silver: number;
+			bronze: number;
+		}
+		participations?: number;
+	}
+
+	let { medals = {
 		diamond: 0,
 		platinum: 0,
 		gold: 0,
 		silver: 0,
 		bronze: 0,
-	};
-	export let participations = 0;
+	}, participations = 0 }: Props = $props();
 </script>
 
 <div class="flex flex-col md:flex-row gap-2 md:gap-4 justify-evenly">

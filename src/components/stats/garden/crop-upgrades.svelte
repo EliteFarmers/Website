@@ -3,12 +3,16 @@
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
+	interface Props {
+		garden?: components['schemas']['GardenDto'] | undefined;
+	}
+
+	let { garden = undefined }: Props = $props();
 
 	const upgradesList = [...Array(9).keys()];
 
-	$: upgrades = getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>);
-	$: crops = Object.entries(upgrades)
+	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>));
+	let crops = $derived(Object.entries(upgrades)
 		.map(([c, level]) => {
 			const crop = getCropFromName(c) ?? Crop.Wheat;
 			const name = getCropDisplayName(crop);
@@ -16,7 +20,7 @@
 
 			return { name, img, level };
 		})
-		.sort((a, b) => a.name.localeCompare(b.name));
+		.sort((a, b) => a.name.localeCompare(b.name)));
 </script>
 
 <div class="flex flex-wrap justify-start -mt-0.5">
@@ -31,7 +35,7 @@
 						: maxed
 						? 'bg-yellow-400 dark:bg-yellow-600'
 						: 'bg-green-400 dark:bg-green-600'}"
-				/>
+				></div>
 			{/each}
 			<span
 				class="leading-none font-semibold md:text-lg pl-1 pr-2 -my-1 {maxed

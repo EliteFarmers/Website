@@ -4,21 +4,37 @@
 	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import Minion from './minion.svelte';
 
-	export let name: string | undefined;
-	export let value: number;
-	export let weight: number;
-	export let pest: string;
-	export let pestKills: number;
-	export let pestRank = -1;
-	export let uncounted = 0;
-	export let minionTierField: number;
-	export let key: string;
-	export let rank = -1;
+	interface Props {
+		name: string | undefined;
+		value: number;
+		weight: number;
+		pest: string;
+		pestKills: number;
+		pestRank?: any;
+		uncounted?: number;
+		minionTierField: number;
+		key: string;
+		rank?: any;
+	}
 
-	$: crop = name ? name : undefined;
-	$: index = 0;
+	let {
+		name,
+		value,
+		weight,
+		pest,
+		pestKills,
+		pestRank = -1,
+		uncounted = 0,
+		minionTierField,
+		key,
+		rank = -1
+	}: Props = $props();
 
-	$: cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
+	let crop = $derived(name ? name : undefined);
+	let index = $state(0);
+	
+
+	let cropArray = $derived(PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0));
 
 	function getFrameStyle() {
 		if (crop && name) {
@@ -90,16 +106,18 @@
 						</a>
 					{/if}
 					<Popover.Mobile>
-						<div slot="trigger" class="flex flex-row items-center align-middle justify-center gap-2 h-6">
-							<p class="text-md sm:text-lg font-semibold whitespace-nowrap">
-								{pestKills.toLocaleString()}
-							</p>
-							<img
-								src="/images/pests/{pest}.png"
-								class="pixelated aspect-square object-contain h-full"
-								alt={pest}
-							/>
-						</div>
+						{#snippet trigger()}
+							<div  class="flex flex-row items-center align-middle justify-center gap-2 h-6">
+								<p class="text-md sm:text-lg font-semibold whitespace-nowrap">
+									{pestKills.toLocaleString()}
+								</p>
+								<img
+									src="/images/pests/{pest}.png"
+									class="pixelated aspect-square object-contain h-full"
+									alt={pest}
+								/>
+							</div>
+						{/snippet}
 						<div class="flex flex-col items-center gap-2 max-w-md">
 							<p class="text-lg first-letter:capitalize font-semibold">{pest} Kills</p>
 							<p>{pestKills.toLocaleString()}</p>

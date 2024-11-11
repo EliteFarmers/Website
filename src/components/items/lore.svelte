@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { FormatMinecraftText } from '$lib/format';
 
-	export let name: string | undefined = undefined;
-	export let lore: string[];
+	interface Props {
+		name?: string | undefined;
+		lore: string[];
+	}
 
-	$: formatted =
-		name && lore.length > 1
+	let { name = undefined, lore }: Props = $props();
+
+	let formatted =
+		$derived(name && lore.length > 1
 			? [name, '', ...lore].map((l) => FormatMinecraftText(l))
-			: lore.map((l) => FormatMinecraftText(l));
+			: lore.map((l) => FormatMinecraftText(l)));
 </script>
 
 <div class="font-mono rounded-sm font-bold">

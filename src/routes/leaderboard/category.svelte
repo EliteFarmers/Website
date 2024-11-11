@@ -1,8 +1,12 @@
 <script lang="ts">
 	import type { LeaderboardConfig } from '$lib/constants/leaderboards';
 
-	export let leaderboards: (LeaderboardConfig & { id: string })[];
-	export let title: string;
+	interface Props {
+		leaderboards: (LeaderboardConfig & { id: string })[];
+		title: string;
+	}
+
+	let { leaderboards, title }: Props = $props();
 </script>
 
 <section class="flex flex-col flex-1 basis-64 items-center justify-center gap-4 w-full">

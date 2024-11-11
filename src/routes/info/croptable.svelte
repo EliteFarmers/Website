@@ -2,9 +2,13 @@
 	import type { components } from '$lib/api/api';
 	import { Crop, getCropFromName, getCropInfo } from 'farming-weight';
 
-	export let weights: components['schemas']['WeightsDto'];
+	interface Props {
+		weights: components['schemas']['WeightsDto'];
+	}
 
-	$: crops = weights.crops ?? {};
+	let { weights }: Props = $props();
+
+	let crops = $derived(weights.crops ?? {});
 </script>
 
 <div class="flex w-full overflow-x-scroll scrollbar-none">

@@ -8,9 +8,13 @@
 	import * as Tabs from '$ui/tabs';
 	import { EventMode, EventType } from '$lib/utils';
 
-	export let open = false;
-	let type = EventType.FarmingWeight;
-	let teams = EventMode.Solo;
+	interface Props {
+		open?: boolean;
+	}
+
+	let { open = $bindable(false) }: Props = $props();
+	let type = $state(EventType.FarmingWeight);
+	let teams = $state(EventMode.Solo);
 </script>
 
 <Dialog.Root bind:open>

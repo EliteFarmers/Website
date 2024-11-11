@@ -1,37 +1,43 @@
 <script lang="ts">
 	import * as Popover from '$ui/popover';
 
-	export let name: string;
-	export let index: number;
-	export let tierField: number;
+	interface Props {
+		name: string;
+		index: number;
+		tierField: number;
+	}
+
+	let { name, index, tierField }: Props = $props();
 
 	// Turn tierField into its binary representation
-	$: tiersString = tierField?.toString(2).substring(0, 12) ?? '';
-	$: tiers = tiersString.split('') ?? [];
-	$: maxed = tiers.every((t) => t === '1');
+	let tiersString = $derived(tierField?.toString(2).substring(0, 12) ?? '');
+	let tiers = $derived(tiersString.split('') ?? []);
+	let maxed = $derived(tiers.every((t) => t === '1'));
 	// Add 0s to the end of the array if it's less than 12 in length
-	$: {
+	$effect(() => {
 		while (tiers.length < 12) tiers.push('0');
-	}
+	});
 </script>
 
 <Popover.Mobile>
-	<div slot="trigger" class="image-container bg-muted p-1 md:p-2 lg:p-3 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20">
-		<div class="image" style="background-position: 100% {1000 - 100 * index}%;"></div>
-		<div class="tier-border">
-			{#each tiers as tier, i}
-				<div
-					class="tier {tier === '1'
-						? maxed
-							? 'bg-yellow-400 dark:bg-yellow-600'
-							: 'bg-green-400 dark:bg-green-600'
-						: ''}"
-					style="grid-area: a{i};"
-				></div>
-			{/each}
+	{#snippet trigger()}
+		<div  class="image-container bg-muted p-1 md:p-2 lg:p-3 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20">
+			<div class="image" style="background-position: 100% {1000 - 100 * index}%;"></div>
+			<div class="tier-border">
+				{#each tiers as tier, i}
+					<div
+						class="tier {tier === '1'
+							? maxed
+								? 'bg-yellow-400 dark:bg-yellow-600'
+								: 'bg-green-400 dark:bg-green-600'
+							: ''}"
+						style="grid-area: a{i};"
+					></div>
+				{/each}
+			</div>
+			<div class="bg-primary-foreground absolute tier-cover"></div>
 		</div>
-		<div class="bg-primary-foreground absolute tier-cover"></div>
-	</div>
+	{/snippet}
 
 	<div class="flex flex-col justify-center items-center max-w-lg">
 		<div class="text-lg text-center my-2 mx-4">Unlocked {name} Minion Tiers</div>

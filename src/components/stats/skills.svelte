@@ -8,13 +8,23 @@
 	import { getGardenLevel } from 'farming-weight';
 	import { slide } from 'svelte/transition';
 
-	export let open = false;
-	export let skills: components['schemas']['ProfileMemberDto']['skills'];
-	export let ranks: components['schemas']['LeaderboardPositionsDto'] | undefined = undefined;
-	export let levelCaps: Record<string, number | undefined> | undefined = undefined;
-	export let gardenXp = 0;
+	interface Props {
+		open?: boolean;
+		skills: components['schemas']['ProfileMemberDto']['skills'];
+		ranks?: components['schemas']['LeaderboardPositionsDto'] | undefined;
+		levelCaps?: Record<string, number | undefined> | undefined;
+		gardenXp?: number;
+	}
 
-	$: skillRanks = ranks?.skills;
+	let {
+		open = $bindable(false),
+		skills,
+		ranks = undefined,
+		levelCaps = undefined,
+		gardenXp = 0
+	}: Props = $props();
+
+	let skillRanks = $derived(ranks?.skills);
 </script>
 
 <Collapsible.Root bind:open class="w-full mx-4">

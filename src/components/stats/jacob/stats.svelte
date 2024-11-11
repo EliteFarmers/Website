@@ -2,14 +2,18 @@
 	import { page } from '$app/stores';
 	import type { components } from '$lib/api/api';
 
-	export let jacob: components['schemas']['JacobDataDto'] | undefined;
-	export let participationsRank = -1;
-	export let firstPlacesRank = -1;
+	interface Props {
+		jacob: components['schemas']['JacobDataDto'] | undefined;
+		participationsRank?: any;
+		firstPlacesRank?: any;
+	}
 
-	$: firstPlaces = jacob?.firstPlaceScores ?? 0;
+	let { jacob, participationsRank = -1, firstPlacesRank = -1 }: Props = $props();
+
+	let firstPlaces = $derived(jacob?.firstPlaceScores ?? 0);
 
 	// Calculate which crop has the most contests and get the count
-	$: highest = Object.entries(
+	let highest = $derived(Object.entries(
 		jacob?.contests?.reduce((acc, contest) => {
 			if (!contest?.crop) return acc;
 
@@ -29,7 +33,7 @@
 			return acc;
 		},
 		['', 0]
-	);
+	));
 </script>
 
 <div class="flex flex-col mb-2 gap-2">

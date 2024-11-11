@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import { Button } from '$ui/button';
+	import { Button, buttonVariants } from '$ui/button';
 	import { FormatMinecraftText } from '$lib/format';
 	import { GearSlot } from 'farming-weight';
 	import * as DropdownMenu from '$ui/dropdown-menu';
@@ -11,7 +11,11 @@
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 
-	export let player: RatesPlayerStore;
+	interface Props {
+		player: RatesPlayerStore;
+	}
+
+	let { player }: Props = $props();
 
 	const slots = [
 		GearSlot.Helmet,
@@ -23,14 +27,14 @@
 		GearSlot.Belt,
 		GearSlot.Gloves,
 	] as const;
-	$: set = $player.armorSet;
+	let set = $derived($player.armorSet);
 
-	$: armor = set.pieces;
-	$: equipment = $player.equipment;
+	let armor = $derived(set.pieces);
+	let equipment = $derived($player.equipment);
 
-	$: pieces = set.slotOptions;
+	let pieces = $derived(set.slotOptions);
 
-	$: selected = {
+	let selected = $derived({
 		[GearSlot.Helmet]: set.helmet?.item.uuid ?? '',
 		[GearSlot.Chestplate]: set.chestplate?.item.uuid ?? '',
 		[GearSlot.Leggings]: set.leggings?.item.uuid ?? '',
@@ -39,7 +43,7 @@
 		[GearSlot.Cloak]: set.cloak?.item.uuid ?? '',
 		[GearSlot.Belt]: set.belt?.item.uuid ?? '',
 		[GearSlot.Gloves]: set.gloves?.item.uuid ?? '',
-	} as Record<GearSlot, string>;
+	} as Record<GearSlot, string>);
 </script>
 
 <div class="flex flex-col gap-3">
@@ -63,19 +67,19 @@
 						<div class="flex flex-row gap-2 items-center">
 							{#if !best}
 								<Popover.Mobile>
-									<div slot="trigger" class="px-1">
-										<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
-									</div>
+									{#snippet trigger()}
+																		<div  class="px-1">
+											<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+										</div>
+																	{/snippet}
 									<div class="max-w-xs">
 										<p class="text-md">This isn't the highest fortune item!</p>
 									</div>
 								</Popover.Mobile>
 							{/if}
 							<DropdownMenu.Root>
-								<DropdownMenu.Trigger asChild let:builder>
-									<Button builders={[builder]} variant="ghost" size="sm" class="px-2">
-										<Menu size={20} />
-									</Button>
+								<DropdownMenu.Trigger class={buttonVariants({ variant: 'ghost' })}>
+									<Menu size={20} />
 								</DropdownMenu.Trigger>
 								<DropdownMenu.Content class="max-w-xl">
 									<DropdownMenu.Label>Swap {slot}</DropdownMenu.Label>

@@ -5,7 +5,11 @@
 	import ItemLore from '$comp/items/item-lore.svelte';
 	import FortuneProgress from './fortune-progress.svelte';
 
-	export let progress: FortuneSourceProgress;
+	interface Props {
+		progress: FortuneSourceProgress;
+	}
+
+	let { progress }: Props = $props();
 </script>
 
 <FortuneProgress {progress} barBg="bg-primary-foreground" />

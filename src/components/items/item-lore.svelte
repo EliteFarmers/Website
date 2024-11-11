@@ -3,8 +3,13 @@
 	import type { EliteItemDto } from 'farming-weight';
 	import Lore from './lore.svelte';
 
-	export let item: EliteItemDto;
-	export let title = true;
+	interface Props {
+		item: EliteItemDto;
+		title?: boolean;
+		children?: import('svelte').Snippet;
+	}
+
+	let { item, title = true, children }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-2">
@@ -16,7 +21,7 @@
 	{/if}
 	<Lore lore={item.lore?.slice() ?? []} />
 	<div class="text-gray-400">
-		<slot />
+		{@render children?.()}
 		<p>
 			<span class="font-semibold select-none">UUID:</span>
 			<span class="select-all">{item.uuid ?? 'N/A'}</span>

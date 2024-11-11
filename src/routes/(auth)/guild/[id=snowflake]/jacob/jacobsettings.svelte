@@ -12,13 +12,17 @@
 	import { Button } from '$ui/button';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
-	export let lb: components['schemas']['GuildJacobLeaderboard'];
-	export let channels: { value: string; label: string }[];
-	export let roles: { value: string; label: string }[];
+	interface Props {
+		lb: components['schemas']['GuildJacobLeaderboard'];
+		channels: { value: string; label: string }[];
+		roles: { value: string; label: string }[];
+	}
 
-	$: crops = Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0);
+	let { lb, channels, roles }: Props = $props();
 
-	let confirmModal = false;
+	let crops = $derived(Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0));
+
+	let confirmModal = $state(false);
 </script>
 
 <div class="flex flex-col justify-between gap-4 p-4 rounded-md bg-primary-foreground w-full rounded-lgs">
@@ -68,11 +72,13 @@
 			<form method="post" action="{$page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
-					<div slot="trigger">
-						<Button type="submit" color="green">
-							<Mail />
-						</Button>
-					</div>
+					{#snippet trigger()}
+										<div >
+							<Button type="submit" color="green">
+								<Mail />
+							</Button>
+						</div>
+									{/snippet}
 					<div>
 						<p>Send Leaderboard in Discord</p>
 					</div>
@@ -81,20 +87,22 @@
 			<form method="post" action="{$page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
-					<div slot="trigger">
-						<Button type="submit" color="yellow">
-							<RefreshCcw />
-						</Button>
-					</div>
+					{#snippet trigger()}
+										<div >
+							<Button type="submit" color="yellow">
+								<RefreshCcw />
+							</Button>
+						</div>
+									{/snippet}
 					<p>Clear all scores, but they can be submitted again</p>
 				</Popover.Mobile>
 			</form>
 			<Popover.Mobile>
-				<div slot="trigger">
-					<Button on:click={() => (confirmModal = true)}>
+				{#snippet trigger()}
+					<Button onclick={() => (confirmModal = true)}>
 						<Trash2 class="text-destructive" />
 					</Button>
-				</div>
+				{/snippet}
 				<div>
 					<p>Delete Leaderboard</p>
 				</div>
@@ -103,7 +111,7 @@
 	</div>
 
 	{#if crops.length > 0}
-		<Accordion.Root>
+		<Accordion.Root type="single">
 			{#each crops as [crop, entries] (crop)}
 				<Accordion.Item value={crop}>
 					<Accordion.Trigger class="py-2">
@@ -120,11 +128,13 @@
 									<input type="hidden" name="crop" value={entry.record?.crop} />
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
 									<Popover.Mobile>
-										<div slot="trigger">
-											<Button type="submit" variant="destructive" size="icon">
-												<Trash2 size={20} class="text-destructive" />
-											</Button>
-										</div>
+										{#snippet trigger()}
+																				<div >
+												<Button type="submit" variant="destructive" size="icon">
+													<Trash2 size={20} class="text-destructive" />
+												</Button>
+											</div>
+																			{/snippet}
 										<p>Remove and block this Participation</p>
 									</Popover.Mobile>
 								</form>

@@ -1,7 +1,11 @@
 <script lang="ts">
-	export let ign: string;
-	export let base = '';
-	export let overlay = '';
+	interface Props {
+		ign: string;
+		base?: string;
+		overlay?: string;
+	}
+
+	let { ign, base = '', overlay = '' }: Props = $props();
 
 	const steve =
 		'iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA60lEQVQYlQXBv0rDQADA4V8ul1xSaatQmiKFCj6AL+Asgmt3h4KLjyDugpuDLj6AuDjUQR2Kq6+gUK0WtUMJlNRyyf3x+4Kdrbo3DmQg0NZgjEUIQSRDvAdpHAAY71hLYppxgCVkXmist0iA8+NDVBSTJg1WywWEgvz3m7O7B4Lb0yNfU4o/rQlDRb7I6WVtJh+vAIiaUhycXHDzvE1SlfSyNlf3GYPLIY3WJsH1YM9nnS5SrTMcjQDo7+8y/XxjPJsji8pSTsdMvpbURQTA49MLnW5KQIR8/5nhnKO10QRAVyWpSihWFl2V/AOcYVkEZ+xVqQAAAABJRU5ErkJggg==';

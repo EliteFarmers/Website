@@ -3,20 +3,26 @@
 	import * as Popover from '$ui/popover';
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
 
-	export let ign: string;
-	export let selected: ProfileDetails;
-	export let profiles: ProfileDetails[];
+	interface Props {
+		ign: string;
+		selected: ProfileDetails;
+		profiles: ProfileDetails[];
+	}
+
+	let { ign, selected, profiles }: Props = $props();
 </script>
 
 <div class="flex flex-row gap-2 items-center">
 	<Popover.Mobile hasContent={profiles.length > 0}>
-		<div slot="trigger" class="grid col-span-1 z-10">
-			<div class="p-1 lg:p-2 px-2 mx-1 bg-primary-foreground rounded-md">
-				<h2 class="text-2xl md:text-3xl">
-					{selected.name}
-				</h2>
+		{#snippet trigger()}
+			<div class="grid col-span-1 z-10">
+				<div class="p-1 lg:p-2 px-2 mx-1 bg-primary-foreground rounded-md">
+					<h2 class="text-2xl md:text-3xl">
+						{selected.name}
+					</h2>
+				</div>
 			</div>
-		</div>
+		{/snippet}
 		{#if profiles.length > 0}
 			<div class="flex flex-col gap-1" data-sveltekit-preload-data="tap">
 				{#each profiles ?? [] as pId (pId.id)}

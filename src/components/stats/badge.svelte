@@ -2,7 +2,11 @@
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 
-	export let badge: components['schemas']['UserBadgeDto'] | components['schemas']['BadgeDto'];
+	interface Props {
+		badge: components['schemas']['UserBadgeDto'] | components['schemas']['BadgeDto'];
+	}
+
+	let { badge }: Props = $props();
 </script>
 
 <Popover.Root>

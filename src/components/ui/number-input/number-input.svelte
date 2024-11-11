@@ -7,9 +7,15 @@
 	type $$Props = HTMLInputAttributes;
 	type $$Events = InputEvents;
 
-	let className: $$Props['class'] = undefined;
-	export let value: $$Props['value'] = undefined;
-	export { className as class };
+	interface Props {
+		class?: $$Props['class'];
+		value?: $$Props['value'];
+		// Fixed in Svelte 5, but not backported to 4.x.
+		readonly?: $$Props['readonly'];
+		[key: string]: any
+	}
+
+	let { class: className = undefined, value = $bindable(undefined), readonly = undefined, ...rest }: Props = $props();
 
 	let previousN = value;
 
@@ -45,10 +51,6 @@
 			},
 		};
 	};
-
-	// Workaround for https://github.com/sveltejs/svelte/issues/9305
-	// Fixed in Svelte 5, but not backported to 4.x.
-	export let readonly: $$Props['readonly'] = undefined;
 </script>
 
 <input
@@ -60,21 +62,6 @@
 	bind:value
 	type="text"
 	inputmode="numeric"
-	on:blur
-	on:click
-	on:focus
-	on:focusin
-	on:focusout
-	on:keydown
-	on:keypress
-	on:keyup
-	on:mouseover
-	on:mouseenter
-	on:mouseleave
-	on:paste
-	on:input
-	on:change
-	on:wheel
 	use:validator={value}
-	{...$$restProps}
+	{...rest}
 />

@@ -4,9 +4,13 @@
 	import { getReadableSkyblockDate } from '$lib/format';
 	import Jacobentry from './jacobentry.svelte';
 
-	export let leaderboard: components['schemas']['PublicJacobLeaderboardDto'];
+	interface Props {
+		leaderboard: components['schemas']['PublicJacobLeaderboardDto'];
+	}
 
-	$: crops = Object.entries(leaderboard.crops ?? {}).filter(([, v]) => v.length > 0);
+	let { leaderboard }: Props = $props();
+
+	let crops = $derived(Object.entries(leaderboard.crops ?? {}).filter(([, v]) => v.length > 0));
 </script>
 
 <div class="flex flex-col items-center gap-4 p-6 bg-primary-foreground rounded-md">

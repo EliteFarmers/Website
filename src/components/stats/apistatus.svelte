@@ -2,9 +2,13 @@
 	import type { components } from '$lib/api/api';
 	import * as Alert from '$ui/alert';
 
-	export let api: components['schemas']['ApiAccessDto'] = {};
+	interface Props {
+		api?: components['schemas']['ApiAccessDto'];
+	}
 
-	$: entries = Object.entries(api);
+	let { api = {} }: Props = $props();
+
+	let entries = $derived(Object.entries(api));
 </script>
 
 {#if !api.collections}

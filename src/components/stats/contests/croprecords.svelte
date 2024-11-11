@@ -6,17 +6,21 @@
 	import Recordparticipation from './recordparticipation.svelte';
 	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 
-	export let crop = 'Wheat';
-	export let entries: components['schemas']['ContestParticipationWithTimestampDto'][] = [];
+	interface Props {
+		crop?: string;
+		entries?: components['schemas']['ContestParticipationWithTimestampDto'][];
+	}
 
-	let expand = false;
+	let { crop = 'Wheat', entries = [] }: Props = $props();
+
+	let expand = $state(false);
 
 	const anyCropSelected = getAnyCropSelected();
 	const selectedCrops = getSelectedCrops();
 
-	$: cropUrl = PROPER_CROP_TO_IMG[crop];
-	$: sorted =
-		entries?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)).slice(0, expand ? undefined : 10) ?? [];
+	let cropUrl = $derived(PROPER_CROP_TO_IMG[crop]);
+	let sorted =
+		$derived(entries?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)).slice(0, expand ? undefined : 10) ?? []);
 </script>
 
 {#if $selectedCrops[crop] || !$anyCropSelected}
@@ -29,7 +33,7 @@
 				{crop ?? 'Not Found'}
 			</h2>
 		</div>
-		<Accordion.Root>
+		<Accordion.Root type="single">
 			{#each sorted as participant, i (participant.playerName ?? '' + participant.collected)}
 				<Recordparticipation entry={participant} rank={i} />
 			{/each}

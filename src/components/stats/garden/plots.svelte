@@ -1,24 +1,32 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { GARDEN_PLOTS } from '$lib/constants/crops';
 
-	export let plots: string[] = [];
+	interface Props {
+		plots?: string[];
+	}
 
-	$: unlockedPlots = [
+	let { plots = [] }: Props = $props();
+
+	let unlockedPlots = $derived([
 		[false, false, false, false, false],
 		[false, false, false, false, false],
 		[false, false, 'barn', false, false],
 		[false, false, false, false, false],
 		[false, false, false, false, false],
-	];
+	]);
 
-	$: plots.forEach((name) => {
-		const plot = GARDEN_PLOTS[name as keyof typeof GARDEN_PLOTS];
-		if (!plot) return;
-		const [x, y] = plot;
-		unlockedPlots[+y][+x] = true;
+	run(() => {
+		plots.forEach((name) => {
+			const plot = GARDEN_PLOTS[name as keyof typeof GARDEN_PLOTS];
+			if (!plot) return;
+			const [x, y] = plot;
+			unlockedPlots[+y][+x] = true;
+		});
 	});
 
-	$: maxed = plots.length === 24;
+	let maxed = $derived(plots.length === 24);
 </script>
 
 <div class="flex flex-col items-center gap-[0.1rem] md:gap-1">
@@ -33,9 +41,9 @@
 					<div
 						class="w-6 h-6 md:w-8 md:h-8 aspect-square rounded-sm
 						{maxed ? 'bg-yellow-400 dark:bg-yellow-600' : 'bg-green-400 dark:bg-green-600'}"
-					/>
+					></div>
 				{:else}
-					<div class="w-6 h-6 md:w-8 md:h-8 aspect-square rounded-sm bg-primary-foreground" />
+					<div class="w-6 h-6 md:w-8 md:h-8 aspect-square rounded-sm bg-primary-foreground"></div>
 				{/if}
 			{/each}
 		</div>

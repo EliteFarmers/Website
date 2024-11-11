@@ -2,13 +2,17 @@
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 
-	export let contest: components['schemas']['ContestParticipationDto'];
-	export let irlTime = false;
+	interface Props {
+		contest: components['schemas']['ContestParticipationDto'];
+		irlTime?: boolean;
+	}
 
-	$: ({ crop, position, participants, collected, timestamp, medal } = contest);
+	let { contest, irlTime = false }: Props = $props();
 
-	$: cropName = crop ?? 'Not Found';
-	$: ranking = (position ?? 0) > -1;
+	let { crop, position, participants, collected, timestamp, medal } = $derived(contest);
+
+	let cropName = $derived(crop ?? 'Not Found');
+	let ranking = $derived((position ?? 0) > -1);
 </script>
 
 <a

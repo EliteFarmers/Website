@@ -6,12 +6,17 @@
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 
-	export let title: string;
-	export let navItems: { title: string; href: string; external?: boolean }[];
+	interface Props {
+		title: string;
+		navItems: { title: string; href: string; external?: boolean }[];
+		children?: import('svelte').Snippet;
+	}
 
-	$: current = navItems.findIndex((p) => p.href.startsWith($page.url.pathname));
-	$: previous = navItems[current - 1];
-	$: next = navItems[current + 1];
+	let { title, navItems, children }: Props = $props();
+
+	let current = $derived(navItems.findIndex((p) => p.href.startsWith($page.url.pathname)));
+	let previous = $derived(navItems[current - 1]);
+	let next = $derived(navItems[current + 1]);
 </script>
 
 <div
@@ -23,7 +28,7 @@
 		</ScrollArea>
 	</aside>
 	<div id="main" class="mx-auto w-full min-w-0">
-		<slot />
+		{@render children?.()}
 
 		<div class="flex flex-row justify-between items-center">
 			{#key $page.url.pathname}

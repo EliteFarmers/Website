@@ -4,15 +4,25 @@
 	import * as Accordion from '$ui/accordion';
 	import Users from 'lucide-svelte/icons/users';
 
-	export let event: components['schemas']['EventDetailsDto'];
-	export let team: components['schemas']['EventTeamWithMembersDto'];
-	export let rank: number;
-	export let running: boolean;
-	export let highlightUuid: undefined | string = undefined;
+	interface Props {
+		event: components['schemas']['EventDetailsDto'];
+		team: components['schemas']['EventTeamWithMembersDto'];
+		rank: number;
+		running: boolean;
+		highlightUuid?: undefined | string;
+	}
 
-	$: key = (team.id ?? '').toString() || rank.toString();
-	$: members = (team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0));
-	$: full = event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers;
+	let {
+		event,
+		team,
+		rank,
+		running,
+		highlightUuid = undefined
+	}: Props = $props();
+
+	let key = $derived((team.id ?? '').toString() || rank.toString());
+	let members = $derived((team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0)));
+	let full = $derived(event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers);
 </script>
 
 <Accordion.Item value={key} id={key} class="outline-2 rounded-lg outline my-2">
@@ -50,7 +60,7 @@
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root class="w-full text-black dark:text-white">
+		<Accordion.Root type="single" class="w-full text-black dark:text-white">
 			{#each members as member, i}
 				<Accordion.Item
 					value={team.id + i.toString()}

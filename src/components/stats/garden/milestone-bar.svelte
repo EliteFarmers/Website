@@ -1,39 +1,48 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';
 	import ProgressBar from '../progress-bar.svelte';
 
-	export let crop: string;
-	export let key: string;
-	export let leveling: LevelingStats;
-	export let rank = -1;
-
-	$: displayName = getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat);
-
-	$: percent = Math.round(leveling.ratio * 100);
-	$: readable = '';
-	$: expanded = '';
-	$: maxed = leveling.goal === undefined;
-
-	$: {
-		if (browser) {
-			const lang = navigator.language;
-
-			readable =
-				leveling.goal !== undefined
-					? toReadable(leveling.progress, lang) + ' / ' + toReadable(leveling.goal, lang)
-					: toReadable(leveling.progress, lang);
-
-			expanded =
-				leveling.goal !== undefined
-					? Math.floor(leveling.progress).toLocaleString() +
-					  ' / ' +
-					  Math.floor(leveling.goal).toLocaleString()
-					: Math.floor(leveling.progress).toLocaleString();
-		}
+	interface Props {
+		crop: string;
+		key: string;
+		leveling: LevelingStats;
+		rank?: number;
 	}
+
+	let {
+		crop,
+		key,
+		leveling,
+		rank = -1
+	}: Props = $props();
+
+	let displayName = $derived(getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat));
+
+	let percent = $derived(Math.round(leveling.ratio * 100));
+	let readable = $state('');
+	let expanded = $state('');
+	let maxed = $derived(leveling.goal === undefined);
+
+	$effect(() => {
+		const lang = navigator.language;
+
+		readable =
+			leveling.goal !== undefined
+				? toReadable(leveling.progress, lang) + ' / ' + toReadable(leveling.goal, lang)
+				: toReadable(leveling.progress, lang);
+
+		expanded =
+			leveling.goal !== undefined
+				? Math.floor(leveling.progress).toLocaleString() +
+					' / ' +
+					Math.floor(leveling.goal).toLocaleString()
+				: Math.floor(leveling.progress).toLocaleString();
+	});
 </script>
 
 <div class="flex flex-row gap-2 w-full align-middle items-center">

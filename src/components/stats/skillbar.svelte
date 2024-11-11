@@ -1,23 +1,32 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 
-	export let name: string;
-	export let progress: {
-		level: number;
-		ratio: number;
-		progress: number;
-		goal?: number;
-	};
-	export let rank = -1;
+	interface Props {
+		name: string;
+		progress: {
+			level: number;
+			ratio: number;
+			progress: number;
+			goal?: number;
+		};
+		rank?: number;
+	}
 
-	$: percent = Math.round(progress.ratio * 100);
-	$: readable = '';
-	$: expanded = '';
-	$: hovering = false;
+	let { name, progress, rank = -1 }: Props = $props();
 
-	$: {
+	let percent = $derived(Math.round(progress.ratio * 100));
+	let readable = $state('');
+	
+	let expanded = $state('');
+	
+	let hovering = $state(false);
+	
+
+	run(() => {
 		if (browser) {
 			const lang = navigator.language;
 
@@ -33,7 +42,7 @@
 					  Math.floor(progress.goal).toLocaleString()
 					: Math.floor(progress.progress).toLocaleString();
 		}
-	}
+	});
 </script>
 
 <div class="flex flex-col flex-1 gap-1 items-start justify-center max-w-2xl w-full">
@@ -52,8 +61,8 @@
 	</div>
 	<div
 		class="relative w-full bg-primary-foreground h-8 rounded-lg"
-		on:mouseenter={() => (hovering = true)}
-		on:mouseleave={() => (hovering = false)}
+		onmouseenter={() => (hovering = true)}
+		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
 		<div

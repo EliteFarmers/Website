@@ -4,8 +4,8 @@
 	import { cn } from '$lib/utils';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let navItems = [] as { title: string; items: NavItem[] }[];
-	$: user = $page.data.session;
+	let { navItems = [] as { title: string; items: NavItem[] }[] } = $props();
+	let user = $derived($page.data.session);
 </script>
 
 <nav class="flex w-full flex-col gap-4">

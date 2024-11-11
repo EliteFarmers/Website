@@ -10,15 +10,19 @@
 	import { slide } from 'svelte/transition';
 	import { Edit } from 'lucide-svelte';
 
-	export let tool: FarmingTool;
-	export let player: RatesPlayerStore;
+	interface Props {
+		tool: FarmingTool;
+		player: RatesPlayerStore;
+	}
+
+	let { tool, player }: Props = $props();
 
 	const counterOptions = [10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000];
 
-	let expanded = false;
-	let reforge = tool.reforge?.name.toLowerCase() ?? 'bountiful';
+	let expanded = $state(false);
+	let reforge = $state(tool.reforge?.name.toLowerCase() ?? 'bountiful');
 
-	let counter = counterOptions.findLast((c) => c < tool.farmed) ?? 10_000;
+	let counter = $state(counterOptions.findLast((c) => c < tool.farmed) ?? 10_000);
 </script>
 
 <div class="flex flex-col gap-2 w-full rounded-md">
@@ -28,7 +32,7 @@
 
 		<div class="flex items-center gap-2">
 			{#if tool.supportsCultivating()}
-				<Button variant="ghost" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
+				<Button variant="ghost" size="sm" class="p-2" onclick={() => (expanded = !expanded)}>
 					<Edit size={16} />
 				</Button>
 			{/if}

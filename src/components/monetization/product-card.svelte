@@ -3,9 +3,13 @@
 	import ProductPrice from './product-price.svelte';
 	import Package from 'lucide-svelte/icons/package';
 
-	export let product: components['schemas']['ProductDto'];
+	interface Props {
+		product: components['schemas']['ProductDto'];
+	}
 
-	$: image = product.thumbnail?.url ?? '';
+	let { product }: Props = $props();
+
+	let image = $derived(product.thumbnail?.url ?? '');
 </script>
 
 <a

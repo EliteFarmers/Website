@@ -3,12 +3,17 @@
 	import * as Popover from '$ui/popover';
 	import FileText from 'lucide-svelte/icons/file-text';
 
-	export let member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberBannedDto'];
+	interface Props {
+		member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberBannedDto'];
+		children?: import('svelte').Snippet;
+	}
+
+	let { member, children }: Props = $props();
 </script>
 
 <div class="flex justify-between flex-row gap-1 w-full text-black dark:text-white">
 	<div class="flex flex-row gap-2 items-center">
-		<slot />
+		{@render children?.()}
 		<img
 			src="https://mc-heads.net/avatar/{member.playerUuid}"
 			class="w-8 aspect-square rounded-sm"
@@ -21,9 +26,9 @@
 	<div class="flex flex-row gap-2 xs:gap-4 items-center">
 		{#if 'notes' in member}
 			<Popover.Mobile>
-				<div slot="trigger">
+				{#snippet trigger()}
 					<FileText size={20} class="text-destructive -mb-1" />
-				</div>
+				{/snippet}
 				<div>
 					<p>{member.notes || 'Member Left'}</p>
 				</div>

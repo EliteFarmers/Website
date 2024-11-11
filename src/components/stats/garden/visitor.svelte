@@ -3,23 +3,28 @@
 	import { getRarityColor, type GardenVisitorStatsWithName } from 'farming-weight';
 	import * as Popover from '$ui/popover';
 
-	export let visitor: GardenVisitorStatsWithName;
+	interface Props {
+		visitor: GardenVisitorStatsWithName;
+	}
 
-	$: color = MINECRAFT_COLORS[getRarityColor(visitor.rarity) as keyof typeof MINECRAFT_COLORS];
-	$: rejected = visitor.visits - visitor.accepted;
-	$: rate = ((visitor.accepted / visitor.visits) * 100).toFixed(1);
+	let { visitor }: Props = $props();
 
-	$: everAccepted = visitor.accepted > 0;
+	let color = $derived(MINECRAFT_COLORS[getRarityColor(visitor.rarity) as keyof typeof MINECRAFT_COLORS]);
+	let rejected = $derived(visitor.visits - visitor.accepted);
+	let rate = $derived(((visitor.accepted / visitor.visits) * 100).toFixed(1));
+
+	let everAccepted = $derived(visitor.accepted > 0);
 </script>
 
 <Popover.Mobile>
-	<div
-		slot="trigger"
-		class="flex basis-32 flex-row gap-1 p-1 rounded-md border-l-4 bg-primary-foreground overflow-ellipsis"
-		style="border-color:{color};"
-	>
-		<p class={!everAccepted ? 'text-muted-foreground' : ''}>{visitor.short ?? visitor.name}</p>
-	</div>
+	{#snippet trigger()}
+		<div
+			class="flex basis-32 flex-row gap-1 p-1 rounded-md border-l-4 bg-primary-foreground overflow-ellipsis"
+			style="border-color:{color};"
+		>
+			<p class={!everAccepted ? 'text-muted-foreground' : ''}>{visitor.short ?? visitor.name}</p>
+		</div>
+	{/snippet}
 	<div class="flex flex-col gap-1">
 		<p class="font-semibold">{visitor.name}</p>
 		<p class="">

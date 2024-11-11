@@ -5,21 +5,27 @@
 	import { getReadableSkyblockDate, getRelativeTimeString } from '$lib/format';
 	import * as Popover from '$ui/popover';
 
-	export let current = false;
-	export let timestamp: number;
-	export let crops: string[];
-	export let currentSeconds: number;
-
-	$: time = timestamp;
-	$: lang = 'en';
-
-	$: selected = $page.url.hash === `#${timestamp}`;
-
-	$: {
-		if (browser) {
-			lang = navigator.language;
-		}
+	interface Props {
+		current?: boolean;
+		timestamp: number;
+		crops: string[];
+		currentSeconds: number;
 	}
+
+	let {
+		current = false,
+		timestamp,
+		crops,
+		currentSeconds
+	}: Props = $props();
+
+	let time = $derived(timestamp);
+	let lang = $state('en');
+	let selected = $derived($page.url.hash === `#${timestamp}`);
+
+	$effect.pre(() => {
+		lang = navigator.language;
+	});
 </script>
 
 <div
@@ -56,11 +62,13 @@
 	<div class="flex flex-row gap-4 mx-4 w-[1/1] md:w-[1/2]">
 		{#each crops as name (name)}
 			<Popover.Mobile>
-				<div slot="trigger">
-					<div class="flex-col flex-1 items-center text-center rounded-md bg-card">
-						<img class="w-16 pixelated" src={PROPER_CROP_TO_IMG[name]} alt="" />
+				{#snippet trigger()}
+								<div >
+						<div class="flex-col flex-1 items-center text-center rounded-md bg-card">
+							<img class="w-16 pixelated" src={PROPER_CROP_TO_IMG[name]} alt="" />
+						</div>
 					</div>
-				</div>
+							{/snippet}
 				<div class="mx-8 text-center">
 					{name}
 				</div>

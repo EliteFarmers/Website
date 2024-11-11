@@ -3,18 +3,21 @@
 	import type { ProfileDetails } from '$lib/api/elite';
 	import Profiles from './profiles.svelte';
 
-	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
-	export let rank: number;
-
-	export let profiles: {
+	interface Props {
+		weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
+		rank: number;
+		profiles: {
 		ign: string;
 		selected: ProfileDetails;
 		profiles: ProfileDetails[];
 	};
+	}
 
-	$: rankText = rank !== -1 ? `#${rank}` : 'Unranked';
+	let { weightInfo, rank, profiles }: Props = $props();
 
-	$: weightStr = weightInfo?.totalWeight?.toLocaleString() ?? '0';
+	let rankText = $derived(rank !== -1 ? `#${rank}` : 'Unranked');
+
+	let weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
 </script>
 
 <div class="block">

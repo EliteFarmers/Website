@@ -1,11 +1,15 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 
-	export let product: components['schemas']['ProductDto'];
+	interface Props {
+		product: components['schemas']['ProductDto'];
+	}
+
+	let { product }: Props = $props();
 
 	// Not localized because Discord only accepts USD anyway
-	$: dollars = ((product.price ?? 0) / 100).toFixed(2);
-	$: free = !product.price || +dollars === 0;
+	let dollars = $derived(((product.price ?? 0) / 100).toFixed(2));
+	let free = $derived(!product.price || +dollars === 0);
 </script>
 
 <p

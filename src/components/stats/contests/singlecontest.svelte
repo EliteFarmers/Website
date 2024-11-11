@@ -5,16 +5,25 @@
 	import Participation from '$comp/stats/contests/participation.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 
-	export let crop = 'Wheat';
-	export let participants = -1;
-	export let timestamp: number;
-	export let entries: components['schemas']['StrippedContestParticipationDto'][] = [];
+	interface Props {
+		crop?: string;
+		participants?: any;
+		timestamp: number;
+		entries?: components['schemas']['StrippedContestParticipationDto'][];
+	}
 
-	let expand = false;
+	let {
+		crop = 'Wheat',
+		participants = -1,
+		timestamp,
+		entries = []
+	}: Props = $props();
 
-	$: cropUrl = PROPER_CROP_TO_IMG[crop];
-	$: sorted =
-		entries?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)).slice(0, expand ? undefined : 10) ?? [];
+	let expand = $state(false);
+
+	let cropUrl = $derived(PROPER_CROP_TO_IMG[crop]);
+	let sorted =
+		$derived(entries?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)).slice(0, expand ? undefined : 10) ?? []);
 </script>
 
 <div class="flex-1 basis-1/4 justify-between h-full items-center rounded-md shadow-md bg-gray-100 dark:bg-zinc-800">
@@ -50,7 +59,7 @@
 		{#if entries.length > 10}
 			<button
 				class="whitespace-nowrap bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-900 p-1 px-2 rounded-md"
-				on:click={() => (expand = !expand)}>{expand ? 'Collapse' : 'Show All'}</button
+				onclick={() => (expand = !expand)}>{expand ? 'Collapse' : 'Show All'}</button
 			>
 		{/if}
 	</div>

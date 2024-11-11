@@ -6,8 +6,12 @@
 	import * as Popover from '$ui/popover';
 	import Star from 'lucide-svelte/icons/star';
 
-	export let mc: components['schemas']['MinecraftAccountDetailsDto'] = {};
-	let loading = false;
+	interface Props {
+		mc?: components['schemas']['MinecraftAccountDetailsDto'];
+	}
+
+	let { mc = {} }: Props = $props();
+	let loading = $state(false);
 </script>
 
 <div class="flex flex-col p-4 rounded-md bg-primary-foreground">
@@ -18,9 +22,9 @@
 
 			{#if mc.primaryAccount}
 				<Popover.Mobile>
-					<div slot="trigger">
+					{#snippet trigger()}
 						<Star size={16} class="text-yellow-500 fill-current" />
-					</div>
+					{/snippet}
 					<p class="font-semibold">Primary Account</p>
 					<div class="pt-2">
 						<p>All Elite features will show stats of this account by default.</p>

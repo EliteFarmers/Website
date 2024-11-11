@@ -4,12 +4,16 @@
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 
-	export let record: components['schemas']['GuildJacobLeaderboardEntry'];
+	interface Props {
+		record: components['schemas']['GuildJacobLeaderboardEntry'];
+	}
 
-	$: contest = record.record;
+	let { record }: Props = $props();
+
+	let contest = $derived(record.record);
 </script>
 
-<Accordion.Root>
+<Accordion.Root type="single">
 	<Accordion.Item value="contest">
 		<Accordion.Trigger class="py-0">
 			<div class="flex flex-col md:flex-row gap-2 justify-between p-2 items-center w-full">

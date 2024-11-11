@@ -3,7 +3,11 @@
 	import * as Popover from '$ui/popover';
 	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 
-	export let entry: components['schemas']['StrippedContestParticipationDto'];
+	interface Props {
+		entry: components['schemas']['StrippedContestParticipationDto'];
+	}
+
+	let { entry }: Props = $props();
 </script>
 
 <a
@@ -28,9 +32,11 @@
 			</div>
 			{#if entry.removed}
 				<Popover.Mobile>
-					<div slot="trigger" class="mt-2">
-						<CircleAlert class="text-destructive" size={24} />
-					</div>
+					{#snippet trigger()}
+						<div class="mt-2">
+							<CircleAlert class="text-destructive" size={24} />
+						</div>
+					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
 						<p class="max-w-xs break-words whitespace-normal">

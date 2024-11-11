@@ -8,9 +8,9 @@
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 
-	let open = false;
+	let open = $state(false);
 
-	$: user = $page.data.session;
+	let user = $derived($page.data.session);
 </script>
 
 <Sheet.Root bind:open>

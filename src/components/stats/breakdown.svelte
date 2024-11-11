@@ -1,14 +1,13 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 
-	export let weight: components['schemas']['FarmingWeightDto'] | undefined;
+	interface Props {
+		weight: components['schemas']['FarmingWeightDto'] | undefined;
+	}
 
-	$: total = weight?.totalWeight ?? 0;
-	$: bonus = Object.values(bonusSources).reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0;
-	$: bonusSources = weight?.bonusWeight ?? {};
-	$: cropSources = weight?.cropWeight ?? {};
+	let { weight = $bindable() }: Props = $props();
 
-	$: {
+	$effect(() => {
 		if (!weight) {
 			weight = {
 				totalWeight: 0,
@@ -16,12 +15,16 @@
 				bonusWeight: {},
 			};
 		}
-	}
-
-	$: sources = Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0));
-	$: bonuses = Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
-
-	$: {
+	});
+	
+	let total = $derived(weight?.totalWeight ?? 0);
+	let bonusSources = $derived(weight?.bonusWeight ?? {});
+	let bonus = $derived(Object.values(bonusSources).reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0);
+	let cropSources = $derived(weight?.cropWeight ?? {});
+	let sources = $derived(Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0)));
+	let bonuses = $derived(Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0])));
+	
+	$effect(() => {
 		if (sources.length === 0) {
 			sources.push(['None Found - API might be off', 0]);
 		}
@@ -29,7 +32,7 @@
 		if (bonuses.length === 0) {
 			bonuses.push(['No bonuses unlocked yet!', 0]);
 		}
-	}
+	});
 </script>
 
 <section class="py-4 flex justify-center align-middle w-full" aria-labelledby="Breakdown">

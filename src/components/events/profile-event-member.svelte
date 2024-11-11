@@ -2,9 +2,13 @@
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 
-	export let member: components['schemas']['ProfileEventMemberDto'];
-	export let memberUuid: string;
-	export let ign: string;
+	interface Props {
+		member: components['schemas']['ProfileEventMemberDto'];
+		memberUuid: string;
+		ign: string;
+	}
+
+	let { member, memberUuid, ign }: Props = $props();
 </script>
 
 <a
@@ -14,7 +18,7 @@
 	<div class="flex flex-row gap-2 align-middle items-center justify-center">
 		<p class="text-lg">{member.eventName}</p>
 		<Popover.Mobile>
-			<div slot="trigger">
+			{#snippet trigger()}
 				<div class="flex flex-col items-center justify-center">
 					{#if member.status === 0}
 						<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
@@ -23,7 +27,7 @@
 						<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300"></div>
 					{/if}
 				</div>
-			</div>
+			{/snippet}
 			<div>
 				{#if member.status === 0}
 					<p class="text-lg font-semibold">Inactive Farmer</p>

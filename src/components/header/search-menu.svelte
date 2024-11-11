@@ -1,19 +1,17 @@
 <script lang="ts">
-	import Laptop from 'lucide-svelte/icons/laptop';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Sun from 'lucide-svelte/icons/sun';
 	import * as Command from '$ui/command';
 	import { Button } from '$ui/button';
 	import cn from 'classnames';
 	import { goto } from '$app/navigation';
-	import { resetMode, setMode } from 'mode-watcher';
 	import { browser } from '$app/environment';
 
-	let open = false;
+	interface Props {
+		[key: string]: any
+	}
 
-	$: searchStr = '';
-	$: players = [] as string[];
-	$: search(searchStr);
+	let { ...rest }: Props = $props();
+
+	let open = $state(false);
 
 	async function search(query: string) {
 		if (!browser) return [];
@@ -32,13 +30,20 @@
 		open = false;
 		cmd();
 	}
+
+	let searchStr = $state('');
+	let players = $state([] as string[]);
+	
+	$effect(() => {
+		search(searchStr);
+	});
 </script>
 
 <Button
 	variant="outline"
 	class={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64')}
 	onclick={() => (open = true)}
-	{...$$restProps}
+	{...rest}
 >
 	<span class="hidden lg:inline-flex"> Search For Player... </span>
 	<span class="inline-flex lg:hidden">Search...</span>

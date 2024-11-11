@@ -55,7 +55,7 @@
 		"eslint-plugin-svelte": "^2.46.0",
 		"farming-weight": "^0.6.5",
 		"layercake": "^8.4.2",
-		"layerchart": "^0.54.1",
+		"layerchart": "^0.58.4",
 		"lucide-svelte": "^0.453.0",
 		"mode-watcher": "^0.4.1",
 		"openapi-fetch": "^0.12.5",

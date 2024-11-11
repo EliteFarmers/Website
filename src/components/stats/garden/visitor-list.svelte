@@ -3,10 +3,14 @@
 	import type { components } from '$lib/api/api';
 	import Visitor from './visitor.svelte';
 
-	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
+	interface Props {
+		garden?: components['schemas']['GardenDto'] | undefined;
+	}
 
-	$: visitors = groupGardenVisitors((garden?.visitors ?? {}) as Record<string, GardenVisitorStats>);
-	$: groups = Object.entries(visitors).sort(([a], [b]) => compareRarity(b, a));
+	let { garden = undefined }: Props = $props();
+
+	let visitors = $derived(groupGardenVisitors((garden?.visitors ?? {}) as Record<string, GardenVisitorStats>));
+	let groups = $derived(Object.entries(visitors).sort(([a], [b]) => compareRarity(b, a)));
 </script>
 
 <div class="flex flex-wrap gap-1">

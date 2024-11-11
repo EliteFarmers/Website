@@ -1,25 +1,29 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import type { FarmingTool } from 'farming-weight';
 	import Toolconfig from './toolconfig.svelte';
 
-	export let player: RatesPlayerStore;
-	export let tools: FarmingTool[] | undefined = undefined;
-
-	$: tools = tools ?? $player.tools;
-
-	let selectedCrops = getSelectedCrops();
-	let show = 2;
-
-	$: filtered = $player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']);
-
 	function toggleShow() {
 		show = show === 2 ? 999 : 2;
 	}
 
-	export let selectedToolId: string | undefined = undefined;
+	interface Props {
+		player: RatesPlayerStore;
+		tools?: FarmingTool[] | undefined;
+		selectedToolId?: string | undefined;
+	}
+
+	let { player, tools: toolList = $bindable(undefined), selectedToolId = $bindable(undefined) }: Props = $props();
+	
+	let selectedCrops = getSelectedCrops();
+	let show = $state(2);
+	let tools = $derived(toolList ?? $player.tools);
+
+	let filtered = $derived($player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']));
 </script>
 
 <div class="flex flex-col gap-2 w-full mb-2 -mx-2">
@@ -27,7 +31,7 @@
 		{@const selected = selectedToolId === tool.item.uuid}
 		{#if tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
 			<button
-				on:click={() => {
+				onclick={() => {
 					selectedToolId = tool.item.uuid ?? undefined;
 					$player.selectTool(tool);
 				}}
@@ -41,7 +45,7 @@
 	{/each}
 	{#if $player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).length > 2}
 		<button
-			on:click={toggleShow}
+			onclick={toggleShow}
 			class="w-fit text-sm border-transparent border-solid border-[3px] hover:bg-card/50 px-1 py-0.5 rounded-lg cursor-pointer flex justify-center items-center"
 		>
 			{show === 2 ? 'Show More' : 'Show Less'}

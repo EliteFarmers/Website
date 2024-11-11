@@ -5,7 +5,11 @@
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let event: components['schemas']['EventDetailsDto'];
+	interface Props {
+		event: components['schemas']['EventDetailsDto'];
+	}
+
+	let { event }: Props = $props();
 
 	const cropWeights = () => {
 		const data = event.data as { cropWeights?: Record<string, number> } | undefined;
@@ -18,7 +22,7 @@
 	};
 </script>
 
-<Accordion.Root>
+<Accordion.Root type="single">
 	<Accordion.Item value="1">
 		<Accordion.Trigger class="w-full">
 			{#if event.type === +EventType.FarmingWeight}

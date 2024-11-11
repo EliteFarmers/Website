@@ -5,15 +5,19 @@
 	import { Crop, CROP_TO_PEST, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { Area, Axis, Chart, Highlight, Spline, Svg, Tooltip } from 'layerchart';
 
-	export let data: { date: string; value: number; pests: number }[];
-	export let pests = false;
-	export let ratio = 0;
-	export let crop = 'wheat';
+	interface Props {
+		data: { date: string; value: number; pests: number }[];
+		pests?: boolean;
+		ratio?: number;
+		crop?: string;
+	}
 
-	$: first = data[0];
-	$: last = data.at(-1);
-	$: yDomain = last ? [first.value, last.value + (last.value - first.value) * (1 - ratio)] : undefined;
-	$: days = Math.ceil((+(last?.date ?? 0) - +first.date) / 86400);
+	let { data, pests = false, ratio = 0, crop = 'wheat' }: Props = $props();
+
+	let first = $derived(data[0]);
+	let last = $derived(data.at(-1));
+	let yDomain = $derived(last ? [first.value, last.value + (last.value - first.value) * (1 - ratio)] : undefined);
+	let days = $derived(Math.ceil((+(last?.date ?? 0) - +first.date) / 86400));
 
 	const dateFormatter = new Intl.DateTimeFormat(undefined, {
 		month: 'short',
@@ -28,7 +32,7 @@
 		year: 'numeric',
 	});
 
-	$: pestScale = scaleLinear(extent(data, (d) => d.pests) as [number, number], yDomain ?? [0, 1]);
+	let pestScale = $derived(scaleLinear(extent(data, (d) => d.pests) as [number, number], yDomain ?? [0, 1]));
 
 	const colorClasses: Record<string, string[]> = {
 		wheat: ['stroke-wheat', 'fill-wheat/70', 'stroke-primary/80'],

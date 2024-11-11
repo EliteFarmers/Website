@@ -3,9 +3,12 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import Users from 'lucide-svelte/icons/users';
 
-	export let lazy = true;
+	interface Props {
+		lazy?: boolean;
+		guild: components['schemas']['GuildDetailsDto'];
+	}
 
-	export let guild: components['schemas']['GuildDetailsDto'];
+	let { lazy = true, guild }: Props = $props();
 </script>
 
 <a

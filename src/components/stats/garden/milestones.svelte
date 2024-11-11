@@ -1,16 +1,26 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { components } from '$lib/api/api';
 	import { getCropMilestones } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
 	import { API_CROP_TO_CROP } from '$lib/constants/crops';
 
-	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
-	export let ranks: components['schemas']['LeaderboardPositionsDto']['profile'] | undefined = undefined;
-	export let overflow = false;
+	interface Props {
+		garden?: components['schemas']['GardenDto'] | undefined;
+		ranks?: components['schemas']['LeaderboardPositionsDto']['profile'] | undefined;
+		overflow?: boolean;
+	}
 
-	$: milestones = Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow));
-	$: list = milestones?.sort((a, b) => b[1].total - a[1].total) ?? [];
-	$: highestSort = true;
+	let { garden = undefined, ranks = undefined, overflow = $bindable(false) }: Props = $props();
+
+	let milestones = $derived(Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow)));
+	let list = $state<typeof milestones>([]);
+	let highestSort = $state(true);
+	
+	$effect.pre(() => {
+		list = milestones?.sort((a, b) => b[1].total - a[1].total) ?? [];
+	});
 
 	function swap() {
 		highestSort = !highestSort;
@@ -34,11 +44,11 @@
 		<div class="flex flex-row items-center gap-2">
 			<button
 				class="rounded-md w-24 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
-				on:click={swap}>{highestSort ? 'Collection ↓' : 'A-Z ↓'}</button
+				onclick={swap}>{highestSort ? 'Collection ↓' : 'A-Z ↓'}</button
 			>
 			<button
 				class="rounded-md w-20 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
-				on:click={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
+				onclick={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
 			>
 		</div>
 		<h3 class="text-lg font-semibold leading-none mt-1.5">Crop Milestones</h3>

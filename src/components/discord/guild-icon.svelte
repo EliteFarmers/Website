@@ -1,10 +1,14 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	export let guild: components['schemas']['GuildDetailsDto'] | undefined;
-	export let size: keyof typeof sizes = 12;
 
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	interface Props {
+		guild: components['schemas']['GuildDetailsDto'] | undefined;
+		size?: keyof typeof sizes;
+		class?: string | undefined | null;
+	}
+
+	let { guild, size = 12, class: className = undefined }: Props = $props();
+	
 
 	const sizes = {
 		8: 'w-8 h-8',

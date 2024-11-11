@@ -4,9 +4,13 @@
 	import { FormatMinecraftText } from '$lib/format';
 	import type { FarmingEquipment } from 'farming-weight';
 
-	export let items: FarmingEquipment[];
+	interface Props {
+		items: FarmingEquipment[];
+	}
 
-	$: bySlot = items
+	let { items }: Props = $props();
+
+	let bySlot = $derived(items
 		.sort((a, b) => b.fortune - a.fortune)
 		.reduce<Record<string, FarmingEquipment>>((acc, item) => {
 			if (!acc[item.slot]) {
@@ -14,7 +18,7 @@
 			}
 
 			return acc;
-		}, {});
+		}, {}));
 </script>
 
 {#each Object.values(bySlot) as item (item.item.uuid)}

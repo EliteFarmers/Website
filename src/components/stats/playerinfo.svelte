@@ -14,26 +14,40 @@
 	import { OTHER_SITES } from '$content/othersites';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let player: components['schemas']['PlayerDataDto'] | undefined;
-	export let profileDetails: ProfileDetails[];
-	export let members: components['schemas']['MemberDetailsDto'][] | null | undefined;
-	export let linked: string | null;
-	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
-	export let weightRank: number;
-	export let skyblockXP: number;
-	export let skyblockRank = -1;
-	export let badges: components['schemas']['UserBadgeDto'][] | undefined;
+	interface Props {
+		player: components['schemas']['PlayerDataDto'] | undefined;
+		profileDetails: ProfileDetails[];
+		members: components['schemas']['MemberDetailsDto'][] | null | undefined;
+		linked: string | null;
+		weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
+		weightRank: number;
+		skyblockXP: number;
+		skyblockRank?: any;
+		badges: components['schemas']['UserBadgeDto'][] | undefined;
+	}
 
-	$: profiles = profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? ''));
+	let {
+		player,
+		profileDetails,
+		members,
+		linked,
+		weightInfo,
+		weightRank,
+		skyblockXP,
+		skyblockRank = -1,
+		badges
+	}: Props = $props();
 
-	$: discordName = linked ?? player?.socialMedia?.discord;
+	let profiles = $derived(profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? '')));
 
-	$: profilesData = { ign: player?.displayname ?? '', profiles: profiles, selected: profileDetails[0] };
+	let discordName = $derived(linked ?? player?.socialMedia?.discord);
 
-	$: rankName = GetRankName(player);
-	$: rank = GetRankDefaults(rankName as RankName);
+	let profilesData = $derived({ ign: player?.displayname ?? '', profiles: profiles, selected: profileDetails[0] });
 
-	$: badgeList = badges?.filter((b) => b.visible).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) ?? [];
+	let rankName = $derived(GetRankName(player));
+	let rank = $derived(GetRankDefaults(rankName as RankName));
+
+	let badgeList = $derived(badges?.filter((b) => b.visible).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) ?? []);
 </script>
 
 <section class="flex flex-col align-middle w-full mt-8 items-center">
@@ -57,9 +71,11 @@
 				</div>
 				<div class="flex justify-start gap-1">
 					<Popover.Mobile>
-						<div slot="trigger" class="bg-primary-foreground rounded-md">
-							<p class="p-2 px-2">External Sites</p>
-						</div>
+						{#snippet trigger()}
+							<div class="bg-primary-foreground rounded-md">
+								<p class="p-2 px-2">External Sites</p>
+							</div>
+						{/snippet}
 						<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
 							{#each OTHER_SITES as site (site.name)}
 								<a

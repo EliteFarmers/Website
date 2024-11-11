@@ -1,6 +1,6 @@
 <!-- Credit: https://github.com/huntabyte/bits-ui/issues/235#issue-2042475148 -->
 
-<script lang="ts" context="module">
+<script lang="ts" module>
 	export type Option<T = string | number> = {
 		value: T;
 		label: string;
@@ -27,20 +27,36 @@
 		change?: (value: T) => void;
 	};
 
-	export let open = false;
-	export let disabled = false;
-	export let required = false;
 
-	export let id: string | undefined = undefined;
-	export let name: string | undefined = undefined;
 
-	export let options: Option<T>[];
-	export let value: T | null | undefined = undefined;
-	export let placeholder = 'Select option';
-	export let change: (value: T) => void = () => undefined;
+	interface Props {
+		open?: boolean;
+		disabled?: boolean;
+		required?: boolean;
+		id?: string | undefined;
+		name?: string | undefined;
+		options: Option<T>[];
+		value?: T | null | undefined;
+		placeholder?: string;
+		change?: (value: T) => void;
+		[key: string]: any
+	}
 
-	$: selected = value != null ? options.find((x) => x.value === value) : undefined;
-	$: display = selected ? selected.label : placeholder;
+	let {
+		open = $bindable(false),
+		disabled = false,
+		required = false,
+		id = undefined,
+		name = undefined,
+		options,
+		value = $bindable(undefined),
+		placeholder = 'Select option',
+		change = () => undefined,
+		...rest
+	}: Props = $props();
+
+	let selected = $derived(value != null ? options.find((x) => x.value === value) : undefined);
+	let display = $derived(selected ? selected.label : placeholder);
 
 	function onChange(option: unknown) {
 		let o = option as Option<T>;
@@ -52,7 +68,7 @@
 </script>
 
 <Primitive.Root loop bind:open {disabled} {required} {name} {selected} onSelectedChange={onChange}>
-	<Select.Trigger {id} {...$$restProps}>
+	<Select.Trigger {id} {...rest}>
 		<Select.Value placeholder={display} class={(!value && 'text-muted-foreground') || ''} />
 	</Select.Trigger>
 
@@ -63,7 +79,7 @@
 			<Select.Item value={o.value}>
 				<div class="flex flex-row gap-1 items-center">
 					{#if o.color}
-						<div class="w-4 h-4 rounded-sm" style="background-color: {o.color}" />
+						<div class="w-4 h-4 rounded-sm" style="background-color: {o.color}"></div>
 					{/if}
 					<span>{o.label}</span>
 				</div>

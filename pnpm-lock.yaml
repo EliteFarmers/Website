@@ -108,8 +108,8 @@ importers:
         specifier: ^8.4.2
         version: 8.4.2(svelte@5.1.13)(typescript@5.6.3)
       layerchart:
-        specifier: ^0.54.1
-        version: 0.54.1(svelte@5.1.13)(typescript@5.6.3)
+        specifier: ^0.58.4
+        version: 0.58.4(svelte@5.1.13)(typescript@5.6.3)
       lucide-svelte:
         specifier: ^0.453.0
         version: 0.453.0(svelte@5.1.13)
@@ -1972,8 +1972,8 @@ packages:
       svelte: 3 - 5 || >=5.0.0-next.120
       typescript: ^5.0.2
 
-  layerchart@0.54.1:
-    resolution: {integrity: sha512-e2rb0A9Ca4ZAAmrpxZn85K7JwW0rroBtw9Tth9oloDC4rwpubGb/q28nKc5wplxvADibSSryvOABtcaj1pOqZg==}
+  layerchart@0.58.4:
+    resolution: {integrity: sha512-bXQnjnOt1Bybx707T7A25p994XvBvdscC2P1tkNAoKKmsmEJSs/WTSKOBjj6F/I2j2tHx3SUr1cEyHFoIDJ0Fg==}
     peerDependencies:
       svelte: ^3.56.0 || ^4.0.0 || ^5.0.0
 
@@ -4782,7 +4782,7 @@ snapshots:
       svelte: 5.1.13
       typescript: 5.6.3
 
-  layerchart@0.54.1(svelte@5.1.13)(typescript@5.6.3):
+  layerchart@0.58.4(svelte@5.1.13)(typescript@5.6.3):
     dependencies:
       '@layerstack/svelte-actions': 0.0.7
       '@layerstack/svelte-stores': 0.0.6

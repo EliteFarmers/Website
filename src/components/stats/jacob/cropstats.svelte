@@ -3,9 +3,13 @@
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let jacob: components['schemas']['JacobDataDto'] | undefined | null;
+	interface Props {
+		jacob: components['schemas']['JacobDataDto'] | undefined | null;
+	}
 
-	$: highest = Object.entries(
+	let { jacob }: Props = $props();
+
+	let highest = $derived(Object.entries(
 		jacob?.contests?.reduce((acc, contest) => {
 			if (!contest?.crop) return acc;
 
@@ -16,7 +20,7 @@
 			}
 			return acc;
 		}, {} as Record<string, number>) ?? {}
-	).sort();
+	).sort());
 
 	function pb(crop: string) {
 		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '') as keyof typeof jacob.stats.personalBests];
@@ -41,22 +45,22 @@
 
 				<div class="flex flex-col items-start gap-1">
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<p class="text-lg leading-none">
 								{pb(crop)?.toLocaleString() ?? 'Not Set!'}
 							</p>
-						</div>
+						{/snippet}
 						<div>
 							<p>The highest placement earned for {crop}!</p>
 						</div>
 					</Popover.Mobile>
 
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<p class="text-lg leading-none participation-count">
 								x{amount.toLocaleString()}
 							</p>
-						</div>
+						{/snippet}
 						<div>
 							<p>The amount of participations for {crop}!</p>
 						</div>

@@ -6,11 +6,21 @@
 	import { EventType } from '$lib/utils';
 	import Crown from 'lucide-svelte/icons/crown';
 
-	export let owner = false;
-	export let event: components['schemas']['EventDetailsDto'];
-	export let member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
-	export let rank: number | undefined = undefined;
-	export let running: boolean;
+	interface Props {
+		owner?: boolean;
+		event: components['schemas']['EventDetailsDto'];
+		member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
+		rank?: number | undefined;
+		running: boolean;
+	}
+
+	let {
+		owner = false,
+		event,
+		member,
+		rank = undefined,
+		running
+	}: Props = $props();
 
 	const medalWeight = (medal: string) => {
 		const data = event.data as { medalWeights?: Record<string, number> } | undefined;
@@ -47,24 +57,26 @@
 			<p class="text-lg">{member.playerName}</p>
 			{#if owner}
 				<Popover.Mobile>
-					<div slot="trigger" class="flex flex-row items-end">
-						<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
-					</div>
+					{#snippet trigger()}
+						<div class="flex flex-row items-end">
+							<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
+						</div>
+					{/snippet}
 					<p class="text-lg font-semibold">Team Owner</p>
 				</Popover.Mobile>
 			{/if}
 			{#if running}
 				<Popover.Mobile>
-					<div slot="trigger">
+					{#snippet trigger()}		
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
-								<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
+								<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
 							{/if}
 							{#if member.status === 1}
-								<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300" />
+								<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300"></div>
 							{/if}
 						</div>
-					</div>
+					{/snippet}
 					<div>
 						{#if member.status === 0}
 							<p class="text-lg font-semibold">Inactive Farmer</p>

@@ -5,8 +5,12 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Settings from 'lucide-svelte/icons/settings';
 
-	export let guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];
-	export let link = false;
+	interface Props {
+		guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];
+		link?: boolean;
+	}
+
+	let { guild, link = false }: Props = $props();
 </script>
 
 <div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">

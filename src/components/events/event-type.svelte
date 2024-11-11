@@ -2,22 +2,27 @@
 	import * as Popover from '$comp/ui/popover';
 	import { EventType } from '$lib/utils';
 
-	export let type: number;
+	interface Props {
+		type: number;
+	}
+
+	let { type }: Props = $props();
 </script>
 
 <Popover.Mobile class="text-black dark:text-white">
-	<div
-		slot="trigger"
-		class="flex flex-row gap-2 items-center bg-card rounded-sm p-1 px-2 w-fit font-semibold leading-none"
-	>
-		{#if type === +EventType.FarmingWeight}
-			<img src="/favicon.webp" alt="Farming Weight" class="w-4 h-4" />
-			<p class="text-xs sm:text-sm">Farming Weight Event</p>
-		{:else if type === +EventType.Medals}
-			<img src="/images/medals/diamond.webp" alt="Farming Weight" class="w-4 h-4" />
-			<p class="text-xs sm:text-sm">Jacob Contest Event</p>
-		{/if}
-	</div>
+	{#snippet trigger()}
+		<div
+			class="flex flex-row gap-2 items-center bg-card rounded-sm p-1 px-2 w-fit font-semibold leading-none"
+		>
+			{#if type === +EventType.FarmingWeight}
+				<img src="/favicon.webp" alt="Farming Weight" class="w-4 h-4" />
+				<p class="text-xs sm:text-sm">Farming Weight Event</p>
+			{:else if type === +EventType.Medals}
+				<img src="/images/medals/diamond.webp" alt="Farming Weight" class="w-4 h-4" />
+				<p class="text-xs sm:text-sm">Jacob Contest Event</p>
+			{/if}
+		</div>
+	{/snippet}
 	<div>
 		{#if type === +EventType.FarmingWeight}
 			<p class="text-lg font-semibold">Farming Weight Event</p>

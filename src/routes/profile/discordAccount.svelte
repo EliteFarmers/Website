@@ -3,7 +3,11 @@
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import type { components } from '$lib/api/api';
 
-	export let account: components['schemas']['AuthorizedAccountDto'] = {};
+	interface Props {
+		account?: components['schemas']['AuthorizedAccountDto'];
+	}
+
+	let { account = {} }: Props = $props();
 </script>
 
 <div class="flex flex-col align-middle gap-4 bg-primary-foreground p-2 rounded-lg">

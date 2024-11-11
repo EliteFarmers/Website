@@ -3,11 +3,15 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
 
-	export let event: components['schemas']['EventDetailsDto'];
-	export let guild: components['schemas']['GuildDetailsDto'] | undefined;
+	interface Props {
+		event: components['schemas']['EventDetailsDto'];
+		guild: components['schemas']['GuildDetailsDto'] | undefined;
+	}
 
-	$: start = new Date(+(event.startTime ?? 0) * 1000);
-	$: end = new Date(+(event.endTime ?? 0) * 1000);
+	let { event, guild }: Props = $props();
+
+	let start = $derived(new Date(+(event.startTime ?? 0) * 1000));
+	let end = $derived(new Date(+(event.endTime ?? 0) * 1000));
 </script>
 
 <a
@@ -18,7 +22,7 @@
 	{#if guild?.banner}
 		<div
 			class="absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-gradient-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
-		/>
+		></div>
 	{/if}
 	<GuildIcon {guild} size={16} class="z-10" />
 	<div class="flex flex-col md:flex-row justify-between w-full z-10 gap-1">

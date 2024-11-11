@@ -6,19 +6,23 @@
 	import Info from 'lucide-svelte/icons/info';
 	import * as Popover from '$ui/popover';
 
-	export let progress: FortuneSourceProgress;
-	export let barBg = 'bg-card';
+	interface Props {
+		progress: FortuneSourceProgress;
+		barBg?: string;
+	}
 
-	$: maxed = progress.ratio >= 1;
-	$: readable =
-		(maxed
+	let { progress, barBg = 'bg-card' }: Props = $props();
+
+	let maxed = $derived(progress.ratio >= 1);
+	let readable =
+		$derived((maxed
 			? (+progress.fortune).toLocaleString()
 			: (+progress.fortune).toLocaleString() + ' / ' + progress.maxFortune) +
 		' ' +
-		STAT_ICONS[Stat.FarmingFortune];
-	$: expanded = maxed
+		STAT_ICONS[Stat.FarmingFortune]);
+	let expanded = $derived(maxed
 		? (+progress.fortune).toLocaleString() + ' / ' + progress.maxFortune + ' ' + STAT_ICONS[Stat.FarmingFortune]
-		: undefined;
+		: undefined);
 </script>
 
 <div class="flex flex-col items-start w-full">
@@ -36,9 +40,9 @@
 		{/if}
 		{#if progress.api === false}
 			<Popover.Mobile>
-				<div slot="trigger">
+				{#snippet trigger()}
 					<TriangleAlert size={16} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
-				</div>
+				{/snippet}
 				<p class="text-sm max-w-sm">
 					This fortune source is not available in the Hypixel API. For it to show up you need to configure
 					settings on this page.

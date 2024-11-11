@@ -3,29 +3,40 @@
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { type LeaderboardConfig } from '$lib/constants/leaderboards';
 
-	export let entry: LeaderboardEntry;
-	export let highlight = false;
-	export let rank: number;
-	export let formatting: 'number' | 'decimal' = 'number';
-	export let leaderboard: LeaderboardConfig | undefined = undefined;
-	export let showLeaderboardName = false;
+	interface Props {
+		entry: LeaderboardEntry;
+		highlight?: boolean;
+		rank: number;
+		formatting?: 'number' | 'decimal';
+		leaderboard?: LeaderboardConfig | undefined;
+		showLeaderboardName?: boolean;
+	}
 
-	$: options = {
+	let {
+		entry,
+		highlight = false,
+		rank,
+		formatting = 'number',
+		leaderboard = undefined,
+		showLeaderboardName = false
+	}: Props = $props();
+
+	let options = $derived({
 		maximumFractionDigits: 1,
-	} as Intl.NumberFormatOptions;
+	} as Intl.NumberFormatOptions);
 
-	$: {
+	$effect(() => {
 		if (formatting === 'decimal') {
 			options.minimumFractionDigits = 1;
 		} else if ($page.params.category === 'skyblockxp') {
 			options.minimumFractionDigits = 2;
 			options.maximumFractionDigits = 2;
 		}
-	}
+	});
 
-	$: ({ ign, amount, profile } = entry);
-	$: pageLink = entry.members ? entry.members[0].ign : ign;
-	$: profileLink = leaderboard?.profile ? entry.uuid : profile;
+	let { ign, amount, profile } = $derived(entry);
+	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
+	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
 </script>
 
 <a

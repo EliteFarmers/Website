@@ -10,10 +10,14 @@
 	import Replace from 'lucide-svelte/icons/replace';
 	import ScrollText from 'lucide-svelte/icons/scroll-text';
 
-	export let product: components['schemas']['ProductDto'];
+	interface Props {
+		product: components['schemas']['ProductDto'];
+	}
 
-	$: features = product.features ?? {};
-	$: styles = product.weightStyles ?? [];
+	let { product }: Props = $props();
+
+	let features = $derived(product.features ?? {});
+	let styles = $derived(product.weightStyles ?? []);
 </script>
 
 <div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">
@@ -27,7 +31,9 @@
 				<div class="flex flex-row gap-1 items-center">
 					{#if styles.length}
 						<ProductFeature>
-							<Image slot="icon" size={16} />
+							{#snippet icon()}
+								<Image size={16} />
+							{/snippet}
 							<p class="font-semibold">Unlocks weight styles:</p>
 							{#each styles as style}
 								<p class="text-sm font-semibold">"{style.name}"</p>
@@ -36,11 +42,13 @@
 					{/if}
 					{#if features.embedColors?.length}
 						<ProductFeature>
-							<Palette slot="icon" size={16} />
+							{#snippet icon()}
+								<Palette size={16} />
+							{/snippet}
 							<p class="font-semibold">Unlocks embed colors:</p>
 							{#each features.embedColors as color}
 								<div class="flex flex-row gap-1 items-center">
-									<div class="w-4 h-4 rounded-sm" style="background-color: #{color}" />
+									<div class="w-4 h-4 rounded-sm" style="background-color: #{color}"></div>
 									<span class="text-sm leading-none font-semibold">#{color}</span>
 								</div>
 							{/each}
@@ -48,25 +56,33 @@
 					{/if}
 					{#if features.badgeId}
 						<ProductFeature>
-							<Tag slot="icon" size={16} />
+							{#snippet icon()}
+								<Tag size={16} />
+							{/snippet}
 							<p class="font-semibold">Unlocks a badge!</p>
 						</ProductFeature>
 					{/if}
 					{#if features.hideShopPromotions}
 						<ProductFeature>
-							<TicketX slot="icon" size={16} />
+							{#snippet icon()}
+								<TicketX size={16} />
+							{/snippet}
 							<p class="font-semibold">Hides shop promotions!</p>
 						</ProductFeature>
 					{/if}
 					{#if features.weightStyleOverride}
 						<ProductFeature>
-							<Replace slot="icon" size={16} />
+							{#snippet icon()}
+								<Replace size={16} />
+							{/snippet}
 							<p class="font-semibold">Apply your weight style on everyone!</p>
 						</ProductFeature>
 					{/if}
 					{#if features.moreInfoDefault}
 						<ProductFeature>
-							<ScrollText slot="icon" size={16} />
+							{#snippet icon()}
+								<ScrollText size={16} />
+							{/snippet}
 							<p class="font-semibold">More info in weight command by default!</p>
 						</ProductFeature>
 					{/if}

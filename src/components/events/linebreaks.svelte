@@ -1,8 +1,12 @@
 <script lang="ts">
-	export let text: string;
+	interface Props {
+		text: string;
+	}
+
+	let { text }: Props = $props();
 
 	// Split by \n or \r\n
-	$: lines = text.split('\n');
+	let lines = $derived(text.split('\n'));
 </script>
 
 {#each lines as line, i (line + i)}

@@ -6,8 +6,12 @@
 	import * as Popover from '$ui/popover';
 	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 
-	export let rank = 0;
-	export let entry: components['schemas']['ContestParticipationWithTimestampDto'];
+	interface Props {
+		rank?: number;
+		entry: components['schemas']['ContestParticipationWithTimestampDto'];
+	}
+
+	let { rank = 0, entry }: Props = $props();
 </script>
 
 <Accordion.Item value={entry.timestamp + '' + entry.collected} class="mx-4">
@@ -24,9 +28,11 @@
 			</div>
 			{#if entry.removed}
 				<Popover.Mobile>
-					<div slot="trigger" class="mt-2">
-						<CircleAlert class="text-destructive" />
-					</div>
+					{#snippet trigger()}
+						<div class="mt-2">
+							<CircleAlert class="text-destructive" />
+						</div>
+					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
 						<p class="max-w-xs break-words whitespace-normal">
