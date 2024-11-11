@@ -18,20 +18,16 @@
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
+
+	let { data = $bindable(), form }: Props = $props();
 
 	const anySelected = getAnyCropSelected();
 	const selectedCrops = getSelectedCrops();
 	const minDate = new CalendarDate(2023, 7, 1);
-
-	$: crops = form?.graph ?? data.crops;
-	$: increases = {} as Record<string, number>;
-	$: highestIncrease = 0;
-	$: pestIncreased = false;
-	$: entries = mapCrops(crops);
-	$: pestToggle = false;
-	$: showPests = pestToggle && pestIncreased;
 
 	function mapCrops(crops: typeof data.crops) {
 		return Object.entries(crops)
@@ -54,20 +50,6 @@
 			});
 	}
 
-	$: selected = (crop: string) => $selectedCrops[crop] || !$anySelected;
-	$: selectedCount = Object.values($selectedCrops).filter(Boolean).length;
-	$: fewSelected = selectedCount <= 3 && $anySelected;
-
-	$: tz = getLocalTimeZone();
-
-	let initEnd = today(tz);
-	let disabled = false;
-	let initStart = initEnd.subtract({ days: 7 });
-
-	$: days = 7;
-	$: value = initStart;
-
-	$: getStart(days);
 	function getStart(days: number) {
 		const dayDiff = differenceInDays(today(tz).toDate(tz), value.toDate(tz));
 		if (!value || dayDiff > 30) return;
@@ -75,19 +57,45 @@
 		value = initEnd.subtract({ days });
 	}
 
-	$: backEnabled = value <= minDate;
 	function back() {
 		value = value.subtract({ days });
 	}
 
-	$: fowardEnabled = value >= initEnd;
 	function forward() {
 		if (value >= initEnd) return;
 		value = value.add({ days });
 		if (value > initEnd) value = initEnd;
 	}
 
-	$: startTime = Math.floor(value.toDate(tz).getTime() / 1000);
+	let crops = $derived(form?.graph ?? data.crops);
+	let increases = $derived({} as Record<string, number>);
+	let highestIncrease = $state(0);
+	
+	let pestIncreased = $state(false);
+	
+	let entries = $derived(mapCrops(crops));
+	let pestToggle = $state(false);
+	
+	let showPests = $derived(pestToggle && pestIncreased);
+	let selected = $derived((crop: string) => $selectedCrops[crop] || !$anySelected);
+	let selectedCount = $derived(Object.values($selectedCrops).filter(Boolean).length);
+	let fewSelected = $derived(selectedCount <= 3 && $anySelected);
+	const tz = getLocalTimeZone();
+	let days = $state(7);
+
+	const initEnd = today(tz);
+	let disabled = $state(false);
+	let initStart = initEnd.subtract({ days: 7 });
+	
+	let value = $state(initStart);
+
+	$effect(() => {
+		getStart(days);
+	});
+
+	let backEnabled = $derived(value <= minDate);
+	let fowardEnabled = $derived(value >= initEnd);
+	let startTime = $derived(Math.floor(value.toDate(tz).getTime() / 1000));
 </script>
 
 <Head title="{data.account.name} | Charts" description="See crop collection charts for Hypixel Skyblock!" />
@@ -108,17 +116,17 @@
 	>
 		<input type="hidden" bind:value={data.account.id} name="uuid" />
 		<input type="hidden" bind:value={data.profile.profileId} name="profile" />
-		<input type="hidden" bind:value={startTime} name="start" />
+		<input type="hidden" value={startTime} name="start" />
 		<input type="hidden" bind:value={days} name="days" />
 
 		<div class="flex flex-col gap-2 items-center">
 			<div class="flex flex-col gap-2 items-center">
 				<div class="flex flex-row gap-2 items-center">
-					<Button on:click={back} variant="outline" disabled={backEnabled}>
+					<Button onclick={back} variant="outline" disabled={backEnabled}>
 						<ArrowLeft />
 					</Button>
 					<DatePicker bind:value maxValue={initEnd} minValue={minDate} class="w-48" />
-					<Button on:click={forward} variant="outline" disabled={fowardEnabled}>
+					<Button onclick={forward} variant="outline" disabled={fowardEnabled}>
 						<ArrowRight />
 					</Button>
 				</div>
@@ -127,9 +135,9 @@
 						<p class="text-sm leading-none">Show Pests</p>
 						{#if !pestIncreased}
 							<Popover.Mobile>
-								<div slot="trigger">
+								{#snippet trigger()}
 									<Switch bind:checked={pestToggle} disabled={true} />
-								</div>
+								{/snippet}
 								<div class="p-2">
 									<p class="text-sm">Pest data not available for this time period.</p>
 								</div>
@@ -149,7 +157,7 @@
 						bind:value={days}
 						class="w-32"
 					/>
-					<Button type="submit" variant="default" bind:disabled>Update</Button>
+					<Button type="submit" variant="default" {disabled}>Update</Button>
 				</div>
 			</div>
 		</div>

@@ -8,26 +8,34 @@
 	import { enhance } from '$app/forms';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: pings = data.pings ?? {};
+	let { data, form }: Props = $props();
 
-	$: channels = (data.guild?.channels ?? [])
-		// Only allow text channels
-		.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
-		.map((c) => ({
-			value: c.id ?? '',
-			label: '#' + (c.name ?? ''),
-		}))
-		.filter((c) => c.value);
+	let pings = $derived(data.pings ?? {});
 
-	$: roles = (data.guild?.roles ?? [])
-		.map((r) => ({
-			value: r.id ?? '',
-			label: '@' + (r.name ?? ''),
-		}))
-		.filter((r) => r.value && r.label !== '@@everyone');
+	let channels = $derived(
+		(data.guild?.channels ?? [])
+			// Only allow text channels
+			.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
+			.map((c) => ({
+				value: c.id ?? '',
+				label: '#' + (c.name ?? ''),
+			}))
+			.filter((c) => c.value)
+	);
+
+	let roles = $derived(
+		(data.guild?.roles ?? [])
+			.map((r) => ({
+				value: r.id ?? '',
+				label: '@' + (r.name ?? ''),
+			}))
+			.filter((r) => r.value && r.label !== '@@everyone')
+	);
 </script>
 
 <Head title="Contest Pings" description="Manage upcoming Jacob Contest pings for your guild" />
@@ -169,9 +177,9 @@
 					</div>
 				</div>
 				<div class="mt-2 flex flex-row gap-4">
-					<form method="post" action="?/disable" use:enhance>
-						<Button type="submit" color="red" disabled={!pings.enabled}>Turn off Pings</Button>
-					</form>
+					<Button type="submit" color="red" formaction="?/disable" disabled={!pings.enabled}
+						>Turn off Pings</Button
+					>
 					<Button type="submit">{!pings.enabled ? 'Enable and ' : ''}Update</Button>
 				</div>
 			</form>

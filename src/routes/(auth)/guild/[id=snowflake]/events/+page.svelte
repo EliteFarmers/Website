@@ -9,15 +9,19 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import CreateEvent from './create-event.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	let clickOutsideModal = false;
+	let { data }: Props = $props();
+
+	let clickOutsideModal = $state(false);
 
 	// Filter out events made more than a month ago
-	$: recentEvents =
-		data.createdEvents?.filter((e) => new Date(e.createdAt ?? 0).getTime() > Date.now() - 2592000000) ?? [];
+	let recentEvents =
+		$derived(data.createdEvents?.filter((e) => new Date(e.createdAt ?? 0).getTime() > Date.now() - 2592000000) ?? []);
 
-	$: events = data.events?.sort((a, b) => b?.endTime?.localeCompare(a?.endTime ?? '') ?? 0) ?? [];
+	let events = $derived(data.events?.sort((a, b) => b?.endTime?.localeCompare(a?.endTime ?? '') ?? 0) ?? []);
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -36,7 +40,7 @@
 		</p>
 		{#if (recentEvents.length ?? 0) < (data.maxMonthlyEvents ?? 0)}
 			<div class="flex w-full justify-center items-center">
-				<Button on:click={() => (clickOutsideModal = true)}>Create New</Button>
+				<Button onclick={() => (clickOutsideModal = true)}>Create New</Button>
 			</div>
 		{/if}
 	</section>
@@ -53,9 +57,11 @@
 						<div class="flex flex-row items-center gap-2">
 							{#if !event.approved}
 								<Popover.Mobile>
-									<div slot="trigger">
-										<TriangleAlert class="text-red-500 mt-1.5" />
-									</div>
+									{#snippet trigger()}
+																		<div >
+											<TriangleAlert class="text-red-500 mt-1.5" />
+										</div>
+																	{/snippet}
 									<div>
 										<p class="font-semibold">Pending approval!</p>
 										<p>Ask kaeso.dev to approve this event.</p>
@@ -78,11 +84,13 @@
 					</div>
 					<div class="p-4 flex flex-col gap-2">
 						<Popover.Mobile>
-							<div slot="trigger">
-								<Button href="/guild/{event.guildId}/event/{event.id}">
-									<Settings />
-								</Button>
-							</div>
+							{#snippet trigger()}
+														<div >
+									<Button href="/guild/{event.guildId}/event/{event.id}">
+										<Settings />
+									</Button>
+								</div>
+													{/snippet}
 							<div>
 								<p>Edit Event</p>
 							</div>
@@ -90,11 +98,13 @@
 
 						{#if event.approved}
 							<Popover.Mobile>
-								<div slot="trigger">
-									<Button href="/event/{event.id}" target="_blank">
-										<ExternalLink />
-									</Button>
-								</div>
+								{#snippet trigger()}
+																<div >
+										<Button href="/event/{event.id}" target="_blank">
+											<ExternalLink />
+										</Button>
+									</div>
+															{/snippet}
 								<div>
 									<p>View Event Page</p>
 								</div>

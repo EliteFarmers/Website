@@ -6,32 +6,34 @@
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import Cropselect from '$comp/stats/contests/cropselect.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: contests = Object.entries((data.contests ?? {}) as Record<number, string[]>) as [string, string[]][];
-	$: seconds = Math.floor(Date.now() / 1000);
+	let { data }: Props = $props();
 
-	$: current = contests.find(([time]) => +time < seconds && seconds <= +time + 1200);
-	$: upcoming = contests.filter(([time]) => +time > seconds).map(([time, contest]) => [time, contest.sort()]) as [
+	let contests = $derived(Object.entries((data.contests ?? {}) as Record<number, string[]>) as [string, string[]][]);
+	let seconds = $state(Math.floor(Date.now() / 1000));
+
+	let current = $derived(contests.find(([time]) => +time < seconds && seconds <= +time + 1200));
+	let upcoming = $derived(contests.filter(([time]) => +time > seconds).map(([time, contest]) => [time, contest.sort()]) as [
 		string,
 		string[]
-	][];
+	][]);
 
-	$: crops = Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b));
-	$: cactus = false;
-	$: carrot = false;
-	$: cocoa = false;
-	$: melon = false;
-	$: mushroom = false;
-	$: netherwart = false;
-	$: potato = false;
-	$: pumpkin = false;
-	$: sugarcane = false;
-	$: wheat = false;
-
-	$: anySelected = false;
-
-	$: selected = {
+	let crops = $derived(Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b)));
+	let cactus = $state(false);
+	let carrot = $state(false);
+	let cocoa = $state(false);
+	let melon = $state(false);
+	let mushroom = $state(false);
+	let netherwart = $state(false);
+	let potato = $state(false);
+	let pumpkin = $state(false);
+	let sugarcane = $state(false);
+	let wheat = $state(false);
+	
+	let selected = $derived({
 		Cactus: cactus,
 		Carrot: carrot,
 		'Cocoa Beans': cocoa,
@@ -42,11 +44,9 @@
 		Pumpkin: pumpkin,
 		'Sugar Cane': sugarcane,
 		Wheat: wheat,
-	} as Record<string, boolean>;
+	} as Record<string, boolean>);
 
-	$: {
-		anySelected = Object.values(selected).some((v) => v);
-	}
+	let anySelected = $derived(Object.values(selected).some((v) => v));
 
 	onMount(() => {
 		const interval = setInterval(() => {

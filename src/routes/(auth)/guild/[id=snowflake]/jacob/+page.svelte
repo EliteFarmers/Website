@@ -16,34 +16,38 @@
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	let clickOutsideModal = false;
+	let { data, form }: Props = $props();
 
-	let sendUpdates = true;
-	let tinyLbPing = false;
+	let clickOutsideModal = $state(false);
 
-	$: channels = (data.guild?.channels ?? [])
+	let sendUpdates = $state(true);
+	let tinyLbPing = $state(false);
+
+	let channels = $derived((data.guild?.channels ?? [])
 		// Only allow text channels
 		.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
 		.map((c) => ({
 			value: c.id ?? '',
 			label: '#' + (c.name ?? ''),
 		}))
-		.filter((c) => c.value);
+		.filter((c) => c.value));
 
-	$: roles = (data.guild?.roles ?? [])
+	let roles = $derived((data.guild?.roles ?? [])
 		.map((r) => ({
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone'));
 
-	$: excluded = (data.excludedParticipations ?? []).map((p) => {
+	let excluded = $derived((data.excludedParticipations ?? []).map((p) => {
 		const [timestamp, crop, uuid] = p.split('-');
 		return { timestamp, crop, uuid };
-	});
+	}));
 </script>
 
 <Head title="Jacob Leaderboards" description="Manage Jacob Leaderboards for your guild" />
@@ -62,7 +66,7 @@
 		</p>
 		{#if (data.leaderboards?.length ?? 0) < (data.maxLeaderboards ?? 0)}
 			<div class="flex w-full justify-center items-center">
-				<Button on:click={() => (clickOutsideModal = true)}>Create New</Button>
+				<Button onclick={() => (clickOutsideModal = true)}>Create New</Button>
 			</div>
 		{/if}
 	</section>
@@ -78,7 +82,7 @@
 			class="flex flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-primary-foreground rounded-md"
 		>
 			<h2 class="text-3xl p-4">Manage Shared Settings</h2>
-			<Accordion.Root class="mx-4" multiple={true}>
+			<Accordion.Root class="mx-4" type="multiple">
 				<Accordion.Item value="banned">
 					<Accordion.Trigger>
 						<h4>Banned Participations</h4>

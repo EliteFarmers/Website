@@ -5,11 +5,15 @@
 	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: days = Object.entries(data.contests ?? {});
-	$: year = data.year;
-	$: month = data.month;
+	let { data }: Props = $props();
+
+	let days = $derived(Object.entries(data.contests ?? {}));
+	let year = $derived(data.year);
+	let month = $derived(data.month);
 </script>
 
 <Head

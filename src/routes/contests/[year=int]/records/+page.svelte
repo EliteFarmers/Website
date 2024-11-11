@@ -2,7 +2,11 @@
 	import type { PageData } from './$types';
 	import Croprecords from '$comp/stats/contests/croprecords.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	const cropNames = {
 		wheat: 'Wheat',
@@ -17,10 +21,10 @@
 		wart: 'Nether Wart',
 	};
 
-	$: crops = Object.entries(data.crops ?? {}).map(([crop, entries]) => ({
+	let crops = $derived(Object.entries(data.crops ?? {}).map(([crop, entries]) => ({
 		crop: cropNames[crop as keyof typeof cropNames] as string,
 		entries,
-	}));
+	})));
 </script>
 
 {#if crops.length === 0}

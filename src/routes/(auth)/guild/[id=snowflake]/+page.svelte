@@ -9,22 +9,26 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: features = data.guild?.features;
-	$: visibility = data.guild?.public !== true;
-	$: currentLeaderboardCount = features?.jacobLeaderboard?.maxLeaderboards ?? 0;
-	$: currentEventCount = features?.eventSettings?.maxMonthlyEvents ?? 0;
-	let leaderboardCount = 3;
-	let eventCount = 1;
+	let { data, form }: Props = $props();
 
-	$: roles = (data.guild?.roles ?? [])
+	let features = $derived(data.guild?.features);
+	let visibility = $state(data.guild?.public !== true);
+	let currentLeaderboardCount = $derived(features?.jacobLeaderboard?.maxLeaderboards ?? 0);
+	let currentEventCount = $derived(features?.eventSettings?.maxMonthlyEvents ?? 0);
+	let leaderboardCount = $state(3);
+	let eventCount = $state(1);
+
+	let roles = $derived((data.guild?.roles ?? [])
 		.map((r) => ({
 			value: r.id ?? '',
 			label: '@' + (r.name ?? ''),
 		}))
-		.filter((r) => r.value && r.label !== '@@everyone');
+		.filter((r) => r.value && r.label !== '@@everyone'));
 </script>
 
 <Head title="Server Settings" description="Manage server settings for your guild!" />

@@ -18,11 +18,15 @@
 	import Badge from '$comp/stats/badge.svelte';
 	import { Package } from 'lucide-svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: product = data.product;
-	$: badge = data.badges.find((b) => b.id === product.features?.badgeId);
-	$: isFree = !product.price || product.price === 0;
+	let { data }: Props = $props();
+
+	let product = $derived(data.product);
+	let badge = $derived(data.badges.find((b) => b.id === product.features?.badgeId));
+	let isFree = $derived(!product.price || product.price === 0);
 </script>
 
 <Head title="Shop" description="Help support development with cosmetics!" />
@@ -45,7 +49,7 @@
 				</p>
 			{:else}
 				<!-- Maintain grid layout -->
-				<div class="order-1" />
+				<div class="order-1"></div>
 			{/if}
 
 			<div class="flex h-full flex-col justify-end order-3 lg:order-2">
@@ -94,10 +98,12 @@
 			<div class="flex flex-col gap-2 w-full max-w-96 order-4">
 				{#if product.weightStyles?.length}
 					<ProductUnlock open={true}>
-						<svelte:fragment slot="header">
-							<Image />
-							<p class="font-semibold">Weight Styles</p>
-						</svelte:fragment>
+						{#snippet header()}
+											
+								<Image />
+								<p class="font-semibold">Weight Styles</p>
+							
+											{/snippet}
 						<p class="max-w-sm">
 							Unlock the weight <a href="#styles" class="underline">
 								style{product.weightStyles.length > 1 ? 's' : ''} shown below!</a
@@ -107,10 +113,12 @@
 				{/if}
 				{#if product.features?.embedColors?.length}
 					<ProductUnlock open={true}>
-						<svelte:fragment slot="header">
-							<Palette />
-							<p class="font-semibold">Embed Colors</p>
-						</svelte:fragment>
+						{#snippet header()}
+											
+								<Palette />
+								<p class="font-semibold">Embed Colors</p>
+							
+											{/snippet}
 						<div class="flex flex-wrap items-center gap-2">
 							{#each product?.features.embedColors as color}
 								<div
@@ -125,10 +133,12 @@
 				{/if}
 				{#if badge}
 					<ProductUnlock open={true}>
-						<svelte:fragment slot="header">
-							<Tag />
-							<p class="font-semibold">Grants A Badge</p>
-						</svelte:fragment>
+						{#snippet header()}
+											
+								<Tag />
+								<p class="font-semibold">Grants A Badge</p>
+							
+											{/snippet}
 						<div>
 							<Badge {badge} />
 						</div>
@@ -136,10 +146,12 @@
 				{/if}
 				{#if product.features?.hideShopPromotions}
 					<ProductUnlock>
-						<svelte:fragment slot="header">
-							<TicketX />
-							<p class="font-semibold">Hide Shop Promotions</p>
-						</svelte:fragment>
+						{#snippet header()}
+											
+								<TicketX />
+								<p class="font-semibold">Hide Shop Promotions</p>
+							
+											{/snippet}
 						<p class="max-w-sm">
 							This allows you to hide any promotions for the Elite Shop in bot commands.
 						</p>
@@ -147,10 +159,12 @@
 				{/if}
 				{#if product.features?.weightStyleOverride}
 					<ProductUnlock>
-						<svelte:fragment slot="header">
-							<Replace />
-							<p class="font-semibold">Use Weight Style On Everyone</p>
-						</svelte:fragment>
+						{#snippet header()}
+											
+								<Replace />
+								<p class="font-semibold">Use Weight Style On Everyone</p>
+							
+											{/snippet}
 						<p class="max-w-sm">
 							With this enabled your selected weight style will show up for everyone you look up using the
 							bot.
@@ -159,10 +173,12 @@
 				{/if}
 				{#if product.features?.moreInfoDefault}
 					<ProductUnlock>
-						<svelte:fragment slot="header">
-							<ScrollText />
-							<p class="font-semibold">Default "More Info"</p>
-						</svelte:fragment>
+						{#snippet header()}
+											
+								<ScrollText />
+								<p class="font-semibold">Default "More Info"</p>
+							
+											{/snippet}
 						<p class="max-w-sm">
 							Using the /weight command on the bot will show the "More Info" section by default.
 						</p>

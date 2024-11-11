@@ -7,9 +7,13 @@
 	import * as Accordion from '$ui/accordion';
 	import { Switch } from '$ui/switch';
 
-	let timeType = false;
+	let timeType = $state(false);
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <Head
@@ -37,7 +41,7 @@
 			</div>
 		</div>
 
-		<Accordion.Root multiple class="max-w-6xl w-full mx-4 items-center">
+		<Accordion.Root type="multiple" class="max-w-6xl w-full mx-4 items-center">
 			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
 				<Accordion.Item value="{year} ">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">

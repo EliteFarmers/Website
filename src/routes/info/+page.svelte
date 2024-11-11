@@ -8,8 +8,12 @@
 	import type { PageData } from './$types';
 	import PestTable from './pest-table.svelte';
 
-	export let data: PageData;
-	$: weights = data.weights;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
+	let weights = $derived(data.weights);
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />

@@ -17,28 +17,32 @@
 	import type { PageData, ActionData } from './$types';
 	import { onMount } from 'svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: product = data.product;
-	let loading = false;
-	let deleteProductImageModal = false;
+	let { data, form }: Props = $props();
 
-	$: selectedColors = product?.features?.embedColors ?? [];
-	$: selectedImageId = '';
+	let product = $derived(data.product);
+	let loading = $state(false);
+	let deleteProductImageModal = $state(false);
 
-	$: changedSettings = {
+	let selectedColors = $state<string[]>(data.product?.features?.embedColors ?? []);
+	let selectedImageId = $state('');
+	
+	let changedSettings = $derived({
 		shopPromotions: false,
 		styleOverride: false,
 		moreInfo: false,
 		badgeId: '',
 		available: false,
-	};
+	});
 
-	$: styles = product.weightStyles?.map((s) => ({
+	let styles = $derived(product.weightStyles?.map((s) => ({
 		value: (s.id ?? 0).toString(),
 		label: s.name,
-	}));
+	})));
 
 	onMount(() => {
 		changedSettings.shopPromotions = product?.features?.hideShopPromotions ?? false;
@@ -48,8 +52,8 @@
 		changedSettings.available = product.available ?? false;
 	});
 
-	let newColor = '';
-	let isThumbnail = false;
+	let newColor = $state('');
+	let isThumbnail = $state(false);
 </script>
 
 <Head title="Product" description="Manage product" />
@@ -84,7 +88,7 @@
 						<Button
 							variant="destructive"
 							size="sm"
-							on:click={() => {
+							onclick={() => {
 								selectedImageId = image.url ?? '';
 								deleteProductImageModal = true;
 							}}
@@ -154,7 +158,7 @@
 							<Button
 								variant="secondary"
 								size="sm"
-								on:click={() => {
+								onclick={() => {
 									selectedColors = selectedColors.filter((c) => c !== color);
 								}}
 							>
@@ -168,7 +172,7 @@
 						<Button
 							variant="secondary"
 							size="sm"
-							on:click={() => {
+							onclick={() => {
 								selectedColors = [...selectedColors, newColor];
 							}}
 						>

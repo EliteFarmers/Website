@@ -3,8 +3,14 @@
 	import Head from '$comp/head.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import { getTimeStamp } from '$lib/format';
+	
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	$: year = +$page.params.year;
+	let { children }: Props = $props();
+
+	let year = $derived(+$page.params.year);
 </script>
 
 <Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />
@@ -28,7 +34,7 @@
 	</div>
 
 	<div class="flex flex-wrap md:flex-row w-full md:w-[90%] gap-4 mt-4 mx-8 mb-16 justify-center">
-		<slot />
+		{@render children?.()}
 	</div>
 
 	<div class="max-w-xl mb-8 text-center text-sm flex flex-col gap-4">

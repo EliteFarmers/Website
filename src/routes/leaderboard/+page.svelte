@@ -3,11 +3,15 @@
 	import type { PageData } from './$types';
 	import Category from './category.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: categories = data.categories;
+	let { data }: Props = $props();
 
-	$: ({ skills, general, collections, pest, milestones } = categories);
+	let categories = $derived(data.categories);
+
+	let { skills, general, collections, pest, milestones } = $derived(categories);
 </script>
 
 <Head

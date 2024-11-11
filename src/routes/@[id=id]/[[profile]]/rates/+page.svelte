@@ -44,27 +44,17 @@
 	import JumpLink from '$comp/jump-link.svelte';
 
 	import type { PageData } from './$types';
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	let blocksBroken = 24_000 * 3;
-	let bps = 20;
-	$: blocksActuallyBroken = blocksBroken * (bps / 20);
+	let { data }: Props = $props();
+
+	let blocksBroken = $state(24_000 * 3);
+	let bps = $state(20);
 
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
-
-	$: pestTurnInChecked = $ratesData.temp.pestTurnIn > 0;
-	$: tools = FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]);
-	$: pets = FarmingPet.fromArray(data.member?.pets ?? []);
-
-	$: armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
-	$: equipment = LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]);
-	$: armorSet = new ArmorSet(armor, equipment);
-
-	// Deselect pet if it's not on this player
-	$: $ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
-		? setPet($ratesData.selectedPet)
-		: undefined;
 
 	function setPet(uuid?: string) {
 		$ratesData.selectedPet = uuid;
@@ -72,10 +62,43 @@
 		return uuid;
 	}
 
-	$: selectedPet = undefined as FarmingPet | undefined;
-	$: selectedTool = undefined as FarmingTool | undefined;
+	function updateSelectedTool(c: string) {
+		const crop = cropKey(c);
+		if (selectedTool?.crop === crop) return;
 
-	$: options = {
+		selectedTool = tools.find((tool) => tool.crop === crop);
+		selectedToolId = selectedTool?.item.uuid ?? '';
+
+		player.refresh();
+	}
+
+	function delayedUpdateSelectedTool(c: string) {
+		setTimeout(() => updateSelectedTool(c), 0);
+	}
+
+	const cropKey = (crop: string) =>
+		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
+		
+	let blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
+	let pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
+	let tools = $derived(FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]));
+	let pets = $derived(FarmingPet.fromArray(data.member?.pets ?? []));
+	let armor = $derived(FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]));
+	let equipment = $derived(LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]));
+	let armorSet = $derived(new ArmorSet(armor, equipment));
+
+	// Deselect pet if it's not on this player
+	$effect.pre(() => {
+		$ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
+			? setPet($ratesData.selectedPet)
+			: undefined;
+	});
+
+	let selectedPet = $state<FarmingPet | undefined>(undefined);
+	let selectedTool = $state<FarmingTool | undefined>(undefined);
+	let selectedToolId = $state('');
+
+	let options = $derived({
 		tools: tools,
 		armor: armorSet,
 		equipment: equipment,
@@ -115,43 +138,24 @@
 					mode: $ratesData.zorroMode,
 			  }
 			: undefined,
-	} satisfies PlayerOptions;
+	} satisfies PlayerOptions);
 
-	$: player = getRatesPlayer(options);
-
-	$: cropFortune = $player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat);
-
-	$: calculator = calculateDetailedAverageDrops({
+	let player = $derived(getRatesPlayer(options));
+	let selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
+	let cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
+	let calculator = $derived(calculateDetailedAverageDrops({
 		farmingFortune: $player.fortune + cropFortune.fortune,
 		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
 		mooshroom: selectedPet?.type === FarmingPets.MooshroomCow,
 		dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
 		blocksBroken: blocksActuallyBroken,
+	}));
+	let selectedCropKey = $derived(cropKey(selectedCrop));
+	let selected = $derived(Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']));
+
+	$effect(() => {
+		delayedUpdateSelectedTool(selectedCrop);
 	});
-
-	$: selectedCrop = Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '';
-	$: selectedCropKey = cropKey(selectedCrop);
-	$: selected = Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']);
-
-	$: delayedUpdateSelectedTool(selectedCrop);
-	$: selectedToolId = $player.selectedTool?.item.uuid?.slice() ?? '';
-
-	function updateSelectedTool(c: string) {
-		const crop = cropKey(c);
-		if (selectedTool?.crop === crop) return;
-
-		selectedTool = tools.find((tool) => tool.crop === crop);
-		selectedToolId = selectedTool?.item.uuid ?? '';
-
-		player.refresh();
-	}
-
-	function delayedUpdateSelectedTool(c: string) {
-		setTimeout(() => updateSelectedTool(c), 0);
-	}
-
-	const cropKey = (crop: string) =>
-		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
 </script>
 
 <Head
@@ -167,7 +171,7 @@
 			class="flex-1 flex flex-col items-center w-full gap-4 p-4 md:pb-6 md:px-6 rounded-md bg-primary-foreground"
 		>
 			<div class="flex flex-row justify-between items-center w-full">
-				<div class="flex-1 hidden sm:block" />
+				<div class="flex-1 hidden sm:block"></div>
 				<div class="flex flex-3 flex-row gap-2 my-2 items-center">
 					<h2 class="text-lg md:text-2xl">Total Farming Fortune</h2>
 
@@ -182,7 +186,7 @@
 						variant="outline"
 						class="m-1"
 						size="sm"
-						on:click={() => ($ratesData.settings = !$ratesData.settings)}
+						onclick={() => ($ratesData.settings = !$ratesData.settings)}
 					>
 						<Settings size={20} />
 					</Button>
@@ -518,7 +522,7 @@
 					<JumpLink id="fortune" self={false} />
 				</div>
 				<h2 class="text-2xl mb-1">Farming Fortune</h2>
-				<div class="flex-1" />
+				<div class="flex-1"></div>
 			</div>
 			{#key $player.fortune}
 				<div class="flex flex-wrap md:flex-row gap-4 w-full justify-start">

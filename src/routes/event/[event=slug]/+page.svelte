@@ -16,20 +16,24 @@
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: ({ event = {} as typeof data.event, members, teams = [], joined, self, guild } = data);
+	let { data }: Props = $props();
 
-	$: banner = event.banner?.url ?? guild?.banner?.url;
-	$: time = Date.now();
-	$: start = +(event.startTime ?? 0) * 1000;
-	$: end = +(event.endTime ?? 0) * 1000;
-	$: running = start < time && end > time;
-	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now() && !self?.disqualified;
-	$: teamEvent = (teams?.length ?? 0) > 0;
+	let { event = {} as typeof data.event, members, teams = [], joined, self, guild } = $derived(data);
+
+	let banner = $derived(event.banner?.url ?? guild?.banner?.url);
+	let time = $state(Date.now());
+	let start = $derived(+(event.startTime ?? 0) * 1000);
+	let end = $derived(+(event.endTime ?? 0) * 1000);
+	let running = $derived(start < time && end > time);
+	let joinable = $derived(+(event.joinUntilTime ?? 0) * 1000 > Date.now() && !self?.disqualified);
+	let teamEvent = $derived((teams?.length ?? 0) > 0);
 
 	let memberLimit = 10;
-	let swapMode = false;
+	let swapMode = $state(false);
 
 	onMount(() => {
 		const interval = setInterval(() => {
@@ -43,7 +47,7 @@
 		swapMode = !swapMode;
 	}
 
-	$: topList = teamEvent
+	let topList = $derived(teamEvent
 		? teams
 				.slice(0, 5)
 				.map((team, i) => `${i + 1}. ${team.name} • ${(+(team?.score ?? 0)).toLocaleString()}`)
@@ -51,9 +55,9 @@
 		: members
 				.slice(0, 5)
 				.map((member, i) => `${i + 1}. ${member.playerName} • ${(+(member?.score ?? 0)).toLocaleString()}`)
-				.join('\n');
+				.join('\n'));
 
-	$: description = `View the ${running ? 'Event happening' : 'past Event'} in ${data.guild?.name}!\n\n${topList}`;
+	let description = $derived(`View the ${running ? 'Event happening' : 'past Event'} in ${data.guild?.name}!\n\n${topList}`);
 </script>
 
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
@@ -157,7 +161,7 @@
 		<section class="flex flex-1 flex-col gap-4 items-center bg-primary-foreground rounded-md p-8 basis-1 w-full">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				{#if teamEvent}
-					<Button on:click={swapLeaderboard} variant="secondary" size="sm">
+					<Button onclick={swapLeaderboard} variant="secondary" size="sm">
 						<ArrowLeftRight size={20} />
 						<span class="sr-only">Swap Leaderboard</span>
 					</Button>

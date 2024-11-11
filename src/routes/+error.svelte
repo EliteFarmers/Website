@@ -2,8 +2,8 @@
 	import { page } from '$app/stores';
 	import Head from '$comp/head.svelte';
 
-	$: message = $page.error?.message ?? 'Unknown error.';
-	$: status = $page.status;
+	let message = $derived($page.error?.message ?? 'Unknown error.');
+	let status = $derived($page.status);
 </script>
 
 <Head title={status.toString()} description={message} />
@@ -17,7 +17,7 @@
 		>Return Home</a
 	>
 	<button
-		on:click={() => location.reload()}
+		onclick={() => location.reload()}
 		class="p-4 shadow-md rounded-md shadow-gray bg-gray-300 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700"
 		>Reload</button
 	>

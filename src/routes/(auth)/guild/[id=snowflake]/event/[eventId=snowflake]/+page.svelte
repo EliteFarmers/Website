@@ -22,33 +22,37 @@
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	let clickOutsideModalEdit = false;
-	let clickOutsideModalEditImage = false;
-	let pending = false;
+	let { data = $bindable(), form }: Props = $props();
 
-	let banMemberModal = false;
+	let clickOutsideModalEdit = $state(false);
+	let clickOutsideModalEditImage = $state(false);
+	let pending = $state(false);
 
-	let banMemberName = '';
-	let banMemberUuid = '';
+	let banMemberModal = $state(false);
 
-	let memberLimit = 10;
-	let bansLimit = 10;
+	let banMemberName = $state('');
+	let banMemberUuid = $state('');
+
+	let memberLimit = $state(10);
+	let bansLimit = $state(10);
 
 	function sort(a: { score?: string | null } | undefined, b: { score?: string | null } | undefined) {
 		return +(b?.score ?? 0) - +(a?.score ?? 0);
 	}
 
-	$: event = data.event;
+	let event = $derived(data.event);
 
-	$: medalWeights = ((event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
-		| Record<string, number>
-		| undefined;
-	$: cropWeights = ((event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
-		| Record<string, number>
-		| undefined;
+	let medalWeights = $state(((data.event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
+			| Record<string, number>
+			| undefined);
+	let cropWeights = $state(((data.event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
+			| Record<string, number>
+			| undefined);
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -76,9 +80,11 @@
 					<div class="flex flex-row items-center gap-2">
 						{#if !event.approved}
 							<Popover.Mobile>
-								<div slot="trigger">
-									<TriangleAlert class="text-red-500 mt-1.5" />
-								</div>
+								{#snippet trigger()}
+																<div >
+										<TriangleAlert class="text-red-500 mt-1.5" />
+									</div>
+															{/snippet}
 								<div>
 									<p class="font-semibold">Pending approval!</p>
 									<p>Ask kaeso.dev to approve this event.</p>
@@ -105,30 +111,30 @@
 				</div>
 				<div class="p-4 flex flex-col gap-2">
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<Button
-								on:click={() => {
+								onclick={() => {
 									clickOutsideModalEdit = true;
 								}}
 							>
 								<Settings />
 							</Button>
-						</div>
+						{/snippet}
 						<div>
 							<p>Edit Event</p>
 						</div>
 					</Popover.Mobile>
 
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<Button
-								on:click={() => {
+								onclick={() => {
 									clickOutsideModalEditImage = true;
 								}}
 							>
 								<Image />
 							</Button>
-						</div>
+						{/snippet}
 						<div>
 							<p>Edit Banner Image</p>
 						</div>
@@ -136,11 +142,13 @@
 
 					{#if event.approved}
 						<Popover.Mobile>
-							<div slot="trigger">
-								<Button href="/event/{event.id}" target="_blank">
-									<ExternalLink />
-								</Button>
-							</div>
+							{#snippet trigger()}
+														<div >
+									<Button href="/event/{event.id}" target="_blank">
+										<ExternalLink />
+									</Button>
+								</div>
+													{/snippet}
 							<div>
 								<p>View Event Page</p>
 							</div>
@@ -166,10 +174,10 @@
 					{#each m.slice(0, memberLimit) as member (member.playerUuid + '' + member.id)}
 						<Member {member}>
 							<Popover.Mobile>
-								<div slot="trigger">
+								{#snippet trigger()}
 									<Button
 										size="sm"
-										on:click={() => {
+										onclick={() => {
 											banMemberName = member.playerName ?? '';
 											banMemberUuid = member.playerUuid ?? '';
 											banMemberModal = true;
@@ -177,7 +185,7 @@
 									>
 										<Trash2 size={16} class="text-destructive" />
 									</Button>
-								</div>
+								{/snippet}
 								<div>
 									<p>Ban this user from the event</p>
 								</div>
@@ -187,7 +195,7 @@
 					{#if m.length > memberLimit}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								memberLimit += m.length;
 							}}
 						>
@@ -196,7 +204,7 @@
 					{:else if memberLimit > 10}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								memberLimit = 10;
 							}}
 						>
@@ -224,11 +232,13 @@
 								<input type="hidden" name="id" value={event.id} />
 								<input type="hidden" name="uuid" value={member.playerUuid} />
 								<Popover.Mobile>
-									<div slot="trigger">
-										<Button type="submit" color="green" class="unban" size="sm">
-											<ArrowUp size={16} />
-										</Button>
-									</div>
+									{#snippet trigger()}
+																		<div >
+											<Button type="submit" color="green" class="unban" size="sm">
+												<ArrowUp size={16} />
+											</Button>
+										</div>
+																	{/snippet}
 									<div>
 										<p>Unban this user from the event</p>
 									</div>
@@ -239,7 +249,7 @@
 					{#if b.length > bansLimit}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								bansLimit += b.length;
 							}}
 						>
@@ -248,7 +258,7 @@
 					{:else if bansLimit > 10}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								bansLimit = 10;
 							}}
 						>
@@ -315,7 +325,7 @@
 						<Button
 							variant="destructive"
 							disabled={pending}
-							on:click={() => {
+							onclick={() => {
 								cropWeights = structuredClone(defaults?.cropWeights ?? {});
 							}}>Reset Values</Button
 						>
@@ -411,7 +421,7 @@
 						<Button
 							variant="destructive"
 							disabled={pending}
-							on:click={() => {
+							onclick={() => {
 								medalWeights = structuredClone(defaults?.medalValues ?? {});
 							}}>Reset Values</Button
 						>

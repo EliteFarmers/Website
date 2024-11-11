@@ -16,50 +16,18 @@
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
-	let checks = {
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
+
+	let { data, form }: Props = $props();
+	let checks = $state({
 		1: false,
 		2: false,
 		3: false,
 		4: false,
-	};
-
-	$: event = data.event;
-	$: teams = (data.teams ?? [])
-		.filter(
-			(t) =>
-				t.members &&
-				event &&
-				event.maxTeamMembers &&
-				(t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1)
-		)
-		.map((t) => ({
-			value: t.id ?? '',
-			label:
-				(t.name ?? '') +
-				` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`,
-		}));
-
-	$: joined = data.member && (data.member?.status === 0 || data.member?.status === 1);
-	$: ownTeamId = +(data.member?.teamId ?? '0');
-	$: ownTeam = data.team;
-	$: isOwner = ownTeam?.ownerId === data.account?.discordId;
-
-	$: profiles =
-		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? [];
-
-	$: picked1 = undefined as string | undefined;
-	$: picked2 = undefined as string | undefined;
-	$: picked3 = undefined as string | undefined;
-
-	$: name = '';
-	$: generateTeamName();
-
-	$: words = Array.from(
-		new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
-		(w) => ({ value: w.replaceAll(' ', '_'), label: w })
-	);
+	});
 
 	function generateTeamName() {
 		const firstWords = data.words?.first ?? [];
@@ -95,6 +63,44 @@
 	function updateName() {
 		name = (picked1 ?? '') + ' ' + (picked2 ?? '') + ' ' + (picked3 ?? '').trim();
 	}
+
+	let event = $derived(data.event);
+	let teams = $derived((data.teams ?? [])
+		.filter(
+			(t) =>
+				t.members &&
+				event &&
+				event.maxTeamMembers &&
+				(t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1)
+		)
+		.map((t) => ({
+			value: t.id ?? '',
+			label:
+				(t.name ?? '') +
+				` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`,
+		})));
+
+	let joined = $derived(data.member && (data.member?.status === 0 || data.member?.status === 1));
+	let ownTeamId = $derived(+(data.member?.teamId ?? '0'));
+	let ownTeam = $derived(data.team);
+	let isOwner = $derived(ownTeam?.ownerId === data.account?.discordId);
+	let profiles =
+		$derived(data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? []);
+	
+	let picked1 = $state('');
+	let picked2 = $state('');
+	let picked3 = $state<string | undefined>(undefined);
+
+	let name = $state('');
+	
+	$effect.pre(() => {
+		generateTeamName();
+	});
+
+	let words = $derived(Array.from(
+		new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
+		(w) => ({ value: w.replaceAll(' ', '_'), label: w })
+	));
 </script>
 
 <main class="flex flex-col justify-center items-center gap-4">
@@ -276,9 +282,11 @@
 									<p>{member.playerName}</p>
 									{#if ownTeam.ownerUuid === member.playerUuid}
 										<Popover.Mobile>
-											<div slot="trigger" class="flex flex-row items-end">
-												<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
-											</div>
+											{#snippet trigger()}
+																						<div  class="flex flex-row items-end">
+													<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
+												</div>
+																					{/snippet}
 											<p class="text-lg font-semibold">Team Owner</p>
 										</Popover.Mobile>
 									{/if}
@@ -287,7 +295,7 @@
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 									{#if isOwner}
 										<form action="?/kickMember" method="post" use:enhance>
-											<input type="hidden" name="team" bind:value={ownTeamId} />
+											<input type="hidden" name="team" value={ownTeamId} />
 											<input type="hidden" name="member" value={member.playerUuid} />
 											<Button
 												type="submit"
@@ -305,14 +313,14 @@
 							</div>
 						{/each}
 						<form action="?/leaveTeam" method="post" use:enhance>
-							<input type="hidden" name="team" bind:value={ownTeamId} />
+							<input type="hidden" name="team" value={ownTeamId} />
 							<Button type="submit" variant="secondary" formaction="?/leaveTeam">Leave Team</Button>
 						</form>
 					</div>
 
 					{#if isOwner}
 						<form action="?/updateTeam" method="post" class="flex flex-col gap-4" use:enhance>
-							<input type="hidden" name="team" bind:value={ownTeamId} />
+							<input type="hidden" name="team" value={ownTeamId} />
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
 							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
@@ -320,7 +328,7 @@
 								<div class="flex flex-col gap-2">
 									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
 									<div class="flex flex-row gap-1 max-w-sm">
-										<Button variant="secondary" on:click={generateTeamName}>
+										<Button variant="secondary" onclick={generateTeamName}>
 											<RefreshCcw />
 										</Button>
 										<ComboBox
@@ -378,7 +386,7 @@
 							<div class="flex flex-col gap-2">
 								<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
 								<div class="flex flex-row gap-1 max-w-sm">
-									<Button variant="secondary" on:click={generateTeamName}>
+									<Button variant="secondary" onclick={generateTeamName}>
 										<RefreshCcw />
 									</Button>
 									<ComboBox

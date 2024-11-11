@@ -8,25 +8,30 @@
 	import { SkyBlockTime } from 'farming-weight';
 
 	const date = SkyBlockTime.now;
-	let yearVal = date.year;
-	let monthVal = date.month;
-	let dayVal = date.day;
+	let yearVal = $state(date.year);
+	let monthVal = $state(date.month);
+	let dayVal = $state(date.day);
 
-	function searchContest() {
+	function searchContest(event: Event) {
+		event.preventDefault();
 		goto(`/contests/${yearVal}/${monthVal}/${dayVal}`);
 	}
 
-	function searchContestYear() {
+	function searchContestYear(event: Event) {
+		event.preventDefault();
 		goto(`/contests/${yearVal}`);
 	}
 
-	function searchContestYearMonth() {
+	function searchContestYearMonth(event: Event) {
+		event.preventDefault();
 		goto(`/contests/${yearVal}/${monthVal}`);
 	}
 
-	$: searchStr = '';
+	let searchStr = $state('');
+	
 
-	function lookUpPlayer() {
+	function lookUpPlayer(event: Event) {
+		event.preventDefault();
 		if (!searchStr) return;
 		goto(`/@${searchStr}/contests`);
 	}
@@ -63,7 +68,7 @@
 					<p class="w-full text-md">May take a moment to load for some players with thousands of contests.</p>
 					<form
 						class="flex flex-row gap-2 justify-center items-center"
-						on:submit|preventDefault={lookUpPlayer}
+						onsubmit={lookUpPlayer}
 					>
 						<Input placeholder="Search for a player" bind:value={searchStr} type="text" />
 						<Button variant="default" type="submit" size="lg">Search</Button>
@@ -82,7 +87,7 @@
 					contest participations elsewhere on the site to jump to that contest.
 				</p>
 				<div class="flex-1 flex flex-col gap-4 items-end">
-					<form on:submit|preventDefault={searchContestYear} class="flex gap-2 items-center justify-center">
+					<form onsubmit={searchContestYear} class="flex gap-2 items-center justify-center">
 						<div>
 							<Label for="yearOnly"><span class="text-sm">Skyblock Year</span></Label>
 							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
@@ -109,7 +114,7 @@
 						</Button>
 					</form>
 					<form
-						on:submit|preventDefault={searchContestYearMonth}
+						onsubmit={searchContestYearMonth}
 						class="flex gap-2 items-center justify-center"
 					>
 						<div>
@@ -138,7 +143,7 @@
 							>
 						</Button>
 					</form>
-					<form on:submit|preventDefault={searchContest} class="flex gap-2 items-center justify-center">
+					<form onsubmit={searchContest} class="flex gap-2 items-center justify-center">
 						<div>
 							<Label for="year"><span class="text-sm">SB Year</span></Label>
 							<Input id="year" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />

@@ -12,16 +12,20 @@
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import type { ActionData, PageData } from './$types';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	let manageMemberModal = false;
-	let promoteMemberModal = false;
+	let { data, form }: Props = $props();
 
-	$: selectedPermission = '';
+	let manageMemberModal = $state(false);
+	let promoteMemberModal = $state(false);
 
-	$: selectedMemberId = '';
-	$: selectedMember = data.admins?.find((a) => a.id === selectedMemberId) ?? null;
+	let selectedPermission = $state('');
+	let selectedMemberId = $state('');
+	
+	let selectedMember = $derived(data.admins?.find((a) => a.id === selectedMemberId) ?? null);
 </script>
 
 <Head title="Admin Settings" description="Admin config page." />
@@ -40,7 +44,7 @@
 					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-gray-100 dark:bg-zinc-800"
 				>
 					<div class="flex flex-row gap-4 items-center">
-						<UserIcon {user} size={16} />
+						<UserIcon {user} class="size-12" />
 						<div class="flex flex-col">
 							<p class="text-xl">{user.username}</p>
 							<p>{user.id}</p>
@@ -53,17 +57,17 @@
 							{/each}
 						</div>
 						<Popover.Mobile>
-							<div slot="trigger">
+							{#snippet trigger()}
 								<Button
 									class="max-h-12"
-									on:click={() => {
+									onclick={() => {
 										manageMemberModal = true;
 										selectedMemberId = user.id ?? '';
 									}}
 								>
 									<Settings size={16} />
 								</Button>
-							</div>
+							{/snippet}
 							<div>Manage Permissions</div>
 						</Popover.Mobile>
 					</div>
@@ -71,7 +75,7 @@
 			{/each}
 		</div>
 		<Button
-			on:click={() => {
+			onclick={() => {
 				promoteMemberModal = true;
 			}}
 		>

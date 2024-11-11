@@ -11,16 +11,20 @@
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import { page } from '$app/stores';
 
-	export let data: PageData;
-	let overflow = true;
+	interface Props {
+		data: PageData;
+	}
 
-	$: garden = (data.member.garden ?? {}) as components['schemas']['GardenDto'];
-	$: maxVisitors = Object.keys(GARDEN_VISITORS).length;
-	$: totalVisits = Object.values(garden.visitors ?? {}).reduce((acc, { visits = 0 }) => acc + visits, 0) ?? 0;
-	$: accepted = garden.completedVisitors ?? 0;
-	$: rejected = totalVisits - accepted;
-	$: rate = ((accepted / totalVisits) * 100).toFixed(2);
-	$: ranks = data.ranks?.profile ?? {};
+	let { data }: Props = $props();
+	let overflow = $state(true);
+
+	let garden = $derived((data.member.garden ?? {}) as components['schemas']['GardenDto']);
+	let maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
+	let totalVisits = $derived(Object.values(garden.visitors ?? {}).reduce((acc, { visits = 0 }) => acc + visits, 0) ?? 0);
+	let accepted = $derived(garden.completedVisitors ?? 0);
+	let rejected = $derived(totalVisits - accepted);
+	let rate = $derived(((accepted / totalVisits) * 100).toFixed(2));
+	let ranks = $derived(data.ranks?.profile ?? {});
 </script>
 
 <Head title="{data.account.name} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />

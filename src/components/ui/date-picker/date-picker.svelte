@@ -12,10 +12,10 @@
 	});
 
 	interface Props {
-		value: DateValue | undefined;
-		minValue: DateValue | undefined;
-		maxValue: DateValue | undefined;
-		class: string | undefined;
+		value?: DateValue;
+		minValue?: DateValue;
+		maxValue?: DateValue;
+		class?: string;
 	}
 
 	let { 

@@ -8,16 +8,20 @@
 	import type { PageData, ActionData } from './$types';
 	import MinecraftAccount from './minecraftAccount.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
-	let loading = false;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: user = data.user || undefined;
-	$: primary = user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined;
-	$: secondary = user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || [];
+	let { data, form }: Props = $props();
+	let loading = $state(false);
 
-	$: discordUsername =
-		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
+	let user = $derived(data.user || undefined);
+	let primary = $derived(user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined);
+	let secondary = $derived(user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || []);
+
+	let discordUsername =
+		$derived(user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username);
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />

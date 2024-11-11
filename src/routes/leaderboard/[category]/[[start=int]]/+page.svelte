@@ -9,23 +9,27 @@
 	import { Switch } from '$comp/ui/switch';
 	import { getShowLeaderboardName } from '$lib/stores/leaderboardName';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: includeLeaderboardName = getShowLeaderboardName();
+	let { data }: Props = $props();
 
-	$: title = `${data.lb?.title} Leaderboard`;
-	$: entries = data.lb?.entries ?? [];
-	$: offset = (data.lb?.offset ?? 0) + 1;
-	$: category = data.category;
+	let includeLeaderboardName = $derived(getShowLeaderboardName());
 
-	$: firstHalf = entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[];
-	$: secondHalf = entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[];
-	$: formatting = data.formatting;
+	let title = $derived(`${data.lb?.title} Leaderboard`);
+	let entries = $state(data.lb?.entries ?? []);
+	let offset = $derived((data.lb?.offset ?? 0) + 1);
+	let category = $derived(data.category);
 
-	$: initialPage = Math.floor((data.lb.offset ?? 0) / 20 + 1);
-	$: noneActive = (data.lb.offset ?? 0) / 20 + 1 !== initialPage;
+	let firstHalf = $derived(entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
+	let secondHalf = $derived(entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
+	let formatting = $derived(data.formatting);
 
-	$: {
+	let initialPage = $state(Math.floor((data.lb.offset ?? 0) / 20 + 1));
+	let noneActive = $derived((data.lb.offset ?? 0) / 20 + 1 !== initialPage);
+
+	$effect.pre(() => {
 		if (data.lb?.id === 'skyblockxp') {
 			entries = entries.map((entry) => ({
 				ign: entry.ign,
@@ -34,7 +38,7 @@
 				amount: (entry.amount ?? 0) / 100,
 			}));
 		}
-	}
+	});
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(({ from }) => {
@@ -58,43 +62,45 @@
 			count={data.lb.maxEntries ?? 1000}
 			perPage={20}
 			bind:page={initialPage}
-			let:pages
+			
 			onPageChange={(newPage) => {
 				goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
-			<Pagination.Content class="flex justify-center">
-				<div class="flex flex-row justify-end order-1 basis-1/3 sm:basis-auto">
-					<Pagination.Item>
-						<Pagination.PrevButton />
-					</Pagination.Item>
-				</div>
-				<div class="flex flex-wrap items-center order-3 sm:order-2 justify-center flex-grow sm:flex-auto">
-					{#each pages as page (page.key)}
-						{#if page.type === 'ellipsis'}
-							<Pagination.Item>
-								<Pagination.Ellipsis />
-							</Pagination.Item>
-						{:else}
-							<Pagination.Item>
-								<Pagination.Link
-									page={{ ...page, value: Math.floor(page.value) }}
-									isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
-									on:click={() => samePageClick(page.value)}
-								>
-									{Math.floor(page.value)}
-								</Pagination.Link>
-							</Pagination.Item>
-						{/if}
-					{/each}
-				</div>
-				<div class="flex flex-row justify-start order-2 sm:order-last basis-1/3 sm:basis-auto">
-					<Pagination.Item>
-						<Pagination.NextButton />
-					</Pagination.Item>
-				</div>
-			</Pagination.Content>
-		</Pagination.Root>
+			{#snippet children({ pages })}
+						<Pagination.Content class="flex justify-center">
+					<div class="flex flex-row justify-end order-1 basis-1/3 sm:basis-auto">
+						<Pagination.Item>
+							<Pagination.PrevButton />
+						</Pagination.Item>
+					</div>
+					<div class="flex flex-wrap items-center order-3 sm:order-2 justify-center flex-grow sm:flex-auto">
+						{#each pages as page (page.key)}
+							{#if page.type === 'ellipsis'}
+								<Pagination.Item>
+									<Pagination.Ellipsis />
+								</Pagination.Item>
+							{:else}
+								<Pagination.Item>
+									<Pagination.Link
+										page={{ ...page, value: Math.floor(page.value) }}
+										isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
+										onclick={() => samePageClick(page.value)}
+									>
+										{Math.floor(page.value)}
+									</Pagination.Link>
+								</Pagination.Item>
+							{/if}
+						{/each}
+					</div>
+					<div class="flex flex-row justify-start order-2 sm:order-last basis-1/3 sm:basis-auto">
+						<Pagination.Item>
+							<Pagination.NextButton />
+						</Pagination.Item>
+					</div>
+				</Pagination.Content>
+								{/snippet}
+				</Pagination.Root>
 	</div>
 	<div
 		data-sveltekit-preload-data="tap"

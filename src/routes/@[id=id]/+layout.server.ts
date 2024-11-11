@@ -43,12 +43,12 @@ export const load: LayoutServerLoad = async (event) => {
 	}
 
 	const selectedProfile = profile
-		? profiles.find(
+		? (profiles.find(
 				(p) =>
 					p.profileId === profile.replaceAll('-', '') ||
 					p.profileName?.toUpperCase() === profile.toUpperCase()
-		  ) ?? profiles[0]
-		: profiles.find((p) => p.selected) ?? profiles[0];
+			) ?? profiles[0])
+		: (profiles.find((p) => p.selected) ?? profiles[0]);
 
 	if (!selectedProfile.profileId || !selectedProfile.profileName) {
 		throw error(404, 'Profile not found');

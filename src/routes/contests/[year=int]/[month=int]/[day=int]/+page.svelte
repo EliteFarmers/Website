@@ -6,10 +6,14 @@
 	import { page } from '$app/stores';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: contests = data.contests;
-	$: timestamp = data.timestamp;
+	let { data }: Props = $props();
+
+	let contests = $derived(data.contests);
+	let timestamp = $derived(data.timestamp);
 </script>
 
 <Head

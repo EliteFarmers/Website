@@ -11,6 +11,11 @@
 
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { settings, getSettings } from 'svelte-ux';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -46,7 +51,7 @@
 	<Nav />
 
 	<div class="flex-1">
-		<slot />
+		{@render children?.()}
 	</div>
 
 	<Footer />

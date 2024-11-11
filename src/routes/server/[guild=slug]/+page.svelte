@@ -8,11 +8,15 @@
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: guild = data.guild ?? {};
-	$: jacob = guild?.features?.jacobLeaderboard;
-	$: leaderboards = jacob?.leaderboards ?? [];
+	let { data }: Props = $props();
+
+	let guild = $derived(data.guild ?? {});
+	let jacob = $derived(guild?.features?.jacobLeaderboard);
+	let leaderboards = $derived(jacob?.leaderboards ?? []);
 </script>
 
 <Head
@@ -72,7 +76,7 @@
 			{/if}
 
 			{#if past.length > 0}
-				<Accordion.Root>
+				<Accordion.Root type="single">
 					<Accordion.Item value="val" class="w-full">
 						<Accordion.Trigger>
 							<h2 class="text-3xl text-black dark:text-white w-full px-4">Past Events</h2>

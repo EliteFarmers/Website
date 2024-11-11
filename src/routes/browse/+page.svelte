@@ -5,11 +5,15 @@
 	import Head from '$comp/head.svelte';
 	import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
 
-	export let data: PageData;
-	$: events = data.events ?? [];
+	interface Props {
+		data: PageData;
+	}
 
-	$: pinned = (data.guilds ?? []).find((g) => g.id === PUBLIC_COMMUNITY_ID);
-	$: guilds = (data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID);
+	let { data }: Props = $props();
+	let events = $derived(data.events ?? []);
+
+	let pinned = $derived((data.guilds ?? []).find((g) => g.id === PUBLIC_COMMUNITY_ID));
+	let guilds = $derived((data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID));
 </script>
 
 <Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />

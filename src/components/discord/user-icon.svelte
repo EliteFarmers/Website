@@ -6,6 +6,7 @@
 		user: AuthorizedUser;
 		class?: string;
 	}
+	
 	let { class: className = 'size-12', user }: props = $props(); 
 </script>
 

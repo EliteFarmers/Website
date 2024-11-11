@@ -3,7 +3,11 @@
 	import Guild from '../guild.svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />

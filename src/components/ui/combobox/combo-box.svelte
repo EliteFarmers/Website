@@ -9,13 +9,13 @@
 
 	interface Props {
 		options: { label: string; value: string }[];
-		exclude: (string | undefined)[];
+		exclude?: (string | undefined)[];
 		placeholder: string;
-		btnClass: string;
-		onChange: ((value: string) => void) | undefined;
-		clear: boolean;
-		disabled: boolean;
-		value: string;
+		btnClass?: string;
+		onChange?: ((value: string) => void) | undefined;
+		clear?: boolean;
+		disabled?: boolean;
+		value?: string;
 	}
 	let {
 		options = [],

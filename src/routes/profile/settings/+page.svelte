@@ -14,13 +14,13 @@
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
-	let loading = false;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: user = data.user || undefined;
-
-	$: badges = mapBadges(user?.minecraftAccounts ?? []);
+	let { data, form }: Props = $props();
+	let loading = $state(false);
 
 	function mapBadges(accounts: PageData['user']['minecraftAccounts'] = []) {
 		return accounts
@@ -32,8 +32,6 @@
 			}));
 	}
 
-	$: visibleToggles = {} as Record<string, boolean>;
-
 	onMount(() => {
 		visibleToggles = badges.reduce<Record<string, boolean>>((acc, mc) => {
 			mc.badges?.forEach((badge) => {
@@ -43,27 +41,32 @@
 		}, {});
 	});
 
-	$: unlockedSettings = {
-		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
-		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
-		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
-		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
-		moreInfo: data.user.entitlements?.some((e) => e.product.features?.moreInfoDefault) ?? false,
-	};
-
-	let changedSettings = {
+	let changedSettings = $state({
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
-	};
+	});
 
-	$: selectedStyle = changedSettings.weightStyle
+	let user = $derived(data.user || undefined);
+	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
+
+	let visibleToggles = $state<Record<string, boolean>>({});
+
+	let unlockedSettings = $derived({
+		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
+		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
+		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
+		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
+		moreInfo: data.user.entitlements?.some((e) => e.product.features?.moreInfoDefault) ?? false,
+	});
+
+	let selectedStyle = $derived(changedSettings.weightStyle
 		? data.styles?.find((s) => s.id === +(changedSettings.weightStyle ?? '-1'))
-		: undefined;
+		: undefined);
 
-	$: unlockedWeightStyles = (data.user.entitlements ?? [])
+	let unlockedWeightStyles = $derived((data.user.entitlements ?? [])
 		.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
 		.map((e) => e.product?.weightStyles ?? [])
 		.flat()
@@ -71,23 +74,22 @@
 			if (!e.id || !e.name) return acc;
 			acc[e.id] = { value: e.id.toString(), label: e.name };
 			return acc;
-		}, {} as Record<string, { label: string; value: string }>);
+		}, {} as Record<string, { label: string; value: string }>));
 
-	$: weightStyleOptions = [{ label: 'Default', value: '-1' }, ...Object.values(unlockedWeightStyles)];
-
-	$: unlockedEmbedColors = [
+	let weightStyleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedWeightStyles)]);
+	let unlockedEmbedColors = $derived([
 		...new Set(
 			(data.user.entitlements ?? [])
 				.filter((e) => (e.product.features?.embedColors?.length ?? 0) > 0)
 				.map((e) => e.product.features?.embedColors ?? [])
 				.flat()
 		),
-	];
+	]);
 
-	$: embedColorOptions = [
+	let embedColorOptions = $derived([
 		{ label: 'Default', value: '' },
 		...unlockedEmbedColors.map((e) => ({ label: e, value: e, color: '#' + e })),
-	];
+	]);
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -262,7 +264,7 @@
 							<Button
 								size="sm"
 								disabled={i === 0 || length === 1}
-								on:click={() => {
+								onclick={() => {
 									const newOrder = Math.max(i - 1, 0);
 									const old = profile.badges?.find((b) => b.order === newOrder);
 									if (old) old.order = i;
@@ -275,7 +277,7 @@
 							<Button
 								size="sm"
 								disabled={i === length - 1 || length === 1}
-								on:click={() => {
+								onclick={() => {
 									const newOrder = Math.min(i + 1, length);
 									const old = profile.badges?.find((b) => b.order === newOrder);
 									if (old) old.order = i;

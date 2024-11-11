@@ -12,14 +12,17 @@
 
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: selectedBadge = null as components['schemas']['BadgeDto'] | null;
+	let { data }: Props = $props();
 
-	let manageBadgeModal = false;
-	let createBadgeModal = false;
-	let grantBadgeModal = false;
-	let grant = true;
+	let selectedBadge = $state<components['schemas']['BadgeDto'] | null>(null);
+	let manageBadgeModal = $state(false);
+	let createBadgeModal = $state(false);
+	let grantBadgeModal = $state(false);
+	let grant = $state(true);
 </script>
 
 <Head title="Badges" description="Manage badges" />
@@ -46,7 +49,7 @@
 					<div class="flex flex-row gap-4 pr-2">
 						<div class="flex flex-col text-right gap-2">
 							<Button
-								on:click={() => {
+								onclick={() => {
 									manageBadgeModal = true;
 									selectedBadge = badge;
 								}}
@@ -54,7 +57,7 @@
 								<Settings size={16} />
 							</Button>
 							<Button
-								on:click={() => {
+								onclick={() => {
 									grantBadgeModal = true;
 									selectedBadge = badge;
 								}}
@@ -67,7 +70,7 @@
 			{/each}
 			<Button
 				class="w-fit"
-				on:click={() => {
+				onclick={() => {
 					createBadgeModal = true;
 				}}
 			>

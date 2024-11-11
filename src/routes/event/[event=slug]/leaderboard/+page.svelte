@@ -11,29 +11,33 @@
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: event = data.event ?? {};
-	$: guild = data.guild;
-	$: members = data.members ?? [];
-	$: teams = data.teams ?? [];
-	$: teamEvent = teams.length > 0;
+	let { data }: Props = $props();
 
-	let swapMode = false;
+	let event = $derived(data.event ?? {});
+	let guild = $derived(data.guild);
+	let members = $derived(data.members ?? []);
+	let teams = $derived(data.teams ?? []);
+	let teamEvent = $derived(teams.length > 0);
+
+	let swapMode = $state(false);
 
 	function swapLeaderboard() {
 		swapMode = !swapMode;
 	}
 
-	$: highlightUuid = $page.url.hash.slice(1);
-	$: highlightTeam =
-		teams?.find((team) => team.members?.some((member) => member.playerUuid === highlightUuid))?.id?.toString() ??
-		undefined;
+	let highlightUuid = $derived($page.url.hash.slice(1));
+	let highlightTeam =
+		$derived(teams?.find((team) => team.members?.some((member) => member.playerUuid === highlightUuid))?.id?.toString() ??
+		undefined);
 
-	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
-	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
+	let running = $derived(+(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now());
+	let joinable = $derived(+(event.joinUntilTime ?? 0) * 1000 > Date.now());
 
-	$: topList = teamEvent
+	let topList = $derived(teamEvent
 		? teams
 				.slice(0, 5)
 				.map((team, i) => `${i + 1}. ${team.name} • ${(+(team?.score ?? 0)).toLocaleString()}`)
@@ -41,11 +45,11 @@
 		: members
 				.slice(0, 5)
 				.map((member, i) => `${i + 1}. ${member.playerName} • ${(+(member?.score ?? 0)).toLocaleString()}`)
-				.join('\n');
+				.join('\n'));
 
-	$: description = `View the leaderboard for ${running ? 'the Event happening' : 'a past Event'} in ${
+	let description = $derived(`View the leaderboard for ${running ? 'the Event happening' : 'a past Event'} in ${
 		data.guild?.name
-	}!\n\n${topList}`;
+	}!\n\n${topList}`);
 </script>
 
 <Head title={(event.name || 'Farming Weight Event') + ' Leaderboard'} {description} imageUrl={guild?.icon?.url} />
@@ -73,7 +77,7 @@
 		<section class="flex flex-col gap-4 w-full items-center bg-primary-foreground rounded-md p-8">
 			<div class="flex flex-row gap-8 items-center justify-center w-full">
 				{#if teamEvent}
-					<Button on:click={swapLeaderboard} variant="secondary" size="sm">
+					<Button onclick={swapLeaderboard} variant="secondary" size="sm">
 						<ArrowLeftRight size={20} />
 						<span class="sr-only">Swap Leaderboard</span>
 					</Button>
