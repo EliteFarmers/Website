@@ -49,7 +49,7 @@
 		"embla-carousel-svelte": "8.3.0",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^8.10.0",
-		"eslint-config-standard-with-typescript": "^34.0.1",
+		"eslint-config-standard-with-typescript": "^43.0.0",
 		"eslint-plugin-import": "^2.31.0",
 		"eslint-plugin-n": "^15.7.0",
 		"eslint-plugin-promise": "^6.6.0",
