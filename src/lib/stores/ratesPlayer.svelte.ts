@@ -2,13 +2,13 @@ import { createFarmingPlayer, type FarmingPlayer, type PlayerOptions } from 'far
 import { writable } from 'svelte/store';
 
 export function getRatesPlayer(options: PlayerOptions) {
-	const { subscribe, update, set } = writable<FarmingPlayer>(createFarmingPlayer(options));
+	const store = writable<FarmingPlayer>(createFarmingPlayer(options));
 
 	return {
-		subscribe,
-		set,
-		update,
-		refresh: () => update((p) => p),
+		subscribe: store.subscribe,
+		set: store.set,
+		update: store.update,
+		refresh: () => store.update((player) => player),
 	};
 }
 

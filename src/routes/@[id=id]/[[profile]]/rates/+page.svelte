@@ -22,7 +22,7 @@
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getRatesData } from '$lib/stores/ratesData';
-	import { getRatesPlayer } from '$lib/stores/ratesPlayer';
+	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
 	import { getLevelProgress } from '$lib/format';
 
 	import { Button } from '$ui/button';
@@ -44,6 +44,7 @@
 	import JumpLink from '$comp/jump-link.svelte';
 
 	import type { PageData } from './$types';
+	import { onMount, untrack } from 'svelte';
 	interface Props {
 		data: PageData;
 	}
@@ -56,19 +57,16 @@
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 
-	function setPet(uuid?: string) {
-		$ratesData.selectedPet = uuid;
-		selectedPet = pets.find((pet) => pet.pet.uuid === uuid) ?? undefined;
-		return uuid;
-	}
-
 	function updateSelectedTool(c: string) {
 		const crop = cropKey(c);
 		if (selectedTool?.crop === crop) return;
 
-		selectedTool = tools.find((tool) => tool.crop === crop);
+		selectedTool = $player.tools.find((tool) => tool.crop === crop);
 		selectedToolId = selectedTool?.item.uuid ?? '';
 
+		if (selectedTool) {
+			$player.selectTool(selectedTool);
+		}
 		player.refresh();
 	}
 
@@ -79,34 +77,40 @@
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
 		
-	let blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
-	let pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
-	let tools = $derived(FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]));
-	let pets = $derived(FarmingPet.fromArray(data.member?.pets ?? []));
-	let armor = $derived(FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]));
-	let equipment = $derived(LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]));
-	let armorSet = $derived(new ArmorSet(armor, equipment));
+	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
+	const pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
+	
+	let pets = FarmingPet.fromArray(data.member?.pets ?? []);
+	let tools = FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]);
+	let armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
+	let equipment = LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]);
 
 	// Deselect pet if it's not on this player
-	$effect.pre(() => {
+	onMount(() => {
 		$ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
-			? setPet($ratesData.selectedPet)
+			? $ratesData.selectedPet
 			: undefined;
 	});
 
-	let selectedPet = $state<FarmingPet | undefined>(undefined);
 	let selectedTool = $state<FarmingTool | undefined>(undefined);
 	let selectedToolId = $state('');
 
-	let options = $derived({
+	let selectedPet = $state<FarmingPet | undefined>(
+		pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet)
+	);
+
+	let armorSet = $state(new ArmorSet(armor, equipment));
+
+	let options = $state({
 		tools: tools,
 		armor: armorSet,
-		equipment: equipment,
 		accessories: (data.member?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
 		pets: pets,
 
-		selectedTool: selectedTool,
+		// svelte-ignore state_referenced_locally
 		selectedPet: selectedPet,
+		// svelte-ignore state_referenced_locally
+		selectedTool: selectedTool,
 
 		refinedTruffles: data.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
 		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
@@ -138,20 +142,60 @@
 					mode: $ratesData.zorroMode,
 			  }
 			: undefined,
-	} satisfies PlayerOptions);
+	} as PlayerOptions);
 
-	let player = $derived(getRatesPlayer(options));
-	let selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
-	let cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
-	let calculator = $derived(calculateDetailedAverageDrops({
+	// svelte-ignore state_referenced_locally
+	let player = $state(getRatesPlayer(options));
+
+	$effect(() => {
+		options = {
+			...untrack(() => $player.options),
+			selectedPet: $ratesData.selectedPet
+				? $player.pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet)
+				: undefined,
+			selectedTool: untrack(() => $player.selectedTool),
+			exportableCrops: $ratesData.exported,
+			communityCenter: $ratesData.communityCenter,
+			strength: $ratesData.strength,
+			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
+			zorro: $ratesData.zorroMode
+				? {
+					enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
+					mode: $ratesData.zorroMode,
+				}
+				: undefined,
+		};
+
+		untrack(() => {
+			player = getRatesPlayer(options);
+			player.refresh();
+		});
+	});
+
+	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
+
+	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
+	const calculator = $derived(calculateDetailedAverageDrops({
 		farmingFortune: $player.fortune + cropFortune.fortune,
 		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
-		mooshroom: selectedPet?.type === FarmingPets.MooshroomCow,
+		mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
 		dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
 		blocksBroken: blocksActuallyBroken,
 	}));
-	let selectedCropKey = $derived(cropKey(selectedCrop));
-	let selected = $derived(Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']));
+	const selectedCropKey = $derived(cropKey(selectedCrop));
+	const selected = $derived(Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']));
+
+	$effect(() => {
+		if (selectedToolId !== untrack(() => selectedTool?.item.uuid)) {
+			untrack(() => {
+				selectedTool = $player.tools.find((tool) => tool.item.uuid === selectedToolId);
+				if (selectedTool) {
+					$player.selectTool(selectedTool);
+					player.refresh();
+				}
+			});
+		}
+	});
 
 	$effect(() => {
 		delayedUpdateSelectedTool(selectedCrop);
@@ -323,7 +367,7 @@
 								class="md:w-48"
 								value={$ratesData.zorroMode}
 								change={(value) => {
-									$ratesData.zorroMode = value;
+									$ratesData.zorroMode = value ?? $ratesData.zorroMode;
 								}}
 								options={[
 									{
@@ -366,13 +410,13 @@
 							<div class="flex flex-col items-center gap-2">
 								<p class="text-md">Garden Milestone</p>
 								<p class="text-lg font-semibold">
-									{options.milestones[selectedCropKey] ?? 0}
+									{options.milestones?.[selectedCropKey] ?? 0}
 								</p>
 							</div>
 							<div class="flex flex-col items-center gap-2">
 								<p class="text-md">Crop Upgrade</p>
 								<p class="text-lg font-semibold">
-									{options.cropUpgrades[selectedCropKey] ?? 0}
+									{options.cropUpgrades?.[selectedCropKey] ?? 0}
 								</p>
 							</div>
 						</div>
@@ -387,15 +431,8 @@
 			{:else}
 				<p class="text-lg font-semibold text-center">Select a crop to see its fortune!</p>
 			{/if}
-			<div class="flex justify-between items-center w-full pt-2">
-				<p class="text-lg font-semibold">Farming Pet</p>
-				{#if selectedPet}
-					<FortuneBreakdown breakdown={selectedPet.breakdown} />
-				{:else}
-					<FortuneBreakdown total={0} />
-				{/if}
-			</div>
-			<PetSelector {player} {pets} onChange={setPet} />
+
+			<PetSelector {player} {pets} bind:selected={selectedPet} />
 
 			<div class="flex justify-between items-center w-full pt-2">
 				<p class="text-lg font-semibold">Farming Tool</p>
@@ -405,7 +442,7 @@
 					<FortuneBreakdown total={0} />
 				{/if}
 			</div>
-			<ToolSelector {player} bind:selectedToolId />
+			<ToolSelector {tools} {player} bind:selectedToolId />
 
 			<div class="flex flex-col gap-2 w-full">
 				<FarmingGear {player} />

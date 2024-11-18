@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import type { FarmingTool } from 'farming-weight';
 	import Toolconfig from './toolconfig.svelte';
@@ -23,17 +21,20 @@
 	let show = $state(2);
 	let tools = $derived(toolList ?? $player.tools);
 
-	let filtered = $derived($player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']));
+	let filtered = $derived(tools
+		.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? ''])
+		.slice(0, show));
 </script>
 
 <div class="flex flex-col gap-2 w-full mb-2 -mx-2">
-	{#each filtered.slice(0, 2) as tool (tool.item.uuid)}
+	{#each filtered as tool (tool.item.uuid)}
 		{@const selected = selectedToolId === tool.item.uuid}
 		{#if tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
 			<button
 				onclick={() => {
 					selectedToolId = tool.item.uuid ?? undefined;
 					$player.selectTool(tool);
+					player.refresh();
 				}}
 				class="{selected
 					? 'border-primary-content/20 dark:border-card/70'

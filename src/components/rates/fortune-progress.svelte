@@ -13,7 +13,7 @@
 
 	let { progress, barBg = 'bg-card' }: Props = $props();
 
-	let maxed = $derived(progress.ratio >= 1);
+	let maxed = $state(progress.ratio >= 1);
 	let readable =
 		$derived((maxed
 			? (+progress.fortune).toLocaleString()

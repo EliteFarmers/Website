@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
 
-
 	interface Props {
 		href: string;
 		open: boolean;

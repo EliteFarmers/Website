@@ -15,7 +15,7 @@
 		class={cn(
 			buttonVariants({
 				variant: 'ghost',
-				class: 'mx-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0',
+				class: 'px-1 text-base focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0',
 			})
 		)}
 	>

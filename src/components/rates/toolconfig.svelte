@@ -2,7 +2,7 @@
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import type { FarmingTool } from 'farming-weight';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
@@ -22,7 +22,7 @@
 	let expanded = $state(false);
 	let reforge = $state(tool.reforge?.name.toLowerCase() ?? 'bountiful');
 
-	let counter = $state(counterOptions.findLast((c) => c < tool.farmed) ?? 10_000);
+	let counter = $state((counterOptions.findLast((c) => c < tool.farmed) ?? 10_000).toString());
 </script>
 
 <div class="flex flex-col gap-2 w-full rounded-md">
@@ -60,8 +60,11 @@
 				]}
 				placeholder="Reforge"
 				class="dark:bg-zinc-800"
-				change={() => {
+				change={(v) => {
+					if (!v) return;
+					console.log(reforge);
 					tool.changeReforgeTo(reforge);
+					$player.selectTool(tool);
 					player.refresh();
 				}}
 			/>
@@ -71,11 +74,14 @@
 				placeholder="Farmed Crops"
 				class="dark:bg-zinc-800"
 				options={counterOptions.map((c) => ({
-					value: c,
+					value: c.toString(),
 					label: c.toLocaleString(),
 				}))}
-				change={() => {
-					tool.changeFarmedCropsTo(counter);
+				change={(v) => {
+					if (!v) return;
+					console.log(counter);
+					tool.changeFarmedCropsTo(+counter);
+					$player.selectTool(tool);
 					player.refresh();
 				}}
 			/>

@@ -64,10 +64,17 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await LinkAccount(username, locals.access_token);
+		const { response } = await LinkAccount(username, locals.access_token);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok) {
+			return fail(response.status, {
+				error: await response
+					.text()
+					.catch(
+						() =>
+							'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.'
+					),
+			});
 		}
 
 		if (!locals.session?.uuid) {

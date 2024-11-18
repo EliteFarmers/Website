@@ -152,7 +152,7 @@
 					<Entry entry={e} rank={i + 1} formatting={'decimal'} />
 				{/each}
 				<div class="flex justify-center w-full">
-					<Button href="/leaderboard/weight/farming" class="text-center max-w-md" variant="secondary"
+					<Button href="/leaderboard/farmingweight" class="text-center max-w-md" variant="secondary"
 						>View Full Leaderboard
 					</Button>
 				</div>

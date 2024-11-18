@@ -30,17 +30,13 @@
 		rank = -1
 	}: Props = $props();
 
-	let crop = $derived(name ? name : undefined);
-	let index = $state(0);
-	
+	const cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
 
-	let cropArray = $derived(PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0));
+	let crop = $derived(name ? name : undefined);
+	let index = $derived(name && crop ? cropArray.indexOf(name) : -1);
+
 
 	function getFrameStyle() {
-		if (crop && name) {
-			index = cropArray.indexOf(name);
-		}
-
 		if (rank <= 0) return '';
 
 		if (rank <= 5) {

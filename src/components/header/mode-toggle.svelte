@@ -15,14 +15,12 @@
 		class={cn(
 			buttonVariants({
 				variant: "ghost",
-				class: "mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0",
+				class: "px-1 py-0 text-base focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0",
 			})
 		)}
 	>
-		<Sun class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-roate-90 dark:scale-0" />
-		<Moon
-			class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-		/>
+		<Sun class="mx-2 block dark:hidden" />
+		<Moon class="mx-2 hidden dark:block" />
 		<span class="sr-only">Toggle theme</span>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">

@@ -1,36 +1,40 @@
 <script lang="ts">
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { FarmingPets, type FarmingPet } from 'farming-weight';
 	import * as Popover from '$ui/popover';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { FormatMinecraftText } from '$lib/format';
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import Menu from 'lucide-svelte/icons/menu';
-	import { Button, buttonVariants } from '$ui/button';
+	import { buttonVariants } from '$ui/button';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-
+	
 	interface Props {
 		pets: FarmingPet[];
 		player: RatesPlayerStore;
-		onChange: (uuid: string) => void;
+		selected?: FarmingPet | undefined;
+		onChange?: (uuid: string) => void;
 	}
 
-	let { pets, player, onChange }: Props = $props();
+	let { pets, selected = $bindable(undefined), player, onChange = undefined }: Props = $props();
 
 	let show = $state(2);
+	let fortune = $state($player.selectedPet?.breakdown);
+
+	selected = $player.selectedPet;
 
 	function toggleShow() {
 		show = show === 2 ? 999 : 2;
 	}
 
-	let grouped = $derived(pets.reduce<Record<string, FarmingPet[]>>((acc, pet) => {
+	let grouped = $state($player.pets.reduce<Record<string, FarmingPet[]>>((acc, pet) => {
 		acc[pet.type] ??= [];
 		acc[pet.type].push(pet);
 		acc[pet.type].sort((a, b) => b.fortune - a.fortune);
 		return acc;
 	}, {}));
 
-	let activeId = $derived({
+	let activeId = $state({
 		[FarmingPets.MooshroomCow]: grouped[FarmingPets.MooshroomCow]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Elephant]: grouped[FarmingPets.Elephant]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,
@@ -38,27 +42,49 @@
 		[FarmingPets.Slug]: grouped[FarmingPets.Slug]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.TRex]: grouped[FarmingPets.TRex]?.at(0)?.pet.uuid ?? undefined,
 	} as Record<string, string | undefined>);
+
+	const groups = $derived(Object.entries(activeId)
+		.filter(([, v]) => v)
+		.slice(0, show));
+
+	function onSelectedChange(type: string, pet: FarmingPet) {
+		const petId = pet.pet.uuid ?? '';
+		activeId = { ...activeId, [type]: petId };
+		onChange?.(petId);
+
+		console.log(pet);
+
+		$player.selectPet(pet);
+		player.refresh();
+
+		fortune = pet.breakdown;
+		selected = pet;
+	}
 </script>
 
+<div class="flex justify-between items-center w-full pt-2">
+	<p class="text-lg font-semibold">Farming Pet</p>
+	{#if $player.selectedPet}
+		<FortuneBreakdown breakdown={fortune} />
+	{:else}
+		<FortuneBreakdown total={0} />
+	{/if}
+</div>
 <div class="grid flex-col gap-2 w-full mb-2 -mx-2">
-	{#each Object.entries(activeId)
-		.filter(([, v]) => v)
-		.slice(0, show) as [type, petId] (petId ?? type)}
+	{#each groups as [type, petId], i (type)}
 		{@const pet = grouped[type].find((p) => p.pet.uuid === petId)}
 		{#if pet}
 			{@const selected = $player.selectedPet?.pet.uuid === pet.pet.uuid}
 			{@const best = pet.fortune >= grouped[type][0]?.fortune}
-			<button
-				onclick={() => {
-					activeId[type] = pet?.pet.uuid ?? undefined;
-					onChange(pet.pet.uuid ?? '');
-				}}
+			<div
 				class="{selected
 					? 'border-primary-content/20 dark:border-card/70'
-					: 'border-transparent'} border-solid border-[3px] hover:bg-primary-content/10 dark:hover:bg-card/50 px-1.5 py-0.5 rounded-lg cursor-pointer flex justify-between items-center w-full"
+					: 'border-transparent'} border-solid border-[3px] has-[.selectable:hover]:bg-primary-content/10 dark:has-[.selectable:hover]:bg-card/50 px-1.5 py-0.5 rounded-lg cursor-pointer flex justify-between items-center w-full"
 			>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<span class="text-lg font-semibold">{@html FormatMinecraftText(pet.getFormattedName())}</span>
+				<button class="flex-1 text-left selectable" onclick={() => onSelectedChange(type, pet)}>
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<span class="text-lg font-semibold">{@html FormatMinecraftText(pet.getFormattedName())}</span>
+				</button>
 				<div class="flex flex-row gap-2 items-center">
 					{#if !best}
 						<Popover.Mobile>
@@ -68,7 +94,7 @@
 								</div>
 							{/snippet}
 							<div class="max-w-xs">
-								<p class="text-md">This isn't the highest fortune item!</p>
+								<p class="text-md">This isn't the highest fortune pet!</p>
 							</div>
 						</Popover.Mobile>
 					{/if}
@@ -84,8 +110,7 @@
 								onValueChange={(value) => {
 									const newPet = grouped[type].find((p) => p.pet.uuid === value);
 									if (newPet) {
-										activeId[type] = newPet.pet.uuid ?? undefined;
-										onChange(newPet.pet.uuid ?? '');
+										onSelectedChange(type, newPet);
 									}
 								}}
 							>
@@ -105,7 +130,7 @@
 					</DropdownMenu.Root>
 					<FortuneBreakdown total={pet.fortune} breakdown={pet.breakdown} />
 				</div>
-			</button>
+			</div>
 		{/if}
 	{/each}
 	{#if Object.values(activeId).filter((v) => v).length > 2}
