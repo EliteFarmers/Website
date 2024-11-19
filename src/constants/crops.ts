@@ -25,7 +25,7 @@ export interface CropInfo {
 export const CROP_INFO: Record<Crop, CropInfo> = {
 	[Crop.Cactus]: {
 		name: 'Cactus',
-		npc: 3,
+		npc: 4,
 		drops: 2,
 		breaks: 2,
 		startingTool: 'CACTUS_KNIFE',
