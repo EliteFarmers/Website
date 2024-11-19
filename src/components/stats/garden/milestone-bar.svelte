@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
-	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';

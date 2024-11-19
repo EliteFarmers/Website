@@ -30,7 +30,8 @@ export const load: PageServerLoad = ({ cookies, url }) => {
 		'&redirect_uri=' +
 		encodeURIComponent(`${url.origin}${PUBLIC_DISCORD_REDIRECT_ROUTE}`) +
 		'&response_type=code&scope=identify%20guilds%20role_connections.write' +
-		`&state=${uuid}|${encodeURIComponent(redirectTo ?? '/profile')}|${attemptCount ?? 0}`;
+		`&state=${uuid}|${encodeURIComponent(redirectTo ?? '/profile')}|${attemptCount ?? 0}` +
+		`&prompt=${attemptCount ? 'consent' : 'none'}`;
 
 	cookies.set('auth_state', uuid, {
 		path: '/',

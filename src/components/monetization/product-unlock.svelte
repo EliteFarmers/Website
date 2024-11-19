@@ -14,7 +14,7 @@
 </script>
 
 <Card.Root>
-	<Card.Content>
+	<Card.Content class="p-2">
 		<Accordion.Root type="single" class="w-full" value={open ? '1' : undefined}>
 			<Accordion.Item value="1" class="border-none p-0">
 				<Accordion.Trigger class="border-none p-2">

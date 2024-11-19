@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import type { components } from '$lib/api/api';
 	import CollectionBar from './collectionbar.svelte';
 

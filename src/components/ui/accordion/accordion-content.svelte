@@ -5,7 +5,7 @@
 	let {
 		ref = $bindable(null),
 		class: className,
-		wrapperClass = '',
+		wrapperClass = 'pb-4 pt-0',
 		children,
 		...restProps
 	}: WithoutChild<AccordionPrimitive.ContentProps> & { wrapperClass?: string } = $props();

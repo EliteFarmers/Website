@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { GARDEN_PLOTS } from '$lib/constants/crops';
 
 	interface Props {
@@ -9,7 +7,7 @@
 
 	let { plots = [] }: Props = $props();
 
-	let unlockedPlots = $derived([
+	let unlockedPlots = $state([
 		[false, false, false, false, false],
 		[false, false, false, false, false],
 		[false, false, 'barn', false, false],
@@ -17,7 +15,7 @@
 		[false, false, false, false, false],
 	]);
 
-	run(() => {
+	$effect.pre(() => {
 		plots.forEach((name) => {
 			const plot = GARDEN_PLOTS[name as keyof typeof GARDEN_PLOTS];
 			if (!plot) return;

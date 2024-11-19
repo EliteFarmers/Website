@@ -90,7 +90,7 @@
 					<form onsubmit={searchContestYear} class="flex gap-2 items-center justify-center">
 						<div>
 							<Label for="yearOnly"><span class="text-sm">Skyblock Year</span></Label>
-							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
+							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} />
 						</div>
 						<Button class="!p-2.5 mt-6" href="/contests/{yearVal}/records" color="green">
 							<!-- <OrdoredListOutline class="w-5 h-5" />
@@ -119,12 +119,12 @@
 					>
 						<div>
 							<Label for="yearMonth"><span class="text-sm">Skyblock Year</span></Label>
-							<Input id="yearMonth" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
+							<Input id="yearMonth" placeholder="Day" bind:value={yearVal} />
 						</div>
 						<span class="mt-4">/</span>
 						<div>
 							<Label for="monthYear"><span class="text-sm">Skyblock Month</span></Label>
-							<Input id="monthYear" placeholder="Day" bind:value={monthVal} class="dark:bg-zinc-700" />
+							<Input id="monthYear" placeholder="Day" bind:value={monthVal} />
 						</div>
 
 						<Button class="!p-2.5 mt-6" type="submit" name="Search">
@@ -146,17 +146,17 @@
 					<form onsubmit={searchContest} class="flex gap-2 items-center justify-center">
 						<div>
 							<Label for="year"><span class="text-sm">SB Year</span></Label>
-							<Input id="year" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
+							<Input id="year" placeholder="Day" bind:value={yearVal} />
 						</div>
 						<span class="mt-4">/</span>
 						<div>
 							<Label for="month"><span class="text-sm">SB Month</span></Label>
-							<Input id="month" placeholder="Day" bind:value={monthVal} class="dark:bg-zinc-700" />
+							<Input id="month" placeholder="Day" bind:value={monthVal} />
 						</div>
 						<span class="mt-4">/</span>
 						<div>
 							<Label for="day"><span class="text-sm">SB Day</span></Label>
-							<Input id="day" placeholder="Day" bind:value={dayVal} class="dark:bg-zinc-700" />
+							<Input id="day" placeholder="Day" bind:value={dayVal} />
 						</div>
 
 						<Button class="!p-2.5 mt-6" type="submit" name="Search">

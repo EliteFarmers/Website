@@ -11,6 +11,7 @@
 
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { settings, getSettings } from 'svelte-ux';
+	import { browser } from '$app/environment';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -22,12 +23,14 @@
 	initRatesData();
 	initShowLeaderboardName();
 
-	mode.subscribe((value) => {
-		if (!value) return;
+	if (browser) {
+		mode.subscribe((value) => {
+			if (!value) return;
 
-		const settings = getSettings();
-		settings.currentTheme.setTheme(value);
-	});
+			const settings = getSettings();
+			settings.currentTheme.setTheme(value);
+		});
+	}
 
 	settings({
 		themes: {
@@ -45,7 +48,10 @@
 	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
 </svelte:head>
-<ModeWatcher />
+
+{#if browser}
+	<ModeWatcher />
+{/if}
 
 <div class="relative flex flex-col min-h-screen">
 	<Nav />

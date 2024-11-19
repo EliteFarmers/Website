@@ -56,7 +56,7 @@
 		"farming-weight": "^0.6.5",
 		"layercake": "^8.4.2",
 		"layerchart": "^0.58.4",
-		"lucide-svelte": "^0.453.0",
+		"lucide-svelte": "^0.460.1",
 		"mode-watcher": "^0.4.1",
 		"openapi-fetch": "^0.12.5",
 		"postcss": "^8.4.48",

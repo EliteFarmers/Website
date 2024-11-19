@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
-	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { toReadable } from '$lib/format';
 
@@ -20,28 +17,23 @@
 
 	let percent = $derived(Math.round(progress.ratio * 100));
 	let readable = $state('');
-	
 	let expanded = $state('');
-	
 	let hovering = $state(false);
 	
+	$effect.pre(() => {
+		const lang = navigator.language;
 
-	run(() => {
-		if (browser) {
-			const lang = navigator.language;
+		readable =
+			progress.goal !== undefined
+				? toReadable(progress.progress, lang) + ' / ' + toReadable(progress.goal, lang)
+				: toReadable(progress.progress, lang);
 
-			readable =
-				progress.goal !== undefined
-					? toReadable(progress.progress, lang) + ' / ' + toReadable(progress.goal, lang)
-					: toReadable(progress.progress, lang);
-
-			expanded =
-				progress.goal !== undefined
-					? Math.floor(progress.progress).toLocaleString() +
-					  ' / ' +
-					  Math.floor(progress.goal).toLocaleString()
-					: Math.floor(progress.progress).toLocaleString();
-		}
+		expanded =
+			progress.goal !== undefined
+				? Math.floor(progress.progress).toLocaleString() +
+					' / ' +
+					Math.floor(progress.goal).toLocaleString()
+				: Math.floor(progress.progress).toLocaleString();
 	});
 </script>
 

@@ -7,6 +7,9 @@ const config = {
 	ssr: {
 		noExternal: process.env.NODE_ENV === 'production' ? ['apexcharts'] : []
 	},
+	optimizeDeps: {
+		include: ['lucide-svelte']
+	},
 	resolve: {
 		alias: {
 			$comp: path.resolve('./src/components'),

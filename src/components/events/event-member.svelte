@@ -67,7 +67,7 @@
 			{/if}
 			{#if running}
 				<Popover.Mobile>
-					{#snippet trigger()}		
+					{#snippet trigger()}
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
 								<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>

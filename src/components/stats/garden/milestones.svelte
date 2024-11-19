@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import type { components } from '$lib/api/api';
 	import { getCropMilestones } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
@@ -26,7 +24,15 @@
 		highestSort = !highestSort;
 
 		list = highestSort
-			? milestones?.sort((a, b) => b[1].total - a[1].total)
+			? milestones?.sort((a, b) => {
+				if (b[1].level === a[1].level) {
+					if (b[1].ratio === a[1].ratio) {
+						return b[1].total - a[1].total;
+					}
+					return b[1].ratio - a[1].ratio;
+				}
+				return b[1].level - a[1].level;
+			})
 			: milestones?.sort((a, b) => a[0].localeCompare(b[0]));
 	}
 
@@ -44,7 +50,7 @@
 		<div class="flex flex-row items-center gap-2">
 			<button
 				class="rounded-md w-24 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
-				onclick={swap}>{highestSort ? 'Collection ↓' : 'A-Z ↓'}</button
+				onclick={swap}>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
 			>
 			<button
 				class="rounded-md w-20 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
