@@ -40,7 +40,7 @@ test('Armor set bonus', () => {
 					'',
 					'§d§l§ka§r §d§lMYTHIC HELMET §d§l§ka',
 				],
-				enchantments: { pesterminator: 5 },
+				enchantments: { pesterminator: 6 },
 				attributes: {
 					skin: 'FERMENTO_ULTIMATE',
 					modifier: 'mossy',
@@ -68,26 +68,26 @@ test('Armor set bonus', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Helmet',
-			fortune: 85,
-			maxFortune: 85,
+			fortune: 92,
+			maxFortune: 92,
 			ratio: 1,
 		}, 
 		{
 			name: 'Chestplate',
 			fortune: 0,
-			maxFortune: 90,
+			maxFortune: 97,
 			ratio: 0,
 		}, 
 		{
 			name: 'Leggings',
 			fortune: 0,
-			maxFortune: 90,
+			maxFortune: 97,
 			ratio: 0,
 		}, 
 		{
 			name: 'Boots',
 			fortune: 0,
-			maxFortune: 85,
+			maxFortune: 92,
 			ratio: 0,
 		},
 		{

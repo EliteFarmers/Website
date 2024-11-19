@@ -99,7 +99,6 @@ test('Wheat fortune test', () => {
 	]);
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
-	console.log(cropFortune.breakdown);
 	expect(cropFortune.fortune).toBe(progress.reduce((acc, piece) => acc + piece.fortune, 0));
 });
 

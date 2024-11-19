@@ -9,6 +9,7 @@ export enum EnchantTierProcurement {
 	Normal = 'normal',
 	Loot = 'loot',
 	SelfLeveling = 'selfleveling',
+	UpgradeItem = 'upgradeitem',
 }
 
 export interface FarmingEnchantTier {
@@ -276,37 +277,44 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://wiki.hypixel.net/Pesterminator_Enchantment',
 		levelRequirement: 10,
 		minLevel: 1,
-		maxLevel: 5,
+		maxLevel: 6,
 		levels: {
 			1: {
 				stats: {
-					[Stat.FarmingFortune]: 1,
-					[Stat.BonusPestChance]: 2,
+					[Stat.BonusPestChance]: 1,
+					[Stat.FarmingFortune]: 2,
 				}
 			},
 			2: {
 				stats: {
-					[Stat.FarmingFortune]: 2,
-					[Stat.BonusPestChance]: 4,
+					[Stat.BonusPestChance]: 2,
+					[Stat.FarmingFortune]: 4,
 				}
 			},
 			3: {
 				stats: {
-					[Stat.FarmingFortune]: 3,
-					[Stat.BonusPestChance]: 6,
+					[Stat.BonusPestChance]: 3,
+					[Stat.FarmingFortune]: 6,
 				}
 			},
 			4: {
 				stats: {
-					[Stat.FarmingFortune]: 4,
-					[Stat.BonusPestChance]: 8,
+					[Stat.BonusPestChance]: 4,
+					[Stat.FarmingFortune]: 8,
 				}
 			},
 			5: {
 				stats: {
-					[Stat.FarmingFortune]: 5,
-					[Stat.BonusPestChance]: 10,
+					[Stat.BonusPestChance]: 5,
+					[Stat.FarmingFortune]: 10,
 				}
+			},
+			6: {
+				stats: {
+					[Stat.BonusPestChance]: 6,
+					[Stat.FarmingFortune]: 12,
+				},
+				procurement: EnchantTierProcurement.UpgradeItem,
 			},
 		},
 	},

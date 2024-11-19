@@ -46,7 +46,7 @@ const maxHelmet = {
 		'',
 		'§d§l§ka§r §d§l§d§lMYTHIC HELMET §d§l§ka',
 	],
-	enchantments: { rejuvenate: 5, respiration: 3, aqua_affinity: 1, pesterminator: 5 },
+	enchantments: { rejuvenate: 5, respiration: 3, aqua_affinity: 1, pesterminator: 6 },
 	attributes: {
 		skin: 'FERMENTO_ULTIMATE',
 		modifier: 'mossy',
@@ -114,14 +114,14 @@ const almostMaxHelmet = {
 
 test('Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(maxHelmet);
-	expect(item.fortune).toBe(85);
+	expect(item.fortune).toBe(92);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(20);
 	expect(item.getUpgrades()).toStrictEqual([]);
 });
 
 test('Almost Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(almostMaxHelmet);
-	expect(item.fortune).toBe(69);
+	expect(item.fortune).toBe(72);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
 	const upgrades = item.getUpgrades();
@@ -131,7 +131,7 @@ test('Almost Maxed Helmet Upgrades Test', () => {
 	expect(upgrades[0]['increase']).toBe(8);
 
 	expect(upgrades[1]['action']).toBe('apply');
-	expect(upgrades[1]['increase']).toBe(1);
+	expect(upgrades[1]['increase']).toBe(2);
 	expect(upgrades[1]['title']).toBe('Pesterminator 4');
 
 	expect(upgrades[2]['action']).toBe('apply');

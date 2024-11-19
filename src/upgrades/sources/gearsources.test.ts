@@ -59,7 +59,7 @@ const almostMaxHelmet = {
 
 test('Almost maxed fermento fortune sources', () => {
 	const item = new FarmingArmor(almostMaxHelmet);
-	expect(item.fortune).toBe(69);
+	expect(item.fortune).toBe(72);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
 	const upgrades = item.getUpgrades();
@@ -95,9 +95,9 @@ test('Almost maxed fermento fortune sources', () => {
 		},
 		{
 			name: 'Pesterminator',
-			fortune: 3,
-			maxFortune: 5,
-			ratio: 3 / 5,
+			fortune: 6,
+			maxFortune: 12,
+			ratio: 6 / 12,
 		},
 	]);
 });
@@ -165,7 +165,7 @@ test('Melon boots fortune sources', () => {
 		{
 			name: 'Pesterminator',
 			fortune: 0,
-			maxFortune: 5,
+			maxFortune: 12,
 			ratio: 0,
 		},
 	]);
