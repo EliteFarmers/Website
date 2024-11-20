@@ -1,7 +1,8 @@
 import { Crop } from '../constants/crops.js';
 import {
+	BESTIARY_PEST_BRACKETS,
 	FORTUNE_PER_PEST_BRACKET,
-	KILLS_PER_PEST_BRACKET,
+	Pest,
 	PEST_COLLECTION_ADJUSTMENTS,
 	PEST_COLLECTION_BRACKETS,
 	PEST_EXCHANGE_RATES,
@@ -16,16 +17,18 @@ export function fortuneFromPests(pests: number): number {
 export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>): number {
 	let reachedBrackets = 0;
 
-	const brackets = Object.entries(KILLS_PER_PEST_BRACKET).sort((a, b) => b[1] - a[1]);
+	const brackets = BESTIARY_PEST_BRACKETS;
 
 	for (const pestId of PEST_IDS) {
 		const kills = bestiaryKills[`pest_${pestId}_1`];
 		if (!kills) continue;
 
-		// Find the highest reached bracket for this pest
-		const bracket = brackets.find((b) => +kills >= b[1]);
+		const bracket = Object.entries(brackets[pestId]).sort((a, b) => b[1] - a[1]);
 
-		reachedBrackets += bracket ? +bracket[0] : 0;
+		// Find the highest reached bracket for this pest
+		const unlocked = bracket.find((b) => +kills >= b[1]);
+
+		reachedBrackets += unlocked ? +unlocked[0] : 0;
 	}
 
 	return reachedBrackets;
@@ -40,6 +43,8 @@ export function uncountedCropsFromPests(pestKills: Record<string, number>): Part
 	const brackets = PEST_COLLECTION_BRACKETS;
 
 	for (const pestId of PEST_IDS) {
+		if (pestId === Pest.Mouse) continue;
+
 		let kills = pestKills[`pest_${pestId}_1`];
 		if (!kills) continue;
 

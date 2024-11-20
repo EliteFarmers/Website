@@ -11,11 +11,12 @@ export enum Pest {
 	Moth = 'moth',
 	Rat = 'rat',
 	Slug = 'slug',
+	Mouse = 'mouse',
 }
 
 export const FORTUNE_PER_PEST_BRACKET = 0.4;
 
-export const KILLS_PER_PEST_BRACKET: Record<number, number> = {
+const killsPerPestBracket: Record<number, number> = {
 	1: 1,
 	2: 2,
 	3: 3,
@@ -32,6 +33,37 @@ export const KILLS_PER_PEST_BRACKET: Record<number, number> = {
 	14: 175,
 	15: 250,
 };
+
+export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
+	[Pest.Beetle]: killsPerPestBracket,
+	[Pest.Cricket]: killsPerPestBracket,
+	[Pest.Worm]: killsPerPestBracket,
+	[Pest.Fly]: killsPerPestBracket,
+	[Pest.Locust]: killsPerPestBracket,
+	[Pest.Mite]: killsPerPestBracket,
+	[Pest.Mosquito]: killsPerPestBracket,
+	[Pest.Moth]: killsPerPestBracket,
+	[Pest.Rat]: killsPerPestBracket,
+	[Pest.Slug]: killsPerPestBracket,
+	[Pest.Mouse]: {
+		1: 1,
+		2: 2,
+		3: 3,
+		4: 5,
+		5: 7,
+		6: 9,
+		7: 11,
+		8: 14,
+		9: 17,
+		10: 20,
+		11: 30,
+		12: 40,
+		13: 55,
+		14: 75,
+		15: 100,
+	}
+};
+
 
 export const PEST_EXCHANGE_RATES = {
 	0: 0,
@@ -88,9 +120,10 @@ export const PEST_IDS: Pest[] = [
 	Pest.Moth,
 	Pest.Rat,
 	Pest.Slug,
+	Pest.Mouse,
 ];
 
-export const PEST_TO_CROP: Record<Pest, Crop> = {
+export const PEST_TO_CROP: Partial<Record<Pest, Crop>> = {
 	mite: Crop.Cactus,
 	cricket: Crop.Carrot,
 	moth: Crop.CocoaBeans,
@@ -128,7 +161,7 @@ export const PEST_COLLECTION_BRACKETS = [
 ];
 
 // Taken from https://api.elitebot.dev/weights/all
-export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> = {
+export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, number>>, Pest.Mouse> = {
 	mite: {
 		0: 0,
 		50: 1285.333312988281,

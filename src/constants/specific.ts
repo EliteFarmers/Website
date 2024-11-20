@@ -39,7 +39,7 @@ export const COMMUNITY_CENTER_UPGRADE: FortuneSource = {
 export const PEST_BESTIARY_SOURCE: FortuneSource = {
 	name: 'Pest Bestiary',
 	fortunePerLevel: 0.4,
-	maxLevel: 60 / 0.4,
+	maxLevel: 66 / 0.4,
 	wiki: 'https://wiki.hypixel.net/Bestiary#Garden_'
 };
 
