@@ -10,8 +10,7 @@ export enum FarmingPets {
 	MooshroomCow = 'MOOSHROOM_COW',
 	Bee = 'BEE',
 	Rabbit = 'RABBIT',
-	Slug = 'SLUG',
-	TRex = 'TYRANNOSAURUS',
+	Slug = 'SLUG'
 }
 
 export interface FarmingPetType {
@@ -204,7 +203,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Repugnant Aroma',
 				// No good option to check if player is in a sprayed plot yet
-				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.temporaryFortune?.flourSpray ?? false),
+				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.sprayedPlot ?? false),
 				computed: (player, pet) => {
 					return {
 						[Stat.FarmingFortune]: {
@@ -213,36 +212,6 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 							type: FarmingPetStatType.Ability,
 						},
 					};
-				},
-			}
-		]
-	},
-	[FarmingPets.TRex]: {
-		name: 'T-Rex',
-		wiki: 'https://wiki.hypixel.net/T-Rex_Pet',
-		perLevelStats: {
-			[Stat.Strength]: {
-				name: 'T-Rex Strength',
-				value: 0.75,
-				type: FarmingPetStatType.Base,
-			},
-			[Stat.CritChance]: {
-				name: 'T-Rex Crit Chance',
-				value: 0.05,
-				type: FarmingPetStatType.Base,
-			},
-			[Stat.Ferocity]: {
-				name: 'T-Rex Ferocity',
-				value: 0.25,
-				type: FarmingPetStatType.Base,
-			},
-		},
-		abilities: [
-			{
-				name: 'Tyrant',
-				computed: (player, pet) => {
-					// Effectively doubles pet item stats by counting them twice
-					return pet.item?.stats ?? {};
 				},
 			}
 		]

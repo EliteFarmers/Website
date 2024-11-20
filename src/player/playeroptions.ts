@@ -20,6 +20,8 @@ export interface FortuneMissingFromAPI {
 	refinedTruffles?: number;
 	cocoaFortuneUpgrade?: number;
 
+	sprayedPlot?: boolean;
+
 	temporaryFortune?: TemporaryFarmingFortune;
 }
 

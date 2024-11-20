@@ -66,19 +66,3 @@ test('Mooshroom Cow fortune test', () => {
 		'Farming Strength Fortune': 52,
 	});
 });
-
-test('T-Rex pet test', () => {
-	const tRex = {
-		uuid: '7118abbe-6b0d-4f8d-b424-ecfa7f45c4df',
-		type: 'TYRANNOSAURUS',
-		exp: 30283813.86580253,
-		active: false,
-		tier: 'LEGENDARY',
-		heldItem: 'BROWN_BANDANA',
-		candyUsed: 0,
-		skin: null,
-	};
-
-	const pet = new FarmingPet(tRex);
-	expect(pet.fortune).toBe(0);
-});
