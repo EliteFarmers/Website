@@ -105,17 +105,17 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 // TODO: Calculate this from a list of sources
 // Base plus pb fortune
 export const MAX_CROP_FORTUNE: Record<Crop, number> = {
-	[Crop.Cactus]: 1744,
-	[Crop.Carrot]: 1979,
-	[Crop.CocoaBeans]: 1807,
-	[Crop.Melon]: 1765,
-	[Crop.Mushroom]: 1779,
-	[Crop.NetherWart]: 1956,
-	[Crop.Potato]: 1966,
-	[Crop.Pumpkin]: 1777,
-	[Crop.SugarCane]: 1966,
-	[Crop.Wheat]: 2019,
-	[Crop.Seeds]: 2019, // Not a crop, same as wheat
+	[Crop.Cactus]: 1778,
+	[Crop.Carrot]: 2013,
+	[Crop.CocoaBeans]: 1842,
+	[Crop.Melon]: 1809,
+	[Crop.Mushroom]: 1813,
+	[Crop.NetherWart]: 1991,
+	[Crop.Potato]: 2001,
+	[Crop.Pumpkin]: 1821,
+	[Crop.SugarCane]: 2001,
+	[Crop.Wheat]: 2053,
+	[Crop.Seeds]: 2053, // Not a crop, same as wheat
 };
 
 export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
