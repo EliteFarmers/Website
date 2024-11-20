@@ -6,7 +6,6 @@ export interface TemporaryFarmingFortune {
 	centuryCake?: boolean;
 	springFilter?: boolean;
 	magic8Ball?: boolean;
-	flourSpray?: boolean;
 	anitaContest?: boolean;
 }
 
@@ -60,14 +59,6 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 		fortune: settings => {
 			if (!settings.magic8Ball) return;
 			return 25;
-		}
-	},
-	flourSpray: {
-		name: 'Fine Flour Spray',
-		wiki: 'https://wiki.hypixel.net/Fine_Flour#Usage',
-		fortune: settings => {
-			if (!settings.flourSpray) return;
-			return 20;
 		}
 	},
 	anitaContest: {

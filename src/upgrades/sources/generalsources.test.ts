@@ -31,8 +31,8 @@ test("General fortune sources", () => {
 		{
 			name: 'Pest Bestiary',
 			fortune: 6 * 0.4,
-			maxFortune: 60,
-			ratio: (6 * 0.4) / 60,
+			maxFortune: 66,
+			ratio: (6 * 0.4) / 66,
 		},
 		{
 			name: 'Anita Bonus Fortune',

@@ -12,7 +12,6 @@ test('Temp fortune test', () => {
 		temporaryFortune: {
 			centuryCake: true,
 			chocolateTruffle: true,
-			flourSpray: true,
 			pestTurnIn: 200,
 			harvestPotion: true,
 			magic8Ball: true,
@@ -23,7 +22,6 @@ test('Temp fortune test', () => {
 	expect(player.tempFortuneBreakdown).toStrictEqual({
 		'Century Cake': 5,
 		'Refined Dark Cacao Truffle': 30,
-		'Fine Flour Spray': 20,
 		'Pest Turn-In': 200,
 		'Harvest Harbinger Potion': 50,
 		'Magic 8 Ball': 25,
