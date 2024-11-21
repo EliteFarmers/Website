@@ -14,7 +14,7 @@
 
 	type T = $$Generic<string | number>;
 
-	interface Props {
+	interface Props extends Primitive.TriggerProps {
 		open?: boolean;
 		disabled?: boolean;
 		required?: boolean;
@@ -24,7 +24,6 @@
 		value?: T | null | undefined;
 		placeholder?: string;
 		change?: (value?: T) => void;
-		[key: string]: any
 	}
 
 	let {

@@ -2,9 +2,9 @@ import { fontFamily } from 'tailwindcss/defaultTheme';
 import colors from 'tailwindcss/colors';
 import tailwindcssAnimate from 'tailwindcss-animate';
 import svelteUx from 'svelte-ux/plugins/tailwind.cjs';
+import { Config } from 'tailwindcss';
 
-/** @type {import('tailwindcss').Config} */
-const config = {
+export default {
 	darkMode: ['class'],
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
@@ -142,6 +142,4 @@ const config = {
 			},
 		},
 	},
-};
-
-export default config;
+} satisfies Config;
