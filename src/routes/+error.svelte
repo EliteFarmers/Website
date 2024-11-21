@@ -8,17 +8,17 @@
 
 <Head title={status.toString()} description={message} />
 
-<h1 class="text-center font-bold text-6xl p-16 m-16 font-mono">{status}</h1>
-<h4 class="text-center font-lighter text-2xl">{message}</h4>
-<div class="flex flex-row justify-center gap-4 item text-center m-12 mb-32">
+<h1 class="m-16 p-16 text-center font-mono text-6xl font-bold">{status}</h1>
+<h4 class="font-lighter text-center text-2xl">{message}</h4>
+<div class="item m-12 mb-32 flex flex-row justify-center gap-4 text-center">
 	<a
 		href="/"
-		class="p-4 shadow-md rounded-md shadow-gray bg-gray-300 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700"
+		class="shadow-gray rounded-md bg-gray-300 p-4 shadow-md hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 		>Return Home</a
 	>
 	<button
 		onclick={() => location.reload()}
-		class="p-4 shadow-md rounded-md shadow-gray bg-gray-300 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700"
+		class="shadow-gray rounded-md bg-gray-300 p-4 shadow-md hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 		>Reload</button
 	>
 </div>

@@ -23,12 +23,14 @@
 	let leaderboardCount = $state(3);
 	let eventCount = $state(1);
 
-	let roles = $derived((data.guild?.roles ?? [])
-		.map((r) => ({
-			value: r.id ?? '',
-			label: '@' + (r.name ?? ''),
-		}))
-		.filter((r) => r.value && r.label !== '@@everyone'));
+	let roles = $derived(
+		(data.guild?.roles ?? [])
+			.map((r) => ({
+				value: r.id ?? '',
+				label: '@' + (r.name ?? ''),
+			}))
+			.filter((r) => r.value && r.label !== '@@everyone')
+	);
 </script>
 
 <Head title="Server Settings" description="Manage server settings for your guild!" />
@@ -36,12 +38,12 @@
 <main class="flex flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
-		<h1 class="text-4xl my-16">
+		<h1 class="my-16 text-4xl">
 			{data.guild?.name}
 		</h1>
 	</div>
 
-	<div class="flex flex-row gap-4 items-center">
+	<div class="flex flex-row items-center gap-4">
 		{#if data.guild?.public}
 			<h2 class="text-lg">View Public Page</h2>
 			<Button href="/server/{data.guildId}" variant="outline">
@@ -56,14 +58,14 @@
 		<p class="text-red-500">{form.error}</p>
 	{/if}
 
-	<section class="flex flex-wrap gap-8 text-center align-middle justify-center mb-16 max-w-4xl">
-		<Card.Root class="flex-1 basis-64 max-w-md">
+	<section class="mb-16 flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
+		<Card.Root class="max-w-md flex-1 basis-64">
 			<Card.Header>
 				<Card.Title class="text-xl">Server Invite</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex flex-col gap-2 self-stretch items-center">
+			<Card.Content class="flex flex-col items-center gap-2 self-stretch">
 				{#if data.guild?.inviteCode}
-					<div class="flex flex-row gap-2 items-center">
+					<div class="flex flex-row items-center gap-2">
 						<p>Current: <strong>{data.guild.inviteCode}</strong></p>
 						<Button size="sm" href="https://discord.gg/{data.guild.inviteCode}" variant="outline">
 							<ExternalLink size={16} />
@@ -79,11 +81,11 @@
 				</form>
 			</Card.Content>
 		</Card.Root>
-		<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+		<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 			<Card.Header>
 				<Card.Title class="text-xl">Server Jacob Leaderboards</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+			<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
 				{#if !features?.jacobLeaderboardEnabled}
 					<p>
 						This server does not have the Jacob Leaderboard feature enabled. For now please ask "kaeso.dev"
@@ -95,11 +97,11 @@
 				{/if}
 			</Card.Content>
 		</Card.Root>
-		<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+		<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 			<Card.Header>
 				<Card.Title class="text-xl">Server Events</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+			<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
 				{#if !features?.eventsEnabled}
 					<p>
 						This server does not have the Event feature enabled. For now please ask "kaeso.dev" on Discord
@@ -111,11 +113,11 @@
 				{/if}
 			</Card.Content>
 		</Card.Root>
-		<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+		<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 			<Card.Header>
 				<Card.Title class="text-xl">Upcoming Contest Pings</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+			<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
 				{#if !features?.contestPingsEnabled}
 					<p>
 						This server does not have the Upcoming Contest Pings feature enabled. For now please ask
@@ -127,12 +129,12 @@
 				{/if}
 			</Card.Content>
 		</Card.Root>
-		<Card.Root class="flex-1 basis-64 max-w-md">
+		<Card.Root class="max-w-md flex-1 basis-64">
 			<Card.Header>
 				<Card.Title class="text-xl">Admin Role</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex flex-col gap-2 self-stretch items-center">
-				<div class="flex flex-row gap-2 items-center">
+			<Card.Content class="flex flex-col items-center gap-2 self-stretch">
+				<div class="flex flex-row items-center gap-2">
 					<p>
 						Current: <strong
 							>{data.guild.adminRole === '0'
@@ -144,7 +146,7 @@
 				<p class="text-red-600">
 					Users with this role will have access to all server settings (besides this one)
 				</p>
-				<form method="POST" action="?/setAdminRole" class="flex flex-row gap-4 w-full" use:enhance>
+				<form method="POST" action="?/setAdminRole" class="flex w-full flex-row gap-4" use:enhance>
 					<Select.Simple
 						options={roles}
 						value={data.guild.adminRole === '0' ? undefined : data.guild.adminRole}
@@ -157,17 +159,17 @@
 		</Card.Root>
 	</section>
 	{#if data.session?.flags.admin}
-		<section class="flex flex-wrap gap-8 text-center align-middle justify-center mb-16 max-w-4xl">
-			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+		<section class="mb-16 flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
+			<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 				<Card.Header>
 					<Card.Title class="text-xl">Set Guild Visibility</Card.Title>
 				</Card.Header>
-				<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+				<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
 					<p>Toggle this guilds public visibility.</p>
 					<form
 						method="POST"
 						action="?/setPublic"
-						class="flex flex-row gap-4 items-center justify-center"
+						class="flex flex-row items-center justify-center gap-4"
 						use:enhance
 					>
 						<input type="hidden" bind:value={visibility} name="visibility" />
@@ -175,16 +177,16 @@
 					</form>
 				</Card.Content>
 			</Card.Root>
-			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+			<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 				<Card.Header>
 					<Card.Title class="text-xl">Enable Jacob Leaderboards</Card.Title>
 				</Card.Header>
-				<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+				<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
 					<p>Current Max Leaderboards: <strong>{currentLeaderboardCount}</strong></p>
 					<form
 						method="POST"
 						action="?/updateJacob"
-						class="flex flex-row gap-4 items-center justify-center mt-4"
+						class="mt-4 flex flex-row items-center justify-center gap-4"
 						use:enhance
 					>
 						<Input
@@ -205,16 +207,16 @@
 					</form>
 				</Card.Content>
 			</Card.Root>
-			<Card.Root class="flex-1 basis-64 flex flex-col max-w-md">
+			<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 				<Card.Header>
 					<Card.Title class="text-xl">Enable Events</Card.Title>
 				</Card.Header>
-				<Card.Content class="flex-1 flex flex-col gap-2 justify-between self-stretch items-center">
+				<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
 					<p>Current Max Events: <strong>{currentEventCount}</strong></p>
 					<form
 						method="POST"
 						action="?/updateEvents"
-						class="flex flex-row gap-4 items-center justify-center mt-4"
+						class="mt-4 flex flex-row items-center justify-center gap-4"
 						use:enhance
 					>
 						<Input

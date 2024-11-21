@@ -19,9 +19,9 @@
 			})
 		)}
 	>
-		<Avatar.Root class="size-8 aspect-square items-center justify-center">
+		<Avatar.Root class="aspect-square size-8 items-center justify-center">
 			{#if user}
-				<UserIcon {user} class="size-8 aspect-square" />
+				<UserIcon {user} class="aspect-square size-8" />
 			{:else}
 				<UserRound class="size-8" />
 			{/if}

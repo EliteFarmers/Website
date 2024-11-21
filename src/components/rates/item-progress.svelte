@@ -15,7 +15,7 @@
 <FortuneProgress {progress} barBg="bg-primary-foreground" />
 
 {#if progress?.progress?.length}
-	<div class="grid md:grid-cols-2 gap-2">
+	<div class="grid gap-2 md:grid-cols-2">
 		{#each progress.progress as p (p.name + p.fortune + (progress?.item?.uuid ?? ''))}
 			<FortuneProgress progress={p} barBg="bg-primary-foreground" />
 		{/each}
@@ -26,15 +26,15 @@
 	<hr />
 {/if}
 
-<div class="flex flex-col sm:flex-row gap-2">
+<div class="flex flex-col gap-2 sm:flex-row">
 	{#if progress?.nextInfo?.skyblockId !== undefined}
-		<div class="flex flex-col gap-1 flex-1">
+		<div class="flex flex-1 flex-col gap-1">
 			{#if progress.info?.upgrade?.reason === UpgradeReason.Situational}
-				<h3 class="text-lg mb-1">Alternate Item</h3>
+				<h3 class="mb-1 text-lg">Alternate Item</h3>
 			{:else if progress.info?.upgrade?.reason === UpgradeReason.DeadEnd}
-				<h3 class="text-lg mb-1">Switch To</h3>
+				<h3 class="mb-1 text-lg">Switch To</h3>
 			{:else}
-				<h3 class="text-lg mb-1">Upgrade To</h3>
+				<h3 class="mb-1 text-lg">Upgrade To</h3>
 			{/if}
 			<div class="flex flex-row items-center gap-1">
 				{#if progress.info?.upgrade?.reason === UpgradeReason.Situational || (progress?.info?.upgrade?.reason === UpgradeReason.NextTier && progress.item?.attributes?.rarity_upgrades)}
@@ -55,7 +55,7 @@
 						href={progress.nextInfo.wiki}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-blue-500 mt-0.5"
+						class="mt-0.5 text-blue-500"
 					>
 						<Info size={16} />
 					</a>
@@ -68,7 +68,7 @@
 	{/if}
 
 	{#if progress?.maxInfo?.skyblockId !== undefined}
-		<div class="flex flex-col gap-2 flex-1">
+		<div class="flex flex-1 flex-col gap-2">
 			<h3 class="text-lg">Max Item</h3>
 			<div class="flex flex-row items-center gap-1">
 				<p>
@@ -80,7 +80,7 @@
 						href={progress.maxInfo.wiki}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="text-blue-500 mt-0.5"
+						class="mt-0.5 text-blue-500"
 					>
 						<Info size={16} />
 					</a>

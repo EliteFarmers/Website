@@ -31,10 +31,10 @@
 {#if $navigating}
 	<div class="relative">
 		<div
-			class="w-full h-1 bg-green-300 absolute"
+			class="absolute h-1 w-full bg-green-300"
 			transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
 		></div>
 	</div>
 	<!-- Gray out the screen -->
-	<div class="absolute z-[100] top-0 left-0 w-full h-[200vh] bg-gray-100 dark:bg-zinc-900 opacity-50"></div>
+	<div class="absolute left-0 top-0 z-[100] h-[200vh] w-full bg-gray-100 opacity-50 dark:bg-zinc-900"></div>
 {/if}

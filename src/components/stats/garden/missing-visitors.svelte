@@ -17,8 +17,8 @@
 
 	let visitors = $derived((garden?.visitors ?? {}) as Record<string, GardenVisitorStats>);
 
-	let missingVisitors = $derived(Object.entries(GARDEN_VISITORS).reduce<Partial<Record<Rarity, GardenVisitor[]>>>(
-		(acc, [visitor, data]) => {
+	let missingVisitors = $derived(
+		Object.entries(GARDEN_VISITORS).reduce<Partial<Record<Rarity, GardenVisitor[]>>>((acc, [visitor, data]) => {
 			const current = visitors[visitor];
 			if ((current && current.accepted > 0) || !data) {
 				return acc; // Not missing
@@ -26,9 +26,8 @@
 			acc[data.rarity] ??= [];
 			acc[data.rarity]?.push(data);
 			return acc;
-		},
-		{}
-	));
+		}, {})
+	);
 
 	let grouped = $derived(Object.entries(missingVisitors).sort(([a], [b]) => compareRarity(b as Rarity, a as Rarity)));
 </script>

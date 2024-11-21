@@ -29,7 +29,7 @@
 
 	let searchStr = $state('');
 	let players = $state([] as string[]);
-	
+
 	$effect(() => {
 		search(searchStr);
 	});

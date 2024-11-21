@@ -25,8 +25,8 @@
 	let counter = $state((counterOptions.findLast((c) => c < tool.farmed) ?? 10_000).toString());
 </script>
 
-<div class="flex flex-col gap-2 w-full rounded-md">
-	<div class="flex justify-between items-center w-full">
+<div class="flex w-full flex-col gap-2 rounded-md">
+	<div class="flex w-full items-center justify-between">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.name ?? '')}</span>
 
@@ -40,7 +40,7 @@
 			<Lorebtn item={tool.item}>
 				{#if tool.cultivating}
 					<p>
-						<span class="font-semibold select-none">Cultivating:</span>
+						<span class="select-none font-semibold">Cultivating:</span>
 						<span class="select-all">{tool.cultivating.toLocaleString()}</span>
 					</p>
 				{/if}
@@ -50,7 +50,7 @@
 		</div>
 	</div>
 	{#if expanded}
-		<div class="flex flex-col gap-2 items-start" transition:slide>
+		<div class="flex flex-col items-start gap-2" transition:slide>
 			<Label>Reforge</Label>
 			<Select.Simple
 				bind:value={reforge}
@@ -85,7 +85,7 @@
 					player.refresh();
 				}}
 			/>
-			<p class="text-gray-500 text-sm">More config options coming soon™!</p>
+			<p class="text-sm text-gray-500">More config options coming soon™!</p>
 		</div>
 	{/if}
 </div>

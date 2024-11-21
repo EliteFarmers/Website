@@ -70,12 +70,12 @@
 	let crops = $derived(form?.graph ?? data.crops);
 	let increases = $derived({} as Record<string, number>);
 	let highestIncrease = $state(0);
-	
+
 	let pestIncreased = $state(false);
-	
+
 	let entries = $derived(mapCrops(crops));
 	let pestToggle = $state(false);
-	
+
 	let showPests = $derived(pestToggle && pestIncreased);
 	let selected = $derived((crop: string) => $selectedCrops[crop] || !$anySelected);
 	let selectedCount = $derived(Object.values($selectedCrops).filter(Boolean).length);
@@ -86,7 +86,7 @@
 	const initEnd = today(tz);
 	let disabled = $state(false);
 	let initStart = initEnd.subtract({ days: 7 });
-	
+
 	let value = $state(initStart);
 
 	$effect(() => {
@@ -100,7 +100,7 @@
 
 <Head title="{data.account.name} | Charts" description="See crop collection charts for Hypixel Skyblock!" />
 
-<div class="flex flex-col justify-center items-center w-full gap-4">
+<div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector />
 	<form
 		method="post"
@@ -119,9 +119,9 @@
 		<input type="hidden" value={startTime} name="start" />
 		<input type="hidden" bind:value={days} name="days" />
 
-		<div class="flex flex-col gap-2 items-center">
-			<div class="flex flex-col gap-2 items-center">
-				<div class="flex flex-row gap-2 items-center">
+		<div class="flex flex-col items-center gap-2">
+			<div class="flex flex-col items-center gap-2">
+				<div class="flex flex-row items-center gap-2">
 					<Button onclick={back} variant="outline" disabled={backEnabled}>
 						<ArrowLeft />
 					</Button>
@@ -130,8 +130,8 @@
 						<ArrowRight />
 					</Button>
 				</div>
-				<div class="flex flex-row gap-2 items-center">
-					<div class="flex flex-col text-center items-center gap-1">
+				<div class="flex flex-row items-center gap-2">
+					<div class="flex flex-col items-center gap-1 text-center">
 						<p class="text-sm leading-none">Show Pests</p>
 						{#if !pestIncreased}
 							<Popover.Mobile>
@@ -163,10 +163,10 @@
 		</div>
 	</form>
 
-	<div class="flex {fewSelected ? 'flex-col' : 'flex-wrap'} justify-center max-w-7xl w-full">
+	<div class="flex {fewSelected ? 'flex-col' : 'flex-wrap'} w-full max-w-7xl justify-center">
 		{#if entries.length === 0}
-			<div class="flex flex-col items-center justify-center p-4 space-y-2 mb-16 max-w-lg text-center">
-				<h2 class="text-3xl font-semibold text-center">No Data Found</h2>
+			<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
+				<h2 class="text-center text-3xl font-semibold">No Data Found</h2>
 				<h4>Try a different time!</h4>
 				<p>
 					There may be nothing to find if a player has kept their collections API disabled or is new to the
@@ -177,8 +177,8 @@
 		{#each entries as { name, crop, data } (crop)}
 			{#if selected(name)}
 				{#if !fewSelected}
-					<div class="basis-[40rem] flex flex-col gap-1 p-2">
-						<div class="flex flex-row gap-1 ml-4">
+					<div class="flex basis-[40rem] flex-col gap-1 p-2">
+						<div class="ml-4 flex flex-row gap-1">
 							<img src={PROPER_CROP_TO_IMG[name]} alt={crop} class="pixelated aspect-square h-full w-8" />
 							<h3 class="text-2xl">{name}</h3>
 							<JumpLink id={crop} />
@@ -186,8 +186,8 @@
 						<CropGraph {data} {crop} ratio={increases[crop] / highestIncrease} pests={showPests} />
 					</div>
 				{:else}
-					<div class="flex-1 flex-col gap-1 p-2 max-w-7xl">
-						<div class="flex flex-row gap-1 ml-4 items-center">
+					<div class="max-w-7xl flex-1 flex-col gap-1 p-2">
+						<div class="ml-4 flex flex-row items-center gap-1">
 							<img src={PROPER_CROP_TO_IMG[name]} alt={crop} class="pixelated aspect-square h-full w-8" />
 							<h3 class="text-2xl">{name}</h3>
 							<JumpLink id={crop} />
@@ -199,8 +199,8 @@
 		{/each}
 	</div>
 
-	<div class="flex flex-col justify-center max-w-lg gap-1 mx-4 mt-16">
-		<h5 class="text-lg font-semibold text-center">How is this data obtained?</h5>
+	<div class="mx-4 mt-16 flex max-w-lg flex-col justify-center gap-1">
+		<h5 class="text-center text-lg font-semibold">How is this data obtained?</h5>
 		<p class="text-left">
 			Your collections are only stored when they're requested. This may result in missing data, especially if
 			collections API has been turned off for the player. Data points are limited to 4 per 24 hours intentionally

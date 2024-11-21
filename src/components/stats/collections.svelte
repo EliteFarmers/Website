@@ -19,7 +19,7 @@
 
 	let list = $state(collections?.sort((a, b) => b.weight - a.weight) ?? []);
 	let weightSort = $state(true);
-	
+
 	function swap() {
 		weightSort = !weightSort;
 
@@ -29,12 +29,12 @@
 	}
 </script>
 
-<div class="flex-1 flex flex-col gap-2 -mt-5 max-w-4xl">
+<div class="-mt-5 flex max-w-4xl flex-1 flex-col gap-2">
 	<button
-		class="-mt-4 py-1 rounded-md w-20 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
+		class="-mt-4 w-20 whitespace-nowrap rounded-md bg-primary-foreground py-1 text-sm hover:bg-muted"
 		onclick={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 	>
-	<div class="flex flex-col gap-2 w-full">
+	<div class="flex w-full flex-col gap-2">
 		{#each list as item (item.name)}
 			<CollectionBar {...item} rank={ranks.collections?.[item.key]} pestRank={ranks.pests?.[item.pest]} />
 		{/each}

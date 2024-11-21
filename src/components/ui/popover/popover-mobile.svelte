@@ -39,7 +39,7 @@
 		triggerRootClass = '',
 		class: className = undefined,
 		trigger,
-		children
+		children,
 	}: Props = $props();
 </script>
 

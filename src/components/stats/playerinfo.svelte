@@ -35,7 +35,7 @@
 		weightRank,
 		skyblockXP,
 		skyblockRank = -1,
-		badges
+		badges,
 	}: Props = $props();
 
 	let profiles = $derived(profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? '')));
@@ -50,29 +50,29 @@
 	let badgeList = $derived(badges?.filter((b) => b.visible).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)) ?? []);
 </script>
 
-<section class="flex flex-col align-middle w-full mt-8 items-center">
-	<div class="flex gap-8 md:gap-16 flex-col md:flex-row rounded-lg bg-card p-4 md:p-8 mx-2 w-full max-w-7xl">
-		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-end items-center">
+<section class="mt-8 flex w-full flex-col items-center align-middle">
+	<div class="mx-2 flex w-full max-w-7xl flex-col gap-8 rounded-lg bg-card p-4 md:flex-row md:gap-16 md:p-8">
+		<div class="flex flex-1 flex-row items-center justify-center gap-6 md:justify-end">
 			<img
-				class="min-w-12 max-w-16 max-h-40 aspect-auto object-cover"
+				class="aspect-auto max-h-40 min-w-12 max-w-16 object-cover"
 				src={`https://mc-heads.net/body/${player?.uuid}`}
 				alt="User's Minecraft appearance"
 			/>
-			<div class="flex flex-col gap-1 justify-start items-start">
+			<div class="flex flex-col items-start justify-start gap-1">
 				<PlayerName
 					ign={player?.displayname}
 					{rank}
 					members={members ?? undefined}
 					profileId={profileDetails[0]?.id}
 				/>
-				<div class="flex flex-wrap md:flex-row justify-start gap-1">
+				<div class="flex flex-wrap justify-start gap-1 md:flex-row">
 					<Skyblocklevel xp={skyblockXP} rank={skyblockRank} />
 					<Discord username={discordName} linked={linked !== null} />
 				</div>
 				<div class="flex justify-start gap-1">
 					<Popover.Mobile>
 						{#snippet trigger()}
-							<div class="bg-primary-foreground rounded-md">
+							<div class="rounded-md bg-primary-foreground">
 								<p class="p-2 px-2">External Sites</p>
 							</div>
 						{/snippet}
@@ -80,7 +80,7 @@
 							{#each OTHER_SITES as site (site.name)}
 								<a
 									href={site.url(player?.uuid ?? $page.params.id, $page.params.profile)}
-									class="flex flex-row items-center justify-between gap-2 p-2 px-3 hover:bg-primary-foreground rounded-md"
+									class="flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3 hover:bg-primary-foreground"
 									target="_blank"
 									rel="noopener noreferrer nofollow"
 								>
@@ -95,11 +95,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex-1 flex gap-6 flex-row justify-center md:justify-start items-center">
+		<div class="flex flex-1 flex-row items-center justify-center gap-6 md:justify-start">
 			<Weight weightInfo={weightInfo ?? undefined} rank={weightRank} profiles={profilesData} />
 		</div>
 	</div>
-	<div class="flex flex-wrap gap-2 align-middle w-full mx-4 justify-center">
+	<div class="mx-4 flex w-full flex-wrap justify-center gap-2 align-middle">
 		{#each badgeList as badge (badge.id)}
 			<Badge {badge} />
 		{/each}

@@ -65,48 +65,53 @@
 	}
 
 	let event = $derived(data.event);
-	let teams = $derived((data.teams ?? [])
-		.filter(
-			(t) =>
-				t.members &&
-				event &&
-				event.maxTeamMembers &&
-				(t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1)
-		)
-		.map((t) => ({
-			value: t.id ?? '',
-			label:
-				(t.name ?? '') +
-				` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`,
-		})));
+	let teams = $derived(
+		(data.teams ?? [])
+			.filter(
+				(t) =>
+					t.members &&
+					event &&
+					event.maxTeamMembers &&
+					(t.members?.length < event.maxTeamMembers || event.maxTeamMembers === -1)
+			)
+			.map((t) => ({
+				value: t.id ?? '',
+				label:
+					(t.name ?? '') +
+					` (${t.members?.length}${event?.maxTeamMembers === -1 ? '' : `/${event?.maxTeamMembers}`})`,
+			}))
+	);
 
 	let joined = $derived(data.member && (data.member?.status === 0 || data.member?.status === 1));
 	let ownTeamId = $derived(+(data.member?.teamId ?? '0'));
 	let ownTeam = $derived(data.team);
 	let isOwner = $derived(ownTeam?.ownerId === data.account?.discordId);
-	let profiles =
-		$derived(data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? []);
-	
+	let profiles = $derived(
+		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? []
+	);
+
 	let picked1 = $state('');
 	let picked2 = $state('');
 	let picked3 = $state<string | undefined>(undefined);
 
 	let name = $state('');
-	
+
 	$effect.pre(() => {
 		generateTeamName();
 	});
 
-	let words = $derived(Array.from(
-		new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
-		(w) => ({ value: w.replaceAll(' ', '_'), label: w })
-	));
+	let words = $derived(
+		Array.from(
+			new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
+			(w) => ({ value: w.replaceAll(' ', '_'), label: w })
+		)
+	);
 </script>
 
-<main class="flex flex-col justify-center items-center gap-4">
+<main class="flex flex-col items-center justify-center gap-4">
 	<h1 class="mt-16 text-4xl font-semibold">Manage Event Membership</h1>
 
-	<Button class="flex-1 my-8" href="/event/{$page.params.event}" variant="secondary">Back To Event</Button>
+	<Button class="my-8 flex-1" href="/event/{$page.params.event}" variant="secondary">Back To Event</Button>
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
@@ -114,14 +119,14 @@
 	{/if}
 
 	{#if form?.error}
-		<h5 class="text-xl font-semibold text-red-700 mb-4 max-w-xl">
+		<h5 class="mb-4 max-w-xl text-xl font-semibold text-red-700">
 			{form?.error}
 		</h5>
 	{/if}
 
-	<div class="flex flex-col md:flex-row justify-center items-start gap-8 md:gap-16">
-		<form method="post" action="?/join" class="flex flex-col gap-4 max-w-lg mb-16" use:enhance>
-			<h2 class="text-center text-2xl font-semibold mb-4">
+	<div class="flex flex-col items-start justify-center gap-8 md:flex-row md:gap-16">
+		<form method="post" action="?/join" class="mb-16 flex max-w-lg flex-col gap-4" use:enhance>
+			<h2 class="mb-4 text-center text-2xl font-semibold">
 				{#if event.mode === 'solo'}
 					Join Event
 				{:else}
@@ -135,7 +140,7 @@
 
 			{#each profiles as profile (profile)}
 				{#if data.member && profile.profileId === data.member.profileId}
-					<div class="flex flex-row gap-2 items-center">
+					<div class="flex flex-row items-center gap-2">
 						<Check class="text-green-500" />
 						<p>
 							{profile.profileName} - {profile.members
@@ -144,8 +149,8 @@
 						</p>
 					</div>
 				{:else if !data.member}
-					<div class="flex flex-row gap-2 items-center">
-						<input type="radio" name="profile" value={profile.profileId} required class="w-4 h-4" />
+					<div class="flex flex-row items-center gap-2">
+						<input type="radio" name="profile" value={profile.profileId} required class="h-4 w-4" />
 						<p>
 							{profile.profileName} - {profile.members
 								?.find((m) => m.uuid === data.account?.id)
@@ -188,7 +193,7 @@
 				</p>
 			{/if}
 
-			<div class="flex gap-2 items-center mt-8">
+			<div class="mt-8 flex items-center gap-2">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[1]} />
 				{#if joined}
 					<Checkbox.Root checked={true} disabled />
@@ -198,14 +203,14 @@
 				<Label>
 					I confirm that I have read all of <a
 						href="https://hypixel.net/rules"
-						class="underline text-blue-500"
+						class="text-blue-500 underline"
 					>
 						Hypixel's Server Rules
 					</a> and that I agree to them.
 				</Label>
 			</div>
 
-			<div class="flex gap-2 items-center">
+			<div class="flex items-center gap-2">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[2]} />
 				{#if joined}
 					<Checkbox.Root checked={true} disabled />
@@ -215,7 +220,7 @@
 				<Label>I confirm that I have read the event's rules and disclaimers and that I agree to them.</Label>
 			</div>
 
-			<div class="flex gap-2 items-center">
+			<div class="flex items-center gap-2">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[3]} />
 				{#if joined}
 					<Checkbox.Root checked={true} disabled />
@@ -227,7 +232,7 @@
 				</Label>
 			</div>
 
-			<div class="flex gap-2 items-center mb-8">
+			<div class="mb-8 flex items-center gap-2">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[4]} />
 				{#if joined}
 					<Checkbox.Root checked={true} disabled />
@@ -240,7 +245,7 @@
 				</Label>
 			</div>
 
-			<div class="flex flex-col md:flex-row gap-2 justify-center">
+			<div class="flex flex-col justify-center gap-2 md:flex-row">
 				<Button class="flex-1" type="submit" disabled={joined}>Join Event</Button>
 			</div>
 
@@ -249,8 +254,8 @@
 			{/if}
 		</form>
 		{#if event.mode !== 'solo'}
-			<div class="flex flex-col gap-4 max-w-lg mb-16">
-				<h2 class="text-center text-2xl font-semibold mb-4">Step 2: Join Team</h2>
+			<div class="mb-16 flex max-w-lg flex-col gap-4">
+				<h2 class="mb-4 text-center text-2xl font-semibold">Step 2: Join Team</h2>
 				<p>
 					This is a team event! You must join a team to participate. If you don't have a team, you can create
 					one below (if the event allows it). <span class="text-red-500"
@@ -259,12 +264,12 @@
 				</p>
 
 				{#if ownTeam}
-					<div class="flex flex-col gap-4 my-8">
+					<div class="my-8 flex flex-col gap-4">
 						<h3 class="text-xl">
 							Your Team: <span class="font-semibold">{ownTeam.name}</span>
 						</h3>
 						{#if ownTeam.joinCode}
-							<div class="flex flex-row gap-4 items-center">
+							<div class="flex flex-row items-center gap-4">
 								<p>
 									Join Code: <span class="font-semibold">{ownTeam.joinCode}</span>
 								</p>
@@ -273,25 +278,25 @@
 						{/if}
 						{#each ownTeam.members ?? [] as member (member.playerUuid)}
 							<div class="flex flex-row justify-between">
-								<div class="flex flex-row gap-2 items-center">
+								<div class="flex flex-row items-center gap-2">
 									<img
 										src="https://mc-heads.net/avatar/{member.playerUuid}"
 										alt="Player Head"
-										class="w-8 h-8 pixelated aspect-square rounded-sm"
+										class="pixelated aspect-square h-8 w-8 rounded-sm"
 									/>
 									<p>{member.playerName}</p>
 									{#if ownTeam.ownerUuid === member.playerUuid}
 										<Popover.Mobile>
 											{#snippet trigger()}
-																						<div  class="flex flex-row items-end">
-													<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
+												<div class="flex flex-row items-end">
+													<Crown size="sm" class="mt-1.5 w-4 text-yellow-400" />
 												</div>
-																					{/snippet}
+											{/snippet}
 											<p class="text-lg font-semibold">Team Owner</p>
 										</Popover.Mobile>
 									{/if}
 								</div>
-								<div class="flex flex-row gap-4 items-center">
+								<div class="flex flex-row items-center gap-4">
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 									{#if isOwner}
 										<form action="?/kickMember" method="post" use:enhance>
@@ -327,7 +332,7 @@
 								<input type="hidden" name="name" value={name} hidden />
 								<div class="flex flex-col gap-2">
 									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-									<div class="flex flex-row gap-1 max-w-sm">
+									<div class="flex max-w-sm flex-row gap-1">
 										<Button variant="secondary" onclick={generateTeamName}>
 											<RefreshCcw />
 										</Button>
@@ -364,7 +369,7 @@
 						</form>
 					{/if}
 				{:else}
-					<form action="?/joinTeam" method="post" class="flex flex-col gap-4 my-8" use:enhance>
+					<form action="?/joinTeam" method="post" class="my-8 flex flex-col gap-4" use:enhance>
 						<h3 class="text-xl font-semibold">Join a Team</h3>
 						<p>Get the code from your team leader!</p>
 						<div class="flex flex-row items-center gap-2">
@@ -385,7 +390,7 @@
 
 							<div class="flex flex-col gap-2">
 								<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-								<div class="flex flex-row gap-1 max-w-sm">
+								<div class="flex max-w-sm flex-row gap-1">
 									<Button variant="secondary" onclick={generateTeamName}>
 										<RefreshCcw />
 									</Button>
@@ -422,7 +427,7 @@
 	</div>
 
 	<form method="post" action="?/leave" class="my-8 mb-16 max-w-xl" use:enhance>
-		<div class="flex flex-row gap-2 items-center justify-center">
+		<div class="flex flex-row items-center justify-center gap-2">
 			<p>Already joined?</p>
 			<Button type="submit" variant="secondary">Leave Event</Button>
 		</div>

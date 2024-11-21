@@ -8,7 +8,6 @@
 	}
 
 	let { guild, size = 12, class: className = undefined }: Props = $props();
-	
 
 	const sizes = {
 		8: 'w-8 h-8',
@@ -26,10 +25,10 @@
 	<div
 		class="{sizes[
 			size
-		]} aspect-square rounded-full flex items-center justify-center select-none bg-blend-darken bg-black {className ??
+		]} flex aspect-square select-none items-center justify-center rounded-full bg-black bg-blend-darken {className ??
 			''}"
 	>
-		<p class="text-white leading-none mb-0.5">
+		<p class="mb-0.5 leading-none text-white">
 			{guild?.name
 				?.split(' ')
 				.slice(0, 3)

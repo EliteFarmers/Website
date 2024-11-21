@@ -14,7 +14,7 @@
 		keywords = 'farming, profile, skyblock, weight, calculate, Hypixel, elite',
 		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
 		description,
-		children
+		children,
 	}: Props = $props();
 </script>
 

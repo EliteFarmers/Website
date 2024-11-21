@@ -76,10 +76,10 @@
 
 	const cropKey = (crop: string) =>
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
-		
+
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 	const pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
-	
+
 	let pets = FarmingPet.fromArray(data.member?.pets ?? []);
 	let tools = FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]);
 	let armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
@@ -95,9 +95,7 @@
 	let selectedTool = $state<FarmingTool | undefined>(undefined);
 	let selectedToolId = $state('');
 
-	let selectedPet = $state<FarmingPet | undefined>(
-		pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet)
-	);
+	let selectedPet = $state<FarmingPet | undefined>(pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet));
 
 	let armorSet = $state(new ArmorSet(armor, equipment));
 
@@ -140,7 +138,7 @@
 			? {
 					enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
 					mode: $ratesData.zorroMode,
-			  }
+				}
 			: undefined,
 	} as PlayerOptions);
 
@@ -158,9 +156,9 @@
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 			zorro: $ratesData.zorroMode
 				? {
-					enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
-					mode: $ratesData.zorroMode,
-				}
+						enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
+						mode: $ratesData.zorroMode,
+					}
 				: undefined,
 		};
 
@@ -173,15 +171,19 @@
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 
 	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
-	const calculator = $derived(calculateDetailedAverageDrops({
-		farmingFortune: $player.fortune + cropFortune.fortune,
-		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
-		mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
-		dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
-		blocksBroken: blocksActuallyBroken,
-	}));
+	const calculator = $derived(
+		calculateDetailedAverageDrops({
+			farmingFortune: $player.fortune + cropFortune.fortune,
+			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
+			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
+			dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
+			blocksBroken: blocksActuallyBroken,
+		})
+	);
 	const selectedCropKey = $derived(cropKey(selectedCrop));
-	const selected = $derived(Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? '']));
+	const selected = $derived(
+		Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? ''])
+	);
 
 	$effect(() => {
 		if (selectedToolId !== untrack(() => selectedTool?.item.uuid)) {
@@ -205,16 +207,16 @@
 	description="Calculate your expected farming rates in Hypixel Skyblock!"
 />
 
-<div class="flex flex-col justify-center items-center w-full gap-4">
+<div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector radio={true} />
 
-	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
+	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
 		<section
-			class="flex-1 flex flex-col items-center w-full gap-4 p-4 md:pb-6 md:px-6 rounded-md bg-primary-foreground"
+			class="flex w-full flex-1 flex-col items-center gap-4 rounded-md bg-primary-foreground p-4 md:px-6 md:pb-6"
 		>
-			<div class="flex flex-row justify-between items-center w-full">
-				<div class="flex-1 hidden sm:block"></div>
-				<div class="flex flex-3 flex-row gap-2 my-2 items-center">
+			<div class="flex w-full flex-row items-center justify-between">
+				<div class="hidden flex-1 sm:block"></div>
+				<div class="flex-3 my-2 flex flex-row items-center gap-2">
 					<h2 class="text-lg md:text-2xl">Total Farming Fortune</h2>
 
 					<Fortunebreakdown
@@ -223,7 +225,7 @@
 						breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
 					/>
 				</div>
-				<div class="flex-1 flex justify-end">
+				<div class="flex flex-1 justify-end">
 					<Button
 						variant="outline"
 						class="m-1"
@@ -238,12 +240,12 @@
 			<div
 				class="{$ratesData.settings
 					? 'flex'
-					: 'hidden'} flex-1 flex-col gap-4 w-full max-w-lg justify-center p-4 border-primary-foreground border-solid outline outline-2 rounded-md"
+					: 'hidden'} w-full max-w-lg flex-1 flex-col justify-center gap-4 rounded-md border-solid border-primary-foreground p-4 outline outline-2"
 			>
-				<div class="flex flex-col md:flex-row items-center justify-center gap-8">
+				<div class="flex flex-col items-center justify-center gap-8 md:flex-row">
 					<div class="flex flex-col justify-start gap-1">
 						<p class="text-sm">Community Center Upgrade</p>
-						<div class="flex flex-row gap-1 items-center">
+						<div class="flex flex-row items-center gap-1">
 							<SliderSimple
 								class="h-12"
 								min={0}
@@ -251,13 +253,13 @@
 								bind:value={$ratesData.communityCenter}
 								step={1}
 							/>
-							<p class="text-lg p-2 pl-4 w-12 text-center">{$ratesData.communityCenter}</p>
+							<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.communityCenter}</p>
 						</div>
 					</div>
 					<div class="flex flex-col items-start gap-1">
 						<p class="text-sm">Strength</p>
 						<NumberInput
-							class="h-10 my-1"
+							class="my-1 h-10"
 							type="text"
 							inputmode="numeric"
 							placeholder="0"
@@ -267,30 +269,30 @@
 						/>
 					</div>
 				</div>
-				<div class="flex flex-col md:flex-row items-center justify-evenly gap-4">
-					<div class="flex flex-row gap-4 items-center align-middle">
+				<div class="flex flex-col items-center justify-evenly gap-4 md:flex-row">
+					<div class="flex flex-row items-center gap-4 align-middle">
 						<p class="text-sm">Garden Level</p>
 						<p class="font-semibold">{options.gardenLevel}</p>
 					</div>
-					<div class="flex flex-row gap-4 items-center align-middle">
+					<div class="flex flex-row items-center gap-4 align-middle">
 						<p class="text-sm">Unlocked Plots</p>
 						<p class="font-semibold">{options.plotsUnlocked}</p>
 					</div>
 				</div>
-				<div class="flex flex-col items-center justify-center gap-1 m-2">
-					<div class="flex flex-row gap-2 items-center min-h-10">
-						<p class="text-lg text-center leading-none">Temporary Fortune</p>
+				<div class="m-2 flex flex-col items-center justify-center gap-1">
+					<div class="flex min-h-10 flex-row items-center gap-2">
+						<p class="text-center text-lg leading-none">Temporary Fortune</p>
 						<FortuneBreakdown total={$player.tempFortune} breakdown={$player.tempFortuneBreakdown} />
 					</div>
 					<div class="flex flex-row items-center justify-center gap-2">
-						<p class="text-md leading-none mb-1">Enabled</p>
+						<p class="text-md mb-1 leading-none">Enabled</p>
 						<Switch bind:checked={$ratesData.useTemp} />
 					</div>
 				</div>
 				<div
-					class="flex flex-col md:flex-row flex-wrap items-start md:items-start justify-start md:justify-center"
+					class="flex flex-col flex-wrap items-start justify-start md:flex-row md:items-start md:justify-center"
 				>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch
@@ -303,21 +305,21 @@
 							<FortuneBreakdown total={200} enabled={pestTurnInChecked && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.centuryCake.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
 							<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.flourSpray.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.flourSpray} disabled={!$ratesData.useTemp} />
 							<FortuneBreakdown total={20} enabled={$ratesData.temp.flourSpray && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.harvestPotion.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
@@ -327,28 +329,28 @@
 							/>
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.magic8Ball.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
 							<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.springFilter.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
 							<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.anitaContest.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
 							<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.chocolateTruffle.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
@@ -358,8 +360,8 @@
 							/>
 						</div>
 					</div>
-					<div class="flex flex-col items-start gap-1 w-full md:basis-48 m-2">
-						<p class="text-md leading-none mb-1">Zorro's Cape Mode</p>
+					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
+						<p class="text-md mb-1 leading-none">Zorro's Cape Mode</p>
 						<div class="flex flex-row items-center justify-center gap-2">
 							<Select.Simple
 								class="md:w-48"
@@ -388,7 +390,7 @@
 			</div>
 
 			{#if selectedCrop}
-				<div class="flex flex-row gap-2 items-center mb-2">
+				<div class="mb-2 flex flex-row items-center gap-2">
 					<h3 class="text-xl">{selectedCrop} Fortune</h3>
 
 					<Fortunebreakdown
@@ -397,14 +399,14 @@
 						breakdown={$player.getCropFortune(selectedCropKey).breakdown}
 					/>
 				</div>
-				<div class="flex flex-row items-center justify-center gap-2 md:gap-4 w-full max-w-lg">
+				<div class="flex w-full max-w-lg flex-row items-center justify-center gap-2 md:gap-4">
 					<img
 						src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
 						alt={selectedCrop}
-						class="w-12 h-12 pixelated m-1 p-1"
+						class="pixelated m-1 h-12 w-12 p-1"
 					/>
 					<div class="flex flex-col gap-4">
-						<div class="flex flex-1 flex-row gap-4 justify-center">
+						<div class="flex flex-1 flex-row justify-center gap-4">
 							<div class="flex flex-col items-center gap-2">
 								<p class="text-md">Garden Milestone</p>
 								<p class="text-lg font-semibold">
@@ -420,19 +422,19 @@
 						</div>
 						{#if getCropInfo(selectedCropKey).exportable}
 							<div class="flex flex-row items-center justify-center gap-2">
-								<p class="text-md leading-none mb-1">Carrolyn Fortune (+12)</p>
+								<p class="text-md mb-1 leading-none">Carrolyn Fortune (+12)</p>
 								<Switch bind:checked={$ratesData.exported[selectedCropKey]} />
 							</div>
 						{/if}
 					</div>
 				</div>
 			{:else}
-				<p class="text-lg font-semibold text-center">Select a crop to see its fortune!</p>
+				<p class="text-center text-lg font-semibold">Select a crop to see its fortune!</p>
 			{/if}
 
 			<PetSelector {player} bind:selected={selectedPet} />
 
-			<div class="flex justify-between items-center w-full pt-2">
+			<div class="flex w-full items-center justify-between pt-2">
 				<p class="text-lg font-semibold">Farming Tool</p>
 				{#if selectedTool && selectedTool.crop === selectedCropKey}
 					<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
@@ -442,32 +444,32 @@
 			</div>
 			<ToolSelector {tools} {player} bind:selectedToolId />
 
-			<div class="flex flex-col gap-2 w-full">
+			<div class="flex w-full flex-col gap-2">
 				<FarmingGear {player} />
 				{#if $player.armor.length === 0 && $player.equipment.length === 0}
-					<p class="text-lg font-semibold text-center my-4">No gear found!</p>
+					<p class="my-4 text-center text-lg font-semibold">No gear found!</p>
 				{/if}
 			</div>
 		</section>
-		<section class="flex-1 w-full p-4 rounded-md bg-primary-foreground">
-			<div class="flex flex-col gap-2 max-w-lg w-full p-2">
+		<section class="w-full flex-1 rounded-md bg-primary-foreground p-4">
+			<div class="flex w-full max-w-lg flex-col gap-2 p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
 					{@const coinBreakdown = Object.entries(info.coinSources).sort(([, a], [, b]) => b - a)}
 					{@const otherBreakdown = Object.entries(info.otherCollection).sort(([, a], [, b]) => b - a)}
 
 					<div class="flex flex-col items-start gap-2">
-						<div class="flex flex-row gap-2 items-center align-middle">
+						<div class="flex flex-row items-center gap-2 align-middle">
 							<img
 								src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
 								alt={selectedCrop}
-								class="w-8 h-8 pixelated"
+								class="pixelated h-8 w-8"
 							/>
 
-							<h2 class="text-2xl pb-1 flex-2">{PROPER_CROP_NAME[cropId]} Rates</h2>
+							<h2 class="flex-2 pb-1 text-2xl">{PROPER_CROP_NAME[cropId]} Rates</h2>
 						</div>
-						<div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
-							<div class="flex flex-col gap-1 justify-start flex-1">
+						<div class="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+							<div class="flex flex-1 flex-col justify-start gap-1">
 								<div class="flex flex-row items-center gap-1">
 									<p class="text-sm font-semibold">Time Spent Farming</p>
 								</div>
@@ -484,15 +486,15 @@
 									]}
 								/>
 							</div>
-							<div class="flex flex-col gap-1 justify-start flex-1">
+							<div class="flex flex-1 flex-col justify-start gap-1">
 								<div class="flex flex-row items-center gap-1">
 									<p class="ml-2 text-sm font-semibold">
 										Blocks Per Second ({bps.toFixed(2)})
 									</p>
 								</div>
-								<div class="flex flex-row gap-1 items-center flex-1">
+								<div class="flex flex-1 flex-row items-center gap-1">
 									<SliderSimple class="h-8" min={10} max={20} bind:value={bps} step={0.05} />
-									<p class="pb-2.5 p-2 pl-4 w-20 text-center leading-none">
+									<p class="w-20 p-2 pb-2.5 pl-4 text-center leading-none">
 										{(bps / 0.2).toFixed(1)}%
 									</p>
 								</div>
@@ -502,39 +504,39 @@
 
 					<hr class="mt-2" />
 
-					<h3 class="text-xl mt-2 mb-1">Results</h3>
+					<h3 class="mb-1 mt-2 text-xl">Results</h3>
 					<div class="flex flex-col text-lg font-semibold">
-						<div class="flex justify-between items-center w-full px-4 py-2">
+						<div class="flex w-full items-center justify-between px-4 py-2">
 							<span class="text-xl">Coins</span>
 							<span>{info.npcCoins.toLocaleString()}</span>
 						</div>
-						<div class="flex justify-between items-center w-full px-4 py-2">
+						<div class="flex w-full items-center justify-between px-4 py-2">
 							<span class="text-xl">Collection</span>
 							<span>{info.collection.toLocaleString()}</span>
 						</div>
 					</div>
 
-					<h3 class="text-xl mt-2 mb-1">Coin Breakdown</h3>
+					<h3 class="mb-1 mt-2 text-xl">Coin Breakdown</h3>
 					<div class="flex flex-col">
 						{#each coinBreakdown as [name, value] (name)}
-							<div class="flex justify-between items-center w-full px-4 py-2">
+							<div class="flex w-full items-center justify-between px-4 py-2">
 								<span class="text-lg font-semibold">{name}</span>
 								<span class="text-lg font-semibold">{value.toLocaleString()}</span>
 							</div>
 						{/each}
 					</div>
 
-					<h3 class="text-xl my-2">Collection Breakdown</h3>
+					<h3 class="my-2 text-xl">Collection Breakdown</h3>
 					<div class="flex flex-col">
 						{#each otherBreakdown as [name, value] (name)}
-							<div class="flex justify-between items-center w-full px-4 py-2">
+							<div class="flex w-full items-center justify-between px-4 py-2">
 								<span class="text-lg font-semibold">{name}</span>
 								<span class="text-lg font-semibold">{value.toLocaleString()}</span>
 							</div>
 						{/each}
 					</div>
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
-						<div class="flex flex-row gap-2 items-center mt-2">
+						<div class="mt-2 flex flex-row items-center gap-2">
 							<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
@@ -542,7 +544,7 @@
 						</div>
 					{/if}
 				{:else}
-					<p class="text-lg font-semibold text-center my-8">Select a crop to see its rates!</p>
+					<p class="my-8 text-center text-lg font-semibold">Select a crop to see its rates!</p>
 				{/if}
 			</div>
 		</section>
@@ -550,23 +552,23 @@
 
 	<Cropselector radio={true} href="#fortune" id="fortune" />
 
-	<div class="flex flex-col md:flex-row gap-4 max-w-6xl w-full justify-center">
-		<section class="flex-1 flex flex-col items-center w-full gap-4 p-4 rounded-md bg-primary-foreground">
-			<div class="flex flex-row gap-1 items-center justify-center w-full">
-				<div class="flex-1 flex flex-row justify-end">
+	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
+		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-md bg-primary-foreground p-4">
+			<div class="flex w-full flex-row items-center justify-center gap-1">
+				<div class="flex flex-1 flex-row justify-end">
 					<JumpLink id="fortune" self={false} />
 				</div>
-				<h2 class="text-2xl mb-1">Farming Fortune</h2>
+				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
 				<div class="flex-1"></div>
 			</div>
 			{#key $player.fortune}
-				<div class="flex flex-wrap md:flex-row gap-4 w-full justify-start">
+				<div class="flex w-full flex-wrap justify-start gap-4 md:flex-row">
 					<CategoryProgress name="General Fortune" progress={$player.getProgress()} />
 					<CategoryProgress name="Gear Fortune" progress={$player.armorSet.getProgress()} />
 					{#key $player.selectedTool}
 						{#if !selectedCrop}
-							<div class="text-center flex-1 items-center basis-64">
-								<p class="font-semibold text-center my-4 max-w-sm">
+							<div class="flex-1 basis-64 items-center text-center">
+								<p class="my-4 max-w-sm text-center font-semibold">
 									Select a crop above to see its fortune!
 								</p>
 							</div>
@@ -578,21 +580,21 @@
 								<img
 									src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
 									alt={selectedCrop}
-									class="w-8 h-8 pixelated ml-1"
+									class="pixelated ml-1 h-8 w-8"
 								/>
 							</CategoryProgress>
 						{/if}
 					{/key}
 				</div>
 			{/key}
-			<div class="flex flex-row justify-start w-full text-muted-foreground">
+			<div class="flex w-full flex-row justify-start text-muted-foreground">
 				<p>Farming pet fortune not included yet, check back later!</p>
 			</div>
 		</section>
 	</div>
 
-	<div class="my-8 mx-2">
-		<p class="text-center max-w-xl">
+	<div class="mx-2 my-8">
+		<p class="max-w-xl text-center">
 			Currently all coins are calculated using their NPC sell price. You may get better rates if you sell to the
 			Bazaar, but typically the difference is not significant. Cactus and Cocoa are often higher in the Bazaar,
 			make sure to check!

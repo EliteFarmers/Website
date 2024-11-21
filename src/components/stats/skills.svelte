@@ -16,36 +16,30 @@
 		gardenXp?: number;
 	}
 
-	let {
-		open = $bindable(false),
-		skills,
-		ranks = undefined,
-		levelCaps = undefined,
-		gardenXp = 0
-	}: Props = $props();
+	let { open = $bindable(false), skills, ranks = undefined, levelCaps = undefined, gardenXp = 0 }: Props = $props();
 
 	let skillRanks = $derived(ranks?.skills);
 </script>
 
-<Collapsible.Root bind:open class="w-full mx-4">
+<Collapsible.Root bind:open class="mx-4 w-full">
 	<div class="flex flex-row items-center justify-center">
 		<Collapsible.Trigger>
 			{#snippet child({ props })}
-				<div class="flex flex-row gap-4 items-end justify-center w-full">
-					<div class="flex flex-col md:flex-row gap-4 items-end justify-center w-full flex-1">
+				<div class="flex w-full flex-row items-end justify-center gap-4">
+					<div class="flex w-full flex-1 flex-col items-end justify-center gap-4 md:flex-row">
 						<Skillbar
 							name="Farming"
 							rank={skillRanks?.farming}
 							progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
 						/>
-						<Button variant="outline" class="w-10 p-0 -mb-1 hidden md:flex" {...props}>
+						<Button variant="outline" class="-mb-1 hidden w-10 p-0 md:flex" {...props}>
 							<ChevronsUpDown class="h-4 w-4" />
 							<span class="sr-only">Skill Toggle</span>
 						</Button>
 						<Skillbar name="Garden" rank={ranks?.profile?.garden} progress={getGardenLevel(gardenXp)} />
 					</div>
 					<div class="md:hidden">
-						<Button variant="outline" class="w-10 p-0 -mb-1" {...props}>
+						<Button variant="outline" class="-mb-1 w-10 p-0" {...props}>
 							<ChevronsUpDown class="h-4 w-4" />
 							<span class="sr-only">Toggle</span>
 						</Button>
@@ -55,8 +49,8 @@
 		</Collapsible.Trigger>
 	</div>
 	<Collapsible.Content transition={slide} transitionConfig={{ duration: 150 }}>
-		<div class="flex flex-col gap-8 md:flex-row justify-center align-middle my-8">
-			<div class="flex flex-col gap-2 flex-1 max-w-2xl">
+		<div class="my-8 flex flex-col justify-center gap-8 align-middle md:flex-row">
+			<div class="flex max-w-2xl flex-1 flex-col gap-2">
 				<Skillbar
 					name="Combat"
 					rank={skillRanks?.combat}
@@ -83,7 +77,7 @@
 					progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}
 				/>
 			</div>
-			<div class="flex flex-col gap-2 flex-1 max-w-2xl">
+			<div class="flex max-w-2xl flex-1 flex-col gap-2">
 				<Skillbar
 					name="Fishing"
 					rank={skillRanks?.fishing}

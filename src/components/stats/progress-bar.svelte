@@ -18,14 +18,13 @@
 		maxed = false,
 		compact = false,
 		barBg = 'bg-card',
-		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold'
+		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold',
 	}: Props = $props();
-	
 </script>
 
-<div class="flex flex-1 flex-row items-center w-full">
+<div class="flex w-full flex-1 flex-row items-center">
 	<div
-		class="relative block w-full {compact ? 'h-5 rounded-md' : 'h-6 md:my-1 rounded-lg'} {barBg}"
+		class="relative block w-full {compact ? 'h-5 rounded-md' : 'h-6 rounded-lg md:my-1'} {barBg}"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"
@@ -36,7 +35,7 @@
 				: 'bg-green-400 dark:bg-green-600'}"
 			style={`width: ${Math.min(percent, 100)}%`}
 		></div>
-		<div class="absolute flex items-center justify-center w-full h-full">
+		<div class="absolute flex h-full w-full items-center justify-center">
 			<p class={className}>{hovering && expanded ? expanded : readable}</p>
 		</div>
 	</div>

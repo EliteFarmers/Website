@@ -9,18 +9,23 @@
 
 	let { jacob }: Props = $props();
 
-	let highest = $derived(Object.entries(
-		jacob?.contests?.reduce((acc, contest) => {
-			if (!contest?.crop) return acc;
+	let highest = $derived(
+		Object.entries(
+			jacob?.contests?.reduce(
+				(acc, contest) => {
+					if (!contest?.crop) return acc;
 
-			if (contest.crop in acc) {
-				acc[contest.crop]++;
-			} else {
-				acc[contest.crop] = 1;
-			}
-			return acc;
-		}, {} as Record<string, number>) ?? {}
-	).sort());
+					if (contest.crop in acc) {
+						acc[contest.crop]++;
+					} else {
+						acc[contest.crop] = 1;
+					}
+					return acc;
+				},
+				{} as Record<string, number>
+			) ?? {}
+		).sort()
+	);
 
 	function pb(crop: string) {
 		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '') as keyof typeof jacob.stats.personalBests];
@@ -35,13 +40,13 @@
 	}
 </script>
 
-<div class="flex flex-wrap gap-4 items-center justify-center max-w-5xl">
+<div class="flex max-w-5xl flex-wrap items-center justify-center gap-4">
 	{#each highest as [crop, amount] (crop)}
 		{@const unique = medal(crop)}
 
-		<div class="flex-1 basis-48 flex flex-row justify-between bg-primary-foreground rounded-md p-2 items-center">
-			<div class="flex flex-row gap-2 items-center">
-				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="w-12 h-12 pixelated p-1" />
+		<div class="flex flex-1 basis-48 flex-row items-center justify-between rounded-md bg-primary-foreground p-2">
+			<div class="flex flex-row items-center gap-2">
+				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
 
 				<div class="flex flex-col items-start gap-1">
 					<Popover.Mobile>
@@ -57,7 +62,7 @@
 
 					<Popover.Mobile>
 						{#snippet trigger()}
-							<p class="text-lg leading-none participation-count">
+							<p class="participation-count text-lg leading-none">
 								x{amount.toLocaleString()}
 							</p>
 						{/snippet}
@@ -72,7 +77,7 @@
 				<img
 					src="/images/medals/{unique}.webp"
 					alt="{unique} Medal"
-					class="w-10 h-10 p-1 pixelated highest-bracket"
+					class="pixelated highest-bracket h-10 w-10 p-1"
 				/>
 			{/if}
 		</div>

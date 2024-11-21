@@ -48,7 +48,7 @@
 	};
 </script>
 
-<div class="h-[200px] rounded m-2">
+<div class="m-2 h-[200px] rounded">
 	<Chart
 		{data}
 		x="date"

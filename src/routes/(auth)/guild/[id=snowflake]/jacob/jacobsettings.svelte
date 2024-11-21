@@ -25,8 +25,8 @@
 	let confirmModal = $state(false);
 </script>
 
-<div class="flex flex-col justify-between gap-4 p-4 rounded-md bg-primary-foreground w-full rounded-lgs">
-	<div class="flex flex-row justify-between gap-4 w-full">
+<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md bg-primary-foreground p-4">
+	<div class="flex w-full flex-row justify-between gap-4">
 		<div class="flex flex-col gap-2">
 			<h3 class="text-2xl">{lb.title}</h3>
 			<p>
@@ -73,12 +73,12 @@
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
 					{#snippet trigger()}
-										<div >
+						<div>
 							<Button type="submit" color="green">
 								<Mail />
 							</Button>
 						</div>
-									{/snippet}
+					{/snippet}
 					<div>
 						<p>Send Leaderboard in Discord</p>
 					</div>
@@ -88,12 +88,12 @@
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
 					{#snippet trigger()}
-										<div >
+						<div>
 							<Button type="submit" color="yellow">
 								<RefreshCcw />
 							</Button>
 						</div>
-									{/snippet}
+					{/snippet}
 					<p>Clear all scores, but they can be submitted again</p>
 				</Popover.Mobile>
 			</form>
@@ -121,7 +121,7 @@
 					</Accordion.Trigger>
 					<Accordion.Content>
 						{#each entries as entry (entry)}
-							<div class="flex items-center flex-row gap-8 my-2">
+							<div class="my-2 flex flex-row items-center gap-8">
 								<form method="POST" action="{$page.url.pathname}?/banparticipation" use:enhance>
 									<input type="hidden" name="id" value={lb.id} />
 									<input type="hidden" name="uuid" value={entry.uuid} />
@@ -129,17 +129,17 @@
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
 									<Popover.Mobile>
 										{#snippet trigger()}
-																				<div >
+											<div>
 												<Button type="submit" variant="destructive" size="icon">
 													<Trash2 size={20} class="text-destructive" />
 												</Button>
 											</div>
-																			{/snippet}
+										{/snippet}
 										<p>Remove and block this Participation</p>
 									</Popover.Mobile>
 								</form>
 								<p class="text-lg">{entry.ign}</p>
-								<p class="text-lg font-mono">{entry.record?.collected?.toLocaleString()}</p>
+								<p class="font-mono text-lg">{entry.record?.collected?.toLocaleString()}</p>
 							</div>
 						{/each}
 					</Accordion.Content>

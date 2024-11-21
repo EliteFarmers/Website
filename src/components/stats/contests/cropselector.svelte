@@ -26,16 +26,16 @@
 	this={href ? 'a' : 'div'}
 	{href}
 	id={id ? id : undefined}
-	class="flex flex-wrap items-center justify-center p-4 gap-2 scroll-mt-32"
+	class="flex scroll-mt-32 flex-wrap items-center justify-center gap-2 p-4"
 >
 	{#each crops as [crop, src] (crop)}
 		<button
-			class="flex flex-row items-center justify-center gap-2 p-2 rounded-md hover:bg-muted {$selectedCrops[crop]
+			class="flex flex-row items-center justify-center gap-2 rounded-md p-2 hover:bg-muted {$selectedCrops[crop]
 				? 'bg-primary/15'
 				: ''}"
 			onclick={() => click(crop)}
 		>
-			<img {src} alt={crop[0]} class="w-12 h-12 pixelated" />
+			<img {src} alt={crop[0]} class="pixelated h-12 w-12" />
 		</button>
 	{/each}
 </svelte:element>

@@ -8,13 +8,14 @@
 
 	let { name = undefined, lore }: Props = $props();
 
-	let formatted =
-		$derived(name && lore.length > 1
+	let formatted = $derived(
+		name && lore.length > 1
 			? [name, '', ...lore].map((l) => FormatMinecraftText(l))
-			: lore.map((l) => FormatMinecraftText(l)));
+			: lore.map((l) => FormatMinecraftText(l))
+	);
 </script>
 
-<div class="font-mono rounded-sm font-bold">
+<div class="rounded-sm font-mono font-bold">
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html '<p>' + formatted.join('</p><p>') + '</p>'}
 </div>

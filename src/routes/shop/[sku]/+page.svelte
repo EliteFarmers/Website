@@ -31,20 +31,20 @@
 
 <Head title="Shop" description="Help support development with cosmetics!" />
 
-<main class="flex flex-col items-center gap-12 my-16 w-full px-2">
+<main class="my-16 flex w-full flex-col items-center gap-12 px-2">
 	<section class="flex flex-col items-start gap-4">
-		<div class="flex flex-row items-center gap-4 -mb-3">
+		<div class="-mb-3 flex flex-row items-center gap-4">
 			<h1 class="text-4xl">{product.name}</h1>
 			<ProductPrice {product} />
 		</div>
-		<a class="text-primary/60 hover:text-primary flex flex-row items-center gap-1" href="/shop">
-			<ArrowLeft size={16} class="inline-block mt-1" />
+		<a class="flex flex-row items-center gap-1 text-primary/60 hover:text-primary" href="/shop">
+			<ArrowLeft size={16} class="mt-1 inline-block" />
 			Back to Shop
 		</a>
 
-		<div class="flex flex-col items-center lg:items-start lg:grid lg:grid-cols-2 gap-8 mt-8 w-full max-w-4xl">
+		<div class="mt-8 flex w-full max-w-4xl flex-col items-center gap-8 lg:grid lg:grid-cols-2 lg:items-start">
 			{#if product.description}
-				<p class="max-w-2xl order-1">
+				<p class="order-1 max-w-2xl">
 					{product.description}
 				</p>
 			{:else}
@@ -52,10 +52,10 @@
 				<div class="order-1"></div>
 			{/if}
 
-			<div class="flex h-full flex-col justify-end order-3 lg:order-2">
+			<div class="order-3 flex h-full flex-col justify-end lg:order-2">
 				<h2 class="text-xl font-semibold">Unlocks Features</h2>
 			</div>
-			<div class="order-2 lg:order-3 w-full max-w-96">
+			<div class="order-2 w-full max-w-96 lg:order-3">
 				{#if product.images?.length}
 					<div class="w-full px-10">
 						<Carousel.Root>
@@ -65,13 +65,13 @@
 										<div class="w-full">
 											<Card.Root>
 												<Card.Content
-													class="flex aspect-square items-center justify-center p-0 relative overflow-hidden"
+													class="relative flex aspect-square items-center justify-center overflow-hidden p-0"
 												>
 													<img
 														src={image.url}
 														alt={product.name}
 														title={image.title}
-														class="w-full object-fit"
+														class="object-fit w-full"
 													/>
 												</Card.Content>
 											</Card.Root>
@@ -86,24 +86,22 @@
 				{:else}
 					<Card.Root>
 						<Card.Content
-							class="flex aspect-square items-center justify-center p-0 relative overflow-hidden"
+							class="relative flex aspect-square items-center justify-center overflow-hidden p-0"
 						>
-							<div class="grid min-h-32 drop-shadow-lg w-full rounded-md items-center justify-center">
+							<div class="grid min-h-32 w-full items-center justify-center rounded-md drop-shadow-lg">
 								<Package size={64} />
 							</div>
 						</Card.Content>
 					</Card.Root>
 				{/if}
 			</div>
-			<div class="flex flex-col gap-2 w-full max-w-96 order-4">
+			<div class="order-4 flex w-full max-w-96 flex-col gap-2">
 				{#if product.weightStyles?.length}
 					<ProductUnlock open={true}>
 						{#snippet header()}
-											
-								<Image />
-								<p class="font-semibold">Weight Styles</p>
-							
-											{/snippet}
+							<Image />
+							<p class="font-semibold">Weight Styles</p>
+						{/snippet}
 						<p class="max-w-sm">
 							Unlock the weight <a href="#styles" class="underline">
 								style{product.weightStyles.length > 1 ? 's' : ''} shown below!</a
@@ -114,18 +112,16 @@
 				{#if product.features?.embedColors?.length}
 					<ProductUnlock open={true}>
 						{#snippet header()}
-											
-								<Palette />
-								<p class="font-semibold">Embed Colors</p>
-							
-											{/snippet}
+							<Palette />
+							<p class="font-semibold">Embed Colors</p>
+						{/snippet}
 						<div class="flex flex-wrap items-center gap-2">
 							{#each product?.features.embedColors as color}
 								<div
-									class="flex flex-row gap-1 items-center rounded-sm p-1"
+									class="flex flex-row items-center gap-1 rounded-sm p-1"
 									style="background-color: #{color}"
 								>
-									<span class="text-sm leading-none font-semibold text-black">#{color}</span>
+									<span class="text-sm font-semibold leading-none text-black">#{color}</span>
 								</div>
 							{/each}
 						</div>
@@ -134,11 +130,9 @@
 				{#if badge}
 					<ProductUnlock open={true}>
 						{#snippet header()}
-											
-								<Tag />
-								<p class="font-semibold">Grants A Badge</p>
-							
-											{/snippet}
+							<Tag />
+							<p class="font-semibold">Grants A Badge</p>
+						{/snippet}
 						<div>
 							<Badge {badge} />
 						</div>
@@ -147,11 +141,9 @@
 				{#if product.features?.hideShopPromotions}
 					<ProductUnlock>
 						{#snippet header()}
-											
-								<TicketX />
-								<p class="font-semibold">Hide Shop Promotions</p>
-							
-											{/snippet}
+							<TicketX />
+							<p class="font-semibold">Hide Shop Promotions</p>
+						{/snippet}
 						<p class="max-w-sm">
 							This allows you to hide any promotions for the Elite Shop in bot commands.
 						</p>
@@ -160,11 +152,9 @@
 				{#if product.features?.weightStyleOverride}
 					<ProductUnlock>
 						{#snippet header()}
-											
-								<Replace />
-								<p class="font-semibold">Use Weight Style On Everyone</p>
-							
-											{/snippet}
+							<Replace />
+							<p class="font-semibold">Use Weight Style On Everyone</p>
+						{/snippet}
 						<p class="max-w-sm">
 							With this enabled your selected weight style will show up for everyone you look up using the
 							bot.
@@ -174,22 +164,20 @@
 				{#if product.features?.moreInfoDefault}
 					<ProductUnlock>
 						{#snippet header()}
-											
-								<ScrollText />
-								<p class="font-semibold">Default "More Info"</p>
-							
-											{/snippet}
+							<ScrollText />
+							<p class="font-semibold">Default "More Info"</p>
+						{/snippet}
 						<p class="max-w-sm">
 							Using the /weight command on the bot will show the "More Info" section by default.
 						</p>
 					</ProductUnlock>
 				{/if}
-				<div class="flex flex-row justify-end w-full">
-					<div class="flex flex-row items-center gap-2 -mb-3">
+				<div class="flex w-full flex-row justify-end">
+					<div class="-mb-3 flex flex-row items-center gap-2">
 						<ProductPrice {product} />
 						<Button
 							href="/shop/{product.id}/buy"
-							class="m-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-900 font-semibold text-white"
+							class="m-1 bg-blue-600 font-semibold text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-900"
 						>
 							{isFree ? 'Unlock' : 'Buy'} on Discord
 							<ExternalLink size={16} class="ml-1.5" />
@@ -213,7 +201,7 @@
 					{#if style}
 						<Card.Root class="max-w-3xl">
 							<Card.Content class="p-2">
-								<p class="text-lg font-semibold mb-1">{style.name}</p>
+								<p class="mb-1 text-lg font-semibold">{style.name}</p>
 								{#if style?.styleFormatter === 'data'}
 									<div class="origin-top-left object-scale-down">
 										<WeightStyle

@@ -32,16 +32,16 @@
 		<div class="flex flex-row gap-[0.1rem] md:gap-1">
 			{#each row as plot, j (j)}
 				{#if plot === 'barn'}
-					<div class="w-6 h-6 md:w-8 md:h-8 flex flex-row items-center justify-center">
-						<span class="leading-none md:text-lg font-semibold">{plots.length}</span>
+					<div class="flex h-6 w-6 flex-row items-center justify-center md:h-8 md:w-8">
+						<span class="font-semibold leading-none md:text-lg">{plots.length}</span>
 					</div>
 				{:else if plot}
 					<div
-						class="w-6 h-6 md:w-8 md:h-8 aspect-square rounded-sm
+						class="aspect-square h-6 w-6 rounded-sm md:h-8 md:w-8
 						{maxed ? 'bg-yellow-400 dark:bg-yellow-600' : 'bg-green-400 dark:bg-green-600'}"
 					></div>
 				{:else}
-					<div class="w-6 h-6 md:w-8 md:h-8 aspect-square rounded-sm bg-primary-foreground"></div>
+					<div class="aspect-square h-6 w-6 rounded-sm bg-primary-foreground md:h-8 md:w-8"></div>
 				{/if}
 			{/each}
 		</div>

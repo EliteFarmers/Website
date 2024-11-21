@@ -23,7 +23,7 @@
 							<a
 								href={item.href}
 								class={cn(
-									'flex flex-row gap-1 items-center whitespace-nowrap rounded-lg border-2 border-transparent px-2.5 py-1.5 font-medium capitalize',
+									'flex flex-row items-center gap-1 whitespace-nowrap rounded-lg border-2 border-transparent px-2.5 py-1.5 font-medium capitalize',
 									'text-sm hover:bg-primary-foreground',
 									'data-[active=true]:border-primary-foreground'
 								)}

@@ -54,7 +54,10 @@
 			<Button
 				variant="outline"
 				role="combobox"
-				class={cn(`w-[200px] justify-between ${selected.value === '_' ? 'text-muted-foreground' : ''}`, btnClass)}
+				class={cn(
+					`w-[200px] justify-between ${selected.value === '_' ? 'text-muted-foreground' : ''}`,
+					btnClass
+				)}
 				aria-expanded={open}
 				{disabled}
 				{...props}
@@ -64,7 +67,7 @@
 			</Button>
 		{/snippet}
 	</Popover.Trigger>
-	<Popover.Content class="w-[200px] p-0 max-h-96 overflow-y-scroll">
+	<Popover.Content class="max-h-96 w-[200px] overflow-y-scroll p-0">
 		<Command.Root>
 			<Command.Input {placeholder} class="h-9" />
 			<Command.Empty>No option found.</Command.Empty>

@@ -13,11 +13,11 @@
 
 {#if !api.collections}
 	<div class="flex w-full justify-center">
-		<Alert.Root class="flex flex-col items-centers w-full max-w-xl bg-destructive/80">
+		<Alert.Root class="items-centers flex w-full max-w-xl flex-col bg-destructive/80">
 			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}
-						<p class="flex-1 basis-1/2 my-1 flex justify-center align-middle capitalize">
+						<p class="my-1 flex flex-1 basis-1/2 justify-center align-middle capitalize">
 							<strong>{key} API&nbsp;</strong> - Disabled
 						</p>
 					{/if}
@@ -30,11 +30,11 @@
 	</div>
 {:else if entries.some(([, value]) => !value)}
 	<div class="flex w-full justify-center">
-		<Alert.Root class="flex flex-col items-centers w-full max-w-xl bg-yellow-100 dark:bg-yellow-600">
+		<Alert.Root class="items-centers flex w-full max-w-xl flex-col bg-yellow-100 dark:bg-yellow-600">
 			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}
-						<p class="flex-1 basis-1/2 my-1 flex justify-center align-middle capitalize">
+						<p class="my-1 flex flex-1 basis-1/2 justify-center align-middle capitalize">
 							<strong>{key} API&nbsp;</strong> - Disabled
 						</p>
 					{/if}

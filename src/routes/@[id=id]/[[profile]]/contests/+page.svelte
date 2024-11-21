@@ -21,8 +21,8 @@
 	description="View all {data.contestsCount} Jacob's Contests participated in by {data.account?.name ?? 'Unknown'}!"
 />
 
-<section class="flex flex-col justify-center items-center w-full">
-	<div class="flex flex-col justify-center items-center mx-4 sm:w-full md:w-[90%] lg:w-[80%]">
+<section class="flex w-full flex-col items-center justify-center">
+	<div class="mx-4 flex flex-col items-center justify-center sm:w-full md:w-[90%] lg:w-[80%]">
 		<div class="my-8 flex flex-col items-center">
 			<MedalCounts
 				participations={data.contestsCount}
@@ -35,19 +35,19 @@
 				}}
 			/>
 
-			<div class="flex flex-row items-center gap-2 my-2 mt-4">
+			<div class="my-2 mt-4 flex flex-row items-center gap-2">
 				<Switch bind:checked={timeType} />
 				<span>Show Real Life Time</span>
 			</div>
 		</div>
 
-		<Accordion.Root type="multiple" class="max-w-6xl w-full mx-4 items-center">
+		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center">
 			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
 				<Accordion.Item value="{year} ">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">
-						<div class="flex flex-col gap-2 justify-center items-center mr-4">
-							<div class="flex flex-row justify-between items-center w-full">
-								<p class="text-xl font-semibold flex-1 text-start">Year {year}</p>
+						<div class="mr-4 flex flex-col items-center justify-center gap-2">
+							<div class="flex w-full flex-row items-center justify-between">
+								<p class="flex-1 text-start text-xl font-semibold">Year {year}</p>
 								<span class="text-normal font-mono">
 									{new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
 										' - ' +
@@ -69,7 +69,7 @@
 					</Accordion.Trigger>
 
 					<Accordion.Content>
-						<div class="flex flex-wrap gap-4 justify-center">
+						<div class="flex flex-wrap justify-center gap-4">
 							{#each conts ?? [] as contest (`${contest.timestamp ?? 0}${contest?.crop ?? 0}`)}
 								<div class="basis-64">
 									<Contest {contest} irlTime={timeType} />
@@ -82,7 +82,7 @@
 		</Accordion.Root>
 
 		{#if data.contestsCount === 0}
-			<div class="flex flex-col justify-center items-center w-full">
+			<div class="flex w-full flex-col items-center justify-center">
 				<p class="text-2xl font-bold">No Contests</p>
 				<p class="text-lg">This player has not participated in any contests.</p>
 			</div>

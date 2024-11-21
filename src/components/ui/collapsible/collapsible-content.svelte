@@ -4,7 +4,7 @@
 
 	interface Props extends CollapsiblePrimitive.ContentProps {
 		transition: typeof slide;
-		transitionConfig: TransitionConfig
+		transitionConfig: TransitionConfig;
 	}
 
 	let { transition: transit, transitionConfig, children, ...rest }: Props = $props();

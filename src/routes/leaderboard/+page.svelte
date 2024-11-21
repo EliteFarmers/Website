@@ -19,10 +19,10 @@
 	description="View the various leaderboards available on the site! See the 5 thousand farmers in every crop!"
 />
 
-<main class="flex flex-col gap-16 mb-16 px-8 items-center">
-	<h1 class="text-4xl text-center mt-16">Leaderboards</h1>
+<main class="mb-16 flex flex-col items-center gap-16 px-8">
+	<h1 class="mt-16 text-center text-4xl">Leaderboards</h1>
 
-	<div class="flex flex-wrap justify-center items-center lg:items-start gap-4 w-full max-w-6xl">
+	<div class="flex w-full max-w-6xl flex-wrap items-center justify-center gap-4 lg:items-start">
 		<Category leaderboards={general} title="General" />
 		<Category leaderboards={collections.sort((a, b) => a.name.localeCompare(b.name))} title="Collections" />
 		<Category leaderboards={pest} title="Pests" />

@@ -15,7 +15,7 @@
 </script>
 
 <div
-	class="relative flex flex-row justify-between items-center gap-1 max-w-fit p-1 text-lg bg-primary-foreground rounded-md"
+	class="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md bg-primary-foreground p-1 text-lg"
 	aria-label="Skyblock Level"
 >
 	<Popover.Mobile>
@@ -24,19 +24,19 @@
 				{#if rank !== -1}
 					<a
 						href="/leaderboard/skyblockxp/{$page.params.id}-{profile}"
-						class="px-1.5 rounded-md hover:bg-muted bg-card"
+						class="rounded-md bg-card px-1.5 hover:bg-muted"
 					>
-						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{rank}</span
 						>
 					</a>
 				{/if}
-				<span class="font-mono font-bold text-2xl px-1" style="color: {color};">{Math.floor(xp / 100)}</span>
+				<span class="px-1 font-mono text-2xl font-bold" style="color: {color};">{Math.floor(xp / 100)}</span>
 			</div>
 		{/snippet}
 		<div>
 			<div class="text-center text-lg">Skyblock&nbsp;Level</div>
-			<div class="text-center font-semibold text-lg">{xp} XP</div>
+			<div class="text-center text-lg font-semibold">{xp} XP</div>
 		</div>
 	</Popover.Mobile>
 </div>

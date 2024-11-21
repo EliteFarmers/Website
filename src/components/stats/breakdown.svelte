@@ -16,14 +16,14 @@
 			};
 		}
 	});
-	
+
 	let total = $derived(weight?.totalWeight ?? 0);
 	let bonusSources = $derived(weight?.bonusWeight ?? {});
 	let bonus = $derived(Object.values(bonusSources).reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0);
 	let cropSources = $derived(weight?.cropWeight ?? {});
 	let sources = $derived(Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0)));
 	let bonuses = $derived(Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0])));
-	
+
 	$effect(() => {
 		if (sources.length === 0) {
 			sources.push(['None Found - API might be off', 0]);
@@ -35,34 +35,34 @@
 	});
 </script>
 
-<section class="py-4 flex justify-center align-middle w-full" aria-labelledby="Breakdown">
-	<div class="w-full max-w-4xl bg-primary-foreground rounded-lg p-4 mx-2">
-		<h1 id="Breakdown" class="text-3xl text-center pt-2">Weight Breakdown - {total.toLocaleString()}</h1>
-		<div class="block md:flex justify-evenly py-4">
+<section class="flex w-full justify-center py-4 align-middle" aria-labelledby="Breakdown">
+	<div class="mx-2 w-full max-w-4xl rounded-lg bg-primary-foreground p-4">
+		<h1 id="Breakdown" class="pt-2 text-center text-3xl">Weight Breakdown - {total.toLocaleString()}</h1>
+		<div class="block justify-evenly py-4 md:flex">
 			<div class="w-full md:w-1/3">
-				<h3 class="text-2xl font-semibold py-2">
+				<h3 class="py-2 text-2xl font-semibold">
 					Crops
 					<span class="pl-2 text-lg">({(total - bonus).toLocaleString()})</span>
 				</h3>
 				{#each sources as [source, value] (source)}
-					<div class="flex flex-row items-center p-1 even:bg-card rounded-sm">
+					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
 						<div class="flex-grow">{source}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{/each}
 			</div>
 			<div class="w-full md:w-1/3">
-				<h3 class="text-2xl font-semibold py-2">
+				<h3 class="py-2 text-2xl font-semibold">
 					Bonus<span class="pl-2 text-lg">({bonus.toLocaleString()})</span>
 				</h3>
 				{#each bonuses as [bonus, value] (bonus)}
-					<div class="flex flex-row items-center p-1 even:bg-card rounded-sm">
+					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
 						<div class="flex-grow capitalize">{bonus}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{/each}
 				<br />
-				<h3 class="text-2xl font-semibold py-2">Questions?</h3>
+				<h3 class="py-2 text-2xl font-semibold">Questions?</h3>
 				<div class="text-md pt-1">
 					View all calculations on the <a href="/info" class="text-blue-600 hover:underline">info page</a>.
 				</div>

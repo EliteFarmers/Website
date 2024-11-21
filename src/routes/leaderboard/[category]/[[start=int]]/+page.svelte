@@ -55,26 +55,25 @@
 
 <Head {title} description={`${title} for Hypixel Skyblock.`} />
 
-<section class="flex flex-col mt-16 justify-center w-full">
-	<h1 class="text-4xl text-center mt-8 mb-16 max-w-md self-center">{title}</h1>
+<section class="mt-16 flex w-full flex-col justify-center">
+	<h1 class="mb-16 mt-8 max-w-md self-center text-center text-4xl">{title}</h1>
 	<div class="flex w-full justify-center gap-4 text-center">
 		<Pagination.Root
 			count={data.lb.maxEntries ?? 1000}
 			perPage={20}
 			bind:page={initialPage}
-			
 			onPageChange={(newPage) => {
 				goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}`);
 			}}
 		>
 			{#snippet children({ pages })}
-						<Pagination.Content class="flex justify-center">
-					<div class="flex flex-row justify-end order-1 basis-1/3 sm:basis-auto">
+				<Pagination.Content class="flex justify-center">
+					<div class="order-1 flex basis-1/3 flex-row justify-end sm:basis-auto">
 						<Pagination.Item>
 							<Pagination.PrevButton />
 						</Pagination.Item>
 					</div>
-					<div class="flex flex-wrap items-center order-3 sm:order-2 justify-center flex-grow sm:flex-auto">
+					<div class="order-3 flex flex-grow flex-wrap items-center justify-center sm:order-2 sm:flex-auto">
 						{#each pages as page (page.key)}
 							{#if page.type === 'ellipsis'}
 								<Pagination.Item>
@@ -93,20 +92,20 @@
 							{/if}
 						{/each}
 					</div>
-					<div class="flex flex-row justify-start order-2 sm:order-last basis-1/3 sm:basis-auto">
+					<div class="order-2 flex basis-1/3 flex-row justify-start sm:order-last sm:basis-auto">
 						<Pagination.Item>
 							<Pagination.NextButton />
 						</Pagination.Item>
 					</div>
 				</Pagination.Content>
-								{/snippet}
-				</Pagination.Root>
+			{/snippet}
+		</Pagination.Root>
 	</div>
 	<div
 		data-sveltekit-preload-data="tap"
-		class="flex flex-col lg:flex-row justify-center align-middle rounded-lg mb-8 mt-2 mx-4"
+		class="mx-4 mb-8 mt-2 flex flex-col justify-center rounded-lg align-middle lg:flex-row"
 	>
-		<div class="flex flex-col gap-2 p-2 w-full items-center lg:items-end">
+		<div class="flex w-full flex-col items-center gap-2 p-2 lg:items-end">
 			{#each firstHalf as entry, i (entry)}
 				<Entry
 					rank={i + offset}
@@ -117,7 +116,7 @@
 				/>
 			{/each}
 		</div>
-		<div class="flex flex-col gap-2 p-2 pt-0 lg:pt-2 w-full items-center lg:items-start">
+		<div class="flex w-full flex-col items-center gap-2 p-2 pt-0 lg:items-start lg:pt-2">
 			{#each secondHalf as entry, i (entry)}
 				<Entry
 					rank={i + firstHalf.length + offset}
@@ -133,7 +132,7 @@
 		<p class="text-sm leading-none">Show Leaderboard Name In Entries</p>
 		<Switch bind:checked={$includeLeaderboardName} />
 	</div>
-	<p class="text-sm text-center w-1/2 mx-auto py-4">
+	<p class="mx-auto w-1/2 py-4 text-center text-sm">
 		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched
 		on this website. New entries are recalculated every 30 minutes.
 	</p>

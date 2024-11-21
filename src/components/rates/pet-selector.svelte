@@ -8,7 +8,7 @@
 	import Menu from 'lucide-svelte/icons/menu';
 	import { buttonVariants } from '$ui/button';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	
+
 	interface Props {
 		player: RatesPlayerStore;
 		selected?: FarmingPet | undefined;
@@ -26,12 +26,14 @@
 		show = show === 2 ? 999 : 2;
 	}
 
-	let grouped = $state($player.pets.reduce<Record<string, FarmingPet[]>>((acc, pet) => {
-		acc[pet.type] ??= [];
-		acc[pet.type].push(pet);
-		acc[pet.type].sort((a, b) => b.fortune - a.fortune);
-		return acc;
-	}, {}));
+	let grouped = $state(
+		$player.pets.reduce<Record<string, FarmingPet[]>>((acc, pet) => {
+			acc[pet.type] ??= [];
+			acc[pet.type].push(pet);
+			acc[pet.type].sort((a, b) => b.fortune - a.fortune);
+			return acc;
+		}, {})
+	);
 
 	let activeId = $state({
 		[FarmingPets.MooshroomCow]: grouped[FarmingPets.MooshroomCow]?.at(0)?.pet.uuid ?? undefined,
@@ -42,9 +44,11 @@
 		[FarmingPets.TRex]: grouped[FarmingPets.TRex]?.at(0)?.pet.uuid ?? undefined,
 	} as Record<string, string | undefined>);
 
-	const groups = $derived(Object.entries(activeId)
-		.filter(([, v]) => v)
-		.slice(0, show));
+	const groups = $derived(
+		Object.entries(activeId)
+			.filter(([, v]) => v)
+			.slice(0, show)
+	);
 
 	function onSelectedChange(type: string, pet: FarmingPet) {
 		const petId = pet.pet.uuid ?? '';
@@ -61,7 +65,7 @@
 	}
 </script>
 
-<div class="flex justify-between items-center w-full pt-2">
+<div class="flex w-full items-center justify-between pt-2">
 	<p class="text-lg font-semibold">Farming Pet</p>
 	{#if $player.selectedPet}
 		<FortuneBreakdown breakdown={fortune} />
@@ -69,7 +73,7 @@
 		<FortuneBreakdown total={0} />
 	{/if}
 </div>
-<div class="grid flex-col gap-2 w-full mb-2 -mx-2">
+<div class="-mx-2 mb-2 grid w-full flex-col gap-2">
 	{#each groups as [type, petId] (type)}
 		{@const pet = grouped[type].find((p) => p.pet.uuid === petId)}
 		{#if pet}
@@ -78,13 +82,13 @@
 			<div
 				class="{selected
 					? 'border-primary-content/20 dark:border-card/70'
-					: 'border-transparent'} border-solid border-[3px] has-[.selectable:hover]:bg-primary-content/10 dark:has-[.selectable:hover]:bg-card/50 px-1.5 py-0.5 rounded-lg cursor-pointer flex justify-between items-center w-full"
+					: 'border-transparent'} flex w-full cursor-pointer items-center justify-between rounded-lg border-[3px] border-solid px-1.5 py-0.5 has-[.selectable:hover]:bg-primary-content/10 dark:has-[.selectable:hover]:bg-card/50"
 			>
-				<button class="flex-1 text-left selectable" onclick={() => onSelectedChange(type, pet)}>
+				<button class="selectable flex-1 text-left" onclick={() => onSelectedChange(type, pet)}>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<span class="text-lg font-semibold">{@html FormatMinecraftText(pet.getFormattedName())}</span>
 				</button>
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					{#if !best}
 						<Popover.Mobile>
 							{#snippet trigger()}
@@ -135,13 +139,13 @@
 	{#if Object.values(activeId).filter((v) => v).length > 2}
 		<button
 			onclick={toggleShow}
-			class="w-fit text-sm border-transparent border-solid border-[3px] hover:bg-card/50 px-1 py-0.5 rounded-lg cursor-pointer flex justify-center items-center"
+			class="flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm hover:bg-card/50"
 		>
 			{show === 2 ? 'Show More' : 'Show Less'}
 		</button>
 	{/if}
 
 	{#if !Object.values(activeId).some((pet) => pet)}
-		<p class="text-lg font-semibold text-center my-4">No matching pets found!</p>
+		<p class="my-4 text-center text-lg font-semibold">No matching pets found!</p>
 	{/if}
 </div>

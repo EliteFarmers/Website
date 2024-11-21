@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { HTMLAnchorAttributes } from "svelte/elements";
-	import * as Menubar from "./index";
-	import type { Menubar as MenubarPrimitive } from "bits-ui";
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import * as Menubar from './index';
+	import type { Menubar as MenubarPrimitive } from 'bits-ui';
 
 	interface Props extends MenubarPrimitive.ItemProps {
-		href: HTMLAnchorAttributes["href"];
+		href: HTMLAnchorAttributes['href'];
 	}
 
-  	let { href, children, ...rest }: Props = $props();
+	let { href, children, ...rest }: Props = $props();
 </script>
 
 <Menubar.Item {...rest}>

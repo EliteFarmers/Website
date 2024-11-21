@@ -24,7 +24,7 @@
 
 <Popover.Mobile hasContent={popover}>
 	{#snippet trigger()}
-		<div >
+		<div>
 			<span class="{classes} font-mono">{icons[gameMode ?? 'classic']}</span>
 		</div>
 	{/snippet}
@@ -32,7 +32,7 @@
 		<div>
 			<h5 class="font-semibold">Profile Game Mode</h5>
 
-			<p class="first-letter:capitalize text-center">{gameModeRename[gameMode] ?? gameMode}</p>
+			<p class="text-center first-letter:capitalize">{gameModeRename[gameMode] ?? gameMode}</p>
 		</div>
 	{/if}
 </Popover.Mobile>

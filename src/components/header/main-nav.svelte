@@ -5,10 +5,10 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 </script>
 
-<div class="mr-4 hidden md:flex gap-6">
+<div class="mr-4 hidden gap-6 md:flex">
 	<a href="/" class="flex items-center gap-2">
 		<img src="/favicon.webp" class="mr-3 h-6 sm:h-9" alt="Elite Logo" />
-		<span class="inline-block leading-none self-center whitespace-nowrap text-xl font-semibold px-1">
+		<span class="inline-block self-center whitespace-nowrap px-1 text-xl font-semibold leading-none">
 			Elite Farmers
 		</span>
 	</a>
@@ -18,7 +18,7 @@
 				<a
 					href={navItem.href}
 					class={cn(
-						'flex flex-row gap-1 items-center transition-colors hover:text-foreground',
+						'flex flex-row items-center gap-1 transition-colors hover:text-foreground',
 						$page.url.pathname.startsWith(navItem.href) ? 'text-foreground' : 'text-foreground/80'
 					)}
 					target={navItem.external ? '_blank' : undefined}

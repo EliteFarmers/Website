@@ -27,14 +27,13 @@
 		uncounted = 0,
 		minionTierField,
 		key,
-		rank = -1
+		rank = -1,
 	}: Props = $props();
 
 	const cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
 
 	let crop = $derived(name ? name : undefined);
 	let index = $derived(name && crop ? cropArray.indexOf(name) : -1);
-
 
 	function getFrameStyle() {
 		if (rank <= 0) return '';
@@ -53,69 +52,69 @@
 	}
 </script>
 
-<div class="flex flex-row gap-2 w-full align-middle items-center">
+<div class="flex w-full flex-row items-center gap-2 align-middle">
 	<div
-		class="flex flex-1 gap-2 justify-start align-middle items-center w-full max-h-30 bg-primary-foreground rounded-lg p-1"
+		class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-primary-foreground p-1 align-middle"
 	>
 		{#key rank}
 			<div
-				class="flex crop-container pixelated w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 aspect-square"
+				class="crop-container pixelated flex aspect-square h-10 w-10 sm:h-14 sm:w-14 md:h-20 md:w-20"
 				style={getFrameStyle()}
 			>
 				<img
 					src="/images/crops/{key}.png"
-					class="rounded-lg pixelated aspect-square p-[16%] object-contain"
+					class="pixelated aspect-square rounded-lg object-contain p-[16%]"
 					alt={name}
 				/>
 			</div>
 		{/key}
-		<div class="flex flex-col gap-1 justify-center flex-grow pr-2">
-			<div class="flex flex-row justify-between items-center gap-2">
+		<div class="flex flex-grow flex-col justify-center gap-1 pr-2">
+			<div class="flex flex-row items-center justify-between gap-2">
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
 							href="/leaderboard/{key}/{$page.params.id}-{$page.params.profile}"
-							class="px-1.5 bg-card rounded-md hover:bg-muted"
+							class="rounded-md bg-card px-1.5 hover:bg-muted"
 						>
-							<span class="text-sm xs:text-md sm:text-lg">#</span><span
+							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span
 							>
 						</a>
 					{/if}
-					<p class="text-md sm:text-lg font-semibold whitespace-nowrap">{name}</p>
+					<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{name}</p>
 				</div>
-				<p class="md:ml-2 text-right font-semibold sm:text-lg md:text-xl lg:text-2xl">
+				<p class="text-right font-semibold sm:text-lg md:ml-2 md:text-xl lg:text-2xl">
 					{weight.toLocaleString()}
 				</p>
 			</div>
-			<div class="flex flex-row justify-between items-center gap-2">
-				<p class="text-normal sm:text-lg md:text-xl lg:text-2xl whitespace-nowrap">{value.toLocaleString()}</p>
+			<div class="flex flex-row items-center justify-between gap-2">
+				<p class="text-normal whitespace-nowrap sm:text-lg md:text-xl lg:text-2xl">{value.toLocaleString()}</p>
 				<div class="flex flex-row items-center gap-2">
 					{#if pestRank > 0}
 						<a
 							href="/leaderboard/{pest}/{$page.params.id}-{$page.params.profile}"
-							class="px-1 bg-card rounded-md hover:bg-muted"
+							class="rounded-md bg-card px-1 hover:bg-muted"
 						>
-							<span class="text-sm xs:text-md sm:text-lg">#</span><span
+							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{pestRank}</span
 							>
 						</a>
 					{/if}
 					<Popover.Mobile>
 						{#snippet trigger()}
-							<div  class="flex flex-row items-center align-middle justify-center gap-2 h-6">
-								<p class="text-md sm:text-lg font-semibold whitespace-nowrap">
+							<div class="flex h-6 flex-row items-center justify-center gap-2 align-middle">
+								<p class="text-md whitespace-nowrap font-semibold sm:text-lg">
 									{pestKills.toLocaleString()}
 								</p>
 								<img
 									src="/images/pests/{pest}.png"
-									class="pixelated aspect-square object-contain h-full"
+									class="pixelated aspect-square h-full object-contain"
 									alt={pest}
 								/>
 							</div>
 						{/snippet}
-						<div class="flex flex-col items-center gap-2 max-w-md">
-							<p class="text-lg first-letter:capitalize font-semibold">{pest} Kills</p>
+						<div class="flex max-w-md flex-col items-center gap-2">
+							<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 							<p>{pestKills.toLocaleString()}</p>
 							<a class="text-lg font-semibold text-blue-500 hover:underline" href="/info#Pests"
 								>Weight Adjustment</a
@@ -136,7 +135,7 @@
 
 <style lang="postcss">
 	.crop-container {
-		@apply align-middle justify-center aspect-square object-contain;
+		@apply aspect-square justify-center object-contain align-middle;
 		aspect-ratio: 1 / 1;
 		background-repeat: no-repeat;
 		background-size: 85%;

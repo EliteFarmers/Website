@@ -10,13 +10,7 @@
 		children?: import('svelte').Snippet;
 	}
 
-	let {
-		href,
-		open = $bindable(),
-		class: className = undefined,
-		children,
-		...rest
-	}: Props = $props();
+	let { href, open = $bindable(), class: className = undefined, children, ...rest }: Props = $props();
 </script>
 
 <a

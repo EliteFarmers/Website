@@ -14,18 +14,21 @@
 	let { progress, barBg = 'bg-card' }: Props = $props();
 
 	let maxed = $state(progress.ratio >= 1);
-	let readable =
-		$derived((maxed
+	let readable = $derived(
+		(maxed
 			? (+progress.fortune).toLocaleString()
 			: (+progress.fortune).toLocaleString() + ' / ' + progress.maxFortune) +
-		' ' +
-		STAT_ICONS[Stat.FarmingFortune]);
-	let expanded = $derived(maxed
-		? (+progress.fortune).toLocaleString() + ' / ' + progress.maxFortune + ' ' + STAT_ICONS[Stat.FarmingFortune]
-		: undefined);
+			' ' +
+			STAT_ICONS[Stat.FarmingFortune]
+	);
+	let expanded = $derived(
+		maxed
+			? (+progress.fortune).toLocaleString() + ' / ' + progress.maxFortune + ' ' + STAT_ICONS[Stat.FarmingFortune]
+			: undefined
+	);
 </script>
 
-<div class="flex flex-col items-start w-full">
+<div class="flex w-full flex-col items-start">
 	<div class="flex flex-row items-center gap-1">
 		{#if progress.item?.name}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -34,7 +37,7 @@
 			<span>{progress.name}</span>
 		{/if}
 		{#if progress.wiki}
-			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="text-blue-500 mt-1">
+			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="mt-1 text-blue-500">
 				<Info size={16} />
 			</a>
 		{/if}
@@ -43,7 +46,7 @@
 				{#snippet trigger()}
 					<TriangleAlert size={16} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
 				{/snippet}
-				<p class="text-sm max-w-sm">
+				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. For it to show up you need to configure
 					settings on this page.
 				</p>

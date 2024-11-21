@@ -49,10 +49,10 @@
 	}
 </script>
 
-<div class="flex max-w-6xl w-full justify-center items-center">
+<div class="flex w-full max-w-6xl items-center justify-center">
 	{#if loaded}
-		<div class="w-full chart" use:apex={options}></div>
+		<div class="chart w-full" use:apex={options}></div>
 	{:else}
-		<Loader class="animate-spin my-4" />
+		<Loader class="my-4 animate-spin" />
 	{/if}
 </div>

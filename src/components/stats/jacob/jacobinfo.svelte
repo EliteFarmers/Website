@@ -9,35 +9,39 @@
 		jacob: components['schemas']['JacobDataDto'] | undefined;
 		ign: string;
 		ranks?: {
-		bronze: number;
-		silver: number;
-		gold: number;
-		platinum: number;
-		diamond: number;
-		participations: number;
-		firstPlaces: number;
-	};
+			bronze: number;
+			silver: number;
+			gold: number;
+			platinum: number;
+			diamond: number;
+			participations: number;
+			firstPlaces: number;
+		};
 	}
 
-	let { jacob, ign, ranks = {
-		bronze: -1,
-		silver: -1,
-		gold: -1,
-		platinum: -1,
-		diamond: -1,
-		participations: -1,
-		firstPlaces: -1,
-	} }: Props = $props();
+	let {
+		jacob,
+		ign,
+		ranks = {
+			bronze: -1,
+			silver: -1,
+			gold: -1,
+			platinum: -1,
+			diamond: -1,
+			participations: -1,
+			firstPlaces: -1,
+		},
+	}: Props = $props();
 </script>
 
-<section class="py-4 flex-col gap-4 justify-center align-middle mx-2 mb-8" aria-labelledby="Jacob">
-	<h1 id="Jacob" class="text-3xl text-center pt-2">{ign} &nbsp;-&nbsp; Jacob Stats</h1>
+<section class="mx-2 mb-8 flex-col justify-center gap-4 py-4 align-middle" aria-labelledby="Jacob">
+	<h1 id="Jacob" class="pt-2 text-center text-3xl">{ign} &nbsp;-&nbsp; Jacob Stats</h1>
 
-	<div class="flex flex-row justify-center my-8 items-center">
+	<div class="my-8 flex flex-row items-center justify-center">
 		<Cropstats {jacob} />
 	</div>
 
-	<div class="flex flex-col lg:flex-row gap-4 md:gap-8 justify-center items-center">
+	<div class="flex flex-col items-center justify-center gap-4 md:gap-8 lg:flex-row">
 		<div class="flex-1 lg:max-w-2xl">
 			<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
 

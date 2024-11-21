@@ -25,7 +25,7 @@
 	let slots = $state($player.armorSet.slots);
 	let fortune = $state((() => set.getFortuneBreakdown())());
 
-	function setPiece(slot: GearSlot, piece: typeof slots[GearSlot]) {
+	function setPiece(slot: GearSlot, piece: (typeof slots)[GearSlot]) {
 		if (!piece) return;
 		set.setPiece(piece);
 		slots = { ...slots, [slot]: piece.item.uuid };
@@ -45,23 +45,23 @@
 </script>
 
 <div class="flex flex-col gap-3">
-	<div class="flex justify-between items-center w-full pb-2">
+	<div class="flex w-full items-center justify-between pb-2">
 		<p class="text-lg font-semibold">Farming Gear</p>
 		<Fortunebreakdown breakdown={fortune} />
 	</div>
-	<div class="flex flex-col gap-3 mx-2">
+	<div class="mx-2 flex flex-col gap-3">
 		{#each Object.entries(slots) as [slot] (slot)}
 			{@const piece = set.getPiece(slot as GearSlot)}
 			{@const best = !set.slotOptions[slot as GearSlot].some((p) =>
 				'potential' in p
-					? p.potential > (!piece ? 0 : 'potential' in piece ? piece.potential ?? 0 : 0)
+					? p.potential > (!piece ? 0 : 'potential' in piece ? (piece.potential ?? 0) : 0)
 					: p.fortune > (piece?.fortune ?? 0)
 			)}
 			{#if piece}
-				<div class="flex justify-between items-center w-full">
+				<div class="flex w-full items-center justify-between">
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<span class="text-lg font-semibold">{@html FormatMinecraftText(piece.item.name ?? '')}</span>
-					<div class="flex flex-row gap-2 items-center">
+					<div class="flex flex-row items-center gap-2">
 						{#if !best}
 							<Popover.Mobile>
 								{#snippet trigger()}

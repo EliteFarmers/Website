@@ -10,12 +10,7 @@
 		profileId: string;
 	}
 
-	let {
-		ign = $bindable(),
-		rank,
-		members,
-		profileId
-	}: Props = $props();
+	let { ign = $bindable(), rank, members, profileId }: Props = $props();
 
 	$effect.pre(() => {
 		ign = ign ?? $page.params.id;
@@ -27,7 +22,7 @@
 
 <Popover.Mobile hasContent={activeMembers.length > 0}>
 	{#snippet trigger()}
-		<div class="p-2 bg-primary-foreground rounded-md" id="playerName">
+		<div class="rounded-md bg-primary-foreground p-2" id="playerName">
 			<h1 class="text-2xl md:text-3xl">
 				{#if rank && plus}
 					<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span
@@ -45,7 +40,7 @@
 			{#each activeMembers ?? [] as member}
 				<a
 					href={`/@${member.uuid}/${profileId}`}
-					class="p-2 text-xl font-semibold flex gap-4 justify-between hover:bg-muted rounded-sm"
+					class="flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"
 				>
 					<span>{member.username}</span>
 					<span class="font-normal">{member.farmingWeight?.toLocaleString()}</span>

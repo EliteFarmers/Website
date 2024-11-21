@@ -16,12 +16,16 @@
 	const selectedCrops = getSelectedCrops();
 
 	let data = $state<Record<string, { name: string; data: { x: number; y: number }[] }>>({});
-	let graphData = $derived(Object.values(data).filter(
-		({ name }) =>
-			name !== 'seeds' &&
-			(!$anyCropSelected ||
-				$selectedCrops[PROPER_CROP_NAME[name as keyof typeof PROPER_CROP_NAME] as keyof typeof selectedCrops])
-	));
+	let graphData = $derived(
+		Object.values(data).filter(
+			({ name }) =>
+				name !== 'seeds' &&
+				(!$anyCropSelected ||
+					$selectedCrops[
+						PROPER_CROP_NAME[name as keyof typeof PROPER_CROP_NAME] as keyof typeof selectedCrops
+					])
+		)
+	);
 	let colors = $derived(graphData.map(({ name }) => CROP_TO_HEX[name] ?? '#000000'));
 
 	$effect(() => {

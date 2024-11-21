@@ -18,16 +18,16 @@
 
 <Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />
 
-<main class="flex flex-col justify-center items-center text-center my-16" data-sveltekit-preload-data="tap">
+<main class="my-16 flex flex-col items-center justify-center text-center" data-sveltekit-preload-data="tap">
 	{#if events.length > 0}
-		<section class="flex flex-col gap-8 w-[90%] md:w-[70%] max-w-7xl my-16 dark:text-white">
+		<section class="my-16 flex w-[90%] max-w-7xl flex-col gap-8 dark:text-white md:w-[70%]">
 			<h1 class="text-2xl md:text-4xl">Join Public Events</h1>
 			{#each events ?? [] as event (event.id)}
 				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} />
 			{/each}
 		</section>
 	{/if}
-	<section class="flex flex-col gap-8 w-[90%] md:w-[70%] max-w-7xl my-16 dark:text-white">
+	<section class="my-16 flex w-[90%] max-w-7xl flex-col gap-8 dark:text-white md:w-[70%]">
 		<h1 class="text-2xl md:text-4xl">Explore Public Discord Servers</h1>
 		{#if pinned}
 			<Serverbar guild={pinned} />

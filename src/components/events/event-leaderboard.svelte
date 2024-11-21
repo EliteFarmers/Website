@@ -10,12 +10,7 @@
 		members: components['schemas']['EventMemberDetailsDto'][];
 	}
 
-	let {
-		highlightUuid = undefined,
-		running = false,
-		event,
-		members
-	}: Props = $props();
+	let { highlightUuid = undefined, running = false, event, members }: Props = $props();
 </script>
 
 <Accordion.Root type="single" class="w-full" value={highlightUuid}>
@@ -24,8 +19,8 @@
 		<Accordion.Item
 			value={key}
 			id={key}
-			class="px-1 w-full {highlightUuid === member.playerUuid
-				? 'border-2 border-blue-400 rounded-md'
+			class="w-full px-1 {highlightUuid === member.playerUuid
+				? 'rounded-md border-2 border-blue-400'
 				: 'border-none'}"
 		>
 			<EventMember {member} rank={i + 1} {running} {event} />

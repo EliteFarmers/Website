@@ -14,8 +14,8 @@
 	<DropdownMenu.Trigger
 		class={cn(
 			buttonVariants({
-				variant: "ghost",
-				class: "px-1 py-0 text-base focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0",
+				variant: 'ghost',
+				class: 'px-1 py-0 text-base focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0',
 			})
 		)}
 	>
@@ -28,7 +28,7 @@
 			<DropdownMenu.Item onclick={() => setMode(option)}>
 				<span class="capitalize">{option}</span>
 				{#if $mode === option}
-					<Check class="w-4 h-4 ml-2" />
+					<Check class="ml-2 h-4 w-4" />
 				{/if}
 			</DropdownMenu.Item>
 		{/each}

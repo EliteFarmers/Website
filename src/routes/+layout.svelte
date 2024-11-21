@@ -53,7 +53,7 @@
 	<ModeWatcher />
 {/if}
 
-<div class="relative flex flex-col min-h-screen">
+<div class="relative flex min-h-screen flex-col">
 	<Nav />
 
 	<div class="flex-1">

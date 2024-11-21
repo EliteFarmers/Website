@@ -23,9 +23,9 @@
 	}
 
 	let { text = '', size = undefined, class: className = undefined }: Props = $props();
-	
+
 	let iconSize = $state(20);
-	
+
 	$effect(() => {
 		if (size === 'sm') iconSize = 16;
 		if (size === 'lg') iconSize = 24;

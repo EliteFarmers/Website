@@ -8,12 +8,7 @@
 		children?: import('svelte').Snippet;
 	}
 
-	let {
-		href,
-		text = undefined,
-		icon = true,
-		children
-	}: Props = $props();
+	let { href, text = undefined, icon = true, children }: Props = $props();
 </script>
 
 <a {href} class="inline-block text-blue-500 decoration-blue-500">

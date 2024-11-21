@@ -11,12 +11,7 @@
 		weight?: components['schemas']['FarmingWeightDto'] | undefined;
 	}
 
-	let {
-		style,
-		ign,
-		uuid,
-		weight = undefined
-	}: Props = $props();
+	let { style, ign, uuid, weight = undefined }: Props = $props();
 
 	let canvas: HTMLCanvasElement | null = $state(null);
 	let promise: Promise<unknown> | undefined = $state();

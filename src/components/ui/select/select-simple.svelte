@@ -42,7 +42,15 @@
 	let selected = $derived(value != null ? options.find((x) => x.value === value) : undefined);
 </script>
 
-<Primitive.Root type="single" bind:open {disabled} {required} {name} onValueChange={() => change(value || undefined)} bind:value={value as string | undefined}>
+<Primitive.Root
+	type="single"
+	bind:open
+	{disabled}
+	{required}
+	{name}
+	onValueChange={() => change(value || undefined)}
+	bind:value={value as string | undefined}
+>
 	<Select.Trigger {id} {...rest}>
 		{#if selected}
 			{@render item(selected)}
@@ -50,7 +58,7 @@
 			<span>{placeholder}</span>
 		{/if}
 	</Select.Trigger>
-	<Select.Content class="p-0 w-[400px] max-h-96 overflow-y-auto overscroll-y-contain">
+	<Select.Content class="max-h-96 w-[400px] overflow-y-auto overscroll-y-contain p-0">
 		{#each options as o (o.value)}
 			<Select.Item value={o.value.toString()}>
 				{@render item(o)}
@@ -60,9 +68,9 @@
 </Primitive.Root>
 
 {#snippet item(option: Option<T>)}
-	<div class="flex flex-row gap-1 items-center">
+	<div class="flex flex-row items-center gap-1">
 		{#if option.color}
-			<div class="w-4 h-4 rounded-sm" style="background-color: {option.color}"></div>
+			<div class="h-4 w-4 rounded-sm" style="background-color: {option.color}"></div>
 		{/if}
 		<span>{option.label}</span>
 	</div>

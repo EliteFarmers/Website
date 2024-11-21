@@ -13,73 +13,78 @@
 	let firstPlaces = $derived(jacob?.firstPlaceScores ?? 0);
 
 	// Calculate which crop has the most contests and get the count
-	let highest = $derived(Object.entries(
-		jacob?.contests?.reduce((acc, contest) => {
-			if (!contest?.crop) return acc;
+	let highest = $derived(
+		Object.entries(
+			jacob?.contests?.reduce(
+				(acc, contest) => {
+					if (!contest?.crop) return acc;
 
-			if (contest.crop in acc) {
-				acc[contest.crop]++;
-			} else {
-				acc[contest.crop] = 1;
-			}
-			return acc;
-		}, {} as Record<string, number>) ?? {}
-	).reduce(
-		(acc, [crop, count]) => {
-			if (count > acc[1]) {
-				acc[0] = crop;
-				acc[1] = count;
-			}
-			return acc;
-		},
-		['', 0]
-	));
+					if (contest.crop in acc) {
+						acc[contest.crop]++;
+					} else {
+						acc[contest.crop] = 1;
+					}
+					return acc;
+				},
+				{} as Record<string, number>
+			) ?? {}
+		).reduce(
+			(acc, [crop, count]) => {
+				if (count > acc[1]) {
+					acc[0] = crop;
+					acc[1] = count;
+				}
+				return acc;
+			},
+			['', 0]
+		)
+	);
 </script>
 
-<div class="flex flex-col mb-2 gap-2">
-	<h1 class="text-2xl mb-0.5">General Stats</h1>
-	<div class="flex flex-col justify-center w-full md:flex-row gap-2 md:gap-4">
+<div class="mb-2 flex flex-col gap-2">
+	<h1 class="mb-0.5 text-2xl">General Stats</h1>
+	<div class="flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
 		<div
-			class="flex flex-row md:flex-col justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-primary-foreground"
+			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-1 text-center md:flex-col md:gap-1 md:p-2"
 		>
-			<div class="flex flex-row gap-2 items-baseline justify-center">
+			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if firstPlacesRank !== -1}
 					<a
 						href="/leaderboard/firstplace/{$page.params.id}-{$page.params.profile}"
-						class="pd-0.5 px-1.5 rounded-md hover:bg-muted bg-card"
+						class="pd-0.5 rounded-md bg-card px-1.5 hover:bg-muted"
 					>
-						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{firstPlacesRank}</span
 						>
 					</a>
 				{/if}
-				<p class="text-2xl mt-0">{firstPlaces.toLocaleString() ?? 0}</p>
+				<p class="mt-0 text-2xl">{firstPlaces.toLocaleString() ?? 0}</p>
 			</div>
-			<h2 class="text-sm md:text-md leading-none">First Place Contests</h2>
+			<h2 class="md:text-md text-sm leading-none">First Place Contests</h2>
 		</div>
 		<div
-			class="flex flex-row md:flex-col align-bottom justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-primary-foreground"
+			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-1 text-center align-bottom md:flex-col md:gap-1 md:p-2"
 		>
-			<div class="flex flex-row gap-2 items-baseline justify-center">
+			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if participationsRank !== -1}
 					<a
 						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
-						class="pd-0.5 px-1.5 rounded-md hover:bg-muted bg-card"
+						class="pd-0.5 rounded-md bg-card px-1.5 hover:bg-muted"
 					>
-						<span class="text-sm xs:text-md sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{participationsRank}</span
 						>
 					</a>
 				{/if}
-				<p class="text-2xl mt-0">{jacob?.participations?.toLocaleString() ?? 0}</p>
+				<p class="mt-0 text-2xl">{jacob?.participations?.toLocaleString() ?? 0}</p>
 			</div>
-			<h2 class="text-sm md:text-md leading-none">Contests Participated</h2>
+			<h2 class="md:text-md text-sm leading-none">Contests Participated</h2>
 		</div>
 		<div
-			class="flex flex-row md:flex-col justify-center items-center gap-3 md:gap-1 p-1 md:p-2 rounded-md text-center w-full bg-primary-foreground"
+			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-1 text-center md:flex-col md:gap-1 md:p-2"
 		>
 			<p class="text-2xl">{highest[1] !== 0 ? highest[1].toLocaleString() : 'N/A'}</p>
-			<h2 class="text-sm md:text-md leading-none">
+			<h2 class="md:text-md text-sm leading-none">
 				{highest[1] !== 0 ? `${highest[0]} Contest${highest[1] > 1 ? 's' : ''}` : highest[0]}
 			</h2>
 		</div>

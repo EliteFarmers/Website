@@ -18,22 +18,24 @@
 		class?: string;
 	}
 
-	let { 
+	let {
 		value = $bindable<DateValue | undefined>(),
 		minValue = $bindable<DateValue | undefined>(undefined),
-		maxValue = $bindable<DateValue | undefined>(undefined), 
-		class: className = ''
+		maxValue = $bindable<DateValue | undefined>(undefined),
+		class: className = '',
 	}: Props = $props();
 </script>
 
 <Popover.Root>
-	<Popover.Trigger class={cn(
-		buttonVariants({
-		  variant: "outline",
-		  class: cn("w-[280px] justify-start text-left font-normal", className)
-		}),
-		!value && "text-muted-foreground"
-	  )}>
+	<Popover.Trigger
+		class={cn(
+			buttonVariants({
+				variant: 'outline',
+				class: cn('w-[280px] justify-start text-left font-normal', className),
+			}),
+			!value && 'text-muted-foreground'
+		)}
+	>
 		<CalendarIcon class="mr-2 h-4 w-4" />
 		{value ? df.format(value.toDate(getLocalTimeZone())) : 'Select a date'}
 	</Popover.Trigger>

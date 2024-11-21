@@ -11,13 +11,7 @@
 		teams: components['schemas']['EventTeamWithMembersDto'][];
 	}
 
-	let {
-		highlightUuid = undefined,
-		highlightTeam = undefined,
-		running = false,
-		event,
-		teams
-	}: Props = $props();
+	let { highlightUuid = undefined, highlightTeam = undefined, running = false, event, teams }: Props = $props();
 </script>
 
 <Accordion.Root type="single" class="w-full" value={highlightTeam}>

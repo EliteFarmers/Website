@@ -11,12 +11,7 @@
 		shown?: number;
 	}
 
-	let {
-		tools,
-		garden = undefined,
-		pets = [],
-		shown = 10
-	}: Props = $props();
+	let { tools, garden = undefined, pets = [], shown = 10 }: Props = $props();
 
 	let currentShown = $state(shown);
 
@@ -36,7 +31,7 @@
 </script>
 
 {#if actualTools.length !== 0}
-	<div class="flex flex-1 flex-col gap-2 items-center">
+	<div class="flex flex-1 flex-col items-center gap-2">
 		{#each actualTools.slice(0, currentShown) as tool, i (tool.item.uuid ?? i)}
 			<Farmingtool {tool} />
 		{/each}

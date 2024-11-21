@@ -13,19 +13,19 @@
 </script>
 
 <a
-	class="m-1 max-w-64 inline-block bg-primary-foreground rounded-md hover:drop-shadow-lg shadow-primary"
+	class="m-1 inline-block max-w-64 rounded-md bg-primary-foreground shadow-primary hover:drop-shadow-lg"
 	href="/shop/{product.id}"
 >
-	<div class="flex flex-col min-w-0 justify-start items-center gap-4">
-		<div class="grid min-h-32 drop-shadow-lg w-full rounded-md items-center justify-center">
+	<div class="flex min-w-0 flex-col items-center justify-start gap-4">
+		<div class="grid min-h-32 w-full items-center justify-center rounded-md drop-shadow-lg">
 			{#if image}
-				<img src={image} alt={product.name} class="w-32 h-32 rounded-sm object-cover" />
+				<img src={image} alt={product.name} class="h-32 w-32 rounded-sm object-cover" />
 			{:else}
 				<Package size={64} />
 			{/if}
 		</div>
-		<div class="flex flex-row gap-2 justify-between pb-2 pt-1 px-2">
-			<p class="text-xl overflow-hidden text-ellipsis pr-4">{product.name}</p>
+		<div class="flex flex-row justify-between gap-2 px-2 pb-2 pt-1">
+			<p class="overflow-hidden text-ellipsis pr-4 text-xl">{product.name}</p>
 			<ProductPrice {product} />
 		</div>
 	</div>

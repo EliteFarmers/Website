@@ -21,7 +21,7 @@
 
 <Popover.Mobile>
 	{#snippet trigger()}
-		<div  class="image-container bg-muted p-1 md:p-2 lg:p-3 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20">
+		<div class="image-container h-12 w-12 bg-muted p-1 sm:h-16 sm:w-16 md:h-20 md:w-20 md:p-2 lg:p-3">
 			<div class="image" style="background-position: 100% {1000 - 100 * index}%;"></div>
 			<div class="tier-border">
 				{#each tiers as tier, i}
@@ -35,16 +35,16 @@
 					></div>
 				{/each}
 			</div>
-			<div class="bg-primary-foreground absolute tier-cover"></div>
+			<div class="tier-cover absolute bg-primary-foreground"></div>
 		</div>
 	{/snippet}
 
-	<div class="flex flex-col justify-center items-center max-w-lg">
-		<div class="text-lg text-center my-2 mx-4">Unlocked {name} Minion Tiers</div>
-		<div class="grid grid-cols-6 gap-1 justify-center items-center max-w-52">
+	<div class="flex max-w-lg flex-col items-center justify-center">
+		<div class="mx-4 my-2 text-center text-lg">Unlocked {name} Minion Tiers</div>
+		<div class="grid max-w-52 grid-cols-6 items-center justify-center gap-1">
 			{#each tiers as tier, i}
 				<div
-					class="flex flex-row px-1 justify-center text-lg rounded-sm {tier === '1'
+					class="flex flex-row justify-center rounded-sm px-1 text-lg {tier === '1'
 						? maxed
 							? 'bg-yellow-400 dark:bg-yellow-600'
 							: 'bg-green-400 dark:bg-green-600'
@@ -59,13 +59,13 @@
 
 <style lang="postcss">
 	.image-container {
-		@apply flex align-middle justify-center rounded-lg object-cover;
+		@apply flex justify-center rounded-lg object-cover align-middle;
 		aspect-ratio: 1 / 1 !important;
 		position: relative;
 	}
 
 	.tier-border {
-		@apply grid absolute rounded-lg w-full h-full top-0 left-0;
+		@apply absolute left-0 top-0 grid h-full w-full rounded-lg;
 		grid-template-areas:
 			'a10 a11 a0 a1'
 			'a9 . . a2'
@@ -85,7 +85,7 @@
 	}
 
 	.image {
-		@apply rounded-lg inline-block w-16 aspect-square;
+		@apply inline-block aspect-square w-16 rounded-lg;
 		background-image: url(/images/cropatlas.webp);
 		background-size: 200% 1000%;
 		z-index: 3;

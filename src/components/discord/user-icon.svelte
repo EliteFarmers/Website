@@ -6,12 +6,12 @@
 		user: AuthorizedUser;
 		class?: string;
 	}
-	
-	let { class: className = 'size-12', user }: props = $props(); 
+
+	let { class: className = 'size-12', user }: props = $props();
 </script>
 
 {#if !user.avatar}
-	<div class="{className} rounded-full flex items-center justify-center select-none bg-blend-darken bg-black">
+	<div class="{className} flex select-none items-center justify-center rounded-full bg-black bg-blend-darken">
 		<UserRound />
 	</div>
 {:else}

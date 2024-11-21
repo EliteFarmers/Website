@@ -17,7 +17,7 @@
 
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
-	
+
 	let collections = $derived(data?.collections);
 	let member = $derived(data.member);
 	let profile = $derived(data.profile);
@@ -25,39 +25,43 @@
 	let ign = $derived(data.account?.name);
 	let weightRank = $derived(data.ranks?.misc?.farmingweight ?? -1);
 
-	let farmingXp = $derived(getLevelProgress(
-		'farming',
-		member?.skills?.farming ?? 0,
-		(member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
-	));
+	let farmingXp = $derived(
+		getLevelProgress(
+			'farming',
+			member?.skills?.farming ?? 0,
+			(member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
+		)
+	);
 	let showSkills = $derived($page.url.href.includes('#Skills'));
 
-	let weightStr =
-		$derived(member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!');
+	let weightStr = $derived(
+		member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'
+	);
 
 	let description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
-		`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
-		`📜 Farming Level - ${farmingXp.level}` +
-		`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming?.toLocaleString()})` : ''}\n` +
-		`⠀⤷ ${(member?.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
-		`\n⭐ Skyblock Level - ${(member?.skyblockXp ?? 0) / 100}` +
-		`${
-			(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
-		}\n\n` +
-		(collections
-			?.sort((a, b) => b.weight - a.weight)
-			.slice(0, 3)
-			.map((c) => {
-				const crop = getCropFromName(c.key) ?? Crop.Wheat;
-				const rank = data.ranks?.collections?.[c.key] ?? -1;
+			`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
+			`📜 Farming Level - ${farmingXp.level}` +
+			`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming?.toLocaleString()})` : ''}\n` +
+			`⠀⤷ ${(member?.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
+			`\n⭐ Skyblock Level - ${(member?.skyblockXp ?? 0) / 100}` +
+			`${
+				(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
+			}\n\n` +
+			(collections
+				?.sort((a, b) => b.weight - a.weight)
+				.slice(0, 3)
+				.map((c) => {
+					const crop = getCropFromName(c.key) ?? Crop.Wheat;
+					const rank = data.ranks?.collections?.[c.key] ?? -1;
 
-				return (
-					`${CROP_UNICODE_EMOJIS[crop]} ${getCropDisplayName(crop)} - ${c.value.toLocaleString()}` +
-					`${rank > 0 ? ` (#${rank.toLocaleString()})` : ''}`
-				);
-			})
-			.join('\n') ?? ''));
+					return (
+						`${CROP_UNICODE_EMOJIS[crop]} ${getCropDisplayName(crop)} - ${c.value.toLocaleString()}` +
+						`${rank > 0 ? ` (#${rank.toLocaleString()})` : ''}`
+					);
+				})
+				.join('\n') ?? '')
+	);
 </script>
 
 <Head
@@ -70,8 +74,8 @@
 
 <APIstatus api={member?.api} />
 
-<section class="flex items-center justify-center my-2 mb-16" id="Skills">
-	<div class="flex flex-1 max-w-7xl w-full">
+<section class="my-2 mb-16 flex items-center justify-center" id="Skills">
+	<div class="flex w-full max-w-7xl flex-1">
 		<Skills
 			open={showSkills}
 			skills={member?.skills}
@@ -82,8 +86,8 @@
 	</div>
 </section>
 
-<section class="flex w-full justify-center align-middle my-8">
-	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
+<section class="my-8 flex w-full justify-center align-middle">
+	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">
 		<Collections {collections} ranks={data.ranks ?? {}} />
 		{#if member?.farmingWeight?.inventory?.tools?.length || member?.events?.length}
 			<div class="flex flex-1 flex-col gap-2">

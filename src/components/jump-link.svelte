@@ -9,12 +9,7 @@
 		class?: string;
 	}
 
-	let {
-		id,
-		size = 20,
-		self = true,
-		class: className = ''
-	}: Props = $props();
+	let { id, size = 20, self = true, class: className = '' }: Props = $props();
 </script>
 
 <Button
