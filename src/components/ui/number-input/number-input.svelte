@@ -1,52 +1,44 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { InputEvents } from './index.js';
 	import { cn } from '$lib/utils.js';
 	import type { Action } from 'svelte/action';
 
-	type $$Props = HTMLInputAttributes;
-	type $$Events = InputEvents;
-
-	interface Props {
-		class?: $$Props['class'];
-		value?: $$Props['value'];
-		// Fixed in Svelte 5, but not backported to 4.x.
-		readonly?: $$Props['readonly'];
-		[key: string]: any
+	interface Props extends HTMLInputAttributes {
+		class?: string;
+		value?: number;
 	}
 
-	let { class: className = undefined, value = $bindable(undefined), readonly = undefined, ...rest }: Props = $props();
+	let { class: className = undefined, value = $bindable(undefined), ...rest }: Props = $props();
 
 	let previousN = value;
 
-	const validator: Action<HTMLInputElement, string> = (node, v) => {
+	const validator: Action<HTMLInputElement, number | undefined> = (node, v) => {
 		return {
 			update(v) {
 				if (!v) {
 					value = undefined;
-					previousN = 0;
+					previousN = undefined;
 					return;
 				}
 
 				if (isNaN(+v)) {
-					value = previousN.toString();
+					value = previousN;
+					return;
+				}
+
+				if (node.min && isFinite(+node.min) && +v < +node.min) {
+					value = +node.min;
 					previousN = value;
 					return;
 				}
 
-				if (node.min && +v < +node.min) {
-					value = node.min;
+				if (node.max && isFinite(+node.max) && +v > +node.max) {
+					value = +node.max;
 					previousN = value;
 					return;
 				}
 
-				if (node.max && +v > +node.max) {
-					value = node.max;
-					previousN = value;
-					return;
-				}
-
-				value = v;
+				value = +v;
 				previousN = value;
 			},
 		};
@@ -58,7 +50,6 @@
 		'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
 		className
 	)}
-	{readonly}
 	bind:value
 	type="text"
 	inputmode="numeric"
