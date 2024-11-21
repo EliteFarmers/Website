@@ -150,9 +150,7 @@
 	$effect(() => {
 		options = {
 			...untrack(() => $player.options),
-			selectedPet: $ratesData.selectedPet
-				? $player.pets.find((pet) => pet.pet.uuid === $ratesData.selectedPet)
-				: undefined,
+			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
 			exportableCrops: $ratesData.exported,
 			communityCenter: $ratesData.communityCenter,
