@@ -41,7 +41,7 @@
 		</Accordion.Root>
 		<div class="my-2 flex flex-col items-center justify-center gap-4 md:flex-row">
 			{#if entries.length > 10}
-				<Button variant="secondary" on:click={() => (expand = !expand)}
+				<Button variant="secondary" onclick={() => (expand = !expand)}
 					>{expand ? 'Collapse' : 'Show All'}</Button
 				>
 			{/if}
