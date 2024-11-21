@@ -4,8 +4,8 @@
 
 	interface Props {
 		jacob: components['schemas']['JacobDataDto'] | undefined;
-		participationsRank?: any;
-		firstPlacesRank?: any;
+		participationsRank?: number;
+		firstPlacesRank?: number;
 	}
 
 	let { jacob, participationsRank = -1, firstPlacesRank = -1 }: Props = $props();

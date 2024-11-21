@@ -10,13 +10,12 @@
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	
 	interface Props {
-		pets: FarmingPet[];
 		player: RatesPlayerStore;
 		selected?: FarmingPet | undefined;
 		onChange?: (uuid: string) => void;
 	}
 
-	let { pets, selected = $bindable(undefined), player, onChange = undefined }: Props = $props();
+	let { selected = $bindable(undefined), player, onChange = undefined }: Props = $props();
 
 	let show = $state(2);
 	let fortune = $state($player.selectedPet?.breakdown);
@@ -71,7 +70,7 @@
 	{/if}
 </div>
 <div class="grid flex-col gap-2 w-full mb-2 -mx-2">
-	{#each groups as [type, petId], i (type)}
+	{#each groups as [type, petId] (type)}
 		{@const pet = grouped[type].find((p) => p.pet.uuid === petId)}
 		{#if pet}
 			{@const selected = $player.selectedPet?.pet.uuid === pet.pet.uuid}

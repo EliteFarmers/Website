@@ -10,7 +10,7 @@
 	let {
 		opts = {},
 		plugins = [],
-		setApi = () => {},
+		setApi = () => undefined,
 		orientation = "horizontal",
 		class: className,
 		children,

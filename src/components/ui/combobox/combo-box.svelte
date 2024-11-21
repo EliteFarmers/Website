@@ -33,7 +33,7 @@
 		: options.filter((f) => !exclude.includes(f.value));
 
 	let open = $state(false);
-	let triggerRef = $state<HTMLButtonElement>(null!);
+	let triggerRef = $state<HTMLButtonElement | null>(null);
 
 	let selected = $derived(realOptions.find((f) => f.value === value) ?? { label: placeholder, value: '_' });
 
@@ -43,7 +43,7 @@
 	function closeAndFocusTrigger() {
 		open = false;
 		tick().then(() => {
-			triggerRef.focus();
+			triggerRef?.focus();
 		});
 	}
 </script>

@@ -1,15 +1,11 @@
 <script lang="ts">
 	import * as Command from '$ui/command';
-	import { Button } from '$ui/button';
+	import { Button, type ButtonProps } from '$ui/button';
 	import cn from 'classnames';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 
-	interface Props {
-		[key: string]: any
-	}
-
-	let { ...rest }: Props = $props();
+	let { ...rest }: ButtonProps = $props();
 
 	let open = $state(false);
 

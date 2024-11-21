@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Sheet from '$ui/sheet';
-	import { Button, buttonVariants } from '$ui/button';
+	import { buttonVariants } from '$ui/button';
 	import MobileLink from '$comp/header/mobile-link.svelte';
 	import Menu from 'lucide-svelte/icons/menu';
 	import { MOBILE_NAV } from '$content/nav';

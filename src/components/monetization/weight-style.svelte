@@ -18,10 +18,11 @@
 		weight = undefined
 	}: Props = $props();
 
-	let canvas: HTMLCanvasElement = $state(null!);
+	let canvas: HTMLCanvasElement | null = $state(null);
 	let promise: Promise<unknown> | undefined = $state();
 
 	onMount(async () => {
+		if (!canvas) return;
 		promise = createFromData(canvas, {
 			account: { name: ign, id: uuid },
 			profile: weight,

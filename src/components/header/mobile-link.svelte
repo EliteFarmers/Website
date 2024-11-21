@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
 
-	interface Props {
+	interface Props extends HTMLAnchorAttributes {
 		href: string;
 		open: boolean;
 		class?: string | undefined | null;
 		children?: import('svelte').Snippet;
-		[key: string]: any
 	}
 
 	let {

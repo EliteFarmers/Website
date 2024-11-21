@@ -2,7 +2,7 @@
 	import Check from 'lucide-svelte/icons/check';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
-	import { Button, buttonVariants } from '$ui/button';
+	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { resetMode, setMode, mode } from 'mode-watcher';
 	import { cn } from '$lib/utils';

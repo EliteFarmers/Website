@@ -432,7 +432,7 @@
 				<p class="text-lg font-semibold text-center">Select a crop to see its fortune!</p>
 			{/if}
 
-			<PetSelector {player} {pets} bind:selected={selectedPet} />
+			<PetSelector {player} bind:selected={selectedPet} />
 
 			<div class="flex justify-between items-center w-full pt-2">
 				<p class="text-lg font-semibold">Farming Tool</p>

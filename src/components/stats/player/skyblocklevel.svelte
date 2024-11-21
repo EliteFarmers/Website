@@ -5,7 +5,7 @@
 
 	interface Props {
 		xp: number;
-		rank?: any;
+		rank?: number;
 	}
 
 	let { xp, rank = -1 }: Props = $props();

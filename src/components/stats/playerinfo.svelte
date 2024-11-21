@@ -22,7 +22,7 @@
 		weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
 		weightRank: number;
 		skyblockXP: number;
-		skyblockRank?: any;
+		skyblockRank?: number;
 		badges: components['schemas']['UserBadgeDto'][] | undefined;
 	}
 

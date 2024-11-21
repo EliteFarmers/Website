@@ -1,5 +1,4 @@
 <script lang="ts">
-
 	interface Props {
 		hovering?: boolean;
 		percent?: number;
@@ -8,7 +7,7 @@
 		maxed?: boolean;
 		compact?: boolean;
 		barBg?: string;
-		class?: any;
+		class?: string;
 	}
 
 	let {

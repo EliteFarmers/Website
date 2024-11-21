@@ -7,7 +7,7 @@
 
 	interface Props {
 		crop?: string;
-		participants?: any;
+		participants?: number;
 		timestamp: number;
 		entries?: components['schemas']['StrippedContestParticipationDto'][];
 	}

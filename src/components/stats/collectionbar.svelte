@@ -10,11 +10,11 @@
 		weight: number;
 		pest: string;
 		pestKills: number;
-		pestRank?: any;
+		pestRank?: number;
 		uncounted?: number;
 		minionTierField: number;
 		key: string;
-		rank?: any;
+		rank?: number;
 	}
 
 	let {
