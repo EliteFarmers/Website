@@ -1,9 +1,14 @@
 <script lang="ts">
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let href: string;
-	export let text: string | undefined = undefined;
-	export let icon = true;
+	interface Props {
+		href: string;
+		text?: string | undefined;
+		icon?: boolean;
+		children?: import('svelte').Snippet;
+	}
+
+	let { href, text = undefined, icon = true, children }: Props = $props();
 </script>
 
 <a {href} class="inline-block text-blue-500 decoration-blue-500">
@@ -12,7 +17,7 @@
 			<span>{text}</span>
 		{:else}
 			<span>
-				<slot />
+				{@render children?.()}
 			</span>
 		{/if}
 		{#if icon}

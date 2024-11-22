@@ -3,11 +3,15 @@
 	import type ApexCharts from 'apexcharts';
 	import Loader from 'lucide-svelte/icons/loader';
 
-	export let options: ApexCharts.ApexOptions;
-	export let animate = true;
+	interface Props {
+		options: ApexCharts.ApexOptions;
+		animate?: boolean;
+	}
+
+	let { options, animate = true }: Props = $props();
 
 	let charts: typeof ApexCharts | null = null;
-	let loaded = false;
+	let loaded = $state(false);
 
 	const apex = (node: HTMLElement, options: ApexCharts.ApexOptions) => {
 		if (!charts || !loaded) return;
@@ -45,10 +49,10 @@
 	}
 </script>
 
-<div class="flex max-w-6xl w-full justify-center items-center">
+<div class="flex w-full max-w-6xl items-center justify-center">
 	{#if loaded}
-		<div class="w-full chart" use:apex={options} />
+		<div class="chart w-full" use:apex={options}></div>
 	{:else}
-		<Loader class="animate-spin my-4" />
+		<Loader class="my-4 animate-spin" />
 	{/if}
 </div>

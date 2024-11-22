@@ -5,17 +5,21 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Settings from 'lucide-svelte/icons/settings';
 
-	export let guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];
-	export let link = false;
+	interface Props {
+		guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];
+		link?: boolean;
+	}
+
+	let { guild, link = false }: Props = $props();
 </script>
 
-<div class="m-1 p-4 inline-block bg-primary-foreground rounded-md">
-	<div class="flex justify-between items-center">
-		<div class="flex flex-shrink min-w-0 justify-start items-center gap-4">
+<div class="m-1 inline-block rounded-md bg-primary-foreground p-4">
+	<div class="flex items-center justify-between">
+		<div class="flex min-w-0 flex-shrink items-center justify-start gap-4">
 			<GuildIcon {guild} />
-			<h1 class="text-xl overflow-hidden whitespace-nowrap text-ellipsis pr-4">{guild.name}</h1>
+			<h1 class="overflow-hidden text-ellipsis whitespace-nowrap pr-4 text-xl">{guild.name}</h1>
 		</div>
-		<div class="flex justify-end min-w-0 items-center gap-4">
+		<div class="flex min-w-0 items-center justify-end gap-4">
 			{#if link}
 				<Button href="/server/{guild.id}" class="m-1" variant="ghost">
 					<ExternalLink />

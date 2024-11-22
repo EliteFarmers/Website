@@ -6,76 +6,82 @@
 	import * as Popover from '$ui/popover';
 	import CircleAlert from 'lucide-svelte/icons/circle-alert';
 
-	export let rank = 0;
-	export let entry: components['schemas']['ContestParticipationWithTimestampDto'];
+	interface Props {
+		rank?: number;
+		entry: components['schemas']['ContestParticipationWithTimestampDto'];
+	}
+
+	let { rank = 0, entry }: Props = $props();
 </script>
 
 <Accordion.Item value={entry.timestamp + '' + entry.collected} class="mx-4">
-	<Accordion.Trigger class="flex gap-0 md:gap-2 justify-between w-full py-1">
+	<Accordion.Trigger class="flex w-full justify-between gap-0 py-1 md:gap-2">
 		<div
-			class="flex gap-1 sm:gap-2 justify-start align-middle items-center flex-grow mx-2 overflow-hidden whitespace-nowrap text-ellipsis"
+			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
 			<div class="text-green-800 dark:text-green-300">
 				<h3>
-					<span class="text-sm xs:text-md sm:text-2xl">#</span><span class="text-lg xs:text-xl sm:text-3xl"
+					<span class="xs:text-md text-sm sm:text-2xl">#</span><span class="xs:text-xl text-lg sm:text-3xl"
 						>{(rank ?? 0) + 1}</span
 					>
 				</h3>
 			</div>
 			{#if entry.removed}
 				<Popover.Mobile>
-					<div slot="trigger" class="mt-2">
-						<CircleAlert class="text-destructive" />
-					</div>
+					{#snippet trigger()}
+						<div class="mt-2">
+							<CircleAlert class="text-destructive" />
+						</div>
+					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
-						<p class="max-w-xs break-words whitespace-normal">
+						<p class="max-w-xs whitespace-normal break-words">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
 					</div>
 				</Popover.Mobile>
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
-			<div class="flex flex-col flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
-				<p class="inline-block text-sm xs:text-xl sm:text-2xl font-semibold text-start">{entry.playerName}</p>
+			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
+				<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl">{entry.playerName}</p>
 			</div>
 		</div>
-		<div class="flex gap-2 p-1 justify-end align-middle items-center mr-2 md:mx-2">
-			<div class="text-sm xs:text-xl sm:text-2xl font-mono">
+		<div class="mr-2 flex items-center justify-end gap-2 p-1 align-middle md:mx-2">
+			<div class="xs:text-xl font-mono text-sm sm:text-2xl">
 				{entry.collected?.toLocaleString()}
 			</div>
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<div class="flex flex-row justify-between items-center px-2">
+		<div class="flex flex-row items-center justify-between px-2">
 			<div class="flex flex-col text-lg">
-				<p class="text-lg p-1">
+				<p class="p-1 text-lg">
 					{#if entry.position !== -1}
-						<span class="text-sm xs:text-lg sm:text-xl text-green-800 dark:text-green-300">#</span><span
-							class="text-lg xs:text-xl sm:text-2xl text-green-800 dark:text-green-300"
+						<span class="xs:text-lg text-sm text-green-800 dark:text-green-300 sm:text-xl">#</span><span
+							class="xs:text-xl text-lg text-green-800 dark:text-green-300 sm:text-2xl"
 							>{(entry.position ?? 0) + 1}</span
 						>
 					{:else}
-						<span class="text-sm xs:text-md sm:text-2xl text-green-800 dark:text-green-300">???</span>
+						<span class="xs:text-md text-sm text-green-800 dark:text-green-300 sm:text-2xl">???</span>
 					{/if}
-					<span class="text-sm xs:text-md sm:text-2xl">
+					<span class="xs:text-md text-sm sm:text-2xl">
 						/ {entry.participants?.toLocaleString() ?? '???'}</span
 					>
 				</p>
-				<p class="text-sm font-light font-mono text-center">
-					<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
+				<p class="text-center font-mono text-sm font-light">
+					<span class="whitespace-nowrap rounded-md bg-gray-200 p-1 dark:bg-zinc-900">
 						{new Date((entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
 							timeStyle: 'short',
 							dateStyle: 'short',
 							timeZone: 'UTC',
 						})}
 					</span>
-					<span class="bg-gray-200 dark:bg-zinc-900 p-1 rounded-md whitespace-nowrap">
+					<span class="whitespace-nowrap rounded-md bg-gray-200 p-1 dark:bg-zinc-900">
 						{getReadableSkyblockMonthDay(entry.timestamp ?? 0)}
 					</span>
 				</p>
 			</div>
-			<div class="flex flex-col sm:flex-row gap-1">
+			<div class="flex flex-col gap-1 sm:flex-row">
 				<Button href="/contest/{entry.timestamp}" color="alternative" size="sm">Contest</Button>
 				<Button href="/@{entry.playerUuid}/{entry.profileUuid}" color="alternative" size="sm">Stats</Button>
 			</div>

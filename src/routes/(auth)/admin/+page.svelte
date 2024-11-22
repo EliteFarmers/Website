@@ -12,58 +12,62 @@
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import type { ActionData, PageData } from './$types';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	let manageMemberModal = false;
-	let promoteMemberModal = false;
+	let { data, form }: Props = $props();
 
-	$: selectedPermission = '';
+	let manageMemberModal = $state(false);
+	let promoteMemberModal = $state(false);
 
-	$: selectedMemberId = '';
-	$: selectedMember = data.admins?.find((a) => a.id === selectedMemberId) ?? null;
+	let selectedPermission = $state('');
+	let selectedMemberId = $state('');
+
+	let selectedMember = $derived(data.admins?.find((a) => a.id === selectedMemberId) ?? null);
 </script>
 
 <Head title="Admin Settings" description="Admin config page." />
 
-<main class="flex flex-col gap-2 justify-start my-16">
-	<h1 class="text-4xl mb-16">Admin Panel</h1>
+<main class="my-16 flex flex-col justify-start gap-2">
+	<h1 class="mb-16 text-4xl">Admin Panel</h1>
 
 	{#if form?.error}
 		<p class="text-lg text-red-500">{form.error}</p>
 	{/if}
 
-	<section class="flex flex-col gap-4 w-full max-w-2xl items-start">
-		<div class="flex flex-col gap-4 w-full">
+	<section class="flex w-full max-w-2xl flex-col items-start gap-4">
+		<div class="flex w-full flex-col gap-4">
 			{#each data.admins as user}
 				<div
-					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-gray-100 dark:bg-zinc-800"
+					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:flex-row"
 				>
-					<div class="flex flex-row gap-4 items-center">
-						<UserIcon {user} size={16} />
+					<div class="flex flex-row items-center gap-4">
+						<UserIcon {user} class="size-12" />
 						<div class="flex flex-col">
 							<p class="text-xl">{user.username}</p>
 							<p>{user.id}</p>
 						</div>
 					</div>
-					<div class="flex flex-row gap-4 pr-2 items-center">
+					<div class="flex flex-row items-center gap-4 pr-2">
 						<div class="flex flex-wrap gap-2 text-right">
 							{#each user.roles ?? [] as role}
 								<p>{role}</p>
 							{/each}
 						</div>
 						<Popover.Mobile>
-							<div slot="trigger">
+							{#snippet trigger()}
 								<Button
 									class="max-h-12"
-									on:click={() => {
+									onclick={() => {
 										manageMemberModal = true;
 										selectedMemberId = user.id ?? '';
 									}}
 								>
 									<Settings size={16} />
 								</Button>
-							</div>
+							{/snippet}
 							<div>Manage Permissions</div>
 						</Popover.Mobile>
 					</div>
@@ -71,7 +75,7 @@
 			{/each}
 		</div>
 		<Button
-			on:click={() => {
+			onclick={() => {
 				promoteMemberModal = true;
 			}}
 		>
@@ -109,7 +113,7 @@
 				/>
 			</div>
 
-			<div class="flex flex-row gap-2 items-center">
+			<div class="flex flex-row items-center gap-2">
 				<Button type="submit" formaction="?/promote">Add Role</Button>
 				<Button type="submit" formaction="?/demote">Remove Role</Button>
 			</div>
@@ -131,12 +135,12 @@
 				};
 			}}
 		>
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Discord User ID</Label>
 				<Input name="id" placeholder="Discord User ID" maxlength={20} />
 			</div>
 
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Role</Label>
 				<Select.Simple
 					options={data.roles.map((p) => ({

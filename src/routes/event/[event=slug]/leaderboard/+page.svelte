@@ -11,50 +11,59 @@
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: event = data.event ?? {};
-	$: guild = data.guild;
-	$: members = data.members ?? [];
-	$: teams = data.teams ?? [];
-	$: teamEvent = teams.length > 0;
+	let { data }: Props = $props();
 
-	let swapMode = false;
+	let event = $derived(data.event ?? {});
+	let guild = $derived(data.guild);
+	let members = $derived(data.members ?? []);
+	let teams = $derived(data.teams ?? []);
+	let teamEvent = $derived(teams.length > 0);
+
+	let swapMode = $state(false);
 
 	function swapLeaderboard() {
 		swapMode = !swapMode;
 	}
 
-	$: highlightUuid = $page.url.hash.slice(1);
-	$: highlightTeam =
+	let highlightUuid = $derived($page.url.hash.slice(1));
+	let highlightTeam = $derived(
 		teams?.find((team) => team.members?.some((member) => member.playerUuid === highlightUuid))?.id?.toString() ??
-		undefined;
+			undefined
+	);
 
-	$: running = +(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now();
-	$: joinable = +(event.joinUntilTime ?? 0) * 1000 > Date.now();
+	let running = $derived(+(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now());
+	let joinable = $derived(+(event.joinUntilTime ?? 0) * 1000 > Date.now());
 
-	$: topList = teamEvent
-		? teams
-				.slice(0, 5)
-				.map((team, i) => `${i + 1}. ${team.name} • ${(+(team?.score ?? 0)).toLocaleString()}`)
-				.join('\n')
-		: members
-				.slice(0, 5)
-				.map((member, i) => `${i + 1}. ${member.playerName} • ${(+(member?.score ?? 0)).toLocaleString()}`)
-				.join('\n');
+	let topList = $derived(
+		teamEvent
+			? teams
+					.slice(0, 5)
+					.map((team, i) => `${i + 1}. ${team.name} • ${(+(team?.score ?? 0)).toLocaleString()}`)
+					.join('\n')
+			: members
+					.slice(0, 5)
+					.map((member, i) => `${i + 1}. ${member.playerName} • ${(+(member?.score ?? 0)).toLocaleString()}`)
+					.join('\n')
+	);
 
-	$: description = `View the leaderboard for ${running ? 'the Event happening' : 'a past Event'} in ${
-		data.guild?.name
-	}!\n\n${topList}`;
+	let description = $derived(
+		`View the leaderboard for ${running ? 'the Event happening' : 'a past Event'} in ${
+			data.guild?.name
+		}!\n\n${topList}`
+	);
 </script>
 
 <Head title={(event.name || 'Farming Weight Event') + ' Leaderboard'} {description} imageUrl={guild?.icon?.url} />
 
-<main class="flex flex-col justify-center items-center gap-8 mb-16" data-sveltekit-preload-data="tap">
-	<section class="flex flex-col gap-4 max-w-4xl bg-primary-foreground rounded-md p-8 mt-16 w-full items-center">
-		<h2 class="text-2xl md:text-4xl text-center">{event.name}</h2>
-		<p class="md:text-lg text-center"><Linebreaks text={event.description ?? ''} /></p>
-		<div class="flex flex-row justify-center gap-2 mt-4 max-w-2xl w-full items-center">
+<main class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
+	<section class="mt-16 flex w-full max-w-4xl flex-col items-center gap-4 rounded-md bg-primary-foreground p-8">
+		<h2 class="text-center text-2xl md:text-4xl">{event.name}</h2>
+		<p class="text-center md:text-lg"><Linebreaks text={event.description ?? ''} /></p>
+		<div class="mt-4 flex w-full max-w-2xl flex-row items-center justify-center gap-2">
 			<Button href="/server/{guild?.id}/join" color="blue" size="sm" class="flex-1">
 				<p class="mr-2">Join Discord</p>
 				<ExternalLink size={16} />
@@ -69,18 +78,18 @@
 			</Button>
 		</div>
 	</section>
-	<div class="flex flex-col lg:flex-row gap-8 max-w-5xl w-full">
-		<section class="flex flex-col gap-4 w-full items-center bg-primary-foreground rounded-md p-8">
-			<div class="flex flex-row gap-8 items-center justify-center w-full">
+	<div class="flex w-full max-w-5xl flex-col gap-8 lg:flex-row">
+		<section class="flex w-full flex-col items-center gap-4 rounded-md bg-primary-foreground p-8">
+			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
-					<Button on:click={swapLeaderboard} variant="secondary" size="sm">
+					<Button onclick={swapLeaderboard} variant="secondary" size="sm">
 						<ArrowLeftRight size={20} />
 						<span class="sr-only">Swap Leaderboard</span>
 					</Button>
 				{/if}
 				{#if !teamEvent || (teamEvent && swapMode)}
 					<h2 class="text-2xl">Members</h2>
-					<div class="flex flex-row gap-2 font-semibold items-center">
+					<div class="flex flex-row items-center gap-2 font-semibold">
 						<p class="text-2xl">
 							{members.length?.toLocaleString()}
 						</p>
@@ -88,7 +97,7 @@
 					</div>
 				{:else}
 					<h2 class="text-2xl">Teams</h2>
-					<div class="flex flex-row gap-2 font-semibold items-center">
+					<div class="flex flex-row items-center gap-2 font-semibold">
 						<p class="text-2xl">
 							{teams.length?.toLocaleString()}
 						</p>
@@ -96,13 +105,13 @@
 					</div>
 				{/if}
 			</div>
-			<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4 w-full">
+			<div class="flex w-full max-w-7xl flex-wrap gap-4 md:mx-32">
 				{#if (!teamEvent || swapMode) && members.length > 0}
 					<EventLeaderboard {highlightUuid} {running} {event} {members} />
 				{:else if teams.length > 0}
 					<EventTeamLeaderboard {highlightUuid} {highlightTeam} {running} {event} {teams} />
 				{:else}
-					<p class="max-w-lg text-center my-16">
+					<p class="my-16 max-w-lg text-center">
 						This Event does not have any members signed up right now! Login to be the first!
 					</p>
 				{/if}

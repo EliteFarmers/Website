@@ -4,18 +4,22 @@
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 
-	export let record: components['schemas']['GuildJacobLeaderboardEntry'];
+	interface Props {
+		record: components['schemas']['GuildJacobLeaderboardEntry'];
+	}
 
-	$: contest = record.record;
+	let { record }: Props = $props();
+
+	let contest = $derived(record.record);
 </script>
 
-<Accordion.Root>
+<Accordion.Root type="single">
 	<Accordion.Item value="contest">
 		<Accordion.Trigger class="py-0">
-			<div class="flex flex-col md:flex-row gap-2 justify-between p-2 items-center w-full">
-				<div class="flex flex-row gap-2 items-center">
+			<div class="flex w-full flex-col items-center justify-between gap-2 p-2 md:flex-row">
+				<div class="flex flex-row items-center gap-2">
 					<img
-						class="w-8 pixelated"
+						class="pixelated w-8"
 						src="https://mc-heads.net/avatar/{record.uuid}/8"
 						alt="{record.ign} Player Head"
 					/>
@@ -25,8 +29,8 @@
 			</div>
 		</Accordion.Trigger>
 		<Accordion.Content>
-			<div class="flex flex-col gap-4 justify-between items-center py-1">
-				<div class="flex flex-col gap-1 items-center">
+			<div class="flex flex-col items-center justify-between gap-4 py-1">
+				<div class="flex flex-col items-center gap-1">
 					<span class="font-semibold">{getReadableSkyblockDate(contest?.timestamp ?? 0)}</span>
 					<span class="font-semibold">
 						{new Date((contest?.timestamp ?? 0) * 1000).toLocaleString(undefined, {
@@ -35,7 +39,7 @@
 						})}
 					</span>
 				</div>
-				<div class="flex flex-wrap align-middle gap-2">
+				<div class="flex flex-wrap gap-2 align-middle">
 					<Button size="sm" href="/@{record.uuid}" variant="secondary">
 						<span>View Stats</span>
 					</Button>

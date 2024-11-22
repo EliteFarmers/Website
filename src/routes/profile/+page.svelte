@@ -8,29 +8,34 @@
 	import type { PageData, ActionData } from './$types';
 	import MinecraftAccount from './minecraftAccount.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
-	let loading = false;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: user = data.user || undefined;
-	$: primary = user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined;
-	$: secondary = user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || [];
+	let { data, form }: Props = $props();
+	let loading = $state(false);
 
-	$: discordUsername =
-		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username;
+	let user = $derived(data.user || undefined);
+	let primary = $derived(user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined);
+	let secondary = $derived(user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || []);
+
+	let discordUsername = $derived(
+		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username
+	);
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="flex flex-col justify-start gap-12 my-16 mx-2">
+<main class="mx-2 my-16 flex flex-col justify-start gap-12">
 	<section class="flex flex-col items-start gap-4">
-		<h1 class="text-3xl mb-4">Discord Account</h1>
+		<h1 class="mb-4 text-3xl">Discord Account</h1>
 		{#key loading}
 			<DiscordAccount account={user} />
 		{/key}
 	</section>
 	<section class="flex flex-col items-start gap-4">
-		<h2 class="text-2xl mb-4">Primary Minecraft Account</h2>
+		<h2 class="mb-4 text-2xl">Primary Minecraft Account</h2>
 
 		{#if primary}
 			<MinecraftAccount mc={primary} />
@@ -44,7 +49,7 @@
 		</p>
 	</section>
 	<section class="flex flex-col items-start gap-4">
-		<h2 class="text-2xl mb-4">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
+		<h2 class="mb-4 text-2xl">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
 
 		{#if secondary.length > 0}
 			{#each secondary as mc, i (mc.id ?? i)}
@@ -55,7 +60,7 @@
 		{/if}
 	</section>
 	<section class="flex flex-col items-start gap-4">
-		<h2 class="text-2xl mb-4">Link/Unlink an Account</h2>
+		<h2 class="mb-4 text-2xl">Link/Unlink an Account</h2>
 
 		<!-- Form to input username to link account -->
 		<form
@@ -72,17 +77,17 @@
 				};
 			}}
 		>
-			<div class="flex flex-col gap-4 items-center w-full">
-				<div class="grid col-span-1 relative w-full">
+			<div class="flex w-full flex-col items-center gap-4">
+				<div class="relative col-span-1 grid w-full">
 					<Input
 						type="text"
 						name="username"
-						class="w-full px-4 py-2 border-2 roundedtext-center"
+						class="roundedtext-center w-full border-2 px-4 py-2"
 						placeholder="Enter your Minecraft username"
 						disabled={loading}
 					/>
 				</div>
-				<div class="flex flex-col lg:flex-row gap-2 w-full">
+				<div class="flex w-full flex-col gap-2 lg:flex-row">
 					<Button type="submit" formaction="?/link" class="flex-1" variant="secondary" disabled={loading}>
 						Link Account
 					</Button>
@@ -91,7 +96,7 @@
 					</Button>
 				</div>
 				{#if form?.error}
-					<span class="text-red-600 text-sm"
+					<span class="text-sm text-red-600"
 						>{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span
 					>
 				{/if}
@@ -99,15 +104,16 @@
 		</form>
 
 		{#if !user?.minecraftAccounts?.length}
-			<div class="text-center flex flex-col">
-				<h1 class="text-lg py-2">
-					Ensure <span class="text-green-500 select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
+			<div class="flex flex-col text-center">
+				<h1 class="py-2 text-lg">
+					Ensure <span class="select-all text-green-500">{discordUsername}</span> is linked in Hypixel.net as follows:
 				</h1>
-				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4" />
-				<h1 class="text-md py-2">
-					(Enter <span class="text-green-500 select-all">{discordUsername}</span>, the video is just the
-					example)
-				</h1>
+				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4">
+					<h1 class="text-md py-2">
+						(Enter <span class="select-all text-green-500">{discordUsername}</span>, the video is just the
+						example)
+					</h1>
+				</video>
 			</div>
 		{/if}
 	</section>

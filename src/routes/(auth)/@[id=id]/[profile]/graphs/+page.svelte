@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ActionData, PageData } from './$types';
-	import { getLocalTimeZone, today } from '@internationalized/date';
+	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 	import { applyAction, enhance } from '$app/forms';
 	import { DatePicker } from '$ui/date-picker';
 	import { Checkbox } from '$ui/checkbox';
@@ -11,34 +11,41 @@
 	import Graph from '$comp/charts/collectiongraph.svelte';
 	import Head from '$comp/head.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: collectionGraph = form?.graph ?? data.collectionGraph ?? [];
+	let { data = $bindable(), form }: Props = $props();
 
-	$: tz = getLocalTimeZone();
+	let collectionGraph = $derived(form?.graph ?? data.collectionGraph ?? []);
 
-	let initEnd = today(tz);
-	let initStart = initEnd.subtract({ days: 14 });
+	let tz = $derived(getLocalTimeZone());
+	let initEnd = $derived(today(tz));
+	let initStart = $derived(initEnd.subtract({ days: 14 }));
 
-	let showAll = false;
-	let disabled = false;
+	let showAll = $state(false);
+	let disabled = $state(false);
 
-	$: value = initStart;
+	let value = $state<CalendarDate>((() => initStart)());
 
-	$: startTime = Math.floor(value.toDate(tz).getTime() / 1000);
+	$effect.pre(() => {
+		value = initStart;
+	});
+
+	let startTime = $derived(Math.floor(value.toDate(tz).getTime() / 1000));
 </script>
 
 <Head title="Player Charts" description="Admin page to view player stats" />
 
-<main class="flex flex-col gap-2 justify-center items-center my-16">
+<main class="my-16 flex flex-col items-center justify-center gap-2">
 	<h1 class="text-4xl">{data.account?.name} | {data.selectedProfile?.profileName}</h1>
 	<p>Discord ID: {data.account?.discordId}</p>
 	<p>Discord: {data.account?.discordUsername}</p>
 
 	<Cropselector />
 
-	<div class="flex flex-col gap-4 w-full items-center">
+	<div class="flex w-full flex-col items-center gap-4">
 		<Graph points={collectionGraph} />
 		<form
 			method="post"
@@ -54,16 +61,16 @@
 		>
 			<input type="hidden" bind:value={data.account.id} name="uuid" />
 			<input type="hidden" bind:value={data.selectedProfile.profileId} name="profile" />
-			<input type="hidden" bind:value={startTime} name="start" />
+			<input type="hidden" value={startTime} name="start" />
 			<input type="hidden" bind:value={showAll} name="all" />
 			<input type="hidden" value={7} name="days" />
 
-			<div class="flex flex-col gap-2 items-center">
-				<div class="flex flex-row gap-2 items-center">
+			<div class="flex flex-col items-center gap-2">
+				<div class="flex flex-row items-center gap-2">
 					<DatePicker bind:value />
-					<Button type="submit" variant="default" bind:disabled>Update</Button>
+					<Button type="submit" variant="default" {disabled}>Update</Button>
 				</div>
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					<Checkbox bind:checked={showAll} id="check" />
 					<Label for="check">Load all points</Label>
 				</div>

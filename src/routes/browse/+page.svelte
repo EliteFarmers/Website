@@ -5,25 +5,29 @@
 	import Head from '$comp/head.svelte';
 	import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
 
-	export let data: PageData;
-	$: events = data.events ?? [];
+	interface Props {
+		data: PageData;
+	}
 
-	$: pinned = (data.guilds ?? []).find((g) => g.id === PUBLIC_COMMUNITY_ID);
-	$: guilds = (data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID);
+	let { data }: Props = $props();
+	let events = $derived(data.events ?? []);
+
+	let pinned = $derived((data.guilds ?? []).find((g) => g.id === PUBLIC_COMMUNITY_ID));
+	let guilds = $derived((data.guilds ?? []).filter((g) => g.id !== PUBLIC_COMMUNITY_ID));
 </script>
 
 <Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />
 
-<main class="flex flex-col justify-center items-center text-center my-16" data-sveltekit-preload-data="tap">
+<main class="my-16 flex flex-col items-center justify-center text-center" data-sveltekit-preload-data="tap">
 	{#if events.length > 0}
-		<section class="flex flex-col gap-8 w-[90%] md:w-[70%] max-w-7xl my-16 dark:text-white">
+		<section class="my-16 flex w-[90%] max-w-7xl flex-col gap-8 dark:text-white md:w-[70%]">
 			<h1 class="text-2xl md:text-4xl">Join Public Events</h1>
 			{#each events ?? [] as event (event.id)}
 				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} />
 			{/each}
 		</section>
 	{/if}
-	<section class="flex flex-col gap-8 w-[90%] md:w-[70%] max-w-7xl my-16 dark:text-white">
+	<section class="my-16 flex w-[90%] max-w-7xl flex-col gap-8 dark:text-white md:w-[70%]">
 		<h1 class="text-2xl md:text-4xl">Explore Public Discord Servers</h1>
 		{#if pinned}
 			<Serverbar guild={pinned} />

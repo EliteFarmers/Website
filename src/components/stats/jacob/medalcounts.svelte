@@ -1,18 +1,31 @@
 <script lang="ts">
-	export let medals = {
-		diamond: 0,
-		platinum: 0,
-		gold: 0,
-		silver: 0,
-		bronze: 0,
-	};
-	export let participations = 0;
+	interface Props {
+		medals?: {
+			diamond: number;
+			platinum: number;
+			gold: number;
+			silver: number;
+			bronze: number;
+		};
+		participations?: number;
+	}
+
+	let {
+		medals = {
+			diamond: 0,
+			platinum: 0,
+			gold: 0,
+			silver: 0,
+			bronze: 0,
+		},
+		participations = 0,
+	}: Props = $props();
 </script>
 
-<div class="flex flex-col md:flex-row gap-2 md:gap-4 justify-evenly">
+<div class="flex flex-col justify-evenly gap-2 md:flex-row md:gap-4">
 	{#if participations}
 		<div
-			class="flex items-baseline flex-1 justify-center gap-2 rounded-md p-2 md:px-4 bg-gray-100 dark:bg-zinc-800"
+			class="flex flex-1 items-baseline justify-center gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:px-4"
 		>
 			<p class="text-2xl font-semibold text-red-700">
 				{participations.toLocaleString()}
@@ -22,9 +35,9 @@
 	{/if}
 	{#each Object.entries(medals) as [medal, amount] (medal)}
 		<div
-			class="flex items-center flex-1 basis-8 justify-center gap-2 rounded-md p-2 md:px-4 bg-gray-100 dark:bg-zinc-800"
+			class="flex flex-1 basis-8 items-center justify-center gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:px-4"
 		>
-			<img src="/images/medals/{medal}.webp" alt="Medal" class="w-8 h-8 pixelated" />
+			<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-8 w-8" />
 			<p class="text-2xl font-semibold">
 				{amount.toLocaleString()}
 			</p>

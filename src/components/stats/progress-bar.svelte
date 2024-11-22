@@ -1,21 +1,32 @@
 <script lang="ts">
-	export let hovering = false;
-	export let percent = 0;
-	export let readable = '';
-	export let expanded: string | undefined = undefined;
-	export let maxed = false;
-	export let compact = false;
-	export let barBg = 'bg-card';
+	interface Props {
+		hovering?: boolean;
+		percent?: number;
+		readable?: string;
+		expanded?: string | undefined;
+		maxed?: boolean;
+		compact?: boolean;
+		barBg?: string;
+		class?: string;
+	}
 
-	let className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold';
-	export { className as class };
+	let {
+		hovering = $bindable(false),
+		percent = 0,
+		readable = '',
+		expanded = undefined,
+		maxed = false,
+		compact = false,
+		barBg = 'bg-card',
+		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold',
+	}: Props = $props();
 </script>
 
-<div class="flex flex-1 flex-row items-center w-full">
+<div class="flex w-full flex-1 flex-row items-center">
 	<div
-		class="relative block w-full {compact ? 'h-5 rounded-md' : 'h-6 md:my-1 rounded-lg'} {barBg}"
-		on:mouseenter={() => (hovering = true)}
-		on:mouseleave={() => (hovering = false)}
+		class="relative block w-full {compact ? 'h-5 rounded-md' : 'h-6 rounded-lg md:my-1'} {barBg}"
+		onmouseenter={() => (hovering = true)}
+		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
 		<div
@@ -23,8 +34,8 @@
 				? 'bg-yellow-400 dark:bg-yellow-600'
 				: 'bg-green-400 dark:bg-green-600'}"
 			style={`width: ${Math.min(percent, 100)}%`}
-		/>
-		<div class="absolute flex items-center justify-center w-full h-full">
+		></div>
+		<div class="absolute flex h-full w-full items-center justify-center">
 			<p class={className}>{hovering && expanded ? expanded : readable}</p>
 		</div>
 	</div>

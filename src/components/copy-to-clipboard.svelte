@@ -4,15 +4,7 @@
 	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
 	import { Button } from '$ui/button';
 
-	export let text = '';
-	export let size: 'default' | 'sm' | 'lg' | 'icon' | undefined = undefined;
-	let copyPromise: Promise<void> | null = null;
-
-	$: iconSize = 20;
-	$: {
-		if (size === 'sm') iconSize = 16;
-		if (size === 'lg') iconSize = 24;
-	}
+	let copyPromise: Promise<void> | null = $state(null);
 
 	function copy() {
 		copyPromise = navigator.clipboard
@@ -24,11 +16,23 @@
 		}, 3000);
 	}
 
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	interface Props {
+		text?: string;
+		size?: 'default' | 'sm' | 'lg' | 'icon' | undefined;
+		class?: string | undefined | null;
+	}
+
+	let { text = '', size = undefined, class: className = undefined }: Props = $props();
+
+	let iconSize = $state(20);
+
+	$effect(() => {
+		if (size === 'sm') iconSize = 16;
+		if (size === 'lg') iconSize = 24;
+	});
 </script>
 
-<Button variant="link" on:click={copy} {size} class={className}>
+<Button variant="link" onclick={copy} {size} class={className}>
 	{#if copyPromise}
 		{#await copyPromise}
 			<LoaderCircle class="animate-spin" size={iconSize} />

@@ -7,5 +7,14 @@
 	"semi": true,
 	"bracketSpacing": true,
 	"arrowParens": "always",
-	"endOfLine": "lf"
+	"endOfLine": "lf",
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	]
 }

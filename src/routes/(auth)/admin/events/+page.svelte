@@ -4,20 +4,24 @@
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <Head title="Events" description="Manage events" />
 
 <main class="my-16">
-	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
-		<h1 class="text-4xl mb-16">Events</h1>
+	<section class="my-8 flex w-full max-w-2xl flex-col gap-4">
+		<h1 class="mb-16 text-4xl">Events</h1>
 
 		<h2 class="text-2xl">Pending Events</h2>
-		<div class="flex flex-col gap-4 w-full">
+		<div class="flex w-full flex-col gap-4">
 			{#each data.pending as event (event.id)}
 				<div
-					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-primary-foreground"
+					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-primary-foreground p-2 md:flex-row"
 				>
 					<div class="flex flex-col gap-2">
 						<h3 class="text-lg">{event.name}</h3>
@@ -38,12 +42,12 @@
 		</div>
 	</section>
 
-	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
+	<section class="my-8 flex w-full max-w-2xl flex-col gap-4">
 		<h2 class="text-2xl">Current Events</h2>
-		<div class="flex flex-col gap-4 w-full">
+		<div class="flex w-full flex-col gap-4">
 			{#each data.upcoming as event (event.id)}
 				<div
-					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-primary-foreground"
+					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-primary-foreground p-2 md:flex-row"
 				>
 					<div class="flex flex-col gap-2">
 						<h3 class="text-lg">{event.name}</h3>

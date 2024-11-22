@@ -319,11 +319,11 @@ function mapPosition(canvas: HTMLCanvasElement, position: Position, offset?: Fin
 		? {
 				x: offset.x + offset.width + getValue(position.x, canvas.width),
 				y: offset.y - offset.height + getValue(position.y, canvas.height),
-		  }
+			}
 		: {
 				x: getValue(position.x, canvas.width),
 				y: getValue(position.y, canvas.height),
-		  };
+			};
 }
 
 function mapPositions(canvas: HTMLCanvasElement, start: Position, end: Position, offset?: FinalSize) {
@@ -335,7 +335,7 @@ function mapPositions(canvas: HTMLCanvasElement, start: Position, end: Position,
 				y2: offset.y - offset.height + getValue(end.y, canvas.height),
 				width: 0,
 				height: 0,
-		  }
+			}
 		: {
 				x1: getValue(start.x, canvas.width),
 				y1: getValue(start.y, canvas.height),
@@ -343,7 +343,7 @@ function mapPositions(canvas: HTMLCanvasElement, start: Position, end: Position,
 				y2: getValue(end.y, canvas.height),
 				width: 0,
 				height: 0,
-		  };
+			};
 
 	positions.width = Math.abs(positions.x2 - positions.x1);
 	positions.height = Math.abs(positions.y2 - positions.y1);

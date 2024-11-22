@@ -17,28 +17,34 @@
 	import type { PageData, ActionData } from './$types';
 	import { onMount } from 'svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: product = data.product;
-	let loading = false;
-	let deleteProductImageModal = false;
+	let { data, form }: Props = $props();
 
-	$: selectedColors = product?.features?.embedColors ?? [];
-	$: selectedImageId = '';
+	let product = $derived(data.product);
+	let loading = $state(false);
+	let deleteProductImageModal = $state(false);
 
-	$: changedSettings = {
+	let selectedColors = $state<string[]>(data.product?.features?.embedColors ?? []);
+	let selectedImageId = $state('');
+
+	let changedSettings = $derived({
 		shopPromotions: false,
 		styleOverride: false,
 		moreInfo: false,
 		badgeId: '',
 		available: false,
-	};
+	});
 
-	$: styles = product.weightStyles?.map((s) => ({
-		value: (s.id ?? 0).toString(),
-		label: s.name,
-	}));
+	let styles = $derived(
+		product.weightStyles?.map((s) => ({
+			value: (s.id ?? 0).toString(),
+			label: s.name,
+		}))
+	);
 
 	onMount(() => {
 		changedSettings.shopPromotions = product?.features?.hideShopPromotions ?? false;
@@ -48,15 +54,15 @@
 		changedSettings.available = product.available ?? false;
 	});
 
-	let newColor = '';
-	let isThumbnail = false;
+	let newColor = $state('');
+	let isThumbnail = $state(false);
 </script>
 
 <Head title="Product" description="Manage product" />
 
 <main class="my-16">
-	<section class="flex flex-col gap-4 w-full max-w-4xl my-8">
-		<div class="flex flex-row items-center gap-4 mb-8">
+	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
+		<div class="mb-8 flex flex-row items-center gap-4">
 			<h1 class="text-4xl">{product.name}</h1>
 			<ProductPrice {product} />
 		</div>
@@ -70,12 +76,12 @@
 				<img
 					src={product.thumbnail.url}
 					alt={product.thumbnail.title ?? 'Product thumbnail'}
-					class="w-32 h-32 object-cover rounded-md"
+					class="h-32 w-32 rounded-md object-cover"
 				/>
 			{/if}
 			{#each product.images ?? [] as image}
-				<div class="flex flex-col gap-2 items-center">
-					<img src={image.url} alt={image.title} class="w-32 h-32 object-cover rounded-md" />
+				<div class="flex flex-col items-center gap-2">
+					<img src={image.url} alt={image.title} class="h-32 w-32 rounded-md object-cover" />
 					<div class="flex flex-row items-center gap-2">
 						{#if image.title}
 							<p>{image.title}</p>
@@ -84,7 +90,7 @@
 						<Button
 							variant="destructive"
 							size="sm"
-							on:click={() => {
+							onclick={() => {
 								selectedImageId = image.url ?? '';
 								deleteProductImageModal = true;
 							}}
@@ -103,21 +109,21 @@
 			<p class="text-red-500">{form.error}</p>
 		{/if}
 
-		<div class="flex flex-col lg:flex-row gap-4 w-full">
-			<form method="post" action="?/updateProduct" class="flex flex-col gap-4 flex-1" use:enhance>
+		<div class="flex w-full flex-col gap-4 lg:flex-row">
+			<form method="post" action="?/updateProduct" class="flex flex-1 flex-col gap-4" use:enhance>
 				<input type="hidden" name="product" bind:value={product.id} />
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Product Description</Label>
 					<Textarea name="description" bind:value={product.description} maxlength={1024} />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Product Price</Label>
 					<Input name="price" bind:value={product.price} placeholder="299" />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Rewarded Badge</Label>
 					<SelectSimple
 						options={data.badges.map((b) => ({
@@ -130,31 +136,31 @@
 					/>
 				</div>
 
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					<Switch bind:checked={changedSettings.shopPromotions} />
 					<Label>Hide shop promotions</Label>
 					<input type="hidden" name="promotions" bind:value={changedSettings.shopPromotions} />
 				</div>
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					<Switch bind:checked={changedSettings.styleOverride} />
 					<Label>Apply Weight Style on everyone</Label>
 					<input type="hidden" name="override" bind:value={changedSettings.styleOverride} />
 				</div>
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					<Switch bind:checked={changedSettings.moreInfo} />
 					<Label>"More Info" in weight command by default</Label>
 					<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<p class="mt-1 font-semibold">Unlocked Embed Colors</p>
 					{#each selectedColors as color}
 						<input type="hidden" name="color" value={color} />
-						<div class="flex flex-row gap-2 items-center">
+						<div class="flex flex-row items-center gap-2">
 							<Button
 								variant="secondary"
 								size="sm"
-								on:click={() => {
+								onclick={() => {
 									selectedColors = selectedColors.filter((c) => c !== color);
 								}}
 							>
@@ -163,12 +169,12 @@
 							<Label>{color}</Label>
 						</div>
 					{/each}
-					<div class="flex flex-row gap-2 items-center">
+					<div class="flex flex-row items-center gap-2">
 						<Input placeholder="Add Color" bind:value={newColor} />
 						<Button
 							variant="secondary"
 							size="sm"
-							on:click={() => {
+							onclick={() => {
 								selectedColors = [...selectedColors, newColor];
 							}}
 						>
@@ -177,7 +183,7 @@
 					</div>
 				</div>
 
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					<Switch bind:checked={changedSettings.available} />
 					<Label>Product Available</Label>
 					<input type="hidden" name="available" bind:value={changedSettings.available} />
@@ -189,27 +195,27 @@
 				method="post"
 				action="?/addImage"
 				enctype="multipart/form-data"
-				class="flex flex-col gap-4 flex-1"
+				class="flex flex-1 flex-col gap-4"
 				use:pending={loading}
 			>
 				<input type="hidden" name="product" bind:value={product.id} />
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Image</Label>
 					<Input type="file" name="image" accept=".png" />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Image Title</Label>
 					<Input name="title" placeholder="Title" />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Image Description</Label>
 					<Input name="description" placeholder="Description" />
 				</div>
 
-				<div class="flex flex-row gap-2 items-center">
+				<div class="flex flex-row items-center gap-2">
 					<Switch bind:checked={isThumbnail} />
 					<Label>Set as thumbnail</Label>
 					<input type="hidden" name="thumbnail" bind:value={isThumbnail} />
@@ -217,7 +223,7 @@
 
 				<Button type="submit" disabled={loading}>Add Image</Button>
 			</form>
-			<div class="flex flex-col flex-1 gap-4">
+			<div class="flex flex-1 flex-col gap-4">
 				<h2 class="text-xl font-semibold">Unlocked Styles</h2>
 
 				<div class="flex flex-col gap-2">
@@ -233,7 +239,7 @@
 				<form method="post" action="?/addCosmetic" class="flex flex-col gap-4" use:pending={loading}>
 					<input type="hidden" name="product" bind:value={product.id} />
 
-					<div class="flex flex-col gap-2 items-start">
+					<div class="flex flex-col items-start gap-2">
 						<Label>Rewarded Cosmetic</Label>
 						<SelectSimple
 							options={data.styles.map((b) => ({
@@ -264,7 +270,7 @@
 </main>
 
 <Dialog.Root bind:open={deleteProductImageModal}>
-	<Dialog.Content class="overflow-scroll max-h-[80%]">
+	<Dialog.Content class="max-h-[80%] overflow-scroll">
 		<Dialog.Title>Delete Product Image</Dialog.Title>
 		<form
 			action="?/deleteImage"

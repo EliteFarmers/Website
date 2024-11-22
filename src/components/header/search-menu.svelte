@@ -1,19 +1,13 @@
 <script lang="ts">
-	import Laptop from 'lucide-svelte/icons/laptop';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Sun from 'lucide-svelte/icons/sun';
 	import * as Command from '$ui/command';
-	import { Button } from '$ui/button';
+	import { Button, type ButtonProps } from '$ui/button';
 	import cn from 'classnames';
 	import { goto } from '$app/navigation';
-	import { resetMode, setMode } from 'mode-watcher';
 	import { browser } from '$app/environment';
 
-	let open = false;
+	let { ...rest }: ButtonProps = $props();
 
-	$: searchStr = '';
-	$: players = [] as string[];
-	$: search(searchStr);
+	let open = $state(false);
 
 	async function search(query: string) {
 		if (!browser) return [];
@@ -32,13 +26,20 @@
 		open = false;
 		cmd();
 	}
+
+	let searchStr = $state('');
+	let players = $state([] as string[]);
+
+	$effect(() => {
+		search(searchStr);
+	});
 </script>
 
 <Button
 	variant="outline"
 	class={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64')}
-	on:click={() => (open = true)}
-	{...$$restProps}
+	onclick={() => (open = true)}
+	{...rest}
 >
 	<span class="hidden lg:inline-flex"> Search For Player... </span>
 	<span class="inline-flex lg:hidden">Search...</span>
@@ -59,20 +60,6 @@
 						{player}
 					</Command.Item>
 				{/each}
-			</Command.Group>
-			<Command.Group heading="Theme">
-				<Command.Item value="light" onSelect={() => runCommand(() => setMode('light'))}>
-					<Sun class="mr-2 h-4 w-4" />
-					Light
-				</Command.Item>
-				<Command.Item value="dark" onSelect={() => runCommand(() => setMode('dark'))}>
-					<Moon class="mr-2 h-4 w-4" />
-					Dark
-				</Command.Item>
-				<Command.Item value="system" onSelect={() => runCommand(() => resetMode())}>
-					<Laptop class="mr-2 h-4 w-4" />
-					System
-				</Command.Item>
 			</Command.Group>
 		</Command.List>
 	</Command.Root>

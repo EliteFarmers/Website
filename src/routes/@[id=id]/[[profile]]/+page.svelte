@@ -16,85 +16,89 @@
 	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
-	export let data: PageData;
+	let { data }: { data: PageData } = $props();
 
-	$: uuid = data.account?.id;
-	$: ign = data.account?.name;
-	$: collections = data.collections;
-	$: weightRank = data.ranks?.misc?.farmingweight ?? -1;
-	$: profile = data.profile;
-	$: member = data.member ?? {};
+	let collections = $derived(data?.collections);
+	let member = $derived(data.member);
+	let profile = $derived(data.profile);
+	let uuid = $derived(data.account?.id);
+	let ign = $derived(data.account?.name);
+	let weightRank = $derived(data.ranks?.misc?.farmingweight ?? -1);
 
-	$: farmingXp = getLevelProgress(
-		'farming',
-		member.skills?.farming ?? 0,
-		(member.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
+	let farmingXp = $derived(
+		getLevelProgress(
+			'farming',
+			member?.skills?.farming ?? 0,
+			(member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
+		)
 	);
-	$: showSkills = $page.url.href.includes('#Skills');
+	let showSkills = $derived($page.url.href.includes('#Skills'));
 
-	$: weightStr =
-		member.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!';
+	let weightStr = $derived(
+		member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'
+	);
 
-	$: description =
+	let description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
-		`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
-		`📜 Farming Level - ${farmingXp.level}` +
-		`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming?.toLocaleString()})` : ''}\n` +
-		`⠀⤷ ${(member.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
-		`\n⭐ Skyblock Level - ${(member.skyblockXp ?? 0) / 100}` +
-		`${
-			(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
-		}\n\n` +
-		data.collections
-			.sort((a, b) => b.weight - a.weight)
-			.slice(0, 3)
-			.map((c) => {
-				const crop = getCropFromName(c.key) ?? Crop.Wheat;
-				const rank = data.ranks?.collections?.[c.key] ?? -1;
+			`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
+			`📜 Farming Level - ${farmingXp.level}` +
+			`${(data.ranks?.skills?.farming ?? -1) > 0 ? ` (#${data.ranks?.skills?.farming?.toLocaleString()})` : ''}\n` +
+			`⠀⤷ ${(member?.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
+			`\n⭐ Skyblock Level - ${(member?.skyblockXp ?? 0) / 100}` +
+			`${
+				(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
+			}\n\n` +
+			(collections
+				?.sort((a, b) => b.weight - a.weight)
+				.slice(0, 3)
+				.map((c) => {
+					const crop = getCropFromName(c.key) ?? Crop.Wheat;
+					const rank = data.ranks?.collections?.[c.key] ?? -1;
 
-				return (
-					`${CROP_UNICODE_EMOJIS[crop]} ${getCropDisplayName(crop)} - ${c.value.toLocaleString()}` +
-					`${rank > 0 ? ` (#${rank.toLocaleString()})` : ''}`
-				);
-			})
-			.join('\n');
+					return (
+						`${CROP_UNICODE_EMOJIS[crop]} ${getCropDisplayName(crop)} - ${c.value.toLocaleString()}` +
+						`${rank > 0 ? ` (#${rank.toLocaleString()})` : ''}`
+					);
+				})
+				.join('\n') ?? '')
+	);
 </script>
 
 <Head
-	title="{ign} ({profile.profileName}) | Farming Weight"
+	title="{ign} ({profile?.profileName}) | Farming Weight"
 	{description}
 	imageUrl="https://mc-heads.net/head/{uuid}/left.png"
 >
 	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>
 
-<APIstatus api={member.api} />
+<APIstatus api={member?.api} />
 
-<section class="flex items-center justify-center my-2 mb-16" id="Skills">
-	<div class="flex flex-1 max-w-7xl w-full">
+<section class="my-2 mb-16 flex items-center justify-center" id="Skills">
+	<div class="flex w-full max-w-7xl flex-1">
 		<Skills
 			open={showSkills}
-			skills={member.skills}
+			skills={member?.skills}
 			ranks={data.ranks}
-			levelCaps={data.member.unparsed?.levelCaps}
-			gardenXp={member.garden?.experience ?? 0}
+			levelCaps={member?.unparsed?.levelCaps}
+			gardenXp={member?.garden?.experience ?? 0}
 		/>
 	</div>
 </section>
 
-<section class="flex w-full justify-center align-middle my-8">
-	<div class="flex flex-col lg:flex-row gap-8 max-w-7xl w-full justify-center align-middle mx-2">
+<section class="my-8 flex w-full justify-center align-middle">
+	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">
 		<Collections {collections} ranks={data.ranks ?? {}} />
-		{#if member.farmingWeight?.inventory?.tools?.length || member.events?.length}
+		{#if member?.farmingWeight?.inventory?.tools?.length || member?.events?.length}
 			<div class="flex flex-1 flex-col gap-2">
-				{#each member.events ?? [] as event (event.eventId)}
+				{#each member?.events ?? [] as event (event.eventId)}
 					<ProfileEventMember member={event} ign={ign || ''} memberUuid={uuid ?? ''} />
 				{/each}
 				<Farmingtools
-					garden={member.garden}
-					tools={member.farmingWeight?.inventory?.tools ?? []}
-					pets={member.pets ?? []}
-					shown={10 - (member.events?.length ?? 0)}
+					garden={member?.garden}
+					tools={member?.farmingWeight?.inventory?.tools ?? []}
+					pets={member?.pets ?? []}
+					shown={10 - (member?.events?.length ?? 0)}
 				/>
 			</div>
 		{/if}
@@ -102,7 +106,7 @@
 </section>
 
 <JacobInfo
-	jacob={member.jacob}
+	jacob={member?.jacob}
 	ign={data.account?.name ?? ''}
 	ranks={{
 		gold: data.ranks?.misc?.goldmedals ?? -1,
@@ -115,4 +119,4 @@
 	}}
 />
 
-<Breakdown weight={member.farmingWeight} />
+<Breakdown weight={member?.farmingWeight} />

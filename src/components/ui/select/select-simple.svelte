@@ -1,6 +1,8 @@
 <!-- Credit: https://github.com/huntabyte/bits-ui/issues/235#issue-2042475148 -->
 
-<script lang="ts" context="module">
+<script lang="ts" module>
+	export type T = string | number;
+
 	export type Option<T = string | number> = {
 		value: T;
 		label: string;
@@ -8,66 +10,68 @@
 	};
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T extends string | number">
 	import { Select as Primitive } from 'bits-ui';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import * as Select from '.';
 
-	type T = $$Generic<string | number>;
-
-	type $$Props = HTMLButtonAttributes & {
+	interface Props extends Primitive.TriggerProps {
 		open?: boolean;
 		disabled?: boolean;
 		required?: boolean;
-		id?: string;
-		name?: string;
-		value?: T | null;
-		placeholder?: string;
+		id?: string | undefined;
+		name?: string | undefined;
 		options: Option<T>[];
-		change?: (value: T) => void;
-	};
-
-	export let open = false;
-	export let disabled = false;
-	export let required = false;
-
-	export let id: string | undefined = undefined;
-	export let name: string | undefined = undefined;
-
-	export let options: Option<T>[];
-	export let value: T | null | undefined = undefined;
-	export let placeholder = 'Select option';
-	export let change: (value: T) => void = () => undefined;
-
-	$: selected = value != null ? options.find((x) => x.value === value) : undefined;
-	$: display = selected ? selected.label : placeholder;
-
-	function onChange(option: unknown) {
-		let o = option as Option<T>;
-		if (o) {
-			value = o.value;
-			change?.(value);
-		}
+		value?: T | null | undefined;
+		placeholder?: string;
+		change?: (value?: T) => void;
 	}
+
+	let {
+		open = $bindable(false),
+		disabled = false,
+		required = false,
+		id = undefined,
+		name = undefined,
+		options,
+		value = $bindable(undefined),
+		placeholder = 'Select option',
+		change = () => undefined,
+		...rest
+	}: Props = $props();
+
+	let selected = $derived(value != null ? options.find((x) => x.value.toString() === value?.toString()) : undefined);
 </script>
 
-<Primitive.Root loop bind:open {disabled} {required} {name} {selected} onSelectedChange={onChange}>
-	<Select.Trigger {id} {...$$restProps}>
-		<Select.Value placeholder={display} class={(!value && 'text-muted-foreground') || ''} />
+<Primitive.Root
+	type="single"
+	bind:open
+	{disabled}
+	{required}
+	{name}
+	onValueChange={() => change(value || undefined)}
+	bind:value={value as string | undefined}
+>
+	<Select.Trigger {id} {...rest}>
+		{#if selected}
+			{@render item(selected)}
+		{:else}
+			<span>{placeholder}</span>
+		{/if}
 	</Select.Trigger>
-
-	<Select.Input />
-
-	<Select.Content class="p-0 w-[400px] max-h-96 overflow-y-auto overscroll-y-contain">
+	<Select.Content class="max-h-96 overflow-y-auto overscroll-y-contain p-0">
 		{#each options as o (o.value)}
-			<Select.Item value={o.value}>
-				<div class="flex flex-row gap-1 items-center">
-					{#if o.color}
-						<div class="w-4 h-4 rounded-sm" style="background-color: {o.color}" />
-					{/if}
-					<span>{o.label}</span>
-				</div>
+			<Select.Item value={o.value.toString()}>
+				{@render item(o)}
 			</Select.Item>
 		{/each}
 	</Select.Content>
 </Primitive.Root>
+
+{#snippet item(option: Option<T>)}
+	<div class="flex flex-row items-center gap-1">
+		{#if option.color}
+			<div class="h-4 w-4 rounded-sm" style="background-color: {option.color}"></div>
+		{/if}
+		<span>{option.label}</span>
+	</div>
+{/snippet}

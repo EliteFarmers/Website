@@ -3,20 +3,29 @@
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let jacob: components['schemas']['JacobDataDto'] | undefined | null;
+	interface Props {
+		jacob: components['schemas']['JacobDataDto'] | undefined | null;
+	}
 
-	$: highest = Object.entries(
-		jacob?.contests?.reduce((acc, contest) => {
-			if (!contest?.crop) return acc;
+	let { jacob }: Props = $props();
 
-			if (contest.crop in acc) {
-				acc[contest.crop]++;
-			} else {
-				acc[contest.crop] = 1;
-			}
-			return acc;
-		}, {} as Record<string, number>) ?? {}
-	).sort();
+	let highest = $derived(
+		Object.entries(
+			jacob?.contests?.reduce(
+				(acc, contest) => {
+					if (!contest?.crop) return acc;
+
+					if (contest.crop in acc) {
+						acc[contest.crop]++;
+					} else {
+						acc[contest.crop] = 1;
+					}
+					return acc;
+				},
+				{} as Record<string, number>
+			) ?? {}
+		).sort()
+	);
 
 	function pb(crop: string) {
 		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '') as keyof typeof jacob.stats.personalBests];
@@ -31,32 +40,32 @@
 	}
 </script>
 
-<div class="flex flex-wrap gap-4 items-center justify-center max-w-5xl">
+<div class="flex max-w-5xl flex-wrap items-center justify-center gap-4">
 	{#each highest as [crop, amount] (crop)}
 		{@const unique = medal(crop)}
 
-		<div class="flex-1 basis-48 flex flex-row justify-between bg-primary-foreground rounded-md p-2 items-center">
-			<div class="flex flex-row gap-2 items-center">
-				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="w-12 h-12 pixelated p-1" />
+		<div class="flex flex-1 basis-48 flex-row items-center justify-between rounded-md bg-primary-foreground p-2">
+			<div class="flex flex-row items-center gap-2">
+				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
 
 				<div class="flex flex-col items-start gap-1">
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<p class="text-lg leading-none">
 								{pb(crop)?.toLocaleString() ?? 'Not Set!'}
 							</p>
-						</div>
+						{/snippet}
 						<div>
 							<p>The highest placement earned for {crop}!</p>
 						</div>
 					</Popover.Mobile>
 
 					<Popover.Mobile>
-						<div slot="trigger">
-							<p class="text-lg leading-none participation-count">
+						{#snippet trigger()}
+							<p class="participation-count text-lg leading-none">
 								x{amount.toLocaleString()}
 							</p>
-						</div>
+						{/snippet}
 						<div>
 							<p>The amount of participations for {crop}!</p>
 						</div>
@@ -68,7 +77,7 @@
 				<img
 					src="/images/medals/{unique}.webp"
 					alt="{unique} Medal"
-					class="w-10 h-10 p-1 pixelated highest-bracket"
+					class="pixelated highest-bracket h-10 w-10 p-1"
 				/>
 			{/if}
 		</div>

@@ -9,7 +9,11 @@
 
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <Head
@@ -18,27 +22,27 @@
 />
 
 <main>
-	<h1 class="text-4xl text-center my-16">Welcome to Elite!</h1>
-	<p class="text-lg text-center mb-16">View farming stats of any skyblock player!</p>
+	<h1 class="my-16 text-center text-4xl">Welcome to Elite!</h1>
+	<p class="mb-16 text-center text-lg">View farming stats of any skyblock player!</p>
 
-	<div class="flex flex-col w-full items-center gap-8">
+	<div class="flex w-full flex-col items-center gap-8">
 		{#if data.eliteGuild}
 			<div class="w-full max-w-3xl">
 				<Serverbar guild={data.eliteGuild} lazy={false} />
 			</div>
 		{/if}
-		<div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+		<div class="flex flex-col items-center justify-center gap-4 md:flex-row">
 			<div class="flex flex-col items-center gap-4">
 				<Card.Root class="max-w-md">
 					<Card.Header>
 						<Card.Title class="text-xl">Join The Discord</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<p class="w-full mb-6 text-lg">
+						<p class="mb-6 w-full text-lg">
 							Full membership unlocked after reaching {(+PUBLIC_WEIGHT_REQ).toLocaleString()}
 							farming weight. Also, join the support server for suggestions and bug reports!
 						</p>
-						<div class="flex flex-col md:flex-row gap-2 justify-center">
+						<div class="flex flex-col justify-center gap-2 md:flex-row">
 							<Button
 								href="/discord"
 								class="w-fit font-semibold"
@@ -67,7 +71,7 @@
 						<Card.Title class="text-xl">Support Development!</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<p class="w-full mb-6 text-lg">
+						<p class="mb-6 w-full text-lg">
 							Donate on Ko-Fi to support the development of Elite! Also check Server Subscriptions on the
 							development server to unlock some perks!
 						</p>
@@ -92,7 +96,7 @@
 						<Card.Title class="text-xl">Add To Discord</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<p class="w-full mb-6 text-lg">
+						<p class="mb-6 w-full text-lg">
 							Quickly access stats and leaderboards in Discord! Try out commands like <strong
 								>/weight</strong
 							>, <strong>/rates</strong>, and <strong>/leaderboard</strong>!
@@ -116,7 +120,7 @@
 						<Card.Title class="text-xl">Purchase Crop Stickers!</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<p class="w-full mb-6 text-lg">
+						<p class="mb-6 w-full text-lg">
 							Direcly support the art on Elite by purchasing crop stickers! All proceeds go to the artist,
 							and you get a cool sticker!
 						</p>
@@ -138,17 +142,17 @@
 		</div>
 	</div>
 
-	<section class="flex justify-center mt-4 mb-10">
-		<div class="flex gap-2 flex-col items-center w-[90%] sm:w-[70%] md:w-[50%]" data-sveltekit-preload-data="tap">
-			<h1 class="w-full text-3xl p-4 text-center">Top Farmers</h1>
+	<section class="mb-10 mt-4 flex justify-center">
+		<div class="flex w-[90%] flex-col items-center gap-2 sm:w-[70%] md:w-[50%]" data-sveltekit-preload-data="tap">
+			<h1 class="w-full p-4 text-center text-3xl">Top Farmers</h1>
 			{#await data.lb}
 				<p>Loading...</p>
 			{:then lb}
 				{#each lb?.entries ?? [] as e, i}
 					<Entry entry={e} rank={i + 1} formatting={'decimal'} />
 				{/each}
-				<div class="flex justify-center w-full">
-					<Button href="/leaderboard/weight/farming" class="text-center max-w-md" variant="secondary"
+				<div class="flex w-full justify-center">
+					<Button href="/leaderboard/farmingweight" class="max-w-md text-center" variant="secondary"
 						>View Full Leaderboard
 					</Button>
 				</div>

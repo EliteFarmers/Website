@@ -8,11 +8,15 @@
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: guild = data.guild ?? {};
-	$: jacob = guild?.features?.jacobLeaderboard;
-	$: leaderboards = jacob?.leaderboards ?? [];
+	let { data }: Props = $props();
+
+	let guild = $derived(data.guild ?? {});
+	let jacob = $derived(guild?.features?.jacobLeaderboard);
+	let leaderboards = $derived(jacob?.leaderboards ?? []);
 </script>
 
 <Head
@@ -21,14 +25,14 @@
 	imageUrl={guild.icon?.url}
 />
 
-<main class="flex flex-col justify-center items-center gap-8 mb-16">
+<main class="mb-16 flex flex-col items-center justify-center gap-8">
 	<!-- Banner image -->
 	{#if guild?.banner?.url}
 		<div
-			class="relative flex flex-col items-center justify-center w-full h-64 bg-center bg-cover bg-no-repeat"
+			class="relative flex h-64 w-full flex-col items-center justify-center bg-cover bg-center bg-no-repeat"
 			style="background-image: url({guild.banner.url})"
 		>
-			<div class="flex flex-row p-4 items-center bg-zinc-900/75 gap-4 my-32 rounded-lg">
+			<div class="my-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 				<GuildIcon {guild} size={16} />
 				<h1 class="text-4xl text-white">
 					{guild?.name}
@@ -39,7 +43,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="flex flex-row items-center gap-4 my-16">
+		<div class="my-16 flex flex-row items-center gap-4">
 			<GuildIcon {guild} size={16} />
 			<h1 class="text-4xl">
 				{guild?.name}
@@ -59,23 +63,23 @@
 			.filter((e) => e.endTime && +e.endTime < now)
 			.sort((a, b) => +(b.endTime ?? 0) - +(a.endTime ?? 0))}
 
-		<section class="flex flex-col gap-4 items-center max-w-5xl w-full">
-			<h2 class="text-3xl my-4">Server Events</h2>
+		<section class="flex w-full max-w-5xl flex-col items-center gap-4">
+			<h2 class="my-4 text-3xl">Server Events</h2>
 			{#if upcoming.length > 0}
-				<div class="flex flex-col md:mx-32 gap-4 w-full">
+				<div class="flex w-full flex-col gap-4 md:mx-32">
 					{#each upcoming as event}
 						<Event {event} {guild} />
 					{/each}
 				</div>
 			{:else}
-				<p class="max-w-xl text-center my-2">This server does not have any upcoming events right now!</p>
+				<p class="my-2 max-w-xl text-center">This server does not have any upcoming events right now!</p>
 			{/if}
 
 			{#if past.length > 0}
-				<Accordion.Root>
+				<Accordion.Root type="single">
 					<Accordion.Item value="val" class="w-full">
 						<Accordion.Trigger>
-							<h2 class="text-3xl text-black dark:text-white w-full px-4">Past Events</h2>
+							<h2 class="w-full px-4 text-3xl text-black dark:text-white">Past Events</h2>
 						</Accordion.Trigger>
 						<Accordion.Content>
 							<div class="flex flex-col gap-2">
@@ -91,22 +95,22 @@
 	{/if}
 
 	<!-- Features -->
-	<section class="flex flex-col gap-4 items-center">
+	<section class="flex flex-col items-center gap-4">
 		<!-- <h2 class="text-3xl">Server Jacob Leaderboard{leaderboards.length === 1 ? '' : 's'}</h2> -->
 		{#if leaderboards.length > 0}
-			<div class="flex flex-wrap md:mx-32 max-w-7xl gap-4">
+			<div class="flex max-w-7xl flex-wrap gap-4 md:mx-32">
 				{#each leaderboards as leaderboard}
 					<Leaderboard {leaderboard} />
 				{/each}
 			</div>
 		{:else}
-			<p class="max-w-xl text-center my-16">
+			<p class="my-16 max-w-xl text-center">
 				This server does not have any Jacob Leaderboards setup right now! Ask the server admins to create one!
 			</p>
 		{/if}
 	</section>
 
-	<div class="mt-8 flex flex-col max-w-xl gap-4 text-center">
+	<div class="mt-8 flex max-w-xl flex-col gap-4 text-center">
 		<p class="mt-8">
 			Join the Discord server in order to submit entries! There may be requirements to participate, so make sure
 			to read the server's information!

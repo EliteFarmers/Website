@@ -8,26 +8,34 @@
 	import { enhance } from '$app/forms';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	$: pings = data.pings ?? {};
+	let { data, form }: Props = $props();
 
-	$: channels = (data.guild?.channels ?? [])
-		// Only allow text channels
-		.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
-		.map((c) => ({
-			value: c.id ?? '',
-			label: '#' + (c.name ?? ''),
-		}))
-		.filter((c) => c.value);
+	let pings = $derived(data.pings ?? {});
 
-	$: roles = (data.guild?.roles ?? [])
-		.map((r) => ({
-			value: r.id ?? '',
-			label: '@' + (r.name ?? ''),
-		}))
-		.filter((r) => r.value && r.label !== '@@everyone');
+	let channels = $derived(
+		(data.guild?.channels ?? [])
+			// Only allow text channels
+			.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
+			.map((c) => ({
+				value: c.id ?? '',
+				label: '#' + (c.name ?? ''),
+			}))
+			.filter((c) => c.value)
+	);
+
+	let roles = $derived(
+		(data.guild?.roles ?? [])
+			.map((r) => ({
+				value: r.id ?? '',
+				label: '@' + (r.name ?? ''),
+			}))
+			.filter((r) => r.value && r.label !== '@@everyone')
+	);
 </script>
 
 <Head title="Contest Pings" description="Manage upcoming Jacob Contest pings for your guild" />
@@ -35,7 +43,7 @@
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
-		<h1 class="text-4xl my-16">
+		<h1 class="my-16 text-4xl">
 			{data.guild?.name}
 		</h1>
 	</div>
@@ -46,9 +54,9 @@
 		</h5>
 	{/if}
 
-	<section class="flex flex-col gap-8 w-full justify-center items-center mb-16">
+	<section class="mb-16 flex w-full flex-col items-center justify-center gap-8">
 		<div
-			class="flex flex-col justify-center justify-items-center gap-4 w-[90%] md:w-[70%] max-w-screen-lg bg-primary-foreground rounded-md p-4"
+			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center gap-4 rounded-md bg-primary-foreground p-4 md:w-[70%]"
 		>
 			<h2 class="text-3xl">Upcoming Contest Ping Settings</h2>
 
@@ -72,8 +80,8 @@
 						name="pingrole"
 					/>
 				</div>
-				<div class="flex flex-col sm:flex-row gap-1 sm:gap-8 justify-center">
-					<div class="flex-1 flex flex-col gap-1">
+				<div class="flex flex-col justify-center gap-1 sm:flex-row sm:gap-8">
+					<div class="flex flex-1 flex-col gap-1">
 						<div class="space-y-2">
 							<Label>Cactus Ping Role</Label>
 							<Select.Simple
@@ -120,7 +128,7 @@
 							/>
 						</div>
 					</div>
-					<div class="flex-1 flex flex-col gap-1">
+					<div class="flex flex-1 flex-col gap-1">
 						<div class="space-y-2">
 							<Label>Pumpkin Ping Role</Label>
 							<Select.Simple
@@ -169,9 +177,9 @@
 					</div>
 				</div>
 				<div class="mt-2 flex flex-row gap-4">
-					<form method="post" action="?/disable" use:enhance>
-						<Button type="submit" color="red" disabled={!pings.enabled}>Turn off Pings</Button>
-					</form>
+					<Button type="submit" color="red" formaction="?/disable" disabled={!pings.enabled}
+						>Turn off Pings</Button
+					>
 					<Button type="submit">{!pings.enabled ? 'Enable and ' : ''}Update</Button>
 				</div>
 			</form>

@@ -13,21 +13,26 @@
 		island: 'stranded',
 	};
 
-	let classes = '';
-	export { classes as class };
-	export let gameMode: ProfileGameMode = 'classic';
-	export let popover = true;
+	interface Props {
+		class?: string;
+		gameMode?: ProfileGameMode;
+		popover?: boolean;
+	}
+
+	let { class: classes = '', gameMode = 'classic', popover = true }: Props = $props();
 </script>
 
 <Popover.Mobile hasContent={popover}>
-	<div slot="trigger">
-		<span class="{$$props.class ?? classes} font-mono">{icons[gameMode ?? 'classic']}</span>
-	</div>
+	{#snippet trigger()}
+		<div>
+			<span class="{classes} font-mono">{icons[gameMode ?? 'classic']}</span>
+		</div>
+	{/snippet}
 	{#if popover}
 		<div>
 			<h5 class="font-semibold">Profile Game Mode</h5>
 
-			<p class="first-letter:capitalize text-center">{gameModeRename[gameMode] ?? gameMode}</p>
+			<p class="text-center first-letter:capitalize">{gameModeRename[gameMode] ?? gameMode}</p>
 		</div>
 	{/if}
 </Popover.Mobile>

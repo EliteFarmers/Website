@@ -6,32 +6,36 @@
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import Cropselect from '$comp/stats/contests/cropselect.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: contests = Object.entries((data.contests ?? {}) as Record<number, string[]>) as [string, string[]][];
-	$: seconds = Math.floor(Date.now() / 1000);
+	let { data }: Props = $props();
 
-	$: current = contests.find(([time]) => +time < seconds && seconds <= +time + 1200);
-	$: upcoming = contests.filter(([time]) => +time > seconds).map(([time, contest]) => [time, contest.sort()]) as [
-		string,
-		string[]
-	][];
+	let contests = $derived(Object.entries((data.contests ?? {}) as Record<number, string[]>) as [string, string[]][]);
+	let seconds = $state(Math.floor(Date.now() / 1000));
 
-	$: crops = Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b));
-	$: cactus = false;
-	$: carrot = false;
-	$: cocoa = false;
-	$: melon = false;
-	$: mushroom = false;
-	$: netherwart = false;
-	$: potato = false;
-	$: pumpkin = false;
-	$: sugarcane = false;
-	$: wheat = false;
+	let current = $derived(contests.find(([time]) => +time < seconds && seconds <= +time + 1200));
+	let upcoming = $derived(
+		contests.filter(([time]) => +time > seconds).map(([time, contest]) => [time, contest.sort()]) as [
+			string,
+			string[],
+		][]
+	);
 
-	$: anySelected = false;
+	let crops = $derived(Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b)));
+	let cactus = $state(false);
+	let carrot = $state(false);
+	let cocoa = $state(false);
+	let melon = $state(false);
+	let mushroom = $state(false);
+	let netherwart = $state(false);
+	let potato = $state(false);
+	let pumpkin = $state(false);
+	let sugarcane = $state(false);
+	let wheat = $state(false);
 
-	$: selected = {
+	let selected = $derived({
 		Cactus: cactus,
 		Carrot: carrot,
 		'Cocoa Beans': cocoa,
@@ -42,11 +46,9 @@
 		Pumpkin: pumpkin,
 		'Sugar Cane': sugarcane,
 		Wheat: wheat,
-	} as Record<string, boolean>;
+	} as Record<string, boolean>);
 
-	$: {
-		anySelected = Object.values(selected).some((v) => v);
-	}
+	let anySelected = $derived(Object.values(selected).some((v) => v));
 
 	onMount(() => {
 		const interval = setInterval(() => {
@@ -59,13 +61,13 @@
 
 <Head title={'Upcoming Contests'} description={"Upcoming Jacob's Contests for Hypixel Skyblock."} />
 
-<main class="flex flex-col justify-center items-center">
-	<h1 class="text-4xl my-16">Upcoming Contests - Year {data.year}</h1>
+<main class="flex flex-col items-center justify-center">
+	<h1 class="my-16 text-4xl">Upcoming Contests - Year {data.year}</h1>
 
 	{#if upcoming.length === 0}
 		<p>No upcoming contests have been provided yet! Try again later!</p>
 	{:else}
-		<div class="flex flex-wrap gap-2 mb-8">
+		<div class="mb-8 flex flex-wrap gap-2">
 			<!-- Not amazing but an easy way to bind the values -->
 			<Cropselect bind:clicked={cactus} src={crops[0][1]} alt={crops[0][0]} />
 			<Cropselect bind:clicked={carrot} src={crops[1][1]} alt={crops[1][0]} />
@@ -78,7 +80,7 @@
 			<Cropselect bind:clicked={sugarcane} src={crops[8][1]} alt={crops[8][0]} />
 			<Cropselect bind:clicked={wheat} src={crops[9][1]} alt={crops[9][0]} />
 		</div>
-		<div class="flex flex-col mx-8 w-full md:w-[70%] gap-4 justify-center items-center">
+		<div class="mx-8 flex w-full flex-col items-center justify-center gap-4 md:w-[70%]">
 			{#if current && (!anySelected || current[1].some((c) => selected[c]))}
 				<Upcoming current={true} timestamp={+current[0]} crops={current[1]} currentSeconds={seconds} />
 			{/if}
@@ -90,7 +92,7 @@
 		</div>
 	{/if}
 
-	<p class="py-16 max-w-2xl text-center">
+	<p class="max-w-2xl py-16 text-center">
 		This data is supplied by users of the mod <a class="underline" href="https://github.com/hannibal002/SkyHanni/"
 			>SkyHanni</a
 		>. Open your calender at the start of the skyblock year to share them with the website and other SkyHanni users!

@@ -4,19 +4,37 @@
 	import MilestoneBar from './milestone-bar.svelte';
 	import { API_CROP_TO_CROP } from '$lib/constants/crops';
 
-	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
-	export let ranks: components['schemas']['LeaderboardPositionsDto']['profile'] | undefined = undefined;
-	export let overflow = false;
+	interface Props {
+		garden?: components['schemas']['GardenDto'] | undefined;
+		ranks?: components['schemas']['LeaderboardPositionsDto']['profile'] | undefined;
+		overflow?: boolean;
+	}
 
-	$: milestones = Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow));
-	$: list = milestones?.sort((a, b) => b[1].total - a[1].total) ?? [];
-	$: highestSort = true;
+	let { garden = undefined, ranks = undefined, overflow = $bindable(false) }: Props = $props();
+
+	let milestones = $derived(
+		Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow))
+	);
+	let list = $state<typeof milestones>([]);
+	let highestSort = $state(true);
+
+	$effect.pre(() => {
+		list = milestones?.sort((a, b) => b[1].total - a[1].total) ?? [];
+	});
 
 	function swap() {
 		highestSort = !highestSort;
 
 		list = highestSort
-			? milestones?.sort((a, b) => b[1].total - a[1].total)
+			? milestones?.sort((a, b) => {
+					if (b[1].level === a[1].level) {
+						if (b[1].ratio === a[1].ratio) {
+							return b[1].total - a[1].total;
+						}
+						return b[1].ratio - a[1].ratio;
+					}
+					return b[1].level - a[1].level;
+				})
 			: milestones?.sort((a, b) => a[0].localeCompare(b[0]));
 	}
 
@@ -29,21 +47,21 @@
 	}
 </script>
 
-<div class="flex-1 flex flex-col gap-2 max-w-4xl">
-	<div class="flex flex-row gap-2 items-center justify-between">
+<div class="flex max-w-4xl flex-1 flex-col gap-2">
+	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex flex-row items-center gap-2">
 			<button
-				class="rounded-md w-24 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
-				on:click={swap}>{highestSort ? 'Collection ↓' : 'A-Z ↓'}</button
+				class="w-24 whitespace-nowrap rounded-md bg-primary-foreground py-1 text-sm hover:bg-muted"
+				onclick={swap}>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
 			>
 			<button
-				class="rounded-md w-20 py-1 bg-primary-foreground whitespace-nowrap text-sm hover:bg-muted"
-				on:click={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
+				class="w-20 whitespace-nowrap rounded-md bg-primary-foreground py-1 text-sm hover:bg-muted"
+				onclick={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
 			>
 		</div>
-		<h3 class="text-lg font-semibold leading-none mt-1.5">Crop Milestones</h3>
+		<h3 class="mt-1.5 text-lg font-semibold leading-none">Crop Milestones</h3>
 	</div>
-	<div class="flex flex-col gap-2 w-full">
+	<div class="flex w-full flex-col gap-2">
 		{#each list as [crop, leveling] (crop)}
 			{@const key = getCropKey(crop)}
 			<MilestoneBar {crop} {leveling} {key} rank={ranks?.[key + '-milestone']} />

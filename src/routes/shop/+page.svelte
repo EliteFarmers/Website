@@ -3,19 +3,23 @@
 	import ProductCard from '$comp/monetization/product-card.svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <Head title="Shop" description="Help support development with cosmetics!" />
 
-<main class="flex flex-col items-center gap-12 my-16 mx-2">
-	<section class="flex flex-col items-start gap-4 max-w-4xl">
-		<h1 class="text-4xl mb-4">Elite Shop</h1>
+<main class="mx-2 my-16 flex flex-col items-center gap-12">
+	<section class="flex max-w-4xl flex-col items-start gap-4">
+		<h1 class="mb-4 text-4xl">Elite Shop</h1>
 		<p class="max-w-2xl">
 			Welcome to the Elite Shop! Here you can purchase and preview cosmetics to show off your support for the
 			Elite projects!
 		</p>
-		<p class="text-sm max-w-2xl">
+		<p class="max-w-2xl text-sm">
 			All purchases are made through the Discord store, not directly on the website. You can preview all products
 			here before purchasing them in the store.
 		</p>
@@ -24,7 +28,7 @@
         {/if} -->
 	</section>
 
-	<section class="flex flex-col items-start gap-4 max-w-4xl">
+	<section class="flex max-w-4xl flex-col items-start gap-4">
 		<h2 class="text-2xl">All Products</h2>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 			{#each data.products as product (product.id)}

@@ -2,28 +2,32 @@
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 
-	export let member: components['schemas']['ProfileEventMemberDto'];
-	export let memberUuid: string;
-	export let ign: string;
+	interface Props {
+		member: components['schemas']['ProfileEventMemberDto'];
+		memberUuid: string;
+		ign: string;
+	}
+
+	let { member, memberUuid, ign }: Props = $props();
 </script>
 
 <a
-	class="flex flex-row justify-between items-center w-full px-6 py-[1.88rem] gap-2 rounded-md bg-primary-foreground"
+	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-primary-foreground px-6 py-[1.88rem]"
 	href="/event/{member.eventId}/leaderboard#{memberUuid}"
 >
-	<div class="flex flex-row gap-2 align-middle items-center justify-center">
+	<div class="flex flex-row items-center justify-center gap-2 align-middle">
 		<p class="text-lg">{member.eventName}</p>
 		<Popover.Mobile>
-			<div slot="trigger">
+			{#snippet trigger()}
 				<div class="flex flex-col items-center justify-center">
 					{#if member.status === 0}
-						<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
+						<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
 					{/if}
 					{#if member.status === 1}
-						<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300" />
+						<div class="h-2 w-2 rounded-full bg-green-500 dark:bg-green-300"></div>
 					{/if}
 				</div>
-			</div>
+			{/snippet}
 			<div>
 				{#if member.status === 0}
 					<p class="text-lg font-semibold">Inactive Farmer</p>
@@ -38,7 +42,7 @@
 			</div>
 		</Popover.Mobile>
 	</div>
-	<div class="flex flex-row align-middle text-lg pr-2 items-center gap-4">
+	<div class="flex flex-row items-center gap-4 pr-2 align-middle text-lg">
 		{#if member.score && +member.score > 0}
 			<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 		{:else}

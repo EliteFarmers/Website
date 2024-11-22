@@ -46,7 +46,8 @@ export const load = (async ({ params, parent }) => {
 			category,
 			formatting: (type === LeaderboardType.Skill ? 'decimal' : 'number') as 'decimal' | 'number',
 		};
-	} catch (e) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (_) {
 		throw error(500, "Leaderboard data couldn't be fetched. Please try again later.");
 	}
 }) satisfies PageServerLoad;

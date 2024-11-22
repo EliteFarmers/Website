@@ -4,22 +4,26 @@
 	import * as Accordion from '$ui/accordion';
 	import Users from 'lucide-svelte/icons/users';
 
-	export let event: components['schemas']['EventDetailsDto'];
-	export let team: components['schemas']['EventTeamWithMembersDto'];
-	export let rank: number;
-	export let running: boolean;
-	export let highlightUuid: undefined | string = undefined;
+	interface Props {
+		event: components['schemas']['EventDetailsDto'];
+		team: components['schemas']['EventTeamWithMembersDto'];
+		rank: number;
+		running: boolean;
+		highlightUuid?: undefined | string;
+	}
 
-	$: key = (team.id ?? '').toString() || rank.toString();
-	$: members = (team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0));
-	$: full = event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers;
+	let { event, team, rank, running, highlightUuid = undefined }: Props = $props();
+
+	let key = $derived((team.id ?? '').toString() || rank.toString());
+	let members = $derived((team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0)));
+	let full = $derived(event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers);
 </script>
 
-<Accordion.Item value={key} id={key} class="outline-2 rounded-lg outline my-2">
+<Accordion.Item value={key} id={key} class="my-2 rounded-lg outline outline-2">
 	<Accordion.Trigger class="w-full pr-4">
-		<div class="flex flex-col gap-2 px-4 w-full">
-			<div class="flex flex-row justify-between items-center">
-				<div class="flex flex-wrap md:flex-row gap-4 items-center">
+		<div class="flex w-full flex-col gap-2 px-4">
+			<div class="flex flex-row items-center justify-between">
+				<div class="flex flex-wrap items-center gap-4 md:flex-row">
 					{#if running}
 						<div class="text-green-800 dark:text-green-300">
 							<p>
@@ -27,8 +31,8 @@
 							</p>
 						</div>
 					{/if}
-					<p class="text-start text-lg sm:text-xl order-3 md:order-2 basis-full md:basis-auto">{team.name}</p>
-					<div class="flex flex-row gap-2 font-semibold items-end order-2 md:order-3">
+					<p class="order-3 basis-full text-start text-lg sm:text-xl md:order-2 md:basis-auto">{team.name}</p>
+					<div class="order-2 flex flex-row items-end gap-2 font-semibold md:order-3">
 						<p class="text-xl leading-none">
 							{#if event.maxTeamMembers === -1 && !full}
 								{members.length?.toLocaleString()}
@@ -39,7 +43,7 @@
 						<Users size={18} />
 					</div>
 				</div>
-				<p class="text-lg block pr-2 font-semibold">
+				<p class="block pr-2 text-lg font-semibold">
 					{#if team.score && +team.score > 0}
 						{(+(team.score ?? 0)).toLocaleString()}
 					{:else if running}
@@ -50,12 +54,12 @@
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root class="w-full text-black dark:text-white">
+		<Accordion.Root type="single" class="w-full text-black dark:text-white">
 			{#each members as member, i}
 				<Accordion.Item
 					value={team.id + i.toString()}
 					class="px-4 {highlightUuid === member.playerUuid
-						? 'border-2 border-blue-400 rounded-md'
+						? 'rounded-md border-2 border-blue-400'
 						: 'border-none'}"
 				>
 					<EventMember {member} {running} {event} owner={team.ownerUuid === member.playerUuid} />

@@ -11,18 +11,26 @@
 
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { settings, getSettings } from 'svelte-ux';
+	import { browser } from '$app/environment';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
 	initShowLeaderboardName();
 
-	mode.subscribe((value) => {
-		if (!value) return;
+	if (browser) {
+		mode.subscribe((value) => {
+			if (!value) return;
 
-		const settings = getSettings();
-		settings.currentTheme.setTheme(value);
-	});
+			const settings = getSettings();
+			settings.currentTheme.setTheme(value);
+		});
+	}
 
 	settings({
 		themes: {
@@ -40,13 +48,16 @@
 	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
 </svelte:head>
-<ModeWatcher />
 
-<div class="relative flex flex-col min-h-screen">
+{#if browser}
+	<ModeWatcher />
+{/if}
+
+<div class="relative flex min-h-screen flex-col">
 	<Nav />
 
 	<div class="flex-1">
-		<slot />
+		{@render children?.()}
 	</div>
 
 	<Footer />

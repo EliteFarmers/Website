@@ -5,14 +5,14 @@
 
 <Head title="API Terms of Service" description="The TOS for using the Elite API" />
 
-<main class="flex flex-col justify-center items-center w-full">
-	<section class="flex flex-col justify-center items-center w-full">
+<main class="flex w-full flex-col items-center justify-center">
+	<section class="flex w-full flex-col items-center justify-center">
 		<article class="w-10/12 md:w-1/2">
-			<h1 class="text-center text-3xl my-16">Elite API Terms of Service</h1>
+			<h1 class="my-16 text-center text-3xl">Elite API Terms of Service</h1>
 			<ExternalLinkButton href="https://api.elitebot.dev">Elite API Documentation</ExternalLinkButton>
 			<div>
-				<h2 class="text-semibold text-xl my-4">Usage Restrictions</h2>
-				<ul class="flex flex-col gap-2 ml-4">
+				<h2 class="text-semibold my-4 text-xl">Usage Restrictions</h2>
+				<ul class="ml-4 flex flex-col gap-2">
 					<li>
 						<span class="select-none">• </span>Adhere to the
 						<a class="underline" href="https://elitebot.dev/terms">Terms of Service</a>,

@@ -54,6 +54,7 @@ export async function FetchDiscordUserData(accessToken: string): Promise<Authori
 
 	try {
 		return data;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (_) {
 		return null;
 	}

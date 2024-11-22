@@ -2,7 +2,7 @@
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import type { FarmingTool } from 'farming-weight';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
@@ -10,25 +10,29 @@
 	import { slide } from 'svelte/transition';
 	import { Edit } from 'lucide-svelte';
 
-	export let tool: FarmingTool;
-	export let player: RatesPlayerStore;
+	interface Props {
+		tool: FarmingTool;
+		player: RatesPlayerStore;
+	}
+
+	let { tool, player }: Props = $props();
 
 	const counterOptions = [10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000];
 
-	let expanded = false;
-	let reforge = tool.reforge?.name.toLowerCase() ?? 'bountiful';
+	let expanded = $state(false);
+	let reforge = $state(tool.reforge?.name.toLowerCase() ?? 'bountiful');
 
-	let counter = counterOptions.findLast((c) => c < tool.farmed) ?? 10_000;
+	let counter = $state((counterOptions.findLast((c) => c < tool.farmed) ?? 10_000).toString());
 </script>
 
-<div class="flex flex-col gap-2 w-full rounded-md">
-	<div class="flex justify-between items-center w-full">
+<div class="flex w-full flex-col gap-2 rounded-md">
+	<div class="flex w-full items-center justify-between">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.name ?? '')}</span>
 
 		<div class="flex items-center gap-2">
 			{#if tool.supportsCultivating()}
-				<Button variant="ghost" size="sm" class="p-2" on:click={() => (expanded = !expanded)}>
+				<Button variant="ghost" size="sm" class="p-2" onclick={() => (expanded = !expanded)}>
 					<Edit size={16} />
 				</Button>
 			{/if}
@@ -36,7 +40,7 @@
 			<Lorebtn item={tool.item}>
 				{#if tool.cultivating}
 					<p>
-						<span class="font-semibold select-none">Cultivating:</span>
+						<span class="select-none font-semibold">Cultivating:</span>
 						<span class="select-all">{tool.cultivating.toLocaleString()}</span>
 					</p>
 				{/if}
@@ -46,7 +50,7 @@
 		</div>
 	</div>
 	{#if expanded}
-		<div class="flex flex-col gap-2 items-start" transition:slide>
+		<div class="flex flex-col items-start gap-2" transition:slide>
 			<Label>Reforge</Label>
 			<Select.Simple
 				bind:value={reforge}
@@ -56,8 +60,11 @@
 				]}
 				placeholder="Reforge"
 				class="dark:bg-zinc-800"
-				change={() => {
+				change={(v) => {
+					if (!v) return;
+					console.log(reforge);
 					tool.changeReforgeTo(reforge);
+					$player.selectTool(tool);
 					player.refresh();
 				}}
 			/>
@@ -67,15 +74,18 @@
 				placeholder="Farmed Crops"
 				class="dark:bg-zinc-800"
 				options={counterOptions.map((c) => ({
-					value: c,
+					value: c.toString(),
 					label: c.toLocaleString(),
 				}))}
-				change={() => {
-					tool.changeFarmedCropsTo(counter);
+				change={(v) => {
+					if (!v) return;
+					console.log(counter);
+					tool.changeFarmedCropsTo(+counter);
+					$player.selectTool(tool);
 					player.refresh();
 				}}
 			/>
-			<p class="text-gray-500 text-sm">More config options coming soon™!</p>
+			<p class="text-sm text-gray-500">More config options coming soon™!</p>
 		</div>
 	{/if}
 </div>

@@ -1,19 +1,23 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
 
-	export let href: string;
-	export let open: boolean;
+	interface Props extends HTMLAnchorAttributes {
+		href: string;
+		open: boolean;
+		class?: string | undefined | null;
+		children?: import('svelte').Snippet;
+	}
 
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	let { href, open = $bindable(), class: className = undefined, children, ...rest }: Props = $props();
 </script>
 
 <a
 	{href}
 	class={cn($page.url.pathname === href ? 'text-foreground' : 'text-foreground/60', className)}
-	on:click={() => (open = false)}
-	{...$$restProps}
+	onclick={() => (open = false)}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </a>

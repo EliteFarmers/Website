@@ -22,33 +22,41 @@
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let data: PageData;
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+		form: ActionData;
+	}
 
-	let clickOutsideModalEdit = false;
-	let clickOutsideModalEditImage = false;
-	let pending = false;
+	let { data = $bindable(), form }: Props = $props();
 
-	let banMemberModal = false;
+	let clickOutsideModalEdit = $state(false);
+	let clickOutsideModalEditImage = $state(false);
+	let pending = $state(false);
 
-	let banMemberName = '';
-	let banMemberUuid = '';
+	let banMemberModal = $state(false);
 
-	let memberLimit = 10;
-	let bansLimit = 10;
+	let banMemberName = $state('');
+	let banMemberUuid = $state('');
+
+	let memberLimit = $state(10);
+	let bansLimit = $state(10);
 
 	function sort(a: { score?: string | null } | undefined, b: { score?: string | null } | undefined) {
 		return +(b?.score ?? 0) - +(a?.score ?? 0);
 	}
 
-	$: event = data.event;
+	let event = $derived(data.event);
 
-	$: medalWeights = ((event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
-		| Record<string, number>
-		| undefined;
-	$: cropWeights = ((event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
-		| Record<string, number>
-		| undefined;
+	let medalWeights = $state(
+		((data.event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
+			| Record<string, number>
+			| undefined
+	);
+	let cropWeights = $state(
+		((data.event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
+			| Record<string, number>
+			| undefined
+	);
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -56,7 +64,7 @@
 <main class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
-		<h1 class="text-4xl my-16">
+		<h1 class="my-16 text-4xl">
 			{event?.name}
 		</h1>
 	</div>
@@ -67,18 +75,20 @@
 		</h5>
 	{/if}
 
-	<section class="flex flex-col gap-8 justify-center items-center justify-items-center max-w-4xl w-full">
+	<section class="flex w-full max-w-4xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
-			class="flex p-4 flex-col justify-center justify-items-center w-[90%] md:w-[70%] max-w-screen-lg bg-primary-foreground rounded-md"
+			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-primary-foreground p-4 md:w-[70%]"
 		>
-			<div class="flex flex-row justify-between p-4 gap-2">
+			<div class="flex flex-row justify-between gap-2 p-4">
 				<div class="flex flex-col gap-2">
 					<div class="flex flex-row items-center gap-2">
 						{#if !event.approved}
 							<Popover.Mobile>
-								<div slot="trigger">
-									<TriangleAlert class="text-red-500 mt-1.5" />
-								</div>
+								{#snippet trigger()}
+									<div>
+										<TriangleAlert class="mt-1.5 text-red-500" />
+									</div>
+								{/snippet}
 								<div>
 									<p class="font-semibold">Pending approval!</p>
 									<p>Ask kaeso.dev to approve this event.</p>
@@ -91,7 +101,7 @@
 					<p class="text-lg">{event.description}</p>
 					<p class="text-lg">{event.rules}</p>
 					<p class="text-lg">{event.prizeInfo}</p>
-					<div class="flex flex-col md:flex-row gap-2 font-semibold md:items-center justify-start text-lg">
+					<div class="flex flex-col justify-start gap-2 text-lg font-semibold md:flex-row md:items-center">
 						<div>
 							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
 							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
@@ -103,32 +113,32 @@
 						</div>
 					</div>
 				</div>
-				<div class="p-4 flex flex-col gap-2">
+				<div class="flex flex-col gap-2 p-4">
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<Button
-								on:click={() => {
+								onclick={() => {
 									clickOutsideModalEdit = true;
 								}}
 							>
 								<Settings />
 							</Button>
-						</div>
+						{/snippet}
 						<div>
 							<p>Edit Event</p>
 						</div>
 					</Popover.Mobile>
 
 					<Popover.Mobile>
-						<div slot="trigger">
+						{#snippet trigger()}
 							<Button
-								on:click={() => {
+								onclick={() => {
 									clickOutsideModalEditImage = true;
 								}}
 							>
 								<Image />
 							</Button>
-						</div>
+						{/snippet}
 						<div>
 							<p>Edit Banner Image</p>
 						</div>
@@ -136,11 +146,13 @@
 
 					{#if event.approved}
 						<Popover.Mobile>
-							<div slot="trigger">
-								<Button href="/event/{event.id}" target="_blank">
-									<ExternalLink />
-								</Button>
-							</div>
+							{#snippet trigger()}
+								<div>
+									<Button href="/event/{event.id}" target="_blank">
+										<ExternalLink />
+									</Button>
+								</div>
+							{/snippet}
 							<div>
 								<p>View Event Page</p>
 							</div>
@@ -151,14 +163,14 @@
 		</div>
 	</section>
 
-	<div class="flex flex-row items-center justify-center max-w-md">
+	<div class="flex max-w-md flex-row items-center justify-center">
 		<Button href="/guild/{data.guild.id}/events" variant="secondary">Back to Events</Button>
 	</div>
 
-	<div class="flex flex-col md:flex-row gap-8 items-start justify-center max-w-6xl w-full px-4">
-		<section class="flex flex-1 flex-col gap-4 p-4 rounded-md bg-primary-foreground w-full">
+	<div class="flex w-full max-w-6xl flex-col items-start justify-center gap-8 px-4 md:flex-row">
+		<section class="flex w-full flex-1 flex-col gap-4 rounded-md bg-primary-foreground p-4">
 			<h3 class="text-xl">Event Members</h3>
-			<div class="flex flex-col flex-1 w-full justify-center items-center gap-2">
+			<div class="flex w-full flex-1 flex-col items-center justify-center gap-2">
 				{#await data.members}
 					<p>Loading...</p>
 				{:then members}
@@ -166,10 +178,10 @@
 					{#each m.slice(0, memberLimit) as member (member.playerUuid + '' + member.id)}
 						<Member {member}>
 							<Popover.Mobile>
-								<div slot="trigger">
+								{#snippet trigger()}
 									<Button
 										size="sm"
-										on:click={() => {
+										onclick={() => {
 											banMemberName = member.playerName ?? '';
 											banMemberUuid = member.playerUuid ?? '';
 											banMemberModal = true;
@@ -177,7 +189,7 @@
 									>
 										<Trash2 size={16} class="text-destructive" />
 									</Button>
-								</div>
+								{/snippet}
 								<div>
 									<p>Ban this user from the event</p>
 								</div>
@@ -187,7 +199,7 @@
 					{#if m.length > memberLimit}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								memberLimit += m.length;
 							}}
 						>
@@ -196,7 +208,7 @@
 					{:else if memberLimit > 10}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								memberLimit = 10;
 							}}
 						>
@@ -211,9 +223,9 @@
 				{/await}
 			</div>
 		</section>
-		<section class="flex flex-1 flex-col gap-4 p-4 rounded-md bg-primary-foreground">
+		<section class="flex flex-1 flex-col gap-4 rounded-md bg-primary-foreground p-4">
 			<h3 class="text-xl">Removed Event Members</h3>
-			<div class="flex flex-col w-full justify-center items-center gap-2 justify-items-center">
+			<div class="flex w-full flex-col items-center justify-center justify-items-center gap-2">
 				{#await data.bans}
 					<p>Loading...</p>
 				{:then bans}
@@ -224,11 +236,13 @@
 								<input type="hidden" name="id" value={event.id} />
 								<input type="hidden" name="uuid" value={member.playerUuid} />
 								<Popover.Mobile>
-									<div slot="trigger">
-										<Button type="submit" color="green" class="unban" size="sm">
-											<ArrowUp size={16} />
-										</Button>
-									</div>
+									{#snippet trigger()}
+										<div>
+											<Button type="submit" color="green" class="unban" size="sm">
+												<ArrowUp size={16} />
+											</Button>
+										</div>
+									{/snippet}
 									<div>
 										<p>Unban this user from the event</p>
 									</div>
@@ -239,7 +253,7 @@
 					{#if b.length > bansLimit}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								bansLimit += b.length;
 							}}
 						>
@@ -248,7 +262,7 @@
 					{:else if bansLimit > 10}
 						<Button
 							variant="secondary"
-							on:click={() => {
+							onclick={() => {
 								bansLimit = 10;
 							}}
 						>
@@ -264,7 +278,7 @@
 			</div>
 		</section>
 	</div>
-	<div class="flex flex-col p-4 rounded-md bg-primary-foreground">
+	<div class="flex flex-col rounded-md bg-primary-foreground p-4">
 		{#await data.defaults}
 			<p>Loading...</p>
 		{:then defaults}
@@ -272,7 +286,7 @@
 				<form
 					action="?/editCropWeights"
 					method="post"
-					class="flex flex-col gap-2 items-center"
+					class="flex flex-col items-center gap-2"
 					use:enhance={() => {
 						pending = true;
 						return async ({ result, update }) => {
@@ -284,16 +298,16 @@
 					}}
 				>
 					<input type="hidden" name="id" bind:value={data.event.id} />
-					<h4 class="text-lg mb-4">Crop Weight Values</h4>
+					<h4 class="mb-4 text-lg">Crop Weight Values</h4>
 
-					<div class="flex flex-col md:flex-row md:flex-wrap gap-1 max-w-4xl justify-center items-center">
+					<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
 						{#each Object.entries(defaults?.cropWeights ?? {}) as [crop] (crop)}
 							{@const c = getCropFromName(crop) ?? Crop.Wheat}
 							{@const cropName = getCropDisplayName(c)}
 							{@const name = CROP_TO_ELITE_CROP[c]}
 
-							<div class="flex flex-row items-center gap-1 md:basis-96 px-4">
-								<img src={PROPER_CROP_TO_IMG[cropName]} alt={crop} class="w-8 h-8 pixelated" />
+							<div class="flex flex-row items-center gap-1 px-4 md:basis-96">
+								<img src={PROPER_CROP_TO_IMG[cropName]} alt={crop} class="pixelated h-8 w-8" />
 								<Label class="flex-1">{cropName}</Label>
 								<NumberInput
 									min={0}
@@ -315,7 +329,7 @@
 						<Button
 							variant="destructive"
 							disabled={pending}
-							on:click={() => {
+							onclick={() => {
 								cropWeights = structuredClone(defaults?.cropWeights ?? {});
 							}}>Reset Values</Button
 						>
@@ -326,7 +340,7 @@
 				<form
 					action="?/editMedalWeights"
 					method="post"
-					class="flex flex-col gap-2 items-center"
+					class="flex flex-col items-center gap-2"
 					use:enhance={() => {
 						pending = true;
 						return async ({ result, update }) => {
@@ -338,11 +352,11 @@
 					}}
 				>
 					<input type="hidden" name="id" bind:value={data.event.id} />
-					<h4 class="text-lg mb-4">Medal Point Values</h4>
+					<h4 class="mb-4 text-lg">Medal Point Values</h4>
 
-					<div class="flex flex-col gap-1 max-w-4xl justify-center items-center">
-						<div class="flex flex-row items-center gap-1 px-4 w-full">
-							<img src="/images/medals/bronze.webp" alt="Bronze" class="w-8 h-8 pixelated" />
+					<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
+						<div class="flex w-full flex-row items-center gap-1 px-4">
+							<img src="/images/medals/bronze.webp" alt="Bronze" class="pixelated h-8 w-8" />
 							<Label class="flex-1">Bronze</Label>
 							<NumberInput
 								min={0}
@@ -354,8 +368,8 @@
 								required
 							/>
 						</div>
-						<div class="flex flex-row items-center gap-1 px-4 w-full">
-							<img src="/images/medals/silver.webp" alt="Silver" class="w-8 h-8 pixelated" />
+						<div class="flex w-full flex-row items-center gap-1 px-4">
+							<img src="/images/medals/silver.webp" alt="Silver" class="pixelated h-8 w-8" />
 							<Label class="flex-1">Silver</Label>
 							<NumberInput
 								min={0}
@@ -367,8 +381,8 @@
 								required
 							/>
 						</div>
-						<div class="flex flex-row items-center gap-1 px-4 w-full">
-							<img src="/images/medals/gold.webp" alt="Gold" class="w-8 h-8 pixelated" />
+						<div class="flex w-full flex-row items-center gap-1 px-4">
+							<img src="/images/medals/gold.webp" alt="Gold" class="pixelated h-8 w-8" />
 							<Label class="flex-1">Gold</Label>
 							<NumberInput
 								min={0}
@@ -380,8 +394,8 @@
 								required
 							/>
 						</div>
-						<div class="flex flex-row items-center gap-1 px-4 w-full">
-							<img src="/images/medals/platinum.webp" alt="Platinum" class="w-8 h-8 pixelated" />
+						<div class="flex w-full flex-row items-center gap-1 px-4">
+							<img src="/images/medals/platinum.webp" alt="Platinum" class="pixelated h-8 w-8" />
 							<Label class="flex-1">Platinum</Label>
 							<NumberInput
 								min={0}
@@ -393,8 +407,8 @@
 								required
 							/>
 						</div>
-						<div class="flex flex-row items-center gap-1 px-4 w-full">
-							<img src="/images/medals/diamond.webp" alt="Diamond" class="w-8 h-8 pixelated" />
+						<div class="flex w-full flex-row items-center gap-1 px-4">
+							<img src="/images/medals/diamond.webp" alt="Diamond" class="pixelated h-8 w-8" />
 							<Label class="flex-1">Diamond</Label>
 							<NumberInput
 								min={0}
@@ -411,7 +425,7 @@
 						<Button
 							variant="destructive"
 							disabled={pending}
-							on:click={() => {
+							onclick={() => {
 								medalWeights = structuredClone(defaults?.medalValues ?? {});
 							}}>Reset Values</Button
 						>
@@ -424,7 +438,7 @@
 </main>
 
 <Dialog.Root bind:open={banMemberModal}>
-	<Dialog.Content class="overflow-scroll max-h-[80%]">
+	<Dialog.Content class="max-h-[80%] overflow-scroll">
 		<Dialog.Title>{banMemberName} - {banMemberUuid}</Dialog.Title>
 		<form
 			method="post"
@@ -452,7 +466,7 @@
 </Dialog.Root>
 
 <Dialog.Root bind:open={clickOutsideModalEdit}>
-	<Dialog.Content class="overflow-scroll max-h-[80%]">
+	<Dialog.Content class="max-h-[80%] overflow-scroll">
 		<Dialog.Title>Edit Event</Dialog.Title>
 		<p>Only fill in fields that you want to be changed.</p>
 		<form
@@ -485,7 +499,7 @@
 				<Label>Event Prizes</Label>
 				<Textarea name="prizes" placeholder="First Place: $20 in Gems!" maxlength={1024} />
 			</div>
-			<div class="space-y-2 mt-4">
+			<div class="mt-4 space-y-2">
 				<Label>Event Start Time</Label>
 				<Input name="startDate" type="datetime-local" />
 			</div>
@@ -493,7 +507,7 @@
 				<Label>Event End Time</Label>
 				<Input name="endDate" type="datetime-local" />
 			</div>
-			<div class="space-y-2 mb-4">
+			<div class="mb-4 space-y-2">
 				<Label>Join Until Time</Label>
 				<Input name="joinDate" type="datetime-local" />
 			</div>
@@ -507,7 +521,7 @@
 </Dialog.Root>
 
 <Dialog.Root bind:open={clickOutsideModalEditImage}>
-	<Dialog.Content class="overflow-scroll max-h-[80%]">
+	<Dialog.Content class="max-h-[80%] overflow-scroll">
 		<Dialog.Title>Edit Event Banner</Dialog.Title>
 		<p>Upload a .png image for use as the event banner!</p>
 		<form

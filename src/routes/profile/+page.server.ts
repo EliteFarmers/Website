@@ -64,10 +64,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await LinkAccount(username, locals.access_token);
+		const { error: msg, response } = await LinkAccount(username, locals.access_token);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || msg) {
+			return fail(response.status, {
+				error:
+					msg ||
+					'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.',
+			});
 		}
 
 		if (!locals.session?.uuid) {
@@ -88,10 +92,12 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await UnlinkAccount(username, locals.access_token);
+		const { error: msg, response } = await UnlinkAccount(username, locals.access_token);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || msg) {
+			return fail(response.status, {
+				error: msg || 'Error unlinking account, please try again later.',
+			});
 		}
 
 		await FetchUserSession(cookies, locals.access_token, locals.refresh_token, true);

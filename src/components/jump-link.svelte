@@ -2,12 +2,14 @@
 	import { Button } from '$ui/button';
 	import Link from 'lucide-svelte/icons/link';
 
-	export let id: string;
-	export let size = 20;
-	export let self = true;
+	interface Props {
+		id: string;
+		size?: number;
+		self?: boolean;
+		class?: string;
+	}
 
-	let className = '';
-	export { className as class };
+	let { id, size = 20, self = true, class: className = '' }: Props = $props();
 </script>
 
 <Button

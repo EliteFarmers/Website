@@ -12,30 +12,33 @@
 
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: selectedBadge = null as components['schemas']['BadgeDto'] | null;
+	let { data }: Props = $props();
 
-	let manageBadgeModal = false;
-	let createBadgeModal = false;
-	let grantBadgeModal = false;
-	let grant = true;
+	let selectedBadge = $state<components['schemas']['BadgeDto'] | null>(null);
+	let manageBadgeModal = $state(false);
+	let createBadgeModal = $state(false);
+	let grantBadgeModal = $state(false);
+	let grant = $state(true);
 </script>
 
 <Head title="Badges" description="Manage badges" />
 
 <main class="my-16">
-	<section class="flex flex-col gap-4 w-full max-w-2xl my-8">
-		<h1 class="text-4xl mb-16">Badges</h1>
+	<section class="my-8 flex w-full max-w-2xl flex-col gap-4">
+		<h1 class="mb-16 text-4xl">Badges</h1>
 
-		<div class="flex flex-col gap-4 w-full">
+		<div class="flex w-full flex-col gap-4">
 			{#each data.badges as badge}
 				<div
-					class="flex flex-col md:flex-row justify-between gap-2 w-full items-center p-2 rounded-md bg-gray-100 dark:bg-zinc-800"
+					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:flex-row"
 				>
-					<div class="flex flex-row gap-4 items-center">
+					<div class="flex flex-row items-center gap-4">
 						{#if badge.image?.url}
-							<img src={badge.image.url} alt={badge.name} class="w-24 h-8 rounded-sm object-cover" />
+							<img src={badge.image.url} alt={badge.name} class="h-8 w-24 rounded-sm object-cover" />
 						{/if}
 						<div class="flex flex-col">
 							<p class="text-xl font-semibold">{badge.name}</p>
@@ -44,9 +47,9 @@
 						</div>
 					</div>
 					<div class="flex flex-row gap-4 pr-2">
-						<div class="flex flex-col text-right gap-2">
+						<div class="flex flex-col gap-2 text-right">
 							<Button
-								on:click={() => {
+								onclick={() => {
 									manageBadgeModal = true;
 									selectedBadge = badge;
 								}}
@@ -54,7 +57,7 @@
 								<Settings size={16} />
 							</Button>
 							<Button
-								on:click={() => {
+								onclick={() => {
 									grantBadgeModal = true;
 									selectedBadge = badge;
 								}}
@@ -67,7 +70,7 @@
 			{/each}
 			<Button
 				class="w-fit"
-				on:click={() => {
+				onclick={() => {
 					createBadgeModal = true;
 				}}
 			>
@@ -96,22 +99,22 @@
 			{#if selectedBadge}
 				<input type="hidden" name="badgeId" bind:value={selectedBadge.id} />
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Name</Label>
 					<Input name="name" bind:value={selectedBadge.name} placeholder="Badge Name" />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Image</Label>
 					<Input name="image" type="file" />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Description</Label>
 					<Input name="description" bind:value={selectedBadge.description} placeholder="Badge Description" />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Requirements</Label>
 					<Input
 						name="requirements"
@@ -141,27 +144,27 @@
 				};
 			}}
 		>
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Name</Label>
 				<Input name="name" placeholder="Badge Name" />
 			</div>
 
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Image</Label>
 				<Input name="image" type="file" />
 			</div>
 
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Description</Label>
 				<Input name="description" placeholder="Badge Description" />
 			</div>
 
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Requirements</Label>
 				<Input name="requirements" placeholder="Badge Requirements" />
 			</div>
 
-			<div class="flex flex-col gap-2 items-start">
+			<div class="flex flex-col items-start gap-2">
 				<Label>Tie To Account</Label>
 				<Switch name="tied" />
 			</div>
@@ -188,12 +191,12 @@
 			{#if selectedBadge}
 				<input type="hidden" name="badgeId" bind:value={selectedBadge.id} />
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Player UUID</Label>
 					<Input name="uuid" placeholder="Player UUID" maxlength={36} />
 				</div>
 
-				<div class="flex flex-col gap-2 items-start">
+				<div class="flex flex-col items-start gap-2">
 					<Label>Mode Toggle</Label>
 					<Switch bind:checked={grant} />
 				</div>

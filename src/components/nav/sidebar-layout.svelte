@@ -6,12 +6,17 @@
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 
-	export let title: string;
-	export let navItems: { title: string; href: string; external?: boolean }[];
+	interface Props {
+		title: string;
+		navItems: { title: string; href: string; external?: boolean }[];
+		children?: import('svelte').Snippet;
+	}
 
-	$: current = navItems.findIndex((p) => p.href.startsWith($page.url.pathname));
-	$: previous = navItems[current - 1];
-	$: next = navItems[current + 1];
+	let { title, navItems, children }: Props = $props();
+
+	let current = $derived(navItems.findIndex((p) => p.href.startsWith($page.url.pathname)));
+	let previous = $derived(navItems[current - 1]);
+	let next = $derived(navItems[current + 1]);
 </script>
 
 <div
@@ -23,26 +28,26 @@
 		</ScrollArea>
 	</aside>
 	<div id="main" class="mx-auto w-full min-w-0">
-		<slot />
+		{@render children?.()}
 
-		<div class="flex flex-row justify-between items-center">
+		<div class="flex flex-row items-center justify-between">
 			{#key $page.url.pathname}
 				{#if previous}
 					<Button
 						href={previous.href}
-						class="flex flex-row gap-1 items-center leading-none"
+						class="flex flex-row items-center gap-1 leading-none"
 						variant="outline"
 					>
-						<ArrowLeft class="h-4 w-4 mt-0.5" />
+						<ArrowLeft class="mt-0.5 h-4 w-4" />
 						{previous.title}
 					</Button>
 				{:else}
-					<div />
+					<div></div>
 				{/if}
 				{#if next}
-					<Button href={next.href} class="flex flex-row gap-1 items-center leading-none" variant="outline">
+					<Button href={next.href} class="flex flex-row items-center gap-1 leading-none" variant="outline">
 						{next.title}
-						<ArrowRight class="h-4 w-4 mt-0.5" />
+						<ArrowRight class="mt-0.5 h-4 w-4" />
 					</Button>
 				{/if}
 			{/key}

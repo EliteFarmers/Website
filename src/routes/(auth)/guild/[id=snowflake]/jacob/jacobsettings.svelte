@@ -12,17 +12,21 @@
 	import { Button } from '$ui/button';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
-	export let lb: components['schemas']['GuildJacobLeaderboard'];
-	export let channels: { value: string; label: string }[];
-	export let roles: { value: string; label: string }[];
+	interface Props {
+		lb: components['schemas']['GuildJacobLeaderboard'];
+		channels: { value: string; label: string }[];
+		roles: { value: string; label: string }[];
+	}
 
-	$: crops = Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0);
+	let { lb, channels, roles }: Props = $props();
 
-	let confirmModal = false;
+	let crops = $derived(Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0));
+
+	let confirmModal = $state(false);
 </script>
 
-<div class="flex flex-col justify-between gap-4 p-4 rounded-md bg-primary-foreground w-full rounded-lgs">
-	<div class="flex flex-row justify-between gap-4 w-full">
+<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md bg-primary-foreground p-4">
+	<div class="flex w-full flex-row justify-between gap-4">
 		<div class="flex flex-col gap-2">
 			<h3 class="text-2xl">{lb.title}</h3>
 			<p>
@@ -68,11 +72,13 @@
 			<form method="post" action="{$page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
-					<div slot="trigger">
-						<Button type="submit" color="green">
-							<Mail />
-						</Button>
-					</div>
+					{#snippet trigger()}
+						<div>
+							<Button type="submit" color="green">
+								<Mail />
+							</Button>
+						</div>
+					{/snippet}
 					<div>
 						<p>Send Leaderboard in Discord</p>
 					</div>
@@ -81,20 +87,22 @@
 			<form method="post" action="{$page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
-					<div slot="trigger">
-						<Button type="submit" color="yellow">
-							<RefreshCcw />
-						</Button>
-					</div>
+					{#snippet trigger()}
+						<div>
+							<Button type="submit" color="yellow">
+								<RefreshCcw />
+							</Button>
+						</div>
+					{/snippet}
 					<p>Clear all scores, but they can be submitted again</p>
 				</Popover.Mobile>
 			</form>
 			<Popover.Mobile>
-				<div slot="trigger">
-					<Button on:click={() => (confirmModal = true)}>
+				{#snippet trigger()}
+					<Button onclick={() => (confirmModal = true)}>
 						<Trash2 class="text-destructive" />
 					</Button>
-				</div>
+				{/snippet}
 				<div>
 					<p>Delete Leaderboard</p>
 				</div>
@@ -103,7 +111,7 @@
 	</div>
 
 	{#if crops.length > 0}
-		<Accordion.Root>
+		<Accordion.Root type="single">
 			{#each crops as [crop, entries] (crop)}
 				<Accordion.Item value={crop}>
 					<Accordion.Trigger class="py-2">
@@ -113,23 +121,25 @@
 					</Accordion.Trigger>
 					<Accordion.Content>
 						{#each entries as entry (entry)}
-							<div class="flex items-center flex-row gap-8 my-2">
+							<div class="my-2 flex flex-row items-center gap-8">
 								<form method="POST" action="{$page.url.pathname}?/banparticipation" use:enhance>
 									<input type="hidden" name="id" value={lb.id} />
 									<input type="hidden" name="uuid" value={entry.uuid} />
 									<input type="hidden" name="crop" value={entry.record?.crop} />
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
 									<Popover.Mobile>
-										<div slot="trigger">
-											<Button type="submit" variant="destructive" size="icon">
-												<Trash2 size={20} class="text-destructive" />
-											</Button>
-										</div>
+										{#snippet trigger()}
+											<div>
+												<Button type="submit" variant="destructive" size="icon">
+													<Trash2 size={20} class="text-destructive" />
+												</Button>
+											</div>
+										{/snippet}
 										<p>Remove and block this Participation</p>
 									</Popover.Mobile>
 								</form>
 								<p class="text-lg">{entry.ign}</p>
-								<p class="text-lg font-mono">{entry.record?.collected?.toLocaleString()}</p>
+								<p class="font-mono text-lg">{entry.record?.collected?.toLocaleString()}</p>
 							</div>
 						{/each}
 					</Accordion.Content>

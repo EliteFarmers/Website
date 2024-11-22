@@ -3,14 +3,18 @@
 	import type { components } from '$lib/api/api';
 	import * as Accordion from '$ui/accordion';
 
-	export let highlightUuid: string | undefined = undefined;
-	export let highlightTeam: string | undefined = undefined;
-	export let running = false;
-	export let event: components['schemas']['EventDetailsDto'];
-	export let teams: components['schemas']['EventTeamWithMembersDto'][];
+	interface Props {
+		highlightUuid?: string | undefined;
+		highlightTeam?: string | undefined;
+		running?: boolean;
+		event: components['schemas']['EventDetailsDto'];
+		teams: components['schemas']['EventTeamWithMembersDto'][];
+	}
+
+	let { highlightUuid = undefined, highlightTeam = undefined, running = false, event, teams }: Props = $props();
 </script>
 
-<Accordion.Root class="w-full" value={highlightTeam}>
+<Accordion.Root type="single" class="w-full" value={highlightTeam}>
 	{#each teams as team, i}
 		<EventTeam {team} rank={i + 1} {running} {event} {highlightUuid} />
 	{/each}

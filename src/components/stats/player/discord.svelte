@@ -4,12 +4,16 @@
 	import Check from 'lucide-svelte/icons/check';
 	import CircleX from 'lucide-svelte/icons/circle-x';
 
-	export let username: string | null | undefined = 'Discord N/A';
-	export let linked: boolean;
+	interface Props {
+		username?: string | null | undefined;
+		linked: boolean;
+	}
 
-	$: validName = true;
+	let { username = 'Discord N/A', linked }: Props = $props();
 
-	$: {
+	let validName = $state(true);
+
+	$effect.pre(() => {
 		// Less strict check for old usernames with #
 		if (username?.includes('#')) {
 			validName = !username.includes('://') && !username.includes('discord');
@@ -18,18 +22,18 @@
 			const regex = /[^a-zA-Z0-9_.#]/g;
 			validName = !(username && regex.test(username));
 		}
-	}
+	});
 </script>
 
 <Popover.Mobile>
-	<div slot="trigger">
-		<div class="block max-w-fit p-2 px-3 rounded-md bg-primary-foreground" id="discordId">
+	{#snippet trigger()}
+		<div class="block max-w-fit rounded-md bg-primary-foreground p-2 px-3" id="discordId">
 			<div class="flex flex-row items-center gap-2">
-				<span class="text-primary mt-1 w-5 h-5">
+				<span class="mt-1 h-5 w-5 text-primary">
 					<DiscordIcon />
 				</span>
 				<span class="whitespace-nowrap text-lg leading-none">
-					{validName ? username ?? 'Discord N/A' : 'Invalid!'}
+					{validName ? (username ?? 'Discord N/A') : 'Invalid!'}
 				</span>
 				{#if validName && username}
 					{#if linked}
@@ -40,9 +44,9 @@
 				{/if}
 			</div>
 		</div>
-	</div>
+	{/snippet}
 	{#if validName}
-		<div class="text-center text-md">
+		<div class="text-md text-center">
 			{#if linked}
 				<p class="font-semibold">Account Linked</p>
 			{:else}

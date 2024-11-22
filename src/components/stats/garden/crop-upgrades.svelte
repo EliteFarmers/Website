@@ -3,40 +3,46 @@
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 
-	export let garden: components['schemas']['GardenDto'] | undefined = undefined;
+	interface Props {
+		garden?: components['schemas']['GardenDto'] | undefined;
+	}
+
+	let { garden = undefined }: Props = $props();
 
 	const upgradesList = [...Array(9).keys()];
 
-	$: upgrades = getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>);
-	$: crops = Object.entries(upgrades)
-		.map(([c, level]) => {
-			const crop = getCropFromName(c) ?? Crop.Wheat;
-			const name = getCropDisplayName(crop);
-			const img = PROPER_CROP_TO_IMG[name as keyof typeof PROPER_CROP_TO_IMG];
+	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>));
+	let crops = $derived(
+		Object.entries(upgrades)
+			.map(([c, level]) => {
+				const crop = getCropFromName(c) ?? Crop.Wheat;
+				const name = getCropDisplayName(crop);
+				const img = PROPER_CROP_TO_IMG[name as keyof typeof PROPER_CROP_TO_IMG];
 
-			return { name, img, level };
-		})
-		.sort((a, b) => a.name.localeCompare(b.name));
+				return { name, img, level };
+			})
+			.sort((a, b) => a.name.localeCompare(b.name))
+	);
 </script>
 
-<div class="flex flex-wrap justify-start -mt-0.5">
+<div class="-mt-0.5 flex flex-wrap justify-start">
 	{#each crops as { name, img, level } (name)}
 		{@const maxed = level === upgradesList.length}
-		<div class="flex flex-row basis-16 md:basis-48 my-1.5 items-center justify-start gap-[0.1rem] md:gap-1">
-			<img src={img} class="w-6 h-6 pixelated" alt={name} />
+		<div class="my-1.5 flex basis-16 flex-row items-center justify-start gap-[0.1rem] md:basis-48 md:gap-1">
+			<img src={img} class="pixelated h-6 w-6" alt={name} />
 			{#each upgradesList as tier, i (i)}
 				<div
-					class="w-3 h-5 hidden md:block md:h-6 rounded-sm {tier + 1 > level
+					class="hidden h-5 w-3 rounded-sm md:block md:h-6 {tier + 1 > level
 						? 'bg-primary-foreground'
 						: maxed
-						? 'bg-yellow-400 dark:bg-yellow-600'
-						: 'bg-green-400 dark:bg-green-600'}"
-				/>
+							? 'bg-yellow-400 dark:bg-yellow-600'
+							: 'bg-green-400 dark:bg-green-600'}"
+				></div>
 			{/each}
 			<span
-				class="leading-none font-semibold md:text-lg pl-1 pr-2 -my-1 {maxed
+				class="-my-1 pl-1 pr-2 font-semibold leading-none md:text-lg {maxed
 					? 'text-yellow-400 dark:text-yellow-500'
-					: ''} dark:md:text-white md:text-black"
+					: ''} md:text-black dark:md:text-white"
 			>
 				{level}
 			</span>

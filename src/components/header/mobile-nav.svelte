@@ -1,37 +1,39 @@
 <script lang="ts">
 	import * as Sheet from '$ui/sheet';
-	import { Button } from '$ui/button';
+	import { buttonVariants } from '$ui/button';
 	import MobileLink from '$comp/header/mobile-link.svelte';
 	import Menu from 'lucide-svelte/icons/menu';
 	import { MOBILE_NAV } from '$content/nav';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import { page } from '$app/stores';
+	import { cn } from '$lib/utils';
 
-	let open = false;
+	let open = $state(false);
 
-	$: user = $page.data.session;
+	let user = $derived($page.data.session);
 </script>
 
 <Sheet.Root bind:open>
-	<Sheet.Trigger asChild let:builder>
-		<Button
-			builders={[builder]}
-			variant="ghost"
-			class="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-		>
-			<Menu class="w-5 h-5" />
-			<span class="sr-only">Toggle Menu</span>
-		</Button>
+	<Sheet.Trigger
+		class={cn(
+			buttonVariants({
+				variant: 'ghost',
+				class: 'mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden',
+			})
+		)}
+	>
+		<Menu class="h-5 w-5" />
+		<span class="sr-only">Toggle Menu</span>
 	</Sheet.Trigger>
 	<Sheet.Content side="left" class="pr-0">
 		<MobileLink href="/" class="flex items-center" bind:open>
-			<a class="flex flex-row gap-2 items-center" href="/">
+			<a class="flex flex-row items-center gap-2" href="/">
 				<img src="/favicon.webp" class="mr-3 h-4 w-4" alt="Elite Logo" loading="lazy" />
 			</a>
 			<span class="font-semibold">Elite Farmers</span>
 		</MobileLink>
-		<div class="my-4 h-[calc(100vh-8rem)] pb-10 px-4 overflow-auto">
-			<div class="flex flex-col gap-2 mr-4">
+		<div class="my-4 h-[calc(100vh-8rem)] overflow-auto px-4 pb-10">
+			<div class="mr-4 flex flex-col gap-2">
 				{#each MOBILE_NAV as navItem, index (index)}
 					{#if navItem.auth === undefined || (!navItem.auth && !user) || (navItem.auth && user)}
 						<div>
@@ -46,7 +48,7 @@
 										<MobileLink
 											href={item.href}
 											bind:open
-											class="flex flex-row gap-1 items-center text-foreground px-2 py-2 rounded-md hover:bg-primary-foreground border-2 border-transparent data-[active=true]:border-primary-foreground"
+											class="flex flex-row items-center gap-1 rounded-md border-2 border-transparent px-2 py-2 text-foreground hover:bg-primary-foreground data-[active=true]:border-primary-foreground"
 											target={item.external ? '_blank' : undefined}
 											data-active={$page.url.pathname === item.href}
 										>

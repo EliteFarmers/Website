@@ -2,43 +2,47 @@
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 
-	export let contest: components['schemas']['ContestParticipationDto'];
-	export let irlTime = false;
+	interface Props {
+		contest: components['schemas']['ContestParticipationDto'];
+		irlTime?: boolean;
+	}
 
-	$: ({ crop, position, participants, collected, timestamp, medal } = contest);
+	let { contest, irlTime = false }: Props = $props();
 
-	$: cropName = crop ?? 'Not Found';
-	$: ranking = (position ?? 0) > -1;
+	let { crop, position, participants, collected, timestamp, medal } = $derived(contest);
+
+	let cropName = $derived(crop ?? 'Not Found');
+	let ranking = $derived((position ?? 0) > -1);
 </script>
 
 <a
 	href="/contest/{timestamp}"
 	data-sveltekit-preload-data="off"
-	class="p-2 flex flex-col hover:shadow-lg hover:bg-muted gap-0.5 rounded-md bg-primary-foreground border-l-4 {crop?.replace(
+	class="flex flex-col gap-0.5 rounded-md border-l-4 bg-primary-foreground p-2 hover:bg-muted hover:shadow-lg {crop?.replace(
 		' ',
 		''
 	)}"
 >
-	<h3 class="first-letter:uppercase text-sm">
-		<span class="p-0.5 px-1.5 bg-card rounded-md">{cropName}</span>
+	<h3 class="text-sm first-letter:uppercase">
+		<span class="rounded-md bg-card p-0.5 px-1.5">{cropName}</span>
 		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</h3>
-	<h3 class="text-lg font-semibold flex flex-row items-center gap-1">
+	<h3 class="flex flex-row items-center gap-1 text-lg font-semibold">
 		{#if medal && medal !== 'none'}
-			<img class="inline-block w-6 h-6 pixelated p-0.5" src="/images/medals/{medal}.webp" alt="Earned Medal" />
+			<img class="pixelated inline-block h-6 w-6 p-0.5" src="/images/medals/{medal}.webp" alt="Earned Medal" />
 		{/if}
 		{(collected ?? 0).toLocaleString()}
 	</h3>
 	{#if irlTime}
-		<span class="text-xs font-mono font-semibold">
+		<span class="font-mono text-xs font-semibold">
 			{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
 				timeStyle: 'short',
 				dateStyle: 'medium',
 			})}
 		</span>
 	{:else}
-		<span class="text-xs font-mono font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</span>
+		<span class="font-mono text-xs font-semibold">{getReadableSkyblockDate(timestamp ?? 0)}</span>
 	{/if}
 </a>
 

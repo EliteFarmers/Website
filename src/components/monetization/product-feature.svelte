@@ -1,17 +1,25 @@
 <script lang="ts">
 	import { PopoverMobile } from '$ui/popover';
 
-	export let name: string | undefined = undefined;
+	interface Props {
+		name?: string | undefined;
+		icon?: import('svelte').Snippet;
+		children?: import('svelte').Snippet;
+	}
+
+	let { name = undefined, icon, children }: Props = $props();
 </script>
 
 <PopoverMobile>
-	<div slot="trigger" class="flex flex-row gap-1 items-center rounded-sm p-2 bg-card">
-		<slot name="icon" />
-		{#if name}
-			<p class="text-semibold text-sm leading-none">{name}</p>
-		{/if}
-	</div>
+	{#snippet trigger()}
+		<div class="flex flex-row items-center gap-1 rounded-sm bg-card p-2">
+			{@render icon?.()}
+			{#if name}
+				<p class="text-semibold text-sm leading-none">{name}</p>
+			{/if}
+		</div>
+	{/snippet}
 	<div>
-		<slot />
+		{@render children?.()}
 	</div>
 </PopoverMobile>

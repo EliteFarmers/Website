@@ -1,10 +1,10 @@
 import Root from './slider.svelte';
-import SliderSimple from './slider-simple.svelte';
+import Simple from './slider-simple.svelte';
 
 export {
 	Root,
-	SliderSimple as Simple,
+	Simple,
 	//
 	Root as Slider,
-	SliderSimple,
+	Simple as SliderSimple,
 };

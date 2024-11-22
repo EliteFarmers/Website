@@ -6,11 +6,15 @@
 	import { EventType } from '$lib/utils';
 	import Crown from 'lucide-svelte/icons/crown';
 
-	export let owner = false;
-	export let event: components['schemas']['EventDetailsDto'];
-	export let member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
-	export let rank: number | undefined = undefined;
-	export let running: boolean;
+	interface Props {
+		owner?: boolean;
+		event: components['schemas']['EventDetailsDto'];
+		member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
+		rank?: number | undefined;
+		running: boolean;
+	}
+
+	let { owner = false, event, member, rank = undefined, running }: Props = $props();
 
 	const medalWeight = (medal: string) => {
 		const data = event.data as { medalWeights?: Record<string, number> } | undefined;
@@ -30,8 +34,8 @@
 </script>
 
 <Accordion.Trigger class="w-full">
-	<div id={member.playerUuid} class="flex flex-row justify-between align-middle w-full scroll-mt-64">
-		<div class="flex flex-row gap-2 align-middle items-center">
+	<div id={member.playerUuid} class="flex w-full scroll-mt-64 flex-row justify-between align-middle">
+		<div class="flex flex-row items-center gap-2 align-middle">
 			{#if rank}
 				<div class="text-green-800 dark:text-green-300">
 					<p>
@@ -42,29 +46,31 @@
 			<img
 				src="https://mc-heads.net/avatar/{member.playerUuid}"
 				alt="Player Head"
-				class="w-8 h-8 pixelated aspect-square rounded-sm"
+				class="pixelated aspect-square h-8 w-8 rounded-sm"
 			/>
 			<p class="text-lg">{member.playerName}</p>
 			{#if owner}
 				<Popover.Mobile>
-					<div slot="trigger" class="flex flex-row items-end">
-						<Crown size="sm" class="w-4 mt-1.5 text-yellow-400" />
-					</div>
+					{#snippet trigger()}
+						<div class="flex flex-row items-end">
+							<Crown size="sm" class="mt-1.5 w-4 text-yellow-400" />
+						</div>
+					{/snippet}
 					<p class="text-lg font-semibold">Team Owner</p>
 				</Popover.Mobile>
 			{/if}
 			{#if running}
 				<Popover.Mobile>
-					<div slot="trigger">
+					{#snippet trigger()}
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
-								<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-zinc-700" />
+								<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
 							{/if}
 							{#if member.status === 1}
-								<div class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-300" />
+								<div class="h-2 w-2 rounded-full bg-green-500 dark:bg-green-300"></div>
 							{/if}
 						</div>
-					</div>
+					{/snippet}
 					<div>
 						{#if member.status === 0}
 							<p class="text-lg font-semibold">Inactive Farmer</p>
@@ -80,7 +86,7 @@
 				</Popover.Mobile>
 			{/if}
 		</div>
-		<p class="text-lg block pr-2">
+		<p class="block pr-2 text-lg">
 			{#if member.score && +member.score > 0}
 				{(+(member.score ?? 0)).toLocaleString()}
 			{:else if running}
@@ -90,32 +96,32 @@
 	</div>
 </Accordion.Trigger>
 <Accordion.Content>
-	<div class="flex flex-col md:flex-row gap-4 items-start w-full">
+	<div class="flex w-full flex-col items-start gap-4 md:flex-row">
 		{#if event.type === +EventType.Medals}
-			<div class="flex flex-col w-full gap-1">
+			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count]}
-					<div class="flex flex-row justify-between items-center gap-2 even:bg-card even:rounded-sm p-1">
+					<div class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-card">
 						<div class="flex flex-row items-center gap-2">
 							<img
 								src="/images/medals/{medal.toLowerCase()}.webp"
 								alt={medal}
 								class="pixelated aspect-square"
 							/>
-							<p class="font-semibold whitespace-nowrap">{medal} <span>x{count}</span></p>
+							<p class="whitespace-nowrap font-semibold">{medal} <span>x{count}</span></p>
 						</div>
 						<p class="font-semibold">{count * medalWeight(medal)}</p>
 					</div>
 				{/each}
 			</div>
 		{/if}
-		<div class="flex flex-row justify-between items-center w-full">
+		<div class="flex w-full flex-row items-center justify-between">
 			<div>
 				<p class="text-gray-500">Last Updated</p>
 				<p>
 					{member.lastUpdated
 						? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +
-						  ' ' +
-						  new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleTimeString()
+							' ' +
+							new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleTimeString()
 						: 'Never Updated!'}
 				</p>
 			</div>

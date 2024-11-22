@@ -4,15 +4,20 @@
 	import { validStyle } from '$lib/styles/style';
 	import { onMount } from 'svelte';
 
-	export let style: components['schemas']['WeightStyleWithDataDto'];
-	export let ign: string;
-	export let uuid: string;
-	export let weight: components['schemas']['FarmingWeightDto'] | undefined = undefined;
+	interface Props {
+		style: components['schemas']['WeightStyleWithDataDto'];
+		ign: string;
+		uuid: string;
+		weight?: components['schemas']['FarmingWeightDto'] | undefined;
+	}
 
-	let canvas: HTMLCanvasElement;
-	let promise: Promise<unknown>;
+	let { style, ign, uuid, weight = undefined }: Props = $props();
+
+	let canvas: HTMLCanvasElement | null = $state(null);
+	let promise: Promise<unknown> | undefined = $state();
 
 	onMount(async () => {
+		if (!canvas) return;
 		promise = createFromData(canvas, {
 			account: { name: ign, id: uuid },
 			profile: weight,
@@ -28,4 +33,4 @@
 {:catch}
 	<p style="color: red">Error loading preview image.</p>
 {/await}
-<canvas bind:this={canvas} class="w-full origin-top-left font-sans" />
+<canvas bind:this={canvas} class="w-full origin-top-left font-sans"></canvas>

@@ -4,8 +4,8 @@
 	import { cn } from '$lib/utils';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 
-	export let navItems = [] as { title: string; items: NavItem[] }[];
-	$: user = $page.data.session;
+	let { navItems = [] as { title: string; items: NavItem[] }[] } = $props();
+	let user = $derived($page.data.session);
 </script>
 
 <nav class="flex w-full flex-col gap-4">
@@ -23,7 +23,7 @@
 							<a
 								href={item.href}
 								class={cn(
-									'flex flex-row gap-1 items-center whitespace-nowrap rounded-lg border-2 border-transparent px-2.5 py-1.5 font-medium capitalize',
+									'flex flex-row items-center gap-1 whitespace-nowrap rounded-lg border-2 border-transparent px-2.5 py-1.5 font-medium capitalize',
 									'text-sm hover:bg-primary-foreground',
 									'data-[active=true]:border-primary-foreground'
 								)}

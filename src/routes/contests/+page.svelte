@@ -8,25 +8,29 @@
 	import { SkyBlockTime } from 'farming-weight';
 
 	const date = SkyBlockTime.now;
-	let yearVal = date.year;
-	let monthVal = date.month;
-	let dayVal = date.day;
+	let yearVal = $state(date.year);
+	let monthVal = $state(date.month);
+	let dayVal = $state(date.day);
 
-	function searchContest() {
+	function searchContest(event: Event) {
+		event.preventDefault();
 		goto(`/contests/${yearVal}/${monthVal}/${dayVal}`);
 	}
 
-	function searchContestYear() {
+	function searchContestYear(event: Event) {
+		event.preventDefault();
 		goto(`/contests/${yearVal}`);
 	}
 
-	function searchContestYearMonth() {
+	function searchContestYearMonth(event: Event) {
+		event.preventDefault();
 		goto(`/contests/${yearVal}/${monthVal}`);
 	}
 
-	$: searchStr = '';
+	let searchStr = $state('');
 
-	function lookUpPlayer() {
+	function lookUpPlayer(event: Event) {
+		event.preventDefault();
 		if (!searchStr) return;
 		goto(`/@${searchStr}/contests`);
 	}
@@ -37,16 +41,16 @@
 	description="Browse hundreds of thousands of contest participations set by fellow players!"
 />
 
-<main class="flex flex-col justify-center items-center">
-	<h1 class="text-4xl my-16">Jacob's Contests</h1>
+<main class="flex flex-col items-center justify-center">
+	<h1 class="my-16 text-4xl">Jacob's Contests</h1>
 
-	<div class="flex flex-col md:flex-row gap-8 items-stretch max-w-4xl">
-		<Card.Root class="flex flex-col max-w-md">
+	<div class="flex max-w-4xl flex-col items-stretch gap-8 md:flex-row">
+		<Card.Root class="flex max-w-md flex-col">
 			<Card.Header>
 				<Card.Title class="text-xl">View upcoming contests!</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex-1 flex flex-col justify-between">
-				<p class="w-full mb-6 text-md">
+			<Card.Content class="flex flex-1 flex-col justify-between">
+				<p class="text-md mb-6 w-full">
 					Contests coming this SkyBlock year! May take a moment to update after the new year.
 				</p>
 				<div class="flex justify-center">
@@ -59,12 +63,9 @@
 				<Card.Title class="text-xl">View all contest participations from a player!</Card.Title>
 			</Card.Header>
 			<Card.Content>
-				<div class="flex flex-col justify-between gap-4 h-full">
-					<p class="w-full text-md">May take a moment to load for some players with thousands of contests.</p>
-					<form
-						class="flex flex-row gap-2 justify-center items-center"
-						on:submit|preventDefault={lookUpPlayer}
-					>
+				<div class="flex h-full flex-col justify-between gap-4">
+					<p class="text-md w-full">May take a moment to load for some players with thousands of contests.</p>
+					<form class="flex flex-row items-center justify-center gap-2" onsubmit={lookUpPlayer}>
 						<Input placeholder="Search for a player" bind:value={searchStr} type="text" />
 						<Button variant="default" type="submit" size="lg">Search</Button>
 					</form>
@@ -73,28 +74,28 @@
 		</Card.Root>
 	</div>
 
-	<div class="my-8 mb-32 flex justify-center w-full max-w-4xl">
+	<div class="my-8 mb-32 flex w-full max-w-4xl justify-center">
 		<Card.Root class="w-full">
-			<Card.Title class="text-xl p-6 pb-0">Delve Through The Archives</Card.Title>
-			<div class="flex flex-col md:flex-row p-6 gap-8 items-start justify-between w-full">
-				<p class="flex-1 text-md my-4">
+			<Card.Title class="p-6 pb-0 text-xl">Delve Through The Archives</Card.Title>
+			<div class="flex w-full flex-col items-start justify-between gap-8 p-6 md:flex-row">
+				<p class="text-md my-4 flex-1">
 					Look through the rankings of every known participant in every known contest. Also try clicking on
 					contest participations elsewhere on the site to jump to that contest.
 				</p>
-				<div class="flex-1 flex flex-col gap-4 items-end">
-					<form on:submit|preventDefault={searchContestYear} class="flex gap-2 items-center justify-center">
+				<div class="flex flex-1 flex-col items-end gap-4">
+					<form onsubmit={searchContestYear} class="flex items-center justify-center gap-2">
 						<div>
 							<Label for="yearOnly"><span class="text-sm">Skyblock Year</span></Label>
-							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
+							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} />
 						</div>
-						<Button class="!p-2.5 mt-6" href="/contests/{yearVal}/records" color="green">
+						<Button class="mt-6 !p-2.5" href="/contests/{yearVal}/records" color="green">
 							<!-- <OrdoredListOutline class="w-5 h-5" />
 							<Popover>Top Scores</Popover> -->
 							Records
 						</Button>
-						<Button class="!p-2.5 mt-6" type="submit" name="Search">
+						<Button class="mt-6 !p-2.5" type="submit" name="Search">
 							<svg
-								class="w-5 h-5"
+								class="h-5 w-5"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -108,23 +109,20 @@
 							>
 						</Button>
 					</form>
-					<form
-						on:submit|preventDefault={searchContestYearMonth}
-						class="flex gap-2 items-center justify-center"
-					>
+					<form onsubmit={searchContestYearMonth} class="flex items-center justify-center gap-2">
 						<div>
 							<Label for="yearMonth"><span class="text-sm">Skyblock Year</span></Label>
-							<Input id="yearMonth" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
+							<Input id="yearMonth" placeholder="Day" bind:value={yearVal} />
 						</div>
 						<span class="mt-4">/</span>
 						<div>
 							<Label for="monthYear"><span class="text-sm">Skyblock Month</span></Label>
-							<Input id="monthYear" placeholder="Day" bind:value={monthVal} class="dark:bg-zinc-700" />
+							<Input id="monthYear" placeholder="Day" bind:value={monthVal} />
 						</div>
 
-						<Button class="!p-2.5 mt-6" type="submit" name="Search">
+						<Button class="mt-6 !p-2.5" type="submit" name="Search">
 							<svg
-								class="w-5 h-5"
+								class="h-5 w-5"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -138,25 +136,25 @@
 							>
 						</Button>
 					</form>
-					<form on:submit|preventDefault={searchContest} class="flex gap-2 items-center justify-center">
+					<form onsubmit={searchContest} class="flex items-center justify-center gap-2">
 						<div>
 							<Label for="year"><span class="text-sm">SB Year</span></Label>
-							<Input id="year" placeholder="Day" bind:value={yearVal} class="dark:bg-zinc-700" />
+							<Input id="year" placeholder="Day" bind:value={yearVal} />
 						</div>
 						<span class="mt-4">/</span>
 						<div>
 							<Label for="month"><span class="text-sm">SB Month</span></Label>
-							<Input id="month" placeholder="Day" bind:value={monthVal} class="dark:bg-zinc-700" />
+							<Input id="month" placeholder="Day" bind:value={monthVal} />
 						</div>
 						<span class="mt-4">/</span>
 						<div>
 							<Label for="day"><span class="text-sm">SB Day</span></Label>
-							<Input id="day" placeholder="Day" bind:value={dayVal} class="dark:bg-zinc-700" />
+							<Input id="day" placeholder="Day" bind:value={dayVal} />
 						</div>
 
-						<Button class="!p-2.5 mt-6" type="submit" name="Search">
+						<Button class="mt-6 !p-2.5" type="submit" name="Search">
 							<svg
-								class="w-5 h-5"
+								class="h-5 w-5"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"

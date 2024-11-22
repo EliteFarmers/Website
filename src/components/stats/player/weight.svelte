@@ -3,34 +3,37 @@
 	import type { ProfileDetails } from '$lib/api/elite';
 	import Profiles from './profiles.svelte';
 
-	export let weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
-	export let rank: number;
+	interface Props {
+		weightInfo: components['schemas']['FarmingWeightDto'] | undefined;
+		rank: number;
+		profiles: {
+			ign: string;
+			selected: ProfileDetails;
+			profiles: ProfileDetails[];
+		};
+	}
 
-	export let profiles: {
-		ign: string;
-		selected: ProfileDetails;
-		profiles: ProfileDetails[];
-	};
+	let { weightInfo, rank, profiles }: Props = $props();
 
-	$: rankText = rank !== -1 ? `#${rank}` : 'Unranked';
+	let rankText = $derived(rank !== -1 ? `#${rank}` : 'Unranked');
 
-	$: weightStr = weightInfo?.totalWeight?.toLocaleString() ?? '0';
+	let weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
 </script>
 
 <div class="block">
-	<div class="flex items-center gap-2 z-10">
+	<div class="z-10 flex items-center gap-2">
 		{#if rank !== -1}
 			<a
-				class="p-1 lg:p-1 rounded-md max-w-fit bg-primary-foreground hover:bg-muted"
+				class="max-w-fit rounded-md bg-primary-foreground p-1 hover:bg-muted lg:p-1"
 				href={`/leaderboard/farmingweight/${profiles.ign}-${profiles.selected.id}`}
 			>
-				<span class="mx-1 text-2xl font-semibold font-mono text-yellow-700 dark:text-yellow-400">
-					<span class="text-lg mr-0.5">#</span>{rank}
+				<span class="mx-1 font-mono text-2xl font-semibold text-yellow-700 dark:text-yellow-400">
+					<span class="mr-0.5 text-lg">#</span>{rank}
 				</span>
 			</a>
 		{:else}
-			<div class="p-1 lg:p-2 rounded-md max-w-fit bg-primary-foreground">
-				<span class="mx-1 text-md md:text-lg font-semibold">
+			<div class="max-w-fit rounded-md bg-primary-foreground p-1 lg:p-2">
+				<span class="text-md mx-1 font-semibold md:text-lg">
 					{rankText}
 				</span>
 			</div>
@@ -40,6 +43,6 @@
 
 	<div class="object-scale-down">
 		<h1 class="text-5xl md:text-6xl lg:text-8xl">{weightStr}</h1>
-		<h1 class="text-sm md:text-lg w-full text-right">Farming Weight</h1>
+		<h1 class="w-full text-right text-sm md:text-lg">Farming Weight</h1>
 	</div>
 </div>

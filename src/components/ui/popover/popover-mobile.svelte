@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { Root, Trigger, Content } from '$ui/popover';
-	import type { Popover as PopoverPrimitive } from 'bits-ui';
 
 	let timeout: ReturnType<typeof setTimeout>;
 
@@ -22,33 +21,38 @@
 		}, 200);
 	}
 
-	export let open = false;
-	export let hasContent = true;
-	export let rootClass = '';
-	export let triggerClass = '';
-	export let triggerRootClass = '';
-
-	type $$Props = PopoverPrimitive.ContentProps & {
-		hasContent?: boolean;
+	interface Props {
 		open?: boolean;
+		hasContent?: boolean;
 		rootClass?: string;
 		triggerClass?: string;
 		triggerRootClass?: string;
-	};
-	let className: $$Props['class'] = undefined;
-	export { className as class };
+		class?: string;
+		trigger?: import('svelte').Snippet;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		open = $bindable(false),
+		rootClass = '',
+		triggerClass = '',
+		triggerRootClass = '',
+		class: className = undefined,
+		trigger,
+		children,
+	}: Props = $props();
 </script>
 
-<Root bind:open closeOnOutsideClick={false}>
-	<div on:mouseenter={mouseEnter} on:mouseleave={mouseLeave} role="contentinfo" class={triggerRootClass}>
+<Root bind:open>
+	<div onmouseenter={mouseEnter} onmouseleave={mouseLeave} role="contentinfo" class={triggerRootClass}>
 		<Trigger class={triggerClass}>
-			<slot name="trigger" />
+			{@render trigger?.()}
 		</Trigger>
 	</div>
-	{#if hasContent}
-		<Content class={cn('p-2', className)}>
-			<div on:mouseenter={mouseEnter} on:mouseleave={mouseLeave} role="contentinfo" class={rootClass}>
-				<slot />
+	{#if children?.length}
+		<Content class={cn('p-2', className)} interactOutsideBehavior="ignore">
+			<div onmouseenter={mouseEnter} onmouseleave={mouseLeave} role="contentinfo" class={rootClass}>
+				{@render children?.()}
 			</div>
 		</Content>
 	{/if}

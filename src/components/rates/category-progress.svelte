@@ -4,25 +4,30 @@
 	import * as Dialog from '$ui/dialog';
 	import ItemProgress from './item-progress.svelte';
 
-	export let name: string;
-	export let progress: FortuneSourceProgress[];
+	interface Props {
+		name: string;
+		progress: FortuneSourceProgress[];
+		children?: import('svelte').Snippet;
+	}
 
-	let progressModal = false;
-	$: shownProgress = undefined as FortuneSourceProgress | undefined;
+	let { name, progress, children }: Props = $props();
+
+	let progressModal = $state(false);
+	let shownProgress = $state<FortuneSourceProgress | undefined>(undefined);
 </script>
 
-<div class="flex flex-col gap-2 flex-1 basis-64 justify-center">
-	<div class="flex flex-col max-w-lg w-full gap-2 flex-1 mx-1">
-		<div class="flex flex-row gap-1 items-center">
-			<slot />
-			<h2 class="text-xl pl-1">{name}</h2>
+<div class="flex flex-1 basis-64 flex-col justify-center gap-2">
+	<div class="mx-1 flex w-full max-w-lg flex-1 flex-col gap-2">
+		<div class="flex flex-row items-center gap-1">
+			{@render children?.()}
+			<h2 class="pl-1 text-xl">{name}</h2>
 		</div>
-		<div class="flex flex-col max-w-lg w-full gap-1.5 flex-1">
+		<div class="flex w-full max-w-lg flex-1 flex-col gap-1.5">
 			{#each progress as p (p.name + p.fortune + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item}
 					<button
-						class="hover:bg-primary-content/10 dark:hover:bg-card/50 px-1 rounded-lg cursor-pointer"
-						on:click={() => {
+						class="cursor-pointer rounded-lg px-1 hover:bg-primary-content/10 dark:hover:bg-card/50"
+						onclick={() => {
 							shownProgress = p;
 							progressModal = true;
 						}}
@@ -40,7 +45,7 @@
 </div>
 
 <Dialog.Root bind:open={progressModal}>
-	<Dialog.Content class="overflow-y-scroll max-h-[80%]">
+	<Dialog.Content class="max-h-[80%] overflow-y-scroll">
 		<Dialog.Title>{shownProgress?.name}</Dialog.Title>
 		{#if shownProgress}
 			<ItemProgress progress={shownProgress} />
