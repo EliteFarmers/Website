@@ -57,6 +57,8 @@
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 
+	$inspect($ratesData);
+
 	function updateSelectedTool(c: string) {
 		const crop = cropKey(c);
 		if (selectedTool?.crop === crop) return;
@@ -75,7 +77,7 @@
 	}
 
 	const cropKey = (crop: string) =>
-		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? crop) as Crop;
+		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? getCropFromName(crop)) as Crop;
 
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 	const pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
@@ -153,6 +155,7 @@
 			communityCenter: $ratesData.communityCenter,
 			strength: $ratesData.strength,
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
+			sprayedPlot: $ratesData.sprayedPlot,
 			zorro: $ratesData.zorroMode
 				? {
 						enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
@@ -285,7 +288,9 @@
 					</div>
 					<div class="flex flex-row items-center justify-center gap-2">
 						<p class="text-md mb-1 leading-none">Enabled</p>
-						<Switch bind:checked={$ratesData.useTemp} />
+						{#if $ratesData.useTemp !== undefined}
+							<Switch bind:checked={$ratesData.useTemp} />
+						{/if}
 					</div>
 				</div>
 				<div
@@ -307,21 +312,18 @@
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.centuryCake.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
+							{#if $ratesData.temp.centuryCake !== undefined}
+								<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
+							{/if}
 							<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.flourSpray.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.flourSpray} disabled={!$ratesData.useTemp} />
-							<FortuneBreakdown total={20} enabled={$ratesData.temp.flourSpray && $ratesData.useTemp} />
 						</div>
 					</div>
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.harvestPotion.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
+							{#if $ratesData.temp.harvestPotion !== undefined}
+								<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
+							{/if}
 							<FortuneBreakdown
 								total={50}
 								enabled={$ratesData.temp.harvestPotion && $ratesData.useTemp}
@@ -331,32 +333,55 @@
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.magic8Ball.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
+							{#if $ratesData.temp.magic8Ball !== undefined}
+								<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
+							{/if}
 							<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
 						</div>
 					</div>
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.springFilter.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
+							{#if $ratesData.temp.springFilter !== undefined}
+								<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
+							{/if}
 							<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
 						</div>
 					</div>
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.anitaContest.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
+							{#if $ratesData.temp.anitaContest !== undefined}
+								<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
+							{/if}
 							<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
 						</div>
 					</div>
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
 						<p class="text-md leading-none">{TEMPORARY_FORTUNE.chocolateTruffle.name}</p>
 						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
+							{#if $ratesData.temp.chocolateTruffle !== undefined}
+								<Switch
+									bind:checked={$ratesData.temp.chocolateTruffle}
+									disabled={!$ratesData.useTemp}
+								/>
+							{/if}
 							<FortuneBreakdown
 								total={30}
 								enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp}
 							/>
+						</div>
+					</div>
+				</div>
+				<div
+					class="flex flex-col flex-wrap items-start justify-start md:flex-row md:items-start md:justify-center"
+				>
+					<div class="m-2 flex w-full flex-col items-center gap-3 md:basis-48">
+						<p class="text-md leading-none">Sprayed Plot</p>
+						<div class="flex flex-row items-center justify-center gap-2">
+							{#if $ratesData.sprayedPlot !== undefined}
+								<Switch bind:checked={$ratesData.sprayedPlot} />
+							{/if}
 						</div>
 					</div>
 					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
@@ -419,10 +444,12 @@
 								</p>
 							</div>
 						</div>
-						{#if getCropInfo(selectedCropKey).exportable}
+						{#if selectedCropKey && getCropInfo(selectedCropKey).exportable}
 							<div class="flex flex-row items-center justify-center gap-2">
 								<p class="text-md mb-1 leading-none">Carrolyn Fortune (+12)</p>
-								<Switch bind:checked={$ratesData.exported[selectedCropKey]} />
+								{#if $ratesData.exported[selectedCropKey]}
+									<Switch bind:checked={$ratesData.exported[selectedCropKey]} />
+								{/if}
 							</div>
 						{/if}
 					</div>

@@ -13,12 +13,13 @@ interface RatesData {
 	exported: Record<Crop, boolean>;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
+	sprayedPlot: boolean;
 	zorroMode: ZorroMode;
 }
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 2,
+	v: 3,
 	settings: true,
 	communityCenter: 0,
 	strength: 0,
@@ -43,7 +44,9 @@ const defaultData = {
 		springFilter: false,
 		magic8Ball: false,
 		flourSpray: false,
+		anitaContest: false,
 	},
+	sprayedPlot: true,
 	zorroMode: ZorroMode.Normal,
 } as RatesData;
 
