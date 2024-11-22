@@ -1,6 +1,8 @@
 <!-- Credit: https://github.com/huntabyte/bits-ui/issues/235#issue-2042475148 -->
 
 <script lang="ts" module>
+	export type T = string | number;
+
 	export type Option<T = string | number> = {
 		value: T;
 		label: string;

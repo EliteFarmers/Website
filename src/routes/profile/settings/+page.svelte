@@ -4,7 +4,6 @@
 	import Product from '$comp/monetization/product.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
-	import { onMount } from 'svelte';
 	import { ArrowDown, ArrowUp } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { Label } from '$ui/label';
