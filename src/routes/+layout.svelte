@@ -49,10 +49,6 @@
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
 </svelte:head>
 
-{#if browser}
-	<ModeWatcher />
-{/if}
-
 <div class="relative flex min-h-screen flex-col">
 	<Nav />
 
@@ -62,3 +58,5 @@
 
 	<Footer />
 </div>
+
+<ModeWatcher />
