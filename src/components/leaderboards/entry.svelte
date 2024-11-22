@@ -21,20 +21,27 @@
 		showLeaderboardName = false,
 	}: Props = $props();
 
-	let options = $derived({
-		maximumFractionDigits: 1,
-	} as Intl.NumberFormatOptions);
-
-	$effect(() => {
+	let options = $derived.by(() => {
 		if (formatting === 'decimal') {
-			options.minimumFractionDigits = 1;
+			return {
+				maximumFractionDigits: 1,
+				minimumFractionDigits: 1,
+			};
 		} else if ($page.params.category === 'skyblockxp') {
-			options.minimumFractionDigits = 2;
-			options.maximumFractionDigits = 2;
+			return {
+				maximumFractionDigits: 2,
+				minimumFractionDigits: 2,
+			};
 		}
+
+		return {
+			maximumFractionDigits: 1,
+		};
 	});
 
-	let { ign, amount, profile } = $derived(entry);
+	let ign = $state(entry.ign);
+	let amount = $derived($page.params.category === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
+	let profile = $state(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
 	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
 </script>
