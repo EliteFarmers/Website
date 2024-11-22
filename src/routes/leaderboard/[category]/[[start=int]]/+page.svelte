@@ -18,7 +18,7 @@
 	let includeLeaderboardName = $derived(getShowLeaderboardName());
 
 	let title = $derived(`${data.lb?.title} Leaderboard`);
-	let entries = $state(data.lb?.entries ?? []);
+	let entries = $derived(data.lb?.entries ?? []);
 	let offset = $derived((data.lb?.offset ?? 0) + 1);
 	let category = $derived(data.category);
 
@@ -28,17 +28,6 @@
 
 	let initialPage = $state(Math.floor((data.lb.offset ?? 0) / 20 + 1));
 	let noneActive = $derived((data.lb.offset ?? 0) / 20 + 1 !== initialPage);
-
-	$effect.pre(() => {
-		if (data.lb?.id === 'skyblockxp') {
-			entries = entries.map((entry) => ({
-				ign: entry.ign,
-				uuid: entry.uuid,
-				profile: entry.profile,
-				amount: (entry.amount ?? 0) / 100,
-			}));
-		}
-	});
 
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(({ from }) => {
