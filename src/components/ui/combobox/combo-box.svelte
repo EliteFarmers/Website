@@ -17,6 +17,7 @@
 		disabled?: boolean;
 		value?: string;
 	}
+
 	let {
 		options = [],
 		exclude = [],
@@ -35,7 +36,9 @@
 	let open = $state(false);
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 
-	let selected = $derived(realOptions.find((f) => f.value === value) ?? { label: placeholder, value: '_' });
+	let selected = $derived(
+		realOptions.find((f) => f.value.toString() === value.toString()) ?? { label: placeholder, value: '_' }
+	);
 
 	// We want to refocus the trigger button when the user selects
 	// an item from the list so users can continue navigating the
@@ -74,7 +77,7 @@
 			<Command.Group>
 				{#each realOptions as option}
 					<Command.Item
-						value={option.value}
+						value={option.label}
 						onSelect={() => {
 							value = option.value;
 							closeAndFocusTrigger();
@@ -82,7 +85,7 @@
 						}}
 					>
 						<Check class={cn('mr-2 h-4 w-4', value !== option.value && 'text-transparent')} />
-						{option.label}
+						<span>{option.label}</span>
 					</Command.Item>
 				{/each}
 			</Command.Group>

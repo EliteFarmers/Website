@@ -6,6 +6,7 @@
 		ref = $bindable(null),
 		class: className,
 		checked = $bindable(false),
+		name,
 		...restProps
 	}: WithoutChildrenOrChild<SwitchPrimitive.RootProps> = $props();
 </script>
@@ -19,6 +20,9 @@
 	)}
 	{...restProps}
 >
+	{#if name}
+		<input type="hidden" {name} value={checked} />
+	{/if}
 	<SwitchPrimitive.Thumb
 		class={cn(
 			'pointer-events-none block size-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0'

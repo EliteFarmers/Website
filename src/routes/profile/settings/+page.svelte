@@ -32,15 +32,6 @@
 			}));
 	}
 
-	onMount(() => {
-		visibleToggles = badges.reduce<Record<string, boolean>>((acc, mc) => {
-			mc.badges?.forEach((badge) => {
-				acc[`${mc.uuid}-${badge.id}`] = badge.visible ?? false;
-			});
-			return acc;
-		}, {});
-	});
-
 	let changedSettings = $state({
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
@@ -51,8 +42,6 @@
 
 	let user = $derived(data.user || undefined);
 	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
-
-	let visibleToggles = $state<Record<string, boolean>>({});
 
 	let unlockedSettings = $derived({
 		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
@@ -254,12 +243,7 @@
 					<div class="flex flex-row items-center gap-4">
 						<input type="hidden" name="badge.{id}" value={id} />
 						<input type="hidden" name="badge.{id}.order" value={i} />
-						<Switch bind:checked={visibleToggles[`${profile.uuid}-${badge.id}`]} />
-						<input
-							type="hidden"
-							name="badge.{id}.visible"
-							value={visibleToggles[`${profile.uuid}-${badge.id}`]}
-						/>
+						<Switch name="badge.{id}.visible" checked={badge.visible ?? false} />
 						{#if badge.image?.url}
 							<img
 								src={badge.image.url}
