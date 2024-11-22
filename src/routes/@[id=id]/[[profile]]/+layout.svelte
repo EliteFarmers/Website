@@ -44,18 +44,30 @@
 		badges={data.account?.badges}
 	/>
 
-	{#key url}
-		<div class="my-4 flex w-full flex-row justify-center">
-			<Button href="{path}/contests" class={active('/contests') + ' cursor-pointer'}>Contests</Button>
-			<Button href="{path}/charts" class={active('/charts') + ' cursor-pointer'}>Charts</Button>
-			<Button href={path} class={active(path) + ' cursor-pointer'}>Stats</Button>
-			<Button href="{path}/garden" class={active('/garden') + ' cursor-pointer'}>Garden</Button>
-			<Button href="{path}/rates" class={active('/rates') + ' cursor-pointer'}>Rates</Button>
-			{#if data.authorized}
-				<Button href="{path}/graphs" class="cursor-pointer">Admin</Button>
-			{/if}
-		</div>
-	{/key}
+	<div class="flex flex-row justify-center">
+		{#key url}
+			<div
+				class="my-6 flex w-fit flex-row justify-center rounded-md border-2 border-solid border-primary-foreground p-1"
+			>
+				<Button variant="ghost" size="sm" href="{path}/contests" class={active('/contests') + ' cursor-pointer'}
+					>Contests</Button
+				>
+				<Button variant="ghost" size="sm" href="{path}/charts" class={active('/charts') + ' cursor-pointer'}
+					>Charts</Button
+				>
+				<Button variant="ghost" size="sm" href={path} class={active(path) + ' cursor-pointer'}>Stats</Button>
+				<Button variant="ghost" size="sm" href="{path}/garden" class={active('/garden') + ' cursor-pointer'}
+					>Garden</Button
+				>
+				<Button variant="ghost" size="sm" href="{path}/rates" class={active('/rates') + ' cursor-pointer'}
+					>Rates</Button
+				>
+				{#if data.authorized}
+					<Button variant="ghost" size="sm" href="{path}/graphs" class="cursor-pointer">Admin</Button>
+				{/if}
+			</div>
+		{/key}
+	</div>
 
 	{@render children?.()}
 
