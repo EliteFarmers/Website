@@ -17,6 +17,7 @@
 	import { differenceInDays } from 'date-fns';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		data: PageData;
@@ -29,8 +30,8 @@
 	const selectedCrops = getSelectedCrops();
 	const minDate = new CalendarDate(2023, 7, 1);
 
-	function mapCrops(crops: typeof data.crops) {
-		return Object.entries(crops)
+	function mapCrops() {
+		return Object.entries(form?.graph ?? data.crops)
 			.filter(([crop]) => crop !== 'seeds')
 			.map(([crop, data]) => {
 				const c = getCropFromName(crop) ?? Crop.Wheat;
@@ -50,30 +51,34 @@
 			});
 	}
 
-	function getStart(days: number) {
+	function getStart(daysToSubtract: number) {
 		const dayDiff = differenceInDays(today(tz).toDate(tz), value.toDate(tz));
 		if (!value || dayDiff > 30) return;
 
-		value = initEnd.subtract({ days });
+		value = initEnd.subtract({ days: daysToSubtract });
 	}
 
 	function back() {
-		value = value.subtract({ days });
+		value = value.subtract({ days: days });
 	}
 
 	function forward() {
 		if (value >= initEnd) return;
-		value = value.add({ days });
+		value = value.add({ days: days });
 		if (value > initEnd) value = initEnd;
 	}
 
-	let crops = $derived(form?.graph ?? data.crops);
-	let increases = $derived({} as Record<string, number>);
+	let increases = $state({} as Record<string, number>);
 	let highestIncrease = $state(0);
 
 	let pestIncreased = $state(false);
 
-	let entries = $derived(mapCrops(crops));
+	let entries = $state<ReturnType<typeof mapCrops>>([]);
+
+	onMount(() => {
+		entries = mapCrops();
+	});
+
 	let pestToggle = $state(false);
 
 	let showPests = $derived(pestToggle && pestIncreased);
@@ -81,17 +86,15 @@
 	let selectedCount = $derived(Object.values($selectedCrops).filter(Boolean).length);
 	let fewSelected = $derived(selectedCount <= 3 && $anySelected);
 	const tz = getLocalTimeZone();
-	let days = $state(7);
+
+	let daysString = $state('7');
+	let days = $derived(+(daysString ?? '7'));
 
 	const initEnd = today(tz);
 	let disabled = $state(false);
 	let initStart = initEnd.subtract({ days: 7 });
 
 	let value = $state(initStart);
-
-	$effect(() => {
-		getStart(days);
-	});
 
 	let backEnabled = $derived(value <= minDate);
 	let fowardEnabled = $derived(value >= initEnd);
@@ -110,14 +113,15 @@
 
 			return async ({ result }) => {
 				await applyAction(result);
+				entries = mapCrops();
 				disabled = false;
 			};
 		}}
 	>
-		<input type="hidden" bind:value={data.account.id} name="uuid" />
-		<input type="hidden" bind:value={data.profile.profileId} name="profile" />
+		<input type="hidden" value={data.account.id} name="uuid" />
+		<input type="hidden" value={data.profile.profileId} name="profile" />
 		<input type="hidden" value={startTime} name="start" />
-		<input type="hidden" bind:value={days} name="days" />
+		<input type="hidden" bind:value={daysString} name="days" />
 
 		<div class="flex flex-col items-center gap-2">
 			<div class="flex flex-col items-center gap-2">
@@ -148,13 +152,17 @@
 					</div>
 					<SelectSimple
 						options={[
-							{ label: '3 Days', value: 3 },
-							{ label: '1 Week', value: 7 },
-							{ label: '2 Weeks', value: 14 },
-							{ label: '3 Weeks', value: 21 },
-							{ label: '1 Month', value: 30 },
+							{ label: '3 Days', value: '3' },
+							{ label: '1 Week', value: '7' },
+							{ label: '2 Weeks', value: '14' },
+							{ label: '3 Weeks', value: '21' },
+							{ label: '1 Month', value: '30' },
 						]}
-						bind:value={days}
+						value={daysString}
+						change={(v) => {
+							daysString = v ?? daysString;
+							getStart(+(v ?? daysString));
+						}}
 						class="w-32"
 					/>
 					<Button type="submit" variant="default" {disabled}>Update</Button>

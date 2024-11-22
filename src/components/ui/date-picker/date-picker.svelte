@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { Calendar as CalendarIcon } from 'lucide-svelte';
-	import { type DateValue, DateFormatter, getLocalTimeZone, today } from '@internationalized/date';
+	import { type DateValue, DateFormatter, getLocalTimeZone } from '@internationalized/date';
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$ui/button';
 	import { Calendar } from '$ui/calendar';
 	import * as Popover from '$ui/popover';
-	import { toDate } from 'date-fns';
 
 	const df = new DateFormatter('en-US', {
 		dateStyle: 'long',

@@ -8,11 +8,9 @@
 	};
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T extends string | number">
 	import { Select as Primitive } from 'bits-ui';
 	import * as Select from '.';
-
-	type T = $$Generic<string | number>;
 
 	interface Props extends Primitive.TriggerProps {
 		open?: boolean;
@@ -39,7 +37,7 @@
 		...rest
 	}: Props = $props();
 
-	let selected = $derived(value != null ? options.find((x) => x.value === value) : undefined);
+	let selected = $derived(value != null ? options.find((x) => x.value.toString() === value?.toString()) : undefined);
 </script>
 
 <Primitive.Root
@@ -58,7 +56,7 @@
 			<span>{placeholder}</span>
 		{/if}
 	</Select.Trigger>
-	<Select.Content class="max-h-96 w-[400px] overflow-y-auto overscroll-y-contain p-0">
+	<Select.Content class="max-h-96 overflow-y-auto overscroll-y-contain p-0">
 		{#each options as o (o.value)}
 			<Select.Item value={o.value.toString()}>
 				{@render item(o)}

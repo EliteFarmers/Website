@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@internationalized/date':
-        specifier: ^3.5.6
-        version: 3.5.6
+        specifier: ^3.6.0
+        version: 3.6.0
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -89,12 +89,15 @@ importers:
       farming-weight:
         specifier: ^0.6.5
         version: 0.6.5
+      globals:
+        specifier: ^15.12.0
+        version: 15.12.0
       layercake:
         specifier: ^8.4.2
         version: 8.4.2(svelte@5.1.13)(typescript@5.6.3)
       layerchart:
-        specifier: ^0.58.4
-        version: 0.58.4(svelte@5.1.13)(typescript@5.6.3)
+        specifier: ^0.59.4
+        version: 0.59.4(svelte@5.1.13)(typescript@5.6.3)
       lucide-svelte:
         specifier: ^0.460.1
         version: 0.460.1(svelte@5.1.13)
@@ -555,8 +558,8 @@ packages:
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
 
-  '@internationalized/date@3.5.6':
-    resolution: {integrity: sha512-jLxQjefH9VI5P9UQuqB6qNKnvFt1Ky1TPIzHGsIlCi7sZZoMR8SdYbBGRvM0y+Jtb+ez4ieBzmiAUcpmPYpyOw==}
+  '@internationalized/date@3.6.0':
+    resolution: {integrity: sha512-+z6ti+CcJnRlLHok/emGEsWQhe7kfSmEW+/6qCzvKY67YPh7YOBfvc7+/+NXq+zJlbArg30tYpqLjNgcAYv2YQ==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -584,17 +587,17 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@layerstack/svelte-actions@0.0.7':
-    resolution: {integrity: sha512-PYG4oocNQxuUKQkhQvrB+nh4SGGzVr2KlqGS8wivXC4lF78BpOnsZfLxv657oVBBE+u3Cx6q9NRq/AG1A7ZiIw==}
+  '@layerstack/svelte-actions@0.0.8':
+    resolution: {integrity: sha512-d5KYPNGMw16mgK5VnshLfC114IGNTsvMQHB29tCXyZqn2keSqFnsUAO1EJBbq5KIWmMBpP0dwnthI7X5g9Rn0w==}
 
-  '@layerstack/svelte-stores@0.0.6':
-    resolution: {integrity: sha512-QCYU2QIOGNVcstkyJDkVHPDxBUX1/9Nb5bYt6JuhmFgSrfdYKx8DlZlax3jMEmjdu2htQRmj/qSZe+xK4HFngA==}
+  '@layerstack/svelte-stores@0.0.8':
+    resolution: {integrity: sha512-2snztoQL6cJtSF+JTQjZM4E4KkUkvvObCcFLGCWNjK4ohU6gbaPplDMnKtD7yv9DLwLwF7CNlJAYlV9LfisQUg==}
 
-  '@layerstack/tailwind@0.0.9':
-    resolution: {integrity: sha512-bmv4qEgmJWgAiUqznj7WSQ3vCEoA80iXztEuSO2jsS1nJ2/676VguAQ/6SGiWm2uoxgJ5BCPAP/AYOowZOkI8g==}
+  '@layerstack/tailwind@0.0.10':
+    resolution: {integrity: sha512-8EMG9dBFHgqgFItmMP9/jytOwD9LjjWux+yHn3sF6au0Vlnw5mqziMltYXBFq3a0GJJwMimAE93gPJgmmWSoqQ==}
 
-  '@layerstack/utils@0.0.5':
-    resolution: {integrity: sha512-Ew84WuCMC3q7Wq0Tb0rBEM/WK2RkkxRBF/RvNcnbaWcj5O+jO6VEZc657Jv73skkIJ4fkciT8FhSIcHoRkhdrQ==}
+  '@layerstack/utils@0.0.6':
+    resolution: {integrity: sha512-aU6KpUq8CF01ZwjXiEGjx7+IfNXZfxQgbdHcZJHs/5DrMcRc7KkHTJYhMbJHQ/27EU0ApMEDswHsNSnFuM9BIg==}
 
   '@mdi/js@7.4.47':
     resolution: {integrity: sha512-KPnNOtm5i2pMabqZxpUz7iQf+mfrYZyKCZ8QNz85czgEt7cuHcGorWfdzUMWYA0SD+a6Hn4FmJ+YhzzzjkTZrQ==}
@@ -1533,6 +1536,10 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
+  globals@15.12.0:
+    resolution: {integrity: sha512-1+gLErljJFhbOVyaetcwJiJ4+eLe45S2E7P5UiZ9xGfeq3ATQf5DOv9G7MH3gGbKQLkzmNh2DxfZwLdw+j6oTQ==}
+    engines: {node: '>=18'}
+
   globalyzer@0.1.0:
     resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
 
@@ -1668,8 +1675,8 @@ packages:
       svelte: 3 - 5 || >=5.0.0-next.120
       typescript: ^5.0.2
 
-  layerchart@0.58.4:
-    resolution: {integrity: sha512-bXQnjnOt1Bybx707T7A25p994XvBvdscC2P1tkNAoKKmsmEJSs/WTSKOBjj6F/I2j2tHx3SUr1cEyHFoIDJ0Fg==}
+  layerchart@0.59.4:
+    resolution: {integrity: sha512-1TF6Z37CXpYUJaWdL47UoMOUNW+sdEalzgF9Tr6leO3SKOZzztFckkOOE+mCSV1GBZ3S2KTbeFmiQLc57WXAyA==}
     peerDependencies:
       svelte: ^3.56.0 || ^4.0.0 || ^5.0.0
 
@@ -1931,8 +1938,8 @@ packages:
     resolution: {integrity: sha512-GCRK8F6+Dl7xYniR5a4FYbpBzU8XnZVeowqsQFYdcXuSbChgiks7qybSkbvnaeqv0G0B+dd9/jJgH8kkLDQeEA==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.181.0:
-    resolution: {integrity: sha512-bI+J+f4E8x4JwbGtG6LReQv1Xvss01F6cs7UDlvffHySpVhNq4ptkNjV88B92IVEsrCtNYhy/TjFnGxk6RN0Qw==}
+  posthog-js@1.187.2:
+    resolution: {integrity: sha512-IGKsZ7M4AYACm5I6gGGFrv9kR/MOnVYw11XFYCLk363n0nq+ghwenoW1jJVL9gZLGKiMsConUR8rG2DD2OMKyg==}
 
   preact@10.24.3:
     resolution: {integrity: sha512-Z2dPnBnMUfyQfSQ+GBdsGa16hz35YmLmtTLhM169uW944hYL6xzTYkJjC07j+Wosz733pMWx0fgON3JNw1jJQA==}
@@ -2799,7 +2806,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.1': {}
 
-  '@internationalized/date@3.5.6':
+  '@internationalized/date@3.6.0':
     dependencies:
       '@swc/helpers': 0.5.15
 
@@ -2831,27 +2838,27 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@layerstack/svelte-actions@0.0.7':
+  '@layerstack/svelte-actions@0.0.8':
     dependencies:
       '@floating-ui/dom': 1.6.12
-      '@layerstack/utils': 0.0.5
+      '@layerstack/utils': 0.0.6
       d3-array: 3.2.4
       d3-scale: 4.0.2
       date-fns: 4.1.0
       lodash-es: 4.17.21
 
-  '@layerstack/svelte-stores@0.0.6':
+  '@layerstack/svelte-stores@0.0.8':
     dependencies:
-      '@layerstack/utils': 0.0.5
+      '@layerstack/utils': 0.0.6
       d3-array: 3.2.4
       date-fns: 4.1.0
       immer: 10.1.1
       lodash-es: 4.17.21
       zod: 3.23.8
 
-  '@layerstack/tailwind@0.0.9':
+  '@layerstack/tailwind@0.0.10':
     dependencies:
-      '@layerstack/utils': 0.0.5
+      '@layerstack/utils': 0.0.6
       clsx: 2.1.1
       culori: 4.0.1
       d3-array: 3.2.4
@@ -2862,7 +2869,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  '@layerstack/utils@0.0.5':
+  '@layerstack/utils@0.0.6':
     dependencies:
       d3-array: 3.2.4
       date-fns: 4.1.0
@@ -3318,7 +3325,7 @@ snapshots:
     dependencies:
       '@floating-ui/core': 1.6.8
       '@floating-ui/dom': 1.6.12
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.6.0
       esm-env: 1.1.4
       runed: 0.15.3(svelte@5.1.13)
       svelte: 5.1.13
@@ -3866,6 +3873,8 @@ snapshots:
 
   globals@14.0.0: {}
 
+  globals@15.12.0: {}
+
   globalyzer@0.1.0: {}
 
   globrex@0.1.2: {}
@@ -3987,12 +3996,12 @@ snapshots:
       svelte: 5.1.13
       typescript: 5.6.3
 
-  layerchart@0.58.4(svelte@5.1.13)(typescript@5.6.3):
+  layerchart@0.59.4(svelte@5.1.13)(typescript@5.6.3):
     dependencies:
-      '@layerstack/svelte-actions': 0.0.7
-      '@layerstack/svelte-stores': 0.0.6
-      '@layerstack/tailwind': 0.0.9
-      '@layerstack/utils': 0.0.5
+      '@layerstack/svelte-actions': 0.0.8
+      '@layerstack/svelte-stores': 0.0.8
+      '@layerstack/tailwind': 0.0.10
+      '@layerstack/utils': 0.0.6
       d3-array: 3.2.4
       d3-color: 3.1.0
       d3-delaunay: 6.0.4
@@ -4015,7 +4024,7 @@ snapshots:
       date-fns: 3.6.0
       layercake: 8.4.2(svelte@5.1.13)(typescript@5.6.3)
       lodash-es: 4.17.21
-      posthog-js: 1.181.0
+      posthog-js: 1.187.2
       shapefile: 0.6.6
       svelte: 5.1.13
       topojson-client: 3.1.0
@@ -4235,7 +4244,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.181.0:
+  posthog-js@1.187.2:
     dependencies:
       core-js: 3.39.0
       fflate: 0.4.8

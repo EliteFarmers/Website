@@ -12,7 +12,7 @@
 
 	let previousN = value;
 
-	const validator: Action<HTMLInputElement, number | undefined> = (node, v) => {
+	const validator: Action<HTMLInputElement, number | undefined> = (node) => {
 		return {
 			update(v) {
 				if (!v) {

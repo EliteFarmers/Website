@@ -105,10 +105,8 @@
 		accessories: (data.member?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
 		pets: pets,
 
-		// svelte-ignore state_referenced_locally
-		selectedPet: selectedPet,
-		// svelte-ignore state_referenced_locally
-		selectedTool: selectedTool,
+		selectedPet: (() => selectedPet)(),
+		selectedTool: (() => selectedTool)(),
 
 		refinedTruffles: data.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
 		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
@@ -150,6 +148,7 @@
 			...untrack(() => $player.options),
 			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
+			armor: untrack(() => $player.armorSet),
 			exportableCrops: $ratesData.exported,
 			communityCenter: $ratesData.communityCenter,
 			strength: $ratesData.strength,

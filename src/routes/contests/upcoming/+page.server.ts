@@ -9,7 +9,8 @@ export const load = (async ({ setHeaders }) => {
 		try {
 			const errorMsg = await response.text();
 			throw error(500, errorMsg);
-		} catch (err) {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (_) {
 			throw error(500, 'Failed to load contests');
 		}
 	}

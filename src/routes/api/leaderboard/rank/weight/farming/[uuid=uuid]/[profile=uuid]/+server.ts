@@ -20,7 +20,8 @@ export const GET = (async ({ params, url }) => {
 			rank: data.rank,
 			next: (data.upcomingPlayers ?? [])[0] ?? undefined,
 		});
-	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (_) {
 		return json({ success: true, rank: -1 });
 	}
 }) as RequestHandler;

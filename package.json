@@ -22,7 +22,7 @@
 		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
 	"devDependencies": {
-		"@internationalized/date": "^3.5.6",
+		"@internationalized/date": "^3.6.0",
 		"@popperjs/core": "^2.11.8",
 		"@quantco/pnpm-licenses": "^2.1.0",
 		"@sveltejs/adapter-node": "^5.2.9",
@@ -49,8 +49,9 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.46.0",
 		"farming-weight": "^0.6.5",
+		"globals": "^15.12.0",
 		"layercake": "^8.4.2",
-		"layerchart": "^0.58.4",
+		"layerchart": "^0.59.4",
 		"lucide-svelte": "^0.460.1",
 		"mode-watcher": "^0.4.1",
 		"openapi-fetch": "^0.12.5",
