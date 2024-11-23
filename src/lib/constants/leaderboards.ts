@@ -306,6 +306,12 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		icon: '/images/pests/fly.png',
 		type: LeaderboardType.Pest,
 	},
+	mouse: {
+		name: 'Field Mouse',
+		title: 'Field Mouse Kills',
+		limit: 5_000,
+		type: LeaderboardType.Pest,
+	},
 	'cactus-milestone': {
 		limit: 5_000,
 		title: 'Cactus Milestone Collection',
