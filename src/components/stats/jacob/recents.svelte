@@ -9,8 +9,11 @@
 
 	let { contests }: Props = $props();
 
-	let recentContests = $derived(
-		contests?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0)).slice(0, 8) ?? []
+	let recentContests = $state(
+		contests
+			?.slice()
+			?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0))
+			.slice(0, 8) ?? []
 	);
 
 	let showMore = false;
