@@ -18,7 +18,7 @@
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
 
-	let collections = $derived(data?.collections);
+	let collections = $derived(data.collections);
 	let member = $derived(data.member);
 	let profile = $derived(data.profile);
 	let uuid = $derived(data.account?.id);
@@ -32,7 +32,8 @@
 			(member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		)
 	);
-	let showSkills = $derived($page.url.href.includes('#Skills'));
+
+	let showSkills = $state($page.url.href.includes('#Skills'));
 
 	let weightStr = $derived(
 		member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'
@@ -77,8 +78,8 @@
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">
 	<div class="flex w-full max-w-7xl flex-1">
 		<Skills
-			open={showSkills}
-			skills={member?.skills}
+			bind:open={showSkills}
+			skills={data.member.skills}
 			ranks={data.ranks}
 			levelCaps={member?.unparsed?.levelCaps}
 			gardenXp={member?.garden?.experience ?? 0}
@@ -88,7 +89,7 @@
 
 <section class="my-8 flex w-full justify-center align-middle">
 	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">
-		<Collections {collections} ranks={data.ranks ?? {}} />
+		<Collections collections={data.collections} ranks={data.ranks ?? {}} />
 		{#if member?.farmingWeight?.inventory?.tools?.length || member?.events?.length}
 			<div class="flex flex-1 flex-col gap-2">
 				{#each member?.events ?? [] as event (event.eventId)}

@@ -17,15 +17,18 @@
 
 	let { collections, ranks }: Props = $props();
 
-	let list = $state(collections?.sort((a, b) => b.weight - a.weight) ?? []);
 	let weightSort = $state(true);
+
+	let list = $derived.by(() => {
+		return (
+			(weightSort
+				? collections?.sort((a, b) => b.weight - a.weight)
+				: collections?.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)) ?? []
+		);
+	});
 
 	function swap() {
 		weightSort = !weightSort;
-
-		list = weightSort
-			? collections?.sort((a, b) => b.weight - a.weight)
-			: collections?.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0);
 	}
 </script>
 
