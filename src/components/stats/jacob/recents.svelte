@@ -9,7 +9,7 @@
 
 	let { contests }: Props = $props();
 
-	let recentContests = $state(
+	let recentContests = $derived(
 		contests
 			?.slice()
 			?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0))
@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex flex-col">
-	<h1 class="my-1 text-2xl">Recent Contests</h1>
+	<h1 class="my-2 text-2xl">Recent Contests</h1>
 	<div class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
 		{#each recentContests as contest, i (`${contest.crop}${contest.timestamp}`)}
 			{#if i < 3 || (showMore && i < 9)}
