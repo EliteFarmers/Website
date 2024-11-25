@@ -40,6 +40,7 @@
 		class: className = undefined,
 		trigger,
 		children,
+		hasContent = true,
 	}: Props = $props();
 </script>
 
@@ -49,7 +50,7 @@
 			{@render trigger?.()}
 		</Trigger>
 	</div>
-	{#if children?.length}
+	{#if children?.length && hasContent}
 		<Content class={cn('p-2', className)} interactOutsideBehavior="ignore">
 			<div onmouseenter={mouseEnter} onmouseleave={mouseLeave} role="contentinfo" class={rootClass}>
 				{@render children?.()}
