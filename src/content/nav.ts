@@ -109,6 +109,10 @@ export const ADMIN_NAV_PAGES = [
 		href: '/admin/products',
 	},
 	{
+		title: 'Styles',
+		href: '/admin/styles',
+	},
+	{
 		title: 'Events',
 		href: '/admin/events',
 	},

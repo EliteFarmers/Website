@@ -68,7 +68,7 @@
 		</div>
 
 		{#if product.description}
-			<p class="font-semibold">Description</p>
+			<p class="mb-8">{product.description}</p>
 		{/if}
 
 		<div class="flex flex-row">
@@ -226,16 +226,6 @@
 			<div class="flex flex-1 flex-col gap-4">
 				<h2 class="text-xl font-semibold">Unlocked Styles</h2>
 
-				<div class="flex flex-col gap-2">
-					{#each styles ?? [] as style}
-						<Card.Root>
-							<Card.Content class="p-4">
-								<p>{style.label}</p>
-							</Card.Content>
-						</Card.Root>
-					{/each}
-				</div>
-
 				<form method="post" action="?/addCosmetic" class="flex flex-col gap-4" use:pending={loading}>
 					<input type="hidden" name="product" bind:value={product.id} />
 
@@ -264,6 +254,16 @@
 						</Button>
 					</div>
 				</form>
+
+				<div class="flex flex-col gap-2">
+					{#each styles ?? [] as style}
+						<Card.Root>
+							<Card.Content class="p-4">
+								<p>{style.label}</p>
+							</Card.Content>
+						</Card.Root>
+					{/each}
+				</div>
 			</div>
 		</div>
 	</section>

@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-export function validStyle(data: unknown): data is WeightStyle {
+export function isValidWeightStyle(data: unknown): data is WeightStyle {
 	const parse = WeightStyle.safeParse(data);
-	if (!parse.success) {
-		console.log(parse.error);
-	}
 	return parse.success;
+}
+
+export function weightStyleParse(data: unknown) {
+	return WeightStyle.safeParse(data);
 }
 
 export const Position = z.object({

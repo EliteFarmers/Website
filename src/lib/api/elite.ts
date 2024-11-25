@@ -1016,6 +1016,48 @@ export const GetAdminProducts = async (token: string) =>
 
 export const GetWeightStyles = async () => await GET('/product/styles', {});
 
+export const GetWeightStyle = async (styleId: number | string) => 
+	await GET('/product/style/{styleId}', {
+		params: {
+			path: {
+				styleId: styleId as unknown as number,
+			},
+		},
+	});
+
+export const UpdateWeightStyle = async (accessToken: string, styleId: string, style: components['schemas']['WeightStyleWithDataDto']) =>
+	await POST('/product/style/{styleId}', {
+		params: {
+			path: {
+				styleId: styleId as unknown as number,
+			},
+		},
+		body: style,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const DeleteWeightStyle = async (accessToken: string, styleId: string) =>
+	await DELETE('/product/style/{styleId}', {
+		params: {
+			path: {
+				styleId: styleId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const CreateWeightStyle = async (accessToken: string, style: components['schemas']['WeightStyleWithDataDto']) =>
+	await POST('/product/style', {
+		body: style,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const UpdateProduct = async (
 	accessToken: string,
 	productId: string,
