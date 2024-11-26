@@ -9,6 +9,7 @@
 		breakdown?: Record<string, number> | undefined;
 		enabled?: boolean;
 		small?: boolean;
+		max?: number;
 		children?: import('svelte').Snippet;
 	}
 
@@ -18,13 +19,19 @@
 		breakdown = undefined,
 		enabled = true,
 		small = false,
+		max = undefined,
 		children,
 	}: Props = $props();
 
-	let background = $derived(enabled ? 'bg-green-400 dark:bg-green-700' : 'bg-green-400/40 dark:bg-green-700/40');
-
 	let list = $derived(Object.entries(breakdown ?? {}).sort(([, a], [, b]) => b - a));
 	let sum = $derived(total ?? list.reduce((acc, [, value]) => acc + value, 0));
+	let maxed = $derived(max !== undefined && sum >= max);
+
+	let background = $derived(
+		enabled
+			? `bg-green-400 dark:bg-green-700 ${maxed ? 'bg-yellow-400 dark:bg-yellow-700' : ''}`
+			: `bg-green-400/40 dark:bg-green-700/40 ${maxed ? 'bg-yellow-400/40 dark:bg-yellow-700/40' : ''}`
+	);
 </script>
 
 {#if list.length <= 0}

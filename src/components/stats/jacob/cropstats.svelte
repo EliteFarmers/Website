@@ -2,6 +2,8 @@
 	import * as Popover from '$ui/popover';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { fortuneFromPersonalBestContest, getCropFromName } from 'farming-weight';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 
 	interface Props {
 		jacob: components['schemas']['JacobDataDto'] | undefined | null;
@@ -27,6 +29,13 @@
 		).sort()
 	);
 
+	function fortune(crop: string, collected: number) {
+		const c = getCropFromName(crop);
+		console.log(c, crop, collected);
+		if (!c) return 0;
+		return fortuneFromPersonalBestContest(c, collected);
+	}
+
 	function pb(crop: string) {
 		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '') as keyof typeof jacob.stats.personalBests];
 		return amount ? +amount : undefined;
@@ -43,22 +52,28 @@
 <div class="flex max-w-5xl flex-wrap items-center justify-center gap-4">
 	{#each highest as [crop, amount] (crop)}
 		{@const unique = medal(crop)}
+		{@const score = pb(crop)}
+		{@const ff = fortune(crop, score ?? 0)}
 
-		<div class="flex flex-1 basis-48 flex-row items-center justify-between rounded-md bg-primary-foreground p-2">
+		<div
+			class="flex flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md bg-primary-foreground p-2"
+		>
 			<div class="flex flex-row items-center gap-2">
 				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
 
 				<div class="flex flex-col items-start gap-1">
-					<Popover.Mobile>
-						{#snippet trigger()}
-							<p class="text-lg leading-none">
-								{pb(crop)?.toLocaleString() ?? 'Not Set!'}
-							</p>
-						{/snippet}
-						<div>
-							<p>The highest placement earned for {crop}!</p>
-						</div>
-					</Popover.Mobile>
+					<div>
+						<Popover.Mobile>
+							{#snippet trigger()}
+								<p class="text-lg font-semibold leading-none">
+									{score?.toLocaleString() ?? 'Not Set!'}
+								</p>
+							{/snippet}
+							<div>
+								<p>The highest placement earned for {crop}!</p>
+							</div>
+						</Popover.Mobile>
+					</div>
 
 					<Popover.Mobile>
 						{#snippet trigger()}
@@ -73,13 +88,16 @@
 				</div>
 			</div>
 
-			{#if unique}
-				<img
-					src="/images/medals/{unique}.webp"
-					alt="{unique} Medal"
-					class="pixelated highest-bracket h-10 w-10 p-1"
-				/>
-			{/if}
+			<div class="flex flex-col items-end gap-1">
+				{#if unique}
+					<img
+						src="/images/medals/{unique}.webp"
+						alt="{unique} Medal"
+						class="pixelated highest-bracket h-10 w-10 p-1"
+					/>
+				{/if}
+				<FortuneBreakdown total={ff} small={true} max={100} />
+			</div>
 		</div>
 	{/each}
 </div>
