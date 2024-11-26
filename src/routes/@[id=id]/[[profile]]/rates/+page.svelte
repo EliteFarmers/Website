@@ -57,8 +57,6 @@
 	const ratesData = getRatesData();
 	const selectedCrops = getSelectedCrops();
 
-	$inspect($ratesData);
-
 	function updateSelectedTool(c: string) {
 		const crop = cropKey(c);
 		if (selectedTool?.crop === crop) return;
