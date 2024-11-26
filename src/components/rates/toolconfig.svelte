@@ -62,7 +62,6 @@
 				class="dark:bg-zinc-800"
 				change={(v) => {
 					if (!v) return;
-					console.log(reforge);
 					tool.changeReforgeTo(reforge);
 					$player.selectTool(tool);
 					player.refresh();
@@ -79,7 +78,6 @@
 				}))}
 				change={(v) => {
 					if (!v) return;
-					console.log(counter);
 					tool.changeFarmedCropsTo(+counter);
 					$player.selectTool(tool);
 					player.refresh();

@@ -54,8 +54,6 @@
 		activeId = { ...activeId, [type]: petId };
 		onChange?.(petId);
 
-		console.log(pet);
-
 		$player.selectPet(pet);
 		player.refresh();
 

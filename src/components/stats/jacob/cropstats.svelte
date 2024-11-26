@@ -31,7 +31,6 @@
 
 	function fortune(crop: string, collected: number) {
 		const c = getCropFromName(crop);
-		console.log(c, crop, collected);
 		if (!c) return 0;
 		return fortuneFromPersonalBestContest(c, collected);
 	}
