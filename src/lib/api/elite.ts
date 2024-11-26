@@ -1016,7 +1016,7 @@ export const GetAdminProducts = async (token: string) =>
 
 export const GetWeightStyles = async () => await GET('/product/styles', {});
 
-export const GetWeightStyle = async (styleId: number | string) => 
+export const GetWeightStyle = async (styleId: number | string) =>
 	await GET('/product/style/{styleId}', {
 		params: {
 			path: {
@@ -1025,7 +1025,11 @@ export const GetWeightStyle = async (styleId: number | string) =>
 		},
 	});
 
-export const UpdateWeightStyle = async (accessToken: string, styleId: string, style: components['schemas']['WeightStyleWithDataDto']) =>
+export const UpdateWeightStyle = async (
+	accessToken: string,
+	styleId: string,
+	style: components['schemas']['WeightStyleWithDataDto']
+) =>
 	await POST('/product/style/{styleId}', {
 		params: {
 			path: {

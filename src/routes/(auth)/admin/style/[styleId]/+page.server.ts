@@ -1,12 +1,7 @@
 import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { components } from '$lib/api/api';
-import {
-	CreateWeightStyle,
-	DeleteWeightStyle,
-	GetWeightStyle,
-	UpdateWeightStyle,
-} from '$lib/api/elite';
+import { CreateWeightStyle, DeleteWeightStyle, GetWeightStyle, UpdateWeightStyle } from '$lib/api/elite';
 import { isValidWeightStyle } from '$lib/styles/style';
 
 export const load = (async ({ parent, locals, params }) => {
@@ -41,18 +36,23 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const styleData = JSON.parse(data.get('data') as string);
-		if (!isValidWeightStyle(styleData)) {
-			return fail(400, { error: 'Invalid style data.' });
-		}
-
 		const body: components['schemas']['WeightStyleWithDataDto'] = {
 			id: +styleId,
-			name: data.get('name') as string,
-			styleFormatter: (data.get('formatter') as string) || 'data',
+			name: (data.get('name') as string) || undefined,
+			styleFormatter: (data.get('formatter') as string) || undefined,
 			description: (data.get('description') as string) || undefined,
-			data: styleData,
 		};
+
+		const style = data.get('data') as string | undefined;
+		if (style) {
+			const styleData = JSON.parse(data.get('data') as string);
+
+			if (!isValidWeightStyle(styleData)) {
+				return fail(400, { error: 'Invalid style data.' });
+			}
+
+			body.data = styleData;
+		}
 
 		const { error: e, response } = await UpdateWeightStyle(locals.access_token, styleId, body);
 
@@ -74,10 +74,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const { error: e, response } = await DeleteWeightStyle(
-			locals.access_token,
-			styleId,
-		);
+		const { error: e, response } = await DeleteWeightStyle(locals.access_token, styleId);
 
 		if (e) {
 			return fail(response.status, { error: e });
@@ -103,20 +100,17 @@ export const actions: Actions = {
 			return fail(404, { error: 'Style not found.' });
 		}
 
-		const { error: e, response } = await CreateWeightStyle(
-			locals.access_token,
-			{
-				name: style.name + ' (Copy)',
-				styleFormatter: style.styleFormatter,
-				description: style.description,
-				data: style.data
-			}
-		);
+		const { error: e, response } = await CreateWeightStyle(locals.access_token, {
+			name: style.name + ' (Copy)',
+			styleFormatter: style.styleFormatter,
+			description: style.description,
+			data: style.data,
+		});
 
 		if (e) {
 			return fail(response.status, { error: e });
 		}
 
 		redirect(307, '/admin/styles');
-	}
+	},
 };

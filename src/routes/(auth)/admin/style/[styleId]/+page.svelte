@@ -9,7 +9,7 @@
 
 	import type { PageData, ActionData } from './$types';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
-	import { isValidWeightStyle, weightStyleParse } from '$lib/styles/style';
+	import { weightStyleParse } from '$lib/styles/style';
 	import { untrack } from 'svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
 
@@ -41,7 +41,7 @@
 
 	let styleDataObj = $derived({
 		...untrack(() => data.style),
-		data: JSON.parse(styleData)
+		data: JSON.parse(styleData),
 	});
 </script>
 
@@ -68,14 +68,14 @@
 		<form method="post" action="?/updateStyle" class="flex flex-1 flex-col gap-4" use:enhance>
 			<input type="hidden" name="style" value={style.id} />
 
-			<div class="flex flex-col items-start gap-2 max-w-64">
+			<div class="flex max-w-64 flex-col items-start gap-2">
 				<Label>Style Name</Label>
-				<Input name="name" value={style.name} required/>
+				<Input name="name" value={style.name} required />
 			</div>
 
-			<div class="flex flex-col items-start gap-2 max-w-2xl">
+			<div class="flex max-w-2xl flex-col items-start gap-2">
 				<Label>Style Description</Label>
-				<Textarea name="description" value={style.description} maxlength={1024} required/>
+				<Textarea name="description" value={style.description} maxlength={1024} required />
 			</div>
 
 			<Button class="max-w-32" type="submit" disabled={loading}>Update</Button>
@@ -86,36 +86,53 @@
 			<h2 class="text-xl">Update Style Design</h2>
 		</div>
 
-		<div class="max-w-2xl h-36 max-h-36 pr-2 overflow-y-auto">
+		<div class="h-36 max-h-36 max-w-2xl overflow-y-auto pr-2">
 			{#if !styleDataValid?.success || !styleDataObj}
-				<p class="text-red-500 mb-2">Invalid style data.</p>
+				<p class="mb-2 text-red-500">Invalid style data.</p>
 				{#if styleDataValid?.error?.issues}
 					<div class="flex flex-col gap-1">
 						{#each styleDataValid.error.issues as issue}
-							<div class="flex flex-col gap-1 p-2 border-2 border-primary-foreground rounded-sm">
+							<div class="flex flex-col gap-1 rounded-sm border-2 border-primary-foreground p-2">
 								<p>{issue.path.join('.')}</p>
 								<p>{issue.message}</p>
 							</div>
 						{/each}
 					</div>
 				{:else}
-					<p class="text-muted-foreground">Data is invalid JSON, please make sure all properties are double quoted and check for missing commas.</p>
+					<p class="text-muted-foreground">
+						Data is invalid JSON, please make sure all properties are double quoted and check for missing
+						commas.
+					</p>
 				{/if}
 			{:else if styleDataObj}
 				<div class="max-h-36">
 					{#key badgeUrl}
-						<WeightStyle style={styleDataObj} ign={data.user.username ?? 'Steve'} uuid={data.user.username ?? 'Steve'} {rank} {badgeUrl} />
+						<WeightStyle
+							style={styleDataObj}
+							ign={data.user.username ?? 'Steve'}
+							uuid={data.user.username ?? 'Steve'}
+							{rank}
+							{badgeUrl}
+						/>
 					{/key}
 				</div>
 			{/if}
 		</div>
 
-		<div class="flex w-full md:flex-row gap-4 lg:flex-row">
+		<div class="flex w-full gap-4 md:flex-row lg:flex-row">
 			<form method="post" action="?/updateStyle" class="flex flex-1 flex-col gap-4" use:enhance>
 				<input type="hidden" name="style" value={style.id} />
+				<input type="hidden" name="name" value={style.name} />
+				<input type="hidden" name="description" value={style.description} />
 
-				<div class="flex flex-col items-start gap-2 max-w-2xl">
-					<Textarea spellcheck={false} writingsuggestions={false} class="h-96 font-mono" name="description" wrap="soft" bind:value={styleData} />
+				<div class="flex max-w-2xl flex-col items-start gap-2">
+					<Textarea
+						spellcheck={false}
+						writingsuggestions={false}
+						class="h-96 font-mono"
+						name="data"
+						bind:value={styleData}
+					/>
 				</div>
 
 				<div class="flex flex-row items-center gap-4">
@@ -137,13 +154,7 @@
 		<div class="flex flex-row gap-2">
 			<form method="post" action="?/duplicate" use:enhance>
 				<input type="hidden" name="style" value={style.id} />
-				<Button
-					size="sm"
-					type="submit"
-					class="max-w-32"
-				>
-					Duplicate Style
-				</Button>
+				<Button size="sm" type="submit" class="max-w-32">Duplicate Style</Button>
 			</form>
 			<Button
 				variant="destructive"

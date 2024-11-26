@@ -2,7 +2,6 @@
 	import type { components } from '$lib/api/api';
 	import { createFromData } from '$lib/styles/maker';
 	import { isValidWeightStyle } from '$lib/styles/style';
-	import { onMount } from 'svelte';
 
 	interface Props {
 		style: components['schemas']['WeightStyleWithDataDto'];
