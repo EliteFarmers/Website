@@ -156,6 +156,9 @@ test('Potato fortune test', () => {
 test('Nether Wart fortune test', () => {
 	const player = new FarmingPlayer({
 		accessories: [ squashRing, cropieTalisman ],
+		personalBests: {
+			[Crop.NetherWart]: 30000,
+		}
 	});
 
 	const progress = player.getCropProgress(Crop.NetherWart);
@@ -191,9 +194,9 @@ test('Nether Wart fortune test', () => {
 		},
 		{
 			name: 'Personal Best',
-			fortune: 0,
+			fortune: 1,
 			maxFortune: 100,
-			ratio: 0,
+			ratio: 1 / 100,
 		}
 	]);
 });
