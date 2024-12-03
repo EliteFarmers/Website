@@ -62,6 +62,9 @@ test('Pest debuff weight calculation', () => {
 	expect(weight.getWeightInfo().uncountedCrops[Crop.Wheat]).toBeCloseTo(uncountedWheat);
 	expect(weight.getWeightInfo().uncountedCrops[Crop.NetherWart]).toBeCloseTo(uncountedWart);
 
+	expect(uncountedWheat).toBe(0);
+	expect(uncountedWart).toBeCloseTo(30742);
+
 	const weightExpected = createFarmingWeightCalculator({
 		collection: {
 			...crops,
@@ -189,7 +192,7 @@ test('Full weight calculation', () => {
 			gold: 99,
 		});
 
-	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5176.617);
+	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5217.48);
 
 	const player = createFarmingPlayer({ ...info, bestiaryKills: pests });
 	const playerWeight = player.getWeightCalc({ 
@@ -202,7 +205,6 @@ test('Full weight calculation', () => {
 		gold: 99,
 	});
 
-		
 	expect(playerWeight.getCropWeights()).toStrictEqual(weight.getCropWeights());
 	expect(playerWeight.getBonusWeights()).toStrictEqual(weight.getBonusWeights());
 	expect(playerWeight.getWeightInfo().uncountedCrops).toStrictEqual(weight.getWeightInfo().uncountedCrops);

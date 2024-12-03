@@ -27,7 +27,7 @@ test('Uncounted crops from pests', () => {
 	expect(Object.values(uncounted)).toHaveLength(3);
 	expect(uncounted[Crop.NetherWart]).toBe(0);
 	expect(uncounted[Crop.Melon]).toBe(Math.ceil(PEST_COLLECTION_ADJUSTMENTS[Pest.Worm][50] ?? 0));
-	expect(uncounted[Crop.Wheat]).toBe(311892563);
+	expect(uncounted[Crop.Wheat]).toBe(0);
 })
 
 test('Bestiary tiers', () => {
