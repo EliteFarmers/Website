@@ -29,8 +29,8 @@
 
 	let background = $derived(
 		enabled
-			? `bg-green-400 dark:bg-green-700 ${maxed ? 'bg-yellow-400 dark:bg-yellow-700' : ''}`
-			: `bg-green-400/40 dark:bg-green-700/40 ${maxed ? 'bg-yellow-400/40 dark:bg-yellow-700/40' : ''}`
+			? `bg-green-400 dark:bg-green-600 ${maxed ? 'bg-yellow-400 dark:bg-yellow-600' : ''}`
+			: `bg-green-400/40 dark:bg-green-600/40 ${maxed ? 'bg-yellow-400/40 dark:bg-yellow-600/40' : ''}`
 	);
 </script>
 
