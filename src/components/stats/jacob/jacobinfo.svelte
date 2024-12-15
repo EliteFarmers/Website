@@ -41,7 +41,7 @@
 		<Cropstats {jacob} />
 	</div>
 
-	<div class="flex flex-col items-start justify-center gap-4 md:gap-8 lg:flex-row">
+	<div class="flex flex-col items-center justify-center gap-4 md:gap-8 lg:flex-row lg:items-start">
 		<div class="flex-1 lg:max-w-2xl">
 			<Medals total={jacob?.medals} earned={jacob?.earnedMedals} {ranks} />
 
