@@ -446,7 +446,7 @@
 						{#if selectedCropKey && getCropInfo(selectedCropKey).exportable}
 							<div class="flex flex-row items-center justify-center gap-2">
 								<p class="text-md mb-1 leading-none">Carrolyn Fortune (+12)</p>
-								{#if $ratesData.exported[selectedCropKey]}
+								{#if $ratesData.exported[selectedCropKey] !== undefined}
 									<Switch bind:checked={$ratesData.exported[selectedCropKey]} />
 								{/if}
 							</div>

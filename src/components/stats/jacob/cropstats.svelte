@@ -48,14 +48,14 @@
 	}
 </script>
 
-<div class="flex max-w-5xl flex-wrap items-center justify-center gap-4">
+<div class="flex max-w-6xl flex-wrap items-center justify-center gap-4">
 	{#each highest as [crop, amount] (crop)}
 		{@const unique = medal(crop)}
 		{@const score = pb(crop)}
 		{@const ff = fortune(crop, score ?? 0)}
 
 		<div
-			class="flex flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md bg-primary-foreground p-2"
+			class="flex max-w-52 flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md bg-primary-foreground p-2"
 		>
 			<div class="flex flex-row items-center gap-2">
 				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
