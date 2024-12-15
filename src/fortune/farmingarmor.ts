@@ -251,21 +251,27 @@ export class ArmorSet {
 	}
 
 	specialDropsCalc(blocksBroken: number, crop: Crop) {
+		const count = this.specialDropsCount(crop);
+		if (count === 0) return null;
+		return calculateAverageSpecialCrops(blocksBroken, crop, count);
+	}
+	
+	specialDropsCount(crop: Crop) {
 		const special = MATCHING_SPECIAL_CROP[crop];
 
 		const applicableBonuses = this.setBonuses.filter((b) => b.special?.includes(special));
-		if (applicableBonuses.length === 0) return null;
+		if (applicableBonuses.length === 0) return 0;
 
 		// Armor set counts need to be combined for special crops
 		// There will only be 2 applicable bonuses at most when Fermento armor plus
-		// a lower tier armor is used. Hypixel appeats to count these as the same
+		// a lower tier armor is used. Hypixel appears to count these as the same
 		// set bonus instead of rolling them separately.
 		let count = 0 as 1 | 2 | 3 | 4;
 		for (const bonus of applicableBonuses) {
 			count += bonus.count;
 		}
 
-		return calculateAverageSpecialCrops(blocksBroken, crop, count);
+		return count;
 	}
 
 	getProgress(zeroed = false) {
