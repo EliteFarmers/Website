@@ -169,18 +169,19 @@
 	});
 
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
-
 	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
-	const calculator = $derived(
-		calculateDetailedAverageDrops({
-			farmingFortune: $player.fortune + cropFortune.fortune,
-			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
-			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
-			dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
-			blocksBroken: blocksActuallyBroken,
-		})
-	);
 	const selectedCropKey = $derived(cropKey(selectedCrop));
+
+	const calculatorOptions = $derived({
+		farmingFortune: $player.fortune + cropFortune.fortune,
+		bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
+		mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
+		dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
+		blocksBroken: blocksActuallyBroken,
+		armorPieces: armorSet.specialDropsCount(selectedCropKey),
+	} as Parameters<typeof calculateDetailedAverageDrops>[0]);
+	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
+
 	const selected = $derived(
 		Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? ''])
 	);

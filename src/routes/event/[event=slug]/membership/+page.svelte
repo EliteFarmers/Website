@@ -27,6 +27,7 @@
 		2: false,
 		3: false,
 		4: false,
+		5: false,
 	});
 
 	function generateTeamName() {
@@ -232,7 +233,7 @@
 				</Label>
 			</div>
 
-			<div class="mb-8 flex items-center gap-2">
+			<div class="flex items-center gap-2">
 				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[4]} />
 				{#if joined}
 					<Checkbox.Root checked={true} disabled />
@@ -242,6 +243,20 @@
 				<Label>
 					I understand that I may be removed from the event at any time for breaking any rules, or appearing
 					to break them at the discretion of the event moderators.
+				</Label>
+			</div>
+
+			<div class="mb-8 flex items-center gap-2">
+				<input type="checkbox" name="confirm" value="true" hidden required bind:checked={checks[5]} />
+				{#if joined}
+					<Checkbox.Root checked={true} disabled />
+				{:else}
+					<Checkbox.Root bind:checked={checks[5]} />
+				{/if}
+				<Label>
+					I understand that I am responsible for my own actions and that the event organizers are not
+					responsible for any harm that may come to me or my account during the event. For example, skipping
+					sleep to play the event is not recommended and is at your own risk.
 				</Label>
 			</div>
 
