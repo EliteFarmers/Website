@@ -6,7 +6,7 @@ export function getRarityFromLore(lore: string[]) {
 	if (found) {
 		return found;
 	}
-	
+
 	// Lore gets jumbled up sometimes? So this is a backup
 	for (const line of lore) {
 		const found = getRarity(line ?? '', null);

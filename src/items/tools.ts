@@ -1,8 +1,8 @@
-import { UpgradeableInfo } from '../fortune/upgradeable.js';
 import { Crop } from '../constants/crops.js';
 import { Rarity, ReforgeTarget } from '../constants/reforges.js';
-import { Stat } from "../constants/stats.js";
+import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
+import { UpgradeableInfo } from '../fortune/upgradeable.js';
 
 export enum FarmingToolType {
 	Other = 'Other',
@@ -28,7 +28,7 @@ const t1hoeStats = {
 		},
 	},
 	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 10,
 		},
 		[Stat.FarmingWisdom]: {
@@ -36,7 +36,7 @@ const t1hoeStats = {
 		},
 	},
 	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 10,
 		},
 		[Stat.FarmingWisdom]: {
@@ -44,7 +44,7 @@ const t1hoeStats = {
 		},
 	},
 	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 10,
 		},
 		[Stat.FarmingWisdom]: {
@@ -52,7 +52,7 @@ const t1hoeStats = {
 		},
 	},
 	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 10,
 		},
 		[Stat.FarmingWisdom]: {
@@ -60,7 +60,7 @@ const t1hoeStats = {
 		},
 	},
 	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 10,
 		},
 		[Stat.FarmingWisdom]: {
@@ -71,7 +71,7 @@ const t1hoeStats = {
 
 const t2hoeStats = {
 	[Rarity.Common]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 25,
 		},
 		[Stat.FarmingWisdom]: {
@@ -79,7 +79,7 @@ const t2hoeStats = {
 		},
 	},
 	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 25,
 		},
 		[Stat.FarmingWisdom]: {
@@ -87,7 +87,7 @@ const t2hoeStats = {
 		},
 	},
 	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 25,
 		},
 		[Stat.FarmingWisdom]: {
@@ -95,7 +95,7 @@ const t2hoeStats = {
 		},
 	},
 	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 25,
 		},
 		[Stat.FarmingWisdom]: {
@@ -103,7 +103,7 @@ const t2hoeStats = {
 		},
 	},
 	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 25,
 		},
 		[Stat.FarmingWisdom]: {
@@ -111,7 +111,7 @@ const t2hoeStats = {
 		},
 	},
 	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 25,
 		},
 		[Stat.FarmingWisdom]: {
@@ -122,7 +122,7 @@ const t2hoeStats = {
 
 const t3hoeStats = {
 	[Rarity.Common]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 50,
 		},
 		[Stat.FarmingWisdom]: {
@@ -130,7 +130,7 @@ const t3hoeStats = {
 		},
 	},
 	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 50,
 		},
 		[Stat.FarmingWisdom]: {
@@ -138,7 +138,7 @@ const t3hoeStats = {
 		},
 	},
 	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 50,
 		},
 		[Stat.FarmingWisdom]: {
@@ -146,7 +146,7 @@ const t3hoeStats = {
 		},
 	},
 	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 50,
 		},
 		[Stat.FarmingWisdom]: {
@@ -154,7 +154,7 @@ const t3hoeStats = {
 		},
 	},
 	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 50,
 		},
 		[Stat.FarmingWisdom]: {
@@ -162,7 +162,7 @@ const t3hoeStats = {
 		},
 	},
 	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: { 
+		[Stat.FarmingFortune]: {
 			value: 50,
 		},
 		[Stat.FarmingWisdom]: {
@@ -226,9 +226,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: { 
+		upgrade: {
 			id: 'MELON_DICER_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -242,9 +242,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: { 
+		upgrade: {
 			id: 'MELON_DICER_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 2,
@@ -271,9 +271,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
-		upgrade: { 
+		upgrade: {
 			id: 'PUMPKIN_DICER_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -290,9 +290,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		upgrade: { 
+		upgrade: {
 			id: 'PUMPKIN_DICER_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		name: 'Pumpkin Dicer 2.0',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer_2.0',
@@ -316,9 +316,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_CARROT_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -333,9 +333,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_CARROT_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 2,
@@ -364,9 +364,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_WARTS_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -381,9 +381,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_WARTS_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 2,
@@ -412,9 +412,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_POTATO_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -429,9 +429,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_POTATO_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 2,
@@ -460,9 +460,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_CANE_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -477,9 +477,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_CANE_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 2,
@@ -508,9 +508,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_WHEAT_2',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 1,
@@ -525,9 +525,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
-		upgrade: { 
+		upgrade: {
 			id: 'THEORETICAL_HOE_WHEAT_3',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		gemSlots: {
 			peridot: 2,

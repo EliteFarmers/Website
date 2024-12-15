@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
-import { SkyBlockTime } from "./skyblocktime.js";
+import { expect, test } from 'vitest';
+import { SkyBlockTime } from './skyblocktime.js';
 
 test('SkyBlock Time Conversion', () => {
 	expect(SkyBlockTime.from(1, 1, 1).unixSeconds).toBe(SkyBlockTime.fromZeroIndexed(0, 0, 0).unixSeconds);
@@ -57,7 +57,7 @@ test('SkyBlock Time Nearest Contest', () => {
 	const firstContestOfYear = SkyBlockTime.from(100, 1, 2);
 	expect(firstContestOfYear.hasJacobContest()).toBe(true);
 	expect(firstContestOfYear.getLastContest().unixSeconds).toBe(firstContestOfYear.unixSeconds);
-	
+
 	const beforeFirstContestOfYear = SkyBlockTime.from(100, 1, 1);
 	expect(beforeFirstContestOfYear.hasJacobContest()).toBe(false);
 	const expected = SkyBlockTime.from(99, 12, 30);

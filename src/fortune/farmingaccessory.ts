@@ -1,7 +1,7 @@
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories.js';
 import { Rarity } from '../constants/reforges.js';
-import { Stat } from "../constants/stats.js";
+import { Stat } from '../constants/stats.js';
 import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources.js';
 import { getSourceProgress } from '../upgrades/upgrades.js';

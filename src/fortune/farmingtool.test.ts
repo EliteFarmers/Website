@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import { FarmingTool } from './farmingtool.js';
-import { FarmingPet } from './farmingpet.js';
 import { Stat } from '../constants/stats.js';
+import { FarmingPet } from './farmingpet.js';
+import { FarmingTool } from './farmingtool.js';
 
 const netherwartHoe = {
 	id: 293,
@@ -212,7 +212,7 @@ test('Daedalus Axe Test', () => {
 
 	expect(tool2.fortune).toBe(220);
 	expect(tool2.fortuneBreakdown).toStrictEqual({
-		'Chimera': 110,
+		Chimera: 110,
 		'Item Ability': 110,
 	});
 

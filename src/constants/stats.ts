@@ -1,4 +1,4 @@
-import type { PlayerOptions } from "../player/playeroptions.js";
+import type { PlayerOptions } from '../player/playeroptions.js';
 
 export enum Stat {
 	Strength = 'Strength',
@@ -23,7 +23,7 @@ export enum Stat {
 	FarmingWisdom = 'Farming Wisdom',
 	ForagingWisdom = 'Foraging Wisdom',
 	Pristine = 'Pristine',
-	BonusPestChance = 'Bonus Pest Chance'
+	BonusPestChance = 'Bonus Pest Chance',
 }
 
 export function getStatValue<T = unknown, C = PlayerOptions>(stat?: StatValue<T, C>, option?: C) {
@@ -41,7 +41,10 @@ export function getStatValue<T = unknown, C = PlayerOptions>(stat?: StatValue<T,
 	return value;
 }
 
-export type StatValue<T = unknown, C = PlayerOptions> = StatValueFlat<T, C> | StatValueCalculated<T, C> | StatValueCompound<T, C>; 
+export type StatValue<T = unknown, C = PlayerOptions> =
+	| StatValueFlat<T, C>
+	| StatValueCalculated<T, C>
+	| StatValueCompound<T, C>;
 export type StatValueCompound<T, C = PlayerOptions> = StatValueFlat<T, C> & StatValueCalculated<T, C>;
 export type StatsRecord<T = unknown, C = PlayerOptions> = Partial<Record<Stat, StatValue<T, C>>>;
 

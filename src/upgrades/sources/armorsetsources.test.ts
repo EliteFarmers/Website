@@ -71,19 +71,19 @@ test('Armor set bonus', () => {
 			fortune: 92,
 			maxFortune: 92,
 			ratio: 1,
-		}, 
+		},
 		{
 			name: 'Chestplate',
 			fortune: 0,
 			maxFortune: 97,
 			ratio: 0,
-		}, 
+		},
 		{
 			name: 'Leggings',
 			fortune: 0,
 			maxFortune: 97,
 			ratio: 0,
-		}, 
+		},
 		{
 			name: 'Boots',
 			fortune: 0,
@@ -119,6 +119,6 @@ test('Armor set bonus', () => {
 			fortune: 0,
 			maxFortune: 56,
 			ratio: 0,
-		}
+		},
 	]);
 });

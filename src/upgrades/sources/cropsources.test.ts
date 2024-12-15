@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
-import { FarmingPlayer } from '../../player/player.js';
-import { Crop, CROP_INFO } from '../../constants/crops.js';
-import { EliteItemDto } from '../../fortune/item.js';
+import { CROP_INFO, Crop } from '../../constants/crops.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
+import { EliteItemDto } from '../../fortune/item.js';
 import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
+import { FarmingPlayer } from '../../player/player.js';
 
 const fermentoArtifact: EliteItemDto = {
 	id: 397,
@@ -49,7 +49,7 @@ test('Wheat fortune test', () => {
 		personalBests: {
 			[Crop.Wheat]: 10000,
 		},
-		accessories: [ fermentoArtifact, squashRing, cropieTalisman ],
+		accessories: [fermentoArtifact, squashRing, cropieTalisman],
 	});
 
 	const progress = player.getCropProgress(Crop.Wheat);
@@ -69,7 +69,9 @@ test('Wheat fortune test', () => {
 			fortune: 0,
 			maxFortune: 485,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Wheat].startingTool] as FarmingToolInfo)?.getProgress(true)
+			progress: FarmingTool.fakeItem(
+				FARMING_TOOLS[CROP_INFO[Crop.Wheat].startingTool] as FarmingToolInfo
+			)?.getProgress(true),
 		},
 		{
 			name: 'Exportable Crop',
@@ -95,7 +97,7 @@ test('Wheat fortune test', () => {
 			fortune: 1,
 			maxFortune: 100,
 			ratio: 1 / 100,
-		}
+		},
 	]);
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
@@ -110,7 +112,7 @@ test('Potato fortune test', () => {
 		cropUpgrades: {
 			[Crop.Potato]: 9,
 		},
-		accessories: [ squashRing, cropieTalisman ],
+		accessories: [squashRing, cropieTalisman],
 	});
 
 	const progress = player.getCropProgress(Crop.Potato);
@@ -130,7 +132,9 @@ test('Potato fortune test', () => {
 			fortune: 0,
 			maxFortune: 485,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Potato].startingTool] as FarmingToolInfo)?.getProgress(true)
+			progress: FarmingTool.fakeItem(
+				FARMING_TOOLS[CROP_INFO[Crop.Potato].startingTool] as FarmingToolInfo
+			)?.getProgress(true),
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -149,16 +153,16 @@ test('Potato fortune test', () => {
 			fortune: 0,
 			maxFortune: 100,
 			ratio: 0,
-		}
+		},
 	]);
 });
 
 test('Nether Wart fortune test', () => {
 	const player = new FarmingPlayer({
-		accessories: [ squashRing, cropieTalisman ],
+		accessories: [squashRing, cropieTalisman],
 		personalBests: {
 			[Crop.NetherWart]: 30000,
-		}
+		},
 	});
 
 	const progress = player.getCropProgress(Crop.NetherWart);
@@ -178,7 +182,9 @@ test('Nether Wart fortune test', () => {
 			fortune: 0,
 			maxFortune: 485,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo)?.getProgress(true)
+			progress: FarmingTool.fakeItem(
+				FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo
+			)?.getProgress(true),
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -197,7 +203,7 @@ test('Nether Wart fortune test', () => {
 			fortune: 1,
 			maxFortune: 100,
 			ratio: 1 / 100,
-		}
+		},
 	]);
 });
 
@@ -206,10 +212,11 @@ test('Carrot fortune test', () => {
 		exportableCrops: {
 			[Crop.Carrot]: true,
 		},
-		accessories: [ cropieTalisman ],
+		accessories: [cropieTalisman],
 		tools: [
-			FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo) ?? new FarmingTool({} as EliteItemDto),
-		]
+			FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo) ??
+				new FarmingTool({} as EliteItemDto),
+		],
 	});
 
 	const progress = player.getCropProgress(Crop.Carrot);
@@ -229,7 +236,7 @@ test('Carrot fortune test', () => {
 			fortune: 25,
 			maxFortune: 485,
 			ratio: 25 / 485,
-			progress: FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo)?.getProgress()
+			progress: FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo)?.getProgress(),
 		},
 		{
 			name: 'Exportable Crop',
@@ -255,7 +262,7 @@ test('Carrot fortune test', () => {
 			fortune: 0,
 			maxFortune: 100,
 			ratio: 0,
-		}
+		},
 	]);
 });
 
@@ -264,7 +271,7 @@ test('Melon fortune test', () => {
 		cropUpgrades: {
 			[Crop.Melon]: 3,
 		},
-		accessories: [ cropieTalisman ],
+		accessories: [cropieTalisman],
 	});
 
 	const progress = player.getCropProgress(Crop.Melon);
@@ -284,7 +291,9 @@ test('Melon fortune test', () => {
 			fortune: 0,
 			maxFortune: 267,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo)?.getProgress(true)
+			progress: FarmingTool.fakeItem(
+				FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo
+			)?.getProgress(true),
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -303,6 +312,6 @@ test('Melon fortune test', () => {
 			fortune: 0,
 			maxFortune: 100,
 			ratio: 0,
-		}
+		},
 	]);
 });

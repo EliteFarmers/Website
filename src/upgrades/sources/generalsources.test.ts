@@ -1,19 +1,19 @@
-import { expect, test } from "vitest";
-import { FarmingPlayer } from "../../player/player.js";
+import { expect, test } from 'vitest';
+import { FarmingPlayer } from '../../player/player.js';
 
-test("General fortune sources", () => {
+test('General fortune sources', () => {
 	const player = new FarmingPlayer({
 		farmingLevel: 10,
 		bestiaryKills: {
-			pest_fly_1: 10
+			pest_fly_1: 10,
 		},
 		anitaBonus: 10,
 		plotsUnlocked: 10,
-		communityCenter: 10
+		communityCenter: 10,
 	});
 
 	const progress = player.getProgress();
-	
+
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
@@ -64,7 +64,6 @@ test("General fortune sources", () => {
 			fortune: 0,
 			maxFortune: 5,
 			ratio: 0,
-		}
+		},
 	]);
-
 });

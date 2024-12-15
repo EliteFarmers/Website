@@ -1,8 +1,8 @@
-import { FarmingArmorInfo, GearSlot } from './armor.js';
 import { Rarity } from '../constants/reforges.js';
-import { Stat } from '../constants/stats.js';
 import { Skill } from '../constants/skills.js';
+import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
+import { FarmingArmorInfo, GearSlot } from './armor.js';
 
 export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	LOTUS_BRACELET: {
@@ -57,7 +57,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		upgrade: {
 			id: 'ZORROS_CAPE',
 			reason: UpgradeReason.Situational,
-			why: 'A maxed Zorro\'s Cape provides significantly more fortune during a Jacob\'s contest, but slightly less outside of one.',
+			why: "A maxed Zorro's Cape provides significantly more fortune during a Jacob's contest, but slightly less outside of one.",
 		},
 		family: 'LOTUS',
 		slot: GearSlot.Cloak,
@@ -77,7 +77,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		upgrade: {
 			id: 'LOTUS_CLOAK',
 			reason: UpgradeReason.Situational,
-			why: 'A maxed Lotus Cloak provides slightly more fortune outside of a Jacob\'s contest, but significantly less fortune during one compared to a maxed Zorro\'s Cape.',
+			why: "A maxed Lotus Cloak provides slightly more fortune outside of a Jacob's contest, but significantly less fortune during one compared to a maxed Zorro's Cape.",
 		},
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Mythic,
@@ -87,7 +87,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 			[Stat.Strength]: 10,
 			[Stat.Ferocity]: 2,
 		},
-		contestStatsMultiplier: 2
+		contestStatsMultiplier: 2,
 	},
 	PEST_VEST: {
 		skyblockId: 'PEST_VEST',
@@ -96,9 +96,9 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Legendary,
 		baseStats: {
-			[Stat.BonusPestChance]: 10
-		}
-	}
+			[Stat.BonusPestChance]: 10,
+		},
+	},
 };
 
 export const VISITORS_SERVED_BONUS = {

@@ -1,24 +1,24 @@
-import { FarmingArmorInfo } from '../items/armor.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { EQUIPMENT_INFO } from '../items/equipment.js';
 import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import { extractNumberFromLine } from '../util/lore.js';
-import { EliteItemDto } from './item.js';
-import { ZorroMode, type PlayerOptions } from '../player/playeroptions.js';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FarmingArmorInfo } from '../items/armor.js';
+import { EQUIPMENT_INFO } from '../items/equipment.js';
+import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
+import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getSourceProgress } from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { extractNumberFromLine } from '../util/lore.js';
 import { FarmingArmor } from './farmingarmor.js';
-import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
+import { EliteItemDto } from './item.js';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
 
 export class FarmingEquipment extends UpgradeableBase {
 	public declare item: EliteItemDto;
 	public declare info: FarmingArmorInfo;
 
-	public get type() { 
-		return ReforgeTarget.Equipment; 
+	public get type() {
+		return ReforgeTarget.Equipment;
 	}
 
 	public get slot() {
@@ -70,7 +70,7 @@ export class FarmingEquipment extends UpgradeableBase {
 		for (const [key, level] of Object.entries(this.item.enchantments ?? {})) {
 			const enchant = FARMING_ENCHANTS[key];
 			if (!enchant || !level || enchant.cropSpecific) continue;
-			
+
 			const fortune = getFortuneFromEnchant(level, enchant, this.options);
 			if (fortune > 0) {
 				this.fortuneBreakdown[enchant.name] = fortune;
@@ -107,7 +107,7 @@ export class FarmingEquipment extends UpgradeableBase {
 			// Zorro's Cape
 			const zorro = this.options?.zorro ?? {
 				enabled: true,
-				mode: ZorroMode.Normal
+				mode: ZorroMode.Normal,
 			};
 
 			switch (zorro.mode) {
@@ -153,7 +153,6 @@ export class FarmingEquipment extends UpgradeableBase {
 		return Math.max(0, found - base - reforge);
 	}
 
-	
 	/**
 	 * Get the bonus from the Salesperson lotus piece
 	 * @returns {number} Fortune from the Salesperson lotus piece

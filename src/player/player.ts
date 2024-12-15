@@ -1,26 +1,26 @@
 import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
-import { fortuneFromPestBestiary } from '../util/pests.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
-	COMMUNITY_CENTER_UPGRADE,
-	GARDEN_CROP_UPGRADES,
-	FARMING_LEVEL,
-	UNLOCKED_PLOTS,
 	COCOA_FORTUNE_UPGRADE,
+	COMMUNITY_CENTER_UPGRADE,
+	FARMING_LEVEL,
+	GARDEN_CROP_UPGRADES,
+	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
-import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
+import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
+import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import { EliteItemDto } from '../fortune/item.js';
-import { FarmingEquipment } from '../fortune/farmingequipment.js';
-import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc.js';
-import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
+import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
+import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
+import { fortuneFromPestBestiary } from '../util/pests.js';
+import { FarmingWeightInfo, createFarmingWeightCalculator } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -224,7 +224,7 @@ export class FarmingPlayer {
 		}
 
 		// Refined Truffles
-		const truffles = Math.min(5, (this.options.refinedTruffles ?? 0));
+		const truffles = Math.min(5, this.options.refinedTruffles ?? 0);
 		if (truffles > 0) {
 			breakdown['Refined Truffles'] = truffles;
 			sum += truffles;
@@ -340,12 +340,12 @@ export class FarmingPlayer {
 
 		return {
 			fortune: sum,
-			breakdown,
+			breakdown: breakdown,
 		};
 	}
 
 	getCropProgress(crop: Crop) {
-		return getSourceProgress<{ crop: Crop, player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
+		return getSourceProgress<{ crop: Crop; player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
 	}
 
 	getWeightCalc(info?: FarmingWeightInfo) {

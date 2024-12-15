@@ -3,7 +3,7 @@ import { PlayerOptions } from '../player/playeroptions.js';
 import { Crop } from './crops.js';
 import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
 import { ReforgeTarget } from './reforges.js';
-import { Stat } from "./stats.js";
+import { Stat } from './stats.js';
 
 export enum EnchantTierProcurement {
 	Normal = 'normal',
@@ -40,31 +40,31 @@ const turboEnchant = {
 	levels: {
 		1: {
 			stats: {
-				[Stat.FarmingFortune]: 5
-			}
+				[Stat.FarmingFortune]: 5,
+			},
 		},
 		2: {
 			stats: {
-				[Stat.FarmingFortune]: 10
-			}
+				[Stat.FarmingFortune]: 10,
+			},
 		},
 		3: {
 			stats: {
-				[Stat.FarmingFortune]: 15
-			}
+				[Stat.FarmingFortune]: 15,
+			},
 		},
 		4: {
 			stats: {
-				[Stat.FarmingFortune]: 20
-			}
+				[Stat.FarmingFortune]: 20,
+			},
 		},
 		5: {
 			stats: {
-				[Stat.FarmingFortune]: 25
-			}
+				[Stat.FarmingFortune]: 25,
+			},
 		},
 	},
-}
+};
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	harvesting: {
@@ -78,27 +78,27 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			1: {
 				stats: {
 					[Stat.FarmingFortune]: 12.5,
-				}
+				},
 			},
 			2: {
 				stats: {
 					[Stat.FarmingFortune]: 25,
-				}
+				},
 			},
 			3: {
 				stats: {
 					[Stat.FarmingFortune]: 37.5,
-				}
+				},
 			},
 			4: {
 				stats: {
 					[Stat.FarmingFortune]: 50,
-				}
+				},
 			},
 			5: {
 				stats: {
 					[Stat.FarmingFortune]: 62.5,
-				}
+				},
 			},
 			6: {
 				stats: {
@@ -119,7 +119,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				stats: {
 					[Stat.FarmingWisdom]: 1,
 					[Stat.FarmingFortune]: 2,
-				}
+				},
 			},
 			2: {
 				stats: {
@@ -199,7 +199,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 						if (!crop) return 0;
 						return 0.5 * (opt?.milestones?.[crop] ?? 0);
 					},
-				}
+				},
 			},
 			2: {
 				cropComputed: {
@@ -207,7 +207,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 						if (!crop) return 0;
 						return 0.75 * (opt?.milestones?.[crop] ?? 0);
 					},
-				}
+				},
 			},
 			3: {
 				cropComputed: {
@@ -215,7 +215,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 						if (!crop) return 0;
 						return 1 * (opt?.milestones?.[crop] ?? 0);
 					},
-				}
+				},
 			},
 			4: {
 				cropComputed: {
@@ -241,27 +241,27 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			1: {
 				stats: {
 					[Stat.FarmingFortune]: 12.5,
-				}
+				},
 			},
 			2: {
 				stats: {
 					[Stat.FarmingFortune]: 25,
-				}
+				},
 			},
 			3: {
 				stats: {
 					[Stat.FarmingFortune]: 37.5,
-				}
+				},
 			},
 			4: {
 				stats: {
 					[Stat.FarmingFortune]: 50,
-				}
+				},
 			},
 			5: {
 				stats: {
 					[Stat.FarmingFortune]: 62.5,
-				}
+				},
 			},
 			6: {
 				stats: {
@@ -283,31 +283,31 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				stats: {
 					[Stat.BonusPestChance]: 1,
 					[Stat.FarmingFortune]: 2,
-				}
+				},
 			},
 			2: {
 				stats: {
 					[Stat.BonusPestChance]: 2,
 					[Stat.FarmingFortune]: 4,
-				}
+				},
 			},
 			3: {
 				stats: {
 					[Stat.BonusPestChance]: 3,
 					[Stat.FarmingFortune]: 6,
-				}
+				},
 			},
 			4: {
 				stats: {
 					[Stat.BonusPestChance]: 4,
 					[Stat.FarmingFortune]: 8,
-				}
+				},
 			},
 			5: {
 				stats: {
 					[Stat.BonusPestChance]: 5,
 					[Stat.FarmingFortune]: 10,
-				}
+				},
 			},
 			6: {
 				stats: {
@@ -328,28 +328,28 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		levels: {
 			1: {
 				computed: {
-					[Stat.FarmingFortune]: (opt) => 0.05 * (opt.uniqueVisitors ?? 0)
-				}
+					[Stat.FarmingFortune]: (opt) => 0.05 * (opt.uniqueVisitors ?? 0),
+				},
 			},
 			2: {
 				computed: {
-					[Stat.FarmingFortune]: (opt) => 0.1 * (opt.uniqueVisitors ?? 0)
-				}
+					[Stat.FarmingFortune]: (opt) => 0.1 * (opt.uniqueVisitors ?? 0),
+				},
 			},
 			3: {
 				computed: {
-					[Stat.FarmingFortune]: (opt) => 0.15 * (opt.uniqueVisitors ?? 0)
-				}
+					[Stat.FarmingFortune]: (opt) => 0.15 * (opt.uniqueVisitors ?? 0),
+				},
 			},
 			4: {
 				computed: {
-					[Stat.FarmingFortune]: (opt) => 0.2 * (opt.uniqueVisitors ?? 0)
-				}
+					[Stat.FarmingFortune]: (opt) => 0.2 * (opt.uniqueVisitors ?? 0),
+				},
 			},
 			5: {
 				computed: {
-					[Stat.FarmingFortune]: (opt) => 0.25 * (opt.uniqueVisitors ?? 0)
-				}
+					[Stat.FarmingFortune]: (opt) => 0.25 * (opt.uniqueVisitors ?? 0),
+				},
 			},
 		},
 		maxStats: {
@@ -374,81 +374,81 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			const pet = opt.selectedPet;
 			return {
 				1: {
-					stats: pet?.getChimeraAffectedStats(0.2) ?? {}
+					stats: pet?.getChimeraAffectedStats(0.2) ?? {},
 				},
 				2: {
-					stats: pet?.getChimeraAffectedStats(0.4) ?? {}
+					stats: pet?.getChimeraAffectedStats(0.4) ?? {},
 				},
 				3: {
-					stats: pet?.getChimeraAffectedStats(0.6) ?? {}
+					stats: pet?.getChimeraAffectedStats(0.6) ?? {},
 				},
 				4: {
-					stats: pet?.getChimeraAffectedStats(0.8) ?? {}
+					stats: pet?.getChimeraAffectedStats(0.8) ?? {},
 				},
 				5: {
-					stats: pet?.getChimeraAffectedStats(1) ?? {}
+					stats: pet?.getChimeraAffectedStats(1) ?? {},
 				},
-			}
-		}
+			};
+		},
 	},
 	turbo_cactus: {
 		name: 'Turbo-Cacti',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',
 		cropSpecific: Crop.Cactus,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_cane: {
 		name: 'Turbo-Cane',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cane_Enchantment',
 		cropSpecific: Crop.SugarCane,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_carrot: {
 		name: 'Turbo-Carrot',
 		wiki: 'https://wiki.hypixel.net/Turbo-Carrot_Enchantment',
 		cropSpecific: Crop.Carrot,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_coco: {
 		name: 'Turbo-Cocoa',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
 		cropSpecific: Crop.CocoaBeans,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_melon: {
 		name: 'Turbo-Melon',
 		wiki: 'https://wiki.hypixel.net/Turbo-Melon_Enchantment',
 		cropSpecific: Crop.Melon,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_mushrooms: {
 		name: 'Turbo-Mushrooms',
 		wiki: 'https://wiki.hypixel.net/Turbo-Mushrooms_Enchantment',
 		cropSpecific: Crop.Mushroom,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_potato: {
 		name: 'Turbo-Potato',
 		wiki: 'https://wiki.hypixel.net/Turbo-Potato_Enchantment',
 		cropSpecific: Crop.Potato,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_pumpkin: {
 		name: 'Turbo-Pumpkin',
 		wiki: 'https://wiki.hypixel.net/Turbo-Pumpkin_Enchantment',
 		cropSpecific: Crop.Pumpkin,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_warts: {
 		name: 'Turbo-Warts',
 		wiki: 'https://wiki.hypixel.net/Turbo-Warts_Enchantment',
 		cropSpecific: Crop.NetherWart,
-		...turboEnchant
+		...turboEnchant,
 	},
 	turbo_wheat: {
 		name: 'Turbo-Wheat',
 		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
 		cropSpecific: Crop.Wheat,
-		...turboEnchant
+		...turboEnchant,
 	},
 } as const;

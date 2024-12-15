@@ -1,13 +1,13 @@
-import type { Crop } from "../constants/crops.js";
-import type { TemporaryFarmingFortune } from "../constants/tempfortune.js";
-import type { Upgrade } from "../constants/upgrades.js";
-import type { FarmingAccessory } from "../fortune/farmingaccessory.js";
-import type { ArmorSet, FarmingArmor } from "../fortune/farmingarmor.js";
-import type { FarmingEquipment } from "../fortune/farmingequipment.js";
-import type { FarmingPet } from "../fortune/farmingpet.js";
-import type { FarmingTool } from "../fortune/farmingtool.js";
-import type { EliteItemDto } from "../fortune/item.js";
-import type { FarmingPetType } from "../items/pets.js";
+import type { Crop } from '../constants/crops.js';
+import type { TemporaryFarmingFortune } from '../constants/tempfortune.js';
+import type { Upgrade } from '../constants/upgrades.js';
+import type { FarmingAccessory } from '../fortune/farmingaccessory.js';
+import type { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
+import type { FarmingEquipment } from '../fortune/farmingequipment.js';
+import type { FarmingPet } from '../fortune/farmingpet.js';
+import type { FarmingTool } from '../fortune/farmingtool.js';
+import type { EliteItemDto } from '../fortune/item.js';
+import type { FarmingPetType } from '../items/pets.js';
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Partial<Record<Crop, number>>;
@@ -61,7 +61,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	zorro?: {
 		enabled: boolean;
 		mode: ZorroMode | `${ZorroMode}`;
-	}
+	};
 }
 
 export interface FortuneProgress {

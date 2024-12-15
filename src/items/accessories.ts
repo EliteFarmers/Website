@@ -1,9 +1,9 @@
-import { UpgradeableInfo } from '../fortune/upgradeable.js';
 import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforges.js';
-import { Stat } from "../constants/stats.js";
 import { Skill } from '../constants/skills.js';
+import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
+import { UpgradeableInfo } from '../fortune/upgradeable.js';
 
 export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	name: string;
@@ -32,7 +32,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		family: 'Fermento',
 		upgrade: {
 			id: 'FERMENTO_ARTIFACT',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		maxRarity: Rarity.Rare,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
@@ -47,7 +47,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		family: 'Fermento',
 		upgrade: {
 			id: 'SQUASH_RING',
-			reason: UpgradeReason.NextTier
+			reason: UpgradeReason.NextTier,
 		},
 		maxRarity: Rarity.Uncommon,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],

@@ -1,10 +1,10 @@
 import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { REFORGES, Rarity } from '../constants/reforges.js';
-import { Stat } from "../constants/stats.js";
-import { BEST_FARMING_TOOLS } from '../items/tools.js';
+import { Stat } from '../constants/stats.js';
 import { calculateMelonPerkBonus } from '../crops/melon.js';
 import { calculatePumpkinPerkBonus } from '../crops/pumpkin.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
+import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
 interface CalculateDropsOptions {
 	farmingFortune?: number;
@@ -142,8 +142,8 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	const { farmingFortune, blocksBroken, crop, bountiful, armorPieces = 4 } = options;
 
 	result.fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
-	let fortune =  result.fortune + 100;
-	
+	let fortune = result.fortune + 100;
+
 	if (fortune <= 0 || blocksBroken < 0) return result;
 
 	if (!bountiful && !farmingFortune) {

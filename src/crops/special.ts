@@ -9,7 +9,7 @@ export function calculateAverageSpecialCrops(blocksBroken: number, crop: Crop, a
 	const amount = blocksBroken * chance;
 
 	return {
-		type,
+		type: type,
 		amount: amount,
 		npc: npc * amount,
 	};

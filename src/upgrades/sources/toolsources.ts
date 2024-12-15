@@ -1,14 +1,14 @@
-import { Crop } from "../../constants/crops.js";
-import { FARMING_ENCHANTS } from "../../constants/enchants.js";
-import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges.js";
-import { getStatValue, Stat } from "../../constants/stats.js";
-import { FarmingToolType } from "../../items/tools.js";
-import { FortuneSourceProgress } from "../../constants/upgrades.js";
-import { FarmingTool } from "../../fortune/farmingtool.js";
-import { EliteItemDto, GemRarity } from "../../fortune/item.js";
-import { UpgradeableInfo } from "../../fortune/upgradeable.js";
-import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants.js";
-import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems.js";
+import { Crop } from '../../constants/crops.js';
+import { FARMING_ENCHANTS } from '../../constants/enchants.js';
+import { REFORGES, Rarity, ReforgeTarget } from '../../constants/reforges.js';
+import { Stat, getStatValue } from '../../constants/stats.js';
+import { FortuneSourceProgress } from '../../constants/upgrades.js';
+import { FarmingTool } from '../../fortune/farmingtool.js';
+import { EliteItemDto, GemRarity } from '../../fortune/item.js';
+import { UpgradeableInfo } from '../../fortune/upgradeable.js';
+import { FarmingToolType } from '../../items/tools.js';
+import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/enchants.js';
+import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 
 export interface DynamicFortuneSource<T> {
 	name: string;
@@ -31,20 +31,20 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Base Stats',
 		exists: (tool) => {
-			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined
+			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined;
 		},
 		max: (tool) => {
 			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] ?? 0;
 		},
 		current: (tool) => {
 			return tool.info.baseStats?.[Stat.FarmingFortune] ?? 0;
-		}
+		},
 	},
 	{
 		name: 'Base Stats',
 		exists: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune] !== undefined
+			return last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune] !== undefined;
 		},
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
@@ -52,7 +52,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		current: (tool) => {
 			return getStatValue(tool.info.stats?.[tool.rarity]?.[Stat.FarmingFortune], tool.options);
-		}
+		},
 	},
 	{
 		name: 'Item Ability',
@@ -61,7 +61,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		max: () => 170,
 		current: (tool) => {
 			return tool.getCalculatedStats()[Stat.FarmingFortune] ?? 0;
-		}
+		},
 	},
 	{
 		name: 'Reforge Stats',
@@ -69,28 +69,31 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		exists: (tool) => tool.type !== ReforgeTarget.Sword,
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return tool.reforge?.name === 'Bountiful' 
-				? REFORGES.bountiful?.tiers[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0
-				: REFORGES.blessed?.tiers?.[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
+			return tool.reforge?.name === 'Bountiful'
+				? (REFORGES.bountiful?.tiers[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0)
+				: (REFORGES.blessed?.tiers?.[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0);
 		},
 		current: (tool) => {
 			return tool.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
-		}
+		},
 	},
 	{
 		name: 'Gemstone Slots',
 		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
 		exists: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return last?.gemSlots?.peridot !== undefined
+			return last?.gemSlots?.peridot !== undefined;
 		},
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return (last?.gemSlots?.peridot ?? 0) * getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect);
+			return (
+				(last?.gemSlots?.peridot ?? 0) *
+				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
+			);
 		},
 		current: (tool) => {
 			return getPeridotFortune(tool.rarity, tool.item);
-		}
+		},
 	},
 	{
 		name: 'Farming For Dummies',
@@ -99,7 +102,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		max: () => 5,
 		current: (tool) => {
 			return +(tool.item.attributes?.farming_for_dummies_count ?? 0);
-		}
+		},
 	},
 	{
 		name: 'Logarithmic Counter',
@@ -109,21 +112,26 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		current: (tool) => {
 			const numberOfDigits = Math.max(Math.floor(Math.log10(Math.abs(tool.counter ?? 0))), 0) + 1;
 			return Math.max((numberOfDigits - 4) * 16, 0);
-		}
+		},
 	},
 	{
 		name: 'Collection Analysis',
 		wiki: (tool) => tool.info.wiki,
 		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
 		max: () => 8 * 7, // 10 billion collection
-		current: (tool) => tool.collAnalysis ?? 0
+		current: (tool) => tool.collAnalysis ?? 0,
 	},
-	...Object.entries(FARMING_ENCHANTS)
-		.map(([id, enchant]) => ({
-			name: enchant.name,
-			wiki: () => enchant.wiki,
-			exists: (tool) => enchant.appliesTo.includes(tool.type) && (!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
-			max: (tool) => getMaxFortuneFromEnchant(enchant, tool.options, tool.crop),
-			current: (tool) => getFortuneFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, tool.options, tool.crop)
-		}) as DynamicFortuneSource<FarmingTool>)
+	...Object.entries(FARMING_ENCHANTS).map(
+		([id, enchant]) =>
+			({
+				name: enchant.name,
+				wiki: () => enchant.wiki,
+				exists: (tool) =>
+					enchant.appliesTo.includes(tool.type) &&
+					(!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
+				max: (tool) => getMaxFortuneFromEnchant(enchant, tool.options, tool.crop),
+				current: (tool) =>
+					getFortuneFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, tool.options, tool.crop),
+			}) as DynamicFortuneSource<FarmingTool>
+	),
 ];

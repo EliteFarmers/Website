@@ -1,4 +1,4 @@
-import { Stat } from "./stats.js";
+import { Stat } from './stats.js';
 
 export type RarityRecord<T> = Partial<Record<Rarity, T>>;
 
@@ -28,7 +28,7 @@ export const RARITY_VALUES = {
 	[Rarity.VerySpecial]: 9,
 	[Rarity.Ultimate]: 10,
 	[Rarity.Admin]: 11,
-}
+};
 
 export function compareRarity(a: Rarity | string, b: Rarity | string) {
 	return RARITY_VALUES[a as Rarity] - RARITY_VALUES[b as Rarity];

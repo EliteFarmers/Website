@@ -1,9 +1,9 @@
-import { UpgradeableInfo } from '../fortune/upgradeable.js';
 import { Rarity, ReforgeTarget } from '../constants/reforges.js';
-import { Stat } from '../constants/stats.js';
 import { Skill } from '../constants/skills.js';
 import { SpecialCrop } from '../constants/specialcrops.js';
+import { Stat } from '../constants/stats.js';
 import { Upgrade, UpgradeReason } from '../constants/upgrades.js';
+import { UpgradeableInfo } from '../fortune/upgradeable.js';
 
 export enum GearSlot {
 	Boots = 'Boots',
@@ -135,7 +135,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Lantern_Helmet',
 		upgrade: {
 			id: 'FERMENTO_HELMET',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Helmet,
@@ -159,7 +159,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
 			id: 'MELON_HELMET',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Helmet,
@@ -180,7 +180,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
 			id: 'MELON_CHESTPLATE',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Chestplate,
@@ -201,7 +201,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
 			id: 'MELON_LEGGINGS',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Leggings,
@@ -222,7 +222,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
 			id: 'MELON_BOOTS',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Boots,
@@ -243,7 +243,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
 			id: 'MELON_HELMET',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'RABBIT',
 		slot: GearSlot.Helmet,
@@ -264,7 +264,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
 			id: 'MELON_CHESTPLATE',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'RABBIT',
 		slot: GearSlot.Chestplate,
@@ -285,7 +285,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
 			id: 'MELON_LEGGINGS',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'RABBIT',
 		slot: GearSlot.Leggings,
@@ -306,7 +306,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
 			id: 'MELON_BOOTS',
-			reason: UpgradeReason.DeadEnd, 
+			reason: UpgradeReason.DeadEnd,
 		},
 		family: 'RABBIT',
 		slot: GearSlot.Boots,
@@ -327,7 +327,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_HELMET',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -346,7 +346,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_CHESTPLATE',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -365,7 +365,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_LEGGINGS',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -384,7 +384,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_BOOTS',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -403,7 +403,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_HELMET',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -425,7 +425,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_CHESTPLATE',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -447,7 +447,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_LEGGINGS',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -469,7 +469,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_BOOTS',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -491,7 +491,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_HELMET',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -513,7 +513,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_CHESTPLATE',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -535,7 +535,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_LEGGINGS',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -557,7 +557,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_BOOTS',
-			reason: UpgradeReason.NextTier, 
+			reason: UpgradeReason.NextTier,
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -634,7 +634,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'RANCHERS_BOOTS',
 			reason: UpgradeReason.Situational,
-			why: 'Rancher\'s Boots provide less farming fortune, but allow you to control your speed for tricky farms.',
+			why: "Rancher's Boots provide less farming fortune, but allow you to control your speed for tricky farms.",
 		},
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],

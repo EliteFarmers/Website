@@ -1,6 +1,6 @@
-import { expect, test } from "vitest";
-import { calculateDetailedAverageDrops } from "./ratecalc.js";
-import { Crop } from "../constants/crops";
+import { expect, test } from 'vitest';
+import { Crop } from '../constants/crops';
+import { calculateDetailedAverageDrops } from './ratecalc.js';
 
 test('Rate calc test', () => {
 	const drops = calculateDetailedAverageDrops({
@@ -8,11 +8,11 @@ test('Rate calc test', () => {
 		farmingFortune: 100,
 		bountiful: true,
 		mooshroom: true,
-	})
+	});
 
 	expect(drops[Crop.Wheat].collection).toBe(48_000);
 
-	expect(drops[Crop.NetherWart].otherCollection["Fermento"]).toBe(2);
-	expect(drops[Crop.SugarCane].otherCollection["Fermento"]).toBe(2);
-	expect(drops[Crop.Cactus].otherCollection["Fermento"]).toBe(2);
+	expect(drops[Crop.NetherWart].otherCollection['Fermento']).toBe(2);
+	expect(drops[Crop.SugarCane].otherCollection['Fermento']).toBe(2);
+	expect(drops[Crop.Cactus].otherCollection['Fermento']).toBe(2);
 });

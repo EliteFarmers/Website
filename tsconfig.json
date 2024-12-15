@@ -8,7 +8,7 @@
 		"moduleResolution": "NodeNext",
 		"module": "NodeNext",
 		// "module": "ESNext", // For easier local development
-		
+
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"declaration": true,
@@ -17,8 +17,8 @@
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 
-		"lib": [ "ES2022" ]
+		"lib": ["ES2022"]
 	},
-	"include": [ "src" ],
-	"exclude": [ "node_modules", "src/**/*.test.ts" ]
-  }
+	"include": ["src"],
+	"exclude": ["node_modules", "src/**/*.test.ts"]
+}

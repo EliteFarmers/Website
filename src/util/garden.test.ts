@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { getCropMilestoneLevels, getCropMilestones } from './garden.js';
 import { Crop } from '../constants/crops.js';
+import { getCropMilestoneLevels, getCropMilestones } from './garden.js';
 
 test('Crop Milestones', () => {
 	const fromElite = {
@@ -26,7 +26,7 @@ test('Crop Milestones', () => {
 		[Crop.Mushroom]: 25,
 		[Crop.CocoaBeans]: 17,
 		[Crop.SugarCane]: 21,
-		[Crop.NetherWart]: 34
+		[Crop.NetherWart]: 34,
 	};
 
 	expect(getCropMilestoneLevels(fromElite)).toEqual(expected);
@@ -57,7 +57,7 @@ test('Overflow Crop Milestones', () => {
 		[Crop.Mushroom]: 102,
 		[Crop.CocoaBeans]: 17,
 		[Crop.SugarCane]: 21,
-		[Crop.NetherWart]: 34
+		[Crop.NetherWart]: 34,
 	});
 
 	const milestones = getCropMilestones(fromElite, true);

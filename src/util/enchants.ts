@@ -1,9 +1,14 @@
-import { Crop } from "../constants/crops.js";
-import { FarmingEnchant, FarmingEnchantTier } from "../constants/enchants.js";
-import { Stat } from "../constants/stats.js";
-import { PlayerOptions } from "../player/playeroptions.js";
+import { Crop } from '../constants/crops.js';
+import { FarmingEnchant, FarmingEnchantTier } from '../constants/enchants.js';
+import { Stat } from '../constants/stats.js';
+import { PlayerOptions } from '../player/playeroptions.js';
 
-export function getFortuneFromEnchant(level: number, enchant: FarmingEnchant, options?: PlayerOptions, crop?: Crop): number {
+export function getFortuneFromEnchant(
+	level: number,
+	enchant: FarmingEnchant,
+	options?: PlayerOptions,
+	crop?: Crop
+): number {
 	if (level <= 0) return 0;
 
 	const tier = enchant.levels?.[level];
@@ -41,7 +46,12 @@ export function getMaxFortuneFromEnchant(enchant: FarmingEnchant, options?: Play
 	return fortune;
 }
 
-function getFortuneFromTier(tier: FarmingEnchantTier, options: PlayerOptions | undefined, crop: Crop | undefined, enchant: FarmingEnchant) {
+function getFortuneFromTier(
+	tier: FarmingEnchantTier,
+	options: PlayerOptions | undefined,
+	crop: Crop | undefined,
+	enchant: FarmingEnchant
+) {
 	let fortune = tier.stats?.[Stat.FarmingFortune] ?? 0;
 
 	if (options) {
@@ -51,6 +61,6 @@ function getFortuneFromTier(tier: FarmingEnchantTier, options: PlayerOptions | u
 	if (crop && (!enchant.cropSpecific || enchant.cropSpecific === crop)) {
 		fortune += tier.cropComputed?.[Stat.FarmingFortune]?.(crop, options) ?? 0;
 	}
-	
+
 	return fortune;
 }

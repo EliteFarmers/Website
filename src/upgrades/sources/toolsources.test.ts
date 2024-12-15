@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { FarmingTool } from '../../fortune/farmingtool.js';
 import { Crop } from '../../constants/crops.js';
+import { FarmingTool } from '../../fortune/farmingtool.js';
 
 const netherwartHoe = {
 	id: 293,

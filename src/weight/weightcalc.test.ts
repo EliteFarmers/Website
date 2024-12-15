@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest';
-import { createFarmingWeightCalculator } from './weightcalc.js';
 import { Crop } from '../constants/crops.js';
 import { CROP_WEIGHT } from '../constants/weight.js';
-import { uncountedCropsFromPests } from '../util/pests.js';
 import { createFarmingPlayer } from '../player/player.js';
+import { uncountedCropsFromPests } from '../util/pests.js';
+import { createFarmingWeightCalculator } from './weightcalc.js';
 
 const crops = {
 	[Crop.Cactus]: CROP_WEIGHT[Crop.Cactus] * 50,
@@ -185,25 +185,26 @@ test('Full weight calculation', () => {
 		minions: minions,
 	};
 
-	const weight = createFarmingWeightCalculator(info)
+	const weight = createFarmingWeightCalculator(info).setEarnedMedals({
+		diamond: 246,
+		platinum: 75,
+		gold: 99,
+	});
+
+	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5217.48);
+
+	const player = createFarmingPlayer({ ...info, bestiaryKills: pests });
+	const playerWeight = player
+		.getWeightCalc({
+			minions: minions,
+			levelCapUpgrade: 10,
+			anitaBonusFarmingFortuneLevel: 15,
+		})
 		.setEarnedMedals({
 			diamond: 246,
 			platinum: 75,
 			gold: 99,
 		});
-
-	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5217.48);
-
-	const player = createFarmingPlayer({ ...info, bestiaryKills: pests });
-	const playerWeight = player.getWeightCalc({ 
-		minions, 
-		levelCapUpgrade: 10,
-		anitaBonusFarmingFortuneLevel: 15,
-	}).setEarnedMedals({
-		diamond: 246,
-		platinum: 75,
-		gold: 99,
-	});
 
 	expect(playerWeight.getCropWeights()).toStrictEqual(weight.getCropWeights());
 	expect(playerWeight.getBonusWeights()).toStrictEqual(weight.getBonusWeights());

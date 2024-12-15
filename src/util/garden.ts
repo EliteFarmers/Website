@@ -1,7 +1,7 @@
-import { Crop } from "../constants/crops.js";
-import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from "../constants/garden.js";
-import { Rarity } from "../constants/reforges.js";
-import { getCropFromName } from "./names.js";
+import { Crop } from '../constants/crops.js';
+import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from '../constants/garden.js';
+import { Rarity } from '../constants/reforges.js';
+import { getCropFromName } from './names.js';
 
 export interface LevelingStats {
 	level: number;
@@ -14,9 +14,9 @@ export interface LevelingStats {
 }
 
 /**
- * Gets user's current level based on experience 
+ * Gets user's current level based on experience
  * @param exp Current experience/progress
- * @param expRequired Array of the amount of experience required to reach each level, not cumulative 
+ * @param expRequired Array of the amount of experience required to reach each level, not cumulative
  * @param maxLevel Maximum level to return
  * @param overflow Calculate overflow levels
  */
@@ -26,7 +26,8 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number, 
 	let maxed = true;
 
 	for (const xpRequired of expRequired) {
-		if ((xp -= xpRequired) > 0) {
+		xp -= xpRequired;
+		if (xp > 0) {
 			level++;
 
 			if (level === maxLevel) {
@@ -50,9 +51,7 @@ export function getLevel(exp: number, expRequired: number[], maxLevel?: number, 
 		}
 	}
 
-	const nextReq = (overflowing) 
-		? expRequired.at(-1) ?? 0
-		: expRequired[level];
+	const nextReq = overflowing ? (expRequired.at(-1) ?? 0) : expRequired[level];
 
 	return {
 		total: exp,
@@ -73,10 +72,13 @@ export function getCropMilestone(crop: Crop, collection: number, overflow = fals
 	return getLevel(collection, CROP_MILESTONES[crop], undefined, overflow);
 }
 
-export function getCropMilestones(crops: Record<string, number | string>, overflow = false): Record<Crop, LevelingStats> {
+export function getCropMilestones(
+	crops: Record<string, number | string>,
+	overflow = false
+): Record<Crop, LevelingStats> {
 	const milestones = {} as Record<string, LevelingStats>;
 
-	for (const [ cropName, collection ] of Object.entries(crops)) {
+	for (const [cropName, collection] of Object.entries(crops)) {
 		const crop = getCropFromName(cropName);
 		const col = typeof collection === 'string' ? parseInt(collection) : collection;
 		if (isNaN(col) || !crop) continue;
@@ -87,12 +89,15 @@ export function getCropMilestones(crops: Record<string, number | string>, overfl
 	return milestones;
 }
 
-export function getCropMilestoneLevels(crops: Record<string, number | string | null | undefined>, overflow = false): Record<Crop, number> {
+export function getCropMilestoneLevels(
+	crops: Record<string, number | string | null | undefined>,
+	overflow = false
+): Record<Crop, number> {
 	const milestones = {} as Record<string, number>;
 
-	for (const [ cropName, collection ] of Object.entries(crops)) {
+	for (const [cropName, collection] of Object.entries(crops)) {
 		const crop = getCropFromName(cropName);
-		const col = typeof collection === 'string' ? parseInt(collection) : collection ?? NaN;
+		const col = typeof collection === 'string' ? parseInt(collection) : (collection ?? NaN);
 		if (isNaN(col) || !crop) continue;
 
 		milestones[crop] = getLevel(col, CROP_MILESTONES[crop], undefined, overflow).level;
@@ -104,7 +109,7 @@ export function getCropMilestoneLevels(crops: Record<string, number | string | n
 export function getCropUpgrades(upgrades: Record<string, number>): Record<Crop, number> {
 	const cropUpgrades = {} as Record<string, number>;
 
-	for (const [ cropName, upgrade ] of Object.entries(upgrades)) {
+	for (const [cropName, upgrade] of Object.entries(upgrades)) {
 		const crop = getCropFromName(cropName);
 		if (!crop) continue;
 
@@ -132,7 +137,7 @@ export interface GardenVisitorStatsWithName extends GardenVisitorStats {
 export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>) {
 	const groups = {} as Record<Rarity, GardenVisitorStatsWithName[]>;
 
-	for (const [ visitorId, stats ] of Object.entries(visitors)) {
+	for (const [visitorId, stats] of Object.entries(visitors)) {
 		const visitor = getGardenVisitor(visitorId);
 		if (!visitor) continue;
 
@@ -152,7 +157,7 @@ export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>
 				return b.accepted - a.accepted;
 			}
 			return b.visits - a.visits;
-		})
+		});
 	}
 
 	return groups;

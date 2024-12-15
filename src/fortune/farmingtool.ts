@@ -1,18 +1,18 @@
 import { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges.js';
-import { getStatValue, Stat } from "../constants/stats.js";
+import { Stat, getStatValue } from '../constants/stats.js';
+import { FortuneSourceProgress } from '../constants/upgrades.js';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools.js';
+import { PlayerOptions } from '../player/playeroptions.js';
+import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
+import { getSourceProgress } from '../upgrades/upgrades.js';
+import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import { extractNumberFromLine } from '../util/lore.js';
 import { EliteItemDto } from './item.js';
-import { PlayerOptions } from '../player/playeroptions.js';
 import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
-import { getSourceProgress } from '../upgrades/upgrades.js';
-import { getFortuneFromEnchant } from '../util/enchants.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
-import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
@@ -22,7 +22,7 @@ export class FarmingTool extends UpgradeableBase {
 	public override get type() {
 		return this.info.reforgeType;
 	}
-	
+
 	// Backwards compatibility
 	public get tool(): FarmingToolInfo {
 		return this.info;

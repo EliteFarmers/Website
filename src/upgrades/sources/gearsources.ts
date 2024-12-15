@@ -1,59 +1,60 @@
-import { FARMING_ENCHANTS } from "../../constants/enchants.js";
-import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges.js";
-import { Skill } from "../../constants/skills.js";
-import { Stat } from "../../constants/stats.js";
-import type { FarmingArmor } from "../../fortune/farmingarmor.js";
-import { FarmingEquipment } from "../../fortune/farmingequipment.js";
-import { GemRarity } from "../../fortune/item.js";
-import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants.js";
-import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems.js";
-import { DynamicFortuneSource } from "./toolsources.js";
+import { FARMING_ENCHANTS } from '../../constants/enchants.js';
+import { REFORGES, Rarity, ReforgeTarget } from '../../constants/reforges.js';
+import { Skill } from '../../constants/skills.js';
+import { Stat } from '../../constants/stats.js';
+import type { FarmingArmor } from '../../fortune/farmingarmor.js';
+import { FarmingEquipment } from '../../fortune/farmingequipment.js';
+import { GemRarity } from '../../fortune/item.js';
+import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/enchants.js';
+import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
+import { DynamicFortuneSource } from './toolsources.js';
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
 	{
 		name: 'Base Stats',
 		exists: (gear) => {
-			return (gear.getLastItemUpgrade() ?? gear)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined
+			return (gear.getLastItemUpgrade() ?? gear)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined;
 		},
 		max: (gear) => {
 			return (gear.getLastItemUpgrade() ?? gear)?.info?.baseStats?.[Stat.FarmingFortune] ?? 0;
 		},
 		current: (gear) => {
 			return gear.info.baseStats?.[Stat.FarmingFortune] ?? 0;
-		}
+		},
 	},
 	{
 		name: 'Reforge Stats',
 		exists: () => true,
 		wiki: (gear) => {
-			return gear.type === ReforgeTarget.Equipment
-				? REFORGES?.rooted?.wiki
-				: REFORGES?.mossy?.wiki;
+			return gear.type === ReforgeTarget.Equipment ? REFORGES?.rooted?.wiki : REFORGES?.mossy?.wiki;
 		},
 		max: (gear) => {
 			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
-			return gear.type === ReforgeTarget.Equipment 
-				? REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0
-				: REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
+			return gear.type === ReforgeTarget.Equipment
+				? (REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0)
+				: (REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0);
 		},
 		current: (gear) => {
 			return gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
-		}
+		},
 	},
 	{
 		name: 'Gemstone Slots',
 		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
 		exists: (gear) => {
 			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
-			return last?.gemSlots?.peridot !== undefined
+			return last?.gemSlots?.peridot !== undefined;
 		},
 		max: (gear) => {
 			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
-			return (last?.gemSlots?.peridot ?? 0) * getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect);
+			return (
+				(last?.gemSlots?.peridot ?? 0) *
+				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
+			);
 		},
 		current: (gear) => {
 			return getPeridotFortune(gear.rarity, gear.item);
-		}
+		},
 	},
 	{
 		name: 'Salesperson Ability',
@@ -62,7 +63,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		max: () => 15,
 		current: (gear) => {
 			return (gear as FarmingEquipment).getPieceBonus();
-		}
+		},
 	},
 	{
 		name: 'Farming Level',
@@ -76,15 +77,21 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		},
 		current: (gear) => {
 			return (gear.info.perLevelStats?.stats[Stat.FarmingFortune] ?? 0) * (gear.options?.farmingLevel ?? 0);
-		}
+		},
 	},
 	...Object.entries(FARMING_ENCHANTS)
-		.filter(([, enchant]) => enchant.appliesTo.includes(ReforgeTarget.Armor) || enchant.appliesTo.includes(ReforgeTarget.Equipment))
-		.map(([id, enchant]) => ({
-			name: enchant.name,
-			wiki: () => enchant.wiki,
-			exists: (gear) => enchant.appliesTo.includes(gear.type),
-			max: (gear) => getMaxFortuneFromEnchant(enchant, gear.options),
-			current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options),				
-		}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>)
+		.filter(
+			([, enchant]) =>
+				enchant.appliesTo.includes(ReforgeTarget.Armor) || enchant.appliesTo.includes(ReforgeTarget.Equipment)
+		)
+		.map(
+			([id, enchant]) =>
+				({
+					name: enchant.name,
+					wiki: () => enchant.wiki,
+					exists: (gear) => enchant.appliesTo.includes(gear.type),
+					max: (gear) => getMaxFortuneFromEnchant(enchant, gear.options),
+					current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options),
+				}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>
+		),
 ];

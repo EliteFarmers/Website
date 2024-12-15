@@ -1,7 +1,7 @@
-import { expect, test } from "vitest";
-import { FarmingPlayer } from "./player.js";
+import { expect, test } from 'vitest';
+import { FarmingPlayer } from './player.js';
 
-test("Player construct test", () => {
+test('Player construct test', () => {
 	const player = new FarmingPlayer({});
 	expect(player.breakdown).toStrictEqual({});
 	expect(player.fortune).toBe(0);
@@ -35,7 +35,7 @@ test('Fortune progress test', () => {
 	});
 
 	const progress = player.getProgress();
-	
+
 	const plots = progress.find((p) => p.name === 'Unlocked Plots');
 	expect(plots?.fortune).toBe(3);
 });

@@ -36,7 +36,7 @@ export class SkyBlockTime {
 	 */
 	declare readonly dayUnixSeconds: number;
 
-	/** 
+	/**
 	 * The day of the SkyBlock year, 1-indexed.
 	 */
 	get dayOfYear() {
@@ -72,9 +72,9 @@ export class SkyBlockTime {
 		this.day = Math.floor((elapsedDays % 372) % 31) + 1;
 
 		// Round down to the nearest skyblock day
-		this.dayUnixSeconds = (elapsedSeconds - (elapsedSeconds % 1200)) + SkyBlockTime.SkyBlockEpochSeconds;
+		this.dayUnixSeconds = elapsedSeconds - (elapsedSeconds % 1200) + SkyBlockTime.SkyBlockEpochSeconds;
 	}
-	
+
 	/**
 	 * Create a SkyBlockTime object from a skyblock year, month, and day.
 	 * These dates shouldbe be 1-indexed. For example, Early Spring the 1st of Year 1 is 1, 1, 1.

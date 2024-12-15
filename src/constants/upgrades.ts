@@ -1,9 +1,9 @@
-import { EliteItemDto } from "../fortune/item.js";
-import { UpgradeableInfo } from "../fortune/upgradeable.js";
-import type { GearSlot } from "../items/armor.js";
-import { Crop } from "./crops.js";
-import { Stat } from "./stats.js";
-import type { FARMING_TOOLS } from "../items/tools.js";
+import { EliteItemDto } from '../fortune/item.js';
+import { UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { GearSlot } from '../items/armor.js';
+import type { FARMING_TOOLS } from '../items/tools.js';
+import { Crop } from './crops.js';
+import { Stat } from './stats.js';
 
 export enum UpgradeReason {
 	NextTier = 'next', // Standard upgrade

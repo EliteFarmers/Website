@@ -1,7 +1,6 @@
-import { FortuneSource, FortuneSourceProgress } from "../constants/upgrades.js";
-import { Upgradeable } from "../fortune/upgradeable.js";
-import { getFortune } from "./upgrades.js";
-
+import { FortuneSource, FortuneSourceProgress } from '../constants/upgrades.js';
+import { Upgradeable } from '../fortune/upgradeable.js';
+import { getFortune } from './upgrades.js';
 
 export function getFortuneProgress(level: number | null | undefined, source: FortuneSource): FortuneSourceProgress {
 	return {
@@ -12,7 +11,7 @@ export function getFortuneProgress(level: number | null | undefined, source: For
 		fortune: getFortune(level, source),
 		ratio: Math.min((level ?? 0) / source.maxLevel, 1),
 		maxFortune: source.maxLevel * source.fortunePerLevel,
-		upgrades: []
+		upgrades: [],
 	};
 }
 
@@ -28,6 +27,6 @@ export function getItemProgress(item: Upgradeable): FortuneSourceProgress {
 		fortunePerLevel: 0,
 		maxFortune: 0,
 		wiki: info.wiki,
-		upgrades
+		upgrades: upgrades,
 	};
 }

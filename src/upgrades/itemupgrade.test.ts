@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
-import { FarmingTool } from "../fortune/farmingtool.js";
+import { expect, test } from 'vitest';
+import { FarmingTool } from '../fortune/farmingtool.js';
 
 const netherwartHoe = {
 	id: 293,
@@ -60,7 +60,7 @@ const netherwartHoe = {
 	gems: { PERIDOT_0: 'FINE' },
 };
 
-test("Tool item upgrade", () => {
+test('Tool item upgrade', () => {
 	const tool = new FarmingTool(netherwartHoe);
 
 	expect(tool.fortune).toBe(151);
