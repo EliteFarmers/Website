@@ -18,7 +18,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - uses: ./.github/workflows/setup.yaml
-      
+
       - name: Lint
         run: pnpm run lint
