@@ -15,74 +15,10 @@ env:
   STORE_PATH: ''
 
 jobs:
-  cache-and-install:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - uses: actions/cache@v4
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Make dummy env for types
-        run: |
-            echo "ls -a ."
-            ls -a .
-            mv .env.example .env
-
   lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    needs: cache-and-install
+    runs-on: ubuntu-latest 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: ./.github/workflows/setup.yaml
+      
       - name: Lint
         run: pnpm run lint
-
-  check:
-    name: Svelte Check
-    runs-on: ubuntu-latest
-    needs: cache-and-install
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Check
-        run: pnpm run check
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: cache-and-install
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: pnpm run build
