@@ -33,9 +33,11 @@ runs:
                   ${{ runner.os }}-pnpm-store-
 
         - name: Install dependencies
+          shell: bash
           run: pnpm install
 
         - name: Make dummy env for types
+          shell: bash
           run: |
               echo "ls -a ."
               ls -a .
