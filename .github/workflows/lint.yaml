@@ -16,9 +16,7 @@ env:
 
 jobs:
   cache-and-install:
-    name: Run Linters
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,5 +54,35 @@ jobs:
             ls -a .
             mv .env.example .env
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: cache-and-install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Lint
         run: pnpm run lint
+
+  check:
+    name: Svelte Check
+    runs-on: ubuntu-latest
+    needs: cache-and-install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check
+        run: pnpm run check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: cache-and-install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: pnpm run build
