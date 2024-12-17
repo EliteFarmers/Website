@@ -19,6 +19,7 @@ build/*
 .svelte-kit/*
 node_modules/*
 pnpm-lock.yaml
+.pnpm-store
 *.cjs
 src/lib/api/swagger.json
 src/lib/api/api.d.ts
