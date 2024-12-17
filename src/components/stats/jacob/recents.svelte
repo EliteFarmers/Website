@@ -19,7 +19,7 @@
 	let showMore = false;
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col items-center md:items-start">
 	<h1 class="my-2 text-2xl">Recent Contests</h1>
 	<div class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
 		{#each recentContests as contest, i (`${contest.crop}${contest.timestamp}`)}

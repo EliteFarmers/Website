@@ -44,7 +44,7 @@
 	let profile = $derived(page.params.profile);
 </script>
 
-<div id="Medals" class="flex flex-col">
+<div id="Medals" class="flex flex-col items-center md:items-start">
 	<h3 class="my-2 text-2xl">Jacob Contest Rankings</h3>
 	<div class="flex w-full flex-wrap justify-evenly gap-2 md:flex-row md:gap-4">
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}

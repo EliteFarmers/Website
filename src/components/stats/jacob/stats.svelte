@@ -41,7 +41,7 @@
 	);
 </script>
 
-<div class="mb-2 flex flex-col gap-2">
+<div class="mb-2 flex flex-col items-center gap-2 md:items-start">
 	<h1 class="mb-0.5 text-2xl">General Stats</h1>
 	<div class="flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
 		<div
