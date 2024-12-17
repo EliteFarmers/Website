@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import Mail from 'lucide-svelte/icons/mail';
@@ -69,7 +69,7 @@
 					<p>Edit Leaderboard</p>
 				</Popover>
 			</Button> -->
-			<form method="post" action="{$page.url.pathname}?/send" use:enhance>
+			<form method="post" action="{page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
 					{#snippet trigger()}
@@ -84,7 +84,7 @@
 					</div>
 				</Popover.Mobile>
 			</form>
-			<form method="post" action="{$page.url.pathname}?/clear" use:enhance>
+			<form method="post" action="{page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
 					{#snippet trigger()}
@@ -122,7 +122,7 @@
 					<Accordion.Content>
 						{#each entries as entry (entry)}
 							<div class="my-2 flex flex-row items-center gap-8">
-								<form method="POST" action="{$page.url.pathname}?/banparticipation" use:enhance>
+								<form method="POST" action="{page.url.pathname}?/banparticipation" use:enhance>
 									<input type="hidden" name="id" value={lb.id} />
 									<input type="hidden" name="uuid" value={entry.uuid} />
 									<input type="hidden" name="crop" value={entry.record?.crop} />
@@ -162,7 +162,7 @@
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-			<form method="POST" action="{$page.url.pathname}?/delete" use:enhance>
+			<form method="POST" action="{page.url.pathname}?/delete" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<AlertDialog.Action type="submit">Delete</AlertDialog.Action>
 			</form>

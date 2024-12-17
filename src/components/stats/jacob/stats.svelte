@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { components } from '$lib/api/api';
 
 	interface Props {
@@ -41,7 +41,7 @@
 	);
 </script>
 
-<div class="mb-2 flex flex-col gap-2">
+<div class="mb-2 flex flex-col items-center gap-2 md:items-start">
 	<h1 class="mb-0.5 text-2xl">General Stats</h1>
 	<div class="flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
 		<div
@@ -50,7 +50,7 @@
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if firstPlacesRank !== -1}
 					<a
-						href="/leaderboard/firstplace/{$page.params.id}-{$page.params.profile}"
+						href="/leaderboard/firstplace/{page.params.id}-{page.params.profile}"
 						class="pd-0.5 rounded-md bg-card px-1.5 hover:bg-muted"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
@@ -68,7 +68,7 @@
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if participationsRank !== -1}
 					<a
-						href="/leaderboard/participations/{$page.params.id}-{$page.params.profile}"
+						href="/leaderboard/participations/{page.params.id}-{page.params.profile}"
 						class="pd-0.5 rounded-md bg-card px-1.5 hover:bg-muted"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"

@@ -3,7 +3,7 @@
 	import type { PageData } from './$types';
 
 	import Head from '$comp/head.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 
 	interface Props {
@@ -28,15 +28,15 @@
 		<div class="my-4 flex flex-col justify-center gap-2 md:flex-row md:gap-4">
 			<a
 				class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800"
-				href="/contests/{$page.params.year}/{$page.params.month}/{+$page.params.day - 3}">Previous</a
+				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day - 3}">Previous</a
 			>
 			<a
 				class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800"
-				href="/contests/{$page.params.year}/{$page.params.month}">View&nbsp;Month</a
+				href="/contests/{page.params.year}/{page.params.month}">View&nbsp;Month</a
 			>
 			<a
 				class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800"
-				href="/contests/{$page.params.year}/{$page.params.month}/{+$page.params.day + 3}">Next</a
+				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day + 3}">Next</a
 			>
 		</div>
 	</div>

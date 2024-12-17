@@ -6,7 +6,7 @@
 	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
 	import Users from 'lucide-svelte/icons/users';
 	import User from 'lucide-svelte/icons/user';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
@@ -29,7 +29,7 @@
 		swapMode = !swapMode;
 	}
 
-	let highlightUuid = $derived($page.url.hash.slice(1));
+	let highlightUuid = $derived(page.url.hash.slice(1));
 	let highlightTeam = $derived(
 		teams?.find((team) => team.members?.some((member) => member.playerUuid === highlightUuid))?.id?.toString() ??
 			undefined
@@ -69,11 +69,11 @@
 				<ExternalLink size={16} />
 			</Button>
 			{#if joinable}
-				<Button href="/event/{$page.params.event}/membership" color="green" size="sm" class="flex-1">
+				<Button href="/event/{page.params.event}/membership" color="green" size="sm" class="flex-1">
 					Join Event
 				</Button>
 			{/if}
-			<Button href="/event/{$page.params.event}" color="alternative" size="sm" class="flex-1">
+			<Button href="/event/{page.params.event}" color="alternative" size="sm" class="flex-1">
 				Back to Event Page
 			</Button>
 		</div>

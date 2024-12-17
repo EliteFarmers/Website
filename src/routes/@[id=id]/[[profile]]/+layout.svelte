@@ -3,7 +3,7 @@
 	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import { browser } from '$app/environment';
 	import { Button } from '$ui/button';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import type { Snippet } from 'svelte';
@@ -11,16 +11,16 @@
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
-	let url = $derived($page.url.pathname);
+	let url = $derived(page.url.pathname);
 
 	$effect(() => {
 		if (!browser) return;
 
-		const current = `${$page.params.id}${$page.params.profile ? `/${$page.params.profile}` : ''}`;
+		const current = `${page.params.id}${page.params.profile ? `/${page.params.profile}` : ''}`;
 		const wanted = `${data.account?.name}/${data.profile?.profileName}`;
 
 		if (current !== wanted) {
-			let newUrl = $page.url.pathname.replace(current, wanted);
+			let newUrl = page.url.pathname.replace(current, wanted);
 			goto(newUrl, { replaceState: true });
 		}
 	});
@@ -100,7 +100,7 @@
 				<span class="select-none text-gray-500">Profile Last Updated</span>
 				<span class="select-all">{new Date((data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span>
 			</div>
-			{#if $page.url.pathname.includes('/garden')}
+			{#if page.url.pathname.includes('/garden')}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
 					<span class="select-none text-gray-500">Garden Last Updated</span>
 					<span class="select-all"

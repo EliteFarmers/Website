@@ -4,7 +4,7 @@
 	import * as Popover from '$ui/popover';
 	import { Label } from '$ui/label';
 	import type { ActionData, PageData } from './$types';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
 	import { EventType } from '$lib/utils';
 	import { Input } from '$ui/input';
@@ -112,7 +112,7 @@
 <main class="flex flex-col items-center justify-center gap-4">
 	<h1 class="mt-16 text-4xl font-semibold">Manage Event Membership</h1>
 
-	<Button class="my-8 flex-1" href="/event/{$page.params.event}" variant="secondary">Back To Event</Button>
+	<Button class="my-8 flex-1" href="/event/{page.params.event}" variant="secondary">Back To Event</Button>
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>

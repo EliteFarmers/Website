@@ -55,7 +55,7 @@
 		{@const ff = fortune(crop, score ?? 0)}
 
 		<div
-			class="flex max-w-52 flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md bg-primary-foreground p-2"
+			class="flex flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md bg-primary-foreground p-2 md:max-w-52"
 		>
 			<div class="flex flex-row items-center gap-2">
 				<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />

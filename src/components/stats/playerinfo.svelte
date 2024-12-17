@@ -3,7 +3,7 @@
 	import type { components } from '$lib/api/api';
 	import type { ProfileDetails } from '$lib/api/elite';
 	import { GetRankName, GetRankDefaults } from '$lib/format';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	import Weight from '$comp/stats/player/weight.svelte';
 	import Discord from '$comp/stats/player/discord.svelte';
@@ -38,7 +38,7 @@
 		badges,
 	}: Props = $props();
 
-	let profiles = $derived(profileDetails.filter((p) => !$page.url.pathname.endsWith(p.name ?? '')));
+	let profiles = $derived(profileDetails.filter((p) => !page.url.pathname.endsWith(p.name ?? '')));
 
 	let discordName = $derived(linked ?? player?.socialMedia?.discord);
 
@@ -79,7 +79,7 @@
 						<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
 							{#each OTHER_SITES as site (site.name)}
 								<a
-									href={site.url(player?.uuid ?? $page.params.id, $page.params.profile)}
+									href={site.url(player?.uuid ?? page.params.id, page.params.profile)}
 									class="flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3 hover:bg-primary-foreground"
 									target="_blank"
 									rel="noopener noreferrer nofollow"

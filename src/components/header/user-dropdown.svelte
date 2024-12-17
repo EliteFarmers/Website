@@ -2,12 +2,12 @@
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Avatar from '$ui/avatar';
 	import { buttonVariants } from '$ui/button';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import UserRound from 'lucide-svelte/icons/user-round';
 	import { cn } from '$lib/utils';
 
-	let user = $derived($page.data.session);
+	let user = $derived(page.data.session);
 </script>
 
 <DropdownMenu.Root>

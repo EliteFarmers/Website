@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import type { components } from '$lib/api/api';
 
@@ -19,7 +19,7 @@
 	let showMore = false;
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col items-center md:items-start">
 	<h1 class="my-2 text-2xl">Recent Contests</h1>
 	<div class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
 		{#each recentContests as contest, i (`${contest.crop}${contest.timestamp}`)}
@@ -43,7 +43,7 @@
 		{/each}
 		{#if recentContests.length > 0}
 			<a
-				href={$page.url.pathname + '/contests'}
+				href={page.url.pathname + '/contests'}
 				data-sveltekit-preload-data="off"
 				class="flex flex-row items-center justify-center gap-0.5 rounded-md border-l-4 bg-primary-foreground p-2 hover:bg-muted hover:shadow-lg dark:border-zinc-700"
 			>

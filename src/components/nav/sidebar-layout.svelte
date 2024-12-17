@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { ScrollArea } from '$ui/scroll-area';
 	import { Button } from '$ui/button';
 	import SidebarNav from '$comp/nav/sidebar-nav.svelte';
@@ -14,7 +14,7 @@
 
 	let { title, navItems, children }: Props = $props();
 
-	let current = $derived(navItems.findIndex((p) => p.href.startsWith($page.url.pathname)));
+	let current = $derived(navItems.findIndex((p) => p.href.startsWith(page.url.pathname)));
 	let previous = $derived(navItems[current - 1]);
 	let next = $derived(navItems[current + 1]);
 </script>
@@ -31,7 +31,7 @@
 		{@render children?.()}
 
 		<div class="flex flex-row items-center justify-between">
-			{#key $page.url.pathname}
+			{#key page.url.pathname}
 				{#if previous}
 					<Button
 						href={previous.href}

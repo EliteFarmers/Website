@@ -9,7 +9,7 @@
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	interface Props {
 		data: PageData;
@@ -72,7 +72,7 @@
 						<div class="flex flex-row items-center gap-1 rounded-md bg-primary-foreground p-1 px-2">
 							{#if ranks['visitors-accepted'] > 0}
 								<a
-									href="/leaderboard/visitors-accepted/{$page.params.id}-{$page.params.profile}"
+									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params.profile}"
 									class="rounded-md bg-card px-1.5 hover:bg-muted"
 								>
 									<span class="text-sm">#</span><span class="text-md"

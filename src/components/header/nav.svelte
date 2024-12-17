@@ -1,5 +1,6 @@
+<!-- @migration task: review uses of `navigating` -->
 <script lang="ts">
-	import { navigating } from '$app/stores';
+	import { navigating } from '$app/state';
 	import { slide } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 
@@ -28,7 +29,7 @@
 	</div>
 </header>
 
-{#if $navigating}
+{#await navigating.complete}
 	<div class="relative">
 		<div
 			class="absolute h-1 w-full bg-green-300"
@@ -37,4 +38,4 @@
 	</div>
 	<!-- Gray out the screen -->
 	<div class="absolute left-0 top-0 z-[100] h-[200vh] w-full bg-gray-100 opacity-50 dark:bg-zinc-900"></div>
-{/if}
+{/await}

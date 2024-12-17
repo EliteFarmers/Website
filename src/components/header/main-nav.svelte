@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { NAV_PAGES } from '$content/nav';
 	import cn from 'classnames';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
@@ -19,7 +19,7 @@
 					href={navItem.href}
 					class={cn(
 						'flex flex-row items-center gap-1 transition-colors hover:text-foreground',
-						$page.url.pathname.startsWith(navItem.href) ? 'text-foreground' : 'text-foreground/80'
+						page.url.pathname.startsWith(navItem.href) ? 'text-foreground' : 'text-foreground/80'
 					)}
 					target={navItem.external ? '_blank' : undefined}
 				>
