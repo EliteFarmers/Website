@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
@@ -33,7 +33,7 @@
 		)
 	);
 
-	let showSkills = $state($page.url.href.includes('#Skills'));
+	let showSkills = $state(page.url.href.includes('#Skills'));
 
 	let weightStr = $derived(
 		member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'

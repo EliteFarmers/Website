@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
 	import Cropselector from '$comp/stats/contests/cropselector.svelte';
 	import { getTimeStamp } from '$lib/format';
@@ -10,7 +10,7 @@
 
 	let { children }: Props = $props();
 
-	let year = $derived(+$page.params.year);
+	let year = $derived(+page.params.year);
 </script>
 
 <Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />

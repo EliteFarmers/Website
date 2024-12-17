@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 
@@ -13,7 +13,7 @@
 	let { ign = $bindable(), rank, members, profileId }: Props = $props();
 
 	$effect.pre(() => {
-		ign = ign ?? $page.params.id;
+		ign = ign ?? page.params.id;
 	});
 	let plus = $derived(rank?.plus ?? undefined);
 	let plusColor = $derived(rank?.plusColor);

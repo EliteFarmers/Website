@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initRatesData } from '$lib/stores/ratesData';
 	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
@@ -43,7 +43,7 @@
 <svelte:head>
 	<meta name="author" content="Kaeso" />
 	<meta name="robots" content="index, follow" />
-	<meta property="og:url" content={$page.url.toString()} />
+	<meta property="og:url" content={page.url.toString()} />
 
 	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />

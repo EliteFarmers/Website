@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { toReadable } from '$lib/format';
 
 	interface Props {
@@ -39,7 +39,7 @@
 	<div class="flex flex-row items-center gap-2">
 		{#if rank >= 0}
 			<a
-				href="/leaderboard/{name.toLowerCase()}/{$page.params.id}-{$page.params.profile}"
+				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}"
 				class="rounded-md bg-primary-foreground px-1.5 py-0.5 font-semibold text-green-700 hover:bg-muted dark:text-yellow-400"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span

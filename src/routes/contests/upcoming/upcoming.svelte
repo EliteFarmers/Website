@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate, getRelativeTimeString } from '$lib/format';
 	import * as Popover from '$ui/popover';
@@ -15,7 +15,7 @@
 
 	let time = $derived(timestamp);
 	let lang = $state('en');
-	let selected = $derived($page.url.hash === `#${timestamp}`);
+	let selected = $derived(page.url.hash === `#${timestamp}`);
 
 	$effect.pre(() => {
 		lang = navigator.language;

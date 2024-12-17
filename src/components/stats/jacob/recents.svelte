@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import type { components } from '$lib/api/api';
 
@@ -43,7 +43,7 @@
 		{/each}
 		{#if recentContests.length > 0}
 			<a
-				href={$page.url.pathname + '/contests'}
+				href={page.url.pathname + '/contests'}
 				data-sveltekit-preload-data="off"
 				class="flex flex-row items-center justify-center gap-0.5 rounded-md border-l-4 bg-primary-foreground p-2 hover:bg-muted hover:shadow-lg dark:border-zinc-700"
 			>

@@ -5,12 +5,12 @@
 	import Menu from 'lucide-svelte/icons/menu';
 	import { MOBILE_NAV } from '$content/nav';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { cn } from '$lib/utils';
 
 	let open = $state(false);
 
-	let user = $derived($page.data.session);
+	let user = $derived(page.data.session);
 </script>
 
 <Sheet.Root bind:open>
@@ -50,7 +50,7 @@
 											bind:open
 											class="flex flex-row items-center gap-1 rounded-md border-2 border-transparent px-2 py-2 text-foreground hover:bg-primary-foreground data-[active=true]:border-primary-foreground"
 											target={item.external ? '_blank' : undefined}
-											data-active={$page.url.pathname === item.href}
+											data-active={page.url.pathname === item.href}
 										>
 											<span class="leading-none">{item.title}</span>
 											{#if item.external}

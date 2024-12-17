@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import * as Popover from '$comp/ui/popover';
 	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import Minion from './minion.svelte';
@@ -73,7 +73,7 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
-							href="/leaderboard/{key}/{$page.params.id}-{$page.params.profile}"
+							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
 							class="rounded-md bg-card px-1.5 hover:bg-muted"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
@@ -92,7 +92,7 @@
 				<div class="flex flex-row items-center gap-2">
 					{#if pestRank > 0}
 						<a
-							href="/leaderboard/{pest}/{$page.params.id}-{$page.params.profile}"
+							href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
 							class="rounded-md bg-card px-1 hover:bg-muted"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span

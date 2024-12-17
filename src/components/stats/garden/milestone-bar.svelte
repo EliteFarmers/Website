@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { toReadable } from '$lib/format';
 	import { Crop, getCropDisplayName, getCropFromName, type LevelingStats } from 'farming-weight';
 	import ProgressBar from '../progress-bar.svelte';
@@ -51,7 +51,7 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
-							href="/leaderboard/{key}-milestone/{$page.params.id}-{$page.params.profile}"
+							href="/leaderboard/{key}-milestone/{page.params.id}-{page.params.profile}"
 							class="rounded-md bg-card px-1.5 hover:bg-muted"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span

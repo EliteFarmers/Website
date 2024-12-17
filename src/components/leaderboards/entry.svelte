@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { type LeaderboardConfig } from '$lib/constants/leaderboards';
 
@@ -27,7 +27,7 @@
 				maximumFractionDigits: 1,
 				minimumFractionDigits: 1,
 			};
-		} else if ($page.params.category === 'skyblockxp') {
+		} else if (page.params.category === 'skyblockxp') {
 			return {
 				maximumFractionDigits: 2,
 				minimumFractionDigits: 2,
@@ -40,7 +40,7 @@
 	});
 
 	let ign = $state(entry.ign);
-	let amount = $derived($page.params.category === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
+	let amount = $derived(page.params.category === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
 	let profile = $state(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
 	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);

@@ -7,7 +7,7 @@
 	import User from 'lucide-svelte/icons/user';
 	import { onMount } from 'svelte';
 	import { getCountdown } from '$lib/format';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
@@ -144,7 +144,7 @@
 						<ExternalLink size={16} />
 					</Button>
 					{#if joinable}
-						<Button href="{$page.url.pathname}/membership">
+						<Button href="{page.url.pathname}/membership">
 							{#if joined}
 								My Membership
 							{:else}
@@ -192,14 +192,14 @@
 				{#if (!teamEvent || (teamEvent && swapMode)) && members.length > 0}
 					<EventLeaderboard {running} {event} members={members.slice(0, memberLimit)} />
 					<div class="flex flex-row justify-center gap-2">
-						<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+						<Button href="{page.url.pathname}/leaderboard" color="alternative">
 							<span>View Leaderboard</span>
 						</Button>
 					</div>
 				{:else if teamEvent && teams.length > 0}
 					<EventTeamLeaderboard {running} {event} teams={teams.slice(0, memberLimit)} />
 					<div class="flex flex-row justify-center gap-2">
-						<Button href="{$page.url.pathname}/leaderboard" color="alternative">
+						<Button href="{page.url.pathname}/leaderboard" color="alternative">
 							<span>View Leaderboard</span>
 						</Button>
 					</div>
