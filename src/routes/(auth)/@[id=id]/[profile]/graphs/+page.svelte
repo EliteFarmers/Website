@@ -7,7 +7,7 @@
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
 
-	import Cropselector from '$comp/stats/contests/cropselector.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import Graph from '$comp/charts/collectiongraph.svelte';
 	import Head from '$comp/head.svelte';
 

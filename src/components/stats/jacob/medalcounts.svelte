@@ -1,4 +1,6 @@
 <script lang="ts">
+	import * as Popover from '$comp/ui/popover';
+
 	interface Props {
 		medals?: {
 			diamond: number;
@@ -22,22 +24,26 @@
 	}: Props = $props();
 </script>
 
-<div class="flex flex-col justify-evenly gap-2 md:flex-row md:gap-4">
+<div class="flex flex-wrap justify-center gap-2 md:flex-row md:gap-4">
 	{#if participations}
-		<div
-			class="flex flex-1 items-baseline justify-center gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:px-4"
-		>
-			<p class="text-2xl font-semibold text-red-700">
-				{participations.toLocaleString()}
-			</p>
-			<h2>Contest{participations > 1 ? 's' : ''}</h2>
+		<div class="flex flex-1 items-center justify-center gap-2 rounded-md bg-primary-foreground">
+			<Popover.Mobile>
+				{#snippet trigger()}
+					<p class="p-2 text-xl font-semibold leading-none md:px-2">
+						{participations.toLocaleString()}
+					</p>
+				{/snippet}
+				<div>
+					<p>The number of contests participated in!</p>
+				</div>
+			</Popover.Mobile>
 		</div>
 	{/if}
 	{#each Object.entries(medals) as [medal, amount] (medal)}
 		<div
-			class="flex flex-1 basis-8 items-center justify-center gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:px-4"
+			class="flex min-w-16 max-w-24 flex-1 basis-8 items-center justify-center gap-2 rounded-md bg-primary-foreground p-1 md:p-2"
 		>
-			<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-8 w-8" />
+			<img src="/images/medals/{medal}.webp" alt={medal} class="pixelated size-6 md:size-8" />
 			<p class="text-2xl font-semibold">
 				{amount.toLocaleString()}
 			</p>

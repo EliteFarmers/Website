@@ -10,7 +10,7 @@
 	import * as Popover from '$ui/popover';
 	import { Crop, CROP_WEIGHT, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import Cropselector from '$comp/stats/contests/cropselector.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getSelectedCrops, getAnyCropSelected } from '$lib/stores/selectedCrops';
 	import JumpLink from '$comp/jump-link.svelte';
 	import Head from '$comp/head.svelte';

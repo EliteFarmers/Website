@@ -24,7 +24,7 @@
 </script>
 
 <svelte:element this={href ? 'a' : 'div'} {href} id={id ? id : undefined} class="max-w-full scroll-mt-32">
-	<ScrollArea orientation="horizontal" class="w-3xl overflow-hidden whitespace-nowrap rounded-md border">
+	<ScrollArea orientation="horizontal" class="w-3xl overflow-hidden whitespace-nowrap rounded-md">
 		<div class="flex flex-row items-center justify-center gap-2 p-3">
 			{#each crops as [crop, src] (crop)}
 				<button
