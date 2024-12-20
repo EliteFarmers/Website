@@ -34,7 +34,7 @@
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import Cropselector from '$comp/stats/contests/cropselector.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import Head from '$comp/head.svelte';
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
