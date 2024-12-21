@@ -80,7 +80,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 	{
 		name: 'Fermento Artifact Family',
 		exists: ({ player, crop }) => {
-			const active = player.activeAccessories.find((a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family);
+			const active = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+			);
 			if (!active) return true;
 
 			if (active.info.crops && active.info.crops.includes(crop)) {
