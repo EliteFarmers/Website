@@ -1038,6 +1038,64 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/guild/{guildId}/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh a Discord guild */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guildId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/guild/{guildId}/events/admin": {
         parameters: {
             query?: never;
@@ -9595,6 +9653,15 @@ export interface components {
             brackets?: components["schemas"]["ContestBracketsDto"];
             participations?: components["schemas"]["StrippedContestParticipationDto"][];
         };
+        JacobCropStatsDto: {
+            /** Format: int32 */
+            participations?: number;
+            /** Format: int32 */
+            firstPlaceScores?: number;
+            /** Format: int32 */
+            personalBestTimestamp?: number | null;
+            medals?: components["schemas"]["EarnedMedalInventoryDto"];
+        };
         JacobDataDto: {
             medals?: components["schemas"]["MedalInventoryDto"];
             earnedMedals?: components["schemas"]["EarnedMedalInventoryDto"];
@@ -9649,6 +9716,19 @@ export interface components {
                 Wheat?: number;
                 /** Format: int64 */
                 Seeds?: number;
+            };
+            crops?: {
+                Cactus?: components["schemas"]["JacobCropStatsDto"];
+                Carrot?: components["schemas"]["JacobCropStatsDto"];
+                CocoaBeans?: components["schemas"]["JacobCropStatsDto"];
+                Melon?: components["schemas"]["JacobCropStatsDto"];
+                Mushroom?: components["schemas"]["JacobCropStatsDto"];
+                NetherWart?: components["schemas"]["JacobCropStatsDto"];
+                Potato?: components["schemas"]["JacobCropStatsDto"];
+                Pumpkin?: components["schemas"]["JacobCropStatsDto"];
+                SugarCane?: components["schemas"]["JacobCropStatsDto"];
+                Wheat?: components["schemas"]["JacobCropStatsDto"];
+                Seeds?: components["schemas"]["JacobCropStatsDto"];
             };
         };
         Leaderboard: {
@@ -9809,6 +9889,8 @@ export interface components {
             slug?: number;
             /** Format: int32 */
             earthworm?: number;
+            /** Format: int32 */
+            mouse?: number | null;
         };
         PetDto: {
             uuid?: string | null;

@@ -1350,6 +1350,76 @@
         ]
       }
     },
+    "/guild/{guildId}/refresh": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Refresh a Discord guild",
+        "parameters": [
+          {
+            "name": "guildId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/guild/{guildId}/events/admin": {
       "get": {
         "tags": [
@@ -14977,6 +15047,28 @@
         },
         "additionalProperties": false
       },
+      "JacobCropStatsDto": {
+        "type": "object",
+        "properties": {
+          "participations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstPlaceScores": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "personalBestTimestamp": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "medals": {
+            "$ref": "#/components/schemas/EarnedMedalInventoryDto"
+          }
+        },
+        "additionalProperties": false
+      },
       "JacobDataDto": {
         "type": "object",
         "properties": {
@@ -15111,6 +15203,45 @@
               "Seeds": {
                 "type": "integer",
                 "format": "int64"
+              }
+            },
+            "additionalProperties": false
+          },
+          "crops": {
+            "type": "object",
+            "properties": {
+              "Cactus": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Carrot": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "CocoaBeans": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Melon": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Mushroom": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "NetherWart": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Potato": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Pumpkin": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "SugarCane": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Wheat": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
+              },
+              "Seeds": {
+                "$ref": "#/components/schemas/JacobCropStatsDto"
               }
             },
             "additionalProperties": false
@@ -15577,6 +15708,11 @@
           "earthworm": {
             "type": "integer",
             "format": "int32"
+          },
+          "mouse": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

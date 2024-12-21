@@ -2,30 +2,17 @@
 	import type { components } from '$lib/api/api';
 
 	interface Props {
-		contests: components['schemas']['ContestParticipationDto'][];
+		stats: NonNullable<components['schemas']['JacobCropStatsDto']>;
 	}
 
-	let { contests }: Props = $props();
+	let { stats }: Props = $props();
 
-	const medals = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
-
-	let counts = $derived(
-		contests.reduce(
-			(acc, contest) => {
-				if (!contest.medal || contest.medal === 'none') return acc;
-
-				acc[contest.medal] ??= 0;
-				acc[contest.medal] += 1;
-				return acc;
-			},
-			{} as Record<string, number>
-		)
-	);
+	const medals = ['bronze', 'silver', 'gold', 'platinum', 'diamond'] as (keyof typeof stats.medals)[];
 </script>
 
 <div class="flex flex-wrap justify-center gap-2 md:flex-row">
 	{#each medals as medal (medal)}
-		{@const amount = counts[medal] ?? 0}
+		{@const amount = stats.medals?.[medal] ?? 0}
 		<div
 			class="flex flex-1 basis-8 items-center justify-center gap-2 rounded-md bg-primary-foreground px-2 py-1 md:px-4"
 		>
