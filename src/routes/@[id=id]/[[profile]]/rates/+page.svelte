@@ -186,6 +186,9 @@
 		Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? ''])
 	);
 
+	const totalFortune = $derived($player.fortune + cropFortune.fortune);
+	const fortuneBreakdown = $derived({ ...$player.breakdown, ...cropFortune.breakdown });
+
 	$effect(() => {
 		if (selectedToolId !== untrack(() => selectedTool?.item.uuid)) {
 			untrack(() => {
@@ -220,11 +223,7 @@
 				<div class="flex-3 my-2 flex flex-row items-center gap-2">
 					<h2 class="text-lg md:text-2xl">Total Farming Fortune</h2>
 
-					<Fortunebreakdown
-						title="Total Farming Fortune"
-						total={$player.fortune + cropFortune.fortune}
-						breakdown={{ ...$player.breakdown, ...cropFortune.breakdown }}
-					/>
+					<Fortunebreakdown title="Total Farming Fortune" total={totalFortune} breakdown={fortuneBreakdown} />
 				</div>
 				<div class="flex flex-1 justify-end">
 					<Button
