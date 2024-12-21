@@ -26,7 +26,7 @@
 	);
 
 	const selectedCrops = getSelectedCrops();
-	const crop = $derived(Object.entries($selectedCrops).find(([_, value]) => value)?.[0] ?? initalCrop);
+	const crop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? initalCrop);
 	const cropKey = $derived(CROP_TO_ELITE_CROP[getCropFromName(crop) ?? Crop.Wheat]);
 	const cropStats = $derived(jacob?.stats?.crops?.[cropKey as keyof typeof jacob.stats.crops] ?? {});
 

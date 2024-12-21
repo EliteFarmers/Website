@@ -4,13 +4,9 @@
 	import Medals from './medals.svelte';
 	import Recents from './recents.svelte';
 	import Stats from './stats.svelte';
-	import { getSelectedCrops } from '$lib/stores/selectedCrops';
-	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
-	import { Crop, getCropFromName } from 'farming-weight';
 
 	interface Props {
 		jacob: components['schemas']['JacobDataDto'] | undefined;
-		crop?: string;
 		ign: string;
 		ranks?: {
 			bronze: number;
@@ -35,25 +31,7 @@
 			participations: -1,
 			firstPlaces: -1,
 		},
-		crop: initalCrop = 'Wheat',
 	}: Props = $props();
-
-	const contestsByCrop = $derived(
-		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
-			if (!contest.crop) return acc;
-
-			acc[contest.crop] ??= [];
-			acc[contest.crop].push(contest);
-			return acc;
-		}, {}) ?? {}
-	);
-
-	const selectedCrops = getSelectedCrops();
-	const crop = $derived(Object.entries($selectedCrops).find(([_, value]) => value)?.[0] ?? initalCrop);
-	const cropKey = $derived(CROP_TO_ELITE_CROP[getCropFromName(crop) ?? Crop.Wheat]);
-	const cropStats = $derived(jacob?.stats?.crops?.[cropKey as keyof typeof jacob.stats.crops] ?? {});
-
-	const contests = $derived(contestsByCrop[crop] ?? []);
 </script>
 
 <section class="mx-2 mb-8 flex-col justify-center gap-4 py-4 align-middle" aria-labelledby="Jacob">
