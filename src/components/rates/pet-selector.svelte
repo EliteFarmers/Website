@@ -18,7 +18,6 @@
 	let { selected = $bindable(undefined), player, onChange = undefined }: Props = $props();
 
 	let show = $state(2);
-	let fortune = $state($player.selectedPet?.breakdown);
 
 	selected = $player.selectedPet;
 
@@ -57,7 +56,6 @@
 		$player.selectPet(pet);
 		player.refresh();
 
-		fortune = pet.breakdown;
 		selected = pet;
 	}
 </script>
@@ -65,7 +63,7 @@
 <div class="flex w-full items-center justify-between pt-2">
 	<p class="text-lg font-semibold">Farming Pet</p>
 	{#if $player.selectedPet}
-		<FortuneBreakdown breakdown={fortune} />
+		<FortuneBreakdown breakdown={$player.selectedPet.breakdown} />
 	{:else}
 		<FortuneBreakdown total={0} />
 	{/if}

@@ -1,15 +1,11 @@
 <script lang="ts">
-	import * as Card from '$ui/card';
 	import type { components } from '$lib/api/api';
-	import CropSelector from '../contests/crop-selector.svelte';
 	import Cropstats from './cropstats.svelte';
 	import Medals from './medals.svelte';
 	import Recents from './recents.svelte';
 	import Stats from './stats.svelte';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
-	import RecentContests from './recent-contests.svelte';
-	import CropMedalCounts from './crop-medal-counts.svelte';
-	import { API_CROP_TO_CROP, CROP_TO_ELITE_CROP } from '$lib/constants/crops';
+	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
 	import { Crop, getCropFromName } from 'farming-weight';
 
 	interface Props {
@@ -62,35 +58,6 @@
 
 <section class="mx-2 mb-8 flex-col justify-center gap-4 py-4 align-middle" aria-labelledby="Jacob">
 	<h1 id="Jacob" class="pt-2 text-center text-3xl">{ign} &nbsp;-&nbsp; Jacob Stats</h1>
-
-	<CropSelector radio={true} />
-
-	<Card.Root class="mx-auto max-w-7xl">
-		<Card.Content class="flex flex-col items-center justify-center gap-4">
-			<div class="flex flex-col items-center gap-2">
-				<CropMedalCounts stats={cropStats} />
-				<div class="flex flex-wrap gap-2">
-					<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
-						<span
-							><span class="text-lg font-semibold">{cropStats.participations?.toLocaleString()}</span> Participations</span
-						>
-					</div>
-					<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
-						<span
-							><span class="text-lg font-semibold">{cropStats.firstPlaceScores?.toLocaleString()}</span> First
-							Place Scores</span
-						>
-					</div>
-				</div>
-			</div>
-			<div class="flex flex-col items-center gap-4 md:flex-row">
-				<RecentContests {contests} />
-			</div>
-		</Card.Content>
-	</Card.Root>
-	<!-- <div class="my-8 flex flex-row items-center justify-center">
-		<Cropstats {jacob} />
-	<!-- </div> -->
 
 	<div class="my-8 flex flex-row items-center justify-center">
 		<Cropstats {jacob} />

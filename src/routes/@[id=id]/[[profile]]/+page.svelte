@@ -13,6 +13,7 @@
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
+	import CropStats from '$comp/stats/jacob/crop-stats.svelte';
 	import Head from '$comp/head.svelte';
 
 	import type { PageData } from './$types';
@@ -39,6 +40,9 @@
 		member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'
 	);
 
+	const topCollections = $derived(collections?.sort((a, b) => b.weight - a.weight).slice(0, 3));
+	const topCrop = $derived(getCropDisplayName(getCropFromName(topCollections?.[0]?.key ?? 'Wheat') ?? Crop.Wheat));
+
 	let description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
 			`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
@@ -49,9 +53,7 @@
 			`${
 				(data.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${data.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
 			}\n\n` +
-			(collections
-				?.sort((a, b) => b.weight - a.weight)
-				.slice(0, 3)
+			(topCollections
 				.map((c) => {
 					const crop = getCropFromName(c.key) ?? Crop.Wheat;
 					const rank = data.ranks?.collections?.[c.key] ?? -1;
@@ -120,4 +122,13 @@
 	}}
 />
 
-<Breakdown weight={member?.farmingWeight} />
+<div class="my-8 flex items-center justify-center">
+	<div class="grid max-w-8xl grid-cols-1 items-center justify-center gap-4 lg:grid-cols-2 lg:items-start">
+		<div class="flex-1">
+			<CropStats jacob={member?.jacob} crop={topCrop} />
+		</div>
+		<div class="flex-1">
+			<Breakdown weight={member?.farmingWeight} />
+		</div>
+	</div>
+</div>
