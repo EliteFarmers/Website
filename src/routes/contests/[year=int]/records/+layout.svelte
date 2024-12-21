@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
-	import Cropselector from '$comp/stats/contests/cropselector.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getTimeStamp } from '$lib/format';
 
 	interface Props {

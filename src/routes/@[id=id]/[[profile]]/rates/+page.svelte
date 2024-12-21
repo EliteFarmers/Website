@@ -34,7 +34,7 @@
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import Cropselector from '$comp/stats/contests/cropselector.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import Head from '$comp/head.svelte';
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
@@ -90,6 +90,16 @@
 		$ratesData.selectedPet = pets.some((pet) => pet.pet.uuid === $ratesData.selectedPet)
 			? $ratesData.selectedPet
 			: undefined;
+
+		if (!$ratesData.selectedPet && pets.length > 0) {
+			pets.sort((a, b) => b.fortune - a.fortune);
+
+			$ratesData.selectedPet = pets[0]?.pet.uuid ?? undefined;
+			selectedPet = pets[0];
+
+			$player.selectPet(selectedPet);
+			player.refresh();
+		}
 	});
 
 	let selectedTool = $state<FarmingTool | undefined>(undefined);
@@ -419,7 +429,14 @@
 						title="{selectedCrop} Fortune"
 						total={$player.getCropFortune(selectedCropKey).fortune}
 						breakdown={$player.getCropFortune(selectedCropKey).breakdown}
-					/>
+					>
+						<p class="text-xs">
+							This fortune is not representative of the actual "{selectedCrop} Fortune" stat seen in-game.
+							Currently, it includes all crop-related options on this page instead of breaking up the fortune
+							into its components. For example, farming tools also have general fortune, but it's included
+							here instead.
+						</p>
+					</Fortunebreakdown>
 				</div>
 				<div class="flex w-full max-w-lg flex-row items-center justify-center gap-2 md:gap-4">
 					<img

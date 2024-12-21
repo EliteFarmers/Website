@@ -35,11 +35,14 @@
 	});
 </script>
 
-<section class="flex w-full justify-center py-4 align-middle" aria-labelledby="Breakdown">
-	<div class="mx-2 w-full max-w-4xl rounded-lg bg-primary-foreground p-4">
-		<h1 id="Breakdown" class="pt-2 text-center text-3xl">Weight Breakdown - {total.toLocaleString()}</h1>
-		<div class="block justify-evenly py-4 md:flex">
-			<div class="w-full md:w-1/3">
+<section class="flex w-full flex-1 justify-center py-4 align-middle" aria-labelledby="Breakdown">
+	<div class="w-full max-w-4xl rounded-lg bg-primary-foreground">
+		<h2 id="Breakdown" class="mt-6 text-center">
+			<span class="mx-2 text-3xl font-semibold">{total.toLocaleString()}</span>
+			<span class="text-lg">Farming Weight</span>
+		</h2>
+		<div class="flex flex-col justify-evenly gap-4 px-4 pb-4 md:flex-row">
+			<div class="flex-1">
 				<h3 class="py-2 text-2xl font-semibold">
 					Crops
 					<span class="pl-2 text-lg">({(total - bonus).toLocaleString()})</span>
@@ -51,7 +54,7 @@
 					</div>
 				{/each}
 			</div>
-			<div class="w-full md:w-1/3">
+			<div class="flex-1">
 				<h3 class="py-2 text-2xl font-semibold">
 					Bonus<span class="pl-2 text-lg">({bonus.toLocaleString()})</span>
 				</h3>
