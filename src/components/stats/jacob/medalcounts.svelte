@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Popover from '$comp/ui/popover';
+	import * as Popover from '$ui/popover';
 
 	interface Props {
 		medals?: {

@@ -9,6 +9,8 @@
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import RecentContests from './recent-contests.svelte';
 	import CropMedalCounts from './crop-medal-counts.svelte';
+	import { API_CROP_TO_CROP, CROP_TO_ELITE_CROP } from '$lib/constants/crops';
+	import { Crop, getCropFromName } from 'farming-weight';
 
 	interface Props {
 		jacob: components['schemas']['JacobDataDto'] | undefined;
@@ -52,6 +54,8 @@
 
 	const selectedCrops = getSelectedCrops();
 	const crop = $derived(Object.entries($selectedCrops).find(([_, value]) => value)?.[0] ?? initalCrop);
+	const cropKey = $derived(CROP_TO_ELITE_CROP[getCropFromName(crop) ?? Crop.Wheat]);
+	const cropStats = $derived(jacob?.stats?.crops?.[cropKey as keyof typeof jacob.stats.crops] ?? {});
 
 	const contests = $derived(contestsByCrop[crop] ?? []);
 </script>
@@ -62,11 +66,26 @@
 	<CropSelector radio={true} />
 
 	<Card.Root class="mx-auto max-w-7xl">
-		<Card.Content class="flex flex-col items-center justify-center gap-4 md:flex-row">
-			<div class="flex flex-col items-center gap-4">
-				<CropMedalCounts {contests} />
+		<Card.Content class="flex flex-col items-center justify-center gap-4">
+			<div class="flex flex-col items-center gap-2">
+				<CropMedalCounts stats={cropStats} />
+				<div class="flex flex-wrap gap-2">
+					<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
+						<span
+							><span class="text-lg font-semibold">{cropStats.participations?.toLocaleString()}</span> Participations</span
+						>
+					</div>
+					<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
+						<span
+							><span class="text-lg font-semibold">{cropStats.firstPlaceScores?.toLocaleString()}</span> First
+							Place Scores</span
+						>
+					</div>
+				</div>
 			</div>
-			<RecentContests {contests} />
+			<div class="flex flex-col items-center gap-4 md:flex-row">
+				<RecentContests {contests} />
+			</div>
 		</Card.Content>
 	</Card.Root>
 	<!-- <div class="my-8 flex flex-row items-center justify-center">
