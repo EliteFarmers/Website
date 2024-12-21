@@ -48,7 +48,7 @@
 		"eslint": "^9.15.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.46.0",
-		"farming-weight": "^0.7.2",
+		"farming-weight": "^0.7.3",
 		"globals": "^15.12.0",
 		"layercake": "^8.4.2",
 		"layerchart": "^0.59.4",
