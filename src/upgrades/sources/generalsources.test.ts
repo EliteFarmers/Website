@@ -19,6 +19,7 @@ test('General fortune sources', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.maxInfo;
 	});
 
 	expect(progress).toStrictEqual([
@@ -52,6 +53,12 @@ test('General fortune sources', () => {
 			maxFortune: 40,
 			ratio: 1,
 			api: false,
+		},
+		{
+			name: 'Fermento Artifact',
+			fortune: 0,
+			maxFortune: 30,
+			ratio: 0,
 		},
 		{
 			name: 'Refined Dark Cacao Truffle',

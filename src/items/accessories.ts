@@ -9,6 +9,7 @@ export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	name: string;
 	wiki: string;
 	family?: string;
+	familyOrder?: number;
 	maxRarity: Rarity;
 	crops?: Crop[];
 	skillReq?: Partial<Record<Skill, number>>;
@@ -20,6 +21,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		name: 'Fermento Artifact',
 		wiki: 'https://wiki.hypixel.net/Fermento_Artifact',
 		family: 'Fermento',
+		familyOrder: 3,
 		maxRarity: Rarity.Epic,
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
@@ -30,6 +32,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		name: 'Squash Ring',
 		wiki: 'https://wiki.hypixel.net/Squash_Ring',
 		family: 'Fermento',
+		familyOrder: 2,
 		upgrade: {
 			id: 'FERMENTO_ARTIFACT',
 			reason: UpgradeReason.NextTier,
@@ -45,6 +48,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		name: 'Cropie Talisman',
 		wiki: 'https://wiki.hypixel.net/Cropie_Talisman',
 		family: 'Fermento',
+		familyOrder: 1,
 		upgrade: {
 			id: 'SQUASH_RING',
 			reason: UpgradeReason.NextTier,

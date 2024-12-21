@@ -87,18 +87,17 @@ test('Wheat fortune test', () => {
 			ratio: 5 / 45,
 		},
 		{
-			name: 'Fermento Artifact Family',
-			fortune: 30,
-			maxFortune: 30,
-			ratio: 1,
-		},
-		{
 			name: 'Personal Best',
 			fortune: 1,
 			maxFortune: 100,
 			ratio: 1 / 100,
 		},
 	]);
+
+	const generalSources = player.getProgress();
+	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact Family');
+	expect(fermento).toBeDefined();
+	expect(fermento?.fortune).toBe(30);
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
 	expect(cropFortune.fortune).toBe(progress.reduce((acc, piece) => acc + piece.fortune, 0));
@@ -190,12 +189,6 @@ test('Nether Wart fortune test', () => {
 			name: 'Garden Crop Upgrade',
 			fortune: 0,
 			maxFortune: 45,
-			ratio: 0,
-		},
-		{
-			name: 'Fermento Artifact Family',
-			fortune: 0,
-			maxFortune: 30,
 			ratio: 0,
 		},
 		{
@@ -302,16 +295,77 @@ test('Melon fortune test', () => {
 			ratio: 15 / 45,
 		},
 		{
-			name: 'Fermento Artifact Family',
-			fortune: 0,
-			maxFortune: 30,
-			ratio: 0,
-		},
-		{
 			name: 'Personal Best',
 			fortune: 0,
 			maxFortune: 100,
 			ratio: 0,
 		},
 	]);
+});
+
+test('Cropie talisman test', () => {
+	const player = new FarmingPlayer({
+		cropUpgrades: {
+			[Crop.Wheat]: 3,
+		},
+		accessories: [cropieTalisman],
+	});
+
+	const progress = player.getCropProgress(Crop.Wheat);
+
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxInfo;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
+	});
+
+	const cropie = progress.find((p) => p.name === 'Fermento Artifact Family');
+	expect(cropie).toBeDefined();
+
+	expect(cropie).toStrictEqual({
+		name: 'Fermento Artifact Family',
+		fortune: 10,
+		maxFortune: 30,
+		ratio: 10 / 30,
+	});
+});
+
+test('Squash ring test', () => {
+	const player = new FarmingPlayer({
+		cropUpgrades: {
+			[Crop.Wheat]: 3,
+		},
+		accessories: [squashRing],
+	});
+
+	const progress = player.getCropProgress(Crop.Wheat);
+
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxInfo;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
+	});
+
+	const squash = progress.find((p) => p.name === 'Fermento Artifact Family');
+	expect(squash).toBeDefined();
+
+	expect(squash).toStrictEqual({
+		name: 'Fermento Artifact Family',
+		fortune: 20,
+		maxFortune: 30,
+		ratio: 20 / 30,
+	});
+
+	const generalSources = player.getProgress();
+	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact Family');
+	expect(fermento).toBeDefined();
+	expect(fermento?.fortune).toBe(0);
+
+	expect(player.breakdown[fermento?.item?.name ?? '']).toBeUndefined();
 });

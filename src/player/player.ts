@@ -210,14 +210,21 @@ export class FarmingPlayer {
 		const families = new Map<string, FarmingAccessory>();
 		this.activeAccessories = [];
 		for (const accessory of this.accessories.filter((a) => a.fortune > 0).sort((a, b) => b.fortune - a.fortune)) {
-			if (accessory.info.family) {
-				if (!families.has(accessory.info.family)) {
-					families.set(accessory.info.family, accessory);
-					this.activeAccessories.push(accessory);
-				} else {
-					continue;
-				}
+			if (!accessory.info.family) continue;
+
+			const existing = families.get(accessory.info.family);
+			if (!existing) {
+				families.set(accessory.info.family, accessory);
+				this.activeAccessories.push(accessory);
+			} else if (accessory.info.familyOrder && accessory.info.familyOrder > (existing.info.familyOrder ?? 0)) {
+				families.set(accessory.info.family, accessory);
+				this.activeAccessories.push(accessory);
+				this.activeAccessories = this.activeAccessories.filter((a) => a !== existing);
 			}
+		}
+
+		for (const accessory of this.activeAccessories) {
+			if (accessory.info.crops) continue;
 
 			breakdown[accessory.item.name ?? accessory.item.skyblockId ?? 'Accessory [Error]'] = accessory.fortune;
 			sum += accessory.fortune;
@@ -305,9 +312,8 @@ export class FarmingPlayer {
 			sum += toolFortune;
 		}
 
-		// Accessories
-		//* There's only one accessory family for farming right now
-		const accessory = this.accessories.find((a) => !a.info.crops || a.info.crops.includes(crop));
+		// Accessories with crop specific fortune
+		const accessory = this.activeAccessories.find((a) => a.info.crops && a.info.crops.includes(crop));
 		if (accessory && accessory.fortune > 0) {
 			breakdown[accessory.item.name ?? 'Accessories'] = accessory.fortune ?? 0;
 			sum += accessory.fortune ?? 0;
