@@ -6,7 +6,7 @@ import {
 	AddProductImage,
 	GetAdminProducts,
 	RemoveCosmeticFromProduct,
-	RemoveProductImage,
+	RemoveCosmeticImage,
 	UpdateProduct,
 } from '$lib/api/elite';
 
@@ -125,7 +125,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response } = await RemoveProductImage(locals.access_token, productId, image);
+		const { response } = await RemoveCosmeticImage(locals.access_token, productId, image);
 
 		if (!response.ok) {
 			return fail(response.status, { error: await response.text() });

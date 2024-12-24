@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-import { GetAdminProducts } from '$lib/api/elite';
+import type { Actions, PageServerLoad } from './$types';
+import { GetAdminProducts, RefreshProducts } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -17,3 +17,17 @@ export const load = (async ({ parent, locals }) => {
 		products: products ?? [],
 	};
 }) satisfies PageServerLoad;
+
+export const actions: Actions = {
+	refresh: async ({ locals }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		await RefreshProducts(locals.access_token);
+
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+
+		return { success: true };
+	},
+};

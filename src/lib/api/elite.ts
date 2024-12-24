@@ -1140,6 +1140,48 @@ export const RemoveCosmeticFromProduct = async (accessToken: string, productId: 
 		},
 	});
 
+export const AddCosmeticImage = async (
+	accessToken: string,
+	styleId: string,
+	image: { Image: string; Title: string; Description: string },
+	thumbnail?: boolean
+) =>
+	await POST('/product/style/{styleId}/images', {
+		params: {
+			path: {
+				styleId: styleId as unknown as number,
+			},
+			query: {
+				thumbnail,
+			},
+		},
+		body: image,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+		bodySerializer: formDataSerializer,
+	});
+
+export const RemoveCosmeticImage = async (accessToken: string, cosmeticId: string, imageUrl: string) =>
+	await DELETE('/product/style/{styleId}/images/{imagePath}', {
+		params: {
+			path: {
+				styleId: cosmeticId as unknown as number,
+				imagePath: imageUrl,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const RefreshProducts = async (accessToken: string) =>
+	await POST('/products/refresh', {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
