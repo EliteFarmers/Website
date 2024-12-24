@@ -5,7 +5,7 @@
 	import { Label } from '$ui/label';
 	import { Textarea } from '$ui/textarea';
 	import * as Dialog from '$ui/dialog';
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 
 	import type { PageData, ActionData } from './$types';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
@@ -126,7 +126,20 @@
 		</div>
 
 		<div class="flex w-full gap-4 md:flex-row lg:flex-row">
-			<form method="post" action="?/updateStyle" class="flex flex-1 flex-col gap-4" use:enhance>
+			<form
+				method="post"
+				action="?/updateStyle"
+				class="flex flex-1 flex-col gap-4"
+				use:enhance={() => {
+					loading = true;
+
+					return async ({ result }) => {
+						await applyAction(result);
+						styleData = JSON.stringify(data.style.data ?? '{}', undefined, 2) + '';
+						loading = false;
+					};
+				}}
+			>
 				<input type="hidden" name="style" value={style.id} />
 				<input type="hidden" name="name" value={style.name} />
 				<input type="hidden" name="description" value={style.description} />
