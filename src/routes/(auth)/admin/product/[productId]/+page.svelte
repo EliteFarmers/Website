@@ -7,15 +7,17 @@
 	import { Switch } from '$ui/switch';
 	import { SelectSimple } from '$ui/select';
 	import { Textarea } from '$ui/textarea';
+	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import * as Dialog from '$ui/dialog';
 	import * as Card from '$ui/card';
 	import { pending } from '$lib/utils';
 	import Plus from 'lucide-svelte/icons/plus';
 	import X from 'lucide-svelte/icons/x';
 	import { enhance } from '$app/forms';
+	import Settings from 'lucide-svelte/icons/settings-2';
+	import { onMount } from 'svelte';
 
 	import type { PageData, ActionData } from './$types';
-	import { onMount } from 'svelte';
 
 	interface Props {
 		data: PageData;
@@ -56,6 +58,7 @@
 
 	let newColor = $state('');
 	let isThumbnail = $state(false);
+	let cosmeticId = $state('');
 </script>
 
 <Head title="Product" description="Manage product" />
@@ -231,14 +234,18 @@
 
 					<div class="flex flex-col items-start gap-2">
 						<Label>Rewarded Cosmetic</Label>
-						<SelectSimple
+						<ComboBox
+							disabled={loading}
 							options={data.styles.map((b) => ({
 								value: (b.id ?? 0).toString(),
 								label: b.name ?? 'Unknown',
 							}))}
-							placeholder="Select a style"
-							name="cosmetic"
+							bind:value={cosmeticId}
+							placeholder="Select Style"
+							btnClass="w-full"
+							popoverClass="w-full"
 						/>
+						<input type="hidden" name="cosmetic" bind:value={cosmeticId} />
 					</div>
 
 					<div class="flex flex-row items-center gap-2">
@@ -259,7 +266,14 @@
 					{#each styles ?? [] as style}
 						<Card.Root>
 							<Card.Content class="p-4">
-								<p>{style.label}</p>
+								<div class="flex flex-row items-center justify-between">
+									<p class="font-semibold">{style.label}</p>
+									<div class="flex flex-row gap-2">
+										<Button href="/admin/style/{style.value}" variant="outline" size="sm">
+											<Settings />
+										</Button>
+									</div>
+								</div>
 							</Card.Content>
 						</Card.Root>
 					{/each}

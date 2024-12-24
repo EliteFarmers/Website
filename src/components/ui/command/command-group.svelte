@@ -5,11 +5,13 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		itemsClass,
 		children,
 		heading,
 		...restProps
 	}: CommandPrimitive.GroupProps & {
 		heading?: string;
+		itemsClass?: string;
 	} = $props();
 </script>
 
@@ -19,5 +21,5 @@
 			{heading}
 		</CommandPrimitive.GroupHeading>
 	{/if}
-	<CommandPrimitive.GroupItems {children} />
+	<CommandPrimitive.GroupItems {children} class={itemsClass} />
 </CommandPrimitive.Group>

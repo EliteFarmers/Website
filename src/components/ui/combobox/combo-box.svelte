@@ -12,6 +12,7 @@
 		exclude?: (string | undefined)[];
 		placeholder: string;
 		btnClass?: string;
+		popoverClass?: string;
 		onChange?: ((value: string) => void) | undefined;
 		clear?: boolean;
 		disabled?: boolean;
@@ -23,6 +24,7 @@
 		exclude = [],
 		placeholder,
 		btnClass,
+		popoverClass,
 		onChange = undefined,
 		clear = false,
 		disabled = $bindable(false),
@@ -70,7 +72,7 @@
 			</Button>
 		{/snippet}
 	</Popover.Trigger>
-	<Popover.Content class="max-h-96 w-[200px] overflow-y-scroll p-0">
+	<Popover.Content class={cn('p-0) max-h-96 w-[200px] overflow-y-scroll', popoverClass)}>
 		<Command.Root>
 			<Command.Input {placeholder} class="h-9" />
 			<Command.Empty>No option found.</Command.Empty>

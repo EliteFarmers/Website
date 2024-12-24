@@ -8,9 +8,11 @@
 	}
 
 	let { class: className = 'size-12', user }: props = $props();
+
+	let errored = $state(false);
 </script>
 
-{#if !user.avatar}
+{#if !user.avatar || errored}
 	<div class="{className} flex select-none items-center justify-center rounded-full bg-black bg-blend-darken">
 		<UserRound />
 	</div>
@@ -22,5 +24,6 @@
 			? 'gif'
 			: 'webp'}?size=96"
 		alt="User Icon"
+		onerror={() => (errored = true)}
 	/>
 {/if}
