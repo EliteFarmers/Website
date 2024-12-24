@@ -6669,6 +6669,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh all products */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProductDto"][];
+                        "application/json": components["schemas"]["ProductDto"][];
+                        "text/json": components["schemas"]["ProductDto"][];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/product/{productId}": {
         parameters: {
             query?: never;
@@ -7246,6 +7284,102 @@ export interface paths {
                         "application/json": string;
                         "text/json": string;
                     };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/style/{styleId}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add image to a cosmetic */
+        post: {
+            parameters: {
+                query?: {
+                    /** @description Specify if this image should be the thumbnail */
+                    thumbnail?: boolean;
+                };
+                header?: never;
+                path: {
+                    styleId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        Title?: string;
+                        Description?: string;
+                        /** Format: binary */
+                        Image?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/style/{styleId}/images/{imagePath}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete image from a style */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    styleId: number;
+                    imagePath: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
                 };
             };
         };
@@ -9417,6 +9551,8 @@ export interface components {
             };
             pests?: components["schemas"]["PestsDto"];
             inventory?: components["schemas"]["FarmingInventoryDto"];
+            /** Format: int64 */
+            lastUpdated?: number;
         };
         FarmingWeightWithProfileDto: {
             profileId: string;
@@ -9436,6 +9572,8 @@ export interface components {
                 [key: string]: number;
             };
             pests?: components["schemas"]["PestsDto"];
+            /** Format: int64 */
+            lastUpdated?: number;
         };
         GardenDto: {
             /** @description Profile ID */
@@ -10414,6 +10552,7 @@ export interface components {
             collection?: string | null;
             description?: string | null;
             image?: components["schemas"]["ImageAttachmentDto"];
+            images?: components["schemas"]["ImageAttachmentDto"][];
             products?: components["schemas"]["ParentProductDto"][];
             data?: components["schemas"]["WeightStyleDataDto"];
         };

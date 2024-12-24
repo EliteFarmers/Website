@@ -2,7 +2,7 @@
 	import Copy from 'lucide-svelte/icons/copy';
 	import Check from 'lucide-svelte/icons/check';
 	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-	import { Button } from '$ui/button';
+	import { Button, type ButtonProps } from '$ui/button';
 
 	let copyPromise: Promise<void> | null = $state(null);
 
@@ -16,13 +16,13 @@
 		}, 3000);
 	}
 
-	interface Props {
+	interface Props extends ButtonProps {
 		text?: string;
 		size?: 'default' | 'sm' | 'lg' | 'icon' | undefined;
 		class?: string | undefined | null;
 	}
 
-	let { text = '', size = undefined, class: className = undefined }: Props = $props();
+	let { text = '', size = undefined, class: className = undefined, ...rest }: Props = $props();
 
 	let iconSize = $state(20);
 
@@ -32,7 +32,7 @@
 	});
 </script>
 
-<Button variant="link" onclick={copy} {size} class={className}>
+<Button variant="link" onclick={copy} {size} class={className} {...rest}>
 	{#if copyPromise}
 		{#await copyPromise}
 			<LoaderCircle class="animate-spin" size={iconSize} />

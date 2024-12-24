@@ -12,6 +12,9 @@
 	import { weightStyleParse } from '$lib/styles/style';
 	import { untrack } from 'svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
+	import X from 'lucide-svelte/icons/x';
+	import { pending } from '$lib/utils';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 
 	interface Props {
 		data: PageData;
@@ -39,13 +42,16 @@
 		}
 	});
 
+	let deleteImageModal = $state(false);
+	let selectedImageId = $state('');
+
 	let styleDataObj = $derived({
 		...untrack(() => data.style),
 		data: JSON.parse(styleData),
 	});
 </script>
 
-<Head title="Product" description="Manage product" />
+<Head title="Style" description="Manage style" />
 
 <main class="my-16">
 	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
@@ -148,6 +154,80 @@
 
 	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
 		<div class="mb-2 flex flex-row items-center gap-4">
+			<h2 class="text-xl">Images</h2>
+		</div>
+
+		<div class="mb-4 flex flex-row">
+			{#if style.image}
+				<img
+					src={style.image.url}
+					alt={style.image.title ?? 'Style thumbnail'}
+					class="h-32 w-32 rounded-md object-cover"
+				/>
+			{/if}
+			{#each style.images ?? [] as image}
+				<div class="flex flex-col items-center gap-2 rounded-md border p-1">
+					<img src={image.url} alt={image.title} class="h-32 w-32 rounded-md object-cover" />
+					{#if image.title}
+						<p>{image.title}</p>
+					{/if}
+					<div class="flex flex-row items-center gap-4">
+						<Button
+							variant="destructive"
+							size="sm"
+							onclick={() => {
+								selectedImageId = image.url ?? '';
+								deleteImageModal = true;
+							}}
+						>
+							<X size={16} />
+						</Button>
+
+						<CopyToClipboard text={image.url} class="px-3" variant="outline" />
+					</div>
+					{#if image.description}
+						<p>{image.description}</p>
+					{/if}
+				</div>
+			{/each}
+			{#if !style.image && !(style.images ?? []).length}
+				<p>No images!</p>
+			{/if}
+		</div>
+
+		<div class="mb-2 flex flex-row items-center gap-4">
+			<h2 class="text-xl">Add Image</h2>
+		</div>
+		<form
+			method="post"
+			action="?/addImage"
+			enctype="multipart/form-data"
+			class="flex max-w-lg flex-1 flex-col gap-4"
+			use:pending={loading}
+		>
+			<input type="hidden" name="style" bind:value={style.id} />
+
+			<div class="flex flex-col items-start gap-2">
+				<Label>Image</Label>
+				<Input type="file" name="image" accept=".png" />
+			</div>
+
+			<div class="flex flex-col items-start gap-2">
+				<Label>Image Title</Label>
+				<Input name="title" placeholder="Title" />
+			</div>
+
+			<div class="flex flex-col items-start gap-2">
+				<Label>Image Description</Label>
+				<Input name="description" placeholder="Description" />
+			</div>
+
+			<Button type="submit" disabled={loading} class="w-fit px-4">Add Image</Button>
+		</form>
+	</section>
+
+	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
+		<div class="mb-2 flex flex-row items-center gap-4">
 			<h2 class="text-xl">Options</h2>
 		</div>
 
@@ -171,7 +251,7 @@
 </main>
 
 <Dialog.Root bind:open={deleteStyleModal}>
-	<Dialog.Content class="max-h-[80%] overflow-scroll">
+	<Dialog.Content class="max-h-[80%] overflow-auto">
 		<Dialog.Title>Delete Style</Dialog.Title>
 		<form
 			action="?/deleteStyle"
@@ -187,6 +267,29 @@
 		>
 			<input type="hidden" name="style" value={style.id} />
 			<p>Are you sure you want to delete this style?</p>
+			<Button type="submit" disabled={loading} variant="destructive">Delete</Button>
+		</form>
+	</Dialog.Content>
+</Dialog.Root>
+
+<Dialog.Root bind:open={deleteImageModal}>
+	<Dialog.Content class="max-h-[80%] overflow-auto">
+		<Dialog.Title>Delete Image</Dialog.Title>
+		<form
+			action="?/deleteImage"
+			method="post"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result, update }) => {
+					loading = false;
+					if (result) deleteImageModal = false;
+					update();
+				};
+			}}
+		>
+			<input type="hidden" name="style" bind:value={style.id} />
+			<input type="hidden" name="image" bind:value={selectedImageId} />
+			<p>Are you sure you want to delete this image?</p>
 			<Button type="submit" disabled={loading} variant="destructive">Delete</Button>
 		</form>
 	</Dialog.Content>

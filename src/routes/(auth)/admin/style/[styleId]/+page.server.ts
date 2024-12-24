@@ -1,7 +1,14 @@
 import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { components } from '$lib/api/api';
-import { CreateWeightStyle, DeleteWeightStyle, GetWeightStyle, UpdateWeightStyle } from '$lib/api/elite';
+import {
+	AddCosmeticImage,
+	CreateWeightStyle,
+	DeleteWeightStyle,
+	GetWeightStyle,
+	RemoveCosmeticImage,
+	UpdateWeightStyle,
+} from '$lib/api/elite';
 import { isValidWeightStyle } from '$lib/styles/style';
 
 export const load = (async ({ parent, locals, params }) => {
@@ -112,5 +119,69 @@ export const actions: Actions = {
 		}
 
 		redirect(307, '/admin/styles');
+	},
+	addImage: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const styleId = data.get('style') as string;
+
+		if (!styleId) {
+			return fail(400, { error: 'Invalid style ID.' });
+		}
+
+		const image = data.get('image') as string;
+		const title = data.get('title') as string;
+		const description = data.get('description') as string;
+		const thumbnail = data.get('thumbnail') === 'true';
+
+		if (!image) {
+			return fail(400, { error: 'Invalid image data.' });
+		}
+
+		const { response, error: e } = await AddCosmeticImage(
+			locals.access_token,
+			styleId,
+			{
+				Image: image,
+				Title: title,
+				Description: description,
+			},
+			thumbnail
+		);
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
+		}
+
+		return { success: true };
+	},
+	deleteImage: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const productId = data.get('style') as string;
+
+		if (!productId) {
+			return fail(400, { error: 'Invalid style ID.' });
+		}
+
+		const image = data.get('image') as string;
+
+		if (!image) {
+			return fail(400, { error: 'Invalid image data.' });
+		}
+
+		const { response, error: e } = await RemoveCosmeticImage(locals.access_token, productId, image);
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
+		}
+
+		return { success: true };
 	},
 };
