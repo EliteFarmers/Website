@@ -19,9 +19,11 @@
 		28: 'w-28 h-28',
 		32: 'w-32 h-32',
 	};
+
+	let errored = $state(false);
 </script>
 
-{#if !guild?.icon?.url}
+{#if !guild?.icon?.url || errored}
 	<div
 		class="{sizes[
 			size
@@ -42,5 +44,6 @@
 		class="w-{size} h-{size} rounded-full {className ?? ''}"
 		src={guild.icon.url}
 		alt="Server Icon"
+		onerror={() => (errored = true)}
 	/>
 {/if}
