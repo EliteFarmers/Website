@@ -98,7 +98,9 @@
 	let name = $state('');
 
 	$effect.pre(() => {
-		generateTeamName();
+		if (event.mode !== 'solo' && data.words) {
+			generateTeamName();
+		}
 	});
 
 	let words = $derived(
