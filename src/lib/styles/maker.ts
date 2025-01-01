@@ -47,11 +47,22 @@ export async function createFromData(
 		result = rWeight.toString();
 	}
 
+	const backgroundStyle = data.elements.background;
+	canvas.width = backgroundStyle?.size?.x ?? 1920;
+	canvas.height = backgroundStyle?.size?.y ?? 400;
+
+	const ctx = canvas.getContext('2d');
+	if (!ctx) {
+		return null;
+	}
+
 	// Load images and avatar
+	const headDirection =
+		data.elements.head && getPosition(canvas, data.elements.head).x < canvas.width / 2 ? 'right' : 'left';
 
 	const images = [
 		data.elements?.background?.imageUrl ? loadImage(data.elements.background.imageUrl).catch(() => null) : null,
-		data.elements.head ? loadImage(`https://mc-heads.net/head/${uuid}/left`).catch(() => null) : null,
+		data.elements.head ? loadImage(`https://mc-heads.net/head/${uuid}/${headDirection}`).catch(() => null) : null,
 		badgeUrl !== '' ? loadImage(badgeUrl).catch(() => null) : null,
 		getDecalImage(profile, data.decal),
 	];
@@ -63,17 +74,7 @@ export async function createFromData(
 		// 	'Please report this if it continues to happen!'
 		// );
 
-		console.error('Images no loads!');
-	}
-
-	const backgroundStyle = data.elements.background;
-
-	canvas.width = data?.elements?.background?.size?.x ?? 1920;
-	canvas.height = data?.elements?.background?.size?.y ?? 400;
-
-	const ctx = canvas.getContext('2d');
-	if (!ctx) {
-		return null;
+		console.error('Weight style images failed to load!');
 	}
 
 	// Clip the corners, draw background and decal, then restore the clip
