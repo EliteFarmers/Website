@@ -566,13 +566,16 @@ export const GetAdminEventMembers = async (token: string, guildId: string, event
 		},
 	});
 
-export const GetEventMember = async (eventId: string, playerUuid: string) =>
+export const GetEventMember = async (eventId: string, playerUuid: string, token?: string) =>
 	await GET('/event/{eventId}/member/{playerUuid}', {
 		params: {
 			path: {
 				eventId: eventId as unknown as number,
 				playerUuid,
 			},
+		},
+		headers: {
+			Authorization: token ? `Bearer ${token}` : undefined,
 		},
 	});
 
@@ -711,6 +714,48 @@ export const BanEventMember = async (
 
 export const UnbanEventMember = async (accessToken: string, guildId: string, eventId: string, playerUuid: string) =>
 	await DELETE('/guild/{guildId}/events/{eventId}/bans/{playerUuid}', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+				playerUuid,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const ForceAddEventMember = async (
+	accessToken: string,
+	guildId: string,
+	eventId: string,
+	playerUuid: string,
+	profileUuid: string
+) =>
+	await POST('/guild/{guildId}/events/{eventId}/members/{playerUuid}', {
+		params: {
+			path: {
+				guildId: guildId as unknown as number,
+				eventId: eventId as unknown as number,
+				playerUuid,
+			},
+			query: {
+				profileId: profileUuid,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const PermDeleteEventMember = async (
+	accessToken: string,
+	guildId: string,
+	eventId: string,
+	playerUuid: string
+) =>
+	await DELETE('/guild/{guildId}/events/{eventId}/members/{playerUuid}', {
 		params: {
 			path: {
 				guildId: guildId as unknown as number,

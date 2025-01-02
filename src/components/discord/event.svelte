@@ -12,12 +12,20 @@
 
 	let start = $derived(new Date(+(event.startTime ?? 0) * 1000));
 	let end = $derived(new Date(+(event.endTime ?? 0) * 1000));
+
+	let background = $derived(
+		event.banner?.url
+			? `background-image: url(${event.banner.url}); color: white;`
+			: guild?.banner?.url
+				? `background-image: url(${guild.banner.url}); color: white;`
+				: ''
+	);
 </script>
 
 <a
 	href="/event/{event?.id}"
 	class="items-centers relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-primary-foreground bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
-	style={guild?.banner?.url ? `background-image: url(${guild.banner.url}); color: white;` : ''}
+	style={background || ''}
 >
 	{#if guild?.banner}
 		<div
