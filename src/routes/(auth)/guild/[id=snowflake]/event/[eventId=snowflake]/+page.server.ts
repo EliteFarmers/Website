@@ -11,6 +11,8 @@ import {
 	SetEventBanner,
 	ClearEventBanner,
 	GetEventDefaults,
+	ForceAddEventMember,
+	PermDeleteEventMember,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
@@ -293,6 +295,67 @@ export const actions: Actions = {
 		if (response.status !== 200) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	forceAddMember: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const eventId = data.get('id') as string;
+		if (!eventId) throw error(400, 'Missing required field: id');
+
+		const uuid = data.get('uuid') as string;
+		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
+
+		const profile = data.get('profile') as string;
+		if (!profile) return fail(400, { error: 'Missing required field: profile' });
+
+		const { response, error: e } = await ForceAddEventMember(token, guildId, eventId, uuid, profile).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	permDeleteMember: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const eventId = data.get('id') as string;
+		if (!eventId) throw error(400, 'Missing required field: id');
+
+		const uuid = data.get('uuid') as string;
+		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
+
+		const { response, error: e } = await PermDeleteEventMember(token, guildId, eventId, uuid).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
 		}
 
 		return {

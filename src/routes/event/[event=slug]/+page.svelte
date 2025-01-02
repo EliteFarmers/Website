@@ -60,7 +60,7 @@
 	);
 
 	let description = $derived(
-		`View the ${running ? 'Event happening' : 'past Event'} in ${data.guild?.name}!\n\n${topList}`
+		`View the ${running ? 'Event happening' : 'Event'} in ${data.guild?.name}!\n\n${topList}`
 	);
 </script>
 

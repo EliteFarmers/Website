@@ -23,7 +23,9 @@ export const load = (async ({ params, url, locals }) => {
 	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
 
 	const { data: self } = locals.session?.uuid
-		? await GetEventMember(eventData.id, locals.session?.uuid).catch(() => ({ data: undefined }))
+		? await GetEventMember(eventData.id, locals.session?.uuid, locals.access_token).catch(() => ({
+				data: undefined,
+			}))
 		: { data: undefined };
 
 	const { data: members } = await GetEventMembers(eventData.id).catch(() => ({ data: undefined }));

@@ -435,6 +435,62 @@
 			{/if}
 		{/await}
 	</div>
+	<div class="flex flex-col p-4">
+		<form
+			action="?/forceAddMember"
+			method="post"
+			class="flex flex-col gap-2"
+			use:enhance={() => {
+				pending = true;
+				return async ({ result, update }) => {
+					if (result) {
+						pending = false;
+						update();
+					}
+				};
+			}}
+		>
+			<input type="hidden" name="id" bind:value={data.event.id} />
+			<h4 class="text-lg">Force Add Member</h4>
+			<p class="max-w-lg text-sm">
+				This should be used very sparingly, and only with the consent of who is being added.
+			</p>
+
+			<div class="flex flex-row gap-2">
+				<Input name="uuid" placeholder="Player UUID" maxlength={32} required class="flex-1" />
+				<Input name="profile" placeholder="Profile UUID" maxlength={32} required class="flex-1" />
+				<Button type="submit" disabled={pending}>Add</Button>
+			</div>
+		</form>
+	</div>
+	<div class="flex flex-col p-4">
+		<form
+			action="?/permDeleteMember"
+			method="post"
+			class="flex flex-col gap-2"
+			use:enhance={() => {
+				pending = true;
+				return async ({ result, update }) => {
+					if (result) {
+						pending = false;
+						update();
+					}
+				};
+			}}
+		>
+			<input type="hidden" name="id" bind:value={data.event.id} />
+			<h4 class="text-lg">Delete Member Entry</h4>
+			<p class="max-w-lg text-sm">
+				This irreversibly deletes the database entry for a member. They will be able to join again. Only use
+				this if absolutely necessary.
+			</p>
+
+			<div class="flex flex-row gap-2">
+				<Input name="uuid" placeholder="Player UUID" maxlength={32} required class="flex-1" />
+				<Button type="submit" disabled={pending} variant="destructive">Delete</Button>
+			</div>
+		</form>
+	</div>
 </main>
 
 <Dialog.Root bind:open={banMemberModal}>
