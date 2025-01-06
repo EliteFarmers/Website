@@ -48,7 +48,6 @@ export const actions: Actions = {
 		const badgeId = data.get('badge') as string | undefined;
 
 		const body = {
-			icon: (data.get('icon') as string) || undefined,
 			description: (data.get('description') as string) || undefined,
 			price: (data.get('price') as unknown as number) || undefined,
 			available: data.get('available') === 'true',

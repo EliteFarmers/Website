@@ -1227,6 +1227,88 @@ export const RefreshProducts = async (accessToken: string) =>
 		},
 	});
 
+export const GetShopCategories = async (token?: string) =>
+	await GET('/shop/categories', {
+		headers: {
+			Authorization: token ? `Bearer ${token}` : undefined,
+		},
+	});
+
+export const GetShopCategory = async (categoryId: string, token?: string) =>
+	await GET('/shop/category/{id}', {
+		params: {
+			path: {
+				id: categoryId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: token ? `Bearer ${token}` : undefined,
+		},
+	});
+
+export const CreateShopCategory = async (token: string, category: components['schemas']['CreateCategoryDto']) =>
+	await POST('/shop/category', {
+		body: category,
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+export const UpdateShopCategory = async (
+	token: string,
+	categoryId: string | number,
+	category: components['schemas']['EditCategoryDto']
+) =>
+	await PATCH('/shop/category/{id}', {
+		params: {
+			path: {
+				id: categoryId as unknown as number,
+			},
+		},
+		body: category,
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+export const DeleteShopCategory = async (token: string, categoryId: string) =>
+	await DELETE('/shop/category/{id}', {
+		params: {
+			path: {
+				id: categoryId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+export const AddProductToCategory = async (token: string, categoryId: string, productId: string) =>
+	await POST('/shop/category/{id}/product/{productId}', {
+		params: {
+			path: {
+				id: categoryId as unknown as number,
+				productId: productId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+export const RemoveProductFromCategory = async (token: string, categoryId: string, productId: string) =>
+	await DELETE('/shop/category/{id}/product/{productId}', {
+		params: {
+			path: {
+				id: categoryId as unknown as number,
+				productId: productId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
