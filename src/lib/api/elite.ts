@@ -1271,6 +1271,14 @@ export const UpdateShopCategory = async (
 		},
 	});
 
+export const UpdateCategoryOrder = async (token: string, order: components['schemas']['Int32ReorderElement'][]) =>
+	await POST('/shop/category/reorder', {
+		body: order,
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const DeleteShopCategory = async (token: string, categoryId: string) =>
 	await DELETE('/shop/category/{id}', {
 		params: {

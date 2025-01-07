@@ -61,6 +61,7 @@
 		"prettier-plugin-tailwindcss": "^0.6.9",
 		"svelte": "^5.1.13",
 		"svelte-check": "^4.0.6",
+		"svelte-dnd-action": "^0.9.54",
 		"svelte-preprocess": "^6.0.3",
 		"svelte-sonner": "^0.3.28",
 		"svelte-ux": "^0.75.4",
