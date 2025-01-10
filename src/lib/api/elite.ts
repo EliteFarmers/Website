@@ -1227,8 +1227,13 @@ export const RefreshProducts = async (accessToken: string) =>
 		},
 	});
 
-export const GetShopCategories = async (token?: string) =>
+export const GetShopCategories = async (includeProducts = false, token?: string) =>
 	await GET('/shop/categories', {
+		params: {
+			query: {
+				includeProducts,
+			},
+		},
 		headers: {
 			Authorization: token ? `Bearer ${token}` : undefined,
 		},
@@ -1238,7 +1243,7 @@ export const GetShopCategory = async (categoryId: string, token?: string) =>
 	await GET('/shop/category/{id}', {
 		params: {
 			path: {
-				id: categoryId as unknown as number,
+				id: categoryId,
 			},
 		},
 		headers: {
@@ -1312,6 +1317,23 @@ export const RemoveProductFromCategory = async (token: string, categoryId: strin
 				productId: productId as unknown as number,
 			},
 		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+export const UpdateCategoryProductOrder = async (
+	token: string,
+	categoryId: string,
+	order: components['schemas']['StringReorderElement'][]
+) =>
+	await POST('/shop/category/{id}/reorder', {
+		params: {
+			path: {
+				id: categoryId as unknown as number,
+			},
+		},
+		body: order,
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},

@@ -13,7 +13,7 @@ export const load = (async ({ setHeaders, locals }) => {
 				.then((res) => res.data)
 				.catch(() => undefined)) ?? [],
 		categories:
-			(await GetShopCategories()
+			(await GetShopCategories(true)
 				.then((res) => res.data)
 				.catch(() => undefined)) ?? [],
 		styles:

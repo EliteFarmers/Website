@@ -3572,7 +3572,9 @@ export interface paths {
         /** Get all shop categories */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    includeProducts?: boolean;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -3613,7 +3615,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    id: number;
+                    id: string;
                 };
                 cookie?: never;
             };
@@ -3625,9 +3627,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["ShopCategoryWithProductsDto"];
-                        "application/json": components["schemas"]["ShopCategoryWithProductsDto"];
-                        "text/json": components["schemas"]["ShopCategoryWithProductsDto"];
+                        "text/plain": components["schemas"]["ShopCategoryDto"];
+                        "application/json": components["schemas"]["ShopCategoryDto"];
+                        "text/json": components["schemas"]["ShopCategoryDto"];
                     };
                 };
                 /** @description Not Found */
@@ -10572,16 +10574,6 @@ export interface components {
             leaderboards?: components["schemas"]["PublicJacobLeaderboardDto"][];
         };
         ShopCategoryDto: {
-            /** Format: int32 */
-            id?: number;
-            title: string;
-            slug: string;
-            description?: string | null;
-            /** Format: int32 */
-            order?: number;
-            published?: boolean;
-        };
-        ShopCategoryWithProductsDto: {
             /** Format: int32 */
             id?: number;
             title: string;

@@ -5191,6 +5191,16 @@
           "Category"
         ],
         "summary": "Get all shop categories",
+        "parameters": [
+          {
+            "name": "includeProducts",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -5221,7 +5231,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
     "/shop/category/{id}": {
@@ -5236,8 +5251,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -5247,17 +5261,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ShopCategoryWithProductsDto"
+                  "$ref": "#/components/schemas/ShopCategoryDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ShopCategoryWithProductsDto"
+                  "$ref": "#/components/schemas/ShopCategoryDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ShopCategoryWithProductsDto"
+                  "$ref": "#/components/schemas/ShopCategoryDto"
                 }
               }
             }
@@ -5282,7 +5296,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -17031,37 +17050,6 @@
         "additionalProperties": false
       },
       "ShopCategoryDto": {
-        "required": [
-          "slug",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "order": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "published": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ShopCategoryWithProductsDto": {
         "required": [
           "slug",
           "title"

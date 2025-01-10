@@ -1,12 +1,6 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import {
-	CreateShopCategory,
-	GetAdminProducts,
-	GetShopCategories,
-	UpdateCategoryOrder,
-	UpdateShopCategory,
-} from '$lib/api/elite';
+import { CreateShopCategory, GetShopCategories, UpdateCategoryOrder, UpdateShopCategory } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -16,12 +10,10 @@ export const load = (async ({ parent, locals }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: products } = await GetAdminProducts(token).catch(() => ({ data: undefined }));
-	const { data: categories } = await GetShopCategories(token).catch(() => ({ data: undefined }));
+	const { data: categories } = await GetShopCategories(true, token).catch(() => ({ data: undefined }));
 
 	return {
 		user,
-		products: products ?? [],
 		categories: categories ?? [],
 	};
 }) satisfies PageServerLoad;

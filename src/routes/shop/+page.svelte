@@ -8,6 +8,8 @@
 	}
 
 	let { data }: Props = $props();
+
+	let categories = $derived((data.categories ?? []).filter((c) => c.products?.length));
 </script>
 
 <Head title="Shop" description="Help support development with cosmetics!" />
@@ -28,9 +30,20 @@
         {/if} -->
 	</section>
 
+	{#each categories as category (category.id)}
+		<section class="flex max-w-4xl flex-col items-start gap-4">
+			<h2 class="text-2xl">{category.title}</h2>
+			<div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+				{#each category.products ?? [] as product (product.id)}
+					<ProductCard {product} />
+				{/each}
+			</div>
+		</section>
+	{/each}
+
 	<section class="flex max-w-4xl flex-col items-start gap-4">
 		<h2 class="text-2xl">All Products</h2>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+		<div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
 			{#each data.products as product (product.id)}
 				<ProductCard {product} />
 			{/each}

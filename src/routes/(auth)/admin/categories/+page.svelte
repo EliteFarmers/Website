@@ -5,12 +5,11 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import type { PageData } from './$types';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import { applyAction, enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
 	import type { components } from '$lib/api/api';
 	import { Label } from '$ui/label';
 	import { Input } from '$ui/input';
 	import { Textarea } from '$ui/textarea';
-	import { Switch } from '$ui/switch';
 	import { dragHandleZone, dragHandle, type DndEvent } from 'svelte-dnd-action';
 	import GripHorizontal from 'lucide-svelte/icons/grip-horizontal';
 
@@ -87,7 +86,7 @@
 			action="?/createCategory"
 			class="flex w-full flex-col gap-2"
 			use:enhance={() => {
-				return async ({ result, update }) => {
+				return async ({ update }) => {
 					createCategoryModal = false;
 					update();
 				};
