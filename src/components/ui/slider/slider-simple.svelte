@@ -1,26 +1,15 @@
 <script lang="ts">
-	import { Slider as SliderPrimitive, type WithoutChildrenOrChild } from 'bits-ui';
+	import { Slider as SliderPrimitive, type SliderSingleRootProps } from 'bits-ui';
 	import { cn } from '$lib/utils.js';
 
-	let {
-		ref = $bindable(null),
-		value = $bindable(0),
-		class: className,
-		...restProps
-	}: Omit<WithoutChildrenOrChild<SliderPrimitive.RootProps>, 'value'> & {
-		value: number;
-	} = $props();
-
-	let bound = $state([value]);
-	$effect(() => {
-		value = bound[0];
-	});
+	let { value = $bindable(0), class: className, ...restProps }: Omit<SliderSingleRootProps, 'type'> = $props();
 </script>
 
 <SliderPrimitive.Root
-	bind:value={bound}
+	bind:value
 	class={cn('relative ml-2.5 flex w-full touch-none select-none items-center', className)}
 	{...restProps}
+	type="single"
 >
 	{#snippet children({ thumbs })}
 		<span class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">

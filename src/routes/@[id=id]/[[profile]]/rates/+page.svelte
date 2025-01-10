@@ -256,13 +256,15 @@
 					<div class="flex flex-col justify-start gap-1">
 						<p class="text-sm">Community Center Upgrade</p>
 						<div class="flex flex-row items-center gap-1">
-							<SliderSimple
-								class="h-12"
-								min={0}
-								max={10}
-								bind:value={$ratesData.communityCenter}
-								step={1}
-							/>
+							{#if $ratesData.communityCenter !== undefined}
+								<SliderSimple
+									class="h-12"
+									min={0}
+									max={10}
+									bind:value={$ratesData.communityCenter}
+									step={1}
+								/>
+							{/if}
 							<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.communityCenter}</p>
 						</div>
 					</div>
