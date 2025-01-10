@@ -33,7 +33,7 @@
 		"@types/d3-scale": "^4.0.8",
 		"@types/d3-time-format": "^4.0.3",
 		"@types/eslint": "^9.6.1",
-		"apexcharts": "^3.54.1",
+		"apexcharts": "^4.0.0",
 		"autoprefixer": "10.4.20",
 		"bits-ui": "1.0.0-next.77",
 		"classnames": "^2.5.1",
