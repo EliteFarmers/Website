@@ -25,8 +25,8 @@ const config = {
 			checkOrigin: process.env.NODE_ENV !== 'development',
 		},
 		alias: {
-			'$comp': './src/components',
 			'$ui': './src/components/ui',
+			'$comp': './src/components',
 			'$stores': './src/stores',
 			'$lib': './src/lib',
 			'$params': './src/params',
