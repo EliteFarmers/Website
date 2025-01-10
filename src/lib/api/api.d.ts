@@ -3562,6 +3562,411 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/shop/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all shop categories */
+        get: {
+            parameters: {
+                query?: {
+                    includeProducts?: boolean;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ShopCategoryDto"][];
+                        "application/json": components["schemas"]["ShopCategoryDto"][];
+                        "text/json": components["schemas"]["ShopCategoryDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/shop/category/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a shop category with products */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ShopCategoryDto"];
+                        "application/json": components["schemas"]["ShopCategoryDto"];
+                        "text/json": components["schemas"]["ShopCategoryDto"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Delete a shop category */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Edit a shop category */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["EditCategoryDto"];
+                    "text/json": components["schemas"]["EditCategoryDto"];
+                    "application/*+json": components["schemas"]["EditCategoryDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/shop/category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a shop category */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateCategoryDto"];
+                    "text/json": components["schemas"]["CreateCategoryDto"];
+                    "application/*+json": components["schemas"]["CreateCategoryDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/shop/category/{id}/product/{productId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add a product to a shop category */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                    productId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        /** Remove a product from a shop category */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                    productId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/shop/category/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder shop categories */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["Int32ReorderElement"][];
+                    "text/json": components["schemas"]["Int32ReorderElement"][];
+                    "application/*+json": components["schemas"]["Int32ReorderElement"][];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/shop/category/{id}/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder products in a shop category */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["StringReorderElement"][];
+                    "text/json": components["schemas"]["StringReorderElement"][];
+                    "application/*+json": components["schemas"]["StringReorderElement"][];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/contests/at/{year}": {
         parameters: {
             query?: never;
@@ -6867,329 +7272,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/product/styles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get weight styles */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["WeightStyleWithDataDto"][];
-                        "application/json": components["schemas"]["WeightStyleWithDataDto"][];
-                        "text/json": components["schemas"]["WeightStyleWithDataDto"][];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product/style/{styleId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get a weight style */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    styleId: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["WeightStyleWithDataDto"];
-                        "application/json": components["schemas"]["WeightStyleWithDataDto"];
-                        "text/json": components["schemas"]["WeightStyleWithDataDto"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        put?: never;
-        /** Update a weight style */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    styleId: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["WeightStyleWithDataDto"];
-                    "text/json": components["schemas"]["WeightStyleWithDataDto"];
-                    "application/*+json": components["schemas"]["WeightStyleWithDataDto"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        /** Delete a weight style */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    styleId: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product/style": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create a weight style */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["WeightStyleWithDataDto"];
-                    "text/json": components["schemas"]["WeightStyleWithDataDto"];
-                    "application/*+json": components["schemas"]["WeightStyleWithDataDto"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product/style/{styleId}/image": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Set image for a weight style */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    styleId: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "multipart/form-data": {
-                        Title?: string;
-                        Description?: string;
-                        /** Format: binary */
-                        Image?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product/style/{styleId}/image/{imageId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Remove image from a weight style */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    styleId: number;
-                    imageId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/product/{productId}/styles/{styleId}": {
         parameters: {
             query?: never;
@@ -7284,102 +7366,6 @@ export interface paths {
                         "application/json": string;
                         "text/json": string;
                     };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product/style/{styleId}/images": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Add image to a cosmetic */
-        post: {
-            parameters: {
-                query?: {
-                    /** @description Specify if this image should be the thumbnail */
-                    thumbnail?: boolean;
-                };
-                header?: never;
-                path: {
-                    styleId: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "multipart/form-data": {
-                        Title?: string;
-                        Description?: string;
-                        /** Format: binary */
-                        Image?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/product/style/{styleId}/images/{imagePath}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete image from a style */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    styleId: number;
-                    imagePath: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
                 };
             };
         };
@@ -7639,6 +7625,321 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/styles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get weight styles */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["WeightStyleWithDataDto"][];
+                        "application/json": components["schemas"]["WeightStyleWithDataDto"][];
+                        "text/json": components["schemas"]["WeightStyleWithDataDto"][];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/style/{styleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a weight style */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    styleId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["WeightStyleWithDataDto"];
+                        "application/json": components["schemas"]["WeightStyleWithDataDto"];
+                        "text/json": components["schemas"]["WeightStyleWithDataDto"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Update a weight style */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    styleId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["WeightStyleWithDataDto"];
+                    "text/json": components["schemas"]["WeightStyleWithDataDto"];
+                    "application/*+json": components["schemas"]["WeightStyleWithDataDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        /** Delete a weight style */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    styleId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/style": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a weight style */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["WeightStyleWithDataDto"];
+                    "text/json": components["schemas"]["WeightStyleWithDataDto"];
+                    "application/*+json": components["schemas"]["WeightStyleWithDataDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/style/{styleId}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add image to a cosmetic */
+        post: {
+            parameters: {
+                query?: {
+                    /** @description Specify if this image should be the thumbnail */
+                    thumbnail?: boolean;
+                };
+                header?: never;
+                path: {
+                    styleId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        Title?: string;
+                        Description?: string;
+                        /** Format: binary */
+                        Image?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/product/style/{styleId}/images/{imagePath}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete image from a style */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    styleId: number;
+                    imagePath: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -9150,6 +9451,11 @@ export interface components {
             delaySeconds?: number;
             disabledReason?: string | null;
         };
+        CreateCategoryDto: {
+            title: string;
+            slug: string;
+            description?: string | null;
+        };
         CreateEventTeamDto: {
             /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
             name?: string[] | null;
@@ -9296,6 +9602,12 @@ export interface components {
             /** Format: int32 */
             diamond?: number;
         };
+        EditCategoryDto: {
+            title?: string | null;
+            slug?: string | null;
+            description?: string | null;
+            published?: boolean | null;
+        };
         EditEventDto: {
             name?: string | null;
             type?: string | null;
@@ -9317,13 +9629,18 @@ export interface components {
             medalData?: components["schemas"]["MedalEventData"];
         };
         EditProductDto: {
-            category?: components["schemas"]["ProductCategory"];
-            icon?: string | null;
+            /** @description Description of the product */
             description?: string | null;
+            /** @description If the product is available for purchase */
             available?: boolean | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Product price in USD cents
+             */
             price?: number | null;
             features?: components["schemas"]["UnlockedProductFeaturesDto"];
+            /** @description Unix seconds timestamp of release date */
+            releasedAt?: string | null;
         };
         EditUserBadgeDto: {
             /** Format: int32 */
@@ -9756,6 +10073,12 @@ export interface components {
             /** Format: int32 */
             netherWart?: number;
         };
+        Int32ReorderElement: {
+            /** Format: int32 */
+            id: number;
+            /** Format: int32 */
+            order?: number;
+        };
         ItemDto: {
             /** Format: int32 */
             id?: number;
@@ -10102,11 +10425,6 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        ProductCategory: 0 | 1 | 2;
         ProductDto: {
             /** @description Product ID */
             id: string;
@@ -10124,7 +10442,6 @@ export interface components {
             /** @description If the product is available for purchase */
             available?: boolean;
             type?: components["schemas"]["ProductType"];
-            category?: components["schemas"]["ProductCategory"];
             features?: components["schemas"]["UnlockedProductFeaturesDto"];
             /** @description Unlocked weight styles */
             weightStyles?: components["schemas"]["WeightStyleLinkedDto"][];
@@ -10256,6 +10573,17 @@ export interface components {
             excludedTimespans?: components["schemas"]["ExcludedTimespan"][];
             leaderboards?: components["schemas"]["PublicJacobLeaderboardDto"][];
         };
+        ShopCategoryDto: {
+            /** Format: int32 */
+            id?: number;
+            title: string;
+            slug: string;
+            description?: string | null;
+            /** Format: int32 */
+            order?: number;
+            published?: boolean;
+            products?: components["schemas"]["ProductDto"][];
+        };
         SkillsDataPointDto: {
             /** Format: int64 */
             timestamp?: number;
@@ -10303,6 +10631,11 @@ export interface components {
             cocoaBeans?: string | null;
             sugarCane?: string | null;
             netherWart?: string | null;
+        };
+        StringReorderElement: {
+            id: string | null;
+            /** Format: int32 */
+            order?: number;
         };
         StrippedContestParticipationDto: {
             /** Format: int32 */

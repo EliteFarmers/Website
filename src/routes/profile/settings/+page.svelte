@@ -21,6 +21,15 @@
 	let { data, form }: Props = $props();
 	let loading = $state(false);
 
+	let purchases = $derived(
+		Object.values(
+			Object.groupBy(
+				(data.user?.entitlements ?? []).sort((a, b) => (!a.endDate ? 1 : +a.endDate - +(b.endDate ?? 0))),
+				(e) => e.product?.id
+			)
+		).map((p) => p?.[0]) ?? []
+	);
+
 	function mapBadges(accounts: PageData['user']['minecraftAccounts'] = []) {
 		return accounts
 			.filter((mc) => mc.badges && mc.badges.length > 0)
@@ -92,20 +101,22 @@
 <main class="my-16 flex flex-col justify-start justify-items-center gap-16 lg:flex-row">
 	<section class="flex w-full max-w-3xl flex-col">
 		<h1 class="mb-4 text-4xl">Purchases</h1>
-		{#if data.user.entitlements?.length === 0}
+		{#if purchases.length === 0}
 			<p class="mb-2">
 				You don't have any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
-					>Discord Shop!</a
+					>Shop!</a
 				>
 			</p>
 		{:else}
 			<p class="mb-2">
-				Check out the <a href="/shop" class="text-blue-400 hover:underline">Discord Shop!</a>
+				Check out the <a href="/shop" class="text-blue-400 hover:underline">Shop!</a>
 			</p>
 		{/if}
 		<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2">
-			{#each data.user.entitlements ?? [] as purchase (purchase.id)}
-				<Product product={purchase.product} />
+			{#each purchases as purchase (purchase?.id)}
+				{#if purchase?.product}
+					<Product product={purchase.product} />
+				{/if}
 			{/each}
 		</div>
 		<form

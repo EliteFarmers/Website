@@ -13,16 +13,16 @@
 </script>
 
 <p
-	class="h-fit rounded-md bg-green-600 px-4 py-1 text-center font-semibold leading-none text-white dark:bg-green-700 {free
+	class="h-fit rounded-md bg-green-600 px-4 pb-1 pt-0.5 text-center font-semibold leading-none text-white dark:bg-green-700 {free
 		? 'pb-1.5'
 		: ''}"
 >
 	{#if free}
 		Free
 	{:else}
-		<span class="whitespace-nowrap">{dollars} USD</span>
+		<span class="whitespace-nowrap leading-none">{dollars} USD</span>
 		{#if product.isSubscription}<br />
-			<span class="whitespace-nowrap text-xs">per month</span>
+			<span class="whitespace-nowrap text-xs leading-none">per month</span>
 		{/if}
 	{/if}
 </p>

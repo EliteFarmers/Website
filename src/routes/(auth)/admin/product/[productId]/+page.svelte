@@ -15,8 +15,6 @@
 	import X from 'lucide-svelte/icons/x';
 	import { enhance } from '$app/forms';
 	import Settings from 'lucide-svelte/icons/settings-2';
-	import { onMount } from 'svelte';
-
 	import type { PageData, ActionData } from './$types';
 
 	interface Props {
@@ -33,28 +31,12 @@
 	let selectedColors = $state<string[]>(data.product?.features?.embedColors ?? []);
 	let selectedImageId = $state('');
 
-	let changedSettings = $derived({
-		shopPromotions: false,
-		styleOverride: false,
-		moreInfo: false,
-		badgeId: '',
-		available: false,
-	});
-
 	let styles = $derived(
 		product.weightStyles?.map((s) => ({
 			value: (s.id ?? 0).toString(),
 			label: s.name,
 		}))
 	);
-
-	onMount(() => {
-		changedSettings.shopPromotions = product?.features?.hideShopPromotions ?? false;
-		changedSettings.styleOverride = product?.features?.weightStyleOverride ?? false;
-		changedSettings.moreInfo = product?.features?.moreInfoDefault ?? false;
-		changedSettings.badgeId = product?.features?.badgeId?.toString() ?? '';
-		changedSettings.available = product.available ?? false;
-	});
 
 	let newColor = $state('');
 	let isThumbnail = $state(false);
@@ -114,16 +96,16 @@
 
 		<div class="flex w-full flex-col gap-4 lg:flex-row">
 			<form method="post" action="?/updateProduct" class="flex flex-1 flex-col gap-4" use:enhance>
-				<input type="hidden" name="product" bind:value={product.id} />
+				<input type="hidden" name="product" value={product.id} />
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Product Description</Label>
-					<Textarea name="description" bind:value={product.description} maxlength={1024} />
+					<Textarea name="description" value={product.description} maxlength={1024} />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Product Price</Label>
-					<Input name="price" bind:value={product.price} placeholder="299" />
+					<Input name="price" value={product.price} placeholder="299" />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
@@ -133,26 +115,23 @@
 							value: (b.id ?? 0).toString(),
 							label: b.name,
 						}))}
-						bind:value={changedSettings.badgeId}
+						value={product.features?.badgeId?.toString()}
 						placeholder="Select a badge"
 						name="badge"
 					/>
 				</div>
 
 				<div class="flex flex-row items-center gap-2">
-					<Switch bind:checked={changedSettings.shopPromotions} />
+					<Switch name="promotions" checked={product.features?.hideShopPromotions ?? false} />
 					<Label>Hide shop promotions</Label>
-					<input type="hidden" name="promotions" bind:value={changedSettings.shopPromotions} />
 				</div>
 				<div class="flex flex-row items-center gap-2">
-					<Switch bind:checked={changedSettings.styleOverride} />
+					<Switch name="override" checked={product.features?.weightStyleOverride ?? false} />
 					<Label>Apply Weight Style on everyone</Label>
-					<input type="hidden" name="override" bind:value={changedSettings.styleOverride} />
 				</div>
 				<div class="flex flex-row items-center gap-2">
-					<Switch bind:checked={changedSettings.moreInfo} />
+					<Switch name="info" checked={product.features?.moreInfoDefault ?? false} />
 					<Label>"More Info" in weight command by default</Label>
-					<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
@@ -187,9 +166,8 @@
 				</div>
 
 				<div class="flex flex-row items-center gap-2">
-					<Switch bind:checked={changedSettings.available} />
+					<Switch name="available" checked={product.available} />
 					<Label>Product Available</Label>
-					<input type="hidden" name="available" bind:value={changedSettings.available} />
 				</div>
 
 				<Button type="submit" disabled={loading}>Update</Button>

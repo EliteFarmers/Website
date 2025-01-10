@@ -5,6 +5,8 @@
 	import ProductPrice from '$comp/monetization/product-price.svelte';
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
+	import * as Popover from '$ui/popover';
+	import { Button } from '$ui/button';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import Image from 'lucide-svelte/icons/image';
 	import Palette from 'lucide-svelte/icons/palette';
@@ -12,11 +14,11 @@
 	import TicketX from 'lucide-svelte/icons/ticket-x';
 	import Replace from 'lucide-svelte/icons/replace';
 	import ScrollText from 'lucide-svelte/icons/scroll-text';
-	import { Button } from '$comp/ui/button';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import ProductUnlock from '$comp/monetization/product-unlock.svelte';
 	import Badge from '$comp/stats/badge.svelte';
-	import { Package } from 'lucide-svelte';
+	import Package from 'lucide-svelte/icons/package';
+	import Info from 'lucide-svelte/icons/info';
 
 	interface Props {
 		data: PageData;
@@ -172,17 +174,31 @@
 						</p>
 					</ProductUnlock>
 				{/if}
-				<div class="flex w-full flex-row justify-end">
-					<div class="-mb-3 flex flex-row items-center gap-2">
+				<div class="flex w-full flex-col items-end gap-1">
+					<div class="flex flex-row items-center gap-2">
 						<ProductPrice {product} />
 						<Button
 							href="/shop/{product.id}/buy"
-							class="m-1 bg-blue-600 font-semibold text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-900"
+							class="bg-blue-600 font-semibold text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-900"
 						>
 							{isFree ? 'Unlock' : 'Buy'} on Discord
 							<ExternalLink size={16} class="ml-1.5" />
 						</Button>
 					</div>
+					{#if isFree}
+						<Popover.Mobile>
+							{#snippet trigger()}
+								<div class="flex flex-row items-center gap-1 text-primary/60">
+									<p>Free Item</p>
+									<Info size={16} class="mt-0.5" />
+								</div>
+							{/snippet}
+							<p class="max-w-64 text-sm">
+								Although this is a free item, Discord still requires you to fill out billing
+								information. You won't be charged, and Discord doesn't share this information with us.
+							</p>
+						</Popover.Mobile>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -192,11 +208,13 @@
 		<section id="styles" class="scroll-mt-32">
 			<h2 class="text-2xl">Weight Styles</h2>
 			<p class="py-4">
-				Preview the weight styles that will be unlocked when you {isFree ? 'unlock' : 'purchase'} this product on
-				Discord!
+				Preview the <strong>{product.weightStyles.length.toLocaleString()}</strong> weight style{product
+					.weightStyles.length === 1
+					? ''
+					: 's'} that will be unlocked when you {isFree ? 'unlock' : 'purchase'} this product on Discord!
 			</p>
 			<div class="flex flex-col gap-4">
-				{#each product.weightStyles as { id } (id)}
+				{#each product.weightStyles.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as { id } (id)}
 					{@const style = data.styles.find((s) => s.id === id)}
 					{#if style}
 						<Card.Root class="max-w-3xl">

@@ -105,6 +105,10 @@ export const ADMIN_NAV_PAGES = [
 		href: '/admin/badges',
 	},
 	{
+		title: 'Categories',
+		href: '/admin/categories',
+	},
+	{
 		title: 'Products',
 		href: '/admin/products',
 	},

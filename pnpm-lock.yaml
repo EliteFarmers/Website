@@ -125,6 +125,9 @@ importers:
       svelte-check:
         specifier: ^4.0.6
         version: 4.1.1(picomatch@4.0.2)(svelte@5.14.1)(typescript@5.7.2)
+      svelte-dnd-action:
+        specifier: ^0.9.54
+        version: 0.9.54(svelte@5.14.1)
       svelte-preprocess:
         specifier: ^6.0.3
         version: 6.0.3(postcss-load-config@4.0.2(postcss@8.4.49))(postcss@8.4.49)(svelte@5.14.1)(typescript@5.7.2)
@@ -2047,6 +2050,11 @@ packages:
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
+
+  svelte-dnd-action@0.9.54:
+    resolution: {integrity: sha512-Hue0e449cd3WOASOeawFhEDUb6WFz6QyMVzuEd2RCWhzUAZS6PvOCLZeJyDkx4uKgYve9PR08yzTlEV0oKaH8A==}
+    peerDependencies:
+      svelte: '>=3.23.0 || ^5.0.0-next.0'
 
   svelte-eslint-parser@0.43.0:
     resolution: {integrity: sha512-GpU52uPKKcVnh8tKN5P4UZpJ/fUDndmq7wfsvoVXsyP+aY0anol7Yqo01fyrlaWGMFfm4av5DyrjlaXdLRJvGA==}
@@ -4219,6 +4227,10 @@ snapshots:
       typescript: 5.7.2
     transitivePeerDependencies:
       - picomatch
+
+  svelte-dnd-action@0.9.54(svelte@5.14.1):
+    dependencies:
+      svelte: 5.14.1
 
   svelte-eslint-parser@0.43.0(svelte@5.14.1):
     dependencies:
