@@ -32,7 +32,7 @@
 
 <Head title="Product" description="Manage product" />
 
-<main class="my-16">
+<div class="my-16">
 	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
 		<h1 class="mb-16 text-4xl">{category.title}</h1>
 
@@ -135,4 +135,4 @@
 			<Button class="w-fit" type="submit">Update Order</Button>
 		</form>
 	</section>
-</main>
+</div>

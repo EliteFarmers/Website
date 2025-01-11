@@ -45,7 +45,7 @@
 
 <Head title="Product" description="Manage product" />
 
-<main class="my-16">
+<div class="my-16">
 	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
 		<div class="mb-8 flex flex-row items-center gap-4">
 			<h1 class="text-4xl">{product.name}</h1>
@@ -259,7 +259,7 @@
 			</div>
 		</div>
 	</section>
-</main>
+</div>
 
 <Dialog.Root bind:open={deleteProductImageModal}>
 	<Dialog.Content class="max-h-[80%] overflow-scroll">

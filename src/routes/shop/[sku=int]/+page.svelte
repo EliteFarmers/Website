@@ -33,7 +33,7 @@
 
 <Head title="Shop" description="Help support development with cosmetics!" />
 
-<main class="my-16 flex w-full flex-col items-center gap-12 px-2">
+<div class="my-16 flex w-full flex-col items-center gap-12 px-2">
 	<section class="flex flex-col items-start gap-4">
 		<div class="-mb-3 flex flex-row items-center gap-4">
 			<h1 class="text-4xl">{product.name}</h1>
@@ -242,4 +242,4 @@
 			</div>
 		</section>
 	{/if}
-</main>
+</div>

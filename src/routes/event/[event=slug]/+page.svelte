@@ -66,7 +66,7 @@
 
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 
-<main class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
+<div class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
 	<div
 		class="relative flex h-96 w-full flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat"
 		style={banner ? `background-image: url('${banner}')` : ''}
@@ -223,4 +223,4 @@
 			from the responsible server if appropriate. This website does not take a cut of any prizes or act as a middleman.
 		</p>
 	</div>
-</main>
+</div>

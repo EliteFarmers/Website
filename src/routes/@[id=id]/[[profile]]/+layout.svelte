@@ -4,7 +4,7 @@
 	import { browser } from '$app/environment';
 	import { Button } from '$ui/button';
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
+	import { replaceState } from '$app/navigation';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import type { Snippet } from 'svelte';
 
@@ -21,7 +21,7 @@
 
 		if (current !== wanted) {
 			let newUrl = page.url.pathname.replace(current, wanted);
-			goto(newUrl, { replaceState: true });
+			replaceState(newUrl, page.state);
 		}
 	});
 
@@ -31,7 +31,7 @@
 	}
 </script>
 
-<main class="m-0 w-full p-0">
+<div class="m-0 w-full p-0">
 	<PlayerInfo
 		player={data.account?.playerData}
 		members={data.profile?.members?.filter((m) => m.uuid !== data.account?.id)}
@@ -110,4 +110,4 @@
 			{/if}
 		</div>
 	</div>
-</main>
+</div>

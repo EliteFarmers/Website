@@ -21,7 +21,7 @@
 	description="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
 />
 
-<main>
+<div>
 	<h1 class="my-16 text-center text-4xl">Welcome to Elite!</h1>
 	<p class="mb-16 text-center text-lg">View farming stats of any skyblock player!</p>
 
@@ -159,4 +159,4 @@
 			{/await}
 		</div>
 	</section>
-</main>
+</div>

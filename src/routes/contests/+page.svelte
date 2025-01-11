@@ -41,7 +41,7 @@
 	description="Browse hundreds of thousands of contest participations set by fellow players!"
 />
 
-<main class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center">
 	<h1 class="my-16 text-4xl">Jacob's Contests</h1>
 
 	<div class="flex max-w-4xl flex-col items-stretch gap-8 md:flex-row">
@@ -172,4 +172,4 @@
 			</div>
 		</Card.Root>
 	</div>
-</main>
+</div>

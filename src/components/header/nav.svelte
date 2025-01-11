@@ -29,8 +29,8 @@
 	</div>
 </header>
 
-<div class="absolute top-16 left-2">
-	<Sidebar.Trigger size="lg" iconSize={35} iconClass="!size-5" class="size-14" />
+<div class="absolute left-2 top-16">
+	<Sidebar.Trigger size="lg" class="size-14" />
 </div>
 
 {#await navigating.complete}

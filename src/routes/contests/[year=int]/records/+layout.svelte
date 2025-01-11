@@ -15,7 +15,7 @@
 
 <Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />
 
-<main class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center">
 	<div class="mb-4 mt-16 flex flex-col items-center gap-4 text-center font-semibold">
 		<h1 class="text-4xl">Contest Records - Year {year}</h1>
 		<p>
@@ -46,4 +46,4 @@
 			in the contest, or their profile hasn't been loaded since.
 		</p>
 	</div>
-</main>
+</div>
