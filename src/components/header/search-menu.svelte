@@ -5,9 +5,15 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 
-	let { ...rest }: ButtonProps = $props();
-
-	let open = $state(false);
+	let {
+		open = $bindable(false),
+		useButton = true,
+		class: className,
+		...rest
+	}: ButtonProps & {
+		open?: boolean;
+		useButton?: boolean;
+	} = $props();
 
 	async function search(query: string) {
 		if (!browser) return [];
@@ -35,15 +41,17 @@
 	});
 </script>
 
-<Button
-	variant="outline"
-	class={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64')}
-	onclick={() => (open = true)}
-	{...rest}
->
-	<span class="hidden lg:inline-flex"> Search For Player... </span>
-	<span class="inline-flex lg:hidden">Search...</span>
-</Button>
+{#if useButton}
+	<Button
+		variant="outline"
+		class={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64', className)}
+		onclick={() => (open = true)}
+		{...rest}
+	>
+		<span class="hidden lg:inline-flex"> Search For Player... </span>
+		<span class="inline-flex lg:hidden">Search...</span>
+	</Button>
+{/if}
 <Command.Dialog bind:open>
 	<Command.Root shouldFilter={false}>
 		<Command.Input placeholder="Search for a player" bind:value={searchStr} />

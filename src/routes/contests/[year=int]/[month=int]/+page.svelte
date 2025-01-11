@@ -21,7 +21,7 @@
 	description="View all known Jacob contests in this month!"
 />
 
-<main class="flex flex-col items-center justify-center px-2">
+<div class="flex flex-col items-center justify-center px-2">
 	<div class="mb-4 mt-16 flex flex-col gap-4 text-center font-semibold">
 		<h1 class="text-4xl">{getSkyblockMonth(month)}, Year {year}</h1>
 		<p>
@@ -90,4 +90,4 @@
 			</a>
 		{/each}
 	</div>
-</main>
+</div>

@@ -9,9 +9,11 @@
 	let { type }: Props = $props();
 </script>
 
-<Popover.Mobile class="text-black dark:text-white">
+<Popover.Mobile>
 	{#snippet trigger()}
-		<div class="flex w-fit flex-row items-center gap-2 rounded-sm bg-card p-1 px-2 font-semibold leading-none">
+		<div
+			class="flex w-fit flex-row items-center gap-2 rounded-sm bg-card p-1 px-2 font-semibold leading-none text-primary"
+		>
 			{#if type === +EventType.FarmingWeight}
 				<img src="/favicon.webp" alt="Farming Weight" class="h-4 w-4" />
 				<p class="text-xs sm:text-sm">Farming Weight Event</p>
@@ -21,7 +23,7 @@
 			{/if}
 		</div>
 	{/snippet}
-	<div>
+	<div class="text-primary">
 		{#if type === +EventType.FarmingWeight}
 			<p class="text-lg font-semibold">Farming Weight Event</p>
 			<p class="max-w-xs">Earn points for gaining farming weight during the event!</p>

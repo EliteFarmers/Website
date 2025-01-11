@@ -27,7 +27,7 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="mx-2 my-16 flex flex-col justify-start gap-12">
+<div class="mx-2 my-16 flex flex-col justify-start gap-12">
 	<section class="flex flex-col items-start gap-4">
 		<h1 class="mb-4 text-3xl">Discord Account</h1>
 		{#key loading}
@@ -117,4 +117,4 @@
 			</div>
 		{/if}
 	</section>
-</main>
+</div>

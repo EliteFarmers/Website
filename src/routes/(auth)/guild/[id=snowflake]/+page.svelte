@@ -35,7 +35,7 @@
 
 <Head title="Server Settings" description="Manage server settings for your guild!" />
 
-<main class="flex flex-col items-center gap-8">
+<div class="flex flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="my-16 text-4xl">
@@ -239,4 +239,4 @@
 			</Card.Root>
 		</section>
 	{/if}
-</main>
+</div>

@@ -98,7 +98,7 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="my-16 flex flex-col justify-start justify-items-center gap-16 lg:flex-row">
+<div class="my-16 flex flex-col justify-start justify-items-center gap-16 lg:flex-row">
 	<section class="flex w-full max-w-3xl flex-col">
 		<h1 class="mb-4 text-4xl">Purchases</h1>
 		{#if purchases.length === 0}
@@ -300,4 +300,4 @@
 			</form>
 		{/each}
 	</section>
-</main>
+</div>

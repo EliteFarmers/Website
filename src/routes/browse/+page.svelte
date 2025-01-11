@@ -18,7 +18,7 @@
 
 <Head title="Browse Servers" description="Browse Discord servers and Events available to join!" />
 
-<main class="my-16 flex flex-col items-center justify-center text-center" data-sveltekit-preload-data="tap">
+<div class="my-16 flex flex-col items-center justify-center text-center" data-sveltekit-preload-data="tap">
 	{#if events.length > 0}
 		<section class="my-16 flex w-[90%] max-w-7xl flex-col gap-8 dark:text-white md:w-[70%]">
 			<h1 class="text-2xl md:text-4xl">Join Public Events</h1>
@@ -36,4 +36,4 @@
 			<Serverbar {guild} />
 		{/each}
 	</section>
-</main>
+</div>

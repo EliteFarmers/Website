@@ -25,7 +25,7 @@
 	imageUrl={guild.icon?.url}
 />
 
-<main class="mb-16 flex flex-col items-center justify-center gap-8">
+<div class="mb-16 flex flex-col items-center justify-center gap-8">
 	<!-- Banner image -->
 	{#if guild?.banner?.url}
 		<div
@@ -120,4 +120,4 @@
 			members. It's a fun way to compete with your friends and see who's the best! Access is currently invite only.
 		</p>
 	</div>
-</main>
+</div>

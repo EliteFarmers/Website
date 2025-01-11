@@ -111,7 +111,7 @@
 	);
 </script>
 
-<main class="flex flex-col items-center justify-center gap-4">
+<div class="flex flex-col items-center justify-center gap-4">
 	<h1 class="mt-16 text-4xl font-semibold">Manage Event Membership</h1>
 
 	<Button class="my-8 flex-1" href="/event/{page.params.event}" variant="secondary">Back To Event</Button>
@@ -453,4 +453,4 @@
 			no confirmation.
 		</p>
 	</form>
-</main>
+</div>

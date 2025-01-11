@@ -53,7 +53,7 @@
 
 <Head title="Style" description="Manage style" />
 
-<main class="my-16">
+<div class="my-16">
 	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
 		<div class="mb-8 flex flex-row items-center gap-4">
 			<h1 class="text-4xl">{style.name}</h1>
@@ -261,7 +261,7 @@
 			</Button>
 		</div>
 	</section>
-</main>
+</div>
 
 <Dialog.Root bind:open={deleteStyleModal}>
 	<Dialog.Content class="max-h-[80%] overflow-auto">

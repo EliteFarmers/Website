@@ -27,7 +27,7 @@
 
 <Head title="Events" description="Manage Events happening in your guild" />
 
-<main class="flex flex-col items-center gap-4">
+<div class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="my-16 text-4xl">
@@ -116,6 +116,6 @@
 			</div>
 		{/each}
 	</section>
-</main>
+</div>
 
 <CreateEvent bind:open={clickOutsideModal} />

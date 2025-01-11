@@ -30,7 +30,7 @@
 
 <Head title="Admin Settings" description="Admin config page." />
 
-<main class="my-16 flex flex-col justify-start gap-2">
+<div class="my-16 flex flex-col justify-start gap-2">
 	<h1 class="mb-16 text-4xl">Admin Panel</h1>
 
 	{#if form?.error}
@@ -83,7 +83,7 @@
 			<Plus size={16} />
 		</Button>
 	</section>
-</main>
+</div>
 
 <Dialog.Root bind:open={manageMemberModal}>
 	<Dialog.Content>

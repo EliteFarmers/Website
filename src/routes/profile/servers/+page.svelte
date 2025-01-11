@@ -12,7 +12,7 @@
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
-<main class="my-16 flex flex-col gap-16 lg:flex-row">
+<div class="my-16 flex flex-col gap-16 lg:flex-row">
 	<section class="flex w-full max-w-3xl flex-col">
 		<h1 class="mb-4 text-2xl">Manage Servers</h1>
 		{#if data.adminGuilds.length === 0}
@@ -37,4 +37,4 @@
 		<h1 class="mb-4 text-2xl">Other Servers</h1>
 		<p>Missing a server above? <a href="/invite" class="text-blue-500 underline">Invite the bot!</a></p>
 	</section>
-</main>
+</div>
