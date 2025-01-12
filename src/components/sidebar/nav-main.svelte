@@ -3,7 +3,6 @@
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import SidebarLink from './sidebar-link.svelte';
-	import { page } from '$app/state';
 
 	let {
 		items,

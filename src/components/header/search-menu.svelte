@@ -1,3 +1,7 @@
+<script lang="ts" module>
+	import Search from 'lucide-svelte/icons/search';
+</script>
+
 <script lang="ts">
 	import * as Command from '$ui/command';
 	import { Button, type ButtonProps } from '$ui/button';
@@ -44,12 +48,13 @@
 {#if useButton}
 	<Button
 		variant="outline"
-		class={cn('relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64', className)}
+		class={cn('relative flex w-full justify-start px-3 text-sm sm:pr-12 md:w-40 lg:w-64', className)}
 		onclick={() => (open = true)}
 		{...rest}
 	>
-		<span class="hidden lg:inline-flex"> Search For Player... </span>
-		<span class="inline-flex lg:hidden">Search...</span>
+		<Search />
+		<span class="hidden text-muted-foreground lg:inline-flex">Search For Player...</span>
+		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
 	</Button>
 {/if}
 <Command.Dialog bind:open>
