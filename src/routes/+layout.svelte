@@ -13,9 +13,10 @@
 	import Footer from '$comp/footer/footer.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
 	import { Separator } from '$ui/separator';
-	import * as Breadcrumb from '$ui/breadcrumb';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import ModeToggle from '$comp/header/mode-toggle.svelte';
+	import NavBreadcrumb from '$comp/sidebar/nav-breadcrumb.svelte';
+	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -27,6 +28,7 @@
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
 	initShowLeaderboardName();
+	initBreadcrumb();
 
 	if (browser) {
 		mode.subscribe((value) => {
@@ -62,22 +64,12 @@
 			<header
 				class="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4"
 			>
-				<div class="flex flex-row items-center gap-2">
+				<div class="flex flex-1 flex-row items-center gap-2">
 					<Sidebar.Trigger class="-my-2 -ml-2 size-10" />
 					<Separator orientation="vertical" class="mr-2 h-4" />
-					<Breadcrumb.Root>
-						<Breadcrumb.List>
-							<Breadcrumb.Item class="hidden md:block">
-								<Breadcrumb.Link href="#">Building Your Application</Breadcrumb.Link>
-							</Breadcrumb.Item>
-							<Breadcrumb.Separator class="hidden md:block" />
-							<Breadcrumb.Item>
-								<Breadcrumb.Page>Data Fetching</Breadcrumb.Page>
-							</Breadcrumb.Item>
-						</Breadcrumb.List>
-					</Breadcrumb.Root>
+					<NavBreadcrumb />
 				</div>
-				<div class="flex flex-1 items-center justify-between gap-4 md:justify-end">
+				<div class="flex items-center justify-between gap-4 md:justify-end">
 					<div class="w-full flex-1 md:w-auto md:flex-none">
 						<SearchMenu />
 					</div>

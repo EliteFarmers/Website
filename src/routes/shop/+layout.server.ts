@@ -3,7 +3,7 @@ import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ setHeaders, locals }) => {
 	// 30 minute public cache
-	if (!locals.session) {
+	if (!locals.session?.flags.admin) {
 		setHeaders({ 'Cache-Control': 'public, max-age=1800' });
 	}
 

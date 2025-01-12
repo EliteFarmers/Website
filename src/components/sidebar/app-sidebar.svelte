@@ -28,7 +28,7 @@
 				{#snippet child({ props })}
 					<a href="/" {...props} class={cn(props.class ?? '', 'group-data-[state=collapsed]:rounded-full')}>
 						<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-						<span class="px-1 text-xl font-semibold leading-none"> Elite Farmers </span>
+						<span class="px-1 text-xl font-semibold leading-none">Elite Farmers</span>
 					</a>
 				{/snippet}
 			</Sidebar.MenuButton>
@@ -39,7 +39,7 @@
 					Search
 				{/snippet}
 				<Search class="-ml-0.5" />
-				<span class="text-muted-foreground">Search</span>
+				<span class="text-muted-foreground">Search...</span>
 			</Sidebar.MenuButton>
 			<SearchMenu bind:open={searchOpen} useButton={false} />
 		</Sidebar.MenuItem>

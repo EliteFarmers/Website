@@ -6,7 +6,8 @@
 	import { page } from '$app/state';
 	import { replaceState } from '$app/navigation';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import type { Snippet } from 'svelte';
+	import { tick, type Snippet } from 'svelte';
+	import { getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -21,8 +22,20 @@
 
 		if (current !== wanted) {
 			let newUrl = page.url.pathname.replace(current, wanted);
-			replaceState(newUrl, page.state);
+			tick().then(() => replaceState(newUrl, page.state));
 		}
+	});
+
+	const crumbs = $derived([
+		{
+			name: data.profile?.profileName + ' Stats',
+			href: path,
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		// breadcrumb.setOverride(crumbs)
 	});
 
 	function active(path: string) {
