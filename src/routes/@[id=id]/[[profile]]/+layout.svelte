@@ -7,12 +7,15 @@
 	import { replaceState } from '$app/navigation';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { tick, type Snippet } from 'svelte';
-	import { getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import Gamemode from '$comp/stats/player/gamemode.svelte';
+	import type { ProfileGameMode } from '$lib/api/elite';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
 	let url = $derived(page.url.pathname);
+	const otherMembers = $derived(data.profile?.members?.filter((m) => m.uuid !== data.account?.id && m.active));
 
 	$effect(() => {
 		if (!browser) return;
@@ -26,16 +29,95 @@
 		}
 	});
 
-	const crumbs = $derived([
+	const lastPath = $derived(page.url.pathname.split('/').at(-1));
+	const subPages = $derived([
 		{
-			name: data.profile?.profileName + ' Stats',
+			name: 'stats',
 			href: path,
+		},
+		{
+			name: 'contests',
+			href: `${path}/contests`,
+		},
+		{
+			name: 'charts',
+			href: `${path}/charts`,
+		},
+		{
+			name: 'garden',
+			href: `${path}/garden`,
+		},
+		{
+			name: 'rates',
+			href: `${path}/rates`,
+		},
+	]);
+	const subPage = $derived(subPages.find((subPages) => subPages.name === lastPath)?.name ?? 'stats');
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: data.account?.name,
+			dropdown: otherMembers?.map((m) => ({
+				name: m.username,
+				href: `/@${m.username}/${data.profile?.profileId}`,
+				data: {
+					uuid: m.uuid,
+					weight: m.farmingWeight?.toString(),
+				},
+				snippet: memberDropdown,
+			})),
+			data: {
+				uuid: data.account?.id,
+			},
+			snippet: memberDropdown,
+		},
+		{
+			name: data.profile?.profileName,
+			dropdown: data.profiles?.slice(1).map((p) => ({
+				name: p.name,
+				href: `/@${data.account?.name}/${p.name}`,
+				data: {
+					mode: p.gameMode,
+				},
+				snippet: profileDropdown,
+			})),
+			data: {
+				mode: data.profile?.gameMode,
+			},
+			snippet: profileDropdown,
+		},
+		{
+			name: subPage,
+			dropdown: [
+				{
+					name: 'Stats',
+					href: path,
+				},
+				{
+					name: 'Contests',
+					href: `${path}/contests`,
+				},
+				{
+					name: 'Charts',
+					href: `${path}/charts`,
+				},
+				{
+					name: 'Garden',
+					href: `${path}/garden`,
+				},
+				{
+					name: 'Rates',
+					href: `${path}/rates`,
+				},
+			],
 		},
 	]);
 
+	$inspect(page.url.pathname);
+
 	const breadcrumb = getBreadcrumb();
 	$effect.pre(() => {
-		// breadcrumb.setOverride(crumbs)
+		breadcrumb.setOverride(crumbs);
 	});
 
 	function active(path: string) {
@@ -47,7 +129,7 @@
 <div class="m-0 w-full p-0">
 	<PlayerInfo
 		player={data.account?.playerData}
-		members={data.profile?.members?.filter((m) => m.uuid !== data.account?.id)}
+		members={otherMembers}
 		profileDetails={data.profiles ?? []}
 		linked={data.account?.discordUsername ?? null}
 		weightInfo={data.member?.farmingWeight}
@@ -124,3 +206,32 @@
 		</div>
 	</div>
 </div>
+
+{#snippet memberDropdown(crumb?: Crumb | Omit<Crumb, 'dropdown'>)}
+	<div class="flex max-w-md flex-row items-center justify-between gap-2">
+		<div class="flex w-full flex-1 flex-row items-center gap-2">
+			<img
+				src="https://mc-heads.net/avatar/{crumb?.data?.uuid ?? ''}"
+				alt="Player Head"
+				class="aspect-square size-6 rounded-sm"
+			/>
+			<span class="font-semibold">{crumb?.name}</span>
+		</div>
+		{#if crumb?.data?.weight}
+			<span>{(+crumb?.data?.weight).toLocaleString()}</span>
+		{/if}
+	</div>
+{/snippet}
+
+{#snippet profileDropdown(crumb?: Crumb | Omit<Crumb, 'dropdown'>)}
+	<div class="flex max-w-md flex-row items-center justify-between gap-2">
+		<span class="font-semibold">{crumb?.name}</span>
+		{#if crumb?.data?.mode}
+			<Gamemode
+				class="max-size-fit"
+				gameMode={(crumb?.data?.mode ?? 'classic') as ProfileGameMode}
+				popover={false}
+			/>
+		{/if}
+	</div>
+{/snippet}

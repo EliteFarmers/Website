@@ -8,6 +8,7 @@
 	import * as Pagination from '$ui/pagination';
 	import { Switch } from '$comp/ui/switch';
 	import { getShowLeaderboardName } from '$lib/stores/leaderboardName';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -40,6 +41,21 @@
 			goto(`/leaderboard/${category}/${(page - 1) * 20 + 1}`);
 		}
 	}
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'LB',
+			href: '/leaderboard',
+		},
+		{
+			name: title,
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head {title} description={`${title} for Hypixel Skyblock.`} />

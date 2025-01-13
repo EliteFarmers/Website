@@ -7,6 +7,7 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -17,6 +18,21 @@
 	let guild = $derived(data.guild ?? {});
 	let jacob = $derived(guild?.features?.jacobLeaderboard);
 	let leaderboards = $derived(jacob?.leaderboards ?? []);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/browse',
+		},
+		{
+			name: guild.name,
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head

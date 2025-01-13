@@ -7,7 +7,6 @@
 	let {
 		items,
 		title = 'Group',
-		icon: Icon,
 	}: {
 		items: {
 			title: string;

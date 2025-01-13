@@ -1,3 +1,8 @@
+<script lang="ts" module>
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import Slash from 'lucide-svelte/icons/slash';
+</script>
+
 <script lang="ts">
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import * as Breadcrumb from '$ui/breadcrumb';
@@ -5,6 +10,7 @@
 	import * as Drawer from '$ui/drawer';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { buttonVariants } from '$ui/button';
+	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
 
 	const crumbs = getBreadcrumb();
 	let open = $state(false);
@@ -13,17 +19,17 @@
 	const items = $derived(crumbs.override ?? crumbs.current);
 
 	const first = $derived(items[0]);
+	const showFirst = $derived(first && !sidebar.isMobile);
+
 	const last = $derived(items.length > 1 ? items.at(-1) : null);
 	const middle = $derived(items.length > 2 ? items.slice(1, -1) : null);
 
-	const maxMiddle = $derived(sidebar.isMobile ? 1 : 2);
-
-	$inspect({ first, middle, last });
+	const maxMiddle = $derived(sidebar.size.mobile ? 1 : sidebar.size.medium ? 2 : sidebar.size.large ? 3 : 5);
 </script>
 
-<Breadcrumb.Root>
+<Breadcrumb.Root data-sveltekit-preload-data="tap">
 	<Breadcrumb.List>
-		{#if first}
+		{#if showFirst}
 			<Breadcrumb.Item>
 				{@render content(first)}
 			</Breadcrumb.Item>
@@ -31,19 +37,23 @@
 
 		{#if middle && middle.length > 0}
 			{#if middle.length > maxMiddle}
-				<Breadcrumb.Separator />
+				{#if showFirst}
+					{@render separator()}
+				{/if}
 				{@render collapsed(middle)}
 			{:else}
-				{#each middle as item}
-					<Breadcrumb.Separator />
+				{#each middle as item, i}
+					{#if i > 0 || showFirst}
+						{@render separator()}
+					{/if}
 					<Breadcrumb.Item>
 						{@render content(item)}
 					</Breadcrumb.Item>
 				{/each}
-				<Breadcrumb.Separator />
+				{@render separator()}
 			{/if}
-		{:else}
-			<Breadcrumb.Separator />
+		{:else if last && showFirst}
+			{@render separator()}
 		{/if}
 
 		{#if last}
@@ -82,8 +92,11 @@
 						<Drawer.Description>Select a page to navigate to.</Drawer.Description>
 					</Drawer.Header>
 					<div class="grid gap-1 px-4">
-						{#each crumbs as item}
-							<a href={item.href ? item.href : '#'} class="py-1 text-sm first-letter:capitalize">
+						{#each crumbs as item (item)}
+							<a
+								href={item.href ? item.href : '#'}
+								class="rounded-sm border-2 p-1 text-sm first-letter:capitalize"
+							>
 								{item.name}
 							</a>
 						{/each}
@@ -95,27 +108,50 @@
 			</Drawer.Root>
 		{/if}
 	</Breadcrumb.Item>
-	<Breadcrumb.Separator />
+	{@render separator()}
 {/snippet}
 
-{#snippet content(crumb: Crumb)}
-	{#if crumb.href}
-		<Breadcrumb.Link href={crumb.href} class="max-w-20 truncate first-letter:capitalize md:max-w-none">
-			{#if crumb.icon}
-				<crumb.icon class="size-4" />
-			{/if}
-			{#if crumb.name}
-				{crumb.name}
-			{/if}
+{#snippet content(crumb: Crumb | Omit<Crumb, 'dropdown'>, drop = true)}
+	{#if drop && 'dropdown' in crumb && crumb.dropdown?.length}
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger class="flex items-center gap-1">
+				{@render content(crumb, false)}
+				<ChevronDown class="size-4" />
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content>
+				<ScrollArea orientation="vertical" class="flex max-h-48 flex-col overflow-y-auto">
+					{#each crumb.dropdown as item (item)}
+						<DropdownMenu.Item>
+							{@render content(item)}
+						</DropdownMenu.Item>
+					{/each}
+				</ScrollArea>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+	{:else if crumb.href}
+		<Breadcrumb.Link href={crumb.href} class="w-full truncate first-letter:capitalize md:max-w-none">
+			{@render inner(crumb)}
 		</Breadcrumb.Link>
 	{:else}
-		<Breadcrumb.Page class="max-w-20 truncate first-letter:capitalize md:max-w-none">
-			{#if crumb.icon}
-				<crumb.icon />
-			{/if}
-			{#if crumb.name}
-				{crumb.name}
-			{/if}
+		<Breadcrumb.Page class="truncate first-letter:capitalize md:max-w-none">
+			{@render inner(crumb)}
 		</Breadcrumb.Page>
 	{/if}
+{/snippet}
+
+{#snippet inner(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+	{#if crumb.icon}
+		<crumb.icon class="size-4" />
+	{/if}
+	{#if crumb.snippet}
+		{@render crumb.snippet(crumb)}
+	{:else if crumb.name}
+		{crumb.name}
+	{/if}
+{/snippet}
+
+{#snippet separator()}
+	<Breadcrumb.Separator>
+		<Slash />
+	</Breadcrumb.Separator>
 {/snippet}

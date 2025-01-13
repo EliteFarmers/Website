@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { cn } from '$lib/utils';
 	import * as Sidebar from '$ui/sidebar';
 	import type { Component } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';

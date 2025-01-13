@@ -1,20 +1,20 @@
 import { page } from '$app/state';
-import { getContext, setContext, untrack, type Component } from 'svelte';
+import { getContext, setContext, untrack, type Component, type Snippet } from 'svelte';
 import Home from 'lucide-svelte/icons/home';
 
+interface CrumbBase {
+	name?: string;
+	href?: string;
+	icon?: Component;
+	snippet?: Snippet;
+	dropdown?: Omit<CrumbBase, 'dropdown'>[];
+	data?: Record<string, string | undefined>;
+}
+
 export type Crumb =
-	| {
-			name: string;
-			href?: string;
-			icon?: Component;
-			dropdown?: Omit<Crumb, 'dropdown'>[];
-	  }
-	| {
-			name?: string;
-			href?: string;
-			icon: Component;
-			dropdown?: Omit<Crumb, 'dropdown'>[];
-	  };
+	| (CrumbBase & { name: string })
+	| (CrumbBase & { icon: Component })
+	| (CrumbBase & { snippet: Snippet<[Crumb | Omit<CrumbBase, 'dropdown'>]> });
 
 const home = {
 	icon: Home as unknown as Component,
