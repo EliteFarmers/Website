@@ -8,6 +8,7 @@
 	import cn from 'classnames';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import { Debounced } from 'runed';
 
 	let {
 		open = $bindable(false),
@@ -21,7 +22,6 @@
 
 	async function search(query: string) {
 		if (!browser) return [];
-
 		try {
 			const results = await fetch(`/api/search?q=${query}`);
 			const json = await results.json();
@@ -38,10 +38,11 @@
 	}
 
 	let searchStr = $state('');
+	const debounced = new Debounced(() => searchStr, 100);
 	let players = $state([] as string[]);
 
 	$effect(() => {
-		search(searchStr);
+		search(debounced.current);
 	});
 </script>
 

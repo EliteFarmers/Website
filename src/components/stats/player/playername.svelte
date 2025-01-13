@@ -17,10 +17,9 @@
 	});
 	let plus = $derived(rank?.plus ?? undefined);
 	let plusColor = $derived(rank?.plusColor);
-	let activeMembers = $derived(members?.filter((m) => m?.active) ?? []);
 </script>
 
-<Popover.Mobile hasContent={activeMembers.length > 0}>
+<Popover.Mobile hasContent={members && members.length > 0}>
 	{#snippet trigger()}
 		<div class="rounded-md bg-primary-foreground p-2" id="playerName">
 			<h1 class="text-2xl md:text-3xl">
@@ -35,9 +34,9 @@
 			</h1>
 		</div>
 	{/snippet}
-	{#if activeMembers.length > 0}
+	{#if members?.length}
 		<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
-			{#each activeMembers ?? [] as member}
+			{#each members ?? [] as member}
 				<a
 					href={`/@${member.uuid}/${profileId}`}
 					class="flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"

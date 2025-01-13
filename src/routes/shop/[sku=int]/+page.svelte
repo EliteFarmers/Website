@@ -19,6 +19,7 @@
 	import Badge from '$comp/stats/badge.svelte';
 	import Package from 'lucide-svelte/icons/package';
 	import Info from 'lucide-svelte/icons/info';
+	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -29,6 +30,13 @@
 	let product = $derived(data.product);
 	let badge = $derived(data.badges.find((b) => b.id === product.features?.badgeId));
 	let isFree = $derived(!product.price || product.price === 0);
+
+	const crumbs = $derived<Crumb[]>([{ name: 'Shop', href: '/shop' }, { name: product.name }]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head title="Shop" description="Help support development with cosmetics!" />

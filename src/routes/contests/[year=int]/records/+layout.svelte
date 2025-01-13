@@ -3,6 +3,7 @@
 	import Head from '$comp/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getTimeStamp } from '$lib/format';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -11,6 +12,25 @@
 	let { children }: Props = $props();
 
 	let year = $derived(+page.params.year);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Contests',
+			href: '/contests',
+		},
+		{
+			name: 'Year ' + year,
+			href: '/contests/' + year,
+		},
+		{
+			name: 'Records',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />

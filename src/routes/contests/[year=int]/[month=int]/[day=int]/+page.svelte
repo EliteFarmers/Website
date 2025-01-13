@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { getReadableSkyblockDate } from '$lib/format';
+	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
 	import type { PageData } from './$types';
 
 	import Head from '$comp/head.svelte';
 	import { page } from '$app/state';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
+	import { SkyBlockTime } from 'farming-weight';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -14,6 +16,30 @@
 
 	let contests = $derived(data.contests);
 	let timestamp = $derived(data.timestamp);
+	let date = $derived(new SkyBlockTime((timestamp ?? 0) * 1000));
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Contests',
+			href: '/contests',
+		},
+		{
+			name: 'Year ' + date.year,
+			href: '/contests/' + date.year,
+		},
+		{
+			name: date.monthName as string,
+			href: `/contests/${date.year}/${date.month}`,
+		},
+		{
+			name: appendOrdinalSuffix(date.day),
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head

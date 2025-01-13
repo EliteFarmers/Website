@@ -15,6 +15,7 @@
 	import Crown from 'lucide-svelte/icons/crown';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -109,6 +110,25 @@
 			(w) => ({ value: w.replaceAll(' ', '_'), label: w })
 		)
 	);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Events',
+			href: '/browse',
+		},
+		{
+			name: event.name,
+			href: `/event/${page.params.event}`,
+		},
+		{
+			name: 'Membership',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <div class="flex flex-col items-center justify-center gap-4">
