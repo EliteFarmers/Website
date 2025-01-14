@@ -69,10 +69,10 @@
 				type,
 				crops.length === 0
 					? Object.values(jacob?.stats?.crops ?? {}).reduce(
-							(sum, stat) => sum + ((stat.medals as any)?.[type] ?? 0),
+							(sum, stat) => sum + ((stat.medals as Record<typeof type, number>)?.[type] ?? 0),
 							0
 						)
-					: crops.reduce((sum, c) => sum + ((allCropStats(c).medals as any)?.[type] ?? 0), 0),
+					: crops.reduce((sum, c) => sum + ((allCropStats(c).medals as Record<typeof type, number>)?.[type] ?? 0), 0),
 			])
 		),
 	});
