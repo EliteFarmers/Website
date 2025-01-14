@@ -52,7 +52,7 @@
 											target={item.external ? '_blank' : undefined}
 											data-active={page.url.pathname === item.href}
 										>
-											<span class="leading-none">{item.title}</span>
+											<span class="leading-none">{item.name}</span>
 											{#if item.external}
 												<ExternalLink size={14} class="mt-0.5" />
 											{/if}

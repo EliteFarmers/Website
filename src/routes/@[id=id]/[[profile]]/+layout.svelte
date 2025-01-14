@@ -33,7 +33,7 @@
 	}
 </script>
 
-<NavCrumbs account={data.account} profile={data.profile} />
+<NavCrumbs account={data.account} profile={data.profile} profiles={data.profiles} />
 
 <div class="m-0 w-full p-0">
 	<PlayerInfo

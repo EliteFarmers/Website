@@ -18,9 +18,9 @@
 	}
 
 	const sizes = {
-		sm: 'size-4',
-		md: 'size-6',
-		lg: 'size-8',
+		sm: 'size-4 rounded-[0.12rem]',
+		md: 'size-6 rounded-sm',
+		lg: 'size-8 rounded-sm',
 	};
 </script>
 
@@ -29,8 +29,8 @@
 		src="https://mc-heads.net/avatar/{uuid}"
 		alt="Player Head"
 		{onerror}
-		class="aspect-square rounded-sm {sizes[size]}"
+		class="aspect-square {sizes[size]} pixelated"
 	/>
 {:else}
-	<User class="aspect-square rounded-sm {sizes[size]}" />
+	<User class="aspect-square {sizes[size]}" />
 {/if}

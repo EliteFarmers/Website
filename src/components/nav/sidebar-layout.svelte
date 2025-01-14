@@ -8,7 +8,7 @@
 
 	interface Props {
 		title: string;
-		navItems: { title: string; href: string; external?: boolean }[];
+		navItems: { name: string; href: string; external?: boolean }[];
 		children?: import('svelte').Snippet;
 	}
 
@@ -39,14 +39,14 @@
 						variant="outline"
 					>
 						<ArrowLeft class="mt-0.5 h-4 w-4" />
-						{previous.title}
+						{previous.name}
 					</Button>
 				{:else}
 					<div></div>
 				{/if}
 				{#if next}
 					<Button href={next.href} class="flex flex-row items-center gap-1 leading-none" variant="outline">
-						{next.title}
+						{next.name}
 						<ArrowRight class="mt-0.5 h-4 w-4" />
 					</Button>
 				{/if}

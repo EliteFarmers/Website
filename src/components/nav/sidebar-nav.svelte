@@ -29,7 +29,7 @@
 								)}
 								data-active={page.url.pathname === item.href}
 							>
-								{item.title}
+								{item.name}
 								{#if item.external}
 									<ExternalLink size={14} class="mt-0.5" />
 								{/if}

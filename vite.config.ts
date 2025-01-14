@@ -1,14 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 import path from 'path';
 
-/** @type {import('vite').UserConfig} */
-const config = {
+export default defineConfig({
 	plugins: [sveltekit()],
 	ssr: {
-		noExternal: process.env.NODE_ENV === 'production' ? ['apexcharts'] : []
-	},
-	optimizeDeps: {
-		include: ['lucide-svelte']
+		noExternal: process.env.NODE_ENV === 'production' ? ['apexcharts'] : [],
 	},
 	resolve: {
 		alias: {
@@ -20,6 +17,4 @@ const config = {
 			$params: path.resolve('./src/params'),
 		},
 	},
-};
-
-export default config;
+});
