@@ -17,6 +17,7 @@
 	import ModeToggle from '$comp/header/mode-toggle.svelte';
 	import NavBreadcrumb from '$comp/sidebar/nav-breadcrumb.svelte';
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -29,6 +30,7 @@
 	initRatesData();
 	initShowLeaderboardName();
 	initBreadcrumb();
+	initSidebarNav();
 
 	if (browser) {
 		mode.subscribe((value) => {

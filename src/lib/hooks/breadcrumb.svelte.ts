@@ -5,15 +5,15 @@ import Home from 'lucide-svelte/icons/home';
 interface CrumbBase {
 	name?: string;
 	href?: string;
-	icon?: Component;
+	icon?: Component | unknown;
 	snippet?: Snippet;
 	dropdown?: Omit<CrumbBase, 'dropdown'>[];
-	data?: Record<string, string | undefined>;
+	data?: Record<string, string | undefined | boolean | number>;
 }
 
 export type Crumb =
 	| (CrumbBase & { name: string })
-	| (CrumbBase & { icon: Component })
+	| (CrumbBase & { icon: Component | unknown })
 	| (CrumbBase & { snippet: Snippet<[Crumb | Omit<CrumbBase, 'dropdown'>]> });
 
 const home = {
@@ -66,7 +66,6 @@ export class Breadcrumb {
 	}
 
 	setOverride(crumbs: Crumb[], useHome = true) {
-		console.log('setOverride', crumbs);
 		this.#override = useHome ? [home, ...crumbs] : crumbs;
 		this.#overridePath = page.url.pathname;
 	}

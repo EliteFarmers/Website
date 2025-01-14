@@ -2,6 +2,7 @@
 	import TreePalm from 'lucide-svelte/icons/tree-palm';
 	import Recycle from 'lucide-svelte/icons/recycle';
 	import Dices from 'lucide-svelte/icons/dices';
+	import MapPin from 'lucide-svelte/icons/map-pin';
 </script>
 
 <script lang="ts">
@@ -24,9 +25,10 @@
 		class?: string;
 		gameMode?: ProfileGameMode;
 		popover?: boolean;
+		map?: boolean;
 	}
 
-	let { class: classes = '', gameMode = 'classic', popover = true }: Props = $props();
+	let { class: classes = '', gameMode = 'classic', popover = true, map = false }: Props = $props();
 </script>
 
 {#if popover}
@@ -44,10 +46,12 @@
 {/if}
 
 {#snippet trigger()}
-	<span class={classes}>
+	<span>
 		{#if icons[gameMode]}
 			{@const Icon = icons[gameMode] as Component}
-			<Icon />
+			<Icon class={classes} />
+		{:else if map}
+			<MapPin class={classes} />
 		{/if}
 	</span>
 {/snippet}
