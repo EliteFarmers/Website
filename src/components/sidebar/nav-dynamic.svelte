@@ -1,0 +1,121 @@
+<script lang="ts">
+	import * as Collapsible from '$comp/ui/collapsible/index.js';
+	import * as Sidebar from '$comp/ui/sidebar/index.js';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import type { Component } from 'svelte';
+
+	let {
+		items,
+		title = 'Group',
+	}: {
+		items: Crumb[];
+		title: string;
+	} = $props();
+
+	const sidebar = Sidebar.useSidebar();
+</script>
+
+<Sidebar.Group data-sveltekit-preload-data="tap">
+	<Collapsible.Root open={true} class="group/collapsible">
+		{#snippet child({ props })}
+			<Sidebar.MenuItem {...props}>
+				<Collapsible.Trigger>
+					{#snippet child({ props })}
+						<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
+							{#snippet tooltipContent()}
+								{title}
+							{/snippet}
+							{#if !sidebar.open}
+								<ChevronRight
+									class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+								/>
+							{/if}
+							<span>{title}</span>
+							<ChevronRight
+								class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+							/>
+						</Sidebar.MenuButton>
+					{/snippet}
+				</Collapsible.Trigger>
+				<Collapsible.Content>
+					<Sidebar.Menu>
+						{#each items as mainItem, i}
+							{@render content(mainItem, i === items.length - 1)}
+						{/each}
+					</Sidebar.Menu>
+				</Collapsible.Content>
+			</Sidebar.MenuItem>
+		{/snippet}
+	</Collapsible.Root>
+</Sidebar.Group>
+
+{#snippet content(crumb: Crumb | Omit<Crumb, 'dropdown'>, open = false, drop = true)}
+	{@const hasDrop = 'dropdown' in crumb && crumb.dropdown?.length}
+	{#if drop && 'dropdown' in crumb && crumb.dropdown?.length}
+		<Collapsible.Root {open} class="group/subcollapsible">
+			<Sidebar.MenuItem class="px-0">
+				<Collapsible.Trigger>
+					{#snippet child({ props })}
+						<Sidebar.MenuButton {...props}>
+							{@render inner(crumb)}
+							{#snippet tooltipContent()}
+								{crumb.name}
+							{/snippet}
+							<ChevronRight
+								class="ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
+							/>
+						</Sidebar.MenuButton>
+					{/snippet}
+					<!-- <ChevronDown class="size-4" /> -->
+				</Collapsible.Trigger>
+				<Collapsible.Content>
+					<Sidebar.MenuSub>
+						{#each crumb.dropdown as item (item)}
+							<Sidebar.MenuSubItem>
+								{@render content(item, false, false)}
+							</Sidebar.MenuSubItem>
+						{/each}
+					</Sidebar.MenuSub>
+				</Collapsible.Content>
+			</Sidebar.MenuItem>
+		</Collapsible.Root>
+	{:else}
+		<Sidebar.MenuItem>
+			{#if crumb.href && !hasDrop}
+				{@render link(crumb)}
+			{:else}
+				<Sidebar.MenuButton class="truncate first-letter:capitalize md:max-w-none">
+					{@render inner(crumb)}
+				</Sidebar.MenuButton>
+			{/if}
+		</Sidebar.MenuItem>
+	{/if}
+{/snippet}
+
+{#snippet inner(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+	{#if crumb.icon}
+		{@const Icon = crumb.icon as Component}
+		<Icon class="size-4" {...crumb.data} />
+	{/if}
+	{#if crumb.snippet}
+		{@render crumb.snippet(crumb)}
+	{:else if crumb.name}
+		<span class="max-w-28 truncate first-letter:capitalize">
+			{crumb.name}
+		</span>
+	{/if}
+{/snippet}
+
+{#snippet link(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+	<Sidebar.MenuButton>
+		{#snippet tooltipContent()}
+			{crumb.name}
+		{/snippet}
+		{#snippet child({ props })}
+			<a href={crumb.href} {...props}>
+				{@render inner(crumb)}
+			</a>
+		{/snippet}
+	</Sidebar.MenuButton>
+{/snippet}

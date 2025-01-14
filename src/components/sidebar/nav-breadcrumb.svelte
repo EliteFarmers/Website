@@ -11,6 +11,7 @@
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { buttonVariants } from '$ui/button';
 	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
+	import type { Component } from 'svelte';
 
 	const crumbs = getBreadcrumb();
 	let open = $state(false);
@@ -91,14 +92,9 @@
 						<Drawer.Title>Navigate to</Drawer.Title>
 						<Drawer.Description>Select a page to navigate to.</Drawer.Description>
 					</Drawer.Header>
-					<div class="grid gap-1 px-4">
+					<div class="grid gap-4 px-4">
 						{#each crumbs as item (item)}
-							<a
-								href={item.href ? item.href : '#'}
-								class="rounded-sm border-2 p-1 text-sm first-letter:capitalize"
-							>
-								{item.name}
-							</a>
+							{@render content(item)}
 						{/each}
 					</div>
 					<Drawer.Footer class="pt-4">
@@ -118,7 +114,7 @@
 				{@render content(crumb, false)}
 				<ChevronDown class="size-4" />
 			</DropdownMenu.Trigger>
-			<DropdownMenu.Content>
+			<DropdownMenu.Content align="start">
 				<ScrollArea orientation="vertical" class="flex max-h-48 flex-col overflow-y-auto">
 					{#each crumb.dropdown as item (item)}
 						<DropdownMenu.Item>
@@ -141,12 +137,15 @@
 
 {#snippet inner(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	{#if crumb.icon}
-		<crumb.icon class="size-4" />
+		{@const Icon = crumb.icon as Component}
+		<Icon class="size-4" {...crumb.data} />
 	{/if}
 	{#if crumb.snippet}
 		{@render crumb.snippet(crumb)}
 	{:else if crumb.name}
-		{crumb.name}
+		<span class="max-w-28 truncate first-letter:capitalize">
+			{crumb.name}
+		</span>
 	{/if}
 {/snippet}
 

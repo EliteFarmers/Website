@@ -13,9 +13,13 @@
 	import { ScrollArea } from '$ui/scroll-area';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import { cn } from '$lib/utils';
+	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import NavDynamic from './nav-dynamic.svelte';
 
 	let { ref = $bindable(null), collapsible = 'icon', ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 	let searchOpen = $state(false);
+
+	const sidebarNav = getSidebarNav();
 </script>
 
 <Sidebar.Root bind:ref {collapsible} {...restProps} class="z-50">
@@ -43,10 +47,12 @@
 			</Sidebar.MenuButton>
 			<SearchMenu bind:open={searchOpen} useButton={false} />
 		</Sidebar.MenuItem>
-		<!-- <TeamSwitcher teams={data.teams} /> -->
 	</Sidebar.Header>
 	<ScrollArea class="h-full">
-		<Sidebar.Content>
+		<Sidebar.Content class="gap-0">
+			{#if sidebarNav.current.length}
+				<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
+			{/if}
 			<NavMain items={SIDEBAR_NAV} title="Main" icon={Home} />
 		</Sidebar.Content>
 	</ScrollArea>
