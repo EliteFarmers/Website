@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import FileChartColumn from 'lucide-svelte/icons/file-chart-column';
 	import ChartColumn from 'lucide-svelte/icons/chart-column';
-	import Flower from 'lucide-svelte/icons/flower';
+	import Sprout from 'lucide-svelte/icons/sprout';
 	import ChartArea from 'lucide-svelte/icons/chart-area';
 	import Ticket from 'lucide-svelte/icons/ticket';
 </script>
@@ -13,16 +13,18 @@
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { page } from '$app/state';
-	import type { ProfileGameMode } from '$lib/api/elite';
+	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 
 	interface Props {
 		account: components['schemas']['MinecraftAccountDto'];
 		profile: components['schemas']['ProfileDetailsDto'];
+		profiles: ProfileDetails[];
 	}
 
-	let { account, profile }: Props = $props();
+	let { account, profile, profiles }: Props = $props();
 
 	const otherMembers = $derived(profile.members?.filter((m) => m.uuid !== account?.id && m.active) ?? []);
+	const otherProfiles = $derived(profiles?.filter((p) => p.id !== profile?.profileId) ?? []);
 
 	let path = $derived(`/@${account?.name}/${profile?.profileName}`);
 
@@ -44,7 +46,7 @@
 			href: `${path}/charts`,
 		},
 		{
-			icon: Flower,
+			icon: Sprout,
 			name: 'garden',
 			href: `${path}/garden`,
 		},
@@ -76,11 +78,14 @@
 		},
 		{
 			name: profile?.profileName,
-			dropdown: otherMembers.map((p) => ({
-				name: p.username,
-				href: `/@${account?.name}/${p.username}`,
+			dropdown: otherProfiles?.map((p) => ({
+				name: p.name ?? 'Unknown',
+				href: `/@${account?.name}/${p.name}`,
 				data: {
-					mode: profile.gameMode,
+					mode: p.gameMode,
+					popover: false,
+					class: 'size-4',
+					map: true,
 				},
 				snippet: profileDropdown,
 			})),
@@ -128,11 +133,11 @@
 				class: 'size-4',
 				map: true,
 			},
-			dropdown: otherMembers.map((p) => ({
-				name: p.username,
-				href: `/@${account?.name}/${p.username}`,
+			dropdown: otherProfiles?.map((p) => ({
+				name: p.name ?? 'Unknown',
+				href: `/@${account?.name}/${p.name}`,
 				data: {
-					gameMode: profile.gameMode,
+					gameMode: p.gameMode,
 					popover: false,
 					class: 'size-4',
 					map: true,
@@ -158,12 +163,8 @@
 {#snippet memberDropdown(crumb?: Crumb | Omit<Crumb, 'dropdown'>)}
 	<div class="flex max-w-md flex-row items-center justify-between gap-2">
 		<div class="flex w-full flex-1 flex-row items-center gap-2">
-			<img
-				src="https://mc-heads.net/avatar/{crumb?.data?.uuid ?? ''}"
-				alt="Player Head"
-				class="aspect-square size-6 rounded-sm"
-			/>
-			<span class="font-semibold">{crumb?.name}</span>
+			<PlayerHead uuid={crumb?.data?.uuid?.toString() ?? ''} size="md" />
+			<span>{crumb?.name}</span>
 		</div>
 		{#if crumb?.data?.weight}
 			<span>{(+crumb?.data?.weight).toLocaleString()}</span>
@@ -173,13 +174,9 @@
 
 {#snippet profileDropdown(crumb?: Crumb | Omit<Crumb, 'dropdown'>)}
 	<div class="flex max-w-md flex-row items-center justify-between gap-2">
-		<span class="font-semibold">{crumb?.name}</span>
+		<span>{crumb?.name}</span>
 		{#if crumb?.data?.mode}
-			<Gamemode
-				class="max-size-fit"
-				gameMode={(crumb?.data?.mode ?? 'classic') as ProfileGameMode}
-				popover={false}
-			/>
+			<Gamemode class="size-4" gameMode={(crumb?.data?.mode ?? 'classic') as ProfileGameMode} popover={false} />
 		{/if}
 	</div>
 {/snippet}

@@ -4,6 +4,7 @@
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import type { Component } from 'svelte';
+	import { page } from '$app/state';
 
 	let {
 		items,
@@ -108,7 +109,7 @@
 {/snippet}
 
 {#snippet link(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
-	<Sidebar.MenuButton>
+	<Sidebar.MenuButton data-active={crumb.href === page.url.pathname}>
 		{#snippet tooltipContent()}
 			{crumb.name}
 		{/snippet}

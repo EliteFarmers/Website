@@ -1,5 +1,17 @@
+import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
+import ShieldPlus from 'lucide-svelte/icons/shield-plus';
+import Badge from 'lucide-svelte/icons/badge';
+import Layers from 'lucide-svelte/icons/layers';
+import Package from 'lucide-svelte/icons/package';
+import Palette from 'lucide-svelte/icons/palette';
+import CalendarClock from 'lucide-svelte/icons/calendar-clock';
+import Command from 'lucide-svelte/icons/command';
+import UserPen from 'lucide-svelte/icons/user-pen';
+import Settings from 'lucide-svelte/icons/settings';
+import ServerCog from 'lucide-svelte/icons/server-cog';
+
 export interface NavItem {
-	title: string;
+	name: string;
 	href: string;
 	external?: boolean;
 	auth?: boolean;
@@ -13,45 +25,48 @@ export interface NavGroup {
 
 export const NAV_PAGES = [
 	{
-		title: 'Home',
+		name: 'Home',
 		href: '/',
 	},
 	{
-		title: 'Info',
+		name: 'Info',
 		href: '/info',
 	},
 	{
-		title: 'Browse',
+		name: 'Browse',
 		href: '/browse',
 	},
 	{
-		title: 'Contests',
+		name: 'Contests',
 		href: '/contests',
 	},
 	{
-		title: 'Top Players',
+		name: 'Top Players',
 		href: '/leaderboard',
 	},
 	{
-		title: 'Shop',
+		name: 'Shop',
 		href: '/shop',
 	},
 ] as NavItem[];
 
 export const PROFILE_NAV_PAGES = [
 	{
-		title: 'Overview',
+		icon: UserPen,
+		name: 'Overview',
 		href: '/profile',
 	},
 	{
-		title: 'Settings',
+		icon: Settings,
+		name: 'Settings',
 		href: '/profile/settings',
 	},
 	{
-		title: 'Discord Servers',
+		icon: ServerCog,
+		name: 'Discord Servers',
 		href: '/profile/servers',
 	},
-] as NavItem[];
+] as Crumb[];
 
 export const MOBILE_NAV = [
 	{
@@ -67,7 +82,7 @@ export const MOBILE_NAV = [
 		title: 'Player Profile',
 		items: [
 			{
-				title: 'Login',
+				name: 'Login',
 				href: '/login',
 			},
 		],
@@ -77,19 +92,19 @@ export const MOBILE_NAV = [
 
 export const SHOP_NAV_PAGES = [
 	{
-		title: 'Overview',
+		name: 'Overview',
 		href: '/shop',
 	},
 	{
-		title: 'Premium',
+		name: 'Premium',
 		href: '/shop/premium',
 	},
 	{
-		title: 'Weight Styles',
+		name: 'Weight Styles',
 		href: '/shop/styles',
 	},
 	{
-		title: 'Manage Account',
+		name: 'Manage Account',
 		href: '/profile/settings',
 		auth: true,
 	},
@@ -97,31 +112,38 @@ export const SHOP_NAV_PAGES = [
 
 export const ADMIN_NAV_PAGES = [
 	{
-		title: 'Moderators',
+		icon: ShieldPlus,
+		name: 'Moderators',
 		href: '/admin',
 	},
 	{
-		title: 'Badges',
+		icon: Badge,
+		name: 'Badges',
 		href: '/admin/badges',
 	},
 	{
-		title: 'Categories',
+		icon: Layers,
+		name: 'Categories',
 		href: '/admin/categories',
 	},
 	{
-		title: 'Products',
+		icon: Package,
+		name: 'Products',
 		href: '/admin/products',
 	},
 	{
-		title: 'Styles',
+		icon: Palette,
+		name: 'Styles',
 		href: '/admin/styles',
 	},
 	{
-		title: 'Events',
+		icon: CalendarClock,
+		name: 'Events',
 		href: '/admin/events',
 	},
 	{
-		title: 'Actions',
+		icon: Command,
+		name: 'Actions',
 		href: '/admin/actions',
 	},
-] as NavItem[];
+] as Crumb[];
