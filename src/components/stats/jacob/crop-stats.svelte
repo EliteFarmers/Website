@@ -28,42 +28,53 @@
 	);
 
 	const selectedCrops = getSelectedCrops();
-	const crops = $derived(Object.entries($selectedCrops).filter(([, value]) => value).map(([key]) => key));
-
-	const contests = $derived(
-		crops.length === 0
-			? Object.values(contestsByCrop).flat()
-			: crops.flatMap(c => contestsByCrop[c] ?? [])
+	const crops = $derived(
+		Object.entries($selectedCrops)
+			.filter(([, value]) => value)
+			.map(([key]) => key)
 	);
 
-	const recentContests = $derived(contests?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0)).slice(0, 30) ?? []);
+	const contests = $derived(
+		crops.length === 0 ? Object.values(contestsByCrop).flat() : crops.flatMap((c) => contestsByCrop[c] ?? [])
+	);
+
+	const recentContests = $derived(
+		contests?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0)).slice(0, 30) ?? []
+	);
 
 	const MEDAL_TYPES = ['diamond', 'platinum', 'gold', 'silver', 'bronze'] as const;
 
 	const allCropStats = $derived((crop: string) => {
 		const cropKey = CROP_TO_ELITE_CROP[getCropFromName(crop) ?? Crop.Wheat] as keyof CropStats;
-		return (jacob?.stats?.crops?.[cropKey] ?? {
-			participations: 0,
-			firstPlaceScores: 0,
-			medals: {}
-		});
+		return (
+			jacob?.stats?.crops?.[cropKey] ?? {
+				participations: 0,
+				firstPlaceScores: 0,
+				medals: {},
+			}
+		);
 	});
 
 	const selectedCropsStats = $derived({
-		participations: crops.length === 0
-			? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + (stat.participations ?? 0), 0)
-			: crops.reduce((sum, c) => sum + (allCropStats(c).participations ?? 0), 0),
-		firstPlaceScores: crops.length === 0
-			? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + (stat.firstPlaceScores ?? 0), 0)
-			: crops.reduce((sum, c) => sum + (allCropStats(c).firstPlaceScores ?? 0), 0),
+		participations:
+			crops.length === 0
+				? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + (stat.participations ?? 0), 0)
+				: crops.reduce((sum, c) => sum + (allCropStats(c).participations ?? 0), 0),
+		firstPlaceScores:
+			crops.length === 0
+				? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + (stat.firstPlaceScores ?? 0), 0)
+				: crops.reduce((sum, c) => sum + (allCropStats(c).firstPlaceScores ?? 0), 0),
 		medals: Object.fromEntries(
-			MEDAL_TYPES.map(type => [
+			MEDAL_TYPES.map((type) => [
 				type,
 				crops.length === 0
-					? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + ((stat.medals as any)?.[type] ?? 0), 0)
-					: crops.reduce((sum, c) => sum + ((allCropStats(c).medals as any)?.[type] ?? 0), 0)
+					? Object.values(jacob?.stats?.crops ?? {}).reduce(
+							(sum, stat) => sum + ((stat.medals as any)?.[type] ?? 0),
+							0
+						)
+					: crops.reduce((sum, c) => sum + ((allCropStats(c).medals as any)?.[type] ?? 0), 0),
 			])
-		)
+		),
 	});
 
 	onMount(() => {
@@ -74,7 +85,7 @@
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center gap-4">
-	<CropSelector/>
+	<CropSelector />
 
 	<div class="flex flex-col items-center justify-center gap-4">
 		<div class="flex flex-col items-center gap-2">
@@ -82,13 +93,15 @@
 			<div class="flex flex-wrap gap-2">
 				<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
 					<span
-						><span class="text-lg font-semibold">{selectedCropsStats.participations?.toLocaleString()}</span> Participations</span
+						><span class="text-lg font-semibold">{selectedCropsStats.participations?.toLocaleString()}</span
+						> Participations</span
 					>
 				</div>
 				<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
 					<span
-						><span class="text-lg font-semibold">{selectedCropsStats.firstPlaceScores?.toLocaleString()}</span> First
-						Place Scores</span
+						><span class="text-lg font-semibold"
+							>{selectedCropsStats.firstPlaceScores?.toLocaleString()}</span
+						> First Place Scores</span
 					>
 				</div>
 			</div>
