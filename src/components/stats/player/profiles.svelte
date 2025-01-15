@@ -37,6 +37,14 @@
 						<span class="font-normal">{pId.weight.toLocaleString()}</span>
 					</a>
 				{/each}
+				<div class="flex flex-row justify-between gap-4 rounded-sm bg-muted p-2 text-xl">
+					<span class="font-semibold">Total Weight</span>
+					<span class="font-normal">
+						{(
+							profiles.reduce((sum, profile) => sum + profile.weight, 0) + selected.weight
+						).toLocaleString()}
+					</span>
+				</div>
 			</div>
 		{/if}
 	</Popover.Mobile>
