@@ -6,8 +6,18 @@
 	import type { PageData } from './$types';
 	import * as Accordion from '$ui/accordion';
 	import { Switch } from '$ui/switch';
+	import { Button } from '$ui/button';
 
 	let timeType = $state(false);
+	let accordionValues = $state<string[]>([]);
+
+	function expandAll() {
+		accordionValues = Object.keys(data.years ?? {}).map(year => `${year} `);
+	}
+
+	function collapseAll() {
+		accordionValues = [];
+	}
 
 	interface Props {
 		data: PageData;
@@ -41,7 +51,16 @@
 			</div>
 		</div>
 
-		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center">
+		<div class="mb-4 flex gap-4">
+			<Button onclick={expandAll}>
+				Expand All
+			</Button>
+			<Button onclick={collapseAll}>
+				Collapse All
+			</Button>
+		</div>
+
+		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center" value={accordionValues}>
 			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
 				<Accordion.Item value="{year} ">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">
