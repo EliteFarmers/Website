@@ -47,8 +47,8 @@
 		<div class="flex flex-col items-start gap-1">
 			<div>
 				<div>
-					<a 
-						href="/contest/{pbData.timestamp}" 
+					<a
+						href="/contest/{pbData.timestamp}"
 						class="text-lg font-semibold leading-none no-underline hover:underline"
 					>
 						{pbData.amount?.toLocaleString() ?? 'Not Set!'}
