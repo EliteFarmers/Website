@@ -16,7 +16,7 @@
 		crop?: string;
 	}
 
-	let { jacob, crop: initalCrop = 'Wheat' }: Props = $props();
+	let { jacob, crop: initialCrop = 'Wheat' }: Props = $props();
 
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
@@ -76,8 +76,8 @@
 	});
 
 	type ReducedCropStats = {
-		participations: number;
-		firstPlaceScores: number;
+		participations: 0;
+		firstPlaceScores: 0;
 		medals: Record<(typeof MEDAL_TYPES)[number], number>;
 	};
 
@@ -109,8 +109,8 @@
 	);
 
 	onMount(() => {
-		if (initalCrop) {
-			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [initalCrop]: true });
+		if (initialCrop) {
+			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [initialCrop]: true });
 		}
 	});
 </script>
@@ -141,10 +141,7 @@
 			<p class="text-md mb-1 leading-none">Sort By</p>
 			<Select.Simple
 				class="md:w-48"
-				value={sortBy}
-				change={(value) => {
-					sortBy = value ?? 'recent';
-				}}
+				bind:value={sortBy}
 				options={[
 					{
 						value: 'recent',
