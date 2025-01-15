@@ -4,7 +4,6 @@
 	import Product from '$comp/monetization/product.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
-	import { ArrowDown, ArrowUp } from 'lucide-svelte';
 	import { invalidateAll } from '$app/navigation';
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
@@ -12,6 +11,7 @@
 	import type { PageData, ActionData } from './$types';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import BadgeConfig from './badge-config.svelte';
 
 	interface Props {
 		data: PageData;
@@ -231,7 +231,6 @@
 			<p class="mb-16">You don't have any badges yet!</p>
 		{/if}
 		{#each badges as profile (profile.uuid)}
-			{@const length = profile.badges?.length ?? 0}
 			<form
 				action="?/updateBadges"
 				method="post"
@@ -248,53 +247,9 @@
 				}}
 			>
 				<h3 class="mt-4 text-xl">Badges for {profile.name}</h3>
-				{#each profile?.badges ?? [] as badge, i (badge.id ?? i)}
-					{@const id = badge.id ?? ''}
-					<div class="flex flex-row items-center gap-4">
-						<input type="hidden" name="badge.{id}" value={id} />
-						<input type="hidden" name="badge.{id}.order" value={i} />
-						<Switch name="badge.{id}.visible" checked={badge.visible ?? false} />
-						{#if badge.image?.url}
-							<img
-								src={badge.image.url}
-								alt={badge.name}
-								class="w-18 h-6 rounded-sm object-cover md:h-8 md:w-24"
-							/>
-						{/if}
-						<div class="flex flex-row gap-1">
-							<Button
-								size="sm"
-								disabled={i === 0 || length === 1}
-								onclick={() => {
-									const newOrder = Math.max(i - 1, 0);
-									const old = profile.badges?.find((b) => b.order === newOrder);
-									if (old) old.order = i;
-									badge.order = newOrder;
-									badges = badges;
-								}}
-							>
-								<ArrowUp size={16} />
-							</Button>
-							<Button
-								size="sm"
-								disabled={i === length - 1 || length === 1}
-								onclick={() => {
-									const newOrder = Math.min(i + 1, length);
-									const old = profile.badges?.find((b) => b.order === newOrder);
-									if (old) old.order = i;
-									badge.order = newOrder;
-									badges = badges;
-								}}
-							>
-								<ArrowDown size={16} />
-							</Button>
-						</div>
-						<div class="flex max-w-md flex-1 flex-col gap-1">
-							<p class="text-lg font-semibold">{badge.name}</p>
-							<p>{badge.description}</p>
-						</div>
-					</div>
-				{/each}
+
+				<BadgeConfig badges={profile.badges ?? []} />
+
 				<input type="hidden" name="uuid" value={profile.uuid} />
 				<Button type="submit" class="max-w-fit" disabled={loading}>Update Badges</Button>
 			</form>

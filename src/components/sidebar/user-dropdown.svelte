@@ -35,9 +35,9 @@
 						<UserRound class="size-4" />
 					{/if}
 				</Avatar.Root>
-				<div class="grid flex-1 text-left text-sm leading-tight">
+				<div class="grid flex-1 text-left text-sm">
 					{#if user}
-						<span class="truncate font-semibold">{user.ign ?? user.username}</span>
+						<span class="truncate font-semibold">{user.ign || user.username}</span>
 						{#if user.ign && user.username}
 							<span class="truncate text-xs">{user.username}</span>
 						{/if}
@@ -62,7 +62,7 @@
 						<UserIcon {user} class="aspect-square" />
 					</Avatar.Root>
 					<div class="grid flex-1 text-left text-sm leading-tight">
-						<span class="truncate font-semibold">{user.ign ?? user.username}</span>
+						<span class="truncate font-semibold">{user.ign || user.username}</span>
 						{#if user.ign && user.username}
 							<span class="truncate text-xs">{user.username}</span>
 						{/if}

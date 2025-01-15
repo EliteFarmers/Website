@@ -15,4 +15,6 @@
 	});
 </script>
 
-{@render children?.()}
+<div class="mx-4 md:mx-8">
+	{@render children?.()}
+</div>
