@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import CropSelector from '../contests/crop-selector.svelte';
+	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
-	import CropMedalCounts from './crop-medal-counts.svelte';
+	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
 	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
 	import { Crop, getCropFromName } from 'farming-weight';
 	import { onMount } from 'svelte';
-	import ContestList from './contest-list.svelte';
+	import ContestList from '$comp/stats/jacob/contest-list.svelte';
 
 	type CropStats = components['schemas']['JacobDataDto']['stats'];
 
