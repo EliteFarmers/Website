@@ -7,10 +7,10 @@
 
 	interface Props {
 		contests: NonNullable<components['schemas']['JacobDataDto']['contests']>;
-		remining?: number;
+		remaining?: number;
 	}
 
-	let { contests, remining = 0 }: Props = $props();
+	let { contests, remaining = 0 }: Props = $props();
 </script>
 
 <ScrollArea orientation="vertical" class="h-96">
@@ -19,10 +19,10 @@
 			<Contest {contest} class="" />
 		{/each}
 	</div>
-	{#if remining > 0}
+	{#if remaining > 0}
 		<div class="mt-4 flex flex-col items-center justify-center gap-2">
 			<p>
-				<span class="text-lg font-semibold">{remining.toLocaleString()}</span>
+				<span class="text-lg font-semibold">{remaining.toLocaleString()}</span>
 				<span>not shown</span>
 			</p>
 			<Button href={page.url.pathname + '/contests'} variant="outline">View All</Button>
