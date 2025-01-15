@@ -16,6 +16,7 @@
 	import { enhance } from '$app/forms';
 	import Settings from 'lucide-svelte/icons/settings-2';
 	import type { PageData, ActionData } from './$types';
+	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -41,6 +42,26 @@
 	let newColor = $state('');
 	let isThumbnail = $state(false);
 	let cosmeticId = $state('');
+
+	let crumbs = $derived<Crumb[]>([
+		{
+			name: 'Admin',
+			href: '/admin',
+		},
+		{
+			name: 'Products',
+			href: '/admin/products',
+		},
+		{
+			name: product.name ?? 'Product',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head title="Product" description="Manage product" />

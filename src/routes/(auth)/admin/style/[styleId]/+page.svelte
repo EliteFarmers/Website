@@ -15,6 +15,7 @@
 	import X from 'lucide-svelte/icons/x';
 	import { pending } from '$lib/utils';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -48,6 +49,26 @@
 	let styleDataObj = $derived({
 		...untrack(() => data.style),
 		data: JSON.parse(styleData),
+	});
+
+	let crumbs = $derived<Crumb[]>([
+		{
+			name: 'Admin',
+			href: '/admin',
+		},
+		{
+			name: 'Styles',
+			href: '/admin/styles',
+		},
+		{
+			name: style.name ?? 'Style',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
 	});
 </script>
 

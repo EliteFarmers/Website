@@ -11,10 +11,15 @@
 	let { uuid, size = 'sm' }: Props = $props();
 
 	let errored = $state(false);
+	let loading = $state(true);
 
 	function onerror() {
 		if (errored) return;
 		errored = true;
+	}
+
+	function onload() {
+		loading = false;
 	}
 
 	const sizes = {
@@ -25,9 +30,14 @@
 </script>
 
 {#if !errored && uuid}
+	{#if loading}
+		<User class="aspect-square {sizes[size]}" />
+	{/if}
 	<img
+		loading="lazy"
 		src="https://mc-heads.net/avatar/{uuid}"
-		alt="Player Head"
+		alt={loading ? '' : 'Player Head'}
+		{onload}
 		{onerror}
 		class="aspect-square {sizes[size]} pixelated"
 	/>

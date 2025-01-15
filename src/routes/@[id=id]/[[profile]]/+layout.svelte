@@ -8,24 +8,45 @@
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { tick, type Snippet } from 'svelte';
 	import NavCrumbs from './nav-crumbs.svelte';
+	import { watch } from 'runed';
+	import { initStatsContext } from '$lib/stores/stats.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
+
+	initStatsContext({
+		account: data.account,
+		selectedProfile: data.profile,
+		profiles: data.profiles,
+		member: data.member,
+		ranks: data.ranks ?? {},
+	});
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
 	let url = $derived(page.url.pathname);
 	const otherMembers = $derived(data.profile?.members?.filter((m) => m.uuid !== data.account?.id && m.active));
 
-	$effect(() => {
-		if (!browser) return;
+	watch.pre(
+		() => data,
+		(data) => {
+			initStatsContext({
+				account: data.account,
+				selectedProfile: data.profile,
+				profiles: data.profiles,
+				member: data.member,
+				ranks: data.ranks ?? {},
+			});
 
-		const current = `${page.params.id}${page.params.profile ? `/${page.params.profile}` : ''}`;
-		const wanted = `${data.account?.name}/${data.profile?.profileName}`;
+			if (!browser) return;
 
-		if (current !== wanted) {
-			let newUrl = page.url.pathname.replace(current, wanted);
-			tick().then(() => replaceState(newUrl, page.state));
+			const current = `${page.params.id}${page.params.profile ? `/${page.params.profile}` : ''}`;
+			const wanted = `${data.account?.name}/${data.profile?.profileName}`;
+
+			if (current !== wanted) {
+				let newUrl = page.url.pathname.replace(current, wanted);
+				tick().then(() => replaceState(newUrl, page.state));
+			}
 		}
-	});
+	);
 
 	function active(path: string) {
 		if (!url.endsWith(path)) return '';

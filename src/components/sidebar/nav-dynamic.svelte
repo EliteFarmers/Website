@@ -54,33 +54,48 @@
 {#snippet content(crumb: Crumb | Omit<Crumb, 'dropdown'>, open = false, drop = true)}
 	{@const hasDrop = 'dropdown' in crumb && crumb.dropdown?.length}
 	{#if drop && 'dropdown' in crumb && crumb.dropdown?.length}
-		<Collapsible.Root {open} class="group/subcollapsible">
-			<Sidebar.MenuItem class="px-0">
-				<Collapsible.Trigger>
-					{#snippet child({ props })}
-						<Sidebar.MenuButton {...props}>
-							{@render inner(crumb)}
-							{#snippet tooltipContent()}
-								{crumb.name}
-							{/snippet}
-							<ChevronRight
-								class="ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
-							/>
-						</Sidebar.MenuButton>
-					{/snippet}
-					<!-- <ChevronDown class="size-4" /> -->
-				</Collapsible.Trigger>
-				<Collapsible.Content>
-					<Sidebar.MenuSub>
-						{#each crumb.dropdown as item (item)}
-							<Sidebar.MenuSubItem>
-								{@render content(item, false, false)}
-							</Sidebar.MenuSubItem>
-						{/each}
-					</Sidebar.MenuSub>
-				</Collapsible.Content>
+		{#if sidebar.state === 'collapsed' && !sidebar.isMobile}
+			<Sidebar.MenuItem>
+				{#if crumb.href && !hasDrop}
+					{@render link(crumb)}
+				{:else}
+					<Sidebar.MenuButton
+						class="truncate first-letter:capitalize md:max-w-none"
+						onclick={() => sidebar.toggle()}
+					>
+						{@render inner(crumb)}
+					</Sidebar.MenuButton>
+				{/if}
 			</Sidebar.MenuItem>
-		</Collapsible.Root>
+		{:else}
+			<Collapsible.Root {open} class="group/subcollapsible">
+				<Sidebar.MenuItem class="px-0">
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Sidebar.MenuButton {...props}>
+								{@render inner(crumb)}
+								{#snippet tooltipContent()}
+									{crumb.name}
+								{/snippet}
+								<ChevronRight
+									class="ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
+								/>
+							</Sidebar.MenuButton>
+						{/snippet}
+						<!-- <ChevronDown class="size-4" /> -->
+					</Collapsible.Trigger>
+					<Collapsible.Content>
+						<Sidebar.MenuSub>
+							{#each crumb.dropdown as item (item)}
+								<Sidebar.MenuSubItem>
+									{@render content(item, false, false)}
+								</Sidebar.MenuSubItem>
+							{/each}
+						</Sidebar.MenuSub>
+					</Collapsible.Content>
+				</Sidebar.MenuItem>
+			</Collapsible.Root>
+		{/if}
 	{:else}
 		<Sidebar.MenuItem>
 			{#if crumb.href && !hasDrop}
