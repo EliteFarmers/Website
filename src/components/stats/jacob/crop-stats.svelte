@@ -37,7 +37,7 @@
 
 	let sortBy = $state<string>('recent');
 
-	const contests = $derived(() => {
+	const contests = $derived.by(() => {
 		let filteredContests =
 			crops.length === 0 ? Object.values(contestsByCrop).flat() : crops.flatMap((c) => contestsByCrop[c] ?? []);
 
@@ -59,7 +59,7 @@
 		});
 	});
 
-	const recentContests = $derived(contests()?.slice(0, 30) ?? []);
+	const recentContests = $derived(contests?.slice(0, 30) ?? []);
 
 	const MEDAL_TYPES = ['diamond', 'platinum', 'gold', 'silver', 'bronze'] as const;
 
@@ -158,6 +158,6 @@
 				]}
 			/>
 		</div>
-		<ContestList contests={recentContests} remaining={Math.max(0, contests().length - recentContests.length)} />
+		<ContestList contests={recentContests} remaining={Math.max(0, contests.length - recentContests.length)} />
 	</div>
 </div>
