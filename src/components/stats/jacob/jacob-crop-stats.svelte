@@ -46,19 +46,14 @@
 
 		<div class="flex flex-col items-start gap-1">
 			<div>
-				<Popover.Mobile>
-					{#snippet trigger()}
-						<a
-							href="/contest/{pbData.timestamp}"
-							class="text-lg font-semibold leading-none no-underline hover:underline"
-						>
-							{pbData.amount?.toLocaleString() ?? 'Not Set!'}
-						</a>
-					{/snippet}
-					<div>
-						<p>The highest placement earned for {crop}!</p>
-					</div>
-				</Popover.Mobile>
+				<div>
+					<a 
+						href="/contest/{pbData.timestamp}" 
+						class="text-lg font-semibold leading-none no-underline hover:underline"
+					>
+						{pbData.amount?.toLocaleString() ?? 'Not Set!'}
+					</a>
+				</div>
 			</div>
 
 			<Popover.Mobile>
