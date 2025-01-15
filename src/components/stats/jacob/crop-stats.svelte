@@ -47,38 +47,47 @@
 	const allCropStats = $derived((crop: string) => {
 		const cropKey = CROP_TO_ELITE_CROP[getCropFromName(crop) ?? Crop.Wheat] as keyof CropStats;
 		return (
-			jacob?.stats?.crops?.[cropKey] ?? {
+			jacob?.stats?.crops?.[cropKey] ??
+			({
 				participations: 0,
 				firstPlaceScores: 0,
 				medals: {},
+			} as components['schemas']['JacobCropStatsDto'])
+		);
+	});
+
+	type ReducedCropStats = {
+		participations: 0;
+		firstPlaceScores: 0;
+		medals: Record<(typeof MEDAL_TYPES)[number], number>;
+	};
+
+	const combineCropStats = $derived((crops: components['schemas']['JacobCropStatsDto'][]) => {
+		return crops.reduce<ReducedCropStats>(
+			(acc, crop) => {
+				acc.participations += crop.participations ?? 0;
+				acc.firstPlaceScores += crop.firstPlaceScores ?? 0;
+
+				MEDAL_TYPES.forEach((type) => {
+					acc.medals[type] ??= 0;
+					acc.medals[type] += (crop.medals as Record<typeof type, number>)?.[type] ?? 0;
+				});
+
+				return acc;
+			},
+			{
+				participations: 0,
+				firstPlaceScores: 0,
+				medals: { diamond: 0, platinum: 0, gold: 0, silver: 0, bronze: 0 },
 			}
 		);
 	});
 
-	const selectedCropsStats = $derived({
-		participations:
-			crops.length === 0
-				? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + (stat.participations ?? 0), 0)
-				: crops.reduce((sum, c) => sum + (allCropStats(c).participations ?? 0), 0),
-		firstPlaceScores:
-			crops.length === 0
-				? Object.values(jacob?.stats?.crops ?? {}).reduce((sum, stat) => sum + (stat.firstPlaceScores ?? 0), 0)
-				: crops.reduce((sum, c) => sum + (allCropStats(c).firstPlaceScores ?? 0), 0),
-		medals: Object.fromEntries(
-			MEDAL_TYPES.map((type) => [
-				type,
-				crops.length === 0
-					? Object.values(jacob?.stats?.crops ?? {}).reduce(
-							(sum, stat) => sum + ((stat.medals as Record<typeof type, number>)?.[type] ?? 0),
-							0
-						)
-					: crops.reduce(
-							(sum, c) => sum + ((allCropStats(c).medals as Record<typeof type, number>)?.[type] ?? 0),
-							0
-						),
-			])
-		),
-	});
+	const selectedCropsStats = $derived(
+		crops.length === 0
+			? combineCropStats(Object.values(jacob?.stats?.crops ?? {}))
+			: combineCropStats(crops.map((c) => allCropStats(c)))
+	);
 
 	onMount(() => {
 		if (initalCrop) {
