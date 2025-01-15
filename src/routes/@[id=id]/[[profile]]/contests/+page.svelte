@@ -56,7 +56,7 @@
 			<Button onclick={collapseAll}>Collapse All</Button>
 		</div>
 
-		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center">
+		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center" value={accordionValues}>
 			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
 				<Accordion.Item value="{year} ">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">
