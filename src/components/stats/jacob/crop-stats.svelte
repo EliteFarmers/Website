@@ -72,7 +72,10 @@
 							(sum, stat) => sum + ((stat.medals as Record<typeof type, number>)?.[type] ?? 0),
 							0
 						)
-					: crops.reduce((sum, c) => sum + ((allCropStats(c).medals as Record<typeof type, number>)?.[type] ?? 0), 0),
+					: crops.reduce(
+							(sum, c) => sum + ((allCropStats(c).medals as Record<typeof type, number>)?.[type] ?? 0),
+							0
+						),
 			])
 		),
 	});
