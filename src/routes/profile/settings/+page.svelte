@@ -8,10 +8,40 @@
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
 	import * as Card from '$ui/card';
+	import * as Carousel from '$ui/carousel';
 	import type { PageData, ActionData } from './$types';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import BadgeConfig from './badge-config.svelte';
+	import type { CarouselAPI } from '$ui/carousel/context.js';
+	import Moon from 'lucide-svelte/icons/moon';
+	import Sun from 'lucide-svelte/icons/sun';
+	import Search from 'lucide-svelte/icons/search';
+	import Menu from 'lucide-svelte/icons/menu';
+	import { setTheme } from 'mode-watcher';
+
+	export const themes = [
+		{ name: 'Default Light', class: 'light', icon: Sun },
+		{ name: 'Default Dark', class: 'dark', icon: Moon },
+	] as const;
+
+	let api = $state<CarouselAPI>();
+
+	const count = $derived(api ? api.scrollSnapList().length : 0);
+	let current = $state(0);
+	let themeName = $state('');
+
+	$effect(() => {
+		if (api) {
+			current = api.selectedScrollSnap() + 1;
+			setTheme(themes[current - 1].class);
+			api.on('select', () => {
+				current = api!.selectedScrollSnap() + 1;
+			});
+			themeName = themes[current - 1].name;
+			//console.log("theme", current-1, ":", themes[current-1])
+		}
+	});
 
 	interface Props {
 		data: PageData;
@@ -254,5 +284,73 @@
 				<Button type="submit" class="max-w-fit" disabled={loading}>Update Badges</Button>
 			</form>
 		{/each}
+
+		<h1 class="mb-10 mt-10 text-2xl">Themes</h1>
+		<div class="flex w-full flex-col items-center justify-center">
+			<Carousel.Root
+				setApi={(emblaApi) => (api = emblaApi)}
+				class="w-full max-w-2xl"
+				opts={{
+					loop: true,
+				}}
+			>
+				<Carousel.Content>
+					{#each themes as theme (theme.name)}
+						<Carousel.Item>
+							<Card.Root>
+								<Card.Content class="flex aspect-video items-center justify-center p-6">
+									<div
+										class={`w-full rounded-lg ${theme.class}`}
+										style="color-scheme: {theme.class === 'dark' ? 'dark' : ''}"
+									>
+										<!-- site "preview" -->
+										<div
+											class="h-full rounded-lg border bg-background p-4 shadow-lg transition-colors"
+										>
+											<!-- nav header -->
+											<div class="mb-4 flex items-center justify-between border-b pb-2">
+												<div class="flex items-center gap-2">
+													<Menu class="h-5 w-5 text-foreground" />
+												</div>
+												<div class="flex items-center gap-2">
+													<div class="flex h-8 items-center rounded-full bg-muted px-3">
+														<Search class="h-4 w-4 text-muted-foreground" />
+														<span class="ml-2 text-sm text-muted-foreground">Search...</span
+														>
+													</div>
+													<svelte:component
+														this={theme.icon}
+														class="h-5 w-5 text-foreground"
+													/>
+												</div>
+											</div>
+											<!-- rest of the "site" -->
+											<div class="space-y-4">
+												<div class="h-4 w-1/2 rounded bg-muted"></div>
+												<div class="h-4 w-1/4 rounded bg-muted"></div>
+												<div class="h-4 w-3/4 rounded bg-muted"></div>
+												<div class="flex gap-2">
+													<div class="h-8 w-8 rounded bg-primary"></div>
+													<div class="h-8 flex-1 rounded bg-muted"></div>
+												</div>
+												<div class="grid grid-cols-2 gap-2">
+													<div class="h-16 rounded bg-muted"></div>
+													<div class="h-16 rounded bg-muted"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</Card.Content>
+							</Card.Root>
+						</Carousel.Item>
+					{/each}
+				</Carousel.Content>
+				<Carousel.Previous />
+				<Carousel.Next />
+			</Carousel.Root>
+			<div class="py-2 text-center text-sm text-muted-foreground">
+				{themeName}
+			</div>
+		</div>
 	</section>
 </div>
