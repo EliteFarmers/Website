@@ -19,6 +19,7 @@
 	import { themes } from '$lib/themes';
 	import Search from 'lucide-svelte/icons/search';
 	import Menu from 'lucide-svelte/icons/menu';
+	import { onMount } from 'svelte';
 
 	let api = $state<CarouselAPI>();
 
@@ -121,6 +122,12 @@
 		{ label: 'Default', value: '' },
 		...unlockedEmbedColors.map((e) => ({ label: e, value: e, color: '#' + e })),
 	]);
+
+	onMount(() => {
+		if (window.location.hash) {
+			document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+		}
+	});
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -282,7 +289,7 @@
 			</form>
 		{/each}
 
-		<h1 class="mb-10 mt-10 text-2xl">Themes</h1>
+		<h1 class="mb-10 mt-10 text-2xl scroll-mt-32" id="themes">Themes</h1>
 		<div class="flex w-full flex-col items-center justify-center">
 			<Carousel.Root
 				setApi={(emblaApi) => (api = emblaApi)}
@@ -330,7 +337,7 @@
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="flex gap-2">
-												<div class="h-9 w-8 px-8 rounded bg-primary hover:bg-accent border border-border"></div>
+												<div class="h-9 w-8 px-8 rounded bg-primary hover:bg-accent border-2 border-border"></div>
 												<div class="h-9 flex-1 rounded bg-muted"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">

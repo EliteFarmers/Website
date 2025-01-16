@@ -11,6 +11,8 @@
 	let currentMode: string | undefined;
 
 	ModeWatcher.mode.subscribe(value => currentMode = value);
+
+	const menuThemes = themes.slice(0, 2);
 </script>
 
 <DropdownMenu.Root>
@@ -27,7 +29,7 @@
 		<span class="sr-only">Toggle theme</span>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
-		{#each themes as theme}
+		{#each menuThemes as theme}
 			<DropdownMenu.Item onclick={() => {
 				ModeWatcher.setMode(theme.class);
 			}}>
@@ -40,5 +42,12 @@
 		<DropdownMenu.Item onclick={() => resetMode()}>
 			<span class="text-destructive">Use System Theme</span>
 		</DropdownMenu.Item>
+		<DropdownMenu.Separator />
+		<DropdownMenu.Item>
+			<a href="/profile/settings#themes" class="flex w-full text-muted-foreground hover:text-foreground">
+				See More Themes
+			</a>
+		</DropdownMenu.Item>
+
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
