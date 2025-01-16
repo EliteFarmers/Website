@@ -10,20 +10,20 @@
 	import * as Popover from '$ui/popover';
 	import type { Component } from 'svelte';
 
-	const icons: Record<ProfileGameMode, unknown | undefined> = {
+	const icons: Record<ProfileGameMode | string, unknown | undefined> = {
 		island: TreePalm,
 		ironman: Recycle,
 		bingo: Dices,
 		classic: undefined,
 	};
 
-	const gameModeRename: Partial<Record<ProfileGameMode, string>> = {
+	const gameModeRename: Partial<Record<ProfileGameMode | string, string>> = {
 		island: 'stranded',
 	};
 
 	interface Props {
 		class?: string;
-		gameMode?: ProfileGameMode;
+		gameMode?: ProfileGameMode | string;
 		popover?: boolean;
 		map?: boolean;
 	}

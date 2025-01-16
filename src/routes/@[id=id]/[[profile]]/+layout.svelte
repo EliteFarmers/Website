@@ -23,7 +23,6 @@
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
 	let url = $derived(page.url.pathname);
-	const otherMembers = $derived(data.profile?.members?.filter((m) => m.uuid !== data.account?.id && m.active));
 
 	watch.pre(
 		() => data,
@@ -57,17 +56,7 @@
 <NavCrumbs account={data.account} profile={data.profile} profiles={data.profiles} />
 
 <div class="m-0 w-full p-0">
-	<PlayerInfo
-		player={data.account?.playerData}
-		members={otherMembers}
-		profileDetails={data.profiles ?? []}
-		linked={data.account?.discordUsername ?? null}
-		weightInfo={data.member?.farmingWeight}
-		weightRank={data.ranks?.misc?.farmingweight ?? -1}
-		skyblockXP={data.member?.skyblockXp ?? 0}
-		skyblockRank={data.ranks?.misc?.skyblockxp ?? -1}
-		badges={data.account?.badges}
-	/>
+	<PlayerInfo />
 
 	<div class="flex flex-row justify-center">
 		{#key url}

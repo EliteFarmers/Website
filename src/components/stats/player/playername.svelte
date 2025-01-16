@@ -1,25 +1,16 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 
-	interface Props {
-		ign: string | null | undefined;
-		rank: { color: string; tag: string; plus?: string; plusColor?: string } | undefined;
-		members: components['schemas']['MemberDetailsDto'][] | undefined;
-		profileId: string;
-	}
-
-	let { ign = $bindable(), rank, members, profileId }: Props = $props();
-
-	$effect.pre(() => {
-		ign = ign ?? page.params.id;
-	});
-	let plus = $derived(rank?.plus ?? undefined);
-	let plusColor = $derived(rank?.plusColor);
+	const ctx = getStatsContext();
+	const ign = $derived(ctx.ign);
+	const rank = $derived(ctx.rank);
+	const plus = $derived(rank?.plus ?? undefined);
+	const plusColor = $derived(rank?.plusColor);
+	const members = $derived((ctx.selectedProfile?.members ?? []).filter((m) => m.active && m.uuid !== ctx.account.id));
 </script>
 
-<Popover.Mobile hasContent={members && members.length > 0}>
+<Popover.Mobile hasContent={members.length > 0}>
 	{#snippet trigger()}
 		<div class="rounded-md bg-primary-foreground p-2" id="playerName">
 			<h1 class="text-2xl md:text-3xl">
@@ -38,7 +29,7 @@
 		<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
 			{#each members ?? [] as member}
 				<a
-					href={`/@${member.uuid}/${profileId}`}
+					href={`/@${member.uuid}/${ctx.selectedProfile?.profileId}`}
 					class="flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"
 				>
 					<span>{member.username}</span>

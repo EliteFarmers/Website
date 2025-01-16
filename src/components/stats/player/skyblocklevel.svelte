@@ -1,17 +1,13 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { SKYBLOCK_LEVEL_COLORS } from '$lib/constants/levels';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 
-	interface Props {
-		xp: number;
-		rank?: number;
-	}
-
-	let { xp, rank = -1 }: Props = $props();
+	const ctx = getStatsContext();
+	const xp = $derived(ctx.member.skyblockXp ?? 0);
+	const rank = $derived(ctx.ranks?.misc?.skyblockxp ?? -1);
 
 	let [, color] = $derived(Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? []);
-	let profile = $derived(page.params.profile);
 </script>
 
 <div
@@ -23,7 +19,7 @@
 			<div>
 				{#if rank !== -1}
 					<a
-						href="/leaderboard/skyblockxp/{page.params.id}-{profile}"
+						href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.profileName}"
 						class="rounded-md bg-card px-1.5 hover:bg-muted"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
