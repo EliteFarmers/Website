@@ -20,8 +20,10 @@
 	}
 
 	function pb(crop: string) {
-		const amount = jacob?.stats?.personalBests?.[crop.replace(' ', '') as keyof typeof jacob.stats.personalBests];
-		return amount ? +amount : undefined;
+		const key = crop.replace(' ', '');
+		const amount = jacob?.stats?.personalBests?.[key as keyof typeof jacob.stats.personalBests];
+		const timestamp = jacob?.stats?.crops?.[key as keyof typeof jacob.stats.crops]?.personalBestTimestamp;
+		return { amount: amount ? +amount : undefined, timestamp: timestamp ? +timestamp : undefined };
 	}
 
 	const medals = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
@@ -32,8 +34,8 @@
 	}
 
 	const unique = $derived(medal(crop));
-	const score = $derived(pb(crop));
-	const ff = $derived(fortune(crop, score ?? 0));
+	const pbData = $derived(pb(crop));
+	const ff = $derived(fortune(crop, pbData?.amount ?? 0));
 </script>
 
 <div
@@ -43,18 +45,12 @@
 		<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
 
 		<div class="flex flex-col items-start gap-1">
-			<div>
-				<Popover.Mobile>
-					{#snippet trigger()}
-						<p class="text-lg font-semibold leading-none">
-							{score?.toLocaleString() ?? 'Not Set!'}
-						</p>
-					{/snippet}
-					<div>
-						<p>The highest placement earned for {crop}!</p>
-					</div>
-				</Popover.Mobile>
-			</div>
+			<a
+				href="/contest/{pbData.timestamp}"
+				class="text-lg font-semibold leading-none no-underline hover:underline"
+			>
+				{pbData.amount?.toLocaleString() ?? 'Not Set!'}
+			</a>
 
 			<Popover.Mobile>
 				{#snippet trigger()}

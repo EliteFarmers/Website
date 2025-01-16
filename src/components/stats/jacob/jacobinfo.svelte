@@ -35,7 +35,7 @@
 </script>
 
 <section class="mx-2 mb-8 flex-col justify-center gap-4 py-4 align-middle" aria-labelledby="Jacob">
-	<h1 id="Jacob" class="pt-2 text-center text-3xl">{ign} &nbsp;-&nbsp; Jacob Stats</h1>
+	<h1 id="Jacob" class="pt-2 text-center text-4xl">{ign} &nbsp;-&nbsp; Jacob Stats</h1>
 
 	<div class="my-8 flex flex-row items-center justify-center">
 		<Cropstats {jacob} />
