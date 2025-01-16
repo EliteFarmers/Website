@@ -4,11 +4,12 @@
 
 <script lang="ts">
 	import * as Command from '$ui/command';
+	import * as Tabs from '$ui/tabs';
 	import { Button, type ButtonProps } from '$ui/button';
 	import cn from 'classnames';
-	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import { Debounced } from 'runed';
+	import { goto } from '$app/navigation';
 
 	let {
 		open = $bindable(false),
@@ -37,6 +38,7 @@
 		cmd();
 	}
 
+	let destination = $state('');
 	let searchStr = $state('');
 	const debounced = new Debounced(() => searchStr, 100);
 	let players = $state([] as string[]);
@@ -61,16 +63,31 @@
 <Command.Dialog bind:open>
 	<Command.Root shouldFilter={false}>
 		<Command.Input placeholder="Search for a player" bind:value={searchStr} />
+		<Tabs.Root class="w-full" bind:value={destination}>
+			<Tabs.List class="flex gap-2 rounded-none bg-background">
+				<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
+				<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
+				<Tabs.Trigger value="/rates" class="data-[state=active]:border-2">Rates</Tabs.Trigger>
+				<Tabs.Trigger value="/contests" class="data-[state=active]:border-2">Contests</Tabs.Trigger>
+				<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
+			</Tabs.List>
+		</Tabs.Root>
 		<Command.List>
 			<Command.Empty>No results found.</Command.Empty>
 			<Command.Group heading="Players">
 				{#if searchStr !== ''}
-					<Command.Item value={searchStr ?? ''} onSelect={() => runCommand(() => goto(`/@${searchStr}`))}>
+					<Command.Item
+						value={searchStr ?? ''}
+						onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
+					>
 						{searchStr}
 					</Command.Item>
 				{/if}
 				{#each players as player, i (i)}
-					<Command.Item value={player ?? ''} onSelect={() => runCommand(() => goto(`/@${player}`))}>
+					<Command.Item
+						value={player ?? ''}
+						onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
+					>
 						{player}
 					</Command.Item>
 				{/each}

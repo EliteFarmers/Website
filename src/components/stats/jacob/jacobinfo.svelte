@@ -2,7 +2,6 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import Cropstats from './cropstats.svelte';
 	import Medals from './medals.svelte';
-	import Recents from './recents.svelte';
 	import Stats from './stats.svelte';
 
 	const ctx = getStatsContext();
@@ -19,9 +18,6 @@
 		<div class="flex-1 lg:max-w-2xl">
 			<Medals />
 			<Stats />
-		</div>
-		<div class="flex-1 lg:max-w-2xl">
-			<Recents />
 		</div>
 	</div>
 </section>

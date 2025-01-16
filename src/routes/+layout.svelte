@@ -15,6 +15,7 @@
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import Header from '$comp/header/header.svelte';
+	import Content from './content.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -56,15 +57,17 @@
 </svelte:head>
 
 <Sidebar.Provider>
-	<AppSidebar />
+	<Sidebar.Root collapsible="icon" class="z-50">
+		<AppSidebar />
+	</Sidebar.Root>
 
 	<Sidebar.Inset>
 		<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="pt-16">
 			<Header />
 
-			<div>
+			<Content>
 				{@render children?.()}
-			</div>
+			</Content>
 
 			<Footer />
 		</ScrollArea>

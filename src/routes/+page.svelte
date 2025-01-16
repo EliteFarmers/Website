@@ -6,7 +6,7 @@
 	import * as Card from '$ui/card';
 	import { Button } from '$ui/button';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-
+	import MainSearch from '$comp/stats/main-search.svelte';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -22,10 +22,16 @@
 />
 
 <div>
-	<h1 class="my-16 text-center text-4xl">Welcome to Elite!</h1>
-	<p class="mb-16 text-center text-lg">View farming stats of any skyblock player!</p>
+	<div class="mb-16 flex flex-col items-center gap-4 lg:gap-8">
+		<div>
+			<h1 class="my-16 text-center text-4xl">Welcome to Elite!</h1>
+			<p class="mb-8 text-center text-lg">View farming stats of any skyblock player!</p>
+		</div>
 
-	<div class="flex w-full flex-col items-center gap-8">
+		<MainSearch class="mx-auto w-full max-w-lg lg:flex-1" />
+	</div>
+
+	<div class="my-8 flex w-full flex-col items-center gap-8">
 		{#if data.eliteGuild}
 			<div class="w-full max-w-3xl">
 				<Serverbar guild={data.eliteGuild} lazy={false} />
