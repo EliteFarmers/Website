@@ -94,19 +94,7 @@
 	</div>
 </section>
 
-<JacobInfo
-	jacob={member.jacob}
-	ign={ctx.ign}
-	ranks={{
-		gold: ctx.ranks?.misc?.goldmedals ?? -1,
-		silver: ctx.ranks?.misc?.silvermedals ?? -1,
-		bronze: ctx.ranks?.misc?.bronzemedals ?? -1,
-		platinum: ctx.ranks?.misc?.platinummedals ?? -1,
-		diamond: ctx.ranks?.misc?.diamondmedals ?? -1,
-		participations: ctx.ranks?.misc?.participations ?? -1,
-		firstPlaces: ctx.ranks?.misc?.firstplace ?? -1,
-	}}
-/>
+<JacobInfo />
 
 <div class="my-8 flex items-center justify-center">
 	<div class="grid max-w-8xl grid-cols-1 items-center justify-center gap-4 lg:grid-cols-2 lg:items-start">

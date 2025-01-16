@@ -1,12 +1,9 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import JacobCropStats from './jacob-crop-stats.svelte';
 
-	interface Props {
-		jacob: components['schemas']['JacobDataDto'] | undefined | null;
-	}
-
-	let { jacob }: Props = $props();
+	const ctx = getStatsContext();
+	const jacob = $derived(ctx.member.jacob);
 
 	let highest = $derived(
 		Object.entries(

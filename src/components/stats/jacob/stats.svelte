@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
-	interface Props {
-		jacob: components['schemas']['JacobDataDto'] | undefined;
-		participationsRank?: number;
-		firstPlacesRank?: number;
-	}
+	const ctx = getStatsContext();
 
-	let { jacob, participationsRank = -1, firstPlacesRank = -1 }: Props = $props();
+	const jacob = $derived(ctx.member.jacob);
+	const participationsRank = $derived(ctx.ranks?.misc?.participations ?? -1);
+	const firstPlacesRank = $derived(ctx.ranks?.misc?.firstPlaces ?? -1);
 
 	let firstPlaces = $derived(jacob?.firstPlaceScores ?? 0);
 
