@@ -10,7 +10,7 @@
 	import { resetMode } from 'mode-watcher';
 	let currentMode: string | undefined;
 
-	ModeWatcher.mode.subscribe(value => currentMode = value);
+	ModeWatcher.mode.subscribe((value) => (currentMode = value));
 
 	const menuThemes = themes.slice(0, 2);
 </script>
@@ -30,9 +30,11 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
 		{#each menuThemes as theme}
-			<DropdownMenu.Item onclick={() => {
-				ModeWatcher.setMode(theme.class);
-			}}>
+			<DropdownMenu.Item
+				onclick={() => {
+					ModeWatcher.setMode(theme.class);
+				}}
+			>
 				<span class="capitalize">{theme.name}</span>
 				{#if theme.class === currentMode}
 					<Check class="ml-2 h-4 w-4" />
@@ -48,6 +50,5 @@
 				See More Themes
 			</a>
 		</DropdownMenu.Item>
-
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

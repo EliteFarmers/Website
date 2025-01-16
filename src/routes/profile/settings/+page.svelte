@@ -289,7 +289,7 @@
 			</form>
 		{/each}
 
-		<h1 class="mb-10 mt-10 text-2xl scroll-mt-32" id="themes">Themes</h1>
+		<h1 class="mb-10 mt-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
 		<div class="flex w-full flex-col items-center justify-center">
 			<Carousel.Root
 				setApi={(emblaApi) => (api = emblaApi)}
@@ -337,7 +337,9 @@
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="flex gap-2">
-												<div class="h-9 w-8 px-8 rounded bg-primary hover:bg-accent border-2 border-border"></div>
+												<div
+													class="h-9 w-8 rounded border-2 border-border bg-primary px-8 hover:bg-accent"
+												></div>
 												<div class="h-9 flex-1 rounded bg-muted"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">
