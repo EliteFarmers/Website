@@ -4,10 +4,12 @@
 	import Sun from 'lucide-svelte/icons/sun';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
-	import { resetMode, setMode, mode } from 'mode-watcher';
+	import * as ModeWatcher from 'mode-watcher';
 	import { cn } from '$lib/utils';
+	import { themes } from '$lib/themes';
+	let currentTheme: string | undefined;
 
-	const modes = ['light', 'dark'] as const;
+	ModeWatcher.theme.subscribe((value) => (currentTheme = value));
 </script>
 
 <DropdownMenu.Root>
@@ -24,10 +26,13 @@
 		<span class="sr-only">Toggle theme</span>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
-		{#each modes as option}
-			<DropdownMenu.Item onclick={() => setMode(option)}>
-				<span class="capitalize">{option}</span>
-				{#if $mode === option}
+		{#each themes as theme}
+			<DropdownMenu.Item onclick={() => {
+				ModeWatcher.setMode(theme.class);
+				console.log(theme.class);
+			}}>
+				<span class="capitalize">{theme.name}</span>
+				{#if theme.class === currentTheme}
 					<Check class="ml-2 h-4 w-4" />
 				{/if}
 			</DropdownMenu.Item>

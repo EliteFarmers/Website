@@ -15,16 +15,10 @@
 	import BadgeConfig from './badge-config.svelte';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Sun from 'lucide-svelte/icons/sun';
+	import { setTheme } from 'mode-watcher';
+	import { themes } from '$lib/themes';
 	import Search from 'lucide-svelte/icons/search';
 	import Menu from 'lucide-svelte/icons/menu';
-	import { setTheme } from 'mode-watcher';
-
-	export const themes = [
-		{ name: 'Default Light', class: 'light', icon: Sun },
-		{ name: 'Default Dark', class: 'dark', icon: Moon },
-	] as const;
 
 	let api = $state<CarouselAPI>();
 
@@ -311,10 +305,17 @@
 										<!-- nav header -->
 										<div class="mb-4 flex items-center justify-between border-b pb-2">
 											<div class="flex items-center gap-2">
+												<img
+													src="/favicon.webp"
+													class="aspect-square max-w-5"
+													alt="Elite Logo"
+												/>
 												<Menu class="h-5 w-5 text-foreground" />
 											</div>
 											<div class="flex items-center gap-2">
-												<div class="flex h-8 items-center rounded-full bg-muted px-3">
+												<div
+													class="bg flex h-8 items-center rounded-sm border px-3 hover:bg-muted"
+												>
 													<Search class="h-4 w-4 text-muted-foreground" />
 													<span class="ml-2 text-sm text-muted-foreground">Search...</span>
 												</div>
@@ -323,14 +324,14 @@
 										</div>
 										<!-- rest of the "site" -->
 										<div class="space-y-4">
-											<div class="h-4 w-1/4 rounded bg-muted"></div>
+											<div class="h-5 w-1/4 rounded bg-muted"></div>
 											<div class="h-4 w-1/2 rounded bg-muted"></div>
-											<div class="h-4 w-1/4 rounded bg-muted"></div>
+											<div class="h-4 w-3/5 rounded bg-muted"></div>
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="flex gap-2">
-												<div class="h-8 w-8 rounded bg-primary hover:bg-accent"></div>
-												<div class="h-8 flex-1 rounded bg-muted"></div>
+												<div class="h-9 w-8 px-8 rounded bg-primary hover:bg-accent border border-border"></div>
+												<div class="h-9 flex-1 rounded bg-muted"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">
 												<div class="h-16 rounded bg-muted"></div>
