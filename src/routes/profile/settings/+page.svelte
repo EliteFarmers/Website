@@ -14,6 +14,7 @@
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import BadgeConfig from './badge-config.svelte';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
+	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
 	import Search from 'lucide-svelte/icons/search';
@@ -26,6 +27,8 @@
 	] as const;
 
 	let api = $state<CarouselAPI>();
+
+	const wheelGestures = WheelGesturesPlugin();
 
 	const count = $derived(api ? api.scrollSnapList().length : 0);
 	let current = $state(0);
@@ -293,50 +296,45 @@
 				opts={{
 					loop: true,
 				}}
+				plugins={[wheelGestures]}
 			>
 				<Carousel.Content>
 					{#each themes as theme (theme.name)}
-						<Carousel.Item>
-							<Card.Root>
-								<Card.Content class="flex aspect-video items-center justify-center p-6">
-									<div
-										class={`w-full rounded-lg ${theme.class}`}
-										style="color-scheme: {theme.class === 'dark' ? 'dark' : ''}"
-									>
-										<!-- site "preview" -->
-										<div
-											class="h-full rounded-lg border bg-background p-4 shadow-lg transition-colors"
-										>
-											<!-- nav header -->
-											<div class="mb-4 flex items-center justify-between border-b pb-2">
-												<div class="flex items-center gap-2">
-													<Menu class="h-5 w-5 text-foreground" />
-												</div>
-												<div class="flex items-center gap-2">
-													<div class="flex h-8 items-center rounded-full bg-muted px-3">
-														<Search class="h-4 w-4 text-muted-foreground" />
-														<span class="ml-2 text-sm text-muted-foreground">Search...</span
-														>
-													</div>
-													<svelte:component
-														this={theme.icon}
-														class="h-5 w-5 text-foreground"
-													/>
-												</div>
+						<Carousel.Item class="">
+							<Card.Root class={theme.class} style="color-scheme: {theme.class}">
+								<Card.Content
+									class={`flex aspect-video items-center justify-center p-6`}
+									style="color-scheme: {theme.class};"
+								>
+									<!-- Theme Preview -->
+									<div class="w-full rounded-lg">
+										<!-- nav header -->
+										<div class="mb-4 flex items-center justify-between border-b pb-2">
+											<div class="flex items-center gap-2">
+												<Menu class="h-5 w-5 text-foreground" />
 											</div>
-											<!-- rest of the "site" -->
-											<div class="space-y-4">
-												<div class="h-4 w-1/2 rounded bg-muted"></div>
-												<div class="h-4 w-1/4 rounded bg-muted"></div>
-												<div class="h-4 w-3/4 rounded bg-muted"></div>
-												<div class="flex gap-2">
-													<div class="h-8 w-8 rounded bg-primary"></div>
-													<div class="h-8 flex-1 rounded bg-muted"></div>
+											<div class="flex items-center gap-2">
+												<div class="flex h-8 items-center rounded-full bg-muted px-3">
+													<Search class="h-4 w-4 text-muted-foreground" />
+													<span class="ml-2 text-sm text-muted-foreground">Search...</span>
 												</div>
-												<div class="grid grid-cols-2 gap-2">
-													<div class="h-16 rounded bg-muted"></div>
-													<div class="h-16 rounded bg-muted"></div>
-												</div>
+												<theme.icon class="h-5 w-5 text-foreground" />
+											</div>
+										</div>
+										<!-- rest of the "site" -->
+										<div class="space-y-4">
+											<div class="h-4 w-1/4 rounded bg-muted"></div>
+											<div class="h-4 w-1/2 rounded bg-muted"></div>
+											<div class="h-4 w-1/4 rounded bg-muted"></div>
+											<div class="h-4 w-3/4 rounded bg-muted"></div>
+											<div class="h-4 w-3/4 rounded bg-muted"></div>
+											<div class="flex gap-2">
+												<div class="h-8 w-8 rounded bg-primary hover:bg-accent"></div>
+												<div class="h-8 flex-1 rounded bg-muted"></div>
+											</div>
+											<div class="grid grid-cols-2 gap-2">
+												<div class="h-16 rounded bg-muted"></div>
+												<div class="h-16 rounded bg-muted"></div>
 											</div>
 										</div>
 									</div>

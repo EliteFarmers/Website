@@ -79,6 +79,7 @@
 		"zod": "^3.23.8"
 	},
 	"dependencies": {
+		"embla-carousel-wheel-gestures": "^8.0.1",
 		"runed": "^0.23.0"
 	}
 }
