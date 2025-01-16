@@ -356,7 +356,7 @@
 				<Carousel.Previous />
 				<Carousel.Next />
 			</Carousel.Root>
-			<div class="py-2 text-center text-sm text-muted-foreground">
+			<div class="py-4 text-center text-lg text-muted-foreground">
 				{themeName}
 			</div>
 		</div>
