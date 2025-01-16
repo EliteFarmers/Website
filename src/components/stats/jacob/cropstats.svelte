@@ -27,11 +27,8 @@
 	);
 </script>
 
-<div class="flex flex-col items-start">
-	<h3 class="my-2 text-left text-2xl">Best Scores</h3>
-	<div class="flex max-w-6xl flex-wrap items-center justify-start gap-4">
-		{#each highest as [crop, amount] (crop)}
-			<JacobCropStats {jacob} {crop} count={amount} />
-		{/each}
-	</div>
+<div class="flex max-w-6xl flex-wrap items-center justify-center gap-4">
+	{#each highest as [crop, amount] (crop)}
+		<JacobCropStats {jacob} {crop} count={amount} />
+	{/each}
 </div>
