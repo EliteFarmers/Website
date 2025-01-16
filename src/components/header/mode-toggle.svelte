@@ -7,9 +7,10 @@
 	import * as ModeWatcher from 'mode-watcher';
 	import { cn } from '$lib/utils';
 	import { themes } from '$lib/themes';
-	let currentTheme: string | undefined;
+	import { resetMode } from 'mode-watcher';
+	let currentMode: string | undefined;
 
-	ModeWatcher.theme.subscribe((value) => (currentTheme = value));
+	ModeWatcher.mode.subscribe(value => currentMode = value);
 </script>
 
 <DropdownMenu.Root>
@@ -29,10 +30,9 @@
 		{#each themes as theme}
 			<DropdownMenu.Item onclick={() => {
 				ModeWatcher.setMode(theme.class);
-				console.log(theme.class);
 			}}>
 				<span class="capitalize">{theme.name}</span>
-				{#if theme.class === currentTheme}
+				{#if theme.class === currentMode}
 					<Check class="ml-2 h-4 w-4" />
 				{/if}
 			</DropdownMenu.Item>
