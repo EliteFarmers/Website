@@ -8,9 +8,11 @@
 	import { cn } from '$lib/utils';
 	import { themes } from '$lib/themes';
 	import { resetMode } from 'mode-watcher';
-	let currentMode: string | undefined;
+	
+	let currentMode = $state<string | undefined>(undefined);
+	let currentTheme = $derived(themes.find(t => t.class === currentMode));
 
-	ModeWatcher.mode.subscribe((value) => (currentMode = value));
+	ModeWatcher.mode.subscribe((value) => currentMode = value);
 
 	const menuThemes = themes.slice(0, 2);
 </script>
@@ -24,8 +26,8 @@
 			})
 		)}
 	>
-		<Sun class="mx-2 block dark:hidden" />
-		<Moon class="mx-2 hidden dark:block" />
+		<Sun class="mx-2 block {currentTheme?.isDark ? 'hidden' : ''}" />
+		<Moon class="mx-2 {currentTheme?.isDark ? '' : 'hidden'}" />
 		<span class="sr-only">Toggle theme</span>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">

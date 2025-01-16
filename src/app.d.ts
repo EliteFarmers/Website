@@ -5,6 +5,7 @@
 
 import type { AuthSession } from '$lib/api/auth';
 import type { AuthorizedUser } from '$lib/api/elite';
+import type { ThemeClass } from '$lib/themes';
 
 declare global {
 	declare namespace App {
@@ -20,4 +21,14 @@ declare global {
 		}
 		// interface Stuff {}
 	}
+}
+
+declare module 'svelte-ux' {
+	interface ThemeConfig {
+		[K in ThemeClass]?: string[];
+	}
+}
+
+declare module 'mode-watcher' {
+	export function setMode(mode: ThemeClass | 'system'): void;
 }

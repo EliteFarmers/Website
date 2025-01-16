@@ -15,11 +15,15 @@
 	import BadgeConfig from './badge-config.svelte';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-	import { setTheme } from 'mode-watcher';
-	import { themes } from '$lib/themes';
+	import { setMode } from 'mode-watcher';
+	import { themes, type ThemeClass } from '$lib/themes';
 	import Search from 'lucide-svelte/icons/search';
 	import Menu from 'lucide-svelte/icons/menu';
+	import Moon from 'lucide-svelte/icons/moon';
+	import Sun from 'lucide-svelte/icons/sun';
 	import { onMount } from 'svelte';
+	import { getSettings } from 'svelte-ux';
+
 
 	let api = $state<CarouselAPI>();
 
@@ -28,16 +32,18 @@
 	const count = $derived(api ? api.scrollSnapList().length : 0);
 	let current = $state(0);
 	let themeName = $state('');
+	let themeClass = $state('');
+
+  const settings = getSettings();
 
 	$effect(() => {
 		if (api) {
 			current = api.selectedScrollSnap() + 1;
-			setTheme(themes[current - 1].class);
 			api.on('select', () => {
 				current = api!.selectedScrollSnap() + 1;
 			});
 			themeName = themes[current - 1].name;
-			//console.log("theme", current-1, ":", themes[current-1])
+			themeClass = themes[current - 1].class;
 		}
 	});
 
@@ -326,7 +332,11 @@
 													<Search class="h-4 w-4 text-muted-foreground" />
 													<span class="ml-2 text-sm text-muted-foreground">Search...</span>
 												</div>
-												<theme.icon class="h-5 w-5 text-foreground" />
+												{#if theme.isDark}
+													<Moon class="h-5 w-5 text-foreground" />
+												{:else}
+													<Sun class="h-5 w-5 text-foreground" />
+												{/if}
 											</div>
 										</div>
 										<!-- rest of the "site" -->
@@ -360,5 +370,18 @@
 				{themeName}
 			</div>
 		</div>
+		<div class="flex justify-start">
+			<button 
+				class="bg-primary text-primary-foreground px-4 py-2 rounded-md" 
+				onclick={() => setMode(themeClass as ThemeClass)}
+			>
+				Apply Theme
+			</button>
+
+		</div>
+
+
+
 	</section>
+
 </div>

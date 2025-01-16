@@ -6,8 +6,8 @@
 	import { initRatesData } from '$lib/stores/ratesData';
 	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 	import * as Sidebar from '$ui/sidebar';
-	import { ModeWatcher, mode } from 'mode-watcher';
-	import { settings, getSettings } from 'svelte-ux';
+	import { ModeWatcher, mode, setMode } from 'mode-watcher';
+	import { settings } from 'svelte-ux';
 	import { browser } from '$app/environment';
 	import { ScrollArea } from '$ui/scroll-area';
 	import Footer from '$comp/footer/footer.svelte';
@@ -15,6 +15,7 @@
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import Header from '$comp/header/header.svelte';
+	import { themes, type ThemeClass } from '$lib/themes';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -32,17 +33,17 @@
 	if (browser) {
 		mode.subscribe((value) => {
 			if (!value) return;
-
-			const settings = getSettings();
-			settings.currentTheme.setTheme(value);
+			setMode(value as ThemeClass | 'system');
 		});
 	}
 
+	const themeGroups = {
+		light: themes.filter(t => !t.isDark).map(t => t.class),
+		dark: themes.filter(t => t.isDark).map(t => t.class)
+	};
+
 	settings({
-		themes: {
-			light: ['light'],
-			dark: ['dark'],
-		},
+		themes: themeGroups
 	});
 </script>
 
@@ -71,4 +72,7 @@
 	</Sidebar.Inset>
 </Sidebar.Provider>
 
-<ModeWatcher />
+<ModeWatcher 
+	darkClassNames={themeGroups.dark} 
+	lightClassNames={themeGroups.light} 
+/>
