@@ -28,7 +28,7 @@
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
 						href={`/@${ign}/${pId.name}`}
-						class="flex flex-row justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"
+						class="flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold hover:bg-muted md:text-xl"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<span>{pId.name}</span>
@@ -37,9 +37,9 @@
 						<span class="font-normal">{pId.weight.toLocaleString()}</span>
 					</a>
 				{/each}
-				<div class="flex flex-row justify-between gap-4 rounded-sm bg-muted p-2 text-xl">
+				<div class="flex flex-row justify-between gap-4 rounded-sm border-2 p-2 text-lg md:text-xl">
 					<span class="font-semibold">Total Weight</span>
-					<span class="font-normal">
+					<span>
 						{(
 							profiles.reduce((sum, profile) => sum + profile.weight, 0) + selected.weight
 						).toLocaleString()}
