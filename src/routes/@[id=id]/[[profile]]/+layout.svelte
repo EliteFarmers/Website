@@ -22,7 +22,6 @@
 	});
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
-	let url = $derived(page.url.pathname);
 
 	watch.pre(
 		() => data,

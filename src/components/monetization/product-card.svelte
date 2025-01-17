@@ -15,7 +15,10 @@
 </script>
 
 <a
-	class={cn('inline-block max-w-64 rounded-md bg-primary-foreground shadow-primary hover:drop-shadow-lg', className)}
+	class={cn(
+		'relative inline-block max-w-64 rounded-md bg-primary-foreground shadow-primary hover:drop-shadow-lg',
+		className
+	)}
 	href="/shop/{product.id}"
 >
 	<div class="flex min-w-0 flex-col items-center justify-start">
