@@ -1,39 +1,23 @@
-<script lang="ts" module>
+<script lang="ts">
+	import { browser } from '$app/environment';
+	import { currentTheme, themes } from '$lib/themes';
+	import { cn } from '$lib/utils';
+	import { buttonVariants } from '$ui/button';
+	import * as DropdownMenu from '$ui/dropdown-menu';
 	import Check from 'lucide-svelte/icons/check';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
-	import { buttonVariants } from '$ui/button';
-	import * as DropdownMenu from '$ui/dropdown-menu';
-	import * as ModeWatcher from 'mode-watcher';
-	import { cn } from '$lib/utils';
-	import { themes } from '$lib/themes';
-	
-	let currentMode = $state<string | undefined>(undefined);
-	let currentTheme = $derived(themes.find(t => t.class === currentMode));
 
-	ModeWatcher.mode.subscribe((value) => currentMode = value);
+	let isDark = $state(false);
 
-	if (typeof window !== 'undefined') {
-		new MutationObserver(mutations => 
-			mutations
-				.filter(m => m.attributeName === 'class')
-				.forEach(() => currentMode = document.documentElement.className || undefined)
-		).observe(document.documentElement, {
+	if (browser) {
+		new MutationObserver(() => {
+			const currentClass = document.documentElement.className;
+			isDark = themes.find((t) => t.class === currentClass)?.isDark ?? false;
+		}).observe(document.documentElement, {
 			attributes: true,
-			attributeFilter: ['class']
+			attributeFilter: ['class'],
 		});
-	}
-
-	export function clearThemes() {
-		const themeClasses = themes.map(t => t.class);
-		document.documentElement.classList.remove(...themeClasses);
-		document.documentElement.className = '';
-		
-		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		const systemTheme = prefersDark ? 'dark' : 'light';
-		
-		document.documentElement.className = systemTheme;
-		currentMode = systemTheme;
 	}
 </script>
 
@@ -46,34 +30,26 @@
 			})
 		)}
 	>
-		<Sun class="mx-2 block {currentTheme?.isDark ? 'hidden' : ''}" />
-		<Moon class="mx-2 {currentTheme?.isDark ? '' : 'hidden'}" />
-		<span class="sr-only">Toggle theme</span>
+		{#if !isDark}
+			<Sun class="mx-2 block" />
+		{:else}
+			<Moon class="mx-2 block" />
+		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
-		<DropdownMenu.Item
-			onclick={() => {
-				document.documentElement.className = 'light';
-				currentMode = 'light';
-			}}
-		>
-			<span class="capitalize">Default Light</span>
-			{#if currentMode === 'light'}
+		<DropdownMenu.Item onclick={() => currentTheme.set('light')}>
+			<span class="capitalize">Light</span>
+			{#if $currentTheme === 'light'}
 				<Check class="ml-2 h-4 w-4" />
 			{/if}
 		</DropdownMenu.Item>
-		<DropdownMenu.Item
-			onclick={() => {
-				document.documentElement.className = 'dark';
-				currentMode = 'dark';
-			}}
-		>
-			<span class="capitalize">Default Dark</span>
-			{#if currentMode === 'dark'}
+		<DropdownMenu.Item onclick={() => currentTheme.set('dark')}>
+			<span class="capitalize">Dark</span>
+			{#if $currentTheme === 'dark'}
 				<Check class="ml-2 h-4 w-4" />
 			{/if}
 		</DropdownMenu.Item>
-		<DropdownMenu.Item onclick={clearThemes}>
+		<DropdownMenu.Item onclick={() => currentTheme.useSystem()}>
 			<span class="text-destructive">Use System Theme</span>
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />

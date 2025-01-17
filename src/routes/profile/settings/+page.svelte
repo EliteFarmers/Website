@@ -1,29 +1,27 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
+	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
+	import { currentTheme, themes } from '$lib/themes';
 	import { Button } from '$ui/button';
-	import { Switch } from '$ui/switch';
-	import { invalidateAll } from '$app/navigation';
-	import { Label } from '$ui/label';
-	import { SelectSimple } from '$ui/select';
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
-	import type { PageData, ActionData } from './$types';
-	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
-	import WeightStyle from '$comp/monetization/weight-style.svelte';
-	import BadgeConfig from './badge-config.svelte';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
+	import { Label } from '$ui/label';
+	import { SelectSimple } from '$ui/select';
+	import { Switch } from '$ui/switch';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-	import { setMode, setTheme } from 'mode-watcher';
-	import { themes, type ThemeClass } from '$lib/themes';
-	import Search from 'lucide-svelte/icons/search';
 	import Menu from 'lucide-svelte/icons/menu';
 	import Moon from 'lucide-svelte/icons/moon';
+	import Search from 'lucide-svelte/icons/search';
 	import Sun from 'lucide-svelte/icons/sun';
 	import { onMount } from 'svelte';
 	import { getSettings } from 'svelte-ux';
-
+	import type { ActionData, PageData } from './$types';
+	import BadgeConfig from './badge-config.svelte';
 
 	let api = $state<CarouselAPI>();
 
@@ -34,7 +32,7 @@
 	let themeName = $state('');
 	let themeClass = $state('');
 
-  const settings = getSettings();
+	const settings = getSettings();
 
 	$effect(() => {
 		if (api) {
@@ -347,9 +345,11 @@
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="h-4 w-3/4 rounded bg-muted"></div>
 											<div class="flex gap-2">
-												<div
+												<button
+													onclick={() => console.log('hey dont touch me!')}
+													aria-label="Theme preview button"
 													class="h-9 w-8 rounded border-2 border-border bg-primary px-8 hover:bg-accent"
-												></div>
+												></button>
 												<div class="h-9 flex-1 rounded bg-muted"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">
@@ -371,19 +371,12 @@
 			</div>
 		</div>
 		<div class="flex justify-start">
-			<button 
-				class="bg-primary text-primary-foreground px-4 py-2 rounded-md" 
-				onclick={() => {
-					document.documentElement.className = themeClass;
-				}}
+			<button
+				class="rounded-md bg-primary px-4 py-2 text-primary-foreground"
+				onclick={() => currentTheme.set(themeClass)}
 			>
 				Apply Theme
 			</button>
-
 		</div>
-
-
-
 	</section>
-
 </div>

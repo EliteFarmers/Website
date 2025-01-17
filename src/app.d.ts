@@ -28,7 +28,3 @@ declare module 'svelte-ux' {
 		[K in ThemeClass]?: string[];
 	}
 }
-
-declare module 'mode-watcher' {
-	export function setMode(mode: ThemeClass | 'system'): void;
-}

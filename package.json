@@ -53,7 +53,6 @@
 		"layercake": "^8.4.2",
 		"layerchart": "^0.60.0",
 		"lucide-svelte": "^0.469.0",
-		"mode-watcher": "^0.5.0",
 		"openapi-fetch": "^0.13.0",
 		"postcss": "^8.4.48",
 		"prettier": "^3.3.3",

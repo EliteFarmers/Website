@@ -6,7 +6,6 @@
 	import { initRatesData } from '$lib/stores/ratesData';
 	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 	import * as Sidebar from '$ui/sidebar';
-	import { ModeWatcher, mode, setMode } from 'mode-watcher';
 	import { settings } from 'svelte-ux';
 	import { browser } from '$app/environment';
 	import { ScrollArea } from '$ui/scroll-area';
@@ -15,8 +14,8 @@
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import Header from '$comp/header/header.svelte';
-	import { clearThemes } from '$comp/header/mode-toggle.svelte';
 	import { themes } from '$lib/themes';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -31,22 +30,20 @@
 	initBreadcrumb();
 	initSidebarNav();
 
-	if (browser) {
-		mode.subscribe((value) => {
-			if (!value) return;
-      console.log(value);
-			clearThemes();
-		});
-	}
-
+	onMount(() => {
+		const savedTheme = localStorage.getItem('theme');
+		if (savedTheme) {
+			document.documentElement.className = savedTheme;
+		}
+	});
 
 	const themeGroups = {
-		light: themes.filter(t => !t.isDark).map(t => t.class),
-		dark: themes.filter(t => t.isDark).map(t => t.class)
+		light: themes.filter((t) => !t.isDark).map((t) => t.class),
+		dark: themes.filter((t) => t.isDark).map((t) => t.class),
 	};
 
 	settings({
-		themes: themeGroups
+		themes: themeGroups,
 	});
 </script>
 
@@ -74,8 +71,3 @@
 		</ScrollArea>
 	</Sidebar.Inset>
 </Sidebar.Provider>
-
-<ModeWatcher 
-	darkClassNames={themeGroups.dark} 
-	lightClassNames={themeGroups.light} 
-/>
