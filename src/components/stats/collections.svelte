@@ -1,29 +1,18 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import CollectionBar from './collectionbar.svelte';
 
-	interface Props {
-		collections: {
-			name: string | undefined;
-			value: number;
-			minionTierField: number;
-			weight: number;
-			pest: string;
-			pestKills: number;
-			key: string;
-		}[];
-		ranks: components['schemas']['LeaderboardPositionsDto'];
-	}
-
-	let { collections, ranks }: Props = $props();
+	const ctx = getStatsContext();
+	const collections = $derived(ctx.collections);
+	const ranks = $derived(ctx.ranks ?? {});
 
 	let weightSort = $state(true);
 
 	let list = $derived.by(() => {
 		return (
 			(weightSort
-				? collections?.sort((a, b) => b.weight - a.weight)
-				: collections?.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)) ?? []
+				? collections?.toSorted((a, b) => b.weight - a.weight)
+				: collections?.toSorted((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)) ?? []
 		);
 	});
 
@@ -38,7 +27,7 @@
 		onclick={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 	>
 	<div class="flex w-full flex-col gap-2">
-		{#each list as item (item.name)}
+		{#each list as item}
 			<CollectionBar {...item} rank={ranks.collections?.[item.key]} pestRank={ranks.pests?.[item.pest]} />
 		{/each}
 	</div>

@@ -7,6 +7,7 @@
 	import * as Accordion from '$ui/accordion';
 	import { Switch } from '$ui/switch';
 	import { Button } from '$ui/button';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	let timeType = $state(false);
 	let accordionValues = $state<string[]>([]);
@@ -24,11 +25,13 @@
 	}
 
 	let { data }: Props = $props();
+
+	const ctx = getStatsContext();
 </script>
 
 <Head
-	title="{data.account?.name ?? 'Unknown'} | Jacob's Contests"
-	description="View all {data.contestsCount} Jacob's Contests participated in by {data.account?.name ?? 'Unknown'}!"
+	title="{ctx.ign ?? 'Unknown'} | Jacob's Contests"
+	description="View all {data.contestsCount} Jacob's Contests participated in by {ctx.ign ?? 'Unknown'}!"
 />
 
 <section class="flex w-full flex-col items-center justify-center">

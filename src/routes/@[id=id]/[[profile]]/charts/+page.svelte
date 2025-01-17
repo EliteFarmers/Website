@@ -18,13 +18,16 @@
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import ArrowRight from 'lucide-svelte/icons/arrow-right';
 	import { onMount } from 'svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	interface Props {
 		data: PageData;
 		form: ActionData;
 	}
 
-	let { data = $bindable(), form }: Props = $props();
+	let { data, form }: Props = $props();
+
+	const ctx = getStatsContext();
 
 	const anySelected = getAnyCropSelected();
 	const selectedCrops = getSelectedCrops();
@@ -101,7 +104,7 @@
 	let startTime = $derived(Math.floor(value.toDate(tz).getTime() / 1000));
 </script>
 
-<Head title="{data.account.name} | Charts" description="See crop collection charts for Hypixel Skyblock!" />
+<Head title="{ctx.ign} | Charts" description="See crop collection charts for Hypixel Skyblock!" />
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector />
@@ -118,8 +121,8 @@
 			};
 		}}
 	>
-		<input type="hidden" value={data.account.id} name="uuid" />
-		<input type="hidden" value={data.profile.profileId} name="profile" />
+		<input type="hidden" value={ctx.uuid} name="uuid" />
+		<input type="hidden" value={ctx.member.profileId} name="profile" />
 		<input type="hidden" value={startTime} name="start" />
 		<input type="hidden" bind:value={daysString} name="days" />
 

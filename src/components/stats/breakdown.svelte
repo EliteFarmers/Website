@@ -1,21 +1,14 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
-	interface Props {
-		weight: components['schemas']['FarmingWeightDto'] | undefined;
-	}
-
-	let { weight = $bindable() }: Props = $props();
-
-	$effect(() => {
-		if (!weight) {
-			weight = {
-				totalWeight: 0,
-				cropWeight: {},
-				bonusWeight: {},
-			};
+	const ctx = getStatsContext();
+	const weight = $derived(
+		ctx.member.farmingWeight ?? {
+			totalWeight: 0,
+			cropWeight: {},
+			bonusWeight: {},
 		}
-	});
+	);
 
 	let total = $derived(weight?.totalWeight ?? 0);
 	let bonusSources = $derived(weight?.bonusWeight ?? {});
@@ -23,16 +16,6 @@
 	let cropSources = $derived(weight?.cropWeight ?? {});
 	let sources = $derived(Object.entries(cropSources ?? {}).sort((a, b) => (b?.[1] ?? 0) - (a?.[1] ?? 0)));
 	let bonuses = $derived(Object.entries(weight?.bonusWeight ?? {}).sort((a, b) => a[0].localeCompare(b[0])));
-
-	$effect(() => {
-		if (sources.length === 0) {
-			sources.push(['None Found - API might be off', 0]);
-		}
-
-		if (bonuses.length === 0) {
-			bonuses.push(['No bonuses unlocked yet!', 0]);
-		}
-	});
 </script>
 
 <section class="flex w-full flex-1 justify-center py-4 align-middle" aria-labelledby="Breakdown">
@@ -52,6 +35,11 @@
 						<div class="flex-grow">{source}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
+				{:else}
+					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
+						<div class="flex-grow">No crops found!</div>
+						<div class="flex-none">0</div>
+					</div>
 				{/each}
 			</div>
 			<div class="flex-1">
@@ -62,6 +50,11 @@
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
 						<div class="flex-grow capitalize">{bonus}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
+					</div>
+				{:else}
+					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
+						<div class="flex-grow">No bonuses unlocked yet!</div>
+						<div class="flex-none">0</div>
 					</div>
 				{/each}
 				<br />

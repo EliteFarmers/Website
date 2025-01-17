@@ -8,7 +8,7 @@
 	import MainNav from '$comp/header/main-nav.svelte';
 	import MobileNav from '$comp/header/mobile-nav.svelte';
 	import SearchMenu from '$comp/header/search-menu.svelte';
-	import UserDropdown from '$comp/header/user-dropdown.svelte';
+	import * as Sidebar from '$ui/sidebar';
 </script>
 
 <header
@@ -23,19 +23,21 @@
 			</div>
 			<nav class="flex items-center gap-2">
 				<ModeToggle />
-				<UserDropdown />
+				<!-- <UserDropdown /> -->
 			</nav>
 		</div>
 	</div>
 </header>
 
+<div class="absolute left-2 top-16">
+	<Sidebar.Trigger size="lg" class="size-14" />
+</div>
+
 {#await navigating.complete}
 	<div class="relative">
 		<div
-			class="absolute h-1 w-full bg-green-300"
+			class="absolute h-1 w-full bg-ring"
 			transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
 		></div>
 	</div>
-	<!-- Gray out the screen -->
-	<div class="absolute left-0 top-0 z-[100] h-[200vh] w-full bg-gray-100 opacity-50 dark:bg-zinc-900"></div>
 {/await}

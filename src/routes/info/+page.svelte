@@ -18,7 +18,7 @@
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
 
-<main class="flex w-full flex-col items-center justify-center">
+<div class="flex w-full flex-col items-center justify-center">
 	<section class="flex w-full flex-col items-center justify-center">
 		<h1 class="mb-8 mt-16 text-center text-3xl">Weight Information</h1>
 		<article class="w-full max-w-4xl px-4">
@@ -157,4 +157,4 @@
 			</div>
 		</article>
 	</section>
-</main>
+</div>

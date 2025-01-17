@@ -37,7 +37,7 @@
 
 <Head title={'Upcoming Contests'} description={"Upcoming Jacob's Contests for Hypixel Skyblock."} />
 
-<main class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center">
 	<h1 class="my-16 text-4xl">Upcoming Contests - Year {data.year}</h1>
 
 	{#if upcoming.length === 0}
@@ -64,4 +64,4 @@
 		>. Open your calender at the start of the skyblock year to share them with the website and other SkyHanni users!
 		No data is sent without your consent when using the mod.
 	</p>
-</main>
+</div>

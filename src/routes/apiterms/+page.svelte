@@ -5,7 +5,7 @@
 
 <Head title="API Terms of Service" description="The TOS for using the Elite API" />
 
-<main class="flex w-full flex-col items-center justify-center">
+<div class="flex w-full flex-col items-center justify-center">
 	<section class="flex w-full flex-col items-center justify-center">
 		<article class="w-10/12 md:w-1/2">
 			<h1 class="my-16 text-center text-3xl">Elite API Terms of Service</h1>
@@ -56,4 +56,4 @@
 			</div>
 		</article>
 	</section>
-</main>
+</div>

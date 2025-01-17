@@ -23,7 +23,7 @@
 					)}
 					target={navItem.external ? '_blank' : undefined}
 				>
-					{navItem.title}
+					{navItem.name}
 					{#if navItem.external}
 						<ExternalLink size={14} class="mt-0.5" />
 					{/if}

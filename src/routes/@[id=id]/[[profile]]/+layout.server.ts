@@ -1,4 +1,3 @@
-import { GetPlayerRanks } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
@@ -11,8 +10,6 @@ export const load = (async ({ parent, setHeaders }) => {
 		throw error(404, 'Player not found');
 	}
 
-	const { data: ranks } = await GetPlayerRanks(account.id, profile.profileId);
-
 	if (!authorized) {
 		setHeaders({
 			'Cache-Control': `public, max-age=${PROFILE_UPDATE_INTERVAL / 1000}`,
@@ -24,7 +21,6 @@ export const load = (async ({ parent, setHeaders }) => {
 	}
 
 	return {
-		ranks,
 		authorized,
 	};
 }) satisfies LayoutServerLoad;

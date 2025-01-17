@@ -5,9 +5,9 @@
 </script>
 
 <footer
-	class="bottom-0 z-50 mt-16 w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+	class="bottom-0 mt-16 w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
-	<div class="container flex max-w-screen-lg flex-wrap items-start justify-between">
+	<div class="container flex flex-wrap items-start justify-between">
 		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">
 			<h5 class="text-lg font-semibold">Support</h5>
 			<Separator />
@@ -42,7 +42,7 @@
 			>
 			<Button variant="link" rel="noopener" class="h-8 p-0" href="/stickers">Purchase Stickers</Button>
 		</div>
-		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4 md:items-end">
+		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">
 			<h5 class="text-lg font-semibold">Made by Kaeso</h5>
 			<Separator />
 			<Button variant="link" class="h-8 p-0" href="/contact">Contact</Button>

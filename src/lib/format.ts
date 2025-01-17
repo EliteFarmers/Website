@@ -170,7 +170,7 @@ export function appendOrdinalSuffix(i: number) {
 	return `${i}th`;
 }
 
-export function GetRankName(player?: components['schemas']['PlayerDataDto'] | null) {
+export function GetRankName(player?: components['schemas']['PlayerDataDto'] | null): string | undefined {
 	if (!player) return undefined;
 
 	if (player.prefix) {
@@ -197,10 +197,10 @@ export function GetRankName(player?: components['schemas']['PlayerDataDto'] | nu
 	return undefined;
 }
 
-export function GetRankDefaults(rank?: RankName) {
+export function GetRankDefaults(rank?: RankName | string) {
 	if (!rank) return undefined;
 
-	return RANKS[rank];
+	return RANKS[rank as keyof typeof RANKS];
 }
 
 export function convertPlusColorToHex(color?: PlusColor) {

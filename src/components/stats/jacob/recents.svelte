@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Contest from '$comp/stats/jacob/contest.svelte';
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
-	interface Props {
-		contests: components['schemas']['JacobDataDto']['contests'];
-	}
-
-	let { contests }: Props = $props();
+	const ctx = getStatsContext();
+	const contests = $derived(ctx.member.jacob.contests);
 
 	let recentContests = $derived(
 		contests

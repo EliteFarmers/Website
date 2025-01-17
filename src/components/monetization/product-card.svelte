@@ -19,7 +19,7 @@
 	href="/shop/{product.id}"
 >
 	<div class="flex min-w-0 flex-col items-center justify-start">
-		<div class="grid min-h-32 w-full items-center justify-center rounded-md drop-shadow-lg">
+		<div class="relative grid min-h-32 w-full items-center justify-center rounded-md drop-shadow-lg">
 			{#if image}
 				<img src={image} alt={product.name} class="h-32 w-32 rounded-sm object-cover" />
 			{:else}
