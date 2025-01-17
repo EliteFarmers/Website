@@ -1,7 +1,7 @@
 import { untrack } from 'svelte';
 
-const MOBILE_BREAKPOINT = 768;
-const MEDIUM_BREAKPOINT = 1024;
+const MOBILE_BREAKPOINT = 1024;
+const MEDIUM_BREAKPOINT = 1148;
 const LARGE_BREAKPOINT = 1280;
 
 export class IsMobile {

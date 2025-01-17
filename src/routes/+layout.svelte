@@ -61,8 +61,8 @@
 		<AppSidebar />
 	</Sidebar.Root>
 
-	<Sidebar.Inset>
-		<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="pt-16">
+	<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="pt-16">
+		<Sidebar.Inset>
 			<Header />
 
 			<Content>
@@ -70,8 +70,8 @@
 			</Content>
 
 			<Footer />
-		</ScrollArea>
-	</Sidebar.Inset>
+		</Sidebar.Inset>
+	</ScrollArea>
 </Sidebar.Provider>
 
 <ModeWatcher />

@@ -29,7 +29,7 @@
 			{#snippet child({ props })}
 				<a href="/" {...props} class={cn(props.class ?? '', 'group-data-[state=collapsed]:rounded-full')}>
 					<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-					<span class="px-1 text-xl font-semibold leading-none">Elite Farmers</span>
+					<span class="px-1 text-lg font-semibold leading-none md:text-xl">Elite Farmers</span>
 				</a>
 			{/snippet}
 		</Sidebar.MenuButton>
