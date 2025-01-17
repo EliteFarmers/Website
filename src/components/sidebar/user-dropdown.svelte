@@ -25,7 +25,7 @@
 		{#snippet child({ props })}
 			<Sidebar.MenuButton
 				size="lg"
-				class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+				class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[state=collapsed]:rounded-full"
 				{...props}
 			>
 				<Avatar.Root class="aspect-square size-8 items-center justify-center rounded-lg">

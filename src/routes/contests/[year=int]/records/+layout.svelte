@@ -4,6 +4,7 @@
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getTimeStamp } from '$lib/format';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { Button } from '$ui/button';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -45,11 +46,9 @@
 		</p>
 		<Cropselector />
 		<div class="mb-2 flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
-			<a class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800" href="/contests/{year - 1}/records"
-				>Previous</a
-			>
-			<a class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800" href="/contests/{year}">View&nbsp;Year</a>
-			<a class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800" href="/contests/{year + 1}/records">Next</a>
+			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year - 1}/records">Previous</Button>
+			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year}">View&nbsp;Year</Button>
+			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year + 1}/records">Next</Button>
 		</div>
 	</div>
 

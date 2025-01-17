@@ -16,6 +16,7 @@
 	import Header from '$comp/header/header.svelte';
 	import { themes } from '$lib/themes';
 	import { onMount } from 'svelte';
+	import Content from './content.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -57,17 +58,19 @@
 </svelte:head>
 
 <Sidebar.Provider>
-	<AppSidebar />
+	<Sidebar.Root collapsible="icon" class="z-50">
+		<AppSidebar />
+	</Sidebar.Root>
 
-	<Sidebar.Inset>
-		<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="pt-16">
+	<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="py-16" type="always">
+		<Sidebar.Inset>
 			<Header />
 
-			<div>
+			<Content>
 				{@render children?.()}
-			</div>
+			</Content>
 
 			<Footer />
-		</ScrollArea>
-	</Sidebar.Inset>
+		</Sidebar.Inset>
+	</ScrollArea>
 </Sidebar.Provider>

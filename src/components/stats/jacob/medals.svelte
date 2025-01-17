@@ -19,8 +19,6 @@
 		['silver', jacob.earnedMedals?.silver ?? 0],
 		['bronze', jacob.earnedMedals?.bronze ?? 0],
 	] as [string, number][]);
-
-	$inspect(earnedMedals, ranks);
 </script>
 
 <div id="Medals" class="flex flex-col items-center md:items-start">

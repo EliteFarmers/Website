@@ -7,6 +7,7 @@ interface CrumbBase {
 	href?: string;
 	icon?: Component | unknown;
 	snippet?: Snippet;
+	tooltip?: string;
 	dropdown?: Omit<CrumbBase, 'dropdown'>[];
 	data?: Record<string, string | undefined | boolean | number>;
 }

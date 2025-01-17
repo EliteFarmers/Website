@@ -111,6 +111,7 @@
 			icon: PlayerHead,
 			name: account?.name,
 			href: `/@${account?.name}`,
+			tooltip: 'Player',
 			data: {
 				uuid: account?.id,
 			},
@@ -127,6 +128,7 @@
 			icon: Gamemode,
 			name: profile?.profileName,
 			href: path,
+			tooltip: 'Profile',
 			data: {
 				gameMode: profile.gameMode,
 				popover: false,

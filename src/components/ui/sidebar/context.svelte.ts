@@ -1,6 +1,7 @@
 import { IsMobile } from '$lib/hooks/is-mobile.svelte.js';
 import { getContext, setContext } from 'svelte';
 import { SIDEBAR_KEYBOARD_SHORTCUT } from './constants.js';
+import { PersistedState } from 'runed';
 
 type Getter<T> = () => T;
 
@@ -28,10 +29,19 @@ class SidebarState {
 	#isMobile: IsMobile;
 	state = $derived.by(() => (this.open ? 'expanded' : 'collapsed'));
 
+	persisted = new PersistedState('sidebar:state', false);
+
 	constructor(props: SidebarStateProps) {
-		this.setOpen = props.setOpen;
+		this.setOpen = (value) => {
+			this.persisted.current = value;
+			props.setOpen(value);
+		};
 		this.#isMobile = new IsMobile();
 		this.props = props;
+
+		$effect.pre(() => {
+			this.setOpen(this.persisted.current);
+		});
 	}
 
 	// Convenience getter for checking if the sidebar is mobile

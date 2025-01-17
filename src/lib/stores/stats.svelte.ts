@@ -1,7 +1,9 @@
 import type { components } from '$lib/api/api';
 import type { ProfileDetails } from '$lib/api/elite';
 import { PROPER_CROP_NAME, API_CROP_TO_CROP, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
-import { CROP_TO_PEST, getCropFromName, Crop } from 'farming-weight';
+import { CROP_TO_PEST } from '$lib/constants/pests';
+import { GetRankDefaults, GetRankName } from '$lib/format';
+import { getCropFromName, Crop } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 
 export class PlayerStats {
@@ -9,12 +11,16 @@ export class PlayerStats {
 	#selectedProfile = $state<components['schemas']['ProfileDetailsDto']>();
 	#profiles = $state<ProfileDetails[]>();
 	#member = $state<NonNullable<components['schemas']['ProfileMemberDto']>>(null!);
-	#garden = $derived.by(() => this.#member?.garden);
 	#ranks = $state<components['schemas']['LeaderboardPositionsDto']>();
 	#collections = $state<Collection[]>([]);
 
-	#tools = $state<components['schemas']['ItemDto'][]>([]);
-	#pets = $state<components['schemas']['PetDto'][]>([]);
+	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
+	#pets = $state.raw<components['schemas']['PetDto'][]>([]);
+	#armor = $state.raw<components['schemas']['ItemDto'][]>([]);
+	#equipment = $state.raw<components['schemas']['ItemDto'][]>([]);
+
+	#garden = $derived.by(() => this.#member?.garden);
+	#rank = $derived.by(() => GetRankDefaults(GetRankName(this.#account.playerData)));
 
 	constructor({
 		account,
@@ -58,6 +64,10 @@ export class PlayerStats {
 		return this.#account?.name ?? '';
 	}
 
+	get rank() {
+		return this.#rank;
+	}
+
 	get selectedProfile() {
 		return this.#selectedProfile;
 	}
@@ -70,8 +80,12 @@ export class PlayerStats {
 		this.#member = value;
 
 		this.#collections = PlayerStats.parseCollections(value);
-		this.#tools = this.#member?.farmingWeight.inventory?.tools ?? [];
-		this.#pets = this.#member?.pets ?? [];
+
+		// This allows mutating the values in these arrays
+		this.#tools = structuredClone(value?.farmingWeight.inventory?.tools ?? []);
+		this.#pets = structuredClone(value?.pets ?? []);
+		this.#armor = structuredClone(value?.farmingWeight.inventory?.armor ?? []);
+		this.#equipment = structuredClone(value?.farmingWeight.inventory?.equipment ?? []);
 	}
 
 	get member() {
@@ -96,6 +110,14 @@ export class PlayerStats {
 
 	get pets() {
 		return this.#pets;
+	}
+
+	get armor() {
+		return this.#armor;
+	}
+
+	get equipment() {
+		return this.#equipment;
 	}
 
 	static parseCollections(member: NonNullable<components['schemas']['ProfileMemberDto']>) {

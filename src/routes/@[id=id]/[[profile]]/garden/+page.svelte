@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
@@ -10,26 +9,26 @@
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import { page } from '$app/state';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
-	interface Props {
-		data: PageData;
-	}
-
-	let { data }: Props = $props();
 	let overflow = $state(true);
 
-	let garden = $derived((data.member.garden ?? {}) as components['schemas']['GardenDto']);
-	let maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
-	let totalVisits = $derived(
+	const ctx = getStatsContext();
+	const garden = $derived((ctx.member.garden ?? {}) as components['schemas']['GardenDto']);
+
+	const maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
+	const totalVisits = $derived(
 		Object.values(garden.visitors ?? {}).reduce((acc, { visits = 0 }) => acc + visits, 0) ?? 0
 	);
-	let accepted = $derived(garden.completedVisitors ?? 0);
-	let rejected = $derived(totalVisits - accepted);
-	let rate = $derived(((accepted / totalVisits) * 100).toFixed(2));
-	let ranks = $derived(data.ranks?.profile ?? {});
+	const accepted = $derived(garden.completedVisitors ?? 0);
+	const rejected = $derived(totalVisits - accepted);
+	const rate = $derived(((accepted / totalVisits) * 100).toFixed(2));
+	const ranks = $derived(ctx.ranks?.profile ?? {});
+
+	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
 </script>
 
-<Head title="{data.account.name} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
+<Head title="{ctx.ign} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
 
 <div class="flex w-full flex-col items-center justify-center gap-8">
 	<section class="flex w-full flex-row items-center justify-center gap-4 px-2">
@@ -38,7 +37,7 @@
 
 	<section class="flex w-full justify-center align-middle">
 		<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-12 align-middle md:gap-8 lg:flex-row">
-			<Milestones garden={data.member.garden} bind:overflow {ranks} />
+			<Milestones {garden} bind:overflow {ranks} />
 			<div class="flex flex-1 flex-col items-center gap-4 md:items-start">
 				<div class="mt-2 flex flex-row gap-6">
 					<div class="flex flex-col gap-2">
@@ -53,9 +52,7 @@
 
 				<div class="flex flex-col gap-2 text-lg">
 					<div class="flex flex-row items-center gap-1 rounded-md bg-primary-foreground p-1 px-2">
-						Copper • <span class="font-semibold"
-							>{(data.member.unparsed?.copper ?? 0).toLocaleString()}</span
-						>
+						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
 					</div>
 				</div>
 

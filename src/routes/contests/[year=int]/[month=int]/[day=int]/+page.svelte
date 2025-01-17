@@ -7,6 +7,7 @@
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 	import { SkyBlockTime } from 'farming-weight';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { Button } from '$ui/button';
 
 	interface Props {
 		data: PageData;
@@ -52,17 +53,20 @@
 		<h1 class="text-4xl">{getReadableSkyblockDate(timestamp ?? 0)}</h1>
 
 		<div class="my-4 flex flex-col justify-center gap-2 md:flex-row md:gap-4">
-			<a
-				class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800"
-				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day - 3}">Previous</a
+			<Button
+				class="flex-1 rounded-lg p-2"
+				variant="secondary"
+				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day - 3}">Previous</Button
 			>
-			<a
-				class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800"
-				href="/contests/{page.params.year}/{page.params.month}">View&nbsp;Month</a
+			<Button
+				class="flex-1 rounded-lg p-2"
+				variant="secondary"
+				href="/contests/{page.params.year}/{page.params.month}">View&nbsp;Month</Button
 			>
-			<a
-				class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800"
-				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day + 3}">Next</a
+			<Button
+				class="flex-1 rounded-lg p-2"
+				variant="secondary"
+				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day + 3}">Next</Button
 			>
 		</div>
 	</div>
@@ -75,7 +79,7 @@
 		</div>
 	{/if}
 
-	<div class="mx-8 mb-16 mt-4 flex w-full flex-wrap justify-center gap-4 md:w-[90%] md:flex-row">
+	<div class="mx-8 mb-16 mt-4 flex w-full flex-wrap justify-center gap-4 md:flex-row">
 		{#each contests ?? [] as contest ((contest.timestamp ?? 0) + (contest.crop ?? ''))}
 			<Singlecontest
 				timestamp={contest.timestamp ?? 0}
@@ -87,7 +91,7 @@
 	</div>
 
 	<div class="mb-8 flex max-w-xl flex-col gap-4 text-center text-sm">
-		<p><strong>???</strong> - The player hasn't claimed this contest yet, their true position is unknown.</p>
+		<p><strong>??</strong> - The player hasn't claimed this contest yet, their true position is unknown.</p>
 		<p>
 			<strong>Disclaimer:</strong> These contest participations are collected when a players profile is loaded on the
 			website, they aren't automatically scraped. Crops may be missing if no one known to the website has participated

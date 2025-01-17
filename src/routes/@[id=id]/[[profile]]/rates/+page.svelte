@@ -24,6 +24,7 @@
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
 	import { getLevelProgress } from '$lib/format';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	import { Button } from '$ui/button';
 	import { SliderSimple } from '$ui/slider';
@@ -42,14 +43,9 @@
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
-
-	import type { PageData } from './$types';
 	import { onMount, untrack } from 'svelte';
-	interface Props {
-		data: PageData;
-	}
 
-	let { data }: Props = $props();
+	const ctx = getStatsContext();
 
 	let blocksBroken = $state(24_000 * 3);
 	let bps = $state(20);
@@ -80,10 +76,10 @@
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 	const pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
 
-	let pets = FarmingPet.fromArray(data.member?.pets ?? []);
-	let tools = FarmingTool.fromArray((data.member?.farmingWeight?.inventory?.tools ?? []) as EliteItemDto[]);
-	let armor = FarmingArmor.fromArray((data.member?.farmingWeight?.inventory?.armor ?? []) as EliteItemDto[]);
-	let equipment = LotusGear.fromArray((data.member?.farmingWeight?.inventory?.equipment ?? []) as EliteItemDto[]);
+	let pets = FarmingPet.fromArray(ctx.pets);
+	let tools = FarmingTool.fromArray(ctx.tools);
+	let armor = FarmingArmor.fromArray(ctx.armor);
+	let equipment = LotusGear.fromArray(ctx.equipment);
 
 	// Deselect pet if it's not on this player
 	onMount(() => {
@@ -112,39 +108,39 @@
 	let options = $state({
 		tools: tools,
 		armor: armorSet,
-		accessories: (data.member?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
+		accessories: (ctx.member?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
 		pets: pets,
 
 		selectedPet: (() => selectedPet)(),
 		selectedTool: (() => selectedTool)(),
 
-		refinedTruffles: data.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
-		personalBests: data.member?.jacob?.stats?.personalBests ?? {},
-		anitaBonus: data.member?.jacob?.perks?.doubleDrops ?? 0,
-		plotsUnlocked: data.member.garden?.plots?.length ?? 0,
-		farmingXp: data.member?.skills?.farming,
-		bestiaryKills: (data.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
-		uniqueVisitors: data.member?.garden?.uniqueVisitors ?? 0,
+		refinedTruffles: ctx.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
+		personalBests: ctx.member?.jacob?.stats?.personalBests ?? {},
+		anitaBonus: ctx.member?.jacob?.perks?.doubleDrops ?? 0,
+		plotsUnlocked: ctx.member.garden?.plots?.length ?? 0,
+		farmingXp: ctx.member?.skills?.farming,
+		bestiaryKills: (ctx.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
+		uniqueVisitors: ctx.member?.garden?.uniqueVisitors ?? 0,
 
 		farmingLevel: getLevelProgress(
 			'farming',
-			data.member?.skills?.farming ?? 0,
-			(data.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
+			ctx.member?.skills?.farming ?? 0,
+			(ctx.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
-		milestones: getCropMilestoneLevels(data.member?.garden?.crops ?? {}),
-		cropUpgrades: getCropUpgrades(data.member?.garden?.cropUpgrades ?? {}),
-		gardenLevel: getGardenLevel(data.member.garden?.experience ?? 0).level,
+		milestones: getCropMilestoneLevels(ctx.member?.garden?.crops ?? {}),
+		cropUpgrades: getCropUpgrades(ctx.member?.garden?.cropUpgrades ?? {}),
+		gardenLevel: getGardenLevel(ctx.member.garden?.experience ?? 0).level,
 
 		exportableCrops: $ratesData.exported,
 		communityCenter: $ratesData.communityCenter,
 		strength: $ratesData.strength,
 
-		cocoaFortuneUpgrade: data.member.chocolateFactory?.cocoaFortuneUpgrades,
+		cocoaFortuneUpgrade: ctx.member.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 
 		zorro: $ratesData.zorroMode
 			? {
-					enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
+					enabled: ctx.member.chocolateFactory?.unlockedZorro ?? false,
 					mode: $ratesData.zorroMode,
 				}
 			: undefined,
@@ -166,7 +162,7 @@
 			sprayedPlot: $ratesData.sprayedPlot,
 			zorro: $ratesData.zorroMode
 				? {
-						enabled: data.member.chocolateFactory?.unlockedZorro ?? false,
+						enabled: ctx.member.chocolateFactory?.unlockedZorro ?? false,
 						mode: $ratesData.zorroMode,
 					}
 				: undefined,
@@ -216,10 +212,7 @@
 	});
 </script>
 
-<Head
-	title="{data.account.name} | Rate Calculator"
-	description="Calculate your expected farming rates in Hypixel Skyblock!"
-/>
+<Head title="{ctx.ign} | Rate Calculator" description="Calculate your expected farming rates in Hypixel Skyblock!" />
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector radio={true} />

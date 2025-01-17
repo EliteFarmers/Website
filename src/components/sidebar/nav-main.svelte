@@ -38,7 +38,7 @@
 							{#snippet tooltipContent()}
 								{title}
 							{/snippet}
-							{#if !sidebar.open}
+							{#if !sidebar.open && !sidebar.isMobile}
 								<ChevronRight
 									class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 								/>
