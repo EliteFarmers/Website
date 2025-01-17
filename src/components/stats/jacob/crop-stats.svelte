@@ -86,13 +86,13 @@
 	);
 </script>
 
-<div class="flex flex-1 flex-col items-center justify-center gap-4">
+<div class="flex w-full max-w-6xl flex-col items-center justify-center gap-4">
 	<CropSelector />
 
 	<div class="flex flex-col items-center justify-center gap-4">
 		<div class="flex flex-col items-center gap-2">
 			<CropMedalCounts stats={selectedCropsStats} />
-			<div class="flex flex-wrap gap-2">
+			<div class="flex flex-wrap justify-center gap-2 md:flex-row">
 				<div class="flex flex-col items-center rounded-md bg-primary-foreground p-2">
 					<span
 						><span class="text-lg font-semibold">{selectedCropsStats.participations?.toLocaleString()}</span
