@@ -25,7 +25,7 @@
 					{#snippet child({ props })}
 						<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
 							{#snippet tooltipContent()}
-								{title}
+								<span class="inline-block first-letter:capitalize">{title}</span>
 							{/snippet}
 							{#if !sidebar.open}
 								<ChevronRight
@@ -64,6 +64,9 @@
 						onclick={() => sidebar.toggle()}
 					>
 						{@render inner(crumb)}
+						{#snippet tooltipContent()}
+							<span class="inline-block first-letter:capitalize">{crumb.tooltip ?? crumb.name}</span>
+						{/snippet}
 					</Sidebar.MenuButton>
 				{/if}
 			</Sidebar.MenuItem>
@@ -75,14 +78,15 @@
 							<Sidebar.MenuButton {...props}>
 								{@render inner(crumb)}
 								{#snippet tooltipContent()}
-									{crumb.name}
+									<span class="inline-block first-letter:capitalize"
+										>{crumb.tooltip ?? crumb.name}</span
+									>
 								{/snippet}
 								<ChevronRight
 									class="ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
 								/>
 							</Sidebar.MenuButton>
 						{/snippet}
-						<!-- <ChevronDown class="size-4" /> -->
 					</Collapsible.Trigger>
 					<Collapsible.Content>
 						<Sidebar.MenuSub>
@@ -103,6 +107,9 @@
 			{:else}
 				<Sidebar.MenuButton class="truncate first-letter:capitalize md:max-w-none">
 					{@render inner(crumb)}
+					{#snippet tooltipContent()}
+						<span class="inline-block first-letter:capitalize">{crumb.tooltip ?? crumb.name}</span>
+					{/snippet}
 				</Sidebar.MenuButton>
 			{/if}
 		</Sidebar.MenuItem>
@@ -126,7 +133,7 @@
 {#snippet link(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	<Sidebar.MenuButton data-active={crumb.href === page.url.pathname}>
 		{#snippet tooltipContent()}
-			{crumb.name}
+			<span class="inline-block first-letter:capitalize">{crumb.tooltip ?? crumb.name}</span>
 		{/snippet}
 		{#snippet child({ props })}
 			<a href={crumb.href} {...props}>

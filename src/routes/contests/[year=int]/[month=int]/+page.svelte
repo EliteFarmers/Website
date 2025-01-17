@@ -4,6 +4,7 @@
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -59,17 +60,18 @@
 		</p>
 		<div class="my-4 flex flex-col items-center justify-center gap-2 md:gap-4">
 			<div class="flex flex-row gap-4">
-				<a
-					class="w-32 rounded-lg bg-gray-200 p-2 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-700"
-					href="/contests/{page.params.year}/{+page.params.month - 1}">Previous</a
+				<Button
+					class="w-32 rounded-lg"
+					variant="secondary"
+					href="/contests/{page.params.year}/{+page.params.month - 1}">Previous</Button
 				>
-				<a
-					class="w-32 rounded-lg bg-gray-200 p-2 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-700"
-					href="/contests/{page.params.year}/records">Records</a
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{page.params.year}/records"
+					>Records</Button
 				>
-				<a
-					class="w-32 rounded-lg bg-gray-200 p-2 hover:bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-700"
-					href="/contests/{page.params.year}/{+page.params.month + 1}">Next</a
+				<Button
+					class="w-32 rounded-lg"
+					variant="secondary"
+					href="/contests/{page.params.year}/{+page.params.month + 1}">Next</Button
 				>
 			</div>
 		</div>
@@ -80,10 +82,10 @@
 			No contests found! Contest data is collected from players who have been searched on the website.
 		</h3>
 	{:else}
-		<div class="mx-8 mb-8 flex w-full flex-wrap gap-4 last:justify-center md:w-[90%] lg:w-[70%]">
+		<div class="mx-8 mb-8 flex w-full flex-wrap justify-center gap-4 md:w-[90%] lg:w-[70%]">
 			{#each days as [day, contests], i (i)}
 				<a
-					class="flex flex-1 basis-16 flex-col items-center gap-1 rounded-lg bg-gray-200 p-2 text-center dark:bg-zinc-800"
+					class="flex w-20 flex-col items-center gap-1 rounded-lg bg-primary-foreground p-2 text-center"
 					href="/contests/{year}/{month}/{day}"
 				>
 					<h4 class="mb-2 text-lg">Day {day}</h4>
@@ -100,16 +102,15 @@
 		</div>
 	{/if}
 
-	<div class="mb-16 flex flex-row flex-wrap items-center gap-1 text-center">
+	<div class="mb-16 grid grid-cols-3 items-center gap-1 text-center">
 		{#each Array.from({ length: 12 }, (_, i) => i + 1) as i}
-			<a
-				class="flex-1 basis-1/4 {month === i
-					? 'bg-gray-100 dark:bg-zinc-700'
-					: 'bg-gray-200 dark:bg-zinc-800'}  whitespace-nowrap rounded-lg p-2 hover:bg-gray-100 hover:dark:bg-zinc-700"
+			<Button
+				variant="secondary"
+				class="w-40 whitespace-nowrap rounded-lg {i === month ? 'ring-2' : ''}"
 				href="/contests/{page.params.year}/{i}"
 			>
 				{getSkyblockMonth(i)}
-			</a>
+			</Button>
 		{/each}
 	</div>
 </div>

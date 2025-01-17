@@ -19,17 +19,15 @@
 		<div
 			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
-			<div class="text-green-800 dark:text-green-300">
-				<p>
-					{#if entry.position !== -1}
-						<span class="xs:text-md text-sm sm:text-xl md:text-2xl">#</span><span
-							class="xs:text-xl text-lg sm:text-2xl md:text-3xl">{(entry.position ?? 0) + 1}</span
-						>
-					{:else}
-						<span class="xs:text-md text-sm sm:text-xl md:text-2xl">???</span>
-					{/if}
-				</p>
-			</div>
+			<p class="text-success">
+				{#if entry.position !== -1}
+					<span class="xs:text-md text-sm sm:text-lg md:text-xl">#</span><span
+						class="xs:text-xl text-lg sm:text-xl md:text-2xl">{(entry.position ?? 0) + 1}</span
+					>
+				{:else}
+					<span class="xs:text-md text-sm sm:text-xl md:text-2xl">???</span>
+				{/if}
+			</p>
 			{#if entry.removed}
 				<Popover.Mobile>
 					{#snippet trigger()}
@@ -47,7 +45,9 @@
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
-				<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl">{entry.playerName}</p>
+				<p class="xs:text-xl inline-block max-w-60 truncate text-start text-sm font-semibold sm:text-2xl">
+					{entry.playerName}
+				</p>
 			</div>
 		</div>
 		<div class="mr-2 flex items-center justify-end gap-2 p-1 align-middle md:mx-2">

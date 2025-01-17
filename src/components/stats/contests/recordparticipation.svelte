@@ -19,12 +19,10 @@
 		<div
 			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
-			<div class="text-green-800 dark:text-green-300">
-				<h3>
-					<span class="xs:text-md text-sm sm:text-2xl">#</span><span class="xs:text-xl text-lg sm:text-3xl"
-						>{(rank ?? 0) + 1}</span
-					>
-				</h3>
+			<div class="text-success">
+				<span class="xs:text-md text-sm sm:text-xl">#</span><span class="xs:text-xl text-lg sm:text-2xl"
+					>{(rank ?? 0) + 1}</span
+				>
 			</div>
 			{#if entry.removed}
 				<Popover.Mobile>
@@ -43,11 +41,11 @@
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
 			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
-				<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl">{entry.playerName}</p>
+				<p class="xs:text-lg inline-block text-start text-sm font-semibold sm:text-xl">{entry.playerName}</p>
 			</div>
 		</div>
 		<div class="mr-2 flex items-center justify-end gap-2 p-1 align-middle md:mx-2">
-			<div class="xs:text-xl font-mono text-sm sm:text-2xl">
+			<div class="xs:text-lg font-mono text-sm sm:text-xl">
 				{entry.collected?.toLocaleString()}
 			</div>
 		</div>
@@ -57,26 +55,25 @@
 			<div class="flex flex-col text-lg">
 				<p class="p-1 text-lg">
 					{#if entry.position !== -1}
-						<span class="xs:text-lg text-sm text-green-800 dark:text-green-300 sm:text-xl">#</span><span
-							class="xs:text-xl text-lg text-green-800 dark:text-green-300 sm:text-2xl"
-							>{(entry.position ?? 0) + 1}</span
+						<span class="xs:text-md text-sm text-success sm:text-xl">#</span><span
+							class=" xs:text-xl text-lg text-success sm:text-2xl">{(entry.position ?? 0) + 1}</span
 						>
 					{:else}
-						<span class="xs:text-md text-sm text-green-800 dark:text-green-300 sm:text-2xl">???</span>
+						<span class="xs:text-md text-sm text-success sm:text-xl">???</span>
 					{/if}
-					<span class="xs:text-md text-sm sm:text-2xl">
+					<span class="xs:text-md text-sm sm:text-xl">
 						/ {entry.participants?.toLocaleString() ?? '???'}</span
 					>
 				</p>
 				<p class="text-center font-mono text-sm font-light">
-					<span class="whitespace-nowrap rounded-md bg-gray-200 p-1 dark:bg-zinc-900">
+					<span class="whitespace-nowrap rounded-md bg-card p-1">
 						{new Date((entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
 							timeStyle: 'short',
 							dateStyle: 'short',
 							timeZone: 'UTC',
 						})}
 					</span>
-					<span class="whitespace-nowrap rounded-md bg-gray-200 p-1 dark:bg-zinc-900">
+					<span class="whitespace-nowrap rounded-md bg-card p-1">
 						{getReadableSkyblockMonthDay(entry.timestamp ?? 0)}
 					</span>
 				</p>

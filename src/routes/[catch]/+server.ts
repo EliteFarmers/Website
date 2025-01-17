@@ -19,7 +19,7 @@ const urls: Partial<Record<string, string>> = {
 	oss: '/oss.txt',
 	store: '/shop',
 	wiki: 'https://wiki.elitebot.dev/',
-	premium: '/shop/',
+	premium: '/shop/1261795533916475578',
 };
 
 export const GET = (async ({ params }) => {
