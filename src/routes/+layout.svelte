@@ -61,7 +61,7 @@
 		<AppSidebar />
 	</Sidebar.Root>
 
-	<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="pt-16">
+	<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="py-16" type="always">
 		<Sidebar.Inset>
 			<Header />
 
