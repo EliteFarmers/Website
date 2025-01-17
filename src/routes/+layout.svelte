@@ -15,7 +15,8 @@
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import Header from '$comp/header/header.svelte';
-	import { themes, type ThemeClass } from '$lib/themes';
+	import { clearThemes } from '$comp/header/mode-toggle.svelte';
+	import { themes } from '$lib/themes';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -33,9 +34,11 @@
 	if (browser) {
 		mode.subscribe((value) => {
 			if (!value) return;
-			setMode(value as ThemeClass | 'system');
+      console.log(value);
+			clearThemes();
 		});
 	}
+
 
 	const themeGroups = {
 		light: themes.filter(t => !t.isDark).map(t => t.class),

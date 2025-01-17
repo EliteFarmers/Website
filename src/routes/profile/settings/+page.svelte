@@ -15,7 +15,7 @@
 	import BadgeConfig from './badge-config.svelte';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-	import { setMode } from 'mode-watcher';
+	import { setMode, setTheme } from 'mode-watcher';
 	import { themes, type ThemeClass } from '$lib/themes';
 	import Search from 'lucide-svelte/icons/search';
 	import Menu from 'lucide-svelte/icons/menu';
@@ -373,7 +373,9 @@
 		<div class="flex justify-start">
 			<button 
 				class="bg-primary text-primary-foreground px-4 py-2 rounded-md" 
-				onclick={() => setMode(themeClass as ThemeClass)}
+				onclick={() => {
+					document.documentElement.className = themeClass;
+				}}
 			>
 				Apply Theme
 			</button>
