@@ -1,21 +1,17 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
-	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
 	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
 	import { Crop, getCropFromName } from 'farming-weight';
-	import { onMount } from 'svelte';
 	import ContestList from '$comp/stats/jacob/contest-list.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+
+	const ctx = getStatsContext();
+	const jacob = $derived(ctx.member.jacob);
 
 	type CropStats = components['schemas']['JacobDataDto']['stats'];
-
-	interface Props {
-		jacob: components['schemas']['JacobDataDto'] | undefined;
-		crop?: string;
-	}
-
-	let { jacob, crop: initalCrop = 'Wheat' }: Props = $props();
 
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
@@ -88,12 +84,6 @@
 			? combineCropStats(Object.values(jacob?.stats?.crops ?? {}))
 			: combineCropStats(crops.map((c) => allCropStats(c)))
 	);
-
-	onMount(() => {
-		if (initalCrop) {
-			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [initalCrop]: true });
-		}
-	});
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center gap-4">

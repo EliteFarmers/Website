@@ -38,7 +38,6 @@
 	);
 
 	const topCollections = $derived(ctx.collections?.toSorted((a, b) => b.weight - a.weight).slice(0, 3));
-	const topCrop = $derived(getCropDisplayName(getCropFromName(topCollections?.[0]?.key ?? 'Wheat') ?? Crop.Wheat));
 
 	let description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
@@ -98,7 +97,7 @@
 
 <div class="my-8 flex flex-col items-center justify-center">
 	<div class="flex max-w-4xl flex-col gap-8">
-		<CropStats jacob={member.jacob} crop={topCrop} />
-		<Breakdown weight={member.farmingWeight} />
+		<CropStats />
+		<Breakdown />
 	</div>
 </div>
