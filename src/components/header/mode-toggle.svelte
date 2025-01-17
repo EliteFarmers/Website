@@ -13,6 +13,17 @@
 
 	ModeWatcher.mode.subscribe((value) => currentMode = value);
 
+	if (typeof window !== 'undefined') {
+		new MutationObserver(mutations => 
+			mutations
+				.filter(m => m.attributeName === 'class')
+				.forEach(() => currentMode = document.documentElement.className || undefined)
+		).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class']
+		});
+	}
+
 	export function clearThemes() {
 		const themeClasses = themes.map(t => t.class);
 		document.documentElement.classList.remove(...themeClasses);
