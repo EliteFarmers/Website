@@ -10,6 +10,7 @@
 	import { browser } from '$app/environment';
 	import { Debounced } from 'runed';
 	import { goto } from '$app/navigation';
+	import { ScrollArea } from '$ui/scroll-area';
 
 	let {
 		open = $bindable(false),
@@ -72,26 +73,28 @@
 				<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
-		<Command.List>
-			<Command.Empty>No results found.</Command.Empty>
-			<Command.Group heading="Players">
-				{#if searchStr !== ''}
-					<Command.Item
-						value={searchStr ?? ''}
-						onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
-					>
-						{searchStr}
-					</Command.Item>
-				{/if}
-				{#each players as player, i (i)}
-					<Command.Item
-						value={player ?? ''}
-						onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
-					>
-						{player}
-					</Command.Item>
-				{/each}
-			</Command.Group>
-		</Command.List>
+		<ScrollArea class="flex h-full max-h-[300px] flex-row">
+			<Command.List class="max-h-none">
+				<Command.Empty>No results found.</Command.Empty>
+				<Command.Group heading="Players">
+					{#if searchStr !== ''}
+						<Command.Item
+							value={searchStr ?? ''}
+							onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
+						>
+							{searchStr}
+						</Command.Item>
+					{/if}
+					{#each players as player, i (i)}
+						<Command.Item
+							value={player ?? ''}
+							onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
+						>
+							{player}
+						</Command.Item>
+					{/each}
+				</Command.Group>
+			</Command.List>
+		</ScrollArea>
 	</Command.Root>
 </Command.Dialog>
