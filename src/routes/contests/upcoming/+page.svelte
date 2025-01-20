@@ -35,7 +35,7 @@
 	});
 </script>
 
-<Head title={'Upcoming Contests'} description={"Upcoming Jacob's Contests for Hypixel Skyblock."} />
+<Head title="Upcoming Contests" description="Upcoming Jacob's Contests for Hypixel Skyblock." />
 
 <div class="flex flex-col items-center justify-center">
 	<h1 class="my-16 text-4xl">Upcoming Contests - Year {data.year}</h1>
@@ -43,7 +43,7 @@
 	{#if upcoming.length === 0}
 		<p>No upcoming contests have been provided yet! Try again later!</p>
 	{:else}
-		<div class="mb-8 flex flex-wrap gap-2">
+		<div class="mb-8 flex w-full flex-row justify-center gap-2">
 			<CropSelector />
 		</div>
 		<div class="mx-8 flex w-full flex-col items-center justify-center gap-4 md:w-[70%]">

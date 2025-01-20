@@ -16,8 +16,6 @@
 	watch(
 		() => ctx.tools,
 		(tools) => {
-			console.log('Tools changed');
-
 			const options = {
 				milestones: getCropMilestoneLevels(garden?.crops ?? {}),
 				selectedPet: FarmingPet.fromArray(ctx.pets)
