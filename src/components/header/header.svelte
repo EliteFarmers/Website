@@ -26,10 +26,12 @@
 </header>
 
 {#await navigating.complete}
-	<div class="relative">
-		<div
-			class="absolute h-1 w-full bg-success"
-			transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
-		></div>
+	<div class="sticky top-16 z-40 w-full">
+		<div class="relative">
+			<div
+				class="absolute h-1.5 w-full bg-success top-0"
+				transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
+			></div>
+		</div>
 	</div>
 {/await}
