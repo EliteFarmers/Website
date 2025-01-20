@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-
 	import Participation from '$comp/stats/contests/participation.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { Button } from '$ui/button';
 	import { ScrollArea } from '$ui/scroll-area';
+	import { tick } from 'svelte';
 
 	interface Props {
 		crop?: string;
@@ -22,6 +22,17 @@
 	let sorted = $derived(
 		entries?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)).slice(0, expand ? undefined : 10) ?? []
 	);
+
+	let area = $state<HTMLElement | null>(null);
+
+	function toggle() {
+		expand = !expand;
+		if (expand) {
+			tick().then(() => {
+				area?.scrollTo({ top: 473.92, behavior: 'smooth' });
+			});
+		}
+	}
 </script>
 
 <div class="h-full items-center justify-between rounded-md border-2 bg-primary-foreground shadow-md">
@@ -35,7 +46,7 @@
 		<span>
 			{entries?.length ?? 0} / {participants !== -1 ? participants : 'Unknown'} Participants
 		</span>
-		<ScrollArea class="h-[29.62rem] w-full rounded-md border">
+		<ScrollArea bind:viewRef={area} class="h-[29.62rem] w-full rounded-md border" type="always">
 			<div class="flex w-[26rem] flex-col justify-center space-y-2">
 				{#each sorted as participant}
 					<Participation entry={participant} />
@@ -57,11 +68,8 @@
 			</span>
 		</div>
 		{#if entries.length > 10}
-			<Button
-				class="w-32 whitespace-nowrap rounded-md"
-				size="sm"
-				variant="secondary"
-				onclick={() => (expand = !expand)}>{expand ? 'Show Less' : 'Load More'}</Button
+			<Button class="w-32 whitespace-nowrap rounded-md" size="sm" variant="secondary" onclick={toggle}
+				>{expand ? 'Show Less' : 'Load More'}</Button
 			>
 		{/if}
 	</div>
