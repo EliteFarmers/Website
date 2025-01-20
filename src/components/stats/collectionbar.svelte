@@ -35,7 +35,7 @@
 	let crop = $derived(name ? name : undefined);
 	let index = $derived(name && crop ? cropArray.indexOf(name) : -1);
 
-	function getFrameStyle() {
+	function getFrameStyle(rank: number) {
 		if (rank <= 0) return '';
 
 		if (rank <= 5) {
@@ -50,27 +50,19 @@
 			return 'background-image: url(/images/frames/bronze.webp);';
 		}
 	}
+
+	let style = $derived(getFrameStyle(rank));
 </script>
 
 <div class="flex w-full flex-row items-center gap-2 align-middle">
 	<div
 		class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-primary-foreground p-1 align-middle"
 	>
-		{#key rank}
-			<div
-				class="crop-container pixelated flex aspect-square h-10 w-10 sm:h-14 sm:w-14 md:h-20 md:w-20"
-				style={getFrameStyle()}
-			>
-				<img
-					src="/images/crops/{key}.png"
-					class="pixelated aspect-square rounded-lg object-contain p-[16%]"
-					alt={name}
-				/>
-			</div>
-		{/key}
+		{@render cropIcon('hidden sm:flex')}
 		<div class="flex flex-grow flex-col justify-center gap-1 pr-2">
 			<div class="flex flex-row items-center justify-between gap-2">
 				<div class="flex flex-row items-center gap-1">
+					{@render cropIcon('flex sm:hidden')}
 					{#if rank > 0}
 						<a
 							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
@@ -132,6 +124,16 @@
 	</div>
 	<Minion name={name ?? ''} {index} tierField={minionTierField} />
 </div>
+
+{#snippet cropIcon(classes: string)}
+	<div class="crop-container pixelated flex aspect-square size-10 sm:size-14 md:size-20 {classes}" {style}>
+		<img
+			src="/images/crops/{key}.png"
+			class="pixelated aspect-square rounded-lg object-contain p-[16%]"
+			alt={name}
+		/>
+	</div>
+{/snippet}
 
 <style lang="postcss">
 	.crop-container {
