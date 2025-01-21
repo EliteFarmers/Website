@@ -143,7 +143,7 @@
 	{#if crumb.snippet}
 		{@render crumb.snippet(crumb)}
 	{:else if crumb.name}
-		<span class="inline-block max-w-28 truncate first-letter:capitalize">
+		<span class="mt-1 inline-block max-w-28 truncate first-letter:capitalize">
 			{crumb.name}
 		</span>
 	{/if}
