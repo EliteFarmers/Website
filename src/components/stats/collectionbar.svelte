@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import * as Popover from '$comp/ui/popover';
 	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
+	import * as Sidebar from '$ui/sidebar';
 	import Minion from './minion.svelte';
 
 	interface Props {
@@ -52,36 +53,45 @@
 	}
 
 	let style = $derived(getFrameStyle(rank));
+	const sidebar = Sidebar.useSidebar();
 </script>
 
-<div class="flex w-full flex-row items-center gap-2 align-middle">
-	<div
-		class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-primary-foreground p-1 align-middle"
-	>
-		{@render cropIcon('hidden sm:flex')}
-		<div class="flex flex-grow flex-col justify-center gap-1 pr-2">
+{#if sidebar.size.tiny}
+	<div class="max-h-30 flex w-full flex-row items-center gap-2 rounded-lg bg-primary-foreground p-1 align-middle">
+		<div class="flex flex-grow flex-col justify-center gap-0.5">
 			<div class="flex flex-row items-center justify-between gap-2">
 				<div class="flex flex-row items-center gap-1">
-					{@render cropIcon('flex sm:hidden')}
-					{#if rank > 0}
-						<a
-							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
-							class="rounded-md bg-card px-1.5 hover:bg-muted"
-						>
-							<span class="xs:text-md text-sm sm:text-lg">#</span><span
-								class="text-md xs:text-lg sm:text-xl">{rank}</span
-							>
-						</a>
-					{/if}
-					<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{name}</p>
+					{@render cropIcon()}
+					<div class="flex flex-col items-start">
+						<div class="flex flex-row items-center gap-1">
+							{#if rank > 0}
+								<a
+									href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
+									class="rounded-md bg-card px-1.5 hover:bg-muted"
+								>
+									<span class="xs:text-md text-sm sm:text-lg">#</span><span
+										class="text-md xs:text-lg sm:text-xl">{rank}</span
+									>
+								</a>
+							{/if}
+							<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{name}</p>
+						</div>
+						<p class="text-normal whitespace-nowrap sm:text-lg md:text-xl lg:text-2xl">
+							{value.toLocaleString()}
+						</p>
+					</div>
 				</div>
-				<p class="text-right font-semibold sm:text-lg md:ml-2 md:text-xl lg:text-2xl">
-					{weight.toLocaleString()}
+				<p class="pr-1 text-right font-semibold sm:text-lg md:ml-2 md:text-xl lg:text-2xl">
+					{Math.floor(weight).toLocaleString()}
 				</p>
 			</div>
-			<div class="flex flex-row items-center justify-between gap-2">
-				<p class="text-normal whitespace-nowrap sm:text-lg md:text-xl lg:text-2xl">{value.toLocaleString()}</p>
+			<div class="flex flex-row items-center justify-between gap-2 px-0.5">
 				<div class="flex flex-row items-center gap-2">
+					<img
+						src="/images/pests/{pest}.png"
+						class="pixelated m-1 aspect-square size-6 h-full object-contain"
+						alt={pest}
+					/>
 					{#if pestRank > 0}
 						<a
 							href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
@@ -98,11 +108,6 @@
 								<p class="text-md whitespace-nowrap font-semibold sm:text-lg">
 									{pestKills.toLocaleString()}
 								</p>
-								<img
-									src="/images/pests/{pest}.png"
-									class="pixelated aspect-square h-full object-contain"
-									alt={pest}
-								/>
 							</div>
 						{/snippet}
 						<div class="flex max-w-md flex-col items-center gap-2">
@@ -119,13 +124,86 @@
 						</div>
 					</Popover.Mobile>
 				</div>
+				<Minion name={name ?? ''} {index} tierField={minionTierField} size="sm" />
 			</div>
 		</div>
 	</div>
-	<Minion name={name ?? ''} {index} tierField={minionTierField} />
-</div>
+{:else}
+	<div class="flex w-full flex-row items-center gap-2 align-middle">
+		<div
+			class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-primary-foreground p-1 align-middle"
+		>
+			{@render cropIcon('hidden sm:flex')}
+			<div class="flex flex-grow flex-col justify-center gap-1 pr-2">
+				<div class="flex flex-row items-center justify-between gap-2">
+					<div class="flex flex-row items-center gap-1">
+						{@render cropIcon('flex sm:hidden')}
+						{#if rank > 0}
+							<a
+								href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
+								class="rounded-md bg-card px-1.5 hover:bg-muted"
+							>
+								<span class="xs:text-md text-sm sm:text-lg">#</span><span
+									class="text-md xs:text-lg sm:text-xl">{rank}</span
+								>
+							</a>
+						{/if}
+						<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{name}</p>
+					</div>
+					<p class="text-right font-semibold sm:text-lg md:ml-2 md:text-xl lg:text-2xl">
+						{weight.toLocaleString()}
+					</p>
+				</div>
+				<div class="flex flex-row items-center justify-between gap-2">
+					<p class="text-normal whitespace-nowrap sm:text-lg md:text-xl lg:text-2xl">
+						{value.toLocaleString()}
+					</p>
+					<div class="flex flex-row items-center gap-2">
+						{#if pestRank > 0}
+							<a
+								href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
+								class="rounded-md bg-card px-1 hover:bg-muted"
+							>
+								<span class="xs:text-md text-sm sm:text-lg">#</span><span
+									class="text-md xs:text-lg sm:text-xl">{pestRank}</span
+								>
+							</a>
+						{/if}
+						<Popover.Mobile>
+							{#snippet trigger()}
+								<div class="flex h-6 flex-row items-center justify-center gap-2 align-middle">
+									<p class="text-md whitespace-nowrap font-semibold sm:text-lg">
+										{pestKills.toLocaleString()}
+									</p>
+									<img
+										src="/images/pests/{pest}.png"
+										class="pixelated aspect-square h-full object-contain"
+										alt={pest}
+									/>
+								</div>
+							{/snippet}
+							<div class="flex max-w-md flex-col items-center gap-2">
+								<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
+								<p>{pestKills.toLocaleString()}</p>
+								<a class="text-lg font-semibold text-blue-500 hover:underline" href="/info#Pests"
+									>Weight Adjustment</a
+								>
+								{#if uncounted === 0}
+									<p>None!</p>
+								{:else}
+									<p>-{uncounted.toLocaleString()} {name}</p>
+								{/if}
+							</div>
+						</Popover.Mobile>
+					</div>
+				</div>
+			</div>
+		</div>
+		<Minion name={name ?? ''} {index} tierField={minionTierField} />
+	</div>
+{/if}
 
-{#snippet cropIcon(classes: string)}
+{#snippet cropIcon(classes?: string)}
 	<div class="crop-container pixelated flex aspect-square size-10 sm:size-14 md:size-20 {classes}" {style}>
 		<img
 			src="/images/crops/{key}.png"
