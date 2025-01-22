@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
-	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto, FarmingPet, Stat } from 'farming-weight';
+	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto } from 'farming-weight';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { watch } from 'runed';
 
@@ -18,13 +18,6 @@
 		(tools) => {
 			const options = {
 				milestones: getCropMilestoneLevels(garden?.crops ?? {}),
-				selectedPet: FarmingPet.fromArray(ctx.pets)
-					.sort(
-						(a, b) =>
-							(b.getChimeraAffectedStats(1)?.[Stat.FarmingFortune] ?? 0) -
-							(a.getChimeraAffectedStats(1)?.[Stat.FarmingFortune] ?? 0)
-					)
-					.at(0),
 			};
 
 			actualTools = FT.fromArray(tools as EliteItemDto[], options);
