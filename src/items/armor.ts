@@ -742,4 +742,18 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 		},
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 	},
+	PESTHUNTERS: {
+		name: 'Eradicator',
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 50,
+			},
+			3: {
+				[Stat.FarmingFortune]: 75,
+			},
+			4: {
+				[Stat.FarmingFortune]: 100,
+			},
+		},
+	}
 };

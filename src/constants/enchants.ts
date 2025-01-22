@@ -356,41 +356,6 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			[Stat.FarmingFortune]: 0.25 * Object.keys(GARDEN_VISITORS).length,
 		},
 	},
-	ultimate_chimera: {
-		name: 'Chimera',
-		appliesTo: [ReforgeTarget.Sword],
-		wiki: 'https://wiki.hypixel.net/Chimera_Enchantment',
-		levelRequirement: 31,
-		minLevel: 1,
-		maxLevel: 5,
-		levels: {
-			1: {},
-			2: {},
-			3: {},
-			4: {},
-			5: {},
-		},
-		computedLevels: (opt) => {
-			const pet = opt.selectedPet;
-			return {
-				1: {
-					stats: pet?.getChimeraAffectedStats(0.2) ?? {},
-				},
-				2: {
-					stats: pet?.getChimeraAffectedStats(0.4) ?? {},
-				},
-				3: {
-					stats: pet?.getChimeraAffectedStats(0.6) ?? {},
-				},
-				4: {
-					stats: pet?.getChimeraAffectedStats(0.8) ?? {},
-				},
-				5: {
-					stats: pet?.getChimeraAffectedStats(1) ?? {},
-				},
-			};
-		},
-	},
 	turbo_cactus: {
 		name: 'Turbo-Cacti',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',

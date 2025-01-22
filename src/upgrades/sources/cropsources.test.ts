@@ -95,7 +95,7 @@ test('Wheat fortune test', () => {
 	]);
 
 	const generalSources = player.getProgress();
-	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact Family');
+	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact');
 	expect(fermento).toBeDefined();
 	expect(fermento?.fortune).toBe(30);
 
@@ -363,7 +363,7 @@ test('Squash ring test', () => {
 	});
 
 	const generalSources = player.getProgress();
-	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact Family');
+	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact');
 	expect(fermento).toBeDefined();
 	expect(fermento?.fortune).toBe(0);
 

@@ -97,6 +97,60 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		maxRarity: Rarity.Legendary,
 		baseStats: {
 			[Stat.BonusPestChance]: 10,
+			[Stat.PestCooldownReduction]: 15,
+		},
+	},
+	PESTHUNTERS_GLOVES: {
+		skyblockId: 'PESTHUNTERS_GLOVES',
+		name: "Pesthunter's Gloves",
+		wiki: 'https://wiki.hypixel.net/Pesthunter%27s_Gloves',
+		slot: GearSlot.Gloves,
+		family: 'PESTHUNTERS',
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 5,
+			[Stat.PestCooldownReduction]: 10,
+		},
+	},
+	PESTHUNTERS_BELT: {
+		skyblockId: 'PESTHUNTERS_BELT',
+		name: "Pesthunter's Belt",
+		wiki: 'https://wiki.hypixel.net/Pesthunter%27s_Belt',
+		slot: GearSlot.Belt,
+		family: 'PESTHUNTERS',
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 5,
+			[Stat.PestCooldownReduction]: 10,
+		},
+	},
+	PESTHUNTERS_CLOAK: {
+		skyblockId: 'PESTHUNTERS_CLOAK',
+		name: "Pesthunter's Cloak",
+		wiki: 'https://wiki.hypixel.net/Pesthunter%27s_Cloak',
+		slot: GearSlot.Cloak,
+		family: 'PESTHUNTERS',
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 5,
+			[Stat.PestCooldownReduction]: 10,
+		},
+		upgrade: {
+			id: 'PEST_VEST',
+			reason: UpgradeReason.NextTier,
+			why: 'The Pest Vest provides more fortune and a higher bonus pest chance.',
+		}
+	},
+	PESTHUNTERS_NECKLACE: {
+		skyblockId: 'PESTHUNTERS_NECKLACE',
+		name: "Pesthunter's Necklace",
+		wiki: 'https://wiki.hypixel.net/Pesthunter%27s_Necklace',
+		slot: GearSlot.Necklace,
+		family: 'PESTHUNTERS',
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 5,
+			[Stat.PestCooldownReduction]: 10,
 		},
 	},
 };

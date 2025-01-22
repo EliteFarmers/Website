@@ -254,3 +254,15 @@ class FarmingWeight {
 		CROP_WEIGHT[crop];
 	};
 }
+
+
+/**
+ * Get the weight of a single crop based on the collection amount.
+ * Use `createFarmingWeightCalculator` to calculate accurate weight of multiple crops
+ * @param {Crop} crop
+ * @param {number} collection
+ * @returns {number}
+ */
+export function calcWeightForCrop(crop: Crop, collection: number): number {
+	return collection / CROP_WEIGHT[crop];
+}

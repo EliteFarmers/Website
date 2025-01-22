@@ -210,11 +210,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		},
 		name: 'Fungi Cutter',
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
-		upgrade: {
-			id: 'DAEDALUS_AXE',
-			reason: UpgradeReason.DeadEnd,
-			why: 'Paired with the Chimera enchantment, a Daedalus Axe provides more fortune than a Fungi Cutter.',
-		},
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -549,32 +544,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Rare_',
 		stats: t3hoeStats,
 	},
-
-	DAEDALUS_AXE: {
-		skyblockId: 'DAEDALUS_AXE',
-		crop: Crop.Mushroom, // No specific crop for this, but best for mushrooms
-		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Sword,
-		type: FarmingToolType.None,
-		upgrade: {
-			id: 'STARRED_DAEDALUS_AXE',
-			reason: UpgradeReason.NextTier,
-		},
-		name: 'Daedalus Axe',
-		wiki: 'https://wiki.hypixel.net/Daedalus_Axe',
-		computedStats: (opt) => opt.selectedPet?.getChimeraAffectedStats(1) ?? {},
-	},
-	STARRED_DAEDALUS_AXE: {
-		skyblockId: 'STARRED_DAEDALUS_AXE',
-		crop: Crop.Mushroom, // No specific crop for this, but best for mushrooms
-		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Sword,
-		type: ReforgeTarget.Sword,
-		name: '⚚ Daedalus Axe',
-		wiki: 'https://wiki.hypixel.net/Daedalus_Axe#Upgraded__',
-		computedStats: (opt) => opt.selectedPet?.getChimeraAffectedStats(1) ?? {},
-	},
-
 	HOE_OF_NO_TILLING: {
 		skyblockId: 'HOE_OF_NO_TILLING',
 		maxRarity: Rarity.Rare,

@@ -11,6 +11,7 @@ export enum FarmingPets {
 	Bee = 'BEE',
 	Rabbit = 'RABBIT',
 	Slug = 'SLUG',
+	Hedgehog = 'HEDGEHOG',
 }
 
 export interface FarmingPetType {
@@ -216,6 +217,42 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			},
 		],
 	},
+	[FarmingPets.Hedgehog]: {
+		name: 'Hedgehog',
+		wiki: 'https://wiki.hypixel.net/Hedgehog_Pet',
+		perLevelStats: {
+			[Stat.Speed]: {
+				name: 'Speed',
+				value: 0.15,
+				type: FarmingPetStatType.Base,
+			},
+		},
+		perRarityLevelStats: {
+			[Rarity.Legendary]: {
+				[Stat.PestKillFortune]: {
+					name: 'Fearsome Farmer',
+					value: 1,
+					type: FarmingPetStatType.Ability,
+				},
+			},
+		},
+		abilities: [
+			{
+				name: 'Nocturnal',
+				exists: () => true,
+				computed: (_, pet) => {
+					// Add option for time of day later
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Nocturnal',
+							value: pet.level * 0.45 * 3,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			}
+		]
+	}
 };
 
 export interface FarmingPetItemInfo {

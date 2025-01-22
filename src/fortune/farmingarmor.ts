@@ -52,9 +52,11 @@ export class ArmorSet {
 		return this.armorFortune + this.equipmentFortune;
 	}
 	public declare setBonuses: ActiveArmorSetBonus[];
+	public declare equipmentSetBonuses: ActiveArmorSetBonus[];
 
 	constructor(armor: FarmingArmor[], equipment?: FarmingEquipment[], options?: PlayerOptions) {
 		this.setBonuses = [];
+		this.equipmentSetBonuses = [];
 
 		if (options) {
 			for (const piece of armor) {
@@ -173,12 +175,18 @@ export class ArmorSet {
 	}
 
 	private recalculateFamilies() {
+		this.setBonuses = ArmorSet.getSetBonusFrom(this.armor ?? []);
+		this.equipmentSetBonuses = ArmorSet.getSetBonusFrom(this.equipmentPieces ?? []);
+	
+		this.getFortuneBreakdown();
+	}
+
+	static getSetBonusFrom(armor: (FarmingArmor | FarmingEquipment | null)[]) {
 		const families = new Map<string, number>();
-		const armor = this.armor.filter((a) => a) as FarmingArmor[];
-		this.setBonuses = [];
+		const result = [];
 
 		for (const piece of armor) {
-			if (!piece.info.family) continue;
+			if (!piece?.info.family) continue;
 
 			families.set(piece.info.family, (families.get(piece.info.family) ?? 0) + 1);
 		}
@@ -189,15 +197,15 @@ export class ArmorSet {
 			const bonus = ARMOR_SET_BONUS[family];
 			if (!bonus) continue;
 
-			this.setBonuses.push({
+			result.push({
 				count: count,
-				from: armor.filter((a) => a.info.family === family).map((a) => a.slot),
+				from: armor.filter((a) => a?.info.family === family).map((a) => a?.slot) as GearSlot[],
 				bonus: bonus,
 				special: bonus.special,
 			});
 		}
 
-		this.getFortuneBreakdown();
+		return result;
 	}
 
 	getFortuneBreakdown(reloadFamilies = false) {
@@ -240,6 +248,16 @@ export class ArmorSet {
 			const fortune = piece.fortune;
 			if (fortune > 0) {
 				breakdown[piece.item.name ?? ''] = fortune;
+				equipmentSum += fortune;
+			}
+		}
+
+		// Equipment set bonuses
+		for (const { bonus, count } of this.equipmentSetBonuses) {
+			if (count < 2 || count > 4) continue;
+			const fortune = bonus.stats?.[count]?.[Stat.FarmingFortune] ?? 0;
+			if (fortune > 0) {
+				breakdown[bonus.name] = fortune;
 				equipmentSum += fortune;
 			}
 		}

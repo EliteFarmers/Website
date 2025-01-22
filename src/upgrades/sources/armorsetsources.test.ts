@@ -122,3 +122,137 @@ test('Armor set bonus', () => {
 		},
 	]);
 });
+
+
+const pesthunterCloak = {
+	id: 397,
+	count: 1,
+	skyblockId: 'PESTHUNTERS_CLOAK',
+	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
+	name: "§dSqueaky Pesthunter's Cloak",
+	lore: [
+		'§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+};
+
+const pesthunterGloves = {
+	id: 397,
+	count: 1,
+	skyblockId: 'PESTHUNTERS_GLOVES',
+	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
+	name: "§dSqueaky Pesthunter's Gloves",
+	lore: [
+		'§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+};
+
+test('Equipment set bonus', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				skyblockId: 'FERMENTO_HELMET',
+				uuid: '369f1caf-8d95-43a1-95b5-b437fbcfe118',
+				name: '§dMossy Fermento Helmet §4✦',
+				lore: [
+					'§7§8Harvester Helmet Skin',
+					'§d§l§ka§r §d§lMYTHIC HELMET §d§l§ka',
+				],
+				enchantments: { pesterminator: 6 },
+				attributes: {
+					skin: 'FERMENTO_ULTIMATE',
+					modifier: 'mossy',
+					timestamp: '1705977799398',
+					favorite_crop: '86',
+					rarity_upgrades: '1',
+				},
+				gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+			},
+		],
+		equipment: [
+			pesthunterCloak,
+			pesthunterGloves,
+		],
+		uniqueVisitors: 84,
+	});
+
+	const progress = player.armorSet.getProgress();
+
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.progress;
+		delete piece.item;
+		delete piece.maxInfo;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
+	});
+
+	expect(progress).toStrictEqual([
+		{
+			name: 'Helmet',
+			fortune: 92,
+			maxFortune: 92,
+			ratio: 1,
+		},
+		{
+			name: 'Chestplate',
+			fortune: 0,
+			maxFortune: 97,
+			ratio: 0,
+		},
+		{
+			name: 'Leggings',
+			fortune: 0,
+			maxFortune: 97,
+			ratio: 0,
+		},
+		{
+			name: 'Boots',
+			fortune: 0,
+			maxFortune: 92,
+			ratio: 0,
+		},
+		{
+			name: 'Armor Set Bonus',
+			fortune: 0,
+			maxFortune: 75,
+			ratio: 0,
+		},
+		{
+			name: 'Necklace',
+			fortune: 0,
+			maxFortune: 56,
+			ratio: 0,
+		},
+		{
+			name: 'Cloak',
+			fortune: 29,
+			maxFortune: 56,
+			ratio: 29 / 56,
+		},
+		{
+			name: 'Belt',
+			fortune: 0,
+			maxFortune: 56,
+			ratio: 0,
+		},
+		{
+			name: 'Gloves',
+			fortune: 29,
+			maxFortune: 56,
+			ratio: 29 / 56,
+		},
+		{
+			name: 'Equipment Set Bonus',
+			fortune: 50,
+			maxFortune: 100,
+			ratio: 0.5,
+		}
+	]);
+});

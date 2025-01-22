@@ -24,6 +24,16 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	...Object.entries(GEAR_SLOTS)
 		.filter(([, info]) => info.target === ReforgeTarget.Equipment)
 		.map<DynamicFortuneSource<ArmorSet>>(gearslot),
+	{
+		name: 'Equipment Set Bonus',
+		exists: (set) => set.equipmentSetBonuses.length > 0,
+		wiki: () => 'https://wiki.hypixel.net/Pesthunter%27s_Gloves',
+		max: () => ARMOR_SET_BONUS.PESTHUNTERS?.stats[4]?.[Stat.FarmingFortune] ?? 0,
+		current: (set) =>
+			set.equipmentSetBonuses.reduce((acc, bonus) => {
+				return acc + (bonus.bonus.stats[bonus.count]?.[Stat.FarmingFortune] ?? 0);
+			}, 0),
+	},
 ];
 
 function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<ArmorSet> {

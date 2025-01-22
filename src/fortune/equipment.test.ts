@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { ZorroMode } from '../player/playeroptions.js';
 import { FarmingEquipment } from './farmingequipment.js';
+import { ArmorSet } from './farmingarmor.js';
 
 const zorrosCape = {
 	id: 397,
@@ -160,4 +161,62 @@ test('Pest Vest Test', () => {
 	});
 
 	expect(vest.getFortune()).toBe(39);
+});
+
+const pesthunterCloak = {
+	id: 397,
+	count: 1,
+	skyblockId: 'PESTHUNTERS_CLOAK',
+	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
+	name: "§dSqueaky Pesthunter's Cloak",
+	lore: [
+		'§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+};
+
+const pesthunterGloves = {
+	id: 397,
+	count: 1,
+	skyblockId: 'PESTHUNTERS_GLOVES',
+	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
+	name: "§dSqueaky Pesthunter's Gloves",
+	lore: [
+		'§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+};
+
+test('Pesthunter Cloak Test', () => {
+	const cloak = new FarmingEquipment(pesthunterCloak, {
+		uniqueVisitors: 84,
+	});
+
+	expect(cloak.fortuneBreakdown).toStrictEqual({
+		'Green Thumb': 21,
+		Reforge: 8,
+	});
+
+	expect(cloak.getFortune()).toBe(29);
+});
+
+test('Pesthunter Set Bonus Test', () => {
+	const cloak = new FarmingEquipment(pesthunterCloak, {
+		uniqueVisitors: 84,
+	});
+	const gloves = new FarmingEquipment(pesthunterGloves, {
+		uniqueVisitors: 84,
+	});
+
+	const set = new ArmorSet([], [cloak, gloves]);
+
+	expect(set.fortune).toBe(108);
+	expect(set.equipmentSetBonuses).toHaveLength(1);
+	expect(set.getFortuneBreakdown()).toStrictEqual({
+		[gloves.item.name ?? '']: 29,
+		[cloak.item.name ?? '']: 29,
+		'Eradicator': 50,
+	});
 });
