@@ -151,8 +151,6 @@ export class ArmorSet {
 					this.boots = armor as FarmingArmor;
 					break;
 			}
-
-			this.recalculateFamilies();
 			return;
 		}
 
@@ -171,12 +169,12 @@ export class ArmorSet {
 				break;
 		}
 
-		this.getFortuneBreakdown();
+		this.getFortuneBreakdown(true);
 	}
 
 	private recalculateFamilies() {
 		this.setBonuses = ArmorSet.getSetBonusFrom(this.armor ?? []);
-		this.equipmentSetBonuses = ArmorSet.getSetBonusFrom(this.equipmentPieces ?? []);
+		this.equipmentSetBonuses = ArmorSet.getSetBonusFrom(this.equipment ?? []);
 	
 		this.getFortuneBreakdown();
 	}
