@@ -6,7 +6,7 @@
 
 	const jacob = $derived(ctx.member.jacob);
 	const participationsRank = $derived(ctx.ranks?.misc?.participations ?? -1);
-	const firstPlacesRank = $derived(ctx.ranks?.misc?.firstPlaces ?? -1);
+	const firstPlacesRank = $derived(ctx.ranks?.misc?.firstplace ?? -1);
 
 	let firstPlaces = $derived(jacob?.firstPlaceScores ?? 0);
 
