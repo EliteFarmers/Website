@@ -40,15 +40,15 @@
 		if (rank <= 0) return '';
 
 		if (rank <= 5) {
-			return 'background-image: url(/images/frames/rainbow.webp);';
+			return 'background-image: url(/images/frames/rainbow.png);';
 		} else if (rank <= 10) {
-			return 'background-image: url(/images/frames/mithril.webp);';
+			return 'background-image: url(/images/frames/mithril.png);';
 		} else if (rank <= 50) {
-			return 'background-image: url(/images/frames/gold.webp);';
+			return 'background-image: url(/images/frames/gold.png);';
 		} else if (rank <= 100) {
-			return 'background-image: url(/images/frames/silver.webp);';
+			return 'background-image: url(/images/frames/silver.png);';
 		} else if (rank <= 500) {
-			return 'background-image: url(/images/frames/bronze.webp);';
+			return 'background-image: url(/images/frames/bronze.png);';
 		}
 	}
 
