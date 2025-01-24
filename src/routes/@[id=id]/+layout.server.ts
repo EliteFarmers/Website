@@ -1,4 +1,10 @@
-import { GetAccount, GetProfileMember, type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
+import {
+	GetAccount,
+	GetPlayerRanks,
+	GetProfileMember,
+	type ProfileDetails,
+	type ProfileGameMode,
+} from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
@@ -62,6 +68,8 @@ export const load: LayoutServerLoad = async (event) => {
 		throw error(404, 'Profile data not found');
 	}
 
+	const { data: ranks } = await GetPlayerRanks(account.id, selectedProfile.profileId);
+
 	const profileIds: ProfileDetails[] = profiles
 		// Filter out the current profile
 		.filter((p) => p.profileId !== selectedProfile.profileId)
@@ -86,5 +94,6 @@ export const load: LayoutServerLoad = async (event) => {
 		profile: selectedProfile,
 		profiles: profileIds,
 		member,
+		ranks,
 	};
 };

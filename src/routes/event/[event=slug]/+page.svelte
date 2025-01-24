@@ -15,6 +15,7 @@
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -62,11 +63,26 @@
 	let description = $derived(
 		`View the ${running ? 'Event happening' : 'Event'} in ${data.guild?.name}!\n\n${topList}`
 	);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Events',
+			href: '/browse',
+		},
+		{
+			name: event.name,
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 
-<main class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
+<div class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
 	<div
 		class="relative flex h-96 w-full flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat"
 		style={banner ? `background-image: url('${banner}')` : ''}
@@ -223,4 +239,4 @@
 			from the responsible server if appropriate. This website does not take a cut of any prizes or act as a middleman.
 		</p>
 	</div>
-</main>
+</div>

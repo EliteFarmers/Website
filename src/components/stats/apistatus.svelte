@@ -1,14 +1,11 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Alert from '$ui/alert';
 
-	interface Props {
-		api?: components['schemas']['ApiAccessDto'];
-	}
+	const ctx = getStatsContext();
 
-	let { api = {} }: Props = $props();
-
-	let entries = $derived(Object.entries(api));
+	const api = $derived(ctx.member.api ?? {});
+	const entries = $derived(Object.entries(api));
 </script>
 
 {#if !api.collections}

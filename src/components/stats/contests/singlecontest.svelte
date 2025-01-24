@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-
 	import Participation from '$comp/stats/contests/participation.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
+	import { Button } from '$ui/button';
+	import { ScrollArea } from '$ui/scroll-area';
+	import { tick } from 'svelte';
 
 	interface Props {
 		crop?: string;
@@ -20,42 +22,54 @@
 	let sorted = $derived(
 		entries?.sort((a, b) => (b?.collected ?? 0) - (a?.collected ?? 0)).slice(0, expand ? undefined : 10) ?? []
 	);
+
+	let area = $state<HTMLElement | null>(null);
+
+	function toggle() {
+		expand = !expand;
+		if (expand) {
+			tick().then(() => {
+				area?.scrollTo({ top: 473.92, behavior: 'smooth' });
+			});
+		}
+	}
 </script>
 
-<div class="h-full flex-1 basis-1/4 items-center justify-between rounded-md bg-gray-100 shadow-md dark:bg-zinc-800">
-	<div class="flex flex-col items-center justify-start space-y-2 p-4">
+<div class="h-full items-center justify-between rounded-md border-2 bg-primary-foreground shadow-md">
+	<div class="flex flex-col items-center justify-start space-y-2 px-2 py-4 pb-2">
 		<div class="flex flex-row gap-2">
 			<img src={cropUrl} alt={crop} class="pixelated h-10 w-10" />
 			<h2 class="text-center text-3xl font-semibold">
 				{crop ?? 'Not Found'}
 			</h2>
 		</div>
-		<h4 class="text-lg">
+		<span>
 			{entries?.length ?? 0} / {participants !== -1 ? participants : 'Unknown'} Participants
-		</h4>
-		<div class="flex w-full flex-col justify-center space-y-2">
-			{#each sorted as participant (participant.playerName ?? '' + participant.collected)}
-				<Participation entry={participant} />
-			{/each}
-		</div>
+		</span>
+		<ScrollArea bind:viewRef={area} class="h-[29.62rem] w-full rounded-md border" type="always">
+			<div class="flex w-[26rem] flex-col justify-center space-y-2">
+				{#each sorted as participant}
+					<Participation entry={participant} />
+				{/each}
+			</div>
+		</ScrollArea>
 	</div>
-	<div class="m-2 flex flex-col items-center justify-center gap-4 md:flex-row">
-		<h3 class="text-center font-mono text-sm font-light">
-			<span class="whitespace-nowrap rounded-md bg-gray-200 p-1 px-2 dark:bg-zinc-900">
+	<div class="flex flex-col items-center justify-center gap-2 pb-2 md:flex-row">
+		<div class="flex flex-col rounded-md bg-card text-center font-mono text-sm font-light leading-tight">
+			<span class="whitespace-nowrap rounded-md p-1 px-2">
 				{new Date(timestamp * 1000).toLocaleString(undefined, {
 					timeStyle: 'short',
 					dateStyle: 'short',
 					timeZone: 'UTC',
 				})} UTC
 			</span>
-			<span class="whitespace-nowrap rounded-md bg-gray-200 p-1 px-2 dark:bg-zinc-900">
+			<span class="whitespace-nowrap rounded-md p-1 px-2">
 				{getReadableSkyblockDate(timestamp)}
 			</span>
-		</h3>
+		</div>
 		{#if entries.length > 10}
-			<button
-				class="whitespace-nowrap rounded-md bg-gray-200 p-1 px-2 hover:bg-gray-300 dark:bg-zinc-700 dark:hover:bg-zinc-900"
-				onclick={() => (expand = !expand)}>{expand ? 'Collapse' : 'Show All'}</button
+			<Button class="w-32 whitespace-nowrap rounded-md" size="sm" variant="secondary" onclick={toggle}
+				>{expand ? 'Show Less' : 'Load More'}</Button
 			>
 		{/if}
 	</div>

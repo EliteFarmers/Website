@@ -19,7 +19,7 @@
 	description="View the various leaderboards available on the site! See the 5 thousand farmers in every crop!"
 />
 
-<main class="mb-16 flex flex-col items-center gap-16 px-8">
+<div class="mb-16 flex flex-col items-center gap-16 px-8">
 	<h1 class="mt-16 text-center text-4xl">Leaderboards</h1>
 
 	<div class="flex w-full max-w-6xl flex-wrap items-center justify-center gap-4 lg:items-start">
@@ -29,4 +29,4 @@
 		<Category leaderboards={skills.sort((a, b) => a.name.localeCompare(b.name))} title="Skills" />
 		<Category leaderboards={milestones.sort((a, b) => a.name.localeCompare(b.name))} title="Milestones" />
 	</div>
-</main>
+</div>

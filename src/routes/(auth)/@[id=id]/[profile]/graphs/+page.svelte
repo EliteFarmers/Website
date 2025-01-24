@@ -38,7 +38,7 @@
 
 <Head title="Player Charts" description="Admin page to view player stats" />
 
-<main class="my-16 flex flex-col items-center justify-center gap-2">
+<div class="my-16 flex flex-col items-center justify-center gap-2">
 	<h1 class="text-4xl">{data.account?.name} | {data.selectedProfile?.profileName}</h1>
 	<p>Discord ID: {data.account?.discordId}</p>
 	<p>Discord: {data.account?.discordUsername}</p>
@@ -78,4 +78,4 @@
 		</form>
 		<!-- <Skillgraph points={data.skillGraph ?? []} /> -->
 	</div>
-</main>
+</div>

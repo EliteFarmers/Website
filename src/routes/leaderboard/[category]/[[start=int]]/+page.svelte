@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import { afterNavigate, goto } from '$app/navigation';
@@ -8,6 +8,7 @@
 	import * as Pagination from '$ui/pagination';
 	import { Switch } from '$comp/ui/switch';
 	import { getShowLeaderboardName } from '$lib/stores/leaderboardName';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -15,7 +16,7 @@
 
 	let { data }: Props = $props();
 
-	let includeLeaderboardName = $derived(getShowLeaderboardName());
+	const showLeaderboardName = getShowLeaderboardName();
 
 	let title = $derived(`${data.lb?.title} Leaderboard`);
 	let entries = $derived(data.lb?.entries ?? []);
@@ -29,6 +30,13 @@
 	let initialPage = $state(Math.floor((data.lb.offset ?? 0) / 20 + 1));
 	let noneActive = $derived((data.lb.offset ?? 0) / 20 + 1 !== initialPage);
 
+	const topTen = $derived(
+		entries
+			.slice(0, 10)
+			.map((entry, i) => `${i + offset}. ${entry.ign} - ${entry.amount?.toLocaleString()}`)
+			.join('\n')
+	);
+
 	// Scroll back down to the buttons after navigating to prevent page jumping
 	afterNavigate(({ from }) => {
 		if (!from?.url.pathname.startsWith('/leaderboard/')) return;
@@ -40,9 +48,24 @@
 			goto(`/leaderboard/${category}/${(page - 1) * 20 + 1}`);
 		}
 	}
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'LB',
+			href: '/leaderboard',
+		},
+		{
+			name: data.settings.title || title,
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
-<Head {title} description={`${title} for Hypixel Skyblock.`} />
+<Head {title} description="{title} for Hypixel Skyblock.{'\n\n'}{topTen}" />
 
 <section class="mt-16 flex w-full flex-col justify-center">
 	<h1 class="mb-16 mt-8 max-w-md self-center text-center text-4xl">{title}</h1>
@@ -101,7 +124,7 @@
 					{entry}
 					{formatting}
 					leaderboard={data.leaderboard}
-					showLeaderboardName={$includeLeaderboardName}
+					showLeaderboardName={showLeaderboardName.current}
 				/>
 			{/each}
 		</div>
@@ -112,17 +135,17 @@
 					{entry}
 					{formatting}
 					leaderboard={data.leaderboard}
-					showLeaderboardName={$includeLeaderboardName}
+					showLeaderboardName={showLeaderboardName.current}
 				/>
 			{/each}
 		</div>
 	</div>
 	<div class="flex flex-row items-center justify-center gap-2">
 		<p class="text-sm leading-none">Show Leaderboard Name In Entries</p>
-		<Switch bind:checked={$includeLeaderboardName} />
+		<Switch bind:checked={showLeaderboardName.current} />
 	</div>
 	<p class="mx-auto w-1/2 py-4 text-center text-sm">
-		This leaderboard only consists of the top {$page.data.leaderboard.limit.toLocaleString()} players who have been searched
+		This leaderboard only consists of the top {page.data.leaderboard.limit.toLocaleString()} players who have been searched
 		on this website. New entries are recalculated every 30 minutes.
 	</p>
 </section>

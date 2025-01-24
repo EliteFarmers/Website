@@ -44,6 +44,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 export const actions: Actions = {
 	updateBadges: async ({ locals, request }) => {
 		if (!locals.access_token) {
+			console.log('no access token');
 			throw error(401, 'Unauthorized');
 		}
 
@@ -51,6 +52,7 @@ export const actions: Actions = {
 		const uuid = data.get('uuid')?.toString();
 
 		if (!uuid || !IsUUID(uuid)) {
+			console.log('invalid uuid');
 			return fail(400, { error: 'Invalid uuid.' });
 		}
 

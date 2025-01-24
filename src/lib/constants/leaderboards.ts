@@ -51,6 +51,12 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Jacob Contests',
 		type: LeaderboardType.Misc,
 	},
+	firstplace: {
+		limit: 1_000,
+		title: 'Jacob Contest First Places',
+		name: 'First Place Contests',
+		type: LeaderboardType.Misc,
+	},
 	'visitors-accepted': {
 		limit: 5_000,
 		title: 'Visitors Accepted',
@@ -58,12 +64,6 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		type: LeaderboardType.Misc,
 		profile: true,
 		subpage: '/garden',
-	},
-	firstplace: {
-		limit: 1_000,
-		title: 'Jacob Contest First Places',
-		name: 'First Place Contests',
-		type: LeaderboardType.Misc,
 	},
 	diamondmedals: {
 		limit: 1_000,
@@ -310,6 +310,7 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		name: 'Field Mouse',
 		title: 'Field Mouse Kills',
 		limit: 5_000,
+		icon: '/images/pests/mouse.png',
 		type: LeaderboardType.Pest,
 	},
 	'cactus-milestone': {

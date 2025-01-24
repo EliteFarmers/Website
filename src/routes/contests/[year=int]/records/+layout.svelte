@@ -3,6 +3,8 @@
 	import Head from '$comp/head.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { getTimeStamp } from '$lib/format';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { Button } from '$ui/button';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -11,11 +13,30 @@
 	let { children }: Props = $props();
 
 	let year = $derived(+page.params.year);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Contests',
+			href: '/contests',
+		},
+		{
+			name: 'Year ' + year,
+			href: '/contests/' + year,
+		},
+		{
+			name: 'Records',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 </script>
 
 <Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />
 
-<main class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center">
 	<div class="mb-4 mt-16 flex flex-col items-center gap-4 text-center font-semibold">
 		<h1 class="text-4xl">Contest Records - Year {year}</h1>
 		<p>
@@ -25,11 +46,9 @@
 		</p>
 		<Cropselector />
 		<div class="mb-2 flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
-			<a class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800" href="/contests/{year - 1}/records"
-				>Previous</a
-			>
-			<a class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800" href="/contests/{year}">View&nbsp;Year</a>
-			<a class="flex-1 rounded-lg bg-gray-200 p-2 dark:bg-zinc-800" href="/contests/{year + 1}/records">Next</a>
+			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year - 1}/records">Previous</Button>
+			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year}">View&nbsp;Year</Button>
+			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year + 1}/records">Next</Button>
 		</div>
 	</div>
 
@@ -46,4 +65,4 @@
 			in the contest, or their profile hasn't been loaded since.
 		</p>
 	</div>
-</main>
+</div>

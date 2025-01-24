@@ -7,7 +7,7 @@
 	const styles = $derived(data.styles.sort((a, b) => (a.name ?? 'x').localeCompare(b?.name ?? 'x')));
 </script>
 
-<main class="my-16">
+<div class="my-16">
 	<section class="my-8 flex w-full max-w-2xl flex-col gap-4">
 		<h1 class="mb-16 text-4xl">Weight Styles</h1>
 
@@ -28,4 +28,4 @@
 			</Command.Group>
 		</Command.Root>
 	</section>
-</main>
+</div>

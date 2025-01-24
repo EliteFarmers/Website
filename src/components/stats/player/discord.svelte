@@ -1,15 +1,13 @@
 <script lang="ts">
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 	import DiscordIcon from './discord-icon.svelte';
 	import Check from 'lucide-svelte/icons/check';
 	import CircleX from 'lucide-svelte/icons/circle-x';
 
-	interface Props {
-		username?: string | null | undefined;
-		linked: boolean;
-	}
-
-	let { username = 'Discord N/A', linked }: Props = $props();
+	const ctx = getStatsContext();
+	const linked = $derived((ctx.account.discordUsername?.length ?? 0) > 0);
+	const username = $derived(ctx.account.discordUsername ?? ctx.account.playerData?.socialMedia?.discord ?? null);
 
 	let validName = $state(true);
 

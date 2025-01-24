@@ -40,7 +40,7 @@
 
 <Head title="Contest Pings" description="Manage upcoming Jacob Contest pings for your guild" />
 
-<main class="flex flex-col items-center gap-4">
+<div class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="my-16 text-4xl">
@@ -185,4 +185,4 @@
 			</form>
 		</div>
 	</section>
-</main>
+</div>

@@ -58,7 +58,7 @@
 
 <Head title="Jacob Leaderboards" description="Manage Jacob Leaderboards for your guild" />
 
-<main class="flex flex-col items-center gap-4">
+<div class="flex flex-col items-center gap-4">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="my-16 text-4xl">
@@ -194,7 +194,7 @@
 			<Jacobsettings {lb} {channels} {roles} />
 		{/each}
 	</section>
-</main>
+</div>
 
 <Dialog.Root bind:open={clickOutsideModal}>
 	<Dialog.Content class="max-h-[90%] overflow-y-scroll">

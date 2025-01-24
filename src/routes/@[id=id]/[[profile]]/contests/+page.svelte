@@ -6,19 +6,32 @@
 	import type { PageData } from './$types';
 	import * as Accordion from '$ui/accordion';
 	import { Switch } from '$ui/switch';
+	import { Button } from '$ui/button';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	let timeType = $state(false);
+	let accordionValues = $state<string[]>([]);
+
+	function expandAll() {
+		accordionValues = Object.keys(data.years ?? {}).map((year) => `year-${year}`);
+	}
+
+	function collapseAll() {
+		accordionValues = [];
+	}
 
 	interface Props {
 		data: PageData;
 	}
 
 	let { data }: Props = $props();
+
+	const ctx = getStatsContext();
 </script>
 
 <Head
-	title="{data.account?.name ?? 'Unknown'} | Jacob's Contests"
-	description="View all {data.contestsCount} Jacob's Contests participated in by {data.account?.name ?? 'Unknown'}!"
+	title="{ctx.ign ?? 'Unknown'} | Jacob's Contests"
+	description="View all {data.contestsCount} Jacob's Contests participated in by {ctx.ign ?? 'Unknown'}!"
 />
 
 <section class="flex w-full flex-col items-center justify-center">
@@ -41,9 +54,14 @@
 			</div>
 		</div>
 
-		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center">
+		<div class="mb-4 flex gap-4">
+			<Button onclick={expandAll}>Expand All</Button>
+			<Button onclick={collapseAll}>Collapse All</Button>
+		</div>
+
+		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center" value={accordionValues}>
 			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
-				<Accordion.Item value="{year} ">
+				<Accordion.Item value="year-{year}">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">
 						<div class="mr-4 flex flex-col items-center justify-center gap-2">
 							<div class="flex w-full flex-row items-center justify-between">
@@ -70,7 +88,7 @@
 
 					<Accordion.Content>
 						<div class="flex flex-wrap justify-center gap-4">
-							{#each conts ?? [] as contest (`${contest.timestamp ?? 0}${contest?.crop ?? 0}`)}
+							{#each conts ?? [] as contest}
 								<div class="basis-64">
 									<Contest {contest} irlTime={timeType} />
 								</div>

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { cn } from '$lib/utils';
 	import JacobCropStats from './jacob-crop-stats.svelte';
 
-	interface Props {
-		jacob: components['schemas']['JacobDataDto'] | undefined | null;
-	}
+	let { class: className }: { class?: string } = $props();
 
-	let { jacob }: Props = $props();
+	const ctx = getStatsContext();
+	const jacob = $derived(ctx.member.jacob);
 
 	let highest = $derived(
 		Object.entries(
@@ -27,7 +27,7 @@
 	);
 </script>
 
-<div class="flex max-w-6xl flex-wrap items-center justify-center gap-4">
+<div class={cn('flex max-w-6xl flex-wrap items-center justify-center gap-4', className)}>
 	{#each highest as [crop, amount] (crop)}
 		<JacobCropStats {jacob} {crop} count={amount} />
 	{/each}

@@ -1,33 +1,28 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
-	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto, FarmingPet, Stat } from 'farming-weight';
+	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto } from 'farming-weight';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { watch } from 'runed';
 
-	interface Props {
-		tools: components['schemas']['ItemDto'][];
-		garden?: components['schemas']['GardenDto'] | undefined;
-		pets?: components['schemas']['PetDto'][];
-		shown?: number;
-	}
+	const ctx = getStatsContext();
 
-	let { tools, garden = undefined, pets = [], shown = 10 }: Props = $props();
+	const garden = $derived(ctx.garden);
+	let shown = $state(10 - (ctx.member.events?.length ?? 0));
+	let currentShown = $state(10 - (ctx.member.events?.length ?? 0));
 
-	let currentShown = $state(shown);
+	let actualTools = $state<FT[]>([]);
 
-	let options = $derived({
-		milestones: getCropMilestoneLevels(garden?.crops ?? {}),
-		// Use the pet with the highest chimera farming fortune for fortune displayed on daedalus axe
-		selectedPet: FarmingPet.fromArray(pets)
-			.sort(
-				(a, b) =>
-					(b.getChimeraAffectedStats(1)?.[Stat.FarmingFortune] ?? 0) -
-					(a.getChimeraAffectedStats(1)?.[Stat.FarmingFortune] ?? 0)
-			)
-			.at(0),
-	});
+	watch(
+		() => ctx.tools,
+		(tools) => {
+			const options = {
+				milestones: getCropMilestoneLevels(garden?.crops ?? {}),
+			};
 
-	let actualTools = $derived(FT.fromArray(tools as EliteItemDto[], options));
+			actualTools = FT.fromArray(tools as EliteItemDto[], options);
+		}
+	);
 </script>
 
 {#if actualTools.length !== 0}
@@ -35,9 +30,9 @@
 		{#each actualTools.slice(0, currentShown) as tool, i (tool.item.uuid ?? i)}
 			<Farmingtool {tool} />
 		{/each}
-		{#if currentShown < tools.length}
-			<Button variant="outline" size="sm" onclick={() => (currentShown = tools.length)}>Show All</Button>
-		{:else if tools.length > shown}
+		{#if currentShown < ctx.tools.length}
+			<Button variant="outline" size="sm" onclick={() => (currentShown = ctx.tools.length)}>Show All</Button>
+		{:else if ctx.tools.length > shown}
 			<Button variant="outline" size="sm" onclick={() => (currentShown = shown)}>Show Less</Button>
 		{/if}
 	</div>
