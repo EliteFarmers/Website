@@ -20,7 +20,7 @@
 		crop?: string;
 	}
 
-	let { jacob: jacobFromProps, crop: initialCrop }: Props = $props();
+	let { crop: initialCrop }: Props = $props();
 
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
