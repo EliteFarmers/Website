@@ -56,14 +56,12 @@
 					return (b?.collected ?? 0) - (a?.collected ?? 0);
 				case 'placement':
 					return (a?.position ?? 0) - (b?.position ?? 0);
-				case 'weight':
-					const weightA = a.crop
-						? calcWeightForCrop(getCropFromName(a.crop) ?? Crop.Wheat, a.collected ?? 0)
-						: 0;
-					const weightB = b.crop
-						? calcWeightForCrop(getCropFromName(b.crop) ?? Crop.Wheat, b.collected ?? 0)
-						: 0;
-					return weightB - weightA;
+				case 'weight': {
+					return (
+						(b.crop ? calcWeightForCrop(getCropFromName(b.crop) ?? Crop.Wheat, b.collected ?? 0) : 0) -
+						(a.crop ? calcWeightForCrop(getCropFromName(a.crop) ?? Crop.Wheat, a.collected ?? 0) : 0)
+					);
+				}
 				case 'recent':
 				default:
 					return (b?.timestamp ?? 0) - (a?.timestamp ?? 0);
