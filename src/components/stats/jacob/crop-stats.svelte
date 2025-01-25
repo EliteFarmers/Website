@@ -19,8 +19,6 @@
 		crop?: string;
 	}
 
-	let { crop: initialCrop }: Props = $props();
-
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
 			if (!contest.crop) return acc;
