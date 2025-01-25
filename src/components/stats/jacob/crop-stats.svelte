@@ -16,11 +16,11 @@
 	type CropStats = components['schemas']['JacobDataDto']['stats'];
 
 	interface Props {
-		jacob: components['schemas']['JacobDataDto'] | undefined;
+		jacob?: components['schemas']['JacobDataDto'] | undefined;
 		crop?: string;
 	}
 
-	let { jacob: jacobFromProps, crop: initialCrop = 'Wheat' }: Props = $props();
+	let { jacob: jacobFromProps, crop: initialCrop }: Props = $props();
 
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
@@ -57,8 +57,12 @@
 				case 'placement':
 					return (a?.position ?? 0) - (b?.position ?? 0);
 				case 'weight':
-					const weightA = a.crop ? calcWeightForCrop(getCropFromName(a.crop) ?? Crop.Wheat, a.collected ?? 0) : 0;
-					const weightB = b.crop ? calcWeightForCrop(getCropFromName(b.crop) ?? Crop.Wheat, b.collected ?? 0) : 0;
+					const weightA = a.crop
+						? calcWeightForCrop(getCropFromName(a.crop) ?? Crop.Wheat, a.collected ?? 0)
+						: 0;
+					const weightB = b.crop
+						? calcWeightForCrop(getCropFromName(b.crop) ?? Crop.Wheat, b.collected ?? 0)
+						: 0;
 					return weightB - weightA;
 				case 'recent':
 				default:
