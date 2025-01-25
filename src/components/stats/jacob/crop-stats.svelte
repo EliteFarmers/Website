@@ -1,13 +1,17 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
-	import { getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
 	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
 	import { Crop, getCropFromName } from 'farming-weight';
 	import ContestList from '$comp/stats/jacob/contest-list.svelte';
-<<<<<<< HEAD
 	import * as Select from '$ui/select';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { onMount } from 'svelte';
+
+	const ctx = getStatsContext();
+	const jacob = $derived(ctx.member.jacob);
 
 	type CropStats = components['schemas']['JacobDataDto']['stats'];
 
@@ -16,17 +20,8 @@
 		crop?: string;
 	}
 
-	let { jacob, crop: initialCrop = 'Wheat' }: Props = $props();
+	let { jacob: jacobFromProps, crop: initialCrop = 'Wheat' }: Props = $props();
 
-=======
-	import { getStatsContext } from '$lib/stores/stats.svelte';
-
-	const ctx = getStatsContext();
-	const jacob = $derived(ctx.member.jacob);
-
-	type CropStats = components['schemas']['JacobDataDto']['stats'];
-
->>>>>>> a016a707a7dd92f747fcee2b73fa7c0cb43f4293
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
 			if (!contest.crop) return acc;
@@ -116,15 +111,12 @@
 			? combineCropStats(Object.values(jacob?.stats?.crops ?? {}))
 			: combineCropStats(crops.map((c) => allCropStats(c)))
 	);
-<<<<<<< HEAD
 
 	onMount(() => {
 		if (initialCrop) {
 			selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [initialCrop]: true });
 		}
 	});
-=======
->>>>>>> a016a707a7dd92f747fcee2b73fa7c0cb43f4293
 </script>
 
 <div class="flex w-full max-w-6xl flex-col items-center justify-center gap-4">
