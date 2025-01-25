@@ -4,7 +4,7 @@
 	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
 	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
-	import { Crop, getCropFromName } from 'farming-weight';
+	import { Crop, getCropFromName, calcWeightForCrop } from 'farming-weight';
 	import ContestList from '$comp/stats/jacob/contest-list.svelte';
 	import * as Select from '$ui/select';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -56,6 +56,10 @@
 					return (b?.collected ?? 0) - (a?.collected ?? 0);
 				case 'placement':
 					return (a?.position ?? 0) - (b?.position ?? 0);
+				case 'weight':
+					const weightA = a.crop ? calcWeightForCrop(getCropFromName(a.crop) ?? Crop.Wheat, a.collected ?? 0) : 0;
+					const weightB = b.crop ? calcWeightForCrop(getCropFromName(b.crop) ?? Crop.Wheat, b.collected ?? 0) : 0;
+					return weightB - weightA;
 				case 'recent':
 				default:
 					return (b?.timestamp ?? 0) - (a?.timestamp ?? 0);
@@ -158,6 +162,10 @@
 					{
 						value: 'placement',
 						label: 'Best Placement',
+					},
+					{
+						value: 'weight',
+						label: 'Most Weight',
 					},
 				]}
 			/>
