@@ -14,11 +14,6 @@
 
 	type CropStats = components['schemas']['JacobDataDto']['stats'];
 
-	interface Props {
-		jacob?: components['schemas']['JacobDataDto'] | undefined;
-		crop?: string;
-	}
-
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
 			if (!contest.crop) return acc;
