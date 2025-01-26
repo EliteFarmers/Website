@@ -97,7 +97,7 @@
 							<svg
 								class="h-5 w-5"
 								fill="none"
-								stroke="white"
+								stroke="currentColor"
 								viewBox="0 0 24 24"
 								xmlns="http://www.w3.org/2000/svg"
 								><path
@@ -124,7 +124,7 @@
 							<svg
 								class="h-5 w-5"
 								fill="none"
-								stroke="white"
+								stroke="currentColor"
 								viewBox="0 0 24 24"
 								xmlns="http://www.w3.org/2000/svg"
 								><path

@@ -44,7 +44,7 @@
 		{#if progress.api === false}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<TriangleAlert size={16} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+					<TriangleAlert size={16} class="completed -mb-1" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. For it to show up you need to configure

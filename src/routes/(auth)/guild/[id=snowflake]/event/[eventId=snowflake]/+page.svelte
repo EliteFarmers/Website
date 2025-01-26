@@ -321,7 +321,7 @@
 							</div>
 						{/each}
 					</div>
-					<p class="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+					<p class="text-sm leading-relaxed text-muted">
 						Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
 					</p>
 
@@ -569,7 +569,7 @@
 			</div>
 
 			<Button type="submit" disabled={pending}>Edit Event</Button>
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			<p class="text-base leading-relaxed text-muted">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
@@ -606,7 +606,7 @@
 					>Clear Banner</Button
 				>
 			</div>
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			<p class="text-base leading-relaxed text-muted">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

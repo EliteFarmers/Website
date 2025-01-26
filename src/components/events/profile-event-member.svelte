@@ -21,7 +21,7 @@
 			{#snippet trigger()}
 				<div class="flex flex-col items-center justify-center">
 					{#if member.status === 0}
-						<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
+						<div class="h-2 w-2 rounded-full bg-muted"></div>
 					{/if}
 					{#if member.status === 1}
 						<div class="h-2 w-2 rounded-full bg-progress"></div>

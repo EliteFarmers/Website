@@ -40,9 +40,7 @@
 				></div>
 			{/each}
 			<span
-				class="-my-1 pl-1 pr-2 font-semibold leading-none md:text-lg {maxed
-					? 'text-yellow-400 dark:text-yellow-500'
-					: ''} bg-primary"
+				class="-my-1 pl-1 pr-2 font-semibold leading-none md:text-lg {maxed ? 'text-completed' : ''} bg-primary"
 			>
 				{level}
 			</span>

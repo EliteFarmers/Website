@@ -40,9 +40,7 @@
 	<section class="flex w-full max-w-2xl flex-col items-start gap-4">
 		<div class="flex w-full flex-col gap-4">
 			{#each data.admins as user}
-				<div
-					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:flex-row"
-				>
+				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-muted md:flex-row">
 					<div class="flex flex-row items-center gap-4">
 						<UserIcon {user} class="size-12" />
 						<div class="flex flex-col">

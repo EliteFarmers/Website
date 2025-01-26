@@ -53,7 +53,7 @@
 				}}
 			>
 				<input type="hidden" name="username" value={mc.id} />
-				<button disabled={loading} class="whitespace-nowrap text-sm text-gray-600 underline dark:text-gray-400"
+				<button disabled={loading} class="whitespace-nowrap text-sm text-muted-foreground underline"
 					>Set As Primary</button
 				>
 			</form>
