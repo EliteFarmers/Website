@@ -27,12 +27,9 @@
 
 	const wheelGestures = WheelGesturesPlugin();
 
-	const count = $derived(api ? api.scrollSnapList().length : 0);
 	let current = $state(0);
 	let themeName = $state('');
 	let themeClass = $state('');
-
-	const settings = getSettings();
 
 	$effect(() => {
 		if (api) {

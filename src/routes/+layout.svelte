@@ -7,7 +7,6 @@
 	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 	import * as Sidebar from '$ui/sidebar';
 	import { settings } from 'svelte-ux';
-	import { browser } from '$app/environment';
 	import { ScrollArea } from '$ui/scroll-area';
 	import Footer from '$comp/footer/footer.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
