@@ -5,9 +5,10 @@
 		name: string;
 		index: number;
 		tierField: number;
+		size?: 'sm' | 'md';
 	}
 
-	let { name, index, tierField }: Props = $props();
+	let { name, index, tierField, size = 'md' }: Props = $props();
 
 	// Turn tierField into its binary representation
 	let tiersString = $derived(tierField?.toString(2).substring(0, 12) ?? '');
@@ -21,7 +22,11 @@
 
 <Popover.Mobile>
 	{#snippet trigger()}
-		<div class="image-container h-12 w-12 bg-muted p-1 sm:h-16 sm:w-16 md:h-20 md:w-20 md:p-2 lg:p-3">
+		<div
+			class="image-container bg-muted p-1 md:p-2 lg:p-3 {size === 'md'
+				? 'size-12 sm:size-16 md:size-20'
+				: 'size-10 sm:size-12 md:size-16'}"
+		>
 			<div class="image" style="background-position: 100% {1000 - 100 * index}%;"></div>
 			<div class="tier-border">
 				{#each tiers as tier, i}

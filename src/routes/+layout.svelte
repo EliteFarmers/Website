@@ -7,7 +7,6 @@
 	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 	import * as Sidebar from '$ui/sidebar';
 	import { settings } from 'svelte-ux';
-	import { ScrollArea } from '$ui/scroll-area';
 	import Footer from '$comp/footer/footer.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
@@ -61,7 +60,7 @@
 		<AppSidebar />
 	</Sidebar.Root>
 
-	<ScrollArea class="max-h-screen flex-1 overflow-y-auto" scrollbarYClasses="py-16" type="always">
+	<div class="max-h-screen flex-1 overflow-y-auto">
 		<Sidebar.Inset>
 			<Header />
 
@@ -71,5 +70,5 @@
 
 			<Footer />
 		</Sidebar.Inset>
-	</ScrollArea>
+	</div>
 </Sidebar.Provider>

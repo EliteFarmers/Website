@@ -40,6 +40,7 @@
 		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Rabbit]: grouped[FarmingPets.Rabbit]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Slug]: grouped[FarmingPets.Slug]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Hedgehog]: grouped[FarmingPets.Hedgehog]?.at(0)?.pet.uuid ?? undefined,
 	} as Record<string, string | undefined>);
 
 	const groups = $derived(

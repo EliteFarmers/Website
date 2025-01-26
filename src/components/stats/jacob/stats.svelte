@@ -6,7 +6,7 @@
 
 	const jacob = $derived(ctx.member.jacob);
 	const participationsRank = $derived(ctx.ranks?.misc?.participations ?? -1);
-	const firstPlacesRank = $derived(ctx.ranks?.misc?.firstPlaces ?? -1);
+	const firstPlacesRank = $derived(ctx.ranks?.misc?.firstplace ?? -1);
 
 	let firstPlaces = $derived(jacob?.firstPlaceScores ?? 0);
 
@@ -39,7 +39,7 @@
 	);
 </script>
 
-<div class="mb-2 flex flex-col items-center gap-2 md:items-start">
+<div class="mb-2 flex w-full max-w-4xl flex-col items-center gap-2 md:items-start">
 	<h1 class="mb-0.5 text-2xl">General Stats</h1>
 	<div class="flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
 		<div

@@ -1,3 +1,4 @@
+
 <script lang="ts" module>
 	import FileChartColumn from 'lucide-svelte/icons/file-chart-column';
 	import ChartColumn from 'lucide-svelte/icons/chart-column';
@@ -163,7 +164,7 @@
 </script>
 
 {#snippet memberDropdown(crumb?: Crumb | Omit<Crumb, 'dropdown'>)}
-	<div class="flex max-w-md flex-row items-center justify-between gap-2">
+	<div class="flex max-w-md flex-row items-center justify-between gap-2 py-1">
 		<div class="flex w-full flex-1 flex-row items-center gap-2">
 			<PlayerHead uuid={crumb?.data?.uuid?.toString() ?? ''} size="md" />
 			<span>{crumb?.name}</span>
@@ -175,7 +176,7 @@
 {/snippet}
 
 {#snippet profileDropdown(crumb?: Crumb | Omit<Crumb, 'dropdown'>)}
-	<div class="flex max-w-md flex-row items-center justify-between gap-2">
+	<div class="flex max-w-md flex-row items-center justify-between gap-2 py-1">
 		<span>{crumb?.name}</span>
 		{#if crumb?.data?.mode}
 			<Gamemode class="size-4" gameMode={(crumb?.data?.mode ?? 'classic') as ProfileGameMode} popover={false} />

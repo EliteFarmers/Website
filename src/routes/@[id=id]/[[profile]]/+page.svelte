@@ -12,7 +12,6 @@
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
-	import CropStats from '$comp/stats/jacob/crop-stats.svelte';
 	import Head from '$comp/head.svelte';
 
 	const ctx = getStatsContext();
@@ -94,10 +93,4 @@
 </section>
 
 <JacobInfo />
-
-<div class="my-8 flex flex-col items-center justify-center">
-	<div class="flex max-w-4xl flex-col gap-8">
-		<CropStats />
-		<Breakdown />
-	</div>
-</div>
+<Breakdown />
