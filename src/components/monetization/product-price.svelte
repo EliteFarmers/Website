@@ -13,7 +13,7 @@
 </script>
 
 <p
-	class="h-fit rounded-md px-4 pb-1 pt-0.5 text-center font-semibold leading-none text-white bg-progress {free
+	class="h-fit rounded-md bg-progress px-4 pb-1 pt-0.5 text-center font-semibold leading-none text-white {free
 		? 'pb-1.5'
 		: ''}"
 >

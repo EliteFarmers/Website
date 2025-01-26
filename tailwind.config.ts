@@ -42,7 +42,7 @@ export default {
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
-                    variant: 'hsl(var(--muted-variant) / <alpha-value>)',
+					variant: 'hsl(var(--muted-variant) / <alpha-value>)',
 					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
 				},
 				accent: {
@@ -103,12 +103,12 @@ export default {
 				completed: {
 					DEFAULT: 'hsl(var(--completed) / <alpha-value>)',
 				},
-                purchase: {
-                    DEFAULT: 'hsl(var(--purchase) / <alpha-value>)',
-                },
-                active: {
-                    DEFAULT: 'hsl(var(--active) / <alpha-value>)',
-                },
+				purchase: {
+					DEFAULT: 'hsl(var(--purchase) / <alpha-value>)',
+				},
+				active: {
+					DEFAULT: 'hsl(var(--active) / <alpha-value>)',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

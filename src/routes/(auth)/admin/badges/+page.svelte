@@ -34,7 +34,7 @@
 		<div class="flex w-full flex-col gap-4">
 			{#each data.badges as badge}
 				<div
-					class="flex w-full flex-col items-center justify-between gap-2 rounded-md p-2 bg-secondary-foreground md:flex-row"
+					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-secondary-foreground p-2 md:flex-row"
 				>
 					<div class="flex flex-row items-center gap-4">
 						{#if badge.image?.url}

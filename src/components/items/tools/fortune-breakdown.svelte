@@ -28,8 +28,8 @@
 	let maxed = $derived(max !== undefined && sum >= max);
 
 	let background = $derived(
-    enabled ? (maxed ? 'bg-completed' : 'bg-progress') : (maxed ? 'bg-completed/40' : 'bg-progress/40')
-  );
+		enabled ? (maxed ? 'bg-completed' : 'bg-progress') : maxed ? 'bg-completed/40' : 'bg-progress/40'
+	);
 </script>
 
 {#if list.length <= 0}
