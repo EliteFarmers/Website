@@ -1,4 +1,3 @@
-
 <script lang="ts" module>
 	import FileChartColumn from 'lucide-svelte/icons/file-chart-column';
 	import ChartColumn from 'lucide-svelte/icons/chart-column';
