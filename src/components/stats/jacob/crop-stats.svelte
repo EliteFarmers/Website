@@ -134,7 +134,7 @@
 			</div>
 		</div>
 		<div class="w-full px-9">
-			<p class="text-md mb-1 leading-none">Sort By</p>
+			<p class="mb-1.5 text-sm leading-none">Sort By</p>
 			<Select.Simple
 				class="md:w-48"
 				bind:value={sortBy}
