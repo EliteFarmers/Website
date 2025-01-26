@@ -19,7 +19,6 @@
 	import Search from 'lucide-svelte/icons/search';
 	import Sun from 'lucide-svelte/icons/sun';
 	import { onMount } from 'svelte';
-	import { getSettings } from 'svelte-ux';
 	import type { ActionData, PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
 
