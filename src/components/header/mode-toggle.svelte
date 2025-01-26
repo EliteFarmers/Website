@@ -11,6 +11,9 @@
 	let isDark = $state(false);
 
 	if (browser) {
+		const currentClass = document.documentElement.className;
+		isDark = themes.find((t) => t.class === currentClass)?.isDark ?? false;
+
 		new MutationObserver(() => {
 			const currentClass = document.documentElement.className;
 			isDark = themes.find((t) => t.class === currentClass)?.isDark ?? false;

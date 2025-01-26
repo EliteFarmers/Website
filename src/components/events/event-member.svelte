@@ -37,8 +37,8 @@
 	<div id={member.playerUuid} class="flex w-full scroll-mt-64 flex-row justify-between align-middle">
 		<div class="flex flex-row items-center gap-2 align-middle">
 			{#if rank}
-				<div class="text-green-800 dark:text-green-300">
-					<p>
+				<div>
+					<p class="text-progress">
 						<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
 					</p>
 				</div>
@@ -64,10 +64,10 @@
 					{#snippet trigger()}
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
-								<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
+								<div class="h-2 w-2 rounded-full bg-muted"></div>
 							{/if}
 							{#if member.status === 1}
-								<div class="h-2 w-2 rounded-full bg-green-500 dark:bg-green-300"></div>
+								<div class="text-bg-progress h-2 w-2 rounded-full"></div>
 							{/if}
 						</div>
 					{/snippet}
@@ -89,8 +89,8 @@
 		<p class="block pr-2 text-lg">
 			{#if member.score && +member.score > 0}
 				{(+(member.score ?? 0)).toLocaleString()}
-			{:else if running}
-				<span class="text-red-800 dark:text-red-500">Zero!</span>
+			{:else}
+				<span class="text-destructive">Zero!</span>
 			{/if}
 		</p>
 	</div>

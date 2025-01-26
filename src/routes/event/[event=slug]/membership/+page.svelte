@@ -365,7 +365,7 @@
 							<input type="hidden" name="team" value={ownTeamId} />
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
-							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
+							<div class="flex flex-row items-center gap-2 text-primary">
 								<input type="hidden" name="name" value={name} hidden />
 								<div class="flex flex-col gap-2">
 									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
@@ -422,7 +422,7 @@
 							Create your own team for players to join! Names are generated below with an approved word
 							list.
 						</p>
-						<div class="flex flex-row items-center gap-2 text-black dark:text-white">
+						<div class="flex flex-row items-center gap-2 text-primary">
 							<input type="hidden" name="name" value={name} hidden />
 
 							<div class="flex flex-col gap-2">

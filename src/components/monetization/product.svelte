@@ -28,7 +28,7 @@
 	let styles = $derived(product.weightStyles ?? []);
 </script>
 
-<div class={cn('m-1 inline-block rounded-md bg-primary-foreground p-4', className)}>
+<div class={cn('m-1 inline-block rounded-md bg-muted p-4', className)}>
 	<div class="flex items-center justify-between">
 		<div class="flex min-w-0 flex-shrink items-center justify-start gap-2">
 			{#if product.thumbnail?.url}

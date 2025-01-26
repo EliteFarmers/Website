@@ -50,11 +50,11 @@
 		>
 			<div class="my-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 				<GuildIcon {guild} size={16} />
-				<h1 class="text-4xl text-white">
+				<h1 class="text-4xl text-primary">
 					{guild?.name}
 				</h1>
 				<Button href="https://discord.gg/{guild.inviteCode}" variant="link">
-					<ExternalLink size={20} class="text-white" />
+					<ExternalLink size={20} class="text-primary" />
 				</Button>
 			</div>
 		</div>
@@ -95,7 +95,7 @@
 				<Accordion.Root type="single">
 					<Accordion.Item value="val" class="w-full">
 						<Accordion.Trigger>
-							<h2 class="w-full px-4 text-3xl text-black dark:text-white">Past Events</h2>
+							<h2 class="w-full px-4 text-3xl text-primary">Past Events</h2>
 						</Accordion.Trigger>
 						<Accordion.Content>
 							<div class="flex flex-col gap-2">

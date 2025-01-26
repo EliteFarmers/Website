@@ -573,7 +573,7 @@
 					</div>
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
 						<div class="mt-2 flex flex-row items-center gap-2">
-							<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+							<TriangleAlert size={20} class="-mb-1 text-completed" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
 							</p>

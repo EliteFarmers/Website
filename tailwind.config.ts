@@ -42,6 +42,7 @@ export default {
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+                    variant: 'hsl(var(--muted-variant) / <alpha-value>)',
 					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
 				},
 				accent: {
@@ -96,6 +97,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))',
 				},
+				progress: {
+					DEFAULT: 'hsl(var(--progress) / <alpha-value>)',
+				},
+				completed: {
+					DEFAULT: 'hsl(var(--completed) / <alpha-value>)',
+				},
+                purchase: {
+                    DEFAULT: 'hsl(var(--purchase) / <alpha-value>)',
+                },
+                active: {
+                    DEFAULT: 'hsl(var(--active) / <alpha-value>)',
+                },
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -126,32 +139,6 @@ export default {
 			},
 			maxWidth: {
 				'8xl': '90rem',
-			},
-		},
-	},
-	ux: {
-		themes: {
-			light: {
-				accent: 'black',
-				primary: colors['orange']['500'],
-				'primary-content': 'black',
-				secondary: colors['blue']['500'],
-				'surface-100': colors['gray']['100'],
-				'surface-200': colors['gray']['400'],
-				'surface-300': colors['gray']['500'],
-				'surface-content': 'black',
-				'color-scheme': 'light',
-			},
-			dark: {
-				accent: 'white',
-				primary: colors['orange']['500'],
-				'primary-content': 'white',
-				secondary: colors['blue']['500'],
-				'surface-100': 'white',
-				'surface-200': colors['zinc']['900'],
-				'surface-300': colors['zinc']['950'],
-				'surface-content': colors['zinc']['100'],
-				'color-scheme': 'dark',
 			},
 		},
 	},

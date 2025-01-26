@@ -89,14 +89,14 @@
 	>
 		<div class="mt-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 			<GuildIcon guild={data.guild} size={16} />
-			<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
+			<h1 class="xs:text-2xl mx-8 text-xl text-primary sm:text-3xl md:text-4xl">
 				{data.event?.name}
 			</h1>
 			<Button href="/server/{event.guildId}/join" variant="link">
-				<ExternalLink size={16} class="text-white" />
+				<ExternalLink size={16} class="text-primary" />
 			</Button>
 		</div>
-		<div class="mb-32 flex flex-col items-center rounded-lg bg-zinc-900/75 p-4 text-white">
+		<div class="mb-32 flex flex-col items-center rounded-lg bg-zinc-900/75 p-4 text-primary">
 			<p class="text-lg font-light">
 				{#if start > time}
 					Event Starts In

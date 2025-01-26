@@ -14,7 +14,7 @@
 <div class="flex w-full overflow-x-scroll scrollbar-none">
 	<table class="flex-grow-1 w-full min-w-[12rem] max-w-4xl">
 		<thead>
-			<tr class="bg-gray-200 dark:bg-zinc-700">
+			<tr class="bg-muted-variant">
 				<th class="text-left">Crop</th>
 				<th class="text-left">Collection Required Per 1 Weight</th>
 				<th class="text-left">Base Drops Per Break</th>
@@ -23,7 +23,7 @@
 		<tbody>
 			{#each Object.entries(crops) as [crop, value]}
 				{@const cropEnum = getCropFromName(crop) ?? Crop.Wheat}
-				<tr class="bg-gray-100 dark:bg-zinc-800">
+				<tr class="bg-muted">
 					<td>{crop}</td>
 					{#if cropEnum === Crop.Mushroom}
 						<td

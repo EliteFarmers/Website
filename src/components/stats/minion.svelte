@@ -26,11 +26,7 @@
 			<div class="tier-border">
 				{#each tiers as tier, i}
 					<div
-						class="tier {tier === '1'
-							? maxed
-								? 'bg-yellow-400 dark:bg-yellow-600'
-								: 'bg-green-400 dark:bg-green-600'
-							: ''}"
+						class="tier {tier === '1' ? (maxed ? 'bg-completed' : 'bg-progress') : ''}"
 						style="grid-area: a{i};"
 					></div>
 				{/each}
@@ -46,8 +42,8 @@
 				<div
 					class="flex flex-row justify-center rounded-sm px-1 text-lg {tier === '1'
 						? maxed
-							? 'bg-yellow-400 dark:bg-yellow-600'
-							: 'bg-green-400 dark:bg-green-600'
+							? 'bg-completed'
+							: 'bg-progress'
 						: 'bg-primary-foreground'}"
 				>
 					<p>{i + 1}</p>

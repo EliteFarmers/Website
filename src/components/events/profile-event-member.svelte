@@ -24,7 +24,7 @@
 						<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
 					{/if}
 					{#if member.status === 1}
-						<div class="h-2 w-2 rounded-full bg-green-500 dark:bg-green-300"></div>
+						<div class="h-2 w-2 rounded-full bg-progress"></div>
 					{/if}
 				</div>
 			{/snippet}
@@ -46,7 +46,7 @@
 		{#if member.score && +member.score > 0}
 			<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 		{:else}
-			<span class="text-red-800 dark:text-red-500">Zero!</span>
+			<span class="text-destructive">Zero!</span>
 		{/if}
 	</div>
 </a>

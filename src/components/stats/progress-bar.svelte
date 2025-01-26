@@ -30,9 +30,7 @@
 		role="none"
 	>
 		<div
-			class="absolute {compact ? 'h-5 rounded-md' : 'h-6 rounded-lg'} {maxed
-				? 'bg-yellow-400 dark:bg-yellow-600'
-				: 'bg-green-400 dark:bg-green-600'}"
+			class="absolute {compact ? 'h-5 rounded-md' : 'h-6 rounded-lg'} {maxed ? 'bg-completed' : 'bg-progress'}"
 			style={`width: ${Math.min(percent, 100)}%`}
 		></div>
 		<div class="absolute flex h-full w-full items-center justify-center">

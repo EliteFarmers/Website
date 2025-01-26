@@ -56,7 +56,7 @@
 		<div
 			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
-			<div class="text-green-800 dark:text-green-300">
+			<div class="text-progress">
 				<h1>
 					<span class="xs:text-md text-sm sm:text-2xl">#</span><span class="xs:text-xl text-lg sm:text-3xl"
 						>{rank}</span

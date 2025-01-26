@@ -28,10 +28,8 @@
 	let maxed = $derived(max !== undefined && sum >= max);
 
 	let background = $derived(
-		enabled
-			? `bg-green-400 dark:bg-green-700 ${maxed ? 'bg-yellow-400 dark:bg-yellow-600' : ''}`
-			: `bg-green-400/40 dark:bg-green-700/40 ${maxed ? 'bg-yellow-400/40 dark:bg-yellow-600/40' : ''}`
-	);
+    enabled ? (maxed ? 'bg-completed' : 'bg-progress') : (maxed ? 'bg-completed/40' : 'bg-progress/40')
+  );
 </script>
 
 {#if list.length <= 0}
@@ -70,7 +68,7 @@
 				{/each}
 			</div>
 
-			<div class="flex flex-row justify-between p-1 text-base font-semibold text-black dark:text-white">
+			<div class="flex flex-row justify-between p-1 text-base font-semibold text-primary">
 				<p>Total</p>
 				<p>{(+sum.toFixed(2)).toLocaleString()}</p>
 			</div>

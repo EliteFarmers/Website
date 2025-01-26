@@ -76,8 +76,8 @@
 			{@const best = pet.fortune >= grouped[type][0]?.fortune}
 			<div
 				class="{selected
-					? 'border-primary-content/20 dark:border-card/70'
-					: 'border-transparent'} flex w-full cursor-pointer items-center justify-between rounded-lg border-[3px] border-solid px-1.5 py-0.5 has-[.selectable:hover]:bg-primary-content/10 dark:has-[.selectable:hover]:bg-card/50"
+					? 'border-muted'
+					: 'border-transparent'} flex w-full cursor-pointer items-center justify-between rounded-lg border-[3px] border-solid px-1.5 py-0.5 has-[.selectable:hover]:bg-muted/30"
 			>
 				<button class="selectable flex-1 text-left" onclick={() => onSelectedChange(type, pet)}>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -88,7 +88,7 @@
 						<Popover.Mobile>
 							{#snippet trigger()}
 								<div class="px-1">
-									<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+									<TriangleAlert size={20} class="-mb-1 text-completed" />
 								</div>
 							{/snippet}
 							<div class="max-w-xs">

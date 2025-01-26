@@ -28,7 +28,7 @@
 {#await navigating.complete}
 	<div class="relative">
 		<div
-			class="absolute h-1 w-full bg-success"
+			class="absolute h-1 w-full bg-progress"
 			transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
 		></div>
 	</div>

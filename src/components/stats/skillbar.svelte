@@ -40,7 +40,7 @@
 		{#if rank >= 0}
 			<a
 				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}"
-				class="rounded-md bg-primary-foreground px-1.5 py-0.5 font-semibold text-green-700 hover:bg-muted dark:text-yellow-400"
+				class="rounded-md bg-primary-foreground px-1.5 py-0.5 font-semibold text-completed hover:bg-muted"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span
 					class="text-md xs:text-lg leading-none sm:text-xl">{rank}</span
@@ -55,15 +55,12 @@
 		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
-		<div
-			class="absolute bottom-0 left-0 top-0 rounded-lg bg-yellow-200 dark:bg-yellow-700"
-			style="width: {Math.max(2, percent)}%;"
-		></div>
 		{#if percent >= 100}
-			<!-- Gold color to show completion -->
+			<div class="absolute bottom-0 left-0 top-0 rounded-lg bg-completed" style="width: 100%;"></div>
+		{:else}
 			<div
-				class="absolute left-0 top-0 h-full w-full rounded-lg bg-yellow-400 dark:bg-yellow-600"
-				style="opacity: 0.7;"
+				class="absolute bottom-0 left-0 top-0 rounded-lg bg-progress"
+				style="width: {Math.max(2, percent)}%;"
 			></div>
 		{/if}
 		<div class="absolute flex h-full w-full items-center justify-center">

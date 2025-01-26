@@ -27,7 +27,7 @@
 	</div>
 {:else if entries.some(([, value]) => !value)}
 	<div class="flex w-full justify-center">
-		<Alert.Root class="items-centers flex w-full max-w-xl flex-col bg-yellow-100 dark:bg-yellow-600">
+		<Alert.Root class="items-centers flex w-full max-w-xl flex-col bg-completed">
 			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}

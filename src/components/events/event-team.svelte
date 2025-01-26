@@ -25,7 +25,7 @@
 			<div class="flex flex-row items-center justify-between">
 				<div class="flex flex-wrap items-center gap-4 md:flex-row">
 					{#if running}
-						<div class="text-green-800 dark:text-green-300">
+						<div class="text-progress">
 							<p>
 								<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
 							</p>
@@ -47,14 +47,14 @@
 					{#if team.score && +team.score > 0}
 						{(+(team.score ?? 0)).toLocaleString()}
 					{:else if running}
-						<span class="text-red-800 dark:text-red-500">No Progress Yet!</span>
+						<span class="text-destructive">No Progress Yet!</span>
 					{/if}
 				</p>
 			</div>
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root type="single" class="w-full text-black dark:text-white">
+		<Accordion.Root type="single" class="w-full text-primary">
 			{#each members as member, i}
 				<Accordion.Item
 					value={team.id + i.toString()}

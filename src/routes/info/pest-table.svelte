@@ -15,7 +15,7 @@
 <div class="flex w-full overflow-x-scroll scrollbar-none">
 	<table class="flex-grow-1 w-full min-w-[48rem] max-w-4xl">
 		<thead>
-			<tr class="bg-gray-200 dark:bg-zinc-700">
+			<tr class="bg-muted-variant">
 				<th class="text-left">Pest Brackets</th>
 				{#each brackets as [count, fortune], i}
 					<th class="text-left">
@@ -35,7 +35,7 @@
 		</thead>
 		<tbody>
 			{#each Object.entries(pests) as [pest, values]}
-				<tr class="bg-gray-100 dark:bg-zinc-800">
+				<tr class="bg-muted">
 					<td class="first-letter:uppercase">{pest}</td>
 					{#each Object.values(values) as crops}
 						<td>{crops.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>

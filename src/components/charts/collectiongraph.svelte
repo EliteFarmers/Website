@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
-	import Apex from './apex.svelte';
-	import type { ApexOptions } from 'apexcharts';
+	import { CROP_TO_HEX, PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { toReadable } from '$lib/format';
 	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
-	import { CROP_TO_HEX, PROPER_CROP_NAME } from '$lib/constants/crops';
+	import type { ApexOptions } from 'apexcharts';
+	import Apex from './apex.svelte';
 
 	interface Props {
 		points: components['schemas']['CropCollectionsDataPointDto'][];

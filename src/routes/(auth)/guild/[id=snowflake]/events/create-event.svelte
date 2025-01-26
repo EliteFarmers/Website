@@ -117,7 +117,7 @@
 				</Tabs.Content>
 			</Tabs.Root>
 
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

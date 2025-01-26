@@ -18,7 +18,7 @@
 </script>
 
 <section class="mt-8 flex w-full flex-col items-center align-middle">
-	<div class="mx-2 flex w-full max-w-7xl flex-col gap-8 rounded-lg bg-card p-4 md:flex-row md:gap-16 md:p-8">
+	<div class="mx-2 flex w-full max-w-7xl flex-col gap-8 rounded-lg bg-background p-4 md:flex-row md:gap-16 md:p-8">
 		<div class="flex flex-1 flex-row items-center justify-center gap-6 md:justify-end">
 			<img
 				class="aspect-auto max-h-40 min-w-12 max-w-16 object-cover"

@@ -24,7 +24,7 @@
 
 <div
 	class="flex w-full max-w-[116rem] flex-1 scroll-mt-32 flex-col items-center justify-between gap-2 rounded-md p-4 md:flex-row {current
-		? 'bg-yellow-100 dark:bg-yellow-900'
+		? 'bg-active'
 		: 'bg-primary-foreground'} {selected ? 'border-2 border-blue-500' : ''}"
 	id={timestamp.toString()}
 >

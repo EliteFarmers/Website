@@ -26,7 +26,7 @@
 			{#each progress as p (p.name + p.fortune + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item}
 					<button
-						class="cursor-pointer rounded-lg px-1 hover:bg-primary-content/10 dark:hover:bg-card/50"
+						class="cursor-pointer rounded-lg px-1 hover:bg-muted/40"
 						onclick={() => {
 							shownProgress = p;
 							progressModal = true;

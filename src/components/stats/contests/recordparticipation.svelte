@@ -19,7 +19,7 @@
 		<div
 			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
-			<div class="text-success">
+			<div class="text-progress">
 				<span class="xs:text-md text-sm sm:text-xl">#</span><span class="xs:text-xl text-lg sm:text-2xl"
 					>{(rank ?? 0) + 1}</span
 				>
@@ -55,11 +55,11 @@
 			<div class="flex flex-col text-lg">
 				<p class="p-1 text-lg">
 					{#if entry.position !== -1}
-						<span class="xs:text-md text-sm text-success sm:text-xl">#</span><span
-							class=" xs:text-xl text-lg text-success sm:text-2xl">{(entry.position ?? 0) + 1}</span
+						<span class="xs:text-md text-sm text-progress sm:text-xl">#</span><span
+							class=" xs:text-xl text-lg text-progress sm:text-2xl">{(entry.position ?? 0) + 1}</span
 						>
 					{:else}
-						<span class="xs:text-md text-sm text-success sm:text-xl">???</span>
+						<span class="xs:text-md text-sm text-progress sm:text-xl">???</span>
 					{/if}
 					<span class="xs:text-md text-sm sm:text-xl">
 						/ {entry.participants?.toLocaleString() ?? '???'}</span

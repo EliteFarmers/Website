@@ -19,7 +19,7 @@
 		<div
 			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
-			<p class="text-success">
+			<p class="text-progress">
 				{#if entry.position !== -1}
 					<span class="xs:text-md text-sm sm:text-lg md:text-xl">#</span><span
 						class="xs:text-xl text-lg sm:text-xl md:text-2xl">{(entry.position ?? 0) + 1}</span

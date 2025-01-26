@@ -37,8 +37,8 @@
 					player.refresh();
 				}}
 				class="{selected
-					? 'border-primary-content/20 dark:border-card/70'
-					: 'border-transparent'} flex w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-[3px] border-solid px-1.5 py-0.5 hover:bg-primary-content/10 dark:hover:bg-card/50"
+					? 'border-muted'
+					: 'border-transparent'} flex w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-[3px] border-solid px-1.5 py-0.5 hover:bg-muted/30"
 			>
 				<Toolconfig {tool} {player} />
 			</button>

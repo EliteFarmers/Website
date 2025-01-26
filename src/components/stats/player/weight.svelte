@@ -17,7 +17,7 @@
 				class="max-w-fit rounded-md bg-primary-foreground p-1 hover:bg-muted lg:p-1"
 				href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
 			>
-				<span class="mx-1 font-mono text-2xl font-semibold text-yellow-700 dark:text-yellow-400">
+				<span class="mx-1 font-mono text-2xl font-semibold text-completed">
 					<span class="mr-0.5 text-lg">#</span>{rank}
 				</span>
 			</a>
