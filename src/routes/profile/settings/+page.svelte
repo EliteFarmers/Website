@@ -5,7 +5,7 @@
 	import Product from '$comp/monetization/product.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
-	import { currentTheme, themes } from '$lib/themes';
+	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
@@ -24,6 +24,7 @@
 
 	let api = $state<CarouselAPI>();
 
+	const themeContext = getThemeContext();
 	const wheelGestures = WheelGesturesPlugin();
 
 	let current = $state(0);
@@ -137,13 +138,13 @@
 		<h1 class="mb-4 text-4xl">Purchases</h1>
 		{#if purchases.length === 0}
 			<p class="mb-2">
-				You don't have any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
+				You don't have any shop purchases! Check out the <a href="/shop" class="text-link hover:underline"
 					>Shop!</a
 				>
 			</p>
 		{:else}
 			<p class="mb-2">
-				Check out the <a href="/shop" class="text-blue-400 hover:underline">Shop!</a>
+				Check out the <a href="/shop" class="text-link hover:underline">Shop!</a>
 			</p>
 		{/if}
 		<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2">
@@ -304,7 +305,7 @@
 						<Carousel.Item class="">
 							<Card.Root class={theme.class} style="color-scheme: {theme.class}">
 								<Card.Content
-									class={`flex aspect-video items-center justify-center p-6`}
+									class="flex aspect-video items-center justify-center p-6"
 									style="color-scheme: {theme.class};"
 								>
 									<!-- Theme Preview -->
@@ -367,12 +368,7 @@
 			</div>
 		</div>
 		<div class="flex justify-start">
-			<button
-				class="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-				onclick={() => currentTheme.set(themeClass)}
-			>
-				Apply Theme
-			</button>
+			<Button class="px-4 py-2" onclick={() => (themeContext.theme = themeClass)}>Apply Theme</Button>
 		</div>
 	</section>
 </div>

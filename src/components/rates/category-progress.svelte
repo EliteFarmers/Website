@@ -26,7 +26,7 @@
 			{#each progress as p (p.name + p.fortune + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item}
 					<button
-						class="cursor-pointer rounded-lg px-1 hover:bg-muted/40"
+						class="cursor-pointer rounded-md border bg-primary-foreground px-1 hover:bg-primary-foreground/40"
 						onclick={() => {
 							shownProgress = p;
 							progressModal = true;
@@ -35,7 +35,7 @@
 						<FortuneProgress progress={p} />
 					</button>
 				{:else}
-					<div class="px-1">
+					<div class="border border-transparent px-1">
 						<FortuneProgress progress={p} />
 					</div>
 				{/if}

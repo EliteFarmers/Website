@@ -50,7 +50,7 @@
 			{:else}
 				<p class="font-semibold">Not Linked</p>
 				<p>
-					Link your account on the <a href="/profile" class="text-blue-500">profile page</a>
+					Link your account on the <a href="/profile" class="text-link">profile page</a>
 				</p>
 			{/if}
 		</div>

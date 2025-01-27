@@ -59,7 +59,7 @@
 				<Accordion.Item
 					value={team.id + i.toString()}
 					class="px-4 {highlightUuid === member.playerUuid
-						? 'rounded-md border-2 border-blue-400'
+						? 'rounded-md border-2 border-link'
 						: 'border-none'}"
 				>
 					<EventMember {member} {running} {event} owner={team.ownerUuid === member.playerUuid} />

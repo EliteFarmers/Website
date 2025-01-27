@@ -23,6 +23,6 @@
 	{/snippet}
 	<div class="flex flex-col gap-1">
 		<p class="font-semibold">{visitor.name}</p>
-		<a href={visitor.wiki} class="text-blue-400 hover:underline">Hypixel Wiki</a>
+		<a href={visitor.wiki} class="text-link hover:underline">Hypixel Wiki</a>
 	</div>
 </Popover.Mobile>

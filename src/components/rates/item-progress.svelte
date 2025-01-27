@@ -26,7 +26,7 @@
 	<hr />
 {/if}
 
-<div class="flex flex-col gap-2 sm:flex-row">
+<div class="dark flex flex-col gap-2 sm:flex-row">
 	{#if progress?.nextInfo?.skyblockId !== undefined}
 		<div class="flex flex-1 flex-col gap-1">
 			{#if progress.info?.upgrade?.reason === UpgradeReason.Situational}
@@ -55,14 +55,14 @@
 						href={progress.nextInfo.wiki}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="mt-0.5 text-blue-500"
+						class="mt-0.5 text-link"
 					>
 						<Info size={16} />
 					</a>
 				{/if}
 			</div>
 			{#if progress.info?.upgrade?.why}
-				<p class="text-sm text-gray-500">{progress.info.upgrade.why}</p>
+				<p class="text-sm text-muted-variant">{progress.info.upgrade.why}</p>
 			{/if}
 		</div>
 	{/if}
@@ -80,7 +80,7 @@
 						href={progress.maxInfo.wiki}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="mt-0.5 text-blue-500"
+						class="mt-0.5 text-link"
 					>
 						<Info size={16} />
 					</a>

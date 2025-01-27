@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { currentTheme, themes } from '$lib/themes';
+	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
@@ -9,6 +9,7 @@
 	import Sun from 'lucide-svelte/icons/sun';
 
 	let isDark = $state(false);
+	const currentTheme = getThemeContext();
 
 	if (browser) {
 		const currentClass = document.documentElement.className;
@@ -40,15 +41,15 @@
 		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
-		<DropdownMenu.Item onclick={() => currentTheme.set('light')}>
+		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'light')}>
 			<span class="capitalize">Light</span>
-			{#if $currentTheme === 'light'}
+			{#if currentTheme.theme === 'light'}
 				<Check class="ml-2 h-4 w-4" />
 			{/if}
 		</DropdownMenu.Item>
-		<DropdownMenu.Item onclick={() => currentTheme.set('dark')}>
+		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'dark')}>
 			<span class="capitalize">Dark</span>
-			{#if $currentTheme === 'dark'}
+			{#if currentTheme.theme === 'dark'}
 				<Check class="ml-2 h-4 w-4" />
 			{/if}
 		</DropdownMenu.Item>

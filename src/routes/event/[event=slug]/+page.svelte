@@ -150,7 +150,7 @@
 					</p>
 				{/if}
 				<EventData {event} />
-				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
+				<a href="#agreement" class="text-link underline">Event Agreement</a>
 				<div class="mt-4 flex flex-wrap justify-center gap-2">
 					<Button href="/server/{event.guildId}" variant="secondary">
 						<p>Back To Server</p>
@@ -233,7 +233,7 @@
 		<p>
 			All members of the event are expected to follow all of <a
 				href="https://hypixel.net/rules"
-				class="text-blue-500 underline">Hypixel's Server Rules.</a
+				class="text-link underline">Hypixel's Server Rules.</a
 			> Futhermore, all prizes specified are the responsibility of the Discord Server/Event Sponsor to payout. This
 			website is not responsible for unpaid prizes. Please do get in contact however and we'll revoke event permissions
 			from the responsible server if appropriate. This website does not take a cut of any prizes or act as a middleman.

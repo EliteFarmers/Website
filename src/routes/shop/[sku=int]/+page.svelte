@@ -187,7 +187,7 @@
 						<ProductPrice {product} />
 						<Button
 							href="/shop/{product.id}/buy"
-							class="bg-purchase font-semibold text-white hover:bg-purchase/85"
+							class="bg-link font-semibold text-white hover:bg-link/85"
 						>
 							{isFree ? 'Unlock' : 'Buy'} on Discord
 							<ExternalLink size={16} class="ml-1.5" />

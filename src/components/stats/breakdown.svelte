@@ -60,7 +60,7 @@
 				<br />
 				<h3 class="py-2 text-2xl font-semibold">Questions?</h3>
 				<div class="text-md pt-1">
-					View all calculations on the <a href="/info" class="text-blue-600 hover:underline">info page</a>.
+					View all calculations on the <a href="/info" class="text-link hover:underline">info page</a>.
 				</div>
 			</div>
 		</div>

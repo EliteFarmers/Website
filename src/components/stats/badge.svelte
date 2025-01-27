@@ -25,7 +25,7 @@
 				<p class="mt-1 font-semibold">Obtained</p>
 				<p>{new Date(+(badge.timestamp ?? 0) * 1000).toLocaleString()}</p>
 			{/if}
-			<a href="/info#Badges" class="text-blue-500">What is this?</a>
+			<a href="/info#Badges" class="text-link">What is this?</a>
 		</div>
 	</Popover.Content>
 </Popover.Root>

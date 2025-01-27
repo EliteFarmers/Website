@@ -138,7 +138,7 @@
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
-		<p>Login and link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
+		<p>Login and link your Minecraft account <a href="/profile" class="text-link">here</a> first.</p>
 	{/if}
 
 	{#if form?.error}
@@ -226,7 +226,7 @@
 				<Label>
 					I confirm that I have read all of <a
 						href="https://hypixel.net/rules"
-						class="text-blue-500 underline"
+						class="text-link underline"
 					>
 						Hypixel's Server Rules
 					</a> and that I agree to them.

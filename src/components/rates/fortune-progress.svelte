@@ -37,7 +37,7 @@
 			<span>{progress.name}</span>
 		{/if}
 		{#if progress.wiki}
-			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="mt-1 text-blue-500">
+			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="mt-1 text-link">
 				<Info size={16} />
 			</a>
 		{/if}
