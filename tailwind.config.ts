@@ -5,11 +5,7 @@ import { Config } from 'tailwindcss';
 
 export default {
 	darkMode: ['class'],
-	content: [
-		'./src/**/*.{html,js,svelte,ts}',
-		'./node_modules/layerchart/**/*.{svelte,js}',
-		'./node_modules/svelte-ux/**/*.{svelte,js}',
-	],
+	content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/layerchart/**/*.{svelte,js}'],
 	safelist: ['dark'],
 	plugins: [svelteUx({ colorSpace: 'oklch' }), tailwindcssAnimate],
 	theme: {
@@ -107,6 +103,12 @@ export default {
 				},
 				active: {
 					DEFAULT: 'hsl(var(--active) / <alpha-value>)',
+				},
+				surface: {
+					100: 'hsl(var(--background) / <alpha-value>)',
+					200: 'hsl(var(--muted) / <alpha-value>)',
+					300: 'hsl(var(--muted-variant) / <alpha-value>)',
+					content: 'hsl(var(--card-foreground) / <alpha-value>)',
 				},
 			},
 			borderRadius: {

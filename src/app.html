@@ -4,15 +4,6 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="/favicon.webp" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<script>
-			const savedTheme = localStorage.getItem('theme');
-			if (savedTheme) {
-				document.documentElement.className = savedTheme;
-			} else {
-				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-				document.documentElement.className = prefersDark ? 'dark' : 'light';
-			}
-		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
