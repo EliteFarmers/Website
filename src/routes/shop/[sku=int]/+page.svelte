@@ -185,10 +185,7 @@
 				<div class="flex w-full flex-col items-end gap-1">
 					<div class="flex flex-row items-center gap-2">
 						<ProductPrice {product} />
-						<Button
-							href="/shop/{product.id}/buy"
-							class="bg-link font-semibold text-white hover:bg-link/85"
-						>
+						<Button href="/shop/{product.id}/buy" class="bg-link font-semibold text-white hover:bg-link/85">
 							{isFree ? 'Unlock' : 'Buy'} on Discord
 							<ExternalLink size={16} class="ml-1.5" />
 						</Button>

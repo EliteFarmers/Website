@@ -51,12 +51,7 @@
 					</p>
 				{/if}
 				{#if progress.nextInfo.wiki}
-					<a
-						href={progress.nextInfo.wiki}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="mt-0.5 text-link"
-					>
+					<a href={progress.nextInfo.wiki} target="_blank" rel="noopener noreferrer" class="mt-0.5 text-link">
 						<Info size={16} />
 					</a>
 				{/if}
@@ -76,12 +71,7 @@
 					{@html FormatMinecraftText(RARITY_COLORS[progress.maxInfo.maxRarity] + progress.maxInfo.name)}
 				</p>
 				{#if progress.maxInfo.wiki}
-					<a
-						href={progress.maxInfo.wiki}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="mt-0.5 text-link"
-					>
+					<a href={progress.maxInfo.wiki} target="_blank" rel="noopener noreferrer" class="mt-0.5 text-link">
 						<Info size={16} />
 					</a>
 				{/if}

@@ -224,10 +224,7 @@
 					<Checkbox.Root bind:checked={checks[1]} />
 				{/if}
 				<Label>
-					I confirm that I have read all of <a
-						href="https://hypixel.net/rules"
-						class="text-link underline"
-					>
+					I confirm that I have read all of <a href="https://hypixel.net/rules" class="text-link underline">
 						Hypixel's Server Rules
 					</a> and that I agree to them.
 				</Label>
