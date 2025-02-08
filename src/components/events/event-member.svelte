@@ -53,7 +53,7 @@
 				<Popover.Mobile>
 					{#snippet trigger()}
 						<div class="flex flex-row items-end">
-							<Crown size="sm" class="mt-1.5 w-4 text-" />
+							<Crown size="sm" class="text-completed mt-1.5 w-4" />
 						</div>
 					{/snippet}
 					<p class="text-lg font-semibold">Team Owner</p>

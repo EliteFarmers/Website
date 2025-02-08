@@ -218,9 +218,7 @@
 	<Cropselector radio={true} />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section
-			class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 md:px-6 md:pb-6"
-		>
+		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 md:px-6 md:pb-6">
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
 				<div class="flex-3 my-2 flex flex-row items-center gap-2">

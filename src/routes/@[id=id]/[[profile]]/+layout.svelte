@@ -55,9 +55,7 @@
 	<PlayerInfo />
 
 	<div class="flex flex-row justify-center">
-		<div
-			class="my-6 flex w-fit flex-row justify-center rounded-md border-2 border-solid border-card p-1"
-		>
+		<div class="my-6 flex w-fit flex-row justify-center rounded-md border-2 border-solid border-card p-1">
 			<Button
 				variant="ghost"
 				size="sm"

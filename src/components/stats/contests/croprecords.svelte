@@ -25,9 +25,7 @@
 </script>
 
 {#if $selectedCrops[crop] || !$anyCropSelected}
-	<div
-		class="h-full max-w-3xl flex-1 basis-1/3 items-center justify-between rounded-md border-2 bg-card shadow-md"
-	>
+	<div class="h-full max-w-3xl flex-1 basis-1/3 items-center justify-between rounded-md border-2 bg-card shadow-md">
 		<div class="flex flex-row justify-center gap-4 py-4">
 			<img src={cropUrl} alt={crop} class="pixelated h-10 w-10" />
 			<h2 class="text-center text-3xl font-semibold">

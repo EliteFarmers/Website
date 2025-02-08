@@ -115,9 +115,7 @@
 	</div>
 
 	<div class="mx-4 flex w-full max-w-6xl flex-col items-center gap-8 lg:flex-row lg:items-start">
-		<section
-			class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-card p-8"
-		>
+		<section class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-card p-8">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-row items-center gap-2 text-sm font-semibold md:text-lg">

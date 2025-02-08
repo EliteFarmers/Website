@@ -36,9 +36,7 @@
 </script>
 
 <div class="flex w-full flex-row items-center gap-2 align-middle">
-	<div
-		class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-card p-1 align-middle"
-	>
+	<div class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-card p-1 align-middle">
 		<div class="crop-container pixelated flex aspect-square h-10 w-10 sm:h-14 sm:w-14 md:h-20 md:w-20">
 			<img
 				src="/images/crops/{key}.png"

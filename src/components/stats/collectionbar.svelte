@@ -128,9 +128,7 @@
 	</div>
 {:else}
 	<div class="flex w-full flex-row items-center gap-2 align-middle">
-		<div
-			class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle"
-		>
+		<div class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle">
 			{@render cropIcon('hidden sm:flex')}
 			<div class="flex flex-grow flex-col justify-center gap-1 pr-2">
 				<div class="flex flex-row items-center justify-between gap-2">
