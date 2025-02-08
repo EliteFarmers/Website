@@ -116,7 +116,7 @@
 
 	<div class="mx-4 flex w-full max-w-6xl flex-col items-center gap-8 lg:flex-row lg:items-start">
 		<section
-			class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-primary-foreground p-8"
+			class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-card p-8"
 		>
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
@@ -171,14 +171,14 @@
 				</div>
 				{#if self?.disqualified}
 					<div class="flex flex-col justify-start gap-1 text-sm">
-						<p class="text-lg text-red-500">You have been removed from this event.</p>
+						<p class="text-lg text-destructive">You have been removed from this event.</p>
 						<p>Reason</p>
 						<p class="rounded-sm bg-card p-2">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
 					</div>
 				{/if}
 			</div>
 		</section>
-		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md bg-primary-foreground p-8">
+		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md bg-card p-8">
 			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
 					<Button onclick={swapLeaderboard} variant="secondary" size="sm">

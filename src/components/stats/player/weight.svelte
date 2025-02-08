@@ -14,7 +14,7 @@
 	<div class="z-10 flex items-center gap-2">
 		{#if rank !== -1}
 			<a
-				class="max-w-fit rounded-md bg-primary-foreground p-1 hover:bg-muted lg:p-1"
+				class="max-w-fit rounded-md bg-card p-1 hover:bg-muted lg:p-1"
 				href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
 			>
 				<span class="mx-1 font-mono text-2xl font-semibold text-completed">
@@ -22,7 +22,7 @@
 				</span>
 			</a>
 		{:else}
-			<div class="max-w-fit rounded-md bg-primary-foreground p-1 lg:p-2">
+			<div class="max-w-fit rounded-md bg-card p-1 lg:p-2">
 				<span class="text-md mx-1 font-semibold md:text-lg">
 					{rankText}
 				</span>

@@ -25,7 +25,7 @@
 
 <Popover.Mobile>
 	{#snippet trigger()}
-		<div class="block max-w-fit rounded-md bg-primary-foreground p-2 px-3" id="discordId">
+		<div class="block max-w-fit rounded-md bg-card p-2 px-3" id="discordId">
 			<div class="flex flex-row items-center gap-2">
 				<span class="mt-1 h-5 w-5 text-primary">
 					<DiscordIcon />

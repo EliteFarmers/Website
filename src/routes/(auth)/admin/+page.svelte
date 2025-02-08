@@ -34,7 +34,7 @@
 	<h1 class="mb-16 text-4xl">Admin Panel</h1>
 
 	{#if form?.error}
-		<p class="text-lg text-red-500">{form.error}</p>
+		<p class="text-lg text-destructive">{form.error}</p>
 	{/if}
 
 	<section class="flex w-full max-w-2xl flex-col items-start gap-4">

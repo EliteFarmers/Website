@@ -142,7 +142,7 @@
 	{/if}
 
 	{#if form?.error}
-		<h5 class="mb-4 max-w-xl text-xl font-semibold text-red-700">
+		<h5 class="mb-4 max-w-xl text-xl font-semibold text-destructive">
 			{form?.error}
 		</h5>
 	{/if}
@@ -158,13 +158,13 @@
 			</h2>
 			<p>
 				Choose the profile you want to join the event with.
-				<span class="text-red-500">This can't be changed later on!</span>
+				<span class="text-destructive">This can't be changed later on!</span>
 			</p>
 
 			{#each profiles as profile (profile)}
 				{#if data.member && profile.profileId === data.member.profileId}
 					<div class="flex flex-row items-center gap-2">
-						<Check class="text-green-500" />
+						<Check class="text-progress" />
 						<p>
 							{profile.profileName} - {profile.members
 								?.find((m) => m.uuid === data.account?.id)
@@ -187,7 +187,7 @@
 			{#if data.event.type === +EventType.FarmingWeight}
 				<p>
 					To prevent the use of minions to gain collection progress, the event will only count progress made
-					through the use of farming tools. <span class="text-red-500"
+					through the use of farming tools. <span class="text-destructive"
 						>You must have collections and inventory API access enabled at all times.</span
 					> If you do turn them off, you will be automatically removed from the event.
 				</p>
@@ -196,7 +196,7 @@
 					a tool, it will not count towards your progress. This also means a Daedalus Axe won't count either,
 					as there's no way to differentiate it from minions.
 				</p>
-				<p class="text-red-500">
+				<p class="text-destructive">
 					Tools that do not have a built in counter require the Cultivating enchantment or your progress with
 					that tool will not be counted.
 				</p>
@@ -210,7 +210,7 @@
 					to count.
 				</p>
 				<p>
-					<span class="text-red-500"
+					<span class="text-destructive"
 						>You must have collections and inventory API access enabled at all times.</span
 					> If you do turn either of them off, you will be automatically removed from the event.
 				</p>
@@ -284,7 +284,7 @@
 			</div>
 
 			{#if joined}
-				<p class="text-green-700">You have successfully joined the event!</p>
+				<p class="text-progress">You have successfully joined the event!</p>
 			{/if}
 		</form>
 		{#if event.mode !== 'solo'}
@@ -292,7 +292,7 @@
 				<h2 class="mb-4 text-center text-2xl font-semibold">Step 2: Join Team</h2>
 				<p>
 					This is a team event! You must join a team to participate. If you don't have a team, you can create
-					one below (if the event allows it). <span class="text-red-500"
+					one below (if the event allows it). <span class="text-destructive"
 						>You won't be able to change your team once the event starts!</span
 					>
 				</p>
@@ -323,7 +323,7 @@
 										<Popover.Mobile>
 											{#snippet trigger()}
 												<div class="flex flex-row items-end">
-													<Crown size="sm" class="mt-1.5 w-4 text-yellow-400" />
+													<Crown size="sm" class="mt-1.5 w-4 text-completed" />
 												</div>
 											{/snippet}
 											<p class="text-lg font-semibold">Team Owner</p>

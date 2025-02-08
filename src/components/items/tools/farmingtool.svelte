@@ -15,7 +15,7 @@
 	);
 </script>
 
-<div class="max-h-30 flex w-full basis-[5rem] flex-row justify-between gap-2 rounded-md bg-primary-foreground p-1">
+<div class="max-h-30 flex w-full basis-[5rem] flex-row justify-between gap-2 rounded-md bg-card p-1">
 	<div class="flex flex-row items-center gap-2">
 		<img
 			class="pixelated aspect-square w-14 p-1 md:h-20 md:w-20"

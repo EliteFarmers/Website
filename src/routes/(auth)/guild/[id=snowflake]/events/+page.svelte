@@ -51,7 +51,7 @@
 	>
 		{#each events as event (event.id)}
 			<div
-				class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-primary-foreground p-4 md:w-[70%]"
+				class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-card p-4 md:w-[70%]"
 			>
 				<div class="flex flex-row justify-between gap-2 p-4">
 					<div class="flex flex-col gap-2">
@@ -60,7 +60,7 @@
 								<Popover.Mobile>
 									{#snippet trigger()}
 										<div>
-											<TriangleAlert class="mt-1.5 text-red-500" />
+											<TriangleAlert class="mt-1.5 text-destructive" />
 										</div>
 									{/snippet}
 									<div>

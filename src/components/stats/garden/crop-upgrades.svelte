@@ -33,7 +33,7 @@
 			{#each upgradesList as tier, i (i)}
 				<div
 					class="hidden h-5 w-3 rounded-sm md:block md:h-6 {tier + 1 > level
-						? 'bg-primary-foreground'
+						? 'bg-card'
 						: maxed
 							? 'bg-completed'
 							: 'bg-progress'}"

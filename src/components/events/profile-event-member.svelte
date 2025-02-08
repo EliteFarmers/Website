@@ -12,7 +12,7 @@
 </script>
 
 <a
-	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-primary-foreground px-6 py-[1.88rem]"
+	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-card px-6 py-[1.88rem]"
 	href="/event/{member.eventId}/leaderboard#{memberUuid}"
 >
 	<div class="flex flex-row items-center justify-center gap-2 align-middle">

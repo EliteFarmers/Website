@@ -51,11 +51,11 @@
 	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex flex-row items-center gap-2">
 			<button
-				class="w-24 whitespace-nowrap rounded-md bg-primary-foreground py-1 text-sm hover:bg-muted"
+				class="w-24 whitespace-nowrap rounded-md bg-card py-1 text-sm hover:bg-muted"
 				onclick={swap}>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
 			>
 			<button
-				class="w-20 whitespace-nowrap rounded-md bg-primary-foreground py-1 text-sm hover:bg-muted"
+				class="w-20 whitespace-nowrap rounded-md bg-card py-1 text-sm hover:bg-muted"
 				onclick={swapOverflow}>{overflow ? 'Overflow' : 'Normal'}</button
 			>
 		</div>

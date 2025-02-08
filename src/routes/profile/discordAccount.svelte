@@ -10,7 +10,7 @@
 	let { account = {} }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-4 rounded-lg bg-primary-foreground p-2 align-middle">
+<div class="flex flex-col gap-4 rounded-lg bg-card p-2 align-middle">
 	<div class="flex flex-row items-center gap-4 p-2">
 		<UserIcon user={account} />
 		<div class="flex flex-col gap-1">

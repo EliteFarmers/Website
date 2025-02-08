@@ -40,7 +40,7 @@
 		{#if rank >= 0}
 			<a
 				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}"
-				class="rounded-md bg-primary-foreground px-1.5 py-0.5 font-semibold text-completed hover:bg-muted"
+				class="rounded-md bg-card px-1.5 py-0.5 font-semibold text-completed hover:bg-muted"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span
 					class="text-md xs:text-lg leading-none sm:text-xl">{rank}</span
@@ -50,7 +50,7 @@
 		<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level.toLocaleString()}</strong></span>
 	</div>
 	<div
-		class="relative h-8 w-full rounded-lg bg-primary-foreground"
+		class="relative h-8 w-full rounded-lg bg-card"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"

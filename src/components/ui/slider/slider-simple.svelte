@@ -12,7 +12,7 @@
 	type="single"
 >
 	{#snippet children({ thumbs })}
-		<span class="relative h-2 w-full grow overflow-hidden rounded-full bg-muted-variant">
+		<span class="relative h-2 w-full grow overflow-hidden rounded-full bg-card">
 			<SliderPrimitive.Range class="absolute h-full bg-primary" />
 		</span>
 		{#each thumbs as thumb}

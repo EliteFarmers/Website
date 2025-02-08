@@ -15,7 +15,7 @@
 </script>
 
 <a
-	class={cn('inline-block max-w-64 rounded-md bg-primary-foreground shadow-primary hover:drop-shadow-lg', className)}
+	class={cn('inline-block max-w-64 rounded-md bg-card shadow-primary hover:drop-shadow-lg', className)}
 	href="/shop/{product.id}"
 >
 	<div class="flex min-w-0 flex-col items-center justify-start">
@@ -25,7 +25,7 @@
 			{:else}
 				<Package size={64} />
 			{/if}
-			<div class="absolute bottom-0 right-0 mb-1 mr-2 rounded-md shadow-primary-foreground drop-shadow-md">
+			<div class="absolute bottom-0 right-0 mb-1 mr-2 rounded-md shadow-card drop-shadow-md">
 				<ProductPrice {product} />
 			</div>
 		</div>

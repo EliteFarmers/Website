@@ -219,7 +219,7 @@
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
 		<section
-			class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-primary-foreground p-4 md:px-6 md:pb-6"
+			class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 md:px-6 md:pb-6"
 		>
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
@@ -243,7 +243,7 @@
 			<div
 				class="{$ratesData.settings
 					? 'flex'
-					: 'hidden'} w-full max-w-lg flex-1 flex-col justify-center gap-4 rounded-md border-solid border-primary-foreground p-4 outline outline-2"
+					: 'hidden'} w-full max-w-lg flex-1 flex-col justify-center gap-4 rounded-md border-solid border-card p-4 outline outline-2"
 			>
 				<div class="flex flex-col items-center justify-center gap-8 md:flex-row">
 					<div class="flex flex-col justify-start gap-1">
@@ -487,7 +487,7 @@
 				{/if}
 			</div>
 		</section>
-		<section class="w-full flex-1 rounded-md border-2 bg-primary-foreground p-4">
+		<section class="w-full flex-1 rounded-md border-2 bg-card p-4">
 			<div class="flex w-full max-w-lg flex-col gap-2 p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
@@ -589,7 +589,7 @@
 	<Cropselector radio={true} href="#fortune" id="fortune" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 bg-primary-foreground p-4">
+		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
 			<div class="flex w-full flex-row items-center justify-center gap-1">
 				<div class="flex flex-1 flex-row justify-end">
 					<JumpLink id="fortune" self={false} />

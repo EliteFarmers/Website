@@ -24,7 +24,7 @@
 
 <a
 	href="/event/{event?.id}"
-	class="items-centers relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-primary-foreground bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
+	class="items-centers relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
 	style={background || ''}
 >
 	{#if guild?.banner}

@@ -78,14 +78,14 @@
 	</section>
 
 	{#if form?.error}
-		<h5 class="text-xl font-semibold text-red-700">
+		<h5 class="text-xl font-semibold text-destructive">
 			<p>{form?.error}</p>
 		</h5>
 	{/if}
 
 	<section class="flex w-full flex-col items-center justify-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-primary-foreground md:w-[70%]"
+			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-card md:w-[70%]"
 		>
 			<h2 class="p-4 text-3xl">Manage Shared Settings</h2>
 			<Accordion.Root class="mx-4" type="multiple">

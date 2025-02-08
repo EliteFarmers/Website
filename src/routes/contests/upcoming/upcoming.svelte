@@ -25,7 +25,7 @@
 <div
 	class="flex w-full max-w-[116rem] flex-1 scroll-mt-32 flex-col items-center justify-between gap-2 rounded-md p-4 md:flex-row {current
 		? 'bg-active'
-		: 'bg-primary-foreground'} {selected ? 'border-2 border-link' : ''}"
+		: 'bg-card'} {selected ? 'border-2 border-link' : ''}"
 	id={timestamp.toString()}
 >
 	<div class="flex flex-col items-center gap-2 md:items-start">

@@ -57,7 +57,7 @@
 </script>
 
 {#if sidebar.size.tiny}
-	<div class="max-h-30 flex w-full flex-row items-center gap-2 rounded-lg bg-primary-foreground p-1 align-middle">
+	<div class="max-h-30 flex w-full flex-row items-center gap-2 rounded-lg bg-card p-1 align-middle">
 		<div class="flex flex-col items-center justify-evenly gap-1">
 			{@render cropIcon()}
 			<img
@@ -129,7 +129,7 @@
 {:else}
 	<div class="flex w-full flex-row items-center gap-2 align-middle">
 		<div
-			class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-primary-foreground p-1 align-middle"
+			class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle"
 		>
 			{@render cropIcon('hidden sm:flex')}
 			<div class="flex flex-grow flex-col justify-center gap-1 pr-2">

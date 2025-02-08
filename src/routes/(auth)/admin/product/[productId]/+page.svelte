@@ -112,7 +112,7 @@
 		</div>
 
 		{#if form?.error}
-			<p class="text-red-500">{form.error}</p>
+			<p class="text-destructive">{form.error}</p>
 		{/if}
 
 		<div class="flex w-full flex-col gap-4 lg:flex-row">

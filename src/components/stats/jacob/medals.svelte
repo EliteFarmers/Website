@@ -29,7 +29,7 @@
 				{#if ranks[medal + 'medals'] > -1}
 					<a
 						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-2 hover:bg-muted"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -43,7 +43,7 @@
 					</a>
 				{:else}
 					<div
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-2"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -61,7 +61,7 @@
 				{#if ranks[medal + 'medals'] > -1}
 					<a
 						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-2 hover:bg-muted"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -78,7 +78,7 @@
 					</a>
 				{:else}
 					<div
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-2"
+						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 

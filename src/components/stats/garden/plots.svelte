@@ -41,7 +41,7 @@
 						{maxed ? 'bg-completed' : 'bg-progress'}"
 					></div>
 				{:else}
-					<div class="aspect-square h-6 w-6 rounded-sm bg-primary-foreground md:h-8 md:w-8"></div>
+					<div class="aspect-square h-6 w-6 rounded-sm bg-card md:h-8 md:w-8"></div>
 				{/if}
 			{/each}
 		</div>

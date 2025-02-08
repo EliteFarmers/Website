@@ -12,12 +12,12 @@
 	let { progress }: Props = $props();
 </script>
 
-<FortuneProgress {progress} barBg="bg-primary-foreground" />
+<FortuneProgress {progress} barBg="bg-card" />
 
 {#if progress?.progress?.length}
 	<div class="grid gap-2 md:grid-cols-2">
 		{#each progress.progress as p (p.name + p.fortune + (progress?.item?.uuid ?? ''))}
-			<FortuneProgress progress={p} barBg="bg-primary-foreground" />
+			<FortuneProgress progress={p} barBg="bg-card" />
 		{/each}
 	</div>
 {/if}
@@ -57,7 +57,7 @@
 				{/if}
 			</div>
 			{#if progress.info?.upgrade?.why}
-				<p class="text-sm text-muted-variant">{progress.info.upgrade.why}</p>
+				<p class="text-sm text-card">{progress.info.upgrade.why}</p>
 			{/if}
 		</div>
 	{/if}

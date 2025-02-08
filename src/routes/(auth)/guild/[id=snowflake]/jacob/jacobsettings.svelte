@@ -25,7 +25,7 @@
 	let confirmModal = $state(false);
 </script>
 
-<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md bg-primary-foreground p-4">
+<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md bg-card p-4">
 	<div class="flex w-full flex-row justify-between gap-4">
 		<div class="flex flex-col gap-2">
 			<h3 class="text-2xl">{lb.title}</h3>

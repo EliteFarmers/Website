@@ -173,7 +173,7 @@
 		</form>
 
 		{#if form?.error}
-			<p class="text-red-500">{form.error}</p>
+			<p class="text-destructive">{form.error}</p>
 		{/if}
 
 		<h1 class="mb-2 text-2xl">User Settings</h1>

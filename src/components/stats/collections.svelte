@@ -23,7 +23,7 @@
 
 <div class="-mt-5 flex max-w-4xl flex-1 flex-col gap-2">
 	<button
-		class="-mt-4 w-20 whitespace-nowrap rounded-md bg-primary-foreground py-1 text-sm hover:bg-muted"
+		class="-mt-4 w-20 whitespace-nowrap rounded-md bg-card py-1 text-sm hover:bg-muted"
 		onclick={swap}>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 	>
 	<div class="flex w-full flex-col gap-2">

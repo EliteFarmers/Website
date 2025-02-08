@@ -55,7 +55,7 @@
 			<div class="flex flex-col gap-1">
 				{#each list as [key, value] (key)}
 					<div
-						class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-primary-foreground"
+						class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
 					>
 						{#if key.includes('§')}
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->

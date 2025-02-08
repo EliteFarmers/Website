@@ -36,7 +36,7 @@
 					></div>
 				{/each}
 			</div>
-			<div class="tier-cover absolute bg-primary-foreground"></div>
+			<div class="tier-cover absolute bg-card"></div>
 		</div>
 	{/snippet}
 
@@ -49,7 +49,7 @@
 						? maxed
 							? 'bg-completed'
 							: 'bg-progress'
-						: 'bg-primary-foreground'}"
+						: 'bg-card'}"
 				>
 					<p>{i + 1}</p>
 				</div>
