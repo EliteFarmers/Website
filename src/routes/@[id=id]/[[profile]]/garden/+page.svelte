@@ -44,13 +44,13 @@
 			.sort((a, b) => a.name.localeCompare(b.name))
 	);
 
-  let totalCopperSpent = 0;
-  let totalCopperToMax = 0;
+  let totalCopperSpent = $derived(() => 
+    crops.reduce((sum, { level }) => sum + getCopperSpent(level), 0)
+  );
 
-  for (const { name, img, level } of crops) {
-      totalCopperSpent += getCopperSpent(level);
-      totalCopperToMax += getCopperToMaxUpgrade(level);
-  }
+  let totalCopperToMax = $derived(() => 
+    crops.reduce((sum, { level }) => sum + getCopperToMaxUpgrade(level), 0)
+  );
 
 </script>
 
@@ -78,8 +78,8 @@
               <div>
                 <p class="font-semibold">All Crops</p>
                 <p class="max-w-xs whitespace-normal break-words">
-                  {totalCopperSpent.toLocaleString()} Total Copper Spent <br />
-                  {totalCopperToMax.toLocaleString()} Total Copper Until Max
+                  {totalCopperSpent().toLocaleString()} Total Copper Spent <br />
+                  {totalCopperToMax().toLocaleString()} Total Copper Until Max
                 </p>
               </div>
             </Popover.Mobile>
