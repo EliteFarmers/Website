@@ -173,3 +173,16 @@ export const GARDEN_PLOTS: Record<string, number[]> = {
 	expert_2: [0, 4],
 	expert_4: [4, 4],
 };
+
+export const CROP_UPGRADE_COSTS: Record<number, number> = {
+    0: 0,
+    1: 5,
+    2: 10,
+    3: 20,
+    4: 50,
+    5: 100,
+    6: 500,
+    7: 1_000,
+    8: 2_000,
+    9: 4_000,
+}
