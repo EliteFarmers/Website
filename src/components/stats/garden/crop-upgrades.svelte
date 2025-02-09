@@ -27,10 +27,10 @@
 	);
 </script>
 
-<div class="-mt-0.5 flex flex-wrap justify-start">
+<div class="mt-0.5 flex flex-wrap justify-start">
 	{#each crops as { name, img, level } (name)}
 		{@const maxed = level === upgradesList.length}
-		<div class="mb-1.5 flex basis-16 flex-row items-center justify-start gap-[0.1rem] md:basis-48 md:gap-1">
+		<div class="mt-1.5 flex basis-16 flex-row items-center justify-start gap-[0.1rem] md:basis-48 md:gap-1">
       <Popover.Mobile>
         {#snippet trigger()}
           <div class="flex items-center gap-1">
@@ -53,11 +53,13 @@
             </span>
           </div>
         {/snippet}
-        <div>
+        <div class="flex flex-col gap-1">
           <p class="font-semibold">{name}</p>
           <p class="max-w-xs whitespace-normal break-words">
-            {getCopperSpent(level).toLocaleString()} Copper Spent <br />
-            {getCopperToMaxUpgrade(level).toLocaleString()} Copper Until Max
+            <span class="font-semibold">{getCopperSpent(level).toLocaleString()}</span> Copper Spent <br />
+          </p>
+          <p class="max-w-xs whitespace-normal break-words">
+            <span class="font-semibold">{getCopperToMaxUpgrade(level).toLocaleString()}</span> Copper Until Max
           </p>
         </div>
       </Popover.Mobile>

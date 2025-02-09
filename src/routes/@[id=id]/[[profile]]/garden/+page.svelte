@@ -70,16 +70,18 @@
 						<h3 class="text-lg font-semibold leading-none">Unlocked Plots</h3>
 						<Plots plots={garden.plots} />
 					</div>
-					<div class="flex flex-col gap-2">
+					<div class="flex flex-col -mt-0.5">
             <Popover.Mobile>
               {#snippet trigger()}
                 <h3 class="text-lg font-semibold leading-none">Crop Upgrades</h3>
               {/snippet}
-              <div>
+              <div class="flex flex-col gap-1">
                 <p class="font-semibold">All Crops</p>
                 <p class="max-w-xs whitespace-normal break-words">
-                  {totalCopperSpent().toLocaleString()} Total Copper Spent <br />
-                  {totalCopperToMax().toLocaleString()} Total Copper Until Max
+                  <span class="font-semibold">{totalCopperSpent().toLocaleString()}</span> Total Copper Spent <br />
+                </p>
+                <p class="max-w-xs whitespace-normal break-words">
+                  <span class="font-semibold">{totalCopperToMax().toLocaleString()}</span> Total Copper Until Max
                 </p>
               </div>
             </Popover.Mobile>
