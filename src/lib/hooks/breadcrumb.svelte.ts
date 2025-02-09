@@ -4,7 +4,6 @@ import Home from 'lucide-svelte/icons/home';
 
 interface CrumbBase {
 	name?: string;
-	capitalize?: boolean;
 	href?: string;
 	icon?: Component | unknown;
 	snippet?: Snippet;

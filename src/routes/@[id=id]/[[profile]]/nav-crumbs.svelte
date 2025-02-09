@@ -110,7 +110,6 @@
 		{
 			icon: PlayerHead,
 			name: account?.name,
-			capitalize: false,
 			href: `/@${account?.name}`,
 			tooltip: 'Player',
 			data: {
@@ -118,7 +117,6 @@
 			},
 			dropdown: otherMembers?.map((m) => ({
 				name: m.username,
-				capitalize: false,
 				href: `/@${m.uuid}/${profile?.profileId}`,
 				data: {
 					uuid: m.uuid,

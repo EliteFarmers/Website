@@ -124,12 +124,8 @@
 	{#if crumb.snippet}
 		{@render crumb.snippet(crumb)}
 	{:else if crumb.name}
-		<span class="max-w-28 truncate">
-			{#if crumb.capitalize !== false}
-				{crumb.name.charAt(0).toUpperCase() + crumb.name.slice(1)}
-			{:else}
-				{crumb.name}
-			{/if}
+		<span class="max-w-28 truncate first-letter:capitalize">
+			{crumb.name}
 		</span>
 	{/if}
 {/snippet}
