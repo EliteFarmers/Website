@@ -116,7 +116,7 @@
 		{/if}
 		<div class="flex w-full flex-row items-center justify-between">
 			<div>
-				<p class="text-gray-500">Last Updated</p>
+				<p class="text-muted-variant">Last Updated</p>
 				<p>
 					{member.lastUpdated
 						? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +

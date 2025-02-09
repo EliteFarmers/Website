@@ -219,7 +219,7 @@
 									/>
 								{/key}
 							{:else}
-								<p class="text-sm text-gray-500">
+								<p class="text-sm text-muted-variant">
 									No preview available! You can change to this style and run the /&NoBreak;weight
 									command in Discord to see it.
 								</p>

@@ -83,7 +83,7 @@
 					player.refresh();
 				}}
 			/>
-			<p class="text-sm text-gray-500">More config options coming soon™!</p>
+			<p class="text-sm text-muted-variant">More config options coming soon™!</p>
 		</div>
 	{/if}
 </div>

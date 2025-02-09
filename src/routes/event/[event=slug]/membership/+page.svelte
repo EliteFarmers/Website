@@ -200,7 +200,7 @@
 					Tools that do not have a built in counter require the Cultivating enchantment or your progress with
 					that tool will not be counted.
 				</p>
-				<p class="text-gray-500">
+				<p class="text-muted-variant">
 					The only valid tools are the specific farming tools. Normal hoes and other beginner tools will not
 					count.
 				</p>
