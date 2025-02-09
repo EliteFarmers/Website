@@ -175,14 +175,14 @@ export const GARDEN_PLOTS: Record<string, number[]> = {
 };
 
 export const CROP_UPGRADE_COSTS: Record<number, number> = {
-    0: 0,
-    1: 5,
-    2: 10,
-    3: 20,
-    4: 50,
-    5: 100,
-    6: 500,
-    7: 1_000,
-    8: 2_000,
-    9: 4_000,
-}
+	0: 0,
+	1: 5,
+	2: 10,
+	3: 20,
+	4: 50,
+	5: 100,
+	6: 500,
+	7: 1_000,
+	8: 2_000,
+	9: 4_000,
+};
