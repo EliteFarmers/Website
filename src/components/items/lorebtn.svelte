@@ -18,7 +18,7 @@
 	<Dialog.Trigger class={buttonVariants({ variant: 'ghost', class: 'px-2', size: 'sm' })}>
 		<FileText size={20} />
 	</Dialog.Trigger>
-	<Dialog.Content class="dark">
+	<Dialog.ScrollContent class="dark">
 		<Dialog.Header>
 			<h3 class="font-mono text-xl">
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -28,5 +28,5 @@
 		<ItemLore {item} title={false}>
 			{@render children?.()}
 		</ItemLore>
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>

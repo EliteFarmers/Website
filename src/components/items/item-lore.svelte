@@ -20,7 +20,7 @@
 		</h3>
 	{/if}
 	<Lore lore={item.lore?.slice() ?? []} />
-	<div class="text-card-foreground">
+	<div class="text-muted-foreground">
 		{@render children?.()}
 		<p>
 			<span class="select-none font-semibold">UUID:</span>

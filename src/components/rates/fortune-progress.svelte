@@ -11,7 +11,7 @@
 		barBg?: string;
 	}
 
-	let { progress, barBg = 'bg-card' }: Props = $props();
+	let { progress, barBg = 'bg-background' }: Props = $props();
 
 	let maxed = $state(progress.ratio >= 1);
 	let readable = $derived(
@@ -44,7 +44,7 @@
 		{#if progress.api === false}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<TriangleAlert size={16} class="completed -mb-1" />
+					<TriangleAlert size={16} class="-mb-1 text-completed" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. For it to show up you need to configure

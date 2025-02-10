@@ -16,7 +16,7 @@
 		<div class="flex flex-col gap-1">
 			<p class="text-2xl font-semibold">{account.username}</p>
 			<div class="flex flex-row items-center gap-1">
-				<p class="text-md font-semibold text-muted-variant">{account.id}</p>
+				<p class="text-sm text-muted-foreground">{account.id}</p>
 				<CopyToClipboard text={account.id} size="sm" class="-my-2" />
 			</div>
 		</div>

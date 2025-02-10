@@ -45,10 +45,10 @@
 </div>
 
 <Dialog.Root bind:open={progressModal}>
-	<Dialog.Content class="max-h-[80%] overflow-y-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Title>{shownProgress?.name}</Dialog.Title>
 		{#if shownProgress}
 			<ItemProgress progress={shownProgress} />
 		{/if}
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>

@@ -19,7 +19,7 @@
 					<Command.Item value={style.name ?? ''} class="p-0">
 						<a
 							href="/admin/style/{style.id}"
-							class="flex h-full w-full flex-col items-center justify-between gap-2 rounded-md bg-card p-2 md:flex-row"
+							class="flex h-full w-full flex-col items-center justify-between gap-2 rounded-md bg-muted p-2 md:flex-row"
 						>
 							<p>{style.name}</p>
 						</a>

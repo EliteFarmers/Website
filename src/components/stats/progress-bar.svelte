@@ -17,7 +17,7 @@
 		expanded = undefined,
 		maxed = false,
 		compact = false,
-		barBg = 'bg-card',
+		barBg = 'bg-background',
 		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold',
 	}: Props = $props();
 </script>

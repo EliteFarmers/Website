@@ -5,6 +5,7 @@ import Footer from './dialog-footer.svelte';
 import Header from './dialog-header.svelte';
 import Overlay from './dialog-overlay.svelte';
 import Content from './dialog-content.svelte';
+import ScrollContent from './dialog-scroll-content.svelte';
 import Description from './dialog-description.svelte';
 
 const Root = DialogPrimitive.Root;
@@ -23,6 +24,7 @@ export {
 	Content,
 	Description,
 	Close,
+	ScrollContent,
 	//
 	Root as Dialog,
 	Title as DialogTitle,
@@ -34,4 +36,5 @@ export {
 	Content as DialogContent,
 	Description as DialogDescription,
 	Close as DialogClose,
+	ScrollContent as DialogScrollContent,
 };

@@ -11,7 +11,7 @@
 	let crops = $derived(weights.crops ?? {});
 </script>
 
-<div class="scrollbar-none flex w-full overflow-x-scroll">
+<div class="scrollbar-none flex w-full overflow-x-auto">
 	<table class="flex-grow-1 w-full min-w-[12rem] max-w-4xl">
 		<thead>
 			<tr class="bg-muted-variant">
