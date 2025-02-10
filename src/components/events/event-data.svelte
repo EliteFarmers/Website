@@ -41,7 +41,9 @@
 				{#if event.type === +EventType.FarmingWeight}
 					{#each cropWeights() as [cropName, weight]}
 						{@const crop = getCropDisplayName(getCropFromName(cropName) ?? Crop.Wheat)}
-						<div class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-card">
+						<div
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						>
 							<div class="flex flex-row items-center gap-2">
 								<img src={PROPER_CROP_TO_IMG[crop]} alt={crop} class="pixelated aspect-square" />
 								<p class="whitespace-nowrap font-semibold">{crop}</p>
@@ -51,7 +53,9 @@
 					{/each}
 				{:else if event.type === +EventType.Medals}
 					{#each medalWeights() as [medal, weight]}
-						<div class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-card">
+						<div
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						>
 							<div class="flex flex-row items-center gap-2">
 								<img
 									src="/images/medals/{medal.toLowerCase()}.webp"

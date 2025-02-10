@@ -9,7 +9,8 @@
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
 	import * as AlertDialog from '$ui/alert-dialog';
-	import { Button } from '$ui/button';
+	import * as Tooltip from '$ui/tooltip';
+	import { Button, buttonVariants } from '$ui/button';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	interface Props {
@@ -25,7 +26,7 @@
 	let confirmModal = $state(false);
 </script>
 
-<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md bg-card p-4">
+<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md border-2 bg-card p-4">
 	<div class="flex w-full flex-row justify-between gap-4">
 		<div class="flex flex-col gap-2">
 			<h3 class="text-2xl">{lb.title}</h3>
@@ -49,17 +50,17 @@
 			</p>
 			<p>
 				<span class="font-semibold">Update Role:</span>
-				@{roles.find((c) => c.value === lb.updateRoleId)?.label ?? 'Not Set'}
+				{roles.find((c) => c.value === lb.updateRoleId)?.label ?? 'Not Set'}
 			</p>
 		</div>
 		<div class="flex flex-col gap-2">
 			<p>
 				<span class="font-semibold">Required Role:</span>
-				@{roles.find((c) => c.value === lb.requiredRole)?.label ?? 'Not Set'}
+				{roles.find((c) => c.value === lb.requiredRole)?.label ?? 'Not Set'}
 			</p>
 			<p>
 				<span class="font-semibold">Banned Role:</span>
-				@{roles.find((c) => c.value === lb.blockedRole)?.label ?? 'Not Set'}
+				{roles.find((c) => c.value === lb.blockedRole)?.label ?? 'Not Set'}
 			</p>
 		</div>
 		<div class="flex flex-col justify-between gap-2">
@@ -99,8 +100,8 @@
 			</form>
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<Button onclick={() => (confirmModal = true)}>
-						<Trash2 class="text-destructive" />
+					<Button onclick={() => (confirmModal = true)} variant="destructive">
+						<Trash2 />
 					</Button>
 				{/snippet}
 				<div>
@@ -127,16 +128,14 @@
 									<input type="hidden" name="uuid" value={entry.uuid} />
 									<input type="hidden" name="crop" value={entry.record?.crop} />
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
-									<Popover.Mobile>
+									<Tooltip.Simple>
 										{#snippet trigger()}
-											<div>
-												<Button type="submit" variant="destructive" size="icon">
-													<Trash2 size={20} class="text-destructive" />
-												</Button>
-											</div>
+											<Button type="submit" variant="destructive" size="icon">
+												<Trash2 size={20} />
+											</Button>
 										{/snippet}
 										<p>Remove and block this Participation</p>
-									</Popover.Mobile>
+									</Tooltip.Simple>
 								</form>
 								<p class="text-lg">{entry.ign}</p>
 								<p class="font-mono text-lg">{entry.record?.collected?.toLocaleString()}</p>
@@ -164,7 +163,9 @@
 			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
 			<form method="POST" action="{page.url.pathname}?/delete" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
-				<AlertDialog.Action type="submit">Delete</AlertDialog.Action>
+				<AlertDialog.Action type="submit" class={buttonVariants({ variant: 'destructive' })}
+					>Delete</AlertDialog.Action
+				>
 			</form>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>

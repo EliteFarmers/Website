@@ -148,7 +148,12 @@
 	{/if}
 
 	<div class="flex flex-col items-start justify-center gap-8 md:flex-row md:gap-16">
-		<form method="post" action="?/join" class="mb-16 flex max-w-lg flex-col gap-4" use:enhance>
+		<form
+			method="post"
+			action="?/join"
+			class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8"
+			use:enhance
+		>
 			<h2 class="mb-4 text-center text-2xl font-semibold">
 				{#if event.mode === 'solo'}
 					Join Event
@@ -200,7 +205,7 @@
 					Tools that do not have a built in counter require the Cultivating enchantment or your progress with
 					that tool will not be counted.
 				</p>
-				<p class="text-muted-variant">
+				<p class="text-muted-foreground">
 					The only valid tools are the specific farming tools. Normal hoes and other beginner tools will not
 					count.
 				</p>
@@ -288,7 +293,7 @@
 			{/if}
 		</form>
 		{#if event.mode !== 'solo'}
-			<div class="mb-16 flex max-w-lg flex-col gap-4">
+			<div class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8">
 				<h2 class="mb-4 text-center text-2xl font-semibold">Step 2: Join Team</h2>
 				<p>
 					This is a team event! You must join a team to participate. If you don't have a team, you can create

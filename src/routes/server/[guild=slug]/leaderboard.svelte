@@ -13,7 +13,7 @@
 	let crops = $derived(Object.entries(leaderboard.crops ?? {}).filter(([, v]) => v.length > 0));
 </script>
 
-<div class="flex flex-col items-center gap-4 rounded-md bg-card p-6">
+<div class="flex flex-col items-center gap-4 rounded-md border-2 bg-card p-6">
 	<h4 class="my-4 text-3xl font-semibold">{leaderboard.title}</h4>
 	<div class="flex flex-wrap justify-center">
 		{#each crops as [crop, records]}

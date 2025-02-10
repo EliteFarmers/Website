@@ -12,7 +12,7 @@
 <Popover.Mobile>
 	{#snippet trigger()}
 		<div
-			class="flex w-fit flex-row items-center gap-2 rounded-sm bg-card p-1 px-2 font-semibold leading-none text-primary"
+			class="flex w-fit flex-row items-center gap-2 rounded-sm bg-primary p-1 px-2 font-semibold leading-none text-primary-foreground"
 		>
 			{#if type === +EventType.FarmingWeight}
 				<img src="/favicon.webp" alt="Farming Weight" class="h-4 w-4" />
@@ -23,12 +23,12 @@
 			{/if}
 		</div>
 	{/snippet}
-	<div class="text-primary">
+	<div>
 		{#if type === +EventType.FarmingWeight}
-			<p class="text-lg font-semibold">Farming Weight Event</p>
+			<p class="text-md mb-1 font-semibold">Farming Weight Event</p>
 			<p class="max-w-xs">Earn points for gaining farming weight during the event!</p>
 		{:else if type === +EventType.Medals}
-			<p class="text-lg font-semibold">Jacob Contests Event</p>
+			<p class="text-md mb-1 font-semibold">Jacob Contests Event</p>
 			<p class="max-w-xs">Earn points for each Jacob contest placement you earn during the event!</p>
 		{/if}
 	</div>
