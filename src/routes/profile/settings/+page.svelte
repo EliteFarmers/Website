@@ -334,7 +334,7 @@
 												{/if}
 											</div>
 										</div>
-										<!-- rest of the "site" -->
+										<!-- rest of the preview -->
 										<div class="space-y-4">
 											<div class="h-5 w-1/4 rounded bg-muted"></div>
 											<div class="h-4 w-1/2 rounded bg-muted"></div>
