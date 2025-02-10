@@ -117,7 +117,7 @@
 		--foreground: 240 10% 3.9%;
 
 		--muted: 240 4.8% 93%;
-		--muted-variant: 240 4.8% 90%;
+		--muted-variant: 240 4.8% 82%;
 		--muted-foreground: 240 3.8% 46.1%;
 
 		--popover: 0 0% 100%;
@@ -213,7 +213,7 @@
 		--foreground: 0 0% 98%;
 
 		--muted: 240 3.7% 15.9%;
-		--muted-variant: 240 4.8% 18%;
+		--muted-variant: 240 4.8% 23%;
 		--muted-foreground: 240 5% 64.9%;
 
 		--popover: 0 0% 8%;
@@ -253,6 +253,10 @@
 		--sidebar-accent-foreground: 0 0% 98%;
 		--sidebar-border: 0 0% 15%;
 		--sidebar-ring: 300 50% 60%;
+	}
+
+	html {
+		scrollbar-color: hsl(var(--muted-variant) / 0.75) hsl(var(--muted) / 0.75);
 	}
 }
 
