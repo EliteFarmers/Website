@@ -11,7 +11,7 @@
 	let { member, children }: Props = $props();
 </script>
 
-<div class="flex w-full flex-row justify-between gap-1 text-primary">
+<div class="flex w-full flex-row justify-between gap-1">
 	<div class="flex flex-row items-center gap-2">
 		{@render children?.()}
 		<img

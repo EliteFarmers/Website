@@ -18,12 +18,15 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.Content class="max-h-[80%] overflow-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Title>Create New Event</Dialog.Title>
-		<p>Events cannot be deleted after being created (right now), be sure that you want to do this.</p>
+		<p class="my-4">
+			Events cannot be deleted after being created, be sure that you want to do this. You are able to edit the
+			event after creation or while waiting for approval.
+		</p>
 		<form
 			method="post"
-			class="flex flex-col gap-2"
+			class="mx-1 flex flex-col gap-2"
 			use:enhance={() => {
 				return async ({ result, update }) => {
 					if (result) open = false;
@@ -121,5 +124,5 @@
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>

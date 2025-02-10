@@ -8,11 +8,12 @@
 		event: components['schemas']['EventDetailsDto'];
 		team: components['schemas']['EventTeamWithMembersDto'];
 		rank: number;
+		started: boolean;
 		running: boolean;
 		highlightUuid?: undefined | string;
 	}
 
-	let { event, team, rank, running, highlightUuid = undefined }: Props = $props();
+	let { event, team, rank, started, running, highlightUuid = undefined }: Props = $props();
 
 	let key = $derived((team.id ?? '').toString() || rank.toString());
 	let members = $derived((team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0)));
@@ -24,7 +25,7 @@
 		<div class="flex w-full flex-col gap-2 px-4">
 			<div class="flex flex-row items-center justify-between">
 				<div class="flex flex-wrap items-center gap-4 md:flex-row">
-					{#if running}
+					{#if started}
 						<div class="text-progress">
 							<p>
 								<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
@@ -46,7 +47,7 @@
 				<p class="block pr-2 text-lg font-semibold">
 					{#if team.score && +team.score > 0}
 						{(+(team.score ?? 0)).toLocaleString()}
-					{:else if running}
+					{:else if started}
 						<span class="text-destructive">No Progress Yet!</span>
 					{/if}
 				</p>

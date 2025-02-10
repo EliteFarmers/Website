@@ -2,9 +2,9 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
-	import * as Popover from '$ui/popover';
 	import { EventType } from '$lib/utils';
 	import Crown from 'lucide-svelte/icons/crown';
+	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 
 	interface Props {
 		owner?: boolean;
@@ -46,21 +46,21 @@
 			<img
 				src="https://mc-heads.net/avatar/{member.playerUuid}"
 				alt="Player Head"
-				class="pixelated aspect-square h-8 w-8 rounded-sm"
+				class="pixelated aspect-square size-8 rounded-sm"
 			/>
 			<p class="text-lg">{member.playerName}</p>
 			{#if owner}
-				<Popover.Mobile>
+				<TooltipSimple>
 					{#snippet trigger()}
 						<div class="flex flex-row items-end">
-							<Crown size="sm" class="mt-1.5 w-4 text-completed" />
+							<Crown size={16} class="w-4 text-completed" />
 						</div>
 					{/snippet}
-					<p class="text-lg font-semibold">Team Owner</p>
-				</Popover.Mobile>
+					<p>Team Owner</p>
+				</TooltipSimple>
 			{/if}
 			{#if running}
-				<Popover.Mobile>
+				<TooltipSimple>
 					{#snippet trigger()}
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
@@ -83,7 +83,7 @@
 							<p class="max-w-xs">{member.playerName} has increased their score since last checked!</p>
 						{/if}
 					</div>
-				</Popover.Mobile>
+				</TooltipSimple>
 			{/if}
 		</div>
 		<p class="block pr-2 text-lg">
@@ -116,7 +116,7 @@
 		{/if}
 		<div class="flex w-full flex-row items-center justify-between">
 			<div>
-				<p class="text-muted-variant">Last Updated</p>
+				<p class="text-muted-foreground">Last Updated</p>
 				<p>
 					{member.lastUpdated
 						? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +
