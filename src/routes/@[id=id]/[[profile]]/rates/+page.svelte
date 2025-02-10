@@ -241,7 +241,7 @@
 			<div
 				class="{$ratesData.settings
 					? 'flex'
-					: 'hidden'} w-full max-w-lg flex-1 flex-col justify-center gap-4 rounded-md border-solid border-card p-4 outline outline-2"
+					: 'hidden'} w-full max-w-lg flex-1 flex-col justify-center gap-4 rounded-md border-2 border-solid border-muted p-4"
 			>
 				<div class="flex flex-col items-center justify-center gap-8 md:flex-row">
 					<div class="flex flex-col justify-start gap-1">

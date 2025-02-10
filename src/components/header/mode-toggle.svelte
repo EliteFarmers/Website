@@ -58,9 +58,7 @@
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />
 		<DropdownMenu.Item>
-			<a href="/profile/settings#themes" class="flex w-full text-muted-foreground hover:text-foreground">
-				See More Themes
-			</a>
+			<a href="/profile/settings#themes" class="flex w-full text-muted-foreground"> See More Themes </a>
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
