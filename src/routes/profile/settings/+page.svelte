@@ -305,7 +305,7 @@
 						<Carousel.Item class="">
 							<Card.Root class={theme.class} style="color-scheme: {theme.class}">
 								<Card.Content
-									class="flex aspect-video items-center justify-center p-6"
+									class="flex aspect-video items-center justify-center rounded-lg bg-background p-6"
 									style="color-scheme: {theme.class};"
 								>
 									<!-- Theme Preview -->
@@ -350,8 +350,8 @@
 												<div class="h-9 flex-1 rounded bg-muted"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">
-												<div class="h-16 rounded bg-muted"></div>
-												<div class="h-16 rounded bg-muted"></div>
+												<div class="h-16 rounded bg-muted-variant"></div>
+												<div class="h-16 rounded bg-muted-variant"></div>
 											</div>
 										</div>
 									</div>
