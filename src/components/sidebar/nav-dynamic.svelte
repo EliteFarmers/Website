@@ -25,7 +25,7 @@
 					{#snippet child({ props })}
 						<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
 							{#snippet tooltipContent()}
-								<span class="inline-blockname">{title}</span>
+								<span class="inline-block">{title}</span>
 							{/snippet}
 							{#if !sidebar.open && !sidebar.isMobile}
 								<ChevronRight
@@ -60,10 +60,10 @@
 				{#if crumb.href && !hasDrop}
 					{@render link(crumb)}
 				{:else}
-					<Sidebar.MenuButton class="truncatename md:max-w-none" onclick={() => sidebar.toggle()}>
+					<Sidebar.MenuButton class="truncate md:max-w-none" onclick={() => sidebar.toggle()}>
 						{@render inner(crumb)}
 						{#snippet tooltipContent()}
-							<span class="inline-blockname">{crumb.tooltip ?? name}</span>
+							<span class="inline-block">{crumb.tooltip ?? name}</span>
 						{/snippet}
 					</Sidebar.MenuButton>
 				{/if}
@@ -76,7 +76,7 @@
 							<Sidebar.MenuButton {...props}>
 								{@render inner(crumb)}
 								{#snippet tooltipContent()}
-									<span class="inline-blockname">{crumb.tooltip ?? name}</span>
+									<span class="inline-block">{crumb.tooltip ?? name}</span>
 								{/snippet}
 								<ChevronRight
 									class="ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
@@ -101,10 +101,10 @@
 			{#if crumb.href && !hasDrop}
 				{@render link(crumb)}
 			{:else}
-				<Sidebar.MenuButton class="truncatename md:max-w-none">
+				<Sidebar.MenuButton class="truncate md:max-w-none">
 					{@render inner(crumb)}
 					{#snippet tooltipContent()}
-						<span class="inline-blockname">{crumb.tooltip ?? name}</span>
+						<span class="inline-block">{crumb.tooltip ?? name}</span>
 					{/snippet}
 				</Sidebar.MenuButton>
 			{/if}
@@ -131,7 +131,7 @@
 	{@const name = crumb.capitalize !== false ? crumb.name.charAt(0).toUpperCase() + crumb.name.slice(1) : crumb.name}
 	<Sidebar.MenuButton data-active={crumb.href === page.url.pathname}>
 		{#snippet tooltipContent()}
-			<span class="inline-blockname">{crumb.tooltip ?? name}</span>
+			<span class="inline-block">{crumb.tooltip ?? name}</span>
 		{/snippet}
 		{#snippet child({ props })}
 			<a href={crumb.href} {...props}>
