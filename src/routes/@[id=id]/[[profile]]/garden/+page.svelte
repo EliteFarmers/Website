@@ -72,7 +72,7 @@
 						<Plots plots={garden.plots} />
 					</div>
 					<div class="-mt-0.5 flex flex-col">
-						<Popover.Mobile>
+						<Popover.Mobile triggerRootClass="inline-block w-fit">
 							{#snippet trigger()}
 								<h3 class="text-lg font-semibold leading-none">Crop Upgrades</h3>
 							{/snippet}
