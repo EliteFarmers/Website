@@ -14,17 +14,17 @@
 	const weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
 
 	onMount(() => {
-    const eligible = (ctx.member.farmingWeight?.totalWeight ?? 0) > Number(PUBLIC_WEIGHT_REQ);
-    const isOwnAccount = page.data.session.ign === ctx.ign
-    const hasElite = ctx.account.badges?.some((badge) => badge.id !== undefined && badge.id === 1) ?? false;
+		const eligible = (ctx.member.farmingWeight?.totalWeight ?? 0) >= Number(PUBLIC_WEIGHT_REQ);
+		const isOwnAccount = page.data.session.ign === ctx.ign;
+		const hasElite = ctx.account.badges?.some((badge) => badge.id !== undefined && badge.id === 1) ?? false;
 
-    if (isOwnAccount && eligible && !hasElite) {
+		if (isOwnAccount && eligible && !hasElite) {
 			toast('You qualify for Elite!', {
 				description: 'Join the Discord and make a ticket to claim your role as an Elite Farmer',
 				action: {
 					label: 'x',
-					onClick: () => toast.dismiss()
-				}
+					onClick: () => toast.dismiss(),
+				},
 			});
 		}
 	});
