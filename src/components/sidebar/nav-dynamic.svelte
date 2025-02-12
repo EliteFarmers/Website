@@ -53,7 +53,9 @@
 
 {#snippet content(crumb: Crumb | Omit<Crumb, 'dropdown'>, open = false, drop = true)}
 	{@const name =
-		crumb.capitalize !== false ? (crumb.name?.charAt(0).toUpperCase() ?? '' + crumb.name?.slice(1)) : crumb.name}
+		crumb.capitalize !== false && crumb.name
+			? crumb.name.charAt(0).toUpperCase() + crumb.name.slice(1)
+			: crumb?.name || ''}
 	{@const hasDrop = 'dropdown' in crumb && crumb.dropdown?.length}
 	{#if drop && 'dropdown' in crumb && crumb.dropdown?.length}
 		{#if sidebar.state === 'collapsed' && !sidebar.isMobile}
@@ -115,7 +117,9 @@
 
 {#snippet inner(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	{@const name =
-		crumb.capitalize !== false ? (crumb.name?.charAt(0).toUpperCase() ?? '' + crumb.name?.slice(1)) : crumb.name}
+		crumb.capitalize !== false && crumb.name
+			? crumb.name.charAt(0).toUpperCase() + crumb.name.slice(1)
+			: crumb?.name || ''}
 	{#if crumb.icon}
 		{@const Icon = crumb.icon as Component}
 		<Icon class="size-4" {...crumb.data} />
@@ -131,7 +135,9 @@
 
 {#snippet link(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	{@const name =
-		crumb.capitalize !== false ? (crumb.name?.charAt(0).toUpperCase() ?? '' + crumb.name?.slice(1)) : crumb.name}
+		crumb.capitalize !== false && crumb.name
+			? crumb.name.charAt(0).toUpperCase() + crumb.name.slice(1)
+			: crumb?.name || ''}
 	<Sidebar.MenuButton data-active={crumb.href === page.url.pathname}>
 		{#snippet tooltipContent()}
 			<span class="inline-block">{crumb.tooltip ?? name}</span>
