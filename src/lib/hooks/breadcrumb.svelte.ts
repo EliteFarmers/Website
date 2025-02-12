@@ -3,7 +3,7 @@ import { getContext, setContext, untrack, type Component, type Snippet } from 's
 import Home from 'lucide-svelte/icons/home';
 
 interface CrumbBase {
-	name: string;
+	name?: string;
 	capitalize?: boolean;
 	href?: string;
 	icon?: Component | unknown;
