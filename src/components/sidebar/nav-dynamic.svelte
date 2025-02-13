@@ -60,12 +60,12 @@
 					{@render link(crumb)}
 				{:else}
 					<Sidebar.MenuButton
-						class="truncate md:max-w-none {(crumb.capitalize ?? true) ? 'first-letter:capitalize' : ''}"
+						class="truncate md:max-w-none {!crumb.capitalize ? '' : 'first-letter:capitalize'}"
 						onclick={() => sidebar.toggle()}
 					>
 						{@render inner(crumb)}
 						{#snippet tooltipContent()}
-							<span class="inline-block {(crumb.capitalize ?? true) ? 'first-letter:capitalize' : ''}"
+							<span class="inline-block {!crumb.capitalize ? '' : 'first-letter:capitalize'}"
 								>{crumb.tooltip ?? crumb.name}</span
 							>
 						{/snippet}
@@ -110,11 +110,11 @@
 				{@render link(crumb)}
 			{:else}
 				<Sidebar.MenuButton
-					class="truncate md:max-w-none {(crumb.capitalize ?? true) ? 'first-letter:capitalize' : ''}"
+					class="truncate md:max-w-none {!crumb.capitalize ? '' : 'first-letter:capitalize'}"
 				>
 					{@render inner(crumb)}
 					{#snippet tooltipContent()}
-						<span class="inline-block {(crumb.capitalize ?? true) ? 'first-letter:capitalize' : ''}"
+						<span class="inline-block {!crumb.capitalize ? '' : 'first-letter:capitalize'}"
 							>{crumb.tooltip ?? crumb.name}</span
 						>
 					{/snippet}
@@ -132,7 +132,7 @@
 	{#if crumb.snippet}
 		{@render crumb.snippet(crumb)}
 	{:else if crumb.name}
-		<span class="max-w-28 truncate {(crumb.capitalize ?? true) ? 'first-letter:capitalize' : ''}">
+		<span class="max-w-28 truncate {!crumb.capitalize ? '' : 'first-letter:capitalize'}">
 			{crumb.name}
 		</span>
 	{/if}
@@ -141,7 +141,7 @@
 {#snippet link(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
 	<Sidebar.MenuButton data-active={crumb.href === page.url.pathname}>
 		{#snippet tooltipContent()}
-			<span class="inline-block {(crumb.capitalize ?? true) ? 'first-letter:capitalize' : ''}"
+			<span class="inline-block {!crumb.capitalize ? '' : 'first-letter:capitalize'}"
 				>{crumb.tooltip ?? crumb.name}</span
 			>
 		{/snippet}
