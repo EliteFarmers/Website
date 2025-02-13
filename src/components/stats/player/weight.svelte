@@ -15,8 +15,6 @@
 	const rankText = $derived(rank !== -1 ? `#${rank}` : 'Unranked');
 	const weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
 
-	let showToast = $state(false);
-
 	onMount(async () => {
 		await tick();
 
@@ -24,7 +22,7 @@
 		const isOwnAccount = (page.data.session.ign ?? undefined) === ctx.ign;
 		const hasElite = ctx.account.badges?.some((badge) => badge.id !== undefined && badge.id === 1) ?? false;
 
-		if (eligible && hasElite) {
+		if (isOwnAccount && eligible && !hasElite) {
 			// @ts-expect-error - Not updated for Svelte 5 yet
 			toast.custom(EliteToast, {
 				duration: Number.POSITIVE_INFINITY,
