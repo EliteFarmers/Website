@@ -52,6 +52,7 @@
 </Sidebar.Group>
 
 {#snippet content(crumb: Crumb | Omit<Crumb, 'dropdown'>, open = false, drop = true)}
+  {@const capital = crumb.capitalize === false ? '' : 'first-letter:capitalize'}
 	{@const hasDrop = 'dropdown' in crumb && crumb.dropdown?.length}
 	{#if drop && 'dropdown' in crumb && crumb.dropdown?.length}
 		{#if sidebar.state === 'collapsed' && !sidebar.isMobile}
@@ -60,12 +61,12 @@
 					{@render link(crumb)}
 				{:else}
 					<Sidebar.MenuButton
-						class="truncate md:max-w-none {crumb.capitalize === false ? '' : 'first-letter:capitalize'}"
+						class="truncate md:max-w-none {capital}"
 						onclick={() => sidebar.toggle()}
 					>
 						{@render inner(crumb)}
 						{#snippet tooltipContent()}
-							<span class="inline-block {crumb.capitalize === false ? '' : 'first-letter:capitalize'}"
+							<span class="inline-block {capital}"
 								>{crumb.tooltip ?? crumb.name}</span
 							>
 						{/snippet}
@@ -110,11 +111,11 @@
 				{@render link(crumb)}
 			{:else}
 				<Sidebar.MenuButton
-					class="truncate md:max-w-none {crumb.capitalize === false ? '' : 'first-letter:capitalize'}"
+					class="truncate md:max-w-none {capital}"
 				>
 					{@render inner(crumb)}
 					{#snippet tooltipContent()}
-						<span class="inline-block {crumb.capitalize === false ? '' : 'first-letter:capitalize'}"
+						<span class="inline-block {capital}"
 							>{crumb.tooltip ?? crumb.name}</span
 						>
 					{/snippet}
@@ -125,6 +126,7 @@
 {/snippet}
 
 {#snippet inner(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+  {@const capital = crumb.capitalize === false ? '' : 'first-letter:capitalize'}
 	{#if crumb.icon}
 		{@const Icon = crumb.icon as Component}
 		<Icon class="size-4" {...crumb.data} />
@@ -132,16 +134,17 @@
 	{#if crumb.snippet}
 		{@render crumb.snippet(crumb)}
 	{:else if crumb.name}
-		<span class="max-w-28 truncate {crumb.capitalize === false ? '' : 'first-letter:capitalize'}">
+		<span class="max-w-28 truncate {capital}">
 			{crumb.name}
 		</span>
 	{/if}
 {/snippet}
 
 {#snippet link(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
+  {@const capital = crumb.capitalize === false ? '' : 'first-letter:capitalize'}
 	<Sidebar.MenuButton data-active={crumb.href === page.url.pathname}>
 		{#snippet tooltipContent()}
-			<span class="inline-block {crumb.capitalize === false ? '' : 'first-letter:capitalize'}"
+			<span class="inline-block {capital}"
 				>{crumb.tooltip ?? crumb.name}</span
 			>
 		{/snippet}
