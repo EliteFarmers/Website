@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import { toast } from 'svelte-sonner';
 	import Profiles from './profiles.svelte';
 	import { PUBLIC_WEIGHT_REQ } from '$env/static/public';
 	import { page } from '$app/state';
+	import EliteToast from '$comp/stats/player/eliteToast.svelte';
+	import { toast } from 'svelte-sonner';
+	import { tick } from 'svelte';
 
 	const ctx = getStatsContext();
 
@@ -13,18 +15,19 @@
 	const rankText = $derived(rank !== -1 ? `#${rank}` : 'Unranked');
 	const weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
 
-	onMount(() => {
+	let showToast = $state(false);
+
+	onMount(async () => {
+		await tick();
+
 		const eligible = (ctx.member.farmingWeight?.totalWeight ?? 0) >= Number(PUBLIC_WEIGHT_REQ);
-		const isOwnAccount = page.data.session.ign === ctx.ign;
+		const isOwnAccount = (page.data.session.ign ?? undefined) === ctx.ign;
 		const hasElite = ctx.account.badges?.some((badge) => badge.id !== undefined && badge.id === 1) ?? false;
 
-		if (isOwnAccount && eligible && !hasElite) {
-			toast('You qualify for Elite!', {
-				description: 'Join the Discord and make a ticket to claim your role as an Elite Farmer',
-				action: {
-					label: 'x',
-					onClick: () => toast.dismiss(),
-				},
+		if (eligible && hasElite) {
+			// @ts-expect-error - Not updated for Svelte 5 yet
+			toast.custom(EliteToast, {
+				duration: Number.POSITIVE_INFINITY,
 			});
 		}
 	});
