@@ -76,11 +76,7 @@
 							<Sidebar.MenuButton {...props}>
 								{@render inner(crumb)}
 								{#snippet tooltipContent()}
-									<span
-										class="inline-block {(crumb.capitalize ?? true)
-											? 'first-letter:capitalize'
-											: ''}">{crumb.tooltip ?? crumb.name}</span
-									>
+									<span class="inline-block {capital}">{crumb.tooltip ?? crumb.name}</span>
 								{/snippet}
 								<ChevronRight
 									class="ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
