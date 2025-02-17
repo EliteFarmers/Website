@@ -83,6 +83,7 @@ export interface Upgrade {
 	reason: UpgradeReason;
 	cost?: UpgradeCost;
 	why?: string;
+	preffered?: boolean;
 }
 
 export interface InitialItems {

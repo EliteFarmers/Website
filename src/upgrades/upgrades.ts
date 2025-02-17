@@ -44,7 +44,7 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 	let item = FARMING_TOOLS[upgrade.id];
 	if (!item) return undefined;
 
-	while (item?.upgrade && item.upgrade.reason !== UpgradeReason.Situational) {
+	while (item?.upgrade && (item.upgrade.reason !== UpgradeReason.Situational || item.upgrade.preffered)) {
 		last = item.upgrade;
 		item = FARMING_TOOLS[item.upgrade.id];
 	}
@@ -72,13 +72,13 @@ export function getLastItemUpgradeableTo(
 	options: Partial<Record<string, UpgradeableInfo>>
 ): { upgrade: Upgrade; info: UpgradeableInfo } | undefined {
 	const upgrade = upgradeable.getItemUpgrade();
-	if (!upgrade || upgrade.reason === UpgradeReason.Situational) return undefined;
+	if (!upgrade || (upgrade.reason === UpgradeReason.Situational && !upgrade.preffered)) return undefined;
 
 	let last = upgrade;
 	let item = options[upgrade.id];
 	if (!item) return undefined;
 
-	while (item?.upgrade && item.upgrade.reason !== UpgradeReason.Situational) {
+	while (item?.upgrade && (item.upgrade.reason !== UpgradeReason.Situational || item.upgrade.preffered)) {
 		last = item.upgrade;
 		item = options[item.upgrade.id];
 	}

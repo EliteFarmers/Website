@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { ZorroMode } from '../player/playeroptions.js';
-import { FarmingEquipment } from './farmingequipment.js';
 import { ArmorSet } from './farmingarmor.js';
+import { FarmingEquipment } from './farmingequipment.js';
 
 const zorrosCape = {
 	id: 397,
@@ -169,9 +169,7 @@ const pesthunterCloak = {
 	skyblockId: 'PESTHUNTERS_CLOAK',
 	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
 	name: "§dSqueaky Pesthunter's Cloak",
-	lore: [
-		'§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka',
-	],
+	lore: ['§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka'],
 	enchantments: { green_thumb: 5 },
 	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
 };
@@ -182,9 +180,7 @@ const pesthunterGloves = {
 	skyblockId: 'PESTHUNTERS_GLOVES',
 	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
 	name: "§dSqueaky Pesthunter's Gloves",
-	lore: [
-		'§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka',
-	],
+	lore: ['§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka'],
 	enchantments: { green_thumb: 5 },
 	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
 };
@@ -217,6 +213,6 @@ test('Pesthunter Set Bonus Test', () => {
 	expect(set.getFortuneBreakdown()).toStrictEqual({
 		[gloves.item.name ?? '']: 29,
 		[cloak.item.name ?? '']: 29,
-		'Eradicator': 50,
+		Eradicator: 50,
 	});
 });

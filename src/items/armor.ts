@@ -113,6 +113,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			id: 'FERMENTO_BOOTS',
 			reason: UpgradeReason.Situational,
 			why: 'Fermento Boots provide more farming fortune, with the tradeoff of not being able to control your speed.',
+			preffered: true,
 		},
 		maxRarity: Rarity.Legendary,
 		slot: GearSlot.Boots,
@@ -755,5 +756,5 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 				[Stat.FarmingFortune]: 100,
 			},
 		},
-	}
+	},
 };

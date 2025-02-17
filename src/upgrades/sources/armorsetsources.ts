@@ -49,7 +49,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 					: EQUIPMENT_INFO[info.startingItem]?.wiki)
 			);
 		},
-		max: () => {
+		max: (set) => {
 			const item =
 				info.target === ReforgeTarget.Armor
 					? FarmingArmor.fakeItem(ARMOR_INFO[info.startingItem] as UpgradeableInfo)
@@ -57,6 +57,14 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 
 			const progress = item?.getProgress();
 			const maxed = progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+
+			const currentItem = set.getPiece(slot as GearSlot);
+			if (currentItem) {
+				const currentProgress = currentItem.getProgress();
+				const currentMaxed = currentProgress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+				if (currentMaxed > maxed) return currentMaxed;
+			}
+
 			return maxed;
 		},
 		current: (set) => {

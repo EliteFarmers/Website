@@ -255,7 +255,6 @@ class FarmingWeight {
 	};
 }
 
-
 /**
  * Get the weight of a single crop based on the collection amount.
  * Use `createFarmingWeightCalculator` to calculate accurate weight of multiple crops

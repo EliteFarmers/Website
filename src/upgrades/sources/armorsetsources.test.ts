@@ -1,4 +1,6 @@
 import { expect, test } from 'vitest';
+import { FarmingArmor } from '../../fortune/farmingarmor.js';
+import { ARMOR_INFO } from '../../items/armor.js';
 import { FarmingPlayer } from '../../player/player.js';
 
 test('Armor set bonus', () => {
@@ -123,16 +125,13 @@ test('Armor set bonus', () => {
 	]);
 });
 
-
 const pesthunterCloak = {
 	id: 397,
 	count: 1,
 	skyblockId: 'PESTHUNTERS_CLOAK',
 	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
 	name: "§dSqueaky Pesthunter's Cloak",
-	lore: [
-		'§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka',
-	],
+	lore: ['§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka'],
 	enchantments: { green_thumb: 5 },
 	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
 };
@@ -143,9 +142,7 @@ const pesthunterGloves = {
 	skyblockId: 'PESTHUNTERS_GLOVES',
 	uuid: 'b8e008d4-cf6c-41a9-afe0-b0ea750b786e',
 	name: "§dSqueaky Pesthunter's Gloves",
-	lore: [
-		'§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka',
-	],
+	lore: ['§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka'],
 	enchantments: { green_thumb: 5 },
 	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
 };
@@ -159,10 +156,7 @@ test('Equipment set bonus', () => {
 				skyblockId: 'FERMENTO_HELMET',
 				uuid: '369f1caf-8d95-43a1-95b5-b437fbcfe118',
 				name: '§dMossy Fermento Helmet §4✦',
-				lore: [
-					'§7§8Harvester Helmet Skin',
-					'§d§l§ka§r §d§lMYTHIC HELMET §d§l§ka',
-				],
+				lore: ['§7§8Harvester Helmet Skin', '§d§l§ka§r §d§lMYTHIC HELMET §d§l§ka'],
 				enchantments: { pesterminator: 6 },
 				attributes: {
 					skin: 'FERMENTO_ULTIMATE',
@@ -174,10 +168,7 @@ test('Equipment set bonus', () => {
 				gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
 			},
 		],
-		equipment: [
-			pesthunterCloak,
-			pesthunterGloves,
-		],
+		equipment: [pesthunterCloak, pesthunterGloves],
 		uniqueVisitors: 84,
 	});
 
@@ -253,6 +244,22 @@ test('Equipment set bonus', () => {
 			fortune: 50,
 			maxFortune: 100,
 			ratio: 0.5,
-		}
+		},
 	]);
+});
+
+test('Rancher boots preferred upgrade test', () => {
+	const boots = FarmingArmor.fakeItem(ARMOR_INFO.RANCHERS_BOOTS);
+	if (!boots) throw new Error('No boots');
+
+	const player = new FarmingPlayer({
+		armor: [boots],
+	});
+
+	const progress = player.armorSet.getProgress();
+
+	const bootProgress = progress.find((p) => p.name === 'Boots');
+	expect(bootProgress).toBeDefined();
+	expect(bootProgress!.item?.skyblockId).toBe('RANCHERS_BOOTS');
+	expect(bootProgress!.maxFortune).toBe(113);
 });

@@ -139,34 +139,33 @@ export class ArmorSet {
 		if (armor instanceof FarmingArmor) {
 			switch (armor.slot) {
 				case GearSlot.Helmet:
-					this.helmet = armor as FarmingArmor;
+					this.helmet = armor;
 					break;
 				case GearSlot.Chestplate:
-					this.chestplate = armor as FarmingArmor;
+					this.chestplate = armor;
 					break;
 				case GearSlot.Leggings:
-					this.leggings = armor as FarmingArmor;
+					this.leggings = armor;
 					break;
 				case GearSlot.Boots:
-					this.boots = armor as FarmingArmor;
+					this.boots = armor;
 					break;
 			}
-			return;
-		}
-
-		switch (armor.slot) {
-			case GearSlot.Necklace:
-				this.necklace = armor;
-				break;
-			case GearSlot.Cloak:
-				this.cloak = armor;
-				break;
-			case GearSlot.Belt:
-				this.belt = armor;
-				break;
-			case GearSlot.Gloves:
-				this.gloves = armor;
-				break;
+		} else if (armor instanceof FarmingEquipment) {
+			switch (armor.slot) {
+				case GearSlot.Necklace:
+					this.necklace = armor;
+					break;
+				case GearSlot.Cloak:
+					this.cloak = armor;
+					break;
+				case GearSlot.Belt:
+					this.belt = armor;
+					break;
+				case GearSlot.Gloves:
+					this.gloves = armor;
+					break;
+			}
 		}
 
 		this.getFortuneBreakdown(true);
@@ -175,7 +174,7 @@ export class ArmorSet {
 	private recalculateFamilies() {
 		this.setBonuses = ArmorSet.getSetBonusFrom(this.armor ?? []);
 		this.equipmentSetBonuses = ArmorSet.getSetBonusFrom(this.equipment ?? []);
-	
+
 		this.getFortuneBreakdown();
 	}
 

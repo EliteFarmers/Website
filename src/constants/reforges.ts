@@ -498,7 +498,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 				cost: 150_000,
 			},
 		},
-	}
+	},
 };
 
 export const STAT_ICONS: Record<Stat, string> = {
@@ -536,7 +536,7 @@ export const STAT_ICONS: Record<Stat, string> = {
 	[Stat.SugarCaneFortune]: '☘',
 	[Stat.WheatFortune]: '☘',
 	[Stat.PestKillFortune]: '☘',
-	[Stat.PestCooldownReduction]: 'ൠ'
+	[Stat.PestCooldownReduction]: 'ൠ',
 };
 
 export const RARITY_COLORS: Record<Rarity, string> = {

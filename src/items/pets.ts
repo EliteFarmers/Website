@@ -250,9 +250,9 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 						},
 					};
 				},
-			}
-		]
-	}
+			},
+		],
+	},
 };
 
 export interface FarmingPetItemInfo {

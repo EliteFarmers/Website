@@ -139,7 +139,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 			id: 'PEST_VEST',
 			reason: UpgradeReason.NextTier,
 			why: 'The Pest Vest provides more fortune and a higher bonus pest chance.',
-		}
+		},
 	},
 	PESTHUNTERS_NECKLACE: {
 		skyblockId: 'PESTHUNTERS_NECKLACE',
