@@ -48,9 +48,9 @@
 
 <a
 	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profileLink ?? '')}{leaderboard?.subpage ?? ''}"
-	class="inline-block w-full max-w-2xl border-2 bg-card py-1 align-middle hover:bg-muted hover:shadow-lg sm:p-1 {highlight
+	class="inline-block w-full max-w-2xl border bg-card py-1 align-middle hover:bg-muted hover:shadow-lg sm:p-1 {highlight
 		? 'border-completed'
-		: 'border-transparent'} rounded-md"
+		: ''} rounded-md"
 >
 	<div class="flex items-center justify-between gap-0 md:gap-2">
 		<div

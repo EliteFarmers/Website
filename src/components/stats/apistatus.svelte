@@ -14,7 +14,7 @@
 			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}
-						<p class="my-1 flex flex-1 basis-1/2 justify-center align-middle capitalize">
+						<p class="my-1 flex flex-1 basis-64 justify-center align-middle capitalize">
 							<strong>{key} API&nbsp;</strong> - Disabled
 						</p>
 					{/if}
@@ -31,7 +31,7 @@
 			<Alert.Title class="flex flex-wrap">
 				{#each entries as [key, value] (key)}
 					{#if !value}
-						<p class="my-1 flex flex-1 basis-1/2 justify-center align-middle capitalize">
+						<p class="my-1 flex flex-1 basis-64 justify-center align-middle capitalize">
 							<strong>{key} API&nbsp;</strong> - Disabled
 						</p>
 					{/if}

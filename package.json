@@ -11,6 +11,7 @@
 		"build": "vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
 		"deploy": "node build/index.js",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

@@ -5,7 +5,7 @@
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
-	import * as Popover from '$ui/popover';
+	import * as Tooltip from '$ui/tooltip';
 	import * as Dialog from '$ui/dialog';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Plus from 'lucide-svelte/icons/plus';
@@ -54,7 +54,7 @@
 								<p>{role}</p>
 							{/each}
 						</div>
-						<Popover.Mobile>
+						<Tooltip.Simple>
 							{#snippet trigger()}
 								<Button
 									class="max-h-12"
@@ -67,7 +67,7 @@
 								</Button>
 							{/snippet}
 							<div>Manage Permissions</div>
-						</Popover.Mobile>
+						</Tooltip.Simple>
 					</div>
 				</div>
 			{/each}

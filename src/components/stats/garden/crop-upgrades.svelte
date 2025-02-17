@@ -38,9 +38,9 @@
 							<div
 								class="hidden h-5 w-3 rounded-sm md:block md:h-6 {tier + 1 > level
 									? 'bg-card'
-                  : maxed
-                    ? 'bg-completed'
-                    : 'bg-progress'}"
+									: maxed
+										? 'bg-completed'
+										: 'bg-progress'}"
 							></div>
 						{/each}
 						<span class="-my-1 pl-1 pr-2 font-semibold leading-none text-foreground md:text-lg">
