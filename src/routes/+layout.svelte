@@ -14,6 +14,7 @@
 	import { initThemeContext } from '$lib/stores/themes.svelte';
 	import Content from './content.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
+	import { Toaster } from '$ui/sonner';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -58,3 +59,5 @@
 		</Sidebar.Inset>
 	</div>
 </Sidebar.Provider>
+
+<Toaster />

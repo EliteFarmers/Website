@@ -2,7 +2,7 @@
 	import Head from '$comp/head.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
-	import { GARDEN_VISITORS, getGardenLevel } from 'farming-weight';
+	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
 	import type { components } from '$lib/api/api';
 	import Plots from '$comp/stats/garden/plots.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
@@ -10,6 +10,9 @@
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import { page } from '$app/state';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Popover from '$ui/popover';
+	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getCopperSpent } from '$lib/calc/garden';
 
 	let overflow = $state(true);
 
@@ -26,6 +29,20 @@
 	const ranks = $derived(ctx.ranks?.profile ?? {});
 
 	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
+
+	let upgrades = $derived(getCropUpgrades(garden?.cropUpgrades ?? {}));
+	let crops = $derived(
+		Object.entries(upgrades)
+			.map(([crop, level]) => {
+				const name = getCropDisplayName(crop as Crop);
+				const img = PROPER_CROP_TO_IMG[name as keyof typeof PROPER_CROP_TO_IMG];
+
+				return { name, img, level };
+			})
+			.sort((a, b) => a.name.localeCompare(b.name))
+	);
+
+	let totalCopperSpent = $derived.by(() => crops.reduce((sum, { level }) => sum + getCopperSpent(level), 0));
 </script>
 
 <Head title="{ctx.ign} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
@@ -44,8 +61,24 @@
 						<h3 class="text-lg font-semibold leading-none">Unlocked Plots</h3>
 						<Plots plots={garden.plots} />
 					</div>
-					<div class="flex flex-col gap-2">
-						<h3 class="text-lg font-semibold leading-none">Crop Upgrades</h3>
+					<div class="-mt-0.5 flex flex-col">
+						<Popover.Mobile triggerRootClass="inline-block w-fit">
+							{#snippet trigger()}
+								<h3 class="text-lg font-semibold leading-none">Crop Upgrades</h3>
+							{/snippet}
+							<div class="flex flex-col gap-1">
+								<p class="font-semibold">All Crops</p>
+								<p class="max-w-xs whitespace-normal break-words">
+									<span class="font-semibold">{totalCopperSpent.toLocaleString()}</span> Total Copper
+									Spent <br />
+								</p>
+								<p class="max-w-xs whitespace-normal break-words">
+									<span class="font-semibold"
+										>{(CROP_UPGRADES_MAX_COST - totalCopperSpent).toLocaleString()}</span
+									> Total Copper Until Max
+								</p>
+							</div>
+						</Popover.Mobile>
 						<CropUpgrades {garden} />
 					</div>
 				</div>
