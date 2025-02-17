@@ -15,6 +15,7 @@
 	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import Header from '$comp/header/header.svelte';
 	import Content from './content.svelte';
+	import { Toaster } from '$ui/sonner';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -74,3 +75,5 @@
 </Sidebar.Provider>
 
 <ModeWatcher />
+
+<Toaster />
