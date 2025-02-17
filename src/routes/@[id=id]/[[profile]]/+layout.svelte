@@ -10,6 +10,7 @@
 	import NavCrumbs from './nav-crumbs.svelte';
 	import { watch } from 'runed';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
+	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -50,6 +51,7 @@
 </script>
 
 <NavCrumbs account={data.account} profile={data.profile} profiles={data.profiles} />
+<JoinElitePopup />
 
 <div class="m-0 w-full p-0">
 	<PlayerInfo />
