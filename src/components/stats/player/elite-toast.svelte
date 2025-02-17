@@ -7,7 +7,7 @@
 
 	function closeToast() {
 		dispatch('closeToast');
-		localStorage.setItem('join-elite-toast-closed', 'true');
+		localStorage.setItem('join-elite-toast', '{"state": "closed"}');
 	}
 </script>
 
