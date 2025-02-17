@@ -270,7 +270,7 @@
 							placeholder="0"
 							bind:value={$ratesData.strength}
 							min={0}
-							max={1500}
+							max={1600}
 						/>
 					</div>
 				</div>
