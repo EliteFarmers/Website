@@ -18,8 +18,8 @@
 	import { page } from '$app/state';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
-	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { getCopperSpent, getCopperToMaxUpgrade } from '$lib/calc/garden';
+	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getCopperSpent } from '$lib/calc/garden';
 
 	let overflow = $state(true);
 
@@ -37,12 +37,11 @@
 
 	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
 
-	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>));
+	let upgrades = $derived(getCropUpgrades(garden?.cropUpgrades ?? {}));
 	let crops = $derived(
 		Object.entries(upgrades)
-			.map(([c, level]) => {
-				const crop = getCropFromName(c) ?? Crop.Wheat;
-				const name = getCropDisplayName(crop);
+			.map(([crop, level]) => {
+				const name = getCropDisplayName(crop as Crop);
 				const img = PROPER_CROP_TO_IMG[name as keyof typeof PROPER_CROP_TO_IMG];
 
 				return { name, img, level };
@@ -50,9 +49,7 @@
 			.sort((a, b) => a.name.localeCompare(b.name))
 	);
 
-	let totalCopperSpent = $derived(() => crops.reduce((sum, { level }) => sum + getCopperSpent(level), 0));
-
-	let totalCopperToMax = $derived(() => crops.reduce((sum, { level }) => sum + getCopperToMaxUpgrade(level), 0));
+	let totalCopperSpent = $derived.by(() => crops.reduce((sum, { level }) => sum + getCopperSpent(level), 0));
 </script>
 
 <Head title="{ctx.ign} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
@@ -79,12 +76,13 @@
 							<div class="flex flex-col gap-1">
 								<p class="font-semibold">All Crops</p>
 								<p class="max-w-xs whitespace-normal break-words">
-									<span class="font-semibold">{totalCopperSpent().toLocaleString()}</span> Total
-									Copper Spent <br />
+									<span class="font-semibold">{totalCopperSpent.toLocaleString()}</span> Total Copper
+									Spent <br />
 								</p>
 								<p class="max-w-xs whitespace-normal break-words">
-									<span class="font-semibold">{totalCopperToMax().toLocaleString()}</span> Total Copper
-									Until Max
+									<span class="font-semibold"
+										>{(CROP_UPGRADES_MAX_COST - totalCopperSpent).toLocaleString()}</span
+									> Total Copper Until Max
 								</p>
 							</div>
 						</Popover.Mobile>

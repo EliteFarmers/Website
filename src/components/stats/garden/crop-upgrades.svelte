@@ -13,12 +13,11 @@
 
 	const upgradesList = [...Array(9).keys()];
 
-	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>));
+	let upgrades = $derived(getCropUpgrades(garden?.cropUpgrades ?? {}));
 	let crops = $derived(
 		Object.entries(upgrades)
 			.map(([c, level]) => {
-				const crop = getCropFromName(c) ?? Crop.Wheat;
-				const name = getCropDisplayName(crop);
+				const name = getCropDisplayName(c as Crop);
 				const img = PROPER_CROP_TO_IMG[name as keyof typeof PROPER_CROP_TO_IMG];
 
 				return { name, img, level };
