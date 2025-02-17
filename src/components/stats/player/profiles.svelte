@@ -12,7 +12,7 @@
 	<Popover.Mobile hasContent={profiles.length > 0}>
 		{#snippet trigger()}
 			<div class="z-10 col-span-1 grid">
-				<div class="mx-1 rounded-md bg-primary-foreground p-1 px-2 lg:p-2">
+				<div class="mx-1 rounded-md bg-card p-1 px-2 lg:p-2">
 					<h2 class="text-2xl md:text-3xl">
 						{selected?.profileName}
 					</h2>

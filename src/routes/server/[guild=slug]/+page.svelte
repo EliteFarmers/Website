@@ -8,6 +8,7 @@
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import HeroBanner from '$comp/hero-banner.svelte';
 
 	interface Props {
 		data: PageData;
@@ -41,22 +42,17 @@
 	imageUrl={guild.icon?.url}
 />
 
-<div class="mb-16 flex flex-col items-center justify-center gap-8">
+<HeroBanner src={guild.banner?.url} class="h-64">
 	<!-- Banner image -->
 	{#if guild?.banner?.url}
-		<div
-			class="relative flex h-64 w-full flex-col items-center justify-center bg-cover bg-center bg-no-repeat"
-			style="background-image: url({guild.banner.url})"
-		>
-			<div class="my-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
-				<GuildIcon {guild} size={16} />
-				<h1 class="text-4xl text-white">
-					{guild?.name}
-				</h1>
-				<Button href="https://discord.gg/{guild.inviteCode}" variant="link">
-					<ExternalLink size={20} class="text-white" />
-				</Button>
-			</div>
+		<div class="my-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
+			<GuildIcon {guild} size={16} />
+			<h1 class="text-4xl text-white">
+				{guild?.name}
+			</h1>
+			<Button href="https://discord.gg/{guild.inviteCode}" variant="link">
+				<ExternalLink size={20} class="text-white" />
+			</Button>
 		</div>
 	{:else}
 		<div class="my-16 flex flex-row items-center gap-4">
@@ -71,7 +67,9 @@
 			</Button>
 		</div>
 	{/if}
+</HeroBanner>
 
+<div class="mb-16 mt-64 flex flex-col items-center justify-center gap-8 py-8">
 	{#if data.events.length > 0}
 		{@const now = Date.now() / 1000}
 		{@const upcoming = data.events.filter((e) => e.endTime && +e.endTime >= now)}
@@ -95,7 +93,7 @@
 				<Accordion.Root type="single">
 					<Accordion.Item value="val" class="w-full">
 						<Accordion.Trigger>
-							<h2 class="w-full px-4 text-3xl text-black dark:text-white">Past Events</h2>
+							<h2 class="w-full px-4 text-3xl">Past Events</h2>
 						</Accordion.Trigger>
 						<Accordion.Content>
 							<div class="flex flex-col gap-2">
@@ -114,7 +112,7 @@
 	<section class="flex flex-col items-center gap-4">
 		<!-- <h2 class="text-3xl">Server Jacob Leaderboard{leaderboards.length === 1 ? '' : 's'}</h2> -->
 		{#if leaderboards.length > 0}
-			<div class="flex max-w-7xl flex-wrap gap-4 md:mx-32">
+			<div class="flex max-w-8xl flex-wrap gap-4">
 				{#each leaderboards as leaderboard}
 					<Leaderboard {leaderboard} />
 				{/each}

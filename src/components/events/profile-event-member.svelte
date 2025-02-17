@@ -12,7 +12,7 @@
 </script>
 
 <a
-	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-primary-foreground px-6 py-[1.88rem]"
+	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-card px-6 py-[1.88rem]"
 	href="/event/{member.eventId}/leaderboard#{memberUuid}"
 >
 	<div class="flex flex-row items-center justify-center gap-2 align-middle">
@@ -21,10 +21,10 @@
 			{#snippet trigger()}
 				<div class="flex flex-col items-center justify-center">
 					{#if member.status === 0}
-						<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
+						<div class="h-2 w-2 rounded-full bg-muted"></div>
 					{/if}
 					{#if member.status === 1}
-						<div class="h-2 w-2 rounded-full bg-green-500 dark:bg-green-300"></div>
+						<div class="h-2 w-2 rounded-full bg-progress"></div>
 					{/if}
 				</div>
 			{/snippet}
@@ -46,7 +46,7 @@
 		{#if member.score && +member.score > 0}
 			<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 		{:else}
-			<span class="text-red-800 dark:text-red-500">Zero!</span>
+			<span class="text-destructive">Zero!</span>
 		{/if}
 	</div>
 </a>

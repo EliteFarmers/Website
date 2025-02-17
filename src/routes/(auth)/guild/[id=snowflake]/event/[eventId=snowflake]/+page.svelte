@@ -70,14 +70,14 @@
 	</div>
 
 	{#if form?.error}
-		<h5 class="text-xl font-semibold text-red-700">
+		<h5 class="text-xl font-semibold text-destructive">
 			<p>{form?.error}</p>
 		</h5>
 	{/if}
 
 	<section class="flex w-full max-w-4xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-primary-foreground p-4 md:w-[70%]"
+			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
 		>
 			<div class="flex flex-row justify-between gap-2 p-4">
 				<div class="flex flex-col gap-2">
@@ -86,7 +86,7 @@
 							<Popover.Mobile>
 								{#snippet trigger()}
 									<div>
-										<TriangleAlert class="mt-1.5 text-red-500" />
+										<TriangleAlert class="mt-1.5 text-destructive" />
 									</div>
 								{/snippet}
 								<div>
@@ -168,7 +168,7 @@
 	</div>
 
 	<div class="flex w-full max-w-6xl flex-col items-start justify-center gap-8 px-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col gap-4 rounded-md bg-primary-foreground p-4">
+		<section class="flex w-full flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4">
 			<h3 class="text-xl">Event Members</h3>
 			<div class="flex w-full flex-1 flex-col items-center justify-center gap-2">
 				{#await data.members}
@@ -180,6 +180,7 @@
 							<Popover.Mobile>
 								{#snippet trigger()}
 									<Button
+										variant="destructive"
 										size="sm"
 										onclick={() => {
 											banMemberName = member.playerName ?? '';
@@ -187,7 +188,7 @@
 											banMemberModal = true;
 										}}
 									>
-										<Trash2 size={16} class="text-destructive" />
+										<Trash2 size={16} />
 									</Button>
 								{/snippet}
 								<div>
@@ -223,7 +224,7 @@
 				{/await}
 			</div>
 		</section>
-		<section class="flex flex-1 flex-col gap-4 rounded-md bg-primary-foreground p-4">
+		<section class="flex flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4">
 			<h3 class="text-xl">Removed Event Members</h3>
 			<div class="flex w-full flex-col items-center justify-center justify-items-center gap-2">
 				{#await data.bans}
@@ -278,7 +279,7 @@
 			</div>
 		</section>
 	</div>
-	<div class="flex flex-col rounded-md bg-primary-foreground p-4">
+	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		{#await data.defaults}
 			<p>Loading...</p>
 		{:then defaults}
@@ -321,7 +322,7 @@
 							</div>
 						{/each}
 					</div>
-					<p class="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+					<p class="text-sm leading-relaxed text-muted-foreground">
 						Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
 					</p>
 
@@ -435,7 +436,7 @@
 			{/if}
 		{/await}
 	</div>
-	<div class="flex flex-col p-4">
+	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		<form
 			action="?/forceAddMember"
 			method="post"
@@ -463,7 +464,7 @@
 			</div>
 		</form>
 	</div>
-	<div class="flex flex-col p-4">
+	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		<form
 			action="?/permDeleteMember"
 			method="post"
@@ -494,7 +495,7 @@
 </div>
 
 <Dialog.Root bind:open={banMemberModal}>
-	<Dialog.Content class="max-h-[80%] overflow-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Title>{banMemberName} - {banMemberUuid}</Dialog.Title>
 		<form
 			method="post"
@@ -518,17 +519,17 @@
 
 			<Button type="submit" disabled={pending}>Ban</Button>
 		</form>
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>
 
 <Dialog.Root bind:open={clickOutsideModalEdit}>
-	<Dialog.Content class="max-h-[80%] overflow-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Title>Edit Event</Dialog.Title>
 		<p>Only fill in fields that you want to be changed.</p>
 		<form
 			method="post"
 			action="?/edit"
-			class="flex flex-col gap-2"
+			class="mx-1 flex flex-col gap-2"
 			use:enhance={() => {
 				pending = true;
 				return async ({ result, update }) => {
@@ -569,21 +570,21 @@
 			</div>
 
 			<Button type="submit" disabled={pending}>Edit Event</Button>
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>
 
 <Dialog.Root bind:open={clickOutsideModalEditImage}>
-	<Dialog.Content class="max-h-[80%] overflow-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Title>Edit Event Banner</Dialog.Title>
-		<p>Upload a .png image for use as the event banner!</p>
+		<p class="mt-4">Upload a .png image for use as the event banner!</p>
 		<form
 			method="post"
 			action="?/banner"
-			class="flex flex-col gap-2"
+			class="mx-1 flex flex-col gap-2"
 			enctype="multipart/form-data"
 			use:enhance={() => {
 				pending = true;
@@ -606,9 +607,9 @@
 					>Clear Banner</Button
 				>
 			</div>
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>

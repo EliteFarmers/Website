@@ -35,7 +35,7 @@
 	}
 </script>
 
-<div class="h-full items-center justify-between rounded-md border-2 bg-primary-foreground shadow-md">
+<div class="h-full items-center justify-between rounded-md border-2 bg-card shadow-md">
 	<div class="flex flex-col items-center justify-start space-y-2 px-2 py-4 pb-2">
 		<div class="flex flex-row gap-2">
 			<img src={cropUrl} alt={crop} class="pixelated h-10 w-10" />

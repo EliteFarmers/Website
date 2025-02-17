@@ -14,7 +14,7 @@
 	let loading = $state(false);
 </script>
 
-<div class="flex flex-col rounded-md bg-primary-foreground p-4">
+<div class="flex flex-col rounded-md bg-card p-4">
 	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex flex-row items-center gap-4">
 			<img class="pixel w-12" src="https://mc-heads.net/head/{mc.id}" alt="{mc.name} player skull" />
@@ -23,7 +23,7 @@
 			{#if mc.primaryAccount}
 				<Popover.Mobile>
 					{#snippet trigger()}
-						<Star size={16} class="fill-current text-yellow-500" />
+						<Star size={16} class="fill-current text-completed" />
 					{/snippet}
 					<p class="font-semibold">Primary Account</p>
 					<div class="pt-2">
@@ -37,7 +37,7 @@
 	</div>
 	<div class="flex flex-wrap items-baseline justify-between gap-2">
 		<div class="flex flex-row items-center gap-1 leading-none">
-			<p class="text-xs text-gray-500 sm:text-sm">{mc.id}</p>
+			<p class="text-xs text-muted-foreground sm:text-sm">{mc.id}</p>
 			<CopyToClipboard text={mc.id} size="sm" class="-m-2" />
 		</div>
 		{#if !mc.primaryAccount}
@@ -53,7 +53,7 @@
 				}}
 			>
 				<input type="hidden" name="username" value={mc.id} />
-				<button disabled={loading} class="whitespace-nowrap text-sm text-gray-600 underline dark:text-gray-400"
+				<button disabled={loading} class="whitespace-nowrap text-sm text-muted-foreground underline"
 					>Set As Primary</button
 				>
 			</form>

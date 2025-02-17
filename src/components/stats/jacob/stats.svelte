@@ -43,7 +43,7 @@
 	<h1 class="mb-0.5 text-2xl">General Stats</h1>
 	<div class="flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
 		<div
-			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-1 text-center md:flex-col md:gap-1 md:p-2"
+			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-card p-1 text-center md:flex-col md:gap-1 md:p-2"
 		>
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if firstPlacesRank !== -1}
@@ -61,7 +61,7 @@
 			<h2 class="md:text-md text-sm leading-none">First Place Contests</h2>
 		</div>
 		<div
-			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-1 text-center align-bottom md:flex-col md:gap-1 md:p-2"
+			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-card p-1 text-center align-bottom md:flex-col md:gap-1 md:p-2"
 		>
 			<div class="flex flex-row items-baseline justify-center gap-2">
 				{#if participationsRank !== -1}
@@ -79,7 +79,7 @@
 			<h2 class="md:text-md text-sm leading-none">Contests Participated</h2>
 		</div>
 		<div
-			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-primary-foreground p-1 text-center md:flex-col md:gap-1 md:p-2"
+			class="flex w-full flex-row items-center justify-center gap-3 rounded-md bg-card p-1 text-center md:flex-col md:gap-1 md:p-2"
 		>
 			<p class="text-2xl">{highest[1] !== 0 ? highest[1].toLocaleString() : 'N/A'}</p>
 			<h2 class="md:text-md text-sm leading-none">

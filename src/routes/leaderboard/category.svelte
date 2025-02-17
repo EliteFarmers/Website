@@ -16,7 +16,7 @@
 		{#each leaderboards as leaderboard (leaderboard.id)}
 			<a
 				href="/leaderboard/{leaderboard.id}"
-				class="w-full max-w-64 flex-shrink-0 items-center rounded-md bg-primary-foreground p-2 px-3 hover:bg-primary-foreground/50"
+				class="w-full max-w-64 flex-shrink-0 items-center rounded-md bg-card p-2 px-3 hover:bg-card/50"
 			>
 				<div class="flex flex-row items-center gap-2">
 					{#if leaderboard.icon}

@@ -50,12 +50,12 @@
 				<ExternalLink size={16} />
 			</Button>
 		{:else}
-			<p class="text-red-500">Private Guild</p>
+			<p class="text-destructive">Private Guild</p>
 		{/if}
 	</div>
 
 	{#if form?.error}
-		<p class="text-red-500">{form.error}</p>
+		<p class="text-destructive">{form.error}</p>
 	{/if}
 
 	<section class="mb-16 flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
@@ -72,7 +72,7 @@
 						</Button>
 					</div>
 				{:else}
-					<p class="text-red-500">No invite set! This is required for your public page.</p>
+					<p class="text-destructive">No invite set! This is required for your public page.</p>
 				{/if}
 				<p>Set the invite code for your server!</p>
 				<form method="POST" action="?/setInvite" class="flex flex-row gap-4" use:enhance>
@@ -143,7 +143,7 @@
 						>
 					</p>
 				</div>
-				<p class="text-red-600">
+				<p class="text-destructive">
 					Users with this role will have access to all server settings (besides this one)
 				</p>
 				<form method="POST" action="?/setAdminRole" class="flex w-full flex-row gap-4" use:enhance>

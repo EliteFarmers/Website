@@ -85,7 +85,7 @@
 		<div class="mx-8 mb-8 flex w-full flex-wrap justify-center gap-4 md:w-[90%] lg:w-[70%]">
 			{#each days as [day, contests], i (i)}
 				<a
-					class="flex w-20 flex-col items-center gap-1 rounded-lg bg-primary-foreground p-2 text-center"
+					class="flex w-20 flex-col items-center gap-1 rounded-lg bg-card p-2 text-center"
 					href="/contests/{year}/{month}/{day}"
 				>
 					<h4 class="mb-2 text-lg">Day {day}</h4>

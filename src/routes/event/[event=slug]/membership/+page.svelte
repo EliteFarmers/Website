@@ -138,17 +138,22 @@
 
 	{#if !data.account}
 		<p>You have no Minecraft accounts linked to your account.</p>
-		<p>Login and link your Minecraft account <a href="/profile" class="text-blue-500">here</a> first.</p>
+		<p>Login and link your Minecraft account <a href="/profile" class="text-link">here</a> first.</p>
 	{/if}
 
 	{#if form?.error}
-		<h5 class="mb-4 max-w-xl text-xl font-semibold text-red-700">
+		<h5 class="mb-4 max-w-xl text-xl font-semibold text-destructive">
 			{form?.error}
 		</h5>
 	{/if}
 
 	<div class="flex flex-col items-start justify-center gap-8 md:flex-row md:gap-16">
-		<form method="post" action="?/join" class="mb-16 flex max-w-lg flex-col gap-4" use:enhance>
+		<form
+			method="post"
+			action="?/join"
+			class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8"
+			use:enhance
+		>
 			<h2 class="mb-4 text-center text-2xl font-semibold">
 				{#if event.mode === 'solo'}
 					Join Event
@@ -158,13 +163,13 @@
 			</h2>
 			<p>
 				Choose the profile you want to join the event with.
-				<span class="text-red-500">This can't be changed later on!</span>
+				<span class="text-destructive">This can't be changed later on!</span>
 			</p>
 
 			{#each profiles as profile (profile)}
 				{#if data.member && profile.profileId === data.member.profileId}
 					<div class="flex flex-row items-center gap-2">
-						<Check class="text-green-500" />
+						<Check class="text-progress" />
 						<p>
 							{profile.profileName} - {profile.members
 								?.find((m) => m.uuid === data.account?.id)
@@ -187,7 +192,7 @@
 			{#if data.event.type === +EventType.FarmingWeight}
 				<p>
 					To prevent the use of minions to gain collection progress, the event will only count progress made
-					through the use of farming tools. <span class="text-red-500"
+					through the use of farming tools. <span class="text-destructive"
 						>You must have collections and inventory API access enabled at all times.</span
 					> If you do turn them off, you will be automatically removed from the event.
 				</p>
@@ -196,11 +201,11 @@
 					a tool, it will not count towards your progress. This also means a Daedalus Axe won't count either,
 					as there's no way to differentiate it from minions.
 				</p>
-				<p class="text-red-500">
+				<p class="text-destructive">
 					Tools that do not have a built in counter require the Cultivating enchantment or your progress with
 					that tool will not be counted.
 				</p>
-				<p class="text-gray-500">
+				<p class="text-muted-foreground">
 					The only valid tools are the specific farming tools. Normal hoes and other beginner tools will not
 					count.
 				</p>
@@ -210,7 +215,7 @@
 					to count.
 				</p>
 				<p>
-					<span class="text-red-500"
+					<span class="text-destructive"
 						>You must have collections and inventory API access enabled at all times.</span
 					> If you do turn either of them off, you will be automatically removed from the event.
 				</p>
@@ -224,10 +229,7 @@
 					<Checkbox.Root bind:checked={checks[1]} />
 				{/if}
 				<Label>
-					I confirm that I have read all of <a
-						href="https://hypixel.net/rules"
-						class="text-blue-500 underline"
-					>
+					I confirm that I have read all of <a href="https://hypixel.net/rules" class="text-link underline">
 						Hypixel's Server Rules
 					</a> and that I agree to them.
 				</Label>
@@ -287,15 +289,15 @@
 			</div>
 
 			{#if joined}
-				<p class="text-green-700">You have successfully joined the event!</p>
+				<p class="text-progress">You have successfully joined the event!</p>
 			{/if}
 		</form>
 		{#if event.mode !== 'solo'}
-			<div class="mb-16 flex max-w-lg flex-col gap-4">
+			<div class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8">
 				<h2 class="mb-4 text-center text-2xl font-semibold">Step 2: Join Team</h2>
 				<p>
 					This is a team event! You must join a team to participate. If you don't have a team, you can create
-					one below (if the event allows it). <span class="text-red-500"
+					one below (if the event allows it). <span class="text-destructive"
 						>You won't be able to change your team once the event starts!</span
 					>
 				</p>
@@ -326,7 +328,7 @@
 										<Popover.Mobile>
 											{#snippet trigger()}
 												<div class="flex flex-row items-end">
-													<Crown size="sm" class="mt-1.5 w-4 text-yellow-400" />
+													<Crown size="sm" class="mt-1.5 w-4 text-completed" />
 												</div>
 											{/snippet}
 											<p class="text-lg font-semibold">Team Owner</p>
@@ -365,7 +367,7 @@
 							<input type="hidden" name="team" value={ownTeamId} />
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
-							<div class="flex flex-row items-center gap-2 text-black dark:text-white">
+							<div class="flex flex-row items-center gap-2 text-primary">
 								<input type="hidden" name="name" value={name} hidden />
 								<div class="flex flex-col gap-2">
 									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
@@ -422,7 +424,7 @@
 							Create your own team for players to join! Names are generated below with an approved word
 							list.
 						</p>
-						<div class="flex flex-row items-center gap-2 text-black dark:text-white">
+						<div class="flex flex-row items-center gap-2 text-primary">
 							<input type="hidden" name="name" value={name} hidden />
 
 							<div class="flex flex-col gap-2">

@@ -1,18 +1,12 @@
 import { fontFamily } from 'tailwindcss/defaultTheme';
-import colors from 'tailwindcss/colors';
 import tailwindcssAnimate from 'tailwindcss-animate';
-import svelteUx from 'svelte-ux/plugins/tailwind.cjs';
 import { Config } from 'tailwindcss';
 
 export default {
 	darkMode: ['class'],
-	content: [
-		'./src/**/*.{html,js,svelte,ts}',
-		'./node_modules/layerchart/**/*.{svelte,js}',
-		'./node_modules/svelte-ux/**/*.{svelte,js}',
-	],
+	content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/layerchart/**/*.{svelte,js}'],
 	safelist: ['dark'],
-	plugins: [svelteUx({ colorSpace: 'oklch' }), tailwindcssAnimate],
+	plugins: [tailwindcssAnimate],
 	theme: {
 		container: {
 			center: true,
@@ -42,6 +36,7 @@ export default {
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+					variant: 'hsl(var(--muted-variant) / <alpha-value>)',
 					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
 				},
 				accent: {
@@ -96,6 +91,24 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))',
 				},
+				progress: {
+					DEFAULT: 'hsl(var(--progress) / <alpha-value>)',
+				},
+				completed: {
+					DEFAULT: 'hsl(var(--completed) / <alpha-value>)',
+				},
+				link: {
+					DEFAULT: 'hsl(var(--link) / <alpha-value>)',
+				},
+				active: {
+					DEFAULT: 'hsl(var(--active) / <alpha-value>)',
+				},
+				surface: {
+					100: 'hsl(var(--background) / <alpha-value>)',
+					200: 'hsl(var(--muted) / <alpha-value>)',
+					300: 'hsl(var(--muted-variant) / <alpha-value>)',
+					content: 'hsl(var(--card-foreground) / <alpha-value>)',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -126,32 +139,6 @@ export default {
 			},
 			maxWidth: {
 				'8xl': '90rem',
-			},
-		},
-	},
-	ux: {
-		themes: {
-			light: {
-				accent: 'black',
-				primary: colors['orange']['500'],
-				'primary-content': 'black',
-				secondary: colors['blue']['500'],
-				'surface-100': colors['gray']['100'],
-				'surface-200': colors['gray']['400'],
-				'surface-300': colors['gray']['500'],
-				'surface-content': 'black',
-				'color-scheme': 'light',
-			},
-			dark: {
-				accent: 'white',
-				primary: colors['orange']['500'],
-				'primary-content': 'white',
-				secondary: colors['blue']['500'],
-				'surface-100': 'white',
-				'surface-200': colors['zinc']['900'],
-				'surface-300': colors['zinc']['950'],
-				'surface-content': colors['zinc']['100'],
-				'color-scheme': 'dark',
 			},
 		},
 	},

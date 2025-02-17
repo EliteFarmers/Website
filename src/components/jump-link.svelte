@@ -16,7 +16,7 @@
 	href="#{id}"
 	variant="ghost"
 	size="sm"
-	class="mx-2 scroll-mt-32 text-gray-500 hover:text-inherit {className}"
+	class="mx-2 scroll-mt-32 text-muted-foreground hover:text-primary-foreground {className}"
 	id={self ? id : undefined}
 >
 	<Link {size} />

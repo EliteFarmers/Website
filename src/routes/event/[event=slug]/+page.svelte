@@ -16,6 +16,7 @@
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import HeroBanner from '$comp/hero-banner.svelte';
 
 	interface Props {
 		data: PageData;
@@ -29,6 +30,7 @@
 	let time = $state(Date.now());
 	let start = $derived(+(event.startTime ?? 0) * 1000);
 	let end = $derived(+(event.endTime ?? 0) * 1000);
+	let started = $derived(start < time);
 	let running = $derived(start < time && end > time);
 	let joinable = $derived(+(event.joinUntilTime ?? 0) * 1000 > Date.now() && !self?.disqualified);
 	let teamEvent = $derived((teams?.length ?? 0) > 0);
@@ -82,42 +84,37 @@
 
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 
-<div class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
-	<div
-		class="relative flex h-96 w-full flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat"
-		style={banner ? `background-image: url('${banner}')` : ''}
-	>
-		<div class="mt-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
-			<GuildIcon guild={data.guild} size={16} />
-			<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
-				{data.event?.name}
-			</h1>
-			<Button href="/server/{event.guildId}/join" variant="link">
-				<ExternalLink size={16} class="text-white" />
-			</Button>
-		</div>
-		<div class="mb-32 flex flex-col items-center rounded-lg bg-zinc-900/75 p-4 text-white">
-			<p class="text-lg font-light">
-				{#if start > time}
-					Event Starts In
-				{:else}
-					Event Ends In
-				{/if}
-			</p>
-			<h1 class="select-none font-sans text-2xl font-semibold sm:text-4xl md:text-6xl lg:text-8xl">
-				{#if start > time}
-					{getCountdown(start - time + time) ?? 'Event Started!'}
-				{:else}
-					{getCountdown(end + time - time) ?? 'Event Over!'}
-				{/if}
-			</h1>
-		</div>
+<HeroBanner src={banner} class="h-96">
+	<div class="mb-6 mt-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
+		<GuildIcon guild={data.guild} size={16} />
+		<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
+			{data.event?.name}
+		</h1>
+		<Button href="/server/{event.guildId}/join" variant="link">
+			<ExternalLink size={16} class="text-white" />
+		</Button>
 	</div>
+	<div class="mb-32 flex flex-col items-center rounded-lg bg-zinc-900/75 p-4 text-white">
+		<p class="text-lg font-light">
+			{#if start > time}
+				Event Starts In
+			{:else}
+				Event Ends In
+			{/if}
+		</p>
+		<h1 class="select-none font-sans text-2xl font-semibold sm:text-4xl md:text-6xl lg:text-8xl">
+			{#if start > time}
+				{getCountdown(start - time + time) ?? 'Event Started!'}
+			{:else}
+				{getCountdown(end + time - time) ?? 'Event Over!'}
+			{/if}
+		</h1>
+	</div>
+</HeroBanner>
 
+<div class="mb-16 mt-96 flex flex-col items-center justify-center gap-8 pt-8" data-sveltekit-preload-data="tap">
 	<div class="mx-4 flex w-full max-w-6xl flex-col items-center gap-8 lg:flex-row lg:items-start">
-		<section
-			class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-primary-foreground p-8"
-		>
+		<section class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-card p-8">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-row items-center gap-2 text-sm font-semibold md:text-lg">
@@ -150,12 +147,12 @@
 					</p>
 				{/if}
 				<EventData {event} />
-				<a href="#agreement" class="text-blue-500 underline">Event Agreement</a>
+				<a href="#agreement" class="text-link underline">Event Agreement</a>
 				<div class="mt-4 flex flex-wrap justify-center gap-2">
-					<Button href="/server/{event.guildId}" variant="secondary">
+					<Button href="/server/{event.guildId}">
 						<p>Back To Server</p>
 					</Button>
-					<Button href="/server/{event.guildId}/join" variant="secondary">
+					<Button href="/server/{event.guildId}/join">
 						<p class="mr-2">Join Discord Server</p>
 						<ExternalLink size={16} />
 					</Button>
@@ -171,17 +168,17 @@
 				</div>
 				{#if self?.disqualified}
 					<div class="flex flex-col justify-start gap-1 text-sm">
-						<p class="text-lg text-red-500">You have been removed from this event.</p>
+						<p class="text-lg text-destructive">You have been removed from this event.</p>
 						<p>Reason</p>
 						<p class="rounded-sm bg-card p-2">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
 					</div>
 				{/if}
 			</div>
 		</section>
-		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md bg-primary-foreground p-8">
+		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md bg-card p-8">
 			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
-					<Button onclick={swapLeaderboard} variant="secondary" size="sm">
+					<Button onclick={swapLeaderboard} variant="outline" size="sm">
 						<ArrowLeftRight size={20} />
 						<span class="sr-only">Swap Leaderboard</span>
 					</Button>
@@ -213,7 +210,7 @@
 						</Button>
 					</div>
 				{:else if teamEvent && teams.length > 0}
-					<EventTeamLeaderboard {running} {event} teams={teams.slice(0, memberLimit)} />
+					<EventTeamLeaderboard {running} {started} {event} teams={teams.slice(0, memberLimit)} />
 					<div class="flex flex-row justify-center gap-2">
 						<Button href="{page.url.pathname}/leaderboard" color="alternative">
 							<span>View Leaderboard</span>
@@ -233,7 +230,7 @@
 		<p>
 			All members of the event are expected to follow all of <a
 				href="https://hypixel.net/rules"
-				class="text-blue-500 underline">Hypixel's Server Rules.</a
+				class="text-link underline">Hypixel's Server Rules.</a
 			> Futhermore, all prizes specified are the responsibility of the Discord Server/Event Sponsor to payout. This
 			website is not responsible for unpaid prizes. Please do get in contact however and we'll revoke event permissions
 			from the responsible server if appropriate. This website does not take a cut of any prizes or act as a middleman.

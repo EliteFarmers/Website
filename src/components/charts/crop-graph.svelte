@@ -64,13 +64,13 @@
 				placement="left"
 				rule
 				grid
-				format={(d) => toReadable(d)}
+				format={(d: number) => toReadable(d)}
 				tickLabelProps={{ class: '!stroke-0 !font-normal text-sm' }}
 			/>
 			<Axis
 				placement="bottom"
 				rule
-				format={(d) => dateFormatter.format(new Date(d * 1000))}
+				format={(d: number) => dateFormatter.format(new Date(d * 1000))}
 				tickLabelProps={{
 					rotate: 330,
 					textAnchor: 'end',
@@ -83,13 +83,13 @@
 					placement="right"
 					scale={scaleLinear(pestScale.domain(), [height, 0])}
 					ticks={pestScale.ticks()}
-					format={(v) => toReadable(v, undefined, 2)}
+					format={(v: number) => toReadable(v, undefined, 2)}
 					rule
 					tickLabelProps={{ class: '!stroke-0 !font-normal text-sm' }}
 				/>
 				<Spline class="{colorClasses[crop][0]} stroke-[3]" />
-				<Spline class="{colorClasses[crop][2]} stroke-[3]" y={(d) => pestScale(d.pests)} />
-				<Highlight points={{ class: 'fill-primary' }} y={(d) => pestScale(d.pests)} />
+				<Spline class="{colorClasses[crop][2]} stroke-[3]" y={(d: { pests: number }) => pestScale(d.pests)} />
+				<Highlight points={{ class: 'fill-primary' }} y={(d: { pests: number }) => pestScale(d.pests)} />
 			{:else}
 				<Area line={{ class: colorClasses[crop][0] + ' stroke-4' }} class={colorClasses[crop][1]} />
 				<Spline class="{colorClasses[crop][0]} stroke-2" />

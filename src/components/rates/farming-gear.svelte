@@ -66,7 +66,7 @@
 							<Popover.Mobile>
 								{#snippet trigger()}
 									<div class="px-1">
-										<TriangleAlert size={20} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+										<TriangleAlert size={20} class="-mb-1 text-completed" />
 									</div>
 								{/snippet}
 								<div class="max-w-xs">

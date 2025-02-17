@@ -8,11 +8,12 @@
 		event: components['schemas']['EventDetailsDto'];
 		team: components['schemas']['EventTeamWithMembersDto'];
 		rank: number;
+		started: boolean;
 		running: boolean;
 		highlightUuid?: undefined | string;
 	}
 
-	let { event, team, rank, running, highlightUuid = undefined }: Props = $props();
+	let { event, team, rank, started, running, highlightUuid = undefined }: Props = $props();
 
 	let key = $derived((team.id ?? '').toString() || rank.toString());
 	let members = $derived((team.members ?? []).sort((a, b) => +(b.score ?? 0) - +(a?.score ?? 0)));
@@ -24,8 +25,8 @@
 		<div class="flex w-full flex-col gap-2 px-4">
 			<div class="flex flex-row items-center justify-between">
 				<div class="flex flex-wrap items-center gap-4 md:flex-row">
-					{#if running}
-						<div class="text-green-800 dark:text-green-300">
+					{#if started}
+						<div class="text-progress">
 							<p>
 								<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
 							</p>
@@ -46,20 +47,20 @@
 				<p class="block pr-2 text-lg font-semibold">
 					{#if team.score && +team.score > 0}
 						{(+(team.score ?? 0)).toLocaleString()}
-					{:else if running}
-						<span class="text-red-800 dark:text-red-500">No Progress Yet!</span>
+					{:else if started}
+						<span class="text-destructive">No Progress Yet!</span>
 					{/if}
 				</p>
 			</div>
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root type="single" class="w-full text-black dark:text-white">
+		<Accordion.Root type="single" class="w-full text-primary">
 			{#each members as member, i}
 				<Accordion.Item
 					value={team.id + i.toString()}
 					class="px-4 {highlightUuid === member.playerUuid
-						? 'rounded-md border-2 border-blue-400'
+						? 'rounded-md border-2 border-link'
 						: 'border-none'}"
 				>
 					<EventMember {member} {running} {event} owner={team.ownerUuid === member.playerUuid} />

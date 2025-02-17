@@ -35,7 +35,8 @@
 			undefined
 	);
 
-	let running = $derived(+(event.startTime ?? 0) * 1000 < Date.now() && +(event.endTime ?? 0) * 1000 > Date.now());
+	let started = $derived(+(event.startTime ?? 0) * 1000 < Date.now());
+	let running = $derived(started && +(event.endTime ?? 0) * 1000 > Date.now());
 	let joinable = $derived(+(event.joinUntilTime ?? 0) * 1000 > Date.now());
 
 	let topList = $derived(
@@ -60,7 +61,7 @@
 <Head title={(event.name || 'Farming Weight Event') + ' Leaderboard'} {description} imageUrl={guild?.icon?.url} />
 
 <div class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
-	<section class="mt-16 flex w-full max-w-4xl flex-col items-center gap-4 rounded-md bg-primary-foreground p-8">
+	<section class="mt-16 flex w-full max-w-4xl flex-col items-center gap-4 rounded-md bg-card p-8">
 		<h2 class="text-center text-2xl md:text-4xl">{event.name}</h2>
 		<p class="text-center md:text-lg"><Linebreaks text={event.description ?? ''} /></p>
 		<div class="mt-4 flex w-full max-w-2xl flex-row items-center justify-center gap-2">
@@ -79,10 +80,10 @@
 		</div>
 	</section>
 	<div class="flex w-full max-w-5xl flex-col gap-8 lg:flex-row">
-		<section class="flex w-full flex-col items-center gap-4 rounded-md bg-primary-foreground p-8">
+		<section class="flex w-full flex-col items-center gap-4 rounded-md bg-card p-8">
 			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
-					<Button onclick={swapLeaderboard} variant="secondary" size="sm">
+					<Button onclick={swapLeaderboard} variant="outline" size="sm">
 						<ArrowLeftRight size={20} />
 						<span class="sr-only">Swap Leaderboard</span>
 					</Button>
@@ -109,7 +110,7 @@
 				{#if (!teamEvent || swapMode) && members.length > 0}
 					<EventLeaderboard {highlightUuid} {running} {event} {members} />
 				{:else if teams.length > 0}
-					<EventTeamLeaderboard {highlightUuid} {highlightTeam} {running} {event} {teams} />
+					<EventTeamLeaderboard {highlightUuid} {highlightTeam} {started} {running} {event} {teams} />
 				{:else}
 					<p class="my-16 max-w-lg text-center">
 						This Event does not have any members signed up right now! Login to be the first!

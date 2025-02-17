@@ -37,17 +37,13 @@
 						{#each upgradesList as tier, i (i)}
 							<div
 								class="hidden h-5 w-3 rounded-sm md:block md:h-6 {tier + 1 > level
-									? 'bg-primary-foreground'
+									? 'bg-card'
 									: maxed
-										? 'bg-yellow-400 dark:bg-yellow-600'
-										: 'bg-green-400 dark:bg-green-600'}"
+										? 'bg-completed'
+										: 'bg-progress'}"
 							></div>
 						{/each}
-						<span
-							class="-my-1 pl-1 pr-2 font-semibold leading-none md:text-lg {maxed
-								? 'text-yellow-400 dark:text-yellow-500'
-								: ''} md:text-black dark:md:text-white"
-						>
+						<span class="-my-1 pl-1 pr-2 font-semibold leading-none text-foreground md:text-lg">
 							{level}
 						</span>
 					</div>

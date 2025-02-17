@@ -49,14 +49,14 @@
 	</div>
 
 	{#if !form?.success && form?.message}
-		<h5 class="text-xl font-semibold text-red-700">
+		<h5 class="text-xl font-semibold text-destructive">
 			<p>{form?.message}</p>
 		</h5>
 	{/if}
 
 	<section class="mb-16 flex w-full flex-col items-center justify-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center gap-4 rounded-md bg-primary-foreground p-4 md:w-[70%]"
+			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center gap-4 rounded-md bg-card p-4 md:w-[70%]"
 		>
 			<h2 class="text-3xl">Upcoming Contest Ping Settings</h2>
 

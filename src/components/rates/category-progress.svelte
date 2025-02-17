@@ -26,7 +26,7 @@
 			{#each progress as p (p.name + p.fortune + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item}
 					<button
-						class="cursor-pointer rounded-lg px-1 hover:bg-primary-content/10 dark:hover:bg-card/50"
+						class="cursor-pointer rounded-md border bg-card px-1 hover:bg-card/40"
 						onclick={() => {
 							shownProgress = p;
 							progressModal = true;
@@ -35,7 +35,7 @@
 						<FortuneProgress progress={p} />
 					</button>
 				{:else}
-					<div class="px-1">
+					<div class="border border-transparent px-1">
 						<FortuneProgress progress={p} />
 					</div>
 				{/if}
@@ -45,10 +45,10 @@
 </div>
 
 <Dialog.Root bind:open={progressModal}>
-	<Dialog.Content class="max-h-[80%] overflow-y-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Title>{shownProgress?.name}</Dialog.Title>
 		{#if shownProgress}
 			<ItemProgress progress={shownProgress} />
 		{/if}
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>

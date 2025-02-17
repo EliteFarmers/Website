@@ -57,7 +57,7 @@
 </script>
 
 {#if sidebar.size.tiny}
-	<div class="max-h-30 flex w-full flex-row items-center gap-2 rounded-lg bg-primary-foreground p-1 align-middle">
+	<div class="max-h-30 flex w-full flex-row items-center gap-2 rounded-lg bg-card p-1 align-middle">
 		<div class="flex flex-col items-center justify-evenly gap-1">
 			{@render cropIcon()}
 			<img
@@ -107,7 +107,7 @@
 					<div class="flex max-w-md flex-col items-center gap-2">
 						<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 						<p>{pestKills.toLocaleString()}</p>
-						<a class="text-lg font-semibold text-blue-500 hover:underline" href="/info#Pests"
+						<a class="text-lg font-semibold text-link hover:underline" href="/info#Pests"
 							>Weight Adjustment</a
 						>
 						{#if uncounted === 0}
@@ -128,9 +128,7 @@
 	</div>
 {:else}
 	<div class="flex w-full flex-row items-center gap-2 align-middle">
-		<div
-			class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-primary-foreground p-1 align-middle"
-		>
+		<div class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle">
 			{@render cropIcon('hidden sm:flex')}
 			<div class="flex flex-grow flex-col justify-center gap-1 pr-2">
 				<div class="flex flex-row items-center justify-between gap-2">
@@ -183,7 +181,7 @@
 							<div class="flex max-w-md flex-col items-center gap-2">
 								<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 								<p>{pestKills.toLocaleString()}</p>
-								<a class="text-lg font-semibold text-blue-500 hover:underline" href="/info#Pests"
+								<a class="text-lg font-semibold text-link hover:underline" href="/info#Pests"
 									>Weight Adjustment</a
 								>
 								{#if uncounted === 0}

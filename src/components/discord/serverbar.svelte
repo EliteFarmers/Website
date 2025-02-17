@@ -13,7 +13,7 @@
 
 <a
 	href="/server/{guild.id}"
-	class="relative flex w-full flex-1 flex-row items-center justify-between overflow-clip rounded-lg bg-primary-foreground p-8 py-8 {guild.banner
+	class="relative flex w-full flex-1 flex-row items-center justify-between overflow-clip rounded-lg bg-card p-8 py-8 {guild.banner
 		? 'text-white'
 		: ''}"
 >

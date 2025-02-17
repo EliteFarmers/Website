@@ -14,7 +14,7 @@
 	{#each medals as medal (medal)}
 		{@const amount = stats.medals?.[medal] ?? 0}
 		<div
-			class="flex min-w-20 max-w-32 flex-1 items-center justify-center gap-2 rounded-md bg-primary-foreground px-2 py-1 md:px-4"
+			class="flex min-w-20 max-w-32 flex-1 items-center justify-center gap-2 rounded-md bg-card px-2 py-1 md:px-4"
 		>
 			<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-6 w-6" />
 			<p class="text-xl font-semibold">

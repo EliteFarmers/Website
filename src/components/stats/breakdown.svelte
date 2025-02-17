@@ -19,7 +19,7 @@
 </script>
 
 <section class="flex w-full flex-1 justify-center py-4 align-middle" aria-labelledby="Breakdown">
-	<div class="w-full max-w-4xl rounded-lg bg-primary-foreground">
+	<div class="w-full max-w-4xl rounded-lg bg-card">
 		<h2 id="Breakdown" class="mt-6 text-center">
 			<span class="mx-2 text-3xl font-semibold">{total.toLocaleString()}</span>
 			<span class="text-lg">Farming Weight</span>
@@ -60,7 +60,7 @@
 				<br />
 				<h3 class="py-2 text-2xl font-semibold">Questions?</h3>
 				<div class="text-md pt-1">
-					View all calculations on the <a href="/info" class="text-blue-600 hover:underline">info page</a>.
+					View all calculations on the <a href="/info" class="text-link hover:underline">info page</a>.
 				</div>
 			</div>
 		</div>

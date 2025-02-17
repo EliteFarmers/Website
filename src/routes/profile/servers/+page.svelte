@@ -35,6 +35,6 @@
 		</div>
 
 		<h1 class="mb-4 text-2xl">Other Servers</h1>
-		<p>Missing a server above? <a href="/invite" class="text-blue-500 underline">Invite the bot!</a></p>
+		<p>Missing a server above? <a href="/invite" class="text-link underline">Invite the bot!</a></p>
 	</section>
 </div>

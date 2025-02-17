@@ -15,7 +15,7 @@
 <Popover.Mobile>
 	{#snippet trigger()}
 		<div
-			class="flex basis-32 flex-row gap-1 overflow-ellipsis rounded-md border-l-4 bg-primary-foreground p-1"
+			class="flex basis-32 flex-row gap-1 overflow-ellipsis rounded-md border-l-4 bg-card p-1"
 			style="border-color:{color};"
 		>
 			<p>{visitor.short ?? visitor.name}</p>
@@ -23,6 +23,6 @@
 	{/snippet}
 	<div class="flex flex-col gap-1">
 		<p class="font-semibold">{visitor.name}</p>
-		<a href={visitor.wiki} class="text-blue-400 hover:underline">Hypixel Wiki</a>
+		<a href={visitor.wiki} class="text-link hover:underline">Hypixel Wiki</a>
 	</div>
 </Popover.Mobile>

@@ -5,7 +5,7 @@
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
-	import * as Popover from '$ui/popover';
+	import * as Tooltip from '$ui/tooltip';
 	import * as Dialog from '$ui/dialog';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Plus from 'lucide-svelte/icons/plus';
@@ -34,15 +34,13 @@
 	<h1 class="mb-16 text-4xl">Admin Panel</h1>
 
 	{#if form?.error}
-		<p class="text-lg text-red-500">{form.error}</p>
+		<p class="text-lg text-destructive">{form.error}</p>
 	{/if}
 
 	<section class="flex w-full max-w-2xl flex-col items-start gap-4">
 		<div class="flex w-full flex-col gap-4">
 			{#each data.admins as user}
-				<div
-					class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-gray-100 p-2 dark:bg-zinc-800 md:flex-row"
-				>
+				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-muted md:flex-row">
 					<div class="flex flex-row items-center gap-4">
 						<UserIcon {user} class="size-12" />
 						<div class="flex flex-col">
@@ -56,7 +54,7 @@
 								<p>{role}</p>
 							{/each}
 						</div>
-						<Popover.Mobile>
+						<Tooltip.Simple>
 							{#snippet trigger()}
 								<Button
 									class="max-h-12"
@@ -69,7 +67,7 @@
 								</Button>
 							{/snippet}
 							<div>Manage Permissions</div>
-						</Popover.Mobile>
+						</Tooltip.Simple>
 					</div>
 				</div>
 			{/each}

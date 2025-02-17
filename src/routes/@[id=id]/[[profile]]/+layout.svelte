@@ -57,38 +57,36 @@
 	<PlayerInfo />
 
 	<div class="flex flex-row justify-center">
-		<div
-			class="my-6 flex w-fit flex-row justify-center rounded-md border-2 border-solid border-primary-foreground p-1"
-		>
+		<div class="my-6 flex w-fit flex-row justify-center rounded-md border-2 border-solid border-card p-1">
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/contests"
-				class="{route === 'contests' ? 'bg-primary-foreground' : ''} cursor-pointer">Contests</Button
+				class="{route === 'contests' ? 'bg-card' : ''} cursor-pointer">Contests</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/charts"
-				class="{route === 'charts' ? 'bg-primary-foreground' : ''} cursor-pointer">Charts</Button
+				class="{route === 'charts' ? 'bg-card' : ''} cursor-pointer">Charts</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href={path}
-				class="{route === '[[profile]]' ? 'bg-primary-foreground' : ''} cursor-pointer">Stats</Button
+				class="{route === '[[profile]]' ? 'bg-card' : ''} cursor-pointer">Stats</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/garden"
-				class="{route === 'garden' ? 'bg-primary-foreground' : ''} cursor-pointer">Garden</Button
+				class="{route === 'garden' ? 'bg-card' : ''} cursor-pointer">Garden</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/rates"
-				class="{route === 'rates' ? 'bg-primary-foreground' : ''} cursor-pointer">Rates</Button
+				class="{route === 'rates' ? 'bg-card' : ''} cursor-pointer">Rates</Button
 			>
 			{#if data.authorized}
 				<Button variant="ghost" size="sm" href="{path}/graphs" class="cursor-pointer">Admin</Button>

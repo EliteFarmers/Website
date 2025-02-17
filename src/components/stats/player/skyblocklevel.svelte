@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md bg-primary-foreground p-1 text-lg"
+	class="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md bg-card p-1 text-lg"
 	aria-label="Skyblock Level"
 >
 	<Popover.Mobile>

@@ -6,15 +6,14 @@
 	import { initRatesData } from '$lib/stores/ratesData';
 	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 	import * as Sidebar from '$ui/sidebar';
-	import { ModeWatcher, mode } from 'mode-watcher';
-	import { settings, getSettings } from 'svelte-ux';
-	import { browser } from '$app/environment';
 	import Footer from '$comp/footer/footer.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
 	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import Header from '$comp/header/header.svelte';
+	import { initThemeContext } from '$lib/stores/themes.svelte';
 	import Content from './content.svelte';
+	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import { Toaster } from '$ui/sonner';
 
 	interface Props {
@@ -23,28 +22,13 @@
 
 	let { children }: Props = $props();
 
+	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
 	initShowLeaderboardName();
 	initBreadcrumb();
 	initSidebarNav();
-
-	if (browser) {
-		mode.subscribe((value) => {
-			if (!value) return;
-
-			const settings = getSettings();
-			settings.currentTheme.setTheme(value);
-		});
-	}
-
-	settings({
-		themes: {
-			light: ['light'],
-			dark: ['dark'],
-		},
-	});
 </script>
 
 <svelte:head>
@@ -55,6 +39,8 @@
 	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
 </svelte:head>
+
+<ThemeWatcher />
 
 <Sidebar.Provider>
 	<Sidebar.Root collapsible="icon" class="z-50">
@@ -73,7 +59,5 @@
 		</Sidebar.Inset>
 	</div>
 </Sidebar.Provider>
-
-<ModeWatcher />
 
 <Toaster />

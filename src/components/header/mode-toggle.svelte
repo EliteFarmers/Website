@@ -1,13 +1,28 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
+	import { cn } from '$lib/utils';
+	import { buttonVariants } from '$ui/button';
+	import * as DropdownMenu from '$ui/dropdown-menu';
 	import Check from 'lucide-svelte/icons/check';
 	import Moon from 'lucide-svelte/icons/moon';
 	import Sun from 'lucide-svelte/icons/sun';
-	import { buttonVariants } from '$ui/button';
-	import * as DropdownMenu from '$ui/dropdown-menu';
-	import { resetMode, setMode, mode } from 'mode-watcher';
-	import { cn } from '$lib/utils';
 
-	const modes = ['light', 'dark'] as const;
+	let isDark = $state(false);
+	const currentTheme = getThemeContext();
+
+	if (browser) {
+		const currentClass = document.documentElement.className;
+		isDark = themes.find((t) => t.class === currentClass)?.isDark ?? false;
+
+		new MutationObserver(() => {
+			const currentClass = document.documentElement.className;
+			isDark = themes.find((t) => t.class === currentClass)?.isDark ?? false;
+		}).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+	}
 </script>
 
 <DropdownMenu.Root>
@@ -19,21 +34,31 @@
 			})
 		)}
 	>
-		<Sun class="mx-2 block dark:hidden" />
-		<Moon class="mx-2 hidden dark:block" />
-		<span class="sr-only">Toggle theme</span>
+		{#if !isDark}
+			<Sun class="mx-2 block" />
+		{:else}
+			<Moon class="mx-2 block" />
+		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
-		{#each modes as option}
-			<DropdownMenu.Item onclick={() => setMode(option)}>
-				<span class="capitalize">{option}</span>
-				{#if $mode === option}
-					<Check class="ml-2 h-4 w-4" />
-				{/if}
-			</DropdownMenu.Item>
-		{/each}
-		<DropdownMenu.Item onclick={() => resetMode()}>
+		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'light')}>
+			<span class="capitalize">Light</span>
+			{#if currentTheme.theme === 'light'}
+				<Check class="ml-2 h-4 w-4" />
+			{/if}
+		</DropdownMenu.Item>
+		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'dark')}>
+			<span class="capitalize">Dark</span>
+			{#if currentTheme.theme === 'dark'}
+				<Check class="ml-2 h-4 w-4" />
+			{/if}
+		</DropdownMenu.Item>
+		<DropdownMenu.Item onclick={() => currentTheme.useSystem()}>
 			<span class="text-destructive">Use System Theme</span>
+		</DropdownMenu.Item>
+		<DropdownMenu.Separator />
+		<DropdownMenu.Item>
+			<a href="/profile/settings#themes" class="flex w-full text-muted-foreground"> See More Themes </a>
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

@@ -21,7 +21,7 @@
 	href="/contest/{timestamp}"
 	data-sveltekit-preload-data="off"
 	class={cn(
-		`flex min-w-52 flex-col gap-1 rounded-md border-l-4 bg-primary-foreground p-2 hover:bg-muted hover:shadow-lg ${crop?.replace(
+		`flex min-w-52 flex-col gap-1 rounded-md border-l-4 bg-card p-2 hover:bg-muted hover:shadow-lg ${crop?.replace(
 			' ',
 			''
 		)}`,

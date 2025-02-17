@@ -47,7 +47,7 @@
 			<h1 class="text-4xl">{product.name}</h1>
 			<ProductPrice {product} />
 		</div>
-		<a class="flex flex-row items-center gap-1 text-primary/60 hover:text-primary" href="/shop">
+		<a class="flex flex-row items-center gap-1 text-muted-foreground hover:text-primary" href="/shop">
 			<ArrowLeft size={16} class="mt-1 inline-block" />
 			Back to Shop
 		</a>
@@ -185,10 +185,7 @@
 				<div class="flex w-full flex-col items-end gap-1">
 					<div class="flex flex-row items-center gap-2">
 						<ProductPrice {product} />
-						<Button
-							href="/shop/{product.id}/buy"
-							class="bg-blue-600 font-semibold text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-900"
-						>
+						<Button href="/shop/{product.id}/buy" class="bg-link font-semibold text-white hover:bg-link/85">
 							{isFree ? 'Unlock' : 'Buy'} on Discord
 							<ExternalLink size={16} class="ml-1.5" />
 						</Button>
@@ -196,7 +193,7 @@
 					{#if isFree}
 						<Popover.Mobile>
 							{#snippet trigger()}
-								<div class="flex flex-row items-center gap-1 text-primary/60">
+								<div class="flex flex-row items-center gap-1 text-muted-foreground">
 									<p>Free Item</p>
 									<Info size={16} class="mt-0.5" />
 								</div>
@@ -241,7 +238,7 @@
 									<p>
 										{style.description}
 									</p>
-									<p class="text-sm text-primary/80">Preview not available for this style.</p>
+									<p class="text-sm text-muted-foreground">Preview not available for this style.</p>
 								{/if}
 							</Card.Content>
 						</Card.Root>

@@ -11,7 +11,7 @@
 		barBg?: string;
 	}
 
-	let { progress, barBg = 'bg-card' }: Props = $props();
+	let { progress, barBg = 'bg-background' }: Props = $props();
 
 	let maxed = $state(progress.ratio >= 1);
 	let readable = $derived(
@@ -37,14 +37,14 @@
 			<span>{progress.name}</span>
 		{/if}
 		{#if progress.wiki}
-			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="mt-1 text-blue-500">
+			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="mt-1 text-link">
 				<Info size={16} />
 			</a>
 		{/if}
 		{#if progress.api === false}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<TriangleAlert size={16} class="-mb-1 text-yellow-600 dark:text-yellow-300" />
+					<TriangleAlert size={16} class="-mb-1 text-completed" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. For it to show up you need to configure

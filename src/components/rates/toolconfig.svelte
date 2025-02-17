@@ -59,7 +59,7 @@
 					{ value: 'blessed', label: 'Blessed' },
 				]}
 				placeholder="Reforge"
-				class="dark:bg-zinc-800"
+				class="bg-secondary-foreground"
 				change={(v) => {
 					if (!v) return;
 					tool.changeReforgeTo(reforge);
@@ -71,7 +71,7 @@
 			<Select.Simple
 				bind:value={counter}
 				placeholder="Farmed Crops"
-				class="dark:bg-zinc-800"
+				class="bg-secondary-foreground"
 				options={counterOptions.map((c) => ({
 					value: c.toString(),
 					label: c.toLocaleString(),
@@ -83,7 +83,7 @@
 					player.refresh();
 				}}
 			/>
-			<p class="text-sm text-gray-500">More config options coming soon™!</p>
+			<p class="text-sm text-muted-variant">More config options coming soon™!</p>
 		</div>
 	{/if}
 </div>

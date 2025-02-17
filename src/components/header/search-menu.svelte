@@ -65,7 +65,7 @@
 	<Command.Root shouldFilter={false}>
 		<Command.Input placeholder="Search for a player" bind:value={searchStr} />
 		<Tabs.Root class="w-full" bind:value={destination}>
-			<Tabs.List class="flex gap-2 rounded-none bg-background">
+			<Tabs.List class="flex gap-2 rounded-none bg-inherit">
 				<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
 				<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
 				<Tabs.Trigger value="/rates" class="data-[state=active]:border-2">Rates</Tabs.Trigger>

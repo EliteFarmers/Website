@@ -1,17 +1,46 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import Head from '$comp/head.svelte';
 	import Product from '$comp/monetization/product.svelte';
+	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
+	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
 	import { Button } from '$ui/button';
-	import { Switch } from '$ui/switch';
-	import { invalidateAll } from '$app/navigation';
+	import * as Card from '$ui/card';
+	import * as Carousel from '$ui/carousel';
+	import type { CarouselAPI } from '$ui/carousel/context.js';
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
-	import * as Card from '$ui/card';
-	import type { PageData, ActionData } from './$types';
-	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
-	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import { Switch } from '$ui/switch';
+	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
+	import Menu from 'lucide-svelte/icons/menu';
+	import Moon from 'lucide-svelte/icons/moon';
+	import Search from 'lucide-svelte/icons/search';
+	import Sun from 'lucide-svelte/icons/sun';
+	import { onMount } from 'svelte';
+	import type { ActionData, PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
+
+	let api = $state<CarouselAPI>();
+
+	const themeContext = getThemeContext();
+	const wheelGestures = WheelGesturesPlugin();
+
+	let current = $state(0);
+	let themeName = $state('');
+	let themeClass = $state('');
+
+	$effect(() => {
+		if (api) {
+			current = api.selectedScrollSnap() + 1;
+			api.on('select', () => {
+				current = api!.selectedScrollSnap() + 1;
+			});
+			themeName = themes[current - 1].name;
+			themeClass = themes[current - 1].class;
+		}
+	});
 
 	interface Props {
 		data: PageData;
@@ -94,6 +123,12 @@
 		{ label: 'Default', value: '' },
 		...unlockedEmbedColors.map((e) => ({ label: e, value: e, color: '#' + e })),
 	]);
+
+	onMount(() => {
+		if (window.location.hash) {
+			document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+		}
+	});
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
@@ -103,13 +138,13 @@
 		<h1 class="mb-4 text-4xl">Purchases</h1>
 		{#if purchases.length === 0}
 			<p class="mb-2">
-				You don't have any shop purchases! Check out the <a href="/shop" class="text-blue-400 hover:underline"
+				You don't have any shop purchases! Check out the <a href="/shop" class="text-link hover:underline"
 					>Shop!</a
 				>
 			</p>
 		{:else}
 			<p class="mb-2">
-				Check out the <a href="/shop" class="text-blue-400 hover:underline">Shop!</a>
+				Check out the <a href="/shop" class="text-link hover:underline">Shop!</a>
 			</p>
 		{/if}
 		<div class="grid grid-flow-row-dense grid-cols-1 md:grid-cols-2">
@@ -138,7 +173,7 @@
 		</form>
 
 		{#if form?.error}
-			<p class="text-red-500">{form.error}</p>
+			<p class="text-destructive">{form.error}</p>
 		{/if}
 
 		<h1 class="mb-2 text-2xl">User Settings</h1>
@@ -184,7 +219,7 @@
 									/>
 								{/key}
 							{:else}
-								<p class="text-sm text-gray-500">
+								<p class="text-sm text-muted-variant">
 									No preview available! You can change to this style and run the /&NoBreak;weight
 									command in Discord to see it.
 								</p>
@@ -254,5 +289,86 @@
 				<Button type="submit" class="max-w-fit" disabled={loading}>Update Badges</Button>
 			</form>
 		{/each}
+
+		<h1 class="mb-10 mt-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
+		<div class="mx-0 flex flex-col items-center justify-center md:mx-16">
+			<Carousel.Root
+				setApi={(emblaApi) => (api = emblaApi)}
+				class="w-full max-w-2xl"
+				opts={{
+					loop: true,
+				}}
+				plugins={[wheelGestures]}
+			>
+				<Carousel.Content>
+					{#each themes as theme (theme.name)}
+						<Carousel.Item class="">
+							<Card.Root class={theme.class} style="color-scheme: {theme.class}">
+								<Card.Content
+									class="flex aspect-video items-center justify-center rounded-lg bg-background p-6"
+									style="color-scheme: {theme.class};"
+								>
+									<!-- Theme Preview -->
+									<div class="w-full rounded-lg">
+										<!-- nav header -->
+										<div class="mb-4 flex items-center justify-between border-b pb-2">
+											<div class="flex items-center gap-2">
+												<img
+													src="/favicon.webp"
+													class="aspect-square max-w-5"
+													alt="Elite Logo"
+												/>
+												<Menu class="h-5 w-5 text-foreground" />
+											</div>
+											<div class="flex items-center gap-2">
+												<div
+													class="bg flex h-8 items-center rounded-sm border px-3 hover:bg-muted"
+												>
+													<Search class="h-4 w-4 text-muted-foreground" />
+													<span class="ml-2 text-sm text-muted-foreground">Search...</span>
+												</div>
+												{#if theme.isDark}
+													<Moon class="h-5 w-5 text-foreground" />
+												{:else}
+													<Sun class="h-5 w-5 text-foreground" />
+												{/if}
+											</div>
+										</div>
+										<!-- rest of the preview -->
+										<div class="space-y-4">
+											<div class="h-5 w-1/4 rounded bg-muted"></div>
+											<div class="h-4 w-1/2 rounded bg-muted"></div>
+											<div class="h-4 w-3/5 rounded bg-muted"></div>
+											<div class="h-4 w-3/4 rounded bg-muted"></div>
+											<div class="h-4 w-3/4 rounded bg-muted"></div>
+											<div class="flex gap-2">
+												<button
+													onclick={() => console.log('hey dont touch me!')}
+													aria-label="Theme preview button"
+													class="h-9 w-8 rounded border-2 border-border bg-primary px-8 hover:bg-accent"
+												></button>
+												<div class="h-9 flex-1 rounded bg-muted"></div>
+											</div>
+											<div class="grid grid-cols-2 gap-2">
+												<div class="h-16 rounded bg-muted-variant"></div>
+												<div class="h-16 rounded bg-muted-variant"></div>
+											</div>
+										</div>
+									</div>
+								</Card.Content>
+							</Card.Root>
+						</Carousel.Item>
+					{/each}
+				</Carousel.Content>
+				<Carousel.Previous class="hidden md:flex" />
+				<Carousel.Next class="hidden md:flex" />
+			</Carousel.Root>
+			<div class="py-4 text-center text-lg text-muted-foreground">
+				{themeName}
+			</div>
+		</div>
+		<div class="flex justify-start">
+			<Button class="px-4 py-2" onclick={() => (themeContext.theme = themeClass)}>Apply Theme</Button>
+		</div>
 	</section>
 </div>

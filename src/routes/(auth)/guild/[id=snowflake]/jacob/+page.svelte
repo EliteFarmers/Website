@@ -78,14 +78,14 @@
 	</section>
 
 	{#if form?.error}
-		<h5 class="text-xl font-semibold text-red-700">
+		<h5 class="text-xl font-semibold text-destructive">
 			<p>{form?.error}</p>
 		</h5>
 	{/if}
 
 	<section class="flex w-full flex-col items-center justify-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-primary-foreground md:w-[70%]"
+			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card md:w-[70%]"
 		>
 			<h2 class="p-4 text-3xl">Manage Shared Settings</h2>
 			<Accordion.Root class="mx-4" type="multiple">
@@ -197,14 +197,14 @@
 </div>
 
 <Dialog.Root bind:open={clickOutsideModal}>
-	<Dialog.Content class="max-h-[90%] overflow-y-scroll">
+	<Dialog.ScrollContent>
 		<Dialog.Header>
 			<h3 class="text-xl">Server Jacob Leaderboard Settings</h3>
 		</Dialog.Header>
 		<form
 			method="post"
 			action="?/create"
-			class="flex flex-col gap-4"
+			class="mx-1 mt-4 flex flex-col gap-4"
 			use:enhance={() => {
 				return async ({ result, update }) => {
 					if (result) clickOutsideModal = false;
@@ -263,10 +263,10 @@
 				<Input name="endDate" type="datetime-local" />
 			</div>
 
-			<Button formaction="?/create" type="submit">Edit/Create</Button>
-			<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+			<Button formaction="?/create" type="submit">Create</Button>
+			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
-	</Dialog.Content>
+	</Dialog.ScrollContent>
 </Dialog.Root>

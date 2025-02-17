@@ -30,7 +30,7 @@
 		]} flex aspect-square select-none items-center justify-center rounded-full bg-black bg-blend-darken {className ??
 			''}"
 	>
-		<p class="mb-0.5 leading-none text-white">
+		<p class="mb-0.5 leading-none">
 			{guild?.name
 				?.split(' ')
 				.slice(0, 3)

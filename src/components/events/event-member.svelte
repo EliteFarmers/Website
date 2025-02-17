@@ -2,9 +2,9 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
-	import * as Popover from '$ui/popover';
 	import { EventType } from '$lib/utils';
 	import Crown from 'lucide-svelte/icons/crown';
+	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 
 	interface Props {
 		owner?: boolean;
@@ -37,8 +37,8 @@
 	<div id={member.playerUuid} class="flex w-full scroll-mt-64 flex-row justify-between align-middle">
 		<div class="flex flex-row items-center gap-2 align-middle">
 			{#if rank}
-				<div class="text-green-800 dark:text-green-300">
-					<p>
+				<div>
+					<p class="text-progress">
 						<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
 					</p>
 				</div>
@@ -46,28 +46,28 @@
 			<img
 				src="https://mc-heads.net/avatar/{member.playerUuid}"
 				alt="Player Head"
-				class="pixelated aspect-square h-8 w-8 rounded-sm"
+				class="pixelated aspect-square size-8 rounded-sm"
 			/>
 			<p class="text-lg">{member.playerName}</p>
 			{#if owner}
-				<Popover.Mobile>
+				<TooltipSimple>
 					{#snippet trigger()}
 						<div class="flex flex-row items-end">
-							<Crown size="sm" class="mt-1.5 w-4 text-yellow-400" />
+							<Crown size={16} class="w-4 text-completed" />
 						</div>
 					{/snippet}
-					<p class="text-lg font-semibold">Team Owner</p>
-				</Popover.Mobile>
+					<p>Team Owner</p>
+				</TooltipSimple>
 			{/if}
 			{#if running}
-				<Popover.Mobile>
+				<TooltipSimple>
 					{#snippet trigger()}
 						<div class="flex flex-col items-center justify-center">
 							{#if member.status === 0}
-								<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-zinc-700"></div>
+								<div class="h-2 w-2 rounded-full bg-muted"></div>
 							{/if}
 							{#if member.status === 1}
-								<div class="h-2 w-2 rounded-full bg-green-500 dark:bg-green-300"></div>
+								<div class="text-bg-progress h-2 w-2 rounded-full"></div>
 							{/if}
 						</div>
 					{/snippet}
@@ -83,14 +83,14 @@
 							<p class="max-w-xs">{member.playerName} has increased their score since last checked!</p>
 						{/if}
 					</div>
-				</Popover.Mobile>
+				</TooltipSimple>
 			{/if}
 		</div>
 		<p class="block pr-2 text-lg">
 			{#if member.score && +member.score > 0}
 				{(+(member.score ?? 0)).toLocaleString()}
-			{:else if running}
-				<span class="text-red-800 dark:text-red-500">Zero!</span>
+			{:else}
+				<span class="text-destructive">Zero!</span>
 			{/if}
 		</p>
 	</div>
@@ -116,7 +116,7 @@
 		{/if}
 		<div class="flex w-full flex-row items-center justify-between">
 			<div>
-				<p class="text-gray-500">Last Updated</p>
+				<p class="text-muted-foreground">Last Updated</p>
 				<p>
 					{member.lastUpdated
 						? new Date(+(member.lastUpdated ?? 0) * 1000).toLocaleDateString() +
