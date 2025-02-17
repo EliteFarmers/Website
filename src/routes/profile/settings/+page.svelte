@@ -291,7 +291,7 @@
 		{/each}
 
 		<h1 class="mb-10 mt-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
-		<div class="flex w-full flex-col items-center justify-center">
+		<div class="mx-0 flex flex-col items-center justify-center md:mx-16">
 			<Carousel.Root
 				setApi={(emblaApi) => (api = emblaApi)}
 				class="w-full max-w-2xl"
@@ -360,8 +360,8 @@
 						</Carousel.Item>
 					{/each}
 				</Carousel.Content>
-				<Carousel.Previous />
-				<Carousel.Next />
+				<Carousel.Previous class="hidden md:flex" />
+				<Carousel.Next class="hidden md:flex" />
 			</Carousel.Root>
 			<div class="py-4 text-center text-lg text-muted-foreground">
 				{themeName}
