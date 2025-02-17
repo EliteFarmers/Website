@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Crop, getCropDisplayName, getCropFromName, getCropUpgrades } from 'farming-weight';
+	import { Crop, getCropDisplayName, getCropUpgrades } from 'farming-weight';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';

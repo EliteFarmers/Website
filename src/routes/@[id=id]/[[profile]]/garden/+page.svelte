@@ -2,14 +2,7 @@
 	import Head from '$comp/head.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
-	import {
-		Crop,
-		GARDEN_VISITORS,
-		getCropDisplayName,
-		getCropFromName,
-		getCropUpgrades,
-		getGardenLevel,
-	} from 'farming-weight';
+	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
 	import type { components } from '$lib/api/api';
 	import Plots from '$comp/stats/garden/plots.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
