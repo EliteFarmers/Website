@@ -59,7 +59,6 @@
 					{ value: 'blessed', label: 'Blessed' },
 				]}
 				placeholder="Reforge"
-				class="bg-secondary-foreground"
 				change={(v) => {
 					if (!v) return;
 					tool.changeReforgeTo(reforge);
@@ -71,7 +70,6 @@
 			<Select.Simple
 				bind:value={counter}
 				placeholder="Farmed Crops"
-				class="bg-secondary-foreground"
 				options={counterOptions.map((c) => ({
 					value: c.toString(),
 					label: c.toLocaleString(),

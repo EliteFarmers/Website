@@ -31,17 +31,6 @@
 		slots = { ...slots, [slot]: piece.item.uuid };
 		fortune = set.getFortuneBreakdown();
 	}
-
-	let selected = $derived({
-		[GearSlot.Helmet]: set.helmet?.item.uuid ?? '',
-		[GearSlot.Chestplate]: set.chestplate?.item.uuid ?? '',
-		[GearSlot.Leggings]: set.leggings?.item.uuid ?? '',
-		[GearSlot.Boots]: set.boots?.item.uuid ?? '',
-		[GearSlot.Necklace]: set.necklace?.item.uuid ?? '',
-		[GearSlot.Cloak]: set.cloak?.item.uuid ?? '',
-		[GearSlot.Belt]: set.belt?.item.uuid ?? '',
-		[GearSlot.Gloves]: set.gloves?.item.uuid ?? '',
-	} as Record<GearSlot, string>);
 </script>
 
 <div class="flex flex-col gap-3">
@@ -82,7 +71,7 @@
 								<DropdownMenu.Label>Swap {slot}</DropdownMenu.Label>
 								<DropdownMenu.Separator />
 								<DropdownMenu.RadioGroup
-									bind:value={selected[slot as GearSlot]}
+									value={piece.item.uuid ?? ''}
 									onValueChange={(value) => {
 										const piece =
 											armor.find((a) => a.item.uuid === value) ??
