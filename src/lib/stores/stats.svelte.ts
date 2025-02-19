@@ -11,7 +11,7 @@ export class PlayerStats {
 	#selectedProfile = $state<components['schemas']['ProfileDetailsDto']>();
 	#profiles = $state<ProfileDetails[]>();
 	#member = $state<NonNullable<components['schemas']['ProfileMemberDto']>>(null!);
-	#ranks = $state<components['schemas']['LeaderboardPositionsDto']>();
+	#ranks = $state<components['schemas']['LeaderboardPositionsDto']>(null!);
 	#collections = $state<Collection[]>([]);
 
 	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);

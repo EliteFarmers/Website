@@ -3,7 +3,7 @@
 	import UserRound from 'lucide-svelte/icons/user-round';
 
 	interface props {
-		user: AuthorizedUser;
+		user: Partial<AuthorizedUser>;
 		class?: string;
 	}
 

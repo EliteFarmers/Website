@@ -7,7 +7,7 @@
 	import Star from 'lucide-svelte/icons/star';
 
 	interface Props {
-		mc?: components['schemas']['MinecraftAccountDetailsDto'];
+		mc?: Partial<components['schemas']['MinecraftAccountDetailsDto']>;
 	}
 
 	let { mc = {} }: Props = $props();

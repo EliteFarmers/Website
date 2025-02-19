@@ -15,7 +15,7 @@
 
 	let { data, form }: Props = $props();
 
-	let pings = $derived(data.pings ?? {});
+	let pings = $derived(data.pings ?? { enabled: false, delaySeconds: 0 });
 
 	let channels = $derived(
 		(data.guild?.channels ?? [])

@@ -48,6 +48,8 @@ export const actions: Actions = {
 			name: (data.get('name') as string) || undefined,
 			styleFormatter: (data.get('formatter') as string) || undefined,
 			description: (data.get('description') as string) || undefined,
+			images: [],
+			products: [],
 		};
 
 		const style = data.get('data') as string | undefined;
@@ -58,7 +60,7 @@ export const actions: Actions = {
 				return fail(400, { error: 'Invalid style data.' });
 			}
 
-			body.data = styleData;
+			body.data = styleData as components['schemas']['WeightStyleDataDto'];
 		}
 
 		const { error: e, response } = await UpdateWeightStyle(locals.access_token, styleId, body);
@@ -111,7 +113,7 @@ export const actions: Actions = {
 			name: style.name + ' (Copy)',
 			styleFormatter: style.styleFormatter,
 			description: style.description,
-			data: style.data,
+			data: style.data as components['schemas']['WeightStyleDataDto'],
 		});
 
 		if (e) {
@@ -145,9 +147,9 @@ export const actions: Actions = {
 			locals.access_token,
 			styleId,
 			{
-				Image: image,
-				Title: title,
-				Description: description,
+				image: image,
+				title: title,
+				description: description,
 			},
 			thumbnail
 		);

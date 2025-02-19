@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 
 	interface Props {
-		guild: components['schemas']['GuildDetailsDto'] | undefined;
+		guild: Partial<components['schemas']['GuildDetailsDto']> | undefined;
 		size?: keyof typeof sizes;
 		class?: string | undefined | null;
 	}

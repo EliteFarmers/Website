@@ -93,9 +93,9 @@ export const actions: Actions = {
 			locals.access_token,
 			productId,
 			{
-				Image: image,
-				Title: title,
-				Description: description,
+				image: image,
+				title: title,
+				description: description,
 			},
 			thumbnail
 		);

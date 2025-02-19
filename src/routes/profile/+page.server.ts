@@ -12,7 +12,7 @@ import {
 	UpdateUserSettings,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
-import { CanEditGuild, type Guild } from '$lib/discord';
+import { CanEditGuild } from '$lib/discord';
 import { IsUUID } from '$params/uuid';
 import { FetchUserSession } from '$lib/api/auth';
 import { FetchDiscordUserData } from '$lib/discordAuth';
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
 
 	return {
-		guildsWithBot: guilds.filter((guild) => guild.hasBot && CanEditGuild(guild as Guild)),
+		guildsWithBot: guilds.filter((guild) => guild.hasBot && CanEditGuild(guild)),
 		guilds: guilds.filter((guild) => !guild.hasBot),
 		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
@@ -65,6 +65,8 @@ export const actions: Actions = {
 		}
 
 		const { error: msg, response } = await LinkAccount(username, locals.access_token);
+
+		console.log(msg);
 
 		if (!response.ok || msg) {
 			return fail(response.status, {

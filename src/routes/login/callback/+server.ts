@@ -34,8 +34,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		grant_type: 'authorization_code',
 		code: code,
 		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
-		state: state,
-		scope: 'identify guilds role_connections.write',
+		// state: state,
+		// scope: 'identify guilds role_connections.write',
 	};
 
 	const request = await fetch('https://discord.com/api/v10/oauth2/token', {
@@ -52,13 +52,19 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		throw error(400, new Error('Discord Authentication Error'));
 	}
 
-	const { data: loginResponse } = await LoginUser({
+	const {
+		data: loginResponse,
+		response: r,
+		error: e,
+	} = await LoginUser({
 		access_token: response.access_token,
 		expires_in: Math.floor(+response.expires_in / 1000).toString(),
 		refresh_token: response.refresh_token,
-	}).catch(() => ({ data: undefined }));
+	});
 
 	if (!loginResponse) {
+		console.log(r);
+		console.log(e);
 		throw error(500, 'Failed to login user!');
 	}
 

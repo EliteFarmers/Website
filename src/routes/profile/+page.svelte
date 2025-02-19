@@ -97,7 +97,7 @@
 				</div>
 				{#if form?.error}
 					<span class="text-sm text-destructive"
-						>{form?.error?.replaceAll('`', '"') ?? 'Something went wrong!'}</span
+						>{form?.error?.toString().replaceAll('`', '"') ?? 'Something went wrong!'}</span
 					>
 				{/if}
 			</div>

@@ -75,7 +75,6 @@
 		</Tabs.Root>
 		<ScrollArea class="flex h-full max-h-[300px] flex-row">
 			<Command.List class="max-h-none">
-				<Command.Empty>No results found.</Command.Empty>
 				<Command.Group heading="Players">
 					{#if searchStr !== ''}
 						<Command.Item
@@ -92,6 +91,8 @@
 						>
 							{player}
 						</Command.Item>
+					{:else}
+						<Command.Empty>No players found.</Command.Empty>
 					{/each}
 				</Command.Group>
 			</Command.List>

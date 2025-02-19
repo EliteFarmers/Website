@@ -88,7 +88,7 @@ export const actions: Actions = {
 			guildId: guildId,
 		};
 
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -247,7 +247,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -287,7 +287,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

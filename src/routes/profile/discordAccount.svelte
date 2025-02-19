@@ -4,7 +4,7 @@
 	import type { components } from '$lib/api/api';
 
 	interface Props {
-		account?: components['schemas']['AuthorizedAccountDto'];
+		account?: Partial<components['schemas']['AuthorizedAccountDto']>;
 	}
 
 	let { account = {} }: Props = $props();

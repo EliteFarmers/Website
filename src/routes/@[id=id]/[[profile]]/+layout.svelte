@@ -19,7 +19,13 @@
 		selectedProfile: data.profile,
 		profiles: data.profiles,
 		member: data.member,
-		ranks: data.ranks ?? {},
+		ranks: data.ranks ?? {
+			misc: {},
+			collections: {},
+			pests: {},
+			skills: {},
+			profile: {},
+		},
 	});
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
@@ -32,7 +38,13 @@
 				selectedProfile: data.profile,
 				profiles: data.profiles,
 				member: data.member,
-				ranks: data.ranks ?? {},
+				ranks: data.ranks ?? {
+					misc: {},
+					collections: {},
+					pests: {},
+					skills: {},
+					profile: {},
+				},
 			});
 
 			if (!browser) return;

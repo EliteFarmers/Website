@@ -37,6 +37,7 @@ export const actions: Actions = {
 			guildId: guildId,
 			channelId: data.get('channel') as string,
 			alwaysPingRole: (data.get('pingrole') as string) ?? null,
+			delaySeconds: 0,
 			cropPingRoles: {
 				cactus: (data.get('cactus') as string) ?? null,
 				carrot: (data.get('carrot') as string) ?? null,

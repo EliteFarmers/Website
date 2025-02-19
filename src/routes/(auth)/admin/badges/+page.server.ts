@@ -30,17 +30,18 @@ export const actions: Actions = {
 		const badgeRequirements = data.get('requirements') as string;
 		const tied = data.get('tied') as string;
 
-		const { response } = await POST('/badge', {
+		const { response } = await POST('/badges', {
 			body: {
-				Image: badgeImage,
-				Name: badgeName,
-				Description: badgeDescription,
-				Requirements: badgeRequirements,
-				TieToAccount: tied === 'on',
+				image: badgeImage,
+				name: badgeName,
+				description: badgeDescription,
+				requirements: badgeRequirements,
+				tieToAccount: tied === 'on',
 			},
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
+			// @ts-expect-error FormData typing not working
 			bodySerializer: formDataSerializer,
 		});
 
@@ -73,14 +74,15 @@ export const actions: Actions = {
 				},
 			},
 			body: {
-				Image: badgeImage,
-				Name: badgeName,
-				Description: badgeDescription,
-				Requirements: badgeRequirements,
+				image: badgeImage,
+				name: badgeName,
+				description: badgeDescription,
+				requirements: badgeRequirements,
 			},
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
+			// @ts-expect-error FormData typing not working
 			bodySerializer: formDataSerializer,
 		});
 
@@ -132,10 +134,10 @@ export const actions: Actions = {
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
 
-		const { response } = await POST('/badge/user/{playerUuid}/{badgeId}', {
+		const { response } = await POST('/badge/user/{player}/{badgeId}', {
 			params: {
 				path: {
-					playerUuid,
+					player: playerUuid,
 					badgeId: badgeId as unknown as number,
 				},
 			},
@@ -161,10 +163,10 @@ export const actions: Actions = {
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
 
-		const { response } = await DELETE('/badge/user/{playerUuid}/{badgeId}', {
+		const { response } = await DELETE('/badge/user/{player}/{badgeId}', {
 			params: {
 				path: {
-					playerUuid,
+					player: playerUuid,
 					badgeId: badgeId as unknown as number,
 				},
 			},

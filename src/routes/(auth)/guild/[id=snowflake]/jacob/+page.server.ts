@@ -217,8 +217,6 @@ export const actions: Actions = {
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
 
-		lb.crops ??= {};
-
 		const keys = {
 			'Sugar Cane': 'sugarCane',
 			'Cocoa Beans': 'cocoaBeans',

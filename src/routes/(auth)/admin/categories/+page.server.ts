@@ -40,7 +40,7 @@ export const actions: Actions = {
 			order.push({ id: +id, order: i });
 		}
 
-		const { response, error: e } = await UpdateCategoryOrder(locals.access_token, order);
+		const { response, error: e } = await UpdateCategoryOrder(locals.access_token, { elements: order });
 
 		if (e || !response.ok) {
 			fail(response.status ?? 400, { error: e || 'Failed to update order.' });

@@ -70,12 +70,13 @@ export const actions: Actions = {
 			endTime: endTime as unknown as number,
 			joinTime: joinUntilTime as unknown as number,
 			guildId: guildId,
-			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : undefined,
+			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : -1,
+			maxTeams: -1,
 		} satisfies components['schemas']['CreateWeightEventDto'] | components['schemas']['CreateMedalEventDto'];
 
 		const method = type === EventType.Medals ? CreateMedalEvent : CreateWeightEvent;
 
-		const { response } = await method(token, body).catch((e) => {
+		const { response } = await method(token, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
