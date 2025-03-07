@@ -32,7 +32,7 @@ export const actions: Actions = {
 		const eventId = data.get('eventId') as string;
 		const revoke = data.get('approve') === 'false';
 
-		const { response } = await POST('/admin/events/{eventId}/approve', {
+		const { response, error: e } = await POST('/admin/events/{eventId}/approve', {
 			params: {
 				query: {
 					approve: !revoke,
@@ -46,8 +46,8 @@ export const actions: Actions = {
 			},
 		});
 
-		if (!response.ok) {
-			return fail(500, { error: 'Failed to approve event' });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e ?? 'Failed to approve event' });
 		}
 
 		return {

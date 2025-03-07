@@ -180,7 +180,7 @@ export const GetCurrentYearContests = async () => await GET('/contests/at/now', 
 export const GetWeights = async () => await GET('/weights/all', {});
 
 export const SetPrimaryAccount = async (player: string, accessToken: string) =>
-	await POST('/account/primary/{Player}', {
+	await POST('/account/primary/{player}', {
 		params: {
 			path: {
 				player,
@@ -192,7 +192,7 @@ export const SetPrimaryAccount = async (player: string, accessToken: string) =>
 	});
 
 export const LinkAccount = async (player: string, accessToken: string) =>
-	await POST('/account/{Player}', {
+	await POST('/account/{player}', {
 		params: {
 			path: {
 				player,
@@ -204,7 +204,7 @@ export const LinkAccount = async (player: string, accessToken: string) =>
 	});
 
 export const UnlinkAccount = async (player: string, accessToken: string) =>
-	await DELETE('/account/{Player}', {
+	await DELETE('/account/{player}', {
 		params: {
 			path: {
 				player,
@@ -784,7 +784,7 @@ export const DisableUpcomingContestPings = async (accessToken: string, discordId
 export const UpdateUpcomingContestPings = async (
 	accessToken: string,
 	discordId: string,
-	body: components['schemas']['UpdateContestPingsRequest']
+	body: components['schemas']['UpdateContestPingsRequest_UpdateContestPings']
 ) =>
 	await PUT('/user/guild/{discordId}/contestpings', {
 		params: {

@@ -1,4 +1,4 @@
-import { error, type NumericRange } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild, EventType } from '$lib/utils';
 import { GetAdminGuildEvents, CreateWeightEvent, CreateMedalEvent } from '$lib/api/elite';
@@ -70,20 +70,19 @@ export const actions: Actions = {
 			endTime: endTime as unknown as number,
 			joinTime: joinUntilTime as unknown as number,
 			guildId: guildId,
-			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : -1,
-			maxTeams: -1,
+			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : 0,
+			maxTeams: 0,
 		} satisfies components['schemas']['CreateWeightEventDto'] | components['schemas']['CreateMedalEventDto'];
 
 		const method = type === EventType.Medals ? CreateMedalEvent : CreateWeightEvent;
 
-		const { response } = await method(token, guildId, body).catch((e) => {
+		const { response, error: e } = await method(token, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 499>, msg);
+		if (!response.ok || e) {
+			return fail(response.status, { error: e?.message ?? 'Unknown error' });
 		}
 
 		return {

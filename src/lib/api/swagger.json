@@ -61,6 +61,86 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Link Account",
+        "operationId": "EliteAPIFeaturesAccountLinkAccountLinkAccountEndpoint",
+        "parameters": [
+          {
+            "name": "player",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Unlink Account",
+        "operationId": "EliteAPIFeaturesAccountUnlinkAccountUnlinkAccountEndpoint",
+        "parameters": [
+          {
+            "name": "player",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
       }
     },
     "/account/{discordId}": {
@@ -177,88 +257,6 @@
         ]
       }
     },
-    "/account/{Player}": {
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Link Account",
-        "operationId": "EliteAPIFeaturesAccountLinkAccountLinkAccountEndpoint",
-        "parameters": [
-          {
-            "name": "player",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Unlink Account",
-        "operationId": "EliteAPIFeaturesAccountUnlinkAccountUnlinkAccountEndpoint",
-        "parameters": [
-          {
-            "name": "player",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      }
-    },
     "/account/purchases": {
       "post": {
         "tags": [
@@ -286,7 +284,7 @@
         "tags": [
           "Account"
         ],
-        "summary": "Get Minecraft Account",
+        "summary": "Search for Minecraft Account",
         "operationId": "EliteAPIFeaturesAccountSearchAccountsSearchAccountsEndpoint",
         "parameters": [
           {
@@ -335,7 +333,7 @@
         }
       }
     },
-    "/account/primary/{Player}": {
+    "/account/primary/{player}": {
       "post": {
         "tags": [
           "Account"
@@ -1320,16 +1318,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -1369,16 +1359,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/account/{discordId}/{player}/primary": {
@@ -1420,16 +1402,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/account/{discordId}/purchases": {
@@ -1463,16 +1437,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/badges/{player}/{badgeId}": {
@@ -1515,16 +1481,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -1565,16 +1523,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/contestpings/{discordId}": {
@@ -1617,16 +1567,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/contestpings": {
@@ -1649,16 +1591,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/{discordId}": {
@@ -1699,16 +1633,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/{discordId}/jacob": {
@@ -1749,16 +1675,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -1817,16 +1735,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/guild/{discordId}": {
@@ -1860,16 +1770,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       },
       "patch": {
         "tags": [
@@ -1920,16 +1822,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/guild/{discordId}/channels": {
@@ -1975,16 +1869,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/guild/{discordId}/members/{userId}/roles": {
@@ -2041,16 +1927,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/guild/{discordId}/roles": {
@@ -2096,16 +1974,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/bot/account": {
@@ -2138,16 +2008,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/contest/{contestKey}": {
@@ -2414,40 +2276,38 @@
         "description": "Data used and provided by <see href=\"https://github.com/hannibal002/SkyHanni/\">SkyHanni</see> to display upcoming contests in-game.",
         "operationId": "EliteAPIFeaturesContestsUploadCurrentContestsUploadCurrentContestsEndpoint",
         "requestBody": {
-          "x-name": "contests",
-          "description": "Upcoming contests",
+          "x-name": "Dictionary`2",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "example": {
-                  "contests": {
-                    "1738390500": [
-                      "Cactus",
-                      "Carrot",
-                      "Melon"
-                    ],
-                    "1738394100": [
-                      "Mushroom",
-                      "Nether Wart",
-                      "Pumpkin"
-                    ],
-                    "1738397700": [
-                      "Cocoa Beans",
-                      "Potato",
-                      "Wheat"
-                    ],
-                    "1738401300": [
-                      "Cactus",
-                      "Cocoa Beans",
-                      "Mushroom"
-                    ],
-                    "1738404900": [
-                      "Carrot",
-                      "Nether Wart",
-                      "Wheat"
-                    ]
-                  }
+                  "1738390500": [
+                    "Cactus",
+                    "Carrot",
+                    "Melon"
+                  ],
+                  "1738394100": [
+                    "Mushroom",
+                    "Nether Wart",
+                    "Pumpkin"
+                  ],
+                  "1738397700": [
+                    "Cocoa Beans",
+                    "Potato",
+                    "Wheat"
+                  ],
+                  "1738401300": [
+                    "Cactus",
+                    "Cocoa Beans",
+                    "Mushroom"
+                  ],
+                  "1738404900": [
+                    "Carrot",
+                    "Nether Wart",
+                    "Wheat"
+                  ]
                 },
                 "additionalProperties": {
                   "type": "array",
@@ -2458,7 +2318,8 @@
               }
             }
           },
-          "required": true
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "204": {
@@ -4387,7 +4248,7 @@
         "requestBody": {
           "x-name": "team",
           "content": {
-            "application/json": {
+            "*/*": {
               "schema": {
                 "$ref": "#/components/schemas/CreateEventTeamDto"
               }
@@ -5781,17 +5642,15 @@
           }
         ],
         "requestBody": {
-          "x-name": "UpdateContestPingsRequest",
-          "description": "",
+          "x-name": "settings",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateContestPingsRequest"
+                "$ref": "#/components/schemas/UpdateContestPingsRequest_UpdateContestPings"
               }
             }
           },
-          "required": true,
-          "x-position": 1
+          "required": true
         },
         "responses": {
           "204": {
@@ -12090,7 +11949,50 @@
         "type": "object",
         "additionalProperties": false
       },
-      "UpdateContestPingsRequest": {
+      "GuildMemberDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "hasBot",
+          "permissions",
+          "roles"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ImageAttachmentDto"
+              }
+            ]
+          },
+          "hasBot": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "admin": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateContestPingsRequest_UpdateContestPings": {
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -12131,49 +12033,6 @@
             "description": "Reason for disabling the feature.",
             "maxLength": 128,
             "minLength": 0,
-            "nullable": true
-          }
-        }
-      },
-      "GuildMemberDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id",
-          "name",
-          "hasBot",
-          "permissions",
-          "roles"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "icon": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ImageAttachmentDto"
-              }
-            ]
-          },
-          "hasBot": {
-            "type": "boolean"
-          },
-          "permissions": {
-            "type": "string"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "admin": {
-            "type": "boolean",
             "nullable": true
           }
         }

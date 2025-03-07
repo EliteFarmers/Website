@@ -64,15 +64,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const { error: msg, response } = await LinkAccount(username, locals.access_token);
+		const { error: problem, response } = await LinkAccount(username, locals.access_token);
+		console.log(response);
 
-		console.log(msg);
-
-		if (!response.ok || msg) {
+		if (!response.ok || problem) {
+			console.log(problem);
 			return fail(response.status, {
-				error:
-					msg ||
-					'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.',
+				error: 'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.',
+				problem: problem,
 			});
 		}
 
@@ -94,11 +93,12 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const { error: msg, response } = await UnlinkAccount(username, locals.access_token);
+		const { error: problem, response } = await UnlinkAccount(username, locals.access_token);
 
-		if (!response.ok || msg) {
+		if (!response.ok || problem) {
 			return fail(response.status, {
-				error: msg || 'Error unlinking account, please try again later.',
+				error: problem?.message || 'Error unlinking account, please try again later.',
+				problem: problem,
 			});
 		}
 

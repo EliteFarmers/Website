@@ -93,7 +93,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -125,7 +125,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -180,7 +180,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -207,7 +207,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -252,7 +252,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -292,7 +292,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}

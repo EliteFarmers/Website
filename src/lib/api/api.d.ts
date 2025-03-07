@@ -14,8 +14,10 @@ export interface paths {
         /** Get Minecraft Account */
         get: operations["EliteAPIFeaturesAccountGetAccountGetAccountEndpoint"];
         put?: never;
-        post?: never;
-        delete?: never;
+        /** Link Account */
+        post: operations["EliteAPIFeaturesAccountLinkAccountLinkAccountEndpoint"];
+        /** Unlink Account */
+        delete: operations["EliteAPIFeaturesAccountUnlinkAccountUnlinkAccountEndpoint"];
         options?: never;
         head?: never;
         patch?: never;
@@ -72,24 +74,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/account/{Player}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Link Account */
-        post: operations["EliteAPIFeaturesAccountLinkAccountLinkAccountEndpoint"];
-        /** Unlink Account */
-        delete: operations["EliteAPIFeaturesAccountUnlinkAccountUnlinkAccountEndpoint"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/account/purchases": {
         parameters: {
             query?: never;
@@ -114,7 +98,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Minecraft Account */
+        /** Search for Minecraft Account */
         get: operations["EliteAPIFeaturesAccountSearchAccountsSearchAccountsEndpoint"];
         put?: never;
         post?: never;
@@ -124,7 +108,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/account/primary/{Player}": {
+    "/account/primary/{player}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3584,7 +3568,16 @@ export interface components {
             memberCount: number;
         };
         DisableContestPingsRequest2: Record<string, never>;
-        UpdateContestPingsRequest: {
+        GuildMemberDto: {
+            id: string;
+            name: string;
+            icon?: components["schemas"]["ImageAttachmentDto"] | null;
+            hasBot: boolean;
+            permissions: string;
+            roles: string[];
+            admin?: boolean | null;
+        };
+        UpdateContestPingsRequest_UpdateContestPings: {
             /** @description Indicates whether the contest pings feature is enabled for the guild. */
             enabled: boolean;
             /** @description Channel ID to send contest pings to. */
@@ -3600,15 +3593,6 @@ export interface components {
             delaySeconds: number;
             /** @description Reason for disabling the feature. */
             disabledReason?: string | null;
-        };
-        GuildMemberDto: {
-            id: string;
-            name: string;
-            icon?: components["schemas"]["ImageAttachmentDto"] | null;
-            hasBot: boolean;
-            permissions: string;
-            roles: string[];
-            admin?: boolean | null;
         };
         AuthorizedGuildDto: {
             id: string;
@@ -4388,6 +4372,78 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesAccountLinkAccountLinkAccountEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                player: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesAccountUnlinkAccountUnlinkAccountEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                player: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EliteAPIFeaturesAccountGetAccountFromDiscordGetAccountFromDiscordEndpoint: {
         parameters: {
             query?: never;
@@ -4467,78 +4523,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthorizedAccountDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EliteAPIFeaturesAccountLinkAccountLinkAccountEndpoint: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                player: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EliteAPIFeaturesAccountUnlinkAccountUnlinkAccountEndpoint: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                player: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Unauthorized */
@@ -5463,13 +5447,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotAccountsUnlinkAccountUnlinkAccountEndpoint: {
@@ -5499,13 +5476,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5537,13 +5507,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotAccountsRefreshPurchasesUnlinkAccountEndpoint: {
@@ -5572,13 +5535,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5611,13 +5567,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotBadgesRemoveBadgeRemoveBadgeEndpoint: {
@@ -5648,13 +5597,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5688,13 +5630,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotGetContestPingsGetContestPingsEndpoint: {
@@ -5714,13 +5649,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ContestPingsFeatureDto"][];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5753,13 +5681,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotGetJacobFeatureGetJacobFeatureEndpoint: {
@@ -5790,13 +5711,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5836,13 +5750,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotGuildsRefreshGuildRefreshGuildEndpoint: {
@@ -5871,13 +5778,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5915,13 +5815,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotGuildsUpdateGuildChannelUpdateGuildChannelEndpoint: {
@@ -5955,13 +5848,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -5998,13 +5884,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotGuildsUpdateGuildRoleUpdateGuildRoleEndpoint: {
@@ -6039,13 +5918,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
         };
     };
     EliteAPIFeaturesBotUpdateDiscordAccountUpdateDiscordAccountEndpoint: {
@@ -6069,13 +5941,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AuthorizedAccountDto"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -6249,7 +6114,6 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        /** @description Upcoming contests */
         requestBody: {
             content: {
                 "application/json": {
@@ -7516,7 +7380,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateEventTeamDto"];
+                "*/*": components["schemas"]["CreateEventTeamDto"];
             };
         };
         responses: {
@@ -8399,7 +8263,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateContestPingsRequest"];
+                "application/json": components["schemas"]["UpdateContestPingsRequest_UpdateContestPings"];
             };
         };
         responses: {

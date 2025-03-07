@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
 import { DisableUpcomingContestPings, UpdateUpcomingContestPings } from '$lib/api/elite';
@@ -52,14 +52,12 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await UpdateUpcomingContestPings(token, guildId, body).catch((e) => {
-			console.log(e);
+		const { response, error: e } = await UpdateUpcomingContestPings(token, guildId, body).catch(() => {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
-			const msg = await response.text();
-			return { success: false, message: msg };
+		if (!response.ok || e) {
+			return fail(response.status, { error: e?.message ?? 'Unknown error' });
 		}
 
 		return {
@@ -79,7 +77,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return { success: false, message: msg };
 		}
