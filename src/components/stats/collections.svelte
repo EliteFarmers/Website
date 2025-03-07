@@ -4,7 +4,7 @@
 
 	const ctx = getStatsContext();
 	const collections = $derived(ctx.collections);
-	const ranks = $derived(ctx.ranks ?? {});
+	const ranks = $derived(ctx.ranks);
 
 	let weightSort = $state(true);
 

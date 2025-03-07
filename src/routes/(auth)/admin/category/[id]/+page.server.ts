@@ -122,7 +122,9 @@ export const actions: Actions = {
 
 		console.log(order);
 
-		const { response, error: e } = await UpdateCategoryProductOrder(locals.access_token, categoryId, order);
+		const { response, error: e } = await UpdateCategoryProductOrder(locals.access_token, categoryId, {
+			elements: order,
+		});
 
 		if (e || !response.ok) {
 			fail(response.status ?? 400, { error: e || 'Failed to update order.' });

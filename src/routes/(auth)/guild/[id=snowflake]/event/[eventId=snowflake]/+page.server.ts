@@ -88,12 +88,12 @@ export const actions: Actions = {
 			guildId: guildId,
 		};
 
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -125,7 +125,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -180,7 +180,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -207,7 +207,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -247,12 +247,12 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}
@@ -287,12 +287,12 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await EditEvent(token, eventId, body).catch((e) => {
+		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status, { error: msg });
 		}

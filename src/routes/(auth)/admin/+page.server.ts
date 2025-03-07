@@ -10,7 +10,7 @@ export const load = (async ({ parent, locals }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: roles } = await GET('/roles', {
+	const { data: roles } = await GET('/admin/roles', {
 		headers: { Authorization: `Bearer ${token}` },
 	}).catch(() => ({ data: undefined }));
 
@@ -44,10 +44,10 @@ export const actions: Actions = {
 		const memberId = data.get('id') as string;
 		const role = data.get('role') as string;
 
-		const { response } = await POST('/admin/user/{userId}/roles/{role}', {
+		const { response } = await POST('/admin/user/{discordId}/roles/{role}', {
 			params: {
 				path: {
-					userId: memberId,
+					discordId: memberId as unknown as number,
 					role: role,
 				},
 			},
@@ -73,10 +73,10 @@ export const actions: Actions = {
 		const memberId = data.get('id') as string;
 		const role = data.get('role') as string;
 
-		const { response } = await DELETE(`/admin/user/{userId}/roles/{role}`, {
+		const { response } = await DELETE(`/admin/user/{discordId}/roles/{role}`, {
 			params: {
 				path: {
-					userId: memberId,
+					discordId: memberId as unknown as number,
 					role: role,
 				},
 			},

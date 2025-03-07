@@ -45,7 +45,7 @@
 										ctx.uuid ?? page.params.id,
 										ctx.selectedProfile?.profileName ?? page.params.profile
 									)}
-									class="flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3 hover:bg-card"
+									class="flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3 hover:bg-muted"
 									target="_blank"
 									rel="noopener noreferrer nofollow"
 								>

@@ -7,7 +7,7 @@
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import { Button } from '$ui/button';
-	import * as Popover from '$ui/popover';
+	import * as Tooltip from '$ui/tooltip';
 	import { Crop, CROP_WEIGHT, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
@@ -141,14 +141,14 @@
 					<div class="flex flex-col items-center gap-1 text-center">
 						<p class="text-sm leading-none">Show Pests</p>
 						{#if !pestIncreased}
-							<Popover.Mobile>
+							<Tooltip.Simple side="bottom">
 								{#snippet trigger()}
 									<Switch bind:checked={pestToggle} disabled={true} />
 								{/snippet}
 								<div class="p-2">
 									<p class="text-sm">Pest data not available for this time period.</p>
 								</div>
-							</Popover.Mobile>
+							</Tooltip.Simple>
 						{:else}
 							<Switch bind:checked={pestToggle} />
 						{/if}
@@ -174,17 +174,18 @@
 		</div>
 	</form>
 
+	{#if entries.length === 0}
+		<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
+			<h2 class="text-center text-3xl font-semibold">No Data Found</h2>
+			<h4>Try a different time!</h4>
+			<p>
+				There may be nothing to find if a player has kept their collections API disabled or is new to the
+				website.
+			</p>
+		</div>
+	{/if}
+
 	<div class="flex {fewSelected ? 'flex-col' : 'flex-wrap'} w-full max-w-7xl justify-center">
-		{#if entries.length === 0}
-			<div class="mb-16 flex max-w-lg flex-col items-center justify-center space-y-2 p-4 text-center">
-				<h2 class="text-center text-3xl font-semibold">No Data Found</h2>
-				<h4>Try a different time!</h4>
-				<p>
-					There may be nothing to find if a player has kept their collections API disabled or is new to the
-					website.
-				</p>
-			</div>
-		{/if}
 		{#each entries as { name, crop, data } (crop)}
 			{#if selected(name)}
 				{#if !fewSelected}

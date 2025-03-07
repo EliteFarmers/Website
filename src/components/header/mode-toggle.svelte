@@ -41,24 +41,24 @@
 		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
-		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'light')}>
+		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'light')} class="cursor-pointer">
 			<span class="capitalize">Light</span>
 			{#if currentTheme.theme === 'light'}
 				<Check class="ml-2 h-4 w-4" />
 			{/if}
 		</DropdownMenu.Item>
-		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'dark')}>
+		<DropdownMenu.Item onclick={() => (currentTheme.theme = 'dark')} class="cursor-pointer">
 			<span class="capitalize">Dark</span>
 			{#if currentTheme.theme === 'dark'}
 				<Check class="ml-2 h-4 w-4" />
 			{/if}
 		</DropdownMenu.Item>
-		<DropdownMenu.Item onclick={() => currentTheme.useSystem()}>
+		<DropdownMenu.Item onclick={() => currentTheme.useSystem()} class="cursor-pointer">
 			<span class="text-destructive">Use System Theme</span>
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item>
-			<a href="/profile/settings#themes" class="flex w-full text-muted-foreground"> See More Themes </a>
-		</DropdownMenu.Item>
+		<DropdownMenu.LinkItem href="/profile/settings#themes" class="cursor-pointer">
+			<span class="flex w-full text-muted-foreground"> See More Themes </span>
+		</DropdownMenu.LinkItem>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

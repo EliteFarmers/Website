@@ -10,8 +10,8 @@ import { getCropFromName } from 'farming-weight';
 import type { components } from '$lib/api/api.js';
 
 export interface CustomFormatterOptions {
-	account?: components['schemas']['MinecraftAccountDto'];
-	profile?: components['schemas']['FarmingWeightDto'];
+	account?: Partial<components['schemas']['MinecraftAccountDto']>;
+	profile?: Partial<components['schemas']['FarmingWeightDto']>;
 	badgeUrl?: string;
 	weightRank?: number;
 	data?: WeightStyle;
@@ -413,7 +413,7 @@ function drawStrokedText(ctx: CanvasRenderingContext2D, text: string, element: E
 	};
 }
 
-function getDecalImage(weight: components['schemas']['FarmingWeightDto'], decal?: WeightStyleDecal) {
+function getDecalImage(weight: Partial<components['schemas']['FarmingWeightDto']>, decal?: WeightStyleDecal) {
 	if (!decal?.crops) {
 		return decal?.imageUrl ? loadImage(decal.imageUrl) : null;
 	}

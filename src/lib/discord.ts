@@ -1,5 +1,7 @@
-export function CanEditGuild(guild: Guild) {
-	if (guild.owner) return true;
+import type { components } from './api/api';
+
+export function CanEditGuild(guild: Guild | components['schemas']['GuildMemberDto']) {
+	if ('owner' in guild && guild.owner) return true;
 
 	const perms = BigInt(guild.permissions);
 

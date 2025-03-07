@@ -12,7 +12,7 @@ import {
 	UpdateUserSettings,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
-import { CanEditGuild, type Guild } from '$lib/discord';
+import { CanEditGuild } from '$lib/discord';
 import { IsUUID } from '$params/uuid';
 import { FetchUserSession } from '$lib/api/auth';
 import { FetchDiscordUserData } from '$lib/discordAuth';
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
 
 	return {
-		guildsWithBot: guilds.filter((guild) => guild.hasBot && CanEditGuild(guild as Guild)),
+		guildsWithBot: guilds.filter((guild) => guild.hasBot && CanEditGuild(guild)),
 		guilds: guilds.filter((guild) => !guild.hasBot),
 		publicGuilds: (publicGuilds ?? []).filter((guild) => guilds.some((g) => g.id === guild.id)),
 		premium: 'none' as string,
@@ -64,13 +64,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const { error: msg, response } = await LinkAccount(username, locals.access_token);
+		const { error: problem, response } = await LinkAccount(username, locals.access_token);
+		console.log(response);
 
-		if (!response.ok || msg) {
+		if (!response.ok || problem) {
+			console.log(problem);
 			return fail(response.status, {
-				error:
-					msg ||
-					'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.',
+				error: 'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.',
+				problem: problem,
 			});
 		}
 
@@ -92,11 +93,12 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const { error: msg, response } = await UnlinkAccount(username, locals.access_token);
+		const { error: problem, response } = await UnlinkAccount(username, locals.access_token);
 
-		if (!response.ok || msg) {
+		if (!response.ok || problem) {
 			return fail(response.status, {
-				error: msg || 'Error unlinking account, please try again later.',
+				error: problem?.message || 'Error unlinking account, please try again later.',
+				problem: problem,
 			});
 		}
 

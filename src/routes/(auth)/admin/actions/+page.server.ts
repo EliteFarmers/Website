@@ -45,9 +45,9 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const playerId = data.get('player') as string;
 
-		const { response } = await POST(`/cooldowns/player/{playerId}/reset`, {
+		const { response } = await POST(`/admin/cooldowns/player/{player}`, {
 			params: {
-				path: { playerId },
+				path: { player: playerId },
 			},
 			headers: { Authorization: `Bearer ${token}` },
 		});

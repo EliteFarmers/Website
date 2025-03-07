@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 
 	interface Props {
-		guild: components['schemas']['GuildDetailsDto'] | undefined;
+		guild: Partial<components['schemas']['GuildDetailsDto']> | undefined;
 		size?: keyof typeof sizes;
 		class?: string | undefined | null;
 	}
@@ -27,10 +27,10 @@
 	<div
 		class="{sizes[
 			size
-		]} flex aspect-square select-none items-center justify-center rounded-full bg-black bg-blend-darken {className ??
+		]} flex aspect-square select-none items-center justify-center rounded-full bg-muted bg-blend-darken {className ??
 			''}"
 	>
-		<p class="mb-0.5 leading-none">
+		<p class="mb-0.5 leading-none text-muted-foreground">
 			{guild?.name
 				?.split(' ')
 				.slice(0, 3)

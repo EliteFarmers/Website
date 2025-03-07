@@ -68,7 +68,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
@@ -96,7 +96,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
@@ -124,7 +124,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
@@ -164,7 +164,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
@@ -212,12 +212,10 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
-
-		lb.crops ??= {};
 
 		const keys = {
 			'Sugar Cane': 'sugarCane',
@@ -275,7 +273,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
@@ -329,7 +327,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}
@@ -370,7 +368,7 @@ export const actions: Actions = {
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			throw error(response.status as NumericRange<400, 599>, msg);
 		}

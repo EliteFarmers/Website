@@ -100,11 +100,10 @@ export const actions: Actions = {
 		const uuid = (data.get('account') as string) || undefined;
 		const profile = (data.get('profile') as string) || undefined;
 
-		const { response } = await JoinEvent(eventId, token, uuid, profile);
+		const { response, error: problem } = await JoinEvent(eventId, token, uuid, profile);
 
-		if (response.status !== 200) {
-			const text = await response.text();
-			return fail(response.status, { error: text || 'Unknown error' });
+		if (!response.ok || problem) {
+			return fail(response.status, { error: problem?.message || 'Unknown error', problem });
 		}
 
 		return { success: true };
@@ -131,11 +130,15 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await JoinEventTeam(token, eventId, teamId, code.trim().toUpperCase());
+		const { response: codeResponse, error: problem } = await JoinEventTeam(
+			token,
+			eventId,
+			teamId,
+			code.trim().toUpperCase()
+		);
 
-		if (codeResponse.status !== 200) {
-			const text = await codeResponse.text();
-			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to join team', problem });
 		}
 
 		return { success: true };
@@ -161,16 +164,15 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await CreateEventTeam(token, eventId, {
+		const { response: codeResponse, error: problem } = await CreateEventTeam(token, eventId, {
 			name: teamName
 				.split(' ')
 				.filter((w) => w)
 				.map((w) => w.replace('_', ' ')),
 		});
 
-		if (codeResponse.status !== 200) {
-			const text = await codeResponse.text();
-			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to create team', problem });
 		}
 
 		return { success: true };
@@ -197,16 +199,15 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await UpdateEventTeam(token, eventId, teamId, {
+		const { response: codeResponse, error: problem } = await UpdateEventTeam(token, eventId, teamId, {
 			name: teamName
 				.split(' ')
 				.filter((w) => w)
 				.map((w) => w.replace('_', ' ')),
 		});
 
-		if (codeResponse.status !== 200) {
-			const text = await codeResponse.text();
-			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to update team', problem });
 		}
 
 		return { success: true };
@@ -232,11 +233,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await RegenerateEventTeamCode(token, eventId, teamId);
+		const { response: codeResponse, error: problem } = await RegenerateEventTeamCode(token, eventId, teamId);
 
-		if (codeResponse.status !== 200) {
-			const text = await codeResponse.text();
-			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to change join code', problem });
 		}
 
 		return { success: true };
@@ -255,11 +255,10 @@ export const actions: Actions = {
 			return fail(404, { error: 'Event not found' });
 		}
 
-		const { response } = await LeaveEvent(eventId, token);
+		const { response, error: problem } = await LeaveEvent(eventId, token);
 
-		if (response.status !== 200) {
-			const text = await response.text();
-			return fail(response.status, { error: text || 'Unknown error' });
+		if (!response.ok || problem) {
+			return fail(response.status, { error: 'Failed to leave event', problem });
 		}
 
 		throw redirect(307, `/event/${eventParam}`);
@@ -285,11 +284,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await LeaveEventTeam(token, eventId, teamId);
+		const { response: codeResponse, error: problem } = await LeaveEventTeam(token, eventId, teamId);
 
-		if (codeResponse.status !== 200) {
-			const text = await codeResponse.text();
-			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to leave team', problem });
 		}
 
 		return { success: true };
@@ -316,15 +314,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse } = await KickEventTeamMember(token, {
+		const { response: codeResponse, error: problem } = await KickEventTeamMember(token, {
 			eventId,
 			teamId,
 			playerUuid: memberUuid,
 		});
 
-		if (codeResponse.status !== 200) {
-			const text = await codeResponse.text();
-			return fail(codeResponse.status, { error: text || 'Unknown error' });
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to kick team member', problem });
 		}
 
 		return { success: true };

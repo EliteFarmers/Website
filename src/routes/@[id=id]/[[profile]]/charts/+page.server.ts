@@ -40,7 +40,7 @@ export const actions: Actions = {
 			})
 		);
 
-		if (response && response.status !== 200) {
+		if (response && !response.ok) {
 			console.log(response.statusText);
 		}
 

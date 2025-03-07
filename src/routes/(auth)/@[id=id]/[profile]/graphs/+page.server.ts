@@ -43,7 +43,7 @@ export const load = (async ({ params, parent, locals }) => {
 		14
 	).catch(() => ({ data: undefined, response: undefined }));
 
-	if (response && response.status !== 200) {
+	if (response && !response.ok) {
 		console.log(response.statusText);
 	}
 
@@ -87,7 +87,7 @@ export const actions: Actions = {
 				+days
 			).catch(() => ({ data: undefined, response: undefined }));
 
-			if (response && response.status !== 200) {
+			if (response && !response.ok) {
 				console.log(response.statusText);
 			}
 
@@ -104,7 +104,7 @@ export const actions: Actions = {
 			days as unknown as number
 		).catch(() => ({ data: undefined, response: undefined }));
 
-		if (response && response.status !== 200) {
+		if (response && !response.ok) {
 			console.log(response.statusText);
 		}
 

@@ -38,7 +38,7 @@ export const actions: Actions = {
 
 		const { response } = await SetGuildInvite(guildId, token, invite);
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = (await response.text()) || 'Missing permissions to set invite! (admin only)';
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
@@ -64,7 +64,7 @@ export const actions: Actions = {
 
 		const { response } = await SetGuildAdminRole(guildId, token, role);
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = (await response.text()) || 'Missing permissions to set admin role! (admin only)';
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
@@ -88,11 +88,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'guildId is required' });
 		}
 
-		const { response } = await SetGuildPublic(guildId, token, enable);
+		const { response, error: e } = await SetGuildPublic(guildId, token, enable);
 
-		if (response.status !== 200) {
-			const msg = await response.text();
-			return fail(response.status as NumericRange<400, 499>, { error: msg });
+		if (!response.ok || e) {
+			return fail(400, { error: e?.message ?? 'Failed to update guild visibility' });
 		}
 
 		return {
@@ -121,7 +120,7 @@ export const actions: Actions = {
 
 		const { response } = await EnableGuildLeaderboards(guildId, token, +max, enable);
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
@@ -152,7 +151,7 @@ export const actions: Actions = {
 
 		const { response } = await EnableGuildEvents(guildId, token, +max, enable);
 
-		if (response.status !== 200) {
+		if (!response.ok) {
 			const msg = await response.text();
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}

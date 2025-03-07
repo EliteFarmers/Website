@@ -15,6 +15,9 @@
 	import Content from './content.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import { Toaster } from '$ui/sonner';
+	import { watch } from 'runed';
+	import { toast } from 'svelte-sonner';
+	import type { components } from '$lib/api/api';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -29,6 +32,38 @@
 	initShowLeaderboardName();
 	initBreadcrumb();
 	initSidebarNav();
+
+	watch(
+		() => page.form,
+		() => {
+			if (!page.form) return;
+
+			if (page.form?.success) {
+				toast.success('Success!', {
+					duration: 5000,
+					class: 'text-success',
+				});
+				return;
+			}
+
+			let problem = page.form.problem as components['schemas']['ErrorResponse'] | undefined;
+			if (problem) {
+				toast.error(Object.values(problem.errors).join('\n') || problem.message, {
+					duration: 5000,
+					class: 'text-destructive',
+				});
+				return;
+			}
+
+			if (page.form?.error) {
+				toast.error(page.form.error as string, {
+					duration: 5000,
+					class: 'text-destructive',
+				});
+				return;
+			}
+		}
+	);
 </script>
 
 <svelte:head>

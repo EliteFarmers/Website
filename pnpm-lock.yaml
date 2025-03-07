@@ -120,8 +120,8 @@ importers:
         specifier: ^0.6.9
         version: 0.6.10(prettier-plugin-svelte@3.3.3(prettier@3.4.2)(svelte@5.19.2))(prettier@3.4.2)
       runed:
-        specifier: ^0.23.1
-        version: 0.23.1(svelte@5.19.2)
+        specifier: ^0.23.4
+        version: 0.23.4(svelte@5.19.2)
       svelte:
         specifier: ^5.1.13
         version: 5.19.2
@@ -1849,8 +1849,8 @@ packages:
     peerDependencies:
       svelte: ^5.7.0
 
-  runed@0.23.1:
-    resolution: {integrity: sha512-h1ZDmin0LBoSMEZxvHOJbCWsUBz4099cjI+/rQ4FZystgOq294s5Rh+OEeu9HIObc8XQQEya23eAhJeal0VBuA==}
+  runed@0.23.4:
+    resolution: {integrity: sha512-9q8oUiBYeXIDLWNK5DfCWlkL0EW3oGbk845VdKlPeia28l751VpfesaB/+7pI6rnbx1I6rqoZ2fZxptOJLxILA==}
     peerDependencies:
       svelte: ^5.7.0
 
@@ -3911,7 +3911,7 @@ snapshots:
       esm-env: 1.2.2
       svelte: 5.19.2
 
-  runed@0.23.1(svelte@5.19.2):
+  runed@0.23.4(svelte@5.19.2):
     dependencies:
       esm-env: 1.2.2
       svelte: 5.19.2

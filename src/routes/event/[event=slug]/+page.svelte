@@ -85,7 +85,7 @@
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 
 <HeroBanner src={banner} class="h-96">
-	<div class="mb-6 mt-32 flex flex-row items-center gap-4 rounded-lg bg-zinc-900/75 p-4">
+	<div class="mb-6 mt-32 flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
 			{data.event?.name}
