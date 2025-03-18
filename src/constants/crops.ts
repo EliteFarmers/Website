@@ -56,6 +56,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Mushroom',
 		npc: 10,
 		drops: 1,
+		exportable: true,
 		startingTool: 'FUNGI_CUTTER',
 	},
 	[Crop.NetherWart]: {
