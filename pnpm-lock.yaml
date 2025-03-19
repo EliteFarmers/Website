@@ -11,6 +11,9 @@ importers:
       '@internationalized/date':
         specifier: ^3.6.0
         version: 3.7.0
+      '@lucide/svelte':
+        specifier: ^0.483.0
+        version: 0.483.0(svelte@5.23.2)
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -483,6 +486,11 @@ packages:
 
   '@layerstack/utils@1.0.0':
     resolution: {integrity: sha512-kIH8lo4MEzPGtdxQRacy8RsSVhMQwe62ckuev62xQDE5QcUJ4wB9EMaRWaQK8CfEOpUERGPgkMPMbMqPhdp0gw==}
+
+  '@lucide/svelte@0.483.0':
+    resolution: {integrity: sha512-b3SbhMIgVJAj/rPa3go6uplTzaFkJzz91TSPO8I8gc2evtHOA2OgSmPYz0S+yEKFIWqLUZ4gika19ljV+tnmyQ==}
+    peerDependencies:
+      svelte: ^5
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2691,6 +2699,10 @@ snapshots:
       d3-array: 3.2.4
       date-fns: 4.1.0
       lodash-es: 4.17.21
+
+  '@lucide/svelte@0.483.0(svelte@5.23.2)':
+    dependencies:
+      svelte: 5.23.2
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
