@@ -40,7 +40,7 @@ class SidebarState {
 		this.props = props;
 
 		$effect.pre(() => {
-			this.setOpen(this.persisted.current);
+			props.setOpen(this.persisted.current);
 		});
 	}
 

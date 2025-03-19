@@ -162,6 +162,8 @@
 						>View Full Leaderboard
 					</Button>
 				</div>
+			{:catch error}
+				<p>{error.message}</p>
 			{/await}
 		</div>
 	</section>

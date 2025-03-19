@@ -17,7 +17,7 @@
 		orientation?: 'vertical' | 'horizontal' | 'both' | undefined;
 		scrollbarXClasses?: string | undefined;
 		scrollbarYClasses?: string | undefined;
-		viewRef?: ScrollAreaPrimitive.Viewport['$$prop_def']['ref'];
+		viewRef?: ScrollAreaPrimitive.ViewportProps['ref'];
 		viewClass?: string | undefined;
 	} = $props();
 </script>
