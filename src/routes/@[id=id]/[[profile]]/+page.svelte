@@ -20,7 +20,7 @@
 	const profile = $derived(ctx.selectedProfile);
 	const uuid = $derived(ctx.uuid);
 	const ign = $derived(ctx.ign);
-	const weightRank = $derived(ctx.ranks?.misc?.farmingweight ?? -1);
+	const weightRank = $derived(ctx.ranks?.farmingweight?.rank ?? -1);
 
 	let farmingXp = $derived(
 		getLevelProgress(
@@ -42,16 +42,16 @@
 		`🌾 Farming Weight - ${weightStr}` +
 			`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
 			`📜 Farming Level - ${farmingXp.level}` +
-			`${(ctx.ranks?.skills?.farming ?? -1) > 0 ? ` (#${ctx.ranks?.skills?.farming?.toLocaleString()})` : ''}\n` +
+			`${(ctx.ranks?.farming?.rank ?? -1) > 0 ? ` (#${ctx.ranks?.farming?.rank?.toLocaleString()})` : ''}\n` +
 			`⠀⤷ ${(member?.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
 			`\n⭐ Skyblock Level - ${(member?.skyblockXp ?? 0) / 100}` +
 			`${
-				(ctx.ranks?.misc?.skyblockxp ?? -1) > 0 ? ` (#${ctx.ranks?.misc?.skyblockxp?.toLocaleString()})` : ''
+				(ctx.ranks?.skyblockxp?.rank ?? -1) > 0 ? ` (#${ctx.ranks?.skyblockxp?.rank?.toLocaleString()})` : ''
 			}\n\n` +
 			(topCollections
 				.map((c) => {
 					const crop = getCropFromName(c.key) ?? Crop.Wheat;
-					const rank = ctx.ranks?.collections?.[c.key] ?? -1;
+					const rank = ctx.ranks?.[c.key]?.rank ?? -1;
 
 					return (
 						`${CROP_UNICODE_EMOJIS[crop]} ${getCropDisplayName(crop)} - ${c.value.toLocaleString()}` +

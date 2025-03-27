@@ -11,6 +11,7 @@
 	import { watch } from 'runed';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
+	import type { components } from '$lib/api/api';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -19,13 +20,7 @@
 		selectedProfile: data.profile,
 		profiles: data.profiles,
 		member: data.member,
-		ranks: data.ranks ?? {
-			misc: {},
-			collections: {},
-			pests: {},
-			skills: {},
-			profile: {},
-		},
+		ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
 	});
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
@@ -38,13 +33,7 @@
 				selectedProfile: data.profile,
 				profiles: data.profiles,
 				member: data.member,
-				ranks: data.ranks ?? {
-					misc: {},
-					collections: {},
-					pests: {},
-					skills: {},
-					profile: {},
-				},
+				ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
 			});
 
 			if (!browser) return;

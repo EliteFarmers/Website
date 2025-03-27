@@ -26,7 +26,7 @@
 	const accepted = $derived(garden.completedVisitors ?? 0);
 	const rejected = $derived(totalVisits - accepted);
 	const rate = $derived(((accepted / totalVisits) * 100).toFixed(2));
-	const ranks = $derived(ctx.ranks?.profile ?? {});
+	const ranks = $derived(ctx.ranks);
 
 	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
 
@@ -49,7 +49,7 @@
 
 <div class="flex w-full flex-col items-center justify-center gap-8">
 	<section class="flex w-full flex-row items-center justify-center gap-4 px-2">
-		<Skillbar name="Garden" progress={getGardenLevel(garden.experience ?? 0, overflow)} rank={ranks.garden} />
+		<Skillbar name="Garden" progress={getGardenLevel(garden.experience ?? 0, overflow)} rank={ranks.garden?.rank} />
 	</section>
 
 	<section class="flex w-full justify-center align-middle">
@@ -100,7 +100,7 @@
 							Total Visits • <span class="font-semibold">{totalVisits.toLocaleString()}</span>
 						</div>
 						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
-							{#if ranks['visitors-accepted'] > 0}
+							{#if ranks['visitors-accepted']?.rank > 0}
 								<a
 									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params.profile}"
 									class="rounded-md bg-card px-1.5 hover:bg-muted"

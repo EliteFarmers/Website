@@ -5,8 +5,8 @@
 	const ctx = getStatsContext();
 
 	const jacob = $derived(ctx.member.jacob);
-	const participationsRank = $derived(ctx.ranks?.misc?.participations ?? -1);
-	const firstPlacesRank = $derived(ctx.ranks?.misc?.firstplace ?? -1);
+	const participationsRank = $derived(ctx.ranks?.participations?.rank ?? -1);
+	const firstPlacesRank = $derived(ctx.ranks?.firstplace?.rank ?? -1);
 
 	let firstPlaces = $derived(jacob?.firstPlaceScores ?? 0);
 

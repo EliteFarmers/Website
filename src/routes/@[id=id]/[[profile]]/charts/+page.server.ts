@@ -33,20 +33,24 @@ export const actions: Actions = {
 			return fail(400);
 		}
 
-		const { data: collectionGraph, response } = await GetCropCollectionPoints(uuid, profile, start, daysNum).catch(
-			() => ({
-				data: undefined,
-				response: undefined,
-			})
-		);
+		try {
+			const {
+				data: collectionGraph,
+				error: e,
+				response,
+			} = await GetCropCollectionPoints(uuid, profile, start, daysNum);
 
-		if (response && !response.ok) {
-			console.log(response.statusText);
+			if (!response?.ok || e) {
+				return fail(response?.status ?? 500, { error: e ?? 'Failed to fetch data.' });
+			}
+
+			return {
+				weight: preprocessWeightChart(collectionGraph ?? []),
+				graph: preprocessCropCharts(collectionGraph ?? []),
+			};
+		} catch (e) {
+			console.error(e);
+			return fail(500);
 		}
-
-		return {
-			weight: preprocessWeightChart(collectionGraph ?? []),
-			graph: preprocessCropCharts(collectionGraph ?? []),
-		};
 	},
 };
