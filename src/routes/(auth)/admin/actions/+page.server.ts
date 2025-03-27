@@ -45,7 +45,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const playerId = data.get('player') as string;
 
-		const { response } = await POST(`/admin/cooldowns/player/{player}`, {
+		const { response, error: e } = await POST(`/admin/cooldowns/player/{player}`, {
 			params: {
 				path: { player: playerId },
 			},
@@ -53,7 +53,7 @@ export const actions: Actions = {
 		});
 
 		if (!response.ok) {
-			return fail(500, { error: 'Failed to reset cooldowns' });
+			return fail(500, { error: e || 'Failed to reset cooldowns' });
 		}
 
 		return {

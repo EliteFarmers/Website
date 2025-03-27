@@ -1822,7 +1822,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Leaderboard */
-        get: operations["EliteAPIFeaturesLeaderboardsGetLeaderboardGetLeaderboardEndpoint"];
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetLeaderboardGetLeaderboardEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1839,7 +1839,24 @@ export interface paths {
             cookie?: never;
         };
         /** Get leaderboards */
-        get: operations["EliteAPIFeaturesLeaderboardsGetLeaderboardsGetLeaderboardsEndpoint"];
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetLeaderboardsGetLeaderboardsEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leaderboards/{playerUuid}/{profileUuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a Player's Leaderboard Ranks */
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetPlayerLeaderboardRanksGetPlayerLeaderboardRanksEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1856,7 +1873,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get a Player's Leaderboard Rank */
-        get: operations["EliteAPIFeaturesLeaderboardsGetPlayerRankGetPlayerRankEndpoint"];
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1872,8 +1889,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get a Player's Leaderboard Ranks */
-        get: operations["EliteAPIFeaturesLeaderboardsGetPlayerRanksGetPlayerRanksEndpoint"];
+        /**
+         * Get a Player's Leaderboard Ranks
+         * @deprecated
+         */
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRanksGetPlayerRanksEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1890,7 +1910,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get a Profiles's Leaderboard Rank */
-        get: operations["EliteAPIFeaturesLeaderboardsGetProfileRankGetProfileRankEndpoint"];
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3619,6 +3639,7 @@ export interface components {
         LeaderboardDto: {
             id: string;
             title: string;
+            shortTitle?: string | null;
             /** Format: int32 */
             limit: number;
             /** Format: int32 */
@@ -3666,34 +3687,47 @@ export interface components {
             xp: number;
         };
         LeaderboardSliceRequest: Record<string, never>;
-        ConfigLeaderboardSettings: {
-            /** Format: int32 */
-            completeRefreshInterval: number;
+        LeaderboardsResponse: {
             leaderboards: {
-                [key: string]: components["schemas"]["Leaderboard"];
-            };
-            collectionLeaderboards: {
-                [key: string]: components["schemas"]["Leaderboard"];
-            };
-            skillLeaderboards: {
-                [key: string]: components["schemas"]["Leaderboard"];
-            };
-            pestLeaderboards: {
-                [key: string]: components["schemas"]["Leaderboard"];
-            };
-            profileLeaderboards: {
-                [key: string]: components["schemas"]["Leaderboard"];
+                [key: string]: components["schemas"]["LeaderboardInfoDto"];
             };
         };
-        Leaderboard: {
-            id: string;
+        LeaderboardInfoDto: {
+            /** @description Leaderboard title */
             title: string;
-            /** Format: int32 */
-            limit: number;
-            order: string;
-            /** Format: int32 */
-            scoreFormat: number;
+            /** @description Leaderboard short title */
+            short?: string | null;
+            /** @description Leaderboard category */
+            category: string;
+            /** @description If true, the leaderboard is profile based */
             profile: boolean;
+            /** @description Interval type of the leaderboard */
+            intervalType: components["schemas"]["LeaderboardType"];
+            /** @description Score data type of the leaderboard */
+            scoreDataType: components["schemas"]["LeaderboardScoreDataType"];
+        };
+        /** @enum {integer} */
+        LeaderboardType: 0 | 1 | 2;
+        /** @enum {integer} */
+        LeaderboardScoreDataType: 0 | 1 | 2;
+        LeaderboardRanksResponse: {
+            ranks: {
+                [key: string]: components["schemas"]["PlayerLeaderboardEntryWithRankDto"];
+            };
+        };
+        PlayerLeaderboardEntryWithRankDto: {
+            title: string;
+            short?: string | null;
+            slug: string;
+            profile?: boolean | null;
+            /** Format: int32 */
+            rank: number;
+            intervalIdentifier?: string | null;
+            /** Format: double */
+            amount: number;
+            /** Format: double */
+            initialAmount: number;
+            type: components["schemas"]["LeaderboardScoreDataType"];
         };
         LeaderboardPositionDto: {
             /** Format: int32 */
@@ -3755,6 +3789,7 @@ export interface components {
             skills: components["schemas"]["SkillsDto"];
             chocolateFactory: components["schemas"]["ChocolateFactoryDto"];
             events: components["schemas"]["ProfileEventMemberDto"][];
+            leaderboards: components["schemas"]["PlayerLeaderboardEntryWithRankDto"][];
             isSelected: boolean;
             wasRemoved: boolean;
             /** Format: int64 */
@@ -8753,11 +8788,13 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsGetLeaderboardGetLeaderboardEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetLeaderboardGetLeaderboardEndpoint: {
         parameters: {
             query?: {
                 offset?: number | null;
                 limit?: number;
+                /** @description Use new leaderboard backend (will be default in the future) */
+                new?: boolean | null;
             };
             header?: never;
             path: {
@@ -8788,7 +8825,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsGetLeaderboardsGetLeaderboardsEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetLeaderboardsGetLeaderboardsEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -8803,12 +8840,44 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ConfigLeaderboardSettings"];
+                    "application/json": components["schemas"]["LeaderboardsResponse"];
                 };
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsGetPlayerRankGetPlayerRankEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetPlayerLeaderboardRanksGetPlayerLeaderboardRanksEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                playerUuid: string;
+                profileUuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeaderboardRanksResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint: {
         parameters: {
             query?: {
                 /** @description Include upcoming players */
@@ -8847,7 +8916,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsGetPlayerRanksGetPlayerRanksEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRanksGetPlayerRanksEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -8879,7 +8948,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsGetProfileRankGetProfileRankEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint: {
         parameters: {
             query?: {
                 /** @description Include upcoming players */

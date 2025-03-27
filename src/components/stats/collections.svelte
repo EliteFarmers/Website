@@ -27,7 +27,7 @@
 	>
 	<div class="flex w-full flex-col gap-2">
 		{#each list as item}
-			<CollectionBar {...item} rank={ranks.collections?.[item.key]} pestRank={ranks.pests?.[item.pest]} />
+			<CollectionBar {...item} rank={ranks?.[item.key]?.rank} pestRank={ranks?.[item.pest]?.rank} />
 		{/each}
 	</div>
 </div>

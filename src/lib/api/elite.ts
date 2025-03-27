@@ -128,7 +128,7 @@ export const GetSelectedProfileMember = async (playerUuid: string) =>
 	});
 
 export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
-	await GET('/leaderboard/ranks/{playerUuid}/{profileUuid}', {
+	await GET('/leaderboards/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
@@ -428,6 +428,7 @@ export const GetLeaderboardSlice = async (leaderboardId: string, offset: number,
 			query: {
 				offset: offset,
 				limit: limit,
+				new: true,
 			},
 		},
 	});

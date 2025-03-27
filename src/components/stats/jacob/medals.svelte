@@ -4,7 +4,7 @@
 
 	const ctx = getStatsContext();
 	const jacob = $derived(ctx.member.jacob);
-	const ranks = $derived(ctx.ranks?.misc ?? {});
+	const ranks = $derived(ctx.ranks);
 
 	let medals = $derived({
 		gold: jacob.medals?.gold ?? 0,
@@ -26,7 +26,7 @@
 	<div class="flex w-full flex-wrap justify-evenly gap-2 md:flex-row md:gap-4">
 		{#each earnedMedals.slice(0, 2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
-				{#if ranks[medal + 'medals'] > -1}
+				{#if ranks[medal + 'medals']?.rank > -1}
 					<a
 						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
 						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
@@ -58,7 +58,7 @@
 	<div class="my-4 flex w-full flex-wrap justify-evenly gap-2 md:flex-row md:gap-4">
 		{#each earnedMedals.slice(2) as [medal, count] (medal)}
 			<div class="flex-1 basis-48">
-				{#if ranks[medal + 'medals'] > -1}
+				{#if ranks[medal + 'medals']?.rank > -1}
 					<a
 						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
 						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"

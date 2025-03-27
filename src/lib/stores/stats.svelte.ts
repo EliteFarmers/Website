@@ -11,7 +11,7 @@ export class PlayerStats {
 	#selectedProfile = $state<components['schemas']['ProfileDetailsDto']>();
 	#profiles = $state<ProfileDetails[]>();
 	#member = $state<NonNullable<components['schemas']['ProfileMemberDto']>>(null!);
-	#ranks = $state<components['schemas']['LeaderboardPositionsDto']>(null!);
+	#ranks = $state<components['schemas']['LeaderboardRanksResponse']>(null!);
 	#collections = $state<Collection[]>([]);
 
 	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
@@ -33,7 +33,7 @@ export class PlayerStats {
 		selectedProfile: components['schemas']['ProfileDetailsDto'];
 		profiles: ProfileDetails[];
 		member: NonNullable<components['schemas']['ProfileMemberDto']>;
-		ranks: components['schemas']['LeaderboardPositionsDto'];
+		ranks: components['schemas']['LeaderboardRanksResponse'];
 	}) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
@@ -97,7 +97,7 @@ export class PlayerStats {
 	}
 
 	get ranks() {
-		return this.#ranks;
+		return this.#ranks?.ranks ?? {};
 	}
 
 	get collections() {

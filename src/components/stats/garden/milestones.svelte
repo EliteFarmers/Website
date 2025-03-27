@@ -6,7 +6,7 @@
 
 	interface Props {
 		garden?: components['schemas']['GardenDto'] | undefined;
-		ranks?: components['schemas']['LeaderboardPositionsDto']['profile'] | undefined;
+		ranks?: components['schemas']['LeaderboardRanksResponse']['ranks'] | undefined;
 		overflow?: boolean;
 	}
 
@@ -62,7 +62,7 @@
 	<div class="flex w-full flex-col gap-2">
 		{#each list as [crop, leveling] (crop)}
 			{@const key = getCropKey(crop)}
-			<MilestoneBar {crop} {leveling} {key} rank={ranks?.[key + '-milestone']} />
+			<MilestoneBar {crop} {leveling} {key} rank={ranks?.[key + '-milestone']?.rank} />
 		{/each}
 	</div>
 </div>

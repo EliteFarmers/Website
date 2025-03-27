@@ -5,7 +5,7 @@
 
 	const ctx = getStatsContext();
 	const xp = $derived(ctx.member.skyblockXp ?? 0);
-	const rank = $derived(ctx.ranks?.misc?.skyblockxp ?? -1);
+	const rank = $derived(ctx.ranks?.skyblockxp?.rank ?? -1);
 
 	let [, color] = $derived(Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? []);
 </script>
