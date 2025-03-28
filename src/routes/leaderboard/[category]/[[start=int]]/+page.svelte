@@ -71,7 +71,7 @@
 	<h1 class="mb-16 mt-8 max-w-md self-center text-center text-4xl">{title}</h1>
 	<div class="flex w-full justify-center gap-4 text-center">
 		<Pagination.Root
-			count={data.lb.maxEntries ?? 1000}
+			count={10_000}
 			perPage={20}
 			bind:page={initialPage}
 			onPageChange={(newPage) => {

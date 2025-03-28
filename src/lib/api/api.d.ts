@@ -1873,7 +1873,24 @@ export interface paths {
             cookie?: never;
         };
         /** Get a Player's Leaderboard Rank */
-        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint"];
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leaderboard/{leaderboard}/{playerUuid}/{profileUuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a Player's Leaderboard Rank */
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint2"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1910,7 +1927,24 @@ export interface paths {
             cookie?: never;
         };
         /** Get a Profiles's Leaderboard Rank */
-        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint"];
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/leaderboard/{leaderboard}/{profileUuid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a Profiles's Leaderboard Rank */
+        get: operations["EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint2"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1961,7 +1995,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get All Profile Details */
-        get: operations["EliteAPIFeaturesProfileGetAllProfileDetailsGetAllProfileDetailsEndpoint"];
+        get: operations["EliteAPIFeaturesProfilesEndpointsGetAllProfileDetailsGetAllProfileDetailsEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1978,7 +2012,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Profile Member */
-        get: operations["EliteAPIFeaturesProfileGetProfileGetProfileEndpoint"];
+        get: operations["EliteAPIFeaturesProfilesEndpointsGetProfileGetProfileEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1995,7 +2029,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Profile Details */
-        get: operations["EliteAPIFeaturesProfileGetProfileDetailsGetProfileDetailsEndpoint"];
+        get: operations["EliteAPIFeaturesProfilesEndpointsGetProfileDetailsGetProfileDetailsEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2012,7 +2046,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get names of a player's profiles */
-        get: operations["EliteAPIFeaturesProfileGetProfileNamesGetProfileNamesEndpoint"];
+        get: operations["EliteAPIFeaturesProfilesEndpointsGetProfileNamesGetProfileNamesEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2029,7 +2063,7 @@ export interface paths {
             cookie?: never;
         };
         /** Get Profile Member */
-        get: operations["EliteAPIFeaturesProfileGetSelectedProfileGetSelectedProfileEndpoint"];
+        get: operations["EliteAPIFeaturesProfilesEndpointsGetSelectedProfileGetSelectedProfileEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2584,20 +2618,14 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
-        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
-             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /**
-             * @description the message for the error response
-             * @default One or more errors occurred!
-             */
+            /** @default One or more errors occurred! */
             message: string;
-            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3646,6 +3674,15 @@ export interface components {
             offset: number;
             /** Format: int32 */
             maxEntries: number;
+            /**
+             * Format: decimal
+             * @description The minimum score required to be on the leaderboard
+             */
+            minimumScore: number;
+            /** Format: int64 */
+            startsAt: number;
+            /** Format: int64 */
+            endsAt: number;
             profile: boolean;
             entries: components["schemas"]["LeaderboardEntryDto"][];
         };
@@ -3675,6 +3712,12 @@ export interface components {
              * @description Score of the entry
              */
             amount: number;
+            removed: boolean;
+            /**
+             * Format: double
+             * @description Initial score of the entry
+             */
+            initialAmount: number;
             members?: components["schemas"]["ProfileLeaderboardMemberDto"][] | null;
         };
         ProfileLeaderboardMemberDto: {
@@ -3701,6 +3744,11 @@ export interface components {
             category: string;
             /** @description If true, the leaderboard is profile based */
             profile: boolean;
+            /**
+             * Format: decimal
+             * @description Minimum score required to be on the leaderboard
+             */
+            minimumScore: number;
             /** @description Interval type of the leaderboard */
             intervalType: components["schemas"]["LeaderboardType"];
             /** @description Score data type of the leaderboard */
@@ -3729,6 +3777,7 @@ export interface components {
             initialAmount: number;
             type: components["schemas"]["LeaderboardScoreDataType"];
         };
+        LeaderboardRanksRequest: Record<string, never>;
         LeaderboardPositionDto: {
             /** Format: int32 */
             rank: number;
@@ -3789,7 +3838,6 @@ export interface components {
             skills: components["schemas"]["SkillsDto"];
             chocolateFactory: components["schemas"]["ChocolateFactoryDto"];
             events: components["schemas"]["ProfileEventMemberDto"][];
-            leaderboards: components["schemas"]["PlayerLeaderboardEntryWithRankDto"][];
             isSelected: boolean;
             wasRemoved: boolean;
             /** Format: int64 */
@@ -8847,7 +8895,10 @@ export interface operations {
     };
     EliteAPIFeaturesLeaderboardsEndpointsGetPlayerLeaderboardRanksGetPlayerLeaderboardRanksEndpoint: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Maximum rank number to return. Used if you don't want ranks higher than a certain number. */
+                max?: number | null;
+            };
             header?: never;
             path: {
                 playerUuid: string;
@@ -8866,6 +8917,40 @@ export interface operations {
                     "application/json": components["schemas"]["LeaderboardRanksResponse"];
                 };
             };
+        };
+    };
+    EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint1: {
+        parameters: {
+            query?: {
+                /** @description Include upcoming players */
+                includeUpcoming?: boolean | null;
+                /** @description Amount of upcoming players to include (max 100). Only works with new leaderboard backend */
+                upcoming?: number | null;
+                /** @description Start at a specified rank for upcoming players */
+                atRank?: number | null;
+                /** @description Use new leaderboard backend (will be default in the future) */
+                new?: boolean | null;
+            };
+            header?: never;
+            path: {
+                /** @description Id of leaderboard */
+                leaderboard: string;
+                playerUuid: string;
+                profileUuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeaderboardPositionDto"];
+                };
+            };
             /** @description Bad Request */
             400: {
                 headers: {
@@ -8877,17 +8962,16 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetPlayerRankGetPlayerRankEndpoint2: {
         parameters: {
             query?: {
-                /** @description Include upcoming players */
                 includeUpcoming?: boolean | null;
-                /** @description Start at a specified rank for upcoming players */
+                upcoming?: number | null;
                 atRank?: number | null;
+                new?: boolean | null;
             };
             header?: never;
             path: {
-                /** @description Id of leaderboard */
                 leaderboard: string;
                 playerUuid: string;
                 profileUuid: string;
@@ -8948,17 +9032,58 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint: {
+    EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint1: {
         parameters: {
             query?: {
                 /** @description Include upcoming players */
                 includeUpcoming?: boolean | null;
+                /** @description Amount of upcoming players to include (max 100). Only works with new leaderboard backend */
+                upcoming?: number | null;
                 /** @description Start at a specified rank for upcoming players */
                 atRank?: number | null;
+                /** @description Use new leaderboard backend (will be default in the future) */
+                new?: boolean | null;
             };
             header?: never;
             path: {
                 /** @description Id of leaderboard */
+                leaderboard: string;
+                profileUuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeaderboardPositionDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesLeaderboardsEndpointsGetProfileRankGetProfileRankEndpoint2: {
+        parameters: {
+            query?: {
+                includeUpcoming?: boolean | null;
+                upcoming?: number | null;
+                atRank?: number | null;
+                new?: boolean | null;
+            };
+            header?: never;
+            path: {
                 leaderboard: string;
                 profileUuid: string;
             };
@@ -9062,7 +9187,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesProfileGetAllProfileDetailsGetAllProfileDetailsEndpoint: {
+    EliteAPIFeaturesProfilesEndpointsGetAllProfileDetailsGetAllProfileDetailsEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -9093,7 +9218,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesProfileGetProfileGetProfileEndpoint: {
+    EliteAPIFeaturesProfilesEndpointsGetProfileGetProfileEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -9132,7 +9257,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesProfileGetProfileDetailsGetProfileDetailsEndpoint: {
+    EliteAPIFeaturesProfilesEndpointsGetProfileDetailsGetProfileDetailsEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -9170,7 +9295,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesProfileGetProfileNamesGetProfileNamesEndpoint: {
+    EliteAPIFeaturesProfilesEndpointsGetProfileNamesGetProfileNamesEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -9201,7 +9326,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesProfileGetSelectedProfileGetSelectedProfileEndpoint: {
+    EliteAPIFeaturesProfilesEndpointsGetSelectedProfileGetSelectedProfileEndpoint: {
         parameters: {
             query?: never;
             header?: never;

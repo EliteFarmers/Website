@@ -127,12 +127,15 @@ export const GetSelectedProfileMember = async (playerUuid: string) =>
 		},
 	});
 
-export const GetPlayerRanks = async (playerUuid: string, profileUuid: string) =>
+export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, max?: number) =>
 	await GET('/leaderboards/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				playerUuid,
 				profileUuid,
+			},
+			query: {
+				max: max,
 			},
 		},
 	});
@@ -439,7 +442,7 @@ export const GetPlayersRank = async (
 	profileUuid: string,
 	upcoming = false
 ) =>
-	await GET('/leaderboard/rank/{leaderboard}/{playerUuid}/{profileUuid}', {
+	await GET('/leaderboard/{leaderboard}/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
 				leaderboard: leaderboardId,
@@ -448,12 +451,13 @@ export const GetPlayersRank = async (
 			},
 			query: {
 				includeUpcoming: upcoming,
+				new: true,
 			},
 		},
 	});
 
 export const GetProfilesRank = async (leaderboardId: string, profileUuid: string, upcoming = false) =>
-	await GET('/leaderboard/rank/{leaderboard}/{profileUuid}', {
+	await GET('/leaderboard/{leaderboard}/{profileUuid}', {
 		params: {
 			path: {
 				leaderboard: leaderboardId,
@@ -461,6 +465,7 @@ export const GetProfilesRank = async (leaderboardId: string, profileUuid: string
 			},
 			query: {
 				includeUpcoming: upcoming,
+				new: true,
 			},
 		},
 	});
