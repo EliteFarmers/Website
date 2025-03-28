@@ -151,7 +151,11 @@
 					</p>
 				</div>
 				<div class="flex flex-row items-center justify-between gap-2 pb-0.5 md:pb-0">
-					<p class="text-normal whitespace-nowrap pl-1 sm:text-lg md:text-xl lg:text-2xl">
+					<p
+						class="text-normal whitespace-nowrap {pestRank > 0
+							? 'pl-1'
+							: ''} sm:text-lg md:text-xl lg:text-2xl"
+					>
 						{value.toLocaleString()}
 					</p>
 					<div class="flex flex-row items-center gap-2">

@@ -37,7 +37,7 @@
 
 						<span class="rounded-md bg-card px-1 py-0.5">
 							<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
-								>{ranks[medal + 'medals']}</span
+								>{ranks[medal + 'medals']?.rank}</span
 							>
 						</span>
 					</a>
@@ -72,7 +72,7 @@
 
 						<span class="rounded-md bg-card px-1 py-0.5">
 							<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
-								>{ranks[medal + 'medals']}</span
+								>{ranks[medal + 'medals']?.rank}</span
 							>
 						</span>
 					</a>

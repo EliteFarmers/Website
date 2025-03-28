@@ -106,7 +106,7 @@
 									class="rounded-md bg-card px-1.5 hover:bg-muted"
 								>
 									<span class="text-sm">#</span><span class="text-md"
-										>{ranks['visitors-accepted']}</span
+										>{ranks['visitors-accepted']?.rank}</span
 									>
 								</a> •
 							{/if}
