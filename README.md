@@ -15,15 +15,15 @@ Note that this website requires the backend API to be running as well. You can f
 
 2. Create a **copy** of `.env.example`, rename it to `.env` and fill out all the fields with the relevant values. The provided default values should work fine, but you will need to change them if you're running an instance of the API.
 
-4. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
+3. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
 
-5. Run the website in dev mode with the following:
+4. Run the website in dev mode with the following:
 
     ```
     pnpm run dev
     ```
 
-    Navigate to the link sent in the terminal, and it *should* load!
+    Navigate to the link sent in the terminal, and it _should_ load!
 
 ## Building
 
