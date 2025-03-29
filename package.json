@@ -61,7 +61,7 @@
 		"prettier": "^3.3.3",
 		"prettier-plugin-svelte": "^3.2.7",
 		"prettier-plugin-tailwindcss": "^0.6.9",
-		"runed": "^0.24.0",
+		"runed": "0.24.0",
 		"svelte": "^5.1.13",
 		"svelte-check": "^4.0.6",
 		"svelte-dnd-action": "^0.9.54",

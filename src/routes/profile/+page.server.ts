@@ -14,8 +14,7 @@ import {
 import type { components } from '$lib/api/api';
 import { CanEditGuild } from '$lib/discord';
 import { IsUUID } from '$params/uuid';
-import { FetchUserSession } from '$lib/api/auth';
-import { FetchDiscordUserData } from '$lib/discordAuth';
+import { FetchUserSession, FetchDiscordUserData } from '$lib/api/auth';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { session } = await parent();

@@ -4,7 +4,6 @@
 	import { page } from '$app/state';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
 	import { initRatesData } from '$lib/stores/ratesData';
-	import { initShowLeaderboardName } from '$lib/stores/leaderboardName';
 	import * as Sidebar from '$ui/sidebar';
 	import Footer from '$comp/footer/footer.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
@@ -29,7 +28,6 @@
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
-	initShowLeaderboardName();
 	initBreadcrumb();
 	initSidebarNav();
 

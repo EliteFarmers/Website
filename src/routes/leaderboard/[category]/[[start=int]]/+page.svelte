@@ -6,9 +6,9 @@
 	import Head from '$comp/head.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import * as Pagination from '$ui/pagination';
-	import { Switch } from '$comp/ui/switch';
-	import { getShowLeaderboardName } from '$lib/stores/leaderboardName';
+	import { Switch } from '$ui/switch';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { PersistedState } from 'runed';
 
 	interface Props {
 		data: PageData;
@@ -16,7 +16,7 @@
 
 	let { data }: Props = $props();
 
-	const showLeaderboardName = getShowLeaderboardName();
+	let showLeaderboardName = new PersistedState('showleaderboardname', false);
 
 	let title = $derived(`${data.lb?.title} Leaderboard`);
 	let entries = $derived(data.lb?.entries ?? []);

@@ -9,7 +9,7 @@ import {
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { IsUUID } from '$params/uuid';
-import { FetchDiscordUserData } from '$lib/discordAuth';
+import { FetchDiscordUserData } from '$lib/api/auth';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { session } = await parent();

@@ -1,6 +1,7 @@
 import type { Cookies } from '@sveltejs/kit';
 import type { components } from './api';
 import { GetUserSession, RefreshUserSession } from './elite';
+import { GetAuthorizedAccount, type AuthorizedUser } from '$lib/api/elite';
 
 export type AuthSession = components['schemas']['AuthSessionDto'] & { flags: AuthFlags };
 
@@ -26,7 +27,7 @@ export async function FetchUserSession(
 
 	if (refresh && (!session || forceRefresh)) {
 		const { data: newTokens } = await RefreshUserSession({
-			access_token: access,
+			user_id: access,
 			refresh_token: refresh,
 		}).catch(() => ({ data: undefined }));
 
@@ -79,4 +80,17 @@ export function UpdateAuthCookies(cookies: Cookies, tokens: components['schemas'
 		path: '/',
 		maxAge: 60 * 60 * 24 * 20,
 	});
+}
+
+export async function FetchDiscordUserData(accessToken: string): Promise<AuthorizedUser | null> {
+	const { data } = await GetAuthorizedAccount(accessToken);
+
+	if (!data) return null;
+
+	try {
+		return data;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	} catch (_) {
+		return null;
+	}
 }

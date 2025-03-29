@@ -2618,14 +2618,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -2857,16 +2863,14 @@ export interface components {
             refresh_token: string;
         };
         DiscordLoginDto: {
-            /** @description Discord access token from OAuth2 */
-            access_token: string;
-            /** @description Unix timestamp in seconds */
-            expires_in: string;
-            /** @description Discord refresh token from OAuth2 */
-            refresh_token: string;
+            /** @description Discord login code from OAuth2 */
+            code: string;
+            /** @description Redirect URI from OAuth2 */
+            redirect_uri: string;
         };
         AuthRefreshDto: {
             /** @description User ID */
-            access_token: string;
+            user_id: string;
             /** @description Refresh token for the user */
             refresh_token: string;
         };
@@ -8842,7 +8846,7 @@ export interface operations {
                 offset?: number | null;
                 limit?: number;
                 /** @description Use new leaderboard backend (will be default in the future) */
-                new?: boolean | null;
+                new?: boolean;
             };
             header?: never;
             path: {
@@ -8928,8 +8932,8 @@ export interface operations {
                 upcoming?: number | null;
                 /** @description Start at a specified rank for upcoming players */
                 atRank?: number | null;
-                /** @description Use new leaderboard backend (will be default in the future) */
-                new?: boolean | null;
+                /** @description Use new leaderboard backend (will be removed in the future) */
+                new?: boolean;
             };
             header?: never;
             path: {
@@ -8968,7 +8972,7 @@ export interface operations {
                 includeUpcoming?: boolean | null;
                 upcoming?: number | null;
                 atRank?: number | null;
-                new?: boolean | null;
+                new?: boolean;
             };
             header?: never;
             path: {
@@ -9042,7 +9046,7 @@ export interface operations {
                 /** @description Start at a specified rank for upcoming players */
                 atRank?: number | null;
                 /** @description Use new leaderboard backend (will be default in the future) */
-                new?: boolean | null;
+                new?: boolean;
             };
             header?: never;
             path: {
@@ -9080,7 +9084,7 @@ export interface operations {
                 includeUpcoming?: boolean | null;
                 upcoming?: number | null;
                 atRank?: number | null;
-                new?: boolean | null;
+                new?: boolean;
             };
             header?: never;
             path: {
