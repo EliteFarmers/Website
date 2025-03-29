@@ -6285,6 +6285,7 @@
 			  "description": "Use new leaderboard backend (will be default in the future)",
 			  "schema": {
 				"type": "boolean",
+				"default": true,
 				"nullable": true
 			  }
 			}
@@ -6450,9 +6451,10 @@
 			{
 			  "name": "new",
 			  "in": "query",
-			  "description": "Use new leaderboard backend (will be default in the future)",
+			  "description": "Use new leaderboard backend (will be removed in the future)",
 			  "schema": {
 				"type": "boolean",
+				"default": true,
 				"nullable": true
 			  }
 			}
@@ -6546,6 +6548,7 @@
 			  "in": "query",
 			  "schema": {
 				"type": "boolean",
+				"default": true,
 				"nullable": true
 			  }
 			}
@@ -6686,6 +6689,7 @@
 			  "description": "Use new leaderboard backend (will be default in the future)",
 			  "schema": {
 				"type": "boolean",
+				"default": true,
 				"nullable": true
 			  }
 			}
@@ -6771,6 +6775,7 @@
 			  "in": "query",
 			  "schema": {
 				"type": "boolean",
+				"default": true,
 				"nullable": true
 			  }
 			}
@@ -8788,6 +8793,7 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
+		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -8797,15 +8803,18 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
+			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
+			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
+			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {
@@ -9493,22 +9502,17 @@
 		  "type": "object",
 		  "additionalProperties": false,
 		  "required": [
-			"access_token",
-			"expires_in",
-			"refresh_token"
+			"code",
+			"redirect_uri"
 		  ],
 		  "properties": {
-			"access_token": {
+			"code": {
 			  "type": "string",
-			  "description": "Discord access token from OAuth2"
+			  "description": "Discord login code from OAuth2"
 			},
-			"expires_in": {
+			"redirect_uri": {
 			  "type": "string",
-			  "description": "Unix timestamp in seconds"
-			},
-			"refresh_token": {
-			  "type": "string",
-			  "description": "Discord refresh token from OAuth2"
+			  "description": "Redirect URI from OAuth2"
 			}
 		  }
 		},
@@ -9516,11 +9520,11 @@
 		  "type": "object",
 		  "additionalProperties": false,
 		  "required": [
-			"access_token",
+			"user_id",
 			"refresh_token"
 		  ],
 		  "properties": {
-			"access_token": {
+			"user_id": {
 			  "type": "string",
 			  "description": "User ID"
 			},

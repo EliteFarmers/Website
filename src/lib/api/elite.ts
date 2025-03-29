@@ -42,7 +42,7 @@ export const LoginUser = async (body: components['schemas']['DiscordLoginDto']) 
 		body: body,
 	});
 
-export const RefreshUserSession = async (body: components['schemas']['AuthResponseDto']) =>
+export const RefreshUserSession = async (body: components['schemas']['AuthRefreshDto']) =>
 	await POST('/auth/refresh', {
 		body: body,
 	});

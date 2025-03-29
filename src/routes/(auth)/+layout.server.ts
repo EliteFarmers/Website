@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { FetchDiscordUserData } from '$lib/discordAuth';
+import { FetchDiscordUserData } from '$lib/api/auth';
 
 export const load = (async ({ locals, url, cookies, parent }) => {
 	await parent();
