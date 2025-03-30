@@ -7794,7 +7794,7 @@
 		  ]
 		}
 	  },
-	  "/product/{ProductId}": {
+	  "/product/{discordId}": {
 		"patch": {
 		  "tags": [
 			"Product"
@@ -7803,11 +7803,13 @@
 		  "operationId": "EliteAPIFeaturesShopProductsAdminUpdateProductUpdateProductEndpoint",
 		  "parameters": [
 			{
-			  "name": "productId",
+			  "name": "discordId",
 			  "in": "path",
 			  "required": true,
+			  "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
 			  "schema": {
-				"type": "string"
+				"type": "integer",
+				"format": "int64"
 			  }
 			}
 		  ],
@@ -7848,9 +7850,7 @@
 			  "JWTBearerAuth": []
 			}
 		  ]
-		}
-	  },
-	  "/product/{discordId}": {
+		},
 		"get": {
 		  "tags": [
 			"Product"
@@ -8793,7 +8793,6 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
-		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -8803,18 +8802,15 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
-			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
-			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
-			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {

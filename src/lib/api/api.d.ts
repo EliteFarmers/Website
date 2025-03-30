@@ -2279,23 +2279,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/product/{ProductId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Update Shop Product */
-        patch: operations["EliteAPIFeaturesShopProductsAdminUpdateProductUpdateProductEndpoint"];
-        trace?: never;
-    };
     "/product/{discordId}": {
         parameters: {
             query?: never;
@@ -2310,7 +2293,8 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update Shop Product */
+        patch: operations["EliteAPIFeaturesShopProductsAdminUpdateProductUpdateProductEndpoint"];
         trace?: never;
     };
     "/products": {
@@ -2618,20 +2602,14 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
-        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
-             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /**
-             * @description the message for the error response
-             * @default One or more errors occurred!
-             */
+            /** @default One or more errors occurred! */
             message: string;
-            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -9929,12 +9907,44 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesShopProductsGetProductGetProductEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     EliteAPIFeaturesShopProductsAdminUpdateProductUpdateProductEndpoint: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                productId: string;
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
             };
             cookie?: never;
         };
@@ -9973,37 +9983,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-        };
-    };
-    EliteAPIFeaturesShopProductsGetProductGetProductEndpoint: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                discordId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductDto"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
             };
         };
     };
