@@ -60,10 +60,11 @@ export const actions: Actions = {
 			},
 		} satisfies components['schemas']['EditProductDto'];
 
-		const req = await UpdateProduct(locals.access_token, productId, body);
+		const { response, error: e } = await UpdateProduct(locals.access_token, productId, body);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			console.log(e);
+			return fail(response.status, { error: e ?? 'Failed to update product!' });
 		}
 
 		return { success: true };
@@ -89,7 +90,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const req = await AddProductImage(
+		const { response, error: e } = await AddProductImage(
 			locals.access_token,
 			productId,
 			{
@@ -100,8 +101,9 @@ export const actions: Actions = {
 			thumbnail
 		);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			console.log(e);
+			return fail(response.status, { error: e ?? 'Failed to add image!' });
 		}
 
 		return { success: true };
@@ -124,10 +126,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response } = await RemoveCosmeticImage(locals.access_token, productId, image);
+		const { response, error: e } = await RemoveCosmeticImage(locals.access_token, productId, image);
 
-		if (!response.ok) {
-			return fail(response.status, { error: await response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e ?? (await response.text()) });
 		}
 
 		return { success: true };
@@ -145,10 +147,11 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid product Id or cosmetic.' });
 		}
 
-		const req = await AddCosmeticToProduct(locals.access_token, productId, cosmeticId);
+		const { response, error: e } = await AddCosmeticToProduct(locals.access_token, productId, cosmeticId);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			console.log(e);
+			return fail(response.status, { error: e ?? 'Failed to add cosmetic!' });
 		}
 
 		return { success: true };
@@ -166,10 +169,11 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid product Id or cosmetic.' });
 		}
 
-		const req = await RemoveCosmeticFromProduct(locals.access_token, productId, cosmeticId);
+		const { response, error: e } = await RemoveCosmeticFromProduct(locals.access_token, productId, cosmeticId);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			console.log(e);
+			return fail(response.status, { error: e ?? 'Failed to remove cosmetic!' });
 		}
 
 		return { success: true };

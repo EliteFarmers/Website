@@ -1107,10 +1107,10 @@ export const UpdateProduct = async (
 	productId: string,
 	product: components['schemas']['EditProductDto']
 ) =>
-	await PATCH('/product/{ProductId}', {
+	await PATCH('/product/{discordId}', {
 		params: {
 			path: {
-				productId,
+				discordId: productId as unknown as number,
 			},
 		},
 		body: product,
