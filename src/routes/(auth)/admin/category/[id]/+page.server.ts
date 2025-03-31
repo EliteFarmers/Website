@@ -69,10 +69,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category Id or product.' });
 		}
 
-		const req = await AddProductToCategory(locals.access_token, categoryId, productId);
+		const { response, error: e } = await AddProductToCategory(locals.access_token, categoryId, productId);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (e || !response.ok) {
+			return fail(response.status ?? 400, { error: e || 'Failed to add product.' });
 		}
 
 		return { success: true };
@@ -90,10 +90,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category Id or product.' });
 		}
 
-		const req = await RemoveProductFromCategory(locals.access_token, categoryId, productId);
+		const { response, error: e } = await RemoveProductFromCategory(locals.access_token, categoryId, productId);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!e || !response.ok) {
+			return fail(response.status ?? 400, { error: e || 'Failed to remove product.' });
 		}
 
 		return { success: true };
@@ -119,8 +119,6 @@ export const actions: Actions = {
 
 			order.push({ id: id, order: i });
 		}
-
-		console.log(order);
 
 		const { response, error: e } = await UpdateCategoryProductOrder(locals.access_token, categoryId, {
 			elements: order,

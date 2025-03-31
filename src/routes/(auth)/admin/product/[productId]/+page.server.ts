@@ -129,7 +129,7 @@ export const actions: Actions = {
 		const { response, error: e } = await RemoveCosmeticImage(locals.access_token, productId, image);
 
 		if (!response.ok || e) {
-			return fail(response.status, { error: e ?? (await response.text()) });
+			return fail(response.status, { error: e ?? 'Failed to delete image!' });
 		}
 
 		return { success: true };

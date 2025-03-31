@@ -88,14 +88,13 @@ export const actions: Actions = {
 			guildId: guildId,
 		};
 
-		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e || 'Failed to update event!' });
 		}
 
 		return {
@@ -120,14 +119,13 @@ export const actions: Actions = {
 
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		const { response } = await BanEventMember(token, guildId, eventId, uuid, reason).catch((e) => {
+		const { response, error: e } = await BanEventMember(token, guildId, eventId, uuid, reason).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e || 'Failed to ban member!' });
 		}
 
 		return {
@@ -175,14 +173,13 @@ export const actions: Actions = {
 		const image = (data.get('image') as string) || undefined;
 		if (!image) return fail(400, { error: 'Missing required field: banner' });
 
-		const { response } = await SetEventBanner(token, eventId, guildId, image).catch((e) => {
+		const { response, error: e } = await SetEventBanner(token, eventId, guildId, image).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
 		}
 
 		return {
@@ -202,14 +199,13 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const { response } = await ClearEventBanner(token, eventId, guildId).catch((e) => {
+		const { response, error: e } = await ClearEventBanner(token, eventId, guildId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
 		}
 
 		return {
@@ -247,14 +243,13 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
 		}
 
 		return {
@@ -287,14 +282,13 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return fail(response.status, { error: msg });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
 		}
 
 		return {
@@ -326,7 +320,7 @@ export const actions: Actions = {
 		});
 
 		if (!response.ok || e) {
-			return fail(response.status, { error: e });
+			return fail(response.status, { error: e || 'Failed to force add member!' });
 		}
 
 		return {
@@ -355,7 +349,7 @@ export const actions: Actions = {
 		});
 
 		if (!response.ok || e) {
-			return fail(response.status, { error: e });
+			return fail(response.status, { error: e ?? 'Failed to delete member!' });
 		}
 
 		return {
