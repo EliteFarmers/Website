@@ -4,16 +4,15 @@
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 
 	interface Props {
 		data: PageData;
-		form: ActionData;
 	}
 
-	let { data, form }: Props = $props();
+	let { data }: Props = $props();
 
 	let pings = $derived(data.pings ?? { enabled: false, delaySeconds: 0 });
 
@@ -47,12 +46,6 @@
 			{data.guild?.name}
 		</h1>
 	</div>
-
-	{#if !form?.success && form?.message}
-		<h5 class="text-xl font-semibold text-destructive">
-			<p>{form?.message}</p>
-		</h5>
-	{/if}
 
 	<section class="mb-16 flex w-full flex-col items-center justify-center gap-8">
 		<div
