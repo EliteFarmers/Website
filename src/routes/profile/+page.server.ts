@@ -117,10 +117,12 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid username.' });
 		}
 
-		const req = await SetPrimaryAccount(username, locals.access_token);
+		const { response, error: e } = await SetPrimaryAccount(username, locals.access_token);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, {
+				error: e || 'Error setting primary account, please try again later.',
+			});
 		}
 
 		await FetchUserSession(cookies, locals.access_token, locals.refresh_token, true);
@@ -160,10 +162,12 @@ export const actions: Actions = {
 		}
 
 		const body = Object.values(badges);
-		const req = await UpdateUserBadges(locals.access_token, uuid, body);
+		const { response, error: e } = await UpdateUserBadges(locals.access_token, uuid, body);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, {
+				error: e || 'Error updating badges, please try again later.',
+			});
 		}
 
 		return { success: true };
@@ -205,10 +209,12 @@ export const actions: Actions = {
 			body.features.moreInfoDefault = info === 'true';
 		}
 
-		const req = await UpdateUserSettings(locals.access_token, body);
+		const { response, error: e } = await UpdateUserSettings(locals.access_token, body);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, {
+				error: e || 'Error updating settings, please try again later.',
+			});
 		}
 
 		return { success: true };
@@ -218,10 +224,12 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const req = await RefreshPurchases(locals.access_token);
+		const { response, error: e } = await RefreshPurchases(locals.access_token);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, {
+				error: e || 'Error refreshing purchases, please try again later.',
+			});
 		}
 
 		return { success: true };

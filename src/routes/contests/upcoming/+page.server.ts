@@ -3,11 +3,11 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ setHeaders }) => {
-	const { data, response } = await GetCurrentYearContests();
+	const { data, response, error: e } = await GetCurrentYearContests();
 
-	if (!data) {
+	if (!data || !response.ok || e) {
 		try {
-			const errorMsg = await response.text();
+			const errorMsg = e ?? 'Failed to load contests!';
 			throw error(500, errorMsg);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (_) {

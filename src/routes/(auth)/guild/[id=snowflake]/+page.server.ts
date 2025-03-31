@@ -36,10 +36,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invite is required' });
 		}
 
-		const { response } = await SetGuildInvite(guildId, token, invite);
+		const { response, error: e } = await SetGuildInvite(guildId, token, invite);
 
 		if (!response.ok) {
-			const msg = (await response.text()) || 'Missing permissions to set invite! (admin only)';
+			const msg = e || 'Missing permissions to set invite! (admin only)';
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
 
@@ -62,10 +62,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Role is required' });
 		}
 
-		const { response } = await SetGuildAdminRole(guildId, token, role);
+		const { response, error: e } = await SetGuildAdminRole(guildId, token, role);
 
-		if (!response.ok) {
-			const msg = (await response.text()) || 'Missing permissions to set admin role! (admin only)';
+		if (!response.ok || e) {
+			const msg = e || 'Missing permissions to set admin role! (admin only)';
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
 
@@ -118,10 +118,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'max is required' });
 		}
 
-		const { response } = await EnableGuildLeaderboards(guildId, token, +max, enable);
+		const { response, error: e } = await EnableGuildLeaderboards(guildId, token, +max, enable);
 
 		if (!response.ok) {
-			const msg = await response.text();
+			const msg = e || "Failed to set Jacob's leaderboards!";
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
 
@@ -149,10 +149,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'max is required' });
 		}
 
-		const { response } = await EnableGuildEvents(guildId, token, +max, enable);
+		const { response, error: e } = await EnableGuildEvents(guildId, token, +max, enable);
 
-		if (!response.ok) {
-			const msg = await response.text();
+		if (!response.ok || e) {
+			const msg = e || 'Failed to set events!';
 			return fail(response.status as NumericRange<400, 499>, { error: msg });
 		}
 

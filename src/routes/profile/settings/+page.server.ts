@@ -77,10 +77,12 @@ export const actions: Actions = {
 		}
 
 		const body = Object.values(badges);
-		const req = await UpdateUserBadges(locals.access_token, uuid, body);
+		const { response, error: e } = await UpdateUserBadges(locals.access_token, uuid, body);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, {
+				error: e || 'Failed to update badges!',
+			});
 		}
 
 		return { success: true };
@@ -122,10 +124,10 @@ export const actions: Actions = {
 			body.features.moreInfoDefault = info === 'true';
 		}
 
-		const req = await UpdateUserSettings(locals.access_token, body);
+		const { response, error: e } = await UpdateUserSettings(locals.access_token, body);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e || 'Failed to update settings!' });
 		}
 
 		return { success: true };
@@ -135,10 +137,10 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const req = await RefreshPurchases(locals.access_token);
+		const { response, error: e } = await RefreshPurchases(locals.access_token);
 
-		if (!req.response.ok) {
-			return fail(req.response.status, { error: await req.response.text() });
+		if (!response.ok || e) {
+			return fail(response.status, { error: e || 'Failed to refresh purchases!' });
 		}
 
 		return { success: true };

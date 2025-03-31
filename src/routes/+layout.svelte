@@ -45,6 +45,11 @@
 			}
 
 			let problem = page.form.problem as components['schemas']['ErrorResponse'] | undefined;
+
+			if (!problem && page.form?.error && typeof page.form.error === 'object') {
+				problem = page.form.error as components['schemas']['ErrorResponse'];
+			}
+
 			if (problem) {
 				toast.error(Object.values(problem.errors).join('\n') || problem.message, {
 					duration: 5000,

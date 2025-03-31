@@ -1,4 +1,4 @@
-import { error, fail, type NumericRange } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild } from '$lib/utils';
 import {
@@ -63,14 +63,13 @@ export const actions: Actions = {
 			blockedRole: blockedRoleId,
 		};
 
-		const { response } = await AddGuildJacobLeadeboard(guildId, token, body).catch((e) => {
+		const { response, error: e } = await AddGuildJacobLeadeboard(guildId, token, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			return fail(response.status, { error: e ?? 'Failed to create leaderboard!' });
 		}
 
 		return {
@@ -91,14 +90,14 @@ export const actions: Actions = {
 
 		if (!lbId) throw error(400, 'Missing required field: id');
 
-		const { response } = await DeleteGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
+		const { response, error: e } = await DeleteGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to delete leaderboard!';
+			return fail(response.status, { error: msg });
 		}
 
 		return {
@@ -119,14 +118,14 @@ export const actions: Actions = {
 
 		if (!lbId) throw error(400, 'Missing required field: id');
 
-		const { response } = await SendGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
+		const { response, error: e } = await SendGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to send leaderboard!';
+			throw error(response.status, msg);
 		}
 
 		return {
@@ -159,14 +158,14 @@ export const actions: Actions = {
 			lb.crops[crop as keyof components['schemas']['CropRecords']] = [];
 		}
 
-		const { response } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
+		const { response, error: e } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to clear leaderboard!';
+			return fail(response.status, { error: msg });
 		}
 
 		return {
@@ -207,14 +206,14 @@ export const actions: Actions = {
 
 		feature.excludedParticipations.push(key);
 
-		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to ban participation!';
+			return fail(response.status, { error: msg });
 		}
 
 		const keys = {
@@ -237,7 +236,7 @@ export const actions: Actions = {
 
 		if (response2.status !== 200) {
 			const msg = await response2.text();
-			throw error(response2.status as NumericRange<400, 599>, msg);
+			throw error(response2.status, msg);
 		}
 
 		return {
@@ -268,14 +267,14 @@ export const actions: Actions = {
 
 		feature.excludedParticipations = feature.excludedParticipations.filter((p) => p !== pId);
 
-		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to unban participation!';
+			return fail(response.status, { error: msg });
 		}
 
 		return {
@@ -322,14 +321,14 @@ export const actions: Actions = {
 
 		feature.excludedTimespans.push(span);
 
-		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to ban timespan!';
+			return fail(response.status, { error: msg });
 		}
 
 		return {
@@ -363,14 +362,14 @@ export const actions: Actions = {
 
 		feature.excludedTimespans = feature.excludedTimespans.filter((t) => t.start !== startTime || t.end !== endTime);
 
-		const { response } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
 
-		if (!response.ok) {
-			const msg = await response.text();
-			throw error(response.status as NumericRange<400, 599>, msg);
+		if (!response.ok || e) {
+			const msg = e ?? 'Failed to unban timespan!';
+			return fail(response.status, { error: msg });
 		}
 
 		return {

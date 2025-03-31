@@ -57,7 +57,7 @@ export const actions: Actions = {
 		});
 
 		if (!response.ok || e) {
-			return fail(response.status, { error: e?.message ?? 'Unknown error' });
+			return fail(response.status, { error: e ?? 'Unknown error' });
 		}
 
 		return {
@@ -72,14 +72,15 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const { response } = await DisableUpcomingContestPings(token, guildId, 'Manually disabled').catch((e) => {
-			console.log(e);
-			throw error(500, 'Internal Server Error');
-		});
+		const { response, error: e } = await DisableUpcomingContestPings(token, guildId, 'Manually disabled').catch(
+			(e) => {
+				console.log(e);
+				throw error(500, 'Internal Server Error');
+			}
+		);
 
-		if (!response.ok) {
-			const msg = await response.text();
-			return { success: false, message: msg };
+		if (!response.ok || e) {
+			return fail(response.status, { error: e ?? 'Unknown error' });
 		}
 
 		return {

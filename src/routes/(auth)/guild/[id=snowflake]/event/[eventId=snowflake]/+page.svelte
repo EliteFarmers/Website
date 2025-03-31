@@ -16,18 +16,18 @@
 	import Member from './member.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { EventType } from '$lib/utils';
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 	import { NumberInput } from '$comp/ui/number-input';
 	import type { components } from '$lib/api/api';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import HeroBanner from '$comp/hero-banner.svelte';
 
 	interface Props {
 		data: PageData;
-		form: ActionData;
 	}
 
-	let { data = $bindable(), form }: Props = $props();
+	let { data = $bindable() }: Props = $props();
 
 	let clickOutsideModalEdit = $state(false);
 	let clickOutsideModalEditImage = $state(false);
@@ -61,20 +61,16 @@
 
 <Head title="Events" description="Manage Events happening in your guild" />
 
-<div class="flex flex-col items-center gap-4">
-	<div class="flex flex-row items-center gap-4">
+<HeroBanner src={event.banner?.url} class="h-48">
+	<div class="mb-6 mt-8 flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 		<GuildIcon guild={data.guild} size={16} />
-		<h1 class="my-16 text-4xl">
-			{event?.name}
+		<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
+			{data.event?.name}
 		</h1>
 	</div>
+</HeroBanner>
 
-	{#if form?.error}
-		<h5 class="text-xl font-semibold text-destructive">
-			<p>{form?.error}</p>
-		</h5>
-	{/if}
-
+<div class="mt-64 flex flex-col items-center gap-4">
 	<section class="flex w-full max-w-4xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
 			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
