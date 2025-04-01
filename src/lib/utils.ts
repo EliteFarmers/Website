@@ -152,7 +152,9 @@ export function preprocessWeightChart(data: components['schemas']['CropCollectio
 
 export enum EventType {
 	FarmingWeight = '1',
+	Collections = '2',
 	Medals = '4',
+	Pests = '5',
 }
 
 export enum EventMode {

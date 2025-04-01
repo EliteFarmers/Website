@@ -295,6 +295,103 @@ export const actions: Actions = {
 			success: true,
 		};
 	},
+	editPestWeights: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const eventId = data.get('id') as string;
+		if (!eventId) throw error(400, 'Missing required field: id');
+
+		const body: components['schemas']['EditEventDto'] = {
+			guildId: guildId,
+			pestData: {
+				pestWeights: {
+					Fly: +(data.get('Fly') as string),
+					Rat: +(data.get('Rat') as string),
+					Mite: +(data.get('Mite') as string),
+					Moth: +(data.get('Moth') as string),
+					Slug: +(data.get('Slug') as string),
+					Mouse: +(data.get('Mouse') as string),
+					Beetle: +(data.get('Beetle') as string),
+					Locust: +(data.get('Locust') as string),
+					Cricket: +(data.get('Cricket') as string),
+					Mosquito: +(data.get('Mosquito') as string),
+					Earthworm: +(data.get('Earthworm') as string),
+				},
+			},
+		};
+
+		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	editCollectionWeights: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+
+		const eventId = data.get('id') as string;
+		if (!eventId) throw error(400, 'Missing required field: id');
+
+		const entries = Array.from(data.entries()).filter(([key]) => key.startsWith('collection.'));
+		const weights = {} as Record<string, { name: string; weight: number }>;
+
+		for (const [key, value] of entries) {
+			const [, id, setting] = key.split('.');
+
+			const coll = weights[id.trim()] ?? (weights[id.trim()] = { name: id.trim(), weight: 1 });
+
+			if (setting === 'name') {
+				coll.name = value as string;
+			}
+
+			if (setting === 'value') {
+				const num = Number(value);
+				if (isNaN(num)) continue;
+				coll.weight = num;
+			}
+		}
+
+		const body: components['schemas']['EditEventDto'] = {
+			guildId: guildId,
+			collectionData: {
+				collectionWeights: weights,
+			},
+		};
+
+		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e });
+		}
+
+		return {
+			success: true,
+		};
+	},
 	forceAddMember: async ({ locals, params, request }) => {
 		const guildId = params.id;
 		const { access_token: token } = locals;

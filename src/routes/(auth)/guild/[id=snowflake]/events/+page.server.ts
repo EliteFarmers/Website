@@ -1,7 +1,13 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { CanManageGuild, EventType } from '$lib/utils';
-import { GetAdminGuildEvents, CreateWeightEvent, CreateMedalEvent } from '$lib/api/elite';
+import {
+	GetAdminGuildEvents,
+	CreateWeightEvent,
+	CreateMedalEvent,
+	CreatePestEvent,
+	CreateCollectionEvent,
+} from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
@@ -14,11 +20,11 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 		throw error(403, 'You do not have permission to edit this guild.');
 	}
 
-	if (!guild?.features?.eventsEnabled || !guild?.id) {
+	const { data: events } = await GetAdminGuildEvents(token, guild.id).catch(() => ({ data: undefined }));
+
+	if ((!guild?.features?.eventsEnabled && !events) || !guild?.id) {
 		throw error(402, 'This guild does not have the Events feature enabled.');
 	}
-
-	const { data: events } = await GetAdminGuildEvents(token, guild.id).catch(() => ({ data: undefined }));
 
 	return {
 		...(guild.features.eventSettings ?? {}),
@@ -72,9 +78,26 @@ export const actions: Actions = {
 			guildId: guildId,
 			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : 0,
 			maxTeams: 0,
-		} satisfies components['schemas']['CreateWeightEventDto'] | components['schemas']['CreateMedalEventDto'];
+		} satisfies
+			| components['schemas']['CreateWeightEventDto']
+			| components['schemas']['CreateMedalEventDto']
+			| components['schemas']['CreatePestEventDto']
+			| components['schemas']['CreateCollectionEventDto'];
 
-		const method = type === EventType.Medals ? CreateMedalEvent : CreateWeightEvent;
+		const method =
+			type === EventType.FarmingWeight
+				? CreateWeightEvent
+				: type === EventType.Medals
+					? CreateMedalEvent
+					: type === EventType.Pests
+						? CreatePestEvent
+						: type === EventType.Collections
+							? CreateCollectionEvent
+							: undefined;
+
+		if (!method) {
+			return fail(400, { error: 'Invalid event type!' });
+		}
 
 		const { response, error: e } = await method(token, guildId, body).catch((e) => {
 			console.log(e);
@@ -82,7 +105,7 @@ export const actions: Actions = {
 		});
 
 		if (!response.ok || e) {
-			return fail(response.status, { error: e?.message ?? 'Unknown error' });
+			return fail(response.status, { error: e ?? 'Unknown error' });
 		}
 
 		return {

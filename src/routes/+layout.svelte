@@ -17,6 +17,7 @@
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
 	import type { components } from '$lib/api/api';
+	import { dev } from '$app/environment';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -51,6 +52,9 @@
 			}
 
 			if (problem) {
+				if (dev) {
+					console.error(problem);
+				}
 				toast.error(Object.values(problem.errors).join('\n') || problem.message, {
 					duration: 5000,
 					class: 'text-destructive',

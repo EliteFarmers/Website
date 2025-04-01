@@ -15,6 +15,7 @@
 	let { open = $bindable(false) }: Props = $props();
 	let type = $state(EventType.FarmingWeight);
 	let teams = $state(EventMode.Solo);
+	let disabled = $state(false);
 </script>
 
 <Dialog.Root bind:open>
@@ -28,8 +29,10 @@
 			method="post"
 			class="mx-1 flex flex-col gap-2"
 			use:enhance={() => {
+				disabled = true;
 				return async ({ result, update }) => {
-					if (result) open = false;
+					disabled = false;
+					if (result.type === 'success') open = false;
 					update();
 				};
 			}}
@@ -97,29 +100,38 @@
 				<Tabs.List class="gap-2 self-center text-center">
 					<Tabs.Trigger value={EventType.FarmingWeight}>Farming Weight</Tabs.Trigger>
 					<Tabs.Trigger value={EventType.Medals}>Medals</Tabs.Trigger>
+					<Tabs.Trigger value={EventType.Pests}>Pests</Tabs.Trigger>
+					<Tabs.Trigger value={EventType.Collections}>Collections</Tabs.Trigger>
 				</Tabs.List>
 				<Tabs.Content value={EventType.FarmingWeight}>
 					<div class="flex flex-col items-center gap-2">
-						<p class="text-center">Creating a new event for farming weight.</p>
+						<p class="text-center">Creating a new event for farming weight!</p>
 						<!-- <div class="flex flex-col gap-1">
 							<div class="flex items-center gap-2">
 								<Checkbox name="cropWeights" bind:checked={sendUpdates} />
 								<Label for="enableUpdates">Send update messages</Label>
 							</div>
 						</div> -->
-
-						<Button formaction="?/create" type="submit" class="mt-8">Create</Button>
 					</div>
 				</Tabs.Content>
 				<Tabs.Content value={EventType.Medals}>
 					<div class="flex flex-col items-center gap-2">
-						<p class="text-center">Creating a new event for medals.</p>
-
-						<Button formaction="?/create" type="submit" class="mt-8">Create</Button>
+						<p class="text-center">Creating a new event for jacob medals!</p>
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value={EventType.Pests}>
+					<div class="flex flex-col items-center gap-2">
+						<p class="text-center">Creating a new event for pest kills!</p>
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value={EventType.Collections}>
+					<div class="flex flex-col items-center gap-2">
+						<p class="text-center">Creating a new event for arbitrary collections!</p>
 					</div>
 				</Tabs.Content>
 			</Tabs.Root>
 
+			<Button formaction="?/create" type="submit" class="mt-8" {disabled}>Create</Button>
 			<p class="text-base leading-relaxed text-muted-foreground">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
