@@ -51,7 +51,7 @@
 		return Object.entries(data?.countedCollections ?? {})
 			.map(([name, value]) => ({
 				name: eventData?.collectionWeights?.[name]?.name ?? name,
-				weight: (eventData?.collectionWeights?.[name]?.weight ?? 0) * value,
+				weight: value / (eventData?.collectionWeights?.[name]?.weight ?? 1),
 			}))
 			.sort((a, b) => b.weight - a.weight);
 	};
