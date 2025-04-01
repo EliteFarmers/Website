@@ -91,19 +91,19 @@
 								<div class="h-2 w-2 rounded-full bg-muted"></div>
 							{/if}
 							{#if member.status === 1}
-								<div class="text-bg-progress h-2 w-2 rounded-full"></div>
+								<div class="text-progress h-2 w-2 rounded-full"></div>
 							{/if}
 						</div>
 					{/snippet}
 					<div>
 						{#if member.status === 0}
-							<p class="text-lg font-semibold">Inactive Farmer</p>
+							<p class="text-lg font-semibold">Inactive</p>
 							<p class="max-w-xs">
 								{member.playerName} has not increased their score since last checked.
 							</p>
 						{/if}
 						{#if member.status === 1}
-							<p class="text-lg font-semibold">Actively Farming!</p>
+							<p class="text-lg font-semibold">Active!</p>
 							<p class="max-w-xs">{member.playerName} has increased their score since last checked!</p>
 						{/if}
 					</div>
