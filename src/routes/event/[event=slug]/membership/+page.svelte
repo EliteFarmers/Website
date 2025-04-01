@@ -219,6 +219,21 @@
 						>You must have collections and inventory API access enabled at all times.</span
 					> If you do turn either of them off, you will be automatically removed from the event.
 				</p>
+			{:else if data.event.type === +EventType.Pests}
+				<p>Just kill pests! The event will count the amount of pests you kill.</p>
+				<p>
+					<span class="text-destructive">You must have collections API access enabled at all times.</span>
+					If you do turn it off, you will be automatically removed from the event.
+				</p>
+			{:else if data.event.type === +EventType.Collections}
+				<p>
+					Just collect items! The event lists what items will count towards your progress. You can find the
+					items in the event description.
+				</p>
+				<p>
+					<span class="text-destructive">You must have collections API access enabled at all times.</span>
+					If you do turn it off, you will be automatically removed from the event.
+				</p>
 			{/if}
 
 			<div class="mt-8 flex items-center gap-2">

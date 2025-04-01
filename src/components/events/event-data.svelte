@@ -20,6 +20,16 @@
 		const data = event.data as { medalWeights?: Record<string, number> } | undefined;
 		return Object.entries(data?.medalWeights ?? {}).sort((a, b) => b[1] - a[1]);
 	};
+
+	const pestWeights = () => {
+		const data = event.data as { pestWeights?: Record<string, number> } | undefined;
+		return Object.entries(data?.pestWeights ?? {}).sort((a, b) => a[0].localeCompare(b[0]));
+	};
+
+	const collectionWeights = () => {
+		const data = event.data as { collectionWeights?: Record<string, { name: string; weight: number }> } | undefined;
+		return Object.entries(data?.collectionWeights ?? {}).sort((a, b) => a[1].name.localeCompare(b[1].name));
+	};
 </script>
 
 <Accordion.Root type="single">
@@ -29,6 +39,10 @@
 				<p>Show Crop Weights</p>
 			{:else if event.type === +EventType.Medals}
 				<p>Show Medal Weights</p>
+			{:else if event.type === +EventType.Pests}
+				<p>Show Pest Weights</p>
+			{:else if event.type === +EventType.Collections}
+				<p>Show Collection Weights</p>
 			{:else}
 				<p>Show Event Weights</p>
 			{/if}
@@ -63,6 +77,33 @@
 									class="pixelated aspect-square"
 								/>
 								<p class="whitespace-nowrap font-semibold">{medal}</p>
+							</div>
+							<p class="font-semibold">{weight.toLocaleString()}</p>
+						</div>
+					{/each}
+				{:else if event.type === +EventType.Pests}
+					{#each pestWeights() as [pest, weight]}
+						<div
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						>
+							<div class="flex flex-row items-center gap-2">
+								<img
+									src="/images/pests/{pest.toLowerCase()}.png"
+									alt={pest}
+									class="pixelated aspect-square"
+								/>
+								<p class="whitespace-nowrap font-semibold">{pest}</p>
+							</div>
+							<p class="font-semibold">{weight.toLocaleString()}</p>
+						</div>
+					{/each}
+				{:else if event.type === +EventType.Collections}
+					{#each collectionWeights() as [, { name, weight }]}
+						<div
+							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						>
+							<div class="flex flex-row items-center gap-2">
+								<p class="whitespace-nowrap font-semibold">{name}</p>
 							</div>
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>

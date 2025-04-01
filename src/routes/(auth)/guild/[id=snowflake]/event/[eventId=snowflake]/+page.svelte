@@ -19,7 +19,7 @@
 	import type { PageData } from './$types';
 	import { NumberInput } from '$comp/ui/number-input';
 	import type { components } from '$lib/api/api';
-	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
+	import { Crop, getCropDisplayName, getCropFromName, Pest } from 'farming-weight';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import HeroBanner from '$comp/hero-banner.svelte';
 
@@ -57,6 +57,17 @@
 			| Record<string, number>
 			| undefined
 	);
+	let pestWeights = $state(
+		((data.event?.data as components['schemas']['PestEventData'])?.pestWeights ?? undefined) as
+			| Record<string, number>
+			| undefined
+	);
+	let collectionWeights = $state(
+		((data.event?.data as components['schemas']['CollectionEventData'])?.collectionWeights ?? undefined) as
+			| Record<string, { weight: number; name: string }>
+			| undefined
+	);
+	let newCollectionKey = $state('');
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />
@@ -429,6 +440,150 @@
 						<Button type="submit" disabled={pending}>Update</Button>
 					</div>
 				</form>
+			{:else if event.type === +EventType.Pests && pestWeights}
+				<form
+					action="?/editPestWeights"
+					method="post"
+					class="flex flex-col items-center gap-2"
+					use:enhance={() => {
+						pending = true;
+						return async ({ result, update }) => {
+							if (result) {
+								pending = false;
+								update();
+							}
+						};
+					}}
+				>
+					<input type="hidden" name="id" bind:value={data.event.id} />
+					<h4 class="mb-4 text-lg">Pest Weight Values</h4>
+
+					<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
+						{#each Object.entries(pestWeights ?? {}) as [pestName] (pestName)}
+							{@const pest = Pest[pestName as keyof typeof Pest] ?? 'earthworm'}
+
+							<div class="flex flex-row items-center gap-1 px-4 md:basis-96">
+								<img src="/images/pests/{pest}.png" alt={pestName} class="pixelated size-8" />
+								<Label class="flex-1">{pestName}</Label>
+								<NumberInput
+									min={0}
+									max={1_000_000}
+									name={pestName}
+									value={pestWeights[pestName]}
+									maxlength={64}
+									class="flex-1"
+									required
+								/>
+							</div>
+						{/each}
+					</div>
+
+					<div class="flex flex-row gap-2">
+						<Button
+							variant="destructive"
+							disabled={pending}
+							onclick={() => {
+								pestWeights = structuredClone(defaults?.pestWeights ?? {});
+							}}>Reset Values</Button
+						>
+						<Button type="submit" disabled={pending}>Update</Button>
+					</div>
+				</form>
+			{:else if event.type === +EventType.Collections && collectionWeights}
+				<form
+					action="?/editCollectionWeights"
+					method="post"
+					class="flex flex-col items-center gap-2"
+					use:enhance={() => {
+						pending = true;
+						return async ({ result, update }) => {
+							if (result) {
+								pending = false;
+								update();
+							}
+						};
+					}}
+				>
+					<input type="hidden" name="id" bind:value={data.event.id} />
+					<h4 class="mb-4 text-lg">Collections</h4>
+
+					<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
+						{#each Object.entries(collectionWeights ?? {}) as [key, pair] (key)}
+							{@const name = pair.name}
+							{@const weight = pair.weight}
+
+							<div class="flex w-full flex-row items-center gap-1 px-4">
+								<Label class="flex-1 font-semibold">{key}</Label>
+								<Input
+									name="collection.{key}.name"
+									value={name}
+									placeholder="Collection Name"
+									maxlength={64}
+									class="flex-1"
+									required
+								/>
+								<NumberInput
+									min={0}
+									max={1_000_000}
+									name="collection.{key}.value"
+									placeholder="Weight Value"
+									value={weight}
+									maxlength={64}
+									class="flex-1"
+									required
+								/>
+								<Button
+									type="button"
+									onclick={() => {
+										delete collectionWeights[key];
+									}}
+									variant="destructive"
+								>
+									<Trash2 size={16} />
+								</Button>
+							</div>
+						{:else}
+							<p class="text-sm leading-relaxed text-muted-foreground">
+								No collections have been added yet.
+							</p>
+						{/each}
+					</div>
+
+					<div class="mt-4 flex flex-row items-center gap-1 px-4">
+						<Label class="flex-1">New Collection Key</Label>
+						<Input name="collectionKey" bind:value={newCollectionKey} maxlength={64} class="flex-1" />
+						<Button
+							type="button"
+							onclick={() => {
+								if (newCollectionKey.trim() === '') return;
+								collectionWeights[newCollectionKey] = {
+									name: newCollectionKey.trim(),
+									weight: 1,
+								};
+								newCollectionKey = '';
+							}}
+							variant="secondary"
+						>
+							Add
+						</Button>
+					</div>
+
+					<p class="text-sm leading-relaxed text-muted-foreground">
+						Enter internal SkyBlock IDs / item ids for collections. It's whatever Hypixel has as a key in
+						the collections object.
+					</p>
+
+					<div class="flex flex-row gap-2">
+						<Button type="submit" disabled={pending}>Update</Button>
+					</div>
+				</form>
+			{:else}
+				<p>Event Type not supported</p>
+			{/if}
+			{#if event.type === +EventType.FarmingWeight && cropWeights}
+				<p class="text-sm leading-relaxed text-muted-foreground">
+					Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
+				</p>
 			{/if}
 		{/await}
 	</div>

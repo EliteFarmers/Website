@@ -916,6 +916,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/guild/{discordId}/events/collection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Collection Event */
+        post: operations["EliteAPIFeaturesEventsAdminCreateEventCollectionCreateCollectionEventEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/guild/{discordId}/events/medals": {
         parameters: {
             query?: never;
@@ -926,7 +943,41 @@ export interface paths {
         get?: never;
         put?: never;
         /** Create Weight Event */
-        post: operations["EliteAPIFeaturesEventsAdminCreateMedalEventCreateMedalEventEndpoint"];
+        post: operations["EliteAPIFeaturesEventsAdminCreateEventMedalsCreateMedalEventEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/guild/{discordId}/events/pests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Pests Event */
+        post: operations["EliteAPIFeaturesEventsAdminCreateEventPestsCreatePestsEventEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/guild/{discordId}/events/weight": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Weight Event */
+        post: operations["EliteAPIFeaturesEventsAdminCreateEventWeightCreateWeightEventEndpoint"];
         delete?: never;
         options?: never;
         head?: never;
@@ -947,23 +998,6 @@ export interface paths {
          * @description This generally should only be used for events with a set amount of teams (when users are not allowed to create their own teams)
          */
         post: operations["EliteAPIFeaturesEventsAdminCreateTeamCreateTeamEndpoint"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/guild/{discordId}/events/weight": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create Weight Event */
-        post: operations["EliteAPIFeaturesEventsAdminCreateWeightEventCreateWeightEventEndpoint"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2529,6 +2563,7 @@ export interface components {
             selected: boolean;
             /** Format: double */
             bankBalance: number;
+            deleted: boolean;
             members: components["schemas"]["MemberDetailsDto"][];
         };
         MemberDetailsDto: {
@@ -2602,14 +2637,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -2807,7 +2848,7 @@ export interface components {
             data?: unknown;
         };
         /** @enum {integer} */
-        EventType: 0 | 1 | 2 | 3 | 4;
+        EventType: 0 | 1 | 2 | 3 | 4 | 5;
         SetEventApprovalRequest: Record<string, never>;
         AccountWithPermsDto: {
             id: string;
@@ -3187,6 +3228,63 @@ export interface components {
             lastUpdated?: string | null;
         };
         DeleteEventRequest: Record<string, never>;
+        CreateCollectionEventDto: {
+            /** @description The name of the event */
+            name: string;
+            /** @description The type of the event */
+            type?: components["schemas"]["EventType"] | null;
+            /** @description The Discord server id as a string for the event */
+            guildId: string;
+            /** @description An optional description for the event */
+            description?: string | null;
+            /** @description An optional set of rules for the event */
+            rules?: string | null;
+            /** @description An optional description of prizes for the event */
+            prizeInfo?: string | null;
+            /**
+             * Format: int64
+             * @description Unix timestamp for the start time of the event in seconds
+             */
+            startTime: number;
+            /**
+             * Format: int64
+             * @description Unix timestamp for the end time of the event in seconds
+             */
+            endTime: number;
+            /**
+             * Format: int64
+             * @description Unix timestamp for the latest time a new member can join the event in seconds
+             */
+            joinTime?: number | null;
+            /** @description Currently unused */
+            dynamicStartTime?: boolean | null;
+            /** @description A Discord role id that is required to participate in the event */
+            requiredRole?: string | null;
+            /** @description A Discord role id that is blocked from participating in the event */
+            blockedRole?: string | null;
+            /**
+             * Format: int32
+             * @description Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited
+             */
+            maxTeams: number;
+            /**
+             * Format: int32
+             * @description Max amount of members allowed in a team, 0 if solo event, -1 if unlimited
+             */
+            maxTeamMembers: number;
+            /** @description Data specific to the pest event */
+            data?: components["schemas"]["CollectionEventData"] | null;
+        };
+        CollectionEventData: {
+            collectionWeights: {
+                [key: string]: components["schemas"]["CollectionWeight"];
+            };
+        };
+        CollectionWeight: {
+            name?: string | null;
+            /** Format: double */
+            weight: number;
+        };
         CreateMedalEventDto: {
             /** @description The name of the event */
             name: string;
@@ -3241,11 +3339,60 @@ export interface components {
         };
         /** @enum {integer} */
         ContestMedal: 0 | 1 | 2 | 3 | 4 | 5;
-        CreateEventTeamDto: {
-            /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
-            name?: string[] | null;
-            color?: string | null;
+        CreatePestEventDto: {
+            /** @description The name of the event */
+            name: string;
+            /** @description The type of the event */
+            type?: components["schemas"]["EventType"] | null;
+            /** @description The Discord server id as a string for the event */
+            guildId: string;
+            /** @description An optional description for the event */
+            description?: string | null;
+            /** @description An optional set of rules for the event */
+            rules?: string | null;
+            /** @description An optional description of prizes for the event */
+            prizeInfo?: string | null;
+            /**
+             * Format: int64
+             * @description Unix timestamp for the start time of the event in seconds
+             */
+            startTime: number;
+            /**
+             * Format: int64
+             * @description Unix timestamp for the end time of the event in seconds
+             */
+            endTime: number;
+            /**
+             * Format: int64
+             * @description Unix timestamp for the latest time a new member can join the event in seconds
+             */
+            joinTime?: number | null;
+            /** @description Currently unused */
+            dynamicStartTime?: boolean | null;
+            /** @description A Discord role id that is required to participate in the event */
+            requiredRole?: string | null;
+            /** @description A Discord role id that is blocked from participating in the event */
+            blockedRole?: string | null;
+            /**
+             * Format: int32
+             * @description Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited
+             */
+            maxTeams: number;
+            /**
+             * Format: int32
+             * @description Max amount of members allowed in a team, 0 if solo event, -1 if unlimited
+             */
+            maxTeamMembers: number;
+            /** @description Data specific to the pest event */
+            data?: components["schemas"]["PestEventData"] | null;
         };
+        PestEventData: {
+            pestWeights: {
+                [key: string]: number;
+            };
+        };
+        /** @enum {integer} */
+        Pest: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
         CreateWeightEventDto: {
             /** @description The name of the event */
             name: string;
@@ -3301,6 +3448,11 @@ export interface components {
         };
         /** @enum {integer} */
         Crop: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+        CreateEventTeamDto: {
+            /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
+            name?: string[] | null;
+            color?: string | null;
+        };
         DeleteEventBannerRequest: Record<string, never>;
         DeleteMemberRequest: Record<string, never>;
         DeleteTeamRequest: Record<string, never>;
@@ -3377,12 +3529,17 @@ export interface components {
             guildId?: string | null;
             weightData?: components["schemas"]["WeightEventData"] | null;
             medalData?: components["schemas"]["MedalEventData"] | null;
+            pestData?: components["schemas"]["PestEventData"] | null;
+            collectionData?: components["schemas"]["CollectionEventData"] | null;
         };
         EventDefaultsDto: {
             cropWeights: {
                 [key: string]: number;
             };
             medalValues: {
+                [key: string]: number;
+            };
+            pestWeights: {
                 [key: string]: number;
             };
         };
@@ -6625,7 +6782,50 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesEventsAdminCreateMedalEventCreateMedalEventEndpoint: {
+    EliteAPIFeaturesEventsAdminCreateEventCollectionCreateCollectionEventEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCollectionEventDto"];
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailsDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesEventsAdminCreateEventMedalsCreateMedalEventEndpoint: {
         parameters: {
             query?: never;
             header?: never;
@@ -6638,6 +6838,92 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["CreateMedalEventDto"];
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailsDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesEventsAdminCreateEventPestsCreatePestsEventEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePestEventDto"];
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventDetailsDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesEventsAdminCreateEventWeightCreateWeightEventEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWeightEventDto"];
             };
         };
         responses: {
@@ -6691,49 +6977,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EliteAPIFeaturesEventsAdminCreateWeightEventCreateWeightEventEndpoint: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
-                discordId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateWeightEventDto"];
-            };
-        };
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EventDetailsDto"];
-                };
             };
             /** @description Bad Request */
             400: {

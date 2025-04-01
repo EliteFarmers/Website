@@ -621,6 +621,40 @@ export const CreateMedalEvent = async (
 		},
 	});
 
+export const CreatePestEvent = async (
+	accessToken: string,
+	guildId: string,
+	event: components['schemas']['CreatePestEventDto']
+) =>
+	await POST('/guild/{discordId}/events/pests', {
+		params: {
+			path: {
+				discordId: guildId as unknown as number,
+			},
+		},
+		body: event,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const CreateCollectionEvent = async (
+	accessToken: string,
+	guildId: string,
+	event: components['schemas']['CreateCollectionEventDto']
+) =>
+	await POST('/guild/{discordId}/events/collection', {
+		params: {
+			path: {
+				discordId: guildId as unknown as number,
+			},
+		},
+		body: event,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const EditEvent = async (
 	accessToken: string,
 	eventId: string,

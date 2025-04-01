@@ -31,6 +31,30 @@
 			['Bronze', data?.earnedMedals?.['Bronze']],
 		].filter(([, count]) => count) as [string, number][];
 	};
+
+	const pestWeights = () => {
+		const data = member.data as { countedPests?: Record<string, number> } | undefined;
+		const eventData = event.data as { pestWeights?: Record<string, number> } | undefined;
+		return Object.entries(data?.countedPests ?? {})
+			.map(([name, kills]) => ({
+				name,
+				weight: (eventData?.pestWeights?.[name] ?? 0) * kills,
+			}))
+			.sort((a, b) => b.weight - a.weight);
+	};
+
+	const collectionWeights = () => {
+		const data = member.data as { countedCollections?: Record<string, number> } | undefined;
+		const eventData = event.data as
+			| { collectionWeights?: Record<string, { name: string; weight: number }> }
+			| undefined;
+		return Object.entries(data?.countedCollections ?? {})
+			.map(([name, value]) => ({
+				name: eventData?.collectionWeights?.[name]?.name ?? name,
+				weight: (eventData?.collectionWeights?.[name]?.weight ?? 0) * value,
+			}))
+			.sort((a, b) => b.weight - a.weight);
+	};
 </script>
 
 <Accordion.Trigger class="w-full">
@@ -100,7 +124,9 @@
 		{#if event.type === +EventType.Medals}
 			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count]}
-					<div class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-card">
+					<div
+						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+					>
 						<div class="flex flex-row items-center gap-2">
 							<img
 								src="/images/medals/{medal.toLowerCase()}.webp"
@@ -109,7 +135,38 @@
 							/>
 							<p class="whitespace-nowrap font-semibold">{medal} <span>x{count}</span></p>
 						</div>
-						<p class="font-semibold">{count * medalWeight(medal)}</p>
+						<p class="font-semibold">{(count * medalWeight(medal)).toLocaleString()}</p>
+					</div>
+				{/each}
+			</div>
+		{:else if event.type === +EventType.Pests}
+			<div class="flex w-full flex-col gap-1">
+				{#each pestWeights() as { name, weight }}
+					<div
+						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+					>
+						<div class="flex flex-row items-center gap-2">
+							<img
+								src="/images/pests/{name.toLowerCase()}.png"
+								alt={name}
+								class="pixelated aspect-square"
+							/>
+							<p class="whitespace-nowrap font-semibold">{name}</p>
+						</div>
+						<p class="font-semibold">{weight.toLocaleString()}</p>
+					</div>
+				{/each}
+			</div>
+		{:else if event.type === +EventType.Collections}
+			<div class="flex w-full flex-col gap-1">
+				{#each collectionWeights() as { name, weight }}
+					<div
+						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+					>
+						<div class="flex flex-row items-center gap-2">
+							<p class="whitespace-nowrap font-semibold">{name}</p>
+						</div>
+						<p class="font-semibold">{weight.toLocaleString()}</p>
 					</div>
 				{/each}
 			</div>

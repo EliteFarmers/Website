@@ -41,7 +41,10 @@
 		</p>
 		{#if (recentEvents.length ?? 0) < (data.maxMonthlyEvents ?? 0)}
 			<div class="flex w-full items-center justify-center">
-				<Button onclick={() => (clickOutsideModal = true)}>Create New</Button>
+				<Button
+					onclick={() => (clickOutsideModal = true)}
+					disabled={data.guild.features?.eventsEnabled !== true}>Create New</Button
+				>
 			</div>
 		{/if}
 	</section>
