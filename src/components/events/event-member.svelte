@@ -91,7 +91,7 @@
 								<div class="h-2 w-2 rounded-full bg-muted"></div>
 							{/if}
 							{#if member.status === 1}
-								<div class="text-progress h-2 w-2 rounded-full"></div>
+								<div class="h-2 w-2 rounded-full text-progress"></div>
 							{/if}
 						</div>
 					{/snippet}
