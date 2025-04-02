@@ -6,7 +6,6 @@
 	import Users from 'lucide-svelte/icons/users';
 	import User from 'lucide-svelte/icons/user';
 	import { onMount } from 'svelte';
-	import { getCountdown } from '$lib/format';
 	import { page } from '$app/state';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
@@ -17,6 +16,9 @@
 	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import Countdown from './countdown.svelte';
+	import * as Accordion from '$ui/accordion';
+	import ExternalLinkButton from '$comp/external-link-button.svelte';
 
 	interface Props {
 		data: PageData;
@@ -30,8 +32,10 @@
 	let time = $state(Date.now());
 	let start = $derived(+(event.startTime ?? 0) * 1000);
 	let end = $derived(+(event.endTime ?? 0) * 1000);
+	let joinEnds = $derived(+(event.joinUntilTime ?? 0) * 1000);
 	let started = $derived(start < time);
 	let running = $derived(start < time && end > time);
+	let target = $derived.by(() => (start > time ? start - time : end - time));
 	let joinable = $derived(+(event.joinUntilTime ?? 0) * 1000 > Date.now() && !self?.disqualified);
 	let teamEvent = $derived((teams?.length ?? 0) > 0);
 
@@ -84,8 +88,8 @@
 
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 
-<HeroBanner src={banner} class="h-96">
-	<div class="mb-6 mt-32 flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
+<HeroBanner src={banner} class="h-64">
+	<div class="flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
 			{data.event?.name}
@@ -94,47 +98,48 @@
 			<ExternalLink size={16} class="text-white" />
 		</Button>
 	</div>
-	<div class="mb-32 flex flex-col items-center rounded-lg bg-zinc-900/75 p-4 text-white">
-		<p class="text-lg font-light">
-			{#if start > time}
-				Event Starts In
-			{:else}
-				Event Ends In
-			{/if}
-		</p>
-		<h1 class="select-none font-sans text-2xl font-semibold sm:text-4xl md:text-6xl lg:text-8xl">
-			{#if start > time}
-				{getCountdown(start - time + time) ?? 'Event Started!'}
-			{:else}
-				{getCountdown(end + time - time) ?? 'Event Over!'}
-			{/if}
-		</h1>
-	</div>
 </HeroBanner>
 
-<div class="mb-16 mt-96 flex flex-col items-center justify-center gap-8 pt-8" data-sveltekit-preload-data="tap">
+<div class="mt-64 flex flex-col items-center justify-center gap-8 pt-8" data-sveltekit-preload-data="tap">
+	<div class="relative flex w-full flex-col items-center rounded-md border-2 bg-card p-4 md:w-fit">
+		{#if end < time}
+			<p class="md:text-lg">Event Ended!</p>
+		{:else}
+			<p class="absolute top-2 mb-2 rounded-md bg-card p-1 pt-0 font-mono md:text-lg">
+				{#if start > time}
+					Event Starts In
+				{:else}
+					Event Ends In
+				{/if}
+			</p>
+			<Countdown ms={target} />
+		{/if}
+
+		<!-- <NumberFlow value={end}></NumberFlow> -->
+	</div>
 	<div class="mx-4 flex w-full max-w-6xl flex-col items-center gap-8 lg:flex-row lg:items-start">
-		<section class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md bg-card p-8">
+		<section class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md border-2 bg-card p-8">
 			<h2 class="text-3xl">{event.name}</h2>
 			<div class="flex flex-col gap-4">
-				<div class="flex flex-row items-center gap-2 text-sm font-semibold md:text-lg">
-					<span>{new Date(start).toLocaleDateString()}</span>
-					<span
-						>{new Date(start).toLocaleTimeString(undefined, {
-							hour: 'numeric',
-							minute: '2-digit',
-						})}</span
-					>
-					<span> - </span>
-					<span>{new Date(end).toLocaleDateString()}</span>
-					<span
-						>{new Date(end).toLocaleTimeString(undefined, {
-							hour: 'numeric',
-							minute: '2-digit',
-						})}</span
-					>
-				</div>
 				<EventType type={event.type ?? 1} />
+				<div class="flex flex-col items-start gap-2 text-sm font-semibold md:text-lg">
+					<p>
+						<span class="text-muted-foreground">Starts</span>
+						{new Date(start).toLocaleDateString()}
+						{new Date(start).toLocaleTimeString(undefined, {
+							hour: 'numeric',
+							minute: '2-digit',
+						})}
+					</p>
+					<p>
+						<span class="text-muted-foreground">Ends</span>
+						{new Date(end).toLocaleDateString()}
+						{new Date(end).toLocaleTimeString(undefined, {
+							hour: 'numeric',
+							minute: '2-digit',
+						})}
+					</p>
+				</div>
 				<p><Linebreaks text={event.description ?? ''} /></p>
 				{#if event.prizeInfo}
 					<p><strong>Prizes</strong></p>
@@ -148,6 +153,18 @@
 				{/if}
 				<EventData {event} />
 				<a href="#agreement" class="text-link underline">Event Agreement</a>
+				<p>
+					{#if joinable}
+						<span class="text-muted-foreground">Joining Closes</span>
+					{:else}
+						<span class="text-muted-foreground">Joining Closed</span>
+					{/if}
+					{new Date(joinEnds).toLocaleDateString()}
+					{new Date(joinEnds).toLocaleTimeString(undefined, {
+						hour: 'numeric',
+						minute: '2-digit',
+					})}
+				</p>
 				<div class="mt-4 flex flex-wrap justify-center gap-2">
 					<Button href="/server/{event.guildId}">
 						<p>Back To Server</p>
@@ -175,7 +192,7 @@
 				{/if}
 			</div>
 		</section>
-		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md bg-card p-8">
+		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-8">
 			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
 					<Button onclick={swapLeaderboard} variant="outline" size="sm">
@@ -225,8 +242,8 @@
 		</section>
 	</div>
 
-	<div class="flex max-w-xl flex-col gap-4" id="agreement">
-		<h2 class="text-3xl">Event Agreement</h2>
+	<section class="flex max-w-xl flex-col gap-4" id="agreement">
+		<h3 class="text-2xl">Event Agreement</h3>
 		<p>
 			All members of the event are expected to follow all of <a
 				href="https://hypixel.net/rules"
@@ -235,5 +252,154 @@
 			website is not responsible for unpaid prizes. Please do get in contact however and we'll revoke event permissions
 			from the responsible server if appropriate. This website does not take a cut of any prizes or act as a middleman.
 		</p>
-	</div>
+	</section>
+
+	<section class="flex w-full max-w-4xl flex-col items-start gap-4 rounded-md border-2 bg-card p-8" id="faq">
+		<h3 class="text-2xl">Frequently Asked Questions</h3>
+		<Accordion.Root type="multiple" class="w-full">
+			<Accordion.Item value="item-1">
+				<Accordion.Trigger><p class="text-left">How is progress counted?</p></Accordion.Trigger>
+				<Accordion.Content>
+					When you first join an event, your initial stats relevant to the event are recorded. After that,
+					whenever your stats change your score is updated while the event is still running. Make sure you've
+					joined before starting to grind!
+					<br /><br />
+					Beyond that, different event types have different logic for how they calculate your score. Farming Weight
+					events aren't affected by minions or pest kills, as they verify your collections with tool counters.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-2">
+				<Accordion.Trigger
+					><p class="text-left">Do my stats get fetched from Hypixel automatically?</p></Accordion.Trigger
+				>
+				<Accordion.Content>
+					No. This would potentially be a violation of <ExternalLinkButton
+						href="https://developer.hypixel.net/policies/">Hypixel's API policies</ExternalLinkButton
+					>. Someone has to manually load your stats page for changes to be detected. Due to the popularity of
+					events, this is usually done frequently by users and doesn't cause issues.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-3">
+				<Accordion.Trigger><p class="text-left">What happens if I get disqualified?</p></Accordion.Trigger>
+				<Accordion.Content>
+					If you are disqualified from an event, you will be removed from the event and recieve a
+					disqualification reason in place of the "Join"/"My Membership" button. You will not be able to
+					rejoin the event. You might be able to appeal your disqualification by contacting the <strong
+						>staff of the Discord server this event takes place in</strong
+					>.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-4">
+				<Accordion.Trigger><p class="text-left">Can I rejoin if I leave the event?</p></Accordion.Trigger>
+				<Accordion.Content>
+					Yes, as long as the event is still running, joining hasn't closed, and you haven't been
+					disqualified. You can rejoin at any time.
+					<br /><br />
+					Your score <strong>will not</strong> be reset if you rejoin, but keep in mind that you can't rejoin once
+					it closes!
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-5">
+				<Accordion.Trigger><p class="text-left">What if I suspect someone is cheating?</p></Accordion.Trigger>
+				<Accordion.Content>
+					If you suspect someone is cheating, you can report them to the <strong
+						>staff of the Discord server this event takes place in</strong
+					>. If they are found to be cheating, they will be disqualified from the event.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-6">
+				<Accordion.Trigger
+					><p class="text-left">
+						What if my stats are still on cooldown when the event ends?
+					</p></Accordion.Trigger
+				>
+				<Accordion.Content>
+					Unfortunately, there's nothing you can do. If you are still on cooldown when the event ends, your
+					score will be locked in at the last time your data was fetched. This scenario could lead to you
+					losing out on a few minutes of progress, but generally these events last long enough that a few
+					minutes of progress won't matter.
+					<br /><br />
+					This scenario also can happen at the start of the event. If you joined before the event started, your
+					initial stats only get loaded the next time your stats are fetched once the event is running. This means
+					that you may need to wait for your second fetch to see your score increase.
+				</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
+		<h4 class="-mb-2 mt-4 text-xl">Team Events</h4>
+		<Accordion.Root type="multiple" class="w-full">
+			<Accordion.Item value="item-1">
+				<Accordion.Trigger><p class="text-left">How do I join/leave a team?</p></Accordion.Trigger>
+				<Accordion.Content>
+					You can join a team by clicking the "Join Event"/"Manage Membership" button on the event page. If
+					you are already in a team, you can leave it and join another one at any time.
+					<br /><br />
+					To join a team, you may need a <strong>join code</strong>. This is a string of characters that the
+					team leader can generate in their Manage Membership page. Ask the leader of the team you want to
+					join for this code!
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-2">
+				<Accordion.Trigger
+					><p class="text-left">Will my score transfer to a new team if I move?</p></Accordion.Trigger
+				>
+				<Accordion.Content>
+					Yes! Your score will transfer to the new team if you leave and rejoin. You can also leave and rejoin
+					the same team as long as you have the join code.
+					<br /><br />
+					However, <strong>you will be locked into the team you are in when the joining period ends.</strong> You
+					will not be able to leave or rejoin a team after this point.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-3">
+				<Accordion.Trigger><p class="text-left">How do I make/manage a team?</p></Accordion.Trigger>
+				<Accordion.Content>
+					If the event allows it, you can create a team by clicking the "Join Event"/"Manage Membership"
+					button on the event page. Once you are in the event, you can create a team by clicking the "Create
+					Team" button. You can change your team name and copy your join code here! Other players can join
+					your team by entering this code in the "Join Team" section of the event page.
+					<br /><br />
+					Here you're also able to kick members from your team, and change the join code. (If you kick someone,
+					they will be able to rejoin with the same code unless you change it!) Your team mates are trusting you
+					not to kick them out last minute, so please don't do that!
+					<br /><br />
+					<strong
+						>Once the joining period ends, you will not be able to kick members from your team. You will
+						also not be able to leave the team you are in.</strong
+					>
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-4">
+				<Accordion.Trigger><p class="text-left">How do I leave a team?</p></Accordion.Trigger>
+				<Accordion.Content>
+					As long as the joining period hasn't closed, you can leave your team by clicking the leave button on
+					the Manage Membership page.
+					<br /><br />
+					You might not be able to rejoin the same team if you leave it, the team leader might have changed the
+					join code!
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-5">
+				<Accordion.Trigger
+					><p class="text-left">What if I suspect someone is cheating on my team?</p></Accordion.Trigger
+				>
+				<Accordion.Content>
+					If you're the team leader and you suspect someone is cheating on your team while the joining period
+					is open, you can kick them from the team by clicking the kick button found on the Manage Membership
+					page.
+					<br /><br />
+					You can also can also report them to the
+					<strong>staff of the Discord server this event takes place in</strong>. If they are found to be
+					cheating, they will be disqualified from the event. The team can continue to play, but they will be
+					unfortunately down a member.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-6">
+				<Accordion.Trigger><p class="text-left">Can I play solo?</p></Accordion.Trigger>
+				<Accordion.Content>
+					You can play solo by creating a team with yourself as the only member, but you will be at a serious
+					disadvantage compared to other teams.
+				</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
+	</section>
 </div>

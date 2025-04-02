@@ -5,6 +5,7 @@
 	import { EventType } from '$lib/utils';
 	import Crown from 'lucide-svelte/icons/crown';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
+	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 
 	interface Props {
 		owner?: boolean;
@@ -58,69 +59,77 @@
 </script>
 
 <Accordion.Trigger class="w-full">
-	<div id={member.playerUuid} class="flex w-full scroll-mt-64 flex-row justify-between align-middle">
-		<div class="flex flex-row items-center gap-2 align-middle">
-			{#if rank}
-				<div>
-					<p class="text-progress">
-						<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
-					</p>
-				</div>
-			{/if}
-			<img
-				src="https://mc-heads.net/avatar/{member.playerUuid}"
-				alt="Player Head"
-				class="pixelated aspect-square size-8 rounded-sm"
-			/>
-			<p class="text-lg">{member.playerName}</p>
-			{#if owner}
-				<TooltipSimple>
-					{#snippet trigger()}
-						<div class="flex flex-row items-end">
-							<Crown size={16} class="w-4 text-completed" />
-						</div>
-					{/snippet}
-					<p>Team Owner</p>
-				</TooltipSimple>
-			{/if}
-			{#if running}
-				<TooltipSimple>
-					{#snippet trigger()}
-						<div class="flex flex-col items-center justify-center">
+	{#snippet child({ props })}
+		<div id={member.playerUuid} class="flex w-full scroll-mt-64 flex-row justify-between align-middle">
+			<div class="flex flex-row items-center gap-2 align-middle">
+				{#if rank}
+					<div>
+						<p class="text-progress">
+							<span class="text-sm sm:text-xl">#</span><span class="text-lg sm:text-2xl">{rank}</span>
+						</p>
+					</div>
+				{/if}
+				<img
+					src="https://mc-heads.net/avatar/{member.playerUuid}"
+					alt="Player Head"
+					class="pixelated aspect-square size-8 rounded-sm"
+				/>
+				<p class="text-lg">{member.playerName}</p>
+				{#if owner}
+					<TooltipSimple>
+						{#snippet trigger()}
+							<div class="flex flex-row items-end">
+								<Crown size={16} class="w-4 text-completed" />
+							</div>
+						{/snippet}
+						<p>Team Owner</p>
+					</TooltipSimple>
+				{/if}
+				{#if running}
+					<TooltipSimple>
+						{#snippet trigger()}
+							<div class="flex flex-col items-center justify-center">
+								{#if member.status === 0}
+									<div class="size-2 rounded-full bg-muted"></div>
+								{/if}
+								{#if +member.status === 1}
+									<div class="size-2 rounded-full bg-progress"></div>
+								{/if}
+							</div>
+						{/snippet}
+						<div>
 							{#if member.status === 0}
-								<div class="h-2 w-2 rounded-full bg-muted"></div>
+								<p class="text-lg font-semibold">Inactive</p>
+								<p class="max-w-xs">
+									{member.playerName} has not increased their score since last checked.
+								</p>
 							{/if}
 							{#if member.status === 1}
-								<div class="h-2 w-2 rounded-full text-progress"></div>
+								<p class="text-lg font-semibold">Active!</p>
+								<p class="max-w-xs">
+									{member.playerName} has increased their score since last checked!
+								</p>
 							{/if}
 						</div>
-					{/snippet}
-					<div>
-						{#if member.status === 0}
-							<p class="text-lg font-semibold">Inactive</p>
-							<p class="max-w-xs">
-								{member.playerName} has not increased their score since last checked.
-							</p>
-						{/if}
-						{#if member.status === 1}
-							<p class="text-lg font-semibold">Active!</p>
-							<p class="max-w-xs">{member.playerName} has increased their score since last checked!</p>
-						{/if}
-					</div>
-				</TooltipSimple>
-			{/if}
+					</TooltipSimple>
+				{/if}
+			</div>
+			<button {...props}>
+				<div class="flex-1"></div>
+				<p class="inline-block truncate pr-2 text-lg">
+					{#if member.score && +member.score > 0}
+						{(+(member.score ?? 0)).toLocaleString()}
+					{:else}
+						<span class="text-destructive">Zero!</span>
+					{/if}
+				</p>
+				<ChevronDown class="size-4 shrink-0 transition-transform duration-200" />
+			</button>
 		</div>
-		<p class="block pr-2 text-lg">
-			{#if member.score && +member.score > 0}
-				{(+(member.score ?? 0)).toLocaleString()}
-			{:else}
-				<span class="text-destructive">Zero!</span>
-			{/if}
-		</p>
-	</div>
+	{/snippet}
 </Accordion.Trigger>
 <Accordion.Content>
-	<div class="flex w-full flex-col items-start gap-4 md:flex-row">
+	<div class="flex flex-col items-start gap-4 md:flex-row">
 		{#if event.type === +EventType.Medals}
 			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count]}
@@ -171,7 +180,8 @@
 				{/each}
 			</div>
 		{/if}
-		<div class="flex w-full flex-row items-center justify-between">
+		<div class="flex w-full flex-col items-end justify-between gap-2 text-right">
+			<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 			<div>
 				<p class="text-muted-foreground">Last Updated</p>
 				<p>
@@ -182,7 +192,6 @@
 						: 'Never Updated!'}
 				</p>
 			</div>
-			<Button href="/@{member.playerUuid}/{member.profileId}">View Stats</Button>
 		</div>
 	</div>
 </Accordion.Content>
