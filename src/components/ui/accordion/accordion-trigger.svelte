@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Accordion as AccordionPrimitive, type WithoutChild } from 'bits-ui';
+	import { Accordion as AccordionPrimitive } from 'bits-ui';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import { cn } from '$lib/utils.js';
 
@@ -8,8 +8,9 @@
 		class: className,
 		level = 3,
 		children,
+		child,
 		...restProps
-	}: WithoutChild<AccordionPrimitive.TriggerProps> & {
+	}: AccordionPrimitive.TriggerProps & {
 		level?: AccordionPrimitive.HeaderProps['level'];
 	} = $props();
 </script>
@@ -22,8 +23,11 @@
 			className
 		)}
 		{...restProps}
+		{child}
 	>
-		{@render children?.()}
-		<ChevronDown class="size-4 shrink-0 transition-transform duration-200" />
+		{#if !child}
+			{@render children?.()}
+			<ChevronDown class="size-4 shrink-0 transition-transform duration-200" />
+		{/if}
 	</AccordionPrimitive.Trigger>
 </AccordionPrimitive.Header>

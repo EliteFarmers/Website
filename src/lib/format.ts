@@ -259,26 +259,24 @@ export function getRelativeTimeString(date: Date | number, lang: string): string
 	return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
 }
 
-export function getCountdown(date: Date | number) {
-	// Set the date we're counting down to
-	const timeMs = typeof date === 'number' ? date : date.getTime();
-	// Get today's date and time
-	const now = new Date().getTime();
-
-	// Find the distance between now and the count down date
-	const distance = timeMs - now;
-
-	// Time calculations for days, hours, minutes and seconds
-	const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-	const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-	const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-	if (distance < 0) {
-		return null;
-	}
-
+export function getCountdown(ms: number) {
+	const { days, hours, minutes, seconds } = getCountdownParts(ms);
 	return (days ? days + 'd ' : '') + (hours ? hours + 'h ' : '') + (minutes ? minutes + 'm ' : '') + seconds + 's ';
+}
+
+export function getCountdownParts(ms: number) {
+	// Time calculations for days, hours, minutes and seconds
+	const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+	const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+	const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+	return {
+		days: days,
+		hours: hours,
+		minutes: minutes,
+		seconds: seconds,
+	};
 }
 
 export function getCropColor(crop: string | Crop) {
