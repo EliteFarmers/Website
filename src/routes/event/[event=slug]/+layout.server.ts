@@ -2,8 +2,9 @@ import { GetEventDetails, GetEventMember, GetEventMembers, GetEventTeams, GetPub
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, url, locals }) => {
+export const load = (async ({ params, url, locals, depends }) => {
 	const { event } = params;
+	depends('event:membership');
 
 	// Remove everything before the last dash
 	const eventId = event.slice(event.lastIndexOf('-') + 1);

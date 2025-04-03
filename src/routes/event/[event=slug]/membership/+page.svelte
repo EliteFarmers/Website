@@ -16,6 +16,8 @@
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { watch } from 'runed';
+	import { invalidate } from '$app/navigation';
 
 	interface Props {
 		data: PageData;
@@ -31,6 +33,10 @@
 		5: false,
 	});
 
+	let picked1 = $state('');
+	let picked2 = $state('');
+	let picked3 = $state('');
+
 	function generateTeamName() {
 		const firstWords = data.words?.first ?? [];
 		const secondWords = data.words?.second ?? [];
@@ -42,7 +48,7 @@
 
 		if (Math.random() > 0.5) {
 			picked1 = first;
-			picked3 = undefined;
+			picked3 = '';
 
 			if (Math.random() > 0.5) {
 				picked2 = second;
@@ -92,17 +98,20 @@
 		data.account?.profiles?.filter((p) => p.members?.some((m) => m.active && m.uuid === data.account?.id)) ?? []
 	);
 
-	let picked1 = $state('');
-	let picked2 = $state('');
-	let picked3 = $state<string | undefined>(undefined);
+	let joinEnds = $derived(+(event.joinUntilTime ?? 0) * 1000);
+	let joinable = $derived(joinEnds > Date.now() && !data.member?.disqualified);
+	let loading = $state(false);
 
 	let name = $state('');
 
-	$effect.pre(() => {
-		if (event.mode !== 'solo' && data.words) {
-			generateTeamName();
+	watch(
+		() => data.words,
+		(words) => {
+			if (event.mode !== 'solo' && words) {
+				generateTeamName();
+			}
 		}
-	});
+	);
 
 	let words = $derived(
 		Array.from(
@@ -147,12 +156,18 @@
 		</h5>
 	{/if}
 
-	<div class="flex flex-col items-start justify-center gap-8 md:flex-row md:gap-16">
+	<div class="flex flex-col items-start justify-center gap-3 md:flex-row md:gap-8">
 		<form
 			method="post"
 			action="?/join"
 			class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8"
-			use:enhance
+			use:enhance={() => {
+				loading = true;
+				return async ({ update }) => {
+					await update();
+					loading = false;
+				};
+			}}
 		>
 			<h2 class="mb-4 text-center text-2xl font-semibold">
 				{#if event.mode === 'solo'}
@@ -300,7 +315,7 @@
 			</div>
 
 			<div class="flex flex-col justify-center gap-2 md:flex-row">
-				<Button class="flex-1" type="submit" disabled={joined}>Join Event</Button>
+				<Button class="flex-1" type="submit" disabled={joined || loading}>Join Event</Button>
 			</div>
 
 			{#if joined}
@@ -312,9 +327,21 @@
 				<h2 class="mb-4 text-center text-2xl font-semibold">Step 2: Join Team</h2>
 				<p>
 					This is a team event! You must join a team to participate. If you don't have a team, you can create
-					one below (if the event allows it). <span class="text-destructive"
-						>You won't be able to change your team once the event starts!</span
+					one below (if the event allows it). <span class="font-semibold"
+						>You won't be able to change your team or kick members once the join period ends!</span
 					>
+				</p>
+				<p>
+					{#if joinable}
+						<span class="text-muted-foreground">Joining Closes</span>
+					{:else}
+						<span class="text-muted-foreground">Joining Closed</span>
+					{/if}
+					{new Date(joinEnds).toLocaleDateString()}
+					{new Date(joinEnds).toLocaleTimeString(undefined, {
+						hour: 'numeric',
+						minute: '2-digit',
+					})}
 				</p>
 
 				{#if ownTeam}
@@ -353,7 +380,17 @@
 								<div class="flex flex-row items-center gap-4">
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
 									{#if isOwner}
-										<form action="?/kickMember" method="post" use:enhance>
+										<form
+											action="?/kickMember"
+											method="post"
+											use:enhance={() => {
+												loading = true;
+												return async ({ update }) => {
+													await update();
+													loading = false;
+												};
+											}}
+										>
 											<input type="hidden" name="team" value={ownTeamId} />
 											<input type="hidden" name="member" value={member.playerUuid} />
 											<Button
@@ -362,7 +399,7 @@
 												size="sm"
 												value={member.playerUuid}
 												variant="destructive"
-												disabled={member.playerUuid === data.account?.id}
+												disabled={member.playerUuid === data.account?.id || loading}
 											>
 												<Trash />
 											</Button>
@@ -371,14 +408,37 @@
 								</div>
 							</div>
 						{/each}
-						<form action="?/leaveTeam" method="post" use:enhance>
+						<form
+							action="?/leaveTeam"
+							method="post"
+							use:enhance={() => {
+								loading = true;
+								return async ({ update }) => {
+									await update();
+									loading = false;
+								};
+							}}
+						>
 							<input type="hidden" name="team" value={ownTeamId} />
-							<Button type="submit" variant="secondary" formaction="?/leaveTeam">Leave Team</Button>
+							<Button type="submit" variant="secondary" formaction="?/leaveTeam" disabled={loading}
+								>Leave Team</Button
+							>
 						</form>
 					</div>
 
 					{#if isOwner}
-						<form action="?/updateTeam" method="post" class="flex flex-col gap-4" use:enhance>
+						<form
+							action="?/updateTeam"
+							method="post"
+							class="flex flex-col gap-4"
+							use:enhance={() => {
+								loading = true;
+								return async ({ update }) => {
+									await update();
+									loading = false;
+								};
+							}}
+						>
 							<input type="hidden" name="team" value={ownTeamId} />
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
@@ -386,8 +446,13 @@
 								<input type="hidden" name="name" value={name} hidden />
 								<div class="flex flex-col gap-2">
 									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-									<div class="flex max-w-sm flex-row gap-1">
-										<Button variant="secondary" onclick={generateTeamName}>
+									<div class="flex max-w-sm flex-row flex-wrap gap-1 lg:flex-nowrap">
+										<Button
+											variant="secondary"
+											onclick={generateTeamName}
+											disabled={loading}
+											class="order-5 lg:order-1"
+										>
 											<RefreshCcw />
 										</Button>
 										<ComboBox
@@ -396,6 +461,7 @@
 											exclude={[picked2, picked3]}
 											onChange={updateName}
 											placeholder="Select Word"
+											btnClass="order-2"
 										/>
 										<ComboBox
 											options={words}
@@ -403,6 +469,7 @@
 											exclude={[picked1, picked3]}
 											onChange={updateName}
 											placeholder="Select Word"
+											btnClass="order-3"
 										/>
 										<ComboBox
 											options={words}
@@ -411,13 +478,15 @@
 											onChange={updateName}
 											placeholder="Select Word"
 											clear={true}
+											btnClass="order-4"
 										/>
 									</div>
 								</div>
 							</div>
 							<div class="flex flex-row gap-2">
-								<Button type="submit">Update Team Name</Button>
-								<Button type="submit" formaction="?/newCode" variant="secondary">Reset Join Code</Button
+								<Button type="submit" disabled={loading}>Update Team Name</Button>
+								<Button type="submit" formaction="?/newCode" variant="secondary" disabled={loading}
+									>Reset Join Code</Button
 								>
 							</div>
 						</form>
@@ -430,10 +499,25 @@
 							<SelectSimple options={teams} name="team" placeholder="Select Team" required />
 							<Input type="text" name="code" placeholder="Join Code" required />
 						</div>
-						<Button type="submit" disabled={!data.member}>Join Team</Button>
+						<Button type="submit" disabled={!data.member || !joined || loading}>Join Team</Button>
+						{#if !joined}
+							<p class="-mt-2 leading-none text-destructive">Join the event first to join a team!</p>
+						{/if}
 					</form>
 
-					<form action="?/createTeam" method="post" class="flex flex-col gap-4" use:enhance>
+					<form
+						action="?/createTeam"
+						method="post"
+						class="flex flex-col gap-4"
+						use:enhance={() => {
+							loading = true;
+							return async ({ update }) => {
+								invalidate('event:membership');
+								await update();
+								loading = false;
+							};
+						}}
+					>
 						<h3 class="text-xl font-semibold">Create a Team</h3>
 						<p>
 							Create your own team for players to join! Names are generated below with an approved word
@@ -444,8 +528,13 @@
 
 							<div class="flex flex-col gap-2">
 								<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-								<div class="flex max-w-sm flex-row gap-1">
-									<Button variant="secondary" onclick={generateTeamName}>
+								<div class="flex max-w-sm flex-row flex-wrap gap-1 lg:flex-nowrap">
+									<Button
+										variant="secondary"
+										disabled={!joined}
+										onclick={generateTeamName}
+										class="order-5 lg:order-1"
+									>
 										<RefreshCcw />
 									</Button>
 									<ComboBox
@@ -454,6 +543,8 @@
 										exclude={[picked2, picked3]}
 										onChange={updateName}
 										placeholder="Select Word"
+										disabled={!joined}
+										btnClass="order-2"
 									/>
 									<ComboBox
 										options={words}
@@ -461,6 +552,8 @@
 										exclude={[picked1, picked3]}
 										onChange={updateName}
 										placeholder="Select Word"
+										disabled={!joined}
+										btnClass="order-3"
 									/>
 									<ComboBox
 										options={words}
@@ -468,12 +561,17 @@
 										exclude={[picked1, picked2]}
 										onChange={updateName}
 										placeholder="Select Word"
+										disabled={!joined}
 										clear={true}
+										btnClass="order-4"
 									/>
 								</div>
 							</div>
 						</div>
-						<Button type="submit" disabled={!data.member}>Create Team</Button>
+						<Button type="submit" disabled={!data.member || !joined || loading}>Create Team</Button>
+						{#if !joined}
+							<p class="-mt-2 leading-none text-destructive">Join the event first to create a team!</p>
+						{/if}
 					</form>
 				{/if}
 			</div>
@@ -483,7 +581,7 @@
 	<form method="post" action="?/leave" class="my-8 mb-16 max-w-xl" use:enhance>
 		<div class="flex flex-row items-center justify-center gap-2">
 			<p>Already joined?</p>
-			<Button type="submit" variant="secondary">Leave Event</Button>
+			<Button type="submit" variant="destructive" disabled={!joined || loading}>Leave Event</Button>
 		</div>
 		<p class="mt-2 text-center">
 			Leaving the event will remove you from the leaderboard. Be sure you want to leave before doing so. There is
