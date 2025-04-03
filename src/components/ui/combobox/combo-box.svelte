@@ -72,7 +72,7 @@
 			</Button>
 		{/snippet}
 	</Popover.Trigger>
-	<Popover.Content class={cn('p-0) max-h-96 w-[200px] overflow-y-scroll', popoverClass)}>
+	<Popover.Content class={cn('max-h-48 w-[200px] overflow-y-scroll p-0', popoverClass)} side="bottom">
 		<Command.Root>
 			<Command.Input {placeholder} class="h-9" />
 			<Command.Empty>No option found.</Command.Empty>
