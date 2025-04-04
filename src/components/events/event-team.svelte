@@ -20,7 +20,7 @@
 	let full = $derived(event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers);
 </script>
 
-<Accordion.Item value={key} id={key} class="my-2 rounded-lg outline outline-2">
+<Accordion.Item value={key} id={key} class="my-2 rounded-lg outline outline-2 outline-border">
 	<Accordion.Trigger class="w-full pr-4">
 		<div class="flex w-full flex-col gap-2 px-4">
 			<div class="flex flex-row items-center justify-between">

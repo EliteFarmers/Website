@@ -22,6 +22,8 @@
 	import { Crop, getCropDisplayName, getCropFromName, Pest } from 'farming-weight';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		data: PageData;
@@ -68,9 +70,16 @@
 			| undefined
 	);
 	let newCollectionKey = $state('');
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild.icon?.url ?? undefined,
+		name: 'Edit ' + (data.event?.name ?? 'Event'),
+		href: page.url.pathname,
+	});
 </script>
 
-<Head title="Events" description="Manage Events happening in your guild" />
+<Head title={data.event.name ?? 'Event'} description="Manage Events happening in your guild" />
 
 <HeroBanner src={event.banner?.url} class="h-48">
 	<div class="mb-6 mt-8 flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">

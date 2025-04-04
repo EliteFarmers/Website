@@ -19,6 +19,7 @@
 	import Countdown from './countdown.svelte';
 	import * as Accordion from '$ui/accordion';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		data: PageData;
@@ -83,6 +84,13 @@
 	const breadcrumb = getBreadcrumb();
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
+	});
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild?.icon?.url ?? undefined,
+		name: data.event.name ?? 'Event',
+		href: page.url.pathname,
 	});
 </script>
 

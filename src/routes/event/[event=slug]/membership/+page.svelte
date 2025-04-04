@@ -18,6 +18,7 @@
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { watch } from 'runed';
 	import { invalidate } from '$app/navigation';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		data: PageData;
@@ -137,6 +138,13 @@
 	const breadcrumb = getBreadcrumb();
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
+	});
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild?.icon?.url ?? undefined,
+		name: (data.event.name ?? 'Event') + ' Membership',
+		href: page.url.pathname,
 	});
 </script>
 

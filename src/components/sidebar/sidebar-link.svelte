@@ -10,9 +10,10 @@
 			href: string;
 			icon?: Component;
 		};
+		icon?: string;
 	}
 
-	let { item }: Props = $props();
+	let { item, icon }: Props = $props();
 
 	let active = $derived(item.href === page.url.pathname);
 </script>
@@ -24,10 +25,13 @@
 		{/snippet}
 		{#snippet child({ props })}
 			<a href={item.href} {...props}>
+				{#if icon}
+					<img src={icon} alt="Icon" class="size-4 rounded-sm" />
+				{/if}
 				{#if item.icon}
 					<item.icon />
 				{/if}
-				<span>{item.title}</span>
+				<span class="inline-block first-letter:capitalize">{item.title}</span>
 			</a>
 		{/snippet}
 	</Sidebar.MenuButton>

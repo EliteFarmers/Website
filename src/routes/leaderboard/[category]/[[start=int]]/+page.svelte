@@ -9,6 +9,7 @@
 	import { Switch } from '$ui/switch';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { PersistedState } from 'runed';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		data: PageData;
@@ -60,8 +61,14 @@
 	]);
 
 	const breadcrumb = getBreadcrumb();
+	const favorites = getFavoritesContext();
+
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
+		favorites.setPage({
+			name: `#${offset} - ` + (data.settings.title || data.lb?.title),
+			href: page.url.pathname,
+		});
 	});
 </script>
 

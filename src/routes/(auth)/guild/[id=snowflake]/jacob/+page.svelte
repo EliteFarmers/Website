@@ -15,6 +15,8 @@
 	import Plus from 'lucide-svelte/icons/plus';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import { page } from '$app/state';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		data: PageData;
@@ -54,6 +56,13 @@
 			return { timestamp, crop, uuid };
 		})
 	);
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild.icon?.url ?? undefined,
+		name: 'Jacob Leaderboards',
+		href: page.url.pathname,
+	});
 </script>
 
 <Head title="Jacob Leaderboards" description="Manage Jacob Leaderboards for your guild" />

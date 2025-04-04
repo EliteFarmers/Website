@@ -7,6 +7,8 @@
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		data: PageData;
@@ -35,6 +37,13 @@
 			}))
 			.filter((r) => r.value && r.label !== '@@everyone')
 	);
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild.icon?.url ?? undefined,
+		name: 'Contest Pings',
+		href: page.url.pathname,
+	});
 </script>
 
 <Head title="Contest Pings" description="Manage upcoming Jacob Contest pings for your guild" />
