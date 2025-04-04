@@ -1,3 +1,4 @@
+import { building } from '$app/environment';
 import type { components } from './api/api';
 import { GetUpcomingEvents } from './api/elite';
 
@@ -29,6 +30,7 @@ export async function reloadCachedItems() {
 }
 
 export async function initCachedItems() {
+	if (building) return;
 	await reloadCachedItems();
 
 	if (interval) {
