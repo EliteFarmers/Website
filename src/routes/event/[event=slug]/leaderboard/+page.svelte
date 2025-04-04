@@ -10,6 +10,7 @@
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		data: PageData;
@@ -56,6 +57,13 @@
 			data.guild?.name
 		}!\n\n${topList}`
 	);
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild?.icon?.url ?? undefined,
+		name: (data.event.name ?? 'Event') + ' Leaderboard',
+		href: page.url.pathname,
+	});
 </script>
 
 <Head title={(event.name || 'Farming Weight Event') + ' Leaderboard'} {description} imageUrl={guild?.icon?.url} />

@@ -14,8 +14,11 @@
 	import { cn } from '$lib/utils';
 	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
 	import NavDynamic from './nav-dynamic.svelte';
+	import type { Snippet } from 'svelte';
 
 	let searchOpen = $state(false);
+
+	let { children }: { children?: Snippet } = $props();
 
 	const sidebarNav = getSidebarNav();
 </script>
@@ -51,6 +54,7 @@
 			<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
 		{/if}
 		<NavMain items={SIDEBAR_NAV} title="Main" icon={Home} />
+		{@render children?.()}
 	</Sidebar.Content>
 </ScrollArea>
 <SideBarFooter />

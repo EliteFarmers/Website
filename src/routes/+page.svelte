@@ -17,7 +17,7 @@
 </script>
 
 <Head
-	title="Elite | Skyblock Farming Weight"
+	title="Skyblock Farming Weight"
 	description="View the Farming Weight of any Hypixel Skyblock player! It's the one true method of accurately comparing between crops in the game."
 />
 

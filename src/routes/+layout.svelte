@@ -18,17 +18,23 @@
 	import { toast } from 'svelte-sonner';
 	import type { components } from '$lib/api/api';
 	import { dev } from '$app/environment';
+	import type { LayoutData } from './$types';
+	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
+	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
+	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
+		data: LayoutData;
 	}
 
-	let { children }: Props = $props();
+	let { children, data }: Props = $props();
 
 	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
+	initFavoritesContext();
 	initBreadcrumb();
 	initSidebarNav();
 
@@ -86,7 +92,10 @@
 
 <Sidebar.Provider>
 	<Sidebar.Root collapsible="icon" class="z-50">
-		<AppSidebar />
+		<AppSidebar>
+			<FavoritedLinks />
+			<UpcomingEvents events={data.cache?.events} />
+		</AppSidebar>
 	</Sidebar.Root>
 
 	<div class="max-h-screen flex-1 overflow-y-auto">

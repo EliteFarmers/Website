@@ -31,9 +31,11 @@
 		value = $bindable('_'),
 	}: Props = $props();
 
-	let realOptions = clear
-		? [{ label: placeholder, value: '_' }, ...options.filter((f) => !exclude.includes(f.value))]
-		: options.filter((f) => !exclude.includes(f.value));
+	let realOptions = $derived(
+		clear
+			? [{ label: placeholder, value: '_' }, ...options.filter((f) => !exclude.includes(f.value))]
+			: options.filter((f) => !exclude.includes(f.value))
+	);
 
 	let open = $state(false);
 	let triggerRef = $state<HTMLButtonElement | null>(null);

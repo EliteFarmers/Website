@@ -8,6 +8,8 @@
 	import Head from '$comp/head.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import CreateEvent from './create-event.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		data: PageData;
@@ -23,6 +25,13 @@
 	);
 
 	let events = $derived(data.events?.sort((a, b) => b?.endTime?.localeCompare(a?.endTime ?? '') ?? 0) ?? []);
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild.icon?.url ?? undefined,
+		name: 'Events',
+		href: page.url.pathname,
+	});
 </script>
 
 <Head title="Events" description="Manage Events happening in your guild" />

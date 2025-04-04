@@ -36,10 +36,7 @@
 	}
 </script>
 
-<Head
-	title="Elite | Contests"
-	description="Browse hundreds of thousands of contest participations set by fellow players!"
-/>
+<Head title="Contests" description="Browse hundreds of thousands of contest participations set by fellow players!" />
 
 <div class="flex flex-col items-center justify-center">
 	<h1 class="my-16 text-4xl">Jacob's Contests</h1>

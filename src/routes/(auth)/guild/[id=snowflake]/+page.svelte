@@ -8,6 +8,8 @@
 	import Head from '$comp/head.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		data: PageData;
@@ -31,9 +33,16 @@
 			}))
 			.filter((r) => r.value && r.label !== '@@everyone')
 	);
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild.icon?.url ?? undefined,
+		name: data.guild?.name ?? 'Guild Settings',
+		href: page.url.pathname,
+	});
 </script>
 
-<Head title="Server Settings" description="Manage server settings for your guild!" />
+<Head title={data.guild?.name ?? 'Guild Settings'} description="Manage server settings for your guild!" />
 
 <div class="flex flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">

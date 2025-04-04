@@ -9,6 +9,8 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		data: PageData;
@@ -33,6 +35,13 @@
 	const breadcrumb = getBreadcrumb();
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
+	});
+
+	const favorites = getFavoritesContext();
+	favorites.setPage({
+		icon: data.guild?.icon?.url ?? undefined,
+		name: data.guild.name ?? 'Server',
+		href: page.url.pathname,
 	});
 </script>
 

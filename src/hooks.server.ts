@@ -1,5 +1,10 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle, ServerInit } from '@sveltejs/kit';
 import { FetchUserSession } from '$lib/api/auth';
+import { cache, initCachedItems } from '$lib/servercache';
+
+export const init: ServerInit = async () => {
+	initCachedItems();
+};
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const { locals, cookies } = event;
@@ -19,6 +24,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (access && refresh) {
 		locals.session = await FetchUserSession(event.cookies, access, refresh);
 	}
+
+	locals.cache = cache;
 
 	return await ResolveWithSecurityHeaders(resolve, event);
 };

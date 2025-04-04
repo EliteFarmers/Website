@@ -15,7 +15,7 @@
 </script>
 
 <Head
-	title="Elite | Leaderboards"
+	title="Leaderboards"
 	description="View the various leaderboards available on the site! See the 5 thousand farmers in every crop!"
 />
 

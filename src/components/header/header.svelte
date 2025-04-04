@@ -4,9 +4,24 @@
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import NavBreadcrumb from '$comp/sidebar/nav-breadcrumb.svelte';
 	import ModeToggle from '$comp/header/mode-toggle.svelte';
-	import { navigating } from '$app/state';
+	import { navigating, page } from '$app/state';
 	import { quadInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
+	import { Button } from '$ui/button';
+	import Search from 'lucide-svelte/icons/search';
+	import Star from 'lucide-svelte/icons/star';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+
+	const sidebar = Sidebar.useSidebar();
+	let searchOpen = $state(false);
+
+	const favorites = getFavoritesContext();
+
+	function toggleFavorite() {
+		if (!favorites.removeFavorite(page.url.pathname)) {
+			favorites.addFavorite(favorites.currentPage);
+		}
+	}
 </script>
 
 <header class="sticky top-0 z-40 flex h-16 shrink items-center justify-between gap-2 border-b bg-background px-4">
@@ -15,10 +30,20 @@
 		<Separator orientation="vertical" class="mr-2 h-4" />
 		<NavBreadcrumb />
 	</div>
-	<div class="flex items-center justify-between gap-4 md:justify-end">
-		<div class="w-full flex-1 md:w-auto md:flex-none">
-			<SearchMenu />
-		</div>
+	<div class="flex items-center justify-between gap-2 md:justify-end">
+		<Button variant="ghost" class="px-3 py-1" onclick={toggleFavorite}>
+			<Star class={favorites.favorited ? 'fill-completed text-completed' : ''}></Star>
+		</Button>
+		{#if sidebar.isMobile}
+			<Button onclick={() => (searchOpen = true)} class="border bg-card px-3 py-4" variant="outline" size="sm">
+				<Search />
+			</Button>
+			<SearchMenu bind:open={searchOpen} useButton={false} />
+		{:else}
+			<div class="w-full flex-1 md:w-auto md:flex-none">
+				<SearchMenu />
+			</div>
+		{/if}
 		<div class="flex items-center gap-2">
 			<ModeToggle />
 		</div>
