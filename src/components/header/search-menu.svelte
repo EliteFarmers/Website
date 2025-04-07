@@ -8,8 +8,8 @@
 	import { Button, type ButtonProps } from '$ui/button';
 	import cn from 'classnames';
 	import { browser } from '$app/environment';
-	import { Debounced } from 'runed';
-	import { goto } from '$app/navigation';
+	import { Debounced, watch } from 'runed';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import { ScrollArea } from '$ui/scroll-area';
 
 	let {
@@ -35,6 +35,7 @@
 	}
 
 	function runCommand(cmd: () => void) {
+		debounced.cancel();
 		open = false;
 		cmd();
 	}
@@ -46,6 +47,21 @@
 
 	$effect(() => {
 		search(debounced.current);
+	});
+
+	watch(
+		() => open,
+		() => {
+			if (open) {
+				searchStr = '';
+				destination = '';
+				search('');
+			}
+		}
+	);
+
+	beforeNavigate(() => {
+		debounced.cancel();
 	});
 </script>
 
@@ -61,41 +77,43 @@
 		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
 	</Button>
 {/if}
-<Command.Dialog bind:open>
-	<Command.Root shouldFilter={false}>
-		<Command.Input placeholder="Search for a player" bind:value={searchStr} />
-		<Tabs.Root class="w-full" bind:value={destination}>
-			<Tabs.List class="flex gap-2 rounded-none bg-inherit">
-				<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
-				<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
-				<Tabs.Trigger value="/rates" class="data-[state=active]:border-2">Rates</Tabs.Trigger>
-				<Tabs.Trigger value="/contests" class="data-[state=active]:border-2">Contests</Tabs.Trigger>
-				<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
-			</Tabs.List>
-		</Tabs.Root>
-		<ScrollArea class="flex h-full max-h-[300px] flex-row">
-			<Command.List class="max-h-none">
-				<Command.Group heading="Players">
-					{#if searchStr !== ''}
-						<Command.Item
-							value={searchStr ?? ''}
-							onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
-						>
-							{searchStr}
-						</Command.Item>
-					{/if}
-					{#each players as player, i (i)}
-						<Command.Item
-							value={player ?? ''}
-							onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
-						>
-							{player}
-						</Command.Item>
-					{:else}
-						<Command.Empty>No players found.</Command.Empty>
-					{/each}
-				</Command.Group>
-			</Command.List>
-		</ScrollArea>
-	</Command.Root>
-</Command.Dialog>
+{#key open}
+	<Command.Dialog bind:open>
+		<Command.Root shouldFilter={false}>
+			<Command.Input placeholder="Search for a player" bind:value={searchStr} />
+			<Tabs.Root class="w-full" bind:value={destination}>
+				<Tabs.List class="flex gap-2 rounded-none bg-inherit">
+					<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
+					<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
+					<Tabs.Trigger value="/rates" class="data-[state=active]:border-2">Rates</Tabs.Trigger>
+					<Tabs.Trigger value="/contests" class="data-[state=active]:border-2">Contests</Tabs.Trigger>
+					<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
+				</Tabs.List>
+			</Tabs.Root>
+			<ScrollArea class="flex h-full max-h-[300px] flex-row">
+				<Command.List class="max-h-none">
+					<Command.Group heading="Players">
+						{#if searchStr !== ''}
+							<Command.Item
+								value={searchStr ?? ''}
+								onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
+							>
+								{searchStr}
+							</Command.Item>
+						{/if}
+						{#each players as player, i (i)}
+							<Command.Item
+								value={player ?? ''}
+								onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
+							>
+								{player}
+							</Command.Item>
+						{:else}
+							<Command.Empty>No players found.</Command.Empty>
+						{/each}
+					</Command.Group>
+				</Command.List>
+			</ScrollArea>
+		</Command.Root>
+	</Command.Dialog>
+{/key}
