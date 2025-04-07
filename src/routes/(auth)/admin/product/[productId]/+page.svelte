@@ -116,8 +116,15 @@
 		{/if}
 
 		<div class="flex w-full flex-col gap-4 lg:flex-row">
-			<form method="post" action="?/updateProduct" class="flex flex-1 flex-col gap-4" use:enhance>
+			<form
+				method="post"
+				action="?/updateProduct"
+				class="flex flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4"
+				use:enhance
+			>
 				<input type="hidden" name="product" value={product.id} />
+
+				<h2 class="text-lg font-semibold">Update Product</h2>
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Product Description</Label>
@@ -125,7 +132,7 @@
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
-					<Label>Product Price</Label>
+					<Label>Product Price (in cents)</Label>
 					<Input name="price" value={product.price} placeholder="299" />
 				</div>
 
@@ -197,10 +204,12 @@
 				method="post"
 				action="?/addImage"
 				enctype="multipart/form-data"
-				class="flex flex-1 flex-col gap-4"
+				class="flex h-fit flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4"
 				use:pending={loading}
 			>
 				<input type="hidden" name="product" bind:value={product.id} />
+
+				<h2 class="text-lg font-semibold">Add Product Image</h2>
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Image</Label>
@@ -225,8 +234,8 @@
 
 				<Button type="submit" disabled={loading}>Add Image</Button>
 			</form>
-			<div class="flex flex-1 flex-col gap-4">
-				<h2 class="text-xl font-semibold">Unlocked Styles</h2>
+			<div class="flex h-fit flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4">
+				<h2 class="text-lg font-semibold">Unlocked Styles</h2>
 
 				<form method="post" action="?/addCosmetic" class="flex flex-col gap-4" use:pending={loading}>
 					<input type="hidden" name="product" bind:value={product.id} />
@@ -283,7 +292,7 @@
 </div>
 
 <Dialog.Root bind:open={deleteProductImageModal}>
-	<Dialog.Content class="max-h-[80%] overflow-scroll">
+	<Dialog.Content class="max-h-[80%] overflow-auto">
 		<Dialog.Title>Delete Product Image</Dialog.Title>
 		<form
 			action="?/deleteImage"
