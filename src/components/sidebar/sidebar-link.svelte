@@ -31,7 +31,7 @@
 				{#if item.icon}
 					<item.icon />
 				{/if}
-				<span class="inline-block first-letter:capitalize">{item.title}</span>
+				<span>{item.title}</span>
 			</a>
 		{/snippet}
 	</Sidebar.MenuButton>

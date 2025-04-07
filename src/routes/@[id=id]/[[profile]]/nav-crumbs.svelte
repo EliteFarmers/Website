@@ -14,6 +14,7 @@
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { page } from '$app/state';
 	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
 		account: components['schemas']['MinecraftAccountDto'];
@@ -157,10 +158,16 @@
 
 	const breadcrumb = getBreadcrumb();
 	const sidebarnav = getSidebarNav();
+	const favorites = getFavoritesContext();
 
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
 		sidebarnav.setNav('Stats', sidebarCrumbs);
+		favorites.setPage({
+			icon: account?.id ? `https://mc-heads.net/avatar/${account.id}` : undefined,
+			name: document.title,
+			href: page.url.pathname,
+		});
 	});
 </script>
 

@@ -26,7 +26,6 @@ export async function reloadCachedItems() {
 		item.data = await item.update();
 	}
 	console.log('New data loaded.');
-	console.log('Cached items:', cache);
 }
 
 export async function initCachedItems() {
