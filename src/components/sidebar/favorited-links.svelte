@@ -15,6 +15,7 @@
 	const favorites = getFavoritesContext();
 
 	let editing = $state(false);
+	let menuOpen = $state(true);
 
 	let items = $derived(favorites.current.map((favorite) => ({ id: favorite.href, ...favorite })));
 
@@ -36,15 +37,22 @@
 		if (editing) {
 			favorites.setFavorites(items);
 		} else {
+			menuOpen = true;
 			sidebar.setOpen(true);
 		}
 		editing = !editing;
+	}
+
+	function openChanged(open: boolean) {
+		if (!open && editing) {
+			onEdit();
+		}
 	}
 </script>
 
 {#if favorites.current?.length}
 	<Sidebar.Group data-sveltekit-preload-data="tap">
-		<Collapsible.Root open={true} class="group/collapsible">
+		<Collapsible.Root bind:open={menuOpen} class="group/collapsible" onOpenChange={openChanged}>
 			{#snippet child({ props })}
 				<Sidebar.MenuItem {...props}>
 					<Collapsible.Trigger>
