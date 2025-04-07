@@ -72,17 +72,34 @@
 	<section class="mt-16 flex w-full max-w-4xl flex-col items-center gap-4 rounded-md border-2 bg-card p-8">
 		<h2 class="text-center text-2xl md:text-4xl">{event.name}</h2>
 		<p class="text-center md:text-lg"><Linebreaks text={event.description ?? ''} /></p>
-		<div class="mt-4 flex w-full max-w-2xl flex-row items-center justify-center gap-2">
-			<Button href="/server/{guild?.id}/join" color="blue" size="sm" class="flex-1">
+		<div class="mt-4 flex w-full max-w-2xl flex-row flex-wrap items-center justify-center gap-2 sm:flex-nowrap">
+			<Button
+				href="/server/{guild?.id}/join"
+				color="blue"
+				size="sm"
+				class="order-1 flex-1 basis-64"
+				variant="secondary"
+			>
 				<p class="mr-2">Join Discord</p>
 				<ExternalLink size={16} />
 			</Button>
 			{#if joinable}
-				<Button href="/event/{page.params.event}/membership" color="green" size="sm" class="flex-1">
+				<Button
+					href="/event/{page.params.event}/membership"
+					color="green"
+					size="sm"
+					class="order-3 flex-1 basis-64"
+				>
 					Join Event
 				</Button>
 			{/if}
-			<Button href="/event/{page.params.event}" color="alternative" size="sm" class="flex-1">
+			<Button
+				href="/event/{page.params.event}"
+				color="alternative"
+				size="sm"
+				class="order-2 flex-1 basis-64 sm:order-4"
+				variant="secondary"
+			>
 				Back to Event Page
 			</Button>
 		</div>
