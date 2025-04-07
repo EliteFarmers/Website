@@ -3,19 +3,19 @@ import { page } from '$app/state';
 import { PersistedState } from 'runed';
 import { getContext, setContext, untrack } from 'svelte';
 
-interface Favorite {
+export interface FavoritedLink {
 	href: string;
 	name: string;
 	icon?: string;
 }
 
 export class Favorites {
-	#favorites = new PersistedState('elite-favorites', [] as Favorite[]);
+	#favorites = new PersistedState('elite-favorites', [] as FavoritedLink[]);
 	#currentFavorited = $derived.by(() => {
 		return this.#favorites.current.some((favorite) => favorite.href === page.url.pathname);
 	});
-	#currentPage = $state<Favorite | undefined>();
-	#override = $state<Favorite | undefined>();
+	#currentPage = $state<FavoritedLink | undefined>();
+	#override = $state<FavoritedLink | undefined>();
 
 	constructor() {
 		$effect.root(() => {
@@ -46,11 +46,11 @@ export class Favorites {
 		return this.#override ?? this.#currentPage;
 	}
 
-	setPage(favorite: Favorite) {
+	setPage(favorite: FavoritedLink) {
 		this.#override = favorite;
 	}
 
-	addFavorite(favorite?: Favorite) {
+	addFavorite(favorite?: FavoritedLink) {
 		if (!favorite) {
 			return;
 		}
@@ -64,6 +64,10 @@ export class Favorites {
 			return true;
 		}
 		return false;
+	}
+
+	setFavorites(favorites: FavoritedLink[]) {
+		this.#favorites.current = favorites;
 	}
 }
 

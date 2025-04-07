@@ -42,7 +42,9 @@
 					<Collapsible.Content>
 						<Sidebar.Menu>
 							{#each events as event (event.id)}
-								{@render eventLink(event)}
+								{#if event.endTime && +(event.endTime ?? 0) * 1000 > Date.now()}
+									{@render eventLink(event)}
+								{/if}
 							{/each}
 						</Sidebar.Menu>
 					</Collapsible.Content>
@@ -55,7 +57,7 @@
 {#snippet eventLink(event: components['schemas']['EventDetailsDto'])}
 	{@const href = `/event/${event.name.replaceAll(' ', '-') + '-' + event.id}`}
 	{@const started = +(event.startTime ?? 0) * 1000 < Date.now()}
-	<Sidebar.MenuItem>
+	<Sidebar.MenuItem class="my-0.5">
 		<Sidebar.MenuButton data-active={href === page.url.pathname} size="xl">
 			{#snippet tooltipContent()}
 				{event.name}
