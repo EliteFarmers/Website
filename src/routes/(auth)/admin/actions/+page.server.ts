@@ -1,6 +1,7 @@
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { DELETE, POST } from '$lib/api/elite';
+import { reloadCachedItems } from '$lib/servercache';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -20,7 +21,7 @@ export const actions: Actions = {
 		const { access_token: token } = locals;
 
 		if (!token) {
-			throw error(404, 'Not Found');
+			return fail(401, { error: 'Unauthorized' });
 		}
 
 		const { response } = await DELETE(`/admin/upcomingcontests`, {
@@ -39,7 +40,7 @@ export const actions: Actions = {
 		const { access_token: token } = locals;
 
 		if (!token) {
-			throw error(404, 'Not Found');
+			return fail(401, { error: 'Unauthorized' });
 		}
 
 		const data = await request.formData();
@@ -55,6 +56,44 @@ export const actions: Actions = {
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to reset cooldowns' });
 		}
+
+		return {
+			success: true,
+		};
+	},
+	refreshGuild: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const guildId = data.get('guild') as string;
+
+		const { response, error: e } = await POST(`/admin/guild/{guildId}/refresh`, {
+			params: {
+				path: { guildId: guildId as unknown as number },
+			},
+			headers: { Authorization: `Bearer ${token}` },
+		});
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to reset cooldowns' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	refreshWebsite: async ({ locals }) => {
+		const { session } = locals;
+
+		if (!session?.flags.admin) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		await reloadCachedItems();
 
 		return {
 			success: true,

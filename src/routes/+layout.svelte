@@ -22,6 +22,7 @@
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
 	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
 	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
+	import FooterPills from '$comp/footer/footer-pills.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -104,6 +105,7 @@
 
 			<Content>
 				{@render children?.()}
+				<FooterPills />
 			</Content>
 
 			<Footer />
