@@ -136,7 +136,7 @@
 								class="w-fit font-semibold"
 								target="_blank"
 								variant="secondary"
-								rel="noopener noreferrer nofollow"
+								rel="noopener nofollow"
 							>
 								Open Lumini's Shop
 								<ExternalLink class="ml-2" size={20} />

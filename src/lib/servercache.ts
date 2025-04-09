@@ -1,6 +1,6 @@
 import { building } from '$app/environment';
 import type { components } from './api/api';
-import { GetUpcomingEvents } from './api/elite';
+import { GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
 
 const cacheEntries = {
 	events: {
@@ -10,11 +10,31 @@ const cacheEntries = {
 			return data ?? [];
 		},
 	},
+	products: {
+		data: [] as components['schemas']['ProductDto'][],
+		update: async () => {
+			const { data } = await GetProducts();
+			return data ?? [];
+		},
+	},
+	styles: {
+		data: [] as components['schemas']['WeightStyleWithDataDto'][],
+		update: async () => {
+			const { data } = await GetWeightStyles();
+			return data ?? [];
+		},
+	},
 };
 
 export const cache = {
 	get events() {
 		return cacheEntries.events.data;
+	},
+	get products() {
+		return cacheEntries.products.data;
+	},
+	get styles() {
+		return cacheEntries.styles.data;
 	},
 };
 

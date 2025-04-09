@@ -4,7 +4,7 @@
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import { getFavoritesContext, type FavoritedLink } from '$lib/stores/favorites.svelte';
 	import SidebarLink from './sidebar-link.svelte';
-	import Cog from 'lucide-svelte/icons/cog';
+	import Settings from 'lucide-svelte/icons/settings';
 	import { Button } from '$ui/button';
 	import { dragHandleZone, dragHandle, type DndEvent } from 'svelte-dnd-action';
 	import GripHorizontal from 'lucide-svelte/icons/grip-horizontal';
@@ -64,7 +64,7 @@
 									class="h-8 px-2 py-0 text-sidebar-foreground/70 group-data-[state=collapsed]:hidden"
 									onclick={onEdit}
 								>
-									<Cog />
+									<Settings class="transition-transform duration-200 {editing ? 'rotate-90' : ''}" />
 								</Button>
 								<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
 									{#snippet tooltipContent()}

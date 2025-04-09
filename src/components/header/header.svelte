@@ -35,16 +35,21 @@
 			<Star class={favorites.favorited ? 'fill-completed text-completed' : ''}></Star>
 		</Button>
 		{#if sidebar.isMobile}
-			<Button onclick={() => (searchOpen = true)} class="border bg-card px-3 py-4" variant="outline" size="sm">
+			<Button
+				onclick={() => (searchOpen = true)}
+				class="order-4 border bg-card px-3 py-4"
+				variant="outline"
+				size="sm"
+			>
 				<Search />
 			</Button>
 			<SearchMenu bind:open={searchOpen} useButton={false} />
 		{:else}
-			<div class="w-full flex-1 md:w-auto md:flex-none">
+			<div class="order-2 w-full flex-1 md:w-auto md:flex-none">
 				<SearchMenu />
 			</div>
 		{/if}
-		<div class="flex items-center gap-2">
+		<div class="order-3 flex items-center gap-2">
 			<ModeToggle />
 		</div>
 	</div>

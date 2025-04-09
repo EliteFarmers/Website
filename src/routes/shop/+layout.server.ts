@@ -1,4 +1,4 @@
-import { GetAllBadges, GetProducts, GetShopCategories, GetWeightStyles } from '$lib/api/elite';
+import { GetAllBadges, GetShopCategories } from '$lib/api/elite';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ setHeaders, locals }) => {
@@ -8,16 +8,10 @@ export const load = (async ({ setHeaders, locals }) => {
 	}
 
 	return {
-		products:
-			(await GetProducts()
-				.then((res) => res.data)
-				.catch(() => undefined)) ?? [],
+		products: locals.cache?.products ?? [],
+		styles: locals.cache?.styles ?? [],
 		categories:
 			(await GetShopCategories(true)
-				.then((res) => res.data)
-				.catch(() => undefined)) ?? [],
-		styles:
-			(await GetWeightStyles()
 				.then((res) => res.data)
 				.catch(() => undefined)) ?? [],
 		badges:
