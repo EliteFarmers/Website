@@ -33,7 +33,7 @@ export default ts.config(
 	{
 		files: ['**/*.ts', '**/*.js', '**/*.svelte'],
 		rules: {
-			'no-undef': 'off', // TypeScript itself checks for this
+			'no-undef': 'off', // TypeScript checks for this already
 		},
 	}
 );
