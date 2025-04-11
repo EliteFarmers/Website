@@ -42,14 +42,33 @@
 
 	let memberLimit = 10;
 	let swapMode = $state(false);
+	let interval: NodeJS.Timeout | undefined;
 
 	onMount(() => {
-		const interval = setInterval(() => {
+		interval = setInterval(() => {
 			time = Date.now();
 		}, 500);
 
-		return () => clearInterval(interval);
+		return () => stopInterval();
 	});
+
+	function visibilityChange() {
+		if (document.hidden) {
+			time = Date.now();
+			stopInterval();
+		} else {
+			interval = setInterval(() => {
+				time = Date.now();
+			}, 500);
+		}
+	}
+
+	function stopInterval() {
+		if (interval) {
+			clearInterval(interval);
+			interval = undefined;
+		}
+	}
 
 	function swapLeaderboard() {
 		swapMode = !swapMode;
@@ -93,6 +112,8 @@
 		href: page.url.pathname,
 	});
 </script>
+
+<svelte:document onvisibilitychange={visibilityChange} />
 
 <Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
 

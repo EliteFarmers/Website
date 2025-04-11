@@ -15,7 +15,7 @@
 			class="absolute -top-8 right-0 hidden h-8 w-fit rounded-md border-2 bg-card px-2 transition-all duration-200 group-hover:block"
 		>
 			<span class="text-xs">
-				Unlocks the <strong>Patron of The Arts</strong>
+				Unlock <strong>Patron of The Arts</strong>
 				<a href="/info#Badges" class="text-link hover:underline">badge</a>!
 			</span>
 		</div>
