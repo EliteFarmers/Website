@@ -29,13 +29,11 @@ export default ts.config(
 	},
 	{
 		ignores: ['build/', '.svelte-kit/', 'dist/'],
-		overrides: [
-			{
-				files: ['**/*.ts', '**/*.js', '**/*.svelte'],
-				rules: {
-					'no-undef': 'off', // TypeScript itself checks for this
-				},
-			},
-		],
+	},
+	{
+		files: ['**/*.ts', '**/*.js', '**/*.svelte'],
+		rules: {
+			'no-undef': 'off', // TypeScript itself checks for this
+		},
 	}
 );
