@@ -1,6 +1,7 @@
 import { building } from '$app/environment';
 import type { components } from './api/api';
 import { GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
+import { ELITE_API_URL } from '$env/static/private';
 
 const cacheEntries = {
 	events: {
@@ -49,7 +50,9 @@ export async function reloadCachedItems() {
 }
 
 export async function initCachedItems() {
-	if (building) return;
+	// Api url is imported just to prevent this file from accidentally being included in the client bundle
+	if (building || !ELITE_API_URL) return;
+
 	await reloadCachedItems();
 
 	if (interval) {

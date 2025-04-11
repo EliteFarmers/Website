@@ -14,17 +14,38 @@
 	let start = $derived(+(event.startTime ?? 0) * 1000);
 	let end = $derived(+(event.endTime ?? 0) * 1000);
 	let ms = $derived.by(() => (start > time ? start - time : end - time));
+	let interval: NodeJS.Timeout | undefined;
 
 	onMount(() => {
-		const interval = setInterval(() => {
+		interval = setInterval(() => {
 			time = Date.now();
 		}, 500);
 
-		return () => clearInterval(interval);
+		return () => stopInterval();
 	});
+
+	function visibilityChange() {
+		if (document.hidden) {
+			time = Date.now();
+			stopInterval();
+		} else {
+			interval = setInterval(() => {
+				time = Date.now();
+			}, 500);
+		}
+	}
+
+	function stopInterval() {
+		if (interval) {
+			clearInterval(interval);
+			interval = undefined;
+		}
+	}
 
 	let counter = $derived.by(() => getCountdownParts(ms));
 </script>
+
+<svelte:document on:visibilitychange={visibilityChange} />
 
 <NumberFlowGroup>
 	<div
