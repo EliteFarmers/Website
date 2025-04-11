@@ -3,6 +3,7 @@ import js from '@eslint/js';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import ts from 'typescript-eslint';
+import { Ribbon } from 'lucide-svelte';
 
 export default ts.config(
 	js.configs.recommended,
@@ -29,5 +30,13 @@ export default ts.config(
 	},
 	{
 		ignores: ['build/', '.svelte-kit/', 'dist/'],
+		overrides: [
+			{
+				files: ['**/*.ts', '**/*.js', '**/*.svelte'],
+				rules: {
+					'no-undef': 'off', // TypeScript itself checks for this
+				},
+			},
+		],
 	}
 );
