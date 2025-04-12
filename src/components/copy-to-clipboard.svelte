@@ -6,7 +6,7 @@
 
 	let copyPromise: Promise<void> | null = $state(null);
 
-	function copy() {
+	function copyClicked() {
 		copyPromise = navigator.clipboard
 			.writeText(text)
 			.then((x) => new Promise((resolve) => setTimeout(() => resolve(x), 100)));
@@ -20,9 +20,19 @@
 		text?: string;
 		size?: 'default' | 'sm' | 'lg' | 'icon' | undefined;
 		class?: string | undefined | null;
+		iconClass?: string;
+		copy?: () => void;
 	}
 
-	let { text = '', size = undefined, class: className = undefined, ...rest }: Props = $props();
+	let {
+		text = '',
+		size = undefined,
+		class: className = undefined,
+		iconClass = '',
+		children,
+		copy = $bindable(copyClicked),
+		...rest
+	}: Props = $props();
 
 	let iconSize = $state(20);
 
@@ -32,16 +42,17 @@
 	});
 </script>
 
-<Button variant="link" onclick={copy} {size} class={className} {...rest}>
+<Button variant="ghost" onclick={copyClicked} {size} class={className} {...rest}>
 	{#if copyPromise}
 		{#await copyPromise}
-			<LoaderCircle class="animate-spin" size={iconSize} />
+			<LoaderCircle class="animate-spin {iconClass}" size={iconSize} />
 		{:then}
-			<Check size={iconSize} />
+			<Check size={iconSize} class={iconClass} />
 		{:catch}
-			<Copy size={iconSize} />
+			<Copy size={iconSize} class={iconClass} />
 		{/await}
 	{:else}
-		<Copy size={iconSize} />
+		<Copy size={iconSize} class={iconClass} />
 	{/if}
+	{@render children?.()}
 </Button>

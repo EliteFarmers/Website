@@ -1092,6 +1092,25 @@ export const KickEventTeamMember = async (
 		},
 	});
 
+export const TransferEventTeamOwnership = async (
+	accessToken: string,
+	data: { eventId: string; teamId: string; playerUuid: string }
+) =>
+	await PUT('/event/{eventId}/team/{teamId}/owner', {
+		params: {
+			path: {
+				eventId: data.eventId as unknown as number,
+				teamId: data.teamId as unknown as number,
+			},
+		},
+		body: {
+			player: data.playerUuid,
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetProducts = async () => await GET('/products', {});
 
 export const GetAdminProducts = async (token: string) =>

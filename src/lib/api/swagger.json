@@ -851,6 +851,44 @@
 		  ]
 		}
 	  },
+	  "/admin/link-account": {
+		"post": {
+		  "tags": [
+			"Admin"
+		  ],
+		  "summary": "Link an Account",
+		  "operationId": "EliteAPIFeaturesAdminLinkAccountLinkAccountEndpoint",
+		  "requestBody": {
+			"x-name": "AdminLinkAccountRequest",
+			"description": "",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AdminLinkAccountRequest"
+				}
+			  }
+			},
+			"required": true,
+			"x-position": 1
+		  },
+		  "responses": {
+			"204": {
+			  "description": "No Content"
+			},
+			"401": {
+			  "description": "Unauthorized"
+			},
+			"403": {
+			  "description": "Forbidden"
+			}
+		  },
+		  "security": [
+			{
+			  "JWTBearerAuth": []
+			}
+		  ]
+		}
+	  },
 	  "/admin/guild/{guildId}/refresh": {
 		"post": {
 		  "tags": [
@@ -883,6 +921,44 @@
 				  }
 				}
 			  }
+			},
+			"401": {
+			  "description": "Unauthorized"
+			},
+			"403": {
+			  "description": "Forbidden"
+			}
+		  },
+		  "security": [
+			{
+			  "JWTBearerAuth": []
+			}
+		  ]
+		}
+	  },
+	  "/admin/unlink-account": {
+		"post": {
+		  "tags": [
+			"Admin"
+		  ],
+		  "summary": "Unlink an Account",
+		  "operationId": "EliteAPIFeaturesAdminUnlinkAccountUnlinkAccountEndpoint",
+		  "requestBody": {
+			"x-name": "AdminUnlinkAccountRequest",
+			"description": "",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/AdminUnlinkAccountRequest"
+				}
+			  }
+			},
+			"required": true,
+			"x-position": 1
+		  },
+		  "responses": {
+			"204": {
+			  "description": "No Content"
 			},
 			"401": {
 			  "description": "Unauthorized"
@@ -3743,6 +3819,77 @@
 			  "JWTBearerAuth": []
 			}
 		  ]
+		},
+		"patch": {
+		  "tags": [
+			"Guild"
+		  ],
+		  "summary": "Update a team",
+		  "operationId": "EliteAPIFeaturesEventsAdminUpdateTeamUpdateTeamEndpoint",
+		  "parameters": [
+			{
+			  "name": "discordId",
+			  "in": "path",
+			  "required": true,
+			  "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
+			  "schema": {
+				"type": "integer",
+				"format": "int64"
+			  }
+			},
+			{
+			  "name": "eventId",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "uint64"
+			  }
+			},
+			{
+			  "name": "teamId",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "requestBody": {
+			"x-name": "team",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/UpdateEventTeamDto"
+				}
+			  }
+			},
+			"required": true
+		  },
+		  "responses": {
+			"204": {
+			  "description": "No Content"
+			},
+			"400": {
+			  "description": "Bad Request",
+			  "content": {
+				"application/problem+json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ErrorResponse"
+				  }
+				}
+			  }
+			},
+			"401": {
+			  "description": "Unauthorized"
+			}
+		  },
+		  "security": [
+			{
+			  "JWTBearerAuth": []
+			}
+		  ]
 		}
 	  },
 	  "/guild/{discordId}/event/{eventId}/bans": {
@@ -4025,6 +4172,81 @@
 				  }
 				}
 			  }
+			},
+			"400": {
+			  "description": "Bad Request",
+			  "content": {
+				"application/problem+json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ErrorResponse"
+				  }
+				}
+			  }
+			},
+			"401": {
+			  "description": "Unauthorized"
+			}
+		  },
+		  "security": [
+			{
+			  "JWTBearerAuth": []
+			}
+		  ]
+		}
+	  },
+	  "/guild/{discordId}/events/{eventId}/teams/{teamId}/owner": {
+		"put": {
+		  "tags": [
+			"Guild"
+		  ],
+		  "summary": "Set player as team owner",
+		  "operationId": "EliteAPIFeaturesEventsAdminSetTeamOwnerSetTeamOwnerEndpoint",
+		  "parameters": [
+			{
+			  "name": "discordId",
+			  "in": "path",
+			  "required": true,
+			  "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
+			  "schema": {
+				"type": "integer",
+				"format": "int64"
+			  }
+			},
+			{
+			  "name": "eventId",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "uint64"
+			  }
+			},
+			{
+			  "name": "teamId",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "requestBody": {
+			"x-name": "SetTeamOwnerRequest",
+			"description": "",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/SetTeamOwnerRequest"
+				}
+			  }
+			},
+			"required": true,
+			"x-position": 1
+		  },
+		  "responses": {
+			"204": {
+			  "description": "No Content"
 			},
 			"400": {
 			  "description": "Bad Request",
@@ -4679,6 +4901,71 @@
 		  "responses": {
 			"204": {
 			  "description": "No Content"
+			},
+			"401": {
+			  "description": "Unauthorized"
+			}
+		  },
+		  "security": [
+			{
+			  "JWTBearerAuth": []
+			}
+		  ]
+		}
+	  },
+	  "/event/{eventId}/team/{teamId}/owner": {
+		"put": {
+		  "tags": [
+			"Event"
+		  ],
+		  "summary": "Set player as team owner",
+		  "operationId": "EliteAPIFeaturesEventsUserSetTeamOwnerSetTeamOwnerEndpoint",
+		  "parameters": [
+			{
+			  "name": "eventId",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "uint64"
+			  }
+			},
+			{
+			  "name": "teamId",
+			  "in": "path",
+			  "required": true,
+			  "schema": {
+				"type": "integer",
+				"format": "int32"
+			  }
+			}
+		  ],
+		  "requestBody": {
+			"x-name": "ChangeTeamOwnerRequest",
+			"description": "",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/ChangeTeamOwnerRequest"
+				}
+			  }
+			},
+			"required": true,
+			"x-position": 1
+		  },
+		  "responses": {
+			"204": {
+			  "description": "No Content"
+			},
+			"400": {
+			  "description": "Bad Request",
+			  "content": {
+				"application/problem+json": {
+				  "schema": {
+					"$ref": "#/components/schemas/ErrorResponse"
+				  }
+				}
+			  }
 			},
 			"401": {
 			  "description": "Unauthorized"
@@ -8921,6 +9208,7 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
+		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -8930,15 +9218,18 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
+			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
+			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
+			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {
@@ -9556,9 +9847,41 @@
 			}
 		  }
 		},
+		"AdminLinkAccountRequest": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "required": [
+			"discordId",
+			"player"
+		  ],
+		  "properties": {
+			"discordId": {
+			  "type": "string"
+			},
+			"player": {
+			  "type": "string"
+			}
+		  }
+		},
 		"GuildIdRequest": {
 		  "type": "object",
 		  "additionalProperties": false
+		},
+		"AdminUnlinkAccountRequest": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "required": [
+			"discordId",
+			"player"
+		  ],
+		  "properties": {
+			"discordId": {
+			  "type": "string"
+			},
+			"player": {
+			  "type": "string"
+			}
+		  }
 		},
 		"AuthSessionDto": {
 		  "type": "object",
@@ -10988,6 +11311,15 @@
 			"id": {
 			  "type": "integer",
 			  "format": "int32"
+			},
+			"accountId": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"notes": {
+			  "type": "string",
+			  "maxLength": 128,
+			  "nullable": true
 			}
 		  }
 		},
@@ -11755,9 +12087,20 @@
 		  "type": "object",
 		  "additionalProperties": false
 		},
-		"UnbanMemberRequest": {
+		"SetTeamOwnerRequest": {
 		  "type": "object",
-		  "additionalProperties": false
+		  "additionalProperties": false,
+		  "required": [
+			"player"
+		  ],
+		  "properties": {
+			"player": {
+			  "type": "string",
+			  "description": "Player uuid or ign",
+			  "minLength": 1,
+			  "nullable": false
+			}
+		  }
 		},
 		"EditEventBannerDto": {
 		  "type": "object",
@@ -11769,6 +12112,10 @@
 			  "nullable": true
 			}
 		  }
+		},
+		"UnbanMemberRequest": {
+		  "type": "object",
+		  "additionalProperties": false
 		},
 		"GetEventRequest": {
 		  "type": "object",
@@ -11864,6 +12211,32 @@
 				  "$ref": "#/components/schemas/CollectionEventData"
 				}
 			  ]
+			}
+		  }
+		},
+		"UpdateEventTeamDto": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "properties": {
+			"name": {
+			  "type": "array",
+			  "description": "An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]",
+			  "maxItems": 3,
+			  "minItems": 1,
+			  "nullable": true,
+			  "items": {
+				"type": "string"
+			  }
+			},
+			"color": {
+			  "type": "string",
+			  "maxLength": 7,
+			  "nullable": true
+			},
+			"changeCode": {
+			  "type": "boolean",
+			  "description": "If join code should be changed",
+			  "nullable": true
 			}
 		  }
 		},
@@ -12020,30 +12393,24 @@
 		  "type": "object",
 		  "additionalProperties": false
 		},
+		"ChangeTeamOwnerRequest": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "required": [
+			"player"
+		  ],
+		  "properties": {
+			"player": {
+			  "type": "string",
+			  "description": "Player uuid or ign",
+			  "minLength": 1,
+			  "nullable": false
+			}
+		  }
+		},
 		"UpdateTeamJoinCodeRequest": {
 		  "type": "object",
 		  "additionalProperties": false
-		},
-		"UpdateEventTeamDto": {
-		  "type": "object",
-		  "additionalProperties": false,
-		  "properties": {
-			"name": {
-			  "type": "array",
-			  "description": "An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]",
-			  "maxItems": 3,
-			  "minItems": 1,
-			  "nullable": true,
-			  "items": {
-				"type": "string"
-			  }
-			},
-			"color": {
-			  "type": "string",
-			  "maxLength": 7,
-			  "nullable": true
-			}
-		  }
 		},
 		"GardenDto": {
 		  "type": "object",

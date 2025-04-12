@@ -2,6 +2,8 @@
 	import { Button } from '$ui/button';
 	import * as Checkbox from '$ui/checkbox';
 	import * as Popover from '$ui/popover';
+	import * as Dialog from '$ui/dialog';
+	import * as Tooltip from '$ui/tooltip';
 	import { Label } from '$ui/label';
 	import type { ActionData, PageData } from './$types';
 	import { page } from '$app/state';
@@ -19,6 +21,8 @@
 	import { watch } from 'runed';
 	import { invalidate } from '$app/navigation';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import VisibleToggle from '$comp/visible-toggle.svelte';
+	import type { components } from '$lib/api/api';
 
 	interface Props {
 		data: PageData;
@@ -33,6 +37,11 @@
 		4: false,
 		5: false,
 	});
+
+	let kickMemberModal = $state(false);
+	let promoteMemberModal = $state(false);
+	let leaveTeamModal = $state(false);
+	let selectedMember = $state<components['schemas']['EventMemberDetailsDto']>();
 
 	let picked1 = $state('');
 	let picked2 = $state('');
@@ -104,6 +113,7 @@
 	let loading = $state(false);
 
 	let name = $state('');
+	let codeVisible = $state(false);
 
 	watch(
 		() => data.words,
@@ -358,11 +368,16 @@
 							Your Team: <span class="font-semibold">{ownTeam.name}</span>
 						</h3>
 						{#if ownTeam.joinCode}
-							<div class="flex flex-row items-center gap-4">
-								<p>
-									Join Code: <span class="font-semibold">{ownTeam.joinCode}</span>
-								</p>
-								<CopyToClipboard text={ownTeam.joinCode} />
+							<div class="flex flex-row items-center gap-2">
+								<p>Join Code</p>
+								<VisibleToggle bind:visible={codeVisible} variant="outline" />
+								<input
+									class="max-w-24 rounded-md border bg-background p-1 text-center font-mono font-semibold"
+									type={!codeVisible ? 'password' : 'text'}
+									disabled
+									value={ownTeam.joinCode}
+								/>
+								<CopyToClipboard text={ownTeam.joinCode} class="size-8" variant="outline" />
 							</div>
 						{/if}
 						{#each ownTeam.members ?? [] as member (member.playerUuid)}
@@ -381,37 +396,51 @@
 													<Crown size="sm" class="mt-1.5 w-4 text-completed" />
 												</div>
 											{/snippet}
-											<p class="text-lg font-semibold">Team Owner</p>
+											<p>Team Owner</p>
 										</Popover.Mobile>
 									{/if}
 								</div>
-								<div class="flex flex-row items-center gap-4">
+								<div class="flex flex-row items-center gap-2">
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
-									{#if isOwner}
-										<form
-											action="?/kickMember"
-											method="post"
-											use:enhance={() => {
-												loading = true;
-												return async ({ update }) => {
-													await update();
-													loading = false;
-												};
-											}}
-										>
-											<input type="hidden" name="team" value={ownTeamId} />
-											<input type="hidden" name="member" value={member.playerUuid} />
-											<Button
-												type="submit"
-												name="player"
-												size="sm"
-												value={member.playerUuid}
-												variant="destructive"
-												disabled={member.playerUuid === data.account?.id || loading}
-											>
-												<Trash />
-											</Button>
-										</form>
+									{#if isOwner && member.playerUuid !== data.account?.id}
+										<Tooltip.Simple>
+											{#snippet child({ props })}
+												<Button
+													type="submit"
+													disabled={loading}
+													{...props}
+													class="ml-1 size-8"
+													size="sm"
+													variant="outline"
+													onclick={() => {
+														selectedMember = member;
+														promoteMemberModal = true;
+													}}
+												>
+													<Crown class="text-completed" />
+												</Button>
+											{/snippet}
+											<p>Transfer Ownership</p>
+										</Tooltip.Simple>
+										<Tooltip.Simple>
+											{#snippet child({ props })}
+												<Button
+													type="submit"
+													disabled={loading}
+													{...props}
+													class="size-8"
+													size="sm"
+													variant="outline"
+													onclick={() => {
+														selectedMember = member;
+														kickMemberModal = true;
+													}}
+												>
+													<Trash class="text-destructive" />
+												</Button>
+											{/snippet}
+											<p>Kick From Team</p>
+										</Tooltip.Simple>
 									{/if}
 								</div>
 							</div>
@@ -597,3 +626,75 @@
 		</p>
 	</form>
 </div>
+
+<Dialog.Root bind:open={kickMemberModal}>
+	<Dialog.ScrollContent>
+		<Dialog.Title>Kick {selectedMember?.playerName} From Team?</Dialog.Title>
+		{#if selectedMember}
+			<form
+				action="?/kickMember"
+				class="mt-4"
+				method="post"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						await update();
+						loading = false;
+						kickMemberModal = false;
+					};
+				}}
+			>
+				<input type="hidden" name="team" value={ownTeamId} />
+				<input type="hidden" name="member" value={selectedMember.playerUuid} />
+				<p class="mb-4">
+					A kicked member can rejoin your team if they still have the join code! Consider changing it
+					afterwards.
+				</p>
+				<Button
+					type="submit"
+					size="sm"
+					variant="destructive"
+					disabled={selectedMember.playerUuid === data.account?.id || loading}
+				>
+					<Trash /> Kick Member
+				</Button>
+			</form>
+		{/if}
+	</Dialog.ScrollContent>
+</Dialog.Root>
+
+<Dialog.Root bind:open={promoteMemberModal}>
+	<Dialog.ScrollContent>
+		<Dialog.Title>Transfer team to {selectedMember?.playerName}?</Dialog.Title>
+		{#if selectedMember}
+			<form
+				action="?/transferOwnership"
+				class="mt-4"
+				method="post"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						await update();
+						loading = false;
+						promoteMemberModal = false;
+					};
+				}}
+			>
+				<input type="hidden" name="team" value={ownTeamId} />
+				<input type="hidden" name="member" value={selectedMember.playerUuid} />
+				<p class="mb-4">
+					Transferring ownership to {selectedMember.playerName} will remove your permissions! They will be able
+					to kick you if you do this, and you will lose control over the team!
+				</p>
+				<Button
+					type="submit"
+					size="sm"
+					variant="destructive"
+					disabled={selectedMember.playerUuid === data.account?.id || loading}
+				>
+					<Crown /> Transfer Ownership
+				</Button>
+			</form>
+		{/if}
+	</Dialog.ScrollContent>
+</Dialog.Root>

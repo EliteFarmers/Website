@@ -302,6 +302,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/link-account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Link an Account */
+        post: operations["EliteAPIFeaturesAdminLinkAccountLinkAccountEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/guild/{guildId}/refresh": {
         parameters: {
             query?: never;
@@ -316,6 +333,23 @@ export interface paths {
          * @description This fetches the latest data from Discord for the specified guild
          */
         post: operations["EliteAPIFeaturesAdminRefreshDiscordGuildRefreshDiscordGuildEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/unlink-account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unlink an Account */
+        post: operations["EliteAPIFeaturesAdminUnlinkAccountUnlinkAccountEndpoint"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1075,7 +1109,8 @@ export interface paths {
         delete: operations["EliteAPIFeaturesEventsAdminDeleteTeamDeleteTeamEndpoint"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update a team */
+        patch: operations["EliteAPIFeaturesEventsAdminUpdateTeamUpdateTeamEndpoint"];
         trace?: never;
     };
     "/guild/{discordId}/event/{eventId}/bans": {
@@ -1156,6 +1191,23 @@ export interface paths {
         /** Get event teams */
         get: operations["EliteAPIFeaturesEventsAdminGetTeamsGetTeamsEndpoint"];
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/guild/{discordId}/events/{eventId}/teams/{teamId}/owner": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set player as team owner */
+        put: operations["EliteAPIFeaturesEventsAdminSetTeamOwnerSetTeamOwnerEndpoint"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1390,6 +1442,23 @@ export interface paths {
         put?: never;
         /** Leave a team */
         post: operations["EliteAPIFeaturesEventsUserLeaveTeamLeaveTeamEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/event/{eventId}/team/{teamId}/owner": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set player as team owner */
+        put: operations["EliteAPIFeaturesEventsUserSetTeamOwnerSetTeamOwnerEndpoint"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2637,14 +2706,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -2852,7 +2927,15 @@ export interface components {
             discriminator?: string | null;
             avatar?: string | null;
         };
+        AdminLinkAccountRequest: {
+            discordId: string;
+            player: string;
+        };
         GuildIdRequest: Record<string, never>;
+        AdminUnlinkAccountRequest: {
+            discordId: string;
+            player: string;
+        };
         AuthSessionDto: {
             /** @description Discord user ID */
             id: string;
@@ -3224,6 +3307,8 @@ export interface components {
             data?: unknown;
             /** Format: int32 */
             id: number;
+            accountId?: string | null;
+            notes?: string | null;
         };
         /** @enum {integer} */
         EventMemberStatus: 0 | 1 | 2 | 3;
@@ -3488,11 +3573,15 @@ export interface components {
         };
         GetTeamsRequest: Record<string, never>;
         KickTeamMemberRequest: Record<string, never>;
-        UnbanMemberRequest: Record<string, never>;
+        SetTeamOwnerRequest: {
+            /** @description Player uuid or ign */
+            player: string;
+        };
         EditEventBannerDto: {
             /** Format: binary */
             image?: string | null;
         };
+        UnbanMemberRequest: Record<string, never>;
         GetEventRequest: Record<string, never>;
         EditEventDto: {
             name?: string | null;
@@ -3515,6 +3604,13 @@ export interface components {
             medalData?: components["schemas"]["MedalEventData"] | null;
             pestData?: components["schemas"]["PestEventData"] | null;
             collectionData?: components["schemas"]["CollectionEventData"] | null;
+        };
+        UpdateEventTeamDto: {
+            /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
+            name?: string[] | null;
+            color?: string | null;
+            /** @description If join code should be changed */
+            changeCode?: boolean | null;
         };
         EventDefaultsDto: {
             cropWeights: {
@@ -3553,12 +3649,11 @@ export interface components {
         KickTeamMemberRequest2: Record<string, never>;
         LeaveEventRequest: Record<string, never>;
         LeaveTeamRequest: Record<string, never>;
-        UpdateTeamJoinCodeRequest: Record<string, never>;
-        UpdateEventTeamDto: {
-            /** @description An array of strings for the team name, example: [ "Bountiful", "Farmers" ] */
-            name?: string[] | null;
-            color?: string | null;
+        ChangeTeamOwnerRequest: {
+            /** @description Player uuid or ign */
+            player: string;
         };
+        UpdateTeamJoinCodeRequest: Record<string, never>;
         GardenDto: {
             /** @description Profile ID */
             profileId: string;
@@ -5275,6 +5370,42 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesAdminLinkAccountLinkAccountEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminLinkAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EliteAPIFeaturesAdminRefreshDiscordGuildRefreshDiscordGuildEndpoint: {
         parameters: {
             query?: never;
@@ -5301,6 +5432,42 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesAdminUnlinkAccountUnlinkAccountEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminUnlinkAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unauthorized */
             401: {
@@ -7279,6 +7446,49 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesEventsAdminUpdateTeamUpdateTeamEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+                eventId: number;
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateEventTeamDto"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EliteAPIFeaturesEventsAdminGetBannedMembersGetBannedMembersEndpoint: {
         parameters: {
             query?: never;
@@ -7458,6 +7668,49 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["EventTeamWithMembersDto"][];
                 };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesEventsAdminSetTeamOwnerSetTeamOwnerEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+                eventId: number;
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetTeamOwnerRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Bad Request */
             400: {
@@ -7905,6 +8158,47 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesEventsUserSetTeamOwnerSetTeamOwnerEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                eventId: number;
+                teamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeTeamOwnerRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
             };
             /** @description Unauthorized */
             401: {
