@@ -14,6 +14,11 @@ import {
 	ForceAddEventMember,
 	PermDeleteEventMember,
 	GetAdminEventTeams,
+	AdminTransferEventTeamOwnership,
+	AdminKickTeamMember,
+	AdminDeleteTeam,
+	AddMemberToTeam,
+	AdminCreateEventTeam,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
@@ -59,6 +64,7 @@ export const load = (async ({ parent, params, locals }) => {
 		bans: bansData,
 		defaults: defaultsData,
 		teams: teamsData,
+		teamWords: locals.cache?.teamwords,
 	};
 }) satisfies PageServerLoad;
 
@@ -463,5 +469,151 @@ export const actions: Actions = {
 		return {
 			success: true,
 		};
+	},
+	promoteMember: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { id: guildId } = params;
+
+		if (!token || !session) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const eventId = data.get('id') as string;
+		const teamId = (data.get('team') as string) || undefined;
+		const memberUuid = (data.get('member') as string) || undefined;
+
+		if (!eventId || !teamId || !memberUuid || !guildId) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse, error: problem } = await AdminTransferEventTeamOwnership(token, {
+			guildId,
+			eventId,
+			teamId,
+			playerUuid: memberUuid,
+		});
+
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to transfer team ownership!', problem });
+		}
+
+		return { success: true };
+	},
+	kickTeamMember: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { id: guildId } = params;
+
+		if (!token || !session) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const eventId = data.get('id') as string;
+		const teamId = (data.get('team') as string) || undefined;
+		const memberUuid = (data.get('member') as string) || undefined;
+
+		if (!eventId || !teamId || !memberUuid || !guildId) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse, error: problem } = await AdminKickTeamMember(
+			token,
+			guildId,
+			eventId,
+			memberUuid,
+			teamId
+		);
+
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to kick team member!', problem });
+		}
+
+		return { success: true };
+	},
+	deleteTeam: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { id: guildId } = params;
+
+		if (!token || !session) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const eventId = data.get('id') as string;
+		const teamId = (data.get('team') as string) || undefined;
+
+		if (!eventId || !teamId || !guildId) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse, error: problem } = await AdminDeleteTeam(token, guildId, eventId, teamId);
+
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to kick team member!', problem });
+		}
+
+		return { success: true };
+	},
+	addMemberToTeam: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { id: guildId } = params;
+
+		if (!token || !session) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const eventId = data.get('id') as string;
+		const teamId = (data.get('team') as string) || undefined;
+		const memberUuid = (data.get('member') as string) || undefined;
+
+		if (!eventId || !teamId || !memberUuid || !guildId) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse, error: problem } = await AddMemberToTeam(
+			token,
+			guildId,
+			eventId,
+			teamId,
+			memberUuid
+		);
+
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to add member to team!', problem });
+		}
+
+		return { success: true };
+	},
+	createTeam: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { id: guildId } = params;
+
+		if (!token || !session) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const eventId = data.get('id') as string;
+		const teamName = (data.get('name') as string) || undefined;
+		const member = (data.get('member') as string) || undefined;
+
+		if (!eventId || !teamName || !guildId || !member) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse, error: problem } = await AdminCreateEventTeam(token, guildId, eventId, member, {
+			name: teamName
+				.split(' ')
+				.filter((w) => w)
+				.map((w) => w.replace('_', ' ')),
+		});
+
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to create team!', problem });
+		}
+
+		return { success: true };
 	},
 };

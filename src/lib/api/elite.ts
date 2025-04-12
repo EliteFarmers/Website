@@ -754,6 +754,41 @@ export const BanEventMember = async (
 		},
 	});
 
+export const AdminKickTeamMember = async (
+	accessToken: string,
+	discordId: string,
+	eventId: string,
+	playerUuid: string,
+	teamId: string
+) =>
+	await DELETE('/guild/{discordId}/events/{eventId}/teams/{teamId}/members/{player}', {
+		params: {
+			path: {
+				discordId: discordId as unknown as number,
+				eventId: eventId as unknown as number,
+				player: playerUuid,
+				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AdminDeleteTeam = async (accessToken: string, discordId: string, eventId: string, teamId: string) =>
+	await DELETE('/guild/{discordId}/events/{eventId}/teams/{teamId}', {
+		params: {
+			path: {
+				discordId: discordId as unknown as number,
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const UnbanEventMember = async (accessToken: string, discordId: string, eventId: string, playerUuid: string) =>
 	await DELETE('/guild/{discordId}/events/{eventId}/bans/{playerUuid}', {
 		params: {
@@ -1106,6 +1141,70 @@ export const TransferEventTeamOwnership = async (
 		body: {
 			player: data.playerUuid,
 		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AdminTransferEventTeamOwnership = async (
+	accessToken: string,
+	data: { guildId: string; eventId: string; teamId: string; playerUuid: string }
+) =>
+	await PUT('/guild/{discordId}/events/{eventId}/teams/{teamId}/owner', {
+		params: {
+			path: {
+				discordId: data.guildId as unknown as number,
+				eventId: data.eventId as unknown as number,
+				teamId: data.teamId as unknown as number,
+			},
+		},
+		body: {
+			player: data.playerUuid,
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AddMemberToTeam = async (
+	accessToken: string,
+	discordId: string,
+	eventId: string,
+	teamId: string,
+	playerUuid: string
+) =>
+	await POST('/guild/{discordId}/events/{eventId}/teams/{teamId}/members/{player}', {
+		params: {
+			path: {
+				discordId: discordId as unknown as number,
+				eventId: eventId as unknown as number,
+				teamId: teamId as unknown as number,
+				player: playerUuid,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const AdminCreateEventTeam = async (
+	accessToken: string,
+	discordId: string,
+	eventId: string,
+	userId: string,
+	team: components['schemas']['CreateEventTeamDto']
+) =>
+	await POST('/guild/{discordId}/events/{eventId}/teams', {
+		params: {
+			path: {
+				discordId: discordId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+			query: {
+				userId: userId,
+			},
+		},
+		body: team,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},

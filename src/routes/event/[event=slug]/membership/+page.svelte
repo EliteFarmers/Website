@@ -12,17 +12,15 @@
 	import { Input } from '$ui/input';
 	import { SelectSimple } from '$ui/select';
 	import Check from 'lucide-svelte/icons/check';
-	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash from 'lucide-svelte/icons/trash-2';
 	import Crown from 'lucide-svelte/icons/crown';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import { watch } from 'runed';
 	import { invalidate } from '$app/navigation';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import VisibleToggle from '$comp/visible-toggle.svelte';
 	import type { components } from '$lib/api/api';
+	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 
 	interface Props {
 		data: PageData;
@@ -40,47 +38,7 @@
 
 	let kickMemberModal = $state(false);
 	let promoteMemberModal = $state(false);
-	let leaveTeamModal = $state(false);
 	let selectedMember = $state<components['schemas']['EventMemberDetailsDto']>();
-
-	let picked1 = $state('');
-	let picked2 = $state('');
-	let picked3 = $state('');
-
-	function generateTeamName() {
-		const firstWords = data.words?.first ?? [];
-		const secondWords = data.words?.second ?? [];
-		const thirdWords = data.words?.third ?? [];
-
-		const first = firstWords[Math.floor(Math.random() * firstWords.length)].replaceAll(' ', '_');
-		const second = secondWords[Math.floor(Math.random() * secondWords.length)].replaceAll(' ', '_');
-		const third = thirdWords[Math.floor(Math.random() * thirdWords.length)].replaceAll(' ', '_');
-
-		if (Math.random() > 0.5) {
-			picked1 = first;
-			picked3 = '';
-
-			if (Math.random() > 0.5) {
-				picked2 = second;
-			} else {
-				picked2 = third;
-			}
-		} else {
-			picked1 = first;
-			picked2 = second;
-			picked3 = third;
-		}
-
-		updateName();
-
-		if (name.length > 32) {
-			generateTeamName();
-		}
-	}
-
-	function updateName() {
-		name = (picked1 ?? '') + ' ' + (picked2 ?? '') + ' ' + (picked3 ?? '').trim();
-	}
 
 	let event = $derived(data.event);
 	let teams = $derived(
@@ -112,24 +70,7 @@
 	let joinable = $derived(joinEnds > Date.now() && !data.member?.disqualified);
 	let loading = $state(false);
 
-	let name = $state('');
 	let codeVisible = $state(false);
-
-	watch(
-		() => data.words,
-		(words) => {
-			if (event.mode !== 'solo' && words) {
-				generateTeamName();
-			}
-		}
-	);
-
-	let words = $derived(
-		Array.from(
-			new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
-			(w) => ({ value: w.replaceAll(' ', '_'), label: w })
-		)
-	);
 
 	const crumbs = $derived<Crumb[]>([
 		{
@@ -480,45 +421,7 @@
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
 							<div class="flex flex-row items-center gap-2 text-primary">
-								<input type="hidden" name="name" value={name} hidden />
-								<div class="flex flex-col gap-2">
-									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-									<div class="flex max-w-sm flex-row flex-wrap gap-1 lg:flex-nowrap">
-										<Button
-											variant="secondary"
-											onclick={generateTeamName}
-											disabled={loading}
-											class="order-5 lg:order-1"
-										>
-											<RefreshCcw />
-										</Button>
-										<ComboBox
-											options={words}
-											bind:value={picked1}
-											exclude={[picked2, picked3]}
-											onChange={updateName}
-											placeholder="Select Word"
-											btnClass="order-2"
-										/>
-										<ComboBox
-											options={words}
-											bind:value={picked2}
-											exclude={[picked1, picked3]}
-											onChange={updateName}
-											placeholder="Select Word"
-											btnClass="order-3"
-										/>
-										<ComboBox
-											options={words}
-											bind:value={picked3}
-											exclude={[picked1, picked2]}
-											onChange={updateName}
-											placeholder="Select Word"
-											clear={true}
-											btnClass="order-4"
-										/>
-									</div>
-								</div>
+								<TeamNameSelector words={data.words} bind:loading />
 							</div>
 							<div class="flex flex-row gap-2">
 								<Button type="submit" disabled={loading}>Update Team Name</Button>
@@ -561,48 +464,8 @@
 							list.
 						</p>
 						<div class="flex flex-row items-center gap-2 text-primary">
-							<input type="hidden" name="name" value={name} hidden />
-
 							<div class="flex flex-col gap-2">
-								<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-								<div class="flex max-w-sm flex-row flex-wrap gap-1 lg:flex-nowrap">
-									<Button
-										variant="secondary"
-										disabled={!joined}
-										onclick={generateTeamName}
-										class="order-5 lg:order-1"
-									>
-										<RefreshCcw />
-									</Button>
-									<ComboBox
-										options={words}
-										bind:value={picked1}
-										exclude={[picked2, picked3]}
-										onChange={updateName}
-										placeholder="Select Word"
-										disabled={!joined}
-										btnClass="order-2"
-									/>
-									<ComboBox
-										options={words}
-										bind:value={picked2}
-										exclude={[picked1, picked3]}
-										onChange={updateName}
-										placeholder="Select Word"
-										disabled={!joined}
-										btnClass="order-3"
-									/>
-									<ComboBox
-										options={words}
-										bind:value={picked3}
-										exclude={[picked1, picked2]}
-										onChange={updateName}
-										placeholder="Select Word"
-										disabled={!joined}
-										clear={true}
-										btnClass="order-4"
-									/>
-								</div>
+								<TeamNameSelector words={data.words} bind:loading />
 							</div>
 						</div>
 						<Button type="submit" disabled={!data.member || !joined || loading}>Create Team</Button>

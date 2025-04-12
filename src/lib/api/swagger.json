@@ -3340,6 +3340,14 @@
 				"type": "integer",
 				"format": "uint64"
 			  }
+			},
+			{
+			  "name": "userId",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
 			}
 		  ],
 		  "requestBody": {
@@ -4206,10 +4214,9 @@
 			  "name": "discordId",
 			  "in": "path",
 			  "required": true,
-			  "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
 			  "schema": {
 				"type": "integer",
-				"format": "int64"
+				"format": "uint64"
 			  }
 			},
 			{
@@ -4247,16 +4254,6 @@
 		  "responses": {
 			"204": {
 			  "description": "No Content"
-			},
-			"400": {
-			  "description": "Bad Request",
-			  "content": {
-				"application/problem+json": {
-				  "schema": {
-					"$ref": "#/components/schemas/ErrorResponse"
-				  }
-				}
-			  }
 			},
 			"401": {
 			  "description": "Unauthorized"
@@ -4944,7 +4941,7 @@
 			"x-name": "ChangeTeamOwnerRequest",
 			"description": "",
 			"content": {
-			  "application/json": {
+			  "*/*": {
 				"schema": {
 				  "$ref": "#/components/schemas/ChangeTeamOwnerRequest"
 				}
@@ -4956,16 +4953,6 @@
 		  "responses": {
 			"204": {
 			  "description": "No Content"
-			},
-			"400": {
-			  "description": "Bad Request",
-			  "content": {
-				"application/problem+json": {
-				  "schema": {
-					"$ref": "#/components/schemas/ErrorResponse"
-				  }
-				}
-			  }
 			},
 			"401": {
 			  "description": "Unauthorized"
@@ -12095,10 +12082,7 @@
 		  ],
 		  "properties": {
 			"player": {
-			  "type": "string",
-			  "description": "Player uuid or ign",
-			  "minLength": 1,
-			  "nullable": false
+			  "type": "string"
 			}
 		  }
 		},
@@ -12401,10 +12385,7 @@
 		  ],
 		  "properties": {
 			"player": {
-			  "type": "string",
-			  "description": "Player uuid or ign",
-			  "minLength": 1,
-			  "nullable": false
+			  "type": "string"
 			}
 		  }
 		},

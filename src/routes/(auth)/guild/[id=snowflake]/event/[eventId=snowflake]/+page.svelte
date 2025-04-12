@@ -174,7 +174,7 @@
 		<Button href="/guild/{data.guild.id}/events" variant="secondary">Back to Events</Button>
 	</div>
 
-	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} />
+	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} teamWords={data.teamWords} />
 
 	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		{#if event.type === +EventType.FarmingWeight && cropWeights}

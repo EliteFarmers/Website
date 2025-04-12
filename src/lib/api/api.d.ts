@@ -3574,7 +3574,6 @@ export interface components {
         GetTeamsRequest: Record<string, never>;
         KickTeamMemberRequest: Record<string, never>;
         SetTeamOwnerRequest: {
-            /** @description Player uuid or ign */
             player: string;
         };
         EditEventBannerDto: {
@@ -3650,7 +3649,6 @@ export interface components {
         LeaveEventRequest: Record<string, never>;
         LeaveTeamRequest: Record<string, never>;
         ChangeTeamOwnerRequest: {
-            /** @description Player uuid or ign */
             player: string;
         };
         UpdateTeamJoinCodeRequest: Record<string, never>;
@@ -7124,7 +7122,9 @@ export interface operations {
     };
     EliteAPIFeaturesEventsAdminCreateTeamCreateTeamEndpoint: {
         parameters: {
-            query?: never;
+            query?: {
+                userId?: string | null;
+            };
             header?: never;
             path: {
                 /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
@@ -7692,7 +7692,6 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
                 discordId: number;
                 eventId: number;
                 teamId: number;
@@ -7711,15 +7710,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
             };
             /** @description Unauthorized */
             401: {
@@ -8180,7 +8170,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ChangeTeamOwnerRequest"];
+                "*/*": components["schemas"]["ChangeTeamOwnerRequest"];
             };
         };
         responses: {
@@ -8190,15 +8180,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
             };
             /** @description Unauthorized */
             401: {

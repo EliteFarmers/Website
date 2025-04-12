@@ -5,7 +5,6 @@ import {
 	GetAccount,
 	GetEventDetails,
 	GetEventTeam,
-	GetEventTeamWords,
 	GetEventTeams,
 	JoinEvent,
 	JoinEventTeam,
@@ -41,7 +40,6 @@ export const load = (async ({ locals, parent, params }) => {
 
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventId).catch(() => ({ data: undefined }));
-		const { data: words } = await GetEventTeamWords().catch(() => ({ data: undefined }));
 
 		if (member?.teamId && token) {
 			const { data: team } = await GetEventTeam(token, eventId, member.teamId).catch(() => ({ data: undefined }));
@@ -51,7 +49,7 @@ export const load = (async ({ locals, parent, params }) => {
 				member,
 				teams,
 				event,
-				words,
+				words: locals.cache?.teamwords,
 				team,
 			};
 		}
@@ -61,7 +59,7 @@ export const load = (async ({ locals, parent, params }) => {
 			member,
 			teams,
 			event,
-			words,
+			words: locals.cache?.teamwords,
 		};
 	}
 
@@ -159,7 +157,7 @@ export const actions: Actions = {
 		}
 
 		const data = await request.formData();
-		const teamName = (data.get('name') as string) || undefined;
+		const teamName = data.get('name') as string;
 
 		if (!teamName) {
 			return fail(400, { error: 'Invalid request' });
