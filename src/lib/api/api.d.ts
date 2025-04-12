@@ -942,7 +942,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create Weight Event */
+        /** Create Medal Event */
         post: operations["EliteAPIFeaturesEventsAdminCreateEventMedalsCreateMedalEventEndpoint"];
         delete?: never;
         options?: never;
@@ -1119,7 +1119,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get all events for a guild */
+        /** Get an event for a guild */
         get: operations["EliteAPIFeaturesEventsAdminGetGuildEventGetGuildEventEndpoint"];
         put?: never;
         post?: never;
@@ -2637,20 +2637,14 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
-        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
-             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /**
-             * @description the message for the error response
-             * @default One or more errors occurred!
-             */
+            /** @default One or more errors occurred! */
             message: string;
-            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3217,16 +3211,22 @@ export interface components {
         GetEntitlementsRequest: Record<string, never>;
         UserEntitlementRequest: Record<string, never>;
         AddTeamMemberRequest: Record<string, never>;
-        EventMemberBannedDto: {
+        AdminEventMemberDto: {
+            playerUuid?: string | null;
+            profileId?: string | null;
+            playerName?: string | null;
+            eventId: string;
+            teamId?: string | null;
+            status: components["schemas"]["EventMemberStatus"];
+            score?: string | null;
+            lastUpdated?: string | null;
+            disqualified?: boolean | null;
+            data?: unknown;
             /** Format: int32 */
             id: number;
-            playerUuid?: string | null;
-            playerName?: string | null;
-            teamId?: string | null;
-            score?: string | null;
-            notes?: string | null;
-            lastUpdated?: string | null;
         };
+        /** @enum {integer} */
+        EventMemberStatus: 0 | 1 | 2 | 3;
         DeleteEventRequest: Record<string, never>;
         CreateCollectionEventDto: {
             /** @description The name of the event */
@@ -3458,22 +3458,6 @@ export interface components {
         DeleteTeamRequest: Record<string, never>;
         ForceAddMemberRequest: Record<string, never>;
         GetBannedMembersRequest: Record<string, never>;
-        AdminEventMemberDto: {
-            playerUuid?: string | null;
-            profileId?: string | null;
-            playerName?: string | null;
-            eventId: string;
-            teamId?: string | null;
-            status: components["schemas"]["EventMemberStatus"];
-            score?: string | null;
-            lastUpdated?: string | null;
-            disqualified?: boolean | null;
-            data?: unknown;
-            /** Format: int32 */
-            id: number;
-        };
-        /** @enum {integer} */
-        EventMemberStatus: 0 | 1 | 2 | 3;
         GetEventMembersRequest: Record<string, never>;
         GetAdminGuildEventRequest: Record<string, never>;
         EventTeamWithMembersDto: {
@@ -3918,12 +3902,29 @@ export interface components {
         };
         LeaderboardRanksRequest: Record<string, never>;
         LeaderboardPositionDto: {
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Current rank of the player (-1 if not on leaderboard)
+             */
             rank: number;
-            /** Format: double */
+            /**
+             * Format: double
+             * @description Current score of the player (0 if not on leaderboard)
+             */
             amount: number;
-            /** Format: int32 */
+            /**
+             * Format: double
+             * @description The minimum amount required to be on the leaderboard. If this is a time based leaderboard,
+             *     this score is instead required on the normal leaderboard before the player can be on the
+             *     time based leaderboard
+             */
+            minAmount: number;
+            /**
+             * Format: int32
+             * @description The starting rank of the returned upcoming players list
+             */
             upcomingRank: number;
+            /** @description List of upcoming players */
             upcomingPlayers?: components["schemas"]["LeaderboardEntryDto"][] | null;
         };
         GetPlayerRankRequest: Record<string, never>;
@@ -4248,7 +4249,7 @@ export interface components {
         };
         GetCategoriesRequest: Record<string, never>;
         GetCategoryRequest: Record<string, never>;
-        RemoveProductToCategoryRequest: Record<string, never>;
+        RemoveProductFromCategoryRequest: Record<string, never>;
         ReorderIntRequest: {
             elements: components["schemas"]["ReorderElementOfInt32"][];
         };
@@ -6723,7 +6724,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventMemberBannedDto"];
+                    "application/json": components["schemas"]["AdminEventMemberDto"];
                 };
             };
             /** @description Bad Request */
@@ -7297,7 +7298,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["EventMemberBannedDto"][];
+                    "application/json": components["schemas"]["AdminEventMemberDto"][];
                 };
             };
             /** @description Bad Request */

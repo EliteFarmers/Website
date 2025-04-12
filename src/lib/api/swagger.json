@@ -2905,7 +2905,7 @@
 			  "content": {
 				"application/json": {
 				  "schema": {
-					"$ref": "#/components/schemas/EventMemberBannedDto"
+					"$ref": "#/components/schemas/AdminEventMemberDto"
 				  }
 				}
 			  }
@@ -3056,7 +3056,7 @@
 		  "tags": [
 			"Guild"
 		  ],
-		  "summary": "Create Weight Event",
+		  "summary": "Create Medal Event",
 		  "operationId": "EliteAPIFeaturesEventsAdminCreateEventMedalsCreateMedalEventEndpoint",
 		  "parameters": [
 			{
@@ -3781,7 +3781,7 @@
 				  "schema": {
 					"type": "array",
 					"items": {
-					  "$ref": "#/components/schemas/EventMemberBannedDto"
+					  "$ref": "#/components/schemas/AdminEventMemberDto"
 					}
 				  }
 				}
@@ -3876,7 +3876,7 @@
 		  "tags": [
 			"Guild"
 		  ],
-		  "summary": "Get all events for a guild",
+		  "summary": "Get an event for a guild",
 		  "operationId": "EliteAPIFeaturesEventsAdminGetGuildEventGetGuildEventEndpoint",
 		  "parameters": [
 			{
@@ -8921,7 +8921,6 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
-		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -8931,18 +8930,15 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
-			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
-			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
-			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {
@@ -10943,18 +10939,20 @@
 		  "type": "object",
 		  "additionalProperties": false
 		},
-		"EventMemberBannedDto": {
+		"AdminEventMemberDto": {
 		  "type": "object",
 		  "additionalProperties": false,
 		  "required": [
+			"eventId",
+			"status",
 			"id"
 		  ],
 		  "properties": {
-			"id": {
-			  "type": "integer",
-			  "format": "int32"
-			},
 			"playerUuid": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"profileId": {
 			  "type": "string",
 			  "nullable": true
 			},
@@ -10962,23 +10960,52 @@
 			  "type": "string",
 			  "nullable": true
 			},
+			"eventId": {
+			  "type": "string"
+			},
 			"teamId": {
 			  "type": "string",
 			  "nullable": true
 			},
-			"score": {
-			  "type": "string",
-			  "nullable": true
+			"status": {
+			  "$ref": "#/components/schemas/EventMemberStatus"
 			},
-			"notes": {
+			"score": {
 			  "type": "string",
 			  "nullable": true
 			},
 			"lastUpdated": {
 			  "type": "string",
 			  "nullable": true
+			},
+			"disqualified": {
+			  "type": "boolean",
+			  "nullable": true
+			},
+			"data": {
+			  "nullable": true
+			},
+			"id": {
+			  "type": "integer",
+			  "format": "int32"
 			}
 		  }
+		},
+		"EventMemberStatus": {
+		  "type": "integer",
+		  "description": "",
+		  "x-enumNames": [
+			"Inactive",
+			"Active",
+			"Left",
+			"Disqualified"
+		  ],
+		  "enum": [
+			0,
+			1,
+			2,
+			3
+		  ]
 		},
 		"DeleteEventRequest": {
 		  "type": "object",
@@ -11610,74 +11637,6 @@
 		"GetBannedMembersRequest": {
 		  "type": "object",
 		  "additionalProperties": false
-		},
-		"AdminEventMemberDto": {
-		  "type": "object",
-		  "additionalProperties": false,
-		  "required": [
-			"eventId",
-			"status",
-			"id"
-		  ],
-		  "properties": {
-			"playerUuid": {
-			  "type": "string",
-			  "nullable": true
-			},
-			"profileId": {
-			  "type": "string",
-			  "nullable": true
-			},
-			"playerName": {
-			  "type": "string",
-			  "nullable": true
-			},
-			"eventId": {
-			  "type": "string"
-			},
-			"teamId": {
-			  "type": "string",
-			  "nullable": true
-			},
-			"status": {
-			  "$ref": "#/components/schemas/EventMemberStatus"
-			},
-			"score": {
-			  "type": "string",
-			  "nullable": true
-			},
-			"lastUpdated": {
-			  "type": "string",
-			  "nullable": true
-			},
-			"disqualified": {
-			  "type": "boolean",
-			  "nullable": true
-			},
-			"data": {
-			  "nullable": true
-			},
-			"id": {
-			  "type": "integer",
-			  "format": "int32"
-			}
-		  }
-		},
-		"EventMemberStatus": {
-		  "type": "integer",
-		  "description": "",
-		  "x-enumNames": [
-			"Inactive",
-			"Active",
-			"Left",
-			"Disqualified"
-		  ],
-		  "enum": [
-			0,
-			1,
-			2,
-			3
-		  ]
 		},
 		"GetEventMembersRequest": {
 		  "type": "object",
@@ -13203,23 +13162,33 @@
 		  "required": [
 			"rank",
 			"amount",
+			"minAmount",
 			"upcomingRank"
 		  ],
 		  "properties": {
 			"rank": {
 			  "type": "integer",
+			  "description": "Current rank of the player (-1 if not on leaderboard)",
 			  "format": "int32"
 			},
 			"amount": {
 			  "type": "number",
+			  "description": "Current score of the player (0 if not on leaderboard)",
+			  "format": "double"
+			},
+			"minAmount": {
+			  "type": "number",
+			  "description": "The minimum amount required to be on the leaderboard. If this is a time based leaderboard,\nthis score is instead required on the normal leaderboard before the player can be on the\ntime based leaderboard",
 			  "format": "double"
 			},
 			"upcomingRank": {
 			  "type": "integer",
+			  "description": "The starting rank of the returned upcoming players list",
 			  "format": "int32"
 			},
 			"upcomingPlayers": {
 			  "type": "array",
+			  "description": "List of upcoming players",
 			  "nullable": true,
 			  "items": {
 				"$ref": "#/components/schemas/LeaderboardEntryDto"
@@ -14263,7 +14232,7 @@
 		  "type": "object",
 		  "additionalProperties": false
 		},
-		"RemoveProductToCategoryRequest": {
+		"RemoveProductFromCategoryRequest": {
 		  "type": "object",
 		  "additionalProperties": false
 		},

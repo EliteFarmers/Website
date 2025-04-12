@@ -4,7 +4,7 @@
 	import FileText from 'lucide-svelte/icons/file-text';
 
 	interface Props {
-		member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberBannedDto'];
+		member: components['schemas']['EventMemberDto'] | components['schemas']['AdminEventMemberDto'];
 		children?: import('svelte').Snippet;
 	}
 
@@ -19,7 +19,11 @@
 			class="aspect-square w-8 rounded-sm"
 			alt="Player Head"
 		/>
-		<a href="/@{member.playerUuid}" target="_blank" class="flex flex-row items-center gap-1 underline sm:text-lg">
+		<a
+			href="/@{member.playerUuid}/{member.profileId ?? ''}"
+			target="_blank"
+			class="flex flex-row items-center gap-1 underline sm:text-lg"
+		>
 			{member.playerName}
 		</a>
 	</div>
