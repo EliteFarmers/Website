@@ -13,6 +13,7 @@ import {
 	GetEventDefaults,
 	ForceAddEventMember,
 	PermDeleteEventMember,
+	GetAdminEventTeams,
 } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
@@ -43,11 +44,21 @@ export const load = (async ({ parent, params, locals }) => {
 		.then((r) => r.data)
 		.catch(() => undefined);
 
+	let teams = undefined;
+	if (event.mode !== 'solo') {
+		teams = GetAdminEventTeams(token, event.guildId, event.id)
+			.then((r) => r.data)
+			.catch(() => undefined);
+	}
+
+	const [membersData, bansData, defaultsData, teamsData] = await Promise.all([members, bans, defaults, teams]);
+
 	return {
 		event,
-		members: members,
-		bans: bans,
-		defaults,
+		members: membersData,
+		bans: bansData,
+		defaults: defaultsData,
+		teams: teamsData,
 	};
 }) satisfies PageServerLoad;
 

@@ -9,11 +9,9 @@
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
-	import ArrowUp from 'lucide-svelte/icons/arrow-up';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Image from 'lucide-svelte/icons/image';
 	import Head from '$comp/head.svelte';
-	import Member from './member.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { EventType } from '$lib/utils';
 	import type { PageData } from './$types';
@@ -24,6 +22,7 @@
 	import HeroBanner from '$comp/hero-banner.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
+	import MemberList from './member-list.svelte';
 
 	interface Props {
 		data: PageData;
@@ -31,21 +30,14 @@
 
 	let { data = $bindable() }: Props = $props();
 
+	let members = $derived(data.members);
+	let bans = $derived(data.bans);
+	let teams = $derived(data.teams);
+	let defaults = $derived(data.defaults);
+
 	let clickOutsideModalEdit = $state(false);
 	let clickOutsideModalEditImage = $state(false);
 	let pending = $state(false);
-
-	let banMemberModal = $state(false);
-
-	let banMemberName = $state('');
-	let banMemberUuid = $state('');
-
-	let memberLimit = $state(10);
-	let bansLimit = $state(10);
-
-	function sort(a: { score?: string | null } | undefined, b: { score?: string | null } | undefined) {
-		return +(b?.score ?? 0) - +(a?.score ?? 0);
-	}
 
 	let event = $derived(data.event);
 
@@ -91,7 +83,7 @@
 </HeroBanner>
 
 <div class="mt-64 flex flex-col items-center gap-4">
-	<section class="flex w-full max-w-4xl flex-col items-center justify-center justify-items-center gap-8">
+	<section class="flex w-full max-w-7xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
 			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
 		>
@@ -183,418 +175,297 @@
 		<Button href="/guild/{data.guild.id}/events" variant="secondary">Back to Events</Button>
 	</div>
 
-	<div class="flex w-full max-w-6xl flex-col items-start justify-center gap-8 px-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4">
-			<h3 class="text-xl">Event Members</h3>
-			<div class="flex w-full flex-1 flex-col items-center justify-center gap-2">
-				{#await data.members}
-					<p>Loading...</p>
-				{:then members}
-					{@const m = (members ?? []).sort(sort)}
-					{#each m.slice(0, memberLimit) as member (member.playerUuid + '' + member.id)}
-						<Member {member}>
-							<Popover.Mobile>
-								{#snippet trigger()}
-									<Button
-										variant="destructive"
-										size="sm"
-										onclick={() => {
-											banMemberName = member.playerName ?? '';
-											banMemberUuid = member.playerUuid ?? '';
-											banMemberModal = true;
-										}}
-									>
-										<Trash2 size={16} />
-									</Button>
-								{/snippet}
-								<div>
-									<p>Ban this user from the event</p>
-								</div>
-							</Popover.Mobile>
-						</Member>
-					{/each}
-					{#if m.length > memberLimit}
-						<Button
-							variant="secondary"
-							onclick={() => {
-								memberLimit += m.length;
-							}}
-						>
-							Show All
-						</Button>
-					{:else if memberLimit > 10}
-						<Button
-							variant="secondary"
-							onclick={() => {
-								memberLimit = 10;
-							}}
-						>
-							Show Less
-						</Button>
-					{/if}
-					{#if m.length === 0}
-						<p>No members have joined this event yet.</p>
-					{/if}
-				{:catch error}
-					<p>{error.message}</p>
-				{/await}
-			</div>
-		</section>
-		<section class="flex flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4">
-			<h3 class="text-xl">Removed Event Members</h3>
-			<div class="flex w-full flex-col items-center justify-center justify-items-center gap-2">
-				{#await data.bans}
-					<p>Loading...</p>
-				{:then bans}
-					{@const b = (bans ?? []).sort(sort)}
-					{#each b.slice(0, bansLimit) as member (member.playerUuid)}
-						<Member {member}>
-							<form method="POST" action="?/unbanmember" use:enhance>
-								<input type="hidden" name="id" value={event.id} />
-								<input type="hidden" name="uuid" value={member.playerUuid} />
-								<Popover.Mobile>
-									{#snippet trigger()}
-										<div>
-											<Button type="submit" color="green" class="unban" size="sm">
-												<ArrowUp size={16} />
-											</Button>
-										</div>
-									{/snippet}
-									<div>
-										<p>Unban this user from the event</p>
-									</div>
-								</Popover.Mobile>
-							</form>
-						</Member>
-					{/each}
-					{#if b.length > bansLimit}
-						<Button
-							variant="secondary"
-							onclick={() => {
-								bansLimit += b.length;
-							}}
-						>
-							Show All
-						</Button>
-					{:else if bansLimit > 10}
-						<Button
-							variant="secondary"
-							onclick={() => {
-								bansLimit = 10;
-							}}
-						>
-							Show Less
-						</Button>
-					{/if}
-					{#if b.length === 0}
-						<p>No members have been removed from this event yet.</p>
-					{/if}
-				{:catch error}
-					<p>{error.message}</p>
-				{/await}
-			</div>
-		</section>
-	</div>
+	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} />
+
 	<div class="flex flex-col rounded-md border-2 bg-card p-4">
-		{#await data.defaults}
-			<p>Loading...</p>
-		{:then defaults}
-			{#if event.type === +EventType.FarmingWeight && cropWeights}
-				<form
-					action="?/editCropWeights"
-					method="post"
-					class="flex flex-col items-center gap-2"
-					use:enhance={() => {
-						pending = true;
-						return async ({ result, update }) => {
-							if (result) {
-								pending = false;
-								update();
-							}
-						};
-					}}
-				>
-					<input type="hidden" name="id" bind:value={data.event.id} />
-					<h4 class="mb-4 text-lg">Crop Weight Values</h4>
+		{#if event.type === +EventType.FarmingWeight && cropWeights}
+			<form
+				action="?/editCropWeights"
+				method="post"
+				class="flex flex-col items-center gap-2"
+				use:enhance={() => {
+					pending = true;
+					return async ({ result, update }) => {
+						if (result) {
+							pending = false;
+							update();
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="id" bind:value={data.event.id} />
+				<h4 class="mb-4 text-lg">Crop Weight Values</h4>
 
-					<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
-						{#each Object.entries(defaults?.cropWeights ?? {}) as [crop] (crop)}
-							{@const c = getCropFromName(crop) ?? Crop.Wheat}
-							{@const cropName = getCropDisplayName(c)}
-							{@const name = CROP_TO_ELITE_CROP[c]}
+				<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
+					{#each Object.entries(defaults?.cropWeights ?? {}) as [crop] (crop)}
+						{@const c = getCropFromName(crop) ?? Crop.Wheat}
+						{@const cropName = getCropDisplayName(c)}
+						{@const name = CROP_TO_ELITE_CROP[c]}
 
-							<div class="flex flex-row items-center gap-1 px-4 md:basis-96">
-								<img src={PROPER_CROP_TO_IMG[cropName]} alt={crop} class="pixelated h-8 w-8" />
-								<Label class="flex-1">{cropName}</Label>
-								<NumberInput
-									min={0}
-									max={1_000_000}
-									{name}
-									value={cropWeights[name]}
-									maxlength={64}
-									class="flex-1"
-									required
-								/>
-							</div>
-						{/each}
-					</div>
-					<p class="text-sm leading-relaxed text-muted-foreground">
-						Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
-					</p>
-
-					<div class="flex flex-row gap-2">
-						<Button
-							variant="destructive"
-							disabled={pending}
-							onclick={() => {
-								cropWeights = structuredClone(defaults?.cropWeights ?? {});
-							}}>Reset Values</Button
-						>
-						<Button type="submit" disabled={pending}>Update</Button>
-					</div>
-				</form>
-			{:else if event.type === +EventType.Medals && medalWeights}
-				<form
-					action="?/editMedalWeights"
-					method="post"
-					class="flex flex-col items-center gap-2"
-					use:enhance={() => {
-						pending = true;
-						return async ({ result, update }) => {
-							if (result) {
-								pending = false;
-								update();
-							}
-						};
-					}}
-				>
-					<input type="hidden" name="id" bind:value={data.event.id} />
-					<h4 class="mb-4 text-lg">Medal Point Values</h4>
-
-					<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
-						<div class="flex w-full flex-row items-center gap-1 px-4">
-							<img src="/images/medals/bronze.webp" alt="Bronze" class="pixelated h-8 w-8" />
-							<Label class="flex-1">Bronze</Label>
+						<div class="flex flex-row items-center gap-1 px-4 md:basis-96">
+							<img src={PROPER_CROP_TO_IMG[cropName]} alt={crop} class="pixelated h-8 w-8" />
+							<Label class="flex-1">{cropName}</Label>
 							<NumberInput
 								min={0}
-								max={1_000}
-								name="bronze"
-								value={medalWeights['Bronze']}
+								max={1_000_000}
+								{name}
+								value={cropWeights[name]}
 								maxlength={64}
 								class="flex-1"
 								required
 							/>
 						</div>
-						<div class="flex w-full flex-row items-center gap-1 px-4">
-							<img src="/images/medals/silver.webp" alt="Silver" class="pixelated h-8 w-8" />
-							<Label class="flex-1">Silver</Label>
-							<NumberInput
-								min={0}
-								max={1_000}
-								name="silver"
-								value={medalWeights['Silver']}
-								maxlength={64}
-								class="flex-1"
-								required
-							/>
-						</div>
-						<div class="flex w-full flex-row items-center gap-1 px-4">
-							<img src="/images/medals/gold.webp" alt="Gold" class="pixelated h-8 w-8" />
-							<Label class="flex-1">Gold</Label>
-							<NumberInput
-								min={0}
-								max={1_000}
-								name="gold"
-								value={medalWeights['Gold']}
-								maxlength={64}
-								class="flex-1"
-								required
-							/>
-						</div>
-						<div class="flex w-full flex-row items-center gap-1 px-4">
-							<img src="/images/medals/platinum.webp" alt="Platinum" class="pixelated h-8 w-8" />
-							<Label class="flex-1">Platinum</Label>
-							<NumberInput
-								min={0}
-								max={1_000}
-								name="platinum"
-								value={medalWeights['Platinum']}
-								maxlength={64}
-								class="flex-1"
-								required
-							/>
-						</div>
-						<div class="flex w-full flex-row items-center gap-1 px-4">
-							<img src="/images/medals/diamond.webp" alt="Diamond" class="pixelated h-8 w-8" />
-							<Label class="flex-1">Diamond</Label>
-							<NumberInput
-								min={0}
-								max={1_000}
-								name="diamond"
-								value={medalWeights['Diamond']}
-								maxlength={64}
-								class="flex-1"
-								required
-							/>
-						</div>
-					</div>
-					<div class="flex flex-row gap-2">
-						<Button
-							variant="destructive"
-							disabled={pending}
-							onclick={() => {
-								medalWeights = structuredClone(defaults?.medalValues ?? {});
-							}}>Reset Values</Button
-						>
-						<Button type="submit" disabled={pending}>Update</Button>
-					</div>
-				</form>
-			{:else if event.type === +EventType.Pests && pestWeights}
-				<form
-					action="?/editPestWeights"
-					method="post"
-					class="flex flex-col items-center gap-2"
-					use:enhance={() => {
-						pending = true;
-						return async ({ result, update }) => {
-							if (result) {
-								pending = false;
-								update();
-							}
-						};
-					}}
-				>
-					<input type="hidden" name="id" bind:value={data.event.id} />
-					<h4 class="mb-4 text-lg">Pest Weight Values</h4>
-
-					<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
-						{#each Object.entries(pestWeights ?? {}) as [pestName] (pestName)}
-							{@const pest = Pest[pestName as keyof typeof Pest] ?? 'earthworm'}
-
-							<div class="flex flex-row items-center gap-1 px-4 md:basis-96">
-								<img src="/images/pests/{pest}.png" alt={pestName} class="pixelated size-8" />
-								<Label class="flex-1">{pestName}</Label>
-								<NumberInput
-									min={0}
-									max={1_000_000}
-									name={pestName}
-									value={pestWeights[pestName]}
-									maxlength={64}
-									class="flex-1"
-									required
-								/>
-							</div>
-						{/each}
-					</div>
-
-					<div class="flex flex-row gap-2">
-						<Button
-							variant="destructive"
-							disabled={pending}
-							onclick={() => {
-								pestWeights = structuredClone(defaults?.pestWeights ?? {});
-							}}>Reset Values</Button
-						>
-						<Button type="submit" disabled={pending}>Update</Button>
-					</div>
-				</form>
-			{:else if event.type === +EventType.Collections && collectionWeights}
-				<form
-					action="?/editCollectionWeights"
-					method="post"
-					class="flex flex-col items-center gap-2"
-					use:enhance={() => {
-						pending = true;
-						return async ({ result, update }) => {
-							if (result) {
-								pending = false;
-								update();
-							}
-						};
-					}}
-				>
-					<input type="hidden" name="id" bind:value={data.event.id} />
-					<h4 class="mb-4 text-lg">Collections</h4>
-
-					<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
-						{#each Object.entries(collectionWeights ?? {}) as [key, pair] (key)}
-							{@const name = pair.name}
-							{@const weight = pair.weight}
-
-							<div class="flex w-full flex-row items-center gap-1 px-4">
-								<Label class="flex-1 font-semibold">{key}</Label>
-								<Input
-									name="collection.{key}.name"
-									value={name}
-									placeholder="Collection Name"
-									maxlength={64}
-									class="flex-1"
-									required
-								/>
-								<NumberInput
-									min={0}
-									max={1_000_000}
-									name="collection.{key}.value"
-									placeholder="Weight Value"
-									value={weight}
-									maxlength={64}
-									class="flex-1"
-									required
-								/>
-								<Button
-									type="button"
-									onclick={() => {
-										delete collectionWeights[key];
-									}}
-									variant="destructive"
-								>
-									<Trash2 size={16} />
-								</Button>
-							</div>
-						{:else}
-							<p class="text-sm leading-relaxed text-muted-foreground">
-								No collections have been added yet.
-							</p>
-						{/each}
-					</div>
-
-					<div class="mt-4 flex flex-row items-center gap-1 px-4">
-						<Label class="flex-1">New Collection Key</Label>
-						<Input name="collectionKey" bind:value={newCollectionKey} maxlength={64} class="flex-1" />
-						<Button
-							type="button"
-							onclick={() => {
-								if (newCollectionKey.trim() === '') return;
-								collectionWeights[newCollectionKey] = {
-									name: newCollectionKey.trim(),
-									weight: 1,
-								};
-								newCollectionKey = '';
-							}}
-							variant="secondary"
-						>
-							Add
-						</Button>
-					</div>
-
-					<p class="text-sm leading-relaxed text-muted-foreground">
-						Enter internal SkyBlock IDs / item ids for collections. It's whatever Hypixel has as a key in
-						the collections object.
-					</p>
-
-					<div class="flex flex-row gap-2">
-						<Button type="submit" disabled={pending}>Update</Button>
-					</div>
-				</form>
-			{:else}
-				<p>Event Type not supported</p>
-			{/if}
-			{#if event.type === +EventType.FarmingWeight && cropWeights}
+					{/each}
+				</div>
 				<p class="text-sm leading-relaxed text-muted-foreground">
 					Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
 				</p>
-			{/if}
-		{/await}
+
+				<div class="flex flex-row gap-2">
+					<Button
+						variant="destructive"
+						disabled={pending}
+						onclick={() => {
+							cropWeights = structuredClone(defaults?.cropWeights ?? {});
+						}}>Reset Values</Button
+					>
+					<Button type="submit" disabled={pending}>Update</Button>
+				</div>
+			</form>
+		{:else if event.type === +EventType.Medals && medalWeights}
+			<form
+				action="?/editMedalWeights"
+				method="post"
+				class="flex flex-col items-center gap-2"
+				use:enhance={() => {
+					pending = true;
+					return async ({ result, update }) => {
+						if (result) {
+							pending = false;
+							update();
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="id" bind:value={data.event.id} />
+				<h4 class="mb-4 text-lg">Medal Point Values</h4>
+
+				<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
+					<div class="flex w-full flex-row items-center gap-1 px-4">
+						<img src="/images/medals/bronze.webp" alt="Bronze" class="pixelated h-8 w-8" />
+						<Label class="flex-1">Bronze</Label>
+						<NumberInput
+							min={0}
+							max={1_000}
+							name="bronze"
+							value={medalWeights['Bronze']}
+							maxlength={64}
+							class="flex-1"
+							required
+						/>
+					</div>
+					<div class="flex w-full flex-row items-center gap-1 px-4">
+						<img src="/images/medals/silver.webp" alt="Silver" class="pixelated h-8 w-8" />
+						<Label class="flex-1">Silver</Label>
+						<NumberInput
+							min={0}
+							max={1_000}
+							name="silver"
+							value={medalWeights['Silver']}
+							maxlength={64}
+							class="flex-1"
+							required
+						/>
+					</div>
+					<div class="flex w-full flex-row items-center gap-1 px-4">
+						<img src="/images/medals/gold.webp" alt="Gold" class="pixelated h-8 w-8" />
+						<Label class="flex-1">Gold</Label>
+						<NumberInput
+							min={0}
+							max={1_000}
+							name="gold"
+							value={medalWeights['Gold']}
+							maxlength={64}
+							class="flex-1"
+							required
+						/>
+					</div>
+					<div class="flex w-full flex-row items-center gap-1 px-4">
+						<img src="/images/medals/platinum.webp" alt="Platinum" class="pixelated h-8 w-8" />
+						<Label class="flex-1">Platinum</Label>
+						<NumberInput
+							min={0}
+							max={1_000}
+							name="platinum"
+							value={medalWeights['Platinum']}
+							maxlength={64}
+							class="flex-1"
+							required
+						/>
+					</div>
+					<div class="flex w-full flex-row items-center gap-1 px-4">
+						<img src="/images/medals/diamond.webp" alt="Diamond" class="pixelated h-8 w-8" />
+						<Label class="flex-1">Diamond</Label>
+						<NumberInput
+							min={0}
+							max={1_000}
+							name="diamond"
+							value={medalWeights['Diamond']}
+							maxlength={64}
+							class="flex-1"
+							required
+						/>
+					</div>
+				</div>
+				<div class="flex flex-row gap-2">
+					<Button
+						variant="destructive"
+						disabled={pending}
+						onclick={() => {
+							medalWeights = structuredClone(defaults?.medalValues ?? {});
+						}}>Reset Values</Button
+					>
+					<Button type="submit" disabled={pending}>Update</Button>
+				</div>
+			</form>
+		{:else if event.type === +EventType.Pests && pestWeights}
+			<form
+				action="?/editPestWeights"
+				method="post"
+				class="flex flex-col items-center gap-2"
+				use:enhance={() => {
+					pending = true;
+					return async ({ result, update }) => {
+						if (result) {
+							pending = false;
+							update();
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="id" bind:value={data.event.id} />
+				<h4 class="mb-4 text-lg">Pest Weight Values</h4>
+
+				<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
+					{#each Object.entries(pestWeights ?? {}) as [pestName] (pestName)}
+						{@const pest = Pest[pestName as keyof typeof Pest] ?? 'earthworm'}
+
+						<div class="flex flex-row items-center gap-1 px-4 md:basis-96">
+							<img src="/images/pests/{pest}.png" alt={pestName} class="pixelated size-8" />
+							<Label class="flex-1">{pestName}</Label>
+							<NumberInput
+								min={0}
+								max={1_000_000}
+								name={pestName}
+								value={pestWeights[pestName]}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+						</div>
+					{/each}
+				</div>
+
+				<div class="flex flex-row gap-2">
+					<Button
+						variant="destructive"
+						disabled={pending}
+						onclick={() => {
+							pestWeights = structuredClone(defaults?.pestWeights ?? {});
+						}}>Reset Values</Button
+					>
+					<Button type="submit" disabled={pending}>Update</Button>
+				</div>
+			</form>
+		{:else if event.type === +EventType.Collections && collectionWeights}
+			<form
+				action="?/editCollectionWeights"
+				method="post"
+				class="flex flex-col items-center gap-2"
+				use:enhance={() => {
+					pending = true;
+					return async ({ result, update }) => {
+						if (result) {
+							pending = false;
+							update();
+						}
+					};
+				}}
+			>
+				<input type="hidden" name="id" bind:value={data.event.id} />
+				<h4 class="mb-4 text-lg">Collections</h4>
+
+				<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
+					{#each Object.entries(collectionWeights ?? {}) as [key, pair] (key)}
+						{@const name = pair.name}
+						{@const weight = pair.weight}
+
+						<div class="flex w-full flex-row items-center gap-1 px-4">
+							<Label class="flex-1 font-semibold">{key}</Label>
+							<Input
+								name="collection.{key}.name"
+								value={name}
+								placeholder="Collection Name"
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+							<NumberInput
+								min={0}
+								max={1_000_000}
+								name="collection.{key}.value"
+								placeholder="Weight Value"
+								value={weight}
+								maxlength={64}
+								class="flex-1"
+								required
+							/>
+							<Button
+								type="button"
+								onclick={() => {
+									delete collectionWeights[key];
+								}}
+								variant="destructive"
+							>
+								<Trash2 size={16} />
+							</Button>
+						</div>
+					{:else}
+						<p class="text-sm leading-relaxed text-muted-foreground">No collections have been added yet.</p>
+					{/each}
+				</div>
+
+				<div class="mt-4 flex flex-row items-center gap-1 px-4">
+					<Label class="flex-1">New Collection Key</Label>
+					<Input name="collectionKey" bind:value={newCollectionKey} maxlength={64} class="flex-1" />
+					<Button
+						type="button"
+						onclick={() => {
+							if (newCollectionKey.trim() === '') return;
+							collectionWeights[newCollectionKey] = {
+								name: newCollectionKey.trim(),
+								weight: 1,
+							};
+							newCollectionKey = '';
+						}}
+						variant="secondary"
+					>
+						Add
+					</Button>
+				</div>
+
+				<p class="text-sm leading-relaxed text-muted-foreground">
+					Enter internal SkyBlock IDs / item ids for collections. It's whatever Hypixel has as a key in the
+					collections object.
+				</p>
+
+				<div class="flex flex-row gap-2">
+					<Button type="submit" disabled={pending}>Update</Button>
+				</div>
+			</form>
+		{:else}
+			<p>Event Type not supported</p>
+		{/if}
 	</div>
 	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		<form
@@ -653,34 +524,6 @@
 		</form>
 	</div>
 </div>
-
-<Dialog.Root bind:open={banMemberModal}>
-	<Dialog.ScrollContent>
-		<Dialog.Title>{banMemberName} - {banMemberUuid}</Dialog.Title>
-		<form
-			method="post"
-			action="?/banmember"
-			class="flex flex-col gap-2"
-			use:enhance={() => {
-				pending = true;
-				return async ({ result, update }) => {
-					if (result) banMemberModal = false;
-					pending = false;
-					update();
-				};
-			}}
-		>
-			<input type="hidden" name="id" bind:value={data.event.id} />
-			<input type="hidden" name="uuid" bind:value={banMemberUuid} />
-			<div class="space-y-2">
-				<Label>Ban Reason</Label>
-				<Input name="reason" placeholder="Cheating - Macro" maxlength={64} required />
-			</div>
-
-			<Button type="submit" disabled={pending}>Ban</Button>
-		</form>
-	</Dialog.ScrollContent>
-</Dialog.Root>
 
 <Dialog.Root bind:open={clickOutsideModalEdit}>
 	<Dialog.ScrollContent>

@@ -31,6 +31,7 @@
 		"@sveltejs/adapter-node": "^5.2.9",
 		"@sveltejs/kit": "^2.20.3",
 		"@sveltejs/vite-plugin-svelte": "5.0.3",
+		"@tanstack/table-core": "^8.21.2",
 		"@types/d3-array": "^3.2.1",
 		"@types/d3-format": "^3.0.4",
 		"@types/d3-scale": "^4.0.8",

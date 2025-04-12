@@ -546,6 +546,19 @@ export const GetAdminEventMembers = async (token: string, discordId: string, eve
 		},
 	});
 
+export const GetAdminEventTeams = async (token: string, discordId: string, eventId: string) =>
+	await GET('/guild/{discordId}/event/{eventId}/teams', {
+		params: {
+			path: {
+				discordId: discordId as unknown as number,
+				eventId: eventId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
 export const GetEventMember = async (eventId: string, playerUuid: string, token?: string) =>
 	await GET('/event/{eventId}/member/{playerUuid}', {
 		params: {
