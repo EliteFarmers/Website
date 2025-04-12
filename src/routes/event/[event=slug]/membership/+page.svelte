@@ -2,6 +2,8 @@
 	import { Button } from '$ui/button';
 	import * as Checkbox from '$ui/checkbox';
 	import * as Popover from '$ui/popover';
+	import * as Dialog from '$ui/dialog';
+	import * as Tooltip from '$ui/tooltip';
 	import { Label } from '$ui/label';
 	import type { ActionData, PageData } from './$types';
 	import { page } from '$app/state';
@@ -10,15 +12,15 @@
 	import { Input } from '$ui/input';
 	import { SelectSimple } from '$ui/select';
 	import Check from 'lucide-svelte/icons/check';
-	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
 	import Trash from 'lucide-svelte/icons/trash-2';
 	import Crown from 'lucide-svelte/icons/crown';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import { watch } from 'runed';
 	import { invalidate } from '$app/navigation';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import VisibleToggle from '$comp/visible-toggle.svelte';
+	import type { components } from '$lib/api/api';
+	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 
 	interface Props {
 		data: PageData;
@@ -34,44 +36,9 @@
 		5: false,
 	});
 
-	let picked1 = $state('');
-	let picked2 = $state('');
-	let picked3 = $state('');
-
-	function generateTeamName() {
-		const firstWords = data.words?.first ?? [];
-		const secondWords = data.words?.second ?? [];
-		const thirdWords = data.words?.third ?? [];
-
-		const first = firstWords[Math.floor(Math.random() * firstWords.length)].replaceAll(' ', '_');
-		const second = secondWords[Math.floor(Math.random() * secondWords.length)].replaceAll(' ', '_');
-		const third = thirdWords[Math.floor(Math.random() * thirdWords.length)].replaceAll(' ', '_');
-
-		if (Math.random() > 0.5) {
-			picked1 = first;
-			picked3 = '';
-
-			if (Math.random() > 0.5) {
-				picked2 = second;
-			} else {
-				picked2 = third;
-			}
-		} else {
-			picked1 = first;
-			picked2 = second;
-			picked3 = third;
-		}
-
-		updateName();
-
-		if (name.length > 32) {
-			generateTeamName();
-		}
-	}
-
-	function updateName() {
-		name = (picked1 ?? '') + ' ' + (picked2 ?? '') + ' ' + (picked3 ?? '').trim();
-	}
+	let kickMemberModal = $state(false);
+	let promoteMemberModal = $state(false);
+	let selectedMember = $state<components['schemas']['EventMemberDetailsDto']>();
 
 	let event = $derived(data.event);
 	let teams = $derived(
@@ -103,23 +70,7 @@
 	let joinable = $derived(joinEnds > Date.now() && !data.member?.disqualified);
 	let loading = $state(false);
 
-	let name = $state('');
-
-	watch(
-		() => data.words,
-		(words) => {
-			if (event.mode !== 'solo' && words) {
-				generateTeamName();
-			}
-		}
-	);
-
-	let words = $derived(
-		Array.from(
-			new Set([...(data.words?.first ?? []), ...(data.words?.second ?? []), ...(data.words?.third ?? [])]),
-			(w) => ({ value: w.replaceAll(' ', '_'), label: w })
-		)
-	);
+	let codeVisible = $state(false);
 
 	const crumbs = $derived<Crumb[]>([
 		{
@@ -358,11 +309,16 @@
 							Your Team: <span class="font-semibold">{ownTeam.name}</span>
 						</h3>
 						{#if ownTeam.joinCode}
-							<div class="flex flex-row items-center gap-4">
-								<p>
-									Join Code: <span class="font-semibold">{ownTeam.joinCode}</span>
-								</p>
-								<CopyToClipboard text={ownTeam.joinCode} />
+							<div class="flex flex-row items-center gap-2">
+								<p>Join Code</p>
+								<VisibleToggle bind:visible={codeVisible} variant="outline" />
+								<input
+									class="max-w-24 rounded-md border bg-background p-1 text-center font-mono font-semibold"
+									type={!codeVisible ? 'password' : 'text'}
+									disabled
+									value={ownTeam.joinCode}
+								/>
+								<CopyToClipboard text={ownTeam.joinCode} class="size-8" variant="outline" />
 							</div>
 						{/if}
 						{#each ownTeam.members ?? [] as member (member.playerUuid)}
@@ -381,37 +337,51 @@
 													<Crown size="sm" class="mt-1.5 w-4 text-completed" />
 												</div>
 											{/snippet}
-											<p class="text-lg font-semibold">Team Owner</p>
+											<p>Team Owner</p>
 										</Popover.Mobile>
 									{/if}
 								</div>
-								<div class="flex flex-row items-center gap-4">
+								<div class="flex flex-row items-center gap-2">
 									<p class="font-semibold">{(+(member.score ?? 0)).toLocaleString()}</p>
-									{#if isOwner}
-										<form
-											action="?/kickMember"
-											method="post"
-											use:enhance={() => {
-												loading = true;
-												return async ({ update }) => {
-													await update();
-													loading = false;
-												};
-											}}
-										>
-											<input type="hidden" name="team" value={ownTeamId} />
-											<input type="hidden" name="member" value={member.playerUuid} />
-											<Button
-												type="submit"
-												name="player"
-												size="sm"
-												value={member.playerUuid}
-												variant="destructive"
-												disabled={member.playerUuid === data.account?.id || loading}
-											>
-												<Trash />
-											</Button>
-										</form>
+									{#if isOwner && member.playerUuid !== data.account?.id}
+										<Tooltip.Simple>
+											{#snippet child({ props })}
+												<Button
+													type="submit"
+													disabled={loading}
+													{...props}
+													class="ml-1 size-8"
+													size="sm"
+													variant="outline"
+													onclick={() => {
+														selectedMember = member;
+														promoteMemberModal = true;
+													}}
+												>
+													<Crown class="text-completed" />
+												</Button>
+											{/snippet}
+											<p>Transfer Ownership</p>
+										</Tooltip.Simple>
+										<Tooltip.Simple>
+											{#snippet child({ props })}
+												<Button
+													type="submit"
+													disabled={loading}
+													{...props}
+													class="size-8"
+													size="sm"
+													variant="outline"
+													onclick={() => {
+														selectedMember = member;
+														kickMemberModal = true;
+													}}
+												>
+													<Trash class="text-destructive" />
+												</Button>
+											{/snippet}
+											<p>Kick From Team</p>
+										</Tooltip.Simple>
 									{/if}
 								</div>
 							</div>
@@ -451,45 +421,7 @@
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
 							<div class="flex flex-row items-center gap-2 text-primary">
-								<input type="hidden" name="name" value={name} hidden />
-								<div class="flex flex-col gap-2">
-									<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-									<div class="flex max-w-sm flex-row flex-wrap gap-1 lg:flex-nowrap">
-										<Button
-											variant="secondary"
-											onclick={generateTeamName}
-											disabled={loading}
-											class="order-5 lg:order-1"
-										>
-											<RefreshCcw />
-										</Button>
-										<ComboBox
-											options={words}
-											bind:value={picked1}
-											exclude={[picked2, picked3]}
-											onChange={updateName}
-											placeholder="Select Word"
-											btnClass="order-2"
-										/>
-										<ComboBox
-											options={words}
-											bind:value={picked2}
-											exclude={[picked1, picked3]}
-											onChange={updateName}
-											placeholder="Select Word"
-											btnClass="order-3"
-										/>
-										<ComboBox
-											options={words}
-											bind:value={picked3}
-											exclude={[picked1, picked2]}
-											onChange={updateName}
-											placeholder="Select Word"
-											clear={true}
-											btnClass="order-4"
-										/>
-									</div>
-								</div>
+								<TeamNameSelector words={data.words} bind:loading />
 							</div>
 							<div class="flex flex-row gap-2">
 								<Button type="submit" disabled={loading}>Update Team Name</Button>
@@ -532,48 +464,8 @@
 							list.
 						</p>
 						<div class="flex flex-row items-center gap-2 text-primary">
-							<input type="hidden" name="name" value={name} hidden />
-
 							<div class="flex flex-col gap-2">
-								<p class="text-xl font-semibold">{name.replaceAll('_', ' ')}</p>
-								<div class="flex max-w-sm flex-row flex-wrap gap-1 lg:flex-nowrap">
-									<Button
-										variant="secondary"
-										disabled={!joined}
-										onclick={generateTeamName}
-										class="order-5 lg:order-1"
-									>
-										<RefreshCcw />
-									</Button>
-									<ComboBox
-										options={words}
-										bind:value={picked1}
-										exclude={[picked2, picked3]}
-										onChange={updateName}
-										placeholder="Select Word"
-										disabled={!joined}
-										btnClass="order-2"
-									/>
-									<ComboBox
-										options={words}
-										bind:value={picked2}
-										exclude={[picked1, picked3]}
-										onChange={updateName}
-										placeholder="Select Word"
-										disabled={!joined}
-										btnClass="order-3"
-									/>
-									<ComboBox
-										options={words}
-										bind:value={picked3}
-										exclude={[picked1, picked2]}
-										onChange={updateName}
-										placeholder="Select Word"
-										disabled={!joined}
-										clear={true}
-										btnClass="order-4"
-									/>
-								</div>
+								<TeamNameSelector words={data.words} bind:loading />
 							</div>
 						</div>
 						<Button type="submit" disabled={!data.member || !joined || loading}>Create Team</Button>
@@ -597,3 +489,75 @@
 		</p>
 	</form>
 </div>
+
+<Dialog.Root bind:open={kickMemberModal}>
+	<Dialog.ScrollContent>
+		<Dialog.Title>Kick {selectedMember?.playerName} From Team?</Dialog.Title>
+		{#if selectedMember}
+			<form
+				action="?/kickMember"
+				class="mt-4"
+				method="post"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						await update();
+						loading = false;
+						kickMemberModal = false;
+					};
+				}}
+			>
+				<input type="hidden" name="team" value={ownTeamId} />
+				<input type="hidden" name="member" value={selectedMember.playerUuid} />
+				<p class="mb-4">
+					A kicked member can rejoin your team if they still have the join code! Consider changing it
+					afterwards.
+				</p>
+				<Button
+					type="submit"
+					size="sm"
+					variant="destructive"
+					disabled={selectedMember.playerUuid === data.account?.id || loading}
+				>
+					<Trash /> Kick Member
+				</Button>
+			</form>
+		{/if}
+	</Dialog.ScrollContent>
+</Dialog.Root>
+
+<Dialog.Root bind:open={promoteMemberModal}>
+	<Dialog.ScrollContent>
+		<Dialog.Title>Transfer team to {selectedMember?.playerName}?</Dialog.Title>
+		{#if selectedMember}
+			<form
+				action="?/transferOwnership"
+				class="mt-4"
+				method="post"
+				use:enhance={() => {
+					loading = true;
+					return async ({ update }) => {
+						await update();
+						loading = false;
+						promoteMemberModal = false;
+					};
+				}}
+			>
+				<input type="hidden" name="team" value={ownTeamId} />
+				<input type="hidden" name="member" value={selectedMember.playerUuid} />
+				<p class="mb-4">
+					Transferring ownership to {selectedMember.playerName} will remove your permissions! They will be able
+					to kick you if you do this, and you will lose control over the team!
+				</p>
+				<Button
+					type="submit"
+					size="sm"
+					variant="destructive"
+					disabled={selectedMember.playerUuid === data.account?.id || loading}
+				>
+					<Crown /> Transfer Ownership
+				</Button>
+			</form>
+		{/if}
+	</Dialog.ScrollContent>
+</Dialog.Root>

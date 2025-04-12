@@ -1,6 +1,6 @@
 import { building } from '$app/environment';
 import type { components } from './api/api';
-import { GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
+import { GetEventTeamWords, GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
 import { ELITE_API_URL } from '$env/static/private';
 
 const cacheEntries = {
@@ -25,6 +25,13 @@ const cacheEntries = {
 			return data ?? [];
 		},
 	},
+	teamwords: {
+		data: {} as components['schemas']['EventTeamsWordListDto'],
+		update: async () => {
+			const { data } = await GetEventTeamWords();
+			return data ?? { first: [] as string[], second: [] as string[], third: [] as string[] };
+		},
+	},
 };
 
 export const cache = {
@@ -37,16 +44,26 @@ export const cache = {
 	get styles() {
 		return cacheEntries.styles.data;
 	},
+	get teamwords() {
+		return cacheEntries.teamwords.data;
+	},
 };
 
 let interval: undefined | number | NodeJS.Timeout = undefined;
 
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
-	for (const item of Object.values(cacheEntries)) {
-		item.data = await item.update();
+	try {
+		for (const item of Object.values(cacheEntries)) {
+			item.data = await item.update();
+		}
+		console.log('New data loaded.');
+	} catch (error) {
+		console.error('Error fetching cached items:', error);
+		setTimeout(() => {
+			reloadCachedItems();
+		}, 1000 * 5); // Retry after 5 seconds
 	}
-	console.log('New data loaded.');
 }
 
 export async function initCachedItems() {

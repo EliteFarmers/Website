@@ -8,16 +8,21 @@
 		class: className,
 		sideOffset = 4,
 		trigger,
+		child: triggerChild,
 		...restProps
 	}: TooltipPrimitive.ContentProps & {
-		trigger: Snippet;
+		trigger?: Snippet;
+		child?: Snippet<[{ props: Record<string, unknown> }]>;
 	} = $props();
 </script>
 
 <TooltipPrimitive.Provider>
 	<TooltipPrimitive.Root delayDuration={0}>
 		<TooltipPrimitive.Trigger>
-			{@render trigger()}
+			{#snippet child(data)}
+				{@render triggerChild?.(data)}
+			{/snippet}
+			{@render trigger?.()}
 		</TooltipPrimitive.Trigger>
 		<TooltipPrimitive.Content
 			bind:ref

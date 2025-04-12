@@ -23,6 +23,7 @@
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
 	import MemberList from './member-list.svelte';
+	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 
 	interface Props {
 		data: PageData;
@@ -93,9 +94,7 @@
 						{#if !event.approved}
 							<Popover.Mobile>
 								{#snippet trigger()}
-									<div>
-										<TriangleAlert class="mt-1.5 text-destructive" />
-									</div>
+									<TriangleAlert class="mt-1.5 text-destructive" />
 								{/snippet}
 								<div>
 									<p class="font-semibold">Pending approval!</p>
@@ -122,12 +121,13 @@
 					</div>
 				</div>
 				<div class="flex flex-col gap-2 p-4">
-					<Popover.Mobile>
-						{#snippet trigger()}
+					<TooltipSimple side="left">
+						{#snippet child({ props })}
 							<Button
 								onclick={() => {
 									clickOutsideModalEdit = true;
 								}}
+								{...props}
 							>
 								<Settings />
 							</Button>
@@ -135,14 +135,15 @@
 						<div>
 							<p>Edit Event</p>
 						</div>
-					</Popover.Mobile>
+					</TooltipSimple>
 
-					<Popover.Mobile>
-						{#snippet trigger()}
+					<TooltipSimple side="left">
+						{#snippet child({ props })}
 							<Button
 								onclick={() => {
 									clickOutsideModalEditImage = true;
 								}}
+								{...props}
 							>
 								<Image />
 							</Button>
@@ -150,21 +151,19 @@
 						<div>
 							<p>Edit Banner Image</p>
 						</div>
-					</Popover.Mobile>
+					</TooltipSimple>
 
 					{#if event.approved}
-						<Popover.Mobile>
-							{#snippet trigger()}
-								<div>
-									<Button href="/event/{event.id}" target="_blank">
-										<ExternalLink />
-									</Button>
-								</div>
+						<TooltipSimple side="left">
+							{#snippet child({ props })}
+								<Button href="/event/{event.id}" target="_blank" {...props}>
+									<ExternalLink />
+								</Button>
 							{/snippet}
 							<div>
 								<p>View Event Page</p>
 							</div>
-						</Popover.Mobile>
+						</TooltipSimple>
 					{/if}
 				</div>
 			</div>
@@ -175,7 +174,7 @@
 		<Button href="/guild/{data.guild.id}/events" variant="secondary">Back to Events</Button>
 	</div>
 
-	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} />
+	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} teamWords={data.teamWords} />
 
 	<div class="flex flex-col rounded-md border-2 bg-card p-4">
 		{#if event.type === +EventType.FarmingWeight && cropWeights}

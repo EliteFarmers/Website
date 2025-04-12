@@ -5,7 +5,6 @@ import {
 	GetAccount,
 	GetEventDetails,
 	GetEventTeam,
-	GetEventTeamWords,
 	GetEventTeams,
 	JoinEvent,
 	JoinEventTeam,
@@ -13,6 +12,7 @@ import {
 	LeaveEvent,
 	LeaveEventTeam,
 	RegenerateEventTeamCode,
+	TransferEventTeamOwnership,
 	UpdateEventTeam,
 } from '$lib/api/elite';
 
@@ -40,7 +40,6 @@ export const load = (async ({ locals, parent, params }) => {
 
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {
 		const { data: teams } = await GetEventTeams(eventId).catch(() => ({ data: undefined }));
-		const { data: words } = await GetEventTeamWords().catch(() => ({ data: undefined }));
 
 		if (member?.teamId && token) {
 			const { data: team } = await GetEventTeam(token, eventId, member.teamId).catch(() => ({ data: undefined }));
@@ -50,7 +49,7 @@ export const load = (async ({ locals, parent, params }) => {
 				member,
 				teams,
 				event,
-				words,
+				words: locals.cache?.teamwords,
 				team,
 			};
 		}
@@ -60,7 +59,7 @@ export const load = (async ({ locals, parent, params }) => {
 			member,
 			teams,
 			event,
-			words,
+			words: locals.cache?.teamwords,
 		};
 	}
 
@@ -158,7 +157,7 @@ export const actions: Actions = {
 		}
 
 		const data = await request.formData();
-		const teamName = (data.get('name') as string) || undefined;
+		const teamName = data.get('name') as string;
 
 		if (!teamName) {
 			return fail(400, { error: 'Invalid request' });
@@ -288,6 +287,40 @@ export const actions: Actions = {
 
 		if (!codeResponse.ok) {
 			return fail(codeResponse.status, { error: 'Failed to leave team', problem });
+		}
+
+		return { success: true };
+	},
+	transferOwnership: async ({ locals, params, request }) => {
+		const { access_token: token, session } = locals;
+		const { event: eventParam } = params;
+
+		const eventId = eventParam?.slice(eventParam.lastIndexOf('-') + 1);
+
+		if (!token || !session) {
+			throw redirect(307, '/login');
+		}
+
+		if (!eventId) {
+			return fail(404, { error: 'Event not found' });
+		}
+
+		const data = await request.formData();
+		const teamId = (data.get('team') as string) || undefined;
+		const memberUuid = (data.get('member') as string) || undefined;
+
+		if (!teamId || !memberUuid) {
+			return fail(400, { error: 'Invalid request' });
+		}
+
+		const { response: codeResponse, error: problem } = await TransferEventTeamOwnership(token, {
+			eventId,
+			teamId,
+			playerUuid: memberUuid,
+		});
+
+		if (!codeResponse.ok) {
+			return fail(codeResponse.status, { error: 'Failed to transfer team ownership!', problem });
 		}
 
 		return { success: true };

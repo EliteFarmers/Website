@@ -1,7 +1,6 @@
 import type { components } from '$lib/api/api';
 import { renderComponent, renderSnippet } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
-// import Bed from 'lucide-svelte/icons/bed';
 import { createRawSnippet } from 'svelte';
 import MemberTableActions from './member-table-actions.svelte';
 import CircleOff from 'lucide-svelte/icons/circle-off';
@@ -9,6 +8,8 @@ import LogOut from 'lucide-svelte/icons/log-out';
 import Activity from 'lucide-svelte/icons/activity';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 import { Pause } from 'lucide-svelte';
+import MemberTeamRow from './member-team-row.svelte';
+import MemberRow from './member-row.svelte';
 
 export type AdminEventMember = components['schemas']['AdminEventMemberDto'];
 export type AdminEventTeam = components['schemas']['EventTeamWithMembersDto'];
@@ -23,23 +24,6 @@ const statusCellSnippet = createRawSnippet<[string]>((getStatus) => {
 	};
 	return {
 		render: () => `<div class="font-medium">${map[+status as keyof typeof map] ?? 'Unknown'}</div>`,
-	};
-});
-
-const nameCellSnippet = createRawSnippet<[{ name: string; uuid: string }]>((getData) => {
-	const { name, uuid } = getData();
-	return {
-		render: () =>
-			`<div class="flex flex-row items-center gap-2">
-				<img
-					src="https://mc-heads.net/avatar/${uuid}"
-					class="aspect-square w-6 rounded-sm"
-					alt="Player Head"
-				/>
-				<a href="/@${uuid}" target="_blank" class="flex flex-row items-center gap-1 underline">
-					${name}
-				</a>
-			</div>`,
 	};
 });
 
@@ -60,10 +44,7 @@ export const getColumns = (
 			accessorKey: 'playerName',
 			header: 'Name',
 			cell: ({ row }) => {
-				return renderSnippet(nameCellSnippet, {
-					name: row.getValue('playerName') as string,
-					uuid: row.original.playerUuid as string,
-				});
+				return renderComponent(MemberRow, { member: row.original });
 			},
 		},
 		{
@@ -89,10 +70,12 @@ export const getColumns = (
 				}),
 			cell: ({ row }) => {
 				const teamId = row.getValue('teamId');
-				if (!teamId) return 'None';
-				const team = teams[teamId as number];
-				if (!team) return 'Unknown';
-				return team.name;
+				const team = teamId ? teams[teamId as number] : undefined;
+				return renderComponent(MemberTeamRow, {
+					member: row.original,
+					team,
+					actions,
+				});
 			},
 			filterFn: (row, id, value) => {
 				return value.includes(row.original.teamId?.toString());

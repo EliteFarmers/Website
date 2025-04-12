@@ -38,6 +38,24 @@
 					<Button type="submit">Fetch</Button>
 				</form>
 			</div>
+
+			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
+				<p>Link an Account</p>
+				<form method="post" action="?/linkAccount" class="flex w-fit flex-row gap-2" use:enhance>
+					<Input name="player" placeholder="Player name/uuid" maxlength={64} required />
+					<Input name="discord" placeholder="Discord ID" maxlength={64} required />
+					<Button type="submit">Link</Button>
+				</form>
+			</div>
+
+			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
+				<p>Unlink an Account</p>
+				<form method="post" action="?/unlinkAccount" class="flex w-fit flex-row gap-2" use:enhance>
+					<Input name="player" placeholder="Player name/uuid" maxlength={64} required />
+					<Input name="discord" placeholder="Discord ID" maxlength={64} required />
+					<Button type="submit" variant="destructive">Unlink</Button>
+				</form>
+			</div>
 		</div>
 	</section>
 </div>

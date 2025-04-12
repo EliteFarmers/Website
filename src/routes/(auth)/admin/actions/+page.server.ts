@@ -99,4 +99,58 @@ export const actions: Actions = {
 			success: true,
 		};
 	},
+	linkAccount: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const playerId = data.get('player') as string;
+		const discordId = data.get('discord') as string;
+
+		const { response, error: e } = await POST('/admin/link-account', {
+			body: {
+				discordId: discordId,
+				player: playerId,
+			},
+			headers: { Authorization: `Bearer ${token}` },
+		});
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to link account' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	unlinkAccount: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const playerId = data.get('player') as string;
+		const discordId = data.get('discord') as string;
+
+		const { response, error: e } = await POST('/admin/unlink-account', {
+			body: {
+				discordId: discordId,
+				player: playerId,
+			},
+			headers: { Authorization: `Bearer ${token}` },
+		});
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to unlink account' });
+		}
+
+		return {
+			success: true,
+		};
+	},
 };
