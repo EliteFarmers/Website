@@ -97,12 +97,10 @@
 					</div>
 					<div class="flex flex-col gap-2 p-4">
 						<Popover.Mobile>
-							{#snippet trigger()}
-								<div>
-									<Button href="/guild/{event.guildId}/event/{event.id}">
-										<Settings />
-									</Button>
-								</div>
+							{#snippet child({ props })}
+								<Button href="/guild/{event.guildId}/event/{event.id}" {...props}>
+									<Settings />
+								</Button>
 							{/snippet}
 							<div>
 								<p>Edit Event</p>
@@ -111,12 +109,10 @@
 
 						{#if event.approved}
 							<Popover.Mobile>
-								{#snippet trigger()}
-									<div>
-										<Button href="/event/{event.id}" target="_blank">
-											<ExternalLink />
-										</Button>
-									</div>
+								{#snippet child({ props })}
+									<Button href="/event/{event.id}" target="_blank" {...props}>
+										<ExternalLink />
+									</Button>
 								{/snippet}
 								<div>
 									<p>View Event Page</p>

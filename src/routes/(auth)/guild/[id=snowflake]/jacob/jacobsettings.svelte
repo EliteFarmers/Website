@@ -73,9 +73,9 @@
 			<form method="post" action="{page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
-					{#snippet trigger()}
+					{#snippet child({ props })}
 						<div>
-							<Button type="submit" color="green">
+							<Button type="submit" color="green" {...props}>
 								<Mail />
 							</Button>
 						</div>
@@ -88,9 +88,9 @@
 			<form method="post" action="{page.url.pathname}?/clear" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
-					{#snippet trigger()}
+					{#snippet child({ props })}
 						<div>
-							<Button type="submit" color="yellow">
+							<Button type="submit" color="yellow" {...props}>
 								<RefreshCcw />
 							</Button>
 						</div>
@@ -99,8 +99,8 @@
 				</Popover.Mobile>
 			</form>
 			<Popover.Mobile>
-				{#snippet trigger()}
-					<Button onclick={() => (confirmModal = true)} variant="destructive">
+				{#snippet child({ props })}
+					<Button onclick={() => (confirmModal = true)} variant="destructive" {...props}>
 						<Trash2 />
 					</Button>
 				{/snippet}

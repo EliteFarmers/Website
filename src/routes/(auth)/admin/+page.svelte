@@ -55,13 +55,14 @@
 							{/each}
 						</div>
 						<Tooltip.Simple>
-							{#snippet trigger()}
+							{#snippet child({ props })}
 								<Button
 									class="max-h-12"
 									onclick={() => {
 										manageMemberModal = true;
 										selectedMemberId = user.id ?? '';
 									}}
+									{...props}
 								>
 									<Settings size={16} />
 								</Button>

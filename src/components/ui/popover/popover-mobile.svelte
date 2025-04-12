@@ -29,6 +29,7 @@
 		triggerRootClass?: string;
 		class?: string;
 		trigger?: import('svelte').Snippet;
+		child?: import('svelte').Snippet<[{ props: Record<string, unknown> }]>;
 		children?: import('svelte').Snippet;
 	}
 
@@ -40,6 +41,7 @@
 		class: className = undefined,
 		trigger,
 		children,
+		child: triggerChild,
 		hasContent = true,
 	}: Props = $props();
 </script>
@@ -47,7 +49,15 @@
 <Root bind:open>
 	<div onmouseenter={mouseEnter} onmouseleave={mouseLeave} role="contentinfo" class={triggerRootClass}>
 		<Trigger class={triggerClass}>
-			{@render trigger?.()}
+			{#snippet child(data)}
+				{#if triggerChild}
+					{@render triggerChild?.(data)}
+				{:else}
+					<button {...data.props}>
+						{@render trigger?.()}
+					</button>
+				{/if}
+			{/snippet}
 		</Trigger>
 	</div>
 	{#if children?.length && hasContent}
