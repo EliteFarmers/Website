@@ -178,7 +178,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="mt-2 flex flex-row gap-4">
+				<div class="mt-2 flex flex-col gap-4 sm:flex-row">
 					<Button type="submit" color="red" formaction="?/disable" disabled={!pings.enabled}
 						>Turn off Pings</Button
 					>
