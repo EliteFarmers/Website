@@ -88,7 +88,7 @@
 		<div
 			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
 		>
-			<div class="flex flex-row justify-between gap-2 p-4">
+			<div class="flex flex-col justify-between gap-2 p-4 md:flex-row">
 				<div class="flex flex-col gap-2">
 					<div class="flex flex-row items-center gap-2">
 						{#if !event.approved}
@@ -120,7 +120,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="flex flex-col gap-2 p-4">
+				<div class="flex flex-row justify-center gap-2 p-4 md:flex-col md:justify-start">
 					<TooltipSimple side="left">
 						{#snippet child({ props })}
 							<Button
@@ -192,7 +192,7 @@
 					};
 				}}
 			>
-				<input type="hidden" name="id" bind:value={data.event.id} />
+				<input type="hidden" name="id" value={data.event.id} />
 				<h4 class="mb-4 text-lg">Crop Weight Values</h4>
 
 				<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
@@ -246,7 +246,7 @@
 					};
 				}}
 			>
-				<input type="hidden" name="id" bind:value={data.event.id} />
+				<input type="hidden" name="id" value={data.event.id} />
 				<h4 class="mb-4 text-lg">Medal Point Values</h4>
 
 				<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
@@ -342,7 +342,7 @@
 					};
 				}}
 			>
-				<input type="hidden" name="id" bind:value={data.event.id} />
+				<input type="hidden" name="id" value={data.event.id} />
 				<h4 class="mb-4 text-lg">Pest Weight Values</h4>
 
 				<div class="flex max-w-4xl flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap">
@@ -391,7 +391,7 @@
 					};
 				}}
 			>
-				<input type="hidden" name="id" bind:value={data.event.id} />
+				<input type="hidden" name="id" value={data.event.id} />
 				<h4 class="mb-4 text-lg">Collections</h4>
 
 				<div class="flex max-w-4xl flex-col items-center justify-center gap-1">
@@ -436,7 +436,7 @@
 
 				<div class="mt-4 flex flex-row items-center gap-1 px-4">
 					<Label class="flex-1">New Collection Key</Label>
-					<Input name="collectionKey" bind:value={newCollectionKey} maxlength={64} class="flex-1" />
+					<Input name="collectionKey" value={newCollectionKey} maxlength={64} class="flex-1" />
 					<Button
 						type="button"
 						onclick={() => {
@@ -481,7 +481,7 @@
 				};
 			}}
 		>
-			<input type="hidden" name="id" bind:value={data.event.id} />
+			<input type="hidden" name="id" value={data.event.id} />
 			<h4 class="text-lg">Force Add Member</h4>
 			<p class="max-w-lg text-sm">
 				This should be used very sparingly, and only with the consent of who is being added.
@@ -509,7 +509,7 @@
 				};
 			}}
 		>
-			<input type="hidden" name="id" bind:value={data.event.id} />
+			<input type="hidden" name="id" value={data.event.id} />
 			<h4 class="text-lg">Delete Member Entry</h4>
 			<p class="max-w-lg text-sm">
 				This irreversibly deletes the database entry for a member. They will be able to join again. Only use
@@ -541,7 +541,7 @@
 				};
 			}}
 		>
-			<input type="text" name="id" bind:value={data.event.id} hidden />
+			<input type="text" name="id" value={data.event.id} hidden />
 			<div class="space-y-2">
 				<Label>Event Name</Label>
 				<Input name="title" placeholder="Farming Weight Challenge" maxlength={64} />
@@ -597,7 +597,7 @@
 				};
 			}}
 		>
-			<input type="text" name="id" bind:value={data.event.id} hidden />
+			<input type="text" name="id" value={data.event.id} hidden />
 			<div class="space-y-2">
 				<Label>Banner Image File</Label>
 				<Input name="image" accept=".png" type="file" />
