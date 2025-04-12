@@ -10,6 +10,7 @@
 	import CreateEvent from './create-event.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
+	import EventType from '$comp/events/event-type.svelte';
 
 	interface Props {
 		data: PageData;
@@ -46,7 +47,7 @@
 
 	<section class="flex flex-col gap-4">
 		<p class="text-lg">
-			You have {recentEvents.length} / {data.maxMonthlyEvents ?? 0} available Events created
+			You have {recentEvents.length} / {data.maxMonthlyEvents ?? 0} available Events created.
 		</p>
 		{#if (recentEvents.length ?? 0) < (data.maxMonthlyEvents ?? 0)}
 			<div class="flex w-full items-center justify-center">
@@ -58,22 +59,32 @@
 		{/if}
 	</section>
 
-	<section
-		class="mb-16 flex w-[90%] max-w-screen-lg flex-col items-center justify-center justify-items-center gap-8 md:w-[70%]"
-	>
+	<section class="mb-16 flex max-w-screen-lg flex-col items-center justify-center justify-items-center gap-8">
 		{#each events as event (event.id)}
+			{@const start = new Date(+(event.startTime ?? 0) * 1000)}
+			{@const end = new Date(+(event.endTime ?? 0) * 1000)}
+			{@const background = event.banner?.url
+				? `background-image: url(${event.banner.url}); color: white;`
+				: data.guild?.banner?.url
+					? `background-image: url(${data.guild.banner.url}); color: white;`
+					: ''}
 			<div
-				class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md bg-card p-4 md:w-[70%]"
+				class="relative flex w-full flex-1 flex-row items-center justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
+				style={background || ''}
 			>
-				<div class="flex flex-row justify-between gap-2 p-4">
-					<div class="flex flex-col gap-2">
+				{#if data.guild?.banner}
+					<div
+						class="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-gradient-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
+					></div>
+				{/if}
+				<GuildIcon guild={data.guild} class="z-10 size-12" />
+				<div class="z-10 flex w-full flex-col items-start justify-between gap-1 md:flex-row">
+					<div class="flex flex-col items-start gap-1">
 						<div class="flex flex-row items-center gap-2">
 							{#if !event.approved}
 								<Popover.Mobile>
 									{#snippet trigger()}
-										<div>
-											<TriangleAlert class="mt-1.5 text-destructive" />
-										</div>
+										<TriangleAlert class="mt-1.5 size-5 text-destructive" />
 									{/snippet}
 									<div>
 										<p class="font-semibold">Pending approval!</p>
@@ -81,44 +92,40 @@
 									</div>
 								</Popover.Mobile>
 							{/if}
-							<h2 class="text-3xl">{event.name}</h2>
+							<h2 class="text-md xs:text-lg font-semibold sm:text-2xl md:text-2xl">{event.name}</h2>
 						</div>
-
-						<p class="text-lg">{event.description}</p>
-						<p class="text-lg">{event.rules}</p>
-						<p class="text-lg">{event.prizeInfo}</p>
-						<div class="flex flex-row items-center gap-2 text-lg font-semibold">
-							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
-							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleTimeString()}</span>
-							<span> - </span>
-							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleDateString()}</span>
-							<span>{new Date(+(event.endTime ?? 0) * 1000).toLocaleTimeString()}</span>
-						</div>
+						<EventType type={event.type ?? 1} />
 					</div>
-					<div class="flex flex-col gap-2 p-4">
-						<Popover.Mobile>
-							{#snippet child({ props })}
-								<Button href="/guild/{event.guildId}/event/{event.id}" {...props}>
-									<Settings />
-								</Button>
-							{/snippet}
-							<div>
-								<p>Edit Event</p>
-							</div>
-						</Popover.Mobile>
-
-						{#if event.approved}
+					<div class="flex flex-col items-start gap-2 md:items-end">
+						<div class="z-10 flex flex-row items-center gap-2 font-semibold sm:text-sm md:text-lg">
+							<span>{start.toLocaleDateString()}</span>
+							<span> - </span>
+							<span>{end.toLocaleDateString()}</span>
+						</div>
+						<div class="flex flex-row gap-2">
+							{#if event.approved}
+								<Popover.Mobile>
+									{#snippet child({ props })}
+										<Button href="/event/{event.id}" target="_blank" {...props} size="sm">
+											<ExternalLink />
+										</Button>
+									{/snippet}
+									<div>
+										<p>View Event Page</p>
+									</div>
+								</Popover.Mobile>
+							{/if}
 							<Popover.Mobile>
 								{#snippet child({ props })}
-									<Button href="/event/{event.id}" target="_blank" {...props}>
-										<ExternalLink />
+									<Button href="/guild/{event.guildId}/event/{event.id}" {...props} size="sm">
+										<Settings />
 									</Button>
 								{/snippet}
 								<div>
-									<p>View Event Page</p>
+									<p>Edit Event</p>
 								</div>
 							</Popover.Mobile>
-						{/if}
+						</div>
 					</div>
 				</div>
 			</div>
