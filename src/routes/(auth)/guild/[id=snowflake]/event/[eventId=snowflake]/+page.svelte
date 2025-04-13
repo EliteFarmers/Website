@@ -124,10 +124,10 @@
 					<TooltipSimple side="left">
 						{#snippet child({ props })}
 							<Button
+								{...props}
 								onclick={() => {
 									clickOutsideModalEdit = true;
 								}}
-								{...props}
 							>
 								<Settings />
 							</Button>
@@ -140,10 +140,10 @@
 					<TooltipSimple side="left">
 						{#snippet child({ props })}
 							<Button
+								{...props}
 								onclick={() => {
 									clickOutsideModalEditImage = true;
 								}}
-								{...props}
 							>
 								<Image />
 							</Button>

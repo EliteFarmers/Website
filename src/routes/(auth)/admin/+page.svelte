@@ -57,12 +57,12 @@
 						<Tooltip.Simple>
 							{#snippet child({ props })}
 								<Button
+									{...props}
 									class="max-h-12"
 									onclick={() => {
 										manageMemberModal = true;
 										selectedMemberId = user.id ?? '';
 									}}
-									{...props}
 								>
 									<Settings size={16} />
 								</Button>
