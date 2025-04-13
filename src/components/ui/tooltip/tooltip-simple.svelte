@@ -20,9 +20,14 @@
 	<TooltipPrimitive.Root delayDuration={0}>
 		<TooltipPrimitive.Trigger>
 			{#snippet child(data)}
-				{@render triggerChild?.(data)}
+				{#if triggerChild}
+					{@render triggerChild?.(data)}
+				{:else}
+					<button {...data.props}>
+						{@render trigger?.()}
+					</button>
+				{/if}
 			{/snippet}
-			{@render trigger?.()}
 		</TooltipPrimitive.Trigger>
 		<TooltipPrimitive.Content
 			bind:ref
