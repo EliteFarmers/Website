@@ -19,8 +19,6 @@
 
 	let { members, teams, event, teamWords }: Props = $props();
 
-	$inspect(members);
-
 	let teamLookup = $derived.by(() => {
 		if (!teams) return [] as components['schemas']['EventTeamWithMembersDto'][];
 		return Object.fromEntries(

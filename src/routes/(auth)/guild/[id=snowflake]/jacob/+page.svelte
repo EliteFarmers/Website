@@ -93,10 +93,8 @@
 	{/if}
 
 	<section class="flex w-full flex-col items-center justify-center gap-8">
-		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card md:w-[70%]"
-		>
-			<h2 class="p-4 text-3xl">Manage Shared Settings</h2>
+		<div class="flex w-full max-w-4xl flex-col justify-center justify-items-center rounded-md border-2 bg-card">
+			<h2 class="p-4 text-2xl">Manage Shared Settings</h2>
 			<Accordion.Root class="mx-4" type="multiple">
 				<Accordion.Item value="banned">
 					<Accordion.Trigger>
@@ -198,7 +196,7 @@
 		</div>
 	</section>
 
-	<section class="mb-16 flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center gap-8 md:w-[70%]">
+	<section class="mb-16 flex w-full max-w-4xl flex-col justify-center justify-items-center gap-8">
 		{#each data.leaderboards ?? [] as lb (lb.id)}
 			<Jacobsettings {lb} {channels} {roles} />
 		{/each}

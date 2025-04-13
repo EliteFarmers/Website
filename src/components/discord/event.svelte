@@ -24,7 +24,7 @@
 
 <a
 	href="/event/{event?.id}"
-	class="items-centers relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
+	class="relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
 	style={background || ''}
 >
 	{#if guild?.banner}
@@ -36,7 +36,7 @@
 	<div class="z-10 flex w-full flex-col justify-between gap-1 md:flex-row">
 		<div class="flex flex-col items-start gap-1">
 			<h2 class="text-md xs:text-lg font-semibold sm:text-2xl md:text-2xl">{event.name}</h2>
-			<EventType type={event.type ?? 1} />
+			<EventType type={event.type ?? 1} popover={false} />
 		</div>
 		<div class="z-10 flex flex-row items-center gap-2 font-semibold sm:text-sm md:text-lg">
 			<span>{start.toLocaleDateString()}</span>

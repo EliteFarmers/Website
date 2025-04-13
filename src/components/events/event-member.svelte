@@ -4,7 +4,7 @@
 	import * as Accordion from '$ui/accordion';
 	import { EventType } from '$lib/utils';
 	import Crown from 'lucide-svelte/icons/crown';
-	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
+	import * as Tooltip from '$ui/tooltip';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 
 	interface Props {
@@ -76,19 +76,19 @@
 				/>
 				<p class="text-lg">{member.playerName}</p>
 				{#if owner}
-					<TooltipSimple>
+					<Tooltip.Simple>
 						{#snippet trigger()}
 							<div class="flex flex-row items-end">
 								<Crown size={16} class="w-4 text-completed" />
 							</div>
 						{/snippet}
 						<p>Team Owner</p>
-					</TooltipSimple>
+					</Tooltip.Simple>
 				{/if}
 				{#if running}
-					<TooltipSimple>
+					<Tooltip.Simple>
 						{#snippet trigger()}
-							<div class="flex flex-col items-center justify-center">
+							<div class="flex size-4 flex-col items-center justify-center">
 								{#if member.status === 0}
 									<div class="size-2 rounded-full bg-muted"></div>
 								{/if}
@@ -111,7 +111,7 @@
 								</p>
 							{/if}
 						</div>
-					</TooltipSimple>
+					</Tooltip.Simple>
 				{/if}
 			</div>
 			<button {...props}>

@@ -27,49 +27,15 @@
 </script>
 
 <div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md border-2 bg-card p-4">
-	<div class="flex w-full flex-row justify-between gap-4">
-		<div class="flex flex-col gap-2">
-			<h3 class="text-2xl">{lb.title}</h3>
-			<p>
-				<span class="font-semibold">Start:</span>
-				{lb.startCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.startCutoff ?? 0)}
-			</p>
-			<p>
-				<span class="font-semibold">End:</span>
-				{lb.endCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.endCutoff ?? 0)}
-			</p>
-		</div>
-		<div class="flex flex-col gap-2">
-			<p>
-				<span class="font-semibold">Channel:</span>
-				{channels.find((c) => c.value === lb.channelId)?.label ?? 'Not Set'}
-			</p>
-			<p>
-				<span class="font-semibold">Updates:</span>
-				{channels.find((c) => c.value === lb.updateChannelId)?.label ?? 'Not Set'}
-			</p>
-			<p>
-				<span class="font-semibold">Update Role:</span>
-				{roles.find((c) => c.value === lb.updateRoleId)?.label ?? 'Not Set'}
-			</p>
-		</div>
-		<div class="flex flex-col gap-2">
-			<p>
-				<span class="font-semibold">Required Role:</span>
-				{roles.find((c) => c.value === lb.requiredRole)?.label ?? 'Not Set'}
-			</p>
-			<p>
-				<span class="font-semibold">Banned Role:</span>
-				{roles.find((c) => c.value === lb.blockedRole)?.label ?? 'Not Set'}
-			</p>
-		</div>
-		<div class="flex flex-col justify-between gap-2">
+	<div class="flex w-full flex-col justify-between gap-4 md:flex-row">
+		<h3 class="text-2xl">{lb.title}</h3>
+		<div class="flex flex-row gap-2">
 			<!-- <Button class="edit" href="?/edit/{lb.id}" color="green">
-				<GearSolid />
-				<Popover triggeredBy=".edit" placement="left">
-					<p>Edit Leaderboard</p>
-				</Popover>
-			</Button> -->
+						<GearSolid />
+						<Popover triggeredBy=".edit" placement="left">
+							<p>Edit Leaderboard</p>
+						</Popover>
+					</Button> -->
 			<form method="post" action="{page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
@@ -110,6 +76,56 @@
 			</Popover.Mobile>
 		</div>
 	</div>
+	<div class="flex w-full flex-col justify-between gap-3 md:flex-row">
+		<div class="flex flex-col gap-3">
+			<p>
+				<span class="font-semibold">Channel:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{channels.find((c) => c.value === lb.channelId)?.label ?? 'Not Set'}</span
+				>
+			</p>
+			<p>
+				<span class="font-semibold">Start:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{lb.startCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.startCutoff ?? 0)}</span
+				>
+			</p>
+			<p>
+				<span class="font-semibold">End:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{lb.endCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.endCutoff ?? 0)}</span
+				>
+			</p>
+		</div>
+		<div class="flex flex-col gap-3">
+			<p>
+				<span class="font-semibold">Updates:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{channels.find((c) => c.value === lb.updateChannelId)?.label ?? 'Not Set'}</span
+				>
+			</p>
+			<p>
+				<span class="font-semibold">Update Role:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{roles.find((c) => c.value === lb.updateRoleId)?.label ?? 'Not Set'}</span
+				>
+			</p>
+		</div>
+		<div class="flex flex-col gap-3">
+			<p>
+				<span class="font-semibold">Required Role:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{roles.find((c) => c.value === lb.requiredRole)?.label ?? 'Not Set'}</span
+				>
+			</p>
+			<p>
+				<span class="font-semibold">Banned Role:</span>
+				<span class="rounded-md border bg-background p-1"
+					>{roles.find((c) => c.value === lb.blockedRole)?.label ?? 'Not Set'}</span
+				>
+			</p>
+		</div>
+	</div>
 
 	{#if crops.length > 0}
 		<Accordion.Root type="single">
@@ -129,8 +145,8 @@
 									<input type="hidden" name="crop" value={entry.record?.crop} />
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
 									<Tooltip.Simple>
-										{#snippet trigger()}
-											<Button type="submit" variant="destructive" size="icon">
+										{#snippet child({ props })}
+											<Button type="submit" variant="destructive" size="icon" {...props}>
 												<Trash2 size={20} />
 											</Button>
 										{/snippet}
