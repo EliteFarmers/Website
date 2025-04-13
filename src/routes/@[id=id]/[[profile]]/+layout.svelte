@@ -58,7 +58,9 @@
 	<PlayerInfo />
 
 	<div class="flex flex-row justify-center">
-		<div class="my-6 flex w-fit flex-row justify-center rounded-md border-2 border-solid border-card p-1">
+		<div
+			class="my-6 flex max-w-fit flex-wrap justify-center rounded-md border-2 border-solid border-card p-1 sm:flex-row"
+		>
 			<Button
 				variant="ghost"
 				size="sm"
@@ -103,14 +105,14 @@
 				<span class="select-none text-muted-foreground">Player UUID</span>
 				<div class="flex flex-row items-center gap-1">
 					<span class="select-all">{data.account.id}</span>
-					<CopyToClipboard text={data.account.id} size="sm" class="-m-2" />
+					<CopyToClipboard text={data.account.id} class="-my-2 size-8" />
 				</div>
 			</div>
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
 				<span class="select-none text-muted-foreground">Profile UUID</span>
 				<div class="flex flex-row items-center gap-1">
 					<span class="select-all">{data.profile?.profileId}</span>
-					<CopyToClipboard text={data.profile?.profileId} size="sm" class="-m-2" />
+					<CopyToClipboard text={data.profile?.profileId} class="-my-2 size-8" />
 				</div>
 			</div>
 			{#if data.account?.discordId}
@@ -118,7 +120,7 @@
 					<span class="select-none text-muted-foreground">Linked Discord ID</span>
 					<div class="flex flex-row items-center gap-1">
 						<span class="select-all">{data.account?.discordId}</span>
-						<CopyToClipboard text={data.account?.discordId} size="sm" class="-m-2" />
+						<CopyToClipboard text={data.account?.discordId} class="-my-2 size-8" />
 					</div>
 				</div>
 			{/if}
