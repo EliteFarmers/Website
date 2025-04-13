@@ -41,7 +41,7 @@
 				<Popover.Mobile>
 					{#snippet child({ props })}
 						<div>
-							<Button type="submit" color="green" {...props}>
+							<Button {...props} type="submit" color="green">
 								<Mail />
 							</Button>
 						</div>
@@ -56,7 +56,7 @@
 				<Popover.Mobile>
 					{#snippet child({ props })}
 						<div>
-							<Button type="submit" color="yellow" {...props}>
+							<Button {...props} type="submit" color="yellow">
 								<RefreshCcw />
 							</Button>
 						</div>
@@ -66,7 +66,7 @@
 			</form>
 			<Popover.Mobile>
 				{#snippet child({ props })}
-					<Button onclick={() => (confirmModal = true)} variant="destructive" {...props}>
+					<Button {...props} onclick={() => (confirmModal = true)} variant="destructive">
 						<Trash2 />
 					</Button>
 				{/snippet}
@@ -146,7 +146,7 @@
 									<input type="hidden" name="time" value={entry.record?.timestamp} />
 									<Tooltip.Simple>
 										{#snippet child({ props })}
-											<Button type="submit" variant="destructive" size="icon" {...props}>
+											<Button {...props} type="submit" variant="destructive" size="icon">
 												<Trash2 size={20} />
 											</Button>
 										{/snippet}

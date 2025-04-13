@@ -143,7 +143,7 @@
 						{#if !pestIncreased}
 							<Tooltip.Simple side="bottom">
 								{#snippet child({ props })}
-									<Switch bind:checked={pestToggle} disabled={true} {...props} />
+									<Switch {...props} bind:checked={pestToggle} disabled={true} />
 								{/snippet}
 								<div class="p-2">
 									<p class="text-sm">Pest data not available for this time period.</p>

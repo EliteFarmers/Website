@@ -67,7 +67,7 @@
 					{href}
 					{...props}
 					style={event?.banner?.url ? `background-image: url(${event.banner.url})` : ''}
-					class={cn(props.class ?? '', 'bg-sidebar bg-cover p-1.5')}
+					class={cn(props.class ?? '', `${event?.banner?.url ? `bg-sidebar` : 'bg-card'} bg-cover p-1.5`)}
 				>
 					<div
 						class="z-10 flex h-full w-full flex-col justify-between overflow-hidden rounded-md bg-inherit p-1 px-1.5 group-data-[state=collapsed]:hidden"
