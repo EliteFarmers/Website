@@ -16,7 +16,13 @@
 
 	let first = $derived(data[0]);
 	let last = $derived(data.at(-1));
-	let yDomain = $derived(last ? [first.value, last.value + (last.value - first.value) * (1 - ratio)] : undefined);
+	let yDomain = $derived.by(() => {
+		const domain = last ? [first.value, last.value + (last.value - first.value) * (1 - ratio)] : undefined;
+		if (!domain || first.value === last?.value) {
+			return undefined;
+		}
+		return domain;
+	});
 	let days = $derived(Math.ceil((+(last?.date ?? 0) - +first.date) / 86400));
 
 	const dateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -76,7 +82,7 @@
 					textAnchor: 'end',
 					class: '!stroke-0 !font-normal text-xs md:text-sm',
 				}}
-				ticks={days}
+				ticks={days > 14 ? 14 : days}
 			/>
 			{#if pests}
 				<Axis
