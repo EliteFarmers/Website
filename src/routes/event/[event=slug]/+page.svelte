@@ -374,6 +374,16 @@
 			</Accordion.Item>
 			<Accordion.Item value="item-2">
 				<Accordion.Trigger
+					><p class="text-left">Do I need to be in the same co-op with my team?</p></Accordion.Trigger
+				>
+				<Accordion.Content>
+					You might be wondering if you and your team need to share the same Skyblock Co-op, and the answer is
+					<strong>no!</strong> You can be in different co-ops and still be on the same team. You can be in the
+					same co-op if you want to, but it does not matter for the event.
+				</Accordion.Content>
+			</Accordion.Item>
+			<Accordion.Item value="item-3">
+				<Accordion.Trigger
 					><p class="text-left">Will my score transfer to a new team if I move?</p></Accordion.Trigger
 				>
 				<Accordion.Content>
@@ -384,7 +394,7 @@
 					will not be able to leave or rejoin a team after this point.
 				</Accordion.Content>
 			</Accordion.Item>
-			<Accordion.Item value="item-3">
+			<Accordion.Item value="item-4">
 				<Accordion.Trigger><p class="text-left">How do I make/manage a team?</p></Accordion.Trigger>
 				<Accordion.Content>
 					If the event allows it, you can create a team by clicking the "Join Event"/"Manage Membership"
@@ -402,7 +412,7 @@
 					>
 				</Accordion.Content>
 			</Accordion.Item>
-			<Accordion.Item value="item-4">
+			<Accordion.Item value="item-5">
 				<Accordion.Trigger><p class="text-left">How do I leave a team?</p></Accordion.Trigger>
 				<Accordion.Content>
 					As long as the joining period hasn't closed, you can leave your team by clicking the leave button on
@@ -412,7 +422,7 @@
 					join code!
 				</Accordion.Content>
 			</Accordion.Item>
-			<Accordion.Item value="item-5">
+			<Accordion.Item value="item-6">
 				<Accordion.Trigger
 					><p class="text-left">What if I suspect someone is cheating on my team?</p></Accordion.Trigger
 				>
@@ -427,7 +437,7 @@
 					unfortunately down a member.
 				</Accordion.Content>
 			</Accordion.Item>
-			<Accordion.Item value="item-6">
+			<Accordion.Item value="item-7">
 				<Accordion.Trigger><p class="text-left">Can I play solo?</p></Accordion.Trigger>
 				<Accordion.Content>
 					You can play solo by creating a team with yourself as the only member, but you will be at a serious
