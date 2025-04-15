@@ -4,9 +4,9 @@
 	import { cn } from '$lib/utils';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
-	import Check from 'lucide-svelte/icons/check';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Sun from 'lucide-svelte/icons/sun';
+	import Check from '@lucide/svelte/icons/check';
+	import Moon from '@lucide/svelte/icons/moon';
+	import Sun from '@lucide/svelte/icons/sun';
 
 	let isDark = $state(false);
 	const currentTheme = getThemeContext();

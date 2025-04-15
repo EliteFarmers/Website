@@ -1,6 +1,6 @@
 <script lang="ts" module>
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import Slash from 'lucide-svelte/icons/slash';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import Slash from '@lucide/svelte/icons/slash';
 </script>
 
 <script lang="ts">

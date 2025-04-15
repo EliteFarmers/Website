@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Popover from '$comp/ui/popover';
 	import { EventType } from '$lib/utils';
-	import ShoppingBasket from 'lucide-svelte/icons/shopping-basket';
+	import ShoppingBasket from '@lucide/svelte/icons/shopping-basket';
 
 	interface Props {
 		type: number;

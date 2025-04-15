@@ -3,8 +3,8 @@
 </script>
 
 <script lang="ts" generics="TData">
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
-	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
 	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
 	import * as Select from '$ui/select';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { dragHandle } from 'svelte-dnd-action';
-	import GripHorizontal from 'lucide-svelte/icons/grip-horizontal';
+	import GripHorizontal from '@lucide/svelte/icons/grip-horizontal';
 
 	interface Props {
 		badge: components['schemas']['UserBadgeDto'];

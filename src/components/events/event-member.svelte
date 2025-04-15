@@ -3,9 +3,9 @@
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
 	import { EventType } from '$lib/utils';
-	import Crown from 'lucide-svelte/icons/crown';
+	import Crown from '@lucide/svelte/icons/crown';
 	import * as Tooltip from '$ui/tooltip';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 
 	interface Props {
 		owner?: boolean;

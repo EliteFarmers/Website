@@ -4,7 +4,7 @@
 	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
 	import * as Popover from '$ui/popover';
-	import CircleAlert from 'lucide-svelte/icons/circle-alert';
+	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 
 	interface Props {
 		rank?: number;

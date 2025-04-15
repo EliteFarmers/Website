@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
-	import Link from 'lucide-svelte/icons/link';
+	import Link from '@lucide/svelte/icons/link';
 
 	interface Props {
 		id: string;

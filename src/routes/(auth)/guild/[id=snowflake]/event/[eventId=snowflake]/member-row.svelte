@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
-	import FileText from 'lucide-svelte/icons/file-text';
+	import FileText from '@lucide/svelte/icons/file-text';
 
 	interface Props {
 		member: components['schemas']['EventMemberDto'] | components['schemas']['AdminEventMemberDto'];

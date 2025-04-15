@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button, { type ButtonProps } from '$ui/button/button.svelte';
-	import Eye from 'lucide-svelte/icons/eye';
-	import EyeOff from 'lucide-svelte/icons/eye-off';
+	import Eye from '@lucide/svelte/icons/eye';
+	import EyeOff from '@lucide/svelte/icons/eye-off';
 
 	interface Props extends ButtonProps {
 		visible: boolean;

@@ -15,8 +15,8 @@
 	import JumpLink from '$comp/jump-link.svelte';
 	import Head from '$comp/head.svelte';
 	import { differenceInDays } from 'date-fns';
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import { onMount } from 'svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Copy from 'lucide-svelte/icons/copy';
-	import Check from 'lucide-svelte/icons/check';
-	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import { Button, type ButtonProps } from '$ui/button';
 
 	let copyPromise: Promise<void> | null = $state(null);

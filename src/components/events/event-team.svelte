@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 	import EventMember from './event-member.svelte';
 	import * as Accordion from '$ui/accordion';
-	import Users from 'lucide-svelte/icons/users';
+	import Users from '@lucide/svelte/icons/users';
 
 	interface Props {
 		event: components['schemas']['EventDetailsDto'];

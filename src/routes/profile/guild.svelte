@@ -2,8 +2,8 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Settings from 'lucide-svelte/icons/settings';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Settings from '@lucide/svelte/icons/settings';
 
 	interface Props {
 		guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];

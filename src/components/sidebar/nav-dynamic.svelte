@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import type { Component } from 'svelte';
 	import { page } from '$app/state';

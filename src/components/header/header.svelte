@@ -8,8 +8,8 @@
 	import { quadInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import { Button } from '$ui/button';
-	import Search from 'lucide-svelte/icons/search';
-	import Star from 'lucide-svelte/icons/star';
+	import Search from '@lucide/svelte/icons/search';
+	import Star from '@lucide/svelte/icons/star';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	const sidebar = Sidebar.useSidebar();

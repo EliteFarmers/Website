@@ -1,9 +1,9 @@
 <script lang="ts" module>
-	import FileChartColumn from 'lucide-svelte/icons/file-chart-column';
-	import ChartColumn from 'lucide-svelte/icons/chart-column';
-	import Sprout from 'lucide-svelte/icons/sprout';
-	import ChartArea from 'lucide-svelte/icons/chart-area';
-	import Ticket from 'lucide-svelte/icons/ticket';
+	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
+	import ChartColumn from '@lucide/svelte/icons/chart-column';
+	import Sprout from '@lucide/svelte/icons/sprout';
+	import ChartArea from '@lucide/svelte/icons/chart-area';
+	import Ticket from '@lucide/svelte/icons/ticket';
 </script>
 
 <script lang="ts">

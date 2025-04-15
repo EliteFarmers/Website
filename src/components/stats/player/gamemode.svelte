@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import TreePalm from 'lucide-svelte/icons/tree-palm';
-	import Recycle from 'lucide-svelte/icons/recycle';
-	import Dices from 'lucide-svelte/icons/dices';
-	import MapPin from 'lucide-svelte/icons/map-pin';
+	import TreePalm from '@lucide/svelte/icons/tree-palm';
+	import Recycle from '@lucide/svelte/icons/recycle';
+	import Dices from '@lucide/svelte/icons/dices';
+	import MapPin from '@lucide/svelte/icons/map-pin';
 </script>
 
 <script lang="ts">

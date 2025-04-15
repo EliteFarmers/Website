@@ -3,9 +3,9 @@
 	import { Button } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import type { AdminEventMember } from './columns';
-	import Trash_2 from 'lucide-svelte/icons/trash-2';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
 	import { goto } from '$app/navigation';
-	import Undo_2 from 'lucide-svelte/icons/undo-2';
+	import Undo_2 from '@lucide/svelte/icons/undo-2';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { cn } from '$lib/utils';
 

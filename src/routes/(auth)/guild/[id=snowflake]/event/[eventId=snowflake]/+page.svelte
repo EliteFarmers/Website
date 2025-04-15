@@ -6,11 +6,11 @@
 	import { Textarea } from '$ui/textarea';
 	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
-	import Settings from 'lucide-svelte/icons/settings';
-	import Image from 'lucide-svelte/icons/image';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Image from '@lucide/svelte/icons/image';
 	import Head from '$comp/head.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { EventType } from '$lib/utils';

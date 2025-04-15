@@ -11,9 +11,9 @@
 	import { EventType } from '$lib/utils';
 	import { Input } from '$ui/input';
 	import { SelectSimple } from '$ui/select';
-	import Check from 'lucide-svelte/icons/check';
-	import Trash from 'lucide-svelte/icons/trash-2';
-	import Crown from 'lucide-svelte/icons/crown';
+	import Check from '@lucide/svelte/icons/check';
+	import Trash from '@lucide/svelte/icons/trash-2';
+	import Crown from '@lucide/svelte/icons/crown';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { invalidate } from '$app/navigation';

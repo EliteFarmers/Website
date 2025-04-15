@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AuthorizedUser } from '$lib/api/elite';
-	import UserRound from 'lucide-svelte/icons/user-round';
+	import UserRound from '@lucide/svelte/icons/user-round';
 
 	interface props {
 		user: Partial<AuthorizedUser>;

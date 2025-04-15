@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@internationalized/date": "^3.6.0",
-		"@lucide/svelte": "^0.483.0",
+		"@lucide/svelte": "^0.488.0",
 		"@number-flow/svelte": "^0.3.6",
 		"@popperjs/core": "^2.11.8",
 		"@quantco/pnpm-licenses": "^2.1.0",
@@ -57,7 +57,6 @@
 		"globals": "^15.12.0",
 		"layercake": "^8.4.2",
 		"layerchart": "^0.99.0",
-		"lucide-svelte": "^0.483.0",
 		"openapi-fetch": "^0.13.0",
 		"postcss": "^8.4.48",
 		"prettier": "^3.3.3",

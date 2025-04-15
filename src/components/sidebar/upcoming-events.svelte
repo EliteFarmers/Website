@@ -2,7 +2,7 @@
 	import SidebarCountdown from '$comp/events/sidebar-countdown.svelte';
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { page } from '$app/state';
 	import { cn } from '$lib/utils';
 	import type { components } from '$lib/api/api';

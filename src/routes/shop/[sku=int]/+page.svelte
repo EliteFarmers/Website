@@ -7,18 +7,18 @@
 	import * as Carousel from '$ui/carousel';
 	import * as Popover from '$ui/popover';
 	import { Button } from '$ui/button';
-	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
-	import Image from 'lucide-svelte/icons/image';
-	import Palette from 'lucide-svelte/icons/palette';
-	import Tag from 'lucide-svelte/icons/tag';
-	import TicketX from 'lucide-svelte/icons/ticket-x';
-	import Replace from 'lucide-svelte/icons/replace';
-	import ScrollText from 'lucide-svelte/icons/scroll-text';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import Image from '@lucide/svelte/icons/image';
+	import Palette from '@lucide/svelte/icons/palette';
+	import Tag from '@lucide/svelte/icons/tag';
+	import TicketX from '@lucide/svelte/icons/ticket-x';
+	import Replace from '@lucide/svelte/icons/replace';
+	import ScrollText from '@lucide/svelte/icons/scroll-text';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import ProductUnlock from '$comp/monetization/product-unlock.svelte';
 	import Badge from '$comp/stats/badge.svelte';
-	import Package from 'lucide-svelte/icons/package';
-	import Info from 'lucide-svelte/icons/info';
+	import Package from '@lucide/svelte/icons/package';
+	import Info from '@lucide/svelte/icons/info';
 	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {

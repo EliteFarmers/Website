@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import Search from 'lucide-svelte/icons/search';
+	import Search from '@lucide/svelte/icons/search';
 </script>
 
 <script lang="ts">

@@ -7,8 +7,8 @@
 	import * as Select from '$ui/select';
 	import * as Tooltip from '$ui/tooltip';
 	import * as Dialog from '$ui/dialog';
-	import Settings from 'lucide-svelte/icons/settings';
-	import Plus from 'lucide-svelte/icons/plus';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Plus from '@lucide/svelte/icons/plus';
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import type { ActionData, PageData } from './$types';
 

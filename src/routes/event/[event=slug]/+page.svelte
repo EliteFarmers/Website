@@ -2,9 +2,9 @@
 	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Users from 'lucide-svelte/icons/users';
-	import User from 'lucide-svelte/icons/user';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Users from '@lucide/svelte/icons/users';
+	import User from '@lucide/svelte/icons/user';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
@@ -13,7 +13,7 @@
 	import EventData from '$comp/events/event-data.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
-	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
 	import Countdown from './countdown.svelte';

@@ -2,11 +2,11 @@
 	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
 	import * as Command from '$ui/command';
-	import Settings from 'lucide-svelte/icons/settings';
+	import Settings from '@lucide/svelte/icons/settings';
 	import Product from '$comp/monetization/product.svelte';
 	import type { PageData } from './$types';
 	import { PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { enhance } from '$app/forms';
 	import { ScrollArea } from '$ui/scroll-area';
 

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import User from 'lucide-svelte/icons/user';
+	import User from '@lucide/svelte/icons/user';
 </script>
 
 <script lang="ts">
