@@ -3,11 +3,11 @@ import { renderComponent, renderSnippet } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import MemberTableActions from './member-table-actions.svelte';
-import CircleOff from 'lucide-svelte/icons/circle-off';
-import LogOut from 'lucide-svelte/icons/log-out';
-import Activity from 'lucide-svelte/icons/activity';
+import CircleOff from '@lucide/svelte/icons/circle-off';
+import LogOut from '@lucide/svelte/icons/log-out';
+import Activity from '@lucide/svelte/icons/activity';
 import DataTableColumnHeader from './data-table-column-header.svelte';
-import { Pause } from 'lucide-svelte';
+import Pause from '@lucide/svelte/icons/pause';
 import MemberTeamRow from './member-team-row.svelte';
 import MemberRow from './member-row.svelte';
 

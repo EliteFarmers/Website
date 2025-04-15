@@ -12,8 +12,8 @@ importers:
         specifier: ^3.6.0
         version: 3.7.0
       '@lucide/svelte':
-        specifier: ^0.483.0
-        version: 0.483.0(svelte@5.25.6)
+        specifier: ^0.488.0
+        version: 0.488.0(svelte@5.25.6)
       '@number-flow/svelte':
         specifier: ^0.3.6
         version: 0.3.6(svelte@5.25.6)
@@ -110,9 +110,6 @@ importers:
       layerchart:
         specifier: ^0.99.0
         version: 0.99.5(svelte@5.25.6)(typescript@5.8.2)
-      lucide-svelte:
-        specifier: ^0.483.0
-        version: 0.483.0(svelte@5.25.6)
       openapi-fetch:
         specifier: ^0.13.0
         version: 0.13.5
@@ -493,8 +490,8 @@ packages:
   '@layerstack/utils@1.0.0':
     resolution: {integrity: sha512-kIH8lo4MEzPGtdxQRacy8RsSVhMQwe62ckuev62xQDE5QcUJ4wB9EMaRWaQK8CfEOpUERGPgkMPMbMqPhdp0gw==}
 
-  '@lucide/svelte@0.483.0':
-    resolution: {integrity: sha512-b3SbhMIgVJAj/rPa3go6uplTzaFkJzz91TSPO8I8gc2evtHOA2OgSmPYz0S+yEKFIWqLUZ4gika19ljV+tnmyQ==}
+  '@lucide/svelte@0.488.0':
+    resolution: {integrity: sha512-i8TFY+vOVci2J/UhaeF1Yj25NOL8UJ27hf+/CexvfIyLSdgid3zHwh0iVf+DlWpAsXXJl2rQ5Cl5g/qfMbfOHw==}
     peerDependencies:
       svelte: ^5
 
@@ -1639,11 +1636,6 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lucide-svelte@0.483.0:
-    resolution: {integrity: sha512-MyMgEVLlFfPbyodGpkB+KCpyPkpjI7EKiFw1crA92B1ZXRK5hq5vTsGWAm9Nt3GAKHunoNc5MVsq3EOCz0DZSQ==}
-    peerDependencies:
-      svelte: ^3 || ^4 || ^5.0.0-next.42
-
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
 
@@ -2718,7 +2710,7 @@ snapshots:
       date-fns: 4.1.0
       lodash-es: 4.17.21
 
-  '@lucide/svelte@0.483.0(svelte@5.25.6)':
+  '@lucide/svelte@0.488.0(svelte@5.25.6)':
     dependencies:
       svelte: 5.25.6
 
@@ -3876,10 +3868,6 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lru-cache@10.4.3: {}
-
-  lucide-svelte@0.483.0(svelte@5.25.6):
-    dependencies:
-      svelte: 5.25.6
 
   magic-string@0.30.17:
     dependencies:

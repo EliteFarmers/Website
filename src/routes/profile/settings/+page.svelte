@@ -14,10 +14,10 @@
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-	import Menu from 'lucide-svelte/icons/menu';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Search from 'lucide-svelte/icons/search';
-	import Sun from 'lucide-svelte/icons/sun';
+	import Menu from '@lucide/svelte/icons/menu';
+	import Moon from '@lucide/svelte/icons/moon';
+	import Search from '@lucide/svelte/icons/search';
+	import Sun from '@lucide/svelte/icons/sun';
 	import { onMount } from 'svelte';
 	import type { ActionData, PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';

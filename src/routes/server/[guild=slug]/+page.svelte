@@ -4,7 +4,7 @@
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 	import Leaderboard from './leaderboard.svelte';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';

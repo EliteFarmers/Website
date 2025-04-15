@@ -1,12 +1,12 @@
 <script lang="ts" module>
-	import UserRound from 'lucide-svelte/icons/user-round';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import Settings from 'lucide-svelte/icons/settings';
-	import FileChartColumn from 'lucide-svelte/icons/file-chart-column';
-	import ChartColumn from 'lucide-svelte/icons/chart-column';
-	import Shield from 'lucide-svelte/icons/shield';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import LogIn from 'lucide-svelte/icons/log-in';
+	import UserRound from '@lucide/svelte/icons/user-round';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import Settings from '@lucide/svelte/icons/settings';
+	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
+	import ChartColumn from '@lucide/svelte/icons/chart-column';
+	import Shield from '@lucide/svelte/icons/shield';
+	import LogOut from '@lucide/svelte/icons/log-out';
+	import LogIn from '@lucide/svelte/icons/log-in';
 </script>
 
 <script lang="ts">

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
-	import RefreshCcw from 'lucide-svelte/icons/refresh-ccw';
+	import RefreshCcw from '@lucide/svelte/icons/refresh-ccw';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import type { components } from '$lib/api/api';
 	import { onMount } from 'svelte';

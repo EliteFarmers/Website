@@ -1,9 +1,9 @@
-import Trophy from 'lucide-svelte/icons/trophy';
-import Home from 'lucide-svelte/icons/home';
-import Info from 'lucide-svelte/icons/info';
-import TextSearch from 'lucide-svelte/icons/text-search';
-import Ticket from 'lucide-svelte/icons/ticket';
-import ShoppingCart from 'lucide-svelte/icons/shopping-cart';
+import Trophy from '@lucide/svelte/icons/trophy';
+import Home from '@lucide/svelte/icons/home';
+import Info from '@lucide/svelte/icons/info';
+import TextSearch from '@lucide/svelte/icons/text-search';
+import Ticket from '@lucide/svelte/icons/ticket';
+import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 import type { Component } from 'svelte';
 
 export const SIDEBAR_NAV = [

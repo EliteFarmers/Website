@@ -7,7 +7,7 @@
 	import * as Popover from '$ui/popover';
 	import Badge from './badge.svelte';
 	import { OTHER_SITES } from '$content/othersites';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const ctx = getStatsContext();

@@ -8,8 +8,8 @@
 	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import { pending } from '$lib/utils';
 	import { enhance } from '$app/forms';
-	import Settings from 'lucide-svelte/icons/settings-2';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import Settings from '@lucide/svelte/icons/settings-2';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import type { components } from '$lib/api/api';
 	import type { PageData } from './$types';

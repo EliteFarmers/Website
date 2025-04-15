@@ -11,10 +11,10 @@
 	import * as Dialog from '$ui/dialog';
 	import * as Card from '$ui/card';
 	import { pending } from '$lib/utils';
-	import Plus from 'lucide-svelte/icons/plus';
-	import X from 'lucide-svelte/icons/x';
+	import Plus from '@lucide/svelte/icons/plus';
+	import X from '@lucide/svelte/icons/x';
 	import { enhance } from '$app/forms';
-	import Settings from 'lucide-svelte/icons/settings-2';
+	import Settings from '@lucide/svelte/icons/settings-2';
 	import type { PageData, ActionData } from './$types';
 	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 

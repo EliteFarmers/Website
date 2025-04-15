@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Check from 'lucide-svelte/icons/check';
-	import CaretSort from 'lucide-svelte/icons/chevrons-up-down';
+	import Check from '@lucide/svelte/icons/check';
+	import CaretSort from '@lucide/svelte/icons/chevrons-up-down';
 	import { tick } from 'svelte';
 	import * as Command from '$ui/command';
 	import * as Popover from '$ui/popover';

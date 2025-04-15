@@ -6,8 +6,8 @@
 	import { Label } from '$ui/label';
 	import { Switch } from '$ui/switch';
 	import * as Dialog from '$ui/dialog';
-	import Settings from 'lucide-svelte/icons/settings';
-	import Plus from 'lucide-svelte/icons/plus';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Plus from '@lucide/svelte/icons/plus';
 	import type { components } from '$lib/api/api';
 
 	import type { PageData } from './$types';

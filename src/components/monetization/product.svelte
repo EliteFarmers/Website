@@ -2,15 +2,15 @@
 	import { Button } from '$comp/ui/button';
 	import type { components } from '$lib/api/api';
 	import ProductFeature from '$comp/monetization/product-feature.svelte';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Palette from 'lucide-svelte/icons/palette';
-	import Image from 'lucide-svelte/icons/image';
-	import Tag from 'lucide-svelte/icons/tag';
-	import TicketX from 'lucide-svelte/icons/ticket-x';
-	import Replace from 'lucide-svelte/icons/replace';
-	import ScrollText from 'lucide-svelte/icons/scroll-text';
-	import Check from 'lucide-svelte/icons/check';
-	import X from 'lucide-svelte/icons/x';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Palette from '@lucide/svelte/icons/palette';
+	import Image from '@lucide/svelte/icons/image';
+	import Tag from '@lucide/svelte/icons/tag';
+	import TicketX from '@lucide/svelte/icons/ticket-x';
+	import Replace from '@lucide/svelte/icons/replace';
+	import ScrollText from '@lucide/svelte/icons/scroll-text';
+	import Check from '@lucide/svelte/icons/check';
+	import X from '@lucide/svelte/icons/x';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 

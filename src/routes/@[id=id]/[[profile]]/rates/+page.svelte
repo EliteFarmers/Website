@@ -31,8 +31,8 @@
 	import { Switch } from '$ui/switch';
 	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
-	import Settings from 'lucide-svelte/icons/settings';
-	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
+	import Settings from '@lucide/svelte/icons/settings';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';

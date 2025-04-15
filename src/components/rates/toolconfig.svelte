@@ -8,7 +8,7 @@
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
 	import { slide } from 'svelte/transition';
-	import { Edit } from 'lucide-svelte';
+	import Edit from '@lucide/svelte/icons/edit';
 
 	interface Props {
 		tool: FarmingTool;

@@ -4,8 +4,8 @@
 	import * as Popover from '$ui/popover';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { FormatMinecraftText } from '$lib/format';
-	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
-	import Menu from 'lucide-svelte/icons/menu';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import Menu from '@lucide/svelte/icons/menu';
 	import { buttonVariants } from '$ui/button';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 

@@ -2,8 +2,8 @@
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import { Stat, STAT_ICONS, type FortuneSourceProgress } from 'farming-weight';
-	import { TriangleAlert } from 'lucide-svelte';
-	import Info from 'lucide-svelte/icons/info';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import Info from '@lucide/svelte/icons/info';
 	import * as Popover from '$ui/popover';
 
 	interface Props {

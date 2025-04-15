@@ -12,7 +12,7 @@
 	import { weightStyleParse } from '$lib/styles/style';
 	import { untrack } from 'svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
-	import X from 'lucide-svelte/icons/x';
+	import X from '@lucide/svelte/icons/x';
 	import { pending } from '$lib/utils';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';

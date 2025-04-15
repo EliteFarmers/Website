@@ -1,6 +1,6 @@
 <script lang="ts" module>
-	import Home from 'lucide-svelte/icons/home';
-	import Search from 'lucide-svelte/icons/search';
+	import Home from '@lucide/svelte/icons/home';
+	import Search from '@lucide/svelte/icons/search';
 
 	import { SIDEBAR_NAV } from '$content/sidebar';
 </script>

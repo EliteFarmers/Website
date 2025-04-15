@@ -1,14 +1,14 @@
 <script lang="ts">
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { getFavoritesContext, type FavoritedLink } from '$lib/stores/favorites.svelte';
 	import SidebarLink from './sidebar-link.svelte';
-	import Settings from 'lucide-svelte/icons/settings';
+	import Settings from '@lucide/svelte/icons/settings';
 	import { Button } from '$ui/button';
 	import { dragHandleZone, dragHandle, type DndEvent } from 'svelte-dnd-action';
-	import GripHorizontal from 'lucide-svelte/icons/grip-horizontal';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import GripHorizontal from '@lucide/svelte/icons/grip-horizontal';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import { Input } from '$ui/input';
 
 	const sidebar = Sidebar.useSidebar();

@@ -7,8 +7,8 @@
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Popover from '$ui/popover';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
-	import Menu from 'lucide-svelte/icons/menu';
-	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
+	import Menu from '@lucide/svelte/icons/menu';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { GearSlot } from 'farming-weight';
 
 	interface Props {

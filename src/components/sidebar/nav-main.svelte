@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
-	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import SidebarLink from './sidebar-link.svelte';
 
 	let {
@@ -11,7 +11,7 @@
 		items: {
 			title: string;
 			href: string;
-			// this should be `Component` after lucide-svelte updates types
+			// this should be `Component` after @lucide/svelte updates types
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			icon?: any;
 			open?: boolean;

@@ -12,8 +12,8 @@
 	import Jacobsettings from './jacobsettings.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import Head from '$comp/head.svelte';
-	import Plus from 'lucide-svelte/icons/plus';
-	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import Plus from '@lucide/svelte/icons/plus';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { page } from '$app/state';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';

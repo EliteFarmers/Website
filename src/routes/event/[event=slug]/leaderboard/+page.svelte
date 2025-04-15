@@ -2,10 +2,10 @@
 	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import ArrowLeftRight from 'lucide-svelte/icons/arrow-left-right';
-	import Users from 'lucide-svelte/icons/users';
-	import User from 'lucide-svelte/icons/user';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
+	import Users from '@lucide/svelte/icons/users';
+	import User from '@lucide/svelte/icons/user';
 	import { page } from '$app/state';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';

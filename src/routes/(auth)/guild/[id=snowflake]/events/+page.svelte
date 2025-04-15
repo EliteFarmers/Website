@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
-	import Settings from 'lucide-svelte/icons/settings';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import Settings from '@lucide/svelte/icons/settings';
 	import type { PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';

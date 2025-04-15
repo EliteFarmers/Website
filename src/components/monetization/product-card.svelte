@@ -2,7 +2,7 @@
 	import type { components } from '$lib/api/api';
 	import { cn } from '$lib/utils';
 	import ProductPrice from './product-price.svelte';
-	import Package from 'lucide-svelte/icons/package';
+	import Package from '@lucide/svelte/icons/package';
 
 	interface Props {
 		product: components['schemas']['ProductDto'];

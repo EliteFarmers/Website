@@ -5,7 +5,7 @@
 	import Serverbar from '$comp/discord/serverbar.svelte';
 	import * as Card from '$ui/card';
 	import { Button } from '$ui/button';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import MainSearch from '$comp/stats/main-search.svelte';
 	import type { PageData } from './$types';
 

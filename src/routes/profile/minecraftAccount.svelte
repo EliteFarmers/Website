@@ -4,7 +4,7 @@
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
-	import Star from 'lucide-svelte/icons/star';
+	import Star from '@lucide/svelte/icons/star';
 
 	interface Props {
 		mc?: Partial<components['schemas']['MinecraftAccountDetailsDto']>;

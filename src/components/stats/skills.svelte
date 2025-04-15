@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLevelProgress } from '$lib/format';
 	import Skillbar from './skillbar.svelte';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import * as Collapsible from '$ui/collapsible';
 	import { Button } from '$ui/button';
 	import { getGardenLevel } from 'farming-weight';
