@@ -1,36 +1,30 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import Gamemode from '$comp/stats/player/gamemode.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
-	import { type LeaderboardConfig } from '$lib/constants/leaderboards';
+	import { type LeaderboardInfo } from '$lib/constants/leaderboards';
 
 	interface Props {
 		entry: LeaderboardEntry;
 		highlight?: boolean;
 		rank: number;
-		formatting?: 'number' | 'decimal';
-		leaderboard?: LeaderboardConfig | undefined;
+		leaderboard?: LeaderboardInfo;
 		showLeaderboardName?: boolean;
 	}
 
-	let {
-		entry,
-		highlight = false,
-		rank,
-		formatting = 'number',
-		leaderboard = undefined,
-		showLeaderboardName = false,
-	}: Props = $props();
+	let { entry, highlight = false, rank, leaderboard, showLeaderboardName = false }: Props = $props();
 
 	let options = $derived.by(() => {
-		if (formatting === 'decimal') {
-			return {
-				maximumFractionDigits: 1,
-				minimumFractionDigits: 1,
-			};
-		} else if (page.params.category === 'skyblockxp') {
+		if (leaderboard?.id === 'skyblockxp') {
 			return {
 				maximumFractionDigits: 2,
 				minimumFractionDigits: 2,
+			};
+		}
+
+		if (leaderboard?.scoreDataType.toString() === 'Decimal') {
+			return {
+				maximumFractionDigits: 1,
+				minimumFractionDigits: 1,
 			};
 		}
 
@@ -40,10 +34,10 @@
 	});
 
 	let ign = $state(entry.ign);
-	let amount = $derived(page.params.category === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
+	let amount = $derived(leaderboard?.id === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
 	let profile = $state(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
-	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
+	let profileLink = $derived(entry?.profile ? entry.uuid : profile);
 </script>
 
 <a
@@ -74,6 +68,7 @@
 				</p>
 				{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
 					<div class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs">
+						<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
 						{#each entry.members.slice(1, 3) ?? [] as member}
 							<p>{member.ign}</p>
 						{/each}
@@ -83,8 +78,9 @@
 					</div>
 				{:else}
 					<div
-						class="xs:text-sm sm:text-md inline overflow-hidden text-ellipsis whitespace-nowrap text-start text-xs"
+						class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-start text-xs"
 					>
+						<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
 						{profile}
 					</div>
 				{/if}

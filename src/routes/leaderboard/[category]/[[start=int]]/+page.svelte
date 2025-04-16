@@ -10,6 +10,7 @@
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { PersistedState } from 'runed';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { Label } from 'bits-ui';
 
 	interface Props {
 		data: PageData;
@@ -26,7 +27,6 @@
 
 	let firstHalf = $derived(entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
 	let secondHalf = $derived(entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
-	let formatting = $derived(data.formatting);
 
 	let initialPage = $state(Math.floor((data.lb.offset ?? 0) / 20 + 1));
 	let noneActive = $derived((data.lb.offset ?? 0) / 20 + 1 !== initialPage);
@@ -77,48 +77,54 @@
 <section class="mt-16 flex w-full flex-col justify-center">
 	<h1 class="mb-16 mt-8 max-w-md self-center text-center text-4xl">{title}</h1>
 	<div class="flex w-full justify-center gap-4 text-center">
-		<Pagination.Root
-			count={10_000}
-			perPage={20}
-			bind:page={initialPage}
-			onPageChange={(newPage) => {
-				goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}`);
-			}}
-		>
-			{#snippet children({ pages })}
-				<Pagination.Content class="flex justify-center">
-					<div class="order-1 flex basis-1/3 flex-row justify-end sm:basis-auto">
-						<Pagination.Item>
-							<Pagination.PrevButton />
-						</Pagination.Item>
-					</div>
-					<div class="order-3 flex flex-grow flex-wrap items-center justify-center sm:order-2 sm:flex-auto">
-						{#each pages as page (page.key)}
-							{#if page.type === 'ellipsis'}
-								<Pagination.Item>
-									<Pagination.Ellipsis />
-								</Pagination.Item>
-							{:else}
-								<Pagination.Item>
-									<Pagination.Link
-										page={{ ...page, value: Math.floor(page.value) }}
-										isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
-										onclick={() => samePageClick(page.value)}
-									>
-										{Math.floor(page.value)}
-									</Pagination.Link>
-								</Pagination.Item>
-							{/if}
-						{/each}
-					</div>
-					<div class="order-2 flex basis-1/3 flex-row justify-start sm:order-last sm:basis-auto">
-						<Pagination.Item>
-							<Pagination.NextButton />
-						</Pagination.Item>
-					</div>
-				</Pagination.Content>
-			{/snippet}
-		</Pagination.Root>
+		{#if data.lb.entries.length}
+			<Pagination.Root
+				count={data.lb.maxEntries}
+				perPage={20}
+				bind:page={initialPage}
+				onPageChange={(newPage) => {
+					goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}${page.url.search}`);
+				}}
+			>
+				{#snippet children({ pages })}
+					<Pagination.Content class="flex justify-center">
+						<div class="order-1 flex basis-1/3 flex-row justify-end sm:basis-auto">
+							<Pagination.Item>
+								<Pagination.PrevButton />
+							</Pagination.Item>
+						</div>
+						<div
+							class="order-3 flex flex-grow flex-wrap items-center justify-center sm:order-2 sm:flex-auto"
+						>
+							{#each pages as page (page.key)}
+								{#if page.type === 'ellipsis'}
+									<Pagination.Item>
+										<Pagination.Ellipsis />
+									</Pagination.Item>
+								{:else}
+									<Pagination.Item>
+										<Pagination.Link
+											page={{ ...page, value: Math.floor(page.value) }}
+											isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
+											onclick={() => samePageClick(page.value)}
+										>
+											{Math.floor(page.value)}
+										</Pagination.Link>
+									</Pagination.Item>
+								{/if}
+							{/each}
+						</div>
+						<div class="order-2 flex basis-1/3 flex-row justify-start sm:order-last sm:basis-auto">
+							<Pagination.Item>
+								<Pagination.NextButton />
+							</Pagination.Item>
+						</div>
+					</Pagination.Content>
+				{/snippet}
+			</Pagination.Root>
+		{:else}
+			<p class="w-full max-w-4xl rounded-lg border-2 py-16 text-muted-foreground">No entries found!</p>
+		{/if}
 	</div>
 	<div
 		data-sveltekit-preload-data="tap"
@@ -129,7 +135,6 @@
 				<Entry
 					rank={i + offset}
 					{entry}
-					{formatting}
 					leaderboard={data.leaderboard}
 					showLeaderboardName={showLeaderboardName.current}
 				/>
@@ -140,7 +145,6 @@
 				<Entry
 					rank={i + firstHalf.length + offset}
 					{entry}
-					{formatting}
 					leaderboard={data.leaderboard}
 					showLeaderboardName={showLeaderboardName.current}
 				/>
@@ -151,8 +155,19 @@
 		<p class="text-sm leading-none">Show Leaderboard Name In Entries</p>
 		<Switch bind:checked={showLeaderboardName.current} />
 	</div>
-	<p class="mx-auto w-1/2 py-4 text-center text-sm">
-		This leaderboard only consists of the top {page.data.leaderboard.limit.toLocaleString()} players who have been searched
-		on this website. New entries are recalculated every 30 minutes.
-	</p>
+
+	{#if data.lb.interval}
+		<p class="mx-auto w-1/2 py-4 text-center text-sm">
+			Leaderboards on an interval work by saving the initial score of a player the first time their data is pulled
+			for an interval, and then using the difference between the current score and the initial score for their
+			score shown here. This means it may be inaccurate due to minions or other factors. A player must have
+			reached the the minimum amount of
+			<strong>{data.lb.minimumScore.toLocaleString()}</strong> to have their initial score saved.
+		</p>
+	{:else}
+		<p class="mx-auto w-1/2 py-4 text-center text-sm">
+			This leaderboard only consists of the top players who have been searched on this website and have hit the
+			minimum score of <strong>{data.lb.minimumScore.toLocaleString()}</strong>.
+		</p>
+	{/if}
 </section>

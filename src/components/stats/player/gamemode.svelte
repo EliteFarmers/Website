@@ -23,12 +23,14 @@
 
 	interface Props {
 		class?: string;
-		gameMode?: ProfileGameMode | string;
+		gameMode?: ProfileGameMode | string | null;
 		popover?: boolean;
 		map?: boolean;
 	}
 
 	let { class: classes = '', gameMode = 'classic', popover = true, map = false }: Props = $props();
+
+	let mode = $derived(gameMode ?? 'classic');
 </script>
 
 {#if popover}
@@ -37,7 +39,7 @@
 			<div>
 				<h5 class="font-semibold">Profile Game Mode</h5>
 
-				<p class="text-center first-letter:capitalize">{gameModeRename[gameMode] ?? gameMode}</p>
+				<p class="text-center first-letter:capitalize">{gameModeRename[mode] ?? mode}</p>
 			</div>
 		{/if}
 	</Popover.Mobile>
@@ -46,12 +48,10 @@
 {/if}
 
 {#snippet trigger()}
-	<span>
-		{#if icons[gameMode]}
-			{@const Icon = icons[gameMode] as Component}
-			<Icon class={classes} />
-		{:else if map}
-			<MapPin class={classes} />
-		{/if}
-	</span>
+	{#if icons[mode]}
+		{@const Icon = icons[mode] as Component}
+		<Icon class={classes} />
+	{:else if map}
+		<MapPin class={classes} />
+	{/if}
 {/snippet}

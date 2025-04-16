@@ -422,17 +422,30 @@ export const GetProfilesWeights = async (playerUuid: string) =>
 		},
 	});
 
-export const GetLeaderboardSlice = async (leaderboardId: string, offset: number, limit: number) =>
+export const GetLeaderboards = async () => await GET('/leaderboards', {});
+
+export enum LeaderboardRemovedFilter {
+	NotRemoved = 0,
+	Removed = 1,
+	All = 2,
+}
+
+interface BaseLeaderboardQuery {
+	interval?: string;
+	mode?: string;
+	removed?: LeaderboardRemovedFilter;
+}
+
+export const GetLeaderboardSlice = async (
+	leaderboardId: string,
+	query: { limit: number; offset: number } & BaseLeaderboardQuery
+) =>
 	await GET('/leaderboard/{leaderboard}', {
 		params: {
 			path: {
 				leaderboard: leaderboardId,
 			},
-			query: {
-				offset: offset,
-				limit: limit,
-				new: true,
-			},
+			query: query,
 		},
 	});
 
@@ -440,7 +453,8 @@ export const GetPlayersRank = async (
 	leaderboardId: string,
 	playerUuid: string,
 	profileUuid: string,
-	upcoming = false
+	upcoming = false,
+	query: BaseLeaderboardQuery = {}
 ) =>
 	await GET('/leaderboard/{leaderboard}/{playerUuid}/{profileUuid}', {
 		params: {
@@ -452,11 +466,17 @@ export const GetPlayersRank = async (
 			query: {
 				includeUpcoming: upcoming,
 				new: true,
+				...query,
 			},
 		},
 	});
 
-export const GetProfilesRank = async (leaderboardId: string, profileUuid: string, upcoming = false) =>
+export const GetProfilesRank = async (
+	leaderboardId: string,
+	profileUuid: string,
+	upcoming = false,
+	query: BaseLeaderboardQuery = {}
+) =>
 	await GET('/leaderboard/{leaderboard}/{profileUuid}', {
 		params: {
 			path: {
@@ -466,6 +486,7 @@ export const GetProfilesRank = async (leaderboardId: string, profileUuid: string
 			query: {
 				includeUpcoming: upcoming,
 				new: true,
+				...query,
 			},
 		},
 	});

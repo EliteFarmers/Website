@@ -6678,6 +6678,38 @@
 			  }
 			},
 			{
+			  "name": "interval",
+			  "in": "query",
+			  "description": "Time interval key of a monthly leaderboard. Format: yyyy-MM",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "mode",
+			  "in": "query",
+			  "description": "Game mode to filter leaderboard by. Leave empty to get all modes.\nOptions: \"ironman\", \"island\", \"classic\"",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "removed",
+			  "in": "query",
+			  "description": "Removed filter to get leaderboard entries that have been removed from the leaderboard.\nDefault is profiles that have not been removed/wiped.\n0 = Not Removed\n1 = Removed\n2 = All",
+			  "schema": {
+				"default": 0,
+				"nullable": true,
+				"allOf": [
+				  {
+					"$ref": "#/components/schemas/RemovedFilter"
+				  }
+				]
+			  }
+			},
+			{
 			  "name": "new",
 			  "in": "query",
 			  "description": "Use new leaderboard backend (will be default in the future)",
@@ -6855,6 +6887,38 @@
 				"default": true,
 				"nullable": true
 			  }
+			},
+			{
+			  "name": "interval",
+			  "in": "query",
+			  "description": "Time interval key of a monthly leaderboard. Format: yyyy-MM",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "mode",
+			  "in": "query",
+			  "description": "Game mode to filter leaderboard by. Leave empty to get all modes.\nOptions: \"ironman\", \"island\", \"classic\"",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "removed",
+			  "in": "query",
+			  "description": "Removed filter to get leaderboard entries that have been removed from the leaderboard.\nDefault is profiles that have not been removed/wiped.\n0 = Not Removed\n1 = Removed\n2 = All",
+			  "schema": {
+				"default": 0,
+				"nullable": true,
+				"allOf": [
+				  {
+					"$ref": "#/components/schemas/RemovedFilter"
+				  }
+				]
+			  }
 			}
 		  ],
 		  "responses": {
@@ -6948,6 +7012,35 @@
 				"type": "boolean",
 				"default": true,
 				"nullable": true
+			  }
+			},
+			{
+			  "name": "interval",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "mode",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "removed",
+			  "in": "query",
+			  "schema": {
+				"default": 0,
+				"nullable": true,
+				"allOf": [
+				  {
+					"$ref": "#/components/schemas/RemovedFilter"
+				  }
+				]
 			  }
 			}
 		  ],
@@ -7090,6 +7183,38 @@
 				"default": true,
 				"nullable": true
 			  }
+			},
+			{
+			  "name": "interval",
+			  "in": "query",
+			  "description": "Time interval key of a monthly leaderboard. Format: yyyy-MM",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "mode",
+			  "in": "query",
+			  "description": "Game mode to filter leaderboard by. Leave empty to get all modes.\nOptions: \"ironman\", \"island\", \"classic\"",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "removed",
+			  "in": "query",
+			  "description": "Removed filter to get leaderboard entries that have been removed from the leaderboard.\nDefault is profiles that have not been removed/wiped.\n0 = Not Removed\n1 = Removed\n2 = All",
+			  "schema": {
+				"default": 0,
+				"nullable": true,
+				"allOf": [
+				  {
+					"$ref": "#/components/schemas/RemovedFilter"
+				  }
+				]
+			  }
 			}
 		  ],
 		  "responses": {
@@ -7175,6 +7300,35 @@
 				"type": "boolean",
 				"default": true,
 				"nullable": true
+			  }
+			},
+			{
+			  "name": "interval",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "mode",
+			  "in": "query",
+			  "schema": {
+				"type": "string",
+				"nullable": true
+			  }
+			},
+			{
+			  "name": "removed",
+			  "in": "query",
+			  "schema": {
+				"default": 0,
+				"nullable": true,
+				"allOf": [
+				  {
+					"$ref": "#/components/schemas/RemovedFilter"
+				  }
+				]
 			  }
 			}
 		  ],
@@ -8993,6 +9147,73 @@
 			"farmingWeight": {
 			  "type": "number",
 			  "format": "double"
+			},
+			"meta": {
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberCosmeticsDto"
+				}
+			  ]
+			}
+		  }
+		},
+		"MemberCosmeticsDto": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "properties": {
+			"prefix": {
+			  "type": "string",
+			  "maxLength": 16,
+			  "nullable": true
+			},
+			"suffix": {
+			  "type": "string",
+			  "maxLength": 16,
+			  "nullable": true
+			},
+			"leaderboard": {
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberLeaderboardCosmeticsDto"
+				}
+			  ]
+			}
+		  }
+		},
+		"MemberLeaderboardCosmeticsDto": {
+		  "type": "object",
+		  "additionalProperties": false,
+		  "properties": {
+			"styleId": {
+			  "type": "integer",
+			  "format": "int32",
+			  "nullable": true
+			},
+			"backgroundColor": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"borderColor": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"textColor": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"rankColor": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"backgroundImage": {
+			  "type": "string",
+			  "nullable": true
+			},
+			"overlayImage": {
+			  "type": "string",
+			  "nullable": true
 			}
 		  }
 		},
@@ -9195,7 +9416,6 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
-		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -9205,18 +9425,15 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
-			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
-			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
-			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {
@@ -11303,6 +11520,10 @@
 			  "type": "string",
 			  "nullable": true
 			},
+			"estimatedTimeActive": {
+			  "type": "string",
+			  "nullable": true
+			},
 			"notes": {
 			  "type": "string",
 			  "maxLength": 128,
@@ -13186,6 +13407,10 @@
 			  "type": "string",
 			  "nullable": true
 			},
+			"interval": {
+			  "type": "string",
+			  "nullable": true
+			},
 			"limit": {
 			  "type": "integer",
 			  "format": "int32"
@@ -13308,12 +13533,26 @@
 			  "description": "Initial score of the entry",
 			  "format": "double"
 			},
+			"mode": {
+			  "type": "string",
+			  "description": "Game mode of the entry. Classic profiles are considered default/null.",
+			  "nullable": true
+			},
 			"members": {
 			  "type": "array",
 			  "nullable": true,
 			  "items": {
 				"$ref": "#/components/schemas/ProfileLeaderboardMemberDto"
 			  }
+			},
+			"meta": {
+			  "description": "Metadata of the entry",
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberCosmeticsDto"
+				}
+			  ]
 			}
 		  }
 		},
@@ -13342,6 +13581,20 @@
 		"LeaderboardSliceRequest": {
 		  "type": "object",
 		  "additionalProperties": false
+		},
+		"RemovedFilter": {
+		  "type": "integer",
+		  "description": "",
+		  "x-enumNames": [
+			"NotRemoved",
+			"Removed",
+			"All"
+		  ],
+		  "enum": [
+			0,
+			1,
+			2
+		  ]
 		},
 		"LeaderboardsResponse": {
 		  "type": "object",
@@ -13668,6 +13921,14 @@
 			"bankBalance": {
 			  "type": "number",
 			  "format": "double"
+			},
+			"meta": {
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberCosmeticsDto"
+				}
+			  ]
 			},
 			"collections": {
 			  "type": "object",

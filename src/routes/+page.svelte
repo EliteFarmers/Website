@@ -155,7 +155,7 @@
 				<p>Loading...</p>
 			{:then lb}
 				{#each lb?.entries ?? [] as e, i}
-					<Entry entry={e} rank={i + 1} formatting={'decimal'} />
+					<Entry entry={e} rank={i + 1} leaderboard={data.leaderboard} />
 				{/each}
 				<div class="flex w-full justify-center">
 					<Button href="/leaderboard/farmingweight" class="max-w-md text-center" variant="secondary"
