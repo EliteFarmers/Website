@@ -1,422 +1,292 @@
-export enum LeaderboardType {
-	Misc = 0,
-	Collection = 1,
-	Skill = 2,
-	Pest = 3,
-	Milestone = 4,
-}
+import type { components } from '$lib/api/api';
 
 export interface LeaderboardConfig {
-	limit: number;
-	type: LeaderboardType;
-	name: string;
 	icon?: string;
-	title: string;
-	profile?: boolean;
-	overflow?: boolean;
+	order?: number;
 	subpage?: string;
+}
+
+type IntervalType = 'current' | 'weekly' | 'monthly';
+
+export type LeaderboardInfo = components['schemas']['LeaderboardInfoDto'] &
+	LeaderboardConfig & {
+		id: string;
+		intervals?: IntervalType[];
+	};
+
+const sortByOrder = (a: LeaderboardInfo, b: LeaderboardInfo) => {
+	if (a.order === undefined && b.order === undefined) return 0;
+	if (a.order === undefined) return 1;
+	if (b.order === undefined) return -1;
+	return a.order - b.order;
+};
+
+export function parseLeaderboards(response?: components['schemas']['LeaderboardsResponse']): {
+	leaderboards: Record<string, LeaderboardInfo>;
+	categories: Record<string, LeaderboardInfo[]>;
+} {
+	const leaderboards = response?.leaderboards as Record<string, LeaderboardInfo>;
+	if (!leaderboards) return { categories: {}, leaderboards: {} };
+
+	const lookup = {} as Record<string, LeaderboardInfo>;
+
+	const entries = Object.entries(leaderboards)
+		.filter(([, v]) => v.intervalType + '' === 'Current')
+		.map<LeaderboardInfo>(([key, value]) => {
+			const config = LEADERBOARDS[key as keyof typeof LEADERBOARDS];
+			const data = {
+				...value,
+				...(config ?? {}),
+				intervals: ['current'] as IntervalType[],
+				id: key,
+			};
+
+			if (leaderboards[`${key}-weekly`]) {
+				data.intervals.push('weekly');
+				lookup[`${key}-weekly`] = { ...data, id: `${key}-weekly` };
+			}
+
+			if (leaderboards[`${key}-monthly`]) {
+				data.intervals.push('monthly');
+				lookup[`${key}-monthly`] = { ...data, id: `${key}-monthly` };
+			}
+
+			lookup[key] = data;
+			return data;
+		});
+
+	const groups = Object.groupBy(entries, (lb) => lb.category);
+
+	const categories: Record<string, LeaderboardInfo[]> = {
+		General: (groups.General ?? []).sort(sortByOrder),
+		Crops: (groups.Crops ?? []).sort(sortByOrder),
+		Pests: (groups.Pests ?? []).sort(sortByOrder),
+		Skills: (groups.Skills ?? []).sort(sortByOrder),
+		Milestones: (groups.Milestones ?? []).sort(sortByOrder),
+	};
+
+	for (const [key, group] of Object.entries(groups)) {
+		if (categories[key] || !group) {
+			continue;
+		}
+		categories[key] = group.sort(sortByOrder);
+	}
+
+	return { categories, leaderboards: lookup };
 }
 
 export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 	farmingweight: {
-		limit: 10_000,
-		title: 'Farming Weight',
-		name: 'Farming Weight',
-		type: LeaderboardType.Misc,
+		order: 1,
 	},
 	garden: {
-		name: 'Garden',
-		title: 'Garden XP',
-		limit: 10_000,
-		type: LeaderboardType.Misc,
-		profile: true,
-		overflow: true,
+		order: 2,
 		subpage: '/garden',
 	},
 	skyblockxp: {
-		limit: 10_000,
-		title: 'Skyblock Level',
-		name: 'Skyblock Level',
-		type: LeaderboardType.Misc,
+		order: 3,
 	},
 	chocolate: {
-		limit: 10_000,
-		title: 'All-Time Chocolate',
-		name: 'Chocolate',
-		type: LeaderboardType.Misc,
+		order: 4,
 	},
 	participations: {
-		limit: 10_000,
-		title: 'Jacob Contest Participations',
-		name: 'Jacob Contests',
-		type: LeaderboardType.Misc,
+		order: 5,
 	},
 	firstplace: {
-		limit: 10_000,
-		title: 'Jacob Contest First Places',
-		name: 'First Place Contests',
-		type: LeaderboardType.Misc,
+		order: 6,
 	},
 	'visitors-accepted': {
-		limit: 10_000,
-		title: 'Visitors Accepted',
-		name: 'Visitors Accepted',
-		type: LeaderboardType.Misc,
-		profile: true,
+		order: 7,
 		subpage: '/garden',
 	},
 	diamondmedals: {
-		limit: 10_000,
-		title: 'Diamond Medals Earned',
-		name: 'Diamond Medals',
+		order: 8,
 		icon: '/images/medals/diamond.webp',
-		type: LeaderboardType.Misc,
 	},
 	platinummedals: {
-		limit: 10_000,
-		title: 'Platinum Medals Earned',
-		name: 'Platinum Medals',
+		order: 9,
 		icon: '/images/medals/platinum.webp',
-		type: LeaderboardType.Misc,
 	},
 	goldmedals: {
-		limit: 10_000,
-		title: 'Gold Medals Earned',
-		name: 'Gold Medals',
+		order: 10,
 		icon: '/images/medals/gold.webp',
-		type: LeaderboardType.Misc,
 	},
 	silvermedals: {
-		limit: 10_000,
-		title: 'Silver Medals Earned',
-		name: 'Silver Medals',
+		order: 11,
 		icon: '/images/medals/silver.webp',
-		type: LeaderboardType.Misc,
 	},
 	bronzemedals: {
-		limit: 10_000,
-		title: 'Bronze Medals Earned',
-		name: 'Bronze Medals',
+		order: 12,
 		icon: '/images/medals/bronze.webp',
-		type: LeaderboardType.Misc,
 	},
 	cactus: {
-		limit: 10_000,
-		title: 'Cactus Collection',
-		name: 'Cactus',
+		order: 1,
 		icon: '/images/crops/cactus.png',
-		type: LeaderboardType.Collection,
 	},
 	carrot: {
-		limit: 10_000,
-		title: 'Carrot Collection',
-		name: 'Carrot',
+		order: 2,
 		icon: '/images/crops/carrot.png',
-		type: LeaderboardType.Collection,
 	},
 	potato: {
-		limit: 10_000,
-		title: 'Potato Collection',
-		name: 'Potato',
+		order: 3,
 		icon: '/images/crops/potato.png',
-		type: LeaderboardType.Collection,
 	},
 	pumpkin: {
-		limit: 10_000,
-		title: 'Pumpkin Collection',
-		name: 'Pumpkin',
+		order: 4,
 		icon: '/images/crops/pumpkin.png',
-		type: LeaderboardType.Collection,
 	},
 	wheat: {
-		limit: 10_000,
-		title: 'Wheat Collection',
-		name: 'Wheat',
+		order: 5,
 		icon: '/images/crops/wheat.png',
-		type: LeaderboardType.Collection,
 	},
 	melon: {
-		limit: 10_000,
-		title: 'Melon Collection',
-		name: 'Melon',
+		order: 6,
 		icon: '/images/crops/melon.png',
-		type: LeaderboardType.Collection,
 	},
 	mushroom: {
-		limit: 10_000,
-		title: 'Mushroom Collection',
-		name: 'Mushroom',
+		order: 7,
 		icon: '/images/crops/mushroom.png',
-		type: LeaderboardType.Collection,
 	},
 	cocoa: {
-		limit: 10_000,
-		title: 'Cocoa Bean Collection',
-		name: 'Cocoa Bean',
+		order: 8,
 		icon: '/images/crops/cocoa.png',
-		type: LeaderboardType.Collection,
 	},
 	sugarcane: {
-		limit: 10_000,
-		title: 'Sugar Cane Collection',
-		name: 'Sugar Cane',
+		order: 9,
 		icon: '/images/crops/sugarcane.png',
-		type: LeaderboardType.Collection,
 	},
 	netherwart: {
-		limit: 10_000,
-		title: 'Nether Wart Collection',
-		name: 'Nether Wart',
+		order: 10,
 		icon: '/images/crops/netherwart.png',
-		type: LeaderboardType.Collection,
-	},
-	combat: {
-		limit: 10_000,
-		title: 'Combat XP',
-		name: 'Combat',
-		type: LeaderboardType.Skill,
-	},
-	mining: {
-		limit: 10_000,
-		title: 'Mining XP',
-		name: 'Mining',
-		type: LeaderboardType.Skill,
-	},
-	foraging: {
-		limit: 10_000,
-		title: 'Foraging XP',
-		name: 'Foraging',
-		type: LeaderboardType.Skill,
-	},
-	fishing: {
-		limit: 10_000,
-		title: 'Fishing XP',
-		name: 'Fishing',
-		type: LeaderboardType.Skill,
-	},
-	enchanting: {
-		limit: 10_000,
-		title: 'Enchanting XP',
-		name: 'Enchanting',
-		type: LeaderboardType.Skill,
 	},
 	alchemy: {
-		limit: 10_000,
-		title: 'Alchemy XP',
-		name: 'Alchemy',
-		type: LeaderboardType.Skill,
-	},
-	taming: {
-		limit: 10_000,
-		title: 'Taming XP',
-		name: 'Taming',
-		type: LeaderboardType.Skill,
+		order: 1,
 	},
 	carpentry: {
-		limit: 10_000,
-		title: 'Carpentry XP',
-		name: 'Carpentry',
-		type: LeaderboardType.Skill,
+		order: 2,
 	},
-	runecrafting: {
-		limit: 10_000,
-		title: 'Runecrafting XP',
-		name: 'Runecrafting',
-		type: LeaderboardType.Skill,
+	combat: {
+		order: 3,
 	},
-	social: {
-		limit: 10_000,
-		title: 'Social XP',
-		name: 'Social',
-		type: LeaderboardType.Skill,
+	enchanting: {
+		order: 4,
 	},
 	farming: {
-		limit: 10_000,
-		title: 'Farming XP',
-		name: 'Farming',
-		type: LeaderboardType.Skill,
+		order: 5,
+	},
+	fishing: {
+		order: 6,
+	},
+	foraging: {
+		order: 7,
+	},
+	mining: {
+		order: 8,
+	},
+	runecrafting: {
+		order: 9,
+	},
+	social: {
+		order: 10,
+	},
+	taming: {
+		order: 11,
 	},
 	mite: {
-		name: 'Mite',
-		title: 'Mite Kills',
-		limit: 10_000,
+		order: 1,
 		icon: '/images/pests/mite.png',
-		type: LeaderboardType.Pest,
 	},
 	cricket: {
-		name: 'Cricket',
-		title: 'Cricket Kills',
-		limit: 10_000,
+		order: 2,
 		icon: '/images/pests/cricket.png',
-		type: LeaderboardType.Pest,
 	},
 	moth: {
-		name: 'Moth',
-		title: 'Moth Kills',
-		limit: 10_000,
+		order: 3,
 		icon: '/images/pests/moth.png',
-		type: LeaderboardType.Pest,
 	},
 	earthworm: {
-		name: 'Earthworm',
-		title: 'Earthworm Kills',
-		limit: 10_000,
+		order: 4,
 		icon: '/images/pests/earthworm.png',
-		type: LeaderboardType.Pest,
 	},
 	slug: {
-		name: 'Slug',
-		title: 'Slug Kills',
-		limit: 10_000,
+		order: 5,
 		icon: '/images/pests/slug.png',
-		type: LeaderboardType.Pest,
 	},
 	beetle: {
-		name: 'Beetle',
-		title: 'Beetle Kills',
-		limit: 10_000,
+		order: 6,
 		icon: '/images/pests/beetle.png',
-		type: LeaderboardType.Pest,
 	},
 	locust: {
-		name: 'Locust',
-		title: 'Locust Kills',
-		limit: 10_000,
+		order: 7,
 		icon: '/images/pests/locust.png',
-		type: LeaderboardType.Pest,
 	},
 	rat: {
-		name: 'Rat',
-		title: 'Rat Kills',
-		limit: 10_000,
+		order: 8,
 		icon: '/images/pests/rat.png',
-		type: LeaderboardType.Pest,
 	},
 	mosquito: {
-		name: 'Mosquito',
-		title: 'Mosquito Kills',
-		limit: 10_000,
+		order: 9,
 		icon: '/images/pests/mosquito.png',
-		type: LeaderboardType.Pest,
 	},
 	fly: {
-		name: 'Fly',
-		title: 'Fly Kills',
-		limit: 10_000,
+		order: 10,
 		icon: '/images/pests/fly.png',
-		type: LeaderboardType.Pest,
 	},
 	mouse: {
-		name: 'Field Mouse',
-		title: 'Field Mouse Kills',
-		limit: 10_000,
+		order: 11,
 		icon: '/images/pests/mouse.png',
-		type: LeaderboardType.Pest,
 	},
 	pests: {
-		name: 'Pest Kills',
-		title: 'Pest Kills',
-		limit: 10_000,
-		type: LeaderboardType.Pest,
+		order: 12,
 	},
 	'cactus-milestone': {
-		limit: 10_000,
-		title: 'Cactus Milestone Collection',
-		name: 'Cactus Milestone',
+		order: 1,
 		icon: '/images/crops/cactus.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
 		subpage: '/garden',
 	},
 	'carrot-milestone': {
-		limit: 10_000,
-		title: 'Carrot Milestone Collection',
-		name: 'Carrot Milestone',
+		order: 2,
 		icon: '/images/crops/carrot.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
-		subpage: '/garden',
-	},
-	'potato-milestone': {
-		limit: 10_000,
-		title: 'Potato Milestone Collection',
-		name: 'Potato Milestone',
-		icon: '/images/crops/potato.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
-		subpage: '/garden',
-	},
-	'pumpkin-milestone': {
-		limit: 10_000,
-		title: 'Pumpkin Milestone Collection',
-		name: 'Pumpkin Milestone',
-		icon: '/images/crops/pumpkin.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
-		subpage: '/garden',
-	},
-	'wheat-milestone': {
-		limit: 10_000,
-		title: 'Wheat Milestone Collection',
-		name: 'Wheat Milestone',
-		icon: '/images/crops/wheat.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
-		subpage: '/garden',
-	},
-	'melon-milestone': {
-		limit: 10_000,
-		title: 'Melon Milestone Collection',
-		name: 'Melon Milestone',
-		icon: '/images/crops/melon.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
-		subpage: '/garden',
-	},
-	'mushroom-milestone': {
-		limit: 10_000,
-		title: 'Mushroom Milestone Collection',
-		name: 'Mushroom	Milestone',
-		icon: '/images/crops/mushroom.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
 		subpage: '/garden',
 	},
 	'cocoa-milestone': {
-		limit: 10_000,
-		title: 'Cocoa Bean Milestone Collection',
-		name: 'Cocoa Bean Milestone',
+		order: 3,
 		icon: '/images/crops/cocoa.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
 		subpage: '/garden',
 	},
-	'sugarcane-milestone': {
-		limit: 10_000,
-		title: 'Sugar Cane Milestone Collection',
-		name: 'Sugar Cane Milestone',
-		icon: '/images/crops/sugarcane.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
+	'melon-milestone': {
+		order: 4,
+		icon: '/images/crops/melon.png',
+		subpage: '/garden',
+	},
+	'mushroom-milestone': {
+		order: 5,
+		icon: '/images/crops/mushroom.png',
 		subpage: '/garden',
 	},
 	'netherwart-milestone': {
-		limit: 10_000,
-		title: 'Nether Wart Milestone Collection',
-		name: 'Nether Wart Milestone',
+		order: 6,
 		icon: '/images/crops/netherwart.png',
-		type: LeaderboardType.Milestone,
-		profile: true,
-		overflow: true,
+		subpage: '/garden',
+	},
+	'potato-milestone': {
+		order: 7,
+		icon: '/images/crops/potato.png',
+		subpage: '/garden',
+	},
+	'pumpkin-milestone': {
+		order: 8,
+		icon: '/images/crops/pumpkin.png',
+		subpage: '/garden',
+	},
+	'sugarcane-milestone': {
+		order: 9,
+		icon: '/images/crops/sugarcane.png',
+		subpage: '/garden',
+	},
+	'wheat-milestone': {
+		order: 10,
+		icon: '/images/crops/wheat.png',
 		subpage: '/garden',
 	},
 };

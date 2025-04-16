@@ -1,7 +1,8 @@
 import { building } from '$app/environment';
 import type { components } from './api/api';
-import { GetEventTeamWords, GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
+import { GetEventTeamWords, GetLeaderboards, GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
 import { ELITE_API_URL } from '$env/static/private';
+import { parseLeaderboards } from './constants/leaderboards';
 
 const cacheEntries = {
 	events: {
@@ -32,6 +33,13 @@ const cacheEntries = {
 			return data ?? { first: [] as string[], second: [] as string[], third: [] as string[] };
 		},
 	},
+	leaderboards: {
+		data: {} as ReturnType<typeof parseLeaderboards>,
+		update: async () => {
+			const { data } = await GetLeaderboards();
+			return parseLeaderboards(data);
+		},
+	},
 };
 
 export const cache = {
@@ -47,6 +55,9 @@ export const cache = {
 	get teamwords() {
 		return cacheEntries.teamwords.data;
 	},
+	get leaderboards() {
+		return cacheEntries.leaderboards.data;
+	},
 };
 
 let interval: undefined | number | NodeJS.Timeout = undefined;
@@ -54,10 +65,13 @@ let interval: undefined | number | NodeJS.Timeout = undefined;
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
 	try {
-		for (const item of Object.values(cacheEntries)) {
-			item.data = await item.update();
-		}
-		console.log('New data loaded.');
+		await Promise.allSettled(
+			Object.values(cacheEntries).map(async (item) => {
+				item.data = await item.update();
+			})
+		);
+
+		console.log('Cached items updated successfully.');
 	} catch (error) {
 		console.error('Error fetching cached items:', error);
 		setTimeout(() => {

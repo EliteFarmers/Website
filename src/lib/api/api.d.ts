@@ -2642,6 +2642,22 @@ export interface components {
             active: boolean;
             /** Format: double */
             farmingWeight: number;
+            meta?: components["schemas"]["MemberCosmeticsDto"] | null;
+        };
+        MemberCosmeticsDto: {
+            prefix?: string | null;
+            suffix?: string | null;
+            leaderboard?: components["schemas"]["MemberLeaderboardCosmeticsDto"] | null;
+        };
+        MemberLeaderboardCosmeticsDto: {
+            /** Format: int32 */
+            styleId?: number | null;
+            backgroundColor?: string | null;
+            borderColor?: string | null;
+            textColor?: string | null;
+            rankColor?: string | null;
+            backgroundImage?: string | null;
+            overlayImage?: string | null;
         };
         UserBadgeDto: {
             /** Format: int32 */
@@ -2706,20 +2722,14 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
-        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
-             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /**
-             * @description the message for the error response
-             * @default One or more errors occurred!
-             */
+            /** @default One or more errors occurred! */
             message: string;
-            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3308,6 +3318,7 @@ export interface components {
             /** Format: int32 */
             id: number;
             accountId?: string | null;
+            estimatedTimeActive?: string | null;
             notes?: string | null;
         };
         /** @enum {integer} */
@@ -3884,6 +3895,7 @@ export interface components {
             id: string;
             title: string;
             shortTitle?: string | null;
+            interval?: string | null;
             /** Format: int32 */
             limit: number;
             /** Format: int32 */
@@ -3934,7 +3946,11 @@ export interface components {
              * @description Initial score of the entry
              */
             initialAmount: number;
+            /** @description Game mode of the entry. Classic profiles are considered default/null. */
+            mode?: string | null;
             members?: components["schemas"]["ProfileLeaderboardMemberDto"][] | null;
+            /** @description Metadata of the entry */
+            meta?: components["schemas"]["MemberCosmeticsDto"] | null;
         };
         ProfileLeaderboardMemberDto: {
             ign: string;
@@ -3946,6 +3962,8 @@ export interface components {
             xp: number;
         };
         LeaderboardSliceRequest: Record<string, never>;
+        /** @enum {integer} */
+        RemovedFilter: 0 | 1 | 2;
         LeaderboardsResponse: {
             leaderboards: {
                 [key: string]: components["schemas"]["LeaderboardInfoDto"];
@@ -4054,6 +4072,7 @@ export interface components {
             purse: number;
             /** Format: double */
             bankBalance: number;
+            meta?: components["schemas"]["MemberCosmeticsDto"] | null;
             collections: {
                 [key: string]: number;
             };
@@ -9342,6 +9361,17 @@ export interface operations {
             query?: {
                 offset?: number | null;
                 limit?: number;
+                /** @description Time interval key of a monthly leaderboard. Format: yyyy-MM */
+                interval?: string | null;
+                /** @description Game mode to filter leaderboard by. Leave empty to get all modes.
+                 *     Options: "ironman", "island", "classic" */
+                mode?: string | null;
+                /** @description Removed filter to get leaderboard entries that have been removed from the leaderboard.
+                 *     Default is profiles that have not been removed/wiped.
+                 *     0 = Not Removed
+                 *     1 = Removed
+                 *     2 = All */
+                removed?: components["schemas"]["RemovedFilter"] | null;
                 /** @description Use new leaderboard backend (will be default in the future) */
                 new?: boolean;
             };
@@ -9431,6 +9461,17 @@ export interface operations {
                 atRank?: number | null;
                 /** @description Use new leaderboard backend (will be removed in the future) */
                 new?: boolean;
+                /** @description Time interval key of a monthly leaderboard. Format: yyyy-MM */
+                interval?: string | null;
+                /** @description Game mode to filter leaderboard by. Leave empty to get all modes.
+                 *     Options: "ironman", "island", "classic" */
+                mode?: string | null;
+                /** @description Removed filter to get leaderboard entries that have been removed from the leaderboard.
+                 *     Default is profiles that have not been removed/wiped.
+                 *     0 = Not Removed
+                 *     1 = Removed
+                 *     2 = All */
+                removed?: components["schemas"]["RemovedFilter"] | null;
             };
             header?: never;
             path: {
@@ -9470,6 +9511,9 @@ export interface operations {
                 upcoming?: number | null;
                 atRank?: number | null;
                 new?: boolean;
+                interval?: string | null;
+                mode?: string | null;
+                removed?: components["schemas"]["RemovedFilter"] | null;
             };
             header?: never;
             path: {
@@ -9544,6 +9588,17 @@ export interface operations {
                 atRank?: number | null;
                 /** @description Use new leaderboard backend (will be default in the future) */
                 new?: boolean;
+                /** @description Time interval key of a monthly leaderboard. Format: yyyy-MM */
+                interval?: string | null;
+                /** @description Game mode to filter leaderboard by. Leave empty to get all modes.
+                 *     Options: "ironman", "island", "classic" */
+                mode?: string | null;
+                /** @description Removed filter to get leaderboard entries that have been removed from the leaderboard.
+                 *     Default is profiles that have not been removed/wiped.
+                 *     0 = Not Removed
+                 *     1 = Removed
+                 *     2 = All */
+                removed?: components["schemas"]["RemovedFilter"] | null;
             };
             header?: never;
             path: {
@@ -9582,6 +9637,9 @@ export interface operations {
                 upcoming?: number | null;
                 atRank?: number | null;
                 new?: boolean;
+                interval?: string | null;
+                mode?: string | null;
+                removed?: components["schemas"]["RemovedFilter"] | null;
             };
             header?: never;
             path: {

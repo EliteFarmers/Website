@@ -3,10 +3,11 @@ import { GetLeaderboardSlice, GetPublicGuild } from '$lib/api/elite';
 import type { PageServerLoad } from './$types';
 import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
 
-export const load: PageServerLoad = async ({ setHeaders }) => {
+export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 	const { data: eliteGuild } = await GetPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
 
-	const leaderboard = GetLeaderboardSlice('farmingweight', 0, 10)
+	const leaderboardInfo = locals.cache?.leaderboards?.leaderboards['farmingweight'];
+	const leaderboard = GetLeaderboardSlice('farmingweight', { offset: 0, limit: 10 })
 		.then((r) => r.data)
 		.catch(() => undefined);
 
@@ -16,6 +17,7 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 
 	return {
 		lb: leaderboard,
+		leaderboard: leaderboardInfo,
 		eliteGuild,
 	};
 };
