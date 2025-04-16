@@ -10,7 +10,6 @@
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { PersistedState } from 'runed';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { Label } from 'bits-ui';
 
 	interface Props {
 		data: PageData;
@@ -20,7 +19,8 @@
 
 	let showLeaderboardName = new PersistedState('showleaderboardname', false);
 
-	let title = $derived(`${data.lb?.title} Leaderboard`);
+	let intervalType = $derived(data.lb?.interval ? (data.lb.interval.includes('W') ? ' Weekly' : ' Monthly') : '');
+	let title = $derived(`${data.lb?.title}${intervalType} Leaderboard`);
 	let entries = $derived(data.lb?.entries ?? []);
 	let offset = $derived((data.lb?.offset ?? 0) + 1);
 	let category = $derived(data.category);
