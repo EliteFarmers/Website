@@ -46,7 +46,7 @@
 
 		return (
 			(lb?.backgroundColor ? `background-color: ${lb?.backgroundColor};` : '') +
-			(lb?.borderColor ? `border-color: ${lb?.borderColor}; border-width: 2px;` : '') +
+			(lb?.borderColor ? `border-color: ${lb?.borderColor};` : '') +
 			(lb?.textColor ? `color: ${lb?.textColor};` : '')
 		);
 	});
