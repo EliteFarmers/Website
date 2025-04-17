@@ -30,8 +30,8 @@
 </script>
 
 <Head
-	title="{ctx.ign ?? 'Unknown'} | Jacob's Contests"
-	description="View all {data.contestsCount} Jacob's Contests participated in by {ctx.ign ?? 'Unknown'}!"
+	title="{ctx.ignMeta ?? 'Unknown'} | Jacob's Contests"
+	description="View all {data.contestsCount} Jacob's Contests participated in by {ctx.ignMeta ?? 'Unknown'}!"
 />
 
 <section class="flex w-full flex-col items-center justify-center">

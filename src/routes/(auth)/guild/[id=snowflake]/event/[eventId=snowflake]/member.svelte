@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import { formatIgn } from '$lib/format';
 	import * as Popover from '$ui/popover';
 	import FileText from '@lucide/svelte/icons/file-text';
 
@@ -24,7 +25,7 @@
 			target="_blank"
 			class="flex flex-row items-center gap-1 underline sm:text-lg"
 		>
-			{member.playerName}
+			{formatIgn(member.playerName, member.meta)}
 		</a>
 	</div>
 	<div class="xs:gap-4 flex flex-row items-center gap-2">

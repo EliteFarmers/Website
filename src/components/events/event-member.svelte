@@ -6,6 +6,7 @@
 	import Crown from '@lucide/svelte/icons/crown';
 	import * as Tooltip from '$ui/tooltip';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import { formatIgn } from '$lib/format';
 
 	interface Props {
 		owner?: boolean;
@@ -74,7 +75,7 @@
 					alt="Player Head"
 					class="pixelated aspect-square size-8 rounded-sm"
 				/>
-				<p class="text-lg">{member.playerName}</p>
+				<p class="text-lg">{formatIgn(member.playerName, member.meta)}</p>
 				{#if owner}
 					<Tooltip.Simple>
 						{#snippet trigger()}
