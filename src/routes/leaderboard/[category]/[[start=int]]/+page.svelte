@@ -82,6 +82,7 @@
 			<div class="flex w-full max-w-xl flex-row items-center justify-center gap-2 md:justify-start">
 				<form
 					method="post"
+					action={page.url.search}
 					bind:this={searchForm}
 					use:enhance={() => {
 						loading = true;

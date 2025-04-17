@@ -87,7 +87,6 @@
 								value={searchStr ?? ''}
 								onSelect={() =>
 									runCommand(() => {
-										console.log('searchStr', searchStr);
 										command(searchStr);
 									})}
 							>
@@ -99,7 +98,7 @@
 								value={player ?? ''}
 								onSelect={() =>
 									runCommand(() => {
-										console.log('player', player);
+										searchStr = player;
 										command(player);
 									})}
 							>

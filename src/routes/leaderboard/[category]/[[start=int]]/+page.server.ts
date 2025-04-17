@@ -87,14 +87,14 @@ export const actions = {
 			});
 		}
 
-		const profile =
-			account.profiles.find((p) => p.selected) ??
-			account.profiles?.find((p) => p.members?.some((m) => m.active && m.uuid === account.id));
+		let profiles = account.profiles;
+		if (mode) {
+			profiles = profiles.filter((p) => (mode === 'classic' && p.gameMode === null) || p.gameMode === mode);
+		}
 
-		if (!profile) {
-			return fail(400, {
-				error: 'No active profile found!',
-			});
+		if (!removed || removed === '0') {
+			// Only show active profiles
+			profiles = profiles.filter((p) => p.members?.some((m) => m.uuid === account.id && m.active));
 		}
 
 		const leaderboard = locals.cache?.leaderboards?.leaderboards?.[category];
@@ -104,16 +104,35 @@ export const actions = {
 			removed: removed ? (+removed as LeaderboardRemovedFilter) : undefined,
 		};
 
-		const { data: rank } = leaderboard?.profile
-			? await GetProfilesRank(category, profile.profileId, false, query)
-			: await GetPlayersRank(category, account.id, profile.profileId, false, query);
+		const results = await Promise.all(
+			profiles.map(async (p) => {
+				const { data: rank } = leaderboard?.profile
+					? await GetProfilesRank(category, p.profileId, false, query)
+					: await GetPlayersRank(category, account.id, p.profileId, false, query);
 
-		if (!rank?.rank || rank.rank === -1) {
+				if (!rank?.rank || rank.rank === -1) {
+					return null;
+				}
+
+				return rank.rank;
+			})
+		)
+			.then((ranks) => ranks.filter((r) => r !== null))
+			.catch(() => []);
+
+		if (results.length === 0) {
 			return fail(400, {
 				error: 'Player not found in leaderboard!',
 			});
 		}
 
-		redirect(303, `/leaderboard/${category}/${Math.max(rank.rank - 10, 1)}${url.search}`);
+		const rank = Math.min(...results);
+		if (rank === -1) {
+			return fail(400, {
+				error: 'Player not found in leaderboard!',
+			});
+		}
+
+		redirect(303, `/leaderboard/${category}/${Math.max(rank - 10, 1)}${url.search}`);
 	},
 };
