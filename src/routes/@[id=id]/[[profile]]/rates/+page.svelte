@@ -214,7 +214,10 @@
 	});
 </script>
 
-<Head title="{ctx.ign} | Rate Calculator" description="Calculate your expected farming rates in Hypixel Skyblock!" />
+<Head
+	title="{ctx.ignMeta} | Rate Calculator"
+	description="Calculate your expected farming rates in Hypixel Skyblock!"
+/>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector radio={true} />

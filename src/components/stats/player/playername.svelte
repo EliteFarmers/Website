@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { formatIgn } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 
 	const ctx = getStatsContext();
-	const ign = $derived(ctx.ign);
+	const ign = $derived(ctx.ignMeta);
 	const rank = $derived(ctx.rank);
 	const plus = $derived(rank?.plus ?? undefined);
 	const plusColor = $derived(rank?.plusColor);
@@ -32,7 +33,7 @@
 					href={`/@${member.uuid}/${ctx.selectedProfile?.profileId}`}
 					class="flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"
 				>
-					<span>{member.username}</span>
+					<span>{formatIgn(member.username, member.meta)}</span>
 					<span class="font-normal">{member.farmingWeight?.toLocaleString()}</span>
 				</a>
 			{/each}

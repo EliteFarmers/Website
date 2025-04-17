@@ -63,7 +63,7 @@
 </script>
 
 <Head
-	title="{ign} ({profile?.profileName}) | Farming Weight"
+	title="{ctx.ignMeta} ({profile?.profileName}) | Farming Weight"
 	{description}
 	imageUrl="https://mc-heads.net/head/{uuid}/left.png"
 >

@@ -15,6 +15,7 @@
 	import { page } from '$app/state';
 	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { formatIgn } from '$lib/format';
 
 	interface Props {
 		account: components['schemas']['MinecraftAccountDto'];
@@ -24,6 +25,7 @@
 
 	let { account, profile, profiles }: Props = $props();
 
+	const thisMember = $derived(profile.members?.find((m) => m.uuid === account?.id) ?? null);
 	const otherMembers = $derived(profile.members?.filter((m) => m.uuid !== account?.id && m.active) ?? []);
 	const otherProfiles = $derived(profiles?.filter((p) => p.id !== profile?.profileId) ?? []);
 
@@ -62,9 +64,9 @@
 
 	const crumbs = $derived<Crumb[]>([
 		{
-			name: account?.name,
+			name: formatIgn(thisMember?.username, thisMember?.meta) || account?.name,
 			dropdown: otherMembers?.map((m) => ({
-				name: m.username,
+				name: formatIgn(m.username, m.meta),
 				href: `/@${m.uuid}/${profile?.profileId}`,
 				data: {
 					uuid: m.uuid,
@@ -110,7 +112,7 @@
 	const sidebarCrumbs = $derived<Crumb[]>([
 		{
 			icon: PlayerHead,
-			name: account?.name,
+			name: formatIgn(thisMember?.username, thisMember?.meta) || account?.name,
 			capitalize: false,
 			href: `/@${account?.name}`,
 			tooltip: 'Player',
@@ -118,7 +120,7 @@
 				uuid: account?.id,
 			},
 			dropdown: otherMembers?.map((m) => ({
-				name: m.username,
+				name: formatIgn(m.username, m.meta),
 				capitalize: false,
 				href: `/@${m.uuid}/${profile?.profileId}`,
 				data: {

@@ -2,14 +2,20 @@
 	import { page } from '$app/state';
 	import type { PageData } from './$types';
 	import Entry from '$comp/leaderboards/entry.svelte';
-	import { afterNavigate, goto } from '$app/navigation';
+	import { afterNavigate } from '$app/navigation';
 	import Head from '$comp/head.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
-	import * as Pagination from '$ui/pagination';
 	import { Switch } from '$ui/switch';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { PersistedState } from 'runed';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import LeaderboardPagination from './leaderboard-pagination.svelte';
+	import LeaderboardFilter from './leaderboard-filter.svelte';
+	import PlayerSearch from '$comp/player-search.svelte';
+	import { enhance } from '$app/forms';
+	import { tick } from 'svelte';
+	import { Button } from '$ui/button';
+	import Search from '@lucide/svelte/icons/search';
 
 	interface Props {
 		data: PageData;
@@ -19,17 +25,12 @@
 
 	let showLeaderboardName = new PersistedState('showleaderboardname', false);
 
-	let intervalType = $derived(data.lb?.interval ? (data.lb.interval.includes('W') ? ' Weekly' : ' Monthly') : '');
-	let title = $derived(`${data.lb?.title}${intervalType} Leaderboard`);
+	let title = $derived(`${data.lb?.title}${data.leaderboard.suffix} Leaderboard`);
 	let entries = $derived(data.lb?.entries ?? []);
 	let offset = $derived((data.lb?.offset ?? 0) + 1);
-	let category = $derived(data.category);
 
 	let firstHalf = $derived(entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
 	let secondHalf = $derived(entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
-
-	let initialPage = $state(Math.floor((data.lb.offset ?? 0) / 20 + 1));
-	let noneActive = $derived((data.lb.offset ?? 0) / 20 + 1 !== initialPage);
 
 	const topTen = $derived(
 		entries
@@ -43,12 +44,6 @@
 		if (!from?.url.pathname.startsWith('/leaderboard/')) return;
 		(document.querySelector('#navigate') as HTMLAnchorElement)?.focus();
 	});
-
-	function samePageClick(page: number) {
-		if (noneActive) {
-			goto(`/leaderboard/${category}/${(page - 1) * 20 + 1}`);
-		}
-	}
 
 	const crumbs = $derived<Crumb[]>([
 		{
@@ -70,67 +65,81 @@
 			href: page.url.pathname,
 		});
 	});
+
+	let searchForm = $state<HTMLFormElement | null>(null);
+	let searchInput = $state('');
+	let loading = $state(false);
+	let searchOpen = $state(false);
 </script>
 
 <Head {title} description="{title} for Hypixel Skyblock.{'\n\n'}{topTen}" />
 
 <section class="mt-16 flex w-full flex-col justify-center">
-	<h1 class="mb-16 mt-8 max-w-md self-center text-center text-4xl">{title}</h1>
-	<div class="flex w-full justify-center gap-4 text-center">
-		{#if data.lb.entries.length}
-			<Pagination.Root
-				count={data.lb.maxEntries}
-				perPage={20}
-				bind:page={initialPage}
-				onPageChange={(newPage) => {
-					goto(`/leaderboard/${category}/${(newPage - 1) * 20 + 1}${page.url.search}`);
-				}}
-			>
-				{#snippet children({ pages })}
-					<Pagination.Content class="flex justify-center">
-						<div class="order-1 flex basis-1/3 flex-row justify-end sm:basis-auto">
-							<Pagination.Item>
-								<Pagination.PrevButton />
-							</Pagination.Item>
-						</div>
-						<div
-							class="order-3 flex flex-grow flex-wrap items-center justify-center sm:order-2 sm:flex-auto"
-						>
-							{#each pages as page (page.key)}
-								{#if page.type === 'ellipsis'}
-									<Pagination.Item>
-										<Pagination.Ellipsis />
-									</Pagination.Item>
-								{:else}
-									<Pagination.Item>
-										<Pagination.Link
-											page={{ ...page, value: Math.floor(page.value) }}
-											isActive={!noneActive && (page.value - 1) * 20 + 1 === offset}
-											onclick={() => samePageClick(page.value)}
-										>
-											{Math.floor(page.value)}
-										</Pagination.Link>
-									</Pagination.Item>
-								{/if}
-							{/each}
-						</div>
-						<div class="order-2 flex basis-1/3 flex-row justify-start sm:order-last sm:basis-auto">
-							<Pagination.Item>
-								<Pagination.NextButton />
-							</Pagination.Item>
-						</div>
-					</Pagination.Content>
-				{/snippet}
-			</Pagination.Root>
-		{:else}
-			<p class="w-full max-w-4xl rounded-lg border-2 py-16 text-muted-foreground">No entries found!</p>
-		{/if}
+	<h1 class="mb-16 mt-8 max-w-2xl self-center text-center text-4xl">{title}</h1>
+	<div class="flex w-full justify-end gap-4 text-center"></div>
+	<div class="my-2 flex flex-col items-end justify-center gap-2 rounded-lg lg:h-16 lg:flex-row">
+		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
+			<div class="flex w-full max-w-xl flex-row items-center justify-center gap-2 md:justify-start">
+				<form
+					method="post"
+					action={page.url.search}
+					bind:this={searchForm}
+					use:enhance={() => {
+						loading = true;
+						return async ({ update }) => {
+							await update();
+							loading = false;
+						};
+					}}
+				>
+					<input type="hidden" name="player" value={searchInput} />
+					<Button
+						class="size-8"
+						variant="outline"
+						onclick={() => {
+							searchOpen = true;
+						}}
+					>
+						<Search size={16} />
+					</Button>
+					<PlayerSearch
+						useButton={false}
+						bind:search={searchInput}
+						bind:open={searchOpen}
+						command={() => {
+							tick().then(() => {
+								if (loading) return;
+								searchForm?.requestSubmit();
+							});
+						}}
+					/>
+				</form>
+				<LeaderboardFilter
+					query="mode"
+					title="Game Mode"
+					options={[
+						{ label: 'Classic', value: 'classic' },
+						{ label: 'Ironman', value: 'ironman' },
+						{ label: 'Stranded', value: 'island' },
+					]}
+				/>
+				<!-- <LeaderboardFilter query="removed" title="Removed" options={[
+					{ label: 'Removed Players', value: '1' },
+					{ label: 'All Players', value: '2' },
+				]} /> -->
+			</div>
+		</div>
+		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
+			<div class="flex w-full max-w-xl justify-center md:justify-start lg:justify-end">
+				<LeaderboardPagination info={data.leaderboard} leaderboard={data.lb} />
+			</div>
+		</div>
 	</div>
 	<div
 		data-sveltekit-preload-data="tap"
-		class="mx-4 mb-8 mt-2 flex flex-col justify-center rounded-lg align-middle lg:flex-row"
+		class="mb-2 flex flex-col justify-center gap-2 rounded-lg align-middle lg:flex-row"
 	>
-		<div class="flex w-full flex-col items-center gap-2 p-2 lg:items-end">
+		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
 			{#each firstHalf as entry, i (entry)}
 				<Entry
 					rank={i + offset}
@@ -140,7 +149,7 @@
 				/>
 			{/each}
 		</div>
-		<div class="flex w-full flex-col items-center gap-2 p-2 pt-0 lg:items-start lg:pt-2">
+		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
 			{#each secondHalf as entry, i (entry)}
 				<Entry
 					rank={i + firstHalf.length + offset}
@@ -151,7 +160,24 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex flex-row items-center justify-center gap-2">
+	{#if !data.lb.entries.length}
+		<div class="mb-8 flex flex-row items-center justify-center">
+			<p class="w-full max-w-4xl rounded-lg border-2 py-16 text-center text-muted-foreground">
+				No entries found!
+			</p>
+		</div>
+	{:else}
+		<div class="flex flex-col items-end justify-center gap-2 rounded-lg lg:flex-row">
+			<div class="flex w-full flex-col items-center gap-2 lg:items-end"></div>
+			<div class="flex w-full flex-col items-center gap-2 lg:items-start">
+				<div class="flex w-full max-w-xl justify-center md:justify-start lg:justify-end">
+					<LeaderboardPagination info={data.leaderboard} leaderboard={data.lb} />
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<div class="mt-8 flex flex-row items-center justify-center gap-2">
 		<p class="text-sm leading-none">Show Leaderboard Name In Entries</p>
 		<Switch bind:checked={showLeaderboardName.current} />
 	</div>

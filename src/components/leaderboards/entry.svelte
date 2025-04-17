@@ -2,6 +2,7 @@
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { type LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { formatIgn } from '$lib/format';
 
 	interface Props {
 		entry: LeaderboardEntry;
@@ -37,20 +38,35 @@
 	let amount = $derived(leaderboard?.id === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
 	let profile = $state(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
-	let profileLink = $derived(entry?.profile ? entry.uuid : profile);
+	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
+
+	let customStyles = $derived.by(() => {
+		const lb = entry.meta?.leaderboard;
+		if (!lb) return '';
+
+		return (
+			(lb?.backgroundColor ? `background-color: ${lb?.backgroundColor};` : '') +
+			(lb?.borderColor ? `border-color: ${lb?.borderColor};` : '') +
+			(lb?.textColor ? `color: ${lb?.textColor};` : '')
+		);
+	});
 </script>
 
 <a
 	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profileLink ?? '')}{leaderboard?.subpage ?? ''}"
-	class="inline-block w-full max-w-2xl border bg-card py-1 align-middle hover:bg-muted hover:shadow-lg sm:p-1 {highlight
+	class="inline-block w-full max-w-xl border bg-card py-1 align-middle hover:bg-muted hover:shadow-lg sm:p-1 {highlight
 		? 'border-completed'
 		: ''} rounded-md"
+	style={customStyles}
 >
 	<div class="flex items-center justify-between gap-0 md:gap-2">
 		<div
 			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
-			<div class="text-progress">
+			<div
+				class="text-progress"
+				style={entry.meta?.leaderboard?.rankColor ? `color: ${entry.meta?.leaderboard?.rankColor};` : ''}
+			>
 				<h1>
 					<span class="xs:text-md text-sm sm:text-2xl">#</span><span class="xs:text-xl text-lg sm:text-3xl"
 						>{rank}</span
@@ -63,7 +79,7 @@
 					{#if leaderboard?.profile}
 						{entry.members?.[0].ign}
 					{:else}
-						{ign}
+						{formatIgn(ign, entry.meta)}
 					{/if}
 				</p>
 				{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
@@ -96,8 +112,9 @@
 				</span> -->
 				<div
 					class="xs:text-sm sm:text-md inline overflow-hidden text-ellipsis whitespace-nowrap text-start text-xs text-muted-foreground"
+					style={entry.meta?.leaderboard?.rankColor ? `color: ${entry.meta?.leaderboard?.rankColor};` : ''}
 				>
-					{leaderboard?.title}
+					{leaderboard?.short ?? leaderboard?.title}{leaderboard?.suffix ?? ''}
 				</div>
 			{/if}
 		</div>

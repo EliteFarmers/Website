@@ -8,7 +8,7 @@ export const load: LayoutServerLoad = ({ params, depends, setHeaders, locals }) 
 
 	depends('custom:leaderboard');
 
-	const leaderboard = locals.cache?.leaderboards?.leaderboards[category] as LeaderboardInfo | undefined;
+	const leaderboard = locals.cache?.leaderboards?.leaderboards?.[category] as LeaderboardInfo | undefined;
 
 	if (!leaderboard) {
 		throw error(404, 'Leaderboard not found!');

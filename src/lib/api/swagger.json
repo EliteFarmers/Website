@@ -9416,6 +9416,7 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
+		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -9425,15 +9426,18 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
+			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
+			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
+			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {
@@ -11512,6 +11516,15 @@
 			"data": {
 			  "nullable": true
 			},
+			"meta": {
+			  "description": "Metadata of the entry",
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberCosmeticsDto"
+				}
+			  ]
+			},
 			"id": {
 			  "type": "integer",
 			  "format": "int32"
@@ -12284,6 +12297,15 @@
 			  "type": "string",
 			  "maxLength": 128,
 			  "nullable": true
+			},
+			"meta": {
+			  "description": "Metadata of the entry",
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberCosmeticsDto"
+				}
+			  ]
 			}
 		  }
 		},
@@ -12534,6 +12556,15 @@
 			},
 			"data": {
 			  "nullable": true
+			},
+			"meta": {
+			  "description": "Metadata of the entry",
+			  "nullable": true,
+			  "oneOf": [
+				{
+				  "$ref": "#/components/schemas/MemberCosmeticsDto"
+				}
+			  ]
 			}
 		  }
 		},
@@ -13562,7 +13593,8 @@
 		  "required": [
 			"ign",
 			"uuid",
-			"xp"
+			"xp",
+			"removed"
 		  ],
 		  "properties": {
 			"ign": {
@@ -13575,6 +13607,9 @@
 			  "type": "integer",
 			  "description": "Skyblock xp of the player (used for sorting)",
 			  "format": "int32"
+			},
+			"removed": {
+			  "type": "boolean"
 			}
 		  }
 		},
