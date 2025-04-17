@@ -307,3 +307,9 @@ export function getCropColor(crop: string | Crop) {
 			return '#d5da45';
 	}
 }
+
+export function formatIgn(ign?: string | null, meta?: components['schemas']['MemberCosmeticsDto'] | null): string {
+	if (!meta || !ign) return ign ?? '';
+
+	return (meta?.prefix ? `${meta.prefix} ` : '') + ign + (meta?.suffix ? ` ${meta.suffix}` : '');
+}

@@ -14,6 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	locals.access_token = access;
 	locals.refresh_token = refresh;
+	locals.cache = cache;
 
 	// Skip getting the user session if the request is /api/
 	if (event.url.pathname.startsWith('/api/')) {
@@ -24,8 +25,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (access && refresh) {
 		locals.session = await FetchUserSession(event.cookies, access, refresh);
 	}
-
-	locals.cache = cache;
 
 	return await ResolveWithSecurityHeaders(resolve, event);
 };

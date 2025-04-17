@@ -2722,14 +2722,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3315,6 +3321,8 @@ export interface components {
             lastUpdated?: string | null;
             disqualified?: boolean | null;
             data?: unknown;
+            /** @description Metadata of the entry */
+            meta?: components["schemas"]["MemberCosmeticsDto"] | null;
             /** Format: int32 */
             id: number;
             accountId?: string | null;
@@ -3581,6 +3589,8 @@ export interface components {
             lastUpdated?: string | null;
             disqualified: boolean;
             notes?: string | null;
+            /** @description Metadata of the entry */
+            meta?: components["schemas"]["MemberCosmeticsDto"] | null;
         };
         GetTeamsRequest: Record<string, never>;
         KickTeamMemberRequest: Record<string, never>;
@@ -3645,6 +3655,8 @@ export interface components {
             lastUpdated?: string | null;
             disqualified?: boolean | null;
             data?: unknown;
+            /** @description Metadata of the entry */
+            meta?: components["schemas"]["MemberCosmeticsDto"] | null;
         };
         GetEventMembersRequest2: Record<string, never>;
         GetEventTeamRequest: Record<string, never>;
@@ -3960,6 +3972,7 @@ export interface components {
              * @description Skyblock xp of the player (used for sorting)
              */
             xp: number;
+            removed: boolean;
         };
         LeaderboardSliceRequest: Record<string, never>;
         /** @enum {integer} */

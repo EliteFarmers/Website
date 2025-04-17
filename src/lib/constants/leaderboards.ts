@@ -12,6 +12,7 @@ export type LeaderboardInfo = components['schemas']['LeaderboardInfoDto'] &
 	LeaderboardConfig & {
 		id: string;
 		intervals?: IntervalType[];
+		suffix: string;
 	};
 
 const sortByOrder = (a: LeaderboardInfo, b: LeaderboardInfo) => {
@@ -39,16 +40,17 @@ export function parseLeaderboards(response?: components['schemas']['Leaderboards
 				...(config ?? {}),
 				intervals: ['current'] as IntervalType[],
 				id: key,
+				suffix: '',
 			};
 
 			if (leaderboards[`${key}-weekly`]) {
 				data.intervals.push('weekly');
-				lookup[`${key}-weekly`] = { ...data, id: `${key}-weekly` };
+				lookup[`${key}-weekly`] = { ...data, id: `${key}-weekly`, suffix: ' Weekly' };
 			}
 
 			if (leaderboards[`${key}-monthly`]) {
 				data.intervals.push('monthly');
-				lookup[`${key}-monthly`] = { ...data, id: `${key}-monthly` };
+				lookup[`${key}-monthly`] = { ...data, id: `${key}-monthly`, suffix: ' Monthly' };
 			}
 
 			lookup[key] = data;
