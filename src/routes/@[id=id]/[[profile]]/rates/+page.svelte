@@ -17,6 +17,7 @@
 		getCropInfo,
 		ZorroMode,
 		TEMPORARY_FORTUNE,
+		calcWeightForCrop,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
@@ -215,7 +216,7 @@
 </script>
 
 <Head
-	title="{ctx.ignMeta} | Rate Calculator"
+	title="{ctx.ignMeta} | Rates Calculator"
 	description="Calculate your expected farming rates in Hypixel Skyblock!"
 />
 
@@ -552,6 +553,17 @@
 						<div class="flex w-full items-center justify-between px-4 py-2">
 							<span class="text-xl">Collection</span>
 							<span>{info.collection.toLocaleString()}</span>
+						</div>
+						<div class="flex w-full items-center justify-between px-4 py-2">
+							<span class="text-xl">Farming Weight</span>
+							<span
+								>{(
+									calcWeightForCrop(getCropFromName(selectedCrop) ?? Crop.Wheat, info.collection) +
+									(selectedPet?.type === FarmingPets.MooshroomCow
+										? calcWeightForCrop(Crop.Mushroom, selectedPet?.level / 100) * bps
+										: 0)
+								).toLocaleString()}</span
+							>
 						</div>
 					</div>
 
