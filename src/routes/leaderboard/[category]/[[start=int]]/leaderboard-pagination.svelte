@@ -16,7 +16,7 @@
 	let { info, leaderboard }: Props = $props();
 
 	let currentPage = $derived(Math.floor(leaderboard.offset / 20) + 1);
-	let maxPage = $derived(Math.floor(leaderboard.maxEntries / 20) + 1);
+	let maxPage = $derived(Math.floor(leaderboard.maxEntries / 20));
 </script>
 
 <div class="flex flex-col items-center gap-2 md:flex-row">
