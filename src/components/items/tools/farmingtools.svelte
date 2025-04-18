@@ -27,14 +27,9 @@
 			};
 
 			actualTools = FT.fromArray(tools as EliteItemDto[], options).sort((a, b) => {
-				const aCounter =
-					a.counter !== undefined && a.counter !== null ? a.counter : Math.abs(a.cultivating ?? 0);
-				const bCounter =
-					b.counter !== undefined && b.counter !== null ? b.counter : Math.abs(b.cultivating ?? 0);
-
 				return (
-					calcWeightForCrop(b.crop ?? Crop.Wheat, bCounter) -
-					calcWeightForCrop(a.crop ?? Crop.Wheat, aCounter)
+					calcWeightForCrop(b.crop ?? Crop.Wheat, b.farmed) -
+					calcWeightForCrop(a.crop ?? Crop.Wheat, a.farmed)
 				);
 			});
 		}
