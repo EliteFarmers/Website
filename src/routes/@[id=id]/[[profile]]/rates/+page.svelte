@@ -560,7 +560,8 @@
 								>{(
 									calcWeightForCrop(getCropFromName(selectedCrop) ?? Crop.Wheat, info.collection) +
 									(selectedPet?.type === FarmingPets.MooshroomCow
-										? calcWeightForCrop(Crop.Mushroom, selectedPet?.level / 100) * bps
+										? calcWeightForCrop(Crop.Mushroom, selectedPet?.level / 100) *
+											blocksActuallyBroken
 										: 0)
 								).toLocaleString()}</span
 							>
