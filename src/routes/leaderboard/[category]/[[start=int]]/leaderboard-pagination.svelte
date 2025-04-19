@@ -16,7 +16,7 @@
 	let { info, leaderboard }: Props = $props();
 
 	let currentPage = $derived(Math.floor(leaderboard.offset / 20) + 1);
-	let maxPage = $derived(Math.floor(leaderboard.maxEntries / 20));
+	let maxPage = $derived(Math.floor(leaderboard.maxEntries / 20) + 1);
 </script>
 
 <div class="flex flex-col items-center gap-2 md:flex-row">
@@ -57,7 +57,7 @@
 		<Button
 			variant="outline"
 			class="size-8 p-0"
-			href="/leaderboard/{info.id}/{maxPage * 20}{page.url.search}"
+			href="/leaderboard/{info.id}/{Math.max(1, maxPage * 20 - 19)}{page.url.search}"
 			disabled={currentPage === maxPage}
 		>
 			<span class="sr-only">Go to last page</span>
