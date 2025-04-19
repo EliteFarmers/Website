@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { Button } from '$ui/button';
 	import Farmingtool from '$comp/items/tools/farmingtool.svelte';
-	import { FarmingTool as FT, getCropMilestoneLevels, type EliteItemDto } from 'farming-weight';
+	import {
+		calcWeightForCrop,
+		Crop,
+		FarmingTool as FT,
+		getCropMilestoneLevels,
+		type EliteItemDto,
+	} from 'farming-weight';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { watch } from 'runed';
 
@@ -20,7 +26,12 @@
 				milestones: getCropMilestoneLevels(garden?.crops ?? {}),
 			};
 
-			actualTools = FT.fromArray(tools as EliteItemDto[], options);
+			actualTools = FT.fromArray(tools as EliteItemDto[], options).sort((a, b) => {
+				return (
+					calcWeightForCrop(b.crop ?? Crop.Wheat, b.farmed) -
+					calcWeightForCrop(a.crop ?? Crop.Wheat, a.farmed)
+				);
+			});
 		}
 	);
 </script>
