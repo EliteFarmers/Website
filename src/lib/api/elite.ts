@@ -491,7 +491,14 @@ export const GetProfilesRank = async (
 		},
 	});
 
-export const GetUpcomingEvents = async () => await GET('/events', {});
+export const GetUpcomingEvents = async () =>
+	await GET('/events', {
+		params: {
+			query: {
+				offset: 2,
+			},
+		},
+	});
 
 export const GetAdminPendingEvents = async (token: string) =>
 	await GET('/admin/events/pending', {

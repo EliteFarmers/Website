@@ -23,7 +23,7 @@
 			<p class="text-xs sm:text-sm">Jacob Contest Event</p>
 		{:else if type === +EventType.Pests}
 			<img src="/images/pests/mouse.png" alt="Mouse" class="size-4" />
-			<p class="text-xs sm:text-sm">Pests Event</p>
+			<p class="text-xs sm:text-sm">Pest Event</p>
 		{:else if type === +EventType.Collections}
 			<ShoppingBasket class="size-4" />
 			<p class="text-xs sm:text-sm">Collection Event</p>
@@ -44,7 +44,7 @@
 				<p class="text-md mb-1 font-semibold">Jacob Contests Event</p>
 				<p class="max-w-xs">Earn points for each Jacob contest placement you earn during the event!</p>
 			{:else if type === +EventType.Pests}
-				<p class="text-md mb-1 font-semibold">Pests Event</p>
+				<p class="text-md mb-1 font-semibold">Pest Event</p>
 				<p class="max-w-xs">Earn points for each pest you kill during the event!</p>
 			{:else if type === +EventType.Collections}
 				<p class="text-md mb-1 font-semibold">Collection Event</p>

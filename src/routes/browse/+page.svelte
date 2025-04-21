@@ -23,7 +23,7 @@
 		<section class="my-16 flex w-[90%] max-w-7xl flex-col gap-8 md:w-[70%]">
 			<h1 class="mb-8 text-2xl md:text-4xl">Join Public Events</h1>
 			{#each events ?? [] as event (event.id)}
-				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} />
+				<Event {event} guild={data.guilds?.find((g) => g.id === event.guildId)} showRecentlyEnded={true} />
 			{/each}
 		</section>
 	{/if}

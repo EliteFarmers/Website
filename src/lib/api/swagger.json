@@ -4643,6 +4643,19 @@
 		  ],
 		  "summary": "Get upcoming events",
 		  "operationId": "EliteAPIFeaturesEventsPublicGetUpcomingGetUpcomingEventsEndpoint",
+		  "parameters": [
+			{
+			  "name": "offset",
+			  "in": "query",
+			  "description": "Offset by an amount of days to also include recently ended events.",
+			  "schema": {
+				"type": "integer",
+				"format": "int32",
+				"default": 0,
+				"nullable": true
+			  }
+			}
+		  ],
 		  "responses": {
 			"200": {
 			  "description": "Success",
@@ -9416,7 +9429,6 @@
 		},
 		"ErrorResponse": {
 		  "type": "object",
-		  "description": "the dto used to send an error response to the client",
 		  "additionalProperties": false,
 		  "required": [
 			"statusCode",
@@ -9426,18 +9438,15 @@
 		  "properties": {
 			"statusCode": {
 			  "type": "integer",
-			  "description": "the http status code sent to the client. default is 400.",
 			  "format": "int32",
 			  "default": 400
 			},
 			"message": {
 			  "type": "string",
-			  "description": "the message for the error response",
 			  "default": "One or more errors occurred!"
 			},
 			"errors": {
 			  "type": "object",
-			  "description": "the collection of errors for the current context",
 			  "additionalProperties": {
 				"type": "array",
 				"items": {
@@ -12609,6 +12618,10 @@
 			}
 		  }
 		},
+		"GetUpcomingEventsRequest": {
+		  "type": "object",
+		  "additionalProperties": false
+		},
 		"DeleteTeamRequest2": {
 		  "type": "object",
 		  "additionalProperties": false
@@ -13798,6 +13811,7 @@
 		  "required": [
 			"rank",
 			"amount",
+			"initialAmount",
 			"minAmount",
 			"upcomingRank"
 		  ],
@@ -13810,6 +13824,11 @@
 			"amount": {
 			  "type": "number",
 			  "description": "Current score of the player (0 if not on leaderboard)",
+			  "format": "double"
+			},
+			"initialAmount": {
+			  "type": "number",
+			  "description": "The starting amount of the leaderboard entry for interval based leaderboards",
 			  "format": "double"
 			},
 			"minAmount": {
