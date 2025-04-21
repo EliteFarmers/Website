@@ -6,9 +6,10 @@
 	interface Props {
 		event: components['schemas']['EventDetailsDto'];
 		guild: components['schemas']['GuildDetailsDto'] | undefined;
+		showRecentlyEnded?: boolean;
 	}
 
-	let { event, guild }: Props = $props();
+	let { event, guild, showRecentlyEnded = false }: Props = $props();
 
 	let start = $derived(new Date(+(event.startTime ?? 0) * 1000));
 	let end = $derived(new Date(+(event.endTime ?? 0) * 1000));
@@ -39,9 +40,13 @@
 			<EventType type={event.type ?? 1} popover={false} />
 		</div>
 		<div class="z-10 flex flex-row items-center gap-2 font-semibold sm:text-sm md:text-lg">
-			<span>{start.toLocaleDateString()}</span>
-			<span> - </span>
-			<span>{end.toLocaleDateString()}</span>
+			{#if showRecentlyEnded && +(event.endTime ?? 0) * 1000 < Date.now()}
+				<span>Ended Recently!</span>
+			{:else}
+				<span>{start.toLocaleDateString()}</span>
+				<span> - </span>
+				<span>{end.toLocaleDateString()}</span>
+			{/if}
 		</div>
 	</div>
 </a>
