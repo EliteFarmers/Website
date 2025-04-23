@@ -55,7 +55,7 @@
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<Accordion.Root type="single" class="w-full text-primary">
+		<Accordion.Root type="multiple" class="w-full text-primary">
 			{#each members as member, i}
 				<Accordion.Item
 					value={team.id + i.toString()}
