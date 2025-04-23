@@ -42,9 +42,7 @@
 					<Collapsible.Content>
 						<Sidebar.Menu>
 							{#each events as event (event.id)}
-								{#if event.endTime && +(event.endTime ?? 0) * 1000 > Date.now()}
-									{@render eventLink(event)}
-								{/if}
+								{@render eventLink(event)}
 							{/each}
 						</Sidebar.Menu>
 					</Collapsible.Content>
@@ -57,6 +55,7 @@
 {#snippet eventLink(event: components['schemas']['EventDetailsDto'])}
 	{@const href = `/event/${event.name.replaceAll(' ', '-') + '-' + event.id}`}
 	{@const started = +(event.startTime ?? 0) * 1000 < Date.now()}
+	{@const ended = +(event.endTime ?? 0) * 1000 < Date.now()}
 	<Sidebar.MenuItem class="my-0.5">
 		<Sidebar.MenuButton data-active={href === page.url.pathname} size="xl">
 			{#snippet tooltipContent()}
@@ -74,18 +73,22 @@
 					>
 						<span class="flex-1 truncate text-lg font-semibold leading-none">{event.name}</span>
 						<div class="flex w-full flex-row items-center justify-start gap-1">
-							{#if started}
-								<span class="text-sm text-muted-foreground">Ends In</span>
+							{#if ended}
+								<span class="text-sm text-muted-foreground">Ended Recently!</span>
 							{:else}
-								<span class="text-sm text-muted-foreground">Starts In</span>
-							{/if}
-							<div class="flex flex-1 flex-row items-center justify-start">
-								{#if event.startTime}
-									<SidebarCountdown {event} />
+								{#if started}
+									<span class="text-sm text-muted-foreground">Ends In</span>
 								{:else}
-									<span class="text-sm text-muted-foreground">No date set</span>
+									<span class="text-sm text-muted-foreground">Starts In</span>
 								{/if}
-							</div>
+								<div class="flex flex-1 flex-row items-center justify-start">
+									{#if event.startTime}
+										<SidebarCountdown {event} />
+									{:else}
+										<span class="text-sm text-muted-foreground">No date set</span>
+									{/if}
+								</div>
+							{/if}
 						</div>
 					</div>
 				</a>
