@@ -133,9 +133,16 @@
 			</div>
 			<div class="flex w-full max-w-7xl flex-wrap gap-4 md:mx-32">
 				{#if (!teamEvent || swapMode) && members.length > 0}
-					<EventLeaderboard {highlightUuid} {running} {event} {members} />
+					<EventLeaderboard highlightUuid={[highlightUuid]} {running} {event} {members} />
 				{:else if teams.length > 0}
-					<EventTeamLeaderboard {highlightUuid} {highlightTeam} {started} {running} {event} {teams} />
+					<EventTeamLeaderboard
+						{highlightUuid}
+						highlightTeam={highlightTeam ? [highlightTeam] : []}
+						{started}
+						{running}
+						{event}
+						{teams}
+					/>
 				{:else}
 					<p class="my-16 max-w-lg text-center">
 						This Event does not have any members signed up right now! Login to be the first!
