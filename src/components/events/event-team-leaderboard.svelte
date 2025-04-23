@@ -22,7 +22,7 @@
 	}: Props = $props();
 </script>
 
-<Accordion.Root type="single" class="w-full" value={highlightTeam}>
+<Accordion.Root type="multiple" class="w-full" value={highlightTeam ? [highlightTeam] : []}>
 	{#each teams as team, i}
 		<EventTeam {team} rank={i + 1} {started} {running} {event} {highlightUuid} />
 	{/each}

@@ -13,7 +13,7 @@
 	let { highlightUuid = undefined, running = false, event, members }: Props = $props();
 </script>
 
-<Accordion.Root type="single" class="w-full" value={highlightUuid}>
+<Accordion.Root type="multiple" class="w-full" value={highlightUuid ? [highlightUuid] : []}>
 	{#each members as member, i}
 		{@const key = member.playerUuid ?? i.toString()}
 		<Accordion.Item
