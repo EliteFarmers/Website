@@ -5,7 +5,7 @@
 
 	interface Props {
 		highlightUuid?: string | undefined;
-		highlightTeam?: string | undefined;
+		highlightTeam?: string[] | undefined;
 		started?: boolean;
 		running?: boolean;
 		event: components['schemas']['EventDetailsDto'];
@@ -22,7 +22,7 @@
 	}: Props = $props();
 </script>
 
-<Accordion.Root type="single" class="w-full" value={highlightTeam}>
+<Accordion.Root type="multiple" class="w-full" value={highlightTeam}>
 	{#each teams as team, i}
 		<EventTeam {team} rank={i + 1} {started} {running} {event} {highlightUuid} />
 	{/each}
