@@ -17,6 +17,7 @@
 		getCropInfo,
 		ZorroMode,
 		TEMPORARY_FORTUNE,
+		createFarmingWeightCalculator,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
@@ -194,6 +195,16 @@
 		Object.entries(calculator).find(([cropId]) => $selectedCrops[PROPER_CROP_NAME[cropId] ?? ''])
 	);
 
+	const weightGain = $derived.by(() => {
+		if (!selected) return 0;
+		return createFarmingWeightCalculator({
+			collection: {
+				[selected[0]]: selected[1].collection,
+				[Crop.Mushroom]: selected[1].otherCollection[Crop.Mushroom],
+			},
+		}).getWeightInfo().cropWeight;
+	});
+
 	const totalFortune = $derived($player.fortune + cropFortune.fortune);
 	const fortuneBreakdown = $derived({ ...$player.breakdown, ...cropFortune.breakdown });
 
@@ -215,7 +226,7 @@
 </script>
 
 <Head
-	title="{ctx.ignMeta} | Rate Calculator"
+	title="{ctx.ignMeta} | Rates Calculator"
 	description="Calculate your expected farming rates in Hypixel Skyblock!"
 />
 
@@ -552,6 +563,10 @@
 						<div class="flex w-full items-center justify-between px-4 py-2">
 							<span class="text-xl">Collection</span>
 							<span>{info.collection.toLocaleString()}</span>
+						</div>
+						<div class="flex w-full items-center justify-between px-4 py-2">
+							<span class="text-xl">Farming Weight</span>
+							<span>{weightGain.toLocaleString()}</span>
 						</div>
 					</div>
 

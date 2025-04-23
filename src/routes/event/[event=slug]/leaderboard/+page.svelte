@@ -11,6 +11,7 @@
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -63,6 +64,25 @@
 		icon: data.guild?.icon?.url ?? undefined,
 		name: (data.event.name ?? 'Event') + ' Leaderboard',
 		href: page.url.pathname,
+	});
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Events',
+			href: '/browse',
+		},
+		{
+			name: event.name,
+			href: `/event/${event.name.replaceAll(' ', '-') + '-' + event.id}`,
+		},
+		{
+			name: 'Leaderboard',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
 	});
 </script>
 
