@@ -4,7 +4,7 @@
 	import * as Accordion from '$ui/accordion';
 
 	interface Props {
-		highlightUuid?: string[] | undefined;
+		highlightUuid?: string | undefined;
 		running?: boolean;
 		event: components['schemas']['EventDetailsDto'];
 		members: components['schemas']['EventMemberDetailsDto'][];
@@ -13,7 +13,7 @@
 	let { highlightUuid = undefined, running = false, event, members }: Props = $props();
 </script>
 
-<Accordion.Root type="multiple" class="w-full" value={highlightUuid}>
+<Accordion.Root type="multiple" class="w-full" value={highlightUuid ? [highlightUuid] : []}>
 	{#each members as member, i}
 		{@const key = member.playerUuid ?? i.toString()}
 		<Accordion.Item
