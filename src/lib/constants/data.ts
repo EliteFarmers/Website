@@ -1,68 +1,26 @@
 import type { PlusColor, RankName } from '$lib/skyblock';
 
-export const PROFILE_UPDATE_INTERVAL = 1000 * 60 * 10; // 10 minutes
+export const PROFILE_UPDATE_INTERVAL = 1000 * 60 * 15; // 15 minutes
 export const LEADERBOARD_UPDATE_INTERVAL = 1000 * 60 * 5; // 5 minutes
 export const PLAYER_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 export const ACCOUNT_UPDATE_INTERVAL = 1000 * 60 * 60; // 1 hour
 
-export const EXCLUDED_FIELDS = [
-	'objectives',
-	'tutorial',
-	'quests',
-	'visited_zones',
-	'visited_modes',
-	'temp_stat_buffs',
-	'disabled_potion_effects',
-	'paused_effects',
-	'active_effects',
-	'achievement_spawned_island_types',
-	'autopet',
-	'experimentation',
-	'harp_quest',
-	'trapper_quest',
-	'favorite_arrow',
-	'backpack_icons',
-	'sacks_counts',
-	'fishing_bag',
-	'candy_inventory_contents',
-	'personal_bank_upgrade',
-	'wardrobe_equipped_slot',
-];
+interface RankDefault {
+	color: string;
+	tag: string;
+	style?: string;
+	plus?: string;
+	plusColor?: string;
+}
 
-export const INVENTORY_FIELDS_RENAME = {
-	inv_contents: 'player',
-	inv_armor: 'armor',
-	ender_chest_contents: 'ender_chest',
-	backpack_contents: 'backpacks',
-	talisman_bag: 'talismans',
-	equippment_contents: 'equipment',
-	wardrobe_contents: 'wardrobe',
-	personal_vault_contents: 'vault',
-	potion_bag: 'potions',
-	quiver: 'quiver',
-};
-
-export const MOVE_TO_STATS = ['first_join', 'first_join_hub', 'last_death', 'death_count', 'fishing_treasure_caught'];
-
-export const KEPT_PLAYER_FIELDS = [
-	'firstLogin',
-	'lastLogin',
-	'socialMedia',
-	'karma',
-	'rank',
-	'rankPlusColor',
-	'newPackageRank',
-	'monthlyPackageRank',
-	'userLanguage',
-	'skyblock_extra',
-	'scorpius_bribe_',
-	'claimed_',
-];
-
-export const RANKS: { [color in RankName]: { color: string; tag: string; plus?: string; plusColor?: string } } = {
+export const RANKS: { [color in RankName]: RankDefault } = {
 	OWNER: {
 		color: '#c43c3c',
 		tag: 'OWNER',
+	},
+	STAFF: {
+		tag: 'ዞ',
+		color: '#ffaa00',
 	},
 	ADMIN: {
 		color: '#c43c3c',
