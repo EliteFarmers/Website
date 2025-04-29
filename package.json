@@ -24,6 +24,7 @@
 		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
 	"devDependencies": {
+		"@eslint/js": "^9.25.1",
 		"@internationalized/date": "^3.6.0",
 		"@lucide/svelte": "^0.488.0",
 		"@number-flow/svelte": "^0.3.6",
@@ -51,9 +52,9 @@
 		"date-fns": "^4.1.0",
 		"embla-carousel-svelte": "8.5.2",
 		"embla-carousel-wheel-gestures": "^8.0.1",
-		"eslint": "^9.15.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-svelte": "^2.46.0",
+		"eslint": "^9.25.1",
+		"eslint-config-prettier": "^10.1.2",
+		"eslint-plugin-svelte": "^3.5.1",
 		"farming-weight": "^0.8.3",
 		"globals": "^15.12.0",
 		"layercake": "^8.4.2",

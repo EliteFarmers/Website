@@ -3,5 +3,6 @@
 	"[svelte]": {
 		"editor.tabSize": 2
 	},
-	"editor.detectIndentation": false
+	"editor.detectIndentation": false,
+	"eslint.validate": ["javascript", "javascriptreact", "typescript", "svelte"]
 }
