@@ -48,7 +48,7 @@
 									<Image size={16} />
 								{/snippet}
 								<p class="font-semibold">Unlocks weight styles:</p>
-								{#each styles as style}
+								{#each styles as style (style.id)}
 									<p class="text-sm font-semibold">"{style.name}"</p>
 								{/each}
 							</ProductFeature>
@@ -59,7 +59,7 @@
 									<Palette size={16} />
 								{/snippet}
 								<p class="font-semibold">Unlocks embed colors:</p>
-								{#each features.embedColors as color}
+								{#each features.embedColors as color, i (i)}
 									<div class="flex flex-row items-center gap-1">
 										<div class="h-4 w-4 rounded-sm" style="background-color: #{color}"></div>
 										<span class="text-sm font-semibold leading-none">#{color}</span>

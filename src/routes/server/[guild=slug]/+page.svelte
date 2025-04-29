@@ -90,7 +90,7 @@
 			<h2 class="my-4 text-3xl">Server Events</h2>
 			{#if upcoming.length > 0}
 				<div class="flex w-full flex-col gap-4 md:mx-32">
-					{#each upcoming as event}
+					{#each upcoming as event (event.id)}
 						<Event {event} {guild} />
 					{/each}
 				</div>
@@ -106,7 +106,7 @@
 						</Accordion.Trigger>
 						<Accordion.Content>
 							<div class="flex flex-col gap-2">
-								{#each past as event}
+								{#each past as event (event.id)}
 									<Event {event} {guild} />
 								{/each}
 							</div>
@@ -122,7 +122,7 @@
 		<!-- <h2 class="text-3xl">Server Jacob Leaderboard{leaderboards.length === 1 ? '' : 's'}</h2> -->
 		{#if leaderboards.length > 0}
 			<div class="flex max-w-8xl flex-wrap gap-4">
-				{#each leaderboards as leaderboard}
+				{#each leaderboards as leaderboard, i (i)}
 					<Leaderboard {leaderboard} />
 				{/each}
 			</div>

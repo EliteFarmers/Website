@@ -82,7 +82,7 @@
 										}
 									}}
 								>
-									{#each pieces[slot as GearSlot] as piece}
+									{#each pieces[slot as GearSlot] as piece, i (piece.item.uuid ?? i)}
 										{#if piece.item.uuid}
 											<DropdownMenu.RadioItem value={piece.item.uuid}>
 												<div class="flex flex-row items-center gap-1">

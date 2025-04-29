@@ -23,7 +23,7 @@
 	);
 </script>
 
-{#each Object.values(bySlot) as item (item.item.uuid)}
+{#each Object.values(bySlot) as item, i (item.item.uuid ?? i)}
 	<div class="flex w-full items-center justify-between px-4 py-2">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>

@@ -89,7 +89,7 @@
 					href="/contests/{year}/{month}/{day}"
 				>
 					<h4 class="mb-2 text-lg">Day {day}</h4>
-					{#each contests?.sort((a, b) => a?.crop?.localeCompare(b?.crop ?? '') ?? 0) ?? [] as crop}
+					{#each contests?.sort((a, b) => a?.crop?.localeCompare(b?.crop ?? '') ?? 0) ?? [] as crop, i (i)}
 						<img
 							class="pixelated w-12"
 							src={PROPER_CROP_TO_IMG[crop.crop ?? '']}
@@ -103,7 +103,7 @@
 	{/if}
 
 	<div class="mb-16 grid grid-cols-3 items-center gap-1 text-center">
-		{#each Array.from({ length: 12 }, (_, i) => i + 1) as i}
+		{#each Array.from({ length: 12 }, (_, i) => i + 1) as i (i)}
 			<Button
 				variant="secondary"
 				class="w-40 whitespace-nowrap rounded-lg {i === month ? 'ring-2' : ''}"

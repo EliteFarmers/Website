@@ -39,7 +39,7 @@
 
 	<section class="flex w-full max-w-2xl flex-col items-start gap-4">
 		<div class="flex w-full flex-col gap-4">
-			{#each data.admins as user}
+			{#each data.admins as user, i (i)}
 				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-muted md:flex-row">
 					<div class="flex flex-row items-center gap-4">
 						<UserIcon {user} class="size-12" />
@@ -50,7 +50,7 @@
 					</div>
 					<div class="flex flex-row items-center gap-4 pr-2">
 						<div class="flex flex-wrap gap-2 text-right">
-							{#each user.roles ?? [] as role}
+							{#each user.roles ?? [] as role, i (i)}
 								<p>{role}</p>
 							{/each}
 						</div>

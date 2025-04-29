@@ -29,7 +29,7 @@
 		>
 			<div class="image" style="background-position: 100% {1000 - 100 * index}%;"></div>
 			<div class="tier-border">
-				{#each tiers as tier, i}
+				{#each tiers as tier, i (i)}
 					<div
 						class="tier {tier === '1' ? (maxed ? 'bg-completed' : 'bg-progress') : ''}"
 						style="grid-area: a{i};"
@@ -43,7 +43,7 @@
 	<div class="flex max-w-lg flex-col items-center justify-center">
 		<div class="mx-4 my-2 text-center text-lg">Unlocked {name} Minion Tiers</div>
 		<div class="grid max-w-52 grid-cols-6 items-center justify-center gap-1">
-			{#each tiers as tier, i}
+			{#each tiers as tier, i (i)}
 				<div
 					class="flex flex-row justify-center rounded-sm px-1 text-lg {tier === '1'
 						? maxed

@@ -21,7 +21,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each Object.entries(crops) as [crop, value]}
+			{#each Object.entries(crops) as [crop, value] (crop)}
 				{@const cropEnum = getCropFromName(crop) ?? Crop.Wheat}
 				<tr class="bg-muted">
 					<td>{crop}</td>

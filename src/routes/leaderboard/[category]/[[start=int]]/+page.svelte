@@ -72,7 +72,7 @@
 	let searchOpen = $state(false);
 </script>
 
-<Head {title} description="{title} for Hypixel Skyblock.{'\n\n'}{topTen}" />
+<Head {title} description="{title} for Hypixel Skyblock.\n\n{topTen}" />
 
 <section class="mt-16 flex w-full flex-col justify-center">
 	<h1 class="mb-16 mt-8 max-w-2xl self-center text-center text-4xl">{title}</h1>

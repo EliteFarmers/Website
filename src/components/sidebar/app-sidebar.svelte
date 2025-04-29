@@ -1,5 +1,4 @@
 <script lang="ts" module>
-	import Home from '@lucide/svelte/icons/home';
 	import Search from '@lucide/svelte/icons/search';
 
 	import { SIDEBAR_NAV } from '$content/sidebar';
@@ -53,7 +52,7 @@
 		{#if sidebarNav.current.length}
 			<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
 		{/if}
-		<NavMain items={SIDEBAR_NAV} title="Main" icon={Home} />
+		<NavMain items={SIDEBAR_NAV} title="Main" />
 		{@render children?.()}
 	</Sidebar.Content>
 </ScrollArea>

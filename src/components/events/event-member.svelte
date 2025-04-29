@@ -133,7 +133,7 @@
 	<div class="flex flex-col items-start gap-4 md:flex-row">
 		{#if event.type === +EventType.Medals}
 			<div class="flex w-full flex-col gap-1">
-				{#each earnedMedals() as [medal, count]}
+				{#each earnedMedals() as [medal, count] (medal)}
 					<div
 						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 					>
@@ -151,7 +151,7 @@
 			</div>
 		{:else if event.type === +EventType.Pests}
 			<div class="flex w-full flex-col gap-1">
-				{#each pestWeights() as { name, weight }}
+				{#each pestWeights() as { name, weight } (name)}
 					<div
 						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 					>
@@ -169,7 +169,7 @@
 			</div>
 		{:else if event.type === +EventType.Collections}
 			<div class="flex w-full flex-col gap-1">
-				{#each collectionWeights() as { name, weight }}
+				{#each collectionWeights() as { name, weight } (name)}
 					<div
 						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 					>

@@ -32,7 +32,7 @@
 		<h1 class="mb-16 text-4xl">Badges</h1>
 
 		<div class="flex w-full flex-col gap-4">
-			{#each data.badges as badge}
+			{#each data.badges as badge (badge.id)}
 				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-card p-2 md:flex-row">
 					<div class="flex flex-row items-center gap-4">
 						{#if badge.image?.url}
@@ -45,7 +45,7 @@
 						</div>
 					</div>
 					<div class="flex flex-row gap-4 pr-2">
-						<div class="flex flex-col gap-2 text-right">
+						<div class="flex flex-row gap-2 text-right md:flex-col">
 							<Button
 								onclick={() => {
 									manageBadgeModal = true;

@@ -26,7 +26,7 @@
 		>{weightSort ? 'Weight ↓' : 'A-Z ↓'}</button
 	>
 	<div class="flex w-full flex-col gap-2">
-		{#each list as item}
+		{#each list as item (item.key)}
 			<CollectionBar {...item} rank={ranks?.[item.key]?.rank} pestRank={ranks?.[item.pest]?.rank} />
 		{/each}
 	</div>
