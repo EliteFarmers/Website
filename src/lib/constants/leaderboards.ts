@@ -129,37 +129,37 @@ export const LEADERBOARDS: Record<string, LeaderboardConfig> = {
 		order: 2,
 		icon: '/images/crops/carrot.png',
 	},
-	potato: {
+	cocoa: {
 		order: 3,
-		icon: '/images/crops/potato.png',
-	},
-	pumpkin: {
-		order: 4,
-		icon: '/images/crops/pumpkin.png',
-	},
-	wheat: {
-		order: 5,
-		icon: '/images/crops/wheat.png',
+		icon: '/images/crops/cocoa.png',
 	},
 	melon: {
-		order: 6,
+		order: 4,
 		icon: '/images/crops/melon.png',
 	},
 	mushroom: {
-		order: 7,
+		order: 5,
 		icon: '/images/crops/mushroom.png',
 	},
-	cocoa: {
+	netherwart: {
+		order: 6,
+		icon: '/images/crops/netherwart.png',
+	},
+	potato: {
+		order: 7,
+		icon: '/images/crops/potato.png',
+	},
+	pumpkin: {
 		order: 8,
-		icon: '/images/crops/cocoa.png',
+		icon: '/images/crops/pumpkin.png',
 	},
 	sugarcane: {
 		order: 9,
 		icon: '/images/crops/sugarcane.png',
 	},
-	netherwart: {
+	wheat: {
 		order: 10,
-		icon: '/images/crops/netherwart.png',
+		icon: '/images/crops/wheat.png',
 	},
 	alchemy: {
 		order: 1,
