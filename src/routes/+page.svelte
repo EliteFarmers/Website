@@ -154,7 +154,7 @@
 			{#await data.lb}
 				<p>Loading...</p>
 			{:then lb}
-				{#each lb?.entries ?? [] as e, i}
+				{#each lb?.entries ?? [] as e, i (i)}
 					<Entry entry={e} rank={i + 1} leaderboard={data.leaderboard} />
 				{/each}
 				<div class="flex w-full justify-center">

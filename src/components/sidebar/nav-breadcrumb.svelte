@@ -43,7 +43,7 @@
 				{/if}
 				{@render collapsed(middle)}
 			{:else}
-				{#each middle as item, i}
+				{#each middle as item, i (i)}
 					{#if i > 0 || showFirst}
 						{@render separator()}
 					{/if}
@@ -73,7 +73,7 @@
 					<Breadcrumb.Ellipsis class="size-4" />
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="start">
-					{#each crumbs as item}
+					{#each crumbs as item, i (i)}
 						<DropdownMenu.Item>
 							<a href={item.href ? item.href : '#'} class="first-letter:capitalize">
 								{item.name}

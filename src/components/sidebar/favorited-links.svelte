@@ -97,7 +97,7 @@
 									{/each}
 								</div>
 							{:else}
-								{#each favorites.current as favorite}
+								{#each favorites.current as favorite, i (i)}
 									{@render favoriteLink(favorite)}
 								{/each}
 							{/if}

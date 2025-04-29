@@ -92,7 +92,7 @@
 	</section>
 	<section class="flex w-full flex-col items-center justify-center" id="FAQ">
 		<h1 class="mb-8 mt-16 text-center text-3xl">F.A.Q.</h1>
-		{#each FAQ as faq}
+		{#each FAQ as faq, i (i)}
 			<article class="w-full max-w-4xl px-4">
 				<h2 class="my-8 text-2xl">{faq.question}</h2>
 				<p class="my-4 text-lg">
@@ -111,7 +111,7 @@
 			</p>
 			<div class="flex flex-col gap-4">
 				<h3 class="mt-4 text-2xl">List of Badges</h3>
-				{#each data?.badges ?? [] as badge}
+				{#each data?.badges ?? [] as badge, i (i)}
 					<div class="flex flex-row items-center gap-4">
 						{#if badge.image?.url}
 							<img
@@ -137,7 +137,7 @@
 		<h1 class="mb-8 mt-16 text-center text-3xl">Credits</h1>
 		<article class="w-full max-w-4xl px-4">
 			<div class="flex flex-col gap-2">
-				{#each CREDITS as credit}
+				{#each CREDITS as credit, i (i)}
 					<Card.Root class="w-full flex-1">
 						<Card.Header class="pb-4">
 							<p class="text-xl font-semibold">{credit.name}</p>
@@ -146,7 +146,7 @@
 							<div class="flex flex-col items-start">
 								<p class="text-lg">{credit.role}</p>
 								<div class="flex flex-row gap-4">
-									{#each credit.links as link}
+									{#each credit.links as link, i (i)}
 										<a class="my-3 text-lg underline" href={link.url}>{link.name}</a>
 									{/each}
 								</div>

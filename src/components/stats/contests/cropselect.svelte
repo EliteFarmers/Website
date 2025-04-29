@@ -9,5 +9,5 @@
 </script>
 
 <button onclick={() => (clicked = !clicked)} class="rounded-md p-2 hover:bg-muted {clicked ? 'bg-primary/15' : ''}">
-	<img class="pixelated h-12 w-12" {src} {alt} title={'Filter this crop'} />
+	<img class="pixelated h-12 w-12" {src} {alt} title="Filter this crop" />
 </button>

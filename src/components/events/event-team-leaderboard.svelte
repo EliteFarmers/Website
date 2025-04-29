@@ -23,7 +23,7 @@
 </script>
 
 <Accordion.Root type="multiple" class="w-full" value={highlightTeam ? [highlightTeam] : []}>
-	{#each teams as team, i}
+	{#each teams as team, i (team.id ?? i)}
 		<EventTeam {team} rank={i + 1} {started} {running} {event} {highlightUuid} />
 	{/each}
 </Accordion.Root>

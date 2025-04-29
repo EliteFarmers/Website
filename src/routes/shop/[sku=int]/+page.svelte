@@ -126,7 +126,7 @@
 							<p class="font-semibold">Embed Colors</p>
 						{/snippet}
 						<div class="flex flex-wrap items-center gap-2">
-							{#each product?.features.embedColors as color}
+							{#each product?.features.embedColors as color, i (i)}
 								<div
 									class="flex flex-row items-center gap-1 rounded-sm p-1"
 									style="background-color: #{color}"

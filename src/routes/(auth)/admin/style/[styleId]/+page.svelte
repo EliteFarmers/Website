@@ -118,7 +118,7 @@
 				<p class="mb-2 text-destructive">Invalid style data.</p>
 				{#if styleDataValid?.error?.issues}
 					<div class="flex flex-col gap-1">
-						{#each styleDataValid.error.issues as issue}
+						{#each styleDataValid.error.issues as issue, i (i)}
 							<div class="flex flex-col gap-1 rounded-sm border-2 border-card p-2">
 								<p>{issue.path.join('.')}</p>
 								<p>{issue.message}</p>
@@ -199,7 +199,7 @@
 					class="h-32 w-32 rounded-md object-cover"
 				/>
 			{/if}
-			{#each style.images ?? [] as image}
+			{#each style.images ?? [] as image, i (i)}
 				<div class="flex flex-col items-center gap-2 rounded-md border p-1">
 					<img src={image.url} alt={image.title} class="h-32 w-32 rounded-md object-cover" />
 					{#if image.title}

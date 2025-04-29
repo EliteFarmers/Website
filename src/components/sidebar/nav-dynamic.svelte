@@ -41,7 +41,7 @@
 				</Collapsible.Trigger>
 				<Collapsible.Content>
 					<Sidebar.Menu>
-						{#each items as mainItem, i}
+						{#each items as mainItem, i (i)}
 							{@render content(mainItem, i === items.length - 1)}
 						{/each}
 					</Sidebar.Menu>

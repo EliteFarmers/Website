@@ -16,13 +16,13 @@
 <div class="flex flex-col items-center gap-4 rounded-md border-2 bg-card p-6">
 	<h4 class="my-4 text-3xl font-semibold">{leaderboard.title}</h4>
 	<div class="flex flex-wrap justify-center">
-		{#each crops as [crop, records]}
+		{#each crops as [crop, records], i (i)}
 			<div class="m-1 flex basis-64 flex-col gap-1 rounded-md bg-card p-2 md:m-2 md:gap-2 xl:basis-96">
 				<div class="flex flex-row items-center gap-2">
 					<img class="pixelated w-12" src={PROPER_CROP_TO_IMG[records[0].record?.crop ?? crop]} alt={crop} />
 					<h5 class="text-xl font-semibold first-letter:capitalize">{records[0].record?.crop ?? crop}</h5>
 				</div>
-				{#each records as record}
+				{#each records as record, i (i)}
 					<Jacobentry {record} />
 				{/each}
 			</div>

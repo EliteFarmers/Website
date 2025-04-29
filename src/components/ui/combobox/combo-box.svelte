@@ -79,7 +79,7 @@
 			<Command.Input {placeholder} class="h-9" />
 			<Command.Empty>No option found.</Command.Empty>
 			<Command.Group>
-				{#each realOptions as option}
+				{#each realOptions as option, i (i)}
 					<Command.Item
 						value={option.label}
 						onSelect={() => {

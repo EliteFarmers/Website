@@ -88,7 +88,7 @@
 
 					<Accordion.Content>
 						<div class="flex flex-wrap justify-center gap-4">
-							{#each conts ?? [] as contest}
+							{#each conts ?? [] as contest, i (i)}
 								<div class="basis-64">
 									<Contest {contest} irlTime={timeType} />
 								</div>

@@ -28,7 +28,7 @@
 	{/snippet}
 	{#if members?.length}
 		<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
-			{#each members ?? [] as member}
+			{#each members ?? [] as member, i (member.uuid ?? i)}
 				<a
 					href={`/@${member.uuid}/${ctx.selectedProfile?.profileId}`}
 					class="flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold hover:bg-muted"

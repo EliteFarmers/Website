@@ -85,7 +85,7 @@
 					class="h-32 w-32 rounded-md object-cover"
 				/>
 			{/if}
-			{#each product.images ?? [] as image}
+			{#each product.images ?? [] as image, i (i)}
 				<div class="flex flex-col items-center gap-2">
 					<img src={image.url} alt={image.title} class="h-32 w-32 rounded-md object-cover" />
 					<div class="flex flex-row items-center gap-2">
@@ -164,7 +164,7 @@
 
 				<div class="flex flex-col items-start gap-2">
 					<p class="mt-1 font-semibold">Unlocked Embed Colors</p>
-					{#each selectedColors as color}
+					{#each selectedColors as color, i (i)}
 						<input type="hidden" name="color" value={color} />
 						<div class="flex flex-row items-center gap-2">
 							<Button
@@ -271,7 +271,7 @@
 				</form>
 
 				<div class="flex flex-col gap-2">
-					{#each styles ?? [] as style}
+					{#each styles ?? [] as style, i (i)}
 						<Card.Root>
 							<Card.Content class="p-4">
 								<div class="flex flex-row items-center justify-between">

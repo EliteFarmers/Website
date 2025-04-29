@@ -85,7 +85,7 @@
 				{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
 					<div class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs">
 						<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
-						{#each entry.members.slice(1, 3) ?? [] as member}
+						{#each entry.members.slice(1, 3) ?? [] as member, i (member.uuid ?? i)}
 							<p>{member.ign}</p>
 						{/each}
 						{#if entry.members.length > 3}

@@ -53,7 +53,7 @@
 					<p>No event specific data found!</p>
 				{/if}
 				{#if event.type === +EventType.FarmingWeight}
-					{#each cropWeights() as [cropName, weight]}
+					{#each cropWeights() as [cropName, weight] (cropName)}
 						{@const crop = getCropDisplayName(getCropFromName(cropName) ?? Crop.Wheat)}
 						<div
 							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
@@ -66,7 +66,7 @@
 						</div>
 					{/each}
 				{:else if event.type === +EventType.Medals}
-					{#each medalWeights() as [medal, weight]}
+					{#each medalWeights() as [medal, weight] (medal)}
 						<div
 							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>
@@ -82,7 +82,7 @@
 						</div>
 					{/each}
 				{:else if event.type === +EventType.Pests}
-					{#each pestWeights() as [pest, weight]}
+					{#each pestWeights() as [pest, weight] (pest)}
 						<div
 							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>
@@ -98,7 +98,7 @@
 						</div>
 					{/each}
 				{:else if event.type === +EventType.Collections}
-					{#each collectionWeights() as [, { name, weight }]}
+					{#each collectionWeights() as [id, { name, weight }] (id)}
 						<div
 							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
 						>

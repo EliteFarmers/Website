@@ -14,7 +14,7 @@
 </script>
 
 <Accordion.Root type="multiple" class="w-full" value={highlightUuid ? [highlightUuid] : []}>
-	{#each members as member, i}
+	{#each members as member, i (member.playerUuid ?? i)}
 		{@const key = member.playerUuid ?? i.toString()}
 		<Accordion.Item
 			value={key}

@@ -56,7 +56,7 @@
 	</Accordion.Trigger>
 	<Accordion.Content>
 		<Accordion.Root type="multiple" class="w-full text-primary">
-			{#each members as member, i}
+			{#each members as member, i (member.playerUuid ?? i)}
 				<Accordion.Item
 					value={team.id + i.toString()}
 					class="px-4 {highlightUuid === member.playerUuid

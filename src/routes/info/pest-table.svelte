@@ -17,7 +17,7 @@
 		<thead>
 			<tr class="bg-muted-variant">
 				<th class="text-left">Pest Brackets</th>
-				{#each brackets as [count, fortune], i}
+				{#each brackets as [count, fortune], i (i)}
 					<th class="text-left">
 						<div class="flex flex-col gap-1">
 							{#if i === brackets.length - 1}
@@ -34,10 +34,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each Object.entries(pests) as [pest, values]}
+			{#each Object.entries(pests) as [pest, values] (pest)}
 				<tr class="bg-muted">
 					<td class="first-letter:uppercase">{pest}</td>
-					{#each Object.values(values) as crops}
+					{#each Object.values(values) as crops, i (i)}
 						<td>{crops.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
 					{/each}
 				</tr>
