@@ -39,7 +39,7 @@ async function ResolveWithSecurityHeaders(
 		'accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()';
 
 	if (!event.request.headers.get('user-agent')?.includes('Chrome')) {
-		permissionsPolicy = permissionsPolicy + 'document-domain=(),';
+		permissionsPolicy = permissionsPolicy.replace('camera=(), ', 'camera=(), document-domain=(),');
 	}
 
 	// Security headers
