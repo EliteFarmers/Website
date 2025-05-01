@@ -89,7 +89,7 @@
 				<div class="-mt-0.5 flex flex-col">
 					<Popover.Mobile triggerRootClass="inline-block w-fit">
 						{#snippet trigger()}
-							<h3 class="text-lg font-semibold leading-none mb-4 mt-2">Composter Upgrades</h3>
+							<h3 class="mb-4 mt-2 text-lg font-semibold leading-none">Composter Upgrades</h3>
 						{/snippet}
 						<div class="flex flex-col gap-1">
 							<p class="font-semibold">All Upgrades</p>

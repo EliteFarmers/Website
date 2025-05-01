@@ -61,20 +61,20 @@ export function getComposterUpgradeCost(upgradeType: ComposterUpgrade, level: nu
 }
 
 export function getEnchantedCropCollectionAmount(crop: Crop, tier: number): number {
-    switch (tier) {
-        case 1:
-            return 160;
-        case 2:
-            switch (crop) {
-                case Crop.Mushroom:
-                    return 32 * getEnchantedCropCollectionAmount(crop, 1);
-                case Crop.CocoaBeans:
-                case Crop.Carrot:
-                    return 128 * getEnchantedCropCollectionAmount(crop, 1);
-                default:
-                    return 160 * getEnchantedCropCollectionAmount(crop, 1);
-            }
-        default:
-            return 0;
-    }
+	switch (tier) {
+		case 1:
+			return 160;
+		case 2:
+			switch (crop) {
+				case Crop.Mushroom:
+					return 32 * getEnchantedCropCollectionAmount(crop, 1);
+				case Crop.CocoaBeans:
+				case Crop.Carrot:
+					return 128 * getEnchantedCropCollectionAmount(crop, 1);
+				default:
+					return 160 * getEnchantedCropCollectionAmount(crop, 1);
+			}
+		default:
+			return 0;
+	}
 }
