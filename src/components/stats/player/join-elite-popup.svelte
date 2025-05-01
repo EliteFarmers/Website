@@ -24,7 +24,7 @@
 		}
 
 		const eligible = (ctx.member.farmingWeight?.totalWeight ?? 0) >= Number(PUBLIC_WEIGHT_REQ);
-		const isOwnAccount = (page.data.session.ign ?? undefined) === ctx.ign;
+		const isOwnAccount = (page.data.session?.ign ?? undefined) === ctx.ign;
 		const hasElite =
 			ctx.account.badges?.some((badge) => badge.id !== undefined && badge.id === +PUBLIC_ELITE_BADGE_ID) ?? false;
 
