@@ -6,13 +6,14 @@
 	import type { components } from '$lib/api/api';
 	import Plots from '$comp/stats/garden/plots.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
+	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import { page } from '$app/state';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { getCopperSpent } from '$lib/calc/garden';
+	import { getCopperSpentCropUpgrades } from '$lib/calc/garden';
 
 	let overflow = $state(true);
 
@@ -42,7 +43,9 @@
 			.sort((a, b) => a.name.localeCompare(b.name))
 	);
 
-	let totalCopperSpent = $derived.by(() => crops.reduce((sum, { level }) => sum + getCopperSpent(level), 0));
+	let totalCopperSpent = $derived.by(() =>
+		crops.reduce((sum, { level }) => sum + getCopperSpentCropUpgrades(level), 0)
+	);
 </script>
 
 <Head title="{ctx.ignMeta} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
@@ -81,6 +84,19 @@
 						</Popover.Mobile>
 						<CropUpgrades {garden} />
 					</div>
+				</div>
+
+				<div class="-mt-0.5 flex flex-col">
+					<Popover.Mobile triggerRootClass="inline-block w-fit">
+						{#snippet trigger()}
+							<h3 class="text-lg font-semibold leading-none mb-4 mt-2">Composter Upgrades</h3>
+						{/snippet}
+						<div class="flex flex-col gap-1">
+							<p class="font-semibold">All Upgrades</p>
+							<!-- total resources used so far -->
+						</div>
+					</Popover.Mobile>
+					<ComposterUpgrades {garden} />
 				</div>
 
 				<div class="flex flex-col gap-2 text-lg">

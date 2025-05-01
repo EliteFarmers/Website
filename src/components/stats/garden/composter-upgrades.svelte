@@ -1,0 +1,115 @@
+<script lang="ts">
+	import { getCropDisplayName, getComposterUpgradeDisplayName, getSpecialCropDisplayName, Crop } from 'farming-weight';
+	import type { components } from '$lib/api/api';
+	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
+	import { API_COMPOSTER_UPGRADE_TO_UPGRADE, COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
+	import * as Popover from '$ui/popover';
+	import { getComposterUpgradeCost, getEnchantedCropCollectionAmount } from '$lib/calc/garden';
+
+	interface Props {
+		garden?: components['schemas']['GardenDto'];
+	}
+
+	let { garden = undefined }: Props = $props();
+
+	const maxLevel = 25;
+
+	let composterUpgrades = $derived(
+		garden?.composter?.upgrades || {
+			speed: 0,
+			multi_drop: 0,
+			fuel_cap: 0,
+			organic_matter_cap: 0,
+			cost_reduction: 0,
+		}
+	);
+
+	let upgrades = $derived(
+		Object.entries(composterUpgrades).map(([key, level]) => {
+			const upgradeType = API_COMPOSTER_UPGRADE_TO_UPGRADE[key as keyof typeof API_COMPOSTER_UPGRADE_TO_UPGRADE];
+			const nextLevel = level + 1;
+			const isMaxed = level >= maxLevel;
+
+			const nextCost = !isMaxed ? getComposterUpgradeCost(upgradeType, nextLevel) : null;
+
+			return {
+				type: upgradeType,
+				name: getComposterUpgradeDisplayName(upgradeType),
+				img: COMPOSTER_UPGRADE_TO_IMG[upgradeType as keyof typeof COMPOSTER_UPGRADE_TO_IMG],
+				level,
+				isMaxed,
+				nextCost,
+			};
+		})
+	);
+</script>
+
+<div class="mt-0.5">
+	<div class="flex flex-col gap-2">
+		{#each upgrades as { type, name, img, level, isMaxed, nextCost } (type)}
+			<Popover.Mobile>
+				{#snippet trigger()}
+					<div class="flex items-center gap-1 p-1">
+						<img src={img} class="pixelated h-6 w-6" alt={name} />
+						<div class="flex items-center gap-1">
+							{#each Array(maxLevel) as _, i (i)}
+								<div
+									class="h-5 w-4 rounded-sm md:block md:h-6 {i < level
+										? isMaxed
+											? 'bg-completed'
+											: 'bg-progress'
+										: 'bg-card'}"
+								></div>
+							{/each}
+							<span class="ml-2 font-semibold">{level}</span>
+						</div>
+					</div>
+				{/snippet}
+				<div class="flex flex-col gap-1 p-1">
+					<p class="text-lg font-semibold">{name}</p>
+					<p class="mb-2 text-sm">Level {level} / {maxLevel}</p>
+
+					{#if nextCost}
+						<div class="border-t pt-2">
+							<p class="font-semibold">Next Level Cost:</p>
+							<p><span class="font-medium">{nextCost.copper.toLocaleString()}</span> Copper</p>
+
+							{#if nextCost.specialCrop}
+								<p>
+									{#if SPECIAL_CROP_TO_IMG[nextCost.specialCrop as keyof typeof SPECIAL_CROP_TO_IMG]}
+										<img
+											src={SPECIAL_CROP_TO_IMG[
+												nextCost.specialCrop as keyof typeof SPECIAL_CROP_TO_IMG
+											]}
+											class="pixelated mr-1 inline-block h-4 w-4"
+											alt={getSpecialCropDisplayName(nextCost.specialCrop)}
+										/>
+									{/if}
+									<span class="font-medium">{nextCost.specialCropAmount.toLocaleString()}</span>
+									{getSpecialCropDisplayName(nextCost.specialCrop)}
+								</p>
+							{/if}
+
+							{#if nextCost.crop}
+								<p>
+									{#if PROPER_CROP_TO_IMG[getCropDisplayName(nextCost.crop)]}
+										<img
+											src={PROPER_CROP_TO_IMG[getCropDisplayName(nextCost.crop)]}
+											class="pixelated mr-1 inline-block h-4 w-4"
+											alt={getCropDisplayName(nextCost.crop)}
+										/>
+									{/if}
+									<span class="font-medium">{(getEnchantedCropCollectionAmount(nextCost.crop, 2) * nextCost.cropAmount).toLocaleString()}</span>
+									{getCropDisplayName(nextCost.crop)}
+								</p>
+							{/if}
+						</div>
+					{:else}
+						<p class="font-medium text-completed">Max Level Reached</p>
+							<!-- total resources used to max maybe -->
+					{/if}
+				</div>
+			</Popover.Mobile>
+		{/each}
+	</div>
+</div>
