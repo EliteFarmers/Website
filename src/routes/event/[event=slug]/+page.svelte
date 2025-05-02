@@ -20,6 +20,7 @@
 	import * as Accordion from '$ui/accordion';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 
 	interface Props {
 		data: PageData;
@@ -203,10 +204,6 @@
 					<Button href="/server/{event.guildId}">
 						<p>Back To Server</p>
 					</Button>
-					<Button href="/server/{event.guildId}/join">
-						<p class="mr-2">Join Discord Server</p>
-						<ExternalLink size={16} />
-					</Button>
 					{#if joinable}
 						<Button href="{page.url.pathname}/membership">
 							{#if joined}
@@ -217,6 +214,14 @@
 						</Button>
 					{/if}
 				</div>
+				{#if joinable && !joined}
+					<div class="flex flex-row items-center justify-center gap-1 text-sm text-muted-foreground">
+						<CircleAlert class="size-4" />
+						<span
+							>You must be in the <a href="#host" class="underline">host Discord server</a> to join!</span
+						>
+					</div>
+				{/if}
 				{#if self?.disqualified}
 					<div class="flex flex-col justify-start gap-1 text-sm">
 						<p class="text-lg text-destructive">You have been removed from this event.</p>
@@ -276,7 +281,31 @@
 		</section>
 	</div>
 
-	<section class="flex max-w-xl flex-col gap-4" id="agreement">
+	<section class="flex w-full max-w-4xl scroll-mt-64 flex-col gap-4" id="host">
+		<div class="flex flex-col items-center justify-between gap-2 rounded-md border-2 bg-card p-4 md:flex-row">
+			<div class="flex flex-1 flex-col gap-2">
+				<span class="italic text-muted-foreground">This event is hosted by...</span>
+				<div class="flex flex-row items-center gap-2">
+					<GuildIcon guild={data.guild} size={12} />
+					<h3 class="text-2xl font-semibold">{data.guild?.name}</h3>
+				</div>
+			</div>
+			<div class="flex flex-1 flex-row items-center gap-4 md:flex-col md:items-end md:gap-2">
+				<div class="hidden flex-row items-center gap-2 font-semibold sm:flex">
+					<p class="text-lg md:text-xl">
+						{data.guild?.memberCount?.toLocaleString()}
+					</p>
+					<Users />
+				</div>
+				<Button href="/server/{event.guildId}/join">
+					<p class="mr-2">Join Discord Server</p>
+					<ExternalLink size={16} />
+				</Button>
+			</div>
+		</div>
+	</section>
+
+	<section class="flex max-w-xl scroll-mt-64 flex-col gap-4" id="agreement">
 		<h3 class="text-2xl">Event Agreement</h3>
 		<p>
 			All members of the event are expected to follow all of <a

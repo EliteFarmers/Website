@@ -608,7 +608,7 @@ export const JoinEvent = async (eventId: string, accessToken: string, playerUuid
 			},
 			query: {
 				playerUuid,
-				profileId,
+				profileUuid: profileId,
 			},
 		},
 		headers: {

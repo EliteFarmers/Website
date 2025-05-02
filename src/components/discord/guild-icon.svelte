@@ -27,7 +27,7 @@
 	<div
 		class="{sizes[
 			size
-		]} flex aspect-square select-none items-center justify-center rounded-full bg-muted bg-blend-darken {className ??
+		]} flex aspect-square select-none items-center justify-center rounded-md bg-muted bg-blend-darken {className ??
 			''}"
 	>
 		<p class="mb-0.5 leading-none text-muted-foreground">
@@ -41,7 +41,7 @@
 {:else}
 	<img
 		loading="lazy"
-		class="w-{size} h-{size} rounded-full {className ?? ''}"
+		class="w-{size} h-{size} rounded-md {className ?? ''}"
 		src={guild.icon.url}
 		alt="Server Icon"
 		onerror={() => (errored = true)}
