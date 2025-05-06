@@ -19,7 +19,7 @@
 	<h1 class="mt-16 text-center text-4xl">Leaderboards</h1>
 
 	<div class="flex w-full max-w-6xl flex-col items-center justify-center gap-4">
-		{#each Object.entries(data.leaderboards) as [category, leaderboards] (category)}
+		{#each Object.entries(data.leaderboards ?? {}) as [category, leaderboards] (category)}
 			<Category {leaderboards} title={category} />
 		{/each}
 	</div>

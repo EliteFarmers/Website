@@ -12,7 +12,7 @@
 	let { leaderboards, title }: Props = $props();
 </script>
 
-<section class="flex w-full flex-1 flex-col items-center justify-center gap-2 rounded-lg border-2 bg-card p-4">
+<section class="flex w-full flex-1 flex-col items-center justify-center gap-4 rounded-lg md:border-2 md:bg-card md:p-4">
 	<h2 class="text-2xl font-semibold">{title}</h2>
 
 	<div class="full flex h-full w-full flex-1 flex-wrap items-center justify-center gap-2">
