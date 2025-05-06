@@ -11,6 +11,12 @@
 	import Search from '@lucide/svelte/icons/search';
 	import Star from '@lucide/svelte/icons/star';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+
+	interface Props {
+		leaderboards?: Record<string, LeaderboardInfo>;
+	}
+	let { leaderboards }: Props = $props();
 
 	const sidebar = Sidebar.useSidebar();
 	let searchOpen = $state(false);
@@ -43,10 +49,10 @@
 			>
 				<Search />
 			</Button>
-			<SearchMenu bind:open={searchOpen} useButton={false} />
+			<SearchMenu bind:open={searchOpen} useButton={false} {leaderboards} />
 		{:else}
 			<div class="order-2 w-full flex-1 md:w-auto md:flex-none">
-				<SearchMenu />
+				<SearchMenu {leaderboards} />
 			</div>
 		{/if}
 		<div class="order-3 flex items-center gap-2">

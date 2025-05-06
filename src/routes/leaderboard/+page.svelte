@@ -18,8 +18,8 @@
 <div class="mb-16 flex flex-col items-center gap-16">
 	<h1 class="mt-16 text-center text-4xl">Leaderboards</h1>
 
-	<div class="flex w-full max-w-6xl flex-wrap items-center justify-center gap-4 lg:items-start">
-		{#each Object.entries(data.leaderboards) as [category, leaderboards] (category)}
+	<div class="flex w-full max-w-6xl flex-col items-center justify-center gap-4">
+		{#each Object.entries(data.leaderboards ?? {}) as [category, leaderboards] (category)}
 			<Category {leaderboards} title={category} />
 		{/each}
 	</div>
