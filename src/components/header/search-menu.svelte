@@ -11,16 +11,24 @@
 	import { Debounced, watch } from 'runed';
 	import { beforeNavigate, goto } from '$app/navigation';
 	import { ScrollArea } from '$ui/scroll-area';
+	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 
 	let {
 		open = $bindable(false),
 		useButton = true,
 		class: className,
+		leaderboards = {} as Record<string, LeaderboardInfo>,
 		...rest
 	}: ButtonProps & {
 		open?: boolean;
 		useButton?: boolean;
+		leaderboards?: Record<string, LeaderboardInfo>;
 	} = $props();
+
+	let lbEntries = Object.entries(leaderboards).map(([id, { title, short, suffix }]) => ({
+		id,
+		name: (short ?? title) + suffix,
+	}));
 
 	async function search(query: string) {
 		if (!browser) return [];
@@ -31,6 +39,12 @@
 			players = (json ?? []) as string[];
 		} catch (e) {
 			console.error(e);
+		}
+
+		if (query === '') {
+			leaderboardList = lbEntries;
+		} else {
+			leaderboardList = lbEntries.filter((lb) => lb.name.toLowerCase().includes(query.toLowerCase()));
 		}
 	}
 
@@ -44,6 +58,7 @@
 	let searchStr = $state('');
 	const debounced = new Debounced(() => searchStr, 100);
 	let players = $state([] as string[]);
+	let leaderboardList = $state([] as { name: string; id: string }[]);
 
 	$effect(() => {
 		search(debounced.current);
@@ -110,6 +125,15 @@
 							</Command.Item>
 						{:else}
 							<Command.Empty>No players found.</Command.Empty>
+						{/each}
+					</Command.Group>
+					<Command.Group heading="Leaderboards">
+						{#each leaderboardList as { name, id } (id)}
+							<Command.Item value={name} onSelect={() => runCommand(() => goto(`/leaderboard/${id}`))}>
+								{name}
+							</Command.Item>
+						{:else}
+							<Command.Empty>No leaderboards found.</Command.Empty>
 						{/each}
 					</Command.Group>
 				</Command.List>
