@@ -42,7 +42,7 @@
 						{/if}
 					</span>
 				{/if}
-				<div class="absolute right-2 top-0 group-hover:animate-bounce-horizontal">
+				<div class="absolute right-2 top-0 text-muted-foreground group-hover:animate-bounce-horizontal">
 					<ArrowRight size={18} />
 				</div>
 			</div>
