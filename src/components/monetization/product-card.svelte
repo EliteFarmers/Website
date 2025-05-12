@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { cn } from '$lib/utils';
-	import ProductPrice from './product-price.svelte';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Package from '@lucide/svelte/icons/package';
 
 	interface Props {
@@ -12,25 +12,40 @@
 	let { product, class: className = '' }: Props = $props();
 
 	let image = $derived(product.thumbnail?.url ?? '');
+	let dollars = $derived(((product.price ?? 0) / 100).toFixed(2));
+	let free = $derived(!product.price || +dollars === 0);
 </script>
 
 <a
-	class={cn('inline-block max-w-64 rounded-md bg-card shadow-primary hover:drop-shadow-lg', className)}
+	class={cn('group inline-block max-w-48 rounded-lg border-2 bg-card shadow-primary hover:drop-shadow-lg', className)}
 	href="/shop/{product.id}"
 >
-	<div class="flex min-w-0 flex-col items-center justify-start">
-		<div class="relative grid min-h-32 w-full items-center justify-center rounded-md drop-shadow-lg">
+	<div class="flex min-w-0 flex-col justify-start">
+		<div class="relative grid min-h-32 w-full items-center justify-center rounded-md">
 			{#if image}
-				<img src={image} alt={product.name} class="h-32 w-32 rounded-sm object-cover" />
+				<img src={image} alt={product.name} class="size-48 rounded-t-md object-cover" />
 			{:else}
-				<Package size={64} />
+				<Package size={64} class="m-16" />
 			{/if}
-			<div class="absolute bottom-0 right-0 mb-1 mr-2 rounded-md shadow-card drop-shadow-md">
-				<ProductPrice {product} />
-			</div>
 		</div>
-		<div class="flex flex-row items-start justify-center gap-2 p-2 px-1">
-			<p class="overflow-hidden text-ellipsis text-xl">{product.name}</p>
+		<div class="flex flex-col items-start justify-between gap-2 py-2">
+			<p class="inline-block max-w-48 flex-1 truncate px-2 text-lg">{product.name}</p>
+
+			<div class="relative w-full px-2 text-sm font-semibold">
+				{#if free}
+					<span>Free</span>
+				{:else}
+					<span class="whitespace-nowrap leading-none"
+						>{dollars} USD
+						{#if product.isSubscription}
+							<span class="whitespace-nowrap leading-none">/ Month</span>
+						{/if}
+					</span>
+				{/if}
+				<div class="absolute right-2 top-0 text-muted-foreground group-hover:animate-bounce-horizontal">
+					<ArrowRight size={18} />
+				</div>
+			</div>
 		</div>
 	</div>
 </a>
