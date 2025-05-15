@@ -29,13 +29,16 @@ class SidebarState {
 	#isMobile: IsMobile;
 	state = $derived.by(() => (this.open ? 'expanded' : 'collapsed'));
 
-	persisted = new PersistedState('sidebar:state', false);
+	persisted: PersistedState<boolean>;
 
 	constructor(props: SidebarStateProps) {
+		this.persisted = new PersistedState('sidebar:state', props.open());
+
 		this.setOpen = (value) => {
-			this.persisted.current = value;
 			props.setOpen(value);
+			this.persisted.current = value;
 		};
+
 		this.#isMobile = new IsMobile();
 		this.props = props;
 

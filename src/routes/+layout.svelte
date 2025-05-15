@@ -91,7 +91,7 @@
 
 <ThemeWatcher />
 
-<Sidebar.Provider>
+<Sidebar.Provider open={data.sidebar}>
 	<Sidebar.Root collapsible="icon" class="z-50">
 		<AppSidebar>
 			<FavoritedLinks />
