@@ -1,4 +1,4 @@
-import { Crop } from 'farming-weight';
+import { Crop, SpecialCrop } from 'farming-weight';
 
 export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	CACTUS: 'Cactus',
@@ -188,3 +188,10 @@ export const CROP_UPGRADE_COSTS: Record<number, number> = {
 };
 
 export const CROP_UPGRADES_MAX_COST = 10 * Object.values(CROP_UPGRADE_COSTS).reduce((a, b) => a + b, 0);
+
+export const SPECIAL_CROP_TO_IMG: Record<SpecialCrop, string> = {
+	[SpecialCrop.Cropie]: '/images/specialcrops/cropie.png',
+	[SpecialCrop.Squash]: '/images/specialcrops/squash.png',
+	[SpecialCrop.Fermento]: '/images/specialcrops/fermento.png',
+	[SpecialCrop.CondensedFermento]: '/images/specialcrops/condensedfermento.png',
+};
