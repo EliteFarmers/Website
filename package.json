@@ -9,7 +9,7 @@
 	"scripts": {
 		"build": "tsc",
 		"format": "pnpm biome check --write",
-		"lint": "pnpm biome lint",
+		"lint": "pnpm biome check",
 		"test": "vitest"
 	},
 	"keywords": ["farming", "weight", "farming-weight", "skyblock", "hypixel", "hypixel-skyblock", "fortune"],
