@@ -250,6 +250,49 @@ export function getNPCProfitFromCrops(crop: Crop, amount: number): number {
 	return npc * amount;
 }
 
+interface PossibleProfit {
+	items: number;
+	fractionalItems: number;
+	remainder: number;
+	cost: number;
+	fractionalCost: number;
+}
+
+export function getPossibleResultsFromCrops(crop: Crop, amount: number): Record<string, PossibleProfit> {
+	const { crafts } = getCropInfo(crop);
+
+	return {
+		[crop]: {
+			items: amount,
+			fractionalItems: amount,
+			remainder: 0,
+			cost: 0,
+			fractionalCost: 0,
+		},
+		...crafts.reduce<Record<string, PossibleProfit>>((acc, curr) => {
+			const items = Math.floor(amount / curr.takes);
+			const remainder = amount % curr.takes;
+			const cost = curr.and?.reduce((sum, curr) => sum + (curr.cost ?? 0) * curr.amount * items, 0);
+
+			const fractionalItems = amount / curr.takes;
+			const fractionalCost = curr.and?.reduce(
+				(sum, curr) => sum + (curr.cost ?? 0) * curr.amount * fractionalItems,
+				0
+			);
+
+			acc[curr.item] = {
+				items,
+				remainder,
+				cost: cost ?? 0,
+				fractionalItems,
+				fractionalCost: fractionalCost ?? 0,
+			};
+
+			return acc;
+		}, {}),
+	};
+}
+
 export function getCropInfo(crop: Crop): CropInfo {
 	return CROP_INFO[crop] ?? {};
 }

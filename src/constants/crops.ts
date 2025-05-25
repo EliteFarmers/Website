@@ -12,6 +12,17 @@ export enum Crop {
 	Seeds = 'WHEAT_SEEDS',
 }
 
+export interface CropCraft {
+	item: string;
+	amount?: number;
+	takes: number;
+	and?: {
+		item: string;
+		amount: number;
+		cost?: number;
+	}[];
+}
+
 export interface CropInfo {
 	name: string;
 	npc: number;
@@ -20,6 +31,7 @@ export interface CropInfo {
 	replenish?: boolean;
 	exportable?: boolean;
 	startingTool: string;
+	crafts: CropCraft[];
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -29,6 +41,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 2,
 		breaks: 2,
 		startingTool: 'CACTUS_KNIFE',
+		crafts: [
+			{
+				item: 'ENCHANTED_CACTUS_GREEN',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_CACTUS',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.Carrot]: {
 		name: 'Carrot',
@@ -37,6 +59,23 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		replenish: true,
 		exportable: true,
 		startingTool: 'THEORETICAL_HOE_CARROT_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_CARROT',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_GOLDEN_CARROT',
+				takes: 128 * 160,
+				and: [
+					{
+						item: 'GOLDEN_CARROT',
+						amount: 32,
+						cost: 15,
+					},
+				],
+			},
+		],
 	},
 	[Crop.CocoaBeans]: {
 		name: 'Cocoa Beans',
@@ -45,12 +84,39 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		replenish: true,
 		exportable: true,
 		startingTool: 'COCO_CHOPPER',
+		crafts: [
+			{
+				item: 'ENCHANTED_COCOA',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_COOKIE',
+				takes: 128 * 160,
+				and: [
+					{
+						item: Crop.Wheat,
+						cost: 6,
+						amount: 32,
+					},
+				],
+			},
+		],
 	},
 	[Crop.Melon]: {
 		name: 'Melon',
 		npc: 2,
 		drops: 5,
 		startingTool: 'MELON_DICER',
+		crafts: [
+			{
+				item: 'ENCHANTED_MELON',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_MELON_BLOCK',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.Mushroom]: {
 		name: 'Mushroom',
@@ -58,6 +124,24 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 1,
 		exportable: true,
 		startingTool: 'FUNGI_CUTTER',
+		crafts: [
+			{
+				item: 'HUGE_MUSHROOM',
+				takes: 9,
+			},
+			{
+				item: 'ENCHANTED_HUGE_MUSHROOM',
+				takes: 9 * 32,
+			},
+			{
+				item: 'HUGE_MUSHROOM_2',
+				takes: 9,
+			},
+			{
+				item: 'ENCHANTED_HUGE_MUSHROOM_2',
+				takes: 9 * 32,
+			},
+		],
 	},
 	[Crop.NetherWart]: {
 		name: 'Nether Wart',
@@ -65,6 +149,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 2.5,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_WARTS_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_NETHER_STALK',
+				takes: 160,
+			},
+			{
+				item: 'MUTANT_NETHER_STALK',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.Potato]: {
 		name: 'Potato',
@@ -72,6 +166,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 3,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_POTATO_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_POTATO',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_BAKED_POTATO',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.Pumpkin]: {
 		name: 'Pumpkin',
@@ -79,6 +183,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 1,
 		exportable: true,
 		startingTool: 'PUMPKIN_DICER',
+		crafts: [
+			{
+				item: 'ENCHANTED_PUMPKIN',
+				takes: 160,
+			},
+			{
+				item: 'POLISHED_PUMPKIN',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.SugarCane]: {
 		name: 'Sugar Cane',
@@ -86,6 +200,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 2,
 		breaks: 2,
 		startingTool: 'THEORETICAL_HOE_CANE_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_SUGAR',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_SUGAR_CANE',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.Wheat]: {
 		name: 'Wheat',
@@ -93,6 +217,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 1,
 		exportable: true,
 		startingTool: 'THEORETICAL_HOE_WHEAT_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_WHEAT',
+				takes: 160,
+			},
+			{
+				item: 'ENCHANTED_HAY_BALE',
+				takes: 160 * 160,
+			},
+		],
 	},
 	[Crop.Seeds]: {
 		name: 'Seeds',
@@ -100,6 +234,16 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 1.5,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_WHEAT_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_SEEDS',
+				takes: 160,
+			},
+			{
+				item: 'BOX_OF_SEEDS',
+				takes: 160 * 160,
+			},
+		],
 	},
 };
 
