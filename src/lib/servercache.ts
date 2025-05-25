@@ -1,6 +1,13 @@
 import { building } from '$app/environment';
 import type { components } from './api/api';
-import { GetEventTeamWords, GetLeaderboards, GetProducts, GetUpcomingEvents, GetWeightStyles } from './api/elite';
+import {
+	GetBazaarData,
+	GetEventTeamWords,
+	GetLeaderboards,
+	GetProducts,
+	GetUpcomingEvents,
+	GetWeightStyles,
+} from './api/elite';
 import { ELITE_API_URL } from '$env/static/private';
 import { parseLeaderboards } from './constants/leaderboards';
 
@@ -40,6 +47,14 @@ const cacheEntries = {
 			return parseLeaderboards(data);
 		},
 	},
+	bazaar: {
+		interval: 180, // 3 minutes
+		data: {} as components['schemas']['GetBazaarProductsResponse'],
+		update: async () => {
+			const { data } = await GetBazaarData();
+			return data;
+		},
+	},
 };
 
 export const cache = {
@@ -60,16 +75,12 @@ export const cache = {
 	},
 };
 
-let interval: undefined | number | NodeJS.Timeout = undefined;
+let intervals: (number | NodeJS.Timeout)[] = [];
 
 export async function reloadCachedItems() {
 	console.log('Fetching new data for cached items...');
 	try {
-		await Promise.allSettled(
-			Object.values(cacheEntries).map(async (item) => {
-				item.data = await item.update();
-			})
-		);
+		await Promise.allSettled(Object.values(cacheEntries).map(async (item) => refreshCacheItem(item)));
 
 		console.log('Cached items updated successfully.');
 	} catch (error) {
@@ -86,14 +97,32 @@ export async function initCachedItems() {
 
 	await reloadCachedItems();
 
-	if (interval) {
-		clearInterval(interval);
+	for (const i of intervals) {
+		clearInterval(i);
 	}
 
-	interval = setInterval(
-		() => {
-			reloadCachedItems();
-		},
-		1000 * 60 * 60
+	intervals = [];
+
+	intervals.push(
+		setInterval(
+			() => {
+				reloadCachedItems();
+			},
+			1000 * 60 * 60
+		)
 	); // 1 hour
+
+	for (const entry of Object.values(cacheEntries)) {
+		if (!('interval' in entry)) continue;
+		intervals.push(setInterval(() => refreshCacheItem(entry), entry.interval * 1000));
+	}
+}
+
+async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEntries]) {
+	try {
+		const result = await item.update();
+		item.data = result ?? item.data;
+	} catch (e) {
+		console.log('Failed to update cached item.\n', e);
+	}
 }
