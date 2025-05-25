@@ -8,7 +8,10 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 
 	return {
 		session: locals.session,
-		cache: locals.cache,
+		cache: {
+			leaderboards: locals.cache?.leaderboards,
+			events: locals.cache?.events,
+		},
 		sidebar: (sidebarState ?? 'true') === 'true',
 	};
 };

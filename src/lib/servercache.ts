@@ -73,6 +73,9 @@ export const cache = {
 	get leaderboards() {
 		return cacheEntries.leaderboards.data;
 	},
+	get bazaar() {
+		return cacheEntries.bazaar.data;
+	},
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];

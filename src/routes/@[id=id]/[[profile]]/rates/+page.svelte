@@ -45,6 +45,7 @@
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import JumpLink from '$comp/jump-link.svelte';
 	import { onMount, untrack } from 'svelte';
+	import BazaarRates from './bazaar-rates.svelte';
 
 	const ctx = getStatsContext();
 
@@ -199,8 +200,8 @@
 		if (!selected) return 0;
 		return createFarmingWeightCalculator({
 			collection: {
-				[selected[0]]: selected[1].collection,
 				[Crop.Mushroom]: selected[1].otherCollection[Crop.Mushroom],
+				[selected[0]]: selected[1].collection,
 			},
 		}).getWeightInfo().cropWeight;
 	});
@@ -555,16 +556,21 @@
 					<hr class="mt-2" />
 
 					<h3 class="mb-1 mt-2 text-xl">Results</h3>
-					<div class="flex flex-col text-lg font-semibold">
-						<div class="flex w-full items-center justify-between px-4 py-2">
-							<span class="text-xl">Coins</span>
+					<div class="flex flex-col text-lg">
+						<div class="flex w-full items-center justify-between py-2">
+							<span class="text-xl">NPC Coins</span>
 							<span>{info.npcCoins.toLocaleString()}</span>
 						</div>
-						<div class="flex w-full items-center justify-between px-4 py-2">
+						<BazaarRates
+							crop={selectedCropKey}
+							amount={info.collection}
+							otherCoins={info.npcCoins - info.coinSources['Collection']}
+						/>
+						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">Collection</span>
 							<span>{info.collection.toLocaleString()}</span>
 						</div>
-						<div class="flex w-full items-center justify-between px-4 py-2">
+						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">Farming Weight</span>
 							<span>{weightGain.toLocaleString()}</span>
 						</div>
@@ -573,7 +579,7 @@
 					<h3 class="mb-1 mt-2 text-xl">Coin Breakdown</h3>
 					<div class="flex flex-col">
 						{#each coinBreakdown as [name, value] (name)}
-							<div class="flex w-full items-center justify-between px-4 py-2">
+							<div class="flex w-full items-center justify-between py-2">
 								<span class="text-lg font-semibold">{name}</span>
 								<span class="text-lg font-semibold">{value.toLocaleString()}</span>
 							</div>
@@ -583,7 +589,7 @@
 					<h3 class="my-2 text-xl">Collection Breakdown</h3>
 					<div class="flex flex-col">
 						{#each otherBreakdown as [name, value] (name)}
-							<div class="flex w-full items-center justify-between px-4 py-2">
+							<div class="flex w-full items-center justify-between py-2">
 								<span class="text-lg font-semibold">{name}</span>
 								<span class="text-lg font-semibold">{value.toLocaleString()}</span>
 							</div>

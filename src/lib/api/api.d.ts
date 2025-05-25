@@ -4443,6 +4443,8 @@ export interface components {
             product: components["schemas"]["BazaarProductSummaryDto"];
         };
         BazaarProductSummaryDto: {
+            /** @description Name of the item if it exists. */
+            name?: string | null;
             /**
              * Format: double
              * @description NPC sell price of the item if it exists.
@@ -4594,6 +4596,7 @@ export interface components {
         };
         SkyblockItemResponse: {
             itemId: string;
+            name?: string | null;
             /** @description Data from the Hypixel items endpoint */
             data?: components["schemas"]["ItemResponse"] | null;
             bazaar?: components["schemas"]["BazaarProductSummaryDto"] | null;

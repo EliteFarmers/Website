@@ -14997,6 +14997,11 @@
           "averageBuyOrder"
         ],
         "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the item if it exists.",
+            "nullable": true
+          },
           "npc": {
             "type": "number",
             "description": "NPC sell price of the item if it exists.",
@@ -15439,6 +15444,10 @@
         "properties": {
           "itemId": {
             "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
           },
           "data": {
             "description": "Data from the Hypixel items endpoint",
