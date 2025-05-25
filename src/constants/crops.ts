@@ -126,20 +126,20 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		startingTool: 'FUNGI_CUTTER',
 		crafts: [
 			{
-				item: 'HUGE_MUSHROOM_1',
-				takes: 9,
+				item: 'ENCHANTED_BROWN_MUSHROOM',
+				takes: 160,
 			},
 			{
 				item: 'ENCHANTED_HUGE_MUSHROOM_1',
-				takes: 9 * 32,
+				takes: 160 * 32,
 			},
 			{
-				item: 'HUGE_MUSHROOM_2',
-				takes: 9,
+				item: 'ENCHANTED_RED_MUSHROOM',
+				takes: 160,
 			},
 			{
 				item: 'ENCHANTED_HUGE_MUSHROOM_2',
-				takes: 9 * 32,
+				takes: 160 * 32,
 			},
 		],
 	},
