@@ -101,7 +101,7 @@
 
 	<div class="max-h-screen flex-1 overflow-y-auto">
 		<Sidebar.Inset>
-			<Header leaderboards={data.cache?.leaderboards.leaderboards} />
+			<Header leaderboards={data.cache?.leaderboards?.leaderboards} />
 
 			<Content>
 				{@render children?.()}

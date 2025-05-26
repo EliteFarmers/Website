@@ -15,8 +15,6 @@
 		getCropMilestoneLevels,
 		getCropUpgrades,
 		getCropInfo,
-		ZorroMode,
-		TEMPORARY_FORTUNE,
 		createFarmingWeightCalculator,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
@@ -30,7 +28,7 @@
 	import { Button } from '$ui/button';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { NumberInput } from '$ui/number-input';
+	import * as Dialog from '$ui/dialog';
 	import * as Select from '$ui/select';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
@@ -46,6 +44,8 @@
 	import JumpLink from '$comp/jump-link.svelte';
 	import { onMount, untrack } from 'svelte';
 	import BazaarRates from './bazaar-rates.svelte';
+	import RatesSettings from './rates-settings.svelte';
+	import FloatingButton from '$comp/floating-button.svelte';
 
 	const ctx = getStatsContext();
 
@@ -76,7 +76,6 @@
 		(PROPER_CROP_TO_API_CROP[crop as keyof typeof PROPER_CROP_TO_API_CROP] ?? getCropFromName(crop)) as Crop;
 
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
-	const pestTurnInChecked = $derived($ratesData.temp.pestTurnIn > 0);
 
 	let pets = FarmingPet.fromArray(ctx.pets);
 	let tools = FarmingTool.fromArray(ctx.tools);
@@ -231,6 +230,10 @@
 	description="Calculate your expected farming rates in Hypixel Skyblock!"
 />
 
+<FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
+	<Settings class="transition-all group-hover:rotate-90 md:!size-6" />
+</FloatingButton>
+
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector radio={true} />
 
@@ -255,182 +258,6 @@
 				</div>
 			</div>
 
-			<div
-				class="{$ratesData.settings
-					? 'flex'
-					: 'hidden'} w-full max-w-lg flex-1 flex-col justify-center gap-4 rounded-md border-2 border-solid p-4"
-			>
-				<div class="flex flex-col items-center justify-center gap-8 md:flex-row">
-					<div class="flex flex-col justify-start gap-1">
-						<p class="text-sm">Community Center Upgrade</p>
-						<div class="flex flex-row items-center gap-1">
-							{#if $ratesData.communityCenter !== undefined}
-								<SliderSimple
-									class="h-12"
-									min={0}
-									max={10}
-									bind:value={$ratesData.communityCenter}
-									step={1}
-								/>
-							{/if}
-							<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.communityCenter}</p>
-						</div>
-					</div>
-					<div class="flex flex-col items-start gap-1">
-						<p class="text-sm">Strength</p>
-						<NumberInput
-							class="my-1 h-10"
-							type="text"
-							inputmode="numeric"
-							placeholder="0"
-							bind:value={$ratesData.strength}
-							min={0}
-							max={1600}
-						/>
-					</div>
-				</div>
-				<div class="flex flex-col items-center justify-evenly gap-4 md:flex-row">
-					<div class="flex flex-row items-center gap-4 align-middle">
-						<p class="text-sm">Garden Level</p>
-						<p class="font-semibold">{options.gardenLevel}</p>
-					</div>
-					<div class="flex flex-row items-center gap-4 align-middle">
-						<p class="text-sm">Unlocked Plots</p>
-						<p class="font-semibold">{options.plotsUnlocked}</p>
-					</div>
-				</div>
-				<div class="m-2 flex flex-col items-center justify-center gap-1">
-					<div class="flex min-h-10 flex-row items-center gap-2">
-						<p class="text-center text-lg leading-none">Temporary Fortune</p>
-						<FortuneBreakdown total={$player.tempFortune} breakdown={$player.tempFortuneBreakdown} />
-					</div>
-					<div class="flex flex-row items-center justify-center gap-2">
-						<p class="text-md mb-1 leading-none">Enabled</p>
-						{#if $ratesData.useTemp !== undefined}
-							<Switch bind:checked={$ratesData.useTemp} />
-						{/if}
-					</div>
-				</div>
-				<div
-					class="flex flex-col flex-wrap items-start justify-start md:flex-row md:items-start md:justify-center"
-				>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							<Switch
-								checked={$ratesData.temp.pestTurnIn > 0}
-								onCheckedChange={(check) => {
-									$ratesData.temp.pestTurnIn = check ? 200 : 0;
-								}}
-								disabled={!$ratesData.useTemp}
-							/>
-							<FortuneBreakdown total={200} enabled={pestTurnInChecked && $ratesData.useTemp} />
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.centuryCake.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.temp.centuryCake !== undefined}
-								<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
-							{/if}
-							<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.harvestPotion.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.temp.harvestPotion !== undefined}
-								<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
-							{/if}
-							<FortuneBreakdown
-								total={50}
-								enabled={$ratesData.temp.harvestPotion && $ratesData.useTemp}
-							/>
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.magic8Ball.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.temp.magic8Ball !== undefined}
-								<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
-							{/if}
-							<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.springFilter.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.temp.springFilter !== undefined}
-								<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
-							{/if}
-							<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.anitaContest.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.temp.anitaContest !== undefined}
-								<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
-							{/if}
-							<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md leading-none">{TEMPORARY_FORTUNE.chocolateTruffle.name}</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.temp.chocolateTruffle !== undefined}
-								<Switch
-									bind:checked={$ratesData.temp.chocolateTruffle}
-									disabled={!$ratesData.useTemp}
-								/>
-							{/if}
-							<FortuneBreakdown
-								total={30}
-								enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp}
-							/>
-						</div>
-					</div>
-				</div>
-				<div
-					class="flex flex-col flex-wrap items-start justify-start md:flex-row md:items-start md:justify-center"
-				>
-					<div class="m-2 flex w-full flex-col items-center gap-3 md:basis-48">
-						<p class="text-md leading-none">Sprayed Plot</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							{#if $ratesData.sprayedPlot !== undefined}
-								<Switch bind:checked={$ratesData.sprayedPlot} />
-							{/if}
-						</div>
-					</div>
-					<div class="m-2 flex w-full flex-col items-start gap-1 md:basis-48">
-						<p class="text-md mb-1 leading-none">Zorro's Cape Mode</p>
-						<div class="flex flex-row items-center justify-center gap-2">
-							<Select.Simple
-								class="md:w-48"
-								value={$ratesData.zorroMode}
-								change={(value) => {
-									$ratesData.zorroMode = value ?? $ratesData.zorroMode;
-								}}
-								options={[
-									{
-										value: ZorroMode.Normal,
-										label: 'Outside Contest',
-									},
-									{
-										value: ZorroMode.Averaged,
-										label: 'Averaged',
-									},
-									{
-										value: ZorroMode.Contest,
-										label: 'Inside Contest',
-									},
-								]}
-							/>
-						</div>
-					</div>
-				</div>
-			</div>
-
 			{#if selectedCrop}
 				<div class="mb-2 flex flex-row items-center gap-2">
 					<h3 class="text-xl">{selectedCrop} Fortune</h3>
@@ -448,6 +275,20 @@
 						</p>
 					</Fortunebreakdown>
 				</div>
+			{/if}
+
+			<div class="flex flex-col items-center justify-evenly gap-4 md:flex-row md:gap-8">
+				<div class="flex flex-row items-center gap-4 align-middle">
+					<p class="text-sm">Garden Level</p>
+					<p class="font-semibold">{options.gardenLevel}</p>
+				</div>
+				<div class="flex flex-row items-center gap-4 align-middle">
+					<p class="text-sm">Unlocked Plots</p>
+					<p class="font-semibold">{options.plotsUnlocked}</p>
+				</div>
+			</div>
+
+			{#if selectedCrop}
 				<div class="flex w-full max-w-lg flex-row items-center justify-center gap-2 md:gap-4">
 					<img
 						src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
@@ -503,7 +344,7 @@
 			</div>
 		</section>
 		<section class="w-full flex-1 rounded-md border-2 bg-card p-4">
-			<div class="flex w-full max-w-lg flex-col gap-2 p-2">
+			<div class="flex h-full w-full max-w-lg flex-col gap-2 p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
 					{@const coinBreakdown = Object.entries(info.coinSources).sort(([, a], [, b]) => b - a)}
@@ -555,17 +396,12 @@
 
 					<hr class="mt-2" />
 
-					<h3 class="mb-1 mt-2 text-xl">Results</h3>
+					<h3 class="mb-1 mt-2 text-xl font-semibold">Results</h3>
 					<div class="flex flex-col text-lg">
 						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">NPC Coins</span>
 							<span>{info.npcCoins.toLocaleString()}</span>
 						</div>
-						<BazaarRates
-							crop={selectedCropKey}
-							amount={info.collection}
-							otherCoins={info.npcCoins - info.coinSources['Collection']}
-						/>
 						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">Collection</span>
 							<span>{info.collection.toLocaleString()}</span>
@@ -576,27 +412,36 @@
 						</div>
 					</div>
 
-					<h3 class="mb-1 mt-2 text-xl">Coin Breakdown</h3>
+					<h3 class="mb-1 mt-2 text-xl font-semibold">Coin Breakdown</h3>
 					<div class="flex flex-col">
 						{#each coinBreakdown as [name, value] (name)}
 							<div class="flex w-full items-center justify-between py-2">
-								<span class="text-lg font-semibold">{name}</span>
-								<span class="text-lg font-semibold">{value.toLocaleString()}</span>
+								<span class="text-lg">{name === 'Collection' ? selectedCrop : name}</span>
+								<span class="text-lg">{value.toLocaleString()}</span>
 							</div>
 						{/each}
 					</div>
 
-					<h3 class="my-2 text-xl">Collection Breakdown</h3>
+					<h3 class="my-2 text-xl font-semibold">Collection Breakdown</h3>
 					<div class="flex flex-col">
 						{#each otherBreakdown as [name, value] (name)}
 							<div class="flex w-full items-center justify-between py-2">
-								<span class="text-lg font-semibold">{name}</span>
-								<span class="text-lg font-semibold">{value.toLocaleString()}</span>
+								<span class="text-lg">{name === 'Normal' ? selectedCrop : name}</span>
+								<span class="text-lg">{value.toLocaleString()}</span>
 							</div>
 						{/each}
 					</div>
+
+					<div class="-mx-2">
+						<BazaarRates
+							crop={selectedCropKey}
+							amount={info.collection}
+							otherCoins={info.npcCoins - info.coinSources['Collection']}
+						/>
+					</div>
+
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
-						<div class="mt-2 flex flex-row items-center gap-2">
+						<div class="mt-2 flex flex-1 flex-row items-end gap-2">
 							<TriangleAlert size={20} class="-mb-1 text-completed" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
@@ -619,7 +464,18 @@
 					<JumpLink id="fortune" self={false} />
 				</div>
 				<h2 class="mb-1 text-2xl">Farming Fortune</h2>
-				<div class="flex-1"></div>
+				<div class="flex-1">
+					<div class="flex flex-1 justify-start">
+						<Button
+							variant="ghost"
+							class="mx-2 text-muted-foreground"
+							size="sm"
+							onclick={() => ($ratesData.settings = !$ratesData.settings)}
+						>
+							<Settings size={20} />
+						</Button>
+					</div>
+				</div>
 			</div>
 			{#key $player.fortune}
 				<div class="flex w-full flex-wrap justify-start gap-4 md:flex-row">
@@ -652,12 +508,10 @@
 			</div>
 		</section>
 	</div>
-
-	<div class="mx-2 my-8">
-		<p class="max-w-xl text-center">
-			Currently all coins are calculated using their NPC sell price. You may get better rates if you sell to the
-			Bazaar, but typically the difference is not significant. Cactus and Cocoa are often higher in the Bazaar,
-			make sure to check!
-		</p>
-	</div>
 </div>
+
+<Dialog.Root bind:open={$ratesData.settings}>
+	<Dialog.ScrollContent parentClass="max-w-2xl">
+		<RatesSettings {player} />
+	</Dialog.ScrollContent>
+</Dialog.Root>

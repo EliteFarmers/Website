@@ -34,17 +34,21 @@
 
 {#if list.length <= 0}
 	<div class="relative flex h-full min-h-4 flex-row items-center rounded-md {background}">
-		<p class="relative {small ? 'md:text-md text-sm' : 'text-md md:text-lg'} z-10 px-1 font-mono">
+		<span class="relative {small ? 'md:text-md text-sm' : 'text-md md:text-lg'} z-10 px-1 font-mono leading-none">
 			{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{(+sum.toFixed(2)).toLocaleString()}&nbsp;
-		</p>
+		</span>
 	</div>
 {:else}
-	<Popover.Mobile>
+	<Popover.Mobile triggerRootClass="h-[28px]">
 		{#snippet trigger()}
 			<div class="relative flex h-full min-h-4 flex-row items-center rounded-md {background}">
-				<p class="relative {small ? 'md:text-md text-sm' : 'text-md md:text-lg'} z-10 px-1 font-mono">
+				<span
+					class="relative {small
+						? 'md:text-md text-sm'
+						: 'text-md md:text-lg'} z-10 px-1 font-mono leading-none"
+				>
 					{STAT_ICONS[Stat.FarmingFortune]}&nbsp;{(+sum.toFixed(2)).toLocaleString()}&nbsp;
-				</p>
+				</span>
 			</div>
 		{/snippet}
 		<div class="flex max-w-xs flex-col gap-2">

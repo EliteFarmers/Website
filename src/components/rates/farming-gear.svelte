@@ -97,7 +97,9 @@
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
 						<Lorebtn item={piece.item} />
-						<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+						{#key $player}
+							<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+						{/key}
 					</div>
 				</div>
 			{/if}
