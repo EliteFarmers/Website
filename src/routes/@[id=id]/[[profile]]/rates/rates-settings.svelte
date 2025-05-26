@@ -1,0 +1,226 @@
+<script lang="ts">
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import SettingBigSeperator from '$comp/settings/setting-big-seperator.svelte';
+	import SettingHeader from '$comp/settings/setting-header.svelte';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import { getRatesData } from '$lib/stores/ratesData';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
+	import { NumberInput } from '$ui/number-input';
+	import * as Select from '$ui/select';
+	import { SliderSimple } from '$ui/slider';
+	import { Switch } from '$ui/switch';
+	import { Crop, CROP_INFO, getCropDisplayName, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+
+	const ratesData = getRatesData();
+
+	interface Props {
+		player: RatesPlayerStore;
+	}
+
+	let { player }: Props = $props();
+</script>
+
+<div class="w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
+	<SettingHeader class="mt-0 text-2xl">Fortune Settings</SettingHeader>
+	<SettingBigSeperator />
+	<SettingListItem
+		title="Garden Fortune"
+		description="Community center farming fortune upgrade."
+		wiki="https://wiki.hypixel.net/Elizabeth#Garden_Farming_Fortune_"
+	>
+		{#snippet child()}
+			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<div class="flex flex-1 flex-row items-center gap-1">
+					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.communityCenter}</p>
+					{#if $ratesData.communityCenter !== undefined}
+						<SliderSimple
+							class="h-12 flex-1"
+							min={0}
+							max={10}
+							bind:value={$ratesData.communityCenter}
+							step={1}
+						/>
+					{/if}
+				</div>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
+	<SettingListItem
+		title="Strength"
+		description="Used for Mooshroom Cow ability."
+		wiki="https://wiki.hypixel.net/Strength"
+	>
+		<NumberInput
+			class="my-1 h-10 max-w-32"
+			type="text"
+			inputmode="numeric"
+			placeholder="0"
+			bind:value={$ratesData.strength}
+			min={0}
+			max={1600}
+		/>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingHeader class="mt-8 font-normal">
+		<span class="text-xl font-semibold">Temporary Fortune</span>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown
+				total={$player.tempFortune}
+				breakdown={$player.tempFortuneBreakdown}
+				enabled={$ratesData.useTemp}
+			/>
+
+			{#if $ratesData.useTemp !== undefined}
+				<Switch bind:checked={$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingHeader>
+	<SettingBigSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.centuryCake.name} wiki={TEMPORARY_FORTUNE.centuryCake.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={5} enabled={$ratesData.temp.centuryCake && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.centuryCake !== undefined}
+				<Switch bind:checked={$ratesData.temp.centuryCake} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title="{TEMPORARY_FORTUNE.pestTurnIn.name} (40 Pests)" wiki={TEMPORARY_FORTUNE.pestTurnIn.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={200} enabled={$ratesData.temp.pestTurnIn > 0 && $ratesData.useTemp} />
+
+			<Switch
+				checked={$ratesData.temp.pestTurnIn > 0}
+				onCheckedChange={(check) => {
+					$ratesData.temp.pestTurnIn = check ? 200 : 0;
+				}}
+				disabled={!$ratesData.useTemp}
+			/>
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.harvestPotion.name} wiki={TEMPORARY_FORTUNE.harvestPotion.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={50} enabled={$ratesData.temp.harvestPotion && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.harvestPotion !== undefined}
+				<Switch bind:checked={$ratesData.temp.harvestPotion} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.magic8Ball.name} wiki={TEMPORARY_FORTUNE.magic8Ball.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={25} enabled={$ratesData.temp.magic8Ball && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.magic8Ball !== undefined}
+				<Switch bind:checked={$ratesData.temp.magic8Ball} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.springFilter.name} wiki={TEMPORARY_FORTUNE.springFilter.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={25} enabled={$ratesData.temp.springFilter && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.springFilter !== undefined}
+				<Switch bind:checked={$ratesData.temp.springFilter} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.anitaContest.name} wiki={TEMPORARY_FORTUNE.anitaContest.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={25} enabled={$ratesData.temp.anitaContest && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.anitaContest !== undefined}
+				<Switch bind:checked={$ratesData.temp.anitaContest} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title={TEMPORARY_FORTUNE.chocolateTruffle.name} wiki={TEMPORARY_FORTUNE.chocolateTruffle.wiki}>
+		<div class="flex flex-col-reverse items-end justify-start gap-2 sm:flex-row sm:items-center sm:justify-center">
+			<FortuneBreakdown total={30} enabled={$ratesData.temp.chocolateTruffle && $ratesData.useTemp} />
+
+			{#if $ratesData.temp.chocolateTruffle !== undefined}
+				<Switch bind:checked={$ratesData.temp.chocolateTruffle} disabled={!$ratesData.useTemp} />
+			{/if}
+		</div>
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingHeader class="mt-8 text-xl">Other Settings</SettingHeader>
+	<SettingBigSeperator />
+
+	<SettingListItem title="Sprayed Plot" description="If you're farming in a sprayed plot. Used for Slug pet ability.">
+		{#if $ratesData.sprayedPlot !== undefined}
+			<Switch bind:checked={$ratesData.sprayedPlot} />
+		{/if}
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingListItem title="Zorro's Cape Mode" description="The mode to use for Zorro's cape fortune.">
+		{#snippet child()}
+			<div class="flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<Select.Simple
+					value={$ratesData.zorroMode}
+					change={(value) => {
+						$ratesData.zorroMode = value ?? $ratesData.zorroMode;
+					}}
+					options={[
+						{
+							value: ZorroMode.Normal,
+							label: 'Outside Contest',
+						},
+						{
+							value: ZorroMode.Averaged,
+							label: 'Averaged',
+						},
+						{
+							value: ZorroMode.Contest,
+							label: 'Inside Contest',
+						},
+					]}
+				/>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
+
+	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
+	<span class="px-1 text-sm text-muted-foreground"
+		>Check each crop that you've brought items to <a
+			href="https://wiki.hypixel.net/Carrolyn"
+			target="_blank"
+			class="text-link underline">Carrolyn</a
+		> for.</span
+	>
+	<SettingBigSeperator />
+
+	{#each Object.entries(CROP_INFO) as [c, info] (c)}
+		{@const crop = c as Crop}
+		{#if info.exportable}
+			<SettingListItem title={getCropDisplayName(crop)}>
+				<div class="flex flex-row items-center justify-center gap-2">
+					<FortuneBreakdown total={12} />
+					{#if $ratesData.exported[crop] !== undefined}
+						<Switch bind:checked={$ratesData.exported[crop]} />
+					{/if}
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+		{/if}
+	{/each}
+</div>

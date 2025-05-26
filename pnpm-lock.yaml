@@ -102,8 +102,8 @@ importers:
         specifier: ^3.5.1
         version: 3.5.1(eslint@9.25.1(jiti@1.21.7))(svelte@5.28.2)
       farming-weight:
-        specifier: ^0.8.3
-        version: 0.8.3
+        specifier: ^0.8.6
+        version: 0.8.6
       globals:
         specifier: ^15.15.0
         version: 15.15.0
@@ -1275,8 +1275,8 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  farming-weight@0.8.3:
-    resolution: {integrity: sha512-YN4VoT01WFbjy3bBgGgMSZNSDv/nCGe+BeUHj1i+0A+vqWgYo6T4vBBAbOzzFg7YIIhl8G8MktZwTWzQgHknvg==}
+  farming-weight@0.8.6:
+    resolution: {integrity: sha512-cvQr2VkWtnX4o1NggsHDBKmow+uQPBwHP9V1Lz8TQYS8Sd+lo6eM/2exj3wFfDgBWz93AUmbFhuZAZ50BS/vxw==}
 
   fast-check@3.23.2:
     resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
@@ -3412,7 +3412,7 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  farming-weight@0.8.3: {}
+  farming-weight@0.8.6: {}
 
   fast-check@3.23.2:
     dependencies:

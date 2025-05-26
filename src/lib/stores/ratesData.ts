@@ -15,14 +15,16 @@ interface RatesData {
 	temp: Required<TemporaryFarmingFortune>;
 	sprayedPlot: boolean;
 	zorroMode: ZorroMode;
+	bzMode: 'order' | 'insta';
 }
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 4,
+	v: 5,
 	settings: true,
 	communityCenter: 0,
 	strength: 0,
+	bzMode: 'order',
 	exported: {
 		[Crop.Cactus]: false,
 		[Crop.Carrot]: false,

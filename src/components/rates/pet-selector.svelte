@@ -70,7 +70,7 @@
 	{/if}
 </div>
 <div class="-mx-2 mb-2 grid w-full flex-col gap-2">
-	{#each groups as [type, petId] (type)}
+	{#each groups as [type, petId] (petId)}
 		{@const pet = grouped[type].find((p) => p.pet.uuid === petId)}
 		{#if pet}
 			{@const selected = $player.selectedPet?.pet.uuid === pet.pet.uuid}
@@ -127,7 +127,9 @@
 							</DropdownMenu.RadioGroup>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
-					<FortuneBreakdown total={pet.fortune} breakdown={pet.breakdown} />
+					{#key $player}
+						<FortuneBreakdown breakdown={pet.breakdown} />
+					{/key}
 				</div>
 			</div>
 		{/if}

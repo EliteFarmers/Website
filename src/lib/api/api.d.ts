@@ -2175,6 +2175,90 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/resources/bazaar/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Bazaar Product
+         * @description Get a specific bazaar product and it's npc price (if it exists)
+         */
+        get: operations["EliteAPIFeaturesResourcesBazaarEndpointsGetBazaarProductEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/resources/bazaar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Bazaar Products
+         * @description Get all bazaar products.
+         */
+        get: operations["EliteAPIFeaturesResourcesBazaarEndpointsGetBazaarProductsEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/resources/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Skyblock Items
+         * @description Get all items in the Hypixel resources endpoint
+         */
+        get: operations["EliteAPIFeaturesResourcesItemsEndpointsGetSkyblockItemsEndpoint"];
+        put?: never;
+        /**
+         * Get Specific Skyblock Items
+         * @description Get specific skyblock items from the Hypixel resources endpoint, along with bazaar data for each.
+         */
+        post: operations["EliteAPIFeaturesResourcesItemsEndpointsGetSpecifiedSkyblockItemsEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/resources/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Skyblock Item
+         * @description Get the Hypixel provided data of a specific item, as well as a bazaar summary.
+         */
+        get: operations["EliteAPIFeaturesResourcesItemsEndpointsSkybProductEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/shop/category/{categoryId}/product/{productId}": {
         parameters: {
             query?: never;
@@ -4354,6 +4438,180 @@ export interface components {
             name: string;
             selected: boolean;
         };
+        GetBazaarProductResponse: {
+            productId: string;
+            product: components["schemas"]["BazaarProductSummaryDto"];
+        };
+        BazaarProductSummaryDto: {
+            /** @description Name of the item if it exists. */
+            name?: string | null;
+            /**
+             * Format: double
+             * @description NPC sell price of the item if it exists.
+             */
+            npc: number;
+            /**
+             * Format: double
+             * @description Instamt Sell price taken directly from most recently fetched data
+             */
+            sell: number;
+            /**
+             * Format: double
+             * @description Instant Buy price taken directly from most recently fetched data
+             */
+            buy: number;
+            /**
+             * Format: double
+             * @description Sell Order price calculated from most recently fetched data
+             */
+            sellOrder: number;
+            /**
+             * Format: double
+             * @description Buy Order price calculated from most recently fetched data
+             */
+            buyOrder: number;
+            /**
+             * Format: double
+             * @description Calculated average Instant Sell price that should be more resistant to price fluctuations
+             */
+            averageSell: number;
+            /**
+             * Format: double
+             * @description Calculated average Instant Buy price that should be more resistant to price fluctuations
+             */
+            averageBuy: number;
+            /**
+             * Format: double
+             * @description Calculated average Sell Order price that should be more resistant to price fluctuations
+             */
+            averageSellOrder: number;
+            /**
+             * Format: double
+             * @description Calculated average Buy Order price that should be more resistant to price fluctuations
+             */
+            averageBuyOrder: number;
+        };
+        GetBazaarProductRequest: Record<string, never>;
+        GetBazaarProductsResponse: {
+            products: {
+                [key: string]: components["schemas"]["BazaarProductSummaryDto"];
+            };
+        };
+        GetSkyblockItemsResponse: {
+            items: {
+                [key: string]: components["schemas"]["ItemResponse"] | null;
+            };
+        };
+        ItemResponse: {
+            id?: string | null;
+            material?: string | null;
+            color?: string | null;
+            /** Format: int32 */
+            durability: number;
+            skin?: components["schemas"]["ItemSkin"] | null;
+            name?: string | null;
+            category?: string | null;
+            tier?: string | null;
+            unstackable: boolean;
+            glowing: boolean;
+            /** Format: double */
+            npc_sell_price: number;
+            can_auction: boolean;
+            can_trade: boolean;
+            can_place: boolean;
+            gemstone_slots?: components["schemas"]["ItemGemstoneSlot"][] | null;
+            requirements?: components["schemas"]["ItemRequirement"][] | null;
+            museum: boolean;
+            museum_data?: components["schemas"]["ItemMuseumData"] | null;
+            stats?: {
+                [key: string]: number;
+            } | null;
+            /** Format: int32 */
+            generator_tier: number;
+            dungeon_item_conversion_cost?: components["schemas"]["DungeonItemConversionCost"] | null;
+            upgrade_costs?: components["schemas"]["UpgradeCosts"][][] | null;
+            catacombs_requirements?: components["schemas"]["CatacombsRequirements"][] | null;
+            hide_from_viewrecipe_command: boolean;
+            salvagable_from_recipe: boolean;
+            item_specific?: components["schemas"]["JsonDocument"] | null;
+        } & {
+            [key: string]: unknown;
+        };
+        ItemSkin: {
+            value: string;
+            signature: string;
+        };
+        ItemGemstoneSlot: {
+            slot_type: string;
+            costs: components["schemas"]["ItemGemstoneSlotCosts"][];
+        };
+        ItemGemstoneSlotCosts: {
+            type: string;
+            item_id?: string | null;
+            /** Format: int32 */
+            coins: number;
+        };
+        ItemRequirement: {
+            type: string;
+            skill?: string | null;
+            /** Format: int32 */
+            level: number;
+        };
+        ItemMuseumData: {
+            /** Format: int32 */
+            donation_xp: number;
+            parent: {
+                [key: string]: string;
+            };
+            type?: string | null;
+            armor_set_donation_xp?: {
+                [key: string]: number;
+            } | null;
+            game_stage?: string | null;
+        };
+        DungeonItemConversionCost: {
+            essence_type?: string | null;
+            /** Format: int32 */
+            amount: number;
+        };
+        UpgradeCosts: {
+            type?: string | null;
+            essence_type?: string | null;
+            /** Format: int32 */
+            amount: number;
+        };
+        CatacombsRequirements: {
+            type?: string | null;
+            dungeon_type?: string | null;
+            /** Format: int32 */
+            level: number;
+        };
+        JsonDocument: {
+            rootElement: unknown;
+        };
+        GetSpecifiedSkyblockItemsResponse: {
+            items: {
+                [key: string]: components["schemas"]["SkyblockItemResponse"];
+            };
+        };
+        SkyblockItemResponse: {
+            itemId: string;
+            name?: string | null;
+            /** @description Data from the Hypixel items endpoint */
+            data?: components["schemas"]["ItemResponse"] | null;
+            bazaar?: components["schemas"]["BazaarProductSummaryDto"] | null;
+        };
+        /** @example {
+         *       "items": [
+         *         "NETHER_STALK",
+         *         "ENCHANTED_NETHER_STALK",
+         *         "MUTANT_NETHER_STALK"
+         *       ]
+         *     } */
+        GetSpecifiedSkyblockItemsRequest: {
+            items: string[];
+        };
+        SkybProductRequest: Record<string, never>;
         AddProductToCategoryRequest: Record<string, never>;
         CreateCategoryDto: {
             title: string;
@@ -8335,9 +8593,9 @@ export interface operations {
                 /** @description Unix timestamp in seconds for the start of the data to return */
                 from?: number | null;
                 /** @description Amount of days after the "from" timestamp to include */
-                days?: number;
+                days?: number | null;
                 /** @description Data points returned per 24-hour period */
-                perDay?: number;
+                perDay?: number | null;
             };
             header?: never;
             path: {
@@ -8386,8 +8644,8 @@ export interface operations {
         parameters: {
             query?: {
                 from?: number | null;
-                days?: number;
-                perDay?: number;
+                days?: number | null;
+                perDay?: number | null;
             };
             header?: never;
             path: {
@@ -8436,8 +8694,8 @@ export interface operations {
         parameters: {
             query?: {
                 from?: number | null;
-                days?: number;
-                perDay?: number;
+                days?: number | null;
+                perDay?: number | null;
             };
             header?: never;
             path: {
@@ -8472,8 +8730,8 @@ export interface operations {
         parameters: {
             query?: {
                 from?: number | null;
-                days?: number;
-                perDay?: number;
+                days?: number | null;
+                perDay?: number | null;
             };
             header?: never;
             path: {
@@ -8508,7 +8766,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Amount of previous SkyBlock months to include in the average */
-                months?: number;
+                months?: number | null;
             };
             header?: never;
             path?: never;
@@ -8531,7 +8789,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Amount of previous SkyBlock months to include in the average */
-                months?: number;
+                months?: number | null;
             };
             header?: never;
             path: {
@@ -8568,9 +8826,9 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Amount of previous SkyBlock years to include in the average */
-                years?: number;
+                years?: number | null;
                 /** @description Amount of previous SkyBlock months to include in the average */
-                months?: number;
+                months?: number | null;
             };
             header?: never;
             path: {
@@ -8682,7 +8940,7 @@ export interface operations {
     EliteAPIFeaturesGuildsAdminSetJacobLeaderboardsSetJacobFeatureEndpoint: {
         parameters: {
             query?: {
-                enable?: boolean;
+                enable?: boolean | null;
                 max?: number | null;
             };
             header?: never;
@@ -8730,7 +8988,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description If server subscriptions shouldn't override feature values */
-                locked?: boolean;
+                locked?: boolean | null;
             };
             header?: never;
             path: {
@@ -8776,7 +9034,7 @@ export interface operations {
     EliteAPIFeaturesGuildsAdminSetPublicSetGuildPublicEndpoint: {
         parameters: {
             query?: {
-                public?: boolean;
+                public?: boolean | null;
             };
             header?: never;
             path: {
@@ -9376,7 +9634,7 @@ export interface operations {
         parameters: {
             query?: {
                 offset?: number | null;
-                limit?: number;
+                limit?: number | null;
                 /** @description Time interval key of a monthly leaderboard. Format: yyyy-MM */
                 interval?: string | null;
                 /** @description Game mode to filter leaderboard by. Leave empty to get all modes.
@@ -9389,7 +9647,7 @@ export interface operations {
                  *     2 = All */
                 removed?: components["schemas"]["RemovedFilter"] | null;
                 /** @description Use new leaderboard backend (will be default in the future) */
-                new?: boolean;
+                new?: boolean | null;
             };
             header?: never;
             path: {
@@ -9476,7 +9734,7 @@ export interface operations {
                 /** @description Start at a specified rank for upcoming players */
                 atRank?: number | null;
                 /** @description Use new leaderboard backend (will be removed in the future) */
-                new?: boolean;
+                new?: boolean | null;
                 /** @description Time interval key of a monthly leaderboard. Format: yyyy-MM */
                 interval?: string | null;
                 /** @description Game mode to filter leaderboard by. Leave empty to get all modes.
@@ -9526,7 +9784,7 @@ export interface operations {
                 includeUpcoming?: boolean | null;
                 upcoming?: number | null;
                 atRank?: number | null;
-                new?: boolean;
+                new?: boolean | null;
                 interval?: string | null;
                 mode?: string | null;
                 removed?: components["schemas"]["RemovedFilter"] | null;
@@ -9603,7 +9861,7 @@ export interface operations {
                 /** @description Start at a specified rank for upcoming players */
                 atRank?: number | null;
                 /** @description Use new leaderboard backend (will be default in the future) */
-                new?: boolean;
+                new?: boolean | null;
                 /** @description Time interval key of a monthly leaderboard. Format: yyyy-MM */
                 interval?: string | null;
                 /** @description Game mode to filter leaderboard by. Leave empty to get all modes.
@@ -9652,7 +9910,7 @@ export interface operations {
                 includeUpcoming?: boolean | null;
                 upcoming?: number | null;
                 atRank?: number | null;
-                new?: boolean;
+                new?: boolean | null;
                 interval?: string | null;
                 mode?: string | null;
                 removed?: components["schemas"]["RemovedFilter"] | null;
@@ -9936,6 +10194,123 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesResourcesBazaarEndpointsGetBazaarProductEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetBazaarProductResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesResourcesBazaarEndpointsGetBazaarProductsEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetBazaarProductsResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesResourcesItemsEndpointsGetSkyblockItemsEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetSkyblockItemsResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesResourcesItemsEndpointsGetSpecifiedSkyblockItemsEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GetSpecifiedSkyblockItemsRequest"];
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetSpecifiedSkyblockItemsResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesResourcesItemsEndpointsSkybProductEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SkyblockItemResponse"];
+                };
             };
         };
     };

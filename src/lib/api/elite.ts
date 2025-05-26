@@ -1529,6 +1529,8 @@ export const UpdateCategoryProductOrder = async (
 		},
 	});
 
+export const GetBazaarData = async () => await GET('/resources/bazaar');
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
