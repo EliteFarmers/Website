@@ -5,12 +5,13 @@
 	interface Props {
 		title: string;
 		description?: string;
+		subtitle?: Snippet;
 		wiki?: string;
 		children?: Snippet;
 		child?: Snippet;
 	}
 
-	let { title, description = undefined, wiki, children, child }: Props = $props();
+	let { title, description = undefined, wiki, children, subtitle, child }: Props = $props();
 </script>
 
 <div class="setting-list-item flex w-full flex-row items-center justify-between gap-2 px-1 py-3">
@@ -23,8 +24,15 @@
 				</a>
 			{/if}
 		</p>
+		{#if subtitle}
+			<p class="mb-1 hidden sm:block">
+				{@render subtitle?.()}
+			</p>
+		{/if}
 		{#if description}
-			<p class="mb-1 hidden text-sm text-muted-foreground sm:block">{description}</p>
+			<p class="mb-1 hidden text-sm text-muted-foreground sm:block">
+				{description}
+			</p>
 		{/if}
 	</div>
 	{#if child}
@@ -35,6 +43,13 @@
 		</div>
 	{/if}
 </div>
+{#if subtitle}
+	<p class="-mt-1 mb-1 block px-1 pb-3 sm:hidden">
+		{@render subtitle?.()}
+	</p>
+{/if}
 {#if description}
-	<p class="-mt-1 mb-1 block px-1 pb-3 text-sm text-muted-foreground sm:hidden">{description}</p>
+	<p class="-mt-1 mb-1 block px-1 pb-3 text-sm text-muted-foreground sm:hidden">
+		{description}
+	</p>
 {/if}

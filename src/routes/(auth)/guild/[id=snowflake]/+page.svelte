@@ -3,13 +3,16 @@
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
 	import * as Card from '$ui/card';
-	import * as Select from '$ui/select';
 	import type { ActionData, PageData } from './$types';
 	import Head from '$comp/head.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
+	import RoleSelect from '$comp/discord/role-select.svelte';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import ExternalLinkButton from '$comp/external-link-button.svelte';
 
 	interface Props {
 		data: PageData;
@@ -25,14 +28,7 @@
 	let leaderboardCount = $state(3);
 	let eventCount = $state(1);
 
-	let roles = $derived(
-		(data.guild?.roles ?? [])
-			.map((r) => ({
-				value: r.id ?? '',
-				label: '@' + (r.name ?? ''),
-			}))
-			.filter((r) => r.value && r.label !== '@@everyone')
-	);
+	let roles = $derived(data.guild?.roles ?? []);
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({
@@ -67,7 +63,7 @@
 		<p class="text-destructive">{form.error}</p>
 	{/if}
 
-	<section class="mb-16 flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
+	<section class="flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
 		<Card.Root class="max-w-md flex-1 basis-64">
 			<Card.Header>
 				<Card.Title class="text-xl">Server Invite</Card.Title>
@@ -90,54 +86,6 @@
 				</form>
 			</Card.Content>
 		</Card.Root>
-		<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
-			<Card.Header>
-				<Card.Title class="text-xl">Server Jacob Leaderboards</Card.Title>
-			</Card.Header>
-			<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
-				{#if !features?.jacobLeaderboardEnabled}
-					<p>
-						This server does not have the Jacob Leaderboard feature enabled. For now please ask "kaeso.dev"
-						on Discord to gain access to this feature.
-					</p>
-				{:else}
-					<p>Manage your server specific Jacob Leaderboards!</p>
-					<Button href="/guild/{data.guildId}/jacob" class="mt-4 px-8">Manage</Button>
-				{/if}
-			</Card.Content>
-		</Card.Root>
-		<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
-			<Card.Header>
-				<Card.Title class="text-xl">Server Events</Card.Title>
-			</Card.Header>
-			<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
-				{#if !features?.eventsEnabled}
-					<p>
-						This server does not have the Event feature enabled. For now please ask "kaeso.dev" on Discord
-						to gain access to this feature.
-					</p>
-				{:else}
-					<p>Create or manage your Events!</p>
-					<Button href="/guild/{data.guildId}/events" class="mt-4 px-8">Manage</Button>
-				{/if}
-			</Card.Content>
-		</Card.Root>
-		<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
-			<Card.Header>
-				<Card.Title class="text-xl">Upcoming Contest Pings</Card.Title>
-			</Card.Header>
-			<Card.Content class="flex flex-1 flex-col items-center justify-between gap-2 self-stretch">
-				{#if !features?.contestPingsEnabled}
-					<p>
-						This server does not have the Upcoming Contest Pings feature enabled. For now please ask
-						"kaeso.dev" on Discord to gain access to this feature.
-					</p>
-				{:else}
-					<p>Manage upcoming Jacob Contest pings within your Discord Server!</p>
-					<Button href="/guild/{data.guildId}/pings" class="mt-4 px-8">Manage</Button>
-				{/if}
-			</Card.Content>
-		</Card.Root>
 		<Card.Root class="max-w-md flex-1 basis-64">
 			<Card.Header>
 				<Card.Title class="text-xl">Admin Role</Card.Title>
@@ -148,7 +96,7 @@
 						Current: <strong
 							>{data.guild.adminRole === '0'
 								? 'None!'
-								: roles.find((r) => r.value === data.guild.adminRole)?.label}</strong
+								: roles.find((r) => r.id === data.guild.adminRole)?.name}</strong
 						>
 					</p>
 				</div>
@@ -156,17 +104,75 @@
 					Users with this role will have access to all server settings (besides this one)
 				</p>
 				<form method="POST" action="?/setAdminRole" class="flex w-full flex-row gap-4" use:enhance>
-					<Select.Simple
-						options={roles}
-						value={data.guild.adminRole === '0' ? undefined : data.guild.adminRole}
+					<RoleSelect
+						{roles}
+						value={data.guild.adminRole === '0' ? undefined : (data.guild.adminRole ?? undefined)}
 						placeholder="Select a role"
 						name="role"
+						btnClass="w-full"
 					/>
 					<Button type="submit">Set</Button>
 				</form>
 			</Card.Content>
 		</Card.Root>
 	</section>
+
+	<div class="w-full max-w-4xl rounded-md border-2 border-completed p-4">
+		<p class="mb-1 text-lg font-semibold">Want to unlock a feature?</p>
+		<p class="text-sm">
+			Subscribe to the appropriate package in the <ExternalLinkButton href="/support"
+				>support server's</ExternalLinkButton
+			> built-in Discord Shop and/or open a ticket in the support server to discuss options!
+		</p>
+	</div>
+
+	<section class="flex w-full max-w-4xl flex-col rounded-md border-2 bg-card p-4">
+		<SettingListItem title="Upcoming Contest Pings">
+			{#snippet subtitle()}
+				{#if !features?.jacobLeaderboardEnabled}
+					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
+				{:else}
+					<span class="text-sm text-muted-foreground">Manage your server specific contest pings!</span>
+				{/if}
+			{/snippet}
+			{#if features?.jacobLeaderboardEnabled}
+				<Button href="/guild/{data.guildId}/pings" class="px-8">Manage</Button>
+			{:else}
+				{@render disabledBtn()}
+			{/if}
+		</SettingListItem>
+		<SettingSeperator />
+		<SettingListItem title="Jacob Leaderboards">
+			{#snippet subtitle()}
+				{#if !features?.jacobLeaderboardEnabled}
+					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
+				{:else}
+					<span class="text-sm text-muted-foreground">Manage your server specific jacob leaderboards!</span>
+				{/if}
+			{/snippet}
+			{#if features?.jacobLeaderboardEnabled}
+				<Button href="/guild/{data.guildId}/jacob" class="px-8">Manage</Button>
+			{:else}
+				{@render disabledBtn()}
+			{/if}
+		</SettingListItem>
+		<SettingSeperator />
+		<SettingListItem title="Server Events">
+			{#snippet subtitle()}
+				{#if !features?.jacobLeaderboardEnabled}
+					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
+				{:else}
+					<span class="text-sm text-muted-foreground">Manage your server specific events!</span>
+				{/if}
+			{/snippet}
+			{#if features?.jacobLeaderboardEnabled}
+				<Button href="/guild/{data.guildId}/events" class="px-8">Manage</Button>
+			{:else}
+				{@render disabledBtn()}
+			{/if}
+		</SettingListItem>
+	</section>
+
 	{#if data.session?.flags.admin}
 		<section class="mb-16 flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
 			<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
@@ -249,3 +255,9 @@
 		</section>
 	{/if}
 </div>
+
+{#snippet disabledBtn()}
+	<div class="cursor-not-allowed rounded-md bg-muted-variant px-8 py-2.5 text-sm font-medium text-muted-foreground">
+		Manage
+	</div>
+{/snippet}

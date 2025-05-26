@@ -21,7 +21,7 @@ interface RatesData {
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
 	v: 5,
-	settings: true,
+	settings: false,
 	communityCenter: 0,
 	strength: 0,
 	bzMode: 'order',

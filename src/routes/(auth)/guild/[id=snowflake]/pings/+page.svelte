@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
-	import { ChannelType } from '$lib/utils';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
-	import * as Select from '$ui/select';
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
+	import RoleSelect from '$comp/discord/role-select.svelte';
+	import ChannelSelect from '$comp/discord/channel-select.svelte';
 
 	interface Props {
 		data: PageData;
@@ -17,26 +17,6 @@
 	let { data }: Props = $props();
 
 	let pings = $derived(data.pings ?? { enabled: false, delaySeconds: 0 });
-
-	let channels = $derived(
-		(data.guild?.channels ?? [])
-			// Only allow text channels
-			.filter((c) => c.id && (c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement))
-			.map((c) => ({
-				value: c.id ?? '',
-				label: '#' + (c.name ?? ''),
-			}))
-			.filter((c) => c.value)
-	);
-
-	let roles = $derived(
-		(data.guild?.roles ?? [])
-			.map((r) => ({
-				value: r.id ?? '',
-				label: '@' + (r.name ?? ''),
-			}))
-			.filter((r) => r.value && r.label !== '@@everyone')
-	);
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({
@@ -58,16 +38,17 @@
 
 	<section class="mb-16 flex w-full flex-col items-center justify-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center gap-4 rounded-md bg-card p-4 md:w-[70%]"
+			class="flex w-full max-w-4xl flex-col justify-center justify-items-center gap-4 rounded-md border bg-card p-4"
 		>
 			<h2 class="text-3xl">Upcoming Contest Ping Settings</h2>
 
 			<form class="flex flex-col gap-2" method="post" action="?/enable" use:enhance>
 				<div class="space-y-2">
 					<Label>Channel to send pings in</Label>
-					<Select.Simple
-						options={channels}
+					<ChannelSelect
+						channels={data.guild.channels}
 						value={pings.channelId ?? ''}
+						btnClass="w-full"
 						placeholder="Select a channel"
 						name="channel"
 					/>
@@ -75,8 +56,9 @@
 
 				<div class="space-y-2">
 					<Label>Ping Role (for every upcoming contest message)</Label>
-					<Select.Simple
-						options={roles}
+					<RoleSelect
+						roles={data.guild.roles}
+						btnClass="w-full"
 						value={pings.alwaysPingRole ?? ''}
 						placeholder="Select a role"
 						name="pingrole"
@@ -86,8 +68,9 @@
 					<div class="flex flex-1 flex-col gap-1">
 						<div class="space-y-2">
 							<Label>Cactus Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.cactus ?? ''}
 								placeholder="Select a role for Cactus"
 								name="cactus"
@@ -95,8 +78,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Carrot Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.carrot ?? ''}
 								placeholder="Select a role for Carrot"
 								name="carrot"
@@ -104,8 +88,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Potato Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.potato ?? ''}
 								placeholder="Select a role for Potato"
 								name="potato"
@@ -113,8 +98,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Wheat Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.wheat ?? ''}
 								placeholder="Select a role for Wheat"
 								name="wheat"
@@ -122,8 +108,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Melon Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.melon ?? ''}
 								placeholder="Select a role for Melon"
 								name="melon"
@@ -133,8 +120,9 @@
 					<div class="flex flex-1 flex-col gap-1">
 						<div class="space-y-2">
 							<Label>Pumpkin Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.pumpkin ?? ''}
 								placeholder="Select a role for Pumpkin"
 								name="pumpkin"
@@ -142,8 +130,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Mushroom Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.mushroom ?? ''}
 								placeholder="Select a role for Mushroom"
 								name="mushroom"
@@ -151,8 +140,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Cocoa Beans Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.cocoaBeans ?? ''}
 								placeholder="Select a role for Cocoa Beans"
 								name="cocoa"
@@ -160,8 +150,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Sugar Cane Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.sugarCane ?? ''}
 								placeholder="Select a role for Sugar Cane"
 								name="cane"
@@ -169,8 +160,9 @@
 						</div>
 						<div class="space-y-2">
 							<Label>Nether Wart Ping Role</Label>
-							<Select.Simple
-								options={roles}
+							<RoleSelect
+								roles={data.guild.roles}
+								btnClass="w-full"
 								value={pings.cropPingRoles?.netherWart ?? ''}
 								placeholder="Select a role for Nether Wart"
 								name="wart"
