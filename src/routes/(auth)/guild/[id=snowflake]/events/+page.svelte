@@ -11,6 +11,7 @@
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
 	import EventType from '$comp/events/event-type.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -26,6 +27,25 @@
 	);
 
 	let events = $derived(data.events?.sort((a, b) => b?.endTime?.localeCompare(a?.endTime ?? '') ?? 0) ?? []);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+			href: `/guild/${data.guild.id}`,
+		},
+		{
+			name: 'Events',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({

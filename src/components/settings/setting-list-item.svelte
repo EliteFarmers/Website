@@ -14,7 +14,9 @@
 	let { title, description = undefined, wiki, children, subtitle, child }: Props = $props();
 </script>
 
-<div class="setting-list-item flex w-full flex-row items-center justify-between gap-2 px-1 py-3">
+<div
+	class="setting-list-item flex w-full flex-col items-start justify-between gap-2 px-1 py-3 sm:flex-row sm:items-center"
+>
 	<div class="flex w-full flex-1 flex-col justify-center">
 		<p class="md:text-lg">
 			{title}
@@ -25,12 +27,12 @@
 			{/if}
 		</p>
 		{#if subtitle}
-			<p class="mb-1 hidden sm:block">
+			<p class="mb-1">
 				{@render subtitle?.()}
 			</p>
 		{/if}
 		{#if description}
-			<p class="mb-1 hidden text-sm text-muted-foreground sm:block">
+			<p class="mb-1 text-sm text-muted-foreground">
 				{description}
 			</p>
 		{/if}
@@ -38,18 +40,8 @@
 	{#if child}
 		{@render child?.()}
 	{:else}
-		<div class="flex w-full max-w-32 flex-row items-center justify-end">
+		<div class="flex w-fit flex-row items-center justify-end">
 			{@render children?.()}
 		</div>
 	{/if}
 </div>
-{#if subtitle}
-	<p class="-mt-1 mb-1 block px-1 pb-3 sm:hidden">
-		{@render subtitle?.()}
-	</p>
-{/if}
-{#if description}
-	<p class="-mt-1 mb-1 block px-1 pb-3 text-sm text-muted-foreground sm:hidden">
-		{description}
-	</p>
-{/if}

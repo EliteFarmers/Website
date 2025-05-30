@@ -9,6 +9,7 @@
 	import { page } from '$app/state';
 	import RoleSelect from '$comp/discord/role-select.svelte';
 	import ChannelSelect from '$comp/discord/channel-select.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -17,6 +18,25 @@
 	let { data }: Props = $props();
 
 	let pings = $derived(data.pings ?? { enabled: false, delaySeconds: 0 });
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+			href: `/guild/${data.guild.id}`,
+		},
+		{
+			name: 'Pings',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({
