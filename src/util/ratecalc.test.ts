@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { Crop } from '../constants/crops';
-import { calculateDetailedAverageDrops, getPossibleResultsFromCrops } from './ratecalc.js';
+import { Crop, MAX_CROP_FORTUNE } from '../constants/crops';
+import { calculateDetailedAverageDrops, calculateDetailedDrops, getPossibleResultsFromCrops } from './ratecalc.js';
 
 test('Rate calc test', () => {
 	const drops = calculateDetailedAverageDrops({
@@ -75,4 +75,25 @@ test('Possible results - Carrot', () => {
 	expect(result['ENCHANTED_CARROT'].fractionalCost).toBe(0);
 	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalItems).toBe(1.26953125);
 	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalCost).toBe(609.375);
+});
+
+test('Max fortune results', () => {
+	const result = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: true,
+	});
+
+	expect(result.fortune).toBe(MAX_CROP_FORTUNE[Crop.Wheat]);
+
+	const result2 = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 100_000,
+		farmingFortune: 173,
+		bountiful: true,
+		mooshroom: true,
+	});
+
+	expect(result2.fortune).toBe(173);
 });

@@ -34,10 +34,11 @@ export function calculateAverageDrops(options: CalculateDropsOptions & CropFortu
 	const result = {} as Record<Crop, number>;
 
 	for (const crop of crops) {
+		const fortune = (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0);
 		result[crop] = calculateExpectedDrops({
 			crop: crop,
 			...options,
-			farmingFortune: (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0),
+			farmingFortune: fortune > 0 ? fortune : undefined,
 		});
 	}
 
@@ -65,10 +66,11 @@ export function calculateDetailedAverageDrops(
 	const result = {} as Record<Crop, DetailedDrops>;
 
 	for (const crop of crops) {
+		const fortune = (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0);
 		result[crop] = calculateDetailedDrops({
 			crop: crop,
 			...options,
-			farmingFortune: (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0),
+			farmingFortune: fortune > 0 ? fortune : undefined,
 		});
 	}
 
