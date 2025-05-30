@@ -129,13 +129,13 @@
 	<section class="flex w-full max-w-4xl flex-col rounded-md border-2 bg-card p-4">
 		<SettingListItem title="Upcoming Contest Pings">
 			{#snippet subtitle()}
-				{#if !features?.jacobLeaderboardEnabled}
+				{#if !features?.contestPingsEnabled}
 					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
 				{:else}
 					<span class="text-sm text-muted-foreground">Manage your server specific contest pings!</span>
 				{/if}
 			{/snippet}
-			{#if features?.jacobLeaderboardEnabled}
+			{#if features?.contestPingsEnabled}
 				<Button href="/guild/{data.guildId}/pings" class="px-8">Manage</Button>
 			{:else}
 				{@render disabledBtn()}
@@ -159,13 +159,13 @@
 		<SettingSeperator />
 		<SettingListItem title="Server Events">
 			{#snippet subtitle()}
-				{#if !features?.jacobLeaderboardEnabled}
+				{#if !features?.eventsEnabled}
 					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
 				{:else}
 					<span class="text-sm text-muted-foreground">Manage your server specific events!</span>
 				{/if}
 			{/snippet}
-			{#if features?.jacobLeaderboardEnabled}
+			{#if features?.eventsEnabled}
 				<Button href="/guild/{data.guildId}/events" class="px-8">Manage</Button>
 			{:else}
 				{@render disabledBtn()}
