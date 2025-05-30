@@ -15,11 +15,13 @@ import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import { EliteItemDto } from '../fortune/item.js';
+import { FarmingPets } from '../items/pets.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
 import { fortuneFromPestBestiary } from '../util/pests.js';
+import { calculateDetailedDrops } from '../util/ratecalc.js';
 import { FarmingWeightInfo, createFarmingWeightCalculator } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
 
@@ -354,7 +356,21 @@ export class FarmingPlayer {
 		return getSourceProgress<{ crop: Crop; player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
 	}
 
-	getWeightCalc(info?: FarmingWeightInfo) {
+	getRates(crop: Crop, blocksBroken: number): ReturnType<typeof calculateDetailedDrops> {
+		const tool = this.getBestTool(crop);
+		const cropFortune = this.getCropFortune(crop, tool);
+		const fortune = this.permFortune + this.tempFortune + cropFortune.fortune;
+
+		return calculateDetailedDrops({
+			crop: crop,
+			blocksBroken: blocksBroken,
+			farmingFortune: fortune,
+			bountiful: tool?.bountiful ?? false,
+			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
+		});
+	}
+
+	getWeightCalc(info?: FarmingWeightInfo): ReturnType<typeof createFarmingWeightCalculator> {
 		return createFarmingWeightCalculator({
 			collection: this.options.collection,
 			pests: this.options.bestiaryKills,

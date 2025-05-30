@@ -4,11 +4,12 @@ import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcr
 export function calculateAverageSpecialCrops(blocksBroken: number, crop: Crop, armor: 1 | 2 | 3 | 4) {
 	const type = MATCHING_SPECIAL_CROP[crop];
 
-	const { rates, npc } = SPECIAL_CROP_INFO[type];
+	const { rates, npc, id } = SPECIAL_CROP_INFO[type];
 	const chance = rates[armor - 1] ?? 0;
 	const amount = blocksBroken * chance;
 
 	return {
+		id: id,
 		type: type,
 		amount: amount,
 		npc: npc * amount,

@@ -34,6 +34,10 @@ export class FarmingTool extends UpgradeableBase {
 		return this.colorPrefix + (this.reforge?.name ?? '') + ' ' + this.itemname;
 	}
 
+	public get bountiful() {
+		return this.reforge?.name === REFORGES.bountiful?.name;
+	}
+
 	public declare rarity: Rarity;
 	public declare counter: number | undefined;
 	public declare cultivating: number;

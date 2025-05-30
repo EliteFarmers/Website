@@ -11,10 +11,45 @@ test('Rate calc test', () => {
 	});
 
 	expect(drops[Crop.Wheat].collection).toBe(48_000);
+	expect(drops[Crop.Wheat].npcPrice).toBe(6);
 
 	expect(drops[Crop.NetherWart].otherCollection['Fermento']).toBe(2);
 	expect(drops[Crop.SugarCane].otherCollection['Fermento']).toBe(2);
 	expect(drops[Crop.Cactus].otherCollection['Fermento']).toBe(2);
+
+	expect(drops[Crop.Carrot].items[Crop.Carrot]).toBe(drops[Crop.Carrot].collection - 24000);
+	expect(drops[Crop.Carrot].items).toStrictEqual({
+		[Crop.Carrot]: 120000,
+		CROPIE: 12,
+		MUSHROOM_COLLECTION: 24000,
+	});
+
+	expect(drops[Crop.Melon].items).toStrictEqual({
+		[Crop.Melon]: 426237,
+		SQUASH: 7.2,
+		MUSHROOM_COLLECTION: 24000,
+	});
+
+	expect(drops[Crop.SugarCane].items).toStrictEqual({
+		[Crop.SugarCane]: 96000,
+		FERMENTO: 1.68,
+		MUSHROOM_COLLECTION: 48000,
+	});
+
+	expect(drops[Crop.Seeds].items).toStrictEqual({
+		[Crop.Seeds]: 48000,
+		FERMENTO: 1.68,
+		MUSHROOM_COLLECTION: 24000,
+	});
+	expect(drops[Crop.Seeds].otherCollection['Replenish']).toBe(-24000);
+	expect(drops[Crop.Seeds].collection).toBe(48000 + 24000);
+
+	expect(drops[Crop.Wheat].items).toStrictEqual({
+		[Crop.Wheat]: 48000,
+		[Crop.Seeds]: 48000,
+		CROPIE: 12,
+		MUSHROOM_COLLECTION: 24000,
+	});
 });
 
 test('Possible results - Wheat', () => {
