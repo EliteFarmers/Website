@@ -24,6 +24,7 @@
 	import { page } from '$app/state';
 	import MemberList from './member-list.svelte';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -63,6 +64,29 @@
 			| undefined
 	);
 	let newCollectionKey = $state('');
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+			href: `/guild/${data.guild.id}`,
+		},
+		{
+			name: 'Events',
+			href: `/guild/${data.guild.id}/events`,
+		},
+		{
+			name: data.event?.name ?? 'Event',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({

@@ -17,6 +17,7 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { page } from '$app/state';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -56,6 +57,25 @@
 			return { timestamp, crop, uuid };
 		})
 	);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+			href: `/guild/${data.guild.id}`,
+		},
+		{
+			name: 'Jacob',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({

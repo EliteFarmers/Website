@@ -13,6 +13,7 @@
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -29,6 +30,21 @@
 	let eventCount = $state(1);
 
 	let roles = $derived(data.guild?.roles ?? []);
+
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
 
 	const favorites = getFavoritesContext();
 	favorites.setPage({
