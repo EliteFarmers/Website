@@ -436,7 +436,8 @@
 						<BazaarRates
 							crop={selectedCropKey}
 							amount={info.collection}
-							otherCoins={info.npcCoins - info.coinSources['Collection']}
+							otherCoins={info.npcCoins -
+								(info.items[selectedCropKey] ?? info.collection) * info.npcPrice}
 						/>
 					</div>
 
