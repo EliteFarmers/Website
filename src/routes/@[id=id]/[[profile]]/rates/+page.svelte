@@ -435,7 +435,7 @@
 					<div class="-mx-2">
 						<BazaarRates
 							crop={selectedCropKey}
-							amount={info.collection}
+							amount={info.items[selectedCropKey] ?? info.collection}
 							otherCoins={info.npcCoins -
 								(info.items[selectedCropKey] ?? info.collection) * info.npcPrice}
 						/>
