@@ -46,6 +46,7 @@
 	import BazaarRates from './bazaar-rates.svelte';
 	import RatesSettings from './rates-settings.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
+	import CheapestUpgrades from './cheapest-upgrades.svelte';
 
 	const ctx = getStatsContext();
 
@@ -442,7 +443,8 @@
 					</div>
 
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
-						<div class="mt-2 flex flex-1 flex-row items-end gap-2">
+						<div class="flex-1"></div>
+						<div class="mt-2 flex flex-row items-center justify-center gap-2">
 							<TriangleAlert size={20} class="-mb-1 text-completed" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
@@ -509,6 +511,10 @@
 			</div>
 		</section>
 	</div>
+
+	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
+		<CheapestUpgrades {player} crop={selectedCropKey} />
+	</section>
 </div>
 
 <Dialog.Root bind:open={$ratesData.settings}>
