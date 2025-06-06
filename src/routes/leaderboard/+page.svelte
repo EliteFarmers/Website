@@ -12,7 +12,8 @@
 
 <Head
 	title="Leaderboards"
-	description="View the various leaderboards available on the site! See the 5 thousand farmers in every crop!"
+	description="View the various leaderboards available on the site!"
+	keywords="leaderboards, hypixel skyblock, level leaderboard, skills leaderboard, collection leaderboards"
 />
 
 <div class="mb-16 flex flex-col items-center gap-16">
