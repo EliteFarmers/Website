@@ -170,6 +170,17 @@ export function appendOrdinalSuffix(i: number) {
 	return `${i}th`;
 }
 
+export function getRankInformation(player?: components['schemas']['PlayerDataDto'] | null) {
+	const defaults = GetRankDefaults(GetRankName(player));
+	if (!defaults) return undefined;
+
+	if (player?.rankPlusColor && defaults) {
+		defaults.plusColor = convertPlusColorToHex(player.rankPlusColor);
+	}
+
+	return defaults;
+}
+
 export function GetRankName(player?: components['schemas']['PlayerDataDto'] | null): string | undefined {
 	if (!player) return undefined;
 
@@ -203,10 +214,10 @@ export function GetRankDefaults(rank?: RankName | string) {
 	return RANKS[rank as keyof typeof RANKS];
 }
 
-export function convertPlusColorToHex(color?: PlusColor) {
+export function convertPlusColorToHex(color?: PlusColor | string) {
 	if (!color) return undefined;
 
-	return RANK_PLUS_COLORS[color];
+	return RANK_PLUS_COLORS[color as keyof typeof RANK_PLUS_COLORS] ?? undefined;
 }
 
 export function RoundToFixed(num: number | null, fixed = 2) {
