@@ -144,8 +144,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3(postcss-load-config@4.0.2(postcss@8.5.3))(postcss@8.5.3)(svelte@5.28.2)(typescript@5.8.2)
       svelte-sonner:
-        specifier: ^0.3.28
-        version: 0.3.28(svelte@5.28.2)
+        specifier: ^1.0.0
+        version: 1.0.0(svelte@5.28.2)
       sveltekit-rate-limiter:
         specifier: ^0.6.1
         version: 0.6.1(@sveltejs/kit@2.20.7(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.28.2)(vite@6.2.2(@types/node@22.10.0)(jiti@1.21.7)(yaml@2.7.0)))(svelte@5.28.2)(vite@6.2.2(@types/node@22.10.0)(jiti@1.21.7)(yaml@2.7.0)))
@@ -2035,10 +2035,10 @@ packages:
       typescript:
         optional: true
 
-  svelte-sonner@0.3.28:
-    resolution: {integrity: sha512-K3AmlySeFifF/cKgsYNv5uXqMVNln0NBAacOYgmkQStLa/UoU0LhfAACU6Gr+YYC8bOCHdVmFNoKuDbMEsppJg==}
+  svelte-sonner@1.0.0:
+    resolution: {integrity: sha512-qKtAJJwjz50iCzKtk27j8nERYG2rZJIwFUhZBIYVOhjijKfjMDT6o0vsaYRtTI+ZxroU+4J96R7x80qTevF90A==}
     peerDependencies:
-      svelte: ^3.0.0 || ^4.0.0 || ^5.0.0-next.1
+      svelte: ^5.0.0
 
   svelte-toolbelt@0.7.1:
     resolution: {integrity: sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ==}
@@ -4077,7 +4077,7 @@ snapshots:
       postcss-load-config: 4.0.2(postcss@8.5.3)
       typescript: 5.8.2
 
-  svelte-sonner@0.3.28(svelte@5.28.2):
+  svelte-sonner@1.0.0(svelte@5.28.2):
     dependencies:
       svelte: 5.28.2
 
