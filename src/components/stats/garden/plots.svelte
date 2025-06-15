@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GARDEN_PLOTS } from '$lib/constants/crops';
+	import { GARDEN_PLOTS } from 'farming-weight';
 
 	interface Props {
 		plots?: string[];
@@ -19,7 +19,7 @@
 		plots.forEach((name) => {
 			const plot = GARDEN_PLOTS[name as keyof typeof GARDEN_PLOTS];
 			if (!plot) return;
-			const [x, y] = plot;
+			const [x, y] = plot.position;
 			unlockedPlots[+y][+x] = true;
 		});
 	});

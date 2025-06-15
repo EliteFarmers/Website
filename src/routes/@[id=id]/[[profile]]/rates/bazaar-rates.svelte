@@ -7,6 +7,7 @@
 	import { getPossibleResultsFromCrops, type Crop } from 'farming-weight';
 	import { watch } from 'runed';
 	import Info from '@lucide/svelte/icons/info';
+	import { browser } from '$app/environment';
 
 	interface Props {
 		crop: Crop;
@@ -21,16 +22,13 @@
 	const results = $derived(getPossibleResultsFromCrops(crop, amount));
 
 	async function getBazaarData(items: string[]) {
-		const start = Date.now();
+		if (!browser) return undefined;
 		const response = await fetch('/rates/' + items.join('|'));
 		try {
 			const jsonData = await response.json();
-			if (Date.now() - start < 100) {
-				// Delay a bit so it looks like something happened
-				await new Promise((r) => setTimeout(r, 200));
-			}
 
-			return jsonData as Record<string, components['schemas']['BazaarProductSummaryDto']>;
+			const data = jsonData as components['schemas']['GetSpecifiedSkyblockItemsResponse'];
+			return data?.items;
 		} catch {
 			return undefined;
 		}
@@ -81,13 +79,13 @@
 			{/each}
 		{:then bz}
 			{#each Object.entries(results) as [id, result], i (i)}
-				{@const bzData = bz?.[id]}
+				{@const bzData = bz?.[id]?.bazaar}
 				{#if bzData && id !== crop}
 					{@const sell = $ratesData.bzMode === 'insta' ? bzData?.averageSell : bzData?.averageSellOrder}
 					{@const profit = sell * result.fractionalItems - result.fractionalCost + otherCoins}
 					<div class="flex w-full items-center justify-between py-1">
 						<div class="flex flex-row items-center gap-2">
-							<span class="text-lg">{bzData.name}</span>
+							<span class="text-lg">{bz?.[id].name}</span>
 							<Popover.Mobile>
 								{#snippet trigger()}
 									<Info size={16} class="text-muted-foreground" />
@@ -106,7 +104,7 @@
 									<div
 										class="flex flex-row items-center justify-between gap-6 rounded-sm p-1 odd:bg-card"
 									>
-										<span>{bzData.name}</span>
+										<span>{bz?.[id].name}</span>
 										<span>{Math.floor(sell * result.fractionalItems).toLocaleString()}</span>
 									</div>
 									{#if result.fractionalCost > 0}

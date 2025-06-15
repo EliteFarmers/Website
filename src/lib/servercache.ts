@@ -58,12 +58,12 @@ const cacheEntries = {
 	},
 	auctions: {
 		interval: 10, // 10 minutes
-		data: {} as components["schemas"]["AuctionHouseDto"],
+		data: {} as components['schemas']['AuctionHouseDto'],
 		update: async () => {
 			const { data } = await GetAuctionHouse();
 			return data ?? { items: {} };
-		}
-	}
+		},
+	},
 };
 
 export const cache = {

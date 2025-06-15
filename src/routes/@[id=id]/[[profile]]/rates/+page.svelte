@@ -119,7 +119,7 @@
 		refinedTruffles: ctx.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
 		personalBests: ctx.member?.jacob?.stats?.personalBests ?? {},
 		anitaBonus: ctx.member?.jacob?.perks?.doubleDrops ?? 0,
-		plotsUnlocked: ctx.member.garden?.plots?.length ?? 0,
+		plots: ctx.member.garden?.plots,
 		farmingXp: ctx.member?.skills?.farming,
 		bestiaryKills: (ctx.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
 		uniqueVisitors: ctx.member?.garden?.uniqueVisitors ?? 0,
@@ -511,6 +511,8 @@
 			</div>
 		</section>
 	</div>
+
+	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
 	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
 		<CheapestUpgrades {player} crop={selectedCropKey} />
