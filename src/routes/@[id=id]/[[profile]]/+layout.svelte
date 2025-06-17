@@ -88,8 +88,8 @@
 			<Button
 				variant="ghost"
 				size="sm"
-				href="{path}/rates"
-				class="{route === 'rates' ? 'bg-card' : ''} cursor-pointer">Rates</Button
+				href="{path}/fortune"
+				class="{route === 'fortune' ? 'bg-card' : ''} cursor-pointer">Fortune</Button
 			>
 			{#if data.authorized}
 				<Button variant="ghost" size="sm" href="{path}/graphs" class="cursor-pointer">Admin</Button>

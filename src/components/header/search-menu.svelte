@@ -100,7 +100,7 @@
 				<Tabs.List class="flex gap-2 rounded-none bg-inherit">
 					<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
 					<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
-					<Tabs.Trigger value="/rates" class="data-[state=active]:border-2">Rates</Tabs.Trigger>
+					<Tabs.Trigger value="/fortune" class="data-[state=active]:border-2">Fortune</Tabs.Trigger>
 					<Tabs.Trigger value="/contests" class="data-[state=active]:border-2">Contests</Tabs.Trigger>
 					<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
 				</Tabs.List>

@@ -3,7 +3,7 @@
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Settings from '@lucide/svelte/icons/settings';
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
-	import ChartColumn from '@lucide/svelte/icons/chart-column';
+	import Clover from '@lucide/svelte/icons/clover';
 	import Shield from '@lucide/svelte/icons/shield';
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import LogIn from '@lucide/svelte/icons/log-in';
@@ -79,9 +79,9 @@
 					<FileChartColumn />
 					My Stats
 				</DropdownMenu.LinkItem>
-				<DropdownMenu.LinkItem href="/@{user.ign}/rates" disabled={!user.ign}>
-					<ChartColumn />
-					My Rates
+				<DropdownMenu.LinkItem href="/@{user.ign}/fortune" disabled={!user.ign}>
+					<Clover />
+					My Fortune
 				</DropdownMenu.LinkItem>
 				{#if user.flags.moderator}
 					<DropdownMenu.LinkItem href="/admin">
