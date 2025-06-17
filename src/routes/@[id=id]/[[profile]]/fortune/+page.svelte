@@ -228,8 +228,8 @@
 </script>
 
 <Head
-	title="{ctx.ignMeta} | Rates Calculator"
-	description="Calculate your expected farming rates in Hypixel Skyblock!"
+	title="{ctx.ignMeta} | Farming Fortune"
+	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 />
 
 <FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
