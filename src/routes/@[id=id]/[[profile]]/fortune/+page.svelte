@@ -507,9 +507,6 @@
 					{/key}
 				</div>
 			{/key}
-			<div class="flex w-full flex-row justify-start text-muted-foreground">
-				<p>Farming pet fortune not included yet, check back later!</p>
-			</div>
 		</section>
 	</div>
 
