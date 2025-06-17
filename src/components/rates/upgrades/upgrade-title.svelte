@@ -1,5 +1,7 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
+	import ItemRequirements from '$comp/items/item-requirements.svelte';
+	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 	import Info from '@lucide/svelte/icons/info';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
@@ -7,12 +9,19 @@
 
 	interface Props {
 		upgrade: FortuneUpgrade;
+		items?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items'];
 	}
 
-	let { upgrade }: Props = $props();
+	let { upgrade, items }: Props = $props();
+
+	const itemData = $derived.by(() => {
+		const item = upgrade.purchase;
+		if (!item) return undefined;
+		return items?.[item]?.data ?? undefined;
+	});
 </script>
 
-<div class="flex flex-1 flex-col items-start justify-center gap-1">
+<div class="flex w-80 flex-1 flex-col items-start justify-center gap-1">
 	<p class="flex flex-row items-center gap-1 text-base">
 		<ItemName name={upgrade.title} />
 		{#if upgrade.wiki}
@@ -26,8 +35,8 @@
 					<TriangleAlert size={16} class="mt-1.5 text-completed" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
-					This fortune source is not available in the Hypixel API. For it to show up you need to configure
-					settings on this page.
+					This fortune source is not available in the Hypixel API. Configure settings on this page to mark it
+					as complete.
 				</p>
 			</Popover.Mobile>
 		{/if}
@@ -48,10 +57,13 @@
 			<span>Upgrade</span> <ItemName name={upgrade.onto.name} />
 		{/if}
 	</p>
+	{#if itemData}
+		<ItemRequirements {itemData} />
+	{/if}
 	{#if upgrade.optional}
-		<p class="text-xs text-muted-foreground">Recommended for more coins per hour despite lower fortune.</p>
+		<p class="text-xs text-muted-foreground">Recommended for more profit despite lower fortune.</p>
 	{/if}
 	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0}
-		<p class="text-xs text-muted-foreground">Gives no fortune right away, but is needed for later upgrades.</p>
+		<p class="text-xs text-muted-foreground">Gives no fortune right away, but has later upgrades.</p>
 	{/if}
 </div>

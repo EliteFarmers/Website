@@ -1,27 +1,12 @@
-import { renderComponent, renderSnippet } from '$ui/data-table';
+import { renderComponent } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
-import { createRawSnippet } from 'svelte';
 import UpgradeTitle from './upgrade-title.svelte';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 import type { FortuneUpgrade } from 'farming-weight';
 import UpgradeFortune from './upgrade-fortune.svelte';
 import type { components } from '$lib/api/api';
 import UpgradeCost from './upgrade-cost.svelte';
-
-const amountCellSnippet = createRawSnippet<[[FortuneUpgrade, number]]>((getUpgrade) => {
-	const [upgrade, amount] = getUpgrade();
-	const increase = upgrade.increase || upgrade.max || 0;
-	let costPer = increase > 0 ? Math.round(amount / increase) : 0;
-
-	if (costPer === 0) {
-		costPer = (upgrade.max ?? increase) > 0 ? Math.round(amount / (upgrade.max ?? increase)) : 0;
-	}
-
-	return {
-		render: () =>
-			`<span><span class="text-right font-semibold dark:text-completed">${Math.round(costPer).toLocaleString()}</span><span class="text-muted-foreground"> coins</span></span>`,
-	};
-});
+import UpgradeCostPer from './upgrade-cost-per.svelte';
 
 export const getColumns = (
 	itemsLookup?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items'],
@@ -36,7 +21,7 @@ export const getColumns = (
 			accessorKey: 'title',
 			header: 'Upgrade',
 			cell: ({ row }) => {
-				return renderComponent(UpgradeTitle, { upgrade: row.original });
+				return renderComponent(UpgradeTitle, { upgrade: row.original, items: itemsLookup });
 			},
 		},
 		{
@@ -62,10 +47,10 @@ export const getColumns = (
 				return 0;
 			},
 			cell: ({ row }) => {
-				return renderSnippet(amountCellSnippet, [
-					row.original,
-					costFn ? costFn(row.original, itemsLookup) : 0,
-				] as [FortuneUpgrade, number]);
+				return renderComponent(UpgradeCostPer, {
+					upgrade: row.original,
+					totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
+				});
 			},
 			enableSorting: true,
 			header: ({ column }) =>

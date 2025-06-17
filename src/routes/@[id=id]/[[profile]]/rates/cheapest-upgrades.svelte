@@ -41,10 +41,14 @@
 		getBazaarData([
 			...new Set(
 				upgrades
-					.map((up) => Object.keys(up.cost?.items ?? {}))
-					.flat()
+					.map((up) => [
+						Object.keys(up.cost?.items ?? {}),
+						Object.keys(up.cost?.applyCost?.items ?? {}),
+						up.purchase,
+					])
+					.flat(2)
 					.filter(Boolean)
-					.flat()
+					.flat() as string[]
 			),
 		])
 	);

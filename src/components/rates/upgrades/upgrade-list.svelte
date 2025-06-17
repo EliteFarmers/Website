@@ -18,6 +18,6 @@
 	const columns = $derived(getColumns(items, costFn));
 </script>
 
-<div class="w-full max-w-6xl rounded-md border-2 p-4">
+<div class="w-full max-w-6xl py-2">
 	<UpgradesTable data={upgrades} {columns} initialSorting={[{ id: 'costper', desc: false }]} />
 </div>

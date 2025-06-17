@@ -47,8 +47,8 @@
 					<TriangleAlert size={16} class="-mb-1 text-completed" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
-					This fortune source is not available in the Hypixel API. For it to show up you need to configure
-					settings on this page.
+					This fortune source is not available in the Hypixel API. Configure settings on this page to mark it
+					as complete.
 				</p>
 			</Popover.Mobile>
 		{/if}

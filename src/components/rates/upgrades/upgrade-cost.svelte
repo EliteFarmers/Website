@@ -10,9 +10,13 @@
 	}
 
 	let { upgrade, items, totalCost }: Props = $props();
+
+	const copper = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
+	const bits = $derived((upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0));
+	const goldMedal = $derived(upgrade.cost?.medals?.gold ?? 0);
 </script>
 
-<div class="flex flex-col items-end justify-center">
+<div class="flex min-w-72 flex-col items-end justify-center">
 	{#each Object.entries(upgrade.cost?.items ?? {}) as [item, amount] (item)}
 		{@render itemCost(item, amount)}
 	{/each}
@@ -25,9 +29,34 @@
 			<span class="text-muted-foreground">coins</span>
 		</p>
 	{/if}
-	<span class="mt-1"
-		>Total <span class="font-semibold dark:text-completed">{Math.round(totalCost).toLocaleString()}</span></span
-	>
+	{#if copper > 0}
+		<p class="text-sm">
+			<span class="dark:text-completed">{copper.toLocaleString()}</span>
+			<span class="text-muted-foreground">copper</span>
+		</p>
+	{/if}
+	{#if bits > 0}
+		<p class="text-sm">
+			<span class="dark:text-completed">{bits.toLocaleString()}</span>
+			<span class="text-muted-foreground">bits</span>
+		</p>
+	{/if}
+	{#if goldMedal > 0}
+		<p class="text-sm">
+			<span class="dark:text-completed">{goldMedal.toLocaleString()}</span>
+			<span class="text-muted-foreground">gold medal{goldMedal === 1 ? '' : 's'}</span>
+		</p>
+	{/if}
+	{#if totalCost || !(copper > 0 || bits > 0 || goldMedal > 0)}
+		{#if totalCost === 0 && !(copper > 0 || bits > 0 || goldMedal > 0)}
+			<span class="text-muted-foreground">Not Available</span>
+		{:else}
+			<span class="mt-1"
+				>Total <span class="font-semibold dark:text-completed">{Math.round(totalCost).toLocaleString()}</span
+				></span
+			>
+		{/if}
+	{/if}
 </div>
 
 {#snippet itemCost(item: string, amount: number)}
@@ -44,7 +73,8 @@
 					.toLowerCase()
 					.split(' ')
 					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-					.join(' ')}
+					.join(' ')
+					.replace('Enchantment ', '')}
 
 				<span class="text-sm">{itemName}</span>
 			{/if}
