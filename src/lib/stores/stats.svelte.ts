@@ -2,7 +2,7 @@ import type { components } from '$lib/api/api';
 import type { ProfileDetails } from '$lib/api/elite';
 import { PROPER_CROP_NAME, API_CROP_TO_CROP, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { CROP_TO_PEST } from '$lib/constants/pests';
-import { formatIgn, GetRankDefaults, GetRankName } from '$lib/format';
+import { formatIgn, getRankInformation } from '$lib/format';
 import { getCropFromName, Crop } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 
@@ -20,7 +20,7 @@ export class PlayerStats {
 	#equipment = $state.raw<components['schemas']['ItemDto'][]>([]);
 
 	#garden = $derived.by(() => this.#member?.garden);
-	#rank = $derived.by(() => GetRankDefaults(GetRankName(this.#account.playerData)));
+	#rank = $derived.by(() => getRankInformation(this.#account.playerData));
 
 	constructor({
 		account,

@@ -34,8 +34,6 @@ export const load = (async ({ params, parent, url }) => {
 		removed: removed ? (+removed as LeaderboardRemovedFilter) : undefined,
 	};
 
-	console.log('Query:', query);
-
 	const { data: rank } = leaderboard?.profile
 		? await GetProfilesRank(category, profile.profileId, false, query)
 		: await GetPlayersRank(category, account.id, profile.profileId, false, query);
