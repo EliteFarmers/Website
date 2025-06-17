@@ -21,7 +21,7 @@
 	});
 </script>
 
-<div class="flex w-80 flex-1 flex-col items-start justify-center gap-1">
+<div class="flex min-w-80 flex-1 flex-col items-start justify-center gap-1">
 	<p class="flex flex-row items-center gap-1 text-base">
 		<ItemName name={upgrade.title} />
 		{#if upgrade.wiki}
