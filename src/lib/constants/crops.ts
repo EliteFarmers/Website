@@ -147,33 +147,6 @@ export const CROP_UNICODE_EMOJIS: Record<Crop, string> = {
 
 export const PROPER_CROP_NAMES = Object.keys(PROPER_CROP_TO_MINION);
 
-export const GARDEN_PLOTS: Record<string, number[]> = {
-	beginner_2: [2, 1],
-	beginner_1: [1, 2],
-	beginner_4: [3, 2],
-	beginner_3: [2, 3],
-	intermediate_1: [1, 1],
-	intermediate_3: [3, 1],
-	intermediate_2: [1, 3],
-	intermediate_4: [3, 3],
-	advanced_6: [2, 0],
-	advanced_2: [0, 2],
-	advanced_11: [4, 2],
-	advanced_7: [2, 4],
-	advanced_4: [1, 0],
-	advanced_8: [3, 0],
-	advanced_1: [0, 1],
-	advanced_10: [4, 1],
-	advanced_3: [0, 3],
-	advanced_12: [4, 3],
-	advanced_5: [1, 4],
-	advanced_9: [3, 4],
-	expert_1: [0, 0],
-	expert_3: [4, 0],
-	expert_2: [0, 4],
-	expert_4: [4, 4],
-};
-
 export const CROP_UPGRADE_COSTS: Record<number, number> = {
 	0: 0,
 	1: 5,

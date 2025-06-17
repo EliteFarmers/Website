@@ -6500,6 +6500,50 @@
         ]
       }
     },
+    "/user/guild/{discordId}/refresh": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Request Guild Refresh",
+        "description": "This fetches the latest data from Discord for the specified guild",
+        "operationId": "EliteAPIFeaturesGuildsUserRequestRefreshRequestGuildRefreshEndpoint",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
     "/user/guild/{discordId}/adminrole": {
       "put": {
         "tags": [
@@ -7686,6 +7730,28 @@
         }
       }
     },
+    "/resources/auctions": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Get Auction House",
+        "description": "Get lowest auction house prices.",
+        "operationId": "EliteAPIFeaturesResourcesAuctionsEndpointsGetAuctionHouseProductsEndpoint",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuctionHouseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/resources/bazaar/{itemId}": {
       "get": {
         "tags": [
@@ -7733,6 +7799,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetBazaarProductsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/item-parse": {
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Parse Skyblock Item from Bytes",
+        "description": "Get an ItemDto from raw bytes from Hypixel",
+        "operationId": "EliteAPIFeaturesResourcesItemsEndpointsGetItemsFromBytesEndpoint",
+        "requestBody": {
+          "x-name": "GetItemsFromBytesRequest",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetItemsFromBytesRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetItemsFromBytesResponse"
                 }
               }
             }
@@ -7812,7 +7913,7 @@
         ],
         "summary": "Get Skyblock Item",
         "description": "Get the Hypixel provided data of a specific item, as well as a bazaar summary.",
-        "operationId": "EliteAPIFeaturesResourcesItemsEndpointsSkybProductEndpoint",
+        "operationId": "EliteAPIFeaturesResourcesItemsEndpointsSkyblockProductEndpoint",
         "parameters": [
           {
             "name": "itemId",
@@ -9580,6 +9681,7 @@
       },
       "ErrorResponse": {
         "type": "object",
+        "description": "the dto used to send an error response to the client",
         "additionalProperties": false,
         "required": [
           "statusCode",
@@ -9589,15 +9691,18 @@
         "properties": {
           "statusCode": {
             "type": "integer",
+            "description": "the http status code sent to the client. default is 400.",
             "format": "int32",
             "default": 400
           },
           "message": {
             "type": "string",
+            "description": "the message for the error response",
             "default": "One or more errors occurred!"
           },
           "errors": {
             "type": "object",
+            "description": "the collection of errors for the current context",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -14234,7 +14339,8 @@
           "type",
           "exp",
           "active",
-          "candyUsed"
+          "candyUsed",
+          "level"
         ],
         "properties": {
           "uuid": {
@@ -14265,6 +14371,10 @@
           "skin": {
             "type": "string",
             "nullable": true
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -14697,26 +14807,32 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "Old Minecraft id of the item",
             "format": "int32"
           },
           "count": {
             "type": "integer",
+            "description": "Minecraft stack count of the item",
             "format": "byte"
           },
           "skyblockId": {
             "type": "string",
+            "description": "Skyblock ID of the item",
             "nullable": true
           },
           "uuid": {
             "type": "string",
+            "description": "Item UUID to uniquely identify a specific instance of this item",
             "nullable": true
           },
           "name": {
             "type": "string",
+            "description": "Item name, first line of the lore",
             "nullable": true
           },
           "lore": {
             "type": "array",
+            "description": "List of item lore in order",
             "nullable": true,
             "items": {
               "type": "string"
@@ -14724,6 +14840,7 @@
           },
           "enchantments": {
             "type": "object",
+            "description": "Applied enchantments with their levels",
             "nullable": true,
             "additionalProperties": {
               "type": "integer",
@@ -14732,6 +14849,15 @@
           },
           "attributes": {
             "type": "object",
+            "description": "ExtraAttributes not included elsewhere",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "itemAttributes": {
+            "type": "object",
+            "description": "ExtraAtrributes.Attributes for attribute shards",
             "nullable": true,
             "additionalProperties": {
               "type": "string"
@@ -14739,10 +14865,59 @@
           },
           "gems": {
             "type": "object",
+            "description": "Applied gems with gem rarity",
             "nullable": true,
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "petInfo": {
+            "description": "Pet info if item is a pet",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ItemPetInfoDto"
+              }
+            ]
+          }
+        }
+      },
+      "ItemPetInfoDto": {
+        "type": "object",
+        "additionalProperties": {},
+        "required": [
+          "type",
+          "active",
+          "exp",
+          "level",
+          "tier",
+          "candyUsed"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "exp": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tier": {
+            "type": "string"
+          },
+          "candyUsed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "heldItem": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -14966,6 +15141,151 @@
           }
         }
       },
+      "AuctionHouseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AuctionItemDto"
+              }
+            }
+          }
+        }
+      },
+      "AuctionItemDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skyblockId",
+          "variantKey",
+          "variedBy",
+          "lowest",
+          "lowestVolume",
+          "lowest3Day",
+          "lowest3DayVolume",
+          "lowest7Day",
+          "lowest7DayVolume"
+        ],
+        "properties": {
+          "skyblockId": {
+            "type": "string"
+          },
+          "variantKey": {
+            "type": "string"
+          },
+          "variedBy": {
+            "description": "Data used to generate variant key (easier to parse)",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AuctionItemVariation"
+              }
+            ]
+          },
+          "lowest": {
+            "type": "number",
+            "description": "Lowest price seen recently (excluding outliers)",
+            "format": "decimal"
+          },
+          "lowestVolume": {
+            "type": "integer",
+            "description": "Volume of prices used to get the lowest recent price",
+            "format": "int32"
+          },
+          "lowest3Day": {
+            "type": "number",
+            "description": "Lowest price seen in 3 days (excluding outliers)",
+            "format": "decimal"
+          },
+          "lowest3DayVolume": {
+            "type": "integer",
+            "description": "Volume of prices used to get the lowest 3 day price",
+            "format": "int32"
+          },
+          "lowest7Day": {
+            "type": "number",
+            "description": "Lowest price seen in 7 days (excluding outliers)",
+            "format": "decimal"
+          },
+          "lowest7DayVolume": {
+            "type": "integer",
+            "description": "Volume of prices ued to get lowest 3 day price",
+            "format": "int32"
+          }
+        }
+      },
+      "AuctionItemVariation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rarity": {
+            "type": "string",
+            "nullable": true
+          },
+          "enchantments": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "pet": {
+            "type": "string",
+            "nullable": true
+          },
+          "petLevel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AuctionItemVariation_PetLevelGroup"
+              }
+            ]
+          },
+          "itemAttributes": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "extra": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AuctionItemVariation_PetLevelGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "min",
+          "max"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "min": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "GetBazaarProductResponse": {
         "type": "object",
         "additionalProperties": false,
@@ -15009,7 +15329,7 @@
           },
           "sell": {
             "type": "number",
-            "description": "Instamt Sell price taken directly from most recently fetched data",
+            "description": "Instant Sell price taken directly from most recently fetched data",
             "format": "double"
           },
           "buy": {
@@ -15065,6 +15385,38 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/BazaarProductSummaryDto"
             }
+          }
+        }
+      },
+      "GetItemsFromBytesResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ItemDto"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "GetItemsFromBytesRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bytes"
+        ],
+        "properties": {
+          "bytes": {
+            "type": "string"
           }
         }
       },
@@ -15275,7 +15627,7 @@
       },
       "ItemGemstoneSlotCosts": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "required": [
           "type",
           "coins"
@@ -15296,7 +15648,7 @@
       },
       "ItemRequirement": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "required": [
           "type",
           "level"
@@ -15317,7 +15669,7 @@
       },
       "ItemMuseumData": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "required": [
           "donation_xp",
           "parent"
@@ -15465,6 +15817,13 @@
                 "$ref": "#/components/schemas/BazaarProductSummaryDto"
               }
             ]
+          },
+          "auctions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AuctionItemDto"
+            }
           }
         }
       },
@@ -15490,7 +15849,7 @@
           }
         }
       },
-      "SkybProductRequest": {
+      "SkyblockProductRequest": {
         "type": "object",
         "additionalProperties": false
       },

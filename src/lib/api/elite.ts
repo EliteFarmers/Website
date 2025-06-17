@@ -1530,6 +1530,14 @@ export const UpdateCategoryProductOrder = async (
 	});
 
 export const GetBazaarData = async () => await GET('/resources/bazaar');
+export const GetAuctionHouse = async () => await GET('/resources/auctions');
+
+export const GetItemPrices = async (items: string[]) =>
+	await POST('/resources/items', {
+		body: {
+			items: items,
+		},
+	});
 
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];

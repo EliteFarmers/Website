@@ -1866,6 +1866,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/user/guild/{discordId}/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request Guild Refresh
+         * @description This fetches the latest data from Discord for the specified guild
+         */
+        post: operations["EliteAPIFeaturesGuildsUserRequestRefreshRequestGuildRefreshEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/user/guild/{discordId}/adminrole": {
         parameters: {
             query?: never;
@@ -2175,6 +2195,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/resources/auctions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Auction House
+         * @description Get lowest auction house prices.
+         */
+        get: operations["EliteAPIFeaturesResourcesAuctionsEndpointsGetAuctionHouseProductsEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/resources/bazaar/{itemId}": {
         parameters: {
             query?: never;
@@ -2209,6 +2249,26 @@ export interface paths {
         get: operations["EliteAPIFeaturesResourcesBazaarEndpointsGetBazaarProductsEndpoint"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/resources/item-parse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Parse Skyblock Item from Bytes
+         * @description Get an ItemDto from raw bytes from Hypixel
+         */
+        post: operations["EliteAPIFeaturesResourcesItemsEndpointsGetItemsFromBytesEndpoint"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2250,7 +2310,7 @@ export interface paths {
          * Get Skyblock Item
          * @description Get the Hypixel provided data of a specific item, as well as a bazaar summary.
          */
-        get: operations["EliteAPIFeaturesResourcesItemsEndpointsSkybProductEndpoint"];
+        get: operations["EliteAPIFeaturesResourcesItemsEndpointsSkyblockProductEndpoint"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2806,14 +2866,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -4208,6 +4274,8 @@ export interface components {
             heldItem?: string | null;
             candyUsed: number;
             skin?: string | null;
+            /** Format: int32 */
+            level: number;
         };
         UnparsedApiDataDto: {
             /** Format: int32 */
@@ -4342,23 +4410,56 @@ export interface components {
             accessories: components["schemas"]["ItemDto"][];
         };
         ItemDto: {
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Old Minecraft id of the item
+             */
             id: number;
-            /** Format: byte */
+            /**
+             * Format: byte
+             * @description Minecraft stack count of the item
+             */
             count: number;
+            /** @description Skyblock ID of the item */
             skyblockId?: string | null;
+            /** @description Item UUID to uniquely identify a specific instance of this item */
             uuid?: string | null;
+            /** @description Item name, first line of the lore */
             name?: string | null;
+            /** @description List of item lore in order */
             lore?: string[] | null;
+            /** @description Applied enchantments with their levels */
             enchantments?: {
                 [key: string]: number;
             } | null;
+            /** @description ExtraAttributes not included elsewhere */
             attributes?: {
                 [key: string]: string;
             } | null;
+            /** @description ExtraAtrributes.Attributes for attribute shards */
+            itemAttributes?: {
+                [key: string]: string;
+            } | null;
+            /** @description Applied gems with gem rarity */
             gems?: {
                 [key: string]: string;
             } | null;
+            /** @description Pet info if item is a pet */
+            petInfo?: components["schemas"]["ItemPetInfoDto"] | null;
+        };
+        ItemPetInfoDto: {
+            type: string;
+            active: boolean;
+            /** Format: decimal */
+            exp: number;
+            /** Format: int32 */
+            level: number;
+            tier: string;
+            /** Format: int32 */
+            candyUsed: number;
+            heldItem?: string | null;
+        } & {
+            [key: string]: unknown;
         };
         SkillsDto: {
             /** Format: double */
@@ -4438,6 +4539,68 @@ export interface components {
             name: string;
             selected: boolean;
         };
+        AuctionHouseDto: {
+            items: {
+                [key: string]: components["schemas"]["AuctionItemDto"][];
+            };
+        };
+        AuctionItemDto: {
+            skyblockId: string;
+            variantKey: string;
+            /** @description Data used to generate variant key (easier to parse) */
+            variedBy: components["schemas"]["AuctionItemVariation"];
+            /**
+             * Format: decimal
+             * @description Lowest price seen recently (excluding outliers)
+             */
+            lowest: number;
+            /**
+             * Format: int32
+             * @description Volume of prices used to get the lowest recent price
+             */
+            lowestVolume: number;
+            /**
+             * Format: decimal
+             * @description Lowest price seen in 3 days (excluding outliers)
+             */
+            lowest3Day: number;
+            /**
+             * Format: int32
+             * @description Volume of prices used to get the lowest 3 day price
+             */
+            lowest3DayVolume: number;
+            /**
+             * Format: decimal
+             * @description Lowest price seen in 7 days (excluding outliers)
+             */
+            lowest7Day: number;
+            /**
+             * Format: int32
+             * @description Volume of prices ued to get lowest 3 day price
+             */
+            lowest7DayVolume: number;
+        };
+        AuctionItemVariation: {
+            rarity?: string | null;
+            enchantments?: {
+                [key: string]: number;
+            } | null;
+            pet?: string | null;
+            petLevel?: components["schemas"]["AuctionItemVariation_PetLevelGroup"] | null;
+            itemAttributes?: {
+                [key: string]: string;
+            } | null;
+            extra?: {
+                [key: string]: string;
+            } | null;
+        };
+        AuctionItemVariation_PetLevelGroup: {
+            key: string;
+            /** Format: int32 */
+            min: number;
+            /** Format: int32 */
+            max: number;
+        };
         GetBazaarProductResponse: {
             productId: string;
             product: components["schemas"]["BazaarProductSummaryDto"];
@@ -4452,7 +4615,7 @@ export interface components {
             npc: number;
             /**
              * Format: double
-             * @description Instamt Sell price taken directly from most recently fetched data
+             * @description Instant Sell price taken directly from most recently fetched data
              */
             sell: number;
             /**
@@ -4496,6 +4659,12 @@ export interface components {
             products: {
                 [key: string]: components["schemas"]["BazaarProductSummaryDto"];
             };
+        };
+        GetItemsFromBytesResponse: {
+            items: (components["schemas"]["ItemDto"] | null)[];
+        };
+        GetItemsFromBytesRequest: {
+            bytes: string;
         };
         GetSkyblockItemsResponse: {
             items: {
@@ -4550,12 +4719,16 @@ export interface components {
             item_id?: string | null;
             /** Format: int32 */
             coins: number;
+        } & {
+            [key: string]: unknown;
         };
         ItemRequirement: {
             type: string;
             skill?: string | null;
             /** Format: int32 */
             level: number;
+        } & {
+            [key: string]: unknown;
         };
         ItemMuseumData: {
             /** Format: int32 */
@@ -4568,6 +4741,8 @@ export interface components {
                 [key: string]: number;
             } | null;
             game_stage?: string | null;
+        } & {
+            [key: string]: unknown;
         };
         DungeonItemConversionCost: {
             essence_type?: string | null;
@@ -4600,6 +4775,7 @@ export interface components {
             /** @description Data from the Hypixel items endpoint */
             data?: components["schemas"]["ItemResponse"] | null;
             bazaar?: components["schemas"]["BazaarProductSummaryDto"] | null;
+            auctions?: components["schemas"]["AuctionItemDto"][] | null;
         };
         /** @example {
          *       "items": [
@@ -4611,7 +4787,7 @@ export interface components {
         GetSpecifiedSkyblockItemsRequest: {
             items: string[];
         };
-        SkybProductRequest: Record<string, never>;
+        SkyblockProductRequest: Record<string, never>;
         AddProductToCategoryRequest: Record<string, never>;
         CreateCategoryDto: {
             title: string;
@@ -9512,6 +9688,42 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesGuildsUserRequestRefreshRequestGuildRefreshEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EliteAPIFeaturesGuildsUserSetAdminRoleSetAdminRoleEndpoint: {
         parameters: {
             query?: never;
@@ -10197,6 +10409,26 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesResourcesAuctionsEndpointsGetAuctionHouseProductsEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuctionHouseDto"];
+                };
+            };
+        };
+    };
     EliteAPIFeaturesResourcesBazaarEndpointsGetBazaarProductEndpoint: {
         parameters: {
             query?: never;
@@ -10235,6 +10467,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GetBazaarProductsResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesResourcesItemsEndpointsGetItemsFromBytesEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GetItemsFromBytesRequest"];
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetItemsFromBytesResponse"];
                 };
             };
         };
@@ -10292,7 +10548,7 @@ export interface operations {
             };
         };
     };
-    EliteAPIFeaturesResourcesItemsEndpointsSkybProductEndpoint: {
+    EliteAPIFeaturesResourcesItemsEndpointsSkyblockProductEndpoint: {
         parameters: {
             query?: never;
             header?: never;

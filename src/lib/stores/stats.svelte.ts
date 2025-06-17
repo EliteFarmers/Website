@@ -109,19 +109,19 @@ export class PlayerStats {
 	}
 
 	get tools() {
-		return this.#tools;
+		return this.#tools ?? [];
 	}
 
 	get pets() {
-		return this.#pets;
+		return this.#pets ?? [];
 	}
 
 	get armor() {
-		return this.#armor;
+		return this.#armor ?? [];
 	}
 
 	get equipment() {
-		return this.#equipment;
+		return this.#equipment ?? [];
 	}
 
 	static parseCollections(member: NonNullable<components['schemas']['ProfileMemberDto']>) {

@@ -1,0 +1,106 @@
+<script lang="ts">
+	import { browser } from '$app/environment';
+	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
+	import type { components } from '$lib/api/api';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import { Crop, type FortuneUpgrade } from 'farming-weight';
+	import { Debounced } from 'runed';
+
+	const ctx = getStatsContext();
+	const mode = $derived(ctx.selectedProfile?.gameMode);
+
+	type FetchedItems = Awaited<ReturnType<typeof getBazaarData> | undefined>;
+	interface Props {
+		player: RatesPlayerStore;
+		crop: Crop;
+	}
+
+	let { player, crop }: Props = $props();
+
+	async function getBazaarData(items: string[]) {
+		if (!browser) return undefined;
+		const response = await fetch('/rates/' + items.join('|'));
+		try {
+			const jsonData = await response.json();
+
+			const data = jsonData as components['schemas']['GetSpecifiedSkyblockItemsResponse'];
+			return data?.items;
+		} catch {
+			return undefined;
+		}
+	}
+
+	const generalUpgrades = $derived($player.getUpgrades());
+	const cropUpgrades = $derived($player.getCropUpgrades(crop));
+	const upgrades = $derived([...generalUpgrades, ...cropUpgrades]);
+
+	const neededItems = $derived([
+		...new Set(
+			upgrades
+				.map((up) => [
+					Object.keys(up.cost?.items ?? {}),
+					Object.keys(up.cost?.applyCost?.items ?? {}),
+					up.purchase,
+				])
+				.flat(2)
+				.filter(Boolean)
+				.flat() as string[]
+		),
+	]);
+
+	const debouncedItems = new Debounced(() => neededItems, 500);
+
+	let itemsPromise = $derived<Promise<FetchedItems | undefined>>(getBazaarData(debouncedItems.current));
+
+	function upgradeCost(upgrade: FortuneUpgrade, items: FetchedItems): number {
+		let total = 0;
+
+		if (upgrade.cost) {
+			sumItems(upgrade.cost.items);
+			total += upgrade.cost.coins ?? 0;
+		}
+		if (upgrade.cost?.applyCost) {
+			sumItems(upgrade.cost.applyCost.items);
+			total += upgrade.cost.applyCost.coins ?? 0;
+		}
+
+		return total;
+
+		function sumItems(requiredItems?: Record<string, number>) {
+			for (const [item, amount] of Object.entries(requiredItems ?? {})) {
+				const itemCost = items?.[item];
+				if (!itemCost) continue;
+				const lowestPrice = itemCost.auctions?.length
+					? Math.min(...itemCost.auctions.map((a) => a.lowest3Day))
+					: (itemCost.bazaar?.averageBuyOrder ?? 0);
+				total += lowestPrice * amount;
+			}
+		}
+	}
+</script>
+
+<div class="flex w-full flex-col gap-2">
+	<h2 class="text-2xl font-bold">Available Upgrades</h2>
+	{#if (mode ?? 'classic') !== 'classic'}
+		<div class="flex flex-row items-center gap-2 text-sm">
+			<TriangleAlert size={20} class="-mb-1 text-completed" />
+			<p>These upgrades use Bazaar and Auction House prices which aren't available in this game mode.</p>
+		</div>
+	{/if}
+	<p class="text-sm text-muted-foreground">Every available fortune upgrade for {ctx.ignMeta}!</p>
+	{#if !crop || crop.length === 0}
+		<div class="flex flex-row items-center gap-2 text-sm">
+			<TriangleAlert size={20} class="-mb-1 text-completed" />
+			<p>No crop selected! Select a crop to add crop specific upgrades to this list!</p>
+		</div>
+	{/if}
+	{#await itemsPromise}
+		<p class="text-sm text-muted-foreground">Loading item prices...</p>
+	{:then loadedItems}
+		<UpgradeList {upgrades} items={loadedItems} costFn={upgradeCost} />
+	{:catch error}
+		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
+	{/await}
+</div>

@@ -46,6 +46,8 @@
 	import BazaarRates from './bazaar-rates.svelte';
 	import RatesSettings from './rates-settings.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
+	import CheapestUpgrades from './cheapest-upgrades.svelte';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 
 	const ctx = getStatsContext();
 
@@ -118,7 +120,7 @@
 		refinedTruffles: ctx.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
 		personalBests: ctx.member?.jacob?.stats?.personalBests ?? {},
 		anitaBonus: ctx.member?.jacob?.perks?.doubleDrops ?? 0,
-		plotsUnlocked: ctx.member.garden?.plots?.length ?? 0,
+		plots: ctx.member.garden?.plots,
 		farmingXp: ctx.member?.skills?.farming,
 		bestiaryKills: (ctx.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
 		uniqueVisitors: ctx.member?.garden?.uniqueVisitors ?? 0,
@@ -226,8 +228,8 @@
 </script>
 
 <Head
-	title="{ctx.ignMeta} | Rates Calculator"
-	description="Calculate your expected farming rates in Hypixel Skyblock!"
+	title="{ctx.ignMeta} | Farming Fortune"
+	description="See missing fortune upgrades, overall progress, and your expected farming rates in Hypixel Skyblock!"
 />
 
 <FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
@@ -442,7 +444,8 @@
 					</div>
 
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
-						<div class="mt-2 flex flex-1 flex-row items-end gap-2">
+						<div class="flex-1"></div>
+						<div class="mt-2 flex flex-row items-center justify-center gap-2">
 							<TriangleAlert size={20} class="-mb-1 text-completed" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
@@ -504,11 +507,28 @@
 					{/key}
 				</div>
 			{/key}
-			<div class="flex w-full flex-row justify-start text-muted-foreground">
-				<p>Farming pet fortune not included yet, check back later!</p>
-			</div>
 		</section>
 	</div>
+
+	<Cropselector radio={true} href="#upgrades" id="upgrades" />
+
+	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
+		<svelte:boundary>
+			<CheapestUpgrades {player} crop={selectedCropKey} />
+			{#snippet failed(error, reset)}
+				<div class="flex w-full flex-col items-center justify-center gap-4">
+					<p class="text-lg font-semibold">Failed to load upgrades!</p>
+					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
+					<p class="text-sm text-muted-foreground">
+						Please report the error in the <a href="/support" class="text-link underline"
+							>Support Discord Server</a
+						>!
+					</p>
+					<Button variant="outline" onclick={reset}>Retry</Button>
+				</div>
+			{/snippet}
+		</svelte:boundary>
+	</section>
 </div>
 
 <Dialog.Root bind:open={$ratesData.settings}>
