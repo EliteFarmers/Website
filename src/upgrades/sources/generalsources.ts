@@ -72,7 +72,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					title: ANITA_FORTUNE_UPGRADE.name,
 					increase: ANITA_FORTUNE_UPGRADE.fortunePerLevel,
 					action: UpgradeAction.Upgrade,
-					repeatable: ANITA_FORTUNE_UPGRADE.maxLevel - current,
 					api: false,
 					category: UpgradeCategory.Anita,
 					wiki: ANITA_FORTUNE_UPGRADE.wiki,
