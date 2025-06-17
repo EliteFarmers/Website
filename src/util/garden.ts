@@ -1,5 +1,6 @@
 import { Crop } from '../constants/crops.js';
 import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from '../constants/garden.js';
+import { GARDEN_PLOTS, GARDEN_PLOT_COSTS, type PlotType } from '../constants/plots.js';
 import { Rarity } from '../constants/reforges.js';
 import { getCropFromName } from './names.js';
 
@@ -161,4 +162,24 @@ export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>
 	}
 
 	return groups;
+}
+
+export function getNextPlotCost(plots: string[]) {
+	const unlocked = plots.reduce<Partial<Record<PlotType, number>>>((acc, plot) => {
+		const plotData = GARDEN_PLOTS[plot as keyof typeof GARDEN_PLOTS];
+		acc[plotData.type] = (acc[plotData.type] ?? 0) + 1;
+		return acc;
+	}, {});
+
+	for (const [type, count] of Object.entries(GARDEN_PLOT_COSTS)) {
+		const plotType = type as PlotType;
+		if (unlocked[plotType] === undefined || (unlocked[plotType] ?? 0) < count.length) {
+			const nextPlot = Object.entries(GARDEN_PLOTS)
+				.filter(([id, plot]) => plot.type === plotType && !plots.includes(id))
+				.sort((a, b) => a[1].name.localeCompare(b[1].name))[0];
+			return { cost: count[unlocked?.[plotType] ?? 0], plot: nextPlot ? nextPlot[1] : undefined };
+		}
+	}
+
+	return undefined;
 }

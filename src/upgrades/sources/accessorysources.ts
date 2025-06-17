@@ -3,6 +3,7 @@ import { Stat } from '../../constants/stats.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { GemRarity } from '../../fortune/item.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
+import { getUpgradeableGems } from '../upgrades.js';
 import { DynamicFortuneSource } from './toolsources.js';
 
 export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[] = [
@@ -22,20 +23,21 @@ export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[]
 	{
 		name: 'Gemstone Slots',
 		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
-		exists: (accessory) => {
-			const last = (accessory.getLastItemUpgrade() ?? accessory)?.info;
-			return last?.gemSlots?.peridot !== undefined;
+		exists: (upgradeable) => {
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
 		},
-		max: (accessory) => {
-			const last = (accessory.getLastItemUpgrade() ?? accessory)?.info;
+		max: (upgradeable) => {
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			return (
 				0.5 *
-				(last?.gemSlots?.peridot ?? 0) *
+				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
 				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
 			);
 		},
-		current: (accessory) => {
-			return 0.5 * getPeridotFortune(accessory.rarity, accessory.item);
+		current: (upgradeable) => {
+			return 0.5 * getPeridotFortune(upgradeable.rarity, upgradeable.item);
 		},
+		upgrades: getUpgradeableGems,
 	},
 ];

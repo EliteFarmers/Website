@@ -4,7 +4,7 @@ import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
 import { FarmingArmorInfo, GearSlot } from './armor.js';
 
-export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
+export const FARMING_EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	LOTUS_BRACELET: {
 		skyblockId: 'LOTUS_BRACELET',
 		name: 'Lotus Bracelet',

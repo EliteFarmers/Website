@@ -132,11 +132,11 @@ test('Almost Maxed Helmet Upgrades Test', () => {
 
 	expect(upgrades[1]['action']).toBe('apply');
 	expect(upgrades[1]['increase']).toBe(2);
-	expect(upgrades[1]['title']).toBe('Pesterminator 4');
+	expect(upgrades[1]['title']).toBe('Perfect Peridot Gemstone');
 
 	expect(upgrades[2]['action']).toBe('apply');
 	expect(upgrades[2]['increase']).toBe(2);
-	expect(upgrades[2]['title']).toBe('Perfect Peridot Gemstone');
+	expect(upgrades[2]['title']).toBe('Pesterminator 4');
 
 	expect(upgrades[3]['action']).toBe('apply');
 	expect(upgrades[3]['increase']).toBe(1);

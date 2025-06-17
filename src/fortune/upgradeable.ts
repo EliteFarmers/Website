@@ -1,23 +1,24 @@
 import { Crop } from '../constants/crops.js';
 import { REFORGES, Rarity, RarityRecord, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges.js';
 import { Stat, StatsRecord } from '../constants/stats.js';
-import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades.js';
+import { FortuneSourceProgress, FortuneUpgrade, Upgrade, UpgradeCost } from '../constants/upgrades.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import { EliteItemDto } from './item.js';
+
+export type GemSlotCost = { type: 'ITEM'; item_id: string; amount: number } | { type: 'COINS'; coins: number };
 
 export interface UpgradeableInfo {
 	name: string;
 	skyblockId: string;
 	upgrade?: Upgrade;
 	wiki?: string;
-	gemSlots?: {
-		peridot: number;
-	};
+	gemSlots?: { slot_type: string; costs: GemSlotCost[] }[];
 	maxRarity: Rarity;
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;
+	cost?: UpgradeCost;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 }
 

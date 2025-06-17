@@ -1,10 +1,11 @@
 import { ReforgeTarget } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { UpgradeableInfo } from '../../fortune/upgradeable.js';
-import { ARMOR_INFO, ARMOR_SET_BONUS, GEAR_SLOTS, GearSlot, GearSlotInfo } from '../../items/armor.js';
-import { EQUIPMENT_INFO } from '../../items/equipment.js';
+import { ARMOR_SET_BONUS, FARMING_ARMOR_INFO, GEAR_SLOTS, GearSlot, GearSlotInfo } from '../../items/armor.js';
+import { FARMING_EQUIPMENT_INFO } from '../../items/equipment.js';
 import { DynamicFortuneSource } from './toolsources.js';
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
@@ -45,15 +46,15 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 			return (
 				current?.info.wiki ??
 				(info.target === ReforgeTarget.Armor
-					? ARMOR_INFO[info.startingItem]?.wiki
-					: EQUIPMENT_INFO[info.startingItem]?.wiki)
+					? FARMING_ARMOR_INFO[info.startingItem]?.wiki
+					: FARMING_EQUIPMENT_INFO[info.startingItem]?.wiki)
 			);
 		},
 		max: (set) => {
 			const item =
 				info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
+					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
+					: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
 
 			const progress = item?.getProgress();
 			const maxed = progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
@@ -78,8 +79,8 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 
 			const fake =
 				info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
+					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
+					: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
 
 			return fake?.getProgress(true) ?? [];
 		},
@@ -87,8 +88,8 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 			const piece = set.getPiece(slot as GearSlot);
 			const fake = !piece
 				? info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo)
+					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
+					: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo)
 				: undefined;
 
 			return {
@@ -97,6 +98,41 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 				nextInfo: fake ? fake.info : piece?.getNextItemUpgrade()?.info,
 				maxInfo: (fake ? fake : piece)?.getLastItemUpgrade()?.info,
 			};
+		},
+		upgrades: (set) => {
+			const piece = set.getPiece(slot as GearSlot);
+			if (piece) return piece.getUpgrades();
+
+			const itemToPurchase =
+				info.target === ReforgeTarget.Armor
+					? (FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
+					: (FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
+
+			const fakeItem =
+				info.target === ReforgeTarget.Armor
+					? FarmingArmor.fakeItem(itemToPurchase)
+					: FarmingEquipment.fakeItem(itemToPurchase);
+
+			return [
+				{
+					title: itemToPurchase.name,
+					action: UpgradeAction.Purchase,
+					purchase: fakeItem?.item.skyblockId ?? undefined,
+					increase: fakeItem?.getFortune() ?? 0,
+					wiki: itemToPurchase.wiki,
+					category: UpgradeCategory.Item,
+					onto: {
+						slot: slot as GearSlot,
+					},
+					cost: fakeItem?.item.skyblockId
+						? {
+								items: {
+									[fakeItem.item.skyblockId]: 1,
+								},
+							}
+						: undefined,
+				},
+			];
 		},
 	};
 }

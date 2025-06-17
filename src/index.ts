@@ -29,6 +29,7 @@ export * from './constants/upgrades.js';
 export * from './constants/tempfortune.js';
 export * from './constants/stats.js';
 export * from './constants/specific.js';
+export * from './constants/plots.js';
 
 export * from './util/garden.js';
 export * from './util/itemstats.js';

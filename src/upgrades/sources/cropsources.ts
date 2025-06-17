@@ -2,6 +2,7 @@ import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
@@ -58,6 +59,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		current: ({ player, crop }) => {
 			return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
 		},
+		upgrades: ({ player, crop }) => {
+			if (player.options.exportableCrops?.[crop]) return [];
+
+			return [
+				{
+					title: 'Exportable Crop',
+					increase: EXPORTABLE_CROP_FORTUNE,
+					action: UpgradeAction.Unlock,
+					category: UpgradeCategory.Misc,
+					api: false,
+					wiki: 'https://wiki.hypixel.net/Carrolyn',
+					cost: CROP_INFO[crop].exportableCost,
+				},
+			];
+		},
 	},
 	{
 		name: GARDEN_CROP_UPGRADES.name,
@@ -67,6 +83,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		current: ({ player, crop }) => {
 			return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
 		},
+		upgrades: ({ player, crop }) => {
+			const level = player.options.cropUpgrades?.[crop] ?? 0;
+			if (level >= GARDEN_CROP_UPGRADES.maxLevel) return [];
+
+			return [
+				{
+					title: GARDEN_CROP_UPGRADES.name,
+					increase: GARDEN_CROP_UPGRADES.fortunePerLevel,
+					action: UpgradeAction.Upgrade,
+					wiki: GARDEN_CROP_UPGRADES.wiki,
+					category: UpgradeCategory.Misc,
+					cost: GARDEN_CROP_UPGRADES.upgradeCosts?.[level + 1],
+				},
+			];
+		},
 	},
 	{
 		name: COCOA_FORTUNE_UPGRADE.name,
@@ -75,6 +106,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		max: () => COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel,
 		current: ({ player }) => {
 			return (player.options.cocoaFortuneUpgrade ?? 0) * COCOA_FORTUNE_UPGRADE.fortunePerLevel;
+		},
+		upgrades: ({ player }) => {
+			const level = player.options.cocoaFortuneUpgrade ?? 0;
+			if (level >= COCOA_FORTUNE_UPGRADE.maxLevel) return [];
+
+			return [
+				{
+					title: COCOA_FORTUNE_UPGRADE.name,
+					increase: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+					action: UpgradeAction.Upgrade,
+					repeatable: COCOA_FORTUNE_UPGRADE.maxLevel - level,
+					wiki: COCOA_FORTUNE_UPGRADE.wiki,
+					category: UpgradeCategory.Misc,
+				},
+			];
 		},
 	},
 	{

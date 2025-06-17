@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../../constants/crops.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
 
 const netherwartHoe = {
@@ -89,6 +90,7 @@ test('Test tool fortune sources', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -200,6 +202,7 @@ test('Tier 1 Wheat Hoe', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -266,4 +269,98 @@ test('Tier 1 Wheat Hoe', () => {
 	]);
 
 	expect(progress.reduce((acc, curr) => acc + curr.maxFortune, 0)).toBe(485);
+});
+
+test('Tier 1 Wheat Hoe Upgrades', () => {
+	const tool = new FarmingTool(t1WheatHoe);
+	expect(tool.fortune).toBe(10);
+
+	const upgrades = tool.getUpgrades();
+
+	expect(upgrades).toHaveLength(8);
+
+	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe");
+	expect(selfUpgrade).toBeDefined();
+	expect(selfUpgrade?.increase).toBe(15);
+	expect(selfUpgrade?.action).toBe(UpgradeAction.Upgrade);
+	expect(selfUpgrade?.category).toBe(UpgradeCategory.Item);
+	expect(selfUpgrade?.cost).toStrictEqual({
+		items: {
+			ENCHANTED_WHEAT: 256,
+			JACOBS_TICKET: 64,
+		},
+	});
+
+	const harvesting = upgrades.find((u) => u.title === 'Harvesting 1');
+	expect(harvesting).toBeDefined();
+	expect(harvesting?.increase).toBe(12.5);
+	expect(harvesting?.action).toBe(UpgradeAction.Apply);
+	expect(harvesting?.category).toBe(UpgradeCategory.Enchant);
+	expect(harvesting?.cost?.items).toStrictEqual({
+		ENCHANTMENT_HARVESTING_1: 1,
+	});
+
+	const blessed = upgrades.find((u) => u.title === 'Reforge to Blessed');
+	expect(blessed).toBeDefined();
+	expect(blessed?.increase).toBe(5);
+	expect(blessed?.action).toBe(UpgradeAction.Apply);
+	expect(blessed?.category).toBe(UpgradeCategory.Reforge);
+	expect(blessed?.cost?.items).toStrictEqual({
+		BLESSED_FRUIT: 1,
+	});
+
+	const bountiful = upgrades.find((u) => u.title === 'Reforge to Bountiful');
+	expect(bountiful).toBeDefined();
+	expect(bountiful?.increase).toBe(1);
+	expect(bountiful?.action).toBe(UpgradeAction.Apply);
+	expect(bountiful?.category).toBe(UpgradeCategory.Reforge);
+	expect(bountiful?.cost).toStrictEqual({
+		items: {
+			GOLDEN_BALL: 1,
+		},
+		coins: 1000000,
+		copper: undefined,
+		applyCost: {
+			coins: 20000,
+		},
+	});
+
+	const turboWheat = upgrades.find((u) => u.title === 'Turbo-Wheat 1');
+	expect(turboWheat).toBeDefined();
+	expect(turboWheat?.increase).toBe(5);
+	expect(turboWheat?.action).toBe(UpgradeAction.Apply);
+	expect(turboWheat?.category).toBe(UpgradeCategory.Enchant);
+	expect(turboWheat?.cost?.items).toStrictEqual({
+		ENCHANTMENT_TURBO_WHEAT_1: 1,
+	});
+
+	const cultivating = upgrades.find((u) => u.title === 'Cultivating 1');
+	expect(cultivating).toBeDefined();
+	expect(cultivating?.increase).toBe(2);
+	expect(cultivating?.action).toBe(UpgradeAction.Apply);
+	expect(cultivating?.category).toBe(UpgradeCategory.Enchant);
+	expect(cultivating?.cost?.items).toStrictEqual({
+		ENCHANTMENT_CULTIVATING_1: 1,
+	});
+
+	const fineGem = upgrades.find((u) => u.title === 'Fine Peridot Gemstone');
+	expect(fineGem).toBeDefined();
+	expect(fineGem?.increase).toBe(1.5);
+	expect(fineGem?.action).toBe(UpgradeAction.Apply);
+	expect(fineGem?.category).toBe(UpgradeCategory.Gem);
+	expect(fineGem?.cost).toStrictEqual({
+		items: {
+			FINE_PERIDOT_GEM: 21,
+		},
+		coins: 50000,
+	});
+
+	const dedication = upgrades.find((u) => u.title === 'Dedication 1');
+	expect(dedication).toBeDefined();
+	expect(dedication?.increase).toBe(0);
+	expect(dedication?.action).toBe(UpgradeAction.Apply);
+	expect(dedication?.category).toBe(UpgradeCategory.Enchant);
+	expect(dedication?.cost?.items).toStrictEqual({
+		ENCHANTMENT_DEDICATION_1: 1,
+	});
 });

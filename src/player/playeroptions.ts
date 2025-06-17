@@ -13,6 +13,7 @@ export interface FortuneMissingFromAPI {
 	cropUpgrades?: Partial<Record<Crop, number>>;
 	gardenLevel?: number;
 	plotsUnlocked?: number;
+	plots?: string[];
 	uniqueVisitors?: number;
 	communityCenter?: number;
 	milestones?: Partial<Record<Crop, number>>;

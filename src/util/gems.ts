@@ -20,15 +20,18 @@ export function getPeridotGems(item: EliteItemDto) {
 
 	return Object.entries(gems)
 		.filter(([gem]) => gem.startsWith('PERIDOT'))
-		.map(([, rarity]) => rarity as GemRarity);
+		.map(([, rarity]) => rarity as GemRarity | null);
 }
 
-export function getPeridotGemFortune(rarity: Rarity, gem: GemRarity) {
+export function getPeridotGemFortune(rarity: Rarity, gem: GemRarity | null): number {
+	if (!gem) return 0;
 	return PERIDOT[rarity]?.[gem] ?? 0;
 }
 
-export function getNextGemRarity(gem: GemRarity) {
+export function getNextGemRarity(gem: GemRarity | null) {
 	switch (gem) {
+		case null:
+			return GemRarity.Rough;
 		case GemRarity.Rough:
 			return GemRarity.Flawed;
 		case GemRarity.Flawed:
@@ -42,8 +45,10 @@ export function getNextGemRarity(gem: GemRarity) {
 	}
 }
 
-export function getGemRarityName(rarity: GemRarity) {
+export function getGemRarityName(rarity: GemRarity | null): string {
 	switch (rarity) {
+		case null:
+			return 'None';
 		case GemRarity.Rough:
 			return 'Rough';
 		case GemRarity.Flawed:

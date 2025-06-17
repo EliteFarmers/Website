@@ -1,4 +1,4 @@
-import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
+import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
@@ -9,6 +9,7 @@ import {
 	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
 import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
+import { FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -16,6 +17,7 @@ import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
+import { FARMING_TOOLS } from '../items/tools.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
@@ -146,12 +148,68 @@ export class FarmingPlayer {
 		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES);
 	}
 
+	getUpgrades() {
+		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		const armorSetUpgrades = this.armorSet.getUpgrades();
+		if (armorSetUpgrades.length > 0) {
+			upgrades.push(...armorSetUpgrades);
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+		return upgrades;
+	}
+
+	getCropUpgrades(crop?: Crop, tool?: FarmingTool) {
+		const upgrades = [] as FortuneUpgrade[];
+		if (!crop) return upgrades;
+
+		const cropUpgrades = this.getCropProgress(crop);
+		for (const source of cropUpgrades) {
+			if (source.upgrades) {
+				upgrades.push(...source.upgrades);
+			}
+		}
+
+		const cropTool = tool ?? this.getSelectedCropTool(crop);
+		if (cropTool) {
+			const toolUpgrades = cropTool.getUpgrades();
+			upgrades.push(...toolUpgrades);
+		} else {
+			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
+			if (startingInfo) {
+				const fakeItem = FarmingTool.fakeItem(startingInfo, this.options);
+				const purchaseId = fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool;
+
+				upgrades.push({
+					title: startingInfo.name,
+					action: UpgradeAction.Purchase,
+					purchase: purchaseId,
+					increase: fakeItem?.getFortune() ?? 0,
+					wiki: startingInfo.wiki,
+					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							[purchaseId]: 1,
+						},
+					},
+				});
+			}
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+		return upgrades;
+	}
+
 	getGeneralFortune() {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
 
 		// Plots
-		const plots = getFortune(this.options.plotsUnlocked, UNLOCKED_PLOTS);
+		const plots = getFortune(this.options.plots?.length ?? this.options.plotsUnlocked, UNLOCKED_PLOTS);
 		if (plots > 0) {
 			breakdown['Unlocked Plots'] = plots;
 			sum += plots;

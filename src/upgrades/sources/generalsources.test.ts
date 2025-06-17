@@ -20,6 +20,7 @@ test('General fortune sources', () => {
 		delete piece.nextInfo;
 		delete piece.info;
 		delete piece.maxInfo;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -48,7 +49,7 @@ test('General fortune sources', () => {
 			ratio: 30 / 72,
 		},
 		{
-			name: 'Community Center Upgrade',
+			name: 'Garden Farming Fortune',
 			fortune: 40,
 			maxFortune: 40,
 			ratio: 1,

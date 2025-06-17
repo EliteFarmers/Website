@@ -7,6 +7,7 @@ import { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { GemRarity } from '../../fortune/item.js';
 import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
+import { getUpgradeableEnchant, getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
 import { DynamicFortuneSource } from './toolsources.js';
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
@@ -37,24 +38,26 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		current: (gear) => {
 			return gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
 		},
+		upgrades: getUpgradeableReforges,
 	},
 	{
 		name: 'Gemstone Slots',
 		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
-		exists: (gear) => {
-			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
-			return last?.gemSlots?.peridot !== undefined;
+		exists: (upgradeable) => {
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
 		},
-		max: (gear) => {
-			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
+		max: (upgradeable) => {
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			return (
-				(last?.gemSlots?.peridot ?? 0) *
+				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
 				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
 			);
 		},
-		current: (gear) => {
-			return getPeridotFortune(gear.rarity, gear.item);
+		current: (upgradeable) => {
+			return getPeridotFortune(upgradeable.rarity, upgradeable.item);
 		},
+		upgrades: getUpgradeableGems,
 	},
 	{
 		name: 'Salesperson Ability',
@@ -92,6 +95,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 					exists: (gear) => enchant.appliesTo.includes(gear.type),
 					max: (gear) => getMaxFortuneFromEnchant(enchant, gear.options),
 					current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options),
+					upgrades: (gear) => getUpgradeableEnchant(gear, id),
 				}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>
 		),
 ];

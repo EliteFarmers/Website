@@ -81,7 +81,7 @@ export interface FarmingArmorInfo extends UpgradeableInfo {
 	skillReq?: Partial<Record<Skill, number>>;
 }
 
-export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
+export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARMER_BOOTS: {
 		skyblockId: 'FARMER_BOOTS',
 		name: 'Farmer Boots',
@@ -89,12 +89,23 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'RANCHERS_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_PUMPKIN: 256,
+				},
+			},
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Boots,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{ type: 'ITEM', item_id: 'FINE_PERIDOT_GEM', amount: 20 },
+					{ type: 'COINS', coins: 50000 },
+				],
+			},
+		],
 		skillReq: {
 			[Skill.Farming]: 18,
 		},
@@ -113,13 +124,40 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			id: 'FERMENTO_BOOTS',
 			reason: UpgradeReason.Situational,
 			why: 'Fermento Boots provide more farming fortune, with the tradeoff of not being able to control your speed.',
-			preffered: true,
+			preferred: true,
 		},
 		maxRarity: Rarity.Legendary,
 		slot: GearSlot.Boots,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		skillReq: {
 			[Skill.Farming]: 21,
 		},
@@ -140,9 +178,26 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Helmet,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		skillReq: {
 			[Skill.Farming]: 15,
 		},
@@ -164,9 +219,26 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Helmet,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		maxRarity: Rarity.Epic,
 		baseStats: {
 			[Stat.FarmingFortune]: 10,
@@ -186,9 +258,26 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
@@ -207,9 +296,26 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
@@ -228,9 +334,26 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
@@ -249,9 +372,12 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'RABBIT',
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Uncommon,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
@@ -269,9 +395,12 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		family: 'RABBIT',
 		slot: GearSlot.Chestplate,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+		],
 		maxRarity: Rarity.Uncommon,
 		baseStats: {
 			[Stat.FarmingFortune]: 15,
@@ -291,9 +420,12 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'RABBIT',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Uncommon,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
@@ -312,9 +444,12 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'RABBIT',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Uncommon,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
@@ -329,6 +464,13 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_HELMET',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 8,
+					BOX_OF_SEEDS: 6,
+					CROPIE: 20,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -348,6 +490,14 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_CHESTPLATE',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 8,
+					BOX_OF_SEEDS: 6,
+					CROPIE: 20,
+					ENCHANTED_BAKED_POTATO: 45,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -367,6 +517,14 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_LEGGINGS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 8,
+					BOX_OF_SEEDS: 6,
+					CROPIE: 20,
+					ENCHANTED_GOLDEN_CARROT: 30,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -386,6 +544,12 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 16,
+					CROPIE: 20,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -405,14 +569,34 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_HELMET',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 8,
+					ENCHANTED_MELON_BLOCK: 48,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
@@ -427,14 +611,35 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_CHESTPLATE',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 8,
+					ENCHANTED_MELON_BLOCK: 48,
+					ENCHANTED_COOKIE: 30,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -449,14 +654,35 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_LEGGINGS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 8,
+					ENCHANTED_MELON_BLOCK: 48,
+					ENCHANTED_COOKIE: 20,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -471,14 +697,33 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 12,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Epic,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
@@ -493,14 +738,35 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_HELMET',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_SUGAR_CANE: 32,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Legendary,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -515,14 +781,37 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_CHESTPLATE',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_SUGAR_CANE: 32,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+					MUTANT_NETHER_STALK: 30,
+					ENCHANTED_CACTUS: 25,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Legendary,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -537,14 +826,36 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_LEGGINGS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_SUGAR_CANE: 32,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+					MUTANT_NETHER_STALK: 40,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Legendary,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -559,14 +870,34 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Legendary,
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -582,9 +913,36 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Mythic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -600,9 +958,36 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Mythic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 35,
 		},
@@ -618,9 +1003,36 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Mythic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 35,
 		},
@@ -641,9 +1053,36 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Mythic,
-		gemSlots: {
-			peridot: 2,
-		},
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},

@@ -72,6 +72,7 @@ test('Almost maxed fermento fortune sources', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -141,6 +142,7 @@ test('Melon boots fortune sources', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -185,9 +187,11 @@ test('Same maxed armor fortune sources', () => {
 	for (let i = 0; i < helmetProgress.length; i++) {
 		helmetProgress[i].fortune = 0;
 		helmetProgress[i].ratio = 0;
+		delete helmetProgress[i].upgrades;
 
 		bootsProgress[i].fortune = 0;
 		bootsProgress[i].ratio = 0;
+		delete bootsProgress[i].upgrades;
 	}
 
 	expect(helmetProgress).toStrictEqual(bootsProgress);

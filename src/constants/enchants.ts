@@ -4,6 +4,7 @@ import { Crop } from './crops.js';
 import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
 import { ReforgeTarget } from './reforges.js';
 import { Stat } from './stats.js';
+import type { UpgradeCost } from './upgrades.js';
 
 export enum EnchantTierProcurement {
 	Normal = 'normal',
@@ -18,10 +19,12 @@ export interface FarmingEnchantTier {
 	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
 	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
 	procurement?: EnchantTierProcurement;
+	cost?: UpgradeCost;
 }
 
 export interface FarmingEnchant {
 	name: string;
+	id?: string;
 	appliesTo: readonly ReforgeTarget[];
 	wiki: string;
 	minLevel: number;
@@ -120,6 +123,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 					[Stat.FarmingWisdom]: 1,
 					[Stat.FarmingFortune]: 2,
 				},
+				cost: {
+					bits: 4000,
+				},
 			},
 			2: {
 				stats: {
@@ -194,6 +200,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 4,
 		levels: {
 			1: {
+				cost: {
+					copper: 250,
+				},
 				cropComputed: {
 					[Stat.FarmingFortune]: (crop, opt) => {
 						if (!crop) return 0;
@@ -241,6 +250,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			1: {
 				stats: {
 					[Stat.FarmingFortune]: 12.5,
+				},
+				cost: {
+					copper: 10,
 				},
 			},
 			2: {
@@ -315,6 +327,11 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 					[Stat.FarmingFortune]: 12,
 				},
 				procurement: EnchantTierProcurement.UpgradeItem,
+				cost: {
+					items: {
+						PESTHUNTING_GUIDE: 1,
+					},
+				},
 			},
 		},
 	},
@@ -329,6 +346,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			1: {
 				computed: {
 					[Stat.FarmingFortune]: (opt) => 0.05 * (opt.uniqueVisitors ?? 0),
+				},
+				cost: {
+					copper: 1500,
 				},
 			},
 			2: {
@@ -376,6 +396,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	turbo_coco: {
 		name: 'Turbo-Cocoa',
+		id: 'ENCHANTMENT_TURBO_COCO',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
 		cropSpecific: Crop.CocoaBeans,
 		...turboEnchant,

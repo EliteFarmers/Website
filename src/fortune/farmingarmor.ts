@@ -4,14 +4,27 @@ import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforg
 import { Skill } from '../constants/skills.js';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
-import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../items/armor.js';
-import { EQUIPMENT_INFO } from '../items/equipment.js';
+import {
+	ARMOR_SET_BONUS,
+	ArmorSetBonus,
+	FARMING_ARMOR_INFO,
+	FarmingArmorInfo,
+	GEAR_SLOTS,
+	GearSlot,
+} from '../items/armor.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
-import { getItemUpgrades, getLastItemUpgradeableTo, getSourceProgress } from '../upgrades/upgrades.js';
+import {
+	getItemUpgrades,
+	getLastItemUpgradeableTo,
+	getSelfFortuneUpgrade,
+	getSourceProgress,
+	getUpgradeableRarityUpgrade,
+} from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { FarmingEquipment } from './farmingequipment.js';
@@ -292,13 +305,25 @@ export class ArmorSet {
 		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed);
 	}
 
+	getUpgrades() {
+		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+
+		return upgrades;
+	}
+
 	getPieceProgress(slot: GearSlot) {
 		let piece = this.getPiece(slot);
 		if (!piece) {
 			piece =
 				GEAR_SLOTS[slot].target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo);
+					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
+					: FarmingEquipment.fakeItem(
+							FARMING_EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo
+						);
 			return piece?.getProgress(true) ?? [];
 		}
 
@@ -366,7 +391,7 @@ export class FarmingArmor extends UpgradeableBase {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		super({ item, options, items: ARMOR_INFO });
+		super({ item, options, items: FARMING_ARMOR_INFO });
 		this.getFortune();
 	}
 
@@ -428,8 +453,26 @@ export class FarmingArmor extends UpgradeableBase {
 		return sum;
 	}
 
-	getUpgrades() {
-		return getItemUpgrades(this);
+	getUpgrades(): FortuneUpgrade[] {
+		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
+		if (deadEnd && self) return [self];
+
+		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, false).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		if (self) {
+			upgrades.push(self);
+		}
+
+		const rarityUpgrade = getUpgradeableRarityUpgrade(this);
+		if (rarityUpgrade) {
+			upgrades.push(rarityUpgrade);
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+
+		return upgrades;
 	}
 
 	getItemUpgrade() {
@@ -437,7 +480,7 @@ export class FarmingArmor extends UpgradeableBase {
 	}
 
 	getLastItemUpgrade() {
-		return getLastItemUpgradeableTo(this, ARMOR_INFO);
+		return getLastItemUpgradeableTo(this, FARMING_ARMOR_INFO);
 	}
 
 	getProgress(zeroed = false): FortuneSourceProgress[] {
@@ -445,7 +488,7 @@ export class FarmingArmor extends UpgradeableBase {
 	}
 
 	static isValid(item: EliteItemDto): boolean {
-		return ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO] !== undefined;
+		return FARMING_ARMOR_INFO[item.skyblockId as keyof typeof FARMING_ARMOR_INFO] !== undefined;
 	}
 
 	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingArmor[] {

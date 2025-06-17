@@ -1,3 +1,5 @@
+import { UpgradeCost } from './upgrades.js';
+
 export enum Crop {
 	Cactus = 'CACTUS',
 	Carrot = 'CARROT_ITEM',
@@ -30,6 +32,7 @@ export interface CropInfo {
 	breaks?: number;
 	replenish?: boolean;
 	exportable?: boolean;
+	exportableCost?: UpgradeCost;
 	startingTool: string;
 	crafts: CropCraft[];
 }
@@ -58,6 +61,11 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 3,
 		replenish: true,
 		exportable: true,
+		exportableCost: {
+			items: {
+				EXPORTABLE_CARROTS: 3000,
+			},
+		},
 		startingTool: 'THEORETICAL_HOE_CARROT_1',
 		crafts: [
 			{
@@ -83,6 +91,11 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 3,
 		replenish: true,
 		exportable: true,
+		exportableCost: {
+			items: {
+				SUPREME_CHOCOLATE_BAR: 3000,
+			},
+		},
 		startingTool: 'COCO_CHOPPER',
 		crafts: [
 			{
@@ -123,6 +136,11 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 10,
 		drops: 1,
 		exportable: true,
+		exportableCost: {
+			items: {
+				HALF_EATEN_MUSHROOM: 3000,
+			},
+		},
 		startingTool: 'FUNGI_CUTTER',
 		crafts: [
 			{
@@ -182,6 +200,11 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 10,
 		drops: 1,
 		exportable: true,
+		exportableCost: {
+			items: {
+				EXPIRED_PUMPKIN: 3000,
+			},
+		},
 		startingTool: 'PUMPKIN_DICER',
 		crafts: [
 			{
@@ -216,6 +239,11 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 6,
 		drops: 1,
 		exportable: true,
+		exportableCost: {
+			items: {
+				FINE_FLOUR: 3000,
+			},
+		},
 		startingTool: 'THEORETICAL_HOE_WHEAT_1',
 		crafts: [
 			{

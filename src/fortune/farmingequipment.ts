@@ -3,7 +3,7 @@ import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforg
 import { Stat } from '../constants/stats.js';
 import { FortuneSourceProgress } from '../constants/upgrades.js';
 import { FarmingArmorInfo } from '../items/armor.js';
-import { EQUIPMENT_INFO } from '../items/equipment.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getSourceProgress } from '../upgrades/upgrades.js';
@@ -35,7 +35,7 @@ export class FarmingEquipment extends UpgradeableBase {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		super({ item, options, items: EQUIPMENT_INFO });
+		super({ item, options, items: FARMING_EQUIPMENT_INFO });
 		this.getFortune();
 	}
 
@@ -173,7 +173,7 @@ export class FarmingEquipment extends UpgradeableBase {
 	}
 
 	static isValid(item: EliteItemDto): boolean {
-		return EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO] !== undefined;
+		return FARMING_EQUIPMENT_INFO[item.skyblockId as keyof typeof FARMING_EQUIPMENT_INFO] !== undefined;
 	}
 
 	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingEquipment[] {
