@@ -60,6 +60,11 @@
 	{#if itemData}
 		<ItemRequirements {itemData} />
 	{/if}
+	{#if upgrade.repeatable && upgrade.repeatable > 1}
+		<p class="text-xs text-muted-foreground">
+			This upgrade can be done <span class="font-bold">{upgrade.repeatable.toLocaleString()}</span> times!
+		</p>
+	{/if}
 	{#if upgrade.optional}
 		<p class="text-xs text-muted-foreground">Recommended for more profit despite lower fortune.</p>
 	{/if}

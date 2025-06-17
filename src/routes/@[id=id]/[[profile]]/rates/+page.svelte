@@ -47,6 +47,7 @@
 	import RatesSettings from './rates-settings.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
 	import CheapestUpgrades from './cheapest-upgrades.svelte';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 
 	const ctx = getStatsContext();
 
@@ -515,7 +516,21 @@
 	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
 	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
-		<CheapestUpgrades {player} crop={selectedCropKey} />
+		<svelte:boundary>
+			<CheapestUpgrades {player} crop={selectedCropKey} />
+			{#snippet failed(error, reset)}
+				<div class="flex w-full flex-col items-center justify-center gap-4">
+					<p class="text-lg font-semibold">Failed to load upgrades!</p>
+					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
+					<p class="text-sm text-muted-foreground">
+						Please report the error in the <a href="/support" class="text-link underline"
+							>Support Discord Server</a
+						>!
+					</p>
+					<Button variant="outline" onclick={reset}>Retry</Button>
+				</div>
+			{/snippet}
+		</svelte:boundary>
 	</section>
 </div>
 

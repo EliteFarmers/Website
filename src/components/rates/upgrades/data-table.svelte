@@ -16,7 +16,6 @@
 	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
 	import * as Table from '$ui/table/index.js';
 	import DataTablePagination from './data-table-pagination.svelte';
-	import DataTableToolbar from './data-table-toolbar.svelte';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -108,7 +107,6 @@
 </script>
 
 <div class="space-y-4">
-	<DataTableToolbar {table} />
 	<div class="rounded-md border">
 		<Table.Root>
 			<Table.Header>

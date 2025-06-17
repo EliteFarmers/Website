@@ -6,8 +6,8 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { Crop, type FortuneUpgrade } from 'farming-weight';
+	import { Debounced } from 'runed';
 
-	// const ratesData = getRatesData();
 	const ctx = getStatsContext();
 	const mode = $derived(ctx.selectedProfile?.gameMode);
 
@@ -26,7 +26,6 @@
 			const jsonData = await response.json();
 
 			const data = jsonData as components['schemas']['GetSpecifiedSkyblockItemsResponse'];
-			console.log('Fetched bazaar data for', items, data?.items);
 			return data?.items;
 		} catch {
 			return undefined;
@@ -37,21 +36,23 @@
 	const cropUpgrades = $derived($player.getCropUpgrades(crop));
 	const upgrades = $derived([...generalUpgrades, ...cropUpgrades]);
 
-	let itemsPromise = $derived<ReturnType<typeof getBazaarData> | undefined>(
-		getBazaarData([
-			...new Set(
-				upgrades
-					.map((up) => [
-						Object.keys(up.cost?.items ?? {}),
-						Object.keys(up.cost?.applyCost?.items ?? {}),
-						up.purchase,
-					])
-					.flat(2)
-					.filter(Boolean)
-					.flat() as string[]
-			),
-		])
-	);
+	const neededItems = $derived([
+		...new Set(
+			upgrades
+				.map((up) => [
+					Object.keys(up.cost?.items ?? {}),
+					Object.keys(up.cost?.applyCost?.items ?? {}),
+					up.purchase,
+				])
+				.flat(2)
+				.filter(Boolean)
+				.flat() as string[]
+		),
+	]);
+
+	const debouncedItems = new Debounced(() => neededItems, 500);
+
+	let itemsPromise = $derived<Promise<FetchedItems | undefined>>(getBazaarData(debouncedItems.current));
 
 	function upgradeCost(upgrade: FortuneUpgrade, items: FetchedItems): number {
 		let total = 0;
@@ -78,18 +79,6 @@
 			}
 		}
 	}
-
-	function costPerFortune(cost: number, increase: number): number {
-		return increase > 0 ? Math.round(cost / increase) : 0;
-	}
-
-	function sortByCost(items: FetchedItems) {
-		return (a: FortuneUpgrade, b: FortuneUpgrade) => {
-			return (
-				costPerFortune(upgradeCost(a, items), a.increase) - costPerFortune(upgradeCost(b, items), b.increase)
-			);
-		};
-	}
 </script>
 
 <div class="flex w-full flex-col gap-2">
@@ -97,17 +86,20 @@
 	{#if (mode ?? 'classic') !== 'classic'}
 		<div class="flex flex-row items-center gap-2 text-sm">
 			<TriangleAlert size={20} class="-mb-1 text-completed" />
-			<p>These upgrades use Bazaar and Auction House prices which aren't available in this game mode. {mode}</p>
+			<p>These upgrades use Bazaar and Auction House prices which aren't available in this game mode.</p>
 		</div>
-	{:else}
-		<p class="text-sm text-muted-foreground">Every available fortune upgrade for {ctx.ignMeta}!</p>
 	{/if}
-	<hr />
+	<p class="text-sm text-muted-foreground">Every available fortune upgrade for {ctx.ignMeta}!</p>
+	{#if !crop || crop.length === 0}
+		<div class="flex flex-row items-center gap-2 text-sm">
+			<TriangleAlert size={20} class="-mb-1 text-completed" />
+			<p>No crop selected! Select a crop to add crop specific upgrades to this list!</p>
+		</div>
+	{/if}
 	{#await itemsPromise}
 		<p class="text-sm text-muted-foreground">Loading item prices...</p>
-	{:then items}
-		{@const sorted = upgrades.sort(sortByCost(items))}
-		<UpgradeList upgrades={sorted} {items} costFn={upgradeCost} />
+	{:then loadedItems}
+		<UpgradeList {upgrades} items={loadedItems} costFn={upgradeCost} />
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
 	{/await}
