@@ -24,9 +24,15 @@
 		{@render itemCost(item, amount)}
 	{/each}
 	{#if upgrade.cost?.coins}
-		<p class="text-sm">
-			+ <span class="dark:text-completed">{upgrade.cost?.coins?.toLocaleString()}</span>
+		<p class="text-sm text-muted-foreground">
+			+ <span class="text-primary dark:text-completed">{upgrade.cost?.coins?.toLocaleString()}</span>
 			<span class="text-muted-foreground">coins</span>
+		</p>
+	{/if}
+	{#if upgrade.cost?.applyCost?.coins}
+		<p class="text-sm text-muted-foreground">
+			+ <span class="text-primary dark:text-completed">{upgrade.cost?.applyCost?.coins?.toLocaleString()}</span>
+			<span class="text-muted-foreground">coins to apply</span>
 		</p>
 	{/if}
 	{#if copper > 0}
