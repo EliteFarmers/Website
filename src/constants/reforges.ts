@@ -441,7 +441,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 	blooming: {
 		name: 'Blooming',
 		wiki: 'https://wiki.hypixel.net/Flowering_Bouquet',
-		appliesTo: [ReforgeTarget.Armor],
+		appliesTo: [ReforgeTarget.Equipment],
 		stone: {
 			name: 'Flowering Bouquet',
 			id: 'FLOWERING_BOUQUET',

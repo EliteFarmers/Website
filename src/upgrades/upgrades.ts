@@ -458,7 +458,6 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 						items: {
 							[reforge.stone.id]: 1,
 						},
-						coins: reforge.stone.npc ?? undefined,
 						copper: reforge.stone.copper ?? undefined,
 						applyCost: tier.cost
 							? {

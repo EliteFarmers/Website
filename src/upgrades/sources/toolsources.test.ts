@@ -318,7 +318,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 		items: {
 			GOLDEN_BALL: 1,
 		},
-		coins: 1000000,
 		copper: undefined,
 		applyCost: {
 			coins: 20000,
