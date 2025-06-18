@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import JumpLink from '$comp/jump-link.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
 	import type { components } from '$lib/api/api';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
@@ -82,7 +83,10 @@
 </script>
 
 <div class="flex w-full flex-col gap-2">
-	<h2 class="text-2xl font-bold">Available Upgrades</h2>
+	<div class="flex flex-row items-center justify-start gap-1">
+		<h2 class="text-2xl font-bold">Available Upgrades</h2>
+		<JumpLink id="upgrades" self={false} />
+	</div>
 	{#if (mode ?? 'classic') !== 'classic'}
 		<div class="flex flex-row items-center gap-2 text-sm">
 			<TriangleAlert size={20} class="-mb-1 text-completed" />
