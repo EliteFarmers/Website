@@ -112,7 +112,6 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 								items: {
 									[reforge.stone.id]: 1,
 								},
-								copper: reforge.stone.copper ?? undefined,
 								applyCost: tier?.cost
 									? {
 											coins: tier?.cost,
