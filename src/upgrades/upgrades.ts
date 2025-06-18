@@ -382,7 +382,7 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 			// Get amount of level 1 enchantment items needed to craft the same applied level
 			// Ex: 4 level 1 items = 2 level 2 items = 1 level 3 item
 			// Count = Math.pow(2, applied - 1)
-			const count = Math.pow(2, applied);
+			const count = Math.pow(2, applied - 1);
 			items[enchantNameToId(enchant) + '_1'] = count;
 			break;
 		}
@@ -458,7 +458,6 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 						items: {
 							[reforge.stone.id]: 1,
 						},
-						copper: reforge.stone.copper ?? undefined,
 						applyCost: tier.cost
 							? {
 									coins: tier.cost,

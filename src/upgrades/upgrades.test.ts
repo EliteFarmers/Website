@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
+import { FarmingEquipment } from '../fortune/farmingequipment.js';
 
 const maxHelmet = {
 	id: 397,
@@ -137,8 +138,64 @@ test('Almost Maxed Helmet Upgrades Test', () => {
 	expect(upgrades[2]['action']).toBe('apply');
 	expect(upgrades[2]['increase']).toBe(2);
 	expect(upgrades[2]['title']).toBe('Pesterminator 4');
+	expect(upgrades[2].cost?.items?.['ENCHANTMENT_PESTERMINATOR_1']).toBe(4);
 
 	expect(upgrades[3]['action']).toBe('apply');
 	expect(upgrades[3]['increase']).toBe(1);
 	expect(upgrades[3]['title']).toBe('Flawless Peridot Gemstone');
+});
+
+const lotusNecklace = {
+	id: 397,
+	count: 1,
+	skyblockId: 'LOTUS_NECKLACE',
+	uuid: '2c0af2b1-234d-4a7d-8560-10a2b0eb8da4',
+	name: '§5Rooted Lotus Necklace',
+	lore: ['§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka'],
+	enchantments: { green_thumb: 4 },
+	attributes: { modifier: 'rooted', timestamp: '1676441040000', rarity_upgrades: '1' },
+};
+
+test('Enchantment Upgrades Test', () => {
+	const item = new FarmingEquipment(lotusNecklace);
+
+	const upgrades = item.getUpgrades();
+	expect(upgrades).toHaveLength(1);
+
+	const green = upgrades[0];
+	expect(green.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(8);
+
+	const green3 = new FarmingEquipment({
+		...lotusNecklace,
+		enchantments: { green_thumb: 3 },
+	});
+	expect(green3.getUpgrades()).toHaveLength(1);
+	expect(green3.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(4);
+
+	const green2 = new FarmingEquipment({
+		...lotusNecklace,
+		enchantments: { green_thumb: 2 },
+	});
+	expect(green2.getUpgrades()).toHaveLength(1);
+	expect(green2.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(2);
+
+	const green1 = new FarmingEquipment({
+		...lotusNecklace,
+		enchantments: { green_thumb: 1 },
+	});
+	expect(green1.getUpgrades()).toHaveLength(1);
+	expect(green1.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(1);
+
+	const green0 = new FarmingEquipment({
+		...lotusNecklace,
+		enchantments: { green_thumb: 0 },
+	});
+	expect(green0.getUpgrades()).toHaveLength(1);
+	expect(green0.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(1);
+
+	const green5 = new FarmingEquipment({
+		...lotusNecklace,
+		enchantments: { green_thumb: 5 },
+	});
+	expect(green5.getUpgrades()).toHaveLength(0);
 });
