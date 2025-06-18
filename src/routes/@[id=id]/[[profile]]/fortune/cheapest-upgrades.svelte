@@ -103,4 +103,18 @@
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
 	{/await}
+	<div class="flex flex-col items-center justify-center gap-2 p-4 text-sm text-muted-foreground">
+		<p class="max-w-xl text-center text-primary">
+			Upgrades such as strength for Mooshroom Cow and unlocking visitors for Green Thumb aren't shown here as
+			those aren't things you can easily purchase. Be sure to check the above farming fortune categories for
+			further upgrades!
+		</p>
+
+		{#if upgrades.length > 0}
+			<p class="max-w-xl text-center">
+				This list is generated based on averaged Bazaar and Auction House prices. Prices may vary and are not
+				guaranteed to be accurate at the time of purchase.
+			</p>
+		{/if}
+	</div>
 </div>
