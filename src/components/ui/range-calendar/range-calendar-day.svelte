@@ -15,15 +15,15 @@
 		'size-9 p-0 font-normal data-selected:opacity-100',
 		'[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground',
 		// Selection Start
-		'data-[selection-start]:bg-primary data-[selection-start]:text-card data-[selection-start]:hover:bg-primary data-[selection-start]:hover:text-card data-[selection-start]:focus:bg-primary data-[selection-start]:focus:text-card',
+		'data-selection-start:bg-primary data-selection-start:text-card data-selection-start:hover:bg-primary data-selection-start:hover:text-card data-selection-start:focus:bg-primary data-selection-start:focus:text-card',
 		// Selection End
-		'data-[selection-end]:bg-primary data-[selection-end]:text-card data-[selection-end]:hover:bg-primary data-[selection-end]:hover:text-card data-[selection-end]:focus:bg-primary data-[selection-end]:focus:text-card',
+		'data-selection-end:bg-primary data-selection-end:text-card data-selection-end:hover:bg-primary data-selection-end:hover:text-card data-selection-end:focus:bg-primary data-selection-end:focus:text-card',
 		// Outside months
-		'data-outside-month:pointer-events-none data-[outside-month]:text-muted-foreground data-outside-month:opacity-50 [&[data-outside-month][data-selected]]:bg-accent/50 [&[data-outside-month][data-selected]]:text-muted-foreground [&[data-outside-month][data-selected]]:opacity-30',
+		'data-outside-month:pointer-events-none data-outside-month:text-muted-foreground data-outside-month:opacity-50 [&[data-outside-month][data-selected]]:bg-accent/50 [&[data-outside-month][data-selected]]:text-muted-foreground [&[data-outside-month][data-selected]]:opacity-30',
 		// Disabled
-		'data-[disabled]:text-muted-foreground data-disabled:opacity-50',
+		'data-disabled:text-muted-foreground data-disabled:opacity-50',
 		// Unavailable
-		'data-[unavailable]:text-destructive-foreground data-unavailable:line-through',
+		'data-unavailable:text-destructive-foreground data-unavailable:line-through',
 		className
 	)}
 	{...restProps}
