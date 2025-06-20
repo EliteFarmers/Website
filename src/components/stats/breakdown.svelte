@@ -32,12 +32,12 @@
 				</h3>
 				{#each sources as [source, value] (source)}
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow">{source}</div>
+						<div class="grow">{source}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{:else}
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow">No crops found!</div>
+						<div class="grow">No crops found!</div>
 						<div class="flex-none">0</div>
 					</div>
 				{/each}
@@ -48,12 +48,12 @@
 				</h3>
 				{#each bonuses as [bonus, value] (bonus)}
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow capitalize">{bonus}</div>
+						<div class="grow capitalize">{bonus}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{:else}
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow">No bonuses unlocked yet!</div>
+						<div class="grow">No bonuses unlocked yet!</div>
 						<div class="flex-none">0</div>
 					</div>
 				{/each}

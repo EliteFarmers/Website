@@ -85,12 +85,12 @@
 							<Label for="yearOnly"><span class="text-sm">Skyblock Year</span></Label>
 							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} />
 						</div>
-						<Button class="mt-6 !p-2.5" href="/contests/{yearVal}/records" color="green">
+						<Button class="mt-6 p-2.5!" href="/contests/{yearVal}/records" color="green">
 							<!-- <OrdoredListOutline class="w-5 h-5" />
 							<Popover>Top Scores</Popover> -->
 							Records
 						</Button>
-						<Button class="mt-6 !p-2.5" type="submit" name="Search">
+						<Button class="mt-6 p-2.5!" type="submit" name="Search">
 							<svg
 								class="h-5 w-5"
 								fill="none"
@@ -117,7 +117,7 @@
 							<Input id="monthYear" placeholder="Day" bind:value={monthVal} />
 						</div>
 
-						<Button class="mt-6 !p-2.5" type="submit" name="Search">
+						<Button class="mt-6 p-2.5!" type="submit" name="Search">
 							<svg
 								class="h-5 w-5"
 								fill="none"
@@ -149,7 +149,7 @@
 							<Input id="day" placeholder="Day" bind:value={dayVal} />
 						</div>
 
-						<Button class="mt-6 !p-2.5" type="submit" name="Search">
+						<Button class="mt-6 p-2.5!" type="submit" name="Search">
 							<svg
 								class="h-5 w-5"
 								fill="none"

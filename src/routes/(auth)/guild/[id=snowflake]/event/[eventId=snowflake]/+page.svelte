@@ -110,7 +110,7 @@
 <div class="mt-64 flex flex-col items-center gap-4">
 	<section class="flex w-full max-w-7xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
+			class="flex w-[90%] max-w-(--breakpoint-lg) flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
 		>
 			<div class="flex flex-col justify-between gap-2 p-4 md:flex-row">
 				<div class="flex flex-col gap-2">

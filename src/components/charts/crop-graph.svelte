@@ -71,7 +71,7 @@
 				rule
 				grid
 				format={(d: number) => toReadable(d)}
-				tickLabelProps={{ class: '!stroke-0 !font-normal text-sm' }}
+				tickLabelProps={{ class: 'stroke-0! font-normal! text-sm' }}
 			/>
 			<Axis
 				placement="bottom"
@@ -80,7 +80,7 @@
 				tickLabelProps={{
 					rotate: 330,
 					textAnchor: 'end',
-					class: '!stroke-0 !font-normal text-xs md:text-sm',
+					class: 'stroke-0! font-normal! text-xs md:text-sm',
 				}}
 				ticks={days > 14 ? 14 : days}
 			/>
@@ -91,10 +91,10 @@
 					ticks={pestScale.ticks()}
 					format={(v: number) => toReadable(v, undefined, 2)}
 					rule
-					tickLabelProps={{ class: '!stroke-0 !font-normal text-sm' }}
+					tickLabelProps={{ class: 'stroke-0! font-normal! text-sm' }}
 				/>
-				<Spline class="{colorClasses[crop][0]} stroke-[3]" />
-				<Spline class="{colorClasses[crop][2]} stroke-[3]" y={(d: { pests: number }) => pestScale(d.pests)} />
+				<Spline class="{colorClasses[crop][0]} stroke-3" />
+				<Spline class="{colorClasses[crop][2]} stroke-3" y={(d: { pests: number }) => pestScale(d.pests)} />
 				<Highlight points={{ class: 'fill-primary' }} y={(d: { pests: number }) => pestScale(d.pests)} />
 			{:else}
 				<Area line={{ class: colorClasses[crop][0] + ' stroke-4' }} class={colorClasses[crop][1]} />

@@ -15,7 +15,7 @@
 
 <div class="m-1 inline-block rounded-md bg-card p-4">
 	<div class="flex items-center justify-between">
-		<div class="flex min-w-0 flex-shrink items-center justify-start gap-4">
+		<div class="flex min-w-0 shrink items-center justify-start gap-4">
 			<GuildIcon {guild} />
 			<h1 class="overflow-hidden text-ellipsis whitespace-nowrap pr-4 text-xl">{guild.name}</h1>
 		</div>

@@ -31,7 +31,7 @@
 	</section>
 
 	{#each categories as category (category.id)}
-		<section class="flex w-full max-w-[51rem] flex-col items-center gap-4 md:items-start">
+		<section class="flex w-full max-w-204 flex-col items-center gap-4 md:items-start">
 			<h2 class="text-2xl">{category.title}</h2>
 			<div class="flex flex-wrap items-start justify-center gap-4 md:justify-start">
 				{#each category.products ?? [] as product (product.id)}
@@ -41,7 +41,7 @@
 		</section>
 	{/each}
 
-	<section class="flex w-full max-w-[51rem] flex-col items-center gap-4 md:items-start">
+	<section class="flex w-full max-w-204 flex-col items-center gap-4 md:items-start">
 		<h2 class="text-2xl">All Products</h2>
 		<div class="flex flex-wrap items-start justify-center gap-4 md:justify-start">
 			{#each data.products as product (product.id)}

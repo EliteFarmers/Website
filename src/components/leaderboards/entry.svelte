@@ -61,7 +61,7 @@
 >
 	<div class="flex items-center justify-between gap-0 md:gap-2">
 		<div
-			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
+			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
 			<div
 				class="text-progress"
@@ -74,7 +74,7 @@
 				</h1>
 			</div>
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
-			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
+			<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
 				<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl">
 					{#if leaderboard?.profile}
 						{entry.members?.[0].ign}

@@ -20,7 +20,7 @@
 	)}
 	style={src ? `background-image: url('${src}')` : ''}
 >
-	<div class={!sidebar.isMobile ? (sidebar.open ? 'md:mr-[16.5rem]' : 'md:mr-[7rem]') : 'md:ml-8 md:mr-12'}>
+	<div class={!sidebar.isMobile ? (sidebar.open ? 'md:mr-66' : 'md:mr-28') : 'md:ml-8 md:mr-12'}>
 		{@render children?.()}
 	</div>
 </div>

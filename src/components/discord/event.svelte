@@ -30,7 +30,7 @@
 >
 	{#if guild?.banner}
 		<div
-			class="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-gradient-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
+			class="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-linear-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
 		></div>
 	{/if}
 	<GuildIcon {guild} size={16} class="z-10" />

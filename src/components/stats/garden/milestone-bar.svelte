@@ -44,7 +44,7 @@
 				alt={displayName}
 			/>
 		</div>
-		<div class="flex flex-grow flex-col justify-center gap-1">
+		<div class="flex grow flex-col justify-center gap-1">
 			<div class="flex flex-row items-end justify-between gap-2">
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}

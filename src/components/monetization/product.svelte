@@ -30,7 +30,7 @@
 
 <div class={cn('m-1 inline-block rounded-md bg-muted/50 p-4', className)}>
 	<div class="flex items-center justify-between">
-		<div class="flex min-w-0 flex-shrink items-center justify-start gap-2">
+		<div class="flex min-w-0 shrink items-center justify-start gap-2">
 			{#if product.thumbnail?.url}
 				<img src={product.thumbnail.url} alt={product.name} class="h-8 w-8 rounded-sm object-cover" />
 			{/if}

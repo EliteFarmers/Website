@@ -233,7 +233,7 @@
 />
 
 <FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
-	<Settings class="transition-all group-hover:rotate-90 md:!size-6" />
+	<Settings class="transition-all group-hover:rotate-90 md:size-6!" />
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">

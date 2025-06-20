@@ -49,7 +49,7 @@
 									{product}
 									showPublished={true}
 									showFeatures={false}
-									class="m-0 md:min-w-[30rem]"
+									class="m-0 md:min-w-120"
 								>
 									<Button href="/shop/{product.id}" class="m-1" variant="ghost" size="sm">
 										<ExternalLink />

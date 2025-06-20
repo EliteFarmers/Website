@@ -47,7 +47,7 @@
 			{entries?.length ?? 0} / {participants !== -1 ? participants : 'Unknown'} Participants
 		</span>
 		<ScrollArea bind:viewRef={area} class="h-[29.62rem] w-full rounded-md border" type="always">
-			<div class="flex w-[26rem] flex-col justify-center space-y-2">
+			<div class="flex w-104 flex-col justify-center space-y-2">
 				{#each sorted as participant, i (participant.playerUuid ?? i)}
 					<Participation entry={participant} />
 				{/each}

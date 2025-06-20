@@ -17,7 +17,7 @@
 <Accordion.Item value={entry.timestamp + '' + entry.collected} class="mx-4">
 	<Accordion.Trigger class="flex w-full justify-between gap-0 py-1 md:gap-2">
 		<div
-			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
+			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
 		>
 			<div class="text-progress">
 				<span class="xs:text-md text-sm sm:text-xl">#</span><span class="xs:text-xl text-lg sm:text-2xl"
@@ -40,7 +40,7 @@
 				</Popover.Mobile>
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
-			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
+			<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
 				<p class="xs:text-lg inline-block text-start text-sm font-semibold sm:text-xl">{entry.playerName}</p>
 			</div>
 		</div>

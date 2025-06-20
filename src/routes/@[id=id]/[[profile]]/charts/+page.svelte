@@ -189,7 +189,7 @@
 		{#each entries as { name, crop, data } (crop)}
 			{#if selected(name)}
 				{#if !fewSelected}
-					<div class="flex basis-[40rem] flex-col gap-1 p-2">
+					<div class="flex basis-160 flex-col gap-1 p-2">
 						<div class="ml-4 flex flex-row gap-1">
 							<img src={PROPER_CROP_TO_IMG[name]} alt={crop} class="pixelated aspect-square h-full w-8" />
 							<h3 class="text-2xl">{name}</h3>
