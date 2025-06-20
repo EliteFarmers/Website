@@ -27,11 +27,7 @@
 	let showAll = $state(false);
 	let disabled = $state(false);
 
-	let value = $state<CalendarDate>((() => initStart)());
-
-	$effect.pre(() => {
-		value = initStart;
-	});
+	let value = $derived<CalendarDate>(initStart);
 
 	let startTime = $derived(Math.floor(value.toDate(tz).getTime() / 1000));
 </script>
