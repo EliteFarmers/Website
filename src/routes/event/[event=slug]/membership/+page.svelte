@@ -110,7 +110,7 @@
 	{/if}
 
 	{#if form?.error}
-		<h5 class="mb-4 max-w-xl text-xl font-semibold text-destructive">
+		<h5 class="text-destructive mb-4 max-w-xl text-xl font-semibold">
 			{form?.error}
 		</h5>
 	{/if}
@@ -119,7 +119,7 @@
 		<form
 			method="post"
 			action="?/join"
-			class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8"
+			class="bg-card mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 p-8"
 			use:enhance={() => {
 				loading = true;
 				return async ({ update }) => {
@@ -282,7 +282,7 @@
 			{/if}
 		</form>
 		{#if event.mode !== 'solo'}
-			<div class="mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 bg-card p-8">
+			<div class="bg-card mb-16 flex max-w-lg flex-col gap-4 rounded-md border-2 p-8">
 				<h2 class="mb-4 text-center text-2xl font-semibold">Step 2: Join Team</h2>
 				<p>
 					This is a team event! You must join a team to participate. If you don't have a team, you can create
@@ -313,7 +313,7 @@
 								<p>Join Code</p>
 								<VisibleToggle bind:visible={codeVisible} variant="outline" />
 								<input
-									class="max-w-24 rounded-md border bg-background p-1 text-center font-mono font-semibold"
+									class="bg-background max-w-24 rounded-md border p-1 text-center font-mono font-semibold"
 									type={!codeVisible ? 'password' : 'text'}
 									disabled
 									value={ownTeam.joinCode}
@@ -334,7 +334,7 @@
 										<Popover.Mobile>
 											{#snippet trigger()}
 												<div class="flex flex-row items-end">
-													<Crown size="sm" class="mt-1.5 w-4 text-completed" />
+													<Crown size="sm" class="text-completed mt-1.5 w-4" />
 												</div>
 											{/snippet}
 											<p>Team Owner</p>
@@ -420,7 +420,7 @@
 							<input type="hidden" name="team" value={ownTeamId} />
 							<h3 class="text-xl font-semibold">Update Your Team</h3>
 							<p>Change the name of your team!</p>
-							<div class="flex flex-row items-center gap-2 text-primary">
+							<div class="text-primary flex flex-row items-center gap-2">
 								<TeamNameSelector words={data.words} bind:loading />
 							</div>
 							<div class="flex flex-row gap-2">
@@ -441,7 +441,7 @@
 						</div>
 						<Button type="submit" disabled={!data.member || !joined || loading}>Join Team</Button>
 						{#if !joined}
-							<p class="-mt-2 leading-none text-destructive">Join the event first to join a team!</p>
+							<p class="text-destructive -mt-2 leading-none">Join the event first to join a team!</p>
 						{/if}
 					</form>
 
@@ -463,14 +463,14 @@
 							Create your own team for players to join! Names are generated below with an approved word
 							list.
 						</p>
-						<div class="flex flex-row items-center gap-2 text-primary">
+						<div class="text-primary flex flex-row items-center gap-2">
 							<div class="flex flex-col gap-2">
 								<TeamNameSelector words={data.words} bind:loading />
 							</div>
 						</div>
 						<Button type="submit" disabled={!data.member || !joined || loading}>Create Team</Button>
 						{#if !joined}
-							<p class="-mt-2 leading-none text-destructive">Join the event first to create a team!</p>
+							<p class="text-destructive -mt-2 leading-none">Join the event first to create a team!</p>
 						{/if}
 					</form>
 				{/if}

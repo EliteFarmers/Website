@@ -13,11 +13,11 @@
 <a
 	href="/@{entry.playerName}/{entry.profileUuid}"
 	data-sveltekit-preload-data="tap"
-	class="bg-card-primary rounded-md hover:bg-muted"
+	class="bg-card-primary hover:bg-muted rounded-md"
 >
 	<div class="flex justify-between gap-0 md:gap-2">
 		<div
-			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
+			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden align-middle text-ellipsis whitespace-nowrap sm:gap-2"
 		>
 			<p class="text-progress">
 				{#if entry.position !== -1}
@@ -37,7 +37,7 @@
 					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
-						<p class="max-w-xs whitespace-normal break-words">
+						<p class="max-w-xs break-words whitespace-normal">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
 					</div>

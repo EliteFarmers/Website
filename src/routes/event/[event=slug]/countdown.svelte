@@ -23,7 +23,7 @@
 					? ''
 					: 'text-muted'} border-r-2 px-1 md:px-2 lg:px-3"
 			>
-				<div class="-mb-2 mt-2 lg:-mb-4">
+				<div class="mt-2 -mb-2 lg:-mb-4">
 					<NumberFlow
 						trend={-1}
 						value={counter.days}
@@ -31,7 +31,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-sm font-normal text-muted-foreground">Days</span>
+				<span class="text-muted-foreground text-sm font-normal">Days</span>
 			</div>
 			<div
 				class="flex min-h-16 flex-1 flex-col items-center justify-center gap-1 {counter.hours <= 0 &&
@@ -39,7 +39,7 @@
 					? 'text-muted'
 					: ''} border-r-2 px-1 md:px-2 lg:px-3"
 			>
-				<div class="-mb-2 mt-2 lg:-mb-4">
+				<div class="mt-2 -mb-2 lg:-mb-4">
 					<NumberFlow
 						trend={-1}
 						digits={{ 1: { max: 2 } }}
@@ -47,7 +47,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-sm font-normal text-muted-foreground">Hours</span>
+				<span class="text-muted-foreground text-sm font-normal">Hours</span>
 			</div>
 			<div
 				class="flex min-h-16 flex-1 flex-col items-center justify-center gap-1 {counter.minutes <= 0 &&
@@ -56,7 +56,7 @@
 					? 'text-muted'
 					: ''} border-r-2 px-1 md:px-2 lg:px-3"
 			>
-				<div class="-mb-2 mt-2 lg:-mb-4">
+				<div class="mt-2 -mb-2 lg:-mb-4">
 					<NumberFlow
 						trend={-1}
 						value={counter.minutes}
@@ -64,7 +64,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-sm font-normal text-muted-foreground">Minutes</span>
+				<span class="text-muted-foreground text-sm font-normal">Minutes</span>
 			</div>
 			<div
 				class="flex min-h-16 flex-1 flex-col items-center justify-center gap-1 {counter.seconds <= 0 &&
@@ -74,7 +74,7 @@
 					? 'text-muted'
 					: ''} px-1 md:px-2 lg:px-3"
 			>
-				<div class="-mb-2 mt-2 lg:-mb-4">
+				<div class="mt-2 -mb-2 lg:-mb-4">
 					<NumberFlow
 						trend={-1}
 						value={counter.seconds}
@@ -82,7 +82,7 @@
 						format={{ minimumIntegerDigits: 2 }}
 					/>
 				</div>
-				<span class="text-sm font-normal text-muted-foreground">Seconds</span>
+				<span class="text-muted-foreground text-sm font-normal">Seconds</span>
 			</div>
 		</div>
 	</NumberFlowGroup>

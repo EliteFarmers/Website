@@ -12,14 +12,14 @@
 	let { leaderboards, title }: Props = $props();
 </script>
 
-<section class="flex w-full flex-1 flex-col items-center justify-center gap-4 rounded-lg md:border-2 md:bg-card md:p-4">
+<section class="md:bg-card flex w-full flex-1 flex-col items-center justify-center gap-4 rounded-lg md:border-2 md:p-4">
 	<h2 class="text-2xl font-semibold">{title}</h2>
 
 	<div class="full flex h-full w-full flex-1 flex-wrap items-center justify-center gap-2">
 		{#each leaderboards ?? [] as lb (lb.id)}
-			<div class="flex h-12 w-full max-w-64 flex-row items-center rounded-md border-2 bg-background">
+			<div class="bg-background flex h-12 w-full max-w-64 flex-row items-center rounded-md border-2">
 				<div class="flex flex-1 items-center justify-center">
-					<a href="/leaderboard/{lb.id}" class="flex-1 items-center truncate p-2 px-3 pr-0 hover:bg-card/60">
+					<a href="/leaderboard/{lb.id}" class="hover:bg-card/60 flex-1 items-center truncate p-2 px-3 pr-0">
 						<div class="flex flex-row items-center gap-2">
 							{#if lb.icon}
 								<img
@@ -28,14 +28,14 @@
 									alt={lb.short ?? lb.title}
 								/>
 							{/if}
-							<span class="truncate whitespace-nowrap text-center text-xl">{lb.short ?? lb.title}</span>
+							<span class="truncate text-center text-xl whitespace-nowrap">{lb.short ?? lb.title}</span>
 						</div>
 					</a>
 				</div>
 				<div class="flex h-full">
 					{#each lb.intervals ?? [] as interval (interval)}
 						{#if interval !== 'current'}
-							<div class="flex h-full flex-col items-center justify-center hover:bg-card/60">
+							<div class="hover:bg-card/60 flex h-full flex-col items-center justify-center">
 								<Tooltip.Simple>
 									{#snippet child({ props })}
 										<a

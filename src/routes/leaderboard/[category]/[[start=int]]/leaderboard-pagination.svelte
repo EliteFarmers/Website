@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex flex-col items-center gap-2 md:flex-row">
-	<div class="order-3 flex items-center justify-center whitespace-nowrap text-sm font-medium lg:order-1">
+	<div class="order-3 flex items-center justify-center text-sm font-medium whitespace-nowrap lg:order-1">
 		<span
 			>Page <strong>{currentPage.toLocaleString()}</strong> of
 			<strong>{maxPage.toLocaleString()}</strong></span

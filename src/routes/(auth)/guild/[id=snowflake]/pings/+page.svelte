@@ -58,7 +58,7 @@
 
 	<section class="mb-16 flex w-full flex-col items-center justify-center gap-8">
 		<div
-			class="flex w-full max-w-4xl flex-col justify-center justify-items-center gap-4 rounded-md border bg-card p-4"
+			class="bg-card flex w-full max-w-4xl flex-col justify-center justify-items-center gap-4 rounded-md border p-4"
 		>
 			<h2 class="text-3xl">Upcoming Contest Ping Settings</h2>
 

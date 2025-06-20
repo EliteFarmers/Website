@@ -15,7 +15,7 @@
 	);
 </script>
 
-<div class="max-h-30 flex w-full basis-20 flex-row justify-between gap-2 rounded-md bg-card p-1">
+<div class="bg-card flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md p-1">
 	<div class="flex flex-row items-center gap-2">
 		<img
 			class="pixelated aspect-square w-14 p-1 md:h-20 md:w-20"
@@ -31,11 +31,11 @@
 					{#if tool.isUsed() || tool.farmed < 0}
 						<div class="text-md md:text-lg">{tool.farmed.toLocaleString()}</div>
 					{:else if tool.tool.type === FarmingToolType.MathematicalHoe}
-						<div class="md:text-md text-sm text-muted-foreground">
+						<div class="md:text-md text-muted-foreground text-sm">
 							{UNUSED_MATHEMATICAL_HOE[Math.floor(Math.random() * UNUSED_MATHEMATICAL_HOE.length)]}
 						</div>
 					{:else}
-						<div class="md:text-md text-sm text-muted-foreground">Missing Cultivating!</div>
+						<div class="md:text-md text-muted-foreground text-sm">Missing Cultivating!</div>
 					{/if}
 				</div>
 			{/if}
@@ -45,7 +45,7 @@
 		<Lorebtn item={tool.item}>
 			{#if tool.cultivating}
 				<p>
-					<span class="select-none font-semibold">Cultivating:</span>
+					<span class="font-semibold select-none">Cultivating:</span>
 					<span class="select-all">{tool.cultivating.toLocaleString()}</span>
 				</p>
 			{/if}

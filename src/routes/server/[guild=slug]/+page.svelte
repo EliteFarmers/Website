@@ -78,7 +78,7 @@
 	{/if}
 </HeroBanner>
 
-<div class="mb-16 mt-64 flex flex-col items-center justify-center gap-8 py-8">
+<div class="mt-64 mb-16 flex flex-col items-center justify-center gap-8 py-8">
 	{#if data.events.length > 0}
 		{@const now = Date.now() / 1000}
 		{@const upcoming = data.events.filter((e) => e.endTime && +e.endTime >= now)}
@@ -121,7 +121,7 @@
 	<section class="flex flex-col items-center gap-4">
 		<!-- <h2 class="text-3xl">Server Jacob Leaderboard{leaderboards.length === 1 ? '' : 's'}</h2> -->
 		{#if leaderboards.length > 0}
-			<div class="flex max-w-8xl flex-wrap gap-4">
+			<div class="max-w-8xl flex flex-wrap gap-4">
 				{#each leaderboards as leaderboard, i (i)}
 					<Leaderboard {leaderboard} />
 				{/each}

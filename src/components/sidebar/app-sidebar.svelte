@@ -31,13 +31,13 @@
 			{#snippet child({ props })}
 				<a href="/" {...props} class={cn(props.class ?? '', 'group-data-[state=collapsed]:rounded-full')}>
 					<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-					<span class="px-1 text-lg font-semibold leading-none md:text-xl">Elite Farmers</span>
+					<span class="px-1 text-lg leading-none font-semibold md:text-xl">Elite Farmers</span>
 				</a>
 			{/snippet}
 		</Sidebar.MenuButton>
 	</Sidebar.MenuItem>
 	<Sidebar.MenuItem class="group-data-[state=collapsed]:mt-3">
-		<Sidebar.MenuButton onclick={() => (searchOpen = true)} class="border-2 bg-card py-4">
+		<Sidebar.MenuButton onclick={() => (searchOpen = true)} class="bg-card border-2 py-4">
 			{#snippet tooltipContent()}
 				Search
 			{/snippet}

@@ -148,7 +148,7 @@
 		</div>
 	</div>
 
-	<section class="mb-10 mt-4 flex justify-center">
+	<section class="mt-4 mb-10 flex justify-center">
 		<div class="flex w-[90%] flex-col items-center gap-2 sm:w-[70%] md:w-[50%]" data-sveltekit-preload-data="tap">
 			<h1 class="w-full p-4 text-center text-3xl">Top Farmers</h1>
 			{#await data.lb}

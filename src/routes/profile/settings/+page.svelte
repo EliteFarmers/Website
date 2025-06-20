@@ -157,7 +157,7 @@
 		<form
 			action="?/refreshPurchases"
 			method="post"
-			class="mb-16 mt-2"
+			class="mt-2 mb-16"
 			use:enhance={() => {
 				loading = true;
 				return async ({ result }) => {
@@ -219,7 +219,7 @@
 									/>
 								{/key}
 							{:else}
-								<p class="text-sm text-muted-variant">
+								<p class="text-muted-variant text-sm">
 									No preview available! You can change to this style and run the /&NoBreak;weight
 									command in Discord to see it.
 								</p>
@@ -290,7 +290,7 @@
 			</form>
 		{/each}
 
-		<h1 class="mb-10 mt-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
+		<h1 class="mt-10 mb-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
 		<div class="mx-0 flex flex-col items-center justify-center md:mx-16">
 			<Carousel.Root
 				setApi={(emblaApi) => (api = emblaApi)}
@@ -305,7 +305,7 @@
 						<Carousel.Item class="">
 							<Card.Root class={theme.class} style="color-scheme: {theme.class}">
 								<Card.Content
-									class="flex aspect-video items-center justify-center rounded-lg bg-background p-6"
+									class="bg-background flex aspect-video items-center justify-center rounded-lg p-6"
 									style="color-scheme: {theme.class};"
 								>
 									<!-- Theme Preview -->
@@ -318,40 +318,40 @@
 													class="aspect-square max-w-5"
 													alt="Elite Logo"
 												/>
-												<Menu class="h-5 w-5 text-foreground" />
+												<Menu class="text-foreground h-5 w-5" />
 											</div>
 											<div class="flex items-center gap-2">
 												<div
-													class="bg flex h-8 items-center rounded-sm border px-3 hover:bg-muted"
+													class="bg hover:bg-muted flex h-8 items-center rounded-sm border px-3"
 												>
-													<Search class="h-4 w-4 text-muted-foreground" />
-													<span class="ml-2 text-sm text-muted-foreground">Search...</span>
+													<Search class="text-muted-foreground h-4 w-4" />
+													<span class="text-muted-foreground ml-2 text-sm">Search...</span>
 												</div>
 												{#if theme.isDark}
-													<Moon class="h-5 w-5 text-foreground" />
+													<Moon class="text-foreground h-5 w-5" />
 												{:else}
-													<Sun class="h-5 w-5 text-foreground" />
+													<Sun class="text-foreground h-5 w-5" />
 												{/if}
 											</div>
 										</div>
 										<!-- rest of the preview -->
 										<div class="space-y-4">
-											<div class="h-5 w-1/4 rounded bg-muted"></div>
-											<div class="h-4 w-1/2 rounded bg-muted"></div>
-											<div class="h-4 w-3/5 rounded bg-muted"></div>
-											<div class="h-4 w-3/4 rounded bg-muted"></div>
-											<div class="h-4 w-3/4 rounded bg-muted"></div>
+											<div class="bg-muted h-5 w-1/4 rounded"></div>
+											<div class="bg-muted h-4 w-1/2 rounded"></div>
+											<div class="bg-muted h-4 w-3/5 rounded"></div>
+											<div class="bg-muted h-4 w-3/4 rounded"></div>
+											<div class="bg-muted h-4 w-3/4 rounded"></div>
 											<div class="flex gap-2">
 												<button
 													onclick={() => console.log('hey dont touch me!')}
 													aria-label="Theme preview button"
-													class="h-9 w-8 rounded border-2 border-border bg-primary px-8 hover:bg-accent"
+													class="border-border bg-primary hover:bg-accent h-9 w-8 rounded border-2 px-8"
 												></button>
-												<div class="h-9 flex-1 rounded bg-muted"></div>
+												<div class="bg-muted h-9 flex-1 rounded"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">
-												<div class="h-16 rounded bg-muted-variant"></div>
-												<div class="h-16 rounded bg-muted-variant"></div>
+												<div class="bg-muted-variant h-16 rounded"></div>
+												<div class="bg-muted-variant h-16 rounded"></div>
 											</div>
 										</div>
 									</div>
@@ -363,7 +363,7 @@
 				<Carousel.Previous class="hidden md:flex" />
 				<Carousel.Next class="hidden md:flex" />
 			</Carousel.Root>
-			<div class="py-4 text-center text-lg text-muted-foreground">
+			<div class="text-muted-foreground py-4 text-center text-lg">
 				{themeName}
 			</div>
 		</div>

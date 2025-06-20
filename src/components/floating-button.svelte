@@ -11,7 +11,7 @@
 	let { children, class: className, ...rest }: Props = $props();
 </script>
 
-<div class="group fixed bottom-4 right-4 z-50 size-12 rounded-full shadow-xl md:bottom-10 md:right-10 md:size-16">
+<div class="group fixed right-4 bottom-4 z-50 size-12 rounded-full shadow-xl md:right-10 md:bottom-10 md:size-16">
 	<button
 		{...rest}
 		class={cn(

@@ -22,7 +22,7 @@
 	{#if member.notes}
 		<Popover.Mobile>
 			{#snippet trigger()}
-				<FileText size={16} class="-mb-1 text-destructive" />
+				<FileText size={16} class="text-destructive -mb-1" />
 			{/snippet}
 			<div class="text-sm">
 				<p>{member.notes || 'Member Left'}</p>

@@ -59,7 +59,7 @@
 
 	<div class="flex flex-row justify-center">
 		<div
-			class="my-6 flex max-w-fit flex-wrap justify-center rounded-md border-2 border-solid border-card p-1 sm:flex-row"
+			class="border-card my-6 flex max-w-fit flex-wrap justify-center rounded-md border-2 border-solid p-1 sm:flex-row"
 		>
 			<Button
 				variant="ghost"
@@ -102,14 +102,14 @@
 	<div class="my-16 flex flex-col items-center justify-center leading-none">
 		<div class="flex flex-col justify-start gap-4 sm:items-center sm:justify-center">
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="select-none text-muted-foreground">Player UUID</span>
+				<span class="text-muted-foreground select-none">Player UUID</span>
 				<div class="flex flex-row items-center gap-1">
 					<span class="select-all">{data.account.id}</span>
 					<CopyToClipboard text={data.account.id} class="-my-2 size-8" />
 				</div>
 			</div>
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="select-none text-muted-foreground">Profile UUID</span>
+				<span class="text-muted-foreground select-none">Profile UUID</span>
 				<div class="flex flex-row items-center gap-1">
 					<span class="select-all">{data.profile?.profileId}</span>
 					<CopyToClipboard text={data.profile?.profileId} class="-my-2 size-8" />
@@ -117,7 +117,7 @@
 			</div>
 			{#if data.account?.discordId}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-					<span class="select-none text-muted-foreground">Linked Discord ID</span>
+					<span class="text-muted-foreground select-none">Linked Discord ID</span>
 					<div class="flex flex-row items-center gap-1">
 						<span class="select-all">{data.account?.discordId}</span>
 						<CopyToClipboard text={data.account?.discordId} class="-my-2 size-8" />
@@ -125,12 +125,12 @@
 				</div>
 			{/if}
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="select-none text-muted-foreground">Profile Last Updated</span>
+				<span class="text-muted-foreground select-none">Profile Last Updated</span>
 				<span class="select-all">{new Date((data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span>
 			</div>
 			{#if page.url.pathname.includes('/garden')}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-					<span class="select-none text-muted-foreground">Garden Last Updated</span>
+					<span class="text-muted-foreground select-none">Garden Last Updated</span>
 					<span class="select-all"
 						>{new Date(+(data.member?.garden?.lastSave ?? 0) * 1000).toLocaleString()}</span
 					>

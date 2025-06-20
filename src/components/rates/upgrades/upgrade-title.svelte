@@ -32,7 +32,7 @@
 		{#if upgrade.api === false}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<TriangleAlert size={16} class="mt-1.5 text-completed" />
+					<TriangleAlert size={16} class="text-completed mt-1.5" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. Configure settings on this page to mark it
@@ -61,14 +61,14 @@
 		<ItemRequirements {itemData} />
 	{/if}
 	{#if upgrade.repeatable && upgrade.repeatable > 1}
-		<p class="text-xs text-muted-foreground">
+		<p class="text-muted-foreground text-xs">
 			This upgrade can be done <span class="font-bold">{upgrade.repeatable.toLocaleString()}</span> times!
 		</p>
 	{/if}
 	{#if upgrade.optional}
-		<p class="text-xs text-muted-foreground">Recommended for more profit despite lower fortune.</p>
+		<p class="text-muted-foreground text-xs">Recommended for more profit despite lower fortune.</p>
 	{/if}
 	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0}
-		<p class="text-xs text-muted-foreground">Gives no fortune right away, but has later upgrades.</p>
+		<p class="text-muted-foreground text-xs">Gives no fortune right away, but has later upgrades.</p>
 	{/if}
 </div>

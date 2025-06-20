@@ -30,7 +30,7 @@
 	}
 </script>
 
-<header class="sticky top-0 z-40 flex h-16 shrink items-center justify-between gap-2 border-b bg-background px-4">
+<header class="bg-background sticky top-0 z-40 flex h-16 shrink items-center justify-between gap-2 border-b px-4">
 	<div class="flex flex-row items-center gap-2">
 		<Sidebar.Trigger class="-my-2 -ml-2 size-10" />
 		<Separator orientation="vertical" class="mr-2 h-4" />
@@ -43,7 +43,7 @@
 		{#if sidebar.isMobile}
 			<Button
 				onclick={() => (searchOpen = true)}
-				class="order-4 border bg-card px-3 py-4"
+				class="bg-card order-4 border px-3 py-4"
 				variant="outline"
 				size="sm"
 			>
@@ -65,7 +65,7 @@
 	<div class="sticky top-16 z-40 w-full">
 		<div class="relative">
 			<div
-				class="absolute top-0 h-1.5 w-full bg-progress"
+				class="bg-progress absolute top-0 h-1.5 w-full"
 				transition:slide={{ delay: 100, duration: 500, easing: quadInOut }}
 			></div>
 		</div>

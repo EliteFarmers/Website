@@ -12,7 +12,7 @@
 
 <PopoverMobile>
 	{#snippet trigger()}
-		<div class="flex flex-row items-center gap-1 rounded-sm bg-card p-2">
+		<div class="bg-card flex flex-row items-center gap-1 rounded-sm p-2">
 			{@render icon?.()}
 			{#if name}
 				<p class="text-semibold text-sm leading-none">{name}</p>

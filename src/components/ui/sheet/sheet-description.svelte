@@ -5,4 +5,4 @@
 	let { ref = $bindable(null), class: className, ...restProps }: SheetPrimitive.DescriptionProps = $props();
 </script>
 
-<SheetPrimitive.Description bind:ref class={cn('text-sm text-muted-foreground', className)} {...restProps} />
+<SheetPrimitive.Description bind:ref class={cn('text-muted-foreground text-sm', className)} {...restProps} />

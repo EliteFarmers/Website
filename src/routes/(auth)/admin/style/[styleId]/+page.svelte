@@ -115,11 +115,11 @@
 
 		<div class="h-36 max-h-36 max-w-2xl overflow-y-auto pr-2">
 			{#if !styleDataValid?.success || !styleDataObj}
-				<p class="mb-2 text-destructive">Invalid style data.</p>
+				<p class="text-destructive mb-2">Invalid style data.</p>
 				{#if styleDataValid?.error?.issues}
 					<div class="flex flex-col gap-1">
 						{#each styleDataValid.error.issues as issue, i (i)}
-							<div class="flex flex-col gap-1 rounded-sm border-2 border-card p-2">
+							<div class="border-card flex flex-col gap-1 rounded-sm border-2 p-2">
 								<p>{issue.path.join('.')}</p>
 								<p>{issue.message}</p>
 							</div>

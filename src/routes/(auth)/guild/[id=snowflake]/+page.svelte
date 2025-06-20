@@ -133,7 +133,7 @@
 		</Card.Root>
 	</section>
 
-	<div class="w-full max-w-4xl rounded-md border-2 border-completed p-4">
+	<div class="border-completed w-full max-w-4xl rounded-md border-2 p-4">
 		<p class="mb-1 text-lg font-semibold">Want to unlock a feature?</p>
 		<p class="text-sm">
 			Subscribe to the appropriate package in the <ExternalLinkButton href="/support"
@@ -142,13 +142,13 @@
 		</p>
 	</div>
 
-	<section class="flex w-full max-w-4xl flex-col rounded-md border-2 bg-card p-4">
+	<section class="bg-card flex w-full max-w-4xl flex-col rounded-md border-2 p-4">
 		<SettingListItem title="Upcoming Contest Pings">
 			{#snippet subtitle()}
 				{#if !features?.contestPingsEnabled}
-					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
+					<span class="text-destructive text-sm">This server does not have this feature unlocked.</span>
 				{:else}
-					<span class="text-sm text-muted-foreground">Manage your server specific contest pings!</span>
+					<span class="text-muted-foreground text-sm">Manage your server specific contest pings!</span>
 				{/if}
 			{/snippet}
 			{#if features?.contestPingsEnabled}
@@ -161,9 +161,9 @@
 		<SettingListItem title="Jacob Leaderboards">
 			{#snippet subtitle()}
 				{#if !features?.jacobLeaderboardEnabled}
-					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
+					<span class="text-destructive text-sm">This server does not have this feature unlocked.</span>
 				{:else}
-					<span class="text-sm text-muted-foreground">Manage your server specific jacob leaderboards!</span>
+					<span class="text-muted-foreground text-sm">Manage your server specific jacob leaderboards!</span>
 				{/if}
 			{/snippet}
 			{#if features?.jacobLeaderboardEnabled}
@@ -176,9 +176,9 @@
 		<SettingListItem title="Server Events">
 			{#snippet subtitle()}
 				{#if !features?.eventsEnabled}
-					<span class="text-sm text-destructive">This server does not have this feature unlocked.</span>
+					<span class="text-destructive text-sm">This server does not have this feature unlocked.</span>
 				{:else}
-					<span class="text-sm text-muted-foreground">Manage your server specific events!</span>
+					<span class="text-muted-foreground text-sm">Manage your server specific events!</span>
 				{/if}
 			{/snippet}
 			{#if features?.eventsEnabled}
@@ -273,7 +273,7 @@
 </div>
 
 {#snippet disabledBtn()}
-	<div class="cursor-not-allowed rounded-md bg-muted-variant px-8 py-2.5 text-sm font-medium text-muted-foreground">
+	<div class="bg-muted-variant text-muted-foreground cursor-not-allowed rounded-md px-8 py-2.5 text-sm font-medium">
 		Manage
 	</div>
 {/snippet}

@@ -36,7 +36,7 @@
 					></div>
 				{/each}
 			</div>
-			<div class="tier-cover absolute bg-card"></div>
+			<div class="tier-cover bg-card absolute"></div>
 		</div>
 	{/snippet}
 
@@ -66,7 +66,7 @@
 	}
 
 	.tier-border {
-		@apply absolute left-0 top-0 grid h-full w-full rounded-lg;
+		@apply absolute top-0 left-0 grid h-full w-full rounded-lg;
 		grid-template-areas:
 			'a10 a11 a0 a1'
 			'a9 . . a2'

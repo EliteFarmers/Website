@@ -25,12 +25,12 @@
 
 <a
 	href="/event/{event?.id}"
-	class="relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
+	class="bg-card relative flex w-full flex-1 flex-row justify-start gap-8 rounded-lg bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
 	style={background || ''}
 >
 	{#if guild?.banner}
 		<div
-			class="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-linear-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
+			class="absolute top-0 right-0 bottom-0 left-0 rounded-lg bg-linear-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
 		></div>
 	{/if}
 	<GuildIcon {guild} size={16} class="z-10" />

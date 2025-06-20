@@ -13,7 +13,7 @@
 </script>
 
 {#if !user.avatar || errored}
-	<div class="{className} flex select-none items-center justify-center rounded-full bg-black bg-blend-darken">
+	<div class="{className} flex items-center justify-center rounded-full bg-black bg-blend-darken select-none">
 		<UserRound />
 	</div>
 {:else}

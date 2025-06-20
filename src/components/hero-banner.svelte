@@ -15,12 +15,12 @@
 
 <div
 	class={cn(
-		'absolute left-0 right-0 top-16 flex h-96 flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat',
+		'absolute top-16 right-0 left-0 flex h-96 flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat',
 		className
 	)}
 	style={src ? `background-image: url('${src}')` : ''}
 >
-	<div class={!sidebar.isMobile ? (sidebar.open ? 'md:mr-66' : 'md:mr-28') : 'md:ml-8 md:mr-12'}>
+	<div class={!sidebar.isMobile ? (sidebar.open ? 'md:mr-66' : 'md:mr-28') : 'md:mr-12 md:ml-8'}>
 		{@render children?.()}
 	</div>
 </div>

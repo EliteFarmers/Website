@@ -36,7 +36,7 @@
 </script>
 
 <div class="flex w-full flex-row items-center gap-2 align-middle">
-	<div class="max-h-30 flex w-full flex-1 items-center justify-start gap-2 rounded-lg bg-card p-1 align-middle">
+	<div class="bg-card flex max-h-30 w-full flex-1 items-center justify-start gap-2 rounded-lg p-1 align-middle">
 		<div class="crop-container pixelated flex aspect-square h-10 w-10 sm:h-14 sm:w-14 md:h-20 md:w-20">
 			<img
 				src="/images/crops/{key}.png"
@@ -50,21 +50,21 @@
 					{#if rank > 0}
 						<a
 							href="/leaderboard/{key}-milestone/{page.params.id}-{page.params.profile}"
-							class="rounded-md bg-card px-1.5 hover:bg-muted"
+							class="bg-card hover:bg-muted rounded-md px-1.5"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span
 							>
 						</a>
 					{/if}
-					<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{displayName}</p>
+					<p class="text-md font-semibold whitespace-nowrap sm:text-lg">{displayName}</p>
 				</div>
 				<p class="pr-1 text-right text-xl font-semibold md:ml-2 lg:text-2xl">
 					{leveling.level.toLocaleString()}
 				</p>
 			</div>
 			<div class="flex flex-row items-center justify-between gap-4 pr-1">
-				<p class="text-normal -pr-1 basis-1/3 whitespace-nowrap leading-none sm:text-lg md:text-xl lg:text-2xl">
+				<p class="text-normal -pr-1 basis-1/3 leading-none whitespace-nowrap sm:text-lg md:text-xl lg:text-2xl">
 					{leveling.total.toLocaleString()}
 				</p>
 				<ProgressBar {percent} {readable} {expanded} {maxed} class="text-sm font-semibold" />

@@ -45,7 +45,7 @@
 <Head title="Contests | {monthString}, Year {year}" description="View all known Jacob contests in this month!" />
 
 <div class="flex flex-col items-center justify-center px-2">
-	<div class="mb-4 mt-16 flex flex-col gap-4 text-center font-semibold">
+	<div class="mt-16 mb-4 flex flex-col gap-4 text-center font-semibold">
 		<h1 class="text-4xl">{monthString}, Year {year}</h1>
 		<p>
 			{new Date(getTimeStamp(+year - 1, month - 1, 0) * 1000).toLocaleString(undefined, {
@@ -85,7 +85,7 @@
 		<div class="mx-8 mb-8 flex w-full flex-wrap justify-center gap-4 md:w-[90%] lg:w-[70%]">
 			{#each days as [day, contests], i (i)}
 				<a
-					class="flex w-20 flex-col items-center gap-1 rounded-lg bg-card p-2 text-center"
+					class="bg-card flex w-20 flex-col items-center gap-1 rounded-lg p-2 text-center"
 					href="/contests/{year}/{month}/{day}"
 				>
 					<h4 class="mb-2 text-lg">Day {day}</h4>
@@ -106,7 +106,7 @@
 		{#each Array.from({ length: 12 }, (_, i) => i + 1) as i (i)}
 			<Button
 				variant="secondary"
-				class="w-40 whitespace-nowrap rounded-lg {i === month ? 'ring-2' : ''}"
+				class="w-40 rounded-lg whitespace-nowrap {i === month ? 'ring-2' : ''}"
 				href="/contests/{page.params.year}/{i}"
 			>
 				{getSkyblockMonth(i)}

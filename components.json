@@ -1,5 +1,5 @@
 {
-	"$schema": "https://next.shadcn-svelte.com/schema.json",
+	"$schema": "https://shadcn-svelte.com/schema.json",
 	"tailwind": {
 		"css": "src/app.pcss",
 		"baseColor": "zinc"
@@ -11,6 +11,5 @@
 		"hooks": "$lib/hooks",
 		"lib": "$lib"
 	},
-	"typescript": true,
-	"registry": "https://tw3.shadcn-svelte.com/registry/default"
+	"typescript": true
 }

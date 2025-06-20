@@ -49,7 +49,7 @@
 />
 
 <div class="flex flex-col items-center justify-center">
-	<div class="mb-4 mt-16 flex flex-col gap-4 text-center font-semibold">
+	<div class="mt-16 mb-4 flex flex-col gap-4 text-center font-semibold">
 		<h1 class="text-4xl">{getReadableSkyblockDate(timestamp ?? 0)}</h1>
 
 		<div class="my-4 flex flex-col justify-center gap-2 md:flex-row md:gap-4">
@@ -79,7 +79,7 @@
 		</div>
 	{/if}
 
-	<div class="mx-8 mb-16 mt-4 flex w-full flex-wrap justify-center gap-4 md:flex-row">
+	<div class="mx-8 mt-4 mb-16 flex w-full flex-wrap justify-center gap-4 md:flex-row">
 		{#each contests ?? [] as contest ((contest.timestamp ?? 0) + (contest.crop ?? ''))}
 			<Singlecontest
 				timestamp={contest.timestamp ?? 0}

@@ -21,7 +21,7 @@
 	href="/contest/{timestamp}"
 	data-sveltekit-preload-data="off"
 	class={cn(
-		`flex min-w-52 flex-col gap-1 rounded-md border-l-4 bg-card p-2 hover:bg-muted hover:shadow-lg ${crop?.replace(
+		`bg-card hover:bg-muted flex min-w-52 flex-col gap-1 rounded-md border-l-4 p-2 hover:shadow-lg ${crop?.replace(
 			' ',
 			''
 		)}`,
@@ -29,7 +29,7 @@
 	)}
 >
 	<p class="text-sm first-letter:uppercase">
-		<span class="rounded-md bg-card p-0.5 px-1.5">{cropName}</span>
+		<span class="bg-card rounded-md p-0.5 px-1.5">{cropName}</span>
 		<span class="text-sm font-semibold">{ranking ? `#${(position ?? -2) + 1}` : 'Unclaimed'}</span>
 		<span class="text-xs">{ranking ? `/ ${participants}` : ''}</span>
 	</p>

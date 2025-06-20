@@ -7,18 +7,18 @@
 
 <SliderPrimitive.Root
 	bind:value
-	class={cn('relative ml-2.5 flex w-full touch-none select-none items-center', className)}
+	class={cn('relative ml-2.5 flex w-full touch-none items-center select-none', className)}
 	{...restProps}
 	type="single"
 >
 	{#snippet children({ thumbs })}
-		<span class="relative h-2 w-full grow overflow-hidden rounded-full border border-muted-variant bg-background">
-			<SliderPrimitive.Range class="absolute h-full bg-primary" />
+		<span class="border-muted-variant bg-background relative h-2 w-full grow overflow-hidden rounded-full border">
+			<SliderPrimitive.Range class="bg-primary absolute h-full" />
 		</span>
 		{#each thumbs as thumb, i (i)}
 			<SliderPrimitive.Thumb
 				index={thumb}
-				class="block size-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+				class="border-primary bg-background ring-offset-background focus-visible:ring-ring block size-5 rounded-full border-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
 			/>
 		{/each}
 	{/snippet}

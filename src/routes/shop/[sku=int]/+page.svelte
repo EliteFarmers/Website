@@ -47,7 +47,7 @@
 			<h1 class="text-4xl">{product.name}</h1>
 			<ProductPrice {product} />
 		</div>
-		<a class="flex flex-row items-center gap-1 text-muted-foreground hover:text-primary" href="/shop">
+		<a class="text-muted-foreground hover:text-primary flex flex-row items-center gap-1" href="/shop">
 			<ArrowLeft size={16} class="mt-1 inline-block" />
 			Back to Shop
 		</a>
@@ -131,7 +131,7 @@
 									class="flex flex-row items-center gap-1 rounded-sm p-1"
 									style="background-color: #{color}"
 								>
-									<span class="text-sm font-semibold leading-none text-black">#{color}</span>
+									<span class="text-sm leading-none font-semibold text-black">#{color}</span>
 								</div>
 							{/each}
 						</div>
@@ -185,7 +185,7 @@
 				<div class="flex w-full flex-col items-end gap-1">
 					<div class="flex flex-row items-center gap-2">
 						<ProductPrice {product} />
-						<Button href="/shop/{product.id}/buy" class="bg-link font-semibold text-white hover:bg-link/85">
+						<Button href="/shop/{product.id}/buy" class="bg-link hover:bg-link/85 font-semibold text-white">
 							{isFree ? 'Unlock' : 'Buy'} on Discord
 							<ExternalLink size={16} class="ml-1.5" />
 						</Button>
@@ -193,7 +193,7 @@
 					{#if isFree}
 						<Popover.Mobile>
 							{#snippet trigger()}
-								<div class="flex flex-row items-center gap-1 text-muted-foreground">
+								<div class="text-muted-foreground flex flex-row items-center gap-1">
 									<p>Free Item</p>
 									<Info size={16} class="mt-0.5" />
 								</div>
@@ -238,7 +238,7 @@
 									<p>
 										{style.description}
 									</p>
-									<p class="text-sm text-muted-foreground">Preview not available for this style.</p>
+									<p class="text-muted-foreground text-sm">Preview not available for this style.</p>
 								{/if}
 							</Card.Content>
 						</Card.Root>

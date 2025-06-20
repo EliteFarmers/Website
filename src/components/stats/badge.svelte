@@ -12,7 +12,7 @@
 <Popover.Root>
 	<Popover.Trigger>
 		{#if badge.image?.url}
-			<img src={badge.image.url} class="w-18 h-6 rounded-sm object-cover md:h-8 md:w-24" alt={badge.name} />
+			<img src={badge.image.url} class="h-6 w-18 rounded-sm object-cover md:h-8 md:w-24" alt={badge.name} />
 		{:else}
 			<p>{badge.name}</p>
 		{/if}

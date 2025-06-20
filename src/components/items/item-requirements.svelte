@@ -54,9 +54,9 @@
 	<div class="flex flex-col gap-1">
 		<p class="text-xs">
 			{#if allCompleted}
-				<CircleCheckBig size={18} class="-mt-1 mr-0.5 inline-block text-progress" />
+				<CircleCheckBig size={18} class="text-progress -mt-1 mr-0.5 inline-block" />
 			{:else}
-				<OctagonAlert size={18} class="-mt-1 mr-0.5 inline-block dark:text-completed" />
+				<OctagonAlert size={18} class="dark:text-completed -mt-1 mr-0.5 inline-block" />
 			{/if}
 			Requires
 			{#each requirements as requirement, i (i)}
@@ -67,7 +67,7 @@
 					.split(' ')
 					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
 					.join(' ')}
-				<span class="mx-0.5 inline-flex items-center gap-1 rounded-sm border bg-background px-1">
+				<span class="bg-background mx-0.5 inline-flex items-center gap-1 rounded-sm border px-1">
 					<span class="font-semibold">
 						{requirementName}
 						{#if requirement.skill}

@@ -13,7 +13,7 @@
 </script>
 
 <div class="scrollbar-none flex w-full overflow-x-auto">
-	<table class="flex-grow-1 w-full min-w-3xl max-w-4xl">
+	<table class="w-full max-w-4xl min-w-3xl flex-grow-1">
 		<thead>
 			<tr class="bg-muted-variant">
 				<th class="text-left">Pest Brackets</th>

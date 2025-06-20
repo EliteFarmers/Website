@@ -57,7 +57,7 @@
 </script>
 
 {#if sidebar.size.tiny}
-	<div class="max-h-30 flex w-full flex-row items-center gap-2 rounded-lg bg-card p-1 align-middle">
+	<div class="bg-card flex max-h-30 w-full flex-row items-center gap-2 rounded-lg p-1 align-middle">
 		<div class="flex flex-col items-center justify-evenly gap-1">
 			{@render cropIcon()}
 			<img
@@ -72,14 +72,14 @@
 					{#if rank > 0}
 						<a
 							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
-							class="rounded-md bg-card px-1.5 hover:bg-muted"
+							class="bg-card hover:bg-muted rounded-md px-1.5"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
 								class="text-md xs:text-lg sm:text-xl">{rank}</span
 							>
 						</a>
 					{/if}
-					<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{name}</p>
+					<p class="text-md font-semibold whitespace-nowrap sm:text-lg">{name}</p>
 				</div>
 				<p class="text-normal whitespace-nowrap sm:text-lg md:text-xl lg:text-2xl">
 					{value.toLocaleString()}
@@ -89,7 +89,7 @@
 				{#if pestRank > 0}
 					<a
 						href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
-						class="rounded-md bg-card px-1 hover:bg-muted"
+						class="bg-card hover:bg-muted rounded-md px-1"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{pestRank}</span
@@ -99,7 +99,7 @@
 				<Popover.Mobile>
 					{#snippet trigger()}
 						<div class="flex h-6 flex-row items-center justify-center gap-2 align-middle">
-							<p class="text-md whitespace-nowrap font-semibold sm:text-lg">
+							<p class="text-md font-semibold whitespace-nowrap sm:text-lg">
 								{pestKills.toLocaleString()}
 							</p>
 						</div>
@@ -107,7 +107,7 @@
 					<div class="flex max-w-md flex-col items-center gap-2">
 						<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 						<p>{pestKills.toLocaleString()}</p>
-						<a class="text-lg font-semibold text-link hover:underline" href="/info#Pests"
+						<a class="text-link text-lg font-semibold hover:underline" href="/info#Pests"
 							>Weight Adjustment</a
 						>
 						{#if uncounted === 0}
@@ -128,7 +128,7 @@
 	</div>
 {:else}
 	<div class="flex w-full flex-row items-center gap-2 align-middle">
-		<div class="max-h-30 flex w-full flex-1 items-center justify-start gap-1 rounded-lg bg-card p-1 align-middle">
+		<div class="bg-card flex max-h-30 w-full flex-1 items-center justify-start gap-1 rounded-lg p-1 align-middle">
 			{@render cropIcon('hidden sm:flex')}
 			<div class="flex grow flex-col justify-center gap-1 pr-2">
 				<div class="flex flex-row items-center justify-between gap-2">
@@ -137,14 +137,14 @@
 						{#if rank > 0}
 							<a
 								href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
-								class="rounded-md bg-card px-1.5 hover:bg-muted"
+								class="bg-card hover:bg-muted rounded-md px-1.5"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
 									class="text-md xs:text-lg sm:text-xl">{rank}</span
 								>
 							</a>
 						{/if}
-						<p class="text-md whitespace-nowrap font-semibold sm:text-lg">{name}</p>
+						<p class="text-md font-semibold whitespace-nowrap sm:text-lg">{name}</p>
 					</div>
 					<p class="text-right font-semibold sm:text-lg md:ml-2 md:text-xl lg:text-2xl">
 						{weight.toLocaleString()}
@@ -162,7 +162,7 @@
 						{#if pestRank > 0}
 							<a
 								href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
-								class="rounded-md bg-card px-1 hover:bg-muted"
+								class="bg-card hover:bg-muted rounded-md px-1"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
 									class="text-md xs:text-lg sm:text-xl">{pestRank}</span
@@ -172,7 +172,7 @@
 						<Popover.Mobile>
 							{#snippet trigger()}
 								<div class="flex h-6 flex-row items-center justify-center gap-2 align-middle">
-									<p class="text-md whitespace-nowrap font-semibold sm:text-lg">
+									<p class="text-md font-semibold whitespace-nowrap sm:text-lg">
 										{pestKills.toLocaleString()}
 									</p>
 									<img
@@ -185,7 +185,7 @@
 							<div class="flex max-w-md flex-col items-center gap-2">
 								<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 								<p>{pestKills.toLocaleString()}</p>
-								<a class="text-lg font-semibold text-link hover:underline" href="/info#Pests"
+								<a class="text-link text-lg font-semibold hover:underline" href="/info#Pests"
 									>Weight Adjustment</a
 								>
 								{#if uncounted === 0}

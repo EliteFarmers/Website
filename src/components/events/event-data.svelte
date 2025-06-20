@@ -56,11 +56,11 @@
 					{#each cropWeights() as [cropName, weight] (cropName)}
 						{@const crop = getCropDisplayName(getCropFromName(cropName) ?? Crop.Wheat)}
 						<div
-							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<img src={PROPER_CROP_TO_IMG[crop]} alt={crop} class="pixelated aspect-square" />
-								<p class="whitespace-nowrap font-semibold">{crop}</p>
+								<p class="font-semibold whitespace-nowrap">{crop}</p>
 							</div>
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
@@ -68,7 +68,7 @@
 				{:else if event.type === +EventType.Medals}
 					{#each medalWeights() as [medal, weight] (medal)}
 						<div
-							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<img
@@ -76,7 +76,7 @@
 									alt={medal}
 									class="pixelated aspect-square"
 								/>
-								<p class="whitespace-nowrap font-semibold">{medal}</p>
+								<p class="font-semibold whitespace-nowrap">{medal}</p>
 							</div>
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
@@ -84,7 +84,7 @@
 				{:else if event.type === +EventType.Pests}
 					{#each pestWeights() as [pest, weight] (pest)}
 						<div
-							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 						>
 							<div class="flex flex-row items-center gap-2">
 								<img
@@ -92,7 +92,7 @@
 									alt={pest}
 									class="pixelated aspect-square"
 								/>
-								<p class="whitespace-nowrap font-semibold">{pest}</p>
+								<p class="font-semibold whitespace-nowrap">{pest}</p>
 							</div>
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
@@ -100,10 +100,10 @@
 				{:else if event.type === +EventType.Collections}
 					{#each collectionWeights() as [id, { name, weight }] (id)}
 						<div
-							class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 						>
 							<div class="flex flex-row items-center gap-2">
-								<p class="whitespace-nowrap font-semibold">{name}</p>
+								<p class="font-semibold whitespace-nowrap">{name}</p>
 							</div>
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>

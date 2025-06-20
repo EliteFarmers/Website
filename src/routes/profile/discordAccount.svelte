@@ -10,13 +10,13 @@
 	let { account = {} }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-4 rounded-lg bg-card p-2 align-middle">
+<div class="bg-card flex flex-col gap-4 rounded-lg p-2 align-middle">
 	<div class="flex flex-row items-center gap-4 p-2">
 		<UserIcon user={account} />
 		<div class="flex flex-col gap-1">
 			<p class="text-2xl font-semibold">{account.username}</p>
 			<div class="flex flex-row items-center gap-1">
-				<p class="text-sm text-muted-foreground">{account.id}</p>
+				<p class="text-muted-foreground text-sm">{account.id}</p>
 				<CopyToClipboard text={account.id} size="sm" class="-my-2" />
 			</div>
 		</div>

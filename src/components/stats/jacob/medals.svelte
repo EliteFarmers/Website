@@ -29,13 +29,13 @@
 				{#if ranks[medal + 'medals']?.rank > -1}
 					<a
 						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
+						class="xs:justify-center bg-card hover:bg-muted flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
 						<span class="text-2xl">{count.toLocaleString()}</span>
 
-						<span class="rounded-md bg-card px-1 py-0.5">
+						<span class="bg-card rounded-md px-1 py-0.5">
 							<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
 								>{ranks[medal + 'medals']?.rank}</span
 							>
@@ -43,7 +43,7 @@
 					</a>
 				{:else}
 					<div
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2"
+						class="xs:justify-center bg-card flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -61,7 +61,7 @@
 				{#if ranks[medal + 'medals']?.rank > -1}
 					<a
 						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2 hover:bg-muted"
+						class="xs:justify-center bg-card hover:bg-muted flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 
@@ -70,7 +70,7 @@
 							<span class="text-2xl leading-none">{count.toLocaleString()}</span>
 						</div>
 
-						<span class="rounded-md bg-card px-1 py-0.5">
+						<span class="bg-card rounded-md px-1 py-0.5">
 							<span class="text-sm">#</span><span class="text-md xs:text-lg sm:text-xl"
 								>{ranks[medal + 'medals']?.rank}</span
 							>
@@ -78,7 +78,7 @@
 					</a>
 				{:else}
 					<div
-						class="xs:justify-center flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md bg-card p-2"
+						class="xs:justify-center bg-card flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
 

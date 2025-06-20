@@ -107,13 +107,13 @@
 	</section>
 
 	{#if form?.error}
-		<h5 class="text-xl font-semibold text-destructive">
+		<h5 class="text-destructive text-xl font-semibold">
 			<p>{form?.error}</p>
 		</h5>
 	{/if}
 
 	<section class="flex w-full flex-col items-center justify-center gap-8">
-		<div class="flex w-full max-w-4xl flex-col justify-center justify-items-center rounded-md border-2 bg-card">
+		<div class="bg-card flex w-full max-w-4xl flex-col justify-center justify-items-center rounded-md border-2">
 			<h2 class="p-4 text-2xl">Manage Shared Settings</h2>
 			<Accordion.Root class="mx-4" type="multiple">
 				<Accordion.Item value="banned">
@@ -291,7 +291,7 @@
 			</div>
 
 			<Button formaction="?/create" type="submit">Create</Button>
-			<p class="text-base leading-relaxed text-muted-foreground">
+			<p class="text-muted-foreground text-base leading-relaxed">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

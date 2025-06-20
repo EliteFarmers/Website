@@ -18,10 +18,10 @@
 </script>
 
 <section class="mt-8 flex w-full flex-col items-center align-middle">
-	<div class="mx-2 flex w-full max-w-7xl flex-col gap-8 rounded-lg bg-background p-4 md:flex-row md:gap-16 md:p-8">
+	<div class="bg-background mx-2 flex w-full max-w-7xl flex-col gap-8 rounded-lg p-4 md:flex-row md:gap-16 md:p-8">
 		<div class="flex flex-1 flex-row items-center justify-center gap-6 md:justify-end">
 			<img
-				class="aspect-auto max-h-40 min-w-12 max-w-16 object-cover"
+				class="aspect-auto max-h-40 max-w-16 min-w-12 object-cover"
 				src="https://mc-heads.net/body/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
@@ -34,7 +34,7 @@
 				<div class="flex justify-start gap-1">
 					<Popover.Mobile>
 						{#snippet trigger()}
-							<div class="rounded-md bg-card">
+							<div class="bg-card rounded-md">
 								<p class="p-2 px-2">External Sites</p>
 							</div>
 						{/snippet}
@@ -45,7 +45,7 @@
 										ctx.uuid ?? page.params.id,
 										ctx.selectedProfile?.profileName ?? page.params.profile
 									)}
-									class="flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3 hover:bg-muted"
+									class="hover:bg-muted flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3"
 									target="_blank"
 									rel="noopener noreferrer nofollow"
 								>

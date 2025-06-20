@@ -305,24 +305,25 @@
 	--color-mushroom: var(--mushroom);
 	--color-cocoa: var(--cocoa);
 
-    --color-progress: var(--progress);
-    --color-completed: var(--completed);
-    --color-link: var(--link);
-    --color-active: var(--active);
+	--color-progress: var(--progress);
+	--color-completed: var(--completed);
+	--color-link: var(--link);
+	--color-active: var(--active);
 
-    /* Spacing */
-    --spacing-8xl: 90rem;
+	/* Spacing */
+	--spacing-8xl: 90rem;
 
-    /* Animations */
-    --animate-bounce-horizontal: bounce-horizontal 1s ease-out infinite;
-    @keyframes bounce-horizontal {
-        0%, 100% {
-            transform: translateX(0);
-        }
-        50% {
-            transform: translateX(-25%);
-        }
-    }
+	/* Animations */
+	--animate-bounce-horizontal: bounce-horizontal 1s ease-out infinite;
+	@keyframes bounce-horizontal {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		50% {
+			transform: translateX(-25%);
+		}
+	}
 }
 
 @layer base {
@@ -331,7 +332,7 @@
 	}
 	html {
 		background-color: hsl(var(--background));
-        scrollbar-color: hsl(var(--muted-variant) / 0.75) hsl(var(--muted) / 0.75);
+		scrollbar-color: hsl(var(--muted-variant) / 0.75) hsl(var(--muted) / 0.75);
 	}
 	body {
 		background-color: hsl(var(--background));

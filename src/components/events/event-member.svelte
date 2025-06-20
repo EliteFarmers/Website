@@ -80,7 +80,7 @@
 					<Tooltip.Simple>
 						{#snippet trigger()}
 							<div class="flex flex-row items-end">
-								<Crown size={16} class="w-4 text-completed" />
+								<Crown size={16} class="text-completed w-4" />
 							</div>
 						{/snippet}
 						<p>Team Owner</p>
@@ -91,10 +91,10 @@
 						{#snippet trigger()}
 							<div class="flex size-4 flex-col items-center justify-center">
 								{#if member.status === 0}
-									<div class="size-2 rounded-full bg-muted"></div>
+									<div class="bg-muted size-2 rounded-full"></div>
 								{/if}
 								{#if +member.status === 1}
-									<div class="size-2 rounded-full bg-progress"></div>
+									<div class="bg-progress size-2 rounded-full"></div>
 								{/if}
 							</div>
 						{/snippet}
@@ -135,7 +135,7 @@
 			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count] (medal)}
 					<div
-						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<img
@@ -143,7 +143,7 @@
 								alt={medal}
 								class="pixelated aspect-square"
 							/>
-							<p class="whitespace-nowrap font-semibold">{medal} <span>x{count}</span></p>
+							<p class="font-semibold whitespace-nowrap">{medal} <span>x{count}</span></p>
 						</div>
 						<p class="font-semibold">{(count * medalWeight(medal)).toLocaleString()}</p>
 					</div>
@@ -153,7 +153,7 @@
 			<div class="flex w-full flex-col gap-1">
 				{#each pestWeights() as { name, weight } (name)}
 					<div
-						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<img
@@ -161,7 +161,7 @@
 								alt={name}
 								class="pixelated aspect-square"
 							/>
-							<p class="whitespace-nowrap font-semibold">{name}</p>
+							<p class="font-semibold whitespace-nowrap">{name}</p>
 						</div>
 						<p class="font-semibold">{weight.toLocaleString()}</p>
 					</div>
@@ -171,10 +171,10 @@
 			<div class="flex w-full flex-col gap-1">
 				{#each collectionWeights() as { name, weight } (name)}
 					<div
-						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 					>
 						<div class="flex flex-row items-center gap-2">
-							<p class="whitespace-nowrap font-semibold">{name}</p>
+							<p class="font-semibold whitespace-nowrap">{name}</p>
 						</div>
 						<p class="font-semibold">{weight.toLocaleString()}</p>
 					</div>

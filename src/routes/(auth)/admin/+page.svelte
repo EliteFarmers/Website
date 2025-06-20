@@ -34,13 +34,13 @@
 	<h1 class="mb-16 text-4xl">Admin Panel</h1>
 
 	{#if form?.error}
-		<p class="text-lg text-destructive">{form.error}</p>
+		<p class="text-destructive text-lg">{form.error}</p>
 	{/if}
 
 	<section class="flex w-full max-w-2xl flex-col items-start gap-4">
 		<div class="flex w-full flex-col gap-4">
 			{#each data.admins as user, i (i)}
-				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-muted md:flex-row">
+				<div class="bg-muted flex w-full flex-col items-center justify-between gap-2 rounded-md md:flex-row">
 					<div class="flex flex-row items-center gap-4">
 						<UserIcon {user} class="size-12" />
 						<div class="flex flex-col">

@@ -11,7 +11,7 @@
 </script>
 
 <CommandPrimitive.Root
-	class={cn('flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground', className)}
+	class={cn('bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md', className)}
 	bind:value
 	bind:ref
 	{...restProps}

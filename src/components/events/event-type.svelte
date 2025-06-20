@@ -13,7 +13,7 @@
 
 {#snippet triggerContent()}
 	<div
-		class="flex w-fit flex-row items-center gap-2 rounded-sm bg-primary p-1 px-2 font-semibold leading-none text-primary-foreground"
+		class="bg-primary text-primary-foreground flex w-fit flex-row items-center gap-2 rounded-sm p-1 px-2 leading-none font-semibold"
 	>
 		{#if type === +EventType.FarmingWeight}
 			<img src="/favicon.webp" alt="Farming Weight" class="size-4" />

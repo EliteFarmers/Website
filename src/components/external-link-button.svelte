@@ -11,7 +11,7 @@
 	let { href, text = undefined, icon = true, children }: Props = $props();
 </script>
 
-<a {href} class="inline-block text-link decoration-link">
+<a {href} class="text-link decoration-link inline-block">
 	<span class="flex flex-row items-center gap-1">
 		{#if text}
 			<span>{text}</span>

@@ -5,4 +5,4 @@
 	let { ref = $bindable(null), class: className, ...restProps }: DialogPrimitive.DescriptionProps = $props();
 </script>
 
-<DialogPrimitive.Description bind:ref class={cn('text-sm text-muted-foreground', className)} {...restProps} />
+<DialogPrimitive.Description bind:ref class={cn('text-muted-foreground text-sm', className)} {...restProps} />

@@ -118,13 +118,13 @@
 		<div class="flex flex-col items-center gap-2">
 			<CropMedalCounts stats={selectedCropsStats} />
 			<div class="flex flex-wrap justify-center gap-2 md:flex-row">
-				<div class="flex flex-col items-center rounded-md bg-card p-2">
+				<div class="bg-card flex flex-col items-center rounded-md p-2">
 					<span
 						><span class="text-lg font-semibold">{selectedCropsStats.participations?.toLocaleString()}</span
 						> Participations</span
 					>
 				</div>
-				<div class="flex flex-col items-center rounded-md bg-card p-2">
+				<div class="bg-card flex flex-col items-center rounded-md p-2">
 					<span
 						><span class="text-lg font-semibold"
 							>{selectedCropsStats.firstPlaceScores?.toLocaleString()}</span

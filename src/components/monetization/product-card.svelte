@@ -17,7 +17,7 @@
 </script>
 
 <a
-	class={cn('group inline-block max-w-48 rounded-lg border-2 bg-card shadow-primary hover:drop-shadow-lg', className)}
+	class={cn('group bg-card shadow-primary inline-block max-w-48 rounded-lg border-2 hover:drop-shadow-lg', className)}
 	href="/shop/{product.id}"
 >
 	<div class="flex min-w-0 flex-col justify-start">
@@ -35,14 +35,14 @@
 				{#if free}
 					<span>Free</span>
 				{:else}
-					<span class="whitespace-nowrap leading-none"
+					<span class="leading-none whitespace-nowrap"
 						>{dollars} USD
 						{#if product.isSubscription}
-							<span class="whitespace-nowrap leading-none">/ Month</span>
+							<span class="leading-none whitespace-nowrap">/ Month</span>
 						{/if}
 					</span>
 				{/if}
-				<div class="absolute right-2 top-0 text-muted-foreground group-hover:animate-bounce-horizontal">
+				<div class="text-muted-foreground group-hover:animate-bounce-horizontal absolute top-0 right-2">
 					<ArrowRight size={18} />
 				</div>
 			</div>

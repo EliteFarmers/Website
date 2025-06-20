@@ -7,6 +7,6 @@
 
 <MenubarPrimitive.SubContent
 	bind:ref
-	class={cn('z-50 min-w-max rounded-md border bg-popover p-1 text-popover-foreground focus:outline-none', className)}
+	class={cn('bg-popover text-popover-foreground z-50 min-w-max rounded-md border p-1 focus:outline-none', className)}
 	{...restProps}
 />

@@ -38,14 +38,14 @@
 	const ff = $derived(fortune(crop, pbData?.amount ?? 0));
 </script>
 
-<div class="flex flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md bg-card p-2 md:max-w-52">
+<div class="bg-card flex flex-1 basis-48 flex-row items-center justify-between gap-4 rounded-md p-2 md:max-w-52">
 	<div class="flex flex-row items-center gap-2">
 		<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
 
 		<div class="flex flex-col items-start gap-1">
 			<a
 				href="/contest/{pbData.timestamp}"
-				class="text-lg font-semibold leading-none no-underline hover:underline"
+				class="text-lg leading-none font-semibold no-underline hover:underline"
 			>
 				{pbData.amount?.toLocaleString() ?? 'Not Set!'}
 			</a>
