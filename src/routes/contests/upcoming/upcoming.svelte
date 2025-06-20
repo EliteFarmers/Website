@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate, getRelativeTimeString } from '$lib/format';
@@ -14,12 +15,11 @@
 	let { current = false, timestamp, crops, currentSeconds }: Props = $props();
 
 	let time = $derived(timestamp);
-	let lang = $state('en');
-	let selected = $derived(page.url.hash === `#${timestamp}`);
-
-	$effect.pre(() => {
-		lang = navigator.language;
+	let lang = $derived.by(() => {
+		if (browser) return navigator.language ?? 'en';
+		return 'en';
 	});
+	let selected = $derived(page.url.hash === `#${timestamp}`);
 </script>
 
 <div

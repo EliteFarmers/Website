@@ -15,17 +15,20 @@
 	let milestones = $derived(
 		Object.entries(getCropMilestones((garden?.crops ?? {}) as Record<string, number>, overflow))
 	);
-	let list = $state<typeof milestones>([]);
 	let highestSort = $state(true);
-
-	$effect.pre(() => {
-		list = milestones?.sort((a, b) => b[1].total - a[1].total) ?? [];
-	});
+	let list = $derived(sortList());
 
 	function swap() {
 		highestSort = !highestSort;
+		list = sortList();
+	}
 
-		list = highestSort
+	function swapOverflow() {
+		overflow = !overflow;
+	}
+
+	function sortList() {
+		return highestSort
 			? milestones?.sort((a, b) => {
 					if (b[1].level === a[1].level) {
 						if (b[1].ratio === a[1].ratio) {
@@ -36,10 +39,6 @@
 					return b[1].level - a[1].level;
 				})
 			: milestones?.sort((a, b) => a[0].localeCompare(b[0]));
-	}
-
-	function swapOverflow() {
-		overflow = !overflow;
 	}
 
 	function getCropKey(crop: string) {
