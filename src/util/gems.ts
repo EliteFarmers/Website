@@ -10,7 +10,7 @@ export function getPeridotFortune(rarity: Rarity, item: EliteItemDto) {
 	if (!peridot) return 0;
 
 	return Object.entries(gems)
-		.filter(([gem]) => gem.startsWith('PERIDOT'))
+		.filter(([gem, value]) => gem.startsWith('PERIDOT') && value !== null)
 		.reduce((acc, gem) => acc + peridot[gem[1] as GemRarity], 0);
 }
 
