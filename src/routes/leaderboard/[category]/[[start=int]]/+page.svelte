@@ -106,7 +106,7 @@
 						useButton={false}
 						bind:search={searchInput}
 						bind:open={searchOpen}
-						command={() => {
+						cmd={() => {
 							tick().then(() => {
 								if (loading) return;
 								searchForm?.requestSubmit();
