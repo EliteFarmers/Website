@@ -144,8 +144,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3(postcss-load-config@4.0.2(postcss@8.5.6))(postcss@8.5.6)(svelte@5.34.7)(typescript@5.8.3)
       svelte-sonner:
-        specifier: ^0.3.28
-        version: 0.3.28(svelte@5.34.7)
+        specifier: ^1.0.0
+        version: 1.0.5(svelte@5.34.7)
       sveltekit-rate-limiter:
         specifier: ^0.7.0
         version: 0.7.0(@sveltejs/kit@2.22.0(@sveltejs/vite-plugin-svelte@5.1.0(svelte@5.34.7)(vite@6.3.5(@types/node@22.10.0)(jiti@1.21.7)(yaml@2.7.0)))(svelte@5.34.7)(vite@6.3.5(@types/node@22.10.0)(jiti@1.21.7)(yaml@2.7.0)))
@@ -1991,6 +1991,11 @@ packages:
     peerDependencies:
       svelte: ^5.7.0
 
+  runed@0.28.0:
+    resolution: {integrity: sha512-k2xx7RuO9hWcdd9f+8JoBeqWtYrm5CALfgpkg2YDB80ds/QE4w0qqu34A7fqiAwiBBSBQOid7TLxwxVC27ymWQ==}
+    peerDependencies:
+      svelte: ^5.7.0
+
   runed@0.29.0:
     resolution: {integrity: sha512-8aewcEjcaHk/dDsAWdPHQMUtsB2J9KSeL/c3USD58/3ijhUYEk0D/XT+BQSHt12ikbHNfaEf/ytJ3fmpBcf0YQ==}
     peerDependencies:
@@ -2158,10 +2163,10 @@ packages:
       typescript:
         optional: true
 
-  svelte-sonner@0.3.28:
-    resolution: {integrity: sha512-K3AmlySeFifF/cKgsYNv5uXqMVNln0NBAacOYgmkQStLa/UoU0LhfAACU6Gr+YYC8bOCHdVmFNoKuDbMEsppJg==}
+  svelte-sonner@1.0.5:
+    resolution: {integrity: sha512-9dpGPFqKb/QWudYqGnEz93vuY+NgCEvyNvxoCLMVGw6sDN/3oVeKV1xiEirW2E1N3vJEyj5imSBNOGltQHA7mg==}
     peerDependencies:
-      svelte: ^3.0.0 || ^4.0.0 || ^5.0.0-next.1
+      svelte: ^5.0.0
 
   svelte-toolbelt@0.7.1:
     resolution: {integrity: sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ==}
@@ -4173,6 +4178,11 @@ snapshots:
       esm-env: 1.2.2
       svelte: 5.34.7
 
+  runed@0.28.0(svelte@5.34.7):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.34.7
+
   runed@0.29.0(svelte@5.34.7):
     dependencies:
       esm-env: 1.2.2
@@ -4314,8 +4324,9 @@ snapshots:
       postcss-load-config: 4.0.2(postcss@8.5.6)
       typescript: 5.8.3
 
-  svelte-sonner@0.3.28(svelte@5.34.7):
+  svelte-sonner@1.0.5(svelte@5.34.7):
     dependencies:
+      runed: 0.28.0(svelte@5.34.7)
       svelte: 5.34.7
 
   svelte-toolbelt@0.7.1(svelte@5.34.7):
