@@ -58,7 +58,7 @@
 		"farming-weight": "^0.9.3",
 		"globals": "^15.15.0",
 		"layercake": "^8.4.2",
-		"layerchart": "^0.99.5",
+		"layerchart": "^1.0.0",
 		"openapi-fetch": "^0.14.0",
 		"postcss": "^8.5.3",
 		"prettier": "^3.5.3",
