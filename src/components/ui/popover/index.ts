@@ -1,8 +1,8 @@
 import { Popover as PopoverPrimitive } from 'bits-ui';
 import Content from './popover-content.svelte';
 import Mobile from './popover-mobile.svelte';
+import Trigger from './popover-trigger.svelte';
 const Root = PopoverPrimitive.Root;
-const Trigger = PopoverPrimitive.Trigger;
 const Close = PopoverPrimitive.Close;
 
 export {

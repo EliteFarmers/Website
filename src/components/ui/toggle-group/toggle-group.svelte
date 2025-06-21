@@ -1,6 +1,6 @@
 <script lang="ts" module>
 	import { getContext, setContext } from 'svelte';
-	import type { ToggleVariants } from '$ui/toggle/index.js';
+	import type { ToggleVariants } from '$comp/ui/toggle/index.js';
 	export function setToggleGroupCtx(props: ToggleVariants) {
 		setContext('toggleGroup', props);
 	}
@@ -36,6 +36,9 @@ get along, so we shut typescript up by casting `value` to `never`.
 <ToggleGroupPrimitive.Root
 	bind:value={value as never}
 	bind:ref
-	class={cn('flex items-center justify-center gap-1', className)}
+	data-slot="toggle-group"
+	data-variant={variant}
+	data-size={size}
+	class={cn('group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs', className)}
 	{...restProps}
 />
