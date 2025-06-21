@@ -58,7 +58,7 @@
 			</SettingListItem>
 			<SettingSeperator />
 			<SettingListItem
-				title="Clear Upcoming Constests"
+				title="Clear Upcoming Contests"
 				description="Clear upcoming jacob's contests if wrong data was submitted."
 			>
 				<form method="post" action="?/clearcontests" class="flex flex-col gap-2" use:enhance>

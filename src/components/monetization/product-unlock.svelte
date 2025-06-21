@@ -9,11 +9,9 @@
 	}
 
 	let { open = false, header, children }: Props = $props();
-
-	const children_render = $derived(children);
 </script>
 
-<Card.Root>
+<Card.Root class="p-0">
 	<Card.Content class="p-2">
 		<Accordion.Root type="single" class="w-full" value={open ? '1' : undefined}>
 			<Accordion.Item value="1" class="border-none p-0">
@@ -22,8 +20,8 @@
 						{@render header?.()}
 					</div>
 				</Accordion.Trigger>
-				<Accordion.Content wrapperClass="pb-2 pt-1 px-2">
-					{@render children_render?.()}
+				<Accordion.Content class="px-2 pt-1 pb-2">
+					{@render children?.()}
 				</Accordion.Content>
 			</Accordion.Item>
 		</Accordion.Root>

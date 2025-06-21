@@ -59,6 +59,8 @@
 </Popover.Mobile>
 
 <style lang="postcss">
+	@reference '$css';
+
 	.image-container {
 		@apply flex justify-center rounded-lg object-cover align-middle;
 		aspect-ratio: 1 / 1 !important;

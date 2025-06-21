@@ -138,7 +138,7 @@
 		<article class="w-full max-w-4xl px-4">
 			<div class="flex flex-col gap-2">
 				{#each CREDITS as credit, i (i)}
-					<Card.Root class="w-full flex-1">
+					<Card.Root class="w-full flex-1 gap-0">
 						<Card.Header class="pb-4">
 							<p class="text-xl font-semibold">{credit.name}</p>
 						</Card.Header>

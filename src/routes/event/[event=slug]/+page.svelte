@@ -356,7 +356,7 @@
 				<Accordion.Trigger><p class="text-left">Can I rejoin if I leave the event?</p></Accordion.Trigger>
 				<Accordion.Content>
 					Yes, as long as the event is still running, joining hasn't closed, and you haven't been
-					disqualified. You can rejoin at any time.
+					disqualified.
 					<br /><br />
 					Your score <strong>will not</strong> be reset if you rejoin, but keep in mind that you can't rejoin once
 					it closes!

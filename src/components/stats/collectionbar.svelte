@@ -214,6 +214,8 @@
 {/snippet}
 
 <style lang="postcss">
+	@reference '$css';
+
 	.crop-container {
 		@apply aspect-square justify-center object-contain align-middle;
 		aspect-ratio: 1 / 1;

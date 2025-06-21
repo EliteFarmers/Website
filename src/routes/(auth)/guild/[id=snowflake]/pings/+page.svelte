@@ -63,34 +63,37 @@
 			<h2 class="text-3xl">Upcoming Contest Ping Settings</h2>
 
 			<form class="flex flex-col gap-2" method="post" action="?/enable" use:enhance>
-				<div class="space-y-2">
-					<Label>Channel to send pings in</Label>
-					<ChannelSelect
-						channels={data.guild.channels}
-						value={pings.channelId ?? ''}
-						btnClass="w-full"
-						placeholder="Select a channel"
-						name="channel"
-					/>
-				</div>
-
-				<div class="space-y-2">
-					<Label>Ping Role (for every upcoming contest message)</Label>
-					<RoleSelect
-						roles={data.guild.roles}
-						btnClass="w-full"
-						value={pings.alwaysPingRole ?? ''}
-						placeholder="Select a role"
-						name="pingrole"
-					/>
-				</div>
 				<div class="flex flex-col justify-center gap-1 sm:flex-row sm:gap-8">
+					<div class="flex-1 space-y-2">
+						<Label class="font-semibold">Channel to send pings in</Label>
+						<ChannelSelect
+							channels={data.guild.channels}
+							value={pings.channelId ?? ''}
+							triggerClass="w-full justify-between max-w-sm"
+							placeholder="Select a channel"
+							name="channel"
+						/>
+					</div>
+
+					<div class="flex-1 space-y-2">
+						<Label class="font-semibold">Ping Role (for every upcoming contest message)</Label>
+						<RoleSelect
+							roles={data.guild.roles}
+							value={pings.alwaysPingRole ?? ''}
+							triggerClass="w-full justify-between max-w-sm"
+							placeholder="Select a role to ping"
+							name="pingrole"
+						/>
+					</div>
+				</div>
+				<hr />
+				<div class="mt-4 flex flex-col justify-center gap-1 sm:flex-row sm:gap-8">
 					<div class="flex flex-1 flex-col gap-1">
 						<div class="space-y-2">
 							<Label>Cactus Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.cactus ?? ''}
 								placeholder="Select a role for Cactus"
 								name="cactus"
@@ -100,7 +103,7 @@
 							<Label>Carrot Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.carrot ?? ''}
 								placeholder="Select a role for Carrot"
 								name="carrot"
@@ -110,7 +113,7 @@
 							<Label>Potato Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.potato ?? ''}
 								placeholder="Select a role for Potato"
 								name="potato"
@@ -120,7 +123,7 @@
 							<Label>Wheat Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.wheat ?? ''}
 								placeholder="Select a role for Wheat"
 								name="wheat"
@@ -130,7 +133,7 @@
 							<Label>Melon Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.melon ?? ''}
 								placeholder="Select a role for Melon"
 								name="melon"
@@ -142,7 +145,7 @@
 							<Label>Pumpkin Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.pumpkin ?? ''}
 								placeholder="Select a role for Pumpkin"
 								name="pumpkin"
@@ -152,7 +155,7 @@
 							<Label>Mushroom Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.mushroom ?? ''}
 								placeholder="Select a role for Mushroom"
 								name="mushroom"
@@ -162,7 +165,7 @@
 							<Label>Cocoa Beans Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.cocoaBeans ?? ''}
 								placeholder="Select a role for Cocoa Beans"
 								name="cocoa"
@@ -172,7 +175,7 @@
 							<Label>Sugar Cane Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.sugarCane ?? ''}
 								placeholder="Select a role for Sugar Cane"
 								name="cane"
@@ -182,7 +185,7 @@
 							<Label>Nether Wart Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								btnClass="w-full"
+								triggerClass="w-full justify-between max-w-sm"
 								value={pings.cropPingRoles?.netherWart ?? ''}
 								placeholder="Select a role for Nether Wart"
 								name="wart"

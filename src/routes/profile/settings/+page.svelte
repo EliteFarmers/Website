@@ -204,7 +204,7 @@
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
 
 				{#if selectedStyle}
-					<Card.Root class="w-full">
+					<Card.Root class="w-full p-0">
 						<Card.Content class="w-full p-2">
 							<!-- {#if selectedStyle.description}
 								<p class="text-sm pb-1">{selectedStyle.description}</p>

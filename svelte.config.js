@@ -31,6 +31,7 @@ const config = {
 			'$lib': './src/lib',
 			'$params': './src/params',
 			'$content': './src/content',
+            '$css': './src/app.css',
 		},
 	},
 	// Only way I found to hide warnings from node_modules that doesn't break everything

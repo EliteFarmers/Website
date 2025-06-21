@@ -127,8 +127,8 @@
 					</Card.Header>
 					<Card.Content>
 						<p class="mb-6 w-full text-lg">
-							Direcly support the art on Elite by purchasing crop stickers! All proceeds go to the artist,
-							and you get a cool sticker!
+							Directly support the art on Elite by purchasing crop stickers! All proceeds go to the
+							artist, and you get a cool sticker!
 						</p>
 						<div class="flex justify-center">
 							<Button

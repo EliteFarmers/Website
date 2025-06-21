@@ -218,9 +218,14 @@
 					<Checkbox.Root bind:checked={checks[1]} />
 				{/if}
 				<Label>
-					I confirm that I have read all of <a href="https://hypixel.net/rules" class="text-link underline">
-						Hypixel's Server Rules
-					</a> and that I agree to them.
+					<p>
+						I confirm that I have read all of <a
+							href="https://hypixel.net/rules"
+							class="text-link underline"
+						>
+							Hypixel's Server Rules
+						</a> and that I agree to them.
+					</p>
 				</Label>
 			</div>
 
@@ -317,6 +322,7 @@
 									type={!codeVisible ? 'password' : 'text'}
 									disabled
 									value={ownTeam.joinCode}
+									autocomplete="new-password"
 								/>
 								<CopyToClipboard text={ownTeam.joinCode} class="size-8" variant="outline" />
 							</div>

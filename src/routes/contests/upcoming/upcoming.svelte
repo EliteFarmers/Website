@@ -23,9 +23,9 @@
 </script>
 
 <div
-	class="flex w-full max-w-464 flex-1 scroll-mt-32 flex-col items-center justify-between gap-2 rounded-md p-4 md:flex-row {current
+	class="flex w-full max-w-464 flex-1 scroll-mt-32 flex-col items-center justify-between gap-2 rounded-md border-2 p-4 md:flex-row {current
 		? 'bg-active'
-		: 'bg-card'} {selected ? 'border-link border-2' : ''}"
+		: 'bg-card'} {selected ? 'border-link' : 'border-border'}"
 	id={timestamp.toString()}
 >
 	<div class="flex flex-col items-center gap-2 md:items-start">

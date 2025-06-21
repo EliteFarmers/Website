@@ -125,7 +125,7 @@
 						value={data.guild.adminRole === '0' ? undefined : (data.guild.adminRole ?? undefined)}
 						placeholder="Select a role"
 						name="role"
-						btnClass="w-full"
+						triggerClass="flex-1 justify-between"
 					/>
 					<Button type="submit">Set</Button>
 				</form>

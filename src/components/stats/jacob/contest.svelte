@@ -53,42 +53,42 @@
 
 <style lang="postcss">
 	.Cactus {
-		@apply border-cactus;
+		border-color: var(--color-cactus);
 	}
 
 	.Carrot {
-		@apply border-carrot;
+		border-color: var(--color-carrot);
 	}
 
 	.CocoaBeans {
-		@apply border-cocoa;
+		border-color: var(--color-cocoa);
 	}
 
 	.Melon {
-		@apply border-melon;
+		border-color: var(--color-melon);
 	}
 
 	.Mushroom {
-		@apply border-mushroom;
+		border-color: var(--color-mushroom);
 	}
 
 	.NetherWart {
-		@apply border-netherwart;
+		border-color: var(--color-netherwart);
 	}
 
 	.Potato {
-		@apply border-potato;
+		border-color: var(--color-potato);
 	}
 
 	.Pumpkin {
-		@apply border-pumpkin;
+		border-color: var(--color-pumpkin);
 	}
 
 	.SugarCane {
-		@apply border-sugarcane;
+		border-color: var(--color-sugarcane);
 	}
 
 	.Wheat {
-		@apply border-wheat;
+		border-color: var(--color-wheat);
 	}
 </style>

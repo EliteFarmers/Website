@@ -10,6 +10,7 @@
 		value: string | undefined;
 		channels?: components['schemas']['GuildChannelDto'][];
 		placeholder?: string;
+		class?: string;
 	}
 
 	let { name, disabled = false, value = $bindable<string | undefined>('_'), channels, ...rest }: Props = $props();

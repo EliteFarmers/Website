@@ -5,13 +5,17 @@
 
 	let {
 		ref = $bindable(null),
+		viewRef = $bindable(null),
 		class: className,
+		viewClass,
 		orientation = 'vertical',
 		scrollbarXClasses = '',
 		scrollbarYClasses = '',
 		children,
 		...restProps
 	}: WithoutChild<ScrollAreaPrimitive.RootProps> & {
+		viewRef?: ScrollAreaPrimitive.ViewportProps['ref'];
+		viewClass?: string | undefined;
 		orientation?: 'vertical' | 'horizontal' | 'both' | undefined;
 		scrollbarXClasses?: string | undefined;
 		scrollbarYClasses?: string | undefined;
@@ -20,8 +24,9 @@
 
 <ScrollAreaPrimitive.Root bind:ref data-slot="scroll-area" class={cn('relative', className)} {...restProps}>
 	<ScrollAreaPrimitive.Viewport
+		bind:ref={viewRef}
 		data-slot="scroll-area-viewport"
-		class="ring-ring/10 dark:ring-ring/20 dark:outline-ring/40 outline-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] focus-visible:ring-4 focus-visible:outline-1"
+		class={cn('h-full w-full rounded-[inherit]', viewClass)}
 	>
 		{@render children?.()}
 	</ScrollAreaPrimitive.Viewport>

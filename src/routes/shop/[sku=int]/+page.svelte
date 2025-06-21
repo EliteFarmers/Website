@@ -222,7 +222,7 @@
 				{#each product.weightStyles.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as { id } (id)}
 					{@const style = data.styles.find((s) => s.id === id)}
 					{#if style}
-						<Card.Root class="max-w-3xl">
+						<Card.Root class="max-w-3xl p-0">
 							<Card.Content class="p-2">
 								<p class="mb-1 text-lg font-semibold">{style.name}</p>
 								{#if style?.styleFormatter === 'data'}

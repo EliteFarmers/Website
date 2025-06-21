@@ -47,12 +47,14 @@
 </div>
 
 <style lang="postcss">
+	@reference '$css';
+
 	td,
 	th {
 		@apply p-1 px-2;
 	}
 
 	tbody > tr:nth-child(odd) {
-		@apply bg-opacity-50;
+		@apply bg-muted/50;
 	}
 </style>
