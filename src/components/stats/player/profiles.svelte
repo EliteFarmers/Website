@@ -12,7 +12,7 @@
 	<Popover.Mobile hasContent={profiles.length > 0}>
 		{#snippet trigger()}
 			<div class="z-10 col-span-1 grid">
-				<div class="mx-1 rounded-md bg-card p-1 px-2 lg:p-2">
+				<div class="bg-card mx-1 rounded-md p-1 px-2 lg:p-2">
 					<h2 class="text-2xl md:text-3xl">
 						{selected?.profileName}
 					</h2>
@@ -24,7 +24,7 @@
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
 						href="/@{ctx.ign}/{pId.name}"
-						class="flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold hover:bg-muted md:text-xl"
+						class="hover:bg-muted flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold md:text-xl"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<span>{pId.name}</span>
@@ -46,7 +46,7 @@
 		{/if}
 	</Popover.Mobile>
 	<Gamemode
-		class="text-2xl font-semibold text-muted-foreground first-letter:capitalize"
+		class="text-muted-foreground text-2xl font-semibold first-letter:capitalize"
 		gameMode={selected?.gameMode ?? 'classic'}
 	/>
 </div>

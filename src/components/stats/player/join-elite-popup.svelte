@@ -29,7 +29,6 @@
 			ctx.account.badges?.some((badge) => badge.id !== undefined && badge.id === +PUBLIC_ELITE_BADGE_ID) ?? false;
 
 		if (isOwnAccount && eligible && !hasElite) {
-			// @ts-expect-error - Not updated for Svelte 5 yet
 			toast.custom(EliteToast, {
 				duration: Number.POSITIVE_INFINITY,
 			});

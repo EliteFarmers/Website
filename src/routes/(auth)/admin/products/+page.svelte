@@ -45,12 +45,7 @@
 					<Command.Group itemsClass="flex flex-wrap gap-3">
 						{#each data.products as product (product.id)}
 							<Command.Item value={product.name ?? ''} class="rounded-md p-0 hover:rounded-md">
-								<Product
-									{product}
-									showPublished={true}
-									showFeatures={false}
-									class="m-0 md:min-w-[30rem]"
-								>
+								<Product {product} showPublished={true} showFeatures={false} class="m-0 md:min-w-120">
 									<Button href="/shop/{product.id}" class="m-1" variant="ghost" size="sm">
 										<ExternalLink />
 									</Button>

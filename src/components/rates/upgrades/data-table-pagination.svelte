@@ -15,7 +15,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-between gap-2 px-2 md:flex-row">
-	<div class="flex-1 text-sm text-muted-foreground">
+	<div class="text-muted-foreground flex-1 text-sm">
 		<!-- {table.getFilteredSelectedRowModel().rows.length} of -->
 		Including {table.getFilteredRowModel().rows.length} of {table.getCoreRowModel().rows.length} upgrade(s)
 	</div>
@@ -43,7 +43,7 @@
 			</Select.Root>
 		</div>
 		<div class="flex flex-row items-center justify-center gap-2">
-			<div class="flex items-center justify-center whitespace-nowrap text-sm font-medium">
+			<div class="flex items-center justify-center text-sm font-medium whitespace-nowrap">
 				Page {table.getState().pagination.pageIndex + 1} of
 				{table.getPageCount()}
 			</div>

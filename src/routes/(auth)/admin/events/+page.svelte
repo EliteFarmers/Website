@@ -20,7 +20,7 @@
 		<h2 class="text-2xl">Pending Events</h2>
 		<div class="flex w-full flex-col gap-4">
 			{#each data.pending as event (event.id)}
-				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-card p-2 md:flex-row">
+				<div class="bg-card flex w-full flex-col items-center justify-between gap-2 rounded-md p-2 md:flex-row">
 					<div class="flex flex-col gap-2">
 						<h3 class="text-lg">{event.name}</h3>
 						<p class="text-sm">{event.description}</p>
@@ -44,7 +44,7 @@
 		<h2 class="text-2xl">Current Events</h2>
 		<div class="flex w-full flex-col gap-4">
 			{#each data.upcoming as event (event.id)}
-				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-card p-2 md:flex-row">
+				<div class="bg-card flex w-full flex-col items-center justify-between gap-2 rounded-md p-2 md:flex-row">
 					<div class="flex flex-col gap-2">
 						<h3 class="text-lg">{event.name}</h3>
 						<p class="text-sm">{event.description}</p>

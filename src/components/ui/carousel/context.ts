@@ -1,6 +1,5 @@
-import type { WithElementRef } from 'bits-ui';
-import type { EmblaCarouselSvelteType } from 'embla-carousel-svelte';
-import type emblaCarouselSvelte from 'embla-carousel-svelte';
+import type { WithElementRef } from '$lib/utils.js';
+import type { EmblaCarouselSvelteType, default as emblaCarouselSvelte } from 'embla-carousel-svelte';
 import { getContext, hasContext, setContext } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 

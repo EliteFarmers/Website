@@ -24,13 +24,13 @@
 		{@render itemCost(item, amount)}
 	{/each}
 	{#if upgrade.cost?.coins}
-		<p class="text-sm text-muted-foreground">
+		<p class="text-muted-foreground text-sm">
 			+ <span class="text-primary dark:text-completed">{upgrade.cost?.coins?.toLocaleString()}</span>
 			<span class="text-muted-foreground">coins</span>
 		</p>
 	{/if}
 	{#if upgrade.cost?.applyCost?.coins}
-		<p class="text-sm text-muted-foreground">
+		<p class="text-muted-foreground text-sm">
 			+ <span class="text-primary dark:text-completed">{upgrade.cost?.applyCost?.coins?.toLocaleString()}</span>
 			<span class="text-muted-foreground">coins to apply</span>
 		</p>
@@ -58,7 +58,7 @@
 			<span class="text-muted-foreground">Not Available</span>
 		{:else}
 			<span class="mt-1"
-				>Total <span class="font-semibold dark:text-completed">{Math.round(totalCost).toLocaleString()}</span
+				>Total <span class="dark:text-completed font-semibold">{Math.round(totalCost).toLocaleString()}</span
 				></span
 			>
 		{/if}
@@ -69,7 +69,7 @@
 	{@const sbItem = items?.[item]}
 	<div class="flex flex-row items-center gap-1">
 		<span class="text-sm font-semibold">{amount}x</span>
-		<span class="rounded-sm border bg-background px-1">
+		<span class="bg-background rounded-sm border px-1">
 			{#if sbItem?.data?.name}
 				<span class="text-sm"><ItemName name={sbItem.data.name} /></span>
 			{:else}
@@ -88,13 +88,13 @@
 
 		{#if sbItem?.auctions && sbItem.auctions.length > 0}
 			{@const lowest = Math.min(...sbItem.auctions.map((a) => a.lowest3Day))}
-			<span class="ml-1 text-sm dark:text-completed">
+			<span class="dark:text-completed ml-1 text-sm">
 				{Math.round(lowest * amount).toLocaleString()}
 			</span>
 			<span class="text-muted-foreground">coins</span>
 		{:else if sbItem?.bazaar}
 			{@const averageBuyOrder = sbItem.bazaar.averageBuyOrder}
-			<span class="ml-1 text-sm dark:text-completed">
+			<span class="dark:text-completed ml-1 text-sm">
 				{Math.round(averageBuyOrder * amount).toLocaleString()}
 			</span>
 			<span class="text-muted-foreground">coins</span>

@@ -20,7 +20,7 @@
 
 <div class="flex w-full flex-col items-center justify-center">
 	<section class="flex w-full flex-col items-center justify-center">
-		<h1 class="mb-8 mt-16 text-center text-3xl">Weight Information</h1>
+		<h1 class="mt-16 mb-8 text-center text-3xl">Weight Information</h1>
 		<article class="w-full max-w-4xl px-4">
 			<h2 class="my-8 text-2xl">What is Farming Weight?</h2>
 			<p class="my-4 text-lg">
@@ -40,7 +40,7 @@
 				needed to increase your farming weight by 1.
 			</p>
 			<CropTable {weights} />
-			<p class="mb-2 mt-4 text-sm">
+			<p class="mt-4 mb-2 text-sm">
 				Base Drops Per Break refers to the average amount of drops you get from breaking a crop without any
 				buffs. Sugar Cane and Cactus actually have a base drop of 1 per block, but because you can break 2
 				blocks at once, 2 is noted here. Full calculation breakdowns will be added in the future.
@@ -54,7 +54,7 @@
 		</article>
 	</section>
 	<section class="flex w-full flex-col items-center justify-center" id="Pests">
-		<h1 class="mb-8 mt-16 text-center text-3xl">Pest Weight Adjustment</h1>
+		<h1 class="mt-16 mb-8 text-center text-3xl">Pest Weight Adjustment</h1>
 		<p class="my-4 w-full max-w-4xl px-4 text-lg">
 			The introduction of pests to the garden has brought a new (and unreliable) source of crop collection into
 			the game which needs to be accounted for in farming weight. If pest drops were balanced in-game there would
@@ -72,14 +72,14 @@
 				that was used to calculate your average drops per pest kill.
 			</p>
 			<PestTable {weights} />
-			<p class="mb-2 mt-4 text-sm">
+			<p class="mt-4 mb-2 text-sm">
 				This system is progressive, which means that as you hit the next bracket, the previous bracket's pest
 				amounts are still using their associated bracket's fortune values.
 			</p>
 		</article>
 	</section>
 	<section class="flex w-full flex-col items-center justify-center">
-		<h1 class="mb-8 mt-16 text-center text-3xl">Bonus Weight</h1>
+		<h1 class="mt-16 mb-8 text-center text-3xl">Bonus Weight</h1>
 		<article class="w-full max-w-4xl px-4">
 			<p class="my-4 text-lg">
 				There are a few sources of bonus weight that can be obtained. These are not intended to be a significant
@@ -91,7 +91,7 @@
 		</article>
 	</section>
 	<section class="flex w-full flex-col items-center justify-center" id="FAQ">
-		<h1 class="mb-8 mt-16 text-center text-3xl">F.A.Q.</h1>
+		<h1 class="mt-16 mb-8 text-center text-3xl">F.A.Q.</h1>
 		{#each FAQ as faq, i (i)}
 			<article class="w-full max-w-4xl px-4">
 				<h2 class="my-8 text-2xl">{faq.question}</h2>
@@ -103,7 +103,7 @@
 		{/each}
 	</section>
 	<section class="flex w-full flex-col items-center justify-center" id="Badges">
-		<h1 class="mb-8 mt-16 text-center text-3xl">Badges</h1>
+		<h1 class="mt-16 mb-8 text-center text-3xl">Badges</h1>
 		<article class="w-full max-w-4xl px-4">
 			<p class="text-lg">
 				Badges are cosmetic profile decorations players can display on the website. More may be added at any
@@ -117,7 +117,7 @@
 							<img
 								src={badge.image.url}
 								alt={badge.name}
-								class="w-18 h-6 rounded-sm object-cover md:h-8 md:w-24"
+								class="h-6 w-18 rounded-sm object-cover md:h-8 md:w-24"
 							/>
 						{/if}
 						<div class="flex max-w-md flex-1 flex-col gap-1">
@@ -134,11 +134,11 @@
 		</article>
 	</section>
 	<section class="flex w-full flex-col items-center justify-center" id="Credits">
-		<h1 class="mb-8 mt-16 text-center text-3xl">Credits</h1>
+		<h1 class="mt-16 mb-8 text-center text-3xl">Credits</h1>
 		<article class="w-full max-w-4xl px-4">
 			<div class="flex flex-col gap-2">
 				{#each CREDITS as credit, i (i)}
-					<Card.Root class="w-full flex-1">
+					<Card.Root class="w-full flex-1 gap-0">
 						<Card.Header class="pb-4">
 							<p class="text-xl font-semibold">{credit.name}</p>
 						</Card.Header>

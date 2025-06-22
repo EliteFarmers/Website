@@ -36,7 +36,7 @@
 		{#if items.length === 0}
 			<div class="flex flex-1 flex-col items-center justify-center">
 				<span class="text-muted-foreground">No visible badges!</span>
-				<span class="text-xs text-muted-foreground">Drag badges here to display them on your profile!</span>
+				<span class="text-muted-foreground text-xs">Drag badges here to display them on your profile!</span>
 			</div>
 		{/if}
 	</div>
@@ -54,7 +54,7 @@
 		{#if hidden.length === 0}
 			<div class="flex flex-1 flex-col items-center justify-center">
 				<span class="text-muted-foreground">No hidden badges!</span>
-				<span class="text-xs text-muted-foreground">Drag badges here to hide them from your profile!</span>
+				<span class="text-muted-foreground text-xs">Drag badges here to hide them from your profile!</span>
 			</div>
 		{/if}
 	</div>

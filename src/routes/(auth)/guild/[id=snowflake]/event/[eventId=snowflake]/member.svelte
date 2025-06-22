@@ -32,7 +32,7 @@
 		{#if 'notes' in member}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<FileText size={20} class="-mb-1 text-destructive" />
+					<FileText size={20} class="text-destructive -mb-1" />
 				{/snippet}
 				<div>
 					<p>{member.notes || 'Member Left'}</p>

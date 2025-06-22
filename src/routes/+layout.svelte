@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.pcss';
+	import '../app.css';
 
 	import { page } from '$app/state';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';

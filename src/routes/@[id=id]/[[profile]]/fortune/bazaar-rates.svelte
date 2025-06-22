@@ -93,7 +93,7 @@
 								<div class="flex max-w-xl flex-col gap-1">
 									<div>
 										<div
-											class="flex flex-row items-center justify-between gap-6 rounded-sm p-1 even:bg-card"
+											class="even:bg-card flex flex-row items-center justify-between gap-6 rounded-sm p-1"
 										>
 											<span><strong>Source</strong></span>
 											<span><strong>Coins</strong></span>
@@ -102,21 +102,21 @@
 									</div>
 
 									<div
-										class="flex flex-row items-center justify-between gap-6 rounded-sm p-1 odd:bg-card"
+										class="odd:bg-card flex flex-row items-center justify-between gap-6 rounded-sm p-1"
 									>
 										<span>{bz?.[id].name}</span>
 										<span>{Math.floor(sell * result.fractionalItems).toLocaleString()}</span>
 									</div>
 									{#if result.fractionalCost > 0}
 										<div
-											class="flex flex-row items-center justify-between gap-6 rounded-sm p-1 odd:bg-card"
+											class="odd:bg-card flex flex-row items-center justify-between gap-6 rounded-sm p-1"
 										>
 											<span>Other items affecting craft cost</span>
 											<span>{Math.floor(-result.fractionalCost).toLocaleString()}</span>
 										</div>
 									{/if}
 									<div
-										class="flex flex-row items-center justify-between gap-6 rounded-sm p-1 odd:bg-card"
+										class="odd:bg-card flex flex-row items-center justify-between gap-6 rounded-sm p-1"
 									>
 										<span>NPC selling other items</span>
 										<span>{Math.floor(otherCoins).toLocaleString()}</span>

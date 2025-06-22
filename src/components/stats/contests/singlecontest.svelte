@@ -35,7 +35,7 @@
 	}
 </script>
 
-<div class="h-full items-center justify-between rounded-md border-2 bg-card shadow-md">
+<div class="bg-card h-full items-center justify-between rounded-md border-2 shadow-md">
 	<div class="flex flex-col items-center justify-start space-y-2 px-2 py-4 pb-2">
 		<div class="flex flex-row gap-2">
 			<img src={cropUrl} alt={crop} class="pixelated h-10 w-10" />
@@ -47,7 +47,7 @@
 			{entries?.length ?? 0} / {participants !== -1 ? participants : 'Unknown'} Participants
 		</span>
 		<ScrollArea bind:viewRef={area} class="h-[29.62rem] w-full rounded-md border" type="always">
-			<div class="flex w-[26rem] flex-col justify-center space-y-2">
+			<div class="flex w-104 flex-col justify-center space-y-2">
 				{#each sorted as participant, i (participant.playerUuid ?? i)}
 					<Participation entry={participant} />
 				{/each}
@@ -55,20 +55,20 @@
 		</ScrollArea>
 	</div>
 	<div class="flex flex-col items-center justify-center gap-2 pb-2 md:flex-row">
-		<div class="flex flex-col rounded-md bg-card text-center font-mono text-sm font-light leading-tight">
-			<span class="whitespace-nowrap rounded-md p-1 px-2">
+		<div class="bg-card flex flex-col rounded-md text-center font-mono text-sm leading-tight font-light">
+			<span class="rounded-md p-1 px-2 whitespace-nowrap">
 				{new Date(timestamp * 1000).toLocaleString(undefined, {
 					timeStyle: 'short',
 					dateStyle: 'short',
 					timeZone: 'UTC',
 				})} UTC
 			</span>
-			<span class="whitespace-nowrap rounded-md p-1 px-2">
+			<span class="rounded-md p-1 px-2 whitespace-nowrap">
 				{getReadableSkyblockDate(timestamp)}
 			</span>
 		</div>
 		{#if entries.length > 10}
-			<Button class="w-32 whitespace-nowrap rounded-md" size="sm" variant="secondary" onclick={toggle}
+			<Button class="w-32 rounded-md whitespace-nowrap" size="sm" variant="secondary" onclick={toggle}
 				>{expand ? 'Show Less' : 'Load More'}</Button
 			>
 		{/if}

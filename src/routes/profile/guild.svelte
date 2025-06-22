@@ -13,11 +13,11 @@
 	let { guild, link = false }: Props = $props();
 </script>
 
-<div class="m-1 inline-block rounded-md bg-card p-4">
+<div class="bg-card m-1 inline-block rounded-md p-4">
 	<div class="flex items-center justify-between">
-		<div class="flex min-w-0 flex-shrink items-center justify-start gap-4">
+		<div class="flex min-w-0 shrink items-center justify-start gap-4">
 			<GuildIcon {guild} />
-			<h1 class="overflow-hidden text-ellipsis whitespace-nowrap pr-4 text-xl">{guild.name}</h1>
+			<h1 class="overflow-hidden pr-4 text-xl text-ellipsis whitespace-nowrap">{guild.name}</h1>
 		</div>
 		<div class="flex min-w-0 items-center justify-end gap-4">
 			{#if link}

@@ -89,26 +89,26 @@
 	</div>
 	{#if (mode ?? 'classic') !== 'classic'}
 		<div class="flex flex-row items-center gap-2 text-sm">
-			<TriangleAlert size={20} class="-mb-1 text-completed" />
+			<TriangleAlert size={20} class="text-completed -mb-1" />
 			<p>These upgrades use Bazaar and Auction House prices which aren't available in this game mode.</p>
 		</div>
 	{/if}
-	<p class="text-sm text-muted-foreground">Every available fortune upgrade for {ctx.ignMeta}!</p>
+	<p class="text-muted-foreground text-sm">Every available fortune upgrade for {ctx.ignMeta}!</p>
 	{#if !crop || crop.length === 0}
 		<div class="flex flex-row items-center gap-2 text-sm">
-			<TriangleAlert size={20} class="-mb-1 text-completed" />
+			<TriangleAlert size={20} class="text-completed -mb-1" />
 			<p>No crop selected! Select a crop to add crop specific upgrades to this list!</p>
 		</div>
 	{/if}
 	{#await itemsPromise}
-		<p class="text-sm text-muted-foreground">Loading item prices...</p>
+		<p class="text-muted-foreground text-sm">Loading item prices...</p>
 	{:then loadedItems}
 		<UpgradeList {upgrades} items={loadedItems} costFn={upgradeCost} />
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
 	{/await}
-	<div class="flex flex-col items-center justify-center gap-2 p-4 text-sm text-muted-foreground">
-		<p class="max-w-xl text-center text-primary">
+	<div class="text-muted-foreground flex flex-col items-center justify-center gap-2 p-4 text-sm">
+		<p class="text-primary max-w-xl text-center">
 			Upgrades such as strength for Mooshroom Cow and unlocking visitors for Green Thumb aren't shown here as
 			those aren't things you can easily purchase. Be sure to check the above farming fortune categories for
 			further upgrades!

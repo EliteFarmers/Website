@@ -79,7 +79,7 @@
 		{/if}
 	</section>
 
-	<section class="mb-16 flex max-w-screen-lg flex-col items-center justify-center justify-items-center gap-8">
+	<section class="mb-16 flex max-w-(--breakpoint-lg) flex-col items-center justify-center justify-items-center gap-8">
 		{#each events as event (event.id)}
 			{@const start = new Date(+(event.startTime ?? 0) * 1000)}
 			{@const end = new Date(+(event.endTime ?? 0) * 1000)}
@@ -89,12 +89,12 @@
 					? `background-image: url(${data.guild.banner.url}); color: white;`
 					: ''}
 			<div
-				class="relative flex w-full flex-1 flex-row items-center justify-start gap-8 rounded-lg bg-card bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
+				class="bg-card relative flex w-full flex-1 flex-row items-center justify-start gap-8 rounded-lg bg-cover bg-center bg-no-repeat p-8 py-8 align-middle"
 				style={background || ''}
 			>
 				{#if data.guild?.banner}
 					<div
-						class="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-gradient-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
+						class="absolute top-0 right-0 bottom-0 left-0 rounded-lg bg-linear-to-r from-zinc-900/70 via-transparent to-zinc-900/70"
 					></div>
 				{/if}
 				<GuildIcon guild={data.guild} class="z-10 size-12" />
@@ -104,7 +104,7 @@
 							{#if !event.approved}
 								<Popover.Mobile>
 									{#snippet trigger()}
-										<TriangleAlert class="mt-1.5 size-5 text-destructive" />
+										<TriangleAlert class="text-destructive mt-1.5 size-5" />
 									{/snippet}
 									<div>
 										<p class="font-semibold">Pending approval!</p>

@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md bg-card p-1 text-lg"
+	class="bg-card relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md p-1 text-lg"
 	aria-label="Skyblock Level"
 >
 	<Popover.Mobile>
@@ -20,7 +20,7 @@
 				{#if rank !== -1}
 					<a
 						href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.profileName}"
-						class="rounded-md bg-card px-1.5 hover:bg-muted"
+						class="bg-card hover:bg-muted rounded-md px-1.5"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
 							>{rank}</span

@@ -57,13 +57,13 @@
 	<ScrollArea
 		bind:viewRef={scrollContainer}
 		orientation="horizontal"
-		class="overflow-x-auto whitespace-nowrap rounded-md"
+		class="overflow-x-auto rounded-md whitespace-nowrap"
 	>
 		<div class="flex min-w-max items-center justify-center gap-2 py-3">
 			{#each crops as [crop, src] (crop)}
 				<button
 					data-crop={crop}
-					class="flex aspect-square w-16 flex-row items-center justify-center gap-2 rounded-md p-2 hover:bg-muted {$selectedCrops[
+					class="hover:bg-muted flex aspect-square w-16 flex-row items-center justify-center gap-2 rounded-md p-2 {$selectedCrops[
 						crop
 					]
 						? 'bg-primary/15'

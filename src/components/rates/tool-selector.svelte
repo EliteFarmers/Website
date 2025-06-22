@@ -38,7 +38,7 @@
 				}}
 				class="{selected
 					? 'border-muted'
-					: 'border-transparent'} flex w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-[3px] border-solid px-1.5 py-0.5 hover:bg-muted/30"
+					: 'border-transparent'} hover:bg-muted/30 flex w-full cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-[3px] border-solid px-1.5 py-0.5"
 			>
 				<Toolconfig {tool} {player} />
 			</button>
@@ -47,7 +47,7 @@
 	{#if $player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).length > 2}
 		<button
 			onclick={toggleShow}
-			class="flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm hover:bg-card/50"
+			class="hover:bg-card/50 flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm"
 		>
 			{show === 2 ? 'Show More' : 'Show Less'}
 		</button>

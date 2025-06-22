@@ -233,17 +233,17 @@
 />
 
 <FloatingButton onclick={() => ($ratesData.settings = !$ratesData.settings)}>
-	<Settings class="transition-all group-hover:rotate-90 md:!size-6" />
+	<Settings class="transition-all group-hover:rotate-90 md:size-6!" />
 </FloatingButton>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector radio={true} />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-4 md:px-6 md:pb-6">
+		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 p-4 md:px-6 md:pb-6">
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
-				<div class="flex-3 my-2 flex flex-row items-center gap-2">
+				<div class="my-2 flex flex-3 flex-row items-center gap-2">
 					<h2 class="text-lg md:text-2xl">Total Farming Fortune</h2>
 
 					<Fortunebreakdown title="Total Farming Fortune" total={totalFortune} breakdown={fortuneBreakdown} />
@@ -345,7 +345,7 @@
 				{/if}
 			</div>
 		</section>
-		<section class="w-full flex-1 rounded-md border-2 bg-card p-4">
+		<section class="bg-card w-full flex-1 rounded-md border-2 p-4">
 			<div class="flex h-full w-full max-w-lg flex-col gap-2 p-2">
 				{#if selected}
 					{@const [cropId, info] = selected}
@@ -398,7 +398,7 @@
 
 					<hr class="mt-2" />
 
-					<h3 class="mb-1 mt-2 text-xl font-semibold">Results</h3>
+					<h3 class="mt-2 mb-1 text-xl font-semibold">Results</h3>
 					<div class="flex flex-col text-lg">
 						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">NPC Coins</span>
@@ -414,7 +414,7 @@
 						</div>
 					</div>
 
-					<h3 class="mb-1 mt-2 text-xl font-semibold">Coin Breakdown</h3>
+					<h3 class="mt-2 mb-1 text-xl font-semibold">Coin Breakdown</h3>
 					<div class="flex flex-col">
 						{#each coinBreakdown as [name, value] (name)}
 							<div class="flex w-full items-center justify-between py-2">
@@ -446,7 +446,7 @@
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
 						<div class="flex-1"></div>
 						<div class="mt-2 flex flex-row items-center justify-center gap-2">
-							<TriangleAlert size={20} class="-mb-1 text-completed" />
+							<TriangleAlert size={20} class="text-completed -mb-1" />
 							<p class="text-sm">
 								Temporary Fortune is enabled! Some sources might not last the whole time.
 							</p>
@@ -462,7 +462,7 @@
 	<Cropselector radio={true} href="#fortune" id="fortune" />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
+		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-lg border-2 p-4">
 			<div class="flex w-full flex-row items-center justify-center gap-1">
 				<div class="flex flex-1 flex-row justify-end">
 					<JumpLink id="fortune" self={false} />
@@ -472,7 +472,7 @@
 					<div class="flex flex-1 justify-start">
 						<Button
 							variant="ghost"
-							class="mx-2 text-muted-foreground"
+							class="text-muted-foreground mx-2"
 							size="sm"
 							onclick={() => ($ratesData.settings = !$ratesData.settings)}
 						>
@@ -512,14 +512,14 @@
 
 	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
-	<section class="flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 bg-card p-4">
+	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
 		<svelte:boundary>
 			<CheapestUpgrades {player} crop={selectedCropKey} />
 			{#snippet failed(error, reset)}
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
 					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
-					<p class="text-sm text-muted-foreground">
+					<p class="text-muted-foreground text-sm">
 						Please report the error in the <a href="/support" class="text-link underline"
 							>Support Discord Server</a
 						>!

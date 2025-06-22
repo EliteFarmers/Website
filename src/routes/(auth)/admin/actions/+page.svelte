@@ -11,7 +11,7 @@
 	<section class="my-8 flex w-full flex-col gap-4">
 		<h1 class="mb-16 text-4xl">Actions</h1>
 
-		<div class="flex w-full flex-col rounded-lg border-2 bg-card p-4">
+		<div class="bg-card flex w-full flex-col rounded-lg border-2 p-4">
 			<SettingListItem
 				title="Refresh Website Cache"
 				description="Fetch new data for the website cache. This will update the website with the latest data from the API."
@@ -58,7 +58,7 @@
 			</SettingListItem>
 			<SettingSeperator />
 			<SettingListItem
-				title="Clear Upcoming Constests"
+				title="Clear Upcoming Contests"
 				description="Clear upcoming jacob's contests if wrong data was submitted."
 			>
 				<form method="post" action="?/clearcontests" class="flex flex-col gap-2" use:enhance>

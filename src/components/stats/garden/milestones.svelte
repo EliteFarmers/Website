@@ -49,14 +49,14 @@
 <div class="flex max-w-4xl flex-1 flex-col gap-2">
 	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex flex-row items-center gap-2">
-			<button class="w-24 whitespace-nowrap rounded-md bg-card py-1 text-sm hover:bg-muted" onclick={swap}
+			<button class="bg-card hover:bg-muted w-24 rounded-md py-1 text-sm whitespace-nowrap" onclick={swap}
 				>{highestSort ? 'Milestone ↓' : 'A-Z ↓'}</button
 			>
-			<button class="w-20 whitespace-nowrap rounded-md bg-card py-1 text-sm hover:bg-muted" onclick={swapOverflow}
+			<button class="bg-card hover:bg-muted w-20 rounded-md py-1 text-sm whitespace-nowrap" onclick={swapOverflow}
 				>{overflow ? 'Overflow' : 'Normal'}</button
 			>
 		</div>
-		<h3 class="mt-1.5 text-lg font-semibold leading-none">Crop Milestones</h3>
+		<h3 class="mt-1.5 text-lg leading-none font-semibold">Crop Milestones</h3>
 	</div>
 	<div class="flex w-full flex-col gap-2">
 		{#each list as [crop, leveling] (crop)}

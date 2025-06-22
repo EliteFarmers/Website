@@ -42,7 +42,7 @@
 {/if}
 {#if costPer > 0}
 	<span>
-		<span class="text-right font-semibold dark:text-completed">{Math.round(costPer).toLocaleString()}</span>
+		<span class="dark:text-completed text-right font-semibold">{Math.round(costPer).toLocaleString()}</span>
 		<span class="text-muted-foreground"> coins </span>
 	</span>
 {/if}

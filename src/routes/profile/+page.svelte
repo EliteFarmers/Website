@@ -96,7 +96,7 @@
 					</Button>
 				</div>
 				{#if form?.error}
-					<span class="text-sm text-destructive"
+					<span class="text-destructive text-sm"
 						>{form?.error?.toString().replaceAll('`', '"') ?? 'Something went wrong!'}</span
 					>
 				{/if}
@@ -106,11 +106,11 @@
 		{#if !user?.minecraftAccounts?.length}
 			<div class="flex flex-col text-center">
 				<h1 class="py-2 text-lg">
-					Ensure <span class="select-all text-progress">{discordUsername}</span> is linked in Hypixel.net as follows:
+					Ensure <span class="text-progress select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
 				</h1>
 				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4">
 					<h1 class="text-md py-2">
-						(Enter <span class="select-all text-progress">{discordUsername}</span>, the video is just the
+						(Enter <span class="text-progress select-all">{discordUsername}</span>, the video is just the
 						example)
 					</h1>
 				</video>

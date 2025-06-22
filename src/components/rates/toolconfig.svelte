@@ -40,7 +40,7 @@
 			<Lorebtn item={tool.item}>
 				{#if tool.cultivating}
 					<p>
-						<span class="select-none font-semibold">Cultivating:</span>
+						<span class="font-semibold select-none">Cultivating:</span>
 						<span class="select-all">{tool.cultivating.toLocaleString()}</span>
 					</p>
 				{/if}
@@ -81,7 +81,7 @@
 					player.refresh();
 				}}
 			/>
-			<p class="text-sm text-muted-variant">More config options coming soon™!</p>
+			<p class="text-muted-variant text-sm">More config options coming soon™!</p>
 		</div>
 	{/if}
 </div>

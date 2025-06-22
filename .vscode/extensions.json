@@ -3,8 +3,6 @@
 		"bradlc.vscode-tailwindcss",
 		"svelte.svelte-vscode",
 		"esbenp.prettier-vscode",
-		"vunguyentuan.vscode-postcss",
-		"cpylua.language-postcss",
 		"dbaeumer.vscode-eslint",
 		"usernamehw.errorlens"
 	]

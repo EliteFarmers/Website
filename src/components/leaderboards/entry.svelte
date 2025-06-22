@@ -54,14 +54,14 @@
 
 <a
 	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profileLink ?? '')}{leaderboard?.subpage ?? ''}"
-	class="inline-block w-full max-w-xl border bg-card py-1 align-middle hover:bg-muted hover:shadow-lg sm:p-1 {highlight
+	class="bg-card hover:bg-muted inline-block w-full max-w-xl border py-1 align-middle hover:shadow-lg sm:p-1 {highlight
 		? 'border-completed'
 		: ''} rounded-md"
 	style={customStyles}
 >
 	<div class="flex items-center justify-between gap-0 md:gap-2">
 		<div
-			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
+			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden align-middle text-ellipsis whitespace-nowrap sm:gap-2"
 		>
 			<div
 				class="text-progress"
@@ -74,7 +74,7 @@
 				</h1>
 			</div>
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
-			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
+			<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
 				<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl">
 					{#if leaderboard?.profile}
 						{entry.members?.[0].ign}
@@ -94,7 +94,7 @@
 					</div>
 				{:else}
 					<div
-						class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap text-start text-xs"
+						class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
 					>
 						<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
 						{profile}
@@ -111,7 +111,7 @@
 					{leaderboard?.title}
 				</span> -->
 				<div
-					class="xs:text-sm sm:text-md inline overflow-hidden text-ellipsis whitespace-nowrap text-start text-xs text-muted-foreground"
+					class="xs:text-sm sm:text-md text-muted-foreground inline overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
 					style={entry.meta?.leaderboard?.rankColor ? `color: ${entry.meta?.leaderboard?.rankColor};` : ''}
 				>
 					{leaderboard?.short ?? leaderboard?.title}{leaderboard?.suffix ?? ''}

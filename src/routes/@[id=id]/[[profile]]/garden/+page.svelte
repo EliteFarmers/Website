@@ -58,21 +58,21 @@
 			<div class="flex flex-1 flex-col items-center gap-4 md:items-start">
 				<div class="mt-2 flex flex-row gap-6">
 					<div class="flex flex-col gap-2">
-						<h3 class="text-lg font-semibold leading-none">Unlocked Plots</h3>
+						<h3 class="text-lg leading-none font-semibold">Unlocked Plots</h3>
 						<Plots plots={garden.plots} />
 					</div>
 					<div class="-mt-0.5 flex flex-col">
 						<Popover.Mobile triggerRootClass="inline-block w-fit">
 							{#snippet trigger()}
-								<h3 class="text-lg font-semibold leading-none">Crop Upgrades</h3>
+								<h3 class="text-lg leading-none font-semibold">Crop Upgrades</h3>
 							{/snippet}
 							<div class="flex flex-col gap-1">
 								<p class="font-semibold">All Crops</p>
-								<p class="max-w-xs whitespace-normal break-words">
+								<p class="max-w-xs break-words whitespace-normal">
 									<span class="font-semibold">{totalCopperSpent.toLocaleString()}</span> Total Copper
 									Spent <br />
 								</p>
-								<p class="max-w-xs whitespace-normal break-words">
+								<p class="max-w-xs break-words whitespace-normal">
 									<span class="font-semibold"
 										>{(CROP_UPGRADES_MAX_COST - totalCopperSpent).toLocaleString()}</span
 									> Total Copper Until Max
@@ -84,26 +84,26 @@
 				</div>
 
 				<div class="flex flex-col gap-2 text-lg">
-					<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
 					</div>
 				</div>
 
 				<div class="flex w-full flex-col gap-2">
-					<h3 class="text-xl font-semibold leading-none">Visitors</h3>
+					<h3 class="text-xl leading-none font-semibold">Visitors</h3>
 					<div class="flex max-w-lg flex-wrap gap-2 text-lg sm:flex-row">
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							Unique • <span class="font-semibold">{(garden.uniqueVisitors ?? 0).toLocaleString()}</span
 							>/{maxVisitors}
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							Total Visits • <span class="font-semibold">{totalVisits.toLocaleString()}</span>
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							{#if ranks['visitors-accepted']?.rank > 0}
 								<a
 									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params.profile}"
-									class="rounded-md bg-card px-1.5 hover:bg-muted"
+									class="bg-card hover:bg-muted rounded-md px-1.5"
 								>
 									<span class="text-sm">#</span><span class="text-md"
 										>{ranks['visitors-accepted']?.rank}</span
@@ -112,10 +112,10 @@
 							{/if}
 							Accepted • <span class="font-semibold">{accepted.toLocaleString()}</span>
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							Rejected • <span class="font-semibold">{rejected.toLocaleString()}</span>
 						</div>
-						<div class="flex flex-row items-center gap-1 rounded-md bg-card p-1 px-2">
+						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							Acceptance Rate • <span class="font-semibold">{rate}%</span>
 						</div>
 					</div>
@@ -124,7 +124,7 @@
 
 				{#if (garden.uniqueVisitors ?? 0) < maxVisitors}
 					<div class="flex w-full flex-col gap-2">
-						<h3 class="text-xl font-semibold leading-none">Missing Visitors</h3>
+						<h3 class="text-xl leading-none font-semibold">Missing Visitors</h3>
 						<MissingVisitors {garden} />
 					</div>
 				{/if}

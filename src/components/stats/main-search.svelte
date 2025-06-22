@@ -18,11 +18,11 @@
 
 <Button
 	onclick={() => (open = true)}
-	class={cn('flex flex-row gap-2 rounded-lg border-[3px] bg-card p-4', className)}
+	class={cn('bg-card flex flex-row gap-2 rounded-lg border-[3px] p-4', className)}
 	variant="outline"
 	size="lg"
 >
 	<Search class="-ml-0.5" />
-	<span class="flex-1 text-muted-foreground">Search For Player...</span>
+	<span class="text-muted-foreground flex-1">Search For Player...</span>
 </Button>
 <SearchMenu bind:open useButton={false} />

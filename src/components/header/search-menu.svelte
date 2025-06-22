@@ -88,8 +88,8 @@
 		{...rest}
 	>
 		<Search />
-		<span class="hidden text-muted-foreground lg:inline-flex">Search For Player...</span>
-		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
+		<span class="text-muted-foreground hidden lg:inline-flex">Search For Player...</span>
+		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
 	</Button>
 {/if}
 {#key open}
@@ -97,14 +97,31 @@
 		<Command.Root shouldFilter={false}>
 			<Command.Input placeholder="Search for a player" bind:value={searchStr} />
 			<Tabs.Root class="w-full" bind:value={destination}>
-				<Tabs.List class="flex gap-2 rounded-none bg-inherit">
-					<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
-					<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
-					<Tabs.Trigger value="/fortune" class="data-[state=active]:border-2">Fortune</Tabs.Trigger>
-					<Tabs.Trigger value="/contests" class="data-[state=active]:border-2">Contests</Tabs.Trigger>
-					<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
-				</Tabs.List>
+				<ScrollArea class="w-full py-1" orientation="horizontal">
+					<Tabs.List class="flex w-full gap-2 rounded-none bg-inherit">
+						<Tabs.Trigger value="" class="data-[state=active]:border-border border-2 border-transparent"
+							>Stats</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/garden"
+							class="data-[state=active]:border-border border-2 border-transparent">Garden</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/fortune"
+							class="data-[state=active]:border-border border-2 border-transparent">Fortune</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/contests"
+							class="data-[state=active]:border-border border-2 border-transparent">Contests</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/charts"
+							class="data-[state=active]:border-border border-2 border-transparent">Charts</Tabs.Trigger
+						>
+					</Tabs.List>
+				</ScrollArea>
 			</Tabs.Root>
+			<hr />
 			<ScrollArea class="flex h-full max-h-[300px] flex-row">
 				<Command.List class="max-h-none">
 					<Command.Group heading="Players">

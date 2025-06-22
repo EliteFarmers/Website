@@ -132,7 +132,7 @@
 			</Tabs.Root>
 
 			<Button formaction="?/create" type="submit" class="mt-8" {disabled}>Create</Button>
-			<p class="text-base leading-relaxed text-muted-foreground">
+			<p class="text-muted-foreground text-base leading-relaxed">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

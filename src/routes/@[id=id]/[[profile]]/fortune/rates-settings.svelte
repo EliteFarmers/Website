@@ -200,7 +200,7 @@
 	<SettingSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
-	<span class="px-1 text-sm text-muted-foreground"
+	<span class="text-muted-foreground px-1 text-sm"
 		>Check each crop that you've brought items to <a
 			href="https://wiki.hypixel.net/Carrolyn"
 			target="_blank"

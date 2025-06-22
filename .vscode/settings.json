@@ -5,5 +5,8 @@
 	},
 	"editor.detectIndentation": false,
 	"eslint.validate": ["javascript", "javascriptreact", "typescript", "svelte"],
-	"editor.defaultFormatter": "esbenp.prettier-vscode"
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"files.associations": {
+		"*.css": "tailwindcss"
+	}
 }

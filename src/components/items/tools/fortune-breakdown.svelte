@@ -76,7 +76,7 @@
 				<div class="flex flex-col gap-1">
 					{#each list as [key, value] (key)}
 						<div
-							class="flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none even:bg-card"
+							class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
 						>
 							{#if key.includes('§')}
 								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -89,7 +89,7 @@
 					{/each}
 				</div>
 
-				<div class="flex flex-row justify-between p-1 text-base font-semibold text-primary">
+				<div class="text-primary flex flex-row justify-between p-1 text-base font-semibold">
 					<p>Total</p>
 					<p>{(+sum.toFixed(2)).toLocaleString()}</p>
 				</div>

@@ -5,4 +5,9 @@
 	let { ref = $bindable(null), class: className, ...restProps }: AccordionPrimitive.ItemProps = $props();
 </script>
 
-<AccordionPrimitive.Item bind:ref class={cn('border-b', className)} {...restProps} />
+<AccordionPrimitive.Item
+	bind:ref
+	data-slot="accordion-item"
+	class={cn('border-b last:border-b-0', className)}
+	{...restProps}
+/>

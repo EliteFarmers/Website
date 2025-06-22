@@ -21,7 +21,7 @@
 		<p class="md:text-lg">
 			{title}
 			{#if wiki}
-				<a href={wiki} target="_blank" rel="noopener noreferrer" class="inline-block text-link">
+				<a href={wiki} target="_blank" rel="noopener noreferrer" class="text-link inline-block">
 					<Info class="size-4 pt-0.5" />
 				</a>
 			{/if}
@@ -32,7 +32,7 @@
 			</p>
 		{/if}
 		{#if description}
-			<p class="mb-1 text-sm text-muted-foreground">
+			<p class="text-muted-foreground mb-1 text-sm">
 				{description}
 			</p>
 		{/if}

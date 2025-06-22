@@ -37,14 +37,14 @@
 			<span>{progress.name}</span>
 		{/if}
 		{#if progress.wiki}
-			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="mt-1 text-link">
+			<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="text-link mt-1">
 				<Info size={16} />
 			</a>
 		{/if}
 		{#if progress.api === false}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<TriangleAlert size={16} class="-mb-1 text-completed" />
+					<TriangleAlert size={16} class="text-completed -mb-1" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. Configure settings on this page to mark it
