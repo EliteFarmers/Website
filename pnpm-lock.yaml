@@ -132,7 +132,7 @@ importers:
         specifier: ^17.13.3
         version: 17.13.3
       layercake:
-        specifier: ^8.4.2
+        specifier: ^8.4.3
         version: 8.4.3(svelte@5.34.7)(typescript@5.8.3)
       layerchart:
         specifier: 2.0.0-next.23
