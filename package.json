@@ -44,7 +44,7 @@
 		"@types/eslint": "^9.6.1",
 		"@typeschema/class-validator": "^0.2.0",
 		"@vinejs/vine": "^1.8.0",
-		"apexcharts": "^3.54.1",
+		"apexcharts": "^4.0.0",
 		"arktype": "^2.1.20",
 		"bits-ui": "2.8.7",
 		"class-validator": "^0.14.2",
