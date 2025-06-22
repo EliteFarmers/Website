@@ -41,7 +41,7 @@
 		"@types/eslint": "^9.6.1",
 		"apexcharts": "^3.54.1",
 		"autoprefixer": "10.4.21",
-		"bits-ui": "1.8.0",
+		"bits-ui": "2.8.8",
 		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
 		"d3-array": "^3.2.4",

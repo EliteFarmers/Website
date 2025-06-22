@@ -60,8 +60,8 @@ importers:
         specifier: 10.4.21
         version: 10.4.21(postcss@8.5.6)
       bits-ui:
-        specifier: 1.8.0
-        version: 1.8.0(svelte@5.34.7)
+        specifier: 2.8.8
+        version: 2.8.8(@internationalized/date@3.8.2)(svelte@5.34.7)
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -408,8 +408,14 @@ packages:
   '@floating-ui/core@1.6.8':
     resolution: {integrity: sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==}
 
+  '@floating-ui/core@1.7.1':
+    resolution: {integrity: sha512-azI0DrjMMfIug/ExbBaeDVJXcY0a7EPvPjb2xAJPa4HeimBX+Z18HK8QQR3jb6356SnDDdxx+hinMLcJEDdOjw==}
+
   '@floating-ui/dom@1.6.13':
     resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
+
+  '@floating-ui/dom@1.7.1':
+    resolution: {integrity: sha512-cwsmW/zyw5ltYTUeeYJ60CnQuPqmGwuGVhG9w0PRaRKkAyi38BT5CKrpIbb+jtahSwUl04cWzSx9ZOIxeS6RsQ==}
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
@@ -1025,11 +1031,12 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
-  bits-ui@1.8.0:
-    resolution: {integrity: sha512-CXD6Orp7l8QevNDcRPLXc/b8iMVgxDWT2LyTwsdLzJKh9CxesOmPuNePSPqAxKoT59FIdU4aFPS1k7eBdbaCxg==}
-    engines: {node: '>=18', pnpm: '>=8.7.0'}
+  bits-ui@2.8.8:
+    resolution: {integrity: sha512-SFBFztROZf04e/zUsOlsbm4l6Nn5rBKAXS1nTWYJDxgbcFA+8DtjlZgbr03oFEkTcVZ5GAmLDIjbZ/KNg5GFxw==}
+    engines: {node: '>=20'}
     peerDependencies:
-      svelte: ^5.11.0
+      '@internationalized/date': ^3.8.1
+      svelte: ^5.33.0
 
   brace-expansion@1.1.12:
     resolution: {integrity: sha512-9T9UjW3r0UW5c1Q7GTwllptXwhvYmEzFhzMfZ9H7FQWt+uZePjZPjBP/W1ZEyZ1twGWom5/56TF4lPcqjnDHcg==}
@@ -1121,9 +1128,6 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
-
-  css.escape@1.5.1:
-    resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -1991,6 +1995,11 @@ packages:
     peerDependencies:
       svelte: ^5.7.0
 
+  runed@0.28.0:
+    resolution: {integrity: sha512-k2xx7RuO9hWcdd9f+8JoBeqWtYrm5CALfgpkg2YDB80ds/QE4w0qqu34A7fqiAwiBBSBQOid7TLxwxVC27ymWQ==}
+    peerDependencies:
+      svelte: ^5.7.0
+
   runed@0.29.0:
     resolution: {integrity: sha512-8aewcEjcaHk/dDsAWdPHQMUtsB2J9KSeL/c3USD58/3ijhUYEk0D/XT+BQSHt12ikbHNfaEf/ytJ3fmpBcf0YQ==}
     peerDependencies:
@@ -2168,6 +2177,12 @@ packages:
     engines: {node: '>=18', pnpm: '>=8.7.0'}
     peerDependencies:
       svelte: ^5.0.0
+
+  svelte-toolbelt@0.9.2:
+    resolution: {integrity: sha512-REb1cENGnFbhNSmIdCb1SDIpjEa3n1kXhNVHqGNEesjmPX3bG87gUZiCG8cqOt9AAarqzTzOtI2jEEWr/ZbHwA==}
+    engines: {node: '>=18', pnpm: '>=8.7.0'}
+    peerDependencies:
+      svelte: ^5.30.2
 
   svelte@5.34.7:
     resolution: {integrity: sha512-5PEg+QQKce4t1qiOtVUhUS3AQRTtxJyGBTpxLcNWnr0Ve8q4r06bMo0Gv8uhtCPWlztZHoi3Ye7elLhu+PCTMg==}
@@ -2608,9 +2623,18 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.9
 
+  '@floating-ui/core@1.7.1':
+    dependencies:
+      '@floating-ui/utils': 0.2.9
+
   '@floating-ui/dom@1.6.13':
     dependencies:
       '@floating-ui/core': 1.6.8
+      '@floating-ui/utils': 0.2.9
+
+  '@floating-ui/dom@1.7.1':
+    dependencies:
+      '@floating-ui/core': 1.7.1
       '@floating-ui/utils': 0.2.9
 
   '@floating-ui/utils@0.2.9': {}
@@ -3224,16 +3248,15 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  bits-ui@1.8.0(svelte@5.34.7):
+  bits-ui@2.8.8(@internationalized/date@3.8.2)(svelte@5.34.7):
     dependencies:
-      '@floating-ui/core': 1.6.8
-      '@floating-ui/dom': 1.6.13
+      '@floating-ui/core': 1.7.1
+      '@floating-ui/dom': 1.7.1
       '@internationalized/date': 3.8.2
-      css.escape: 1.5.1
       esm-env: 1.2.2
-      runed: 0.23.4(svelte@5.34.7)
+      runed: 0.28.0(svelte@5.34.7)
       svelte: 5.34.7
-      svelte-toolbelt: 0.7.1(svelte@5.34.7)
+      svelte-toolbelt: 0.9.2(svelte@5.34.7)
       tabbable: 6.2.0
 
   brace-expansion@1.1.12:
@@ -3325,8 +3348,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  css.escape@1.5.1: {}
 
   cssesc@3.0.0: {}
 
@@ -4173,6 +4194,11 @@ snapshots:
       esm-env: 1.2.2
       svelte: 5.34.7
 
+  runed@0.28.0(svelte@5.34.7):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.34.7
+
   runed@0.29.0(svelte@5.34.7):
     dependencies:
       esm-env: 1.2.2
@@ -4322,6 +4348,13 @@ snapshots:
     dependencies:
       clsx: 2.1.1
       runed: 0.23.4(svelte@5.34.7)
+      style-to-object: 1.0.8
+      svelte: 5.34.7
+
+  svelte-toolbelt@0.9.2(svelte@5.34.7):
+    dependencies:
+      clsx: 2.1.1
+      runed: 0.28.0(svelte@5.34.7)
       style-to-object: 1.0.8
       svelte: 5.34.7
 
