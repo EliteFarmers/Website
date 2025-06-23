@@ -166,6 +166,12 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2.5,
 		replenish: true,
+		exportable: true,
+		exportableCost: {
+			items: {
+				WARTY: 3000,
+			},
+		},
 		startingTool: 'THEORETICAL_HOE_WARTS_1',
 		crafts: [
 			{

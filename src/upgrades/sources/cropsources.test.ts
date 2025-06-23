@@ -188,6 +188,13 @@ test('Nether Wart fortune test', () => {
 			)?.getProgress(true),
 		},
 		{
+			name: 'Exportable Crop',
+			fortune: 0,
+			maxFortune: 12,
+			ratio: 0,
+			api: false,
+		},
+		{
 			name: 'Garden Crop Upgrade',
 			fortune: 0,
 			maxFortune: 45,
