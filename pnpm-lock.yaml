@@ -120,8 +120,8 @@ importers:
         specifier: ^3.5.1
         version: 3.9.3(eslint@9.29.0(jiti@2.4.2))(svelte@5.34.7)
       farming-weight:
-        specifier: ^0.9.3
-        version: 0.9.4
+        specifier: ^0.9.5
+        version: 0.9.5
       formsnap:
         specifier: 2.0.1
         version: 2.0.1(svelte@5.34.7)(sveltekit-superforms@2.27.0(@sveltejs/kit@2.22.0(@sveltejs/vite-plugin-svelte@5.1.0(svelte@5.34.7)(vite@6.3.5(@types/node@22.10.0)(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.7.0)))(svelte@5.34.7)(vite@6.3.5(@types/node@22.10.0)(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.7.0)))(@types/json-schema@7.0.15)(esbuild@0.25.5)(svelte@5.34.7)(typescript@5.8.3))
@@ -1453,8 +1453,8 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  farming-weight@0.9.4:
-    resolution: {integrity: sha512-uDKlrOvnFiPr9rAPso/yCZ+lvJuH/CuhJb9IRZnCgAEj2Xbg5Vsfecjv1rZUxchiQjtQVh4Z/nQyeeangTNxOA==}
+  farming-weight@0.9.5:
+    resolution: {integrity: sha512-rZUna05IkJD6BGDEpuE1pa05PG8Pz3AeQLSCKMGxW8oHMUdwIC2Emd83brh0PJaRso2Iu7V+cNk+reuZhbQvJA==}
 
   fast-check@3.23.2:
     resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
@@ -3634,7 +3634,7 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  farming-weight@0.9.4: {}
+  farming-weight@0.9.5: {}
 
   fast-check@3.23.2:
     dependencies:
