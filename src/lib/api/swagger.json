@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Elite API",
@@ -454,6 +454,16 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -2103,7 +2113,8 @@
             "description": "A contest key in the format from the Hypixel API",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "285:2_11:CACTUS"
           }
         ],
         "responses": {
@@ -2585,210 +2596,6 @@
             }
           }
         }
-      }
-    },
-    "/account/{discordId}/entitlements": {
-      "get": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Get all entitlements for a user or guild",
-        "operationId": "EliteAPIFeaturesEntitlementsGetEntitlementsGetEntitlementsEndpoint",
-        "parameters": [
-          {
-            "name": "discordId",
-            "in": "path",
-            "required": true,
-            "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "target",
-            "in": "query",
-            "schema": {
-              "nullable": true,
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/EntitlementTarget"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EntitlementDto"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      }
-    },
-    "/account/{discordId}/entitlement/{productId}": {
-      "post": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Grant a test entitlement to a user or guild",
-        "description": "This passes along a request to Discord to grant a test entitlement to a user or guild, which only works on subscription products.",
-        "operationId": "EliteAPIFeaturesEntitlementsGrantTestEntitlementGrantTestEntitlementEndpoint",
-        "parameters": [
-          {
-            "name": "discordId",
-            "in": "path",
-            "required": true,
-            "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "productId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "target",
-            "in": "query",
-            "schema": {
-              "nullable": true,
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/EntitlementTarget"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Account"
-        ],
-        "summary": "Remove a test entitlement from a user or guild",
-        "description": "This passes along a request to Discord to remove a test entitlement from a user or guild.",
-        "operationId": "EliteAPIFeaturesEntitlementsRemoveTestEntitlementRemoveTestEntitlementEndpoint",
-        "parameters": [
-          {
-            "name": "discordId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "productId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "target",
-            "in": "query",
-            "schema": {
-              "nullable": true,
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/EntitlementTarget"
-                }
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
       }
     },
     "/guild/{discordId}/events/{eventId}/teams/{teamId}/members/{player}": {
@@ -5035,7 +4842,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           }
         ],
         "responses": {
@@ -5080,7 +4888,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           }
         ],
         "responses": {
@@ -5124,7 +4933,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "profileUuid",
@@ -5132,7 +4942,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "from",
@@ -5143,7 +4954,8 @@
               "format": "int64",
               "default": 0,
               "nullable": true
-            }
+            },
+            "example": 0
           },
           {
             "name": "days",
@@ -5154,7 +4966,8 @@
               "format": "int32",
               "default": 7,
               "nullable": true
-            }
+            },
+            "example": 7
           },
           {
             "name": "perDay",
@@ -5165,7 +4978,8 @@
               "format": "int32",
               "default": 4,
               "nullable": true
-            }
+            },
+            "example": 4
           }
         ],
         "responses": {
@@ -5220,7 +5034,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "profileUuid",
@@ -5228,7 +5043,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "from",
@@ -5238,7 +5054,8 @@
               "format": "int64",
               "default": 0,
               "nullable": true
-            }
+            },
+            "example": 0
           },
           {
             "name": "days",
@@ -5248,7 +5065,8 @@
               "format": "int32",
               "default": 7,
               "nullable": true
-            }
+            },
+            "example": 7
           },
           {
             "name": "perDay",
@@ -5258,7 +5076,8 @@
               "format": "int32",
               "default": 4,
               "nullable": true
-            }
+            },
+            "example": 4
           }
         ],
         "responses": {
@@ -5313,7 +5132,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "profileUuid",
@@ -5321,7 +5141,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "from",
@@ -5331,7 +5152,8 @@
               "format": "int64",
               "default": 0,
               "nullable": true
-            }
+            },
+            "example": 0
           },
           {
             "name": "days",
@@ -5341,7 +5163,8 @@
               "format": "int32",
               "default": 7,
               "nullable": true
-            }
+            },
+            "example": 7
           },
           {
             "name": "perDay",
@@ -5351,7 +5174,8 @@
               "format": "int32",
               "default": 4,
               "nullable": true
-            }
+            },
+            "example": 4
           }
         ],
         "responses": {
@@ -5395,7 +5219,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "profileUuid",
@@ -5403,7 +5228,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "7da0c47581dc42b4962118f8049147b7"
           },
           {
             "name": "from",
@@ -5413,7 +5239,8 @@
               "format": "int64",
               "default": 0,
               "nullable": true
-            }
+            },
+            "example": 0
           },
           {
             "name": "days",
@@ -5423,7 +5250,8 @@
               "format": "int32",
               "default": 7,
               "nullable": true
-            }
+            },
+            "example": 7
           },
           {
             "name": "perDay",
@@ -5433,7 +5261,8 @@
               "format": "int32",
               "default": 4,
               "nullable": true
-            }
+            },
+            "example": 4
           }
         ],
         "responses": {
@@ -7413,6 +7242,210 @@
         }
       }
     },
+    "/account/{discordId}/entitlements": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get all entitlements for a user or guild",
+        "operationId": "EliteAPIFeaturesMonetizationEndpointsGetEntitlementsGetEntitlementsEndpoint",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/EntitlementTarget"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntitlementDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
+    "/account/{discordId}/entitlement/{productId}": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Grant a test entitlement to a user or guild",
+        "description": "This passes along a request to Discord to grant a test entitlement to a user or guild, which only works on subscription products.",
+        "operationId": "EliteAPIFeaturesMonetizationEndpointsGrantTestEntitlementGrantTestEntitlementEndpoint",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "description": "Discord Snowflake ID of the requested resource (guild, user, etc.)",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/EntitlementTarget"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Remove a test entitlement from a user or guild",
+        "description": "This passes along a request to Discord to remove a test entitlement from a user or guild.",
+        "operationId": "EliteAPIFeaturesMonetizationEndpointsRemoveTestEntitlementRemoveTestEntitlementEndpoint",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/EntitlementTarget"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
     "/player/{discordId}": {
       "get": {
         "tags": [
@@ -8709,6 +8742,49 @@
         }
       }
     },
+    "/product/{discordId}/claim": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "summary": "Claim Free Shop Product",
+        "operationId": "EliteAPIFeaturesShopProductsClaimProductClaimProductEndpoint",
+        "parameters": [
+          {
+            "name": "discordId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
     "/products": {
       "get": {
         "tags": [
@@ -9259,6 +9335,16 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "prefix": {
+            "type": "string",
+            "description": "Custom name prefix",
+            "nullable": true
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Custom name suffix",
+            "nullable": true
+          },
           "features": {
             "description": "Configurated features for the user",
             "nullable": true,
@@ -9270,6 +9356,15 @@
           },
           "weightStyle": {
             "description": "Selected weight style for the user",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WeightStyleLinkedDto"
+              }
+            ]
+          },
+          "leaderboardStyle": {
+            "description": "Selected leaderboard style for the user",
             "nullable": true,
             "oneOf": [
               {
@@ -9308,6 +9403,12 @@
           "hideShopPromotions": {
             "type": "boolean",
             "description": "If shop promotions should be hidden.",
+            "nullable": true
+          },
+          "emojiUrl": {
+            "type": "string",
+            "description": "Custom name emoji URL.",
+            "maxLength": 256,
             "nullable": true
           }
         }
@@ -9991,13 +10092,15 @@
           "Durable",
           "Consumable",
           "Subscription",
-          "SubscriptionGroup"
+          "SubscriptionGroup",
+          "Custom"
         ],
         "enum": [
           2,
           3,
           5,
-          6
+          6,
+          -1
         ]
       },
       "UnlockedProductFeaturesDto": {
@@ -10039,6 +10142,11 @@
           "moreInfoDefault": {
             "type": "boolean",
             "description": "Show \"More Info\" on weight command by default.",
+            "nullable": true
+          },
+          "customEmoji": {
+            "type": "boolean",
+            "description": "Ability to have custom name emoji for the user.",
             "nullable": true
           },
           "maxMonthlyEvents": {
@@ -10097,6 +10205,16 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "prefix": {
+            "type": "string",
+            "description": "Custom name prefix",
+            "nullable": true
+          },
+          "suffix": {
+            "type": "string",
+            "description": "Custom name suffix",
+            "nullable": true
+          },
           "features": {
             "description": "Configurated features for the user",
             "nullable": true,
@@ -10109,6 +10227,12 @@
           "weightStyleId": {
             "type": "integer",
             "description": "Selected weight style for the user",
+            "format": "int32",
+            "nullable": true
+          },
+          "leaderboardStyleId": {
+            "type": "integer",
+            "description": "Selected leaderboard style for the user",
             "format": "int32",
             "nullable": true
           }
@@ -10383,6 +10507,11 @@
           "ign": {
             "type": "string",
             "description": "Primary Minecraft IGN"
+          },
+          "fIgn": {
+            "type": "string",
+            "description": "Formatted Primary Minecraft IGN",
+            "nullable": true
           },
           "uuid": {
             "type": "string",
@@ -11720,14 +11849,6 @@
         }
       },
       "SkyBlockYearRequest": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "GetEntitlementsRequest": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "UserEntitlementRequest": {
         "type": "object",
         "additionalProperties": false
       },
@@ -14163,6 +14284,14 @@
         "type": "object",
         "additionalProperties": false
       },
+      "GetEntitlementsRequest": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UserEntitlementRequest": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "LinkedAccountsDto": {
         "type": "object",
         "additionalProperties": false,
@@ -14865,10 +14994,11 @@
           },
           "gems": {
             "type": "object",
-            "description": "Applied gems with gem rarity",
+            "description": "Applied gems with gem rarity, null for an unlocked gem slot without a gem",
             "nullable": true,
             "additionalProperties": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             }
           },
           "petInfo": {
@@ -15764,12 +15894,15 @@
       },
       "JsonDocument": {
         "type": "object",
+        "description": "Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.",
         "additionalProperties": false,
         "required": [
           "rootElement"
         ],
         "properties": {
-          "rootElement": {}
+          "rootElement": {
+            "description": "Gets the root element of this JSON document."
+          }
         }
       },
       "GetSpecifiedSkyblockItemsResponse": {
@@ -15843,6 +15976,11 @@
         "properties": {
           "items": {
             "type": "array",
+            "example": [
+              "NETHER_STALK",
+              "ENCHANTED_NETHER_STALK",
+              "MUTANT_NETHER_STALK"
+            ],
             "items": {
               "type": "string"
             }
@@ -16098,7 +16236,11 @@
           "data": {
             "minLength": 1,
             "nullable": false,
-            "$ref": "#/components/schemas/WeightStyleData"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WeightStyleData"
+              }
+            ]
           }
         }
       },

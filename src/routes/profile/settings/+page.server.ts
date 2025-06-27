@@ -95,6 +95,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 
 		const body = {
+			suffix: data.get('emoji')?.toString() ?? '',
 			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
 			weightStyleId: undefined as number | undefined,
 		} satisfies components['schemas']['UpdateUserSettingsDto'];

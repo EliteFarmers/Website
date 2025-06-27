@@ -58,6 +58,7 @@
 		"date-fns": "^4.1.0",
 		"embla-carousel-svelte": "8.6.0",
 		"embla-carousel-wheel-gestures": "^8.0.1",
+		"emoji-picker-element": "^1.26.3",
 		"eslint": "^9.25.1",
 		"eslint-config-prettier": "^10.1.2",
 		"eslint-plugin-svelte": "^3.5.1",

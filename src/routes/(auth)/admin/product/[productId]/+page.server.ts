@@ -57,6 +57,7 @@ export const actions: Actions = {
 				weightStyleOverride: data.get('override') === 'true',
 				moreInfoDefault: data.get('info') === 'true',
 				embedColors: (data.getAll('color') as string[])?.filter((c) => c) ?? undefined,
+				customEmoji: data.get('emoji') === 'true',
 			},
 		} satisfies components['schemas']['EditProductDto'];
 

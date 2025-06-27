@@ -6,6 +6,7 @@
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
 	import * as Popover from '$ui/popover';
+	import * as Dialog from '$ui/dialog';
 	import { Button } from '$ui/button';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import Image from '@lucide/svelte/icons/image';
@@ -19,7 +20,9 @@
 	import Badge from '$comp/stats/badge.svelte';
 	import Package from '@lucide/svelte/icons/package';
 	import Info from '@lucide/svelte/icons/info';
+	import Heart from '@lucide/svelte/icons/heart';
 	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { enhance } from '$app/forms';
 
 	interface Props {
 		data: PageData;
@@ -37,6 +40,8 @@
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
 	});
+
+	let claimModalOpen = $state(false);
 </script>
 
 <Head title={product.name ?? 'Product'} description="Help support development with cosmetics!" />
@@ -148,6 +153,15 @@
 						</div>
 					</ProductUnlock>
 				{/if}
+				{#if product.features?.customEmoji}
+					<ProductUnlock>
+						{#snippet header()}
+							<Heart />
+							<p class="font-semibold">Custom Emoji</p>
+						{/snippet}
+						<p class="max-w-sm">Apply a custom emoji next to your account name! Shows up everywhere!</p>
+					</ProductUnlock>
+				{/if}
 				{#if product.features?.hideShopPromotions}
 					<ProductUnlock>
 						{#snippet header()}
@@ -185,10 +199,22 @@
 				<div class="flex w-full flex-col items-end gap-1">
 					<div class="flex flex-row items-center gap-2">
 						<ProductPrice {product} />
-						<Button href="/shop/{product.id}/buy" class="bg-link hover:bg-link/85 font-semibold text-white">
-							{isFree ? 'Unlock' : 'Buy'} on Discord
-							<ExternalLink size={16} class="ml-1.5" />
-						</Button>
+						{#if isFree && product.type == 2}
+							<Button
+								onclick={() => (claimModalOpen = true)}
+								class="bg-link hover:bg-link/85 font-semibold text-white"
+							>
+								Unlock Now
+							</Button>
+						{:else}
+							<Button
+								href="/shop/{product.id}/buy"
+								class="bg-link hover:bg-link/85 font-semibold text-white"
+							>
+								{isFree ? 'Unlock' : 'Buy'} on Discord
+								<ExternalLink size={16} class="ml-1.5" />
+							</Button>
+						{/if}
 					</div>
 					{#if isFree}
 						<Popover.Mobile>
@@ -248,3 +274,39 @@
 		</section>
 	{/if}
 </div>
+
+<Dialog.Root bind:open={claimModalOpen}>
+	<Dialog.ScrollContent>
+		<Dialog.Title>Unlock {product.name}</Dialog.Title>
+		<div class="mt-4 flex flex-col gap-4">
+			<p>You can claim this item for free!</p>
+
+			<ul class="ml-6 max-w-sm list-disc md:ml-4">
+				<li class="mb-2">
+					<p>
+						<strong>Unlock</strong> item on Discord if you're able!
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Claim </strong> item here if you can't purchase on Discord. <br />
+						<span class="text-sm"
+							>Claiming an item here won't show it as purchased in the Discord shop.</span
+						>
+					</p>
+				</li>
+			</ul>
+
+			<div class="flex w-full flex-row items-center gap-2 p-2">
+				<form action="?/claim" method="post" class="flex-1" use:enhance>
+					<input type="hidden" name="sku" value={product.id} />
+					<Button type="submit" class="w-full font-semibold" variant="secondary">Claim Item</Button>
+				</form>
+				<Button href="/shop/{product.id}/buy" class="bg-link hover:bg-link/85 flex-1 font-semibold text-white">
+					{isFree ? 'Unlock' : 'Buy'} on Discord
+					<ExternalLink size={16} class="ml-1.5" />
+				</Button>
+			</div>
+		</div>
+	</Dialog.ScrollContent>
+</Dialog.Root>

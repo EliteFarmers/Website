@@ -161,6 +161,10 @@
 					<Switch name="info" checked={product.features?.moreInfoDefault ?? false} />
 					<Label>"More Info" in weight command by default</Label>
 				</div>
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="emoji" checked={product.features?.customEmoji ?? false} />
+					<Label>Custom Emoji permissions</Label>
+				</div>
 
 				<div class="flex flex-col items-start gap-2">
 					<p class="mt-1 font-semibold">Unlocked Embed Colors</p>

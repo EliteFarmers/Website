@@ -873,47 +873,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/account/{discordId}/entitlements": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all entitlements for a user or guild */
-        get: operations["EliteAPIFeaturesEntitlementsGetEntitlementsGetEntitlementsEndpoint"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/account/{discordId}/entitlement/{productId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Grant a test entitlement to a user or guild
-         * @description This passes along a request to Discord to grant a test entitlement to a user or guild, which only works on subscription products.
-         */
-        post: operations["EliteAPIFeaturesEntitlementsGrantTestEntitlementGrantTestEntitlementEndpoint"];
-        /**
-         * Remove a test entitlement from a user or guild
-         * @description This passes along a request to Discord to remove a test entitlement from a user or guild.
-         */
-        delete: operations["EliteAPIFeaturesEntitlementsRemoveTestEntitlementRemoveTestEntitlementEndpoint"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/guild/{discordId}/events/{eventId}/teams/{teamId}/members/{player}": {
         parameters: {
             query?: never;
@@ -2076,6 +2035,47 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/{discordId}/entitlements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all entitlements for a user or guild */
+        get: operations["EliteAPIFeaturesMonetizationEndpointsGetEntitlementsGetEntitlementsEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/{discordId}/entitlement/{productId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Grant a test entitlement to a user or guild
+         * @description This passes along a request to Discord to grant a test entitlement to a user or guild, which only works on subscription products.
+         */
+        post: operations["EliteAPIFeaturesMonetizationEndpointsGrantTestEntitlementGrantTestEntitlementEndpoint"];
+        /**
+         * Remove a test entitlement from a user or guild
+         * @description This passes along a request to Discord to remove a test entitlement from a user or guild.
+         */
+        delete: operations["EliteAPIFeaturesMonetizationEndpointsRemoveTestEntitlementRemoveTestEntitlementEndpoint"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/player/{discordId}": {
         parameters: {
             query?: never;
@@ -2544,6 +2544,23 @@ export interface paths {
         patch: operations["EliteAPIFeaturesShopProductsAdminUpdateProductUpdateProductEndpoint"];
         trace?: never;
     };
+    "/product/{discordId}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Claim Free Shop Product */
+        post: operations["EliteAPIFeaturesShopProductsClaimProductClaimProductEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/products": {
         parameters: {
             query?: never;
@@ -2740,10 +2757,16 @@ export interface components {
             playerData?: components["schemas"]["PlayerDataDto"] | null;
         };
         UserSettingsDto: {
+            /** @description Custom name prefix */
+            prefix?: string | null;
+            /** @description Custom name suffix */
+            suffix?: string | null;
             /** @description Configurated features for the user */
             features?: components["schemas"]["ConfiguredProductFeaturesDto"] | null;
             /** @description Selected weight style for the user */
             weightStyle?: components["schemas"]["WeightStyleLinkedDto"] | null;
+            /** @description Selected leaderboard style for the user */
+            leaderboardStyle?: components["schemas"]["WeightStyleLinkedDto"] | null;
         };
         ConfiguredProductFeaturesDto: {
             /**
@@ -2759,6 +2782,8 @@ export interface components {
             moreInfoDefault?: boolean | null;
             /** @description If shop promotions should be hidden. */
             hideShopPromotions?: boolean | null;
+            /** @description Custom name emoji URL. */
+            emojiUrl?: string | null;
         };
         WeightStyleLinkedDto: {
             /** Format: int32 */
@@ -2974,7 +2999,7 @@ export interface components {
             isUserSubscription: boolean;
         };
         /** @enum {integer} */
-        ProductType: 2 | 3 | 5 | 6;
+        ProductType: 2 | 3 | 5 | 6 | -1;
         UnlockedProductFeaturesDto: {
             /**
              * Format: int32
@@ -2991,6 +3016,8 @@ export interface components {
             hideShopPromotions?: boolean | null;
             /** @description Show "More Info" on weight command by default. */
             moreInfoDefault?: boolean | null;
+            /** @description Ability to have custom name emoji for the user. */
+            customEmoji?: boolean | null;
             /**
              * Format: int32
              * @description Maximum number of events that can be created in a month. (For guilds)
@@ -3011,6 +3038,10 @@ export interface components {
         };
         SearchRequest: Record<string, never>;
         UpdateUserSettingsDto: {
+            /** @description Custom name prefix */
+            prefix?: string | null;
+            /** @description Custom name suffix */
+            suffix?: string | null;
             /** @description Configurated features for the user */
             features?: components["schemas"]["ConfiguredProductFeaturesDto"] | null;
             /**
@@ -3018,6 +3049,11 @@ export interface components {
              * @description Selected weight style for the user
              */
             weightStyleId?: number | null;
+            /**
+             * Format: int32
+             * @description Selected leaderboard style for the user
+             */
+            leaderboardStyleId?: number | null;
         };
         EditUserBadgeDto: {
             /** Format: int32 */
@@ -3105,6 +3141,8 @@ export interface components {
             avatar: string;
             /** @description Primary Minecraft IGN */
             ign: string;
+            /** @description Formatted Primary Minecraft IGN */
+            fIgn?: string | null;
             /** @description Primary Minecraft UUID */
             uuid: string;
             /** @description List of user roles */
@@ -3451,8 +3489,6 @@ export interface components {
             participants: number;
         };
         SkyBlockYearRequest: Record<string, never>;
-        GetEntitlementsRequest: Record<string, never>;
-        UserEntitlementRequest: Record<string, never>;
         AddTeamMemberRequest: Record<string, never>;
         AdminEventMemberDto: {
             playerUuid?: string | null;
@@ -4220,6 +4256,8 @@ export interface components {
             };
         };
         GetProfileRankRequest: Record<string, never>;
+        GetEntitlementsRequest: Record<string, never>;
+        UserEntitlementRequest: Record<string, never>;
         LinkedAccountsDto: {
             selectedUuid?: string | null;
             players: components["schemas"]["PlayerDataDto"][];
@@ -4440,9 +4478,9 @@ export interface components {
             itemAttributes?: {
                 [key: string]: string;
             } | null;
-            /** @description Applied gems with gem rarity */
+            /** @description Applied gems with gem rarity, null for an unlocked gem slot without a gem */
             gems?: {
-                [key: string]: string;
+                [key: string]: string | null;
             } | null;
             /** @description Pet info if item is a pet */
             petInfo?: components["schemas"]["ItemPetInfoDto"] | null;
@@ -4761,7 +4799,9 @@ export interface components {
             /** Format: int32 */
             level: number;
         };
+        /** @description Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values. */
         JsonDocument: {
+            /** @description Gets the root element of this JSON document. */
             rootElement: unknown;
         };
         GetSpecifiedSkyblockItemsResponse: {
@@ -4785,6 +4825,11 @@ export interface components {
          *       ]
          *     } */
         GetSpecifiedSkyblockItemsRequest: {
+            /** @example [
+             *       "NETHER_STALK",
+             *       "ENCHANTED_NETHER_STALK",
+             *       "MUTANT_NETHER_STALK"
+             *     ] */
             items: string[];
         };
         SkyblockProductRequest: Record<string, never>;
@@ -5470,6 +5515,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
             };
             /** @description Unauthorized */
             401: {
@@ -6803,7 +6857,10 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description A contest key in the format from the Hypixel API */
+                /**
+                 * @description A contest key in the format from the Hypixel API
+                 * @example 285:2_11:CACTUS
+                 */
                 contestKey: string;
             };
             cookie?: never;
@@ -7108,147 +7165,6 @@ export interface operations {
                 content: {
                     "application/problem+json": components["schemas"]["ErrorResponse"];
                 };
-            };
-        };
-    };
-    EliteAPIFeaturesEntitlementsGetEntitlementsGetEntitlementsEndpoint: {
-        parameters: {
-            query?: {
-                target?: components["schemas"]["EntitlementTarget"] | null;
-            };
-            header?: never;
-            path: {
-                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
-                discordId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntitlementDto"][];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EliteAPIFeaturesEntitlementsGrantTestEntitlementGrantTestEntitlementEndpoint: {
-        parameters: {
-            query?: {
-                target?: components["schemas"]["EntitlementTarget"] | null;
-            };
-            header?: never;
-            path: {
-                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
-                discordId: number;
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EliteAPIFeaturesEntitlementsRemoveTestEntitlementRemoveTestEntitlementEndpoint: {
-        parameters: {
-            query?: {
-                target?: components["schemas"]["EntitlementTarget"] | null;
-            };
-            header?: never;
-            path: {
-                discordId: number;
-                productId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No Content */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Forbidden */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -8692,6 +8608,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 profileUuid: string;
             };
             cookie?: never;
@@ -8730,6 +8647,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 playerUuid: string;
             };
             cookie?: never;
@@ -8766,16 +8684,27 @@ export interface operations {
     EliteAPIFeaturesGraphsGetAdminCropGraphsGetAdminCropGraphsEndpoint: {
         parameters: {
             query?: {
-                /** @description Unix timestamp in seconds for the start of the data to return */
+                /**
+                 * @description Unix timestamp in seconds for the start of the data to return
+                 * @example 0
+                 */
                 from?: number | null;
-                /** @description Amount of days after the "from" timestamp to include */
+                /**
+                 * @description Amount of days after the "from" timestamp to include
+                 * @example 7
+                 */
                 days?: number | null;
-                /** @description Data points returned per 24-hour period */
+                /**
+                 * @description Data points returned per 24-hour period
+                 * @example 4
+                 */
                 perDay?: number | null;
             };
             header?: never;
             path: {
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 playerUuid: string;
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 profileUuid: string;
             };
             cookie?: never;
@@ -8819,13 +8748,18 @@ export interface operations {
     EliteAPIFeaturesGraphsGetAdminSkillGraphsGetAdminSkillGraphsEndpoint: {
         parameters: {
             query?: {
+                /** @example 0 */
                 from?: number | null;
+                /** @example 7 */
                 days?: number | null;
+                /** @example 4 */
                 perDay?: number | null;
             };
             header?: never;
             path: {
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 playerUuid: string;
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 profileUuid: string;
             };
             cookie?: never;
@@ -8869,13 +8803,18 @@ export interface operations {
     EliteAPIFeaturesGraphsGetCropGraphsGetCropGraphsEndpoint: {
         parameters: {
             query?: {
+                /** @example 0 */
                 from?: number | null;
+                /** @example 7 */
                 days?: number | null;
+                /** @example 4 */
                 perDay?: number | null;
             };
             header?: never;
             path: {
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 playerUuid: string;
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 profileUuid: string;
             };
             cookie?: never;
@@ -8905,13 +8844,18 @@ export interface operations {
     EliteAPIFeaturesGraphsGetSkillGraphsGetSkillGraphsEndpoint: {
         parameters: {
             query?: {
+                /** @example 0 */
                 from?: number | null;
+                /** @example 7 */
                 days?: number | null;
+                /** @example 4 */
                 perDay?: number | null;
             };
             header?: never;
             path: {
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 playerUuid: string;
+                /** @example 7da0c47581dc42b4962118f8049147b7 */
                 profileUuid: string;
             };
             cookie?: never;
@@ -10156,6 +10100,147 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesMonetizationEndpointsGetEntitlementsGetEntitlementsEndpoint: {
+        parameters: {
+            query?: {
+                target?: components["schemas"]["EntitlementTarget"] | null;
+            };
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntitlementDto"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesMonetizationEndpointsGrantTestEntitlementGrantTestEntitlementEndpoint: {
+        parameters: {
+            query?: {
+                target?: components["schemas"]["EntitlementTarget"] | null;
+            };
+            header?: never;
+            path: {
+                /** @description Discord Snowflake ID of the requested resource (guild, user, etc.) */
+                discordId: number;
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesMonetizationEndpointsRemoveTestEntitlementRemoveTestEntitlementEndpoint: {
+        parameters: {
+            query?: {
+                target?: components["schemas"]["EntitlementTarget"] | null;
+            };
+            header?: never;
+            path: {
+                discordId: number;
+                productId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EliteAPIFeaturesPlayerGetLinkedAccountsGetLinkedAccountsEndpoint: {
         parameters: {
             query?: never;
@@ -11203,6 +11288,42 @@ export interface operations {
             };
             /** @description Forbidden */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesShopProductsClaimProductClaimProductEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                discordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };

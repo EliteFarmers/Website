@@ -314,6 +314,11 @@
 	/* Spacing */
 	--spacing-8xl: 90rem;
 
+	/* Fonts */
+	--font-emoji:
+		'Twemoji Mozilla', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+		'EmojiOne Color', 'Android Emoji', inherit;
+
 	/* Animations */
 	--animate-bounce-horizontal: bounce-horizontal 1s ease-out infinite;
 	@keyframes bounce-horizontal {

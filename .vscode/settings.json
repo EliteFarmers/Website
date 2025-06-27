@@ -8,5 +8,30 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"files.associations": {
 		"*.css": "tailwindcss"
+	},
+	"workbench.editor.customLabels.patterns": {
+		// Page
+		"**/routes/**/*/+page.svelte": "${dirname} - Page",
+		"**/routes/+page.svelte": "(root) - Page",
+		// Layout
+		"**/routes/**/*/+layout.svelte": "${dirname} - Layout",
+		"**/routes/+layout.svelte": "(root) - Layout",
+		// Page Data
+		"**/routes/**/*/+page.[tj]s": "${dirname} - Page Data",
+		"**/routes/+page.[tj]s": "(root) - Page Data",
+		// Layout Data
+		"**/routes/**/*/+layout.[tj]s": "${dirname} - Layout Data",
+		"**/routes/+layout.[tj]s": "(root) - Layout Data",
+		// Page Server Data
+		"**/routes/**/*/+page.server.[tj]s": "${dirname} - Page Server Data",
+		"**/routes/+page.server.[tj]s": "(root) - Page Server Data",
+		// Page Layout Data
+		"**/routes/**/*/+layout.server.[tj]s": "${dirname} - Layout Server Data",
+		"**/routes/+layout.server.[tj]s": "(root) - Layout Server Data",
+		// Error Page
+		"**/routes/**/*/+error.svelte": "${dirname} - Error Page",
+		"**/routes/+error.svelte": "(root) - Error Page",
+		// Server Endpoint
+		"**/routes/**/*/+server.[tj]s": "${dirname} - Server Endpoint"
 	}
 }
