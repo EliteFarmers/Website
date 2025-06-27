@@ -65,7 +65,7 @@
 		tooltip={{ mode: 'bisect-x' }}
 	>
 		{#snippet children({ context })}
-			<Layer type="svg">
+			<Layer type="svg" class="fill-primary stroke-muted-foreground">
 				<Axis
 					placement="left"
 					rule
@@ -99,7 +99,7 @@
 						ticks={pestScale.ticks()}
 						format={(v: number) => toReadable(v, undefined, 2)}
 						rule
-						tickLabelProps={{ class: 'stroke-0! font-normal! text-sm' }}
+						tickLabelProps={{ class: 'stroke-0! font-normal! text-sm', stroke: colorVars[crop] }}
 					/>
 					<Area
 						y1={(d) => pestScale(d.pests)}

@@ -233,34 +233,42 @@
 					options={weightStyleOptions}
 					bind:value={changedSettings.weightStyle}
 					placeholder="Select Style"
-					onChange={updateSettings}
+					onChange={() => {
+						if (changedSettings.weightStyle === '-1') {
+							updateSettings();
+						}
+					}}
 				/>
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
-				{#if selectedStyle}
-					<Card.Root class="w-full p-0">
-						<Card.Content class="w-full p-2">
-							<!-- {#if selectedStyle.description}
+			</SettingListItem>
+			{#if selectedStyle}
+				<Card.Root class="w-full p-0">
+					<Card.Content class="w-full p-2">
+						<!-- {#if selectedStyle.description}
 								<p class="text-sm pb-1">{selectedStyle.description}</p>
 							{/if} -->
-							{#if selectedStyle.styleFormatter === 'data'}
-								{#key selectedStyle.id}
-									<WeightStyle
-										style={selectedStyle}
-										ign={data.mcAccount?.name ?? ''}
-										uuid={data.mcAccount?.id ?? ''}
-										weight={data.weight ?? undefined}
-									/>
-								{/key}
-							{:else}
-								<p class="text-muted-variant text-sm">
-									No preview available! You can change to this style and run the /&NoBreak;weight
-									command in Discord to see it.
-								</p>
-							{/if}
-						</Card.Content>
-					</Card.Root>
-				{/if}
-			</SettingListItem>
+						{#if selectedStyle.styleFormatter === 'data'}
+							{#key selectedStyle.id}
+								<WeightStyle
+									style={selectedStyle}
+									ign={data.mcAccount?.name ?? ''}
+									uuid={data.mcAccount?.id ?? ''}
+									weight={data.weight ?? undefined}
+								/>
+							{/key}
+						{:else}
+							<p class="text-muted-variant text-sm">
+								No preview available! You can change to this style and run the /&NoBreak;weight command
+								in Discord to see it.
+							</p>
+						{/if}
+					</Card.Content>
+				</Card.Root>
+
+				<div class="flex flex-col items-end gap-2">
+					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
+				</div>
+			{/if}
 			<SettingSeperator />
 			<SettingListItem title="Bot Embed Color" description="Select an accent color for bot responses in Discord!">
 				<SelectSimple
@@ -272,10 +280,20 @@
 				/>
 			</SettingListItem>
 			<SettingSeperator />
-			<SettingListItem
-				title="Custom Emoji"
-				description="Set a custom emoji to be shown next to your linked account's name!"
-			>
+			<SettingListItem title="Custom Emoji">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Set a custom emoji to be shown next to your linked account's name!</span
+					>
+					{#if !unlockedSettings.emoji}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
 				<div class="flex flex-row items-center gap-4">
 					<span class="text-2xl"
 						>{data.mcAccount?.name ?? data.session?.username ?? ''} {changedSettings.emoji}</span
@@ -298,10 +316,20 @@
 				</div>
 			</SettingListItem>
 			<SettingSeperator />
-			<SettingListItem
-				title="Hide Shop Promotions"
-				description="Toggle whether to hide shop promotions in bot commands."
-			>
+			<SettingListItem title="Hide Shop Promotions">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Toggle whether to hide shop promotions in bot commands.</span
+					>
+					{#if !unlockedSettings.shopPromotions}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
 				<div class="flex flex-row items-center gap-2">
 					<Switch
 						bind:checked={changedSettings.shopPromotions}
@@ -312,10 +340,20 @@
 				</div>
 			</SettingListItem>
 			<SettingSeperator />
-			<SettingListItem
-				title="Override Weight Style"
-				description="Toggle whether to apply your weight style on everyone you look up."
-			>
+			<SettingListItem title="Override Weight Style">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Toggle whether to apply your weight style on everyone you look up.</span
+					>
+					{#if !unlockedSettings.styleOverride}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
 				<div class="flex flex-row items-center gap-2">
 					<Switch
 						bind:checked={changedSettings.styleOverride}
@@ -326,10 +364,20 @@
 				</div>
 			</SettingListItem>
 			<SettingSeperator />
-			<SettingListItem
-				title="Default 'More Info'"
-				description="Toggle whether the 'More Info' section is shown by default in the weight command."
-			>
+			<SettingListItem title="Default 'More Info'">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Toggle whether the 'More Info' section is shown by default in the weight command.</span
+					>
+					{#if !unlockedSettings.moreInfo}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
 				<div class="flex flex-row items-center gap-2">
 					<Switch
 						bind:checked={changedSettings.moreInfo}
