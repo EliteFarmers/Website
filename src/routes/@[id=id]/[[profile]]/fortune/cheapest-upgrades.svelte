@@ -93,7 +93,7 @@
 			<p>These upgrades use Bazaar and Auction House prices which aren't available in this game mode.</p>
 		</div>
 	{/if}
-	<p class="text-muted-foreground text-sm">Every available fortune upgrade for {ctx.ignMeta}!</p>
+	<p class="text-muted-foreground font-emoji text-sm">Every available fortune upgrade for {ctx.ignMeta}!</p>
 	{#if !crop || crop.length === 0}
 		<div class="flex flex-row items-center gap-2 text-sm">
 			<TriangleAlert size={20} class="text-completed -mb-1" />

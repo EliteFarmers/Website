@@ -10,7 +10,6 @@
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
-	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
@@ -18,9 +17,15 @@
 	import Moon from '@lucide/svelte/icons/moon';
 	import Search from '@lucide/svelte/icons/search';
 	import Sun from '@lucide/svelte/icons/sun';
+	import Pencil from '@lucide/svelte/icons/pencil';
 	import { onMount } from 'svelte';
 	import type { ActionData, PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
+	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import SettingHeader from '$comp/settings/setting-header.svelte';
+	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import { useDebounce } from 'runed';
 
 	let api = $state<CarouselAPI>();
 
@@ -75,7 +80,25 @@
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
+		emoji: data.user.settings?.suffix ?? '',
 	});
+
+	let updateForm: HTMLFormElement | undefined = $state(undefined);
+
+	const updateSettings = useDebounce(() => {
+		const settings = data.user.settings;
+		if (
+			!settings ||
+			changedSettings.weightStyle !== settings.weightStyle?.id?.toString() ||
+			changedSettings.embedColor !== settings.features?.embedColor ||
+			changedSettings.shopPromotions !== settings.features?.hideShopPromotions ||
+			changedSettings.styleOverride !== settings.features?.weightStyleOverride ||
+			changedSettings.moreInfo !== settings.features?.moreInfoDefault ||
+			(changedSettings.emoji !== settings.suffix && unlockedSettings.emoji)
+		) {
+			updateForm?.requestSubmit();
+		}
+	}, 1000);
 
 	let user = $derived(data.user || undefined);
 	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
@@ -86,6 +109,7 @@
 		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
 		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
 		moreInfo: data.user.entitlements?.some((e) => e.product.features?.moreInfoDefault) ?? false,
+		emoji: data.user.entitlements?.some((e) => e.product.features?.customEmoji) ?? false,
 	});
 
 	let selectedStyle = $derived(
@@ -176,12 +200,11 @@
 			<p class="text-destructive">{form.error}</p>
 		{/if}
 
-		<h1 class="mb-2 text-2xl">User Settings</h1>
-		<p class="mb-4">Configure settings here! Only things that you've paid for are available to edit.</p>
 		<form
 			action="?/updateSettings"
 			method="post"
-			class="mb-12 flex max-w-md flex-col gap-4"
+			class="bg-card mb-12 flex max-w-4xl flex-col gap-4 rounded-lg border-2 p-4"
+			bind:this={updateForm}
 			use:enhance={() => {
 				loading = true;
 				return async ({ result }) => {
@@ -193,16 +216,26 @@
 				};
 			}}
 		>
-			<div class="flex flex-col space-y-2">
-				<Label>Weight Command Style</Label>
+			<SettingHeader class="flex flex-col items-start font-normal">
+				<span class="mb-2 text-2xl">User Settings</span>
+				<br />
+				<span class="text-sm"
+					>Configure settings here! Only things that you've paid for are available to edit.</span
+				>
+			</SettingHeader>
+			<SettingSeperator />
+			<SettingListItem
+				title="Weight Command Style"
+				description="Select a style for the weight command in Discord!"
+			>
 				<ComboBox
 					disabled={loading || !unlockedSettings.weightStyle}
 					options={weightStyleOptions}
 					bind:value={changedSettings.weightStyle}
 					placeholder="Select Style"
+					onChange={updateSettings}
 				/>
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
-
 				{#if selectedStyle}
 					<Card.Root class="w-full p-0">
 						<Card.Content class="w-full p-2">
@@ -227,38 +260,88 @@
 						</Card.Content>
 					</Card.Root>
 				{/if}
-			</div>
-			<div class="space-y-2">
-				<Label>Bot Embed Color</Label>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Bot Embed Color" description="Select an accent color for bot responses in Discord!">
 				<SelectSimple
 					name="embed"
 					options={embedColorOptions}
 					bind:value={changedSettings.embedColor}
 					disabled={loading || !unlockedSettings.embedColor}
+					change={updateSettings}
 				/>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Custom Emoji"
+				description="Set a custom emoji to be shown next to your linked account's name!"
+			>
+				<div class="flex flex-row items-center gap-4">
+					<span class="text-2xl"
+						>{data.mcAccount?.name ?? data.session?.username ?? ''} {changedSettings.emoji}</span
+					>
+					<EmojiDialog
+						ign={data.mcAccount?.name ?? data.session?.username ?? ''}
+						bind:selected={changedSettings.emoji}
+						name="emoji"
+						onChange={() => {
+							if (unlockedSettings.emoji) {
+								updateSettings();
+							}
+						}}
+					>
+						{#snippet trigger()}
+							<Pencil />
+						{/snippet}
+					</EmojiDialog>
+					<input type="hidden" name="emoji" bind:value={changedSettings.emoji} />
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Hide Shop Promotions"
+				description="Toggle whether to hide shop promotions in bot commands."
+			>
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						bind:checked={changedSettings.shopPromotions}
+						disabled={loading || !unlockedSettings.shopPromotions}
+						name="promotions"
+						onCheckedChange={updateSettings}
+					/>
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Override Weight Style"
+				description="Toggle whether to apply your weight style on everyone you look up."
+			>
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						bind:checked={changedSettings.styleOverride}
+						disabled={loading || !unlockedSettings.styleOverride}
+						name="override"
+						onCheckedChange={updateSettings}
+					/>
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Default 'More Info'"
+				description="Toggle whether the 'More Info' section is shown by default in the weight command."
+			>
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						bind:checked={changedSettings.moreInfo}
+						disabled={loading || !unlockedSettings.moreInfo}
+						name="info"
+						onCheckedChange={updateSettings}
+					/>
+				</div>
+			</SettingListItem>
+			<div class="flex flex-col items-end gap-2">
+				<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
 			</div>
-			<div class="flex flex-row items-center gap-2">
-				<Switch
-					bind:checked={changedSettings.shopPromotions}
-					disabled={loading || !unlockedSettings.shopPromotions}
-				/>
-				<Label>Hide shop promotions</Label>
-				<input type="hidden" name="promotions" bind:value={changedSettings.shopPromotions} />
-			</div>
-			<div class="flex flex-row items-center gap-2">
-				<Switch
-					bind:checked={changedSettings.styleOverride}
-					disabled={loading || !unlockedSettings.styleOverride}
-				/>
-				<Label>Apply Weight Style on everyone</Label>
-				<input type="hidden" name="override" bind:value={changedSettings.styleOverride} />
-			</div>
-			<div class="flex flex-row items-center gap-2">
-				<Switch bind:checked={changedSettings.moreInfo} disabled={loading || !unlockedSettings.moreInfo} />
-				<Label>"More Info" in weight command by default</Label>
-				<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
-			</div>
-			<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
 		</form>
 
 		<h1 class="mb-4 text-2xl">Manage Badges</h1>

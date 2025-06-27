@@ -14,7 +14,7 @@
 <Popover.Mobile hasContent={members.length > 0}>
 	{#snippet trigger()}
 		<div class="bg-card rounded-md p-2" id="playerName">
-			<h1 class="text-2xl md:text-3xl">
+			<h1 class="font-emoji text-2xl md:text-3xl">
 				{#if rank && plus}
 					<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span
 					>&nbsp;{ign}
@@ -33,7 +33,7 @@
 					href={`/@${member.uuid}/${ctx.selectedProfile?.profileId}`}
 					class="hover:bg-muted flex justify-between gap-4 rounded-sm p-2 text-xl font-semibold"
 				>
-					<span>{formatIgn(member.username, member.meta)}</span>
+					<span class="font-emoji">{formatIgn(member.username, member.meta)}</span>
 					<span class="font-normal">{member.farmingWeight?.toLocaleString()}</span>
 				</a>
 			{/each}

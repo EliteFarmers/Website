@@ -10,6 +10,7 @@
 	import Replace from '@lucide/svelte/icons/replace';
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
 	import Check from '@lucide/svelte/icons/check';
+	import Heart from '@lucide/svelte/icons/heart';
 	import X from '@lucide/svelte/icons/x';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
@@ -73,6 +74,14 @@
 									<Tag size={16} />
 								{/snippet}
 								<p class="font-semibold">Unlocks a badge!</p>
+							</ProductFeature>
+						{/if}
+						{#if features.customEmoji}
+							<ProductFeature>
+								{#snippet icon()}
+									<Heart size={16} />
+								{/snippet}
+								<p class="font-semibold">Select a Custom Emoji!</p>
 							</ProductFeature>
 						{/if}
 						{#if features.hideShopPromotions}

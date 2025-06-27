@@ -1,6 +1,6 @@
-import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-import { GetSelectedProfileMember } from '$lib/api/elite';
+import { error, fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import { ClaimFreeProduct, GetSelectedProfileMember } from '$lib/api/elite';
 
 export const load = (async ({ params, parent }) => {
 	const { products, session } = await parent();
@@ -26,3 +26,23 @@ export const load = (async ({ params, parent }) => {
 		weight: weight?.farmingWeight,
 	};
 }) satisfies PageServerLoad;
+
+export const actions: Actions = {
+	claim: async ({ request, locals }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+		const data = await request.formData();
+		const sku = data.get('sku') as string;
+		if (!sku) {
+			return { error: 'Invalid SKU.' };
+		}
+
+		const { response, error: e } = await ClaimFreeProduct(locals.access_token, sku);
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to claim item!' });
+		}
+
+		redirect(303, '/profile/settings');
+	},
+};

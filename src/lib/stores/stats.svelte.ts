@@ -21,6 +21,7 @@ export class PlayerStats {
 
 	#garden = $derived.by(() => this.#member?.garden);
 	#rank = $derived.by(() => getRankInformation(this.#account.playerData));
+	#ignMeta = $derived.by(() => formatIgn(this.#account?.name, this.#member.meta));
 
 	constructor({
 		account,
@@ -65,7 +66,7 @@ export class PlayerStats {
 	}
 
 	get ignMeta() {
-		return formatIgn(this.#account?.name, this.#member.meta);
+		return this.#ignMeta;
 	}
 
 	get rank() {

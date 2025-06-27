@@ -319,8 +319,14 @@ export function getCropColor(crop: string | Crop) {
 	}
 }
 
-export function formatIgn(ign?: string | null, meta?: components['schemas']['MemberCosmeticsDto'] | null): string {
-	if (!meta || !ign) return ign ?? '';
+export function formatIgn(
+	ign?: string | null,
+	meta?: components['schemas']['MemberCosmeticsDto'] | null,
+	settings?: components['schemas']['UserSettingsDto']
+): string {
+	if ((!meta && !settings) || !ign) return ign ?? '';
+	const prefix = meta?.prefix || settings?.prefix || '';
+	const suffix = meta?.suffix || settings?.suffix || '';
 
-	return (meta?.prefix ? `${meta.prefix} ` : '') + ign + (meta?.suffix ? ` ${meta.suffix}` : '');
+	return `${prefix} ${ign} ${suffix}`;
 }

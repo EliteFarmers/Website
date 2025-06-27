@@ -1240,6 +1240,18 @@ export const AdminCreateEventTeam = async (
 
 export const GetProducts = async () => await GET('/products', {});
 
+export const ClaimFreeProduct = async (accessToken: string, productId: string) =>
+	await POST('/product/{discordId}/claim', {
+		params: {
+			path: {
+				discordId: productId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetAdminProducts = async (token: string) =>
 	await GET('/products/admin', {
 		headers: {
