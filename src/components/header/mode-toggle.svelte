@@ -35,9 +35,9 @@
 		)}
 	>
 		{#if !isDark}
-			<Sun class="mx-2 block" />
+			<Sun class="block" />
 		{:else}
-			<Moon class="mx-2 block" />
+			<Moon class="block" />
 		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">

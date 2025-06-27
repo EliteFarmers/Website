@@ -17,7 +17,7 @@
 <div class="flex flex-col items-center justify-between gap-2 px-2 md:flex-row">
 	<div class="text-muted-foreground flex-1 text-sm">
 		<!-- {table.getFilteredSelectedRowModel().rows.length} of -->
-		Including {table.getFilteredRowModel().rows.length} of {table.getCoreRowModel().rows.length} upgrade(s)
+		Showing {table.getFilteredRowModel().rows.length} of {table.getCoreRowModel().rows.length} upgrade(s)
 	</div>
 	<div class="flex flex-col items-center gap-2 md:flex-row lg:space-x-8">
 		<div class="flex items-center space-x-2">
