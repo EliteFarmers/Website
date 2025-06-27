@@ -110,6 +110,9 @@ importers:
       embla-carousel-wheel-gestures:
         specifier: ^8.0.1
         version: 8.0.2(embla-carousel@8.6.0)
+      emoji-picker-element:
+        specifier: ^1.26.3
+        version: 1.26.3
       eslint:
         specifier: ^9.25.1
         version: 9.29.0(jiti@2.4.2)
@@ -1366,6 +1369,9 @@ packages:
 
   embla-carousel@8.6.0:
     resolution: {integrity: sha512-SjWyZBHJPbqxHOzckOfo8lHisEaJWmwd23XppYFYVh10bU66/Pn5tkVkbkCMZVdbUE5eTCI2nD8OyIP4Z+uwkA==}
+
+  emoji-picker-element@1.26.3:
+    resolution: {integrity: sha512-fOMG44d/3OqTe1pPqlu5H4ZtWg7gK4Le6Bt24JTKtDyce5+EO3Mo8WA95cKHbPSsSsg7ehM12M1x3Y6U6fgvTQ==}
 
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
@@ -3492,6 +3498,8 @@ snapshots:
       wheel-gestures: 2.2.48
 
   embla-carousel@8.6.0: {}
+
+  emoji-picker-element@1.26.3: {}
 
   enhanced-resolve@5.18.1:
     dependencies:
