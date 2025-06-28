@@ -2,11 +2,23 @@ import type { Handle, ServerInit } from '@sveltejs/kit';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
 
+// Access posthog environment variables while keeping them optional
+import * as e from '$env/static/private';
+const POSTHOG_ASSETS_HOST = (e as Record<string, string>).POSTHOG_ASSETS_HOST;
+const POSTHOG_HOST = (e as Record<string, string>).POSTHOG_HOST;
+
 export const init: ServerInit = async () => {
+	if (POSTHOG_ASSETS_HOST && POSTHOG_HOST) {
+		console.log('Starting up with PostHog integration!');
+	}
 	initCachedItems();
 };
 
 export const handle: Handle = async ({ event, resolve }) => {
+	if (POSTHOG_ASSETS_HOST && POSTHOG_HOST && event.url.pathname.startsWith('/post')) {
+		return await sendToPostHog(event);
+	}
+
 	const { locals, cookies } = event;
 
 	const access = cookies.get('access_token');
@@ -43,6 +55,32 @@ async function ResolveWithSecurityHeaders(
 		'accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()'
 	);
 	response.headers.set('X-Content-Type-Options', 'nosniff');
+
+	return response;
+}
+
+async function sendToPostHog(event: Parameters<Handle>[0]['event']): Promise<ReturnType<Handle>> {
+	const hostname = event.url.pathname.startsWith('/post/static/') ? POSTHOG_ASSETS_HOST : POSTHOG_HOST;
+
+	// Build external URL
+	const url = new URL(event.request.url);
+	url.protocol = 'https:';
+	url.hostname = hostname;
+	url.port = '443';
+	url.pathname = event.url.pathname.replace('/post/', '');
+
+	// Clone and adjust headers
+	const headers = new Headers(event.request.headers);
+	headers.set('host', hostname);
+
+	// Proxy the request to the external host
+	const response = await fetch(url.toString(), {
+		...event.request,
+		method: event.request.method,
+		headers,
+		body: event.request.body,
+		duplex: 'half',
+	} as RequestInit);
 
 	return response;
 }
