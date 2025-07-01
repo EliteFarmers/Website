@@ -166,7 +166,7 @@
 		breadcrumb.setOverride(crumbs);
 		sidebarnav.setNav('Stats', sidebarCrumbs);
 		favorites.setPage({
-			icon: account?.id ? `https://mc-heads.net/avatar/${account.id}` : undefined,
+			icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
 			name: document.title,
 			href: page.url.pathname,
 		});

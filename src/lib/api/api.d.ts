@@ -2746,6 +2746,7 @@ export interface components {
         MinecraftAccountDto: {
             id: string;
             name: string;
+            formattedName: string;
             primaryAccount: boolean;
             discordId?: string | null;
             discordUsername?: string | null;
@@ -2891,20 +2892,14 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
-        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
-             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /**
-             * @description the message for the error response
-             * @default One or more errors occurred!
-             */
+            /** @default One or more errors occurred! */
             message: string;
-            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -4799,9 +4794,7 @@ export interface components {
             /** Format: int32 */
             level: number;
         };
-        /** @description Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values. */
         JsonDocument: {
-            /** @description Gets the root element of this JSON document. */
             rootElement: unknown;
         };
         GetSpecifiedSkyblockItemsResponse: {

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { components } from '$lib/api/api';
 	import * as Popover from '$ui/popover';
 	import FileText from '@lucide/svelte/icons/file-text';
@@ -11,7 +12,7 @@
 </script>
 
 <div class="flex flex-row items-center gap-2">
-	<img src="https://mc-heads.net/avatar/{member.playerUuid}" class="aspect-square w-6 rounded-sm" alt="Player Head" />
+	<PlayerHead uuid={member.playerUuid} size="lg" />
 	<a
 		href="/@{member.playerUuid}/{member.profileId ?? ''}"
 		target="_blank"

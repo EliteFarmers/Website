@@ -21,6 +21,7 @@
 	import VisibleToggle from '$comp/visible-toggle.svelte';
 	import type { components } from '$lib/api/api';
 	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 
 	interface Props {
 		data: PageData;
@@ -330,11 +331,7 @@
 						{#each ownTeam.members ?? [] as member (member.playerUuid)}
 							<div class="flex flex-row justify-between">
 								<div class="flex flex-row items-center gap-2">
-									<img
-										src="https://mc-heads.net/avatar/{member.playerUuid}"
-										alt="Player Head"
-										class="pixelated aspect-square h-8 w-8 rounded-sm"
-									/>
+									<PlayerHead uuid={member.playerUuid} size="lg" />
 									<p>{member.playerName}</p>
 									{#if ownTeam.ownerUuid === member.playerUuid}
 										<Popover.Mobile>

@@ -9272,6 +9272,7 @@
         "required": [
           "id",
           "name",
+          "formattedName",
           "primaryAccount",
           "settings",
           "properties",
@@ -9283,6 +9284,9 @@
             "type": "string"
           },
           "name": {
+            "type": "string"
+          },
+          "formattedName": {
             "type": "string"
           },
           "primaryAccount": {
@@ -9782,7 +9786,6 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "description": "the dto used to send an error response to the client",
         "additionalProperties": false,
         "required": [
           "statusCode",
@@ -9792,18 +9795,15 @@
         "properties": {
           "statusCode": {
             "type": "integer",
-            "description": "the http status code sent to the client. default is 400.",
             "format": "int32",
             "default": 400
           },
           "message": {
             "type": "string",
-            "description": "the message for the error response",
             "default": "One or more errors occurred!"
           },
           "errors": {
             "type": "object",
-            "description": "the collection of errors for the current context",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -15894,15 +15894,12 @@
       },
       "JsonDocument": {
         "type": "object",
-        "description": "Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.",
         "additionalProperties": false,
         "required": [
           "rootElement"
         ],
         "properties": {
-          "rootElement": {
-            "description": "Gets the root element of this JSON document."
-          }
+          "rootElement": {}
         }
       },
       "GetSpecifiedSkyblockItemsResponse": {

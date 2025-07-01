@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { components } from '$lib/api/api';
 	import { formatIgn } from '$lib/format';
 	import * as Popover from '$ui/popover';
@@ -15,11 +16,7 @@
 <div class="flex w-full flex-row justify-between gap-1">
 	<div class="flex flex-row items-center gap-2">
 		{@render children?.()}
-		<img
-			src="https://mc-heads.net/avatar/{member.playerUuid}"
-			class="aspect-square w-8 rounded-sm"
-			alt="Player Head"
-		/>
+		<PlayerHead uuid={member.playerUuid} size="lg" />
 		<a
 			href="/@{member.playerUuid}/{member.profileId ?? ''}"
 			target="_blank"

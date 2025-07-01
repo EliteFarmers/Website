@@ -18,6 +18,7 @@
 	import { page } from '$app/state';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 
 	interface Props {
 		data: PageData;
@@ -136,11 +137,7 @@
 												<Trash2 size={16} />
 											</Button>
 										</form>
-										<img
-											class="pixelated h-8 w-8"
-											src="https://mc-heads.net/avatar/{p.uuid}/8"
-											alt="User Avatar"
-										/>
+										<PlayerHead uuid={p.uuid} size="lg" />
 										<p>{p.crop}</p>
 										<p>{getReadableSkyblockDate(p.timestamp)}</p>
 										<Button size="sm" href="/contest/{p.timestamp}" color="alternative">View</Button
