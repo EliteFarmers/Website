@@ -65,7 +65,7 @@
 <Head
 	title="{ctx.ignMeta} ({profile?.profileName}) | Farming Weight"
 	{description}
-	imageUrl="https://mc-heads.net/head/{uuid}/left.png"
+	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 >
 	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>

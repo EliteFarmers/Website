@@ -7,6 +7,7 @@
 	import * as Tooltip from '$ui/tooltip';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import { formatIgn } from '$lib/format';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 
 	interface Props {
 		owner?: boolean;
@@ -70,11 +71,7 @@
 						</p>
 					</div>
 				{/if}
-				<img
-					src="https://mc-heads.net/avatar/{member.playerUuid}"
-					alt="Player Head"
-					class="pixelated aspect-square size-8 rounded-sm"
-				/>
+				<PlayerHead uuid={member.playerUuid} size="lg" />
 				<p class="text-lg">{formatIgn(member.playerName, member.meta)}</p>
 				{#if owner}
 					<Tooltip.Simple>

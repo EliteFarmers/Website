@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
@@ -17,7 +18,7 @@
 <div class="bg-card flex flex-col rounded-md p-4">
 	<div class="flex flex-row items-center justify-between gap-2">
 		<div class="flex flex-row items-center gap-4">
-			<img class="pixel w-12" src="https://mc-heads.net/head/{mc.id}" alt="{mc.name} player skull" />
+			<PlayerHead uuid={mc.id} size="2xl" />
 			<h1 class="font-mono text-xl font-semibold">{mc.name}</h1>
 
 			{#if mc.primaryAccount}

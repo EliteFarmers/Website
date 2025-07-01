@@ -20,7 +20,8 @@
 				<div class="flex flex-row items-center gap-2">
 					<img
 						class="pixelated w-8"
-						src="https://mc-heads.net/avatar/{record.uuid}/8"
+						src="https://api.elitebot.dev/account/{record.uuid}/face.png"
+						loading="lazy"
 						alt="{record.ign} Player Head"
 					/>
 					<p class="font-semibold">{record.ign}</p>
