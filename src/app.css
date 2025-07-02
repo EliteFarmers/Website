@@ -347,6 +347,10 @@
 	.container {
 		padding: 2rem;
 	}
+	button:not(:disabled),
+	[role='button']:not(:disabled) {
+		cursor: pointer;
+	}
 }
 
 @layer components {

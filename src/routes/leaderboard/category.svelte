@@ -10,14 +10,25 @@
 	}
 
 	let { leaderboards, title }: Props = $props();
+
+	const by3Remainder = $derived(byNRemainder(3));
+	const by2Remainder = $derived(byNRemainder(2));
+
+	function byNRemainder(n: number) {
+		const remainder = (leaderboards?.length ?? 0) % n;
+		if (remainder === 0) return 0;
+		return n - remainder;
+	}
 </script>
 
-<section class="md:bg-card flex w-full flex-1 flex-col items-center justify-center gap-4 rounded-lg md:border-2 md:p-4">
+<section class="md:bg-card flex w-full flex-1 flex-col justify-center gap-2 rounded-lg md:border-2 md:p-4">
 	<h2 class="text-2xl font-semibold">{title}</h2>
 
-	<div class="full flex h-full w-full flex-1 flex-wrap items-center justify-center gap-2">
+	<div
+		class="bg-border grid h-full w-full flex-1 border-collapse grid-cols-1 gap-[2px] overflow-clip rounded-md border-2 sm:grid-cols-2 md:grid-cols-3"
+	>
 		{#each leaderboards ?? [] as lb (lb.id)}
-			<div class="bg-background flex h-12 w-full max-w-64 flex-row items-center rounded-md border-2">
+			<div class="bg-background flex h-10 w-full flex-row items-center">
 				<div class="flex flex-1 items-center justify-center">
 					<a href="/leaderboard/{lb.id}" class="hover:bg-card/60 flex-1 items-center truncate p-2 px-3 pr-0">
 						<div class="flex flex-row items-center gap-2">
@@ -28,7 +39,7 @@
 									alt={lb.short ?? lb.title}
 								/>
 							{/if}
-							<span class="truncate text-center text-xl whitespace-nowrap">{lb.short ?? lb.title}</span>
+							<span class="truncate text-center whitespace-nowrap">{lb.short ?? lb.title}</span>
 						</div>
 					</a>
 				</div>
@@ -62,5 +73,15 @@
 				</div>
 			</div>
 		{/each}
+		{#each { length: by3Remainder }}
+			{@render empty('hidden md:block')}
+		{/each}
+		{#each { length: by2Remainder }}
+			{@render empty('hidden sm:block md:hidden')}
+		{/each}
 	</div>
 </section>
+
+{#snippet empty(className: string)}
+	<div class="bg-background h-10 w-full {className}"></div>
+{/snippet}

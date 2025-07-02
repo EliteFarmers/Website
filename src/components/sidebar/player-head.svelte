@@ -32,7 +32,7 @@
 </script>
 
 {#if !errored && uuid}
-	<div class="relative {sizes[size]}">
+	<div class="relative {sizes[size]} aspect-square">
 		{#if loading}
 			<User class="aspect-square {sizes[size]} absolute top-0 left-0" />
 		{/if}
