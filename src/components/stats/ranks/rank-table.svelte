@@ -1,4 +1,4 @@
-<script lang="ts" generics="TData, TValue">
+<script lang="ts" generics="TData, TValue, TExtra">
 	import {
 		type ColumnDef,
 		type ColumnFiltersState,
@@ -14,15 +14,19 @@
 		getSortedRowModel,
 	} from '@tanstack/table-core';
 	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
-	import * as Table from '$ui/table/index.js';
 	import DataTablePagination from './data-table-pagination.svelte';
+	import type { Component } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import DataTableToolbar from './data-table-toolbar.svelte';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
 		data: TData[];
+		extra?: TExtra;
 		initialSorting?: SortingState;
 		initialFilters?: ColumnFiltersState;
 		initialVisibility?: VisibilityState;
+		row?: Component<{ original: TData; extra?: TExtra } & HTMLAttributes<HTMLDivElement>>;
 	};
 
 	let {
@@ -31,6 +35,8 @@
 		initialFilters = [],
 		initialSorting = [],
 		initialVisibility = {},
+		row: RowComponent,
+		extra,
 	}: DataTableProps<TData, TValue> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
@@ -106,41 +112,51 @@
 	});
 </script>
 
-<div class="space-y-4">
-	<div class="rounded-md border">
-		<Table.Root>
-			<Table.Header>
-				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-					<Table.Row>
-						{#each headerGroup.headers as header (header.id)}
-							<Table.Head>
+<div class="flex flex-col items-start gap-2">
+	<div class="flex w-full flex-col items-center">
+		{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+			<div class="bg-card flex w-full flex-col gap-2 rounded-md border-2 p-2 md:flex-row md:items-center">
+				<div class="flex flex-1">
+					<DataTableToolbar {table} />
+				</div>
+				<div class="flex items-center md:justify-end">
+					{#each headerGroup.headers as header (header.id)}
+						{@const hdef = header.column.columnDef.header}
+						{#if hdef}
+							<div
+								class="text-foreground px-4 font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+							>
 								{#if !header.isPlaceholder}
-									<FlexRender
-										content={header.column.columnDef.header}
-										context={header.getContext()}
-									/>
+									<FlexRender content={hdef} context={header.getContext()} />
 								{/if}
-							</Table.Head>
-						{/each}
-					</Table.Row>
-				{/each}
-			</Table.Header>
-			<Table.Body>
-				{#each table.getRowModel().rows as row (row.id)}
-					<Table.Row data-state={row.getIsSelected() && 'selected'}>
-						{#each row.getVisibleCells() as cell (cell.id)}
-							<Table.Cell>
-								<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
-							</Table.Cell>
-						{/each}
-					</Table.Row>
-				{:else}
-					<Table.Row>
-						<Table.Cell colspan={columns.length} class="h-24 text-center">No ranks found!</Table.Cell>
-					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table.Root>
+							</div>
+						{/if}
+					{/each}
+				</div>
+			</div>
+		{/each}
+	</div>
+	<div class="flex w-full flex-col gap-1">
+		{#each table.getRowModel().rows as row (row.id)}
+			{#if RowComponent}
+				<RowComponent original={row.original} data-state={row.getIsSelected() && 'selected'} {extra} />
+			{:else}
+				<div
+					data-state={row.getIsSelected() && 'selected'}
+					class="hover:bg-muted/50 data-[state=selected]:bg-muted flex flex-1 flex-row rounded-md border-2 transition-colors"
+				>
+					{#each row.getVisibleCells() as cell (cell.id)}
+						<div class="min-w-fit flex-1 p-2">
+							<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
+						</div>
+					{/each}
+				</div>
+			{/if}
+		{:else}
+			<div class="flex w-full flex-col items-center justify-center border-2 rounded-md p-4 h-24">
+				<div class="text-center">No leaderboard ranks found!</div>
+			</div>
+		{/each}
 	</div>
 	<DataTablePagination {table} />
 </div>

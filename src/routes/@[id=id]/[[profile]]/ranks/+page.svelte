@@ -6,40 +6,17 @@
 	let { data } = $props();
 
 	const ctx = getStatsContext();
-	const ranks = $derived(
-		Object.entries(ctx.ranks).sort(([, a], [, b]) => {
-			if (a.rank === b.rank) return a.amount < b.amount ? -1 : 1;
-			return a.rank < b.rank ? -1 : 1;
-		})
-	);
 </script>
 
 <Head title="{ctx.ignMeta} | Ranks" description="See this player's leaderboard ranks in Hypixel Skyblock!" />
 
-<div class="mx-2 flex flex-col items-center">
+<div class="mb-16 flex flex-col items-center gap-8">
+	<h1 class="mt-4 max-w-2xl self-center text-center text-4xl">Leaderboard Ranks</h1>
 	<RanksList leaderboards={data.cache.leaderboards} />
-	<div class="flex w-full max-w-3xl flex-col items-center gap-4">
-		{#each ranks as [id, rank] (id)}
-			{@render lbRank(id, rank)}
-		{/each}
-	</div>
+	<p class="text-muted-foreground max-w-lg text-center">
+		Only leaderboards where this player has reached the minimum required score will be shown. If you want to see all
+		leaderboards, you can check out the
+		<a href="/leaderboard" class="text-link hover:underline">leaderboard</a>
+		page!
+	</p>
 </div>
-
-{#snippet lbRank(id: string, rank: (typeof ranks)[number][1])}
-	<a
-		class="bg-card flex w-full flex-row items-center justify-between gap-2 rounded-lg border-2 p-3"
-		href="/leaderboard/{id}/{ctx.ign}-{ctx.selectedProfile?.profileName ?? ''}"
-	>
-		<div class="flex flex-col items-start gap-2">
-			<p class="text-lg font-semibold">
-				{rank.title}
-			</p>
-			<p>{rank.amount.toLocaleString()}</p>
-		</div>
-		<div>
-			<p class="text-2xl">
-				#{rank.rank}
-			</p>
-		</div>
-	</a>
-{/snippet}

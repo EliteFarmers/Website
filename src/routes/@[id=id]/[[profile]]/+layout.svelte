@@ -106,44 +106,42 @@
 
 {#snippet pagenav()}
 	<div class="flex flex-row justify-center">
-		<div
-			class="border-card my-6 flex max-w-fit flex-wrap justify-center rounded-md border-2 border-solid p-1 sm:flex-row"
-		>
+		<div class="my-6 flex max-w-fit flex-wrap justify-center rounded-md border border-solid p-1 sm:flex-row">
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/contests"
-				class="{route === 'contests' ? 'bg-card' : ''} cursor-pointer">Contests</Button
+				class="{route === 'contests' ? 'bg-muted' : ''} cursor-pointer">Contests</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/charts"
-				class="{route === 'charts' ? 'bg-card' : ''} cursor-pointer">Charts</Button
+				class="{route === 'charts' ? 'bg-muted' : ''} cursor-pointer">Charts</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href={path}
-				class="{route === '[[profile]]' ? 'bg-card' : ''} cursor-pointer">Stats</Button
+				class="{route === '[[profile]]' ? 'bg-muted' : ''} cursor-pointer">Stats</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/garden"
-				class="{route === 'garden' ? 'bg-card' : ''} cursor-pointer">Garden</Button
+				class="{route === 'garden' ? 'bg-muted' : ''} cursor-pointer">Garden</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/fortune"
-				class="{route === 'fortune' ? 'bg-card' : ''} cursor-pointer">Fortune</Button
+				class="{route === 'fortune' ? 'bg-muted' : ''} cursor-pointer">Fortune</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/ranks"
-				class="{route === 'ranks' ? 'bg-card' : ''} cursor-pointer">Ranks</Button
+				class="{route === 'ranks' ? 'bg-muted' : ''} cursor-pointer">Ranks</Button
 			>
 			{#if data.authorized}
 				<Button variant="ghost" size="sm" href="{path}/graphs" class="cursor-pointer">Admin</Button>

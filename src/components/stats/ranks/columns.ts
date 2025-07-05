@@ -2,20 +2,27 @@ import { renderComponent } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 import type { components } from '$lib/api/api';
-import RankTitle from './rank-title.svelte';
+import Calendar from '@lucide/svelte/icons/calendar';
+import SquareActivity from '@lucide/svelte/icons/square-activity';
 
-export type LbRanking = components['schemas']['LeaderboardRanksResponse']['ranks'][number] & { id: string };
+export type LbRanking = components['schemas']['LeaderboardRanksResponse']['ranks'][number] & {
+	id: string;
+	interval: 'none' | 'monthly';
+};
 export type LbList = (typeof import('$lib/servercache').cache)['leaderboards'];
 
-export const getColumns = (ranks: LbRanking[], leaderboards?: LbList) =>
-	[
+export let categories = [{ value: 'General', label: 'General' }];
+
+export const getColumns = (leaderboards?: LbList) => {
+	categories = Object.keys(leaderboards?.categories ?? {}).map((c) => ({
+		value: c,
+		label: c,
+	}));
+	return [
 		{
 			id: 'title',
 			accessorKey: 'title',
-			header: 'Leaderboard',
-			cell: ({ row }) => {
-				return renderComponent(RankTitle, { rank: row.original, leaderboards });
-			},
+			header: null,
 		},
 		{
 			id: 'amount',
@@ -42,6 +49,25 @@ export const getColumns = (ranks: LbRanking[], leaderboards?: LbList) =>
 			// cell: ({ row }) => {
 			// 	return renderComponent(UpgradeFortune, { upgrade: row.original });
 			// },
+		},
+		{
+			id: 'interval',
+			accessorKey: 'interval',
+			header: null,
+			enableSorting: true,
+		},
+		{
+			id: 'category',
+			accessorFn: (row) => {
+				const leaderboard = leaderboards?.leaderboards[row.id];
+				return leaderboard?.category || 'General';
+			},
+			header: null,
+			enableSorting: true,
+			filterFn: (row, id, value) => {
+				const leaderboard = leaderboards?.leaderboards[row.original.id];
+				return value.includes(leaderboard?.category || 'General');
+			},
 		},
 		// {
 		// 	accessorKey: 'costper',
@@ -88,3 +114,17 @@ export const getColumns = (ranks: LbRanking[], leaderboards?: LbList) =>
 		// 	},
 		// },
 	] as ColumnDef<LbRanking>[];
+};
+
+export const types = [
+	{
+		value: 'none',
+		label: 'Normal',
+		icon: SquareActivity,
+	},
+	{
+		value: 'monthly',
+		label: 'Monthly',
+		icon: Calendar,
+	},
+];
