@@ -4,6 +4,7 @@
 	import ChartArea from '@lucide/svelte/icons/chart-area';
 	import Ticket from '@lucide/svelte/icons/ticket';
 	import Clover from '@lucide/svelte/icons/clover';
+	import Trophy from '@lucide/svelte/icons/trophy';
 </script>
 
 <script lang="ts">
@@ -57,6 +58,11 @@
 			icon: Clover,
 			name: 'fortune',
 			href: `${path}/fortune`,
+		},
+		{
+			icon: Trophy,
+			name: 'ranks',
+			href: `${path}/ranks`,
 		},
 	]);
 
