@@ -5,7 +5,7 @@
 	const ctx = getStatsContext();
 
 	const weightInfo = $derived(ctx.member.farmingWeight);
-	const rank = $derived(ctx.ranks?.farmingweight?.rank ?? -1);
+	const rank = $derived(ctx.allRanks?.farmingweight?.rank ?? -1);
 	const rankText = $derived(rank !== -1 ? `#${rank}` : 'Unranked');
 	const weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
 </script>
