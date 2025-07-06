@@ -12,7 +12,7 @@
 
 	const ctx = getStatsContext();
 	const ranks = $derived(
-		Object.entries(ctx.ranks)
+		Object.entries(ctx.allRanks)
 			.filter(([, rank]) => rank.amount)
 			.map(([id, rank]) => ({
 				id,

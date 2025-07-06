@@ -68,7 +68,7 @@ export const load: LayoutServerLoad = async (event) => {
 		throw error(404, 'Profile data not found');
 	}
 
-	const { data: ranks } = await GetPlayerRanks(account.id, selectedProfile.profileId, 10_000);
+	const { data: ranks } = await GetPlayerRanks(account.id, selectedProfile.profileId);
 
 	const profileIds: ProfileDetails[] = profiles
 		// Filter out the current profile

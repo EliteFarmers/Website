@@ -20,7 +20,7 @@
 	const profile = $derived(ctx.selectedProfile);
 	const uuid = $derived(ctx.uuid);
 	const ign = $derived(ctx.ign);
-	const weightRank = $derived(ctx.ranks?.farmingweight?.rank ?? -1);
+	const weightRank = $derived(ctx.allRanks?.farmingweight?.rank ?? -1);
 
 	let farmingXp = $derived(
 		getLevelProgress(

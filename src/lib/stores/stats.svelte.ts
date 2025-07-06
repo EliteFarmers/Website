@@ -12,6 +12,7 @@ export class PlayerStats {
 	#profiles = $state<ProfileDetails[]>();
 	#member = $state<NonNullable<components['schemas']['ProfileMemberDto']>>(null!);
 	#ranks = $state<components['schemas']['LeaderboardRanksResponse']>(null!);
+	#filteredRanks = $state<components['schemas']['LeaderboardRanksResponse']['ranks']>(null!);
 	#collections = $state<Collection[]>([]);
 
 	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
@@ -23,25 +24,14 @@ export class PlayerStats {
 	#rank = $derived.by(() => getRankInformation(this.#account.playerData));
 	#ignMeta = $derived.by(() => formatIgn(this.#account?.name, this.#member.meta));
 
-	constructor({
-		account,
-		selectedProfile,
-		profiles,
-		member,
-		ranks,
-	}: {
+	constructor(data: {
 		account: NonNullable<components['schemas']['MinecraftAccountDto']>;
 		selectedProfile: components['schemas']['ProfileDetailsDto'];
 		profiles: ProfileDetails[];
 		member: NonNullable<components['schemas']['ProfileMemberDto']>;
 		ranks: components['schemas']['LeaderboardRanksResponse'];
 	}) {
-		this.#account = account;
-		this.#selectedProfile = selectedProfile;
-		this.#profiles = profiles;
-		this.#ranks = ranks;
-
-		this.member = member;
+		this.setValues(data);
 	}
 
 	setValues({ account, selectedProfile, profiles, member, ranks }: ConstructorParameters<typeof PlayerStats>[0]) {
@@ -49,6 +39,7 @@ export class PlayerStats {
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
 		this.#ranks = ranks;
+		this.#filteredRanks = Object.fromEntries(Object.entries(ranks.ranks ?? {}).filter((r) => r[1].rank <= 10_000));
 
 		this.member = member;
 	}
@@ -102,7 +93,11 @@ export class PlayerStats {
 	}
 
 	get ranks() {
-		return this.#ranks?.ranks ?? {};
+		return this.#filteredRanks ?? {};
+	}
+
+	get allRanks() {
+		return this.#ranks.ranks ?? {};
 	}
 
 	get collections() {
