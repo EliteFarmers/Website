@@ -19,7 +19,7 @@
 
 	let { data }: Props = $props();
 
-	let items = $state(data.categories);
+	let items = $derived(data.categories);
 
 	let createCategoryModal = $state(false);
 
