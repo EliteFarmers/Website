@@ -47,14 +47,16 @@
 		<SearchMenu bind:open={searchOpen} useButton={false} />
 	</Sidebar.MenuItem>
 </Sidebar.Header>
-<ScrollArea class="h-full">
-	<Sidebar.Content class="gap-0">
-		{#if sidebarNav.current.length}
-			<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
-		{/if}
-		<NavMain items={SIDEBAR_NAV} title="Main" />
-		{@render children?.()}
-	</Sidebar.Content>
-</ScrollArea>
+<div class="flex h-full flex-col overflow-hidden">
+	<ScrollArea class="h-full" orientation="vertical">
+		<Sidebar.Content class="gap-0">
+			{#if sidebarNav.current.length}
+				<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
+			{/if}
+			<NavMain items={SIDEBAR_NAV} title="Main" />
+			{@render children?.()}
+		</Sidebar.Content>
+	</ScrollArea>
+</div>
 <SideBarFooter />
 <Sidebar.Rail />
