@@ -184,10 +184,10 @@
 
 	{#if data.lb.interval}
 		<p class="mx-auto w-1/2 py-4 text-center text-sm">
-			Leaderboards on an interval work by saving the initial score of a player the first time their data is pulled
-			for an interval, and then using the difference between the current score and the initial score for their
-			score shown here. This means it may be inaccurate due to minions or other factors. A player must have
-			reached the the minimum amount of
+			Leaderboards on an interval work by saving an initial score the first time a player's data is pulled for an
+			interval, then using the difference between their current score and the initial score for their score shown
+			here. High scores on these leaderboards may be due to minions or other factors. A player must have reached
+			the minimum amount of
 			<strong>{data.lb.minimumScore.toLocaleString()}</strong> to have their initial score saved.
 		</p>
 	{:else}
