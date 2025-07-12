@@ -356,6 +356,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/announcements/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create an announcement
+         * @description Creates a new announcement that will be displayed to users
+         */
+        post: operations["EliteAPIFeaturesArticlesCreateAnnouncementEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/articles/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create an article
+         * @description Creates a new article that can be viewed by users
+         */
+        post: operations["EliteAPIFeaturesArticlesCreateArticleEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/announcements/{announcementId}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Dismiss an announcement
+         * @description Mark an announcement as dismissed for the current user
+         */
+        post: operations["EliteAPIFeaturesArticlesDismissAnnouncementEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/announcements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get announcements
+         * @description Gets all announcements that should be shown to users
+         */
+        get: operations["EliteAPIFeaturesArticlesGetAnnouncementEndpoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/me": {
         parameters: {
             query?: never;
@@ -2892,14 +2972,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3126,6 +3212,116 @@ export interface components {
         AdminUnlinkAccountRequest: {
             discordId: string;
             player: string;
+        };
+        CreateAnnouncementDto: {
+            /** @description Announcement title */
+            title: string;
+            /** @description Announcement content */
+            content: string;
+            /** @description Type of the announcement */
+            type: components["schemas"]["AnnouncementType"];
+            /** @description Label for the target of the announcement (e.g. "Read more", "View article") */
+            targetLabel?: string | null;
+            /** @description Url to read more about the announcement */
+            targetUrl?: string | null;
+            /**
+             * Format: date-time
+             * @description Optional time stamp for when the topic of the announcement starts
+             */
+            targetStartsAt?: string | null;
+            /**
+             * Format: date-time
+             * @description Optional time stamp for when the topic of the announcement ends
+             */
+            targetEndsAt?: string | null;
+            /**
+             * Format: date-time
+             * @description Announcement creation date
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Announcement expiration date (will no longer be shown after this date)
+             */
+            expiresAt: string;
+        };
+        /** @enum {integer} */
+        AnnouncementType: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+        CreateArticleDto: {
+            title: string;
+            content: string;
+        };
+        DismissAnnouncementDto: Record<string, never>;
+        /** @description RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:
+         *     app.UseFastEndpoints(c => c.Errors.UseProblemDetails()) */
+        ProblemDetails: {
+            /** @default https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1 */
+            type: string;
+            /** @default One or more validation errors occurred. */
+            title: string;
+            /**
+             * Format: int32
+             * @default 400
+             */
+            status: number;
+            /** @default /api/route */
+            instance: string;
+            /** @default 0HMPNHL0JHL76:00000001 */
+            traceId: string;
+            /** @description the details of the error */
+            detail?: string | null;
+            errors: components["schemas"]["ProblemDetails_Error"][];
+        };
+        /** @description the error details object */
+        ProblemDetails_Error: {
+            /**
+             * @description the name of the error or property of the dto that caused the error
+             * @default Error or field name
+             */
+            name: string;
+            /**
+             * @description the reason for the error
+             * @default Error reason
+             */
+            reason: string;
+            /** @description the code of the error */
+            code?: string | null;
+            /** @description the severity of the error */
+            severity?: string | null;
+        };
+        AnnouncementDto: {
+            /** @description Announcement title */
+            title: string;
+            /** @description Announcement content */
+            content: string;
+            /** @description Type of the announcement */
+            type: components["schemas"]["AnnouncementType"];
+            /** @description Label for the target of the announcement (e.g. "Read more", "View article") */
+            targetLabel?: string | null;
+            /** @description Url to read more about the announcement */
+            targetUrl?: string | null;
+            /**
+             * Format: date-time
+             * @description Optional time stamp for when the topic of the announcement starts
+             */
+            targetStartsAt?: string | null;
+            /**
+             * Format: date-time
+             * @description Optional time stamp for when the topic of the announcement ends
+             */
+            targetEndsAt?: string | null;
+            /**
+             * Format: date-time
+             * @description Announcement creation date
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Announcement expiration date (will no longer be shown after this date)
+             */
+            expiresAt: string;
+            /** @description Announcement id */
+            id: string;
         };
         AuthSessionDto: {
             /** @description Discord user ID */
@@ -4781,20 +4977,29 @@ export interface components {
             essence_type?: string | null;
             /** Format: int32 */
             amount: number;
+        } & {
+            [key: string]: unknown;
         };
         UpgradeCosts: {
             type?: string | null;
             essence_type?: string | null;
+            item_id?: string | null;
             /** Format: int32 */
             amount: number;
+        } & {
+            [key: string]: unknown;
         };
         CatacombsRequirements: {
             type?: string | null;
             dungeon_type?: string | null;
             /** Format: int32 */
             level: number;
+        } & {
+            [key: string]: unknown;
         };
+        /** @description Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values. */
         JsonDocument: {
+            /** @description Gets the root element of this JSON document. */
             rootElement: unknown;
         };
         GetSpecifiedSkyblockItemsResponse: {
@@ -5993,6 +6198,127 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesArticlesCreateAnnouncementEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateAnnouncementDto"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesArticlesCreateArticleEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateArticleDto"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesArticlesDismissAnnouncementEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                announcementId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesArticlesGetAnnouncementEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnnouncementDto"][];
+                };
             };
         };
     };

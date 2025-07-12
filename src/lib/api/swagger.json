@@ -984,6 +984,150 @@
         ]
       }
     },
+    "/announcements/create": {
+      "post": {
+        "tags": [
+          "Announcements"
+        ],
+        "summary": "Create an announcement",
+        "description": "Creates a new announcement that will be displayed to users",
+        "operationId": "EliteAPIFeaturesArticlesCreateAnnouncementEndpoint",
+        "requestBody": {
+          "x-name": "CreateAnnouncementDto",
+          "description": "",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAnnouncementDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
+    "/articles/create": {
+      "post": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Create an article",
+        "description": "Creates a new article that can be viewed by users",
+        "operationId": "EliteAPIFeaturesArticlesCreateArticleEndpoint",
+        "requestBody": {
+          "x-name": "CreateArticleDto",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArticleDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
+    "/announcements/{announcementId}/dismiss": {
+      "post": {
+        "tags": [
+          "Announcements"
+        ],
+        "summary": "Dismiss an announcement",
+        "description": "Mark an announcement as dismissed for the current user",
+        "operationId": "EliteAPIFeaturesArticlesDismissAnnouncementEndpoint",
+        "parameters": [
+          {
+            "name": "announcementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
+    "/announcements": {
+      "get": {
+        "tags": [
+          "Announcements"
+        ],
+        "summary": "Get announcements",
+        "description": "Gets all announcements that should be shown to users",
+        "operationId": "EliteAPIFeaturesArticlesGetAnnouncementEndpoint",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AnnouncementDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/me": {
       "get": {
         "tags": [
@@ -9786,6 +9930,7 @@
       },
       "ErrorResponse": {
         "type": "object",
+        "description": "the dto used to send an error response to the client",
         "additionalProperties": false,
         "required": [
           "statusCode",
@@ -9795,15 +9940,18 @@
         "properties": {
           "statusCode": {
             "type": "integer",
+            "description": "the http status code sent to the client. default is 400.",
             "format": "int32",
             "default": 400
           },
           "message": {
             "type": "string",
+            "description": "the message for the error response",
             "default": "One or more errors occurred!"
           },
           "errors": {
             "type": "object",
+            "description": "the collection of errors for the current context",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -10477,6 +10625,253 @@
           },
           "player": {
             "type": "string"
+          }
+        }
+      },
+      "CreateAnnouncementDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "content",
+          "type",
+          "createdAt",
+          "expiresAt"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Announcement title"
+          },
+          "content": {
+            "type": "string",
+            "description": "Announcement content"
+          },
+          "type": {
+            "description": "Type of the announcement",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AnnouncementType"
+              }
+            ]
+          },
+          "targetLabel": {
+            "type": "string",
+            "description": "Label for the target of the announcement (e.g. \"Read more\", \"View article\")",
+            "nullable": true
+          },
+          "targetUrl": {
+            "type": "string",
+            "description": "Url to read more about the announcement",
+            "nullable": true
+          },
+          "targetStartsAt": {
+            "type": "string",
+            "description": "Optional time stamp for when the topic of the announcement starts",
+            "format": "date-time",
+            "nullable": true
+          },
+          "targetEndsAt": {
+            "type": "string",
+            "description": "Optional time stamp for when the topic of the announcement ends",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Announcement creation date",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Announcement expiration date (will no longer be shown after this date)",
+            "format": "date-time"
+          }
+        }
+      },
+      "AnnouncementType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Other",
+          "Update",
+          "Article",
+          "News",
+          "Event",
+          "Maintenance",
+          "Shop"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "CreateArticleDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "content"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "DismissAnnouncementDto": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "description": "RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:\napp.UseFastEndpoints(c => c.Errors.UseProblemDetails())",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status",
+          "instance",
+          "traceId",
+          "errors"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "default": "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1"
+          },
+          "title": {
+            "type": "string",
+            "default": "One or more validation errors occurred."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "instance": {
+            "type": "string",
+            "default": "/api/route"
+          },
+          "traceId": {
+            "type": "string",
+            "default": "0HMPNHL0JHL76:00000001"
+          },
+          "detail": {
+            "type": "string",
+            "description": "the details of the error",
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProblemDetails_Error"
+            }
+          }
+        }
+      },
+      "ProblemDetails_Error": {
+        "type": "object",
+        "description": "the error details object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "reason"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "the name of the error or property of the dto that caused the error",
+            "default": "Error or field name"
+          },
+          "reason": {
+            "type": "string",
+            "description": "the reason for the error",
+            "default": "Error reason"
+          },
+          "code": {
+            "type": "string",
+            "description": "the code of the error",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "description": "the severity of the error",
+            "nullable": true
+          }
+        }
+      },
+      "AnnouncementDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "content",
+          "type",
+          "createdAt",
+          "expiresAt",
+          "id"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Announcement title"
+          },
+          "content": {
+            "type": "string",
+            "description": "Announcement content"
+          },
+          "type": {
+            "description": "Type of the announcement",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AnnouncementType"
+              }
+            ]
+          },
+          "targetLabel": {
+            "type": "string",
+            "description": "Label for the target of the announcement (e.g. \"Read more\", \"View article\")",
+            "nullable": true
+          },
+          "targetUrl": {
+            "type": "string",
+            "description": "Url to read more about the announcement",
+            "nullable": true
+          },
+          "targetStartsAt": {
+            "type": "string",
+            "description": "Optional time stamp for when the topic of the announcement starts",
+            "format": "date-time",
+            "nullable": true
+          },
+          "targetEndsAt": {
+            "type": "string",
+            "description": "Optional time stamp for when the topic of the announcement ends",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Announcement creation date",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Announcement expiration date (will no longer be shown after this date)",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "description": "Announcement id"
           }
         }
       },
@@ -15835,7 +16230,7 @@
       },
       "DungeonItemConversionCost": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "required": [
           "amount"
         ],
@@ -15852,7 +16247,7 @@
       },
       "UpgradeCosts": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "required": [
           "amount"
         ],
@@ -15865,6 +16260,10 @@
             "type": "string",
             "nullable": true
           },
+          "item_id": {
+            "type": "string",
+            "nullable": true
+          },
           "amount": {
             "type": "integer",
             "format": "int32"
@@ -15873,7 +16272,7 @@
       },
       "CatacombsRequirements": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "required": [
           "level"
         ],
@@ -15894,12 +16293,15 @@
       },
       "JsonDocument": {
         "type": "object",
+        "description": "Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.",
         "additionalProperties": false,
         "required": [
           "rootElement"
         ],
         "properties": {
-          "rootElement": {}
+          "rootElement": {
+            "description": "Gets the root element of this JSON document."
+          }
         }
       },
       "GetSpecifiedSkyblockItemsResponse": {

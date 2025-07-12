@@ -1551,6 +1551,30 @@ export const GetItemPrices = async (items: string[]) =>
 		},
 	});
 
+export const GetAnnouncements = async () => await GET('/announcements', {});
+export const DismissAnnouncement = async (accessToken: string, announcementId: string) =>
+	await POST('/announcements/{announcementId}/dismiss', {
+		params: {
+			path: {
+				announcementId,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const CreateAnnouncement = async (
+	accessToken: string,
+	announcement: components['schemas']['CreateAnnouncementDto']
+) =>
+	await POST('/announcements/create', {
+		body: announcement,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
 export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
 export interface UserInfo {
