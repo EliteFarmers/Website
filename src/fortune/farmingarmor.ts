@@ -120,7 +120,9 @@ export class ArmorSet {
 		for (const piece of this.equipmentPieces) {
 			piece.setOptions(options);
 		}
+	}
 
+	resetChosenPieces() {
 		this.setArmor(this.pieces);
 		this.setEquipment(this.equipmentPieces);
 	}
