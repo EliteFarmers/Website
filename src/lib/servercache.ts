@@ -148,6 +148,9 @@ async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEn
 		const result = await item.update();
 		item.data = result ?? item.data;
 	} catch (e) {
-		console.log('Failed to update cached item.\n', e);
+		console.log(
+			'Failed to update cached item ' + Object.entries(cacheEntries).find(([, entry]) => entry === item)?.[0],
+			e
+		);
 	}
 }

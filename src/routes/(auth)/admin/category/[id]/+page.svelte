@@ -21,7 +21,7 @@
 	let { data }: Props = $props();
 
 	let category = $derived(data.category);
-	let items = $state(data.category.products ?? []);
+	let items = $derived(data.category.products ?? []);
 	let loading = $state(false);
 	let productId = $state('');
 
