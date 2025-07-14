@@ -23,6 +23,8 @@
 	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
 	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
 	import FooterPills from '$comp/footer/footer-pills.svelte';
+	import { initGlobalContext } from '$lib/hooks/global.svelte';
+	import Announcements from '$comp/header/announcements.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -31,6 +33,7 @@
 
 	let { children, data }: Props = $props();
 
+	initGlobalContext({ session: data.session, announcements: data.cache?.announcements ?? [] });
 	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -104,6 +107,7 @@
 			<Header leaderboards={data.cache?.leaderboards?.leaderboards} />
 
 			<Content>
+				<Announcements />
 				{@render children?.()}
 				<FooterPills />
 			</Content>

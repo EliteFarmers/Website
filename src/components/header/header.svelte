@@ -12,10 +12,12 @@
 	import Star from '@lucide/svelte/icons/star';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import SmallAnnouncements from './small-announcements.svelte';
 
 	interface Props {
 		leaderboards?: Record<string, LeaderboardInfo>;
 	}
+
 	let { leaderboards }: Props = $props();
 
 	const sidebar = Sidebar.useSidebar();
@@ -71,3 +73,5 @@
 		</div>
 	</div>
 {/await}
+
+<SmallAnnouncements />

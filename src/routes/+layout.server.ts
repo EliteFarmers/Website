@@ -11,6 +11,7 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 		cache: {
 			leaderboards: locals.cache?.leaderboards,
 			events: locals.cache?.events,
+			announcements: locals.cache?.announcements ?? [],
 		},
 		sidebar: (sidebarState ?? 'true') === 'true',
 	};

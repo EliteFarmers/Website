@@ -98,6 +98,9 @@ export const cache = {
 	get auctions() {
 		return cacheEntries.auctions.data;
 	},
+	get announcements() {
+		return cacheEntries.announcements.data;
+	},
 };
 
 let intervals: (number | NodeJS.Timeout)[] = [];

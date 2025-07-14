@@ -1,6 +1,5 @@
 <script lang="ts" module>
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import Slash from '@lucide/svelte/icons/slash';
 </script>
 
 <script lang="ts">
@@ -151,6 +150,6 @@
 
 {#snippet separator()}
 	<Breadcrumb.Separator>
-		<Slash />
+		<span class="leading-none select-none">/</span>
 	</Breadcrumb.Separator>
 {/snippet}

@@ -23,7 +23,7 @@ export const actions = {
 		if (!title || !content) {
 			return { error: 'Title and content are required.' };
 		}
-        
+
 		// const response = await CreateAnnouncement(locals.access_token, { title, content });
 
 		return { success: true };

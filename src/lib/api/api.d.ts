@@ -23,6 +23,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/{player}/face": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Minecraft Account Face Image
+         * @description Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
+         */
+        get: operations["EliteAPIFeaturesAccountGetAccountFaceGetAccountFaceEndpoint1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/account/{player}/face.png": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Minecraft Account Face Image
+         * @description Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
+         */
+        get: operations["EliteAPIFeaturesAccountGetAccountFaceGetAccountFaceEndpoint2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/{discordId}": {
         parameters: {
             query?: never;
@@ -2832,7 +2872,7 @@ export interface components {
             discordUsername?: string | null;
             discordAvatar?: string | null;
             settings: components["schemas"]["UserSettingsDto"];
-            properties: components["schemas"]["MinecraftAccountPropertyDto"][];
+            skin: components["schemas"]["MinecraftSkinDto"];
             profiles: components["schemas"]["ProfileDetailsDto"][];
             badges: components["schemas"]["UserBadgeDto"][];
             playerData?: components["schemas"]["PlayerDataDto"] | null;
@@ -2871,9 +2911,13 @@ export interface components {
             id: number;
             name?: string | null;
         };
-        MinecraftAccountPropertyDto: {
-            name: string;
-            value: string;
+        MinecraftSkinDto: {
+            /** @description Minecraft skin texture ID */
+            texture?: string | null;
+            /** @description Base64 data image of the 8x8 face */
+            face?: string | null;
+            /** @description Base64 data image of the 8x8 hat (overlay on the face) */
+            hat?: string | null;
         };
         ProfileDetailsDto: {
             profileId: string;
@@ -3000,8 +3044,6 @@ export interface components {
             username: string;
             /** @deprecated */
             discriminator?: string | null;
-            /** @description Discord email, not asked for normally */
-            email?: string | null;
             /** @description Discord user locale */
             locale?: string | null;
             /** @description Discord avatar URL hash */
@@ -3011,6 +3053,8 @@ export interface components {
             entitlements: components["schemas"]["EntitlementDto"][];
             /** @description Linked Minecraft accounts */
             minecraftAccounts: components["schemas"]["MinecraftAccountDetailsDto"][];
+            /** @description Dismissed announcements by the user */
+            dismissedAnnouncements: string[];
         };
         EntitlementDto: {
             /** @description Entitlement ID */
@@ -3115,7 +3159,7 @@ export interface components {
             name: string;
             primaryAccount: boolean;
             badges: components["schemas"]["UserBadgeDto"][];
-            properties: components["schemas"]["MinecraftAccountPropertyDto"][];
+            skin: components["schemas"]["MinecraftSkinDto"];
         };
         SearchRequest: Record<string, never>;
         UpdateUserSettingsDto: {
@@ -3245,8 +3289,8 @@ export interface components {
              */
             expiresAt: string;
         };
-        /** @enum {integer} */
-        AnnouncementType: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+        /** @enum {string} */
+        AnnouncementType: "other" | "update" | "article" | "news" | "event" | "maintenance" | "shop";
         CreateArticleDto: {
             title: string;
             content: string;
@@ -5466,6 +5510,64 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    EliteAPIFeaturesAccountGetAccountFaceGetAccountFaceEndpoint1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                player: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    EliteAPIFeaturesAccountGetAccountFaceGetAccountFaceEndpoint2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                player: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                };
             };
         };
     };
@@ -11213,7 +11315,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ReorderIntRequest"];
+                "*/*": components["schemas"]["ReorderIntRequest"];
             };
         };
         responses: {
@@ -11261,7 +11363,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ReorderCategoryProductsRequest"];
+                "*/*": components["schemas"]["ReorderCategoryProductsRequest"];
             };
         };
         responses: {

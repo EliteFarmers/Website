@@ -143,6 +143,76 @@
         ]
       }
     },
+    "/account/{player}/face": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get Minecraft Account Face Image",
+        "description": "Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's \"hat\" overlay. If not found, returns Steve's face.",
+        "operationId": "EliteAPIFeaturesAccountGetAccountFaceGetAccountFaceEndpoint1",
+        "parameters": [
+          {
+            "name": "player",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{player}/face.png": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get Minecraft Account Face Image",
+        "description": "Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's \"hat\" overlay. If not found, returns Steve's face.",
+        "operationId": "EliteAPIFeaturesAccountGetAccountFaceGetAccountFaceEndpoint2",
+        "parameters": [
+          {
+            "name": "player",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/account/{discordId}": {
       "get": {
         "tags": [
@@ -8406,7 +8476,7 @@
           "x-name": "ReorderIntRequest",
           "description": "",
           "content": {
-            "application/json": {
+            "*/*": {
               "schema": {
                 "$ref": "#/components/schemas/ReorderIntRequest"
               }
@@ -8466,7 +8536,7 @@
           "x-name": "ReorderCategoryProductsRequest",
           "description": "",
           "content": {
-            "application/json": {
+            "*/*": {
               "schema": {
                 "$ref": "#/components/schemas/ReorderCategoryProductsRequest"
               }
@@ -9419,7 +9489,7 @@
           "formattedName",
           "primaryAccount",
           "settings",
-          "properties",
+          "skin",
           "profiles",
           "badges"
         ],
@@ -9451,11 +9521,8 @@
           "settings": {
             "$ref": "#/components/schemas/UserSettingsDto"
           },
-          "properties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MinecraftAccountPropertyDto"
-            }
+          "skin": {
+            "$ref": "#/components/schemas/MinecraftSkinDto"
           },
           "profiles": {
             "type": "array",
@@ -9579,19 +9646,24 @@
           }
         }
       },
-      "MinecraftAccountPropertyDto": {
+      "MinecraftSkinDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "name",
-          "value"
-        ],
         "properties": {
-          "name": {
-            "type": "string"
+          "texture": {
+            "type": "string",
+            "description": "Minecraft skin texture ID",
+            "nullable": true
           },
-          "value": {
-            "type": "string"
+          "face": {
+            "type": "string",
+            "description": "Base64 data image of the 8x8 face",
+            "nullable": true
+          },
+          "hat": {
+            "type": "string",
+            "description": "Base64 data image of the 8x8 hat (overlay on the face)",
+            "nullable": true
           }
         }
       },
@@ -9974,7 +10046,8 @@
           "username",
           "settings",
           "entitlements",
-          "minecraftAccounts"
+          "minecraftAccounts",
+          "dismissedAnnouncements"
         ],
         "properties": {
           "id": {
@@ -9993,11 +10066,6 @@
             "type": "string",
             "deprecated": true,
             "x-deprecatedMessage": "Discriminator is deprecated and will be removed in a future version.",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "description": "Discord email, not asked for normally",
             "nullable": true
           },
           "locale": {
@@ -10025,6 +10093,13 @@
             "description": "Linked Minecraft accounts",
             "items": {
               "$ref": "#/components/schemas/MinecraftAccountDetailsDto"
+            }
+          },
+          "dismissedAnnouncements": {
+            "type": "array",
+            "description": "Dismissed announcements by the user",
+            "items": {
+              "type": "string"
             }
           }
         }
@@ -10319,7 +10394,7 @@
           "name",
           "primaryAccount",
           "badges",
-          "properties"
+          "skin"
         ],
         "properties": {
           "id": {
@@ -10337,11 +10412,8 @@
               "$ref": "#/components/schemas/UserBadgeDto"
             }
           },
-          "properties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MinecraftAccountPropertyDto"
-            }
+          "skin": {
+            "$ref": "#/components/schemas/MinecraftSkinDto"
           }
         }
       },
@@ -10690,25 +10762,16 @@
         }
       },
       "AnnouncementType": {
-        "type": "integer",
+        "type": "string",
         "description": "",
-        "x-enumNames": [
-          "Other",
-          "Update",
-          "Article",
-          "News",
-          "Event",
-          "Maintenance",
-          "Shop"
-        ],
         "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
+          "other",
+          "update",
+          "article",
+          "news",
+          "event",
+          "maintenance",
+          "shop"
         ]
       },
       "CreateArticleDto": {
