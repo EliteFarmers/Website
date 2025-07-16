@@ -74,7 +74,7 @@
 				const itemCost = items?.[item];
 				if (!itemCost) continue;
 				const lowestPrice = itemCost.auctions?.length
-					? Math.min(...itemCost.auctions.map((a) => a.lowest3Day))
+					? Math.min(...itemCost.auctions.filter((a) => a.lowest3Day > 0).map((a) => a.lowest3Day))
 					: (itemCost.bazaar?.averageBuyOrder ?? 0);
 				total += lowestPrice * amount;
 			}

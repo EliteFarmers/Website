@@ -1,13 +1,7 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CanManageGuild, EventType } from '$lib/utils';
-import {
-	GetAdminGuildEvents,
-	CreateWeightEvent,
-	CreateMedalEvent,
-	CreatePestEvent,
-	CreateCollectionEvent,
-} from '$lib/api/elite';
+import { CanManageGuild } from '$lib/utils';
+import { GetAdminGuildEvents, CreateEvent } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
@@ -43,7 +37,7 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 
-		const type = data.get('type') as EventType;
+		const type = data.get('type') as components['schemas']['EventType'];
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
 		const rules = data.get('rules') as string;
@@ -69,6 +63,7 @@ export const actions: Actions = {
 
 		const body = {
 			name: title,
+			type: type,
 			rules,
 			description,
 			prizeInfo: prizes,
@@ -78,28 +73,9 @@ export const actions: Actions = {
 			guildId: guildId,
 			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : 0,
 			maxTeams: 0,
-		} satisfies
-			| components['schemas']['CreateWeightEventDto']
-			| components['schemas']['CreateMedalEventDto']
-			| components['schemas']['CreatePestEventDto']
-			| components['schemas']['CreateCollectionEventDto'];
+		} satisfies components['schemas']['CreateEventDto'];
 
-		const method =
-			type === EventType.FarmingWeight
-				? CreateWeightEvent
-				: type === EventType.Medals
-					? CreateMedalEvent
-					: type === EventType.Pests
-						? CreatePestEvent
-						: type === EventType.Collections
-							? CreateCollectionEvent
-							: undefined;
-
-		if (!method) {
-			return fail(400, { error: 'Invalid event type!' });
-		}
-
-		const { response, error: e } = await method(token, guildId, body).catch((e) => {
+		const { response, error: e } = await CreateEvent(token, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

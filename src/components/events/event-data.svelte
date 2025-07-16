@@ -35,13 +35,13 @@
 <Accordion.Root type="single">
 	<Accordion.Item value="1">
 		<Accordion.Trigger class="w-full">
-			{#if event.type === +EventType.FarmingWeight}
+			{#if event.type === EventType.FarmingWeight}
 				<p>Show Crop Weights</p>
-			{:else if event.type === +EventType.Medals}
+			{:else if event.type === EventType.Medals}
 				<p>Show Medal Weights</p>
-			{:else if event.type === +EventType.Pests}
+			{:else if event.type === EventType.Pests}
 				<p>Show Pest Weights</p>
-			{:else if event.type === +EventType.Collections}
+			{:else if event.type === EventType.Collections}
 				<p>Show Collection Weights</p>
 			{:else}
 				<p>Show Event Weights</p>
@@ -52,7 +52,7 @@
 				{#if !event.data}
 					<p>No event specific data found!</p>
 				{/if}
-				{#if event.type === +EventType.FarmingWeight}
+				{#if event.type === EventType.FarmingWeight}
 					{#each cropWeights() as [cropName, weight] (cropName)}
 						{@const crop = getCropDisplayName(getCropFromName(cropName) ?? Crop.Wheat)}
 						<div
@@ -65,7 +65,7 @@
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
 					{/each}
-				{:else if event.type === +EventType.Medals}
+				{:else if event.type === EventType.Medals}
 					{#each medalWeights() as [medal, weight] (medal)}
 						<div
 							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
@@ -81,7 +81,7 @@
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
 					{/each}
-				{:else if event.type === +EventType.Pests}
+				{:else if event.type === EventType.Pests}
 					{#each pestWeights() as [pest, weight] (pest)}
 						<div
 							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
@@ -97,7 +97,7 @@
 							<p class="font-semibold">{weight.toLocaleString()}</p>
 						</div>
 					{/each}
-				{:else if event.type === +EventType.Collections}
+				{:else if event.type === EventType.Collections}
 					{#each collectionWeights() as [id, { name, weight }] (id)}
 						<div
 							class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"

@@ -628,63 +628,12 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 		},
 	});
 
-export const CreateWeightEvent = async (
+export const CreateEvent = async (
 	accessToken: string,
 	guildId: string,
-	event: components['schemas']['CreateWeightEventDto']
+	event: components['schemas']['CreateEventDto']
 ) =>
 	await POST('/guild/{discordId}/events/weight', {
-		params: {
-			path: {
-				discordId: guildId as unknown as number,
-			},
-		},
-		body: event,
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
-
-export const CreateMedalEvent = async (
-	accessToken: string,
-	guildId: string,
-	event: components['schemas']['CreateMedalEventDto']
-) =>
-	await POST('/guild/{discordId}/events/medals', {
-		params: {
-			path: {
-				discordId: guildId as unknown as number,
-			},
-		},
-		body: event,
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
-
-export const CreatePestEvent = async (
-	accessToken: string,
-	guildId: string,
-	event: components['schemas']['CreatePestEventDto']
-) =>
-	await POST('/guild/{discordId}/events/pests', {
-		params: {
-			path: {
-				discordId: guildId as unknown as number,
-			},
-		},
-		body: event,
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
-
-export const CreateCollectionEvent = async (
-	accessToken: string,
-	guildId: string,
-	event: components['schemas']['CreateCollectionEventDto']
-) =>
-	await POST('/guild/{discordId}/events/collection', {
 		params: {
 			path: {
 				discordId: guildId as unknown as number,
@@ -1548,6 +1497,30 @@ export const GetItemPrices = async (items: string[]) =>
 	await POST('/resources/items', {
 		body: {
 			items: items,
+		},
+	});
+
+export const GetAnnouncements = async () => await GET('/announcements', {});
+export const DismissAnnouncement = async (accessToken: string, announcementId: string) =>
+	await POST('/announcements/{announcementId}/dismiss', {
+		params: {
+			path: {
+				announcementId,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const CreateAnnouncement = async (
+	accessToken: string,
+	announcement: components['schemas']['CreateAnnouncementDto']
+) =>
+	await POST('/announcements/create', {
+		body: announcement,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
 		},
 	});
 

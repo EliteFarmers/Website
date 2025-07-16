@@ -1,6 +1,7 @@
 import { building } from '$app/environment';
 import type { components } from './api/api';
 import {
+	GetAnnouncements,
 	GetAuctionHouse,
 	GetBazaarData,
 	GetEventTeamWords,
@@ -64,6 +65,13 @@ const cacheEntries = {
 			return data ?? { items: {} };
 		},
 	},
+	announcements: {
+		data: [] as components['schemas']['AnnouncementDto'][],
+		update: async () => {
+			const { data } = await GetAnnouncements();
+			return data ?? [];
+		},
+	},
 };
 
 export const cache = {
@@ -87,6 +95,9 @@ export const cache = {
 	},
 	get auctions() {
 		return cacheEntries.auctions.data;
+	},
+	get announcements() {
+		return cacheEntries.announcements.data;
 	},
 };
 
