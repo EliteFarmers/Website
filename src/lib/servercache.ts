@@ -68,9 +68,7 @@ const cacheEntries = {
 	announcements: {
 		data: [] as components['schemas']['AnnouncementDto'][],
 		update: async () => {
-			// Assuming there's an API endpoint for announcements
 			const { data } = await GetAnnouncements();
-			console.log(data);
 			return data ?? [];
 		},
 	},

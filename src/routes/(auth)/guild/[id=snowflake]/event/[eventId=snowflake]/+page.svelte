@@ -201,7 +201,7 @@
 	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} teamWords={data.teamWords} />
 
 	<div class="bg-card flex flex-col rounded-md border-2 p-4">
-		{#if event.type === +EventType.FarmingWeight && cropWeights}
+		{#if event.type === EventType.FarmingWeight && cropWeights}
 			<form
 				action="?/editCropWeights"
 				method="post"
@@ -255,7 +255,7 @@
 					<Button type="submit" disabled={pending}>Update</Button>
 				</div>
 			</form>
-		{:else if event.type === +EventType.Medals && medalWeights}
+		{:else if event.type === EventType.Medals && medalWeights}
 			<form
 				action="?/editMedalWeights"
 				method="post"
@@ -351,7 +351,7 @@
 					<Button type="submit" disabled={pending}>Update</Button>
 				</div>
 			</form>
-		{:else if event.type === +EventType.Pests && pestWeights}
+		{:else if event.type === EventType.Pests && pestWeights}
 			<form
 				action="?/editPestWeights"
 				method="post"
@@ -400,7 +400,7 @@
 					<Button type="submit" disabled={pending}>Update</Button>
 				</div>
 			</form>
-		{:else if event.type === +EventType.Collections && collectionWeights}
+		{:else if event.type === EventType.Collections && collectionWeights}
 			<form
 				action="?/editCollectionWeights"
 				method="post"

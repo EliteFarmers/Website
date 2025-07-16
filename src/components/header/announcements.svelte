@@ -37,12 +37,14 @@
 			<Button
 				variant="outline"
 				class="hover:bg-secondary-hover w-full flex-initial rounded-md p-1 sm:flex-1 md:w-fit"
-				onclick={() => ctx.dismissAnnouncement(a.id)}
+				onclick={() => {
+					ctx.dismissAnnouncement(a.id);
+				}}
 			>
 				<X />
 				<span class="md:hidden">Dismiss</span>
 			</Button>
-			{#if a.targetUrl}
+			{#if a.targetUrl && a.targetUrl !== '/'}
 				<Button href={a.targetUrl} class="w-full flex-initial sm:flex-1 md:w-fit">
 					{a.targetLabel || 'Learn More'}
 				</Button>

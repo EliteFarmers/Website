@@ -6,7 +6,7 @@ import {
 	PUBLIC_PRIVACY_URL,
 } from '$env/static/public';
 import { error, redirect } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import type { PageServerLoad } from './$types';
 
 const urls: Partial<Record<string, string>> = {
 	donate: PUBLIC_DONATION_URL,
@@ -22,14 +22,14 @@ const urls: Partial<Record<string, string>> = {
 	premium: '/shop/1261795533916475578',
 };
 
-export const GET = (async ({ params }) => {
+export const load = (async ({ params }) => {
 	const { catch: param } = params;
 
 	const mapped = urls[param];
 
 	if (!mapped) {
-		throw error(404, 'Not Found');
+		error(404, 'Not Found');
 	}
 
-	throw redirect(307, mapped);
-}) satisfies RequestHandler;
+	redirect(307, mapped);
+}) satisfies PageServerLoad;

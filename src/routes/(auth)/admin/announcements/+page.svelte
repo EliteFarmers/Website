@@ -4,13 +4,27 @@
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
-	import { Switch } from '$ui/switch';
 	import Plus from '@lucide/svelte/icons/plus';
 	import type { PageProps } from './$types';
+	import { Textarea } from '$ui/textarea';
+	import { SelectSimple } from '$ui/select';
+	import type { components } from '$lib/api/api';
 
 	let { data }: PageProps = $props();
 
 	let createModal = $state(false);
+
+	const types: Record<components['schemas']['AnnouncementType'], string> = {
+		news: 'News',
+		update: 'Update',
+		maintenance: 'Maintenance',
+		other: 'Other',
+		article: 'Article',
+		event: 'Event',
+		shop: 'Shop',
+	};
+
+	const options = Object.entries(types).map(([value, label]) => ({ value, label }));
 </script>
 
 <div class="my-16 flex flex-col items-center justify-center gap-4">
@@ -26,8 +40,16 @@
 		{#each data.announcements as announcement (announcement.id)}
 			<div class="bg-card w-full rounded-md p-4">
 				<h2 class="text-xl font-semibold">{announcement.title}</h2>
-				<p class="text-gray-700">{announcement.content}</p>
-				<p class="text-sm text-gray-500">Posted on: {new Date(announcement.createdAt).toLocaleDateString()}</p>
+				<p class="text-muted-foreground">{announcement.content}</p>
+				<p class="text-muted-foreground text-sm">
+					Posted on: {new Date(announcement.createdAt).toLocaleDateString()}
+				</p>
+				<p class="text-muted-foreground text-sm">
+					Expires on: {new Date(announcement.expiresAt).toLocaleDateString()}
+				</p>
+				<p class="text-muted-foreground text-sm">
+					Links to <a href={announcement.targetUrl} class="text-link underline">{announcement.targetLabel}</a>
+				</p>
 			</div>
 		{/each}
 	</div>
@@ -35,7 +57,7 @@
 
 <Dialog.Root bind:open={createModal}>
 	<Dialog.ScrollContent>
-		<Dialog.Title class="mb-4">Create Badge</Dialog.Title>
+		<Dialog.Title class="mb-4">Create Announcement</Dialog.Title>
 		<form
 			method="post"
 			action="?/create"
@@ -48,31 +70,36 @@
 			}}
 		>
 			<div class="flex flex-col items-start gap-2">
-				<Label>Name</Label>
-				<Input name="name" placeholder="Badge Name" />
+				<Label>Title</Label>
+				<Input name="title" placeholder="Announcement Title" />
 			</div>
 
 			<div class="flex flex-col items-start gap-2">
-				<Label>Image</Label>
-				<Input name="image" type="file" />
+				<Label>Content</Label>
+				<Textarea name="content" placeholder="Announcement Content" />
 			</div>
 
 			<div class="flex flex-col items-start gap-2">
-				<Label>Description</Label>
-				<Input name="description" placeholder="Badge Description" />
+				<Label>Type</Label>
+				<SelectSimple name="type" {options} placeholder="Select Announcement Type" required />
 			</div>
 
 			<div class="flex flex-col items-start gap-2">
-				<Label>Requirements</Label>
-				<Input name="requirements" placeholder="Badge Requirements" />
+				<Label>Expiration Date</Label>
+				<Input type="datetime-local" name="expiresAt" />
 			</div>
 
 			<div class="flex flex-col items-start gap-2">
-				<Label>Tie To Account</Label>
-				<Switch name="tied" />
+				<Label>Target Label</Label>
+				<Input name="label" placeholder="Read More" />
 			</div>
 
-			<Button type="submit">Create</Button>
+			<div class="flex flex-col items-start gap-2">
+				<Label>Target URL</Label>
+				<Input name="targetUrl" placeholder="https://example.com" />
+			</div>
+
+			<Button type="submit">Create Announcement</Button>
 		</form>
 	</Dialog.ScrollContent>
 </Dialog.Root>

@@ -164,7 +164,7 @@
 			{/each}
 
 			<h3 class="mt-2 text-lg font-semibold">How is progress counted?</h3>
-			{#if data.event.type === +EventType.FarmingWeight}
+			{#if data.event.type === EventType.FarmingWeight}
 				<p>
 					To prevent the use of minions to gain collection progress, the event will only count progress made
 					through the use of farming tools. <span class="text-destructive"
@@ -184,7 +184,7 @@
 					The only valid tools are the specific farming tools. Normal hoes and other beginner tools will not
 					count.
 				</p>
-			{:else if data.event.type === +EventType.Medals}
+			{:else if data.event.type === EventType.Medals}
 				<p>
 					It's simple, just earn Jacob Contest placements! Make sure to claim your contests in game for them
 					to count.
@@ -194,13 +194,13 @@
 						>You must have collections and inventory API access enabled at all times.</span
 					> If you do turn either of them off, you will be automatically removed from the event.
 				</p>
-			{:else if data.event.type === +EventType.Pests}
+			{:else if data.event.type === EventType.Pests}
 				<p>Just kill pests! The event will count the amount of pests you kill.</p>
 				<p>
 					<span class="text-destructive">You must have collections API access enabled at all times.</span>
 					If you do turn it off, you will be automatically removed from the event.
 				</p>
-			{:else if data.event.type === +EventType.Collections}
+			{:else if data.event.type === EventType.Collections}
 				<p>
 					Just collect items! The event lists what items will count towards your progress. You can find the
 					items in the event description.

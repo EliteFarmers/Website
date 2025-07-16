@@ -1,6 +1,4 @@
 <script lang="ts" module>
-	import Settings from '@lucide/svelte/icons/settings';
-	import LogOut from '@lucide/svelte/icons/log-out';
 	import Bell from '@lucide/svelte/icons/bell';
 </script>
 
@@ -8,11 +6,15 @@
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Sidebar from '$ui/sidebar';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
+	import Button from '$ui/button/button.svelte';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import AnnouncementIcon from '$comp/header/announcement-icon.svelte';
 
 	const ctx = getGlobalContext();
 	const sidebar = Sidebar.useSidebar();
 
 	const announcements = $derived(ctx.announcements);
+	const allAnnouncements = $derived(ctx.allAnnouncements);
 </script>
 
 <DropdownMenu.Root>
@@ -30,46 +32,65 @@
 					>
 						{announcements.length}
 					</div>
-				{:else if ctx.allAnnouncements.length}
-					<div
-						class="bg-muted ml-auto flex size-5 items-center justify-center rounded-full pb-0.5 text-sm leading-0 font-semibold text-white"
-					>
-						{ctx.allAnnouncements.length}
-					</div>
 				{/if}
 			</Sidebar.MenuButton>
 		{/snippet}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content
-		class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg"
+		class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg lg:w-80"
 		align="end"
 		sideOffset={4}
 		side={sidebar.isMobile ? 'top' : 'right'}
 	>
-		<DropdownMenu.Label class="p-0 font-normal">
-			<!-- <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-					<Avatar.Root class="aspect-square size-8 items-center justify-center rounded-lg">
-						<UserIcon user={session} class="aspect-square" />
-					</Avatar.Root>
-					<div class="grid flex-1 text-left text-sm leading-tight">
-						<span class="truncate font-semibold">{session.ign || session.username}</span>
-						{#if session.ign && session.username}
-							<span class="truncate text-xs">{session.username}</span>
+		<DropdownMenu.Label class="py-2 text-sm font-semibold">Alerts</DropdownMenu.Label>
+		<DropdownMenu.Separator />
+		{#each allAnnouncements as announcement, i (announcement.id)}
+			{@const isDismissed = ctx.data.dismissedAnnouncements.includes(announcement.id)}
+			<DropdownMenu.Item
+				class="border-2 {isDismissed
+					? 'border-transparent'
+					: 'border-completed'} data-highlighted:bg-background"
+			>
+				<div class="flex flex-col gap-1">
+					<span class="text-sm font-semibold">
+						<AnnouncementIcon {announcement} class="text-primary mr-1 mb-0.5 inline size-4" />
+						{announcement.title}
+					</span>
+					<span class="text-muted-foreground text-xs">{announcement.content}</span>
+					<div class="flex flex-row justify-between">
+						{#if !isDismissed}
+							<Button
+								class="p-0 text-sm"
+								size="sm"
+								variant="link"
+								onclick={() => {
+									ctx.dismissAnnouncement(announcement.id);
+								}}
+							>
+								Mark as Read
+							</Button>
+						{/if}
+						{#if announcement.targetUrl !== '/'}
+							<Button
+								class="group mx-0 !px-0 text-sm"
+								size="sm"
+								variant="link"
+								href={announcement.targetUrl}
+							>
+								{announcement.targetLabel ?? 'Read More'}
+								<ArrowRight
+									class="text-primary group-hover:animate-bounce-horizontal ml-1 hidden size-4 md:inline"
+								/>
+							</Button>
 						{/if}
 					</div>
-				</div> -->
-		</DropdownMenu.Label>
-		<DropdownMenu.Separator />
-		<DropdownMenu.Group>
-			<DropdownMenu.LinkItem href="/profile">
-				<Settings />
-				Profile
-			</DropdownMenu.LinkItem>
-		</DropdownMenu.Group>
-		<DropdownMenu.Separator />
-		<DropdownMenu.LinkItem data-sveltekit-preload-data="off" href="/logout">
-			<LogOut />
-			Log out
-		</DropdownMenu.LinkItem>
+				</div>
+			</DropdownMenu.Item>
+			{#if i < allAnnouncements.length - 1}
+				<DropdownMenu.Separator />
+			{/if}
+		{:else}
+			<DropdownMenu.Item class="text-muted-foreground">No alerts!</DropdownMenu.Item>
+		{/each}
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

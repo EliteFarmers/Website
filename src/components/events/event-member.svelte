@@ -128,7 +128,7 @@
 </Accordion.Trigger>
 <Accordion.Content>
 	<div class="flex flex-col items-start gap-4 md:flex-row">
-		{#if event.type === +EventType.Medals}
+		{#if event.type === EventType.Medals}
 			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count] (medal)}
 					<div
@@ -146,7 +146,7 @@
 					</div>
 				{/each}
 			</div>
-		{:else if event.type === +EventType.Pests}
+		{:else if event.type === EventType.Pests}
 			<div class="flex w-full flex-col gap-1">
 				{#each pestWeights() as { name, weight } (name)}
 					<div
@@ -164,7 +164,7 @@
 					</div>
 				{/each}
 			</div>
-		{:else if event.type === +EventType.Collections}
+		{:else if event.type === EventType.Collections}
 			<div class="flex w-full flex-col gap-1">
 				{#each collectionWeights() as { name, weight } (name)}
 					<div

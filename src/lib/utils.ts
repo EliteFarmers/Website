@@ -150,12 +150,13 @@ export function preprocessWeightChart(data: components['schemas']['CropCollectio
 		}));
 }
 
-export enum EventType {
-	FarmingWeight = '1',
-	Collections = '2',
-	Medals = '4',
-	Pests = '5',
-}
+export const EventType: Record<string, components['schemas']['EventType']> = {
+	FarmingWeight: 'farming-weight',
+	Collections: 'collection',
+	Experience: 'experience',
+	Medals: 'medals',
+	Pests: 'pests',
+};
 
 export enum EventMode {
 	Solo = '1',

@@ -2,7 +2,7 @@ import { page } from '$app/state';
 import type { components } from '$lib/api/api';
 import type { AuthSession } from '$lib/api/auth';
 import { PersistedState } from 'runed';
-import { getContext, setContext } from 'svelte';
+import { getContext, setContext, tick } from 'svelte';
 
 type ConstructorData = {
 	user?: components['schemas']['AuthorizedAccountDto'] | null;
@@ -22,23 +22,27 @@ export class GlobalContext {
 		dismissedAnnouncements: [],
 	});
 	#announcements = $state<components['schemas']['AnnouncementDto'][]>([]);
+	#initialized = $state(false);
 
 	constructor(data: ConstructorData) {
 		this.setValues(data);
 
 		$effect(() => {
 			this.session = page.data.session as AuthSession | undefined;
+			tick().then(() => {
+				this.#initialized = true;
+			});
 		});
 	}
 
 	setValues({ user, session, announcements }: ConstructorData) {
-		this.#user = user ?? undefined;
 		this.#session = session ?? undefined;
+		this.user = user;
 		this.#announcements = announcements ?? this.#announcements ?? [];
+	}
 
-		this.#data.current = {
-			dismissedAnnouncements: user?.dismissedAnnouncements ?? this.data.dismissedAnnouncements,
-		};
+	get initialized() {
+		return this.#initialized;
 	}
 
 	get user() {
@@ -58,9 +62,21 @@ export class GlobalContext {
 
 	set user(user: components['schemas']['AuthorizedAccountDto'] | undefined | null) {
 		this.#user = user ?? undefined;
+
 		if (this.#session?.id !== user?.id) {
 			this.#session = undefined;
 		}
+
+		let dismissed = user?.dismissedAnnouncements ?? this.data.dismissedAnnouncements;
+		if (this.#announcements?.length) {
+			// Filter out dismissed announcements that no longer exist
+			dismissed = dismissed.filter((id) => this.#announcements.some((a) => a.id === id));
+		}
+
+		this.#data.current = {
+			...this.#data.current,
+			dismissedAnnouncements: dismissed,
+		};
 	}
 
 	get authorized() {
@@ -72,11 +88,13 @@ export class GlobalContext {
 	}
 
 	get allAnnouncements() {
-		return this.#announcements;
+		return this.initialized ? this.#announcements : [];
 	}
 
 	get announcements() {
-		return this.#announcements.filter((a) => !this.data.dismissedAnnouncements.includes(a.id));
+		return this.initialized
+			? this.#announcements.filter((a) => !this.data.dismissedAnnouncements.includes(a.id))
+			: [];
 	}
 
 	set data(data: PersistedData) {
@@ -89,6 +107,8 @@ export class GlobalContext {
 				...this.#data.current,
 				dismissedAnnouncements: [...this.#data.current.dismissedAnnouncements, id],
 			};
+
+			fetch('/api/dismiss/' + id);
 		}
 	}
 }

@@ -10,7 +10,7 @@
 
 	onMount(async () => {
 		ctx.user = data.user;
-		goto('/');
+		goto(data.redirect ?? '/');
 	});
 </script>
 
