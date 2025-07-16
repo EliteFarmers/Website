@@ -1,19 +1,19 @@
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
-import { Stat, getStatValue } from '../constants/stats.js';
+import { getStatValue, Stat } from '../constants/stats.js';
 import {
-	FARMING_PETS,
 	FARMING_PET_ITEMS,
-	FarmingPetInfo,
-	FarmingPetItemInfo,
+	FARMING_PETS,
+	type FarmingPetInfo,
+	type FarmingPetItemInfo,
 	FarmingPetStatType,
-	FarmingPetType,
-	FarmingPets,
+	type FarmingPets,
+	type FarmingPetType,
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,
 } from '../items/pets.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
 import { getRarityFromLore } from '../util/itemstats.js';
-import { EliteItemDto } from './item.js';
+import type { EliteItemDto } from './item.js';
 
 export function createFarmingPet(pet: FarmingPetType) {
 	return new FarmingPet(pet);

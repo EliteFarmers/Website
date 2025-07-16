@@ -16,6 +16,7 @@
 
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
+		"verbatimModuleSyntax": true,
 
 		"lib": ["ES2022"]
 	},

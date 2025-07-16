@@ -1,18 +1,21 @@
-import { Crop } from '../constants/crops.js';
+import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges.js';
-import { Stat, getStatValue } from '../constants/stats.js';
-import { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
-import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import { type Rarity, REFORGES, type Reforge, type ReforgeTier } from '../constants/reforges.js';
+import { getStatValue, Stat } from '../constants/stats.js';
+import type { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
+import { FARMING_TOOLS, type FarmingToolInfo, FarmingToolType } from '../items/tools.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
+import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { registerItem } from '../upgrades/itemregistry.js';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
-import { getSelfFortuneUpgrade, getSourceProgress, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
+import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import { extractNumberFromLine } from '../util/lore.js';
-import { EliteItemDto } from './item.js';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import type { EliteItemDto } from './item.js';
+import type { UpgradeableInfo } from './upgradeable.js';
+import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
@@ -312,4 +315,12 @@ export class FarmingTool extends UpgradeableBase {
 
 		return new FarmingTool(fake, options);
 	}
+}
+
+for (const item of Object.values(FARMING_TOOLS)) {
+	if (!item) continue;
+	registerItem({
+		info: item,
+		fakeItem: (i, o) => FarmingTool.fakeItem(i, o),
+	});
 }

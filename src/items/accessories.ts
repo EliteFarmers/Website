@@ -1,9 +1,10 @@
 import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforges.js';
-import { Skill } from '../constants/skills.js';
+import type { Skill } from '../constants/skills.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
-import { UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { UpgradeableInfo } from '../fortune/upgradeable.js';
+import { registerItem } from '../upgrades/itemregistry.js';
 
 export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	name: string;

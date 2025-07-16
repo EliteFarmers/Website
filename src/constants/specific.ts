@@ -1,4 +1,4 @@
-import { FortuneSource } from './upgrades.js';
+import type { FortuneSource } from './upgrades.js';
 
 export const GARDEN_CROP_UPGRADES: FortuneSource = {
 	name: 'Garden Crop Upgrade',

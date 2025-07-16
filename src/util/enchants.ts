@@ -1,7 +1,7 @@
-import { Crop } from '../constants/crops.js';
-import { FarmingEnchant, FarmingEnchantTier } from '../constants/enchants.js';
+import type { Crop } from '../constants/crops.js';
+import type { FarmingEnchant, FarmingEnchantTier } from '../constants/enchants.js';
 import { Stat } from '../constants/stats.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
 
 export function getFortuneFromEnchant(
 	level: number,

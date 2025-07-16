@@ -23,6 +23,8 @@ export interface FortuneMissingFromAPI {
 
 	sprayedPlot?: boolean;
 
+	attributes?: Record<string, number>;
+
 	temporaryFortune?: TemporaryFarmingFortune;
 }
 

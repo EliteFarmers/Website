@@ -2,7 +2,7 @@ import { Crop } from '../constants/crops.js';
 import { Rarity, ReforgeTarget } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
-import { UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { UpgradeableInfo } from '../fortune/upgradeable.js';
 
 export enum FarmingToolType {
 	Other = 'Other',

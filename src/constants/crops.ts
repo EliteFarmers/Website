@@ -1,4 +1,4 @@
-import { UpgradeCost } from './upgrades.js';
+import type { UpgradeCost } from './upgrades.js';
 
 export enum Crop {
 	Cactus = 'CACTUS',

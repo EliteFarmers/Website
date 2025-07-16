@@ -1,12 +1,19 @@
 import { ReforgeTarget } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
-import { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
-import { FarmingEquipment } from '../../fortune/farmingequipment.js';
-import { UpgradeableInfo } from '../../fortune/upgradeable.js';
-import { ARMOR_SET_BONUS, FARMING_ARMOR_INFO, GEAR_SLOTS, GearSlot, GearSlotInfo } from '../../items/armor.js';
+import type { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
+import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
+import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
+import {
+	ARMOR_SET_BONUS,
+	FARMING_ARMOR_INFO,
+	GEAR_SLOTS,
+	type GearSlot,
+	type GearSlotInfo,
+} from '../../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../../items/equipment.js';
-import { DynamicFortuneSource } from './toolsources.js';
+import { getFakeItem } from '../itemregistry.js';
+import type { DynamicFortuneSource } from './toolsources.js';
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	...Object.entries(GEAR_SLOTS)
@@ -51,10 +58,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 			);
 		},
 		max: (set) => {
-			const item =
-				info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
+			const item = getFakeItem(info.startingItem);
 
 			const progress = item?.getProgress();
 			const maxed = progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
@@ -79,18 +83,14 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 
 			const fake =
 				info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
+					? getFakeItem<FarmingArmor>(info.startingItem)
+					: getFakeItem<FarmingEquipment>(info.startingItem);
 
 			return fake?.getProgress(true) ?? [];
 		},
 		info: (set) => {
 			const piece = set.getPiece(slot as GearSlot);
-			const fake = !piece
-				? info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo)
-				: undefined;
+			const fake = !piece ? getFakeItem(info.startingItem) : undefined;
 
 			return {
 				item: piece?.item,
@@ -108,10 +108,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 					? (FARMING_ARMOR_INFO[info.startingItem] as UpgradeableInfo)
 					: (FARMING_EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
 
-			const fakeItem =
-				info.target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(itemToPurchase)
-					: FarmingEquipment.fakeItem(itemToPurchase);
+			const fakeItem = getFakeItem(itemToPurchase.skyblockId);
 
 			return [
 				{

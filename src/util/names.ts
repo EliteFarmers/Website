@@ -1,5 +1,5 @@
 import { Crop } from '../constants/crops.js';
-import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
+import { RARITY_COLORS, type Rarity } from '../constants/reforges.js';
 
 export function getCropDisplayName(crop?: Crop | null): string {
 	return (crop ? cropDisplayNames[crop] : null) ?? 'Unknown Crop';

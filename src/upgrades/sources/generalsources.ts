@@ -9,11 +9,11 @@ import {
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../../items/accessories.js';
-import { FarmingPlayer } from '../../player/player.js';
+import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../../items/accessories.js';
+import type { FarmingPlayer } from '../../player/player.js';
 import { getNextPlotCost } from '../../util/garden.js';
 import { fortuneFromPestBestiary } from '../../util/pests.js';
-import { DynamicFortuneSource } from './toolsources.js';
+import type { DynamicFortuneSource } from './toolsources.js';
 
 export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{

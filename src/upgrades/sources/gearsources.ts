@@ -1,14 +1,15 @@
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
-import { REFORGES, Rarity, ReforgeTarget } from '../../constants/reforges.js';
+import { Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
 import { Skill } from '../../constants/skills.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingArmor } from '../../fortune/farmingarmor.js';
-import { FarmingEquipment } from '../../fortune/farmingequipment.js';
+import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { GemRarity } from '../../fortune/item.js';
 import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
-import { getUpgradeableEnchant, getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
-import { DynamicFortuneSource } from './toolsources.js';
+import { getUpgradeableEnchant } from '../enchantupgrades.js';
+import { getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
+import type { DynamicFortuneSource } from './toolsources.js';
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
 	{
@@ -82,7 +83,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 			return (gear.info.perLevelStats?.stats[Stat.FarmingFortune] ?? 0) * (gear.options?.farmingLevel ?? 0);
 		},
 	},
-	...Object.entries(FARMING_ENCHANTS)
+	...Object.entries(FARMING_ENCHANTS ?? {})
 		.filter(
 			([, enchant]) =>
 				enchant.appliesTo.includes(ReforgeTarget.Armor) || enchant.appliesTo.includes(ReforgeTarget.Equipment)

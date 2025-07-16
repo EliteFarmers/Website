@@ -1,13 +1,15 @@
-import { Rarity } from '../constants/reforges.js';
+import type { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../items/accessories.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
+import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { registerItem } from '../upgrades/itemregistry.js';
 import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources.js';
-import { getSourceProgress } from '../upgrades/upgrades.js';
 import { getPeridotFortune } from '../util/gems.js';
-import { EliteItemDto } from './item.js';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import type { EliteItemDto } from './item.js';
+import type { UpgradeableInfo } from './upgradeable.js';
+import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingAccessory extends UpgradeableBase {
 	public declare readonly item: EliteItemDto;
@@ -78,4 +80,12 @@ export class FarmingAccessory extends UpgradeableBase {
 
 		return new FarmingAccessory(fake, options);
 	}
+}
+
+for (const item of Object.values(FARMING_ACCESSORIES_INFO)) {
+	if (!item) continue;
+	registerItem({
+		info: item,
+		fakeItem: (i, o) => FarmingAccessory.fakeItem(i, o),
+	});
 }

@@ -1,28 +1,18 @@
-import { EnchantTierProcurement, FARMING_ENCHANTS, FarmingEnchant } from '../constants/enchants.js';
-import { REFORGES, Rarity } from '../constants/reforges.js';
+import { REFORGES } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import {
-	FortuneSource,
-	FortuneSourceProgress,
-	FortuneUpgrade,
-	FortuneUpgradeImprovement,
-	Upgrade,
+	type FortuneUpgrade,
+	type FortuneUpgradeImprovement,
+	type Upgrade,
 	UpgradeAction,
 	UpgradeCategory,
-	UpgradeCost,
+	type UpgradeCost,
 	UpgradeReason,
 } from '../constants/upgrades.js';
-import { FarmingAccessory } from '../fortune/farmingaccessory.js';
-import { FarmingArmor } from '../fortune/farmingarmor.js';
-import { FarmingEquipment } from '../fortune/farmingequipment.js';
-import { FarmingTool } from '../fortune/farmingtool.js';
 import { GemRarity } from '../fortune/item.js';
-import { Upgradeable, UpgradeableBase, UpgradeableInfo } from '../fortune/upgradeable.js';
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories.js';
-import { FARMING_ARMOR_INFO, FarmingArmorInfo } from '../items/armor.js';
-import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
-import { FARMING_TOOLS, FarmingToolInfo } from '../items/tools.js';
-import { getFortuneFromEnchant } from '../util/enchants.js';
+import type { Upgradeable, UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
+import { FARMING_TOOLS, type FarmingToolInfo } from '../items/tools.js';
 import {
 	getGemRarityName,
 	getNextGemRarity,
@@ -31,11 +21,8 @@ import {
 	getPeridotGems,
 } from '../util/gems.js';
 import { nextRarity } from '../util/itemstats.js';
-import { DynamicFortuneSource } from './sources/toolsources.js';
-
-export function getFortune(level: number | null | undefined, source: FortuneSource) {
-	return Math.min(Math.max(level ?? 0, 0), source.maxLevel) * source.fortunePerLevel;
-}
+import { getUpgradeableEnchants } from './enchantupgrades.js';
+import { getFakeItem } from './itemregistry.js';
 
 export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 	const { deadEnd, upgrade } = getSelfFortuneUpgrade(upgradeable) ?? {};
@@ -125,25 +112,18 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 }
 
 export function getUpgradeableInfo(skyblockId?: string): { info?: UpgradeableInfo; fake?: UpgradeableBase } {
-	const notFound = { info: undefined, fake: undefined } as const;
-	if (!skyblockId) return notFound;
-	if (FARMING_TOOLS[skyblockId]) {
-		const info = FARMING_TOOLS[skyblockId];
-		return { info, fake: FarmingTool.fakeItem(info as FarmingToolInfo) };
+	if (!skyblockId) return { info: undefined, fake: undefined };
+
+	const fake = getFakeItem(skyblockId);
+
+	if (fake) {
+		return {
+			info: fake.info,
+			fake: fake,
+		};
 	}
-	if (FARMING_ACCESSORIES_INFO[skyblockId]) {
-		const info = FARMING_ACCESSORIES_INFO[skyblockId];
-		return { info, fake: FarmingAccessory.fakeItem(info as FarmingAccessoryInfo) };
-	}
-	if (FARMING_ARMOR_INFO[skyblockId]) {
-		const info = FARMING_ARMOR_INFO[skyblockId];
-		return { info, fake: FarmingArmor.fakeItem(info as FarmingArmorInfo) };
-	}
-	if (FARMING_EQUIPMENT_INFO[skyblockId]) {
-		const info = FARMING_EQUIPMENT_INFO[skyblockId];
-		return { info, fake: FarmingEquipment.fakeItem(info as FarmingArmorInfo) };
-	}
-	return notFound;
+
+	return { info: undefined, fake: undefined };
 }
 
 export function getNextItemUpgradeableTo(
@@ -178,72 +158,6 @@ export function getLastItemUpgradeableTo(
 	if (!item || last === upgrade) return undefined;
 
 	return { upgrade: last, info: item };
-}
-
-export function getSourceProgress<T extends object>(
-	upgradeable: T,
-	sources: DynamicFortuneSource<T>[],
-	zeroed = false
-): FortuneSourceProgress[] {
-	const result = [] as FortuneSourceProgress[];
-
-	// Ensure the item fortune is up to date
-	if ('getFortune' in upgradeable && typeof upgradeable.getFortune === 'function') {
-		upgradeable.getFortune();
-	}
-
-	for (const source of sources) {
-		if (!source.exists(upgradeable)) continue;
-
-		const max = source.max(upgradeable);
-		const current = zeroed ? 0 : source.current(upgradeable);
-
-		const progress = {
-			name: source.name,
-			fortune: current,
-			maxFortune: max,
-			ratio: Math.min(current / max, 1),
-		} as FortuneSourceProgress;
-
-		if (source.progress) {
-			const p = source.progress(upgradeable);
-			if (p) {
-				progress.progress = p;
-			}
-		}
-
-		if (source.info) {
-			const { item, info, maxInfo, nextInfo } = source.info(upgradeable);
-			if (item) progress.item = item;
-			if (info) progress.info = info;
-			if (maxInfo) progress.maxInfo = maxInfo;
-			if (nextInfo) progress.nextInfo = nextInfo;
-		}
-
-		if (source.wiki) {
-			const wiki = source.wiki(upgradeable);
-			if (wiki) progress.wiki = wiki;
-		}
-
-		if (source.api === false) {
-			progress.api = false;
-		}
-
-		if (source.upgrades) {
-			const upgrades = source.upgrades(upgradeable);
-			for (const upgrade of upgrades) {
-				upgrade.max = upgrade.max ?? max;
-				upgrade.wiki = upgrade.wiki ?? progress.wiki;
-			}
-			if (upgrades.length > 0) {
-				progress.upgrades = upgrades;
-			}
-		}
-
-		result.push(progress);
-	}
-
-	return result;
 }
 
 export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUpgrade | undefined {
@@ -306,120 +220,6 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 	if (result.increase <= 0) return undefined;
 
 	return result;
-}
-
-export function getUpgradeableEnchants(upgradeable: Upgradeable): FortuneUpgrade[] {
-	if (!upgradeable.type) return [];
-
-	const result = [] as FortuneUpgrade[];
-
-	for (const enchantId in FARMING_ENCHANTS) {
-		result.push(...getUpgradeableEnchant(upgradeable, enchantId));
-	}
-
-	return result;
-}
-
-export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: string): FortuneUpgrade[] {
-	const enchant = FARMING_ENCHANTS[enchantId];
-	if (!upgradeable.type || !enchant) return [];
-
-	const result = [] as FortuneUpgrade[];
-
-	// Skip if the enchantment doesn't apply to the item
-	if (!enchant || !enchant.appliesTo.includes(upgradeable.type)) return result;
-	// Skip if the enchantment is crop specific and the crop doesn't match
-	if (enchant.cropSpecific && enchant.cropSpecific !== upgradeable.crop) return result;
-
-	const applied = upgradeable.item.enchantments?.[enchantId];
-
-	// If the enchantment is not applied, add an entry for applying it
-	if (!applied) {
-		const procurement = enchant.levels[enchant.minLevel]?.procurement;
-
-		result.push({
-			title: enchant.name + ' 1',
-			increase: getFortuneFromEnchant(enchant.minLevel, enchant, upgradeable.options, upgradeable.crop),
-			wiki: enchant.wiki,
-			action:
-				!procurement || procurement === EnchantTierProcurement.Normal
-					? UpgradeAction.Apply
-					: UpgradeAction.LevelUp,
-			category: UpgradeCategory.Enchant,
-			cost: {
-				items: {
-					[enchantNameToId(enchant) + '_1']: 1,
-				},
-			},
-			onto: {
-				name: upgradeable.item.name,
-				skyblockId: upgradeable.item.skyblockId,
-			},
-		});
-
-		return result;
-	}
-
-	// If the enchantment is at max level already, we don't need to do anything
-	if (applied >= enchant.maxLevel) return result;
-
-	// Add an entry for upgrading the enchantment
-	const currentFortune = getFortuneFromEnchant(applied, enchant, upgradeable.options, upgradeable.crop);
-	const nextFortune = getFortuneFromEnchant(applied + 1, enchant, upgradeable.options, upgradeable.crop);
-
-	const nextEnchant = enchant.levels[applied + 1];
-	if (!nextEnchant) return result;
-
-	const normalNext =
-		!nextEnchant.procurement ||
-		nextEnchant.procurement === EnchantTierProcurement.Normal ||
-		nextEnchant.procurement === EnchantTierProcurement.Loot;
-	const items = nextEnchant.cost?.items ?? ({} as Record<string, number>);
-
-	switch (nextEnchant.procurement) {
-		case undefined:
-		case EnchantTierProcurement.Normal: {
-			// Get amount of level 1 enchantment items needed to craft the same applied level
-			// Ex: 4 level 1 items = 2 level 2 items = 1 level 3 item
-			// Count = Math.pow(2, applied - 1)
-			const count = Math.pow(2, applied - 1);
-			items[enchantNameToId(enchant) + '_1'] = count;
-			break;
-		}
-		case EnchantTierProcurement.Loot:
-			// The desired level needs to be applied directly
-			items[enchantNameToId(enchant) + '_' + (applied + 1)] = 1;
-			break;
-		case EnchantTierProcurement.SelfLeveling:
-			return result; // Self-leveling enchantments do not have a cost
-		default:
-			break;
-	}
-
-	const cost = {
-		...(nextEnchant.cost ?? {}),
-		items: Object.keys(items).length > 0 ? items : undefined,
-	};
-
-	result.push({
-		title: enchant.name + ' ' + (applied + 1),
-		increase: nextFortune - currentFortune,
-		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
-		category: UpgradeCategory.Enchant,
-		cost: cost,
-		wiki: enchant.wiki,
-		onto: {
-			name: upgradeable.item.name,
-			skyblockId: upgradeable.item.skyblockId,
-		},
-	});
-
-	return result;
-}
-
-function enchantNameToId(enchant: FarmingEnchant): string {
-	if (enchant.id) return enchant.id;
-	return 'ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_').replaceAll('-', '_');
 }
 
 export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade[] {

@@ -1,8 +1,8 @@
-import { Rarity, RarityRecord } from '../constants/reforges.js';
-import { Skill } from '../constants/skills.js';
-import { Stat, StatsRecord } from '../constants/stats.js';
+import { Rarity, type RarityRecord } from '../constants/reforges.js';
+import type { Skill } from '../constants/skills.js';
+import { Stat, type StatsRecord } from '../constants/stats.js';
 import type { FarmingPet } from '../fortune/farmingpet.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
 import { unlockedPestBestiaryTiers } from '../util/pests.js';
 
 export enum FarmingPets {

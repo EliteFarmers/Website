@@ -8,23 +8,25 @@ import {
 	GARDEN_CROP_UPGRADES,
 	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
-import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
+import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
-import { EliteItemDto } from '../fortune/item.js';
+import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
 import { FARMING_TOOLS } from '../items/tools.js';
+import { getFortune } from '../upgrades/getfortune.js';
+import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { getFakeItem } from '../upgrades/itemregistry.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
-import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
 import { fortuneFromPestBestiary } from '../util/pests.js';
 import { calculateDetailedDrops } from '../util/ratecalc.js';
-import { FarmingWeightInfo, createFarmingWeightCalculator } from '../weight/weightcalc.js';
+import { createFarmingWeightCalculator, type FarmingWeightInfo } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -180,7 +182,7 @@ export class FarmingPlayer {
 		} else {
 			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
 			if (startingInfo) {
-				const fakeItem = FarmingTool.fakeItem(startingInfo, this.options);
+				const fakeItem = getFakeItem(startingInfo.skyblockId, this.options);
 				const purchaseId = fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool;
 
 				upgrades.push({

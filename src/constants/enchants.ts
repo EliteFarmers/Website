@@ -1,5 +1,5 @@
-import { FarmingPlayer } from '../player/player.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import type { FarmingPlayer } from '../player/player.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
 import { Crop } from './crops.js';
 import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
 import { ReforgeTarget } from './reforges.js';

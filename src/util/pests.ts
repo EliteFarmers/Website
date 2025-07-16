@@ -1,4 +1,4 @@
-import { Crop } from '../constants/crops.js';
+import type { Crop } from '../constants/crops.js';
 import {
 	BESTIARY_PEST_BRACKETS,
 	FORTUNE_PER_PEST_BRACKET,

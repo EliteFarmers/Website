@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import { CROP_INFO, Crop } from '../../constants/crops.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
-import { EliteItemDto } from '../../fortune/item.js';
-import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
+import type { EliteItemDto } from '../../fortune/item.js';
+import { FARMING_TOOLS, type FarmingToolInfo } from '../../items/tools.js';
 import { FarmingPlayer } from '../../player/player.js';
 
 const fermentoArtifact: EliteItemDto = {

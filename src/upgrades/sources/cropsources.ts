@@ -3,24 +3,25 @@ import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
-import { FarmingTool } from '../../fortune/farmingtool.js';
+import type { FarmingTool } from '../../fortune/farmingtool.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
-import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
-import { FarmingPlayer } from '../../player/player.js';
+import type { FarmingPlayer } from '../../player/player.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
-import { DynamicFortuneSource } from './toolsources.js';
+import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
+import type { DynamicFortuneSource } from './toolsources.js';
 
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer; crop: Crop }>[] = [
 	{
 		name: 'Farming Tool',
 		exists: () => true,
 		wiki: ({ player, crop }) => {
-			return player.getSelectedCropTool(crop)?.info.wiki ?? FARMING_TOOLS[CROP_INFO[crop].startingTool]?.wiki;
+			return (
+				player.getSelectedCropTool(crop)?.info.wiki ??
+				ITEM_REGISTRY.get(CROP_INFO[crop].startingTool)?.info.wiki
+			);
 		},
 		max: ({ crop }) => {
-			const tool = FARMING_TOOLS[CROP_INFO[crop].startingTool];
-			if (!tool) return 0;
-			const progress = FarmingTool.fakeItem(tool)?.getProgress();
+			const progress = getFakeItem(CROP_INFO[crop].startingTool)?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
 		},
 		current: ({ player, crop }) => {
@@ -32,15 +33,13 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 			const tool = player.getSelectedCropTool(crop);
 			if (tool) return tool.getProgress();
 
-			const fake = FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo);
+			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
 			return fake?.getProgress(true) ?? [];
 		},
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop ? player.selectedTool : player.getSelectedCropTool(crop);
 
-			const fake = !tool
-				? FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo)
-				: undefined;
+			const fake = !tool ? getFakeItem(CROP_INFO[crop].startingTool) : undefined;
 
 			return {
 				item: tool?.item,
