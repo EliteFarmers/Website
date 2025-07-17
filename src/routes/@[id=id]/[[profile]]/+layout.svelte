@@ -111,40 +111,42 @@
 				variant="ghost"
 				size="sm"
 				href="{path}/contests"
-				class="{route === 'contests' ? 'bg-muted' : ''} cursor-pointer">Contests</Button
+				class="{route === 'contests' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Contests</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/charts"
-				class="{route === 'charts' ? 'bg-muted' : ''} cursor-pointer">Charts</Button
+				class="{route === 'charts' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Charts</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href={path}
-				class="{route === '[[profile]]' ? 'bg-muted' : ''} cursor-pointer">Stats</Button
+				class="{route === '[[profile]]' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Stats</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/garden"
-				class="{route === 'garden' ? 'bg-muted' : ''} cursor-pointer">Garden</Button
+				class="{route === 'garden' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Garden</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/fortune"
-				class="{route === 'fortune' ? 'bg-muted' : ''} cursor-pointer">Fortune</Button
+				class="{route === 'fortune' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Fortune</Button
 			>
 			<Button
 				variant="ghost"
 				size="sm"
 				href="{path}/ranks"
-				class="{route === 'ranks' ? 'bg-muted' : ''} cursor-pointer">Ranks</Button
+				class="{route === 'ranks' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Ranks</Button
 			>
 			{#if data.authorized}
-				<Button variant="ghost" size="sm" href="{path}/graphs" class="cursor-pointer">Admin</Button>
+				<Button variant="ghost" size="sm" href="{path}/graphs" class="w-1/3 cursor-pointer sm:w-auto"
+					>Admin</Button
+				>
 			{/if}
 		</div>
 	</div>
