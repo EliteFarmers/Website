@@ -7,3 +7,11 @@ export function extractNumberFromLine(line: string, regex: RegExp) {
 
 	return found;
 }
+
+export function getNumberFromMatchingLine(lines: string[], regex: RegExp) {
+	for (const line of lines) {
+		const found = extractNumberFromLine(line, regex);
+		if (found) return found;
+	}
+	return undefined;
+}

@@ -188,24 +188,25 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			return Math.max(0, maxFortune * 0.02); // 2% of the other sources
 		},
 		current: (tool) => {
+			if (!tool.hasAxedPerk()) return 0;
 			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
 
 			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
 			return Math.max(0, fortune * 0.02); // 2% of the other sources
 		},
 		upgrades: (tool) => {
-			if (tool.options?.axed) return [];
+			if (tool.hasAxedPerk()) return [];
 
 			return [
 				{
 					title: 'Axed Perk',
-					increase: 1,
+					increase: tool.getFortune() * 0.02,
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
 					wiki: 'https://wiki.hypixel.net/Essence#Forest_Essence_',
 					cost: {
 						items: {
-							FOREST_ESSENCE: 10_000,
+							ESSENCE_FOREST: 10_000,
 						},
 					},
 				},

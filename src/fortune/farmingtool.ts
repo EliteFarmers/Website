@@ -12,7 +12,7 @@ import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
-import { extractNumberFromLine } from '../util/lore.js';
+import { extractNumberFromLine, getNumberFromMatchingLine } from '../util/lore.js';
 import type { EliteItemDto } from './item.js';
 import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
@@ -269,6 +269,15 @@ export class FarmingTool extends UpgradeableBase {
 	isMissingDedication() {
 		if (!this.crop) return false;
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
+	}
+
+	// Check if the tool has the Axed Perk by seeing if the stats in the lore have an additional 2% bonus
+	hasAxedPerk(): boolean {
+		const regex = /§7Farming Fortune: §a\+(\d+\.\d+)/g;
+		const found = getNumberFromMatchingLine(this.item.lore ?? [], regex);
+		if (!found) return false;
+
+		return found >= this.getFortune() * 0.02;
 	}
 
 	private getFarmingAbilityFortune() {

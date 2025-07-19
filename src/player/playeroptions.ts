@@ -20,7 +20,6 @@ export interface FortuneMissingFromAPI {
 	exportableCrops?: Partial<Record<Crop, boolean>>;
 	refinedTruffles?: number;
 	cocoaFortuneUpgrade?: number;
-	axed?: boolean;
 
 	sprayedPlot?: boolean;
 	infestedPlotProbability?: number;
