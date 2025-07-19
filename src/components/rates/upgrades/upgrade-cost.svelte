@@ -1,11 +1,11 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
-	import type { components } from '$lib/api/api';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import type { FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
-		items?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items'];
+		items?: RatesItemPriceData;
 		totalCost: number;
 	}
 
@@ -70,8 +70,8 @@
 	<div class="flex flex-row items-center gap-1">
 		<span class="text-sm font-semibold">{amount}x</span>
 		<span class="bg-background rounded-sm border px-1">
-			{#if sbItem?.data?.name}
-				<span class="text-sm"><ItemName name={sbItem.data.name} /></span>
+			{#if sbItem?.item?.name}
+				<span class="text-sm"><ItemName name={sbItem.item.name} /></span>
 			{:else}
 				<!-- Replace underscores with spaces and capitalize first letter of each word -->
 				{@const itemName = item

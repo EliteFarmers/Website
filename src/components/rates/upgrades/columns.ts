@@ -4,16 +4,13 @@ import UpgradeTitle from './upgrade-title.svelte';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 import type { FortuneUpgrade } from 'farming-weight';
 import UpgradeFortune from './upgrade-fortune.svelte';
-import type { components } from '$lib/api/api';
 import UpgradeCost from './upgrade-cost.svelte';
 import UpgradeCostPer from './upgrade-cost-per.svelte';
+import type { RatesItemPriceData } from '$lib/api/elite';
 
 export const getColumns = (
-	itemsLookup?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items'],
-	costFn?: (
-		upgrade: FortuneUpgrade,
-		items?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items']
-	) => number
+	itemsLookup?: RatesItemPriceData,
+	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number
 ) =>
 	[
 		{

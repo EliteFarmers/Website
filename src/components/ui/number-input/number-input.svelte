@@ -6,9 +6,15 @@
 	interface Props extends HTMLInputAttributes {
 		class?: string;
 		value?: number;
+		onValueChange?: (value: number | undefined) => void;
 	}
 
-	let { class: className = undefined, value = $bindable(undefined), ...rest }: Props = $props();
+	let {
+		class: className = undefined,
+		value = $bindable(undefined),
+		onValueChange = undefined,
+		...rest
+	}: Props = $props();
 
 	let previousN = value;
 
@@ -18,6 +24,7 @@
 				if (!v) {
 					value = undefined;
 					previousN = undefined;
+					onValueChange?.(undefined);
 					return;
 				}
 
@@ -29,17 +36,20 @@
 				if (node.min && isFinite(+node.min) && +v < +node.min) {
 					value = +node.min;
 					previousN = value;
+					onValueChange?.(value);
 					return;
 				}
 
 				if (node.max && isFinite(+node.max) && +v > +node.max) {
 					value = +node.max;
 					previousN = value;
+					onValueChange?.(value);
 					return;
 				}
 
 				value = +v;
 				previousN = value;
+				onValueChange?.(value);
 			},
 		};
 	};

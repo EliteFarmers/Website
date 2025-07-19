@@ -1492,6 +1492,7 @@ export const UpdateCategoryProductOrder = async (
 
 export const GetBazaarData = async () => await GET('/resources/bazaar');
 export const GetAuctionHouse = async () => await GET('/resources/auctions');
+export const GetSkyblockItems = async () => await GET('/resources/items');
 
 export const GetItemPrices = async (items: string[]) =>
 	await POST('/resources/items', {
@@ -1543,3 +1544,12 @@ export interface ProfileDetails {
 	gameMode?: ProfileGameMode;
 	weight: number;
 }
+
+export type RatesItemPriceData = Record<
+	string,
+	{
+		auctions?: components['schemas']['AuctionItemDto'][];
+		bazaar?: components['schemas']['BazaarProductSummaryDto'];
+		item?: components['schemas']['ItemResponse'];
+	}
+>;

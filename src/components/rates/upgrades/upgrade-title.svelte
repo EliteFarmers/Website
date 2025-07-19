@@ -1,15 +1,15 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRequirements from '$comp/items/item-requirements.svelte';
-	import type { components } from '$lib/api/api';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import * as Popover from '$ui/popover';
 	import Info from '@lucide/svelte/icons/info';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { UpgradeAction, type FortuneUpgrade } from 'farming-weight';
+	import { UpgradeAction, UpgradeCategory, type FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
-		items?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items'];
+		items?: RatesItemPriceData;
 	}
 
 	let { upgrade, items }: Props = $props();
@@ -17,7 +17,7 @@
 	const itemData = $derived.by(() => {
 		const item = upgrade.purchase;
 		if (!item) return undefined;
-		return items?.[item]?.data ?? undefined;
+		return items?.[item]?.item ?? undefined;
 	});
 </script>
 
@@ -47,6 +47,10 @@
 		{:else if upgrade.action === UpgradeAction.LevelUp && upgrade.onto?.name}
 			<span>Level up {upgrade.category} on</span>
 			<ItemName name={upgrade.onto.name} />
+		{:else if upgrade.action === UpgradeAction.LevelUp}
+			{#if upgrade.category === UpgradeCategory.Attribute}
+				<span>Level up {upgrade.category}</span>
+			{/if}
 			<!-- {:else if upgrade.action === UpgradeAction.Recombobulate && upgrade.onto?.name}
       <span>Recombobulate</span> <ItemName name={upgrade.onto.name} /> -->
 		{:else if upgrade.action === UpgradeAction.Purchase}

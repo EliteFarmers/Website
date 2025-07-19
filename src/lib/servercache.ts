@@ -7,6 +7,7 @@ import {
 	GetEventTeamWords,
 	GetLeaderboards,
 	GetProducts,
+	GetSkyblockItems,
 	GetUpcomingEvents,
 	GetWeightStyles,
 } from './api/elite';
@@ -65,6 +66,13 @@ const cacheEntries = {
 			return data ?? { items: {} };
 		},
 	},
+	items: {
+		data: {} as components['schemas']['GetSkyblockItemsResponse']['items'],
+		update: async () => {
+			const { data } = await GetSkyblockItems();
+			return ((data ?? {}).items ?? {}) as components['schemas']['GetSkyblockItemsResponse']['items'];
+		},
+	},
 	announcements: {
 		data: [] as components['schemas']['AnnouncementDto'][],
 		update: async () => {
@@ -95,6 +103,9 @@ export const cache = {
 	},
 	get auctions() {
 		return cacheEntries.auctions.data;
+	},
+	get items() {
+		return cacheEntries.items.data;
 	},
 	get announcements() {
 		return cacheEntries.announcements.data;

@@ -16,6 +16,7 @@
 		getCropUpgrades,
 		getCropInfo,
 		createFarmingWeightCalculator,
+		createFarmingPlayer,
 	} from 'farming-weight';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
@@ -48,6 +49,7 @@
 	import FloatingButton from '$comp/floating-button.svelte';
 	import CheapestUpgrades from './cheapest-upgrades.svelte';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 
 	const ctx = getStatsContext();
 
@@ -137,6 +139,7 @@
 		exportableCrops: $ratesData.exported,
 		communityCenter: $ratesData.communityCenter,
 		strength: $ratesData.strength,
+		attributes: $ratesData.attributes,
 
 		cocoaFortuneUpgrade: ctx.member.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
@@ -158,22 +161,21 @@
 			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
 			armor: untrack(() => $player.armorSet),
+			attributes: $ratesData.attributes,
 			exportableCrops: $ratesData.exported,
 			communityCenter: $ratesData.communityCenter,
 			strength: $ratesData.strength,
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 			sprayedPlot: $ratesData.sprayedPlot,
-			zorro: $ratesData.zorroMode
-				? {
-						enabled: ctx.member.chocolateFactory?.unlockedZorro ?? false,
-						mode: $ratesData.zorroMode,
-					}
-				: undefined,
+			infestedPlotProbability: $ratesData.infestedPlotProbability,
+			zorro: {
+				enabled: ctx.member.chocolateFactory?.unlockedZorro ?? false,
+				mode: $ratesData.zorroMode,
+			},
 		};
 
 		untrack(() => {
-			player = getRatesPlayer(options);
-			player.refresh();
+			player.update(() => createFarmingPlayer(options));
 		});
 	});
 
@@ -189,6 +191,8 @@
 			dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
 			blocksBroken: blocksActuallyBroken,
 			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
+			infestedPlotProbability: $ratesData.infestedPlotProbability,
+			attributes: $ratesData.attributes,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
@@ -244,8 +248,7 @@
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
 				<div class="my-2 flex flex-3 flex-row items-center gap-2">
-					<h2 class="text-lg md:text-2xl">Total Farming Fortune</h2>
-
+					<h2 class="mb-2 text-lg leading-none md:text-2xl">Farming Fortune</h2>
 					<Fortunebreakdown title="Total Farming Fortune" total={totalFortune} breakdown={fortuneBreakdown} />
 				</div>
 				<div class="flex flex-1 justify-end">
@@ -402,7 +405,7 @@
 					<div class="flex flex-col text-lg">
 						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">NPC Coins</span>
-							<span>{info.npcCoins.toLocaleString()}</span>
+							<CoinsBreakdown coins={info.npcCoins} breakdown={info.coinSources} />
 						</div>
 						<div class="flex w-full items-center justify-between py-2">
 							<span class="text-xl">Collection</span>
@@ -419,7 +422,7 @@
 						{#each coinBreakdown as [name, value] (name)}
 							<div class="flex w-full items-center justify-between py-2">
 								<span class="text-lg">{name === 'Collection' ? selectedCrop : name}</span>
-								<span class="text-lg">{value.toLocaleString()}</span>
+								<CoinsBreakdown coins={value} />
 							</div>
 						{/each}
 					</div>
@@ -436,6 +439,7 @@
 
 					<div class="-mx-2">
 						<BazaarRates
+							result={info}
 							crop={selectedCropKey}
 							amount={info.items[selectedCropKey] ?? info.collection}
 							otherCoins={info.npcCoins -
