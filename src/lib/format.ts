@@ -174,8 +174,9 @@ export function getRankInformation(player?: components['schemas']['PlayerDataDto
 	const rankName = GetRankName(player);
 	const defaults = GetRankDefaults(rankName);
 	if (!defaults) {
+		if (!rankName) return undefined;
 		return {
-			raw: rankName || '',
+			raw: rankName,
 			color:
 				MINECRAFT_COLORS[(rankName?.match(/(§\w)/)?.[1] || '§0') as keyof typeof MINECRAFT_COLORS] || '#000000',
 			tag: rankName?.replace(/§\w/g, '').match(/\[(.+?)\]/)?.[1] || '',
