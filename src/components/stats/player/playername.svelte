@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FormattedText from '$comp/items/formatted-text.svelte';
 	import { formatIgn } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
@@ -15,7 +16,9 @@
 	{#snippet trigger()}
 		<div class="bg-card rounded-md p-2" id="playerName">
 			<h1 class="font-emoji text-2xl md:text-3xl">
-				{#if rank && plus}
+				{#if ctx.rank?.raw}
+					<FormattedText text={ctx.rank.raw.replace(']', '').replace('[', '')} /> {ign}
+				{:else if rank && plus}
 					<span style="color: {rank.color};">{rank?.tag}</span><span style="color: {plusColor};">{plus}</span
 					>&nbsp;{ign}
 				{:else if rank}
