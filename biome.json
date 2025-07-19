@@ -50,7 +50,11 @@
 				"useValidForDirection": "error",
 				"useYield": "error",
 				"noInvalidBuiltinInstantiation": "error",
-				"useValidTypeof": "error"
+				"useValidTypeof": "error",
+				"noUnusedImports": {
+					"fix": "safe",
+					"level": "error"
+				}
 			},
 			"style": {
 				"noNamespace": "error",

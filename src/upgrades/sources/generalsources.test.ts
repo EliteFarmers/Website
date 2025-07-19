@@ -21,6 +21,7 @@ test('General fortune sources', () => {
 		delete piece.info;
 		delete piece.maxInfo;
 		delete piece.upgrades;
+		delete piece.progress;
 	});
 
 	expect(progress).toStrictEqual([
@@ -29,6 +30,13 @@ test('General fortune sources', () => {
 			fortune: 40,
 			maxFortune: 240,
 			ratio: 4 / 24,
+		},
+		{
+			name: 'Attribute Shards',
+			fortune: 0,
+			maxFortune: 90,
+			ratio: 0,
+			api: false,
 		},
 		{
 			name: 'Pest Bestiary',

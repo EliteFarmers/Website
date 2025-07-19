@@ -12,6 +12,7 @@ export enum FarmingPets {
 	Rabbit = 'RABBIT',
 	Slug = 'SLUG',
 	Hedgehog = 'HEDGEHOG',
+	Chicken = 'CHICKEN',
 }
 
 export interface FarmingPetType {
@@ -252,6 +253,22 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				},
 			},
 		],
+	},
+	[FarmingPets.Chicken]: {
+		name: 'Chicken',
+		wiki: 'https://wiki.hypixel.net/Chicken_Pet',
+		perLevelStats: {
+			[Stat.Speed]: {
+				name: 'Speed',
+				value: 0.5,
+				type: FarmingPetStatType.Base,
+			},
+			[Stat.FarmingFortune]: {
+				name: 'Farming Fortune',
+				value: 0.5,
+				type: FarmingPetStatType.Base,
+			},
+		},
 	},
 };
 

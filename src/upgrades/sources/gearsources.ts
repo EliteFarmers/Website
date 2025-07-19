@@ -9,7 +9,7 @@ import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/ench
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
 import { getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
-import type { DynamicFortuneSource } from './toolsources.js';
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEquipment>[] = [
 	{

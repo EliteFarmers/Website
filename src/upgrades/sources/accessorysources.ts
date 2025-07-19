@@ -4,7 +4,7 @@ import type { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { GemRarity } from '../../fortune/item.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableGems } from '../upgrades.js';
-import type { DynamicFortuneSource } from './toolsources.js';
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[] = [
 	{

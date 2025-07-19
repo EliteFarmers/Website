@@ -116,6 +116,7 @@ export class ArmorSet {
 		for (const piece of this.equipmentPieces) {
 			piece.setOptions(options);
 		}
+		this.getFortuneBreakdown(true);
 	}
 
 	resetChosenPieces() {

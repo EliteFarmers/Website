@@ -1,4 +1,11 @@
 import {
+	FARMING_ATTRIBUTE_SHARDS,
+	getShardFortune,
+	getShardLevel,
+	getShardsForNextLevel,
+} from '../../constants/attributes.js';
+import type { Crop } from '../../constants/crops.js';
+import {
 	ANITA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,
 	FARMING_LEVEL,
@@ -7,13 +14,15 @@ import {
 	UNLOCKED_PLOTS,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
-import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../../items/accessories.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import { getNextPlotCost } from '../../util/garden.js';
 import { fortuneFromPestBestiary } from '../../util/pests.js';
-import type { DynamicFortuneSource } from './toolsources.js';
+import type { CalculateCropDetailedDropsOptions } from '../../util/ratecalc.js';
+import { getSourceProgress } from '../getsourceprogress.js';
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
@@ -41,6 +50,32 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					cost: nextCost,
 				},
 			];
+		},
+	},
+	{
+		name: 'Attribute Shards',
+		api: false,
+		wiki: () => 'https://wiki.hypixel.net/Attributes',
+		exists: () => true,
+		max: () => {
+			return ATTRIBUTE_FORTUNE_SOURCES.filter(
+				(shard) => !shard.active || shard.active(maxShardOptions).active
+			).reduce((acc, shard) => {
+				return acc + shard.max(maxShardOptions);
+			}, 0);
+		},
+		current: (player) => {
+			return ATTRIBUTE_FORTUNE_SOURCES.reduce((acc, shard) => {
+				return acc + shard.current(player);
+			}, 0);
+		},
+		upgrades: (player) => {
+			return ATTRIBUTE_FORTUNE_SOURCES.filter((shard) => shard.active?.(player).active !== false)
+				.flatMap((shard) => shard.upgrades?.(player))
+				.filter(Boolean) as FortuneUpgrade[];
+		},
+		progress: (player) => {
+			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_FORTUNE_SOURCES);
 		},
 	},
 	{
@@ -266,3 +301,75 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 	},
 ];
+
+export const ATTRIBUTE_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>[] =
+	Object.entries(FARMING_ATTRIBUTE_SHARDS)
+		.filter((a) => a[1].effect === 'fortune')
+		.map(([id, shard]) => mapShardSource(id, shard));
+
+const maxShardOptions = {
+	attributes: Object.fromEntries(
+		Object.keys(FARMING_ATTRIBUTE_SHARDS).map((id) => [
+			id,
+			1000, // Max level for all shards
+		])
+	),
+	blocksBroken: 0,
+	crop: 'CACTUS' as Crop,
+	bountiful: false,
+	mooshroom: false,
+	infestedPlotProbability: 1,
+};
+
+function mapShardSource(
+	id: string,
+	shard: (typeof FARMING_ATTRIBUTE_SHARDS)[keyof typeof FARMING_ATTRIBUTE_SHARDS]
+): DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions> {
+	const result = {
+		name: shard.name,
+		wiki: () => shard.wiki,
+		exists: () => true,
+		active: shard.active,
+		max: () => {
+			return getShardFortune(
+				shard,
+				{
+					...maxShardOptions,
+					attributes: { [id]: 1000 },
+				},
+				10
+			);
+		},
+		current: (player) => {
+			return getShardFortune(shard, player);
+		},
+		upgrades: (player) => {
+			const amount = player.attributes?.[id] ?? 0;
+			const nextCost = getShardsForNextLevel(shard.rarity, amount);
+			if (!nextCost) return [];
+
+			const currentLevel = getShardLevel(shard.rarity, amount);
+			const level = currentLevel + 1;
+
+			const currentFortune = getShardFortune(shard, player, currentLevel);
+			const nextFortune = getShardFortune(shard, player, level);
+
+			return [
+				{
+					title: shard.name.replace('Shard', level.toString()),
+					increase: nextFortune - currentFortune,
+					action: UpgradeAction.LevelUp,
+					category: UpgradeCategory.Attribute,
+					// wiki: shard.wiki, // Wiki page doesn't exist yet
+					cost: {
+						items: {
+							[shard.skyblockId]: nextCost,
+						},
+					},
+				},
+			];
+		},
+	} as DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>;
+
+	return result;
+}

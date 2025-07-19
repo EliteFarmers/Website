@@ -1,39 +1,15 @@
-import type { Crop } from '../../constants/crops.js';
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
 import { Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
 import { getStatValue, Stat } from '../../constants/stats.js';
-import {
-	type FortuneSourceProgress,
-	type FortuneUpgrade,
-	UpgradeAction,
-	UpgradeCategory,
-} from '../../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import type { FarmingTool } from '../../fortune/farmingtool.js';
-import { type EliteItemDto, GemRarity } from '../../fortune/item.js';
-import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
+import { GemRarity } from '../../fortune/item.js';
 import { FarmingToolType } from '../../items/tools.js';
 import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
 import { getUpgradeableGems } from '../upgrades.js';
-
-export interface DynamicFortuneSource<T> {
-	name: string;
-	crop?: Crop;
-	api?: boolean;
-	wiki?: (source: T) => string | undefined;
-	exists: (source: T) => boolean;
-	max: (source: T) => number;
-	current: (source: T) => number;
-	progress?: (source: T) => FortuneSourceProgress[];
-	info?: (source: T) => {
-		item?: EliteItemDto;
-		info?: UpgradeableInfo;
-		nextInfo?: UpgradeableInfo;
-		maxInfo?: UpgradeableInfo;
-	};
-	upgrades?: (source: T) => FortuneUpgrade[];
-}
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
@@ -201,6 +177,41 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		current: (tool) => tool.collAnalysis ?? 0,
 	},
 	...Object.entries(FARMING_ENCHANTS).map(([id, enchant]) => enchantSourceBuilder(id, enchant)),
+	{
+		name: 'Axed Perk',
+		wiki: () => 'https://wiki.hypixel.net/Essence#Forest_Essence_',
+		exists: (tool) => tool.info.type === ReforgeTarget.Axe || tool.info.type === FarmingToolType.Dicer,
+		max: (tool) => {
+			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
+
+			const maxFortune = otherSources.reduce((acc, source) => acc + source.max(tool), 0);
+			return Math.max(0, maxFortune * 0.02); // 2% of the other sources
+		},
+		current: (tool) => {
+			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
+
+			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
+			return Math.max(0, fortune * 0.02); // 2% of the other sources
+		},
+		upgrades: (tool) => {
+			if (tool.options?.axed) return [];
+
+			return [
+				{
+					title: 'Axed Perk',
+					increase: 1,
+					action: UpgradeAction.Unlock,
+					category: UpgradeCategory.Misc,
+					wiki: 'https://wiki.hypixel.net/Essence#Forest_Essence_',
+					cost: {
+						items: {
+							FOREST_ESSENCE: 10_000,
+						},
+					},
+				},
+			] as FortuneUpgrade[];
+		},
+	},
 ];
 
 function enchantSourceBuilder(

@@ -35,6 +35,7 @@ export interface CropInfo {
 	exportableCost?: UpgradeCost;
 	startingTool: string;
 	crafts: CropCraft[];
+	rng?: { chance: number; drops: Record<string, number> }[];
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -158,6 +159,14 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 			{
 				item: 'ENCHANTED_HUGE_MUSHROOM_2',
 				takes: 160 * 32,
+			},
+		],
+		rng: [
+			{
+				chance: 1 / 250_000,
+				drops: {
+					BURROWING_SPORES: 1,
+				},
 			},
 		],
 	},

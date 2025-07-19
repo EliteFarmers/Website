@@ -4,7 +4,6 @@ import type { Skill } from '../constants/skills.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
 import type { UpgradeableInfo } from '../fortune/upgradeable.js';
-import { registerItem } from '../upgrades/itemregistry.js';
 
 export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	name: string;

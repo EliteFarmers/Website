@@ -293,7 +293,7 @@ test('Melon fortune test', () => {
 		{
 			name: 'Farming Tool',
 			fortune: 0,
-			maxFortune: 267,
+			maxFortune: 272.34,
 			ratio: 0,
 			progress: FarmingTool.fakeItem(
 				FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo

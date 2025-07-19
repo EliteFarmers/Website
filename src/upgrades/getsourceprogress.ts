@@ -1,5 +1,5 @@
 import type { FortuneSourceProgress } from '../constants/upgrades.js';
-import type { DynamicFortuneSource } from './sources/toolsources.js';
+import type { DynamicFortuneSource } from './sources/dynamicfortunesources.js';
 
 export function getSourceProgress<T extends object>(
 	upgradeable: T,
@@ -23,7 +23,7 @@ export function getSourceProgress<T extends object>(
 			name: source.name,
 			fortune: current,
 			maxFortune: max,
-			ratio: Math.min(current / max, 1),
+			ratio: Math.min(isNaN(current / max) ? 0 : current / max, 1),
 		} as FortuneSourceProgress;
 
 		if (source.progress) {
@@ -31,6 +31,10 @@ export function getSourceProgress<T extends object>(
 			if (p) {
 				progress.progress = p;
 			}
+		}
+
+		if (source.active) {
+			progress.active = source.active(upgradeable);
 		}
 
 		if (source.info) {

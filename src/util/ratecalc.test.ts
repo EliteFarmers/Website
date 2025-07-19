@@ -97,3 +97,29 @@ test('Max fortune results', () => {
 
 	expect(result2.fortune).toBe(173);
 });
+
+test('Warty RNG Drops', () => {
+	const result = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: true,
+		attributes: {
+			SHARD_WARTYBUG: 500, // Max level
+		},
+	});
+
+	expect(result.fortune).toBe(MAX_CROP_FORTUNE[Crop.NetherWart]);
+	expect(result.rngItems?.['WARTY']).toBe(50); // 0.05% chance on 100k blocks broken is 50 drops
+});
+
+test('Burrowing RNG Drops', () => {
+	const result = calculateDetailedDrops({
+		crop: Crop.Mushroom,
+		bountiful: true,
+		mooshroom: true,
+		blocksBroken: 250_000,
+	});
+
+	expect(result.rngItems?.['BURROWING_SPORES']).toBe(1);
+});

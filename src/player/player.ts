@@ -1,3 +1,4 @@
+import { FARMING_ATTRIBUTE_SHARDS, getShardFortune } from '../constants/attributes.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
@@ -53,6 +54,10 @@ export class FarmingPlayer {
 
 	declare selectedTool?: FarmingTool;
 	declare selectedPet?: FarmingPet;
+
+	get attributes() {
+		return this.options.attributes ?? {};
+	}
 
 	constructor(options: PlayerOptions) {
 		this.options = options;
@@ -297,6 +302,18 @@ export class FarmingPlayer {
 		if (truffles > 0) {
 			breakdown['Refined Truffles'] = truffles;
 			sum += truffles;
+		}
+
+		// Attribute Shards
+		for (const [shardId, value] of Object.entries(this.attributes)) {
+			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
+			if (!shard || value <= 0) continue;
+
+			const fortune = getShardFortune(shard, this);
+			if (fortune <= 0) continue;
+
+			breakdown[shard.name] = fortune;
+			sum += fortune;
 		}
 
 		// Extra Fortune

@@ -8,7 +8,7 @@ import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
 import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
-import type { DynamicFortuneSource } from './toolsources.js';
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer; crop: Crop }>[] = [
 	{

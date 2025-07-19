@@ -13,7 +13,7 @@ import {
 } from '../../items/armor.js';
 import { FARMING_EQUIPMENT_INFO } from '../../items/equipment.js';
 import { getFakeItem } from '../itemregistry.js';
-import type { DynamicFortuneSource } from './toolsources.js';
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 	...Object.entries(GEAR_SLOTS)

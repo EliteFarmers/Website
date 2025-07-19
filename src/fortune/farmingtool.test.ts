@@ -1,6 +1,4 @@
 import { expect, test } from 'vitest';
-import { Stat } from '../constants/stats.js';
-import { FarmingPet } from './farmingpet.js';
 import { FarmingTool } from './farmingtool.js';
 
 const netherwartHoe = {

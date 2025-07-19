@@ -43,6 +43,11 @@ export interface FortuneSourceProgress {
 	nextInfo?: UpgradeableInfo;
 	maxInfo?: UpgradeableInfo;
 	api?: boolean;
+	active?: {
+		active: boolean;
+		reason?: string;
+		fortune?: number;
+	};
 }
 
 export interface UpgradeCost {
@@ -65,6 +70,7 @@ export enum UpgradeCategory {
 	CommunityCenter = 'community_center',
 	Anita = 'anita',
 	Misc = 'misc',
+	Attribute = 'attribute',
 }
 
 export enum UpgradeAction {
