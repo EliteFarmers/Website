@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import JumpLink from '$comp/jump-link.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
-	import type { components } from '$lib/api/api';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
@@ -22,12 +22,12 @@
 
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
-		const response = await fetch('/rates/' + items.join('|'));
+		const response = await fetch('/api/items/' + items.join('|'));
 		try {
 			const jsonData = await response.json();
 
-			const data = jsonData as components['schemas']['GetSpecifiedSkyblockItemsResponse'];
-			return data?.items;
+			const data = jsonData as RatesItemPriceData;
+			return data;
 		} catch {
 			return undefined;
 		}

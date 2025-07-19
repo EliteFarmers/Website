@@ -11,6 +11,8 @@
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
 	import { Crop, CROP_INFO, getCropDisplayName, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+	import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
+	import ShardSetting from './shard-setting.svelte';
 
 	const ratesData = getRatesData();
 
@@ -171,6 +173,31 @@
 	</SettingListItem>
 	<SettingSeperator />
 
+	<SettingListItem
+		title="Infested Plot"
+		description="How much of your time is spent farming in an infested plot. Used for Termite Shard."
+	>
+		{#snippet child()}
+			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<div class="flex flex-1 flex-row items-center gap-1">
+					<p class="w-12 p-2 pl-4 text-right text-lg">
+						{Math.round(($ratesData.infestedPlotProbability ?? 0) * 100)}%
+					</p>
+					{#if $ratesData.infestedPlotProbability !== undefined}
+						<SliderSimple
+							class="h-12 flex-1"
+							min={0}
+							max={1}
+							bind:value={$ratesData.infestedPlotProbability}
+							step={0.01}
+						/>
+					{/if}
+				</div>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
+
 	<SettingListItem title="Zorro's Cape Mode" description="The mode to use for Zorro's cape fortune.">
 		{#snippet child()}
 			<div class="flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
@@ -198,6 +225,26 @@
 		{/snippet}
 	</SettingListItem>
 	<SettingSeperator />
+
+	<SettingHeader class="mt-8 text-xl">Attribute Shards</SettingHeader>
+	<span class="text-muted-foreground px-1 text-sm"
+		>Set the amount of each attribute shard you have! This is unfortunately necessary since Hypixel hasn't added
+		them to the API yet.</span
+	>
+	<SettingBigSeperator />
+
+	{#each Object.values(FARMING_ATTRIBUTE_SHARDS).filter((shard) => shard.effect === 'fortune' || shard.effect === 'rates') as shard (shard.skyblockId)}
+		<SettingListItem title={shard.name}>
+			<ShardSetting
+				{shard}
+				amount={$ratesData.attributes[shard.skyblockId]}
+				onChange={(v) => {
+					$ratesData.attributes[shard.skyblockId] = v;
+				}}
+			/>
+		</SettingListItem>
+		<SettingSeperator />
+	{/each}
 
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
 	<span class="text-muted-foreground px-1 text-sm"

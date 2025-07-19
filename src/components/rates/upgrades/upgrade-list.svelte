@@ -1,16 +1,13 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api.js';
+	import type { RatesItemPriceData } from '$lib/api/elite.js';
 	import { getColumns } from './columns.js';
 	import UpgradesTable from './data-table.svelte';
 	import type { FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrades: FortuneUpgrade[];
-		items?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items'];
-		costFn?: (
-			upgrade: FortuneUpgrade,
-			items?: components['schemas']['GetSpecifiedSkyblockItemsResponse']['items']
-		) => number;
+		items?: RatesItemPriceData;
+		costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number;
 	}
 
 	let { upgrades, items, costFn }: Props = $props();
