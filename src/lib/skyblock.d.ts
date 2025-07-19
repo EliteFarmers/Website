@@ -380,5 +380,4 @@ export type RankName =
 	| 'VIP'
 	| 'MAYOR'
 	| 'MINISTER'
-	| 'PIG+++'
 	| 'STAFF';

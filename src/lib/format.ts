@@ -1,6 +1,6 @@
 import { Crop, getCropFromName } from 'farming-weight';
 import type { components } from './api/api';
-import { MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
+import { MINECRAFT_COLORS, MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
 import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
 import type { RankName, Skill, PlusColor } from './skyblock';
@@ -171,8 +171,17 @@ export function appendOrdinalSuffix(i: number) {
 }
 
 export function getRankInformation(player?: components['schemas']['PlayerDataDto'] | null) {
-	const defaults = GetRankDefaults(GetRankName(player));
-	if (!defaults) return undefined;
+	const rankName = GetRankName(player);
+	const defaults = GetRankDefaults(rankName);
+	if (!defaults) {
+		if (!rankName) return undefined;
+		return {
+			raw: rankName,
+			color:
+				MINECRAFT_COLORS[(rankName?.match(/(§\w)/)?.[1] || '§0') as keyof typeof MINECRAFT_COLORS] || '#000000',
+			tag: rankName?.replace(/§\w/g, '').match(/\[(.+?)\]/)?.[1] || '',
+		} as ReturnType<typeof GetRankDefaults>;
+	}
 
 	if (player?.rankPlusColor && defaults) {
 		defaults.plusColor = convertPlusColorToHex(player.rankPlusColor);
@@ -185,12 +194,7 @@ export function GetRankName(player?: components['schemas']['PlayerDataDto'] | nu
 	if (!player) return undefined;
 
 	if (player.prefix) {
-		// Example: §c[OWNER] -> OWNER
-		// Also removes color codes between brackets for PIG+++
-		const match = player.prefix.replace(/§\w/g, '').match(/\[(.+?)\]/);
-		if (match) {
-			return match[1];
-		}
+		return player.prefix;
 	}
 
 	if (player.rank && player.rank !== 'NORMAL') {

@@ -11,9 +11,10 @@ interface RankDefault {
 	style?: string;
 	plus?: string;
 	plusColor?: string;
+	raw?: string;
 }
 
-export const RANKS: { [color in RankName]: RankDefault } = {
+export const RANKS: { [color in RankName]: RankDefault } & { [key: string]: RankDefault } = {
 	OWNER: {
 		color: '#c43c3c',
 		tag: 'OWNER',
@@ -59,12 +60,6 @@ export const RANKS: { [color in RankName]: RankDefault } = {
 	VIP: {
 		color: '#40bb40',
 		tag: 'VIP',
-	},
-	'PIG+++': {
-		color: '#e668c6',
-		tag: 'PIG',
-		plus: '+++',
-		plusColor: '#33aec3',
 	},
 	MAYOR: {
 		color: '#e668c6',

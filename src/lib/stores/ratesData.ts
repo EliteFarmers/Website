@@ -1,5 +1,6 @@
 import { browser } from '$app/environment';
 import { Crop, ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
+import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 
@@ -13,14 +14,17 @@ interface RatesData {
 	exported: Record<Crop, boolean>;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
+	axed: boolean;
 	sprayedPlot: boolean;
+	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
+	attributes: Record<string, number>;
 }
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 5,
+	v: 6,
 	settings: false,
 	communityCenter: 0,
 	strength: 0,
@@ -49,7 +53,14 @@ const defaultData = {
 		anitaContest: false,
 	},
 	sprayedPlot: true,
+	infestedPlotProbability: 0.2,
+	axed: false,
 	zorroMode: ZorroMode.Normal,
+	attributes: Object.fromEntries(
+		Object.entries(FARMING_ATTRIBUTE_SHARDS)
+			.filter((a) => a[1].effect === 'rates' || a[1].effect === 'fortune')
+			.map((a) => [a[0], 0])
+	),
 } as RatesData;
 
 export function initRatesData(data = defaultData) {
