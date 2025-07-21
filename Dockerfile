@@ -1,5 +1,5 @@
 FROM node:23-alpine AS builder
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.12.2
 WORKDIR /app
 
 COPY package*.json .
@@ -14,7 +14,7 @@ RUN pnpm prune --production
 
 
 FROM node:23-alpine
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.12.2
 WORKDIR /app
 
 COPY --from=builder /app/node_modules node_modules/
