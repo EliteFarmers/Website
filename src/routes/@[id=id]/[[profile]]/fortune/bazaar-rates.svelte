@@ -25,6 +25,7 @@
 
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
+		if (items.length === 0) return undefined;
 		const response = await fetch('/api/items/' + items.join('|'));
 		try {
 			const jsonData = await response.json();

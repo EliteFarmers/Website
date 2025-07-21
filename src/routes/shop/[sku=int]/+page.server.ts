@@ -2,7 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { ClaimFreeProduct, GetSelectedProfileMember } from '$lib/api/elite';
 
-export const load = (async ({ params, parent }) => {
+export const load = (async ({ params, parent, request }) => {
 	const { products, session } = await parent();
 
 	const product = products?.find((p) => p.id === params.sku);
@@ -17,7 +17,9 @@ export const load = (async ({ params, parent }) => {
 		};
 	}
 
-	const { data: weight } = await GetSelectedProfileMember(session.uuid).catch(() => ({ data: undefined }));
+	const { data: weight } = await GetSelectedProfileMember(session.uuid, request.headers).catch(() => ({
+		data: undefined,
+	}));
 
 	return {
 		product: product,

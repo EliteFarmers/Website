@@ -11,7 +11,7 @@ import type { components } from '$lib/api/api';
 import { IsUUID } from '$params/uuid';
 import { FetchDiscordUserData } from '$lib/api/auth';
 
-export const load: PageServerLoad = async ({ locals, parent, url }) => {
+export const load: PageServerLoad = async ({ locals, parent, url, request }) => {
 	const { session } = await parent();
 	const { access_token: token } = locals;
 
@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
 	const { data: weight } = account?.id
-		? await GetSelectedProfileMember(account?.id).catch(() => ({ data: undefined }))
+		? await GetSelectedProfileMember(account?.id, request.headers).catch(() => ({ data: undefined }))
 		: { data: undefined };
 	const { data: styles } = await GetWeightStyles().catch(() => ({ data: undefined }));
 

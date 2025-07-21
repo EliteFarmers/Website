@@ -1,13 +1,22 @@
-import createClient from 'openapi-fetch';
+import createClient, { type HeadersOptions, type Middleware } from 'openapi-fetch';
 import type { components, paths } from './api';
 import { ELITE_API_URL } from '$env/static/private';
 
-export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
+const client = createClient<paths>({
 	baseUrl: ELITE_API_URL,
-	headers: {
-		'User-Agent': 'EliteWebsite',
-	},
 });
+
+const middleware: Middleware = {
+	async onRequest({ request }) {
+		request.headers.set('User-Agent', 'EliteWebsite');
+		request.headers.delete('accept-encoding');
+		return request;
+	},
+};
+
+client.use(middleware);
+
+export const { GET, POST, DELETE, PATCH, PUT } = client;
 
 export const formDataSerializer = (body: Record<string, string | number | boolean>) => {
 	if (!body) return;
@@ -54,61 +63,67 @@ export const GetAuthorizedAccount = async (accessToken: string) =>
 		},
 	});
 
-export const GetAccount = async (player: string) =>
+export const GetAccount = async (player: string, headers: HeadersOptions) =>
 	await GET('/account/{player}', {
 		params: {
 			path: {
 				player: player,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetAccountByDiscordId = async (discordId: number) =>
+export const GetAccountByDiscordId = async (discordId: number, headers: HeadersOptions) =>
 	await GET('/account/{discordId}', {
 		params: {
 			path: {
 				discordId: discordId,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayer = async (player: string) =>
+export const GetPlayer = async (player: string, headers: HeadersOptions) =>
 	await GET('/player/{player}', {
 		params: {
 			path: {
 				player: player,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayerByDiscordId = async (id: string) =>
+export const GetPlayerByDiscordId = async (id: string, headers: HeadersOptions) =>
 	await GET('/player/{discordId}', {
 		params: {
 			path: {
 				discordId: id as unknown as number,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetProfiles = async (playerUuid: string) =>
+export const GetProfiles = async (playerUuid: string, headers: HeadersOptions) =>
 	await GET('/profiles/{playerUuid}', {
 		params: {
 			path: {
 				playerUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetProfile = async (profileUuid: string) =>
+export const GetProfile = async (profileUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{profileUuid}', {
 		params: {
 			path: {
 				profileUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetProfileMember = async (playerUuid: string, profileUuid: string) =>
+export const GetProfileMember = async (playerUuid: string, profileUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -116,18 +131,20 @@ export const GetProfileMember = async (playerUuid: string, profileUuid: string) 
 				profileUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetSelectedProfileMember = async (playerUuid: string) =>
+export const GetSelectedProfileMember = async (playerUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{playerUuid}/selected', {
 		params: {
 			path: {
 				playerUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, max?: number) =>
+export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, max?: number, headers?: HeadersOptions) =>
 	await GET('/leaderboards/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -138,9 +155,10 @@ export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, ma
 				max: max,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayerContests = async (playerUuid: string, profileUuid: string) =>
+export const GetPlayerContests = async (playerUuid: string, profileUuid: string, headers: HeadersOptions) =>
 	await GET('/contests/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -148,27 +166,30 @@ export const GetPlayerContests = async (playerUuid: string, profileUuid: string)
 				profileUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetContests = async (timestamp: number) =>
+export const GetContests = async (timestamp: number, headers: HeadersOptions) =>
 	await GET('/contests/{timestamp}', {
 		params: {
 			path: {
 				timestamp,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetYearlyContests = async (year: number) =>
+export const GetYearlyContests = async (year: number, headers: HeadersOptions) =>
 	await GET('/contests/at/{year}', {
 		params: {
 			path: {
 				year,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetMonthlyContests = async (year: number, month: number) =>
+export const GetMonthlyContests = async (year: number, month: number, headers: HeadersOptions) =>
 	await GET('/contests/at/{year}/{month}', {
 		params: {
 			path: {
@@ -176,6 +197,7 @@ export const GetMonthlyContests = async (year: number, month: number) =>
 				month,
 			},
 		},
+		headers: headers,
 	});
 
 export const GetCurrentYearContests = async () => await GET('/contests/at/now', {});

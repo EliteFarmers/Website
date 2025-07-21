@@ -4,6 +4,9 @@ import type { RatesItemPriceData } from '$lib/api/elite';
 
 export const GET: RequestHandler = async ({ params, locals }) => {
 	const { item } = params;
+	if (!item) {
+		return json({});
+	}
 	const items = item.split('|');
 
 	const bz = locals.cache?.bazaar.products;

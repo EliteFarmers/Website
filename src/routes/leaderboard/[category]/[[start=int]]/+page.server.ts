@@ -80,7 +80,7 @@ export const actions = {
 			});
 		}
 
-		const { data: account } = await GetAccount(search);
+		const { data: account } = await GetAccount(search, request.headers).catch(() => ({ data: undefined }));
 		if (!account) {
 			return fail(400, {
 				error: 'User not found!',
