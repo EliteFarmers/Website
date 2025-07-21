@@ -7,7 +7,7 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { Crop, type FortuneUpgrade } from 'farming-weight';
-	import { Debounced } from 'runed';
+	import { Debounced, useDebounce, watch } from 'runed';
 
 	const ctx = getStatsContext();
 	const mode = $derived(ctx.selectedProfile?.gameMode);
@@ -22,6 +22,7 @@
 
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
+		if (items.length === 0) return {} as RatesItemPriceData;
 		const response = await fetch('/api/items/' + items.join('|'));
 		try {
 			const jsonData = await response.json();
@@ -33,9 +34,15 @@
 		}
 	}
 
-	const generalUpgrades = $derived($player.getUpgrades());
-	const cropUpgrades = $derived($player.getCropUpgrades(crop));
-	const upgrades = $derived([...generalUpgrades, ...cropUpgrades]);
+	let upgrades = $state([...$player.getUpgrades(), ...$player.getCropUpgrades(crop)]);
+
+	const getUpgrades = useDebounce(() => {
+		upgrades = [...$player.getUpgrades(), ...$player.getCropUpgrades(crop)];
+	}, 750);
+
+	watch([() => $player, () => crop], () => {
+		getUpgrades();
+	});
 
 	const neededItems = $derived([
 		...new Set(
