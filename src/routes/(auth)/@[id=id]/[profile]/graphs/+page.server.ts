@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad, PageServerParentData } from './$types';
 import { GetAccount, GetAdminCropCollectionPointsTimeSpan, GetCropCollectionPoints } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 
-export const load = (async ({ params, parent, locals }) => {
+export const load = (async ({ params, parent, locals, request }) => {
 	const { session, account: aData } = (await parent()) as PageServerParentData & {
 		account?: components['schemas']['MinecraftAccountDto'];
 	};
@@ -16,7 +16,7 @@ export const load = (async ({ params, parent, locals }) => {
 	}
 
 	if (!account?.id) {
-		const { data: accountData } = await GetAccount(id).catch(() => ({ data: undefined }));
+		const { data: accountData } = await GetAccount(id, request.headers).catch(() => ({ data: undefined }));
 		if (!accountData?.id) {
 			throw error(404, 'Account not found');
 		}

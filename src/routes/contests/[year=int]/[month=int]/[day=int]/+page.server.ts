@@ -3,7 +3,7 @@ import { getSkyblockDate, getTimeStamp } from '$lib/format';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load: PageServerLoad = async ({ params, setHeaders, request }) => {
 	const { year, month, day } = params;
 
 	const daysSinceFirstContestOfTheYear = +day + (+month - 1) * 31 - 2;
@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		throw redirect(308, `/contests/${date.year + 1}/${date.month + 1}/${date.day + 1}`);
 	}
 
-	const { data: contests } = await GetContests(timestamp);
+	const { data: contests } = await GetContests(timestamp, request.headers).catch(() => ({ data: undefined }));
 
 	if (!contests) {
 		throw error(404, 'Contests not found!');
