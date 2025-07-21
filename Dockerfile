@@ -1,4 +1,4 @@
-FROM node:23-alpine AS builder
+FROM node:24-alpine AS builder
 RUN npm install -g pnpm@10.12.2
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN pnpm run build
 RUN pnpm prune --production
 
 
-FROM node:23-alpine
+FROM node:24-alpine
 RUN npm install -g pnpm@10.12.2
 WORKDIR /app
 
