@@ -1186,13 +1186,13 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 		name: 'Eradicator',
 		stats: {
 			2: {
-				[Stat.FarmingFortune]: 50,
+				[Stat.PestKillFortune]: 50,
 			},
 			3: {
-				[Stat.FarmingFortune]: 75,
+				[Stat.PestKillFortune]: 75,
 			},
 			4: {
-				[Stat.FarmingFortune]: 100,
+				[Stat.PestKillFortune]: 100,
 			},
 		},
 	},
