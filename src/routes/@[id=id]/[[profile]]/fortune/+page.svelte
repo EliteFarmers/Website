@@ -38,7 +38,6 @@
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import Head from '$comp/head.svelte';
 	import FarmingGear from '$comp/rates/farming-gear.svelte';
-	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import CategoryProgress from '$comp/rates/category-progress.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import PetSelector from '$comp/rates/pet-selector.svelte';
