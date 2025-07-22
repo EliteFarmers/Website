@@ -24,7 +24,9 @@
 				class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[state=collapsed]:rounded-full"
 				{...props}
 			>
-				<Bell class="aspect-square size-8 items-center justify-center rounded-lg mx-2 group-data-[state=collapsed]:mx-0 mt-0.5" />
+				<Bell
+					class="mx-2 mt-0.5 aspect-square size-8 items-center justify-center rounded-lg group-data-[state=collapsed]:mx-0"
+				/>
 				<span>Alerts</span>
 				{#if announcements.length}
 					<div
