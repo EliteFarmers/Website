@@ -327,6 +327,7 @@ function mapShardSource(
 ): DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions> {
 	const result = {
 		name: shard.name,
+		api: false,
 		wiki: () => shard.wiki,
 		exists: () => true,
 		active: shard.active,
@@ -357,6 +358,7 @@ function mapShardSource(
 			return [
 				{
 					title: shard.name.replace('Shard', level.toString()),
+					api: false,
 					increase: nextFortune - currentFortune,
 					action: UpgradeAction.LevelUp,
 					category: UpgradeCategory.Attribute,
