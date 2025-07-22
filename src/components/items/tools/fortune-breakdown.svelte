@@ -45,14 +45,14 @@
 </script>
 
 {#if list.length <= 0 && !child}
-	<div class="relative flex h-full min-h-4 max-w-fit flex-row items-center rounded-md {background} gap-1.5 px-1">
+	<div class="relative flex max-h-fit min-h-4 max-w-fit flex-row items-center rounded-md {background} gap-1.5 px-1">
 		<span>{STAT_ICONS[Stat.FarmingFortune]}</span>
 		<span class="relative {small ? 'md:text-md text-sm' : 'text-md md:text-lg'} z-10 pr-1 font-mono leading-none">
 			{(+sum.toFixed(2)).toLocaleString()}
 		</span>
 	</div>
 {:else}
-	<Popover.Mobile triggerRootClass="h-[28px]">
+	<Popover.Mobile triggerRootClass="h-fit">
 		{#snippet trigger()}
 			<div class="relative flex h-full min-h-4 flex-row items-center rounded-md {background} gap-1.5 px-1">
 				<span>{STAT_ICONS[Stat.FarmingFortune]}</span>
