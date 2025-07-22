@@ -362,8 +362,17 @@ export class FarmingPlayer {
 			this.selectTool(tool);
 		}
 
+		const { fortuneType } = CROP_INFO[crop];
+
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
+
+		// Selected Pet
+		const petFortune = this.selectedPet?.getFortune(fortuneType);
+		if (petFortune && petFortune > 0) {
+			breakdown[this.selectedPet?.info.name ?? 'Selected Pet'] = petFortune;
+			sum += petFortune;
+		}
 
 		// Crop upgrades
 		const upgrade = getFortune(this.options.cropUpgrades?.[crop], GARDEN_CROP_UPGRADES);

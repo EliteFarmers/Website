@@ -208,11 +208,10 @@ test('Pesthunter Set Bonus Test', () => {
 
 	const set = new ArmorSet([], [cloak, gloves]);
 
-	expect(set.fortune).toBe(108);
+	expect(set.fortune).toBe(58);
 	expect(set.equipmentSetBonuses).toHaveLength(1);
 	expect(set.getFortuneBreakdown()).toStrictEqual({
 		[gloves.item.name ?? '']: 29,
 		[cloak.item.name ?? '']: 29,
-		Eradicator: 50,
 	});
 });

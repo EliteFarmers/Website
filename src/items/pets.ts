@@ -13,6 +13,7 @@ export enum FarmingPets {
 	Slug = 'SLUG',
 	Hedgehog = 'HEDGEHOG',
 	Chicken = 'CHICKEN',
+	Mosquito = 'MOSQUITO',
 }
 
 export interface FarmingPetType {
@@ -269,6 +270,37 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				type: FarmingPetStatType.Base,
 			},
 		},
+	},
+	[FarmingPets.Mosquito]: {
+		name: 'Mosquito',
+		wiki: 'https://wiki.hypixel.net/Mosquito_Pet',
+		perLevelStats: {
+			[Stat.Speed]: {
+				name: 'Speed',
+				value: 0.2,
+				type: FarmingPetStatType.Base,
+			},
+			[Stat.BonusPestChance]: {
+				name: 'Bonus Pest Chance',
+				value: 0.4,
+				type: FarmingPetStatType.Base,
+			},
+		},
+		abilities: [
+			{
+				name: "Buzzin' Barterer",
+				exists: (_, pet) => pet.rarity !== Rarity.Common && pet.rarity !== Rarity.Uncommon,
+				computed: (player, pet) => {
+					return {
+						[Stat.SugarCaneFortune]: {
+							name: "Buzzin' Barterer",
+							value: pet.level * 0.02 * (player.uniqueVisitors ?? 0),
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			},
+		],
 	},
 };
 

@@ -1,3 +1,4 @@
+import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
 
 export enum Crop {
@@ -29,6 +30,7 @@ export interface CropInfo {
 	name: string;
 	npc: number;
 	drops: number;
+	fortuneType: Stat;
 	breaks?: number;
 	replenish?: boolean;
 	exportable?: boolean;
@@ -44,6 +46,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		fortuneType: Stat.CactusFortune,
 		startingTool: 'CACTUS_KNIFE',
 		crafts: [
 			{
@@ -60,6 +63,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Carrot',
 		npc: 3,
 		drops: 3,
+		fortuneType: Stat.CarrotFortune,
 		replenish: true,
 		exportable: true,
 		exportableCost: {
@@ -90,6 +94,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Cocoa Beans',
 		npc: 3,
 		drops: 3,
+		fortuneType: Stat.CocoaBeanFortune,
 		replenish: true,
 		exportable: true,
 		exportableCost: {
@@ -120,6 +125,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Melon',
 		npc: 2,
 		drops: 5,
+		fortuneType: Stat.MelonFortune,
 		startingTool: 'MELON_DICER',
 		crafts: [
 			{
@@ -137,6 +143,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 10,
 		drops: 1,
 		exportable: true,
+		fortuneType: Stat.MushroomFortune,
 		exportableCost: {
 			items: {
 				HALF_EATEN_MUSHROOM: 3000,
@@ -176,6 +183,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		drops: 2.5,
 		replenish: true,
 		exportable: true,
+		fortuneType: Stat.NetherWartFortune,
 		exportableCost: {
 			items: {
 				WARTY: 3000,
@@ -198,6 +206,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 3,
 		drops: 3,
 		replenish: true,
+		fortuneType: Stat.PotatoFortune,
 		startingTool: 'THEORETICAL_HOE_POTATO_1',
 		crafts: [
 			{
@@ -215,6 +224,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 10,
 		drops: 1,
 		exportable: true,
+		fortuneType: Stat.PumpkinFortune,
 		exportableCost: {
 			items: {
 				EXPIRED_PUMPKIN: 3000,
@@ -237,6 +247,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		fortuneType: Stat.SugarCaneFortune,
 		startingTool: 'THEORETICAL_HOE_CANE_1',
 		crafts: [
 			{
@@ -254,6 +265,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 6,
 		drops: 1,
 		exportable: true,
+		fortuneType: Stat.WheatFortune,
 		exportableCost: {
 			items: {
 				FINE_FLOUR: 3000,
@@ -276,6 +288,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 3,
 		drops: 1.5,
 		replenish: true,
+		fortuneType: Stat.WheatFortune,
 		startingTool: 'THEORETICAL_HOE_WHEAT_1',
 		crafts: [
 			{

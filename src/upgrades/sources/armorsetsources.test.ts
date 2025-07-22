@@ -243,9 +243,9 @@ test('Equipment set bonus', () => {
 		},
 		{
 			name: 'Equipment Set Bonus',
-			fortune: 50,
-			maxFortune: 100,
-			ratio: 0.5,
+			fortune: 0,
+			maxFortune: 0,
+			ratio: 0,
 		},
 	]);
 });

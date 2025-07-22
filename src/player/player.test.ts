@@ -1,5 +1,7 @@
 import { expect, test } from 'vitest';
 import { FARMING_ATTRIBUTE_SHARDS } from '../constants/attributes.js';
+import { Crop } from '../constants/crops.js';
+import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingPlayer } from './player.js';
 
 test('Player construct test', () => {
@@ -71,4 +73,31 @@ test('Attribute shards upgrade test', () => {
 
 	const galaxyFish = upgrades.find((u) => u.title.startsWith('Galaxy Fish 10'));
 	expect(galaxyFish).toBeDefined();
+});
+
+test('Crop specific pet fortune test', () => {
+	const player = new FarmingPlayer({
+		pets: [
+			new FarmingPet({
+				uuid: '5adcc2e9-56b1-46dd-9a6e-18d082422604',
+				type: 'MOSQUITO',
+				exp: 1491022.3152000662,
+				active: false,
+				tier: 'LEGENDARY',
+				heldItem: null,
+				candyUsed: 0,
+				skin: null,
+			}),
+		],
+		uniqueVisitors: 71,
+	});
+
+	player.selectPet(player.pets[0]);
+
+	const cropFortune = player.getCropFortune(Crop.SugarCane);
+	expect(cropFortune).toBeDefined();
+
+	expect(cropFortune.breakdown).toStrictEqual({
+		Mosquito: 86.62,
+	});
 });
