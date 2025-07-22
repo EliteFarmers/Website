@@ -88,7 +88,7 @@ export class FarmingPlayer {
 			this.armorSet = options.armor;
 
 			this.armor = this.armorSet.pieces;
-			this.armor.sort((a, b) => b.fortune - a.fortune);
+			this.armor.sort((a, b) => b.potential - a.potential);
 
 			this.equipment = this.armorSet.equipmentPieces;
 			this.equipment.sort((a, b) => b.fortune - a.fortune);

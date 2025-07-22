@@ -63,9 +63,12 @@ export class ArmorSet {
 	public declare setBonuses: ActiveArmorSetBonus[];
 	public declare equipmentSetBonuses: ActiveArmorSetBonus[];
 
+	public declare options?: PlayerOptions;
+
 	constructor(armor: FarmingArmor[], equipment?: FarmingEquipment[], options?: PlayerOptions) {
 		this.setBonuses = [];
 		this.equipmentSetBonuses = [];
+		this.options = options;
 
 		if (options) {
 			for (const piece of armor) {
@@ -116,7 +119,14 @@ export class ArmorSet {
 		for (const piece of this.equipmentPieces) {
 			piece.setOptions(options);
 		}
+
+		if (!this.options) {
+			this.resetChosenPieces();
+		}
+
 		this.getFortuneBreakdown(true);
+
+		this.options = options;
 	}
 
 	resetChosenPieces() {
