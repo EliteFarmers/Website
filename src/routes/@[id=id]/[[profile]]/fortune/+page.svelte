@@ -244,7 +244,7 @@
 	<Cropselector radio={true} />
 
 	<div class="flex w-full max-w-6xl flex-col justify-center gap-4 md:flex-row">
-		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 p-4 md:px-6 md:pb-6">
+		<section class="bg-card flex w-full flex-1 flex-col items-center gap-4 rounded-md border-2 p-4 md:py-4">
 			<div class="flex w-full flex-row items-center justify-between">
 				<div class="hidden flex-1 sm:block"></div>
 				<div class="my-2 flex flex-3 flex-row items-center gap-2">
@@ -330,22 +330,10 @@
 			{/if}
 
 			<PetSelector {player} bind:selected={selectedPet} />
-
-			<div class="flex w-full items-center justify-between pt-2">
-				<p class="text-lg font-semibold">Farming Tool</p>
-				{#if selectedTool && selectedTool.crop === selectedCropKey}
-					<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
-				{:else}
-					<FortuneBreakdown total={0} />
-				{/if}
-			</div>
-			<ToolSelector {tools} {player} bind:selectedToolId />
+			<ToolSelector {tools} {player} bind:selectedToolId {selectedCropKey} />
 
 			<div class="flex w-full flex-col gap-2">
 				<FarmingGear {player} />
-				{#if $player.armor.length === 0 && $player.equipment.length === 0}
-					<p class="my-4 text-center text-lg font-semibold">No gear found!</p>
-				{/if}
 			</div>
 		</section>
 		<section class="bg-card w-full flex-1 rounded-md border-2 p-4">
