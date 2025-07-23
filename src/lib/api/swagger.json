@@ -501,6 +501,64 @@
         ]
       }
     },
+    "/account/{playerUuid}/{profileUuid}/fortune": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update Fortune Settings for Account",
+        "operationId": "EliteAPIFeaturesAccountUpdateFortuneSettingsUpdateFortuneSettingsEndpoint",
+        "parameters": [
+          {
+            "name": "playerUuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "profileUuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "x-name": "settings",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberFortuneSettingsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
     "/account/settings": {
       "patch": {
         "tags": [
@@ -530,13 +588,10 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         },
         "security": [
@@ -9361,6 +9416,24 @@
                 "$ref": "#/components/schemas/WeightStyleLinkedDto"
               }
             ]
+          },
+          "nameStyle": {
+            "description": "Selected name style for the user",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WeightStyleLinkedDto"
+              }
+            ]
+          },
+          "fortune": {
+            "description": "Fortune settings for the user",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FortuneSettingsDto"
+              }
+            ]
           }
         }
       },
@@ -9418,6 +9491,62 @@
             "type": "string",
             "maxLength": 64,
             "nullable": true
+          }
+        }
+      },
+      "FortuneSettingsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "accounts"
+        ],
+        "properties": {
+          "accounts": {
+            "type": "object",
+            "description": "Member fortune settings for each minecraft account, then each profile.",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/MemberFortuneSettingsDto"
+              }
+            }
+          }
+        }
+      },
+      "MemberFortuneSettingsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "strength",
+          "communityCenter",
+          "attributes",
+          "exported"
+        ],
+        "properties": {
+          "strength": {
+            "type": "integer",
+            "description": "Amount of strength used for mooshroom fortune",
+            "format": "int32"
+          },
+          "communityCenter": {
+            "type": "integer",
+            "description": "Community center farming fortune level",
+            "format": "int32"
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Attribute shards",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "exported": {
+            "type": "object",
+            "description": "Exported crops",
+            "additionalProperties": {
+              "type": "boolean"
+            }
           }
         }
       },
@@ -10255,6 +10384,84 @@
           }
         }
       },
+      "ProblemDetails": {
+        "type": "object",
+        "description": "RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:\napp.UseFastEndpoints(c => c.Errors.UseProblemDetails())",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "title",
+          "status",
+          "instance",
+          "traceId",
+          "errors"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "default": "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1"
+          },
+          "title": {
+            "type": "string",
+            "default": "One or more validation errors occurred."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "default": 400
+          },
+          "instance": {
+            "type": "string",
+            "default": "/api/route"
+          },
+          "traceId": {
+            "type": "string",
+            "default": "0HMPNHL0JHL76:00000001"
+          },
+          "detail": {
+            "type": "string",
+            "description": "the details of the error",
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProblemDetails_Error"
+            }
+          }
+        }
+      },
+      "ProblemDetails_Error": {
+        "type": "object",
+        "description": "the error details object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "reason"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "the name of the error or property of the dto that caused the error",
+            "default": "Error or field name"
+          },
+          "reason": {
+            "type": "string",
+            "description": "the reason for the error",
+            "default": "Error reason"
+          },
+          "code": {
+            "type": "string",
+            "description": "the code of the error",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "description": "the severity of the error",
+            "nullable": true
+          }
+        }
+      },
       "UserRoleRequest": {
         "type": "object",
         "additionalProperties": false
@@ -10544,84 +10751,6 @@
       "DismissAnnouncementDto": {
         "type": "object",
         "additionalProperties": false
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "description": "RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:\napp.UseFastEndpoints(c => c.Errors.UseProblemDetails())",
-        "additionalProperties": false,
-        "required": [
-          "type",
-          "title",
-          "status",
-          "instance",
-          "traceId",
-          "errors"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "default": "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1"
-          },
-          "title": {
-            "type": "string",
-            "default": "One or more validation errors occurred."
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "default": 400
-          },
-          "instance": {
-            "type": "string",
-            "default": "/api/route"
-          },
-          "traceId": {
-            "type": "string",
-            "default": "0HMPNHL0JHL76:00000001"
-          },
-          "detail": {
-            "type": "string",
-            "description": "the details of the error",
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProblemDetails_Error"
-            }
-          }
-        }
-      },
-      "ProblemDetails_Error": {
-        "type": "object",
-        "description": "the error details object",
-        "additionalProperties": false,
-        "required": [
-          "name",
-          "reason"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "the name of the error or property of the dto that caused the error",
-            "default": "Error or field name"
-          },
-          "reason": {
-            "type": "string",
-            "description": "the reason for the error",
-            "default": "Error reason"
-          },
-          "code": {
-            "type": "string",
-            "description": "the code of the error",
-            "nullable": true
-          },
-          "severity": {
-            "type": "string",
-            "description": "the severity of the error",
-            "nullable": true
-          }
-        }
       },
       "AnnouncementDto": {
         "type": "object",

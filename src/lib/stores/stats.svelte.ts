@@ -5,6 +5,7 @@ import { CROP_TO_PEST } from '$lib/constants/pests';
 import { formatIgn, getRankInformation } from '$lib/format';
 import { getCropFromName, Crop } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
+import { getRatesData } from './ratesData';
 
 export class PlayerStats {
 	#account = $state<NonNullable<components['schemas']['MinecraftAccountDto']>>(null!);
@@ -14,6 +15,9 @@ export class PlayerStats {
 	#ranks = $state<components['schemas']['LeaderboardRanksResponse']>(null!);
 	#filteredRanks = $state<components['schemas']['LeaderboardRanksResponse']['ranks']>(null!);
 	#collections = $state<Collection[]>([]);
+	#fortuneSettings = $derived(
+		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
+	);
 
 	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
 	#pets = $state.raw<components['schemas']['PetDto'][]>([]);
@@ -41,6 +45,17 @@ export class PlayerStats {
 		this.#ranks = ranks;
 		this.#filteredRanks = Object.fromEntries(Object.entries(ranks.ranks ?? {}).filter((r) => r[1].rank <= 10_000));
 
+		if (this.fortuneSettings) {
+			const ratesData = getRatesData();
+			ratesData.update((data) => {
+				data.communityCenter = this.fortuneSettings?.communityCenter ?? data.communityCenter;
+				data.strength = this.fortuneSettings?.strength ?? data.strength;
+				data.attributes = this.fortuneSettings?.attributes ?? data.attributes;
+				data.exported = (this.fortuneSettings?.exported as Record<Crop, boolean>) ?? data.exported;
+				return data;
+			});
+		}
+
 		this.member = member;
 	}
 
@@ -64,6 +79,10 @@ export class PlayerStats {
 		return this.#rank;
 	}
 
+	get fortuneSettings() {
+		return this.#fortuneSettings;
+	}
+
 	get selectedProfile() {
 		return this.#selectedProfile;
 	}
@@ -77,11 +96,10 @@ export class PlayerStats {
 
 		this.#collections = PlayerStats.parseCollections(value);
 
-		// This allows mutating the values in these arrays
-		this.#tools = structuredClone(value?.farmingWeight.inventory?.tools ?? []);
-		this.#pets = structuredClone(value?.pets ?? []);
-		this.#armor = structuredClone(value?.farmingWeight.inventory?.armor ?? []);
-		this.#equipment = structuredClone(value?.farmingWeight.inventory?.equipment ?? []);
+		this.#tools = $state.snapshot(value?.farmingWeight.inventory?.tools ?? []);
+		this.#pets = $state.snapshot(value?.pets ?? []);
+		this.#armor = $state.snapshot(value?.farmingWeight.inventory?.armor ?? []);
+		this.#equipment = $state.snapshot(value?.farmingWeight.inventory?.equipment ?? []);
 	}
 
 	get member() {

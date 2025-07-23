@@ -14,7 +14,6 @@ interface RatesData {
 	exported: Record<Crop, boolean>;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
-	axed: boolean;
 	sprayedPlot: boolean;
 	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;

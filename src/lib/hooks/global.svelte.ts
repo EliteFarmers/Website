@@ -12,6 +12,8 @@ type ConstructorData = {
 
 type PersistedData = {
 	dismissedAnnouncements: string[];
+	settings: components['schemas']['AuthorizedAccountDto']['settings'];
+	minecraftAccounts?: string[];
 };
 
 export class GlobalContext {
@@ -20,6 +22,7 @@ export class GlobalContext {
 	#authorized = $derived(this.#session !== undefined);
 	#data = new PersistedState<PersistedData>('global-data', {
 		dismissedAnnouncements: [],
+		settings: {},
 	});
 	#announcements = $state<components['schemas']['AnnouncementDto'][]>([]);
 	#initialized = $state(false);
@@ -74,8 +77,9 @@ export class GlobalContext {
 		}
 
 		this.#data.current = {
-			...this.#data.current,
 			dismissedAnnouncements: dismissed,
+			settings: user?.settings ?? this.data.settings,
+			minecraftAccounts: user?.minecraftAccounts?.map((a) => a.id) ?? this.data.minecraftAccounts,
 		};
 	}
 
@@ -110,6 +114,10 @@ export class GlobalContext {
 
 			fetch('/api/dismiss/' + id);
 		}
+	}
+
+	ownsAccount(uuid: string) {
+		return this.data?.minecraftAccounts?.some((a) => a === uuid);
 	}
 }
 
