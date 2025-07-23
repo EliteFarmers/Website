@@ -70,7 +70,7 @@
 			placeholder="0"
 			bind:value={$ratesData.strength}
 			min={0}
-			max={1600}
+			max={2500}
 		/>
 	</SettingListItem>
 	<SettingSeperator />
