@@ -13,8 +13,17 @@
 	import { Crop, CROP_INFO, getCropDisplayName, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
 	import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
 	import ShardSetting from './shard-setting.svelte';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { applyAction, enhance } from '$app/forms';
+	import { Button } from '$ui/button';
 
 	const ratesData = getRatesData();
+	const gbl = getGlobalContext();
+	const ctx = getStatsContext();
+
+	const owned = $derived(gbl.authorized && gbl.ownsAccount(ctx.uuid));
+	let loading = $state(false);
 
 	interface Props {
 		player: RatesPlayerStore;
@@ -23,7 +32,7 @@
 	let { player }: Props = $props();
 </script>
 
-<div class="w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
+<div class="relative w-full max-w-2xl flex-1 flex-col justify-center rounded-md p-0 sm:p-4">
 	<SettingHeader class="mt-0 text-2xl">Fortune Settings</SettingHeader>
 	<SettingBigSeperator />
 	<SettingListItem
@@ -270,4 +279,60 @@
 			<SettingSeperator />
 		{/if}
 	{/each}
+
+	{#if owned || ctx.fortuneSettings}
+		<div class="h-16"></div>
+		<div
+			class="bg-background fixed right-0 bottom-0 left-0 z-50 flex w-full max-w-2xl flex-col items-center justify-center gap-2 border-t p-4"
+		>
+			{#if ctx.fortuneSettings && !owned}
+				<p class="text-muted-foreground px-1 text-sm">
+					Loaded saved settings from {ctx.ignMeta}!
+				</p>
+			{/if}
+			{#if owned}
+				<div class="flex flex-row items-center justify-between gap-2">
+					<form
+						class="flex flex-row items-center justify-between gap-4"
+						action="?/save"
+						method="post"
+						use:enhance={() => {
+							loading = true;
+
+							return async ({ result }) => {
+								await applyAction(result);
+								loading = false;
+							};
+						}}
+					>
+						<p class="text-muted-foreground max-w-sm text-sm">
+							Strength, garden fortune, exported crops, and attribute shards can be saved to your profile!
+						</p>
+						<input type="hidden" name="player" value={ctx.uuid} />
+						<input type="hidden" name="profile" value={ctx.selectedProfile?.profileId} />
+						{#each Object.values(FARMING_ATTRIBUTE_SHARDS).filter((shard) => shard.effect === 'fortune' || shard.effect === 'rates') as shard (shard.skyblockId)}
+							<input
+								type="hidden"
+								name={shard.skyblockId}
+								value={$ratesData.attributes[shard.skyblockId] ?? 0}
+							/>
+						{/each}
+						{#each Object.entries(CROP_INFO) as [c, info] (c)}
+							{@const crop = c as Crop}
+							{#if info.exportable}
+								<input
+									type="hidden"
+									name="exported.{crop}"
+									value={$ratesData.exported[crop] ? 'true' : 'false'}
+								/>
+							{/if}
+						{/each}
+						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
+						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />
+						<Button type="submit" disabled={loading}>Save</Button>
+					</form>
+				</div>
+			{/if}
+		</div>
+	{/if}
 </div>

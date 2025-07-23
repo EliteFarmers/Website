@@ -182,6 +182,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/account/{playerUuid}/{profileUuid}/fortune": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Update Fortune Settings for Account */
+        post: operations["EliteAPIFeaturesAccountUpdateFortuneSettingsUpdateFortuneSettingsEndpoint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/account/settings": {
         parameters: {
             query?: never;
@@ -2817,6 +2834,10 @@ export interface components {
             weightStyle?: components["schemas"]["WeightStyleLinkedDto"] | null;
             /** @description Selected leaderboard style for the user */
             leaderboardStyle?: components["schemas"]["WeightStyleLinkedDto"] | null;
+            /** @description Selected name style for the user */
+            nameStyle?: components["schemas"]["WeightStyleLinkedDto"] | null;
+            /** @description Fortune settings for the user */
+            fortune?: components["schemas"]["FortuneSettingsDto"] | null;
         };
         ConfiguredProductFeaturesDto: {
             /**
@@ -2839,6 +2860,34 @@ export interface components {
             /** Format: int32 */
             id: number;
             name?: string | null;
+        };
+        FortuneSettingsDto: {
+            /** @description Member fortune settings for each minecraft account, then each profile. */
+            accounts: {
+                [key: string]: {
+                    [key: string]: components["schemas"]["MemberFortuneSettingsDto"];
+                };
+            };
+        };
+        MemberFortuneSettingsDto: {
+            /**
+             * Format: int32
+             * @description Amount of strength used for mooshroom fortune
+             */
+            strength: number;
+            /**
+             * Format: int32
+             * @description Community center farming fortune level
+             */
+            communityCenter: number;
+            /** @description Attribute shards */
+            attributes: {
+                [key: string]: number;
+            };
+            /** @description Exported crops */
+            exported: {
+                [key: string]: boolean;
+            };
         };
         MinecraftSkinDto: {
             /** @description Minecraft skin texture ID */
@@ -3116,6 +3165,43 @@ export interface components {
             /** Format: int32 */
             order?: number | null;
         };
+        /** @description RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:
+         *     app.UseFastEndpoints(c => c.Errors.UseProblemDetails()) */
+        ProblemDetails: {
+            /** @default https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1 */
+            type: string;
+            /** @default One or more validation errors occurred. */
+            title: string;
+            /**
+             * Format: int32
+             * @default 400
+             */
+            status: number;
+            /** @default /api/route */
+            instance: string;
+            /** @default 0HMPNHL0JHL76:00000001 */
+            traceId: string;
+            /** @description the details of the error */
+            detail?: string | null;
+            errors: components["schemas"]["ProblemDetails_Error"][];
+        };
+        /** @description the error details object */
+        ProblemDetails_Error: {
+            /**
+             * @description the name of the error or property of the dto that caused the error
+             * @default Error or field name
+             */
+            name: string;
+            /**
+             * @description the reason for the error
+             * @default Error reason
+             */
+            reason: string;
+            /** @description the code of the error */
+            code?: string | null;
+            /** @description the severity of the error */
+            severity?: string | null;
+        };
         UserRoleRequest: Record<string, never>;
         EventIdRequest: Record<string, never>;
         EventDetailsDto: {
@@ -3221,43 +3307,6 @@ export interface components {
         /** @enum {string} */
         AnnouncementType: "other" | "update" | "article" | "news" | "event" | "maintenance" | "shop";
         DismissAnnouncementDto: Record<string, never>;
-        /** @description RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:
-         *     app.UseFastEndpoints(c => c.Errors.UseProblemDetails()) */
-        ProblemDetails: {
-            /** @default https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1 */
-            type: string;
-            /** @default One or more validation errors occurred. */
-            title: string;
-            /**
-             * Format: int32
-             * @default 400
-             */
-            status: number;
-            /** @default /api/route */
-            instance: string;
-            /** @default 0HMPNHL0JHL76:00000001 */
-            traceId: string;
-            /** @description the details of the error */
-            detail?: string | null;
-            errors: components["schemas"]["ProblemDetails_Error"][];
-        };
-        /** @description the error details object */
-        ProblemDetails_Error: {
-            /**
-             * @description the name of the error or property of the dto that caused the error
-             * @default Error or field name
-             */
-            name: string;
-            /**
-             * @description the reason for the error
-             * @default Error reason
-             */
-            reason: string;
-            /** @description the code of the error */
-            code?: string | null;
-            /** @description the severity of the error */
-            severity?: string | null;
-        };
         AnnouncementDto: {
             /** @description Announcement title */
             title: string;
@@ -5579,6 +5628,40 @@ export interface operations {
             };
         };
     };
+    EliteAPIFeaturesAccountUpdateFortuneSettingsUpdateFortuneSettingsEndpoint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                playerUuid: string;
+                profileUuid: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberFortuneSettingsDto"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     EliteAPIFeaturesAccountUpdateSettingsUpdateAccountEndpoint: {
         parameters: {
             query?: never;
@@ -5605,15 +5688,8 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": components["schemas"]["ErrorResponse"];
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };

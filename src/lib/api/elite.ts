@@ -265,6 +265,25 @@ export const UpdateUserSettings = async (accessToken: string, settings: componen
 		},
 	});
 
+export const SetUserFortuneSettings = async (
+	accessToken: string,
+	playerUuid: string,
+	profileUuid: string,
+	settings: components['schemas']['MemberFortuneSettingsDto']
+) =>
+	await POST('/account/{playerUuid}/{profileUuid}/fortune', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+		},
+		body: settings,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const RefreshPurchases = async (accessToken: string) =>
 	await POST('/account/purchases', {
 		headers: {
