@@ -66,6 +66,7 @@
 			<p class="text-muted-foreground text-xs">
 				Running version <a
 					href="https://github.com/EliteFarmers/Website/commit/{PUBLIC_COMMIT_HASH}"
+					target="_blank"
 					class="bg-card text-primary rounded-sm border p-0.5 hover:underline">{PUBLIC_COMMIT_HASH}</a
 				>
 			</p>

@@ -18,3 +18,5 @@ networks:
     elite-network:
         name: elite-network
         driver: bridge
+        # Hacky way to set the external to true (any string is truthy), or empty string for false
+        external: ${EXTERNAL_NETWORK:-""}
