@@ -29,7 +29,7 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deployment.key
+          printf "%s\n" "${{ secrets.SSH_KEY }}" > ~/.ssh/deployment.key
           chmod 600 ~/.ssh/deployment.key
           cat >>~/.ssh/config <<END
           Host deployment
