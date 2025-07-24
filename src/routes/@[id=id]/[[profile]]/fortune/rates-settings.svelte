@@ -236,10 +236,10 @@
 	<SettingSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Attribute Shards</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm"
-		>Set the amount of each attribute shard you have! This is unfortunately necessary since Hypixel hasn't added
-		them to the API yet.</p
-	>
+	<p class="text-muted-foreground px-1 text-sm">
+		Set the amount of each attribute shard you have! This is unfortunately necessary since Hypixel hasn't added them
+		to the API yet.
+	</p>
 	<SettingBigSeperator />
 
 	{#each Object.values(FARMING_ATTRIBUTE_SHARDS).filter((shard) => shard.effect === 'fortune' || shard.effect === 'rates') as shard (shard.skyblockId)}
