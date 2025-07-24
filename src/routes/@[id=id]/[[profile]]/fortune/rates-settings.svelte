@@ -236,9 +236,9 @@
 	<SettingSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Attribute Shards</SettingHeader>
-	<span class="text-muted-foreground px-1 text-sm"
+	<p class="text-muted-foreground px-1 text-sm"
 		>Set the amount of each attribute shard you have! This is unfortunately necessary since Hypixel hasn't added
-		them to the API yet.</span
+		them to the API yet.</p
 	>
 	<SettingBigSeperator />
 
