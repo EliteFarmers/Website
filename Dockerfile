@@ -17,6 +17,10 @@ FROM node:23-alpine
 RUN npm install -g pnpm@10.12.2
 WORKDIR /app
 
+# Add these two lines
+ARG COMMIT_HASH
+ENV PUBLIC_COMMIT_HASH=$COMMIT_HASH
+
 COPY --from=builder /app/node_modules node_modules/
 COPY --from=builder /app/build build/
 COPY package.json .
