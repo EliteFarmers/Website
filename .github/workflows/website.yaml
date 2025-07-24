@@ -59,13 +59,13 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/ci-deployment.key
-          chmod 600 ~/.ssh/ci-deployment.key
+          echo "$SSH_KEY" > ~/.ssh/deployment.key
+          chmod 600 ~/.ssh/deployment.key
           cat >>~/.ssh/config <<END
-          Host ci-deployment
+          Host deployment
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/ci-deployment.key
+            IdentityFile ~/.ssh/deployment.key
             StrictHostKeyChecking no
           END
         env:
@@ -74,6 +74,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: Update production
-        run: |
-            cd ~/API
-            ./update.sh
+        run: ssh deployment 'cd ~/Website && ./update.sh'
