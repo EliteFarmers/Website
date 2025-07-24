@@ -2,7 +2,7 @@
 
 The best way to check a player's farming skill/weight in Hypixel skyblock.
 
-**Webite:** https://elitebot.dev/ \
+**Website:** https://elitebot.dev/ \
 **Donate:** https://elitebot.dev/donate \
 **Community Discord:** https://elitebot.dev/discord \
 **Development/Support Discord:** https://elitebot.dev/support
@@ -15,9 +15,7 @@ Note that this website requires the backend API to be running as well. You can f
 
 2. Create a **copy** of `.env.example`, rename it to `.env` and fill out all the fields with the relevant values. The provided default values should work fine, but you will need to change them if you're running an instance of the API.
 
-3. Make a copy of your new `.env` file and rename it to `.env.production`. You should have both. You can ignore the production enviroment file for running in dev mode, it just needs to exist.
-
-4. Run the website in dev mode with the following:
+3. Run the website in dev mode with the following:
 
     ```
     pnpm run dev
@@ -29,23 +27,25 @@ Note that this website requires the backend API to be running as well. You can f
 
 To create a production version of your app, follow these steps.
 
-1. Follow steps `1-5` of the above development steps, you should then have a `.env.production` file to edit.
+1. Follow steps `1-4` of the above development steps, you should then have a `.env` file to edit.
 
-2. Edit your new `.env.production` to use the port `3000` (or one of your choice, but be sure to change the port directive in the docker-compose-prod file as well).
+2. Edit your `.env` file for use in production. Probably use the port `3000` (or one of your choice, but be sure to change the port directive in the docker-compose-prod file as well).
 
     ```
     ORIGIN="http://localhost:3000"
     PUBLIC_HOST_URL="http://localhost:3000"
     ```
 
-    Ensure that you have the port `3000` redirect uri in the Discord application settings on the developer panel mentioned above.
+    Ensure that you have the port `3000` redirect uri in the Discord application settings on the developer panel mentioned above if you want to test locally.
+
+    You might also want to set `EXTERNAL_NETWORK=true` if the API project is running in the same docker network.
 
 3. Start up the production build with the following command:
     ```
-    docker-compose -f docker-compose-prod.yaml up --build -d
+    docker-compose up --build -d
     ```
     You can now navigate to http://localhost:3000/ to view the site.
 
-In order to deploy this site to an actual domain name, you'd have to change the `ORIGIN` and `PUBLIC_HOST_URL` to your domain name, and follow a tutorial elsewhere and point to this address with something like nginx.
+In order to deploy this site to an actual domain name, you'd have to change the `ORIGIN` and `PUBLIC_HOST_URL` to your domain name, and follow a tutorial elsewhere and point to this address with something like nginx. (Also add your domain name to Discord OAuth urls).
 
 If you have questions, feel free to join the [support Discord server](https://elitebot.dev/support)!
