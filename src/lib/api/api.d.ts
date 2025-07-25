@@ -2994,20 +2994,14 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
-        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
-             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /**
-             * @description the message for the error response
-             * @default One or more errors occurred!
-             */
+            /** @default One or more errors occurred! */
             message: string;
-            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3157,6 +3151,11 @@ export interface components {
              * @description Selected leaderboard style for the user
              */
             leaderboardStyleId?: number | null;
+            /**
+             * Format: int32
+             * @description Selected name style for the user
+             */
+            nameStyleId?: number | null;
         };
         EditUserBadgeDto: {
             /** Format: int32 */
@@ -3165,8 +3164,6 @@ export interface components {
             /** Format: int32 */
             order?: number | null;
         };
-        /** @description RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:
-         *     app.UseFastEndpoints(c => c.Errors.UseProblemDetails()) */
         ProblemDetails: {
             /** @default https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1 */
             type: string;
@@ -3181,25 +3178,15 @@ export interface components {
             instance: string;
             /** @default 0HMPNHL0JHL76:00000001 */
             traceId: string;
-            /** @description the details of the error */
             detail?: string | null;
             errors: components["schemas"]["ProblemDetails_Error"][];
         };
-        /** @description the error details object */
         ProblemDetails_Error: {
-            /**
-             * @description the name of the error or property of the dto that caused the error
-             * @default Error or field name
-             */
+            /** @default Error or field name */
             name: string;
-            /**
-             * @description the reason for the error
-             * @default Error reason
-             */
+            /** @default Error reason */
             reason: string;
-            /** @description the code of the error */
             code?: string | null;
-            /** @description the severity of the error */
             severity?: string | null;
         };
         UserRoleRequest: Record<string, never>;
@@ -4873,9 +4860,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values. */
         JsonDocument: {
-            /** @description Gets the root element of this JSON document. */
             rootElement: unknown;
         };
         GetSpecifiedSkyblockItemsResponse: {

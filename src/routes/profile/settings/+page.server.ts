@@ -98,11 +98,17 @@ export const actions: Actions = {
 			suffix: data.get('emoji')?.toString() ?? '',
 			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
 			weightStyleId: undefined as number | undefined,
+			nameStyleId: undefined as number | undefined,
 		} satisfies components['schemas']['UpdateUserSettingsDto'];
 
 		const style = data.get('style')?.toString() ?? undefined;
 		if (style !== undefined && isFinite(+style)) {
 			body.weightStyleId = +style;
+		}
+
+		const nameStyle = data.get('nameStyle')?.toString() ?? undefined;
+		if (nameStyle !== undefined && isFinite(+nameStyle)) {
+			body.nameStyleId = +nameStyle;
 		}
 
 		const embed = data.get('embed')?.toString() ?? undefined;

@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Elite API",
-    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data.\r\n<br>\r\nUse of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.",
+    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data.\n<br>\nUse of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.",
     "termsOfService": "https://elitebot.dev/apiterms",
     "contact": {
       "name": "- GitHub",
@@ -9906,7 +9906,6 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "description": "the dto used to send an error response to the client",
         "additionalProperties": false,
         "required": [
           "statusCode",
@@ -9916,18 +9915,15 @@
         "properties": {
           "statusCode": {
             "type": "integer",
-            "description": "the http status code sent to the client. default is 400.",
             "format": "int32",
             "default": 400
           },
           "message": {
             "type": "string",
-            "description": "the message for the error response",
             "default": "One or more errors occurred!"
           },
           "errors": {
             "type": "object",
-            "description": "the collection of errors for the current context",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -10359,6 +10355,12 @@
             "description": "Selected leaderboard style for the user",
             "format": "int32",
             "nullable": true
+          },
+          "nameStyleId": {
+            "type": "integer",
+            "description": "Selected name style for the user",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -10386,7 +10388,6 @@
       },
       "ProblemDetails": {
         "type": "object",
-        "description": "RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:\napp.UseFastEndpoints(c => c.Errors.UseProblemDetails())",
         "additionalProperties": false,
         "required": [
           "type",
@@ -10420,7 +10421,6 @@
           },
           "detail": {
             "type": "string",
-            "description": "the details of the error",
             "nullable": true
           },
           "errors": {
@@ -10433,7 +10433,6 @@
       },
       "ProblemDetails_Error": {
         "type": "object",
-        "description": "the error details object",
         "additionalProperties": false,
         "required": [
           "name",
@@ -10442,22 +10441,18 @@
         "properties": {
           "name": {
             "type": "string",
-            "description": "the name of the error or property of the dto that caused the error",
             "default": "Error or field name"
           },
           "reason": {
             "type": "string",
-            "description": "the reason for the error",
             "default": "Error reason"
           },
           "code": {
             "type": "string",
-            "description": "the code of the error",
             "nullable": true
           },
           "severity": {
             "type": "string",
-            "description": "the severity of the error",
             "nullable": true
           }
         }
@@ -15919,15 +15914,12 @@
       },
       "JsonDocument": {
         "type": "object",
-        "description": "Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.",
         "additionalProperties": false,
         "required": [
           "rootElement"
         ],
         "properties": {
-          "rootElement": {
-            "description": "Gets the root element of this JSON document."
-          }
+          "rootElement": {}
         }
       },
       "GetSpecifiedSkyblockItemsResponse": {

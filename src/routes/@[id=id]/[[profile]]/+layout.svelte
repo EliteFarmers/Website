@@ -12,6 +12,8 @@
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 	import type { components } from '$lib/api/api';
+	import NameCard from '$comp/stats/namecard/name-card.svelte';
+	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -21,6 +23,7 @@
 		profiles: data.profiles,
 		member: data.member,
 		ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
+		style: data.style,
 	});
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
@@ -34,6 +37,7 @@
 				profiles: data.profiles,
 				member: data.member,
 				ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
+				style: data.style,
 			});
 
 			if (!browser) return;
@@ -55,7 +59,13 @@
 <JoinElitePopup />
 
 <div class="m-0 w-full p-0">
-	<PlayerInfo />
+	<div class="hidden sm:block">
+		<NameCard />
+	</div>
+	<div class="block sm:hidden">
+		<PlayerInfo />
+	</div>
+	<BadgeList />
 
 	{@render pagenav()}
 

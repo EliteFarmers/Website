@@ -18,6 +18,30 @@ export interface CustomFormatterOptions {
 	head?: HTMLImageElement;
 }
 
+export async function drawBackgroundCanvas(canvas: HTMLCanvasElement, data?: WeightStyle | undefined) {
+	if (!data?.elements.background) {
+		return;
+	}
+
+	const ctx = canvas.getContext('2d');
+	if (!ctx) {
+		console.error('Failed to get canvas context!');
+		return;
+	}
+
+	const backgroundStyle = data.elements.background;
+	canvas.width = backgroundStyle.size?.x ?? 1920;
+	canvas.height = backgroundStyle.size?.y ?? 400;
+
+	const image = data.elements?.background?.imageUrl
+		? await loadImage(data.elements.background.imageUrl).catch(() => null)
+		: null;
+
+	drawBackground(ctx, backgroundStyle, image);
+
+	ctx.restore();
+}
+
 export async function createFromData(
 	canvas: HTMLCanvasElement,
 	{

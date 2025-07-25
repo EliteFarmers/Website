@@ -76,6 +76,8 @@
 
 	let changedSettings = $state({
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
+		leaderboardStyle: (data.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
+		nameStyle: (data.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
@@ -90,6 +92,8 @@
 		if (
 			!settings ||
 			changedSettings.weightStyle !== settings.weightStyle?.id?.toString() ||
+			changedSettings.leaderboardStyle !== settings.leaderboardStyle?.id?.toString() ||
+			changedSettings.nameStyle !== settings.nameStyle?.id?.toString() ||
 			changedSettings.embedColor !== settings.features?.embedColor ||
 			changedSettings.shopPromotions !== settings.features?.hideShopPromotions ||
 			changedSettings.styleOverride !== settings.features?.weightStyleOverride ||
@@ -104,7 +108,7 @@
 	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
 
 	let unlockedSettings = $derived({
-		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
+		styles: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
 		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
 		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
 		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
@@ -112,13 +116,25 @@
 		emoji: data.user.entitlements?.some((e) => e.product.features?.customEmoji) ?? false,
 	});
 
-	let selectedStyle = $derived(
+	let selectedWeightStyle = $derived(
 		changedSettings.weightStyle
 			? data.styles?.find((s) => s.id === +(changedSettings.weightStyle ?? '-1'))
 			: undefined
 	);
 
-	let unlockedWeightStyles = $derived(
+	// let selectedLeaderboardStyle = $derived(
+	//   changedSettings.leaderboardStyle
+	//     ? data.styles?.find((s) => s.id === +(changedSettings.leaderboardStyle ?? '-1'))
+	//     : undefined
+	// );
+
+	// let selectedNameStyle = $derived(
+	//   changedSettings.nameStyle
+	//     ? data.styles?.find((s) => s.id === +(changedSettings.nameStyle ?? '-1'))
+	//     : undefined
+	// );
+
+	let unlockedStyles = $derived(
 		(data.user.entitlements ?? [])
 			.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
 			.map((e) => e.product?.weightStyles ?? [])
@@ -133,7 +149,7 @@
 			)
 	);
 
-	let weightStyleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedWeightStyles)]);
+	let styleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedStyles)]);
 	let unlockedEmbedColors = $derived([
 		...new Set(
 			(data.user.entitlements ?? [])
@@ -229,8 +245,8 @@
 				description="Select a style for the weight command in Discord!"
 			>
 				<ComboBox
-					disabled={loading || !unlockedSettings.weightStyle}
-					options={weightStyleOptions}
+					disabled={loading || !unlockedSettings.styles}
+					options={styleOptions}
 					bind:value={changedSettings.weightStyle}
 					placeholder="Select Style"
 					onChange={() => {
@@ -241,16 +257,16 @@
 				/>
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
 			</SettingListItem>
-			{#if selectedStyle}
+			{#if selectedWeightStyle}
 				<Card.Root class="w-full p-0">
 					<Card.Content class="w-full p-2">
 						<!-- {#if selectedStyle.description}
 								<p class="text-sm pb-1">{selectedStyle.description}</p>
 							{/if} -->
-						{#if selectedStyle.styleFormatter === 'data'}
-							{#key selectedStyle.id}
+						{#if selectedWeightStyle.styleFormatter === 'data'}
+							{#key selectedWeightStyle.id}
 								<WeightStyle
-									style={selectedStyle}
+									style={selectedWeightStyle}
 									ign={data.mcAccount?.name ?? ''}
 									uuid={data.mcAccount?.id ?? ''}
 									weight={data.weight ?? undefined}
@@ -269,6 +285,39 @@
 					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
 				</div>
 			{/if}
+			<SettingSeperator />
+			<!-- <SettingListItem
+				title="Leaderboard Style"
+				description="Select a style for your leaderboard positions!"
+			>
+				<ComboBox
+					disabled={loading || !unlockedSettings.styles}
+					options={styleOptions}
+					bind:value={changedSettings.leaderboardStyle}
+					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.leaderboardStyle === '-1') {
+							updateSettings();
+						}
+					}}
+				/>
+				<input type="hidden" name="style" bind:value={changedSettings.leaderboardStyle} />
+			</SettingListItem>
+      <SettingSeperator /> -->
+			<SettingListItem title="Name Card Style" description="Select a style for the name card on your stats page!">
+				<ComboBox
+					disabled={loading || !unlockedSettings.styles}
+					options={styleOptions}
+					bind:value={changedSettings.nameStyle}
+					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.nameStyle === '-1') {
+							updateSettings();
+						}
+					}}
+				/>
+				<input type="hidden" name="nameStyle" bind:value={changedSettings.nameStyle} />
+			</SettingListItem>
 			<SettingSeperator />
 			<SettingListItem title="Bot Embed Color" description="Select an accent color for bot responses in Discord!">
 				<SelectSimple
