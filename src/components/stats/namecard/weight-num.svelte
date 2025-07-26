@@ -8,6 +8,6 @@
 
 <div class="block">
 	<div class="object-scale-down">
-		<h1 class="text-5xl font-semibold md:text-6xl lg:text-8xl">{weightStr}</h1>
+		<h1 class="text-4xl leading-none font-semibold sm:text-6xl md:text-7xl xl:text-8xl">{weightStr}</h1>
 	</div>
 </div>

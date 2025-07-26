@@ -29,14 +29,21 @@
 				Elite Farmers
 			{/snippet}
 			{#snippet child({ props })}
-				<a href="/" {...props} class={cn(props.class ?? '', 'group-data-[state=collapsed]:rounded-full')}>
+				<a
+					href="/"
+					{...props}
+					class={cn(
+						props.class ?? '',
+						'group-data-[state=collapsed]:rounded-full group-data-[state=expanded]:-mt-2'
+					)}
+				>
 					<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
 					<span class="px-1 text-lg leading-none font-semibold md:text-xl">Elite Farmers</span>
 				</a>
 			{/snippet}
 		</Sidebar.MenuButton>
 	</Sidebar.MenuItem>
-	<Sidebar.MenuItem class="group-data-[state=collapsed]:mt-3">
+	<Sidebar.MenuItem class="group-data-[state=collapsed]:mt-2">
 		<Sidebar.MenuButton onclick={() => (searchOpen = true)} class="bg-card border-2 py-4">
 			{#snippet tooltipContent()}
 				Search

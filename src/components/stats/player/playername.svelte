@@ -4,6 +4,12 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 
+	interface Props {
+		class?: string;
+	}
+
+	let { class: className = '' }: Props = $props();
+
 	const ctx = getStatsContext();
 	const ign = $derived(ctx.ignMeta);
 	const rank = $derived(ctx.rank);
@@ -12,10 +18,10 @@
 	const members = $derived((ctx.selectedProfile?.members ?? []).filter((m) => m.active && m.uuid !== ctx.account.id));
 </script>
 
-<Popover.Mobile hasContent={members.length > 0}>
+<Popover.Mobile hasContent={members.length > 0} rootClass={className}>
 	{#snippet trigger()}
-		<div class="bg-card rounded-md p-2" id="playerName">
-			<h1 class="font-emoji text-2xl md:text-3xl">
+		<div class="bg-card rounded-md border-2 p-1.5 px-3" id="playerName">
+			<h1 class="font-emoji text-xl @sm:text-2xl @lg:text-3xl">
 				{#if ctx.rank?.raw}
 					<FormattedText text={ctx.rank.raw.replace(']', '').replace('[', '')} /> {ign}
 				{:else if rank && plus}

@@ -9,7 +9,7 @@
 	);
 </script>
 
-<div class="mx-4 mt-6 flex w-full flex-wrap justify-center gap-2 align-middle">
+<div class="mt-4 flex w-full flex-wrap justify-center gap-2 align-middle">
 	{#each badgeList as badge (badge.id)}
 		<Badge {badge} />
 	{/each}

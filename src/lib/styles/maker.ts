@@ -19,13 +19,14 @@ export interface CustomFormatterOptions {
 }
 
 export async function drawBackgroundCanvas(canvas: HTMLCanvasElement, data?: WeightStyle | undefined) {
-	if (!data?.elements.background) {
-		return;
-	}
-
 	const ctx = canvas.getContext('2d');
 	if (!ctx) {
 		console.error('Failed to get canvas context!');
+		return;
+	}
+	ctx?.reset();
+
+	if (!data?.elements.background) {
 		return;
 	}
 

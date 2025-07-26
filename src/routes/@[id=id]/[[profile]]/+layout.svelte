@@ -59,12 +59,7 @@
 <JoinElitePopup />
 
 <div class="m-0 w-full p-0">
-	<div class="hidden sm:block">
-		<NameCard />
-	</div>
-	<div class="block sm:hidden">
-		<PlayerInfo />
-	</div>
+	<NameCard />
 	<BadgeList />
 
 	{@render pagenav()}

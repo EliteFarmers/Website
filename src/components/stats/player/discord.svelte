@@ -23,9 +23,11 @@
 	});
 </script>
 
-<Popover.Mobile>
+<Popover.Mobile
+	triggerRootClass="bg-card relative flex max-w-fit flex-row items-center justify-between gap-1 border-2 rounded-md p-1.5 @md:p-2 px-3 text-lg"
+>
 	{#snippet trigger()}
-		<div class="bg-card block max-w-fit rounded-md p-2 px-3" id="discordId">
+		<div class="bg-card block max-w-fit rounded-md p-1" id="discordId">
 			<div class="flex flex-row items-center gap-2">
 				<span class="mt-1 h-5 w-5">
 					<DiscordIcon />

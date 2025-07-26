@@ -13,8 +13,7 @@
 
 <div
 	class={className}
-	style="color: {element?.fill ?? 'inherit'}; -webkit-text-stroke: {(element?.outline?.width ?? 0) / 8}px {element
-		?.outline?.fill ?? 'transparent'};"
+	style="color: {element?.fill ?? 'inherit'}; -webkit-text-stroke: 0.1rem {element?.outline?.fill ?? 'transparent'};"
 >
 	{@render children?.()}
 </div>
