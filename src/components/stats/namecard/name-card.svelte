@@ -12,6 +12,13 @@
 	const style = $derived(isValidWeightStyle(ctx.style?.data) ? ctx.style.data : undefined);
 	const rank = $derived(ctx.allRanks?.farmingweight?.rank ?? -1);
 	const rankText = $derived(rank !== -1 ? `#${rank}` : '');
+
+	const bg = $derived(
+		style?.elements?.name?.outline?.fill
+			? style.elements.name.outline.fill +
+					Math.round((style.elements.name.outline.opacity ?? 0.8) * 255).toString(16)
+			: 'inherit'
+	);
 </script>
 
 <div
@@ -38,7 +45,10 @@
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
 				<div class="hidden flex-row items-center gap-2 @md:flex">
-					<PlayerName />
+					<PlayerName
+						bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
+							?.fill ?? 'inherit'};"
+					/>
 					{#if rankText}
 						<TextElement class="h-full" element={style?.elements?.rank}>
 							{@render rankLink()}
@@ -67,6 +77,8 @@
 	<a
 		class="bg-card hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-1 lg:p-1"
 		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
+		style="background-color: {bg}; border-color: transparent; background-opacity: 0.8; color: {style?.elements?.name
+			?.fill ?? 'inherit'};"
 	>
 		<span class="mx-1 px-2 font-mono text-3xl">
 			<span class="mr-0.5 text-xl">#</span>{rank}

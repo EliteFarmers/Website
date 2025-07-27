@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import { browser } from '$app/environment';
 	import { Button } from '$ui/button';
 	import { page } from '$app/state';
