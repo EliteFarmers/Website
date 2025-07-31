@@ -1,12 +1,23 @@
 import { z } from 'zod';
 
 export function isValidWeightStyle(data: unknown): data is WeightStyle {
+	if (data === null || data === undefined) return false;
 	const parse = WeightStyle.safeParse(data);
 	return parse.success;
 }
 
 export function weightStyleParse(data: unknown) {
 	return WeightStyle.safeParse(data);
+}
+
+export function isValidLeaderboardStyle(data: unknown): data is LeaderboardStyle {
+	if (data === null || data === undefined) return false;
+	const parse = LeaderboardStyle.safeParse(data);
+	return parse.success;
+}
+
+export function leaderboardStyleParse(data: unknown) {
+	return LeaderboardStyle.safeParse(data);
 }
 
 export const Position = z.object({
@@ -31,6 +42,7 @@ export const BackgroundStyle = z.object({
 	radius: z.number().optional(),
 	rects: z.array(BackgroundRectangle).optional(),
 	imageUrl: z.string().optional(),
+	align: z.enum(['flex-end', 'flex-start', 'center']).optional(),
 });
 export type BackgroundStyle = z.infer<typeof BackgroundStyle>;
 
@@ -107,3 +119,36 @@ export const WeightStyle = z.object({
 	}),
 });
 export type WeightStyle = z.infer<typeof WeightStyle>;
+
+const LeaderboardStyleText = z.object({
+	color: z.string().optional(),
+	shadowColor: z.string().optional(),
+	shadowOpacity: z.number().optional(),
+	fontWeight: z.number().optional(),
+});
+
+export type LeaderboardStyleText = z.infer<typeof LeaderboardStyleText>;
+
+const LeaderboardStyleLayer = z.object({
+	imageUrl: z.string().optional(),
+	imageOpacity: z.string().optional(),
+	fillColor: z.string().optional(),
+	fillOpacity: z.number().optional(),
+	borderColor: z.string().optional(),
+	borderOpacity: z.number().optional(),
+	align: z.enum(['flex-end', 'flex-start', 'center']).optional(),
+});
+
+export const LeaderboardStyle = z.object({
+	background: LeaderboardStyleLayer.optional(),
+	overlay: LeaderboardStyleLayer.optional(),
+	gradientOpacity: z.number().optional(),
+	gradientColor: z.string().optional(),
+	font: z.string().optional(),
+	name: LeaderboardStyleText.optional(),
+	score: LeaderboardStyleText.optional(),
+	rank: LeaderboardStyleText.optional(),
+	subtitle: LeaderboardStyleText.optional(),
+});
+
+export type LeaderboardStyle = z.infer<typeof LeaderboardStyle>;

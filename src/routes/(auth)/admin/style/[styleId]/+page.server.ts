@@ -9,7 +9,7 @@ import {
 	RemoveCosmeticImage,
 	UpdateWeightStyle,
 } from '$lib/api/elite';
-import { isValidWeightStyle } from '$lib/styles/style';
+import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { session } = await parent();
@@ -61,6 +61,46 @@ export const actions: Actions = {
 			}
 
 			body.data = styleData as components['schemas']['WeightStyleDataDto'];
+		}
+
+		const { error: e, response } = await UpdateWeightStyle(locals.access_token, styleId, body);
+
+		if (e) {
+			return fail(response.status, { error: e });
+		}
+
+		return { success: true };
+	},
+	updateLeaderboardStyle: async ({ locals, request }) => {
+		if (!locals.session?.id || !locals.access_token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const data = await request.formData();
+		const styleId = data.get('style') as string;
+
+		if (!styleId || isNaN(+styleId)) {
+			return fail(400, { error: 'Invalid style ID.' });
+		}
+
+		const body: components['schemas']['WeightStyleWithDataDto'] = {
+			id: +styleId,
+			name: (data.get('name') as string) || undefined,
+			styleFormatter: (data.get('formatter') as string) || undefined,
+			description: (data.get('description') as string) || undefined,
+			images: [],
+			products: [],
+		};
+
+		const style = data.get('data') as string | undefined;
+		if (style) {
+			const styleData = JSON.parse(data.get('data') as string);
+
+			if (!isValidLeaderboardStyle(styleData)) {
+				return fail(400, { error: 'Invalid style data.' });
+			}
+
+			body.leaderboard = styleData as components['schemas']['LeaderboardStyleDataDto'];
 		}
 
 		const { error: e, response } = await UpdateWeightStyle(locals.access_token, styleId, body);

@@ -42,7 +42,7 @@ export const load = (async ({ params, parent, url }) => {
 	}
 
 	try {
-		const { data: lb } = await GetLeaderboardSlice(category, {
+		const lb = await GetLeaderboardSlice(category, {
 			offset: startNum,
 			limit: 20,
 			mode,

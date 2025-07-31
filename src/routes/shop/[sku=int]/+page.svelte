@@ -23,6 +23,7 @@
 	import Heart from '@lucide/svelte/icons/heart';
 	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { enhance } from '$app/forms';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 
 	interface Props {
 		data: PageData;
@@ -115,12 +116,12 @@
 					<ProductUnlock open={true}>
 						{#snippet header()}
 							<Image />
-							<p class="font-semibold">Weight Styles</p>
+							<p class="font-semibold">Cosmetic Styles</p>
 						{/snippet}
 						<p class="max-w-sm">
-							Unlock the weight <a href="#styles" class="underline">
+							Unlock the cosmetic <a href="#styles" class="underline">
 								style{product.weightStyles.length > 1 ? 's' : ''} shown below!</a
-							> These replace the normal weight image when anyone uses the /weight bot command on your account.
+							> These styles may be available for your website name card, /weight bot command, and leaderboards!
 						</p>
 					</ProductUnlock>
 				{/if}
@@ -250,7 +251,10 @@
 					{#if style}
 						<Card.Root class="max-w-3xl p-0">
 							<Card.Content class="p-2">
-								<p class="mb-1 text-lg font-semibold">{style.name}</p>
+								<p class="mb-1 text-xl font-semibold">{style.name}</p>
+								<p class="my-1 text-lg">
+									<span class="bg-background rounded-md border p-1 font-mono">/weight</span> Style
+								</p>
 								{#if style?.styleFormatter === 'data'}
 									<div class="origin-top-left object-scale-down">
 										<WeightStyle
@@ -265,6 +269,22 @@
 										{style.description}
 									</p>
 									<p class="text-muted-foreground text-sm">Preview not available for this style.</p>
+								{/if}
+								{#if style?.leaderboard && Object.keys(style.leaderboard).length > 0}
+									<p class="my-1 text-lg">Leaderboard Style</p>
+									<div class="origin-top-left object-scale-down">
+										<EntryPreview
+											style={style.leaderboard}
+											ign={data.ign ?? ''}
+											uuid={data.uuid ?? ''}
+											styleId={style.id}
+										/>
+									</div>
+								{/if}
+								{#if style?.styleFormatter === 'data'}
+									<p class="text-muted-foreground my-1 text-sm">
+										Name card style also included! (Preview not available yet)
+									</p>
 								{/if}
 							</Card.Content>
 						</Card.Root>

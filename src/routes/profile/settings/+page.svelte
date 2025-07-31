@@ -26,6 +26,7 @@
 	import SettingHeader from '$comp/settings/setting-header.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import { useDebounce } from 'runed';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 
 	let api = $state<CarouselAPI>();
 
@@ -76,6 +77,8 @@
 
 	let changedSettings = $state({
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
+		leaderboardStyle: (data.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
+		nameStyle: (data.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
@@ -90,6 +93,8 @@
 		if (
 			!settings ||
 			changedSettings.weightStyle !== settings.weightStyle?.id?.toString() ||
+			changedSettings.leaderboardStyle !== settings.leaderboardStyle?.id?.toString() ||
+			changedSettings.nameStyle !== settings.nameStyle?.id?.toString() ||
 			changedSettings.embedColor !== settings.features?.embedColor ||
 			changedSettings.shopPromotions !== settings.features?.hideShopPromotions ||
 			changedSettings.styleOverride !== settings.features?.weightStyleOverride ||
@@ -104,7 +109,7 @@
 	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
 
 	let unlockedSettings = $derived({
-		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
+		styles: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
 		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
 		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
 		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
@@ -112,13 +117,21 @@
 		emoji: data.user.entitlements?.some((e) => e.product.features?.customEmoji) ?? false,
 	});
 
-	let selectedStyle = $derived(
-		changedSettings.weightStyle
-			? data.styles?.find((s) => s.id === +(changedSettings.weightStyle ?? '-1'))
-			: undefined
+	let selectedWeightStyle = $derived(
+		changedSettings.weightStyle ? data.styles[changedSettings.weightStyle ?? '-1'] : undefined
 	);
 
-	let unlockedWeightStyles = $derived(
+	let selectedLeaderboardStyle = $derived(
+		changedSettings.leaderboardStyle ? data.styles[changedSettings.leaderboardStyle ?? '-1'] : undefined
+	);
+
+	// let selectedNameStyle = $derived(
+	//   changedSettings.nameStyle
+	//     ? data.styles[changedSettings.nameStyle ?? '-1']
+	//     : undefined
+	// );
+
+	let unlockedStyles = $derived(
 		(data.user.entitlements ?? [])
 			.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
 			.map((e) => e.product?.weightStyles ?? [])
@@ -126,14 +139,29 @@
 			.reduce(
 				(acc, e) => {
 					if (!e.id || !e.name) return acc;
-					acc[e.id] = { value: e.id.toString(), label: e.name };
+					const style = data.styles[e.id];
+					acc[e.id] = {
+						value: e.id.toString(),
+						label: e.name,
+						lb: (style.leaderboard && Object.keys(style.leaderboard).length > 0) == true,
+						data: style.styleFormatter === 'data',
+					};
 					return acc;
 				},
-				{} as Record<string, { label: string; value: string }>
+				{} as Record<string, { label: string; value: string; lb: boolean; data: boolean }>
 			)
 	);
 
-	let weightStyleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedWeightStyles)]);
+	let styleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedStyles)]);
+	let lbStyleOptions = $derived([
+		{ label: 'Default', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.lb),
+	]);
+	let nameStyleOptions = $derived([
+		{ label: 'Default', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.data),
+	]);
+
 	let unlockedEmbedColors = $derived([
 		...new Set(
 			(data.user.entitlements ?? [])
@@ -229,8 +257,8 @@
 				description="Select a style for the weight command in Discord!"
 			>
 				<ComboBox
-					disabled={loading || !unlockedSettings.weightStyle}
-					options={weightStyleOptions}
+					disabled={loading || !unlockedSettings.styles}
+					options={styleOptions}
 					bind:value={changedSettings.weightStyle}
 					placeholder="Select Style"
 					onChange={() => {
@@ -241,16 +269,16 @@
 				/>
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
 			</SettingListItem>
-			{#if selectedStyle}
+			{#if selectedWeightStyle}
 				<Card.Root class="w-full p-0">
 					<Card.Content class="w-full p-2">
 						<!-- {#if selectedStyle.description}
 								<p class="text-sm pb-1">{selectedStyle.description}</p>
 							{/if} -->
-						{#if selectedStyle.styleFormatter === 'data'}
-							{#key selectedStyle.id}
+						{#if selectedWeightStyle.styleFormatter === 'data'}
+							{#key selectedWeightStyle.id}
 								<WeightStyle
-									style={selectedStyle}
+									style={selectedWeightStyle}
 									ign={data.mcAccount?.name ?? ''}
 									uuid={data.mcAccount?.id ?? ''}
 									weight={data.weight ?? undefined}
@@ -269,6 +297,61 @@
 					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
 				</div>
 			{/if}
+			<SettingSeperator />
+			<SettingListItem title="Leaderboard Style" description="Select a style for your leaderboard positions!">
+				<ComboBox
+					disabled={loading || !unlockedSettings.styles}
+					options={lbStyleOptions}
+					bind:value={changedSettings.leaderboardStyle}
+					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.leaderboardStyle === '-1') {
+							updateSettings();
+						}
+					}}
+				/>
+				<input type="hidden" name="lbstyle" bind:value={changedSettings.leaderboardStyle} />
+			</SettingListItem>
+			{#if selectedLeaderboardStyle}
+				<div class="flex w-full flex-row items-center justify-end">
+					{#if selectedLeaderboardStyle.leaderboard}
+						<EntryPreview
+							style={selectedLeaderboardStyle.leaderboard}
+							ign={data.mcAccount?.name ?? ''}
+							uuid={data.mcAccount?.id ?? ''}
+							styleId={selectedLeaderboardStyle.id}
+						/>
+					{:else}
+						<p class="text-muted-variant text-sm">
+							No preview available! You can change to this style and run the /&NoBreak;weight command in
+							Discord to see it.
+						</p>
+					{/if}
+				</div>
+
+				<div class="flex flex-col items-end gap-2">
+					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
+				</div>
+			{/if}
+			<SettingSeperator />
+			<SettingListItem title="Name Card Style" description="Select a style for the name card on your stats page!">
+				<ComboBox
+					disabled={loading || !unlockedSettings.styles}
+					options={nameStyleOptions}
+					bind:value={changedSettings.nameStyle}
+					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.nameStyle === '-1') {
+							updateSettings();
+						}
+					}}
+				/>
+				<input type="hidden" name="nameStyle" bind:value={changedSettings.nameStyle} />
+			</SettingListItem>
+			<div class="flex flex-col items-end gap-2 md:flex-row md:items-center md:justify-end">
+				<p class="text-muted-foreground w-full text-right text-sm">Preview not available for name cards yet!</p>
+				<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
+			</div>
 			<SettingSeperator />
 			<SettingListItem title="Bot Embed Color" description="Select an accent color for bot responses in Discord!">
 				<SelectSimple

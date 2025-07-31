@@ -33,7 +33,7 @@
 	let mode = $derived(gameMode ?? 'classic');
 </script>
 
-{#if popover}
+{#if popover && mode !== 'classic'}
 	<Popover.Mobile hasContent={popover} {trigger}>
 		{#if popover}
 			<div>

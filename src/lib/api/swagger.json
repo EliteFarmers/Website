@@ -10359,6 +10359,12 @@
             "description": "Selected leaderboard style for the user",
             "format": "int32",
             "nullable": true
+          },
+          "nameStyleId": {
+            "type": "integer",
+            "description": "Selected name style for the user",
+            "format": "int32",
+            "nullable": true
           }
         }
       },
@@ -16743,6 +16749,14 @@
                 "$ref": "#/components/schemas/WeightStyleDataDto"
               }
             ]
+          },
+          "leaderboard": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleDataDto"
+              }
+            ]
           }
         }
       },
@@ -16923,6 +16937,10 @@
             ]
           },
           "fill": {
+            "type": "string",
+            "nullable": true
+          },
+          "align": {
             "type": "string",
             "nullable": true
           },
@@ -17129,6 +17147,133 @@
             "nullable": true
           },
           "radius": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "LeaderboardStyleDataDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "background": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleLayerDto"
+              }
+            ]
+          },
+          "overlay": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleLayerDto"
+              }
+            ]
+          },
+          "gradientOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "gradientColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "font": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          },
+          "score": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          },
+          "rank": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          },
+          "subtitle": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          }
+        }
+      },
+      "LeaderboardStyleLayerDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageOpacity": {
+            "type": "string",
+            "nullable": true
+          },
+          "fillColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "fillOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "borderColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "borderOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "align": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LeaderboardStyleTextDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "shadowColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "shadowOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "fontWeight": {
             "type": "integer",
             "format": "int32",
             "nullable": true

@@ -18,6 +18,7 @@ export class PlayerStats {
 	#fortuneSettings = $derived(
 		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
 	);
+	#style = $state.raw<components['schemas']['WeightStyleWithDataDto'] | undefined>(undefined);
 
 	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
 	#pets = $state.raw<components['schemas']['PetDto'][]>([]);
@@ -34,15 +35,24 @@ export class PlayerStats {
 		profiles: ProfileDetails[];
 		member: NonNullable<components['schemas']['ProfileMemberDto']>;
 		ranks: components['schemas']['LeaderboardRanksResponse'];
+		style?: components['schemas']['WeightStyleWithDataDto'];
 	}) {
 		this.setValues(data);
 	}
 
-	setValues({ account, selectedProfile, profiles, member, ranks }: ConstructorParameters<typeof PlayerStats>[0]) {
+	setValues({
+		account,
+		selectedProfile,
+		profiles,
+		member,
+		ranks,
+		style,
+	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
 		this.#ranks = ranks;
+		this.#style = style;
 		this.#filteredRanks = Object.fromEntries(Object.entries(ranks.ranks ?? {}).filter((r) => r[1].rank <= 10_000));
 
 		if (this.fortuneSettings) {
@@ -61,6 +71,10 @@ export class PlayerStats {
 
 	get account() {
 		return this.#account;
+	}
+
+	get style() {
+		return this.#style;
 	}
 
 	get uuid() {

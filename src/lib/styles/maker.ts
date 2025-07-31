@@ -8,6 +8,7 @@ import {
 } from '$lib/styles/style.js';
 import { getCropFromName } from 'farming-weight';
 import type { components } from '$lib/api/api.js';
+import type { Canvas } from '@napi-rs/canvas';
 
 export interface CustomFormatterOptions {
 	account?: Partial<components['schemas']['MinecraftAccountDto']>;
@@ -16,6 +17,29 @@ export interface CustomFormatterOptions {
 	weightRank?: number;
 	data?: WeightStyle;
 	head?: HTMLImageElement;
+}
+
+export async function drawBackgroundCanvas(canvas: HTMLCanvasElement, data?: WeightStyle | undefined) {
+	const ctx = canvas.getContext('2d');
+	if (!ctx) {
+		console.error('Failed to get canvas context!');
+		return;
+	}
+	ctx?.reset();
+
+	const backgroundStyle = data?.elements?.background;
+	if (!backgroundStyle) {
+		return;
+	}
+
+	canvas.width = backgroundStyle.size?.x ?? 1920;
+	canvas.height = backgroundStyle.size?.y ?? 400;
+
+	const image = backgroundStyle.imageUrl ? await loadImage(backgroundStyle.imageUrl).catch(() => null) : null;
+
+	drawBackground(ctx, backgroundStyle, image);
+
+	ctx.restore();
 }
 
 export async function createFromData(
@@ -315,7 +339,7 @@ function drawBackgroundText(
 // 	ctx.restore();
 // }
 
-function mapPosition(canvas: HTMLCanvasElement, position: Position, offset?: FinalSize) {
+export function mapPosition(canvas: HTMLCanvasElement | Canvas, position: Position, offset?: FinalSize) {
 	return offset
 		? {
 				x: offset.x + offset.width + getValue(position.x, canvas.width),
@@ -327,7 +351,7 @@ function mapPosition(canvas: HTMLCanvasElement, position: Position, offset?: Fin
 			};
 }
 
-function mapPositions(canvas: HTMLCanvasElement, start: Position, end: Position, offset?: FinalSize) {
+export function mapPositions(canvas: HTMLCanvasElement | Canvas, start: Position, end: Position, offset?: FinalSize) {
 	const positions = offset
 		? {
 				x1: offset.x + offset.width + getValue(start.x, canvas.width),

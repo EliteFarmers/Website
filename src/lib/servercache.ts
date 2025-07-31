@@ -30,10 +30,23 @@ const cacheEntries = {
 		},
 	},
 	styles: {
-		data: [] as components['schemas']['WeightStyleWithDataDto'][],
+		data: {
+			list: [] as components['schemas']['WeightStyleWithDataDto'][],
+			lookup: {} as Record<string, components['schemas']['WeightStyleWithDataDto']>,
+		},
 		update: async () => {
 			const { data } = await GetWeightStyles();
-			return data ?? [];
+			return {
+				list: data ?? [],
+				lookup:
+					data?.reduce(
+						(acc, style) => {
+							acc[style.id] = style;
+							return acc;
+						},
+						{} as Record<string, components['schemas']['WeightStyleWithDataDto']>
+					) || {},
+			};
 		},
 	},
 	teamwords: {
@@ -90,7 +103,10 @@ export const cache = {
 		return cacheEntries.products.data;
 	},
 	get styles() {
-		return cacheEntries.styles.data;
+		return cacheEntries.styles.data.list;
+	},
+	get styleLookup() {
+		return cacheEntries.styles.data.lookup;
 	},
 	get teamwords() {
 		return cacheEntries.teamwords.data;

@@ -3157,6 +3157,11 @@ export interface components {
              * @description Selected leaderboard style for the user
              */
             leaderboardStyleId?: number | null;
+            /**
+             * Format: int32
+             * @description Selected name style for the user
+             */
+            nameStyleId?: number | null;
         };
         EditUserBadgeDto: {
             /** Format: int32 */
@@ -5088,6 +5093,7 @@ export interface components {
             images: components["schemas"]["ImageAttachmentDto"][];
             products: components["schemas"]["ParentProductDto"][];
             data?: components["schemas"]["WeightStyleDataDto"] | null;
+            leaderboard?: components["schemas"]["LeaderboardStyleDataDto"] | null;
         };
         ParentProductDto: {
             id: string;
@@ -5127,6 +5133,7 @@ export interface components {
         WeightStyleBackgroundDto: {
             size?: components["schemas"]["WeightStylePositionDto"] | null;
             fill?: string | null;
+            align?: string | null;
             rects?: components["schemas"]["WeightStyleBackgroundRectDto"][] | null;
             imageUrl?: string | null;
             /** Format: int32 */
@@ -5186,6 +5193,37 @@ export interface components {
             padding?: number | null;
             /** Format: int32 */
             radius?: number | null;
+        };
+        LeaderboardStyleDataDto: {
+            background?: components["schemas"]["LeaderboardStyleLayerDto"] | null;
+            overlay?: components["schemas"]["LeaderboardStyleLayerDto"] | null;
+            /** Format: double */
+            gradientOpacity?: number | null;
+            gradientColor?: string | null;
+            font?: string | null;
+            name?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+            score?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+            rank?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+            subtitle?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+        };
+        LeaderboardStyleLayerDto: {
+            imageUrl?: string | null;
+            imageOpacity?: string | null;
+            fillColor?: string | null;
+            /** Format: double */
+            fillOpacity?: number | null;
+            borderColor?: string | null;
+            /** Format: double */
+            borderOpacity?: number | null;
+            align?: string | null;
+        };
+        LeaderboardStyleTextDto: {
+            color?: string | null;
+            shadowColor?: string | null;
+            /** Format: double */
+            shadowOpacity?: number | null;
+            /** Format: int32 */
+            fontWeight?: number | null;
         };
         GetStyleRequest: Record<string, never>;
         WeightsDto: {
