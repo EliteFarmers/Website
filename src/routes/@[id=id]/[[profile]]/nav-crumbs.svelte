@@ -1,9 +1,10 @@
 <script lang="ts" module>
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
-	import ChartColumn from '@lucide/svelte/icons/chart-column';
 	import Sprout from '@lucide/svelte/icons/sprout';
 	import ChartArea from '@lucide/svelte/icons/chart-area';
 	import Ticket from '@lucide/svelte/icons/ticket';
+	import Clover from '@lucide/svelte/icons/clover';
+	import Trophy from '@lucide/svelte/icons/trophy';
 </script>
 
 <script lang="ts">
@@ -54,9 +55,14 @@
 			href: `${path}/garden`,
 		},
 		{
-			icon: ChartColumn,
-			name: 'rates',
-			href: `${path}/rates`,
+			icon: Clover,
+			name: 'fortune',
+			href: `${path}/fortune`,
+		},
+		{
+			icon: Trophy,
+			name: 'ranks',
+			href: `${path}/ranks`,
 		},
 	]);
 
@@ -166,7 +172,7 @@
 		breadcrumb.setOverride(crumbs);
 		sidebarnav.setNav('Stats', sidebarCrumbs);
 		favorites.setPage({
-			icon: account?.id ? `https://mc-heads.net/avatar/${account.id}` : undefined,
+			icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
 			name: document.title,
 			href: page.url.pathname,
 		});

@@ -113,7 +113,7 @@
 				<input type="hidden" name="id" value={event.id} />
 				<input type="hidden" name="uuid" bind:value={selectedMember.playerUuid} />
 
-				<p class="mt-2 text-sm text-muted-foreground">
+				<p class="text-muted-foreground mt-2 text-sm">
 					This will remove {selectedMember.playerName} from the event and ban them from rejoining. This action
 					is reversible. Ban reasons are visible to the player.
 				</p>
@@ -149,7 +149,7 @@
 				<input type="hidden" name="id" value={event.id} />
 				<input type="hidden" name="uuid" bind:value={selectedMember.playerUuid} />
 
-				<p class="mt-2 text-sm text-muted-foreground">
+				<p class="text-muted-foreground mt-2 text-sm">
 					This will add {selectedMember.playerName} back to the event and remove their ban.
 				</p>
 
@@ -180,7 +180,7 @@
 				<input type="hidden" name="team" value={selectedMember.teamId} />
 				<input type="hidden" name="member" value={selectedMember.playerUuid} />
 
-				<p class="mt-2 text-sm text-muted-foreground">
+				<p class="text-muted-foreground mt-2 text-sm">
 					This will set {selectedMember.playerName} as the new owner of the team.
 				</p>
 
@@ -211,7 +211,7 @@
 				<input type="hidden" name="team" value={selectedMember.teamId} />
 				<input type="hidden" name="member" value={selectedMember.playerUuid} />
 
-				<p class="mt-2 text-sm text-muted-foreground">
+				<p class="text-muted-foreground mt-2 text-sm">
 					This will remove {selectedMember.playerName} from the team.
 				</p>
 
@@ -241,7 +241,7 @@
 				<input type="hidden" name="id" value={event.id} />
 				<input type="hidden" name="team" value={selectedMember.teamId} />
 
-				<p class="mt-2 text-sm text-muted-foreground">This will delete the team and remove members in it.</p>
+				<p class="text-muted-foreground mt-2 text-sm">This will delete the team and remove members in it.</p>
 
 				<Button type="submit" disabled={pending} class="w-fit" variant="destructive">Delete</Button>
 			</form>

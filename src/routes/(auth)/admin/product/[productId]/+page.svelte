@@ -119,7 +119,7 @@
 			<form
 				method="post"
 				action="?/updateProduct"
-				class="flex flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4"
+				class="bg-card flex flex-1 flex-col gap-4 rounded-md border-2 p-4"
 				use:enhance
 			>
 				<input type="hidden" name="product" value={product.id} />
@@ -160,6 +160,10 @@
 				<div class="flex flex-row items-center gap-2">
 					<Switch name="info" checked={product.features?.moreInfoDefault ?? false} />
 					<Label>"More Info" in weight command by default</Label>
+				</div>
+				<div class="flex flex-row items-center gap-2">
+					<Switch name="emoji" checked={product.features?.customEmoji ?? false} />
+					<Label>Custom Emoji permissions</Label>
 				</div>
 
 				<div class="flex flex-col items-start gap-2">
@@ -204,7 +208,7 @@
 				method="post"
 				action="?/addImage"
 				enctype="multipart/form-data"
-				class="flex h-fit flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4"
+				class="bg-card flex h-fit flex-1 flex-col gap-4 rounded-md border-2 p-4"
 				use:pending={loading}
 			>
 				<input type="hidden" name="product" bind:value={product.id} />
@@ -234,7 +238,7 @@
 
 				<Button type="submit" disabled={loading}>Add Image</Button>
 			</form>
-			<div class="flex h-fit flex-1 flex-col gap-4 rounded-md border-2 bg-card p-4">
+			<div class="bg-card flex h-fit flex-1 flex-col gap-4 rounded-md border-2 p-4">
 				<h2 class="text-lg font-semibold">Unlocked Styles</h2>
 
 				<form method="post" action="?/addCosmetic" class="flex flex-col gap-4" use:pending={loading}>

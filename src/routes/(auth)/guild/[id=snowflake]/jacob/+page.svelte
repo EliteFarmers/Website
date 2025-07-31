@@ -17,6 +17,8 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import { page } from '$app/state';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 
 	interface Props {
 		data: PageData;
@@ -57,6 +59,25 @@
 		})
 	);
 
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+			href: `/guild/${data.guild.id}`,
+		},
+		{
+			name: 'Jacob',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
+
 	const favorites = getFavoritesContext();
 	favorites.setPage({
 		icon: data.guild.icon?.url ?? undefined,
@@ -87,13 +108,13 @@
 	</section>
 
 	{#if form?.error}
-		<h5 class="text-xl font-semibold text-destructive">
+		<h5 class="text-destructive text-xl font-semibold">
 			<p>{form?.error}</p>
 		</h5>
 	{/if}
 
 	<section class="flex w-full flex-col items-center justify-center gap-8">
-		<div class="flex w-full max-w-4xl flex-col justify-center justify-items-center rounded-md border-2 bg-card">
+		<div class="bg-card flex w-full max-w-4xl flex-col justify-center justify-items-center rounded-md border-2">
 			<h2 class="p-4 text-2xl">Manage Shared Settings</h2>
 			<Accordion.Root class="mx-4" type="multiple">
 				<Accordion.Item value="banned">
@@ -116,11 +137,7 @@
 												<Trash2 size={16} />
 											</Button>
 										</form>
-										<img
-											class="pixelated h-8 w-8"
-											src="https://mc-heads.net/avatar/{p.uuid}/8"
-											alt="User Avatar"
-										/>
+										<PlayerHead uuid={p.uuid} size="lg" />
 										<p>{p.crop}</p>
 										<p>{getReadableSkyblockDate(p.timestamp)}</p>
 										<Button size="sm" href="/contest/{p.timestamp}" color="alternative">View</Button
@@ -271,7 +288,7 @@
 			</div>
 
 			<Button formaction="?/create" type="submit">Create</Button>
-			<p class="text-base leading-relaxed text-muted-foreground">
+			<p class="text-muted-foreground text-base leading-relaxed">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

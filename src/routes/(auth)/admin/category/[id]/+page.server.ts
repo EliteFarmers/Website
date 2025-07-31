@@ -40,7 +40,7 @@ export const actions: Actions = {
 		const published = data.get('published') === 'true';
 
 		if (!id) {
-			fail(400, { error: 'Invalid category data.' });
+			return fail(400, { error: 'Invalid category data.' });
 		}
 
 		const { response, error: e } = await UpdateShopCategory(locals.access_token, id, {
@@ -51,7 +51,7 @@ export const actions: Actions = {
 		});
 
 		if (e || !response.ok) {
-			fail(response.status ?? 400, { error: e || 'Failed to edit category.' });
+			return fail(response.status ?? 400, { error: e || 'Failed to edit category.' });
 		}
 
 		return { success: true };
@@ -114,7 +114,7 @@ export const actions: Actions = {
 			const [, id] = key.split('.');
 
 			if (!id) {
-				fail(400, { error: 'Invalid order data.' });
+				return fail(400, { error: 'Invalid order data.' });
 			}
 
 			order.push({ id: id, order: i });
@@ -125,7 +125,7 @@ export const actions: Actions = {
 		});
 
 		if (e || !response.ok) {
-			fail(response.status ?? 400, { error: e || 'Failed to update order.' });
+			return fail(response.status ?? 400, { error: e });
 		}
 
 		return { success: true };

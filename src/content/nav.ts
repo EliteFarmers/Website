@@ -9,6 +9,7 @@ import Command from '@lucide/svelte/icons/command';
 import UserPen from '@lucide/svelte/icons/user-pen';
 import Settings from '@lucide/svelte/icons/settings';
 import ServerCog from '@lucide/svelte/icons/server-cog';
+import Megaphone from '@lucide/svelte/icons/megaphone';
 
 export interface NavItem {
 	name: string;
@@ -115,6 +116,11 @@ export const ADMIN_NAV_PAGES = [
 		icon: ShieldPlus,
 		name: 'Moderators',
 		href: '/admin',
+	},
+	{
+		icon: Megaphone,
+		name: 'Announce',
+		href: '/admin/announcements',
 	},
 	{
 		icon: Badge,

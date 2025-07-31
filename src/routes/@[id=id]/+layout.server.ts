@@ -23,7 +23,7 @@ const limiter = new RateLimiter({
 });
 
 export const load: LayoutServerLoad = async (event) => {
-	const { params } = event;
+	const { params, request } = event;
 
 	if (!dev) {
 		await limiter.cookieLimiter?.preflight(event);
@@ -36,7 +36,7 @@ export const load: LayoutServerLoad = async (event) => {
 
 	const { id, profile } = params;
 
-	const { data: account } = await GetAccount(id.replaceAll('-', '')).catch(() => ({ data: undefined }));
+	const { data: account } = await GetAccount(id.replaceAll('-', ''), request.headers);
 
 	if (!account?.id || !account.name) {
 		throw error(404, 'Player not found');
@@ -60,15 +60,17 @@ export const load: LayoutServerLoad = async (event) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId).catch(() => ({
-		data: undefined,
-	}));
+	const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId, request.headers).catch(
+		() => ({
+			data: undefined,
+		})
+	);
 
 	if (!member) {
 		throw error(404, 'Profile data not found');
 	}
 
-	const { data: ranks } = await GetPlayerRanks(account.id, selectedProfile.profileId, 10_000);
+	const { data: ranks } = await GetPlayerRanks(account.id, selectedProfile.profileId, undefined, request.headers);
 
 	const profileIds: ProfileDetails[] = profiles
 		// Filter out the current profile

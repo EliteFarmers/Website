@@ -12,7 +12,7 @@
 </script>
 
 <a
-	class="flex w-full flex-row items-center justify-between gap-2 rounded-md bg-card px-6 py-[1.88rem]"
+	class="bg-card flex w-full flex-row items-center justify-between gap-2 rounded-md px-6 py-[1.88rem]"
 	href="/event/{member.eventId}/leaderboard#{memberUuid}"
 >
 	<div class="flex flex-row items-center justify-center gap-2 align-middle">
@@ -21,10 +21,10 @@
 			{#snippet trigger()}
 				<div class="flex flex-col items-center justify-center">
 					{#if member.status === 0}
-						<div class="h-2 w-2 rounded-full bg-muted"></div>
+						<div class="bg-muted h-2 w-2 rounded-full"></div>
 					{/if}
 					{#if member.status === 1}
-						<div class="h-2 w-2 rounded-full bg-progress"></div>
+						<div class="bg-progress h-2 w-2 rounded-full"></div>
 					{/if}
 				</div>
 			{/snippet}

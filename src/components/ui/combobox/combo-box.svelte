@@ -13,6 +13,7 @@
 		placeholder: string;
 		btnClass?: string;
 		popoverClass?: string;
+		triggerClass?: string;
 		onChange?: ((value: string) => void) | undefined;
 		clear?: boolean;
 		disabled?: boolean;
@@ -25,6 +26,7 @@
 		placeholder,
 		btnClass,
 		popoverClass,
+		triggerClass,
 		onChange = undefined,
 		clear = false,
 		disabled = $bindable(false),
@@ -56,7 +58,7 @@
 </script>
 
 <Popover.Root bind:open>
-	<Popover.Trigger bind:ref={triggerRef}>
+	<Popover.Trigger bind:ref={triggerRef} class={cn('w-fit', triggerClass)}>
 		{#snippet child({ props })}
 			<Button
 				variant="outline"

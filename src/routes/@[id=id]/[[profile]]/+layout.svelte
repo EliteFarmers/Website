@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { LayoutData } from './$types';
-	import PlayerInfo from '$comp/stats/playerinfo.svelte';
 	import { browser } from '$app/environment';
 	import { Button } from '$ui/button';
 	import { page } from '$app/state';
@@ -12,6 +11,8 @@
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 	import type { components } from '$lib/api/api';
+	import NameCard from '$comp/stats/namecard/name-card.svelte';
+	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -21,6 +22,7 @@
 		profiles: data.profiles,
 		member: data.member,
 		ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
+		style: data.style,
 	});
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
@@ -34,6 +36,7 @@
 				profiles: data.profiles,
 				member: data.member,
 				ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
+				style: data.style,
 			});
 
 			if (!browser) return;
@@ -55,61 +58,26 @@
 <JoinElitePopup />
 
 <div class="m-0 w-full p-0">
-	<PlayerInfo />
+	<NameCard />
+	<BadgeList />
 
-	<div class="flex flex-row justify-center">
-		<div
-			class="my-6 flex max-w-fit flex-wrap justify-center rounded-md border-2 border-solid border-card p-1 sm:flex-row"
-		>
-			<Button
-				variant="ghost"
-				size="sm"
-				href="{path}/contests"
-				class="{route === 'contests' ? 'bg-card' : ''} cursor-pointer">Contests</Button
-			>
-			<Button
-				variant="ghost"
-				size="sm"
-				href="{path}/charts"
-				class="{route === 'charts' ? 'bg-card' : ''} cursor-pointer">Charts</Button
-			>
-			<Button
-				variant="ghost"
-				size="sm"
-				href={path}
-				class="{route === '[[profile]]' ? 'bg-card' : ''} cursor-pointer">Stats</Button
-			>
-			<Button
-				variant="ghost"
-				size="sm"
-				href="{path}/garden"
-				class="{route === 'garden' ? 'bg-card' : ''} cursor-pointer">Garden</Button
-			>
-			<Button
-				variant="ghost"
-				size="sm"
-				href="{path}/rates"
-				class="{route === 'rates' ? 'bg-card' : ''} cursor-pointer">Rates</Button
-			>
-			{#if data.authorized}
-				<Button variant="ghost" size="sm" href="{path}/graphs" class="cursor-pointer">Admin</Button>
-			{/if}
-		</div>
-	</div>
+	{@render pagenav()}
 
 	{@render children?.()}
+
+	{@render pagenav()}
 
 	<div class="my-16 flex flex-col items-center justify-center leading-none">
 		<div class="flex flex-col justify-start gap-4 sm:items-center sm:justify-center">
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="select-none text-muted-foreground">Player UUID</span>
+				<span class="text-muted-foreground select-none">Player UUID</span>
 				<div class="flex flex-row items-center gap-1">
 					<span class="select-all">{data.account.id}</span>
 					<CopyToClipboard text={data.account.id} class="-my-2 size-8" />
 				</div>
 			</div>
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="select-none text-muted-foreground">Profile UUID</span>
+				<span class="text-muted-foreground select-none">Profile UUID</span>
 				<div class="flex flex-row items-center gap-1">
 					<span class="select-all">{data.profile?.profileId}</span>
 					<CopyToClipboard text={data.profile?.profileId} class="-my-2 size-8" />
@@ -117,7 +85,7 @@
 			</div>
 			{#if data.account?.discordId}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-					<span class="select-none text-muted-foreground">Linked Discord ID</span>
+					<span class="text-muted-foreground select-none">Linked Discord ID</span>
 					<div class="flex flex-row items-center gap-1">
 						<span class="select-all">{data.account?.discordId}</span>
 						<CopyToClipboard text={data.account?.discordId} class="-my-2 size-8" />
@@ -125,12 +93,12 @@
 				</div>
 			{/if}
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="select-none text-muted-foreground">Profile Last Updated</span>
+				<span class="text-muted-foreground select-none">Profile Last Updated</span>
 				<span class="select-all">{new Date((data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span>
 			</div>
 			{#if page.url.pathname.includes('/garden')}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-					<span class="select-none text-muted-foreground">Garden Last Updated</span>
+					<span class="text-muted-foreground select-none">Garden Last Updated</span>
 					<span class="select-all"
 						>{new Date(+(data.member?.garden?.lastSave ?? 0) * 1000).toLocaleString()}</span
 					>
@@ -139,3 +107,51 @@
 		</div>
 	</div>
 </div>
+
+{#snippet pagenav()}
+	<div class="flex flex-row justify-center">
+		<div class="my-6 flex max-w-fit flex-wrap justify-center rounded-md border border-solid p-1 sm:flex-row">
+			<Button
+				variant="ghost"
+				size="sm"
+				href="{path}/contests"
+				class="{route === 'contests' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Contests</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
+				href="{path}/charts"
+				class="{route === 'charts' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Charts</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
+				href={path}
+				class="{route === '[[profile]]' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Stats</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
+				href="{path}/garden"
+				class="{route === 'garden' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Garden</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
+				href="{path}/fortune"
+				class="{route === 'fortune' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Fortune</Button
+			>
+			<Button
+				variant="ghost"
+				size="sm"
+				href="{path}/ranks"
+				class="{route === 'ranks' ? 'bg-muted' : ''} w-1/3 cursor-pointer sm:w-auto">Ranks</Button
+			>
+			{#if data.authorized}
+				<Button variant="ghost" size="sm" href="{path}/graphs" class="w-1/3 cursor-pointer sm:w-auto"
+					>Admin</Button
+				>
+			{/if}
+		</div>
+	</div>
+{/snippet}

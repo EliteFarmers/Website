@@ -40,7 +40,7 @@
 		{#if rank >= 0}
 			<a
 				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}"
-				class="rounded-md bg-card px-1.5 py-0.5 font-semibold text-completed hover:bg-muted"
+				class="bg-card text-completed hover:bg-muted rounded-md px-1.5 py-0.5 font-semibold"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span
 					class="text-md xs:text-lg leading-none sm:text-xl">{rank}</span
@@ -50,21 +50,21 @@
 		<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level.toLocaleString()}</strong></span>
 	</div>
 	<div
-		class="relative h-8 w-full rounded-lg bg-card"
+		class="bg-card relative h-8 w-full rounded-lg"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
 		{#if percent >= 100}
-			<div class="absolute bottom-0 left-0 top-0 rounded-lg bg-completed" style="width: 100%;"></div>
+			<div class="bg-completed absolute top-0 bottom-0 left-0 rounded-lg" style="width: 100%;"></div>
 		{:else}
 			<div
-				class="absolute bottom-0 left-0 top-0 rounded-lg bg-progress"
+				class="bg-progress absolute top-0 bottom-0 left-0 rounded-lg"
 				style="width: {Math.max(2, percent)}%;"
 			></div>
 		{/if}
 		<div class="absolute flex h-full w-full items-center justify-center">
-			<p class="text-lg font-semibold leading-none">{hovering ? expanded : readable}</p>
+			<p class="text-lg leading-none font-semibold">{hovering ? expanded : readable}</p>
 		</div>
 	</div>
 </div>

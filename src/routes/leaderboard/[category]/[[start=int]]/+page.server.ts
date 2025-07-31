@@ -42,7 +42,7 @@ export const load = (async ({ params, parent, url }) => {
 	}
 
 	try {
-		const { data: lb } = await GetLeaderboardSlice(category, {
+		const lb = await GetLeaderboardSlice(category, {
 			offset: startNum,
 			limit: 20,
 			mode,
@@ -80,7 +80,7 @@ export const actions = {
 			});
 		}
 
-		const { data: account } = await GetAccount(search);
+		const { data: account } = await GetAccount(search, request.headers).catch(() => ({ data: undefined }));
 		if (!account) {
 			return fail(400, {
 				error: 'User not found!',

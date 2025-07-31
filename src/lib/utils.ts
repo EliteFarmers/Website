@@ -150,14 +150,22 @@ export function preprocessWeightChart(data: components['schemas']['CropCollectio
 		}));
 }
 
-export enum EventType {
-	FarmingWeight = '1',
-	Collections = '2',
-	Medals = '4',
-	Pests = '5',
-}
+export const EventType: Record<string, components['schemas']['EventType']> = {
+	FarmingWeight: 'farming-weight',
+	Collections: 'collection',
+	Experience: 'experience',
+	Medals: 'medals',
+	Pests: 'pests',
+};
 
 export enum EventMode {
 	Solo = '1',
 	Teams = '2',
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'children'> : T;
+export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
+export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };

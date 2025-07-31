@@ -21,7 +21,7 @@
 	let { data }: Props = $props();
 
 	let category = $derived(data.category);
-	let items = $state(data.category.products ?? []);
+	let items = $derived(data.category.products ?? []);
 	let loading = $state(false);
 	let productId = $state('');
 
@@ -119,7 +119,7 @@
 				{#each items as product (product.id)}
 					<div class="flex w-64 flex-row items-center justify-between rounded-md border-2 px-2 py-1">
 						<input type="hidden" name="order.{product.id}" value={product.id} />
-						<p class="overflow-hidden overflow-ellipsis whitespace-nowrap font-semibold">{product.name}</p>
+						<p class="overflow-hidden font-semibold text-ellipsis whitespace-nowrap">{product.name}</p>
 						<div class="flex flex-row items-center gap-2">
 							<Button href="/shop/{product.id}" class="m-1" variant="ghost" size="sm">
 								<ExternalLink />

@@ -1,11 +1,15 @@
 FROM node:23-alpine AS builder
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.12.2
 WORKDIR /app
 
 COPY package*.json .
 COPY pnpm-lock.yaml .
 RUN pnpm install
 COPY . .
+
+# Set the commit hash as an environment variable
+ARG PUBLIC_COMMIT_HASH
+ENV PUBLIC_COMMIT_HASH=$PUBLIC_COMMIT_HASH
 
 # Generates the oss.txt license file for used software
 RUN pnpm run license
@@ -14,8 +18,10 @@ RUN pnpm prune --production
 
 
 FROM node:23-alpine
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.12.2
 WORKDIR /app
+
+ENV PUBLIC_COMMIT_HASH=$PUBLIC_COMMIT_HASH
 
 COPY --from=builder /app/node_modules node_modules/
 COPY --from=builder /app/build build/

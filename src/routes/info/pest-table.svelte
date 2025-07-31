@@ -13,7 +13,7 @@
 </script>
 
 <div class="scrollbar-none flex w-full overflow-x-auto">
-	<table class="flex-grow-1 w-full min-w-[48rem] max-w-4xl">
+	<table class="w-full max-w-4xl min-w-3xl flex-grow-1">
 		<thead>
 			<tr class="bg-muted-variant">
 				<th class="text-left">Pest Brackets</th>
@@ -47,12 +47,14 @@
 </div>
 
 <style lang="postcss">
+	@reference '$css';
+
 	td,
 	th {
 		@apply p-1 px-2;
 	}
 
 	tbody > tr:nth-child(odd) {
-		@apply bg-opacity-50;
+		@apply bg-muted/50;
 	}
 </style>

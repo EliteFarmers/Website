@@ -26,7 +26,7 @@
 	let confirmModal = $state(false);
 </script>
 
-<div class="rounded-lgs flex w-full flex-col justify-between gap-4 rounded-md border-2 bg-card p-4">
+<div class="rounded-lgs bg-card flex w-full flex-col justify-between gap-4 rounded-md border-2 p-4">
 	<div class="flex w-full flex-col justify-between gap-4 md:flex-row">
 		<h3 class="text-2xl">{lb.title}</h3>
 		<div class="flex flex-row gap-2">
@@ -80,19 +80,19 @@
 		<div class="flex flex-col gap-3">
 			<p>
 				<span class="font-semibold">Channel:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{channels.find((c) => c.value === lb.channelId)?.label ?? 'Not Set'}</span
 				>
 			</p>
 			<p>
 				<span class="font-semibold">Start:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{lb.startCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.startCutoff ?? 0)}</span
 				>
 			</p>
 			<p>
 				<span class="font-semibold">End:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{lb.endCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.endCutoff ?? 0)}</span
 				>
 			</p>
@@ -100,13 +100,13 @@
 		<div class="flex flex-col gap-3">
 			<p>
 				<span class="font-semibold">Updates:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{channels.find((c) => c.value === lb.updateChannelId)?.label ?? 'Not Set'}</span
 				>
 			</p>
 			<p>
 				<span class="font-semibold">Update Role:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{roles.find((c) => c.value === lb.updateRoleId)?.label ?? 'Not Set'}</span
 				>
 			</p>
@@ -114,13 +114,13 @@
 		<div class="flex flex-col gap-3">
 			<p>
 				<span class="font-semibold">Required Role:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{roles.find((c) => c.value === lb.requiredRole)?.label ?? 'Not Set'}</span
 				>
 			</p>
 			<p>
 				<span class="font-semibold">Banned Role:</span>
-				<span class="rounded-md border bg-background p-1"
+				<span class="bg-background rounded-md border p-1"
 					>{roles.find((c) => c.value === lb.blockedRole)?.label ?? 'Not Set'}</span
 				>
 			</p>

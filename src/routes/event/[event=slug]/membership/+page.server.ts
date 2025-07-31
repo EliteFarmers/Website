@@ -16,7 +16,7 @@ import {
 	UpdateEventTeam,
 } from '$lib/api/elite';
 
-export const load = (async ({ locals, parent, params }) => {
+export const load = (async ({ locals, parent, params, request }) => {
 	const { session, self: member } = await parent();
 	const { access_token: token } = locals;
 	const { event: eventRoute } = params;
@@ -35,7 +35,7 @@ export const load = (async ({ locals, parent, params }) => {
 	}
 
 	const { data: account } = session.uuid
-		? await GetAccount(session.uuid).catch(() => ({ data: undefined }))
+		? await GetAccount(session.uuid, request.headers).catch(() => ({ data: undefined }))
 		: { data: undefined };
 
 	if (event.maxTeamMembers !== 0 || event.maxTeams !== 0) {

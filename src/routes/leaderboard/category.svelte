@@ -3,25 +3,34 @@
 	import * as Tooltip from '$ui/tooltip';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
+
 	interface Props {
 		leaderboards?: LeaderboardInfo[];
 		title: string;
 	}
 
 	let { leaderboards, title }: Props = $props();
+
+	const by3Remainder = $derived(byNRemainder(3));
+	const by2Remainder = $derived(byNRemainder(2));
+
+	function byNRemainder(n: number) {
+		const remainder = (leaderboards?.length ?? 0) % n;
+		if (remainder === 0) return 0;
+		return n - remainder;
+	}
 </script>
 
-<section class="flex w-full flex-1 basis-64 flex-col items-center justify-center gap-4">
-	<h2 class="py-6 pt-8 text-3xl">{title}</h2>
+<section class="md:bg-card flex w-full flex-1 flex-col justify-center gap-2 rounded-lg md:border-2 md:p-4">
+	<h2 class="text-2xl font-semibold">{title}</h2>
 
-	<div class="flex h-full w-full flex-1 flex-wrap items-center justify-center gap-2">
+	<div
+		class="bg-border grid h-full w-full flex-1 border-collapse grid-cols-1 gap-[2px] overflow-clip rounded-md border-2 sm:grid-cols-2 md:grid-cols-3"
+	>
 		{#each leaderboards ?? [] as lb (lb.id)}
-			<div class="flex h-12 w-full max-w-64 flex-row items-center gap-2">
+			<div class="bg-background flex h-10 w-full flex-row items-center">
 				<div class="flex flex-1 items-center justify-center">
-					<a
-						href="/leaderboard/{lb.id}"
-						class="flex-1 items-center rounded-md border-2 bg-card p-2 px-3 hover:bg-card/50"
-					>
+					<a href="/leaderboard/{lb.id}" class="hover:bg-card/60 flex-1 items-center truncate p-2 px-3 pr-0">
 						<div class="flex flex-row items-center gap-2">
 							{#if lb.icon}
 								<img
@@ -30,33 +39,49 @@
 									alt={lb.short ?? lb.title}
 								/>
 							{/if}
-							<h6 class="whitespace-nowrap text-center text-xl">{lb.short ?? lb.title}</h6>
+							<span class="truncate text-center whitespace-nowrap">{lb.short ?? lb.title}</span>
 						</div>
 					</a>
 				</div>
-				{#each lb.intervals ?? [] as interval (interval)}
-					{#if interval !== 'current'}
-						<div class="flex flex-col items-center justify-center">
-							<Tooltip.Simple>
-								{#snippet child({ props })}
-									<a
-										{...props}
-										href="/leaderboard/{lb.id}-{interval}"
-										class="flex aspect-square h-full flex-row items-center rounded-md border-2 bg-card p-3 hover:bg-card/50"
-									>
-										{#if interval === 'monthly'}
-											<CalendarClock class="size-5" />
-										{:else if interval === 'weekly'}
-											<Hourglass class="size-5" />
-										{/if}
-									</a>
-								{/snippet}
-								<p>View Monthly Leaderboard</p>
-							</Tooltip.Simple>
-						</div>
-					{/if}
-				{/each}
+				<div class="flex h-full">
+					{#each lb.intervals ?? [] as interval (interval)}
+						{#if interval !== 'current'}
+							<div class="hover:bg-card/60 flex h-full flex-col items-center justify-center">
+								<Tooltip.Simple>
+									{#snippet child({ props })}
+										<a
+											{...props}
+											href="/leaderboard/{lb.id}-{interval}"
+											class="flex aspect-square h-full flex-row items-center justify-center border-l-2"
+										>
+											{#if interval === 'monthly'}
+												<CalendarClock class="size-5" />
+											{:else if interval === 'weekly'}
+												<Hourglass class="size-5" />
+											{/if}
+										</a>
+									{/snippet}
+									{#if interval === 'monthly'}
+										<p>View Monthly Leaderboard</p>
+									{:else if interval === 'weekly'}
+										<p>View Weekly Leaderboard</p>
+									{/if}
+								</Tooltip.Simple>
+							</div>
+						{/if}
+					{/each}
+				</div>
 			</div>
+		{/each}
+		{#each { length: by3Remainder }}
+			{@render empty('hidden md:block')}
+		{/each}
+		{#each { length: by2Remainder }}
+			{@render empty('hidden sm:block md:hidden')}
 		{/each}
 	</div>
 </section>
+
+{#snippet empty(className: string)}
+	<div class="bg-background h-10 w-full {className}"></div>
+{/snippet}

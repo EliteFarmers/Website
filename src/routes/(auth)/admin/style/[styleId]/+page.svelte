@@ -9,13 +9,16 @@
 
 	import type { PageData, ActionData } from './$types';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
-	import { weightStyleParse } from '$lib/styles/style';
+	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
 	import { untrack } from 'svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
 	import X from '@lucide/svelte/icons/x';
 	import { pending } from '$lib/utils';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
+	import { PersistedState } from 'runed';
+	import type { components } from '$lib/api/api';
 
 	interface Props {
 		data: PageData;
@@ -27,13 +30,14 @@
 	let style = $derived(data.style);
 	let loading = $state(false);
 	let deleteStyleModal = $state(false);
+	let showLeaderboardName = new PersistedState('showleaderboardname', false);
 
-	let styleData = $state(JSON.stringify(data.style.data ?? '{}', undefined, 2) + '');
 	let badge = $state(data.badges?.[0]?.image?.url ?? undefined);
 	let rank = $state(1000);
 	let showBadge = $state(false);
 	let badgeUrl = $derived(showBadge ? badge : undefined);
 
+	let styleData = $derived(JSON.stringify(data.style.data ?? {}, undefined, 2) + '');
 	let styleDataValid = $derived.by(() => {
 		try {
 			const s = JSON.parse(styleData);
@@ -43,12 +47,28 @@
 		}
 	});
 
+	let leaderboardData = $derived(JSON.stringify(data.style.leaderboard ?? {}, undefined, 2) + '');
+	let leaderboardDataValid = $derived.by(() => {
+		try {
+			const l = JSON.parse(leaderboardData);
+			return leaderboardStyleParse(l);
+		} catch {
+			console.log('Invalid leaderboard data');
+			return undefined;
+		}
+	});
+
 	let deleteImageModal = $state(false);
 	let selectedImageId = $state('');
 
 	let styleDataObj = $derived({
 		...untrack(() => data.style),
-		data: JSON.parse(styleData),
+		data: (styleDataValid?.success ? styleDataValid.data : data.style.data) as
+			| components['schemas']['WeightStyleDataDto']
+			| undefined,
+		leaderboard: (leaderboardDataValid?.success ? leaderboardDataValid.data : data.style.leaderboard) as
+			| components['schemas']['LeaderboardStyleDataDto']
+			| undefined,
 	});
 
 	let crumbs = $derived<Crumb[]>([
@@ -115,11 +135,11 @@
 
 		<div class="h-36 max-h-36 max-w-2xl overflow-y-auto pr-2">
 			{#if !styleDataValid?.success || !styleDataObj}
-				<p class="mb-2 text-destructive">Invalid style data.</p>
+				<p class="text-destructive mb-2">Invalid style data.</p>
 				{#if styleDataValid?.error?.issues}
 					<div class="flex flex-col gap-1">
 						{#each styleDataValid.error.issues as issue, i (i)}
-							<div class="flex flex-col gap-1 rounded-sm border-2 border-card p-2">
+							<div class="border-card flex flex-col gap-1 rounded-sm border-2 p-2">
 								<p>{issue.path.join('.')}</p>
 								<p>{issue.message}</p>
 							</div>
@@ -156,7 +176,6 @@
 
 					return async ({ result }) => {
 						await applyAction(result);
-						styleData = JSON.stringify(data.style.data ?? '{}', undefined, 2) + '';
 						loading = false;
 					};
 				}}
@@ -185,7 +204,80 @@
 			</form>
 		</div>
 	</section>
+	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
+		<div class="mb-2 flex flex-row items-center gap-4">
+			<h2 class="text-xl">Update Leaderboard Style</h2>
+		</div>
 
+		<div class="max-w-2xl overflow-y-auto pr-2">
+			{#if !leaderboardDataValid?.success || !styleDataObj}
+				<p class="text-destructive mb-2">Invalid style data.</p>
+				{#if leaderboardDataValid?.error?.issues}
+					<div class="flex flex-col gap-1">
+						{#each leaderboardDataValid.error.issues as issue, i (i)}
+							<div class="border-card flex flex-col gap-1 rounded-sm border-2 p-2">
+								<p>{issue.path.join('.')}</p>
+								<p>{issue.message}</p>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<p class="text-muted-foreground">
+						Data is invalid JSON, please make sure all properties are double quoted and check for missing
+						commas.
+					</p>
+				{/if}
+			{:else if styleDataObj}
+				<div class="max-h-16">
+					<EntryPreview
+						style={leaderboardDataValid.data}
+						ign={data.user.username ?? 'Steve'}
+						uuid={data.user.username ?? 'Steve'}
+						showLeaderboardName={showLeaderboardName.current}
+						styleId={style.id}
+					/>
+				</div>
+			{/if}
+		</div>
+
+		<div class="flex w-full gap-4 md:flex-row lg:flex-row">
+			<form
+				method="post"
+				action="?/updateLeaderboardStyle"
+				class="flex flex-1 flex-col gap-4"
+				use:enhance={() => {
+					loading = true;
+
+					return async ({ result }) => {
+						await applyAction(result);
+						loading = false;
+					};
+				}}
+			>
+				<input type="hidden" name="style" value={style.id} />
+				<input type="hidden" name="name" value={style.name} />
+				<input type="hidden" name="description" value={style.description} />
+
+				<div class="flex max-w-2xl flex-col items-start gap-2">
+					<Textarea
+						spellcheck={false}
+						writingsuggestions={false}
+						class="h-96 font-mono"
+						name="data"
+						bind:value={leaderboardData}
+					/>
+				</div>
+
+				<div class="flex flex-row items-center gap-4">
+					<Button class="w-32" type="submit" disabled={loading}>Update</Button>
+					<div class="flex flex-row items-center gap-2">
+						<Switch bind:checked={showLeaderboardName.current} />
+						<Label class="leading-none">Show Leaderboard Name</Label>
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
 	<section class="my-8 flex w-full max-w-4xl flex-col gap-4">
 		<div class="mb-2 flex flex-row items-center gap-4">
 			<h2 class="text-xl">Images</h2>

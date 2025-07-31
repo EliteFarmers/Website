@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.pcss';
+	import '../app.css';
 
 	import { page } from '$app/state';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
@@ -23,6 +23,8 @@
 	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
 	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
 	import FooterPills from '$comp/footer/footer-pills.svelte';
+	import { initGlobalContext } from '$lib/hooks/global.svelte';
+	import Announcements from '$comp/header/announcements.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -31,6 +33,7 @@
 
 	let { children, data }: Props = $props();
 
+	initGlobalContext({ session: data.session, announcements: data.cache?.announcements ?? [] });
 	initThemeContext();
 	initAnyCropSelected();
 	initSelectedCrops(getAnyCropSelected());
@@ -91,7 +94,7 @@
 
 <ThemeWatcher />
 
-<Sidebar.Provider>
+<Sidebar.Provider open={data.sidebar}>
 	<Sidebar.Root collapsible="icon" class="z-50">
 		<AppSidebar>
 			<FavoritedLinks />
@@ -101,9 +104,10 @@
 
 	<div class="max-h-screen flex-1 overflow-y-auto">
 		<Sidebar.Inset>
-			<Header />
+			<Header leaderboards={data.cache?.leaderboards?.leaderboards} />
 
 			<Content>
+				<Announcements />
 				{@render children?.()}
 				<FooterPills />
 			</Content>

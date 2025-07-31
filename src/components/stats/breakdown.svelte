@@ -19,7 +19,7 @@
 </script>
 
 <section class="flex w-full flex-1 justify-center py-4 align-middle" aria-labelledby="Breakdown">
-	<div class="w-full max-w-4xl rounded-lg bg-card">
+	<div class="bg-card w-full max-w-4xl rounded-lg">
 		<h2 id="Breakdown" class="mt-6 text-center">
 			<span class="mx-2 text-3xl font-semibold">{total.toLocaleString()}</span>
 			<span class="text-lg">Farming Weight</span>
@@ -31,13 +31,13 @@
 					<span class="pl-2 text-lg">({(total - bonus).toLocaleString()})</span>
 				</h3>
 				{#each sources as [source, value] (source)}
-					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow">{source}</div>
+					<div class="even:bg-card flex flex-row items-center rounded-sm p-1">
+						<div class="grow">{source}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{:else}
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow">No crops found!</div>
+						<div class="grow">No crops found!</div>
 						<div class="flex-none">0</div>
 					</div>
 				{/each}
@@ -47,13 +47,13 @@
 					Bonus<span class="pl-2 text-lg">({bonus.toLocaleString()})</span>
 				</h3>
 				{#each bonuses as [bonus, value] (bonus)}
-					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow capitalize">{bonus}</div>
+					<div class="even:bg-card flex flex-row items-center rounded-sm p-1">
+						<div class="grow capitalize">{bonus}</div>
 						<div class="flex-none">{value?.toLocaleString() ?? 0}</div>
 					</div>
 				{:else}
 					<div class="flex flex-row items-center rounded-sm p-1 even:bg-card">
-						<div class="flex-grow">No bonuses unlocked yet!</div>
+						<div class="grow">No bonuses unlocked yet!</div>
 						<div class="flex-none">0</div>
 					</div>
 				{/each}

@@ -6,6 +6,7 @@
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
 	import * as Popover from '$ui/popover';
+	import * as Dialog from '$ui/dialog';
 	import { Button } from '$ui/button';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import Image from '@lucide/svelte/icons/image';
@@ -19,7 +20,10 @@
 	import Badge from '$comp/stats/badge.svelte';
 	import Package from '@lucide/svelte/icons/package';
 	import Info from '@lucide/svelte/icons/info';
+	import Heart from '@lucide/svelte/icons/heart';
 	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { enhance } from '$app/forms';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 
 	interface Props {
 		data: PageData;
@@ -37,6 +41,8 @@
 	$effect.pre(() => {
 		breadcrumb.setOverride(crumbs);
 	});
+
+	let claimModalOpen = $state(false);
 </script>
 
 <Head title={product.name ?? 'Product'} description="Help support development with cosmetics!" />
@@ -47,7 +53,7 @@
 			<h1 class="text-4xl">{product.name}</h1>
 			<ProductPrice {product} />
 		</div>
-		<a class="flex flex-row items-center gap-1 text-muted-foreground hover:text-primary" href="/shop">
+		<a class="text-muted-foreground hover:text-primary flex flex-row items-center gap-1" href="/shop">
 			<ArrowLeft size={16} class="mt-1 inline-block" />
 			Back to Shop
 		</a>
@@ -110,12 +116,12 @@
 					<ProductUnlock open={true}>
 						{#snippet header()}
 							<Image />
-							<p class="font-semibold">Weight Styles</p>
+							<p class="font-semibold">Cosmetic Styles</p>
 						{/snippet}
 						<p class="max-w-sm">
-							Unlock the weight <a href="#styles" class="underline">
+							Unlock the cosmetic <a href="#styles" class="underline">
 								style{product.weightStyles.length > 1 ? 's' : ''} shown below!</a
-							> These replace the normal weight image when anyone uses the /weight bot command on your account.
+							> These styles may be available for your website name card, /weight bot command, and leaderboards!
 						</p>
 					</ProductUnlock>
 				{/if}
@@ -131,7 +137,7 @@
 									class="flex flex-row items-center gap-1 rounded-sm p-1"
 									style="background-color: #{color}"
 								>
-									<span class="text-sm font-semibold leading-none text-black">#{color}</span>
+									<span class="text-sm leading-none font-semibold text-black">#{color}</span>
 								</div>
 							{/each}
 						</div>
@@ -146,6 +152,15 @@
 						<div>
 							<Badge {badge} />
 						</div>
+					</ProductUnlock>
+				{/if}
+				{#if product.features?.customEmoji}
+					<ProductUnlock>
+						{#snippet header()}
+							<Heart />
+							<p class="font-semibold">Custom Emoji</p>
+						{/snippet}
+						<p class="max-w-sm">Apply a custom emoji next to your account name! Shows up everywhere!</p>
 					</ProductUnlock>
 				{/if}
 				{#if product.features?.hideShopPromotions}
@@ -185,15 +200,27 @@
 				<div class="flex w-full flex-col items-end gap-1">
 					<div class="flex flex-row items-center gap-2">
 						<ProductPrice {product} />
-						<Button href="/shop/{product.id}/buy" class="bg-link font-semibold text-white hover:bg-link/85">
-							{isFree ? 'Unlock' : 'Buy'} on Discord
-							<ExternalLink size={16} class="ml-1.5" />
-						</Button>
+						{#if isFree && product.type == 2}
+							<Button
+								onclick={() => (claimModalOpen = true)}
+								class="bg-link hover:bg-link/85 font-semibold text-white"
+							>
+								Unlock Now
+							</Button>
+						{:else}
+							<Button
+								href="/shop/{product.id}/buy"
+								class="bg-link hover:bg-link/85 font-semibold text-white"
+							>
+								{isFree ? 'Unlock' : 'Buy'} on Discord
+								<ExternalLink size={16} class="ml-1.5" />
+							</Button>
+						{/if}
 					</div>
 					{#if isFree}
 						<Popover.Mobile>
 							{#snippet trigger()}
-								<div class="flex flex-row items-center gap-1 text-muted-foreground">
+								<div class="text-muted-foreground flex flex-row items-center gap-1">
 									<p>Free Item</p>
 									<Info size={16} class="mt-0.5" />
 								</div>
@@ -222,9 +249,12 @@
 				{#each product.weightStyles.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0) as { id } (id)}
 					{@const style = data.styles.find((s) => s.id === id)}
 					{#if style}
-						<Card.Root class="max-w-3xl">
+						<Card.Root class="max-w-3xl p-0">
 							<Card.Content class="p-2">
-								<p class="mb-1 text-lg font-semibold">{style.name}</p>
+								<p class="mb-1 text-xl font-semibold">{style.name}</p>
+								<p class="my-1 text-lg">
+									<span class="bg-background rounded-md border p-1 font-mono">/weight</span> Style
+								</p>
 								{#if style?.styleFormatter === 'data'}
 									<div class="origin-top-left object-scale-down">
 										<WeightStyle
@@ -238,7 +268,23 @@
 									<p>
 										{style.description}
 									</p>
-									<p class="text-sm text-muted-foreground">Preview not available for this style.</p>
+									<p class="text-muted-foreground text-sm">Preview not available for this style.</p>
+								{/if}
+								{#if style?.leaderboard && Object.keys(style.leaderboard).length > 0}
+									<p class="my-1 text-lg">Leaderboard Style</p>
+									<div class="origin-top-left object-scale-down">
+										<EntryPreview
+											style={style.leaderboard}
+											ign={data.ign ?? ''}
+											uuid={data.uuid ?? ''}
+											styleId={style.id}
+										/>
+									</div>
+								{/if}
+								{#if style?.styleFormatter === 'data'}
+									<p class="text-muted-foreground my-1 text-sm">
+										Name card style also included! (Preview not available yet)
+									</p>
 								{/if}
 							</Card.Content>
 						</Card.Root>
@@ -248,3 +294,39 @@
 		</section>
 	{/if}
 </div>
+
+<Dialog.Root bind:open={claimModalOpen}>
+	<Dialog.ScrollContent>
+		<Dialog.Title>Unlock {product.name}</Dialog.Title>
+		<div class="mt-4 flex flex-col gap-4">
+			<p>You can claim this item for free!</p>
+
+			<ul class="ml-6 max-w-sm list-disc md:ml-4">
+				<li class="mb-2">
+					<p>
+						<strong>Unlock</strong> item on Discord if you're able!
+					</p>
+				</li>
+				<li>
+					<p>
+						<strong>Claim </strong> item here if you can't purchase on Discord. <br />
+						<span class="text-sm"
+							>Claiming an item here won't show it as purchased in the Discord shop.</span
+						>
+					</p>
+				</li>
+			</ul>
+
+			<div class="flex w-full flex-row items-center gap-2 p-2">
+				<form action="?/claim" method="post" class="flex-1" use:enhance>
+					<input type="hidden" name="sku" value={product.id} />
+					<Button type="submit" class="w-full font-semibold" variant="secondary">Claim Item</Button>
+				</form>
+				<Button href="/shop/{product.id}/buy" class="bg-link hover:bg-link/85 flex-1 font-semibold text-white">
+					{isFree ? 'Unlock' : 'Buy'} on Discord
+					<ExternalLink size={16} class="ml-1.5" />
+				</Button>
+			</div>
+		</div>
+	</Dialog.ScrollContent>
+</Dialog.Root>

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ScrollArea as ScrollAreaPrimitive, type WithoutChild } from 'bits-ui';
+	import { ScrollArea as ScrollAreaPrimitive } from 'bits-ui';
 	import { Scrollbar } from './index.js';
-	import { cn } from '$lib/utils.js';
+	import { cn, type WithoutChild } from '$lib/utils.js';
 
 	let {
 		ref = $bindable(null),
@@ -14,16 +14,20 @@
 		children,
 		...restProps
 	}: WithoutChild<ScrollAreaPrimitive.RootProps> & {
+		viewRef?: ScrollAreaPrimitive.ViewportProps['ref'];
+		viewClass?: string | undefined;
 		orientation?: 'vertical' | 'horizontal' | 'both' | undefined;
 		scrollbarXClasses?: string | undefined;
 		scrollbarYClasses?: string | undefined;
-		viewRef?: ScrollAreaPrimitive.ViewportProps['ref'];
-		viewClass?: string | undefined;
 	} = $props();
 </script>
 
-<ScrollAreaPrimitive.Root bind:ref {...restProps} class={cn('relative overflow-hidden', className)}>
-	<ScrollAreaPrimitive.Viewport bind:ref={viewRef} class={cn('h-full w-full rounded-[inherit]', viewClass)}>
+<ScrollAreaPrimitive.Root bind:ref data-slot="scroll-area" class={cn('relative', className)} {...restProps}>
+	<ScrollAreaPrimitive.Viewport
+		bind:ref={viewRef}
+		data-slot="scroll-area-viewport"
+		class={cn('h-full w-full rounded-[inherit]', viewClass)}
+	>
 		{@render children?.()}
 	</ScrollAreaPrimitive.Viewport>
 	{#if orientation === 'vertical' || orientation === 'both'}

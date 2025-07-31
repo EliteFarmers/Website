@@ -16,13 +16,13 @@
 		useButton = true,
 		class: className,
 		search: searchStr = $bindable(''),
-		command = (player: string) => goto(`/@${player}`),
+		cmd: command = (player: string) => goto(`/@${player}`),
 		...rest
 	}: ButtonProps & {
 		open?: boolean;
 		useButton?: boolean;
 		search?: string;
-		command?: (player: string) => void;
+		cmd?: (player: string) => Promise<void> | void;
 	} = $props();
 
 	async function search(query: string) {
@@ -71,8 +71,8 @@
 		{...rest}
 	>
 		<Search />
-		<span class="hidden text-muted-foreground lg:inline-flex">Search For Player...</span>
-		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
+		<span class="text-muted-foreground hidden lg:inline-flex">Search For Player...</span>
+		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
 	</Button>
 {/if}
 {#key open}

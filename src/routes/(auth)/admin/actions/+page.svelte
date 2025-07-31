@@ -2,60 +2,69 @@
 	import { enhance } from '$app/forms';
 	import { Input } from '$ui/input';
 	import { Button } from '$ui/button';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
 </script>
 
 <div class="my-16">
 	<section class="my-8 flex w-full flex-col gap-4">
 		<h1 class="mb-16 text-4xl">Actions</h1>
 
-		<div class="flex w-full flex-row flex-wrap gap-4">
-			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
-				<p>Clear upcoming jacob's contests if wrong data was submitted.</p>
-				<form method="post" action="?/clearcontests" class="flex w-fit flex-col gap-2" use:enhance>
-					<Button type="submit" variant="destructive">Clear Upcoming Contests</Button>
+		<div class="bg-card flex w-full flex-col rounded-lg border-2 p-4">
+			<SettingListItem
+				title="Refresh Website Cache"
+				description="Fetch new data for the website cache. This will update the website with the latest data from the API."
+			>
+				<form method="post" action="?/refreshWebsite" class="flex flex-row gap-2" use:enhance>
+					<Button type="submit">Refresh Cache</Button>
 				</form>
-			</div>
-
-			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
-				<p>Clear cooldowns for a player</p>
-				<form method="post" action="?/resetCooldowns" class="flex w-fit flex-row gap-2" use:enhance>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Clear Player Cooldowns"
+				description="Clear cooldowns for a player. This will allow their stats to be fetched again right away."
+			>
+				<form method="post" action="?/resetCooldowns" class="flex flex-row gap-2" use:enhance>
 					<Input name="player" placeholder="Player name/uuid" maxlength={64} required />
 					<Button type="submit">Reset</Button>
 				</form>
-			</div>
-
-			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
-				<p>Fetch new data for a discord guild</p>
-				<form method="post" action="?/refreshGuild" class="flex w-fit flex-row gap-2" use:enhance>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Refresh Discord Guild"
+				description="Fetch new data for a discord guild. This will update the guild data with the latest data from Discord."
+			>
+				<form method="post" action="?/refreshGuild" class="flex flex-row gap-2" use:enhance>
 					<Input name="guild" placeholder="Discord Server ID" maxlength={64} required />
 					<Button type="submit">Fetch</Button>
 				</form>
-			</div>
-
-			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
-				<p>Fetch new data for website cache</p>
-				<form method="post" action="?/refreshWebsite" class="flex w-fit flex-row gap-2" use:enhance>
-					<Button type="submit">Fetch</Button>
-				</form>
-			</div>
-
-			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
-				<p>Link an Account</p>
-				<form method="post" action="?/linkAccount" class="flex w-fit flex-row gap-2" use:enhance>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Link Account" description="Link a Minecraft account to a Discord account.">
+				<form method="post" action="?/linkAccount" class="flex flex-row gap-2" use:enhance>
 					<Input name="player" placeholder="Player name/uuid" maxlength={64} required />
 					<Input name="discord" placeholder="Discord ID" maxlength={64} required />
 					<Button type="submit">Link</Button>
 				</form>
-			</div>
-
-			<div class="flex max-w-sm flex-col justify-between gap-2 rounded-md border-2 bg-card p-4">
-				<p>Unlink an Account</p>
-				<form method="post" action="?/unlinkAccount" class="flex w-fit flex-row gap-2" use:enhance>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Unlink Account" description="Unlink a Minecraft account from a Discord account.">
+				<form method="post" action="?/unlinkAccount" class="flex flex-row gap-2" use:enhance>
 					<Input name="player" placeholder="Player name/uuid" maxlength={64} required />
 					<Input name="discord" placeholder="Discord ID" maxlength={64} required />
 					<Button type="submit" variant="destructive">Unlink</Button>
 				</form>
-			</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem
+				title="Clear Upcoming Contests"
+				description="Clear upcoming jacob's contests if wrong data was submitted."
+			>
+				<form method="post" action="?/clearcontests" class="flex flex-col gap-2" use:enhance>
+					<Button type="submit" variant="destructive">Clear<Trash_2 /></Button>
+				</form>
+			</SettingListItem>
 		</div>
 	</section>
 </div>

@@ -33,7 +33,7 @@
 
 		<div class="flex w-full flex-col gap-4">
 			{#each data.badges as badge (badge.id)}
-				<div class="flex w-full flex-col items-center justify-between gap-2 rounded-md bg-card p-2 md:flex-row">
+				<div class="bg-card flex w-full flex-col items-center justify-between gap-2 rounded-md p-2 md:flex-row">
 					<div class="flex flex-row items-center gap-4">
 						{#if badge.image?.url}
 							<img src={badge.image.url} alt={badge.name} class="h-8 w-24 rounded-sm object-cover" />

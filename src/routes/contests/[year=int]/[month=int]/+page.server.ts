@@ -3,7 +3,7 @@ import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getSkyblockDate, getTimeStamp } from '$lib/format';
 
-export const load = (async ({ params, setHeaders }) => {
+export const load = (async ({ params, setHeaders, request }) => {
 	const { year, month } = params;
 
 	const timestamp = getTimeStamp(+year - 1, +month - 1, 0);
@@ -17,7 +17,9 @@ export const load = (async ({ params, setHeaders }) => {
 		throw error(400, 'Invalid year or month');
 	}
 
-	const { data } = await GetMonthlyContests(+params.year, +params.month);
+	const { data } = await GetMonthlyContests(+params.year, +params.month, request.headers).catch(() => ({
+		data: undefined,
+	}));
 
 	if (!data) {
 		throw error(500, 'Failed to load contests');

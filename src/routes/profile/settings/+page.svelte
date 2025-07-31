@@ -10,7 +10,6 @@
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
 	import type { CarouselAPI } from '$ui/carousel/context.js';
-	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
 	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
@@ -18,9 +17,16 @@
 	import Moon from '@lucide/svelte/icons/moon';
 	import Search from '@lucide/svelte/icons/search';
 	import Sun from '@lucide/svelte/icons/sun';
+	import Pencil from '@lucide/svelte/icons/pencil';
 	import { onMount } from 'svelte';
 	import type { ActionData, PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
+	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import SettingHeader from '$comp/settings/setting-header.svelte';
+	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import { useDebounce } from 'runed';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 
 	let api = $state<CarouselAPI>();
 
@@ -71,30 +77,61 @@
 
 	let changedSettings = $state({
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
+		leaderboardStyle: (data.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
+		nameStyle: (data.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
 		embedColor: data.user.settings?.features?.embedColor ?? '',
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
+		emoji: data.user.settings?.suffix ?? '',
 	});
+
+	let updateForm: HTMLFormElement | undefined = $state(undefined);
+
+	const updateSettings = useDebounce(() => {
+		const settings = data.user.settings;
+		if (
+			!settings ||
+			changedSettings.weightStyle !== settings.weightStyle?.id?.toString() ||
+			changedSettings.leaderboardStyle !== settings.leaderboardStyle?.id?.toString() ||
+			changedSettings.nameStyle !== settings.nameStyle?.id?.toString() ||
+			changedSettings.embedColor !== settings.features?.embedColor ||
+			changedSettings.shopPromotions !== settings.features?.hideShopPromotions ||
+			changedSettings.styleOverride !== settings.features?.weightStyleOverride ||
+			changedSettings.moreInfo !== settings.features?.moreInfoDefault ||
+			(changedSettings.emoji !== settings.suffix && unlockedSettings.emoji)
+		) {
+			updateForm?.requestSubmit();
+		}
+	}, 1000);
 
 	let user = $derived(data.user || undefined);
 	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
 
 	let unlockedSettings = $derived({
-		weightStyle: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
+		styles: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,
 		embedColor: data.user.entitlements?.some((e) => (e.product.features?.embedColors?.length ?? 0) > 0) ?? false,
 		shopPromotions: data.user.entitlements?.some((e) => e.product.features?.hideShopPromotions) ?? false,
 		styleOverride: data.user.entitlements?.some((e) => e.product.features?.weightStyleOverride) ?? false,
 		moreInfo: data.user.entitlements?.some((e) => e.product.features?.moreInfoDefault) ?? false,
+		emoji: data.user.entitlements?.some((e) => e.product.features?.customEmoji) ?? false,
 	});
 
-	let selectedStyle = $derived(
-		changedSettings.weightStyle
-			? data.styles?.find((s) => s.id === +(changedSettings.weightStyle ?? '-1'))
-			: undefined
+	let selectedWeightStyle = $derived(
+		changedSettings.weightStyle ? data.styles[changedSettings.weightStyle ?? '-1'] : undefined
 	);
 
-	let unlockedWeightStyles = $derived(
+	let selectedLeaderboardStyle = $derived(
+		changedSettings.leaderboardStyle ? data.styles[changedSettings.leaderboardStyle ?? '-1'] : undefined
+	);
+
+	// let selectedNameStyle = $derived(
+	//   changedSettings.nameStyle
+	//     ? data.styles[changedSettings.nameStyle ?? '-1']
+	//     : undefined
+	// );
+
+	let unlockedStyles = $derived(
 		(data.user.entitlements ?? [])
 			.filter((e) => (e.product?.weightStyles?.length ?? 0) > 0)
 			.map((e) => e.product?.weightStyles ?? [])
@@ -102,14 +139,29 @@
 			.reduce(
 				(acc, e) => {
 					if (!e.id || !e.name) return acc;
-					acc[e.id] = { value: e.id.toString(), label: e.name };
+					const style = data.styles[e.id];
+					acc[e.id] = {
+						value: e.id.toString(),
+						label: e.name,
+						lb: (style.leaderboard && Object.keys(style.leaderboard).length > 0) == true,
+						data: style.styleFormatter === 'data',
+					};
 					return acc;
 				},
-				{} as Record<string, { label: string; value: string }>
+				{} as Record<string, { label: string; value: string; lb: boolean; data: boolean }>
 			)
 	);
 
-	let weightStyleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedWeightStyles)]);
+	let styleOptions = $derived([{ label: 'Default', value: '-1' }, ...Object.values(unlockedStyles)]);
+	let lbStyleOptions = $derived([
+		{ label: 'Default', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.lb),
+	]);
+	let nameStyleOptions = $derived([
+		{ label: 'Default', value: '-1' },
+		...Object.values(unlockedStyles).filter((s) => s.data),
+	]);
+
 	let unlockedEmbedColors = $derived([
 		...new Set(
 			(data.user.entitlements ?? [])
@@ -157,7 +209,7 @@
 		<form
 			action="?/refreshPurchases"
 			method="post"
-			class="mb-16 mt-2"
+			class="mt-2 mb-16"
 			use:enhance={() => {
 				loading = true;
 				return async ({ result }) => {
@@ -176,12 +228,11 @@
 			<p class="text-destructive">{form.error}</p>
 		{/if}
 
-		<h1 class="mb-2 text-2xl">User Settings</h1>
-		<p class="mb-4">Configure settings here! Only things that you've paid for are available to edit.</p>
 		<form
 			action="?/updateSettings"
 			method="post"
-			class="mb-12 flex max-w-md flex-col gap-4"
+			class="bg-card mb-12 flex max-w-4xl flex-col gap-4 rounded-lg border-2 p-4"
+			bind:this={updateForm}
 			use:enhance={() => {
 				loading = true;
 				return async ({ result }) => {
@@ -193,72 +244,235 @@
 				};
 			}}
 		>
-			<div class="flex flex-col space-y-2">
-				<Label>Weight Command Style</Label>
+			<SettingHeader class="flex flex-col items-start font-normal">
+				<span class="mb-2 text-2xl">User Settings</span>
+				<br />
+				<span class="text-sm"
+					>Configure settings here! Only things that you've paid for are available to edit.</span
+				>
+			</SettingHeader>
+			<SettingSeperator />
+			<SettingListItem
+				title="Weight Command Style"
+				description="Select a style for the weight command in Discord!"
+			>
 				<ComboBox
-					disabled={loading || !unlockedSettings.weightStyle}
-					options={weightStyleOptions}
+					disabled={loading || !unlockedSettings.styles}
+					options={styleOptions}
 					bind:value={changedSettings.weightStyle}
 					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.weightStyle === '-1') {
+							updateSettings();
+						}
+					}}
 				/>
 				<input type="hidden" name="style" bind:value={changedSettings.weightStyle} />
-
-				{#if selectedStyle}
-					<Card.Root class="w-full">
-						<Card.Content class="w-full p-2">
-							<!-- {#if selectedStyle.description}
+			</SettingListItem>
+			{#if selectedWeightStyle}
+				<Card.Root class="w-full p-0">
+					<Card.Content class="w-full p-2">
+						<!-- {#if selectedStyle.description}
 								<p class="text-sm pb-1">{selectedStyle.description}</p>
 							{/if} -->
-							{#if selectedStyle.styleFormatter === 'data'}
-								{#key selectedStyle.id}
-									<WeightStyle
-										style={selectedStyle}
-										ign={data.mcAccount?.name ?? ''}
-										uuid={data.mcAccount?.id ?? ''}
-										weight={data.weight ?? undefined}
-									/>
-								{/key}
-							{:else}
-								<p class="text-sm text-muted-variant">
-									No preview available! You can change to this style and run the /&NoBreak;weight
-									command in Discord to see it.
-								</p>
-							{/if}
-						</Card.Content>
-					</Card.Root>
-				{/if}
+						{#if selectedWeightStyle.styleFormatter === 'data'}
+							{#key selectedWeightStyle.id}
+								<WeightStyle
+									style={selectedWeightStyle}
+									ign={data.mcAccount?.name ?? ''}
+									uuid={data.mcAccount?.id ?? ''}
+									weight={data.weight ?? undefined}
+								/>
+							{/key}
+						{:else}
+							<p class="text-muted-variant text-sm">
+								No preview available! You can change to this style and run the /&NoBreak;weight command
+								in Discord to see it.
+							</p>
+						{/if}
+					</Card.Content>
+				</Card.Root>
+
+				<div class="flex flex-col items-end gap-2">
+					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
+				</div>
+			{/if}
+			<SettingSeperator />
+			<SettingListItem title="Leaderboard Style" description="Select a style for your leaderboard positions!">
+				<ComboBox
+					disabled={loading || !unlockedSettings.styles}
+					options={lbStyleOptions}
+					bind:value={changedSettings.leaderboardStyle}
+					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.leaderboardStyle === '-1') {
+							updateSettings();
+						}
+					}}
+				/>
+				<input type="hidden" name="lbstyle" bind:value={changedSettings.leaderboardStyle} />
+			</SettingListItem>
+			{#if selectedLeaderboardStyle}
+				<div class="flex w-full flex-row items-center justify-end">
+					{#if selectedLeaderboardStyle.leaderboard}
+						<EntryPreview
+							style={selectedLeaderboardStyle.leaderboard}
+							ign={data.mcAccount?.name ?? ''}
+							uuid={data.mcAccount?.id ?? ''}
+							styleId={selectedLeaderboardStyle.id}
+						/>
+					{:else}
+						<p class="text-muted-variant text-sm">
+							No preview available! You can change to this style and run the /&NoBreak;weight command in
+							Discord to see it.
+						</p>
+					{/if}
+				</div>
+
+				<div class="flex flex-col items-end gap-2">
+					<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
+				</div>
+			{/if}
+			<SettingSeperator />
+			<SettingListItem title="Name Card Style" description="Select a style for the name card on your stats page!">
+				<ComboBox
+					disabled={loading || !unlockedSettings.styles}
+					options={nameStyleOptions}
+					bind:value={changedSettings.nameStyle}
+					placeholder="Select Style"
+					onChange={() => {
+						if (changedSettings.nameStyle === '-1') {
+							updateSettings();
+						}
+					}}
+				/>
+				<input type="hidden" name="nameStyle" bind:value={changedSettings.nameStyle} />
+			</SettingListItem>
+			<div class="flex flex-col items-end gap-2 md:flex-row md:items-center md:justify-end">
+				<p class="text-muted-foreground w-full text-right text-sm">Preview not available for name cards yet!</p>
+				<Button type="submit" class="max-w-fit" disabled={loading}>Update Style</Button>
 			</div>
-			<div class="space-y-2">
-				<Label>Bot Embed Color</Label>
+			<SettingSeperator />
+			<SettingListItem title="Bot Embed Color" description="Select an accent color for bot responses in Discord!">
 				<SelectSimple
 					name="embed"
 					options={embedColorOptions}
 					bind:value={changedSettings.embedColor}
 					disabled={loading || !unlockedSettings.embedColor}
+					change={updateSettings}
 				/>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Custom Emoji">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Set a custom emoji to be shown next to your linked account's name!</span
+					>
+					{#if !unlockedSettings.emoji}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
+				<div class="flex flex-row items-center gap-4">
+					<span class="text-2xl"
+						>{data.mcAccount?.name ?? data.session?.username ?? ''} {changedSettings.emoji}</span
+					>
+					<EmojiDialog
+						ign={data.mcAccount?.name ?? data.session?.username ?? ''}
+						bind:selected={changedSettings.emoji}
+						name="emoji"
+						onChange={() => {
+							if (unlockedSettings.emoji) {
+								updateSettings();
+							}
+						}}
+					>
+						{#snippet trigger()}
+							<Pencil />
+						{/snippet}
+					</EmojiDialog>
+					<input type="hidden" name="emoji" bind:value={changedSettings.emoji} />
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Hide Shop Promotions">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Toggle whether to hide shop promotions in bot commands.</span
+					>
+					{#if !unlockedSettings.shopPromotions}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						bind:checked={changedSettings.shopPromotions}
+						disabled={loading || !unlockedSettings.shopPromotions}
+						name="promotions"
+						onCheckedChange={updateSettings}
+					/>
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Override Weight Style">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Toggle whether to apply your weight style on everyone you look up.</span
+					>
+					{#if !unlockedSettings.styleOverride}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						bind:checked={changedSettings.styleOverride}
+						disabled={loading || !unlockedSettings.styleOverride}
+						name="override"
+						onCheckedChange={updateSettings}
+					/>
+				</div>
+			</SettingListItem>
+			<SettingSeperator />
+			<SettingListItem title="Default 'More Info'">
+				{#snippet subtitle()}
+					<span class="text-muted-foreground text-sm"
+						>Toggle whether the 'More Info' section is shown by default in the weight command.</span
+					>
+					{#if !unlockedSettings.moreInfo}
+						<br />
+						<span class="text-destructive/80 text-sm"
+							>Not unlocked! Purchase this as part of <a href="/premium" class="text-link underline"
+								>Elite Premium</a
+							>!</span
+						>
+					{/if}
+				{/snippet}
+				<div class="flex flex-row items-center gap-2">
+					<Switch
+						bind:checked={changedSettings.moreInfo}
+						disabled={loading || !unlockedSettings.moreInfo}
+						name="info"
+						onCheckedChange={updateSettings}
+					/>
+				</div>
+			</SettingListItem>
+			<div class="flex flex-col items-end gap-2">
+				<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
 			</div>
-			<div class="flex flex-row items-center gap-2">
-				<Switch
-					bind:checked={changedSettings.shopPromotions}
-					disabled={loading || !unlockedSettings.shopPromotions}
-				/>
-				<Label>Hide shop promotions</Label>
-				<input type="hidden" name="promotions" bind:value={changedSettings.shopPromotions} />
-			</div>
-			<div class="flex flex-row items-center gap-2">
-				<Switch
-					bind:checked={changedSettings.styleOverride}
-					disabled={loading || !unlockedSettings.styleOverride}
-				/>
-				<Label>Apply Weight Style on everyone</Label>
-				<input type="hidden" name="override" bind:value={changedSettings.styleOverride} />
-			</div>
-			<div class="flex flex-row items-center gap-2">
-				<Switch bind:checked={changedSettings.moreInfo} disabled={loading || !unlockedSettings.moreInfo} />
-				<Label>"More Info" in weight command by default</Label>
-				<input type="hidden" name="info" bind:value={changedSettings.moreInfo} />
-			</div>
-			<Button type="submit" class="max-w-fit" disabled={loading}>Update Settings</Button>
 		</form>
 
 		<h1 class="mb-4 text-2xl">Manage Badges</h1>
@@ -290,7 +504,7 @@
 			</form>
 		{/each}
 
-		<h1 class="mb-10 mt-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
+		<h1 class="mt-10 mb-10 scroll-mt-32 text-2xl" id="themes">Themes</h1>
 		<div class="mx-0 flex flex-col items-center justify-center md:mx-16">
 			<Carousel.Root
 				setApi={(emblaApi) => (api = emblaApi)}
@@ -305,7 +519,7 @@
 						<Carousel.Item class="">
 							<Card.Root class={theme.class} style="color-scheme: {theme.class}">
 								<Card.Content
-									class="flex aspect-video items-center justify-center rounded-lg bg-background p-6"
+									class="bg-background flex aspect-video items-center justify-center rounded-lg p-6"
 									style="color-scheme: {theme.class};"
 								>
 									<!-- Theme Preview -->
@@ -318,40 +532,40 @@
 													class="aspect-square max-w-5"
 													alt="Elite Logo"
 												/>
-												<Menu class="h-5 w-5 text-foreground" />
+												<Menu class="text-foreground h-5 w-5" />
 											</div>
 											<div class="flex items-center gap-2">
 												<div
-													class="bg flex h-8 items-center rounded-sm border px-3 hover:bg-muted"
+													class="bg hover:bg-muted flex h-8 items-center rounded-sm border px-3"
 												>
-													<Search class="h-4 w-4 text-muted-foreground" />
-													<span class="ml-2 text-sm text-muted-foreground">Search...</span>
+													<Search class="text-muted-foreground h-4 w-4" />
+													<span class="text-muted-foreground ml-2 text-sm">Search...</span>
 												</div>
 												{#if theme.isDark}
-													<Moon class="h-5 w-5 text-foreground" />
+													<Moon class="text-foreground h-5 w-5" />
 												{:else}
-													<Sun class="h-5 w-5 text-foreground" />
+													<Sun class="text-foreground h-5 w-5" />
 												{/if}
 											</div>
 										</div>
 										<!-- rest of the preview -->
 										<div class="space-y-4">
-											<div class="h-5 w-1/4 rounded bg-muted"></div>
-											<div class="h-4 w-1/2 rounded bg-muted"></div>
-											<div class="h-4 w-3/5 rounded bg-muted"></div>
-											<div class="h-4 w-3/4 rounded bg-muted"></div>
-											<div class="h-4 w-3/4 rounded bg-muted"></div>
+											<div class="bg-muted h-5 w-1/4 rounded"></div>
+											<div class="bg-muted h-4 w-1/2 rounded"></div>
+											<div class="bg-muted h-4 w-3/5 rounded"></div>
+											<div class="bg-muted h-4 w-3/4 rounded"></div>
+											<div class="bg-muted h-4 w-3/4 rounded"></div>
 											<div class="flex gap-2">
 												<button
 													onclick={() => console.log('hey dont touch me!')}
 													aria-label="Theme preview button"
-													class="h-9 w-8 rounded border-2 border-border bg-primary px-8 hover:bg-accent"
+													class="border-border bg-primary hover:bg-accent h-9 w-8 rounded border-2 px-8"
 												></button>
-												<div class="h-9 flex-1 rounded bg-muted"></div>
+												<div class="bg-muted h-9 flex-1 rounded"></div>
 											</div>
 											<div class="grid grid-cols-2 gap-2">
-												<div class="h-16 rounded bg-muted-variant"></div>
-												<div class="h-16 rounded bg-muted-variant"></div>
+												<div class="bg-muted-variant h-16 rounded"></div>
+												<div class="bg-muted-variant h-16 rounded"></div>
 											</div>
 										</div>
 									</div>
@@ -363,7 +577,7 @@
 				<Carousel.Previous class="hidden md:flex" />
 				<Carousel.Next class="hidden md:flex" />
 			</Carousel.Root>
-			<div class="py-4 text-center text-lg text-muted-foreground">
+			<div class="text-muted-foreground py-4 text-center text-lg">
 				{themeName}
 			</div>
 		</div>

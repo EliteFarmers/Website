@@ -61,7 +61,7 @@
 								<Button
 									variant={editing ? 'secondary' : 'ghost'}
 									size="sm"
-									class="h-8 px-2 py-0 text-sidebar-foreground/70 group-data-[state=collapsed]:hidden"
+									class="text-sidebar-foreground/70 h-8 px-2 py-0 group-data-[state=collapsed]:hidden"
 									onclick={onEdit}
 								>
 									<Settings class="transition-transform duration-200 {editing ? 'rotate-90' : ''}" />
@@ -127,7 +127,7 @@
 					<Input
 						type="text"
 						bind:value={favorite.name}
-						class="h-8 w-full rounded-md border-2 border-border bg-card px-1.5"
+						class="border-border bg-card h-8 w-full rounded-md border-2 px-1.5"
 						maxlength={32}
 						placeholder="Favorite Name"
 					/>
@@ -136,7 +136,7 @@
 			<Button
 				variant="ghost"
 				size="sm"
-				class="ml-auto h-8 px-2 py-0 text-sidebar-foreground/70"
+				class="text-sidebar-foreground/70 ml-auto h-8 px-2 py-0"
 				onclick={() => {
 					favorites.removeFavorite(favorite.href);
 				}}

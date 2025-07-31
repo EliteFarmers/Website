@@ -15,7 +15,7 @@
 <Popover.Mobile>
 	{#snippet trigger()}
 		<div
-			class="flex basis-32 flex-row gap-1 overflow-ellipsis rounded-md border-l-4 bg-card p-1"
+			class="bg-card flex basis-32 flex-row gap-1 rounded-md border-l-4 p-1 text-ellipsis"
 			style="border-color:{color};"
 		>
 			<p>{visitor.short ?? visitor.name}</p>

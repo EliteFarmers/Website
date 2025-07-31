@@ -11,16 +11,24 @@
 	import { Debounced, watch } from 'runed';
 	import { beforeNavigate, goto } from '$app/navigation';
 	import { ScrollArea } from '$ui/scroll-area';
+	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 
 	let {
 		open = $bindable(false),
 		useButton = true,
 		class: className,
+		leaderboards = {} as Record<string, LeaderboardInfo>,
 		...rest
 	}: ButtonProps & {
 		open?: boolean;
 		useButton?: boolean;
+		leaderboards?: Record<string, LeaderboardInfo>;
 	} = $props();
+
+	let lbEntries = Object.entries(leaderboards).map(([id, { title, short, suffix }]) => ({
+		id,
+		name: (short ?? title) + suffix,
+	}));
 
 	async function search(query: string) {
 		if (!browser) return [];
@@ -31,6 +39,12 @@
 			players = (json ?? []) as string[];
 		} catch (e) {
 			console.error(e);
+		}
+
+		if (query === '') {
+			leaderboardList = lbEntries;
+		} else {
+			leaderboardList = lbEntries.filter((lb) => lb.name.toLowerCase().includes(query.toLowerCase()));
 		}
 	}
 
@@ -44,6 +58,7 @@
 	let searchStr = $state('');
 	const debounced = new Debounced(() => searchStr, 100);
 	let players = $state([] as string[]);
+	let leaderboardList = $state([] as { name: string; id: string }[]);
 
 	$effect(() => {
 		search(debounced.current);
@@ -73,8 +88,8 @@
 		{...rest}
 	>
 		<Search />
-		<span class="hidden text-muted-foreground lg:inline-flex">Search For Player...</span>
-		<span class="inline-flex text-muted-foreground lg:hidden">Search...</span>
+		<span class="text-muted-foreground hidden lg:inline-flex">Search For Player...</span>
+		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
 	</Button>
 {/if}
 {#key open}
@@ -82,14 +97,31 @@
 		<Command.Root shouldFilter={false}>
 			<Command.Input placeholder="Search for a player" bind:value={searchStr} />
 			<Tabs.Root class="w-full" bind:value={destination}>
-				<Tabs.List class="flex gap-2 rounded-none bg-inherit">
-					<Tabs.Trigger value="" class="data-[state=active]:border-2">Stats</Tabs.Trigger>
-					<Tabs.Trigger value="/garden" class="data-[state=active]:border-2">Garden</Tabs.Trigger>
-					<Tabs.Trigger value="/rates" class="data-[state=active]:border-2">Rates</Tabs.Trigger>
-					<Tabs.Trigger value="/contests" class="data-[state=active]:border-2">Contests</Tabs.Trigger>
-					<Tabs.Trigger value="/charts" class="data-[state=active]:border-2">Charts</Tabs.Trigger>
-				</Tabs.List>
+				<ScrollArea class="w-full py-1" orientation="horizontal">
+					<Tabs.List class="flex w-full gap-2 rounded-none bg-inherit">
+						<Tabs.Trigger value="" class="data-[state=active]:border-border border-2 border-transparent"
+							>Stats</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/garden"
+							class="data-[state=active]:border-border border-2 border-transparent">Garden</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/fortune"
+							class="data-[state=active]:border-border border-2 border-transparent">Fortune</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/contests"
+							class="data-[state=active]:border-border border-2 border-transparent">Contests</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="/charts"
+							class="data-[state=active]:border-border border-2 border-transparent">Charts</Tabs.Trigger
+						>
+					</Tabs.List>
+				</ScrollArea>
 			</Tabs.Root>
+			<hr />
 			<ScrollArea class="flex h-full max-h-[300px] flex-row">
 				<Command.List class="max-h-none">
 					<Command.Group heading="Players">
@@ -110,6 +142,15 @@
 							</Command.Item>
 						{:else}
 							<Command.Empty>No players found.</Command.Empty>
+						{/each}
+					</Command.Group>
+					<Command.Group heading="Leaderboards">
+						{#each leaderboardList as { name, id } (id)}
+							<Command.Item value={name} onSelect={() => runCommand(() => goto(`/leaderboard/${id}`))}>
+								{name}
+							</Command.Item>
+						{:else}
+							<Command.Empty>No leaderboards found.</Command.Empty>
 						{/each}
 					</Command.Group>
 				</Command.List>

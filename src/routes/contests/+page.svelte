@@ -72,8 +72,8 @@
 	</div>
 
 	<div class="my-8 mb-32 flex w-full max-w-4xl justify-center">
-		<Card.Root class="w-full">
-			<Card.Title class="p-6 pb-0 text-xl">Delve Through The Archives</Card.Title>
+		<Card.Root class="w-full gap-0 p-0">
+			<Card.Title class="m-0 p-6 pb-0 text-xl">Delve Through The Archives</Card.Title>
 			<div class="flex w-full flex-col items-start justify-between gap-8 p-6 md:flex-row">
 				<p class="text-md my-4 flex-1">
 					Look through the rankings of every known participant in every known contest. Also try clicking on
@@ -85,12 +85,12 @@
 							<Label for="yearOnly"><span class="text-sm">Skyblock Year</span></Label>
 							<Input id="yearOnly" placeholder="Day" bind:value={yearVal} />
 						</div>
-						<Button class="mt-6 !p-2.5" href="/contests/{yearVal}/records" color="green">
+						<Button class="mt-6 p-2.5!" href="/contests/{yearVal}/records" color="green">
 							<!-- <OrdoredListOutline class="w-5 h-5" />
 							<Popover>Top Scores</Popover> -->
 							Records
 						</Button>
-						<Button class="mt-6 !p-2.5" type="submit" name="Search">
+						<Button class="mt-6 p-2.5!" type="submit" name="Search">
 							<svg
 								class="h-5 w-5"
 								fill="none"
@@ -117,7 +117,7 @@
 							<Input id="monthYear" placeholder="Day" bind:value={monthVal} />
 						</div>
 
-						<Button class="mt-6 !p-2.5" type="submit" name="Search">
+						<Button class="mt-6 p-2.5!" type="submit" name="Search">
 							<svg
 								class="h-5 w-5"
 								fill="none"
@@ -149,7 +149,7 @@
 							<Input id="day" placeholder="Day" bind:value={dayVal} />
 						</div>
 
-						<Button class="mt-6 !p-2.5" type="submit" name="Search">
+						<Button class="mt-6 p-2.5!" type="submit" name="Search">
 							<svg
 								class="h-5 w-5"
 								fill="none"

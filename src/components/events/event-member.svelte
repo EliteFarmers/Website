@@ -7,6 +7,7 @@
 	import * as Tooltip from '$ui/tooltip';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import { formatIgn } from '$lib/format';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 
 	interface Props {
 		owner?: boolean;
@@ -70,17 +71,13 @@
 						</p>
 					</div>
 				{/if}
-				<img
-					src="https://mc-heads.net/avatar/{member.playerUuid}"
-					alt="Player Head"
-					class="pixelated aspect-square size-8 rounded-sm"
-				/>
+				<PlayerHead uuid={member.playerUuid} size="lg" />
 				<p class="text-lg">{formatIgn(member.playerName, member.meta)}</p>
 				{#if owner}
 					<Tooltip.Simple>
 						{#snippet trigger()}
 							<div class="flex flex-row items-end">
-								<Crown size={16} class="w-4 text-completed" />
+								<Crown size={16} class="text-completed w-4" />
 							</div>
 						{/snippet}
 						<p>Team Owner</p>
@@ -91,10 +88,10 @@
 						{#snippet trigger()}
 							<div class="flex size-4 flex-col items-center justify-center">
 								{#if member.status === 0}
-									<div class="size-2 rounded-full bg-muted"></div>
+									<div class="bg-muted size-2 rounded-full"></div>
 								{/if}
 								{#if +member.status === 1}
-									<div class="size-2 rounded-full bg-progress"></div>
+									<div class="bg-progress size-2 rounded-full"></div>
 								{/if}
 							</div>
 						{/snippet}
@@ -131,11 +128,11 @@
 </Accordion.Trigger>
 <Accordion.Content>
 	<div class="flex flex-col items-start gap-4 md:flex-row">
-		{#if event.type === +EventType.Medals}
+		{#if event.type === EventType.Medals}
 			<div class="flex w-full flex-col gap-1">
 				{#each earnedMedals() as [medal, count] (medal)}
 					<div
-						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<img
@@ -143,17 +140,17 @@
 								alt={medal}
 								class="pixelated aspect-square"
 							/>
-							<p class="whitespace-nowrap font-semibold">{medal} <span>x{count}</span></p>
+							<p class="font-semibold whitespace-nowrap">{medal} <span>x{count}</span></p>
 						</div>
 						<p class="font-semibold">{(count * medalWeight(medal)).toLocaleString()}</p>
 					</div>
 				{/each}
 			</div>
-		{:else if event.type === +EventType.Pests}
+		{:else if event.type === EventType.Pests}
 			<div class="flex w-full flex-col gap-1">
 				{#each pestWeights() as { name, weight } (name)}
 					<div
-						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<img
@@ -161,20 +158,20 @@
 								alt={name}
 								class="pixelated aspect-square"
 							/>
-							<p class="whitespace-nowrap font-semibold">{name}</p>
+							<p class="font-semibold whitespace-nowrap">{name}</p>
 						</div>
 						<p class="font-semibold">{weight.toLocaleString()}</p>
 					</div>
 				{/each}
 			</div>
-		{:else if event.type === +EventType.Collections}
+		{:else if event.type === EventType.Collections}
 			<div class="flex w-full flex-col gap-1">
 				{#each collectionWeights() as { name, weight } (name)}
 					<div
-						class="flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm even:bg-background"
+						class="even:bg-background flex flex-row items-center justify-between gap-2 p-1 even:rounded-sm"
 					>
 						<div class="flex flex-row items-center gap-2">
-							<p class="whitespace-nowrap font-semibold">{name}</p>
+							<p class="font-semibold whitespace-nowrap">{name}</p>
 						</div>
 						<p class="font-semibold">{weight.toLocaleString()}</p>
 					</div>

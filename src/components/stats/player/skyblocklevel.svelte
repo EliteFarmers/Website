@@ -10,29 +10,28 @@
 	let [, color] = $derived(Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? []);
 </script>
 
-<div
-	class="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md bg-card p-1 text-lg"
-	aria-label="Skyblock Level"
+<Popover.Mobile
+	triggerRootClass="relative flex max-w-fit flex-row items-center justify-between gap-1 border rounded-md py-1.5 md:py-2 px-3 text-lg"
 >
-	<Popover.Mobile>
-		{#snippet trigger()}
-			<div>
-				{#if rank !== -1}
-					<a
-						href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.profileName}"
-						class="rounded-md bg-card px-1.5 hover:bg-muted"
-					>
-						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
-							>{rank}</span
-						>
-					</a>
-				{/if}
-				<span class="px-1 font-mono text-2xl font-bold" style="color: {color};">{Math.floor(xp / 100)}</span>
-			</div>
-		{/snippet}
+	{#snippet trigger()}
 		<div>
-			<div class="text-center text-lg">Skyblock&nbsp;Level</div>
-			<div class="text-center text-lg font-semibold">{xp} XP</div>
+			{#if rank !== -1}
+				<a
+					href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.profileName}"
+					class="bg-card hover:bg-muted rounded-md px-1.5"
+				>
+					<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
+						>{rank}</span
+					>
+				</a>
+			{/if}
+			<span class="px-1 font-mono text-xl font-bold md:text-2xl" style="color: {color};"
+				>{Math.floor(xp / 100)}</span
+			>
 		</div>
-	</Popover.Mobile>
-</div>
+	{/snippet}
+	<div class="px-4">
+		<div class="text-center text-lg">Skyblock&nbsp;Level</div>
+		<div class="text-center text-lg font-semibold">{xp} XP</div>
+	</div>
+</Popover.Mobile>

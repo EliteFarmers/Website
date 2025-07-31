@@ -1,13 +1,23 @@
-import createClient from 'openapi-fetch';
+import createClient, { type HeadersOptions, type Middleware } from 'openapi-fetch';
 import type { components, paths } from './api';
 import { ELITE_API_URL } from '$env/static/private';
+import { cache } from '$lib/servercache';
 
-export const { GET, POST, DELETE, PATCH, PUT } = createClient<paths>({
+const client = createClient<paths>({
 	baseUrl: ELITE_API_URL,
-	headers: {
-		'User-Agent': 'EliteWebsite',
-	},
 });
+
+const middleware: Middleware = {
+	async onRequest({ request }) {
+		request.headers.set('User-Agent', 'EliteWebsite');
+		request.headers.delete('accept-encoding');
+		return request;
+	},
+};
+
+client.use(middleware);
+
+export const { GET, POST, DELETE, PATCH, PUT } = client;
 
 export const formDataSerializer = (body: Record<string, string | number | boolean>) => {
 	if (!body) return;
@@ -54,61 +64,67 @@ export const GetAuthorizedAccount = async (accessToken: string) =>
 		},
 	});
 
-export const GetAccount = async (player: string) =>
+export const GetAccount = async (player: string, headers: HeadersOptions) =>
 	await GET('/account/{player}', {
 		params: {
 			path: {
 				player: player,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetAccountByDiscordId = async (discordId: number) =>
+export const GetAccountByDiscordId = async (discordId: number, headers: HeadersOptions) =>
 	await GET('/account/{discordId}', {
 		params: {
 			path: {
 				discordId: discordId,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayer = async (player: string) =>
+export const GetPlayer = async (player: string, headers: HeadersOptions) =>
 	await GET('/player/{player}', {
 		params: {
 			path: {
 				player: player,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayerByDiscordId = async (id: string) =>
+export const GetPlayerByDiscordId = async (id: string, headers: HeadersOptions) =>
 	await GET('/player/{discordId}', {
 		params: {
 			path: {
 				discordId: id as unknown as number,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetProfiles = async (playerUuid: string) =>
+export const GetProfiles = async (playerUuid: string, headers: HeadersOptions) =>
 	await GET('/profiles/{playerUuid}', {
 		params: {
 			path: {
 				playerUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetProfile = async (profileUuid: string) =>
+export const GetProfile = async (profileUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{profileUuid}', {
 		params: {
 			path: {
 				profileUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetProfileMember = async (playerUuid: string, profileUuid: string) =>
+export const GetProfileMember = async (playerUuid: string, profileUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -116,18 +132,20 @@ export const GetProfileMember = async (playerUuid: string, profileUuid: string) 
 				profileUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetSelectedProfileMember = async (playerUuid: string) =>
+export const GetSelectedProfileMember = async (playerUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{playerUuid}/selected', {
 		params: {
 			path: {
 				playerUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, max?: number) =>
+export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, max?: number, headers?: HeadersOptions) =>
 	await GET('/leaderboards/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -138,9 +156,10 @@ export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, ma
 				max: max,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetPlayerContests = async (playerUuid: string, profileUuid: string) =>
+export const GetPlayerContests = async (playerUuid: string, profileUuid: string, headers: HeadersOptions) =>
 	await GET('/contests/{playerUuid}/{profileUuid}', {
 		params: {
 			path: {
@@ -148,27 +167,30 @@ export const GetPlayerContests = async (playerUuid: string, profileUuid: string)
 				profileUuid,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetContests = async (timestamp: number) =>
+export const GetContests = async (timestamp: number, headers: HeadersOptions) =>
 	await GET('/contests/{timestamp}', {
 		params: {
 			path: {
 				timestamp,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetYearlyContests = async (year: number) =>
+export const GetYearlyContests = async (year: number, headers: HeadersOptions) =>
 	await GET('/contests/at/{year}', {
 		params: {
 			path: {
 				year,
 			},
 		},
+		headers: headers,
 	});
 
-export const GetMonthlyContests = async (year: number, month: number) =>
+export const GetMonthlyContests = async (year: number, month: number, headers: HeadersOptions) =>
 	await GET('/contests/at/{year}/{month}', {
 		params: {
 			path: {
@@ -176,6 +198,7 @@ export const GetMonthlyContests = async (year: number, month: number) =>
 				month,
 			},
 		},
+		headers: headers,
 	});
 
 export const GetCurrentYearContests = async () => await GET('/contests/at/now', {});
@@ -237,6 +260,25 @@ export const UpdateUserBadges = async (
 
 export const UpdateUserSettings = async (accessToken: string, settings: components['schemas']['UserSettingsDto']) =>
 	await PATCH('/account/settings', {
+		body: settings,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const SetUserFortuneSettings = async (
+	accessToken: string,
+	playerUuid: string,
+	profileUuid: string,
+	settings: components['schemas']['MemberFortuneSettingsDto']
+) =>
+	await POST('/account/{playerUuid}/{profileUuid}/fortune', {
+		params: {
+			path: {
+				playerUuid,
+				profileUuid,
+			},
+		},
 		body: settings,
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -439,15 +481,31 @@ interface BaseLeaderboardQuery {
 export const GetLeaderboardSlice = async (
 	leaderboardId: string,
 	query: { limit: number; offset: number } & BaseLeaderboardQuery
-) =>
-	await GET('/leaderboard/{leaderboard}', {
+) => {
+	const { data } = await GET('/leaderboard/{leaderboard}', {
 		params: {
 			path: {
 				leaderboard: leaderboardId,
 			},
 			query: query,
 		},
-	});
+	}).catch(() => ({ data: undefined }));
+
+	if (!data) return undefined;
+
+	return {
+		...data,
+		entries: data.entries.map((entry) => {
+			if (entry.meta?.leaderboard?.styleId === undefined || entry.meta.leaderboard.styleId === null) return entry;
+			return {
+				...entry,
+				style: cache.styleLookup[entry.meta?.leaderboard?.styleId]?.leaderboard ?? undefined,
+			};
+		}) as (components['schemas']['LeaderboardEntryDto'] & {
+			style?: components['schemas']['WeightStyleWithDataDto']['leaderboard'];
+		})[],
+	};
+};
 
 export const GetPlayersRank = async (
 	leaderboardId: string,
@@ -608,7 +666,7 @@ export const JoinEvent = async (eventId: string, accessToken: string, playerUuid
 			},
 			query: {
 				playerUuid,
-				profileId,
+				profileUuid: profileId,
 			},
 		},
 		headers: {
@@ -628,63 +686,12 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 		},
 	});
 
-export const CreateWeightEvent = async (
+export const CreateEvent = async (
 	accessToken: string,
 	guildId: string,
-	event: components['schemas']['CreateWeightEventDto']
+	event: components['schemas']['CreateEventDto']
 ) =>
 	await POST('/guild/{discordId}/events/weight', {
-		params: {
-			path: {
-				discordId: guildId as unknown as number,
-			},
-		},
-		body: event,
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
-
-export const CreateMedalEvent = async (
-	accessToken: string,
-	guildId: string,
-	event: components['schemas']['CreateMedalEventDto']
-) =>
-	await POST('/guild/{discordId}/events/medals', {
-		params: {
-			path: {
-				discordId: guildId as unknown as number,
-			},
-		},
-		body: event,
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
-
-export const CreatePestEvent = async (
-	accessToken: string,
-	guildId: string,
-	event: components['schemas']['CreatePestEventDto']
-) =>
-	await POST('/guild/{discordId}/events/pests', {
-		params: {
-			path: {
-				discordId: guildId as unknown as number,
-			},
-		},
-		body: event,
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
-
-export const CreateCollectionEvent = async (
-	accessToken: string,
-	guildId: string,
-	event: components['schemas']['CreateCollectionEventDto']
-) =>
-	await POST('/guild/{discordId}/events/collection', {
 		params: {
 			path: {
 				discordId: guildId as unknown as number,
@@ -1240,6 +1247,18 @@ export const AdminCreateEventTeam = async (
 
 export const GetProducts = async () => await GET('/products', {});
 
+export const ClaimFreeProduct = async (accessToken: string, productId: string) =>
+	await POST('/product/{discordId}/claim', {
+		params: {
+			path: {
+				discordId: productId as unknown as number,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export const GetAdminProducts = async (token: string) =>
 	await GET('/products/admin', {
 		headers: {
@@ -1529,8 +1548,45 @@ export const UpdateCategoryProductOrder = async (
 		},
 	});
 
+export const GetBazaarData = async () => await GET('/resources/bazaar');
+export const GetAuctionHouse = async () => await GET('/resources/auctions');
+export const GetSkyblockItems = async () => await GET('/resources/items');
+
+export const GetItemPrices = async (items: string[]) =>
+	await POST('/resources/items', {
+		body: {
+			items: items,
+		},
+	});
+
+export const GetAnnouncements = async () => await GET('/announcements', {});
+export const DismissAnnouncement = async (accessToken: string, announcementId: string) =>
+	await POST('/announcements/{announcementId}/dismiss', {
+		params: {
+			path: {
+				announcementId,
+			},
+		},
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+export const CreateAnnouncement = async (
+	accessToken: string,
+	announcement: components['schemas']['CreateAnnouncementDto']
+) =>
+	await POST('/announcements/create', {
+		body: announcement,
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
-export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
+export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'] & {
+	style?: components['schemas']['WeightStyleWithDataDto']['leaderboard'];
+};
 export interface UserInfo {
 	id: string;
 	username: string;
@@ -1548,3 +1604,12 @@ export interface ProfileDetails {
 	gameMode?: ProfileGameMode;
 	weight: number;
 }
+
+export type RatesItemPriceData = Record<
+	string,
+	{
+		auctions?: components['schemas']['AuctionItemDto'][];
+		bazaar?: components['schemas']['BazaarProductSummaryDto'];
+		item?: components['schemas']['ItemResponse'];
+	}
+>;

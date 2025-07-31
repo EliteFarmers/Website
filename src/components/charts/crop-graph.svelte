@@ -3,7 +3,7 @@
 	import { scaleLinear } from 'd3-scale';
 	import { extent } from 'd3-array';
 	import { Crop, CROP_TO_PEST, getCropDisplayName, getCropFromName } from 'farming-weight';
-	import { Area, Axis, Chart, Highlight, Spline, Svg, Tooltip } from 'layerchart';
+	import { Area, Axis, Chart, Highlight, Layer, Tooltip } from 'layerchart';
 
 	interface Props {
 		data: { date: string; value: number; pests: number }[];
@@ -40,17 +40,17 @@
 
 	let pestScale = $derived(scaleLinear(extent(data, (d) => d.pests) as [number, number], yDomain ?? [0, 1]));
 
-	const colorClasses: Record<string, string[]> = {
-		wheat: ['stroke-wheat', 'fill-wheat/70', 'stroke-primary/80'],
-		melon: ['stroke-melon', 'fill-melon/70', 'stroke-primary/80'],
-		cactus: ['stroke-cactus', 'fill-cactus/70', 'stroke-primary/80'],
-		pumpkin: ['stroke-pumpkin', 'fill-pumpkin/70', 'stroke-primary/80'],
-		carrot: ['stroke-carrot', 'fill-carrot/70', 'stroke-primary/80'],
-		potato: ['stroke-potato', 'fill-potato/70', 'stroke-primary/80'],
-		cane: ['stroke-sugarcane', 'fill-sugarcane/70', 'stroke-primary/80'],
-		wart: ['stroke-netherwart', 'fill-netherwart/70', 'stroke-primary/80'],
-		mushroom: ['stroke-mushroom', 'fill-mushroom/70', 'stroke-primary/80'],
-		cocoa: ['stroke-cocoa', 'fill-cocoa/70', 'stroke-primary/80'],
+	const colorVars: Record<string, string> = {
+		wheat: 'var(--color-wheat)',
+		melon: 'var(--color-melon)',
+		cactus: 'var(--color-cactus)',
+		pumpkin: 'var(--color-pumpkin)',
+		carrot: 'var(--color-carrot)',
+		potato: 'var(--color-potato)',
+		cane: 'var(--color-sugarcane)',
+		wart: 'var(--color-netherwart)',
+		mushroom: 'var(--color-mushroom)',
+		cocoa: 'var(--color-cocoa)',
 	};
 </script>
 
@@ -63,57 +63,71 @@
 		yNice
 		padding={{ left: 48, bottom: 16, top: 5, right: 48 }}
 		tooltip={{ mode: 'bisect-x' }}
-		let:height
 	>
-		<Svg>
-			<Axis
-				placement="left"
-				rule
-				grid
-				format={(d: number) => toReadable(d)}
-				tickLabelProps={{ class: '!stroke-0 !font-normal text-sm' }}
-			/>
-			<Axis
-				placement="bottom"
-				rule
-				format={(d: number) => dateFormatter.format(new Date(d * 1000))}
-				tickLabelProps={{
-					rotate: 330,
-					textAnchor: 'end',
-					class: '!stroke-0 !font-normal text-xs md:text-sm',
-				}}
-				ticks={days > 14 ? 14 : days}
-			/>
-			{#if pests}
+		{#snippet children({ context })}
+			<Layer type="svg" class="fill-primary stroke-muted-foreground">
 				<Axis
-					placement="right"
-					scale={scaleLinear(pestScale.domain(), [height, 0])}
-					ticks={pestScale.ticks()}
-					format={(v: number) => toReadable(v, undefined, 2)}
+					placement="left"
 					rule
-					tickLabelProps={{ class: '!stroke-0 !font-normal text-sm' }}
+					grid
+					format={(d: number) => toReadable(d)}
+					tickLabelProps={{ class: 'stroke-0! font-normal! text-sm' }}
 				/>
-				<Spline class="{colorClasses[crop][0]} stroke-[3]" />
-				<Spline class="{colorClasses[crop][2]} stroke-[3]" y={(d: { pests: number }) => pestScale(d.pests)} />
-				<Highlight points={{ class: 'fill-primary' }} y={(d: { pests: number }) => pestScale(d.pests)} />
-			{:else}
-				<Area line={{ class: colorClasses[crop][0] + ' stroke-4' }} class={colorClasses[crop][1]} />
-				<Spline class="{colorClasses[crop][0]} stroke-2" />
-			{/if}
-			<Highlight lines points={{ class: colorClasses[crop][0] }} />
-		</Svg>
-		<Tooltip.Root let:data>
-			<Tooltip.Header>
-				{tooltipFormatter.format(new Date(data.date * 1000))}
-			</Tooltip.Header>
-			<div class="min-w-lg">
-				<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
-				<p class="font-mono">{(+data.value).toLocaleString()}</p>
+				<Axis
+					placement="bottom"
+					rule
+					format={(d: number) => dateFormatter.format(new Date(d * 1000))}
+					tickLabelProps={{
+						rotate: 330,
+						textAnchor: 'end',
+						class: 'stroke-0! font-normal! text-xs md:text-sm',
+					}}
+					ticks={days > 14 ? 14 : days}
+				/>
+
+				<Area
+					y1={(d) => d.value}
+					fill={colorVars[crop]}
+					fillOpacity={0.7}
+					line={{ class: 'stroke-3 fill-transparent', stroke: colorVars[crop] }}
+				/>
+				<Highlight y={(d) => d.value} points={{ fill: colorVars[crop] }} />
 				{#if pests}
-					<p class="first-letter:capitalize">{CROP_TO_PEST[getCropFromName(crop) ?? Crop.Wheat]} Kills</p>
-					<p class="font-mono">{(+data.pests).toLocaleString()}</p>
+					<Axis
+						placement="right"
+						scale={scaleLinear(pestScale.domain(), [context.height, 0])}
+						ticks={pestScale.ticks()}
+						format={(v: number) => toReadable(v, undefined, 2)}
+						rule
+						tickLabelProps={{ class: 'stroke-0! font-normal! text-sm', stroke: colorVars[crop] }}
+					/>
+					<Area
+						y1={(d) => pestScale(d.pests)}
+						fill={colorVars[crop]}
+						fillOpacity={0}
+						line={{ class: 'stroke-3 fill-transparent', stroke: colorVars[crop] }}
+					/>
+
+					<Highlight y={(d) => pestScale(d.pests)} points={{ fill: colorVars[crop] }} />
 				{/if}
-			</div>
-		</Tooltip.Root>
+			</Layer>
+			<Tooltip.Root class="bg-card">
+				{#snippet children({ data })}
+					<Tooltip.Header>
+						{tooltipFormatter.format(new Date(data.date * 1000))}
+					</Tooltip.Header>
+					<div class="">
+						<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
+						<p class="font-mono">{(+data.value).toLocaleString()}</p>
+						{#if pests}
+							<p class="first-letter:capitalize">
+								{CROP_TO_PEST[getCropFromName(crop) ?? Crop.Wheat]} Kills
+							</p>
+							<p class="font-mono">{(+data.pests).toLocaleString()}</p>
+						{/if}
+					</div>
+				{/snippet}
+			</Tooltip.Root>
+		{/snippet}
 	</Chart>
 </div>

@@ -22,7 +22,7 @@
 		<GripHorizontal size={16} />
 	</div>
 	{#if badge.image?.url}
-		<img src={badge.image.url} alt={badge.name} class="w-18 h-6 rounded-sm object-cover md:h-8 md:w-24" />
+		<img src={badge.image.url} alt={badge.name} class="h-6 w-18 rounded-sm object-cover md:h-8 md:w-24" />
 	{/if}
 	<div class="flex max-w-md flex-1 flex-col gap-1">
 		<p class="text-lg">{badge.name}</p>

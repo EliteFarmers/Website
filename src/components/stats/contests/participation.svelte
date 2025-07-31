@@ -13,11 +13,11 @@
 <a
 	href="/@{entry.playerName}/{entry.profileUuid}"
 	data-sveltekit-preload-data="tap"
-	class="bg-card-primary rounded-md hover:bg-muted"
+	class="bg-card-primary hover:bg-muted rounded-md"
 >
 	<div class="flex justify-between gap-0 md:gap-2">
 		<div
-			class="mx-2 flex flex-grow items-center justify-start gap-1 overflow-hidden text-ellipsis whitespace-nowrap align-middle sm:gap-2"
+			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden align-middle text-ellipsis whitespace-nowrap sm:gap-2"
 		>
 			<p class="text-progress">
 				{#if entry.position !== -1}
@@ -37,14 +37,14 @@
 					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
-						<p class="max-w-xs whitespace-normal break-words">
+						<p class="max-w-xs break-words whitespace-normal">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
 					</div>
 				</Popover.Mobile>
 			{/if}
 			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
-			<div class="flex flex-grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
+			<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
 				<p class="xs:text-xl inline-block max-w-60 truncate text-start text-sm font-semibold sm:text-2xl">
 					{entry.playerName}
 				</p>

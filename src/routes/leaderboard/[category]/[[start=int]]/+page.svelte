@@ -75,7 +75,7 @@
 <Head {title} description="{title} for Hypixel Skyblock.\n\n{topTen}" />
 
 <section class="mt-16 flex w-full flex-col justify-center">
-	<h1 class="mb-16 mt-8 max-w-2xl self-center text-center text-4xl">{title}</h1>
+	<h1 class="mt-8 mb-16 max-w-2xl self-center text-center text-4xl">{title}</h1>
 	<div class="flex w-full justify-end gap-4 text-center"></div>
 	<div class="my-2 flex flex-col items-end justify-center gap-2 rounded-lg lg:h-16 lg:flex-row">
 		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
@@ -106,7 +106,7 @@
 						useButton={false}
 						bind:search={searchInput}
 						bind:open={searchOpen}
-						command={() => {
+						cmd={() => {
 							tick().then(() => {
 								if (loading) return;
 								searchForm?.requestSubmit();
@@ -162,7 +162,7 @@
 	</div>
 	{#if !data.lb.entries.length}
 		<div class="mb-8 flex flex-row items-center justify-center">
-			<p class="w-full max-w-4xl rounded-lg border-2 py-16 text-center text-muted-foreground">
+			<p class="text-muted-foreground w-full max-w-4xl rounded-lg border-2 py-16 text-center">
 				No entries found!
 			</p>
 		</div>
@@ -184,10 +184,10 @@
 
 	{#if data.lb.interval}
 		<p class="mx-auto w-1/2 py-4 text-center text-sm">
-			Leaderboards on an interval work by saving the initial score of a player the first time their data is pulled
-			for an interval, and then using the difference between the current score and the initial score for their
-			score shown here. This means it may be inaccurate due to minions or other factors. A player must have
-			reached the the minimum amount of
+			Leaderboards on an interval work by saving an initial score the first time a player's data is pulled for an
+			interval, then using the difference between their current score and the initial score for their score shown
+			here. High scores on these leaderboards may be due to minions or other factors. A player must have reached
+			the minimum amount of
 			<strong>{data.lb.minimumScore.toLocaleString()}</strong> to have their initial score saved.
 		</p>
 	{:else}

@@ -1,17 +1,11 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import {
-	GetSelectedProfileMember,
-	GetWeightStyles,
-	RefreshPurchases,
-	UpdateUserBadges,
-	UpdateUserSettings,
-} from '$lib/api/elite';
+import { GetSelectedProfileMember, RefreshPurchases, UpdateUserBadges, UpdateUserSettings } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { IsUUID } from '$params/uuid';
 import { FetchDiscordUserData } from '$lib/api/auth';
 
-export const load: PageServerLoad = async ({ locals, parent, url }) => {
+export const load: PageServerLoad = async ({ locals, parent, url, request }) => {
 	const { session } = await parent();
 	const { access_token: token } = locals;
 
@@ -29,15 +23,14 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
 	const { data: weight } = account?.id
-		? await GetSelectedProfileMember(account?.id).catch(() => ({ data: undefined }))
+		? await GetSelectedProfileMember(account?.id, request.headers).catch(() => ({ data: undefined }))
 		: { data: undefined };
-	const { data: styles } = await GetWeightStyles().catch(() => ({ data: undefined }));
 
 	return {
 		mcAccount: account ?? null,
 		user: discord,
 		weight: weight?.farmingWeight ?? null,
-		styles: styles ?? null,
+		styles: locals.cache?.styleLookup ?? ({} as Record<string, components['schemas']['WeightStyleWithDataDto']>),
 	};
 };
 
@@ -95,13 +88,26 @@ export const actions: Actions = {
 		const data = await request.formData();
 
 		const body = {
+			suffix: data.get('emoji')?.toString() ?? '',
 			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
 			weightStyleId: undefined as number | undefined,
+			nameStyleId: undefined as number | undefined,
+			leaderboardStyleId: undefined as number | undefined,
 		} satisfies components['schemas']['UpdateUserSettingsDto'];
 
 		const style = data.get('style')?.toString() ?? undefined;
 		if (style !== undefined && isFinite(+style)) {
 			body.weightStyleId = +style;
+		}
+
+		const nameStyle = data.get('nameStyle')?.toString() ?? undefined;
+		if (nameStyle !== undefined && isFinite(+nameStyle)) {
+			body.nameStyleId = +nameStyle;
+		}
+
+		const leaderboardStyle = data.get('lbstyle')?.toString() ?? undefined;
+		if (leaderboardStyle !== undefined && isFinite(+leaderboardStyle)) {
+			body.leaderboardStyleId = +leaderboardStyle;
 		}
 
 		const embed = data.get('embed')?.toString() ?? undefined;

@@ -24,6 +24,7 @@
 	import { page } from '$app/state';
 	import MemberList from './member-list.svelte';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -64,6 +65,29 @@
 	);
 	let newCollectionKey = $state('');
 
+	const crumbs = $derived<Crumb[]>([
+		{
+			name: 'Servers',
+			href: '/profile/servers',
+		},
+		{
+			name: data.guild.name,
+			href: `/guild/${data.guild.id}`,
+		},
+		{
+			name: 'Events',
+			href: `/guild/${data.guild.id}/events`,
+		},
+		{
+			name: data.event?.name ?? 'Event',
+		},
+	]);
+
+	const breadcrumb = getBreadcrumb();
+	$effect.pre(() => {
+		breadcrumb.setOverride(crumbs);
+	});
+
 	const favorites = getFavoritesContext();
 	favorites.setPage({
 		icon: data.guild.icon?.url ?? undefined,
@@ -75,7 +99,7 @@
 <Head title={data.event.name ?? 'Event'} description="Manage Events happening in your guild" />
 
 <HeroBanner src={event.banner?.url} class="h-48">
-	<div class="mb-6 mt-8 flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
+	<div class="mt-8 mb-6 flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
 			{data.event?.name}
@@ -86,7 +110,7 @@
 <div class="mt-64 flex flex-col items-center gap-4">
 	<section class="flex w-full max-w-7xl flex-col items-center justify-center justify-items-center gap-8">
 		<div
-			class="flex w-[90%] max-w-screen-lg flex-col justify-center justify-items-center rounded-md border-2 bg-card p-4 md:w-[70%]"
+			class="bg-card flex w-[90%] max-w-(--breakpoint-lg) flex-col justify-center justify-items-center rounded-md border-2 p-4 md:w-[70%]"
 		>
 			<div class="flex flex-col justify-between gap-2 p-4 md:flex-row">
 				<div class="flex flex-col gap-2">
@@ -94,7 +118,7 @@
 						{#if !event.approved}
 							<Popover.Mobile>
 								{#snippet trigger()}
-									<TriangleAlert class="mt-1.5 text-destructive" />
+									<TriangleAlert class="text-destructive mt-1.5" />
 								{/snippet}
 								<div>
 									<p class="font-semibold">Pending approval!</p>
@@ -176,8 +200,8 @@
 
 	<MemberList members={(members ?? []).concat(bans ?? [])} {teams} {event} teamWords={data.teamWords} />
 
-	<div class="flex flex-col rounded-md border-2 bg-card p-4">
-		{#if event.type === +EventType.FarmingWeight && cropWeights}
+	<div class="bg-card flex flex-col rounded-md border-2 p-4">
+		{#if event.type === EventType.FarmingWeight && cropWeights}
 			<form
 				action="?/editCropWeights"
 				method="post"
@@ -216,7 +240,7 @@
 						</div>
 					{/each}
 				</div>
-				<p class="text-sm leading-relaxed text-muted-foreground">
+				<p class="text-muted-foreground text-sm leading-relaxed">
 					Default values are balanced, Pumpkin and Melon RNG drops don't get counted in events.
 				</p>
 
@@ -231,7 +255,7 @@
 					<Button type="submit" disabled={pending}>Update</Button>
 				</div>
 			</form>
-		{:else if event.type === +EventType.Medals && medalWeights}
+		{:else if event.type === EventType.Medals && medalWeights}
 			<form
 				action="?/editMedalWeights"
 				method="post"
@@ -327,7 +351,7 @@
 					<Button type="submit" disabled={pending}>Update</Button>
 				</div>
 			</form>
-		{:else if event.type === +EventType.Pests && pestWeights}
+		{:else if event.type === EventType.Pests && pestWeights}
 			<form
 				action="?/editPestWeights"
 				method="post"
@@ -376,7 +400,7 @@
 					<Button type="submit" disabled={pending}>Update</Button>
 				</div>
 			</form>
-		{:else if event.type === +EventType.Collections && collectionWeights}
+		{:else if event.type === EventType.Collections && collectionWeights}
 			<form
 				action="?/editCollectionWeights"
 				method="post"
@@ -453,7 +477,7 @@
 					</Button>
 				</div>
 
-				<p class="text-sm leading-relaxed text-muted-foreground">
+				<p class="text-muted-foreground text-sm leading-relaxed">
 					Enter internal SkyBlock IDs / item ids for collections. It's whatever Hypixel has as a key in the
 					collections object.
 				</p>
@@ -466,7 +490,7 @@
 			<p>Event Type not supported</p>
 		{/if}
 	</div>
-	<div class="flex flex-col rounded-md border-2 bg-card p-4">
+	<div class="bg-card flex flex-col rounded-md border-2 p-4">
 		<form
 			action="?/forceAddMember"
 			method="post"
@@ -494,7 +518,7 @@
 			</div>
 		</form>
 	</div>
-	<div class="flex flex-col rounded-md border-2 bg-card p-4">
+	<div class="bg-card flex flex-col rounded-md border-2 p-4">
 		<form
 			action="?/permDeleteMember"
 			method="post"
@@ -572,7 +596,7 @@
 			</div>
 
 			<Button type="submit" disabled={pending}>Edit Event</Button>
-			<p class="text-base leading-relaxed text-muted-foreground">
+			<p class="text-muted-foreground text-base leading-relaxed">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>
@@ -609,7 +633,7 @@
 					>Clear Banner</Button
 				>
 			</div>
-			<p class="text-base leading-relaxed text-muted-foreground">
+			<p class="text-muted-foreground text-base leading-relaxed">
 				Having any trouble with this? Please contact "kaeso.dev" on Discord and I'll help you out! Thanks.
 			</p>
 		</form>

@@ -2,6 +2,7 @@
 	import * as Popover from '$ui/popover';
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { cn } from '$lib/utils';
 
 	const ctx = getStatsContext();
 	const selected = $derived(ctx.selectedProfile);
@@ -10,13 +11,19 @@
 
 <div class="flex flex-row items-center gap-2">
 	<Popover.Mobile hasContent={profiles.length > 0}>
-		{#snippet trigger()}
-			<div class="z-10 col-span-1 grid">
-				<div class="mx-1 rounded-md bg-card p-1 px-2 lg:p-2">
-					<h2 class="text-2xl md:text-3xl">
-						{selected?.profileName}
-					</h2>
-				</div>
+		{#snippet child({ props })}
+			<div class="flex flex-row items-center gap-2 rounded-md border">
+				<button {...props} class={cn(props.class ?? '', 'z-10 col-span-1 grid')}>
+					<div class="mx-1 px-3 py-1.5 @md:py-2">
+						<h2 class="text-xl md:text-2xl">
+							{selected?.profileName}
+						</h2>
+					</div>
+				</button>
+				<Gamemode
+					class="text-muted-foreground mt-1 mr-4 text-2xl font-semibold first-letter:capitalize"
+					gameMode={selected?.gameMode ?? 'classic'}
+				/>
 			</div>
 		{/snippet}
 		{#if profiles.length > 0}
@@ -24,7 +31,7 @@
 				{#each profiles ?? [] as pId (pId.id)}
 					<a
 						href="/@{ctx.ign}/{pId.name}"
-						class="flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold hover:bg-muted md:text-xl"
+						class="hover:bg-muted flex flex-row justify-between gap-4 rounded-sm p-2 text-lg font-semibold md:text-xl"
 					>
 						<div class="flex flex-row items-center gap-2">
 							<span>{pId.name}</span>
@@ -45,8 +52,4 @@
 			</div>
 		{/if}
 	</Popover.Mobile>
-	<Gamemode
-		class="text-2xl font-semibold text-muted-foreground first-letter:capitalize"
-		gameMode={selected?.gameMode ?? 'classic'}
-	/>
 </div>

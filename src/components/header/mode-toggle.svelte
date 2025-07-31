@@ -35,9 +35,9 @@
 		)}
 	>
 		{#if !isDark}
-			<Sun class="mx-2 block" />
+			<Sun class="block" />
 		{:else}
-			<Moon class="mx-2 block" />
+			<Moon class="block" />
 		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content align="end">
@@ -58,7 +58,7 @@
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />
 		<DropdownMenu.LinkItem href="/profile/settings#themes" class="cursor-pointer">
-			<span class="flex w-full text-muted-foreground"> See More Themes </span>
+			<span class="text-muted-foreground flex w-full"> See More Themes </span>
 		</DropdownMenu.LinkItem>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

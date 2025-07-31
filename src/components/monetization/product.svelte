@@ -10,6 +10,7 @@
 	import Replace from '@lucide/svelte/icons/replace';
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
 	import Check from '@lucide/svelte/icons/check';
+	import Heart from '@lucide/svelte/icons/heart';
 	import X from '@lucide/svelte/icons/x';
 	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
@@ -28,9 +29,9 @@
 	let styles = $derived(product.weightStyles ?? []);
 </script>
 
-<div class={cn('m-1 inline-block rounded-md bg-muted/50 p-4', className)}>
+<div class={cn('bg-muted/50 m-1 inline-block rounded-md p-4', className)}>
 	<div class="flex items-center justify-between">
-		<div class="flex min-w-0 flex-shrink items-center justify-start gap-2">
+		<div class="flex min-w-0 shrink items-center justify-start gap-2">
 			{#if product.thumbnail?.url}
 				<img src={product.thumbnail.url} alt={product.name} class="h-8 w-8 rounded-sm object-cover" />
 			{/if}
@@ -38,7 +39,7 @@
 				{#if !showFeatures}
 					{@render available()}
 				{/if}
-				<p class="overflow-hidden text-ellipsis whitespace-nowrap pr-4 text-xl">{product.name}</p>
+				<p class="overflow-hidden pr-4 text-xl text-ellipsis whitespace-nowrap">{product.name}</p>
 				{#if showFeatures}
 					<div class="flex flex-row items-center gap-1">
 						{@render available()}
@@ -62,7 +63,7 @@
 								{#each features.embedColors as color, i (i)}
 									<div class="flex flex-row items-center gap-1">
 										<div class="h-4 w-4 rounded-sm" style="background-color: #{color}"></div>
-										<span class="text-sm font-semibold leading-none">#{color}</span>
+										<span class="text-sm leading-none font-semibold">#{color}</span>
 									</div>
 								{/each}
 							</ProductFeature>
@@ -73,6 +74,14 @@
 									<Tag size={16} />
 								{/snippet}
 								<p class="font-semibold">Unlocks a badge!</p>
+							</ProductFeature>
+						{/if}
+						{#if features.customEmoji}
+							<ProductFeature>
+								{#snippet icon()}
+									<Heart size={16} />
+								{/snippet}
+								<p class="font-semibold">Select a Custom Emoji!</p>
 							</ProductFeature>
 						{/if}
 						{#if features.hideShopPromotions}

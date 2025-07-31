@@ -20,6 +20,7 @@
 	import * as Accordion from '$ui/accordion';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 
 	interface Props {
 		data: PageData;
@@ -130,11 +131,11 @@
 </HeroBanner>
 
 <div class="mt-64 flex flex-col items-center justify-center gap-8 pt-8" data-sveltekit-preload-data="tap">
-	<div class="relative flex w-full flex-col items-center rounded-md border-2 bg-card p-4 md:w-fit">
+	<div class="bg-card relative flex w-full flex-col items-center rounded-md border-2 p-4 md:w-fit">
 		{#if end < time}
 			<p class="md:text-lg">Event Ended!</p>
 		{:else}
-			<p class="absolute top-2 mb-2 rounded-md bg-card p-1 pt-0 font-mono md:text-lg">
+			<p class="bg-card absolute top-2 mb-2 rounded-md p-1 pt-0 font-mono md:text-lg">
 				{#if start > time}
 					Event Starts In
 				{:else}
@@ -145,7 +146,7 @@
 		{/if}
 	</div>
 	<div class="mx-4 flex w-full max-w-6xl flex-col items-center gap-8 lg:flex-row lg:items-start">
-		<section class="flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md border-2 bg-card p-8">
+		<section class="bg-card flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md border-2 p-8">
 			<div class="flex flex-row items-center gap-2">
 				<h2 class="text-3xl">{event.name}</h2>
 				{#if data.session?.flags.admin}
@@ -203,10 +204,6 @@
 					<Button href="/server/{event.guildId}">
 						<p>Back To Server</p>
 					</Button>
-					<Button href="/server/{event.guildId}/join">
-						<p class="mr-2">Join Discord Server</p>
-						<ExternalLink size={16} />
-					</Button>
 					{#if joinable}
 						<Button href="{page.url.pathname}/membership">
 							{#if joined}
@@ -217,16 +214,24 @@
 						</Button>
 					{/if}
 				</div>
+				{#if joinable && !joined}
+					<div class="text-muted-foreground flex flex-row items-center justify-center gap-1 text-sm">
+						<CircleAlert class="size-4" />
+						<span
+							>You must be in the <a href="#host" class="underline">host Discord server</a> to join!</span
+						>
+					</div>
+				{/if}
 				{#if self?.disqualified}
 					<div class="flex flex-col justify-start gap-1 text-sm">
-						<p class="text-lg text-destructive">You have been removed from this event.</p>
+						<p class="text-destructive text-lg">You have been removed from this event.</p>
 						<p>Reason</p>
-						<p class="rounded-sm bg-card p-2">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
+						<p class="bg-card rounded-sm p-2">{self.notes ?? 'Unknown - Ask Server Staff'}</p>
 					</div>
 				{/if}
 			</div>
 		</section>
-		<section class="flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md border-2 bg-card p-8">
+		<section class="bg-card flex w-full flex-1 basis-1 flex-col items-center gap-4 rounded-md border-2 p-8">
 			<div class="flex w-full flex-row items-center justify-center gap-8">
 				{#if teamEvent}
 					<Button onclick={swapLeaderboard} variant="outline" size="sm">
@@ -276,7 +281,31 @@
 		</section>
 	</div>
 
-	<section class="flex max-w-xl flex-col gap-4" id="agreement">
+	<section class="flex w-full max-w-4xl scroll-mt-64 flex-col gap-4" id="host">
+		<div class="bg-card flex flex-col items-center justify-between gap-2 rounded-md border-2 p-4 md:flex-row">
+			<div class="flex flex-1 flex-col gap-2">
+				<span class="text-muted-foreground italic">This event is hosted by...</span>
+				<div class="flex flex-row items-center gap-2">
+					<GuildIcon guild={data.guild} size={12} />
+					<h3 class="text-2xl font-semibold">{data.guild?.name}</h3>
+				</div>
+			</div>
+			<div class="flex flex-1 flex-row items-center gap-4 md:flex-col md:items-end md:gap-2">
+				<div class="hidden flex-row items-center gap-2 font-semibold sm:flex">
+					<p class="text-lg md:text-xl">
+						{data.guild?.memberCount?.toLocaleString()}
+					</p>
+					<Users />
+				</div>
+				<Button href="/server/{event.guildId}/join">
+					<p class="mr-2">Join Discord Server</p>
+					<ExternalLink size={16} />
+				</Button>
+			</div>
+		</div>
+	</section>
+
+	<section class="flex max-w-xl scroll-mt-64 flex-col gap-4" id="agreement">
 		<h3 class="text-2xl">Event Agreement</h3>
 		<p>
 			All members of the event are expected to follow all of <a
@@ -288,7 +317,7 @@
 		</p>
 	</section>
 
-	<section class="flex w-full max-w-4xl flex-col items-start gap-4 rounded-md border-2 bg-card p-8" id="faq">
+	<section class="bg-card flex w-full max-w-4xl flex-col items-start gap-4 rounded-md border-2 p-8" id="faq">
 		<h3 class="text-2xl">Frequently Asked Questions</h3>
 		<Accordion.Root type="multiple" class="w-full">
 			<Accordion.Item value="item-1">
@@ -327,7 +356,7 @@
 				<Accordion.Trigger><p class="text-left">Can I rejoin if I leave the event?</p></Accordion.Trigger>
 				<Accordion.Content>
 					Yes, as long as the event is still running, joining hasn't closed, and you haven't been
-					disqualified. You can rejoin at any time.
+					disqualified.
 					<br /><br />
 					Your score <strong>will not</strong> be reset if you rejoin, but keep in mind that you can't rejoin once
 					it closes!
@@ -359,7 +388,7 @@
 				</Accordion.Content>
 			</Accordion.Item>
 		</Accordion.Root>
-		<h4 class="-mb-2 mt-4 text-xl">Team Events</h4>
+		<h4 class="mt-4 -mb-2 text-xl">Team Events</h4>
 		<Accordion.Root type="multiple" class="w-full">
 			<Accordion.Item value="item-1">
 				<Accordion.Trigger><p class="text-left">How do I join/leave a team?</p></Accordion.Trigger>

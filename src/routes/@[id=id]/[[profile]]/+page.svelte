@@ -20,7 +20,7 @@
 	const profile = $derived(ctx.selectedProfile);
 	const uuid = $derived(ctx.uuid);
 	const ign = $derived(ctx.ign);
-	const weightRank = $derived(ctx.ranks?.farmingweight?.rank ?? -1);
+	const weightRank = $derived(ctx.allRanks?.farmingweight?.rank ?? -1);
 
 	let farmingXp = $derived(
 		getLevelProgress(
@@ -65,7 +65,7 @@
 <Head
 	title="{ctx.ignMeta} ({profile?.profileName}) | Farming Weight"
 	{description}
-	imageUrl="https://mc-heads.net/head/{uuid}/left.png"
+	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 >
 	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>

@@ -3,7 +3,7 @@
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import Settings from '@lucide/svelte/icons/settings';
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
-	import ChartColumn from '@lucide/svelte/icons/chart-column';
+	import Clover from '@lucide/svelte/icons/clover';
 	import Shield from '@lucide/svelte/icons/shield';
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import LogIn from '@lucide/svelte/icons/log-in';
@@ -14,9 +14,11 @@
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Avatar from '$ui/avatar';
 	import * as Sidebar from '$ui/sidebar';
-	import { page } from '$app/state';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 
-	let user = $derived(page.data.session);
+	const ctx = getGlobalContext();
+	const session = $derived(ctx.session);
+
 	const sidebar = Sidebar.useSidebar();
 </script>
 
@@ -29,17 +31,17 @@
 				{...props}
 			>
 				<Avatar.Root class="aspect-square size-8 items-center justify-center rounded-lg">
-					{#if user}
-						<UserIcon {user} class="aspect-square" />
+					{#if session}
+						<UserIcon user={session} class="aspect-square" />
 					{:else}
 						<UserRound class="size-4" />
 					{/if}
 				</Avatar.Root>
 				<div class="grid flex-1 text-left text-sm">
-					{#if user}
-						<span class="truncate font-semibold">{user.ign || user.username}</span>
-						{#if user.ign && user.username}
-							<span class="truncate text-xs">{user.username}</span>
+					{#if session}
+						<span class="truncate font-semibold">{session.fIgn || session.username}</span>
+						{#if session.ign && session.username}
+							<span class="truncate text-xs">{session.username}</span>
 						{/if}
 					{:else}
 						<span class="truncate font-semibold">Login</span>
@@ -50,21 +52,21 @@
 		{/snippet}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content
-		class="w-[--bits-dropdown-menu-anchor-width] min-w-56 rounded-lg"
+		class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg"
 		align="end"
 		sideOffset={4}
 		side={sidebar.isMobile ? 'top' : 'right'}
 	>
-		{#if user}
+		{#if session}
 			<DropdownMenu.Label class="p-0 font-normal">
 				<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 					<Avatar.Root class="aspect-square size-8 items-center justify-center rounded-lg">
-						<UserIcon {user} class="aspect-square" />
+						<UserIcon user={session} class="aspect-square" />
 					</Avatar.Root>
 					<div class="grid flex-1 text-left text-sm leading-tight">
-						<span class="truncate font-semibold">{user.ign || user.username}</span>
-						{#if user.ign && user.username}
-							<span class="truncate text-xs">{user.username}</span>
+						<span class="truncate font-semibold">{session.ign || session.username}</span>
+						{#if session.ign && session.username}
+							<span class="truncate text-xs">{session.username}</span>
 						{/if}
 					</div>
 				</div>
@@ -75,15 +77,15 @@
 					<Settings />
 					Profile
 				</DropdownMenu.LinkItem>
-				<DropdownMenu.LinkItem href="/@{user.ign}" disabled={!user.ign}>
+				<DropdownMenu.LinkItem href="/@{session.ign}" disabled={!session.ign}>
 					<FileChartColumn />
 					My Stats
 				</DropdownMenu.LinkItem>
-				<DropdownMenu.LinkItem href="/@{user.ign}/rates" disabled={!user.ign}>
-					<ChartColumn />
-					My Rates
+				<DropdownMenu.LinkItem href="/@{session.ign}/fortune" disabled={!session.ign}>
+					<Clover />
+					My Fortune
 				</DropdownMenu.LinkItem>
-				{#if user.flags.moderator}
+				{#if session.flags.moderator}
 					<DropdownMenu.LinkItem href="/admin">
 						<Shield />
 						Admin

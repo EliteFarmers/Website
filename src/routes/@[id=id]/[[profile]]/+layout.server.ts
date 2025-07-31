@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
-export const load = (async ({ parent, setHeaders }) => {
+export const load = (async ({ parent, setHeaders, locals }) => {
 	const { account, profile, session } = await parent();
 	const authorized = session?.flags?.support;
 
@@ -18,6 +18,14 @@ export const load = (async ({ parent, setHeaders }) => {
 		setHeaders({
 			'Cache-Control': 'no-store',
 		});
+	}
+
+	if (account.settings?.nameStyle?.id) {
+		const style = locals.cache?.styleLookup?.[account.settings.nameStyle?.id];
+		return {
+			authorized,
+			style: style ?? undefined,
+		};
 	}
 
 	return {

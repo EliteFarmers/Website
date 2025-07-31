@@ -27,10 +27,10 @@
 	<div
 		class="{sizes[
 			size
-		]} flex aspect-square select-none items-center justify-center rounded-full bg-muted bg-blend-darken {className ??
+		]} bg-muted flex aspect-square items-center justify-center rounded-md bg-blend-darken select-none {className ??
 			''}"
 	>
-		<p class="mb-0.5 leading-none text-muted-foreground">
+		<p class="text-muted-foreground mb-0.5 leading-none">
 			{guild?.name
 				?.split(' ')
 				.slice(0, 3)
@@ -41,7 +41,7 @@
 {:else}
 	<img
 		loading="lazy"
-		class="w-{size} h-{size} rounded-full {className ?? ''}"
+		class="w-{size} h-{size} rounded-md {className ?? ''}"
 		src={guild.icon.url}
 		alt="Server Icon"
 		onerror={() => (errored = true)}

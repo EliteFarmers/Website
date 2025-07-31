@@ -8,6 +8,7 @@
 		compact?: boolean;
 		barBg?: string;
 		class?: string;
+		disabled?: boolean;
 	}
 
 	let {
@@ -18,19 +19,24 @@
 		maxed = false,
 		compact = false,
 		barBg = 'bg-background',
+		disabled = false,
 		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold',
 	}: Props = $props();
+
+	let background = $derived(
+		!disabled ? (maxed ? 'bg-completed' : 'bg-progress') : maxed ? 'bg-completed/40' : 'bg-progress/40'
+	);
 </script>
 
 <div class="flex w-full flex-1 flex-row items-center">
 	<div
-		class="relative block w-full {compact ? 'h-5 rounded-md' : 'h-6 rounded-lg md:my-1'} {barBg}"
+		class="relative block w-full {compact ? 'h-5 rounded-sm' : 'h-6 rounded-md md:my-1'} {barBg}"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
 		<div
-			class="absolute {compact ? 'h-5 rounded-md' : 'h-6 rounded-lg'} {maxed ? 'bg-completed' : 'bg-progress'}"
+			class="absolute {compact ? 'h-5 rounded-sm' : 'h-6 rounded-md'} {background}"
 			style={`width: ${Math.min(percent, 100)}%`}
 		></div>
 		<div class="absolute flex h-full w-full items-center justify-center">

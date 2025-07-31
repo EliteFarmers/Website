@@ -2,9 +2,10 @@ import type { components } from '$lib/api/api';
 import type { ProfileDetails } from '$lib/api/elite';
 import { PROPER_CROP_NAME, API_CROP_TO_CROP, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { CROP_TO_PEST } from '$lib/constants/pests';
-import { formatIgn, GetRankDefaults, GetRankName } from '$lib/format';
+import { formatIgn, getRankInformation } from '$lib/format';
 import { getCropFromName, Crop } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
+import { getRatesData } from './ratesData';
 
 export class PlayerStats {
 	#account = $state<NonNullable<components['schemas']['MinecraftAccountDto']>>(null!);
@@ -12,7 +13,12 @@ export class PlayerStats {
 	#profiles = $state<ProfileDetails[]>();
 	#member = $state<NonNullable<components['schemas']['ProfileMemberDto']>>(null!);
 	#ranks = $state<components['schemas']['LeaderboardRanksResponse']>(null!);
+	#filteredRanks = $state<components['schemas']['LeaderboardRanksResponse']['ranks']>(null!);
 	#collections = $state<Collection[]>([]);
+	#fortuneSettings = $derived(
+		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
+	);
+	#style = $state.raw<components['schemas']['WeightStyleWithDataDto'] | undefined>(undefined);
 
 	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
 	#pets = $state.raw<components['schemas']['PetDto'][]>([]);
@@ -20,40 +26,55 @@ export class PlayerStats {
 	#equipment = $state.raw<components['schemas']['ItemDto'][]>([]);
 
 	#garden = $derived.by(() => this.#member?.garden);
-	#rank = $derived.by(() => GetRankDefaults(GetRankName(this.#account.playerData)));
+	#rank = $derived.by(() => getRankInformation(this.#account.playerData));
+	#ignMeta = $derived.by(() => formatIgn(this.#account?.name, this.#member.meta));
 
-	constructor({
-		account,
-		selectedProfile,
-		profiles,
-		member,
-		ranks,
-	}: {
+	constructor(data: {
 		account: NonNullable<components['schemas']['MinecraftAccountDto']>;
 		selectedProfile: components['schemas']['ProfileDetailsDto'];
 		profiles: ProfileDetails[];
 		member: NonNullable<components['schemas']['ProfileMemberDto']>;
 		ranks: components['schemas']['LeaderboardRanksResponse'];
+		style?: components['schemas']['WeightStyleWithDataDto'];
 	}) {
-		this.#account = account;
-		this.#selectedProfile = selectedProfile;
-		this.#profiles = profiles;
-		this.#ranks = ranks;
-
-		this.member = member;
+		this.setValues(data);
 	}
 
-	setValues({ account, selectedProfile, profiles, member, ranks }: ConstructorParameters<typeof PlayerStats>[0]) {
+	setValues({
+		account,
+		selectedProfile,
+		profiles,
+		member,
+		ranks,
+		style,
+	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
 		this.#ranks = ranks;
+		this.#style = style;
+		this.#filteredRanks = Object.fromEntries(Object.entries(ranks.ranks ?? {}).filter((r) => r[1].rank <= 10_000));
+
+		if (this.fortuneSettings) {
+			const ratesData = getRatesData();
+			ratesData.update((data) => {
+				data.communityCenter = this.fortuneSettings?.communityCenter ?? data.communityCenter;
+				data.strength = this.fortuneSettings?.strength ?? data.strength;
+				data.attributes = this.fortuneSettings?.attributes ?? data.attributes;
+				data.exported = (this.fortuneSettings?.exported as Record<Crop, boolean>) ?? data.exported;
+				return data;
+			});
+		}
 
 		this.member = member;
 	}
 
 	get account() {
 		return this.#account;
+	}
+
+	get style() {
+		return this.#style;
 	}
 
 	get uuid() {
@@ -65,11 +86,15 @@ export class PlayerStats {
 	}
 
 	get ignMeta() {
-		return formatIgn(this.#account?.name, this.#member.meta);
+		return this.#ignMeta;
 	}
 
 	get rank() {
 		return this.#rank;
+	}
+
+	get fortuneSettings() {
+		return this.#fortuneSettings;
 	}
 
 	get selectedProfile() {
@@ -85,11 +110,10 @@ export class PlayerStats {
 
 		this.#collections = PlayerStats.parseCollections(value);
 
-		// This allows mutating the values in these arrays
-		this.#tools = structuredClone(value?.farmingWeight.inventory?.tools ?? []);
-		this.#pets = structuredClone(value?.pets ?? []);
-		this.#armor = structuredClone(value?.farmingWeight.inventory?.armor ?? []);
-		this.#equipment = structuredClone(value?.farmingWeight.inventory?.equipment ?? []);
+		this.#tools = $state.snapshot(value?.farmingWeight.inventory?.tools ?? []);
+		this.#pets = $state.snapshot(value?.pets ?? []);
+		this.#armor = $state.snapshot(value?.farmingWeight.inventory?.armor ?? []);
+		this.#equipment = $state.snapshot(value?.farmingWeight.inventory?.equipment ?? []);
 	}
 
 	get member() {
@@ -101,7 +125,11 @@ export class PlayerStats {
 	}
 
 	get ranks() {
-		return this.#ranks?.ranks ?? {};
+		return this.#filteredRanks ?? {};
+	}
+
+	get allRanks() {
+		return this.#ranks.ranks ?? {};
 	}
 
 	get collections() {
@@ -109,19 +137,19 @@ export class PlayerStats {
 	}
 
 	get tools() {
-		return this.#tools;
+		return this.#tools ?? [];
 	}
 
 	get pets() {
-		return this.#pets;
+		return this.#pets ?? [];
 	}
 
 	get armor() {
-		return this.#armor;
+		return this.#armor ?? [];
 	}
 
 	get equipment() {
-		return this.#equipment;
+		return this.#equipment ?? [];
 	}
 
 	static parseCollections(member: NonNullable<components['schemas']['ProfileMemberDto']>) {
