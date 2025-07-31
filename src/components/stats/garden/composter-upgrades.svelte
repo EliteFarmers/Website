@@ -5,17 +5,13 @@
 		getComposterUpgradeDisplayName,
 		getSpecialCropDisplayName,
 	} from 'farming-weight';
-	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
 	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
 	import * as Popover from '$ui/popover';
 	import { getComposterUpgradeCost, getEnchantedCropCollectionAmount } from '$lib/calc/garden';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 
-	interface Props {
-		garden?: components['schemas']['GardenDto'];
-	}
-
-	let { garden = undefined }: Props = $props();
+	const garden = getStatsContext().garden;
 
 	const maxLevel = 25;
 
@@ -57,7 +53,7 @@
 					<div class="flex items-center gap-1 p-1">
 						<img src={img} class="pixelated h-6 w-6" alt={name} />
 						<div class="flex items-center gap-1">
-							{#each Array(maxLevel) as _, i (i)}
+							{#each Array(maxLevel) as i (i)}
 								<div
 									class="h-5 w-4 rounded-sm md:block md:h-6 {i < level
 										? isMaxed
