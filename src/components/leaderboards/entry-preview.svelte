@@ -44,4 +44,5 @@
 		suffix: '',
 	}}
 	{showLeaderboardName}
+	disabled={true}
 />
