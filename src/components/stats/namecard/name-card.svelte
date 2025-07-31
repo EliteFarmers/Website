@@ -49,13 +49,17 @@
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
 				<div class="hidden flex-row items-center gap-2 pt-2 @md:flex">
-					<PlayerName
-						bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
-							?.fill ?? 'inherit'};"
-					/>
+					<div class={bg === 'inherit' ? 'rounded-md border' : ''}>
+						<PlayerName
+							bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
+								?.fill ?? 'inherit'};"
+						/>
+					</div>
 					{#if rankText}
 						<TextElement class="h-full" element={style?.elements?.rank}>
-							{@render rankLink()}
+							<div class="{bg === 'inherit' ? 'rounded-md border' : ''} h-full">
+								{@render rankLink()}
+							</div>
 						</TextElement>
 					{/if}
 				</div>
@@ -79,9 +83,11 @@
 	<div class="block @md:hidden">
 		<PlayerName />
 	</div>
-	<div class="block rounded-md border @md:hidden">
-		{@render rankLink(true)}
-	</div>
+	{#if rankText}
+		<div class="block rounded-md border @md:hidden">
+			{@render rankLink(true)}
+		</div>
+	{/if}
 </StatElements>
 
 {#snippet rankLink(small = false)}
