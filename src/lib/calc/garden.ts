@@ -1,10 +1,11 @@
-import { LEVEL_REQUIREMENTS, UPGRADE_CROP_AMOUNTS } from '$lib/constants/composter';
 import { CROP_UPGRADE_COSTS } from '$lib/constants/crops';
 import {
 	COMPOSTER_UPGRADE_CROPS,
 	ComposterUpgrade,
 	Crop,
+    LEVEL_REQUIREMENTS,
 	SpecialCrop,
+    UPGRADE_CROP_AMOUNTS,
 	type ComposterUpgradeCost,
 } from 'farming-weight';
 
