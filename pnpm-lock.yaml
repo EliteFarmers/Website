@@ -223,8 +223,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1
       zod:
-        specifier: ^3.24.2
-        version: 3.25.67
+        specifier: ^4.0.0
+        version: 4.0.14
 
 packages:
 
@@ -2557,6 +2557,9 @@ packages:
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
+  zod@4.0.14:
+    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -4654,3 +4657,5 @@ snapshots:
     optional: true
 
   zod@3.25.67: {}
+
+  zod@4.0.14: {}
