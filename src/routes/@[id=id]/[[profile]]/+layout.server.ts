@@ -21,8 +21,7 @@ export const load = (async ({ parent, setHeaders, locals }) => {
 	}
 
 	if (account.settings?.nameStyle?.id) {
-		console.log('Using name style', account.settings.nameStyle.id);
-		const style = locals.cache?.styles?.find((s) => s.id === account.settings.nameStyle?.id);
+		const style = locals.cache?.styleLookup?.[account.settings.nameStyle?.id];
 		return {
 			authorized,
 			style: style ?? undefined,

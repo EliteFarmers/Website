@@ -10,7 +10,7 @@
 </script>
 
 <Popover.Mobile
-	triggerRootClass="bg-card rounded-md border-2 p-2 md:p-3"
+	triggerRootClass="rounded-md border p-2 md:p-3"
 	triggerClass="p-0 m-0 flex flex-row items-center justify-between gap-2"
 >
 	{#snippet trigger()}

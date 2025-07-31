@@ -12,9 +12,9 @@
 <div class="flex flex-row items-center gap-2">
 	<Popover.Mobile hasContent={profiles.length > 0}>
 		{#snippet child({ props })}
-			<div class="bg-card flex flex-row items-center gap-2 rounded-md border-2">
+			<div class="flex flex-row items-center gap-2 rounded-md border">
 				<button {...props} class={cn(props.class ?? '', 'z-10 col-span-1 grid')}>
-					<div class="mx-1 px-3 py-2">
+					<div class="mx-1 px-3 py-1.5 @md:py-2">
 						<h2 class="text-xl md:text-2xl">
 							{selected?.profileName}
 						</h2>

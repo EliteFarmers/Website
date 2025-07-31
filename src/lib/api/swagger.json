@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Elite API",
-    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data.\n<br>\nUse of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.",
+    "description": "A backend API for https://elitebot.dev/ that provides Hypixel Skyblock data.\r\n<br>\r\nUse of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.",
     "termsOfService": "https://elitebot.dev/apiterms",
     "contact": {
       "name": "- GitHub",
@@ -9906,6 +9906,7 @@
       },
       "ErrorResponse": {
         "type": "object",
+        "description": "the dto used to send an error response to the client",
         "additionalProperties": false,
         "required": [
           "statusCode",
@@ -9915,15 +9916,18 @@
         "properties": {
           "statusCode": {
             "type": "integer",
+            "description": "the http status code sent to the client. default is 400.",
             "format": "int32",
             "default": 400
           },
           "message": {
             "type": "string",
+            "description": "the message for the error response",
             "default": "One or more errors occurred!"
           },
           "errors": {
             "type": "object",
+            "description": "the collection of errors for the current context",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -10388,6 +10392,7 @@
       },
       "ProblemDetails": {
         "type": "object",
+        "description": "RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:\napp.UseFastEndpoints(c => c.Errors.UseProblemDetails())",
         "additionalProperties": false,
         "required": [
           "type",
@@ -10421,6 +10426,7 @@
           },
           "detail": {
             "type": "string",
+            "description": "the details of the error",
             "nullable": true
           },
           "errors": {
@@ -10433,6 +10439,7 @@
       },
       "ProblemDetails_Error": {
         "type": "object",
+        "description": "the error details object",
         "additionalProperties": false,
         "required": [
           "name",
@@ -10441,18 +10448,22 @@
         "properties": {
           "name": {
             "type": "string",
+            "description": "the name of the error or property of the dto that caused the error",
             "default": "Error or field name"
           },
           "reason": {
             "type": "string",
+            "description": "the reason for the error",
             "default": "Error reason"
           },
           "code": {
             "type": "string",
+            "description": "the code of the error",
             "nullable": true
           },
           "severity": {
             "type": "string",
+            "description": "the severity of the error",
             "nullable": true
           }
         }
@@ -15914,12 +15925,15 @@
       },
       "JsonDocument": {
         "type": "object",
+        "description": "Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.",
         "additionalProperties": false,
         "required": [
           "rootElement"
         ],
         "properties": {
-          "rootElement": {}
+          "rootElement": {
+            "description": "Gets the root element of this JSON document."
+          }
         }
       },
       "GetSpecifiedSkyblockItemsResponse": {
@@ -16735,6 +16749,14 @@
                 "$ref": "#/components/schemas/WeightStyleDataDto"
               }
             ]
+          },
+          "leaderboard": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleDataDto"
+              }
+            ]
           }
         }
       },
@@ -16915,6 +16937,10 @@
             ]
           },
           "fill": {
+            "type": "string",
+            "nullable": true
+          },
+          "align": {
             "type": "string",
             "nullable": true
           },
@@ -17121,6 +17147,133 @@
             "nullable": true
           },
           "radius": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "LeaderboardStyleDataDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "background": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleLayerDto"
+              }
+            ]
+          },
+          "overlay": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleLayerDto"
+              }
+            ]
+          },
+          "gradientOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "gradientColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "font": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          },
+          "score": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          },
+          "rank": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          },
+          "subtitle": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LeaderboardStyleTextDto"
+              }
+            ]
+          }
+        }
+      },
+      "LeaderboardStyleLayerDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageOpacity": {
+            "type": "string",
+            "nullable": true
+          },
+          "fillColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "fillOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "borderColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "borderOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "align": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LeaderboardStyleTextDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "shadowColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "shadowOpacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "fontWeight": {
             "type": "integer",
             "format": "int32",
             "nullable": true

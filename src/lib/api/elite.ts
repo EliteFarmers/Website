@@ -1,6 +1,7 @@
 import createClient, { type HeadersOptions, type Middleware } from 'openapi-fetch';
 import type { components, paths } from './api';
 import { ELITE_API_URL } from '$env/static/private';
+import { cache } from '$lib/servercache';
 
 const client = createClient<paths>({
 	baseUrl: ELITE_API_URL,
@@ -480,15 +481,31 @@ interface BaseLeaderboardQuery {
 export const GetLeaderboardSlice = async (
 	leaderboardId: string,
 	query: { limit: number; offset: number } & BaseLeaderboardQuery
-) =>
-	await GET('/leaderboard/{leaderboard}', {
+) => {
+	const { data } = await GET('/leaderboard/{leaderboard}', {
 		params: {
 			path: {
 				leaderboard: leaderboardId,
 			},
 			query: query,
 		},
-	});
+	}).catch(() => ({ data: undefined }));
+
+	if (!data) return undefined;
+
+	return {
+		...data,
+		entries: data.entries.map((entry) => {
+			if (entry.meta?.leaderboard?.styleId === undefined || entry.meta.leaderboard.styleId === null) return entry;
+			return {
+				...entry,
+				style: cache.styleLookup[entry.meta?.leaderboard?.styleId]?.leaderboard ?? undefined,
+			};
+		}) as (components['schemas']['LeaderboardEntryDto'] & {
+			style?: components['schemas']['WeightStyleWithDataDto']['leaderboard'];
+		})[],
+	};
+};
 
 export const GetPlayersRank = async (
 	leaderboardId: string,
@@ -1567,7 +1584,9 @@ export const CreateAnnouncement = async (
 	});
 
 export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
-export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'];
+export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'] & {
+	style?: components['schemas']['WeightStyleWithDataDto']['leaderboard'];
+};
 export interface UserInfo {
 	id: string;
 	username: string;

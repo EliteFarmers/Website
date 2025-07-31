@@ -34,9 +34,13 @@
 	>
 	</canvas>
 	<div class="absolute top-0 right-0 bottom-0 left-0 z-10 flex h-full flex-row items-center justify-between p-4">
-		<div class="flex h-full w-full flex-row items-center justify-center gap-4 @md:justify-start">
+		<div
+			class="flex h-full w-full flex-row items-center justify-center gap-4 @md:gap-8 {bg !== 'inherit'
+				? '@md:justify-start'
+				: ''}"
+		>
 			<img
-				class="hidden aspect-[1/1.3] h-full flex-1 self-center object-contain @md:inline-block @md:flex-none"
+				class="hidden h-full flex-1 self-center object-contain @md:inline-block @md:flex-none"
 				src="https://mc-heads.net/body/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
@@ -44,7 +48,7 @@
 				<PlayerHead uuid={ctx.uuid} size="2xl" />
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
-				<div class="hidden flex-row items-center gap-2 @md:flex">
+				<div class="hidden flex-row items-center gap-2 pt-2 @md:flex">
 					<PlayerName
 						bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
 							?.fill ?? 'inherit'};"
@@ -56,7 +60,14 @@
 					{/if}
 				</div>
 				<TextElement element={style?.elements?.weight}>
-					<WeightNum />
+					<div class="flex flex-col items-end">
+						<WeightNum />
+						{#if bg == 'inherit'}
+							<span class="font-muted-foreground mb-0.5 hidden pr-1 text-xs md:inline-block md:text-sm"
+								>Farming Weight</span
+							>
+						{/if}
+					</div>
 				</TextElement>
 			</div>
 		</div>
@@ -68,17 +79,21 @@
 	<div class="block @md:hidden">
 		<PlayerName />
 	</div>
-	<div class="block rounded-md border-2 @md:hidden">
-		{@render rankLink()}
+	<div class="block rounded-md border @md:hidden">
+		{@render rankLink(true)}
 	</div>
 </StatElements>
 
-{#snippet rankLink()}
+{#snippet rankLink(small = false)}
 	<a
-		class="bg-card hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-1 lg:p-1"
+		class="hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-0.5 lg:p-1"
 		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
-		style="background-color: {bg}; border-color: transparent; background-opacity: 0.8; color: {style?.elements?.name
-			?.fill ?? 'inherit'};"
+		style="background-color: {small
+			? 'inherit'
+			: bg}; border-color: transparent; background-opacity: 0.8; color: {(!small
+			? style?.elements?.name?.fill
+			: undefined) ?? 'inherit'};"
+		data-sveltekit-preload-data="tap"
 	>
 		<span class="mx-1 px-2 font-mono text-3xl">
 			<span class="mr-0.5 text-xl">#</span>{rank}

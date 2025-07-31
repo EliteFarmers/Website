@@ -3,6 +3,7 @@
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { type LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { formatIgn } from '$lib/format';
+	import { isValidLeaderboardStyle, type LeaderboardStyleText } from '$lib/styles/style';
 
 	interface Props {
 		entry: LeaderboardEntry;
@@ -10,9 +11,17 @@
 		rank: number;
 		leaderboard?: LeaderboardInfo;
 		showLeaderboardName?: boolean;
+		disabled?: boolean;
 	}
 
-	let { entry, highlight = false, rank, leaderboard, showLeaderboardName = false }: Props = $props();
+	let {
+		entry,
+		highlight = false,
+		rank,
+		leaderboard,
+		showLeaderboardName = false,
+		disabled = false,
+	}: Props = $props();
 
 	let options = $derived.by(() => {
 		if (leaderboard?.id === 'skyblockxp') {
@@ -42,7 +51,8 @@
 
 	let customStyles = $derived.by(() => {
 		const lb = entry.meta?.leaderboard;
-		if (!lb) return '';
+		const style = entry?.style;
+		if (!lb || !style) return '';
 
 		return (
 			(lb?.backgroundColor ? `background-color: ${lb?.backgroundColor};` : '') +
@@ -50,73 +60,110 @@
 			(lb?.textColor ? `color: ${lb?.textColor};` : '')
 		);
 	});
+
+	let style = $derived(isValidLeaderboardStyle(entry?.style) ? entry.style : undefined);
+
+	function getStyles(element: LeaderboardStyleText | undefined, defaultClass: string = ''): string {
+		if (!element) return defaultClass;
+		let styles = '';
+		if (element.color) {
+			styles += `color: ${element.color};`;
+		}
+		if (element.fontWeight) {
+			styles += `font-weight: ${element.fontWeight};`;
+		}
+		return styles;
+	}
+
+	const nameStyles = $derived(getStyles(style?.name));
+	const rankStyles = $derived(getStyles(style?.rank));
+	const subtitleStyles = $derived(getStyles(style?.subtitle));
+	const scoreStyles = $derived(getStyles(style?.score));
 </script>
 
-<a
-	href="/@{encodeURIComponent(pageLink ?? '')}/{encodeURIComponent(profileLink ?? '')}{leaderboard?.subpage ?? ''}"
-	class="bg-card hover:bg-muted inline-block w-full max-w-xl border py-1 align-middle hover:shadow-lg sm:p-1 {highlight
-		? 'border-completed'
-		: ''} rounded-md"
-	style={customStyles}
+<div
+	class="bg-background group relative flex h-14 w-full max-w-xl flex-col items-center justify-center overflow-clip rounded-md border bg-no-repeat sm:h-16"
+	style="justify-content: {style?.background?.align ?? 'center'};"
+	data-sveltekit-preload-data="tap"
 >
-	<div class="flex items-center justify-between gap-0 md:gap-2">
-		<div
-			class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden align-middle text-ellipsis whitespace-nowrap sm:gap-2"
-		>
+	{#if style?.background?.imageUrl || entry.meta?.leaderboard?.styleId}
+		{@const img = style?.background?.imageUrl}
+		<!-- svelte-ignore a11y_missing_attribute -->
+		<img
+			loading="lazy"
+			src={img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
+			class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
+		/>
+		<div class="absolute inset-0 rounded-sm bg-gradient-to-r from-black/20 via-transparent to-black/20"></div>
+	{/if}
+	<a
+		href={disabled
+			? undefined
+			: `/@${encodeURIComponent(pageLink ?? '')}/${encodeURIComponent(profileLink ?? '')}${leaderboard?.subpage ?? ''}`}
+		class="absolute top-0 right-0 bottom-0 left-0 z-10 flex h-full w-full max-w-xl items-center py-1 align-middle sm:p-1 {highlight
+			? 'border-completed'
+			: ''} rounded-md {style ? 'text-shadow-md/40' : ''}"
+		style={customStyles}
+	>
+		<div class="flex flex-1 items-center justify-between gap-0 md:gap-2">
 			<div
-				class="text-progress"
-				style={entry.meta?.leaderboard?.rankColor ? `color: ${entry.meta?.leaderboard?.rankColor};` : ''}
+				class="mx-2 flex grow items-center justify-start gap-1 overflow-hidden align-middle text-ellipsis whitespace-nowrap sm:gap-2"
 			>
-				<h1>
+				<div class={!style ? 'text-progress' : ''} style={rankStyles}>
 					<span class="xs:text-md text-sm sm:text-2xl">#</span><span class="xs:text-xl text-lg sm:text-3xl"
 						>{rank}</span
 					>
-				</h1>
-			</div>
-			<!-- <Face {ign} base={face?.base} overlay={face?.overlay} /> -->
-			<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
-				<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl">
-					{#if leaderboard?.profile}
-						{entry.members?.[0].ign}
-					{:else}
-						{formatIgn(ign, entry.meta)}
-					{/if}
-				</p>
-				{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
-					<div class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs">
-						<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
-						{#each entry.members.slice(1, 3) ?? [] as member, i (member.uuid ?? i)}
-							<p>{member.ign}</p>
-						{/each}
-						{#if entry.members.length > 3}
-							<p class="font-semibold">+{entry.members.length - 3}</p>
+				</div>
+				<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
+					<span>
+						<p
+							class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl"
+							style={nameStyles}
+						>
+							{#if leaderboard?.profile}
+								{entry.members?.[0].ign}
+							{:else}
+								{formatIgn(ign, entry.meta)}
+							{/if}
+						</p>
+						{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
+							<div
+								class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs"
+								style={subtitleStyles}
+							>
+								<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
+								{#each entry.members.slice(1, 3) ?? [] as member, i (member.uuid ?? i)}
+									<p>{member.ign}</p>
+								{/each}
+								{#if entry.members.length > 3}
+									<p class="font-semibold">+{entry.members.length - 3}</p>
+								{/if}
+							</div>
+						{:else}
+							<div
+								class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
+								style={subtitleStyles}
+							>
+								<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
+								{profile}
+							</div>
 						{/if}
-					</div>
-				{:else}
+					</span>
+				</div>
+			</div>
+			<div class="mr-2 flex flex-col items-end justify-center align-middle md:mx-2">
+				<span class="xs:text-xl text-sm leading-none sm:text-2xl" style={scoreStyles}>
+					{amount?.toLocaleString(undefined, options)}
+				</span>
+				{#if showLeaderboardName}
 					<div
-						class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
+						class="xs:text-sm sm:text-md inline overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
+						style={subtitleStyles}
 					>
-						<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
-						{profile}
+						{leaderboard?.short ?? leaderboard?.title}{leaderboard?.suffix ?? ''}
 					</div>
 				{/if}
 			</div>
 		</div>
-		<div class="mr-2 flex flex-col items-end justify-center align-middle md:mx-2">
-			<span class="xs:text-xl text-sm leading-none sm:text-2xl">
-				{amount?.toLocaleString(undefined, options)}
-			</span>
-			{#if showLeaderboardName}
-				<!-- <span class="text-xs xs:text-sm sm:text-md text-right text-muted-foreground leading-none">
-					{leaderboard?.title}
-				</span> -->
-				<div
-					class="xs:text-sm sm:text-md text-muted-foreground inline overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
-					style={entry.meta?.leaderboard?.rankColor ? `color: ${entry.meta?.leaderboard?.rankColor};` : ''}
-				>
-					{leaderboard?.short ?? leaderboard?.title}{leaderboard?.suffix ?? ''}
-				</div>
-			{/if}
-		</div>
-	</div>
-</a>
+	</a>
+</div>

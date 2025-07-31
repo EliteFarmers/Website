@@ -4,16 +4,24 @@
 
 	interface Props {
 		element: components['schemas']['WeightStyleElementDto'] | null | undefined;
+		color?: string;
 		children?: Snippet;
 		class?: string;
 	}
 
-	let { element, children, class: className }: Props = $props();
+	let { element, children, class: className, color }: Props = $props();
 </script>
 
-<div
-	class={className}
-	style="color: {element?.fill ?? 'inherit'}; -webkit-text-stroke: 0.1rem {element?.outline?.fill ?? 'transparent'};"
->
-	{@render children?.()}
-</div>
+{#if color}
+	<span class={className} style="color: {color ?? 'inherit'};">
+		{@render children?.()}
+	</span>
+{:else}
+	<span
+		class={className}
+		style="color: {element?.fill ?? 'inherit'}; -webkit-text-stroke: 0.1rem {element?.outline?.fill ??
+			'transparent'};"
+	>
+		{@render children?.()}
+	</span>
+{/if}

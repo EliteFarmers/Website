@@ -10,7 +10,7 @@
 		bgStyle?: string;
 	}
 
-	let { class: className = '', bgClass = 'bg-card border-2', bgStyle = '' }: Props = $props();
+	let { class: className = '', bgClass = 'border', bgStyle = '' }: Props = $props();
 
 	const ctx = getStatsContext();
 	const ign = $derived(ctx.ignMeta);

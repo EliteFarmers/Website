@@ -2994,14 +2994,20 @@ export interface components {
             youtube?: string | null;
         };
         PlayerRequest: Record<string, never>;
+        /** @description the dto used to send an error response to the client */
         ErrorResponse: {
             /**
              * Format: int32
+             * @description the http status code sent to the client. default is 400.
              * @default 400
              */
             statusCode: number;
-            /** @default One or more errors occurred! */
+            /**
+             * @description the message for the error response
+             * @default One or more errors occurred!
+             */
             message: string;
+            /** @description the collection of errors for the current context */
             errors: {
                 [key: string]: string[];
             };
@@ -3164,6 +3170,8 @@ export interface components {
             /** Format: int32 */
             order?: number | null;
         };
+        /** @description RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:
+         *     app.UseFastEndpoints(c => c.Errors.UseProblemDetails()) */
         ProblemDetails: {
             /** @default https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1 */
             type: string;
@@ -3178,15 +3186,25 @@ export interface components {
             instance: string;
             /** @default 0HMPNHL0JHL76:00000001 */
             traceId: string;
+            /** @description the details of the error */
             detail?: string | null;
             errors: components["schemas"]["ProblemDetails_Error"][];
         };
+        /** @description the error details object */
         ProblemDetails_Error: {
-            /** @default Error or field name */
+            /**
+             * @description the name of the error or property of the dto that caused the error
+             * @default Error or field name
+             */
             name: string;
-            /** @default Error reason */
+            /**
+             * @description the reason for the error
+             * @default Error reason
+             */
             reason: string;
+            /** @description the code of the error */
             code?: string | null;
+            /** @description the severity of the error */
             severity?: string | null;
         };
         UserRoleRequest: Record<string, never>;
@@ -4860,7 +4878,9 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** @description Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values. */
         JsonDocument: {
+            /** @description Gets the root element of this JSON document. */
             rootElement: unknown;
         };
         GetSpecifiedSkyblockItemsResponse: {
@@ -5073,6 +5093,7 @@ export interface components {
             images: components["schemas"]["ImageAttachmentDto"][];
             products: components["schemas"]["ParentProductDto"][];
             data?: components["schemas"]["WeightStyleDataDto"] | null;
+            leaderboard?: components["schemas"]["LeaderboardStyleDataDto"] | null;
         };
         ParentProductDto: {
             id: string;
@@ -5112,6 +5133,7 @@ export interface components {
         WeightStyleBackgroundDto: {
             size?: components["schemas"]["WeightStylePositionDto"] | null;
             fill?: string | null;
+            align?: string | null;
             rects?: components["schemas"]["WeightStyleBackgroundRectDto"][] | null;
             imageUrl?: string | null;
             /** Format: int32 */
@@ -5171,6 +5193,37 @@ export interface components {
             padding?: number | null;
             /** Format: int32 */
             radius?: number | null;
+        };
+        LeaderboardStyleDataDto: {
+            background?: components["schemas"]["LeaderboardStyleLayerDto"] | null;
+            overlay?: components["schemas"]["LeaderboardStyleLayerDto"] | null;
+            /** Format: double */
+            gradientOpacity?: number | null;
+            gradientColor?: string | null;
+            font?: string | null;
+            name?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+            score?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+            rank?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+            subtitle?: components["schemas"]["LeaderboardStyleTextDto"] | null;
+        };
+        LeaderboardStyleLayerDto: {
+            imageUrl?: string | null;
+            imageOpacity?: string | null;
+            fillColor?: string | null;
+            /** Format: double */
+            fillOpacity?: number | null;
+            borderColor?: string | null;
+            /** Format: double */
+            borderOpacity?: number | null;
+            align?: string | null;
+        };
+        LeaderboardStyleTextDto: {
+            color?: string | null;
+            shadowColor?: string | null;
+            /** Format: double */
+            shadowOpacity?: number | null;
+            /** Format: int32 */
+            fontWeight?: number | null;
         };
         GetStyleRequest: Record<string, never>;
         WeightsDto: {
