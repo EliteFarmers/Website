@@ -1,13 +1,13 @@
 <script lang="ts">
 	import {
+    API_COMPOSTER_UPGRADE_TO_UPGRADE,
 		getCropDisplayName,
 		getComposterUpgradeDisplayName,
 		getSpecialCropDisplayName,
-		Crop,
 	} from 'farming-weight';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
-	import { API_COMPOSTER_UPGRADE_TO_UPGRADE, COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
+	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
 	import * as Popover from '$ui/popover';
 	import { getComposterUpgradeCost, getEnchantedCropCollectionAmount } from '$lib/calc/garden';
 
