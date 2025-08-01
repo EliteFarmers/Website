@@ -13,6 +13,7 @@ export const load = (async ({ parent, locals }) => {
 
 	return {
 		user,
+		subscriptions: locals.cache?.products.filter((p) => p.isSubscription) ?? [],
 	};
 }) satisfies PageServerLoad;
 
@@ -147,6 +148,64 @@ export const actions: Actions = {
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to unlink account' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	grantTestEntitlement: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token || !locals.session?.flags.admin) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const playerId = data.get('player') as string;
+		const productId = data.get('product') as string;
+
+		const { response, error: e } = await POST('/account/{discordId}/entitlement/{productId}', {
+			params: {
+				path: {
+					discordId: playerId as unknown as number,
+					productId: productId as unknown as number,
+				},
+			},
+			headers: { Authorization: `Bearer ${token}` },
+		});
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to grant entitlement' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	revokeTestEntitlement: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token || !locals.session?.flags.admin) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const playerId = data.get('player') as string;
+		const productId = data.get('product') as string;
+
+		const { response, error: e } = await DELETE('/account/{discordId}/entitlement/{productId}', {
+			params: {
+				path: {
+					discordId: playerId as unknown as number,
+					productId: productId as unknown as number,
+				},
+			},
+			headers: { Authorization: `Bearer ${token}` },
+		});
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to revoke entitlement' });
 		}
 
 		return {
