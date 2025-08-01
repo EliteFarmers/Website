@@ -29,9 +29,7 @@
 	interface Props {
 		open?: boolean;
 		hasContent?: boolean;
-		rootClass?: string;
 		triggerClass?: string;
-		triggerRootClass?: string;
 		class?: string;
 		trigger?: import('svelte').Snippet;
 		child?: import('svelte').Snippet<[{ props: Record<string, unknown> }]>;
@@ -40,9 +38,7 @@
 
 	let {
 		open = $bindable(false),
-		rootClass = '',
 		triggerClass = '',
-		triggerRootClass = '',
 		class: className = undefined,
 		trigger,
 		children,
@@ -52,7 +48,7 @@
 </script>
 
 <Root bind:open>
-	<div onpointerenter={pointerEnter} onpointerleave={pointerLeave} role="contentinfo" class={triggerRootClass}>
+	<div onpointerenter={pointerEnter} onpointerleave={pointerLeave} role="contentinfo" class="contents">
 		<Trigger class={triggerClass}>
 			{#snippet child(data)}
 				{#if triggerChild}
@@ -66,7 +62,7 @@
 		</Trigger>
 		{#if children?.length && hasContent}
 			<Content class={cn('p-2', className)} interactOutsideBehavior={isHover.current ? 'ignore' : 'close'}>
-				<div onpointerenter={pointerEnter} onpointerleave={pointerLeave} role="contentinfo" class={rootClass}>
+				<div onpointerenter={pointerEnter} onpointerleave={pointerLeave} role="contentinfo" class="contents">
 					{@render children?.()}
 				</div>
 			</Content>

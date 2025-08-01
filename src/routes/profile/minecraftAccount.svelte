@@ -39,7 +39,7 @@
 	<div class="flex flex-wrap items-baseline justify-between gap-2">
 		<div class="flex flex-row items-center gap-1 leading-none">
 			<p class="text-muted-foreground text-xs sm:text-sm">{mc.id}</p>
-			<CopyToClipboard text={mc.id} size="sm" class="-m-2" />
+			<CopyToClipboard text={mc.id} size="sm" />
 		</div>
 		{#if !mc.primaryAccount}
 			<form

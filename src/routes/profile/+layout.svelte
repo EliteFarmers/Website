@@ -14,4 +14,6 @@
 	});
 </script>
 
-{@render children?.()}
+<div class="flex flex-col items-center">
+	{@render children?.()}
+</div>

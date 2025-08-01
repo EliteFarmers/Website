@@ -42,15 +42,13 @@
 		{:else}
 			<p class="text-lg">No primary account set.</p>
 		{/if}
-
-		<p class="max-w-2xl text-sm">
+	</section>
+	<section class="flex flex-col items-start gap-4">
+		<h2 class="text-2xl">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
+		<p class="mb-4 max-w-2xl text-sm">
 			Your primary account is the account that will be used for all Elite features by default. Secondary accounts
 			essentially only exist for the purpose of confirming ownership of the account.
 		</p>
-	</section>
-	<section class="flex flex-col items-start gap-4">
-		<h2 class="mb-4 text-2xl">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
-
 		{#if secondary.length > 0}
 			{#each secondary as mc, i (mc.id ?? i)}
 				<MinecraftAccount {mc} />

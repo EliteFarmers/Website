@@ -28,7 +28,7 @@
 		</span>
 	</div>
 {:else}
-	<Popover.Mobile triggerRootClass="h-fit">
+	<Popover.Mobile>
 		{#snippet trigger()}
 			<div class="bg-completed/80 relative flex h-full min-h-6 flex-row items-center gap-1.5 rounded-md px-1">
 				<span

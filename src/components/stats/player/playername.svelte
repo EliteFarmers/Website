@@ -5,12 +5,11 @@
 	import * as Popover from '$ui/popover';
 
 	interface Props {
-		class?: string;
 		bgClass?: string;
 		bgStyle?: string;
 	}
 
-	let { class: className = '', bgClass = 'border', bgStyle = '' }: Props = $props();
+	let { bgClass = 'border', bgStyle = '' }: Props = $props();
 
 	const ctx = getStatsContext();
 	const ign = $derived(ctx.ignMeta);
@@ -20,7 +19,7 @@
 	const members = $derived((ctx.selectedProfile?.members ?? []).filter((m) => m.active && m.uuid !== ctx.account.id));
 </script>
 
-<Popover.Mobile hasContent={members.length > 0} rootClass={className}>
+<Popover.Mobile hasContent={members.length > 0}>
 	{#snippet trigger()}
 		<div class="rounded-md p-1.5 px-3 {bgClass}" id="playerName" style={bgStyle}>
 			<h1 class="font-emoji text-xl @sm:text-2xl @lg:text-3xl">

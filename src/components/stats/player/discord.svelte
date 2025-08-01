@@ -22,7 +22,7 @@
 </script>
 
 <Popover.Mobile
-	triggerRootClass="relative flex max-w-fit flex-row items-center justify-between gap-1 border rounded-md p-2 px-3 @md:p-3 text-lg"
+	triggerClass="relative flex max-w-fit flex-row items-center justify-between gap-1 border rounded-md p-2 px-3 @md:p-3 text-lg"
 >
 	{#snippet trigger()}
 		<div class="block max-w-fit rounded-md" id="discordId">
