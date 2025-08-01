@@ -25,17 +25,17 @@ const config = {
 			checkOrigin: process.env.NODE_ENV !== 'development',
 		},
 		alias: {
-			'$ui': './src/components/ui',
-			'$comp': './src/components',
-			'$stores': './src/stores',
-			'$lib': './src/lib',
-			'$params': './src/params',
-			'$content': './src/content',
-            '$css': './src/app.css',
+			$ui: './src/components/ui',
+			$comp: './src/components',
+			$stores: './src/stores',
+			$lib: './src/lib',
+			$params: './src/params',
+			$content: './src/content',
+			$css: './src/app.css',
 		},
 	},
 	// Only way I found to hide warnings from node_modules that doesn't break everything
-	// vitePlugin: { exclude: ['**/node_modules/**'] } doesn't work  
+	// vitePlugin: { exclude: ['**/node_modules/**'] } doesn't work
 	onwarn: (warning, handler) => {
 		if (warning.filename.includes('node_modules')) return;
 		handler(warning);

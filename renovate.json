@@ -1,7 +1,5 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "group:allNonMajor"
-  ],
-  "rebaseWhen": "conflicted"
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["group:allNonMajor"],
+	"rebaseWhen": "conflicted"
 }
