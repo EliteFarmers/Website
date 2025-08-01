@@ -14,8 +14,8 @@
 	const rankText = $derived(rank !== -1 ? `#${rank}` : '');
 
 	const bg = $derived(
-		style?.elements?.name?.outline?.fill
-			? style.elements.name.outline.fill +
+		style?.elements?.name?.outline
+			? (style.elements.name.outline.fill ?? '#000000') +
 					Math.round((style.elements.name.outline.opacity ?? 0.8) * 255).toString(16)
 			: 'inherit'
 	);
@@ -35,7 +35,7 @@
 	</canvas>
 	<div class="absolute top-0 right-0 bottom-0 left-0 z-10 flex h-full flex-row items-center justify-between p-4">
 		<div
-			class="flex h-full w-full flex-row items-center justify-center gap-4 @md:gap-8 {bg !== 'inherit'
+			class="flex h-full w-full flex-row items-center justify-center gap-4 @md:gap-8 {style
 				? '@md:justify-start'
 				: ''}"
 		>
@@ -49,7 +49,7 @@
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
 				<div class="hidden flex-row items-center gap-2 pt-2 @md:flex">
-					<div class={bg === 'inherit' ? 'rounded-md border' : ''}>
+					<div class={!style ? 'rounded-md border' : ''}>
 						<PlayerName
 							bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
 								?.fill ?? 'inherit'};"
@@ -57,7 +57,7 @@
 					</div>
 					{#if rankText}
 						<TextElement class="h-full" element={style?.elements?.rank}>
-							<div class="{bg === 'inherit' ? 'rounded-md border' : ''} h-full">
+							<div class="{!style ? 'rounded-md border' : ''} h-full">
 								{@render rankLink()}
 							</div>
 						</TextElement>
