@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
-	import { Root, Trigger, Content } from '$ui/popover';
+	import { Content, Root, Trigger } from '$ui/popover';
 
 	let timeout: ReturnType<typeof setTimeout>;
 
@@ -18,7 +18,7 @@
 			if (!mousePresent) {
 				open = false;
 			}
-		}, 200);
+		}, 75);
 	}
 
 	interface Props {
