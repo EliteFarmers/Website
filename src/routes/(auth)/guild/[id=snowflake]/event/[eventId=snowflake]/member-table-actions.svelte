@@ -48,7 +48,7 @@
 						size="sm"
 						class={cn(props.class ?? '', 'w-full cursor-pointer justify-start px-2 py-0')}
 						text={member.playerUuid ?? ''}
-						iconClass="p-0 m-0">Copy Player Uuid</CopyToClipboard
+						iconClass="m-0 p-0">Copy Player Uuid</CopyToClipboard
 					>
 				{/snippet}
 			</DropdownMenu.Item>
@@ -58,7 +58,7 @@
 						size="sm"
 						class={cn(props.class ?? '', 'w-full cursor-pointer justify-start px-2 py-0')}
 						text={member.profileId ?? ''}
-						iconClass="p-0 m-0">Copy Profile Uuid</CopyToClipboard
+						iconClass="m-0 p-0">Copy Profile Uuid</CopyToClipboard
 					>
 				{/snippet}
 			</DropdownMenu.Item>
@@ -68,7 +68,7 @@
 						size="sm"
 						class={cn(props.class ?? '', 'w-full cursor-pointer justify-start px-2 py-0')}
 						text={member.accountId?.toString() ?? ''}
-						iconClass="p-0 m-0">Copy Discord Id</CopyToClipboard
+						iconClass="m-0 p-0">Copy Discord Id</CopyToClipboard
 					>
 				{/snippet}
 			</DropdownMenu.Item>

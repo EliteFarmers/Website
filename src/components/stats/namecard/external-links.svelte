@@ -9,7 +9,7 @@
 	const ctx = getStatsContext();
 </script>
 
-<Popover.Mobile triggerClass="m-0 flex flex-row rounded-md border p-2 md:p-3 items-center justify-between gap-2">
+<Popover.Mobile triggerClass="m-0 flex flex-row items-center justify-between gap-2 rounded-md border p-2 md:p-3">
 	{#snippet trigger()}
 		<Globe class="inline-block" />
 	{/snippet}
