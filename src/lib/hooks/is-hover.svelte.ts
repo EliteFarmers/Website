@@ -1,9 +1,9 @@
-import { MediaQuery } from "svelte/reactivity";
+import { MediaQuery } from 'svelte/reactivity';
 
-const MEDIA_QUERY = "(hover: hover) and (pointer: fine)";
+const MEDIA_QUERY = '(hover: hover) and (pointer: fine)';
 
 export class IsHover extends MediaQuery {
-  constructor() {
-    super(MEDIA_QUERY);
-  }
+	constructor() {
+		super(MEDIA_QUERY);
+	}
 }
