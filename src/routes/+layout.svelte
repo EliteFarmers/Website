@@ -25,6 +25,8 @@
 	import FooterPills from '$comp/footer/footer-pills.svelte';
 	import { initGlobalContext } from '$lib/hooks/global.svelte';
 	import Announcements from '$comp/header/announcements.svelte';
+	import { IsHover } from '$lib/hooks/is-hover.svelte';
+	import { setContext } from 'svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -32,6 +34,9 @@
 	}
 
 	let { children, data }: Props = $props();
+
+	let isHover = $state(new IsHover());
+	setContext('isHover', isHover);
 
 	initGlobalContext({ session: data.session, announcements: data.cache?.announcements ?? [] });
 	initThemeContext();
