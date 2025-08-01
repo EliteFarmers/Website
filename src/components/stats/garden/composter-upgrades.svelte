@@ -1,14 +1,15 @@
 <script lang="ts">
 	import {
-    API_COMPOSTER_UPGRADE_TO_UPGRADE,
+		API_COMPOSTER_UPGRADE_TO_UPGRADE,
 		getCropDisplayName,
 		getComposterUpgradeDisplayName,
 		getSpecialCropDisplayName,
+		getComposterUpgradeCollectionAmount,
 	} from 'farming-weight';
 	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
 	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
 	import * as Popover from '$ui/popover';
-	import { getComposterUpgradeCost, getEnchantedCropCollectionAmount } from '$lib/calc/garden';
+	import { getComposterUpgradeCost } from '$lib/calc/garden';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const garden = getStatsContext().garden;
@@ -101,17 +102,15 @@
 										/>
 									{/if}
 									<span class="font-medium"
-										>{(
-											getEnchantedCropCollectionAmount(nextCost.crop, 2) * nextCost.cropAmount
-										).toLocaleString()}</span
+										>{getComposterUpgradeCollectionAmount(type, level).toLocaleString()}</span
 									>
 									{getCropDisplayName(nextCost.crop)}
 								</p>
 							{/if}
 						</div>
 					{:else}
-						<p class="font-medium text-completed">Max Level Reached</p>
-						<!-- total resources used to max maybe -->
+						<p class="text-completed font-medium">Max Level Reached</p>
+						<!-- todo: total resources used to max maybe -->
 					{/if}
 				</div>
 			</Popover.Mobile>

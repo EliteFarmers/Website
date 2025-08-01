@@ -3,9 +3,9 @@ import {
 	COMPOSTER_UPGRADE_CROPS,
 	ComposterUpgrade,
 	Crop,
-    LEVEL_REQUIREMENTS,
+	LEVEL_REQUIREMENTS,
 	SpecialCrop,
-    UPGRADE_CROP_AMOUNTS,
+	UPGRADE_CROP_AMOUNTS,
 	type ComposterUpgradeCost,
 } from 'farming-weight';
 
@@ -59,23 +59,4 @@ export function getComposterUpgradeCost(upgradeType: ComposterUpgrade, level: nu
 		crop,
 		cropAmount,
 	};
-}
-
-export function getEnchantedCropCollectionAmount(crop: Crop, tier: number): number {
-	switch (tier) {
-		case 1:
-			return 160;
-		case 2:
-			switch (crop) {
-				case Crop.Mushroom:
-					return 32 * getEnchantedCropCollectionAmount(crop, 1);
-				case Crop.CocoaBeans:
-				case Crop.Carrot:
-					return 128 * getEnchantedCropCollectionAmount(crop, 1);
-				default:
-					return 160 * getEnchantedCropCollectionAmount(crop, 1);
-			}
-		default:
-			return 0;
-	}
 }
