@@ -13,7 +13,7 @@
 
 <div class="@container">
 	<div
-		class="mx-4 @7xl:mr-(--sidebarWidth) @7xl:ml-auto"
+		class="mx-4 @7xl:mr-[calc(var(--sidebarWidth)+1rem)]"
 		style="--sidebarWidth: {sidebar.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON}"
 	>
 		{@render children?.()}
