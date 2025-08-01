@@ -52,7 +52,7 @@
 		</span>
 	</div>
 {:else}
-	<Popover.Mobile triggerRootClass="h-fit">
+	<Popover.Mobile>
 		{#snippet trigger()}
 			<div class="relative flex h-full min-h-4 flex-row items-center rounded-md {background} gap-1.5 px-1">
 				<span>{STAT_ICONS[Stat.FarmingFortune]}</span>
