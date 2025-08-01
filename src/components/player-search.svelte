@@ -75,41 +75,40 @@
 		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
 	</Button>
 {/if}
-{#key open}
-	<Command.Dialog bind:open>
-		<Command.Root shouldFilter={false}>
-			<Command.Input placeholder="Search for a player" bind:value={searchStr} />
-			<ScrollArea class="flex h-full max-h-[300px] flex-row">
-				<Command.List class="max-h-none">
-					<Command.Group heading="Players">
-						{#if searchStr !== ''}
-							<Command.Item
-								value={searchStr ?? ''}
-								onSelect={() =>
-									runCommand(() => {
-										command(searchStr);
-									})}
-							>
-								{searchStr}
-							</Command.Item>
-						{/if}
-						{#each players as player, i (i)}
-							<Command.Item
-								value={player ?? ''}
-								onSelect={() =>
-									runCommand(() => {
-										searchStr = player;
-										command(player);
-									})}
-							>
-								{player}
-							</Command.Item>
-						{:else}
-							<Command.Empty>No players found.</Command.Empty>
-						{/each}
-					</Command.Group>
-				</Command.List>
-			</ScrollArea>
-		</Command.Root>
-	</Command.Dialog>
-{/key}
+
+<Command.Dialog bind:open>
+	<Command.Root shouldFilter={false}>
+		<Command.Input placeholder="Search for a player" bind:value={searchStr} />
+		<ScrollArea class="flex h-full max-h-[300px] flex-row">
+			<Command.List class="max-h-none">
+				<Command.Group heading="Players">
+					{#if searchStr !== ''}
+						<Command.Item
+							value={searchStr ?? ''}
+							onSelect={() =>
+								runCommand(() => {
+									command(searchStr);
+								})}
+						>
+							{searchStr}
+						</Command.Item>
+					{/if}
+					{#each players as player, i (i)}
+						<Command.Item
+							value={player ?? ''}
+							onSelect={() =>
+								runCommand(() => {
+									searchStr = player;
+									command(player);
+								})}
+						>
+							{player}
+						</Command.Item>
+					{:else}
+						<Command.Empty>No players found.</Command.Empty>
+					{/each}
+				</Command.Group>
+			</Command.List>
+		</ScrollArea>
+	</Command.Root>
+</Command.Dialog>
