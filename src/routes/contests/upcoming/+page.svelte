@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
+	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
+	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import Upcoming from './upcoming.svelte';
-	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
-	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 
 	interface Props {
 		data: PageData;

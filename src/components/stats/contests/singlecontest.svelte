@@ -1,7 +1,7 @@
 <script lang="ts">
+	import Participation from '$comp/stats/contests/participation.svelte';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import Participation from '$comp/stats/contests/participation.svelte';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { Button } from '$ui/button';
 	import { ScrollArea } from '$ui/scroll-area';

@@ -1,6 +1,6 @@
 import { page } from '$app/state';
-import { getContext, setContext } from 'svelte';
 import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
+import { getContext, setContext } from 'svelte';
 
 export class SidebarNav {
 	#name = $state<string>('');

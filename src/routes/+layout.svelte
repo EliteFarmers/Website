@@ -1,32 +1,31 @@
 <script lang="ts">
-	import '../app.css';
-
+	import { dev } from '$app/environment';
 	import { page } from '$app/state';
-	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
-	import { initRatesData } from '$lib/stores/ratesData';
-	import * as Sidebar from '$ui/sidebar';
+	import FooterPills from '$comp/footer/footer-pills.svelte';
 	import Footer from '$comp/footer/footer.svelte';
-	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
-	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
-	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import Announcements from '$comp/header/announcements.svelte';
 	import Header from '$comp/header/header.svelte';
-	import { initThemeContext } from '$lib/stores/themes.svelte';
-	import Content from './content.svelte';
+	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
+	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
+	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
+	import type { components } from '$lib/api/api';
+	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { initGlobalContext } from '$lib/hooks/global.svelte';
+	import { IsHover } from '$lib/hooks/is-hover.svelte';
+	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { initRatesData } from '$lib/stores/ratesData';
+	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
+	import { initThemeContext } from '$lib/stores/themes.svelte';
+	import * as Sidebar from '$ui/sidebar';
 	import { Toaster } from '$ui/sonner';
 	import { watch } from 'runed';
-	import { toast } from 'svelte-sonner';
-	import type { components } from '$lib/api/api';
-	import { dev } from '$app/environment';
-	import type { LayoutData } from './$types';
-	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
-	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
-	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
-	import FooterPills from '$comp/footer/footer-pills.svelte';
-	import { initGlobalContext } from '$lib/hooks/global.svelte';
-	import Announcements from '$comp/header/announcements.svelte';
-	import { IsHover } from '$lib/hooks/is-hover.svelte';
 	import { setContext } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import '../app.css';
+	import type { LayoutData } from './$types';
+	import Content from './content.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;

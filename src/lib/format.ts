@@ -2,8 +2,8 @@ import { Crop, getCropFromName } from 'farming-weight';
 import type { components } from './api/api';
 import { MINECRAFT_COLORS, MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
-import { LEVEL_XP, DEFAULT_SKILL_CAPS, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
-import type { RankName, Skill, PlusColor } from './skyblock';
+import { DEFAULT_SKILL_CAPS, LEVEL_XP, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
+import type { PlusColor, RankName, Skill } from './skyblock';
 
 function getLevelCap(skill: Skill) {
 	return DEFAULT_SKILL_CAPS[skill];

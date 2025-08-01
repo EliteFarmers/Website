@@ -1,8 +1,8 @@
-import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
+import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
 import { GetAuthorizedAccount } from '$lib/api/elite';
-import type { PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import crypto from 'crypto';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 	const success = url.searchParams.get('success');

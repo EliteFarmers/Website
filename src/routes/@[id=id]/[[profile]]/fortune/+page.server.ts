@@ -1,6 +1,6 @@
+import { SetUserFortuneSettings } from '$lib/api/elite';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import { SetUserFortuneSettings } from '$lib/api/elite';
 
 export const actions: Actions = {
 	save: async ({ request, locals }) => {

@@ -22,7 +22,7 @@ export type InputEvents = {
 };
 
 export {
-	Root,
 	//
 	Root as NumberInput,
+	Root,
 };

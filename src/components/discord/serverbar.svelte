@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import type { components } from '$lib/api/api';
 	import Users from '@lucide/svelte/icons/users';
 
 	interface Props {

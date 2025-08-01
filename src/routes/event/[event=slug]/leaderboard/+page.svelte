@@ -1,17 +1,17 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
-	import { Button } from '$ui/button';
-	import type { PageData } from './$types';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
-	import Users from '@lucide/svelte/icons/users';
-	import User from '@lucide/svelte/icons/user';
 	import { page } from '$app/state';
-	import Linebreaks from '$comp/events/linebreaks.svelte';
-	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
+	import Linebreaks from '$comp/events/linebreaks.svelte';
+	import Head from '$comp/head.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { Button } from '$ui/button';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import User from '@lucide/svelte/icons/user';
+	import Users from '@lucide/svelte/icons/users';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;

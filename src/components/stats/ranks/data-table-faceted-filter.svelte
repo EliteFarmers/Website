@@ -4,16 +4,16 @@
 </script>
 
 <script lang="ts" generics="TData, TValue">
-	import CirclePlus from '@lucide/svelte/icons/circle-plus';
-	import CircleMinus from '@lucide/svelte/icons/circle-minus';
-	import Check from '@lucide/svelte/icons/check';
-	import type { Column } from '@tanstack/table-core';
-	import { SvelteSet } from 'svelte/reactivity';
-	import * as Command from '$ui/command';
-	import * as Popover from '$ui/popover';
-	import { Button } from '$ui/button';
 	import { cn } from '$lib/utils.js';
 	import { Badge } from '$ui/badge';
+	import { Button } from '$ui/button';
+	import * as Command from '$ui/command';
+	import * as Popover from '$ui/popover';
+	import Check from '@lucide/svelte/icons/check';
+	import CircleMinus from '@lucide/svelte/icons/circle-minus';
+	import CirclePlus from '@lucide/svelte/icons/circle-plus';
+	import type { Column } from '@tanstack/table-core';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	type Props<TData, TValue> = {
 		radio: boolean;

@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
-	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import type { Component } from 'svelte';
-	import { page } from '$app/state';
 
 	let {
 		items,

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
 	import { FormatMinecraftText } from '$lib/format';
-	import { Stat, STAT_ICONS, type FortuneSourceProgress } from 'farming-weight';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import Info from '@lucide/svelte/icons/info';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import FileText from '@lucide/svelte/icons/file-text';
+	import Info from '@lucide/svelte/icons/info';
 	import OctagonAlert from '@lucide/svelte/icons/octagon-alert';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import { Stat, STAT_ICONS, type FortuneSourceProgress } from 'farming-weight';
 
 	interface Props {
 		progress: FortuneSourceProgress;

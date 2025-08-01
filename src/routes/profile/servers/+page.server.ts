@@ -1,8 +1,8 @@
-import { redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-import { GetPublicGuilds, GetUsersGuilds } from '$lib/api/elite';
 import type { components } from '$lib/api/api';
 import { FetchDiscordUserData } from '$lib/api/auth';
+import { GetPublicGuilds, GetUsersGuilds } from '$lib/api/elite';
+import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { session } = await parent();

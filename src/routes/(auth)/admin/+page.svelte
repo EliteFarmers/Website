@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
 	import { enhance } from '$app/forms';
+	import UserIcon from '$comp/discord/user-icon.svelte';
+	import Head from '$comp/head.svelte';
 	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
 	import * as Tooltip from '$ui/tooltip';
-	import * as Dialog from '$ui/dialog';
-	import Settings from '@lucide/svelte/icons/settings';
 	import Plus from '@lucide/svelte/icons/plus';
-	import UserIcon from '$comp/discord/user-icon.svelte';
+	import Settings from '@lucide/svelte/icons/settings';
 	import type { ActionData, PageData } from './$types';
 
 	interface Props {

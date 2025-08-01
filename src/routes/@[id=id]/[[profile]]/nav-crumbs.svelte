@@ -1,22 +1,22 @@
 <script lang="ts" module>
+	import ChartArea from '@lucide/svelte/icons/chart-area';
+	import Clover from '@lucide/svelte/icons/clover';
 	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
 	import Sprout from '@lucide/svelte/icons/sprout';
-	import ChartArea from '@lucide/svelte/icons/chart-area';
 	import Ticket from '@lucide/svelte/icons/ticket';
-	import Clover from '@lucide/svelte/icons/clover';
 	import Trophy from '@lucide/svelte/icons/trophy';
 </script>
 
 <script lang="ts">
+	import { page } from '$app/state';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import Gamemode from '$comp/stats/player/gamemode.svelte';
+	import type { components } from '$lib/api/api';
+	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
+	import { formatIgn } from '$lib/format';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
-	import type { components } from '$lib/api/api';
-	import Gamemode from '$comp/stats/player/gamemode.svelte';
-	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import { page } from '$app/state';
-	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { formatIgn } from '$lib/format';
 
 	interface Props {
 		account: components['schemas']['MinecraftAccountDto'];

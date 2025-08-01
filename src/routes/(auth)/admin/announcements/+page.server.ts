@@ -1,8 +1,8 @@
+import type { components } from '$lib/api/api';
+import { CreateAnnouncement, GetAnnouncements } from '$lib/api/elite';
+import { reloadCachedItems } from '$lib/servercache';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { CreateAnnouncement, GetAnnouncements } from '$lib/api/elite';
-import type { components } from '$lib/api/api';
-import { reloadCachedItems } from '$lib/servercache';
 
 export const load = (async () => {
 	const { data: announcements = [] } = await GetAnnouncements().catch(() => ({ data: undefined }));

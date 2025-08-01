@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Input } from '$ui/input';
-	import { Button } from '$ui/button';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
-	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import { SelectSimple } from '$ui/select';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
 
 	let { data } = $props();
 

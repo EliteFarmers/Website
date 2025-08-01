@@ -1,26 +1,26 @@
+import type { components } from '$lib/api/api';
+import {
+	AddMemberToTeam,
+	AdminCreateEventTeam,
+	AdminDeleteTeam,
+	AdminKickTeamMember,
+	AdminTransferEventTeamOwnership,
+	BanEventMember,
+	ClearEventBanner,
+	EditEvent,
+	ForceAddEventMember,
+	GetAdminEventDetails,
+	GetAdminEventMembers,
+	GetAdminEventTeams,
+	GetEventBans,
+	GetEventDefaults,
+	PermDeleteEventMember,
+	SetEventBanner,
+	UnbanEventMember,
+} from '$lib/api/elite';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import {
-	BanEventMember,
-	EditEvent,
-	GetAdminEventMembers,
-	GetEventBans,
-	GetAdminEventDetails,
-	UnbanEventMember,
-	SetEventBanner,
-	ClearEventBanner,
-	GetEventDefaults,
-	ForceAddEventMember,
-	PermDeleteEventMember,
-	GetAdminEventTeams,
-	AdminTransferEventTeamOwnership,
-	AdminKickTeamMember,
-	AdminDeleteTeam,
-	AddMemberToTeam,
-	AdminCreateEventTeam,
-} from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 
 export const load = (async ({ parent, params, locals }) => {
 	const { guild, authGuild, session } = await parent();

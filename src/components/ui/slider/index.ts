@@ -1,5 +1,5 @@
-import Root from './slider.svelte';
 import Simple from './slider-simple.svelte';
+import Root from './slider.svelte';
 
 export {
 	Root,

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { EliteItemDto } from 'farming-weight';
 	import { FormatMinecraftText } from '$lib/format';
 	import { buttonVariants } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import FileText from '@lucide/svelte/icons/file-text';
+	import type { EliteItemDto } from 'farming-weight';
 	import ItemLore from './item-lore.svelte';
 
 	interface Props {

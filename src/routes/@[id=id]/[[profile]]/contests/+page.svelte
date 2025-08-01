@@ -3,11 +3,11 @@
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import MedalCounts from '$comp/stats/jacob/medalcounts.svelte';
 	import { getTimeStamp } from '$lib/format';
-	import type { PageData } from './$types';
-	import * as Accordion from '$ui/accordion';
-	import { Switch } from '$ui/switch';
-	import { Button } from '$ui/button';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
+	import { Switch } from '$ui/switch';
+	import type { PageData } from './$types';
 
 	let timeType = $state(false);
 	let accordionValues = $state<string[]>([]);

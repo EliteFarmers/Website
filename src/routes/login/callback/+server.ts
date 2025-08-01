@@ -1,7 +1,7 @@
+import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
+import { LoginUser } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { LoginUser } from '$lib/api/elite';
-import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
 
 export const GET: RequestHandler = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');

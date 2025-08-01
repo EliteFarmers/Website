@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
+	import ChannelSelect from '$comp/discord/channel-select.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import RoleSelect from '$comp/discord/role-select.svelte';
 	import Head from '$comp/head.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
 	import type { PageData } from './$types';
-	import { enhance } from '$app/forms';
-	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { page } from '$app/state';
-	import RoleSelect from '$comp/discord/role-select.svelte';
-	import ChannelSelect from '$comp/discord/channel-select.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;

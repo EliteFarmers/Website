@@ -1,5 +1,3 @@
-import { error, fail, redirect, type Actions } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import type { components } from '$lib/api/api';
 import {
 	AddCosmeticImage,
@@ -10,6 +8,8 @@ import {
 	UpdateWeightStyle,
 } from '$lib/api/elite';
 import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
+import { error, fail, redirect, type Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { session } = await parent();

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
+	import type { components } from '$lib/api/api';
 
 	interface Props {
 		event: components['schemas']['EventDetailsDto'];

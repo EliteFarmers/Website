@@ -3,12 +3,12 @@
 </script>
 
 <script lang="ts" generics="TData">
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import X from '@lucide/svelte/icons/x';
 	import type { Table } from '@tanstack/table-core';
 	import { statuses } from './columns.js';
 	import DataTableFacetedFilter from './data-table-faceted-filter.svelte';
-	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
 
 	let { table }: { table: Table<TData> } = $props();
 

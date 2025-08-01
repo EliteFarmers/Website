@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { MINECRAFT_COLORS } from '$lib/constants/colors';
-	import { getRarityColor, type GardenVisitor } from 'farming-weight';
 	import * as Popover from '$ui/popover';
+	import { getRarityColor, type GardenVisitor } from 'farming-weight';
 
 	interface Props {
 		visitor: GardenVisitor;

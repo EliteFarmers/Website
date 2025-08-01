@@ -1,17 +1,17 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import EventType from '$comp/events/event-type.svelte';
+	import Head from '$comp/head.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import Settings from '@lucide/svelte/icons/settings';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import type { PageData } from './$types';
-	import Head from '$comp/head.svelte';
-	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import CreateEvent from './create-event.svelte';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { page } from '$app/state';
-	import EventType from '$comp/events/event-type.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;

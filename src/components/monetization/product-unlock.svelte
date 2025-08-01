@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Card from '$ui/card';
 	import * as Accordion from '$ui/accordion';
+	import * as Card from '$ui/card';
 
 	interface Props {
 		open?: boolean;

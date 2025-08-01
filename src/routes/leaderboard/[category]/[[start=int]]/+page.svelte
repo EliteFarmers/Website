@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { PageData } from './$types';
-	import Entry from '$comp/leaderboards/entry.svelte';
-	import { afterNavigate } from '$app/navigation';
-	import Head from '$comp/head.svelte';
-	import type { LeaderboardEntry } from '$lib/api/elite';
-	import { Switch } from '$ui/switch';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import { PersistedState } from 'runed';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import LeaderboardPagination from './leaderboard-pagination.svelte';
-	import LeaderboardFilter from './leaderboard-filter.svelte';
-	import PlayerSearch from '$comp/player-search.svelte';
 	import { enhance } from '$app/forms';
-	import { tick } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
+	import Head from '$comp/head.svelte';
+	import Entry from '$comp/leaderboards/entry.svelte';
+	import PlayerSearch from '$comp/player-search.svelte';
+	import type { LeaderboardEntry } from '$lib/api/elite';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
+	import { Switch } from '$ui/switch';
 	import Search from '@lucide/svelte/icons/search';
+	import { PersistedState } from 'runed';
+	import { tick } from 'svelte';
+	import type { PageData } from './$types';
+	import LeaderboardFilter from './leaderboard-filter.svelte';
+	import LeaderboardPagination from './leaderboard-pagination.svelte';
 
 	interface Props {
 		data: PageData;

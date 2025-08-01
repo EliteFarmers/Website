@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
-	import * as Card from '$ui/card';
-	import type { ActionData, PageData } from './$types';
-	import Head from '$comp/head.svelte';
-	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import RoleSelect from '$comp/discord/role-select.svelte';
+	import ExternalLinkButton from '$comp/external-link-button.svelte';
+	import Head from '$comp/head.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
-	import ExternalLinkButton from '$comp/external-link-button.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { Button } from '$ui/button';
+	import * as Card from '$ui/card';
+	import { Input } from '$ui/input';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import type { ActionData, PageData } from './$types';
 
 	interface Props {
 		data: PageData;

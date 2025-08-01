@@ -1,14 +1,14 @@
+import type { components } from '$lib/api/api.js';
 import {
 	BackgroundGradient,
 	BackgroundStyle,
 	ElementPosition,
 	Position,
-	WeightStyleDecal,
 	WeightStyle,
+	WeightStyleDecal,
 } from '$lib/styles/style.js';
-import { getCropFromName } from 'farming-weight';
-import type { components } from '$lib/api/api.js';
 import type { Canvas } from '@napi-rs/canvas';
+import { getCropFromName } from 'farming-weight';
 
 export interface CustomFormatterOptions {
 	account?: Partial<components['schemas']['MinecraftAccountDto']>;

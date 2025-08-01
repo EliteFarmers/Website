@@ -1,6 +1,6 @@
+import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { PROFILE_UPDATE_INTERVAL } from '$lib/constants/data';
 
 export const load = (async ({ parent, setHeaders, locals }) => {
 	const { account, profile, session } = await parent();

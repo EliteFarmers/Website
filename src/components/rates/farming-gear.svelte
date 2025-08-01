@@ -1,15 +1,17 @@
 <script lang="ts">
+	import FormattedText from '$comp/items/formatted-text.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
-	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import {
+		default as Fortunebreakdown,
+		default as FortuneBreakdown,
+	} from '$comp/items/tools/fortune-breakdown.svelte';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Popover from '$ui/popover';
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import Menu from '@lucide/svelte/icons/menu';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { GearSlot } from 'farming-weight';
-	import FormattedText from '$comp/items/formatted-text.svelte';
 
 	interface Props {
 		player: RatesPlayerStore;

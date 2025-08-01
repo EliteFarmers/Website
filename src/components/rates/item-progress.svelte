@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { UpgradeReason, RARITY_COLORS, previousRarity, type FortuneSourceProgress } from 'farming-weight';
+	import ItemLore from '$comp/items/item-lore.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import Info from '@lucide/svelte/icons/info';
-	import ItemLore from '$comp/items/item-lore.svelte';
+	import { RARITY_COLORS, UpgradeReason, previousRarity, type FortuneSourceProgress } from 'farming-weight';
 	import FortuneProgress from './fortune-progress.svelte';
 
 	interface Props {

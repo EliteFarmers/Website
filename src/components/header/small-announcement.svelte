@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import ArrowUp from '@lucide/svelte/icons/arrow-up';
-	import AnnouncementIcon from './announcement-icon.svelte';
 	import { IsInViewport } from 'runed';
 	import { onMount, tick } from 'svelte';
+	import AnnouncementIcon from './announcement-icon.svelte';
 
 	let targetNode = $state<HTMLElement>();
 	const inViewport = new IsInViewport(() => targetNode);
