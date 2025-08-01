@@ -1,10 +1,7 @@
 <script lang="ts">
 	import FormattedText from '$comp/items/formatted-text.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
-	import {
-		default as Fortunebreakdown,
-		default as FortuneBreakdown,
-	} from '$comp/items/tools/fortune-breakdown.svelte';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
@@ -38,7 +35,7 @@
 <div class="flex flex-col gap-3 rounded-md border p-4">
 	<div class="flex w-full items-center justify-between">
 		<p class="text-lg font-semibold">Farming Gear</p>
-		<Fortunebreakdown breakdown={fortune} />
+		<FortuneBreakdown breakdown={fortune} />
 	</div>
 	<hr />
 	<div class="flex flex-col gap-3">
@@ -101,7 +98,7 @@
 						{/if}
 						<Lorebtn item={piece.item} />
 						{#key $player}
-							<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+							<FortuneBreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
 						{/key}
 					</div>
 				</div>
