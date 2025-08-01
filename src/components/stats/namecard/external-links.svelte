@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Globe from '@lucide/svelte/icons/globe';
-	import * as Popover from '$ui/popover';
 	import { OTHER_SITES } from '$content/othersites';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Popover from '$ui/popover';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Globe from '@lucide/svelte/icons/globe';
 
 	const ctx = getStatsContext();
 </script>
