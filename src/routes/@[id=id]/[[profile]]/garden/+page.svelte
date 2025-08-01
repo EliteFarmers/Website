@@ -86,18 +86,7 @@
 					</div>
 				</div>
 
-				<div class="-mt-0.5 flex flex-col">
-					<Popover.Mobile triggerRootClass="inline-block w-fit">
-						{#snippet trigger()}
-							<h3 class="mb-4 mt-2 text-lg font-semibold leading-none">Composter Upgrades</h3>
-						{/snippet}
-						<div class="flex flex-col gap-1">
-							<p class="font-semibold">All Upgrades</p>
-							<!-- total resources used so far -->
-						</div>
-					</Popover.Mobile>
-					<ComposterUpgrades {garden} />
-				</div>
+				<ComposterUpgrades />
 
 				<div class="flex flex-col gap-2 text-lg">
 					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">

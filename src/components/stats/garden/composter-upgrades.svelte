@@ -4,7 +4,6 @@
 		getCropDisplayName,
 		getComposterUpgradeDisplayName,
 		getSpecialCropDisplayName,
-		getComposterUpgradeCollectionAmount,
 	} from 'farming-weight';
 	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
 	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
@@ -43,7 +42,8 @@
 	);
 </script>
 
-<div class="mt-0.5">
+<div class="-mt-0.5 flex flex-col">
+	<h3 class="mt-2 mb-4 text-lg leading-none font-semibold">Composter Upgrades</h3>
 	<div class="flex flex-col gap-2">
 		{#each upgrades as { type, img, level, nextCost } (type)}
 			<Popover.Mobile>
@@ -99,16 +99,13 @@
 											alt={getCropDisplayName(nextCost.crop)}
 										/>
 									{/if}
-									<span class="font-medium"
-										>{getComposterUpgradeCollectionAmount(type, level).toLocaleString()}</span
-									>
+									<span class="font-medium">{nextCost.cropAmount.toLocaleString()}</span>
 									{getCropDisplayName(nextCost.crop)}
 								</p>
 							{/if}
 						</div>
 					{:else}
 						<p class="text-completed font-medium">Max Level Reached</p>
-						<!-- todo: total resources used to max maybe -->
 					{/if}
 				</div>
 			</Popover.Mobile>

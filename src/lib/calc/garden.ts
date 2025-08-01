@@ -3,6 +3,7 @@ import {
 	COMPOSTER_UPGRADE_CROPS,
 	ComposterUpgrade,
 	Crop,
+	getComposterUpgradeCollectionAmount,
 	LEVEL_REQUIREMENTS,
 	SpecialCrop,
 	UPGRADE_CROP_AMOUNTS,
@@ -50,7 +51,7 @@ export function getComposterUpgradeCost(upgradeType: ComposterUpgrade, level: nu
 	const { specialCrop, amount: specialCropAmount } = getComposterSpecialCropRequirement(level);
 	const copper = getComposterCopperCost(level);
 	const crop = getComposterRequiredCrop(upgradeType, level);
-	const cropAmount = getComposterCropAmount(upgradeType, level);
+	const cropAmount = getComposterUpgradeCollectionAmount(upgradeType, level);
 
 	return {
 		copper,
