@@ -29,17 +29,14 @@
 	let upgrades = $derived(
 		Object.entries(composterUpgrades).map(([key, level]) => {
 			const upgradeType = API_COMPOSTER_UPGRADE_TO_UPGRADE[key as keyof typeof API_COMPOSTER_UPGRADE_TO_UPGRADE];
-			const nextLevel = level + 1;
 			const isMaxed = level >= maxLevel;
 
-			const nextCost = !isMaxed ? getComposterUpgradeCost(upgradeType, nextLevel) : null;
+			const nextCost = !isMaxed ? getComposterUpgradeCost(upgradeType, level + 1) : null;
 
 			return {
 				type: upgradeType,
-				name: getComposterUpgradeDisplayName(upgradeType),
 				img: COMPOSTER_UPGRADE_TO_IMG[upgradeType as keyof typeof COMPOSTER_UPGRADE_TO_IMG],
 				level,
-				isMaxed,
 				nextCost,
 			};
 		})
@@ -48,16 +45,17 @@
 
 <div class="mt-0.5">
 	<div class="flex flex-col gap-2">
-		{#each upgrades as { type, name, img, level, isMaxed, nextCost } (type)}
+		{#each upgrades as { type, img, level, nextCost } (type)}
 			<Popover.Mobile>
 				{#snippet trigger()}
 					<div class="flex items-center gap-1 p-1">
-						<img src={img} class="pixelated h-6 w-6" alt={name} />
+						<img src={img} class="pixelated h-6 w-6" alt={getComposterUpgradeDisplayName(type)} />
 						<div class="flex items-center gap-1">
-							{#each Array(maxLevel) as i (i)}
+							<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
+							{#each Array(maxLevel) as _, i (i)}
 								<div
 									class="h-5 w-4 rounded-sm md:block md:h-6 {i < level
-										? isMaxed
+										? level === maxLevel
 											? 'bg-completed'
 											: 'bg-progress'
 										: 'bg-card'}"
