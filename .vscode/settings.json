@@ -6,8 +6,14 @@
 	"editor.detectIndentation": false,
 	"eslint.validate": ["javascript", "javascriptreact", "typescript", "svelte"],
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "always",
+		"source.organizeImports": "explicit"
+	},
 	"files.associations": {
-		"*.css": "tailwindcss"
+		"*.css": "tailwindcss",
+		".env*": "properties"
 	},
 	"workbench.editor.customLabels.patterns": {
 		// Page
@@ -33,5 +39,15 @@
 		"**/routes/+error.svelte": "(root) - Error Page",
 		// Server Endpoint
 		"**/routes/**/*/+server.[tj]s": "${dirname} - Server Endpoint"
+	},
+	"svelte.enable-ts-plugin": true,
+	"svelte.plugin.svelte.defaultScriptLanguage": "ts",
+	"tailwindCSS.classAttributes": ["class", "className", "ngClass", "class:list", ".*Class*"],
+	"tailwindCSS.includeLanguages": {
+		"html": "html",
+		"plaintext": "html",
+		"javascript": "javascript",
+		"typescript": "typescript",
+		"svelte": "html"
 	}
 }
