@@ -8,6 +8,8 @@
 	"bracketSpacing": true,
 	"arrowParens": "always",
 	"endOfLine": "lf",
+	"tailwindAttributes": ["btnClass", "triggerClass", "popoverClass", "itemsClass", "iconClass", "parentClass"],
+	"tailwindFunctions": ["clsx", "cn"],
 	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
 	"overrides": [
 		{
