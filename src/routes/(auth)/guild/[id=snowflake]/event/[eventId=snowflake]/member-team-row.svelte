@@ -49,7 +49,7 @@
 								size="sm"
 								class={cn(props.class ?? '', 'w-full cursor-pointer justify-start px-2 py-0 font-mono')}
 								text={team.joinCode ?? ''}
-								iconClass="p-0 m-0">{team.joinCode}</CopyToClipboard
+								iconClass="m-0 p-0">{team.joinCode}</CopyToClipboard
 							>
 						{/snippet}
 					</DropdownMenu.Item>
