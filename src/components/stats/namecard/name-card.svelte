@@ -40,7 +40,7 @@
 				: ''}"
 		>
 			<img
-				class="hidden h-full flex-1 self-center object-contain @md:inline-block @md:flex-none"
+				class="hidden h-full flex-1 self-center object-contain @md:ml-8 @md:inline-block @md:flex-none"
 				src="https://mc-heads.net/body/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
@@ -53,17 +53,26 @@
 						<PlayerName
 							bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
 								?.fill ?? 'inherit'};"
+							class={style ? 'text-shadow-[brightness(currentColor, 70%)]/30 text-shadow-md' : ''}
 						/>
 					</div>
 					{#if rankText}
-						<TextElement class="h-full" element={style?.elements?.rank}>
+						<TextElement
+							class="{style
+								? 'text-shadow-[brightness(currentColor, 70%)]/30 text-shadow-md'
+								: ''} h-full"
+							element={style?.elements?.rank}
+						>
 							<div class="{!style ? 'rounded-md border' : ''} h-full">
 								{@render rankLink()}
 							</div>
 						</TextElement>
 					{/if}
 				</div>
-				<TextElement element={style?.elements?.weight}>
+				<TextElement
+					element={style?.elements?.weight}
+					class={style ? 'text-shadow-[brightness(currentColor, 70%)]/30 text-shadow-md' : ''}
+				>
 					<div class="flex flex-col items-end">
 						<WeightNum />
 						{#if bg == 'inherit'}

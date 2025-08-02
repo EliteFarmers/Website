@@ -64,10 +64,8 @@ export const actions: Actions = {
 		}
 
 		const { error: problem, response } = await LinkAccount(username, locals.access_token);
-		console.log(response);
 
 		if (!response.ok || problem) {
-			console.log(problem);
 			return fail(response.status, {
 				error: 'Error linking account, please check spelling and that your Discord account is correctly linked on Hypixel.',
 				problem: problem,
@@ -96,7 +94,7 @@ export const actions: Actions = {
 
 		if (!response.ok || problem) {
 			return fail(response.status, {
-				error: problem?.message || 'Error unlinking account, please try again later.',
+				error: problem || 'Error unlinking account, please try again later.',
 				problem: problem,
 			});
 		}
