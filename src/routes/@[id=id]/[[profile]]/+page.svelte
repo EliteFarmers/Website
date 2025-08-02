@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-	import { getLevelProgress } from '$lib/format';
-	import { CROP_UNICODE_EMOJIS } from '$lib/constants/crops';
-	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
-	import Skills from '$comp/stats/skills.svelte';
-	import Collections from '$comp/stats/collections.svelte';
-	import APIstatus from '$comp/stats/apistatus.svelte';
-	import Breakdown from '$comp/stats/breakdown.svelte';
-	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
-	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
+	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
+	import APIstatus from '$comp/stats/apistatus.svelte';
+	import Breakdown from '$comp/stats/breakdown.svelte';
+	import Collections from '$comp/stats/collections.svelte';
+	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
+	import Skills from '$comp/stats/skills.svelte';
+	import { CROP_UNICODE_EMOJIS } from '$lib/constants/crops';
+	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
+	import { getLevelProgress } from '$lib/format';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	const ctx = getStatsContext();
 

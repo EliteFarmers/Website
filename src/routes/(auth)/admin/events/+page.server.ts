@@ -1,6 +1,6 @@
+import { DELETE, GetAdminPendingEvents, GetUpcomingEvents, POST } from '$lib/api/elite';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { DELETE, GetAdminPendingEvents, GetUpcomingEvents, POST } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();

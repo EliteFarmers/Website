@@ -1,26 +1,26 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
-	import { Button } from '$ui/button';
-	import type { PageData } from './$types';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import Users from '@lucide/svelte/icons/users';
-	import User from '@lucide/svelte/icons/user';
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import EventType from '$comp/events/event-type.svelte';
 	import EventData from '$comp/events/event-data.svelte';
-	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
-	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import HeroBanner from '$comp/hero-banner.svelte';
-	import Countdown from './countdown.svelte';
-	import * as Accordion from '$ui/accordion';
+	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
+	import EventType from '$comp/events/event-type.svelte';
+	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
+	import Head from '$comp/head.svelte';
+	import HeroBanner from '$comp/hero-banner.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import User from '@lucide/svelte/icons/user';
+	import Users from '@lucide/svelte/icons/users';
+	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+	import Countdown from './countdown.svelte';
 
 	interface Props {
 		data: PageData;

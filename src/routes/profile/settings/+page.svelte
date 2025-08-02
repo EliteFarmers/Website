@@ -1,9 +1,14 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
 	import Head from '$comp/head.svelte';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import Product from '$comp/monetization/product.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import SettingHeader from '$comp/settings/setting-header.svelte';
+	import SettingListItem from '$comp/settings/setting-list-item.svelte';
+	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
 	import { getThemeContext, themes } from '$lib/stores/themes.svelte';
 	import { Button } from '$ui/button';
@@ -12,21 +17,16 @@
 	import type { CarouselAPI } from '$ui/carousel/context.js';
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
-	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 	import Menu from '@lucide/svelte/icons/menu';
 	import Moon from '@lucide/svelte/icons/moon';
+	import Pencil from '@lucide/svelte/icons/pencil';
 	import Search from '@lucide/svelte/icons/search';
 	import Sun from '@lucide/svelte/icons/sun';
-	import Pencil from '@lucide/svelte/icons/pencil';
+	import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
+	import { useDebounce } from 'runed';
 	import { onMount } from 'svelte';
 	import type { ActionData, PageData } from './$types';
 	import BadgeConfig from './badge-config.svelte';
-	import EmojiDialog from '$comp/emoji/emoji-dialog.svelte';
-	import SettingListItem from '$comp/settings/setting-list-item.svelte';
-	import SettingHeader from '$comp/settings/setting-header.svelte';
-	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
-	import { useDebounce } from 'runed';
-	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 
 	let api = $state<CarouselAPI>();
 

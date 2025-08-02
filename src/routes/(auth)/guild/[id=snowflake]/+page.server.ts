@@ -1,5 +1,3 @@
-import { error, fail, type Actions, type NumericRange } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import {
 	EnableGuildEvents,
 	EnableGuildLeaderboards,
@@ -8,6 +6,8 @@ import {
 	SetGuildInvite,
 	SetGuildPublic,
 } from '$lib/api/elite';
+import { error, fail, type Actions, type NumericRange } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	await parent();

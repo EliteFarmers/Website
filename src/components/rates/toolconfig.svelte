@@ -3,12 +3,12 @@
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { FormatMinecraftText } from '$lib/format';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
-	import type { FarmingTool } from 'farming-weight';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
-	import { slide } from 'svelte/transition';
 	import Edit from '@lucide/svelte/icons/edit';
+	import type { FarmingTool } from 'farming-weight';
+	import { slide } from 'svelte/transition';
 
 	interface Props {
 		tool: FarmingTool;

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import Ellipsis from '@lucide/svelte/icons/ellipsis';
-	import Plus from '@lucide/svelte/icons/plus';
-	import * as DropdownMenu from '$ui/dropdown-menu';
-	import { Button } from '$ui/button';
-	import type { AdminEventMember, AdminEventTeam } from './columns';
-	import Crown from '@lucide/svelte/icons/crown';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import { cn } from '$lib/utils';
+	import { Button } from '$ui/button';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import Crown from '@lucide/svelte/icons/crown';
+	import Ellipsis from '@lucide/svelte/icons/ellipsis';
+	import Plus from '@lucide/svelte/icons/plus';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import type { AdminEventMember, AdminEventTeam } from './columns';
 
 	interface Props {
 		member: AdminEventMember;

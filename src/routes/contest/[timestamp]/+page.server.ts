@@ -1,6 +1,6 @@
-import type { PageServerLoad } from './$types';
 import { getSkyblockDate } from '$lib/format';
 import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = ({ params }) => {
 	const { timestamp } = params;

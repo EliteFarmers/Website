@@ -1,8 +1,8 @@
+import type { components } from '$lib/api/api';
+import { CreateEvent, GetAdminGuildEvents } from '$lib/api/elite';
+import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CanManageGuild } from '$lib/utils';
-import { GetAdminGuildEvents, CreateEvent } from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { guild, authGuild, session } = await parent();

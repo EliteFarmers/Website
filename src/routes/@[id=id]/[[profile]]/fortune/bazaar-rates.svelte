@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import * as Select from '$ui/select';
 	import { Skeleton } from '$ui/skeleton';
+	import Switch from '$ui/switch/switch.svelte';
 	import { getPossibleResultsFromCrops, type Crop, type DetailedDropsResult } from 'farming-weight';
 	import { watch } from 'runed';
-	import { browser } from '$app/environment';
-	import type { RatesItemPriceData } from '$lib/api/elite';
-	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
-	import Switch from '$ui/switch/switch.svelte';
 
 	interface Props {
 		crop: Crop;

@@ -1,54 +1,52 @@
 <script lang="ts">
-	import {
-		calculateDetailedAverageDrops,
-		Crop,
-		getCropFromName,
-		FarmingArmor,
-		FarmingPet,
-		FarmingTool,
-		LotusGear,
-		FarmingPets,
-		ArmorSet,
-		type EliteItemDto,
-		type PlayerOptions,
-		getGardenLevel,
-		getCropMilestoneLevels,
-		getCropUpgrades,
-		getCropInfo,
-		createFarmingWeightCalculator,
-		createFarmingPlayer,
-	} from 'farming-weight';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import FloatingButton from '$comp/floating-button.svelte';
+	import Head from '$comp/head.svelte';
+	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import JumpLink from '$comp/jump-link.svelte';
+	import CategoryProgress from '$comp/rates/category-progress.svelte';
+	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
+	import FarmingGear from '$comp/rates/farming-gear.svelte';
+	import PetSelector from '$comp/rates/pet-selector.svelte';
+	import ToolSelector from '$comp/rates/tool-selector.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
-	import { getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { getLevelProgress } from '$lib/format';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
-	import { getLevelProgress } from '$lib/format';
+	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
-
 	import { Button } from '$ui/button';
-	import { SliderSimple } from '$ui/slider';
-	import { Switch } from '$ui/switch';
 	import * as Dialog from '$ui/dialog';
 	import * as Select from '$ui/select';
+	import { SliderSimple } from '$ui/slider';
+	import { Switch } from '$ui/switch';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-
-	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
-	import Head from '$comp/head.svelte';
-	import FarmingGear from '$comp/rates/farming-gear.svelte';
-	import CategoryProgress from '$comp/rates/category-progress.svelte';
-	import ToolSelector from '$comp/rates/tool-selector.svelte';
-	import PetSelector from '$comp/rates/pet-selector.svelte';
-	import JumpLink from '$comp/jump-link.svelte';
+	import {
+		ArmorSet,
+		calculateDetailedAverageDrops,
+		createFarmingPlayer,
+		createFarmingWeightCalculator,
+		Crop,
+		FarmingArmor,
+		FarmingPet,
+		FarmingPets,
+		FarmingTool,
+		getCropFromName,
+		getCropInfo,
+		getCropMilestoneLevels,
+		getCropUpgrades,
+		getGardenLevel,
+		LotusGear,
+		type EliteItemDto,
+		type PlayerOptions,
+	} from 'farming-weight';
 	import { onMount, untrack } from 'svelte';
 	import BazaarRates from './bazaar-rates.svelte';
-	import RatesSettings from './rates-settings.svelte';
-	import FloatingButton from '$comp/floating-button.svelte';
 	import CheapestUpgrades from './cheapest-upgrades.svelte';
-	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
+	import RatesSettings from './rates-settings.svelte';
 
 	const ctx = getStatsContext();
 

@@ -1,6 +1,6 @@
+import { DismissAnnouncement } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { DismissAnnouncement } from '$lib/api/elite';
 
 export const GET: RequestHandler = async ({ locals, params }) => {
 	const id = params.id;

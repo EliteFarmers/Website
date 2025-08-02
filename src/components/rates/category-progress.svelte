@@ -1,7 +1,7 @@
 <script lang="ts">
+	import * as Dialog from '$ui/dialog';
 	import type { FortuneSourceProgress } from 'farming-weight';
 	import FortuneProgress from './fortune-progress.svelte';
-	import * as Dialog from '$ui/dialog';
 	import ItemProgress from './item-progress.svelte';
 
 	interface Props {

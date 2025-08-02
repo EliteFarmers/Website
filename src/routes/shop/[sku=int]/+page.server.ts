@@ -1,6 +1,6 @@
+import { ClaimFreeProduct, GetSelectedProfileMember } from '$lib/api/elite';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { ClaimFreeProduct, GetSelectedProfileMember } from '$lib/api/elite';
 
 export const load = (async ({ params, parent, request }) => {
 	const { products, session } = await parent();

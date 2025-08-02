@@ -1,7 +1,7 @@
+import { GetAuthorizedAccount, type AuthorizedUser } from '$lib/api/elite';
 import type { Cookies } from '@sveltejs/kit';
 import type { components } from './api';
 import { GetUserSession, RefreshUserSession } from './elite';
-import { GetAuthorizedAccount, type AuthorizedUser } from '$lib/api/elite';
 
 export type AuthSession = components['schemas']['AuthSessionDto'] & { flags: AuthFlags };
 

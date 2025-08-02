@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import Head from '$comp/head.svelte';
-	import DiscordAccount from './discordAccount.svelte';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
-	import { invalidateAll } from '$app/navigation';
-	import type { PageData, ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
+	import DiscordAccount from './discordAccount.svelte';
 	import MinecraftAccount from './minecraftAccount.svelte';
 
 	interface Props {

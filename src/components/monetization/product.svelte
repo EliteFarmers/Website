@@ -1,18 +1,18 @@
 <script lang="ts">
+	import ProductFeature from '$comp/monetization/product-feature.svelte';
 	import { Button } from '$comp/ui/button';
 	import type { components } from '$lib/api/api';
-	import ProductFeature from '$comp/monetization/product-feature.svelte';
+	import { cn } from '$lib/utils';
+	import Check from '@lucide/svelte/icons/check';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import Palette from '@lucide/svelte/icons/palette';
+	import Heart from '@lucide/svelte/icons/heart';
 	import Image from '@lucide/svelte/icons/image';
-	import Tag from '@lucide/svelte/icons/tag';
-	import TicketX from '@lucide/svelte/icons/ticket-x';
+	import Palette from '@lucide/svelte/icons/palette';
 	import Replace from '@lucide/svelte/icons/replace';
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
-	import Check from '@lucide/svelte/icons/check';
-	import Heart from '@lucide/svelte/icons/heart';
+	import Tag from '@lucide/svelte/icons/tag';
+	import TicketX from '@lucide/svelte/icons/ticket-x';
 	import X from '@lucide/svelte/icons/x';
-	import { cn } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
 	interface Props {

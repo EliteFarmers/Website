@@ -3,14 +3,14 @@
 	import { page } from '$app/state';
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockDate } from '$lib/format';
+	import * as Accordion from '$ui/accordion';
+	import * as AlertDialog from '$ui/alert-dialog';
+	import { Button, buttonVariants } from '$ui/button';
+	import * as Popover from '$ui/popover';
+	import * as Tooltip from '$ui/tooltip';
 	import Mail from '@lucide/svelte/icons/mail';
 	import RefreshCcw from '@lucide/svelte/icons/refresh-ccw';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
-	import * as Accordion from '$ui/accordion';
-	import * as Popover from '$ui/popover';
-	import * as AlertDialog from '$ui/alert-dialog';
-	import * as Tooltip from '$ui/tooltip';
-	import { Button, buttonVariants } from '$ui/button';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	interface Props {

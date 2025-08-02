@@ -1,6 +1,6 @@
+import { createCanvas, Image, loadImage, type SKRSContext2D } from '@napi-rs/canvas';
 import { mapPositions } from './maker';
 import type { BackgroundStyle, LeaderboardStyle } from './style';
-import { createCanvas, Image, loadImage, type SKRSContext2D } from '@napi-rs/canvas';
 
 export async function getLeaderboardBackground(
 	data?: LeaderboardStyle | undefined,

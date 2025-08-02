@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { EventMode, EventType } from '$lib/utils';
 	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
-	import { Textarea } from '$ui/textarea';
-	import * as Dialog from '$ui/dialog';
 	import * as Tabs from '$ui/tabs';
-	import { EventMode, EventType } from '$lib/utils';
+	import { Textarea } from '$ui/textarea';
 
 	interface Props {
 		open?: boolean;

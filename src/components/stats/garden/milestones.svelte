@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
+	import { API_CROP_TO_CROP } from '$lib/constants/crops';
 	import { getCropMilestones } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
-	import { API_CROP_TO_CROP } from '$lib/constants/crops';
 
 	interface Props {
 		garden?: components['schemas']['GardenDto'] | undefined;

@@ -1,6 +1,6 @@
+import { getSkyblockDate } from '$lib/format';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { getSkyblockDate } from '$lib/format';
 
 export const load = (({ params, url }) => {
 	const { year, month } = params;

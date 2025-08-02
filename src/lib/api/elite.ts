@@ -1,7 +1,7 @@
-import createClient, { type HeadersOptions, type Middleware } from 'openapi-fetch';
-import type { components, paths } from './api';
 import { ELITE_API_URL } from '$env/static/private';
 import { cache } from '$lib/servercache';
+import createClient, { type HeadersOptions, type Middleware } from 'openapi-fetch';
+import type { components, paths } from './api';
 
 const client = createClient<paths>({
 	baseUrl: ELITE_API_URL,

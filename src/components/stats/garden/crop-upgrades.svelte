@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { Crop, getCropDisplayName, getCropUpgrades } from 'farming-weight';
 	import type { components } from '$lib/api/api';
+	import { getCopperSpent, getCopperToMaxUpgrade } from '$lib/calc/garden';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';
-	import { getCopperSpent, getCopperToMaxUpgrade } from '$lib/calc/garden';
+	import { Crop, getCropDisplayName, getCropUpgrades } from 'farming-weight';
 
 	interface Props {
 		garden?: components['schemas']['GardenDto'] | undefined;

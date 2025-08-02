@@ -1,12 +1,12 @@
 <script lang="ts">
-	import ChevronRight from '@lucide/svelte/icons/chevron-right';
-	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
-	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
-	import { Button } from '$ui/button';
-	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
-	import type { components } from '$lib/api/api';
 	import { page } from '$app/state';
+	import type { components } from '$lib/api/api';
+	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { Button } from '$ui/button';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
+	import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
 
 	interface Props {
 		info: LeaderboardInfo;

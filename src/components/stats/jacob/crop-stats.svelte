@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
-	import { getSelectedCrops } from '$lib/stores/selectedCrops';
-	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
-	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
-	import { Crop, getCropFromName, calcWeightForCrop } from 'farming-weight';
 	import ContestList from '$comp/stats/jacob/contest-list.svelte';
-	import * as Select from '$ui/select';
+	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
+	import type { components } from '$lib/api/api';
+	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
+	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Select from '$ui/select';
+	import { calcWeightForCrop, Crop, getCropFromName } from 'farming-weight';
 
 	const ctx = getStatsContext();
 	const jacob = $derived(ctx.member.jacob);

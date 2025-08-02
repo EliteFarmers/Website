@@ -1,14 +1,14 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 	import type { components } from '$lib/api/api';
+	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
+	import SelectSimple from '$ui/select/select-simple.svelte';
 	import { getColumns, type AdminEventMember } from './columns.js';
 	import MemberTable from './data-table.svelte';
-	import * as Dialog from '$ui/dialog';
-	import { enhance } from '$app/forms';
-	import { Label } from '$ui/label';
-	import { Input } from '$ui/input';
-	import { Button } from '$ui/button';
-	import SelectSimple from '$ui/select/select-simple.svelte';
-	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 
 	interface Props {
 		event: components['schemas']['EventDetailsDto'];

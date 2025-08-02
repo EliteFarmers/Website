@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { LayoutData } from './$types';
 	import { browser } from '$app/environment';
-	import { Button } from '$ui/button';
-	import { page } from '$app/state';
 	import { replaceState } from '$app/navigation';
+	import { page } from '$app/state';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import { tick, type Snippet } from 'svelte';
-	import NavCrumbs from './nav-crumbs.svelte';
-	import { watch } from 'runed';
-	import { initStatsContext } from '$lib/stores/stats.svelte';
+	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
+	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 	import type { components } from '$lib/api/api';
-	import NameCard from '$comp/stats/namecard/name-card.svelte';
-	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
+	import { initStatsContext } from '$lib/stores/stats.svelte';
+	import { Button } from '$ui/button';
+	import { watch } from 'runed';
+	import { tick, type Snippet } from 'svelte';
+	import type { LayoutData } from './$types';
+	import NavCrumbs from './nav-crumbs.svelte';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 

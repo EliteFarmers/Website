@@ -1,6 +1,5 @@
-import { error, fail, redirect } from '@sveltejs/kit';
-import type { PageServerLoad, Actions } from './$types';
-import { IsIGNOrUUID } from '$params/id';
+import type { components } from '$lib/api/api';
+import { FetchDiscordUserData, FetchUserSession } from '$lib/api/auth';
 import {
 	GetPublicGuilds,
 	GetUsersGuilds,
@@ -11,10 +10,11 @@ import {
 	UpdateUserBadges,
 	UpdateUserSettings,
 } from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 import { CanEditGuild } from '$lib/discord';
+import { IsIGNOrUUID } from '$params/id';
 import { IsUUID } from '$params/uuid';
-import { FetchUserSession, FetchDiscordUserData } from '$lib/api/auth';
+import { error, fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { session } = await parent();

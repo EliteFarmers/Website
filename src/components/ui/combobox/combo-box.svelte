@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { cn } from '$lib/utils.js';
+	import { Button } from '$ui/button';
+	import * as Command from '$ui/command';
+	import * as Popover from '$ui/popover';
 	import Check from '@lucide/svelte/icons/check';
 	import CaretSort from '@lucide/svelte/icons/chevrons-up-down';
 	import { tick } from 'svelte';
-	import * as Command from '$ui/command';
-	import * as Popover from '$ui/popover';
-	import { Button } from '$ui/button';
-	import { cn } from '$lib/utils.js';
 
 	interface Props {
 		options: { label: string; value: string }[];

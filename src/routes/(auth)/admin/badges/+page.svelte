@@ -1,15 +1,14 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
 	import { enhance } from '$app/forms';
+	import Head from '$comp/head.svelte';
+	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { Switch } from '$ui/switch';
-	import * as Dialog from '$ui/dialog';
-	import Settings from '@lucide/svelte/icons/settings';
 	import Plus from '@lucide/svelte/icons/plus';
-	import type { components } from '$lib/api/api';
-
+	import Settings from '@lucide/svelte/icons/settings';
 	import type { PageData } from './$types';
 
 	interface Props {

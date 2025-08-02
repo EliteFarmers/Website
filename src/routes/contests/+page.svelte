@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
 	import Head from '$comp/head.svelte';
+	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
+	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { SkyBlockTime } from 'farming-weight';
 

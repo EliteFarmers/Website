@@ -1,7 +1,7 @@
 import { IsMobile } from '$lib/hooks/is-mobile.svelte.js';
+import { PersistedState } from 'runed';
 import { getContext, setContext } from 'svelte';
 import { SIDEBAR_KEYBOARD_SHORTCUT } from './constants.js';
-import { PersistedState } from 'runed';
 
 type Getter<T> = () => T;
 

@@ -1,14 +1,14 @@
-import { error, fail, type Actions } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import type { components } from '$lib/api/api';
 import {
 	AddCosmeticToProduct,
 	AddProductImage,
 	GetAdminProducts,
 	RemoveCosmeticFromProduct,
-	UpdateProduct,
 	RemoveProductImage,
+	UpdateProduct,
 } from '$lib/api/elite';
+import { error, fail, type Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { user, session } = await parent();

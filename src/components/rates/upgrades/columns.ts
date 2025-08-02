@@ -1,12 +1,12 @@
+import type { RatesItemPriceData } from '$lib/api/elite';
 import { renderComponent } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
-import UpgradeTitle from './upgrade-title.svelte';
-import DataTableColumnHeader from './data-table-column-header.svelte';
 import type { FortuneUpgrade } from 'farming-weight';
-import UpgradeFortune from './upgrade-fortune.svelte';
-import UpgradeCost from './upgrade-cost.svelte';
+import DataTableColumnHeader from './data-table-column-header.svelte';
 import UpgradeCostPer from './upgrade-cost-per.svelte';
-import type { RatesItemPriceData } from '$lib/api/elite';
+import UpgradeCost from './upgrade-cost.svelte';
+import UpgradeFortune from './upgrade-fortune.svelte';
+import UpgradeTitle from './upgrade-title.svelte';
 
 export const getColumns = (
 	itemsLookup?: RatesItemPriceData,

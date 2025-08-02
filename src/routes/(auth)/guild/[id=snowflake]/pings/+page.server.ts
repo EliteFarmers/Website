@@ -1,7 +1,7 @@
+import { DisableUpcomingContestPings, UpdateUpcomingContestPings } from '$lib/api/elite';
+import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CanManageGuild } from '$lib/utils';
-import { DisableUpcomingContestPings, UpdateUpcomingContestPings } from '$lib/api/elite';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { authGuild, guild } = await parent();

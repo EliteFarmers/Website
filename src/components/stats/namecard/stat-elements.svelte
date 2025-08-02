@@ -1,9 +1,9 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	import Discord from '../player/discord.svelte';
 	import Profiles from '../player/profiles.svelte';
 	import Skyblocklevel from '../player/skyblocklevel.svelte';
-	import Discord from '../player/discord.svelte';
 	import ExternalLinks from './external-links.svelte';
-	import type { Snippet } from 'svelte';
 
 	let { children }: { children?: Snippet } = $props();
 </script>

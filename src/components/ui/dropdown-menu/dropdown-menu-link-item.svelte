@@ -1,7 +1,7 @@
 <script lang="ts">
+	import type { DropdownMenu as DropdownPrimitive } from 'bits-ui';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import * as Dropdown from './index';
-	import type { DropdownMenu as DropdownPrimitive } from 'bits-ui';
 
 	interface Props extends DropdownPrimitive.ItemProps {
 		href: HTMLAnchorAttributes['href'];

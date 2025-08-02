@@ -1,4 +1,5 @@
 import { building } from '$app/environment';
+import { ELITE_API_URL } from '$env/static/private';
 import type { components } from './api/api';
 import {
 	GetAnnouncements,
@@ -11,7 +12,6 @@ import {
 	GetUpcomingEvents,
 	GetWeightStyles,
 } from './api/elite';
-import { ELITE_API_URL } from '$env/static/private';
 import { parseLeaderboards } from './constants/leaderboards';
 
 const cacheEntries = {

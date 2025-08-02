@@ -4,15 +4,15 @@
 			"off",
 			{
 				"argsIgnorePattern": "^_",
-				"varsIgnorePattern": "^$$(Props|Events|Slots|Generic)$"
-			}
+				"varsIgnorePattern": "^$$(Props|Events|Slots|Generic)$",
+			},
 		],
 		"no-undef": [
 			"off",
 			{
 				"argsIgnorePattern": "^_",
-				"varsIgnorePattern": "^$$(Props|Events|Slots|Generic)$"
-			}
-		]
-	}
+				"varsIgnorePattern": "^$$(Props|Events|Slots|Generic)$",
+			},
+		],
+	},
 }

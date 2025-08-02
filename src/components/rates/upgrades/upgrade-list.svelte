@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { RatesItemPriceData } from '$lib/api/elite.js';
+	import type { FortuneUpgrade } from 'farming-weight';
 	import { getColumns } from './columns.js';
 	import UpgradesTable from './data-table.svelte';
-	import type { FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrades: FortuneUpgrade[];

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { toReadable } from '$lib/format';
-	import { scaleLinear } from 'd3-scale';
 	import { extent } from 'd3-array';
+	import { scaleLinear } from 'd3-scale';
 	import { Crop, CROP_TO_PEST, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { Area, Axis, Chart, Highlight, Layer, Tooltip } from 'layerchart';
 

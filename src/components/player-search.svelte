@@ -3,13 +3,13 @@
 </script>
 
 <script lang="ts">
-	import * as Command from '$ui/command';
-	import { Button, type ButtonProps } from '$ui/button';
-	import cn from 'classnames';
 	import { browser } from '$app/environment';
-	import { Debounced, watch } from 'runed';
 	import { beforeNavigate, goto } from '$app/navigation';
+	import { Button, type ButtonProps } from '$ui/button';
+	import * as Command from '$ui/command';
 	import { ScrollArea } from '$ui/scroll-area';
+	import cn from 'classnames';
+	import { Debounced, watch } from 'runed';
 
 	let {
 		open = $bindable(false),

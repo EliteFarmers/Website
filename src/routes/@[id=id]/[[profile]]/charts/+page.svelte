@@ -1,24 +1,24 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import CropGraph from '$comp/charts/crop-graph.svelte';
-	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
-	import type { ActionData, PageData } from './$types';
+	import Head from '$comp/head.svelte';
+	import JumpLink from '$comp/jump-link.svelte';
+	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
+	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { Button } from '$ui/button';
 	import { DatePicker } from '$ui/date-picker';
 	import { SelectSimple } from '$ui/select';
 	import { Switch } from '$ui/switch';
-	import { Button } from '$ui/button';
 	import * as Tooltip from '$ui/tooltip';
-	import { Crop, CROP_WEIGHT, getCropDisplayName, getCropFromName } from 'farming-weight';
-	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
-	import { getSelectedCrops, getAnyCropSelected } from '$lib/stores/selectedCrops';
-	import JumpLink from '$comp/jump-link.svelte';
-	import Head from '$comp/head.svelte';
-	import { differenceInDays } from 'date-fns';
+	import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import { differenceInDays } from 'date-fns';
+	import { Crop, CROP_WEIGHT, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { onMount } from 'svelte';
-	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import type { ActionData, PageData } from './$types';
 
 	interface Props {
 		data: PageData;

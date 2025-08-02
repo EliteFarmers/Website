@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import { PUBLIC_ELITE_BADGE_ID, PUBLIC_WEIGHT_REQ } from '$env/static/public';
 	import { page } from '$app/state';
 	import EliteToast from '$comp/stats/player/elite-toast.svelte';
-	import { toast } from 'svelte-sonner';
-	import { tick } from 'svelte';
+	import { PUBLIC_ELITE_BADGE_ID, PUBLIC_WEIGHT_REQ } from '$env/static/public';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { PersistedState } from 'runed';
+	import { onMount, tick } from 'svelte';
+	import { toast } from 'svelte-sonner';
 
 	const ctx = getStatsContext();
 	const closed = new PersistedState<{ state: 'ready' | 'open' | 'closed'; opened?: number }>('join-elite-toast', {
