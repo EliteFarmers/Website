@@ -44,7 +44,7 @@
 			{/if}
 
 			<div class="flex w-full items-center justify-between">
-				<p class="overflow-hidden pr-4 text-xl text-ellipsis whitespace-nowrap">{product.name}</p>
+				<p class="whitespace-wrap overflow-hidden pr-4 text-xl break-all text-ellipsis">{product.name}</p>
 				<div class="flex min-w-0 items-center justify-end gap-2">
 					{#if children}
 						{@render children()}
