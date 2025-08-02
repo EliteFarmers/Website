@@ -83,13 +83,10 @@
 						"content": {
 							"application/problem+json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponse"
+									"$ref": "#/components/schemas/ProblemDetails"
 								}
 							}
 						}
-					},
-					"401": {
-						"description": "Unauthorized"
 					}
 				},
 				"security": [
@@ -121,13 +118,10 @@
 						"content": {
 							"application/problem+json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponse"
+									"$ref": "#/components/schemas/ProblemDetails"
 								}
 							}
 						}
-					},
-					"401": {
-						"description": "Unauthorized"
 					}
 				},
 				"security": [
@@ -407,13 +401,10 @@
 						"content": {
 							"application/problem+json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponse"
+									"$ref": "#/components/schemas/ProblemDetails"
 								}
 							}
 						}
-					},
-					"401": {
-						"description": "Unauthorized"
 					}
 				},
 				"security": [
@@ -962,11 +953,15 @@
 					"204": {
 						"description": "No Content"
 					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
 					}
 				},
 				"security": [
@@ -1043,11 +1038,15 @@
 					"204": {
 						"description": "No Content"
 					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/problem+json": {
+								"schema": {
+									"$ref": "#/components/schemas/ProblemDetails"
+								}
+							}
+						}
 					}
 				},
 				"security": [
@@ -1552,7 +1551,7 @@
 						"content": {
 							"application/problem+json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponse"
+									"$ref": "#/components/schemas/ProblemDetails"
 								}
 							}
 						}
@@ -1591,7 +1590,7 @@
 						"content": {
 							"application/problem+json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponse"
+									"$ref": "#/components/schemas/ProblemDetails"
 								}
 							}
 						}
@@ -1632,7 +1631,7 @@
 						"content": {
 							"application/problem+json": {
 								"schema": {
-									"$ref": "#/components/schemas/ErrorResponse"
+									"$ref": "#/components/schemas/ProblemDetails"
 								}
 							}
 						}
@@ -9538,6 +9537,11 @@
 						"description": "Discord avatar URL hash",
 						"nullable": true
 					},
+					"banner": {
+						"type": "string",
+						"description": "Discord banner URL hash",
+						"nullable": true
+					},
 					"settings": {
 						"$ref": "#/components/schemas/UserSettingsDto"
 					},
@@ -9835,73 +9839,6 @@
 					}
 				}
 			},
-			"SearchRequest": {
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateUserSettingsDto": {
-				"type": "object",
-				"additionalProperties": false,
-				"properties": {
-					"prefix": {
-						"type": "string",
-						"description": "Custom name prefix",
-						"nullable": true
-					},
-					"suffix": {
-						"type": "string",
-						"description": "Custom name suffix",
-						"nullable": true
-					},
-					"features": {
-						"description": "Configurated features for the user",
-						"nullable": true,
-						"oneOf": [
-							{
-								"$ref": "#/components/schemas/ConfiguredProductFeaturesDto"
-							}
-						]
-					},
-					"weightStyleId": {
-						"type": "integer",
-						"description": "Selected weight style for the user",
-						"format": "int32",
-						"nullable": true
-					},
-					"leaderboardStyleId": {
-						"type": "integer",
-						"description": "Selected leaderboard style for the user",
-						"format": "int32",
-						"nullable": true
-					},
-					"nameStyleId": {
-						"type": "integer",
-						"description": "Selected name style for the user",
-						"format": "int32",
-						"nullable": true
-					}
-				}
-			},
-			"EditUserBadgeDto": {
-				"type": "object",
-				"additionalProperties": false,
-				"required": ["badgeId"],
-				"properties": {
-					"badgeId": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"visible": {
-						"type": "boolean",
-						"nullable": true
-					},
-					"order": {
-						"type": "integer",
-						"format": "int32",
-						"nullable": true
-					}
-				}
-			},
 			"ProblemDetails": {
 				"type": "object",
 				"description": "RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:\napp.UseFastEndpoints(c => c.Errors.UseProblemDetails())",
@@ -9966,6 +9903,73 @@
 					"severity": {
 						"type": "string",
 						"description": "the severity of the error",
+						"nullable": true
+					}
+				}
+			},
+			"SearchRequest": {
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateUserSettingsDto": {
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"prefix": {
+						"type": "string",
+						"description": "Custom name prefix",
+						"nullable": true
+					},
+					"suffix": {
+						"type": "string",
+						"description": "Custom name suffix",
+						"nullable": true
+					},
+					"features": {
+						"description": "Configurated features for the user",
+						"nullable": true,
+						"oneOf": [
+							{
+								"$ref": "#/components/schemas/ConfiguredProductFeaturesDto"
+							}
+						]
+					},
+					"weightStyleId": {
+						"type": "integer",
+						"description": "Selected weight style for the user",
+						"format": "int32",
+						"nullable": true
+					},
+					"leaderboardStyleId": {
+						"type": "integer",
+						"description": "Selected leaderboard style for the user",
+						"format": "int32",
+						"nullable": true
+					},
+					"nameStyleId": {
+						"type": "integer",
+						"description": "Selected name style for the user",
+						"format": "int32",
+						"nullable": true
+					}
+				}
+			},
+			"EditUserBadgeDto": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["badgeId"],
+				"properties": {
+					"badgeId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"visible": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"order": {
+						"type": "integer",
+						"format": "int32",
 						"nullable": true
 					}
 				}
@@ -11154,6 +11158,10 @@
 						"nullable": true
 					},
 					"locale": {
+						"type": "string",
+						"nullable": true
+					},
+					"banner": {
 						"type": "string",
 						"nullable": true
 					}
