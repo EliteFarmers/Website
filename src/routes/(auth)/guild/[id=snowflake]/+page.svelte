@@ -9,6 +9,7 @@
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import * as Alert from '$ui/alert';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import { Input } from '$ui/input';
@@ -56,35 +57,40 @@
 
 <Head title={data.guild?.name ?? 'Guild Settings'} description="Manage server settings for your guild!" />
 
-<div class="flex flex-col items-center gap-8">
+<div class="@container-normal mx-auto flex max-w-4xl flex-col items-center gap-8">
 	<div class="flex flex-row items-center gap-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="my-16 text-4xl">
 			{data.guild?.name}
 		</h1>
-	</div>
-
-	<div class="flex flex-row items-center gap-4">
 		{#if data.guild?.public}
-			<h2 class="text-lg">View Public Page</h2>
 			<Button href="/server/{data.guildId}" variant="outline">
 				<ExternalLink size={16} />
 			</Button>
-		{:else}
-			<p class="text-destructive">Private Guild</p>
 		{/if}
 	</div>
+
+	<Alert.Root class="border-link/30 w-full max-w-4xl border-2">
+		<Alert.Title class="text-lg">Want to unlock a feature?</Alert.Title>
+		<Alert.Description class="text-base">
+			<p>
+				Subscribe to the appropriate package in the
+				<ExternalLinkButton href="/support">support server's</ExternalLinkButton> built-in Discord Shop and/or open
+				a ticket in the support server to discuss options!
+			</p>
+		</Alert.Description>
+	</Alert.Root>
 
 	{#if form?.error}
 		<p class="text-destructive">{form.error}</p>
 	{/if}
 
-	<section class="flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
-		<Card.Root class="max-w-md flex-1 basis-64">
+	<section class="grid grid-cols-1 gap-4 @[37.5rem]:grid-cols-2">
+		<Card.Root class="size-full flex-1 rounded-lg border-2">
 			<Card.Header>
 				<Card.Title class="text-xl">Server Invite</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex flex-col items-center gap-2 self-stretch">
+			<Card.Content class="flex h-full flex-col items-center gap-2 self-stretch">
 				{#if data.guild?.inviteCode}
 					<div class="flex flex-row items-center gap-2">
 						<p>Current: <strong>{data.guild.inviteCode}</strong></p>
@@ -97,16 +103,16 @@
 				{/if}
 				<p>Set the invite code for your server!</p>
 				<form method="POST" action="?/setInvite" class="flex flex-row gap-4" use:enhance>
-					<Input name="invite" placeholder="Invite Code" maxlength={16} />
+					<Input name="invite" placeholder="Invite Code" maxlength={64} />
 					<Button type="submit">Set</Button>
 				</form>
 			</Card.Content>
 		</Card.Root>
-		<Card.Root class="max-w-md flex-1 basis-64">
+		<Card.Root class="size-full flex-1 rounded-lg border-2">
 			<Card.Header>
 				<Card.Title class="text-xl">Admin Role</Card.Title>
 			</Card.Header>
-			<Card.Content class="flex flex-col items-center gap-2 self-stretch">
+			<Card.Content class="flex h-full flex-col items-center gap-2 self-stretch">
 				<div class="flex flex-row items-center gap-2">
 					<p>
 						Current: <strong
@@ -133,59 +139,40 @@
 		</Card.Root>
 	</section>
 
-	<div class="border-completed w-full max-w-4xl rounded-md border-2 p-4">
-		<p class="mb-1 text-lg font-semibold">Want to unlock a feature?</p>
-		<p class="text-sm">
-			Subscribe to the appropriate package in the <ExternalLinkButton href="/support"
-				>support server's</ExternalLinkButton
-			> built-in Discord Shop and/or open a ticket in the support server to discuss options!
-		</p>
-	</div>
+	<section class="bg-card flex w-full max-w-4xl flex-col rounded-lg border-2 p-4">
+		<SettingListItem
+			title="Upcoming Contest Pings"
+			class={!features?.contestPingsEnabled ? 'cursor-not-allowed opacity-50 select-none' : undefined}
+		>
+			{#snippet subtitle()}
+				<span class="text-muted-foreground text-sm">Manage your server specific contest pings!</span>
+			{/snippet}
+			<Button href="/guild/{data.guildId}/pings" class="px-8" disabled={!features?.contestPingsEnabled}
+				>Manage</Button
+			>
+		</SettingListItem>
+		<SettingSeperator />
+		<SettingListItem
+			title="Jacob Leaderboards"
+			class={!features?.jacobLeaderboardEnabled ? 'cursor-not-allowed opacity-50 select-none' : undefined}
+		>
+			{#snippet subtitle()}
+				<span class="text-muted-foreground text-sm">Manage your server specific jacob leaderboards!</span>
+			{/snippet}
+			<Button href="/guild/{data.guildId}/jacob" class="px-8" disabled={!features?.jacobLeaderboardEnabled}
+				>Manage</Button
+			>
+		</SettingListItem>
+		<SettingSeperator />
+		<SettingListItem
+			title="Server Events"
+			class={!features?.eventsEnabled ? 'cursor-not-allowed opacity-50 select-none' : undefined}
+		>
+			{#snippet subtitle()}
+				<span class="text-muted-foreground text-sm">Manage your server specific events!</span>
+			{/snippet}
 
-	<section class="bg-card flex w-full max-w-4xl flex-col rounded-md border-2 p-4">
-		<SettingListItem title="Upcoming Contest Pings">
-			{#snippet subtitle()}
-				{#if !features?.contestPingsEnabled}
-					<span class="text-destructive text-sm">This server does not have this feature unlocked.</span>
-				{:else}
-					<span class="text-muted-foreground text-sm">Manage your server specific contest pings!</span>
-				{/if}
-			{/snippet}
-			{#if features?.contestPingsEnabled}
-				<Button href="/guild/{data.guildId}/pings" class="px-8">Manage</Button>
-			{:else}
-				{@render disabledBtn()}
-			{/if}
-		</SettingListItem>
-		<SettingSeperator />
-		<SettingListItem title="Jacob Leaderboards">
-			{#snippet subtitle()}
-				{#if !features?.jacobLeaderboardEnabled}
-					<span class="text-destructive text-sm">This server does not have this feature unlocked.</span>
-				{:else}
-					<span class="text-muted-foreground text-sm">Manage your server specific jacob leaderboards!</span>
-				{/if}
-			{/snippet}
-			{#if features?.jacobLeaderboardEnabled}
-				<Button href="/guild/{data.guildId}/jacob" class="px-8">Manage</Button>
-			{:else}
-				{@render disabledBtn()}
-			{/if}
-		</SettingListItem>
-		<SettingSeperator />
-		<SettingListItem title="Server Events">
-			{#snippet subtitle()}
-				{#if !features?.eventsEnabled}
-					<span class="text-destructive text-sm">This server does not have this feature unlocked.</span>
-				{:else}
-					<span class="text-muted-foreground text-sm">Manage your server specific events!</span>
-				{/if}
-			{/snippet}
-			{#if features?.eventsEnabled}
-				<Button href="/guild/{data.guildId}/events" class="px-8">Manage</Button>
-			{:else}
-				{@render disabledBtn()}
-			{/if}
+			<Button href="/guild/{data.guildId}/events" class="px-8" disabled={!features?.eventsEnabled}>Manage</Button>
 		</SettingListItem>
 	</section>
 
@@ -271,9 +258,3 @@
 		</section>
 	{/if}
 </div>
-
-{#snippet disabledBtn()}
-	<div class="bg-muted-variant text-muted-foreground cursor-not-allowed rounded-md px-8 py-2.5 text-sm font-medium">
-		Manage
-	</div>
-{/snippet}
