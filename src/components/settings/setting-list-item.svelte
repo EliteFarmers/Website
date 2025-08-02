@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import Info from '@lucide/svelte/icons/info';
 	import type { Snippet } from 'svelte';
 
@@ -9,13 +10,17 @@
 		wiki?: string;
 		children?: Snippet;
 		child?: Snippet;
+		class?: string;
 	}
 
-	let { title, description = undefined, wiki, children, subtitle, child }: Props = $props();
+	let { title, description = undefined, wiki, children, subtitle, child, class: className }: Props = $props();
 </script>
 
 <div
-	class="setting-list-item flex w-full flex-col items-start justify-between gap-2 px-1 py-3 sm:flex-row sm:items-center"
+	class={cn(
+		'setting-list-item flex w-full flex-col items-start justify-between gap-2 px-1 py-3 sm:flex-row sm:items-center',
+		className
+	)}
 >
 	<div class="flex w-full flex-1 flex-col justify-center">
 		<p class="md:text-lg">
