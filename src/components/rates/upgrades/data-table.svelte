@@ -1,4 +1,6 @@
 <script lang="ts" generics="TData, TValue">
+	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
+	import * as Table from '$ui/table/index.js';
 	import {
 		type ColumnDef,
 		type ColumnFiltersState,
@@ -13,8 +15,6 @@
 		getPaginationRowModel,
 		getSortedRowModel,
 	} from '@tanstack/table-core';
-	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
-	import * as Table from '$ui/table/index.js';
 	import DataTablePagination from './data-table-pagination.svelte';
 
 	type DataTableProps<TData, TValue> = {

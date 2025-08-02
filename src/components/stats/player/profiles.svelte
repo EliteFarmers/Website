@@ -1,8 +1,8 @@
 <script lang="ts">
-	import * as Popover from '$ui/popover';
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { cn } from '$lib/utils';
+	import * as Popover from '$ui/popover';
 
 	const ctx = getStatsContext();
 	const selected = $derived(ctx.selectedProfile);

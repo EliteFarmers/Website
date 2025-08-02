@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getStatsContext } from '$lib/stores/stats.svelte.js';
 	import { getColumns } from './columns.js';
-	import RanksTable from './rank-table.svelte';
 	import RankRow from './rank-row.svelte';
+	import RanksTable from './rank-table.svelte';
 
 	interface Props {
 		leaderboards?: (typeof import('$lib/servercache').cache)['leaderboards'];

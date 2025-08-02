@@ -1,16 +1,16 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
-	import * as Accordion from '$ui/accordion';
-	import { Button } from '$ui/button';
-	import type { PageData } from './$types';
-	import Leaderboard from './leaderboard.svelte';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import { page } from '$app/state';
 	import Event from '$comp/discord/event.svelte';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { page } from '$app/state';
+	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import type { PageData } from './$types';
+	import Leaderboard from './leaderboard.svelte';
 
 	interface Props {
 		data: PageData;

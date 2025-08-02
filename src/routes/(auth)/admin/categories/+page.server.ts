@@ -1,6 +1,6 @@
+import { CreateShopCategory, GetShopCategories, UpdateCategoryOrder, UpdateShopCategory } from '$lib/api/elite';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CreateShopCategory, GetShopCategories, UpdateCategoryOrder, UpdateShopCategory } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();

@@ -1,7 +1,7 @@
 import { GetCropCollectionPoints } from '$lib/api/elite';
+import { preprocessCropCharts, preprocessWeightChart } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { preprocessCropCharts, preprocessWeightChart } from '$lib/utils';
 
 export const load = (async ({ parent }) => {
 	const { account, profile } = await parent();

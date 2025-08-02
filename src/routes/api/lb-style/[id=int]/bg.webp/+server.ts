@@ -1,8 +1,8 @@
 import { cache } from '$lib/servercache';
-import { error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
 import { getLeaderboardBackground } from '$lib/styles/render';
 import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
+import { error } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 
 export async function OPTIONS() {
 	return new Response(null, {

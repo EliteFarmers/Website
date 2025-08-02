@@ -1,8 +1,13 @@
+import {
+	AddProductToCategory,
+	GetAdminProducts,
+	GetShopCategory,
+	RemoveProductFromCategory,
+	UpdateCategoryProductOrder,
+	UpdateShopCategory,
+} from '$lib/api/elite';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetAdminProducts, GetShopCategory, UpdateCategoryProductOrder, UpdateShopCategory } from '$lib/api/elite';
-import { AddProductToCategory } from '$lib/api/elite';
-import { RemoveProductFromCategory } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { user, session } = await parent();

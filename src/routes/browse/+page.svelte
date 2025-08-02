@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import Serverbar from '$comp/discord/serverbar.svelte';
 	import Event from '$comp/discord/event.svelte';
+	import Serverbar from '$comp/discord/serverbar.svelte';
 	import Head from '$comp/head.svelte';
 	import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;

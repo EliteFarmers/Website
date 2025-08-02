@@ -2,11 +2,11 @@
 	import type { components } from '$lib/api/api';
 	import { getSkillLevel } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import OctagonAlert from '@lucide/svelte/icons/octagon-alert';
-	import CircleCheckBig from '@lucide/svelte/icons/circle-check-big';
-	import { getGardenLevel } from 'farming-weight';
 	import Check from '@lucide/svelte/icons/check';
+	import CircleCheckBig from '@lucide/svelte/icons/circle-check-big';
+	import OctagonAlert from '@lucide/svelte/icons/octagon-alert';
 	import X from '@lucide/svelte/icons/x';
+	import { getGardenLevel } from 'farming-weight';
 
 	interface Props {
 		itemData: components['schemas']['ItemResponse'];

@@ -1,7 +1,7 @@
 import { GetMonthlyContests } from '$lib/api/elite';
+import { getSkyblockDate, getTimeStamp } from '$lib/format';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getSkyblockDate, getTimeStamp } from '$lib/format';
 
 export const load = (async ({ params, setHeaders, request }) => {
 	const { year, month } = params;

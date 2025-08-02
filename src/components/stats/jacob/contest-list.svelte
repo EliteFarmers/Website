@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Contest from '$comp/stats/jacob/contest.svelte';
-	import { ScrollArea } from '$ui/scroll-area';
 	import type { components } from '$lib/api/api';
 	import { Button } from '$ui/button';
-	import { page } from '$app/state';
+	import { ScrollArea } from '$ui/scroll-area';
 
 	interface Props {
 		contests: NonNullable<components['schemas']['JacobDataDto']['contests']>;

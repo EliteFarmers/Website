@@ -1,6 +1,6 @@
 import { page } from '$app/state';
-import { getContext, setContext, untrack, type Component, type Snippet } from 'svelte';
 import Home from '@lucide/svelte/icons/home';
+import { getContext, setContext, untrack, type Component, type Snippet } from 'svelte';
 
 interface CrumbBase {
 	name?: string;

@@ -1,6 +1,6 @@
+import { GetGuild } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { GetGuild } from '$lib/api/elite';
 
 export const load = (async ({ params, parent, locals }) => {
 	const { user } = await parent();

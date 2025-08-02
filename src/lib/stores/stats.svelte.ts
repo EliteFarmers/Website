@@ -1,9 +1,9 @@
 import type { components } from '$lib/api/api';
 import type { ProfileDetails } from '$lib/api/elite';
-import { PROPER_CROP_NAME, API_CROP_TO_CROP, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
+import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { CROP_TO_PEST } from '$lib/constants/pests';
 import { formatIgn, getRankInformation } from '$lib/format';
-import { getCropFromName, Crop } from 'farming-weight';
+import { Crop, getCropFromName } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { getRatesData } from './ratesData';
 

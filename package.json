@@ -23,9 +23,9 @@
 		"license": "pnpm exec pnpm-licenses generate-disclaimer --output-file=./static/oss.txt",
 		"generate-api-types": "npx openapi-typescript \"./src/lib/api/swagger.json\" -o \"./src/lib/api/api.d.ts\""
 	},
-    "dependencies": {
+	"dependencies": {
 		"@napi-rs/canvas": "^0.1.74"
-    },
+	},
 	"devDependencies": {
 		"@eslint/js": "^9.25.1",
 		"@exodus/schemasafe": "^1.3.0",

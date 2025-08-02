@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
-	import WeightNum from './weight-num.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { drawBackgroundCanvas } from '$lib/styles/maker';
 	import { isValidWeightStyle } from '$lib/styles/style';
-	import TextElement from './text-element.svelte';
 	import StatElements from './stat-elements.svelte';
-	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import TextElement from './text-element.svelte';
+	import WeightNum from './weight-num.svelte';
 
 	const ctx = getStatsContext();
 	const style = $derived(isValidWeightStyle(ctx.style?.data) ? ctx.style.data : undefined);

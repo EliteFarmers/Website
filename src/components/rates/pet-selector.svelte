@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
-	import { FarmingPets, type FarmingPet } from 'farming-weight';
-	import * as Popover from '$ui/popover';
-	import * as DropdownMenu from '$ui/dropdown-menu';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import Menu from '@lucide/svelte/icons/menu';
-	import { buttonVariants } from '$ui/button';
-	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import FormattedText from '$comp/items/formatted-text.svelte';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
+	import { buttonVariants } from '$ui/button';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import * as Popover from '$ui/popover';
+	import Menu from '@lucide/svelte/icons/menu';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import { FarmingPets, type FarmingPet } from 'farming-weight';
 
 	interface Props {
 		player: RatesPlayerStore;

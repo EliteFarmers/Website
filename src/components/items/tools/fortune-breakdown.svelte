@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FormatMinecraftText } from '$lib/format';
-	import { STAT_ICONS, Stat } from 'farming-weight';
 	import * as Popover from '$ui/popover';
+	import { STAT_ICONS, Stat } from 'farming-weight';
 
 	interface Props {
 		title?: string;

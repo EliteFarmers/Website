@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { components } from '$lib/api/api';
 	import {
 		compareRarity,
 		GARDEN_VISITORS,
@@ -6,7 +7,6 @@
 		type GardenVisitor,
 		type GardenVisitorStats,
 	} from 'farming-weight';
-	import type { components } from '$lib/api/api';
 	import MissingVisitor from './missing-visitor.svelte';
 
 	interface Props {

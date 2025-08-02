@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as Accordion from '$ui/accordion';
 	import type { components } from '$lib/api/api';
-	import { EventType } from '$lib/utils';
-	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { EventType } from '$lib/utils';
+	import * as Accordion from '$ui/accordion';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	interface Props {
 		event: components['schemas']['EventDetailsDto'];

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as Popover from '$ui/popover';
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import type { components } from '$lib/api/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import * as Popover from '$ui/popover';
 	import { fortuneFromPersonalBestContest, getCropFromName } from 'farming-weight';
-	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 
 	interface Props {
 		jacob: components['schemas']['JacobDataDto'] | undefined | null;

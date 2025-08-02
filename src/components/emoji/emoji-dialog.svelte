@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Button, buttonVariants } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
-	import EmojiPicker from './emoji-picker.svelte';
-	import type { Snippet } from 'svelte';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import type { Snippet } from 'svelte';
+	import EmojiPicker from './emoji-picker.svelte';
 
 	interface Props {
 		ign?: string;

@@ -1,11 +1,15 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import SettingBigSeperator from '$comp/settings/setting-big-seperator.svelte';
 	import SettingHeader from '$comp/settings/setting-header.svelte';
 	import SettingListItem from '$comp/settings/setting-list-item.svelte';
 	import SettingSeperator from '$comp/settings/setting-seperator.svelte';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { Button } from '$ui/button';
 	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
@@ -13,10 +17,6 @@
 	import { Crop, CROP_INFO, getCropDisplayName, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
 	import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
 	import ShardSetting from './shard-setting.svelte';
-	import { getGlobalContext } from '$lib/hooks/global.svelte';
-	import { getStatsContext } from '$lib/stores/stats.svelte';
-	import { applyAction, enhance } from '$app/forms';
-	import { Button } from '$ui/button';
 
 	const ratesData = getRatesData();
 	const gbl = getGlobalContext();

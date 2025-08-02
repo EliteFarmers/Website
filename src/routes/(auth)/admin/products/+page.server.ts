@@ -1,6 +1,6 @@
+import { GetAdminProducts, RefreshProducts } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { GetAdminProducts, RefreshProducts } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();

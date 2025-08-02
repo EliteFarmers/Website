@@ -5,11 +5,11 @@
 <script lang="ts">
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import * as Breadcrumb from '$ui/breadcrumb';
-	import { useSidebar } from '$ui/sidebar';
+	import { buttonVariants } from '$ui/button';
 	import * as Drawer from '$ui/drawer';
 	import * as DropdownMenu from '$ui/dropdown-menu';
-	import { buttonVariants } from '$ui/button';
 	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
+	import { useSidebar } from '$ui/sidebar';
 	import type { Component } from 'svelte';
 
 	const crumbs = getBreadcrumb();

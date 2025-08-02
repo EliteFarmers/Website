@@ -1,18 +1,18 @@
 <script lang="ts">
-	import Head from '$comp/head.svelte';
-	import Milestones from '$comp/stats/garden/milestones.svelte';
-	import Skillbar from '$comp/stats/skillbar.svelte';
-	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
-	import type { components } from '$lib/api/api';
-	import Plots from '$comp/stats/garden/plots.svelte';
-	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
-	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
-	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import { page } from '$app/state';
+	import Head from '$comp/head.svelte';
+	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
+	import Milestones from '$comp/stats/garden/milestones.svelte';
+	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
+	import Plots from '$comp/stats/garden/plots.svelte';
+	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
+	import Skillbar from '$comp/stats/skillbar.svelte';
+	import type { components } from '$lib/api/api';
+	import { getCopperSpent } from '$lib/calc/garden';
+	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
-	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { getCopperSpent } from '$lib/calc/garden';
+	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
 
 	let overflow = $state(true);
 

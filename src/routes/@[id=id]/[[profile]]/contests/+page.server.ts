@@ -1,6 +1,6 @@
-import type { PageServerLoad } from './$types';
 import type { components } from '$lib/api/api';
 import { getSkyblockDate } from '$lib/format';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent }) => {
 	const { member } = await parent();

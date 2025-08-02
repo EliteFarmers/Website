@@ -1,6 +1,6 @@
+import type { RatesItemPriceData } from '$lib/api/elite';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { RatesItemPriceData } from '$lib/api/elite';
 
 export const GET: RequestHandler = async ({ params, locals }) => {
 	const { item } = params;

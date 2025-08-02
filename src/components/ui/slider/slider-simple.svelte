@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Slider as SliderPrimitive, type SliderSingleRootProps } from 'bits-ui';
 	import { cn } from '$lib/utils.js';
+	import { Slider as SliderPrimitive, type SliderSingleRootProps } from 'bits-ui';
 
 	let { value = $bindable(0), class: className, ...restProps }: Omit<SliderSingleRootProps, 'type'> = $props();
 </script>

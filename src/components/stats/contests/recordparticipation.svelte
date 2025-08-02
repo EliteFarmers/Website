@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { components } from '$lib/api/api';
 	import { getReadableSkyblockMonthDay } from '$lib/format';
-	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 

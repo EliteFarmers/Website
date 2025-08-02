@@ -1,5 +1,3 @@
-import { error, redirect, type Actions, fail } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import {
 	CreateEventTeam,
 	GetAccount,
@@ -15,6 +13,8 @@ import {
 	TransferEventTeamOwnership,
 	UpdateEventTeam,
 } from '$lib/api/elite';
+import { error, fail, redirect, type Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals, parent, params, request }) => {
 	const { session, self: member } = await parent();

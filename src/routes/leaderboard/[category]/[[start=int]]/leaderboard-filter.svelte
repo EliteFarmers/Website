@@ -1,14 +1,14 @@
 <script lang="ts">
-	import CirclePlus from '@lucide/svelte/icons/circle-plus';
-	import Check from '@lucide/svelte/icons/check';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { cn } from '$lib/utils.js';
+	import { Badge } from '$ui/badge';
+	import { Button } from '$ui/button';
 	import * as Command from '$ui/command';
 	import * as Popover from '$ui/popover';
-	import { Button } from '$ui/button';
-	import { cn } from '$lib/utils.js';
 	import { Separator } from '$ui/separator';
-	import { Badge } from '$ui/badge';
-	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
+	import Check from '@lucide/svelte/icons/check';
+	import CirclePlus from '@lucide/svelte/icons/circle-plus';
 
 	type Props = {
 		query: string;

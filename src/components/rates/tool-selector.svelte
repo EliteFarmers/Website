@@ -1,10 +1,10 @@
 <script lang="ts">
+	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import { PROPER_CROP_NAME } from '$lib/constants/crops';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import type { FarmingTool } from 'farming-weight';
 	import Toolconfig from './toolconfig.svelte';
-	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 
 	function toggleShow() {
 		show = show === 2 ? 999 : 2;

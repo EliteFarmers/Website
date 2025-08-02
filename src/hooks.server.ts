@@ -1,6 +1,6 @@
-import type { Handle, ServerInit } from '@sveltejs/kit';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
+import type { Handle, ServerInit } from '@sveltejs/kit';
 
 export const init: ServerInit = async () => {
 	initCachedItems();

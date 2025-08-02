@@ -1,3 +1,5 @@
+import { dev } from '$app/environment';
+import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
 import {
 	GetAccount,
 	GetPlayerRanks,
@@ -6,10 +8,8 @@ import {
 	type ProfileGameMode,
 } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
-import type { LayoutServerLoad } from './$types';
-import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
-import { dev } from '$app/environment';
+import type { LayoutServerLoad } from './$types';
 
 const limiter = new RateLimiter({
 	IP: [+RATE_LIMIT_IP, '10m'],

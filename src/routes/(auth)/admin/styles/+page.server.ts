@@ -1,7 +1,7 @@
+import type { components } from '$lib/api/api';
+import { CreateWeightStyle } from '$lib/api/elite';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { CreateWeightStyle } from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 
 export const load = (async ({ parent, locals }) => {
 	const { session } = await parent();

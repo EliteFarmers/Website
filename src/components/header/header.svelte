@@ -1,17 +1,17 @@
 <script lang="ts">
-	import * as Sidebar from '$ui/sidebar';
-	import { Separator } from '$ui/separator';
+	import { navigating, page } from '$app/state';
+	import ModeToggle from '$comp/header/mode-toggle.svelte';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import NavBreadcrumb from '$comp/sidebar/nav-breadcrumb.svelte';
-	import ModeToggle from '$comp/header/mode-toggle.svelte';
-	import { navigating, page } from '$app/state';
-	import { quadInOut } from 'svelte/easing';
-	import { slide } from 'svelte/transition';
+	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
+	import { Separator } from '$ui/separator';
+	import * as Sidebar from '$ui/sidebar';
 	import Search from '@lucide/svelte/icons/search';
 	import Star from '@lucide/svelte/icons/star';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { quadInOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
 	import SmallAnnouncements from './small-announcements.svelte';
 
 	interface Props {

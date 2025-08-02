@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
-	import type { PageData } from './$types';
-
-	import Head from '$comp/head.svelte';
 	import { page } from '$app/state';
+	import Head from '$comp/head.svelte';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
-	import { SkyBlockTime } from 'farming-weight';
+	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
 	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { Button } from '$ui/button';
+	import { SkyBlockTime } from 'farming-weight';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;

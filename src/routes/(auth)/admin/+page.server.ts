@@ -1,6 +1,6 @@
-import { error, type Actions, fail } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import { DELETE, GET, GetAdminProducts, POST } from '$lib/api/elite';
+import { error, fail, type Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();

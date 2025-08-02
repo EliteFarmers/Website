@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import Croprecords from '$comp/stats/contests/croprecords.svelte';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;

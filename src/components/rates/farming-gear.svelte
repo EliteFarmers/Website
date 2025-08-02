@@ -1,15 +1,14 @@
 <script lang="ts">
+	import FormattedText from '$comp/items/formatted-text.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
-	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
+	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Popover from '$ui/popover';
-	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import Menu from '@lucide/svelte/icons/menu';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { GearSlot } from 'farming-weight';
-	import FormattedText from '$comp/items/formatted-text.svelte';
 
 	interface Props {
 		player: RatesPlayerStore;
@@ -36,7 +35,7 @@
 <div class="flex flex-col gap-3 rounded-md border p-4">
 	<div class="flex w-full items-center justify-between">
 		<p class="text-lg font-semibold">Farming Gear</p>
-		<Fortunebreakdown breakdown={fortune} />
+		<FortuneBreakdown breakdown={fortune} />
 	</div>
 	<hr />
 	<div class="flex flex-col gap-3">
@@ -99,7 +98,7 @@
 						{/if}
 						<Lorebtn item={piece.item} />
 						{#key $player}
-							<Fortunebreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
+							<FortuneBreakdown total={piece.fortune} breakdown={piece.fortuneBreakdown} />
 						{/key}
 					</div>
 				</div>
