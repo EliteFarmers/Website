@@ -114,7 +114,7 @@ export const CREDITS: Credit[] = [
 		links: [
 			{
 				name: 'GitHub',
-				url: 'https://github.com/SkyCryptWebsite/SkyCrypt',
+				url: 'https://github.com/SkyCryptWebsite/SkyCryptv2',
 			},
 			{
 				name: 'Website',
