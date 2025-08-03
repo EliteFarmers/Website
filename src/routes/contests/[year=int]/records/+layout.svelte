@@ -37,15 +37,15 @@
 <Head title="Record Contest Scores | Year {year}" description="View the top scores of the Skyblock year!" />
 
 <div class="flex flex-col items-center justify-center">
-	<div class="mt-16 mb-4 flex flex-col items-center gap-4 text-center font-semibold">
-		<h1 class="text-4xl">Contest Records - Year {year}</h1>
+	<div class="mt-16 mb-4 flex w-full flex-col items-center gap-4 text-center font-semibold">
+		<h1 class="text-4xl">Contest Records<br />Year {year}</h1>
 		<p>
 			{new Date(getTimeStamp(+year - 1, 0, 0) * 1000).toLocaleDateString() +
 				' - ' +
 				new Date(getTimeStamp(+year, 0, 0) * 1000).toLocaleDateString()}
 		</p>
 		<Cropselector />
-		<div class="mb-2 flex w-full flex-col justify-center gap-2 md:flex-row md:gap-4">
+		<div class="mb-2 flex w-full max-w-2xl flex-col justify-center gap-2 md:flex-row md:gap-4">
 			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year - 1}/records">Previous</Button>
 			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year}">View&nbsp;Year</Button>
 			<Button class="flex-1 rounded-lg" variant="secondary" href="/contests/{year + 1}/records">Next</Button>
