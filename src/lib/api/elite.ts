@@ -17,8 +17,14 @@ const middleware: Middleware = {
 
 client.use(middleware);
 
+/**
+ * @deprecated The method should not be used
+ */
 export const { GET, POST, DELETE, PATCH, PUT } = client;
 
+/**
+ * @deprecated The method should not be used
+ */
 export const formDataSerializer = (body: Record<string, string | number | boolean>) => {
 	if (!body) return;
 	try {
@@ -40,6 +46,9 @@ export const formDataSerializer = (body: Record<string, string | number | boolea
 	}
 };
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetUserSession = async (accessToken: string) =>
 	await GET('/auth/me', {
 		headers: {
@@ -47,16 +56,25 @@ export const GetUserSession = async (accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const LoginUser = async (body: components['schemas']['DiscordLoginDto']) =>
 	await POST('/auth/login', {
 		body: body,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RefreshUserSession = async (body: components['schemas']['AuthRefreshDto']) =>
 	await POST('/auth/refresh', {
 		body: body,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAuthorizedAccount = async (accessToken: string) =>
 	await GET('/account', {
 		headers: {
@@ -64,6 +82,9 @@ export const GetAuthorizedAccount = async (accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAccount = async (player: string, headers: HeadersOptions) =>
 	await GET('/account/{player}', {
 		params: {
@@ -74,6 +95,9 @@ export const GetAccount = async (player: string, headers: HeadersOptions) =>
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAccountByDiscordId = async (discordId: number, headers: HeadersOptions) =>
 	await GET('/account/{discordId}', {
 		params: {
@@ -84,6 +108,9 @@ export const GetAccountByDiscordId = async (discordId: number, headers: HeadersO
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPlayer = async (player: string, headers: HeadersOptions) =>
 	await GET('/player/{player}', {
 		params: {
@@ -94,6 +121,9 @@ export const GetPlayer = async (player: string, headers: HeadersOptions) =>
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPlayerByDiscordId = async (id: string, headers: HeadersOptions) =>
 	await GET('/player/{discordId}', {
 		params: {
@@ -104,6 +134,9 @@ export const GetPlayerByDiscordId = async (id: string, headers: HeadersOptions) 
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetProfiles = async (playerUuid: string, headers: HeadersOptions) =>
 	await GET('/profiles/{playerUuid}', {
 		params: {
@@ -114,6 +147,9 @@ export const GetProfiles = async (playerUuid: string, headers: HeadersOptions) =
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetProfile = async (profileUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{profileUuid}', {
 		params: {
@@ -124,6 +160,9 @@ export const GetProfile = async (profileUuid: string, headers: HeadersOptions) =
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetProfileMember = async (playerUuid: string, profileUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{playerUuid}/{profileUuid}', {
 		params: {
@@ -135,6 +174,9 @@ export const GetProfileMember = async (playerUuid: string, profileUuid: string, 
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetSelectedProfileMember = async (playerUuid: string, headers: HeadersOptions) =>
 	await GET('/profile/{playerUuid}/selected', {
 		params: {
@@ -145,6 +187,9 @@ export const GetSelectedProfileMember = async (playerUuid: string, headers: Head
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, max?: number, headers?: HeadersOptions) =>
 	await GET('/leaderboards/{playerUuid}/{profileUuid}', {
 		params: {
@@ -159,6 +204,9 @@ export const GetPlayerRanks = async (playerUuid: string, profileUuid: string, ma
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPlayerContests = async (playerUuid: string, profileUuid: string, headers: HeadersOptions) =>
 	await GET('/contests/{playerUuid}/{profileUuid}', {
 		params: {
@@ -170,6 +218,9 @@ export const GetPlayerContests = async (playerUuid: string, profileUuid: string,
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetContests = async (timestamp: number, headers: HeadersOptions) =>
 	await GET('/contests/{timestamp}', {
 		params: {
@@ -180,6 +231,9 @@ export const GetContests = async (timestamp: number, headers: HeadersOptions) =>
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetYearlyContests = async (year: number, headers: HeadersOptions) =>
 	await GET('/contests/at/{year}', {
 		params: {
@@ -190,6 +244,9 @@ export const GetYearlyContests = async (year: number, headers: HeadersOptions) =
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetMonthlyContests = async (year: number, month: number, headers: HeadersOptions) =>
 	await GET('/contests/at/{year}/{month}', {
 		params: {
@@ -201,10 +258,19 @@ export const GetMonthlyContests = async (year: number, month: number, headers: H
 		headers: headers,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetCurrentYearContests = async () => await GET('/contests/at/now', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetWeights = async () => await GET('/weights/all', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SetPrimaryAccount = async (player: string, accessToken: string) =>
 	await POST('/account/primary/{player}', {
 		params: {
@@ -217,6 +283,9 @@ export const SetPrimaryAccount = async (player: string, accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const LinkAccount = async (player: string, accessToken: string) =>
 	await POST('/account/{player}', {
 		params: {
@@ -229,6 +298,9 @@ export const LinkAccount = async (player: string, accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UnlinkAccount = async (player: string, accessToken: string) =>
 	await DELETE('/account/{player}', {
 		params: {
@@ -241,6 +313,9 @@ export const UnlinkAccount = async (player: string, accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateUserBadges = async (
 	accessToken: string,
 	playerUuid: string,
@@ -258,6 +333,9 @@ export const UpdateUserBadges = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateUserSettings = async (accessToken: string, settings: components['schemas']['UserSettingsDto']) =>
 	await PATCH('/account/settings', {
 		body: settings,
@@ -266,6 +344,9 @@ export const UpdateUserSettings = async (accessToken: string, settings: componen
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SetUserFortuneSettings = async (
 	accessToken: string,
 	playerUuid: string,
@@ -285,6 +366,9 @@ export const SetUserFortuneSettings = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RefreshPurchases = async (accessToken: string) =>
 	await POST('/account/purchases', {
 		headers: {
@@ -292,8 +376,14 @@ export const RefreshPurchases = async (accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAllBadges = async () => await GET('/badges', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetUsersGuilds = async (accessToken: string) =>
 	await GET('/user/guilds', {
 		headers: {
@@ -301,6 +391,9 @@ export const GetUsersGuilds = async (accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetGuild = async (discordId: string, accessToken: string) =>
 	await GET('/user/guild/{discordId}', {
 		params: {
@@ -313,6 +406,9 @@ export const GetGuild = async (discordId: string, accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetGuildJacob = async (discordId: string, accessToken: string) =>
 	await GET('/user/guild/{discordId}/jacob', {
 		params: {
@@ -325,6 +421,9 @@ export const GetGuildJacob = async (discordId: string, accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const PatchGuildJacob = async (
 	discordId: string,
 	accessToken: string,
@@ -342,6 +441,9 @@ export const PatchGuildJacob = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AddGuildJacobLeadeboard = async (
 	discordId: string,
 	accessToken: string,
@@ -359,6 +461,9 @@ export const AddGuildJacobLeadeboard = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateGuildJacobLeadeboard = async (
 	discordId: string,
 	accessToken: string,
@@ -377,6 +482,9 @@ export const UpdateGuildJacobLeadeboard = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const DeleteGuildJacobLeadeboard = async (discordId: string, accessToken: string, leaderboardId: string) =>
 	await DELETE('/user/guild/{discordId}/jacob/{leaderboardId}', {
 		params: {
@@ -390,6 +498,9 @@ export const DeleteGuildJacobLeadeboard = async (discordId: string, accessToken:
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SendGuildJacobLeadeboard = async (discordId: string, accessToken: string, leaderboardId: string) =>
 	await POST('/user/guild/{discordId}/jacob/{leaderboardId}/send', {
 		params: {
@@ -403,6 +514,9 @@ export const SendGuildJacobLeadeboard = async (discordId: string, accessToken: s
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SetGuildInvite = async (discordId: string, accessToken: string, invite: string) =>
 	await PUT('/user/guild/{discordId}/invite', {
 		params: {
@@ -416,6 +530,9 @@ export const SetGuildInvite = async (discordId: string, accessToken: string, inv
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SetGuildAdminRole = async (discordId: string, accessToken: string, role: string) =>
 	await PUT('/user/guild/{discordId}/adminrole', {
 		params: {
@@ -429,6 +546,9 @@ export const SetGuildAdminRole = async (discordId: string, accessToken: string, 
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SetGuildPublic = async (discordId: string, accessToken: string, enable: boolean) =>
 	await POST('/guild/{discordId}/public', {
 		params: {
@@ -444,6 +564,9 @@ export const SetGuildPublic = async (discordId: string, accessToken: string, ena
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPublicGuild = async (discordId: string) =>
 	await GET('/guild/{discordId}', {
 		params: {
@@ -453,8 +576,14 @@ export const GetPublicGuild = async (discordId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPublicGuilds = async () => await GET('/guilds', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetProfilesWeights = async (playerUuid: string) =>
 	await GET('/weight/{playerUuid}', {
 		params: {
@@ -464,6 +593,9 @@ export const GetProfilesWeights = async (playerUuid: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetLeaderboards = async () => await GET('/leaderboards', {});
 
 export enum LeaderboardRemovedFilter {
@@ -478,6 +610,9 @@ interface BaseLeaderboardQuery {
 	removed?: LeaderboardRemovedFilter;
 }
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetLeaderboardSlice = async (
 	leaderboardId: string,
 	query: { limit: number; offset: number } & BaseLeaderboardQuery
@@ -507,6 +642,9 @@ export const GetLeaderboardSlice = async (
 	};
 };
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetPlayersRank = async (
 	leaderboardId: string,
 	playerUuid: string,
@@ -529,6 +667,9 @@ export const GetPlayersRank = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetProfilesRank = async (
 	leaderboardId: string,
 	profileUuid: string,
@@ -549,6 +690,9 @@ export const GetProfilesRank = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetUpcomingEvents = async () =>
 	await GET('/events', {
 		params: {
@@ -558,6 +702,9 @@ export const GetUpcomingEvents = async () =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminPendingEvents = async (token: string) =>
 	await GET('/admin/events/pending', {
 		headers: {
@@ -565,6 +712,9 @@ export const GetAdminPendingEvents = async (token: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetGuildEvents = async (discordId: string) =>
 	await GET('/guild/{discordId}/events', {
 		params: {
@@ -574,6 +724,9 @@ export const GetGuildEvents = async (discordId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminGuildEvents = async (token: string, discordId: string) =>
 	await GET('/guild/{discordId}/events/admin', {
 		params: {
@@ -586,6 +739,9 @@ export const GetAdminGuildEvents = async (token: string, discordId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventDetails = async (eventId: string) =>
 	await GET('/event/{eventId}', {
 		params: {
@@ -595,8 +751,14 @@ export const GetEventDetails = async (eventId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventDefaults = async () => await GET('/event/defaults', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminEventDetails = async (token: string, discordId: string, eventId: string) =>
 	await GET('/guild/{discordId}/event/{eventId}/admin', {
 		params: {
@@ -610,6 +772,9 @@ export const GetAdminEventDetails = async (token: string, discordId: string, eve
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventMembers = async (eventId: string) =>
 	await GET('/event/{eventId}/members', {
 		params: {
@@ -619,6 +784,9 @@ export const GetEventMembers = async (eventId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminEventMembers = async (token: string, discordId: string, eventId: string) =>
 	await GET('/guild/{discordId}/event/{eventId}/members', {
 		params: {
@@ -632,6 +800,9 @@ export const GetAdminEventMembers = async (token: string, discordId: string, eve
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminEventTeams = async (token: string, discordId: string, eventId: string) =>
 	await GET('/guild/{discordId}/event/{eventId}/teams', {
 		params: {
@@ -645,6 +816,9 @@ export const GetAdminEventTeams = async (token: string, discordId: string, event
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventMember = async (eventId: string, playerUuid: string, token?: string) =>
 	await GET('/event/{eventId}/member/{playerUuid}', {
 		params: {
@@ -658,6 +832,9 @@ export const GetEventMember = async (eventId: string, playerUuid: string, token?
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const JoinEvent = async (eventId: string, accessToken: string, playerUuid?: string, profileId?: string) =>
 	await POST('/event/{eventId}/join', {
 		params: {
@@ -674,6 +851,9 @@ export const JoinEvent = async (eventId: string, accessToken: string, playerUuid
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const LeaveEvent = async (eventId: string, accessToken: string) =>
 	await POST('/event/{eventId}/leave', {
 		params: {
@@ -686,6 +866,9 @@ export const LeaveEvent = async (eventId: string, accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const CreateEvent = async (
 	accessToken: string,
 	guildId: string,
@@ -703,6 +886,9 @@ export const CreateEvent = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const EditEvent = async (
 	accessToken: string,
 	eventId: string,
@@ -722,6 +908,9 @@ export const EditEvent = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SetEventBanner = async (accessToken: string, eventId: string, discordId: string, banner: string) =>
 	await POST('/guild/{discordId}/events/{eventId}/banner', {
 		params: {
@@ -740,6 +929,9 @@ export const SetEventBanner = async (accessToken: string, eventId: string, disco
 		bodySerializer: formDataSerializer,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const ClearEventBanner = async (accessToken: string, eventId: string, discordId: string) =>
 	await DELETE('/guild/{discordId}/events/{eventId}/banner', {
 		params: {
@@ -755,6 +947,9 @@ export const ClearEventBanner = async (accessToken: string, eventId: string, dis
 		bodySerializer: formDataSerializer,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventBans = async (accessToken: string, discordId: string, eventId: string) =>
 	await GET('/guild/{discordId}/event/{eventId}/bans', {
 		params: {
@@ -768,6 +963,9 @@ export const GetEventBans = async (accessToken: string, discordId: string, event
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const BanEventMember = async (
 	accessToken: string,
 	discordId: string,
@@ -789,6 +987,9 @@ export const BanEventMember = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AdminKickTeamMember = async (
 	accessToken: string,
 	discordId: string,
@@ -810,6 +1011,9 @@ export const AdminKickTeamMember = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AdminDeleteTeam = async (accessToken: string, discordId: string, eventId: string, teamId: string) =>
 	await DELETE('/guild/{discordId}/events/{eventId}/teams/{teamId}', {
 		params: {
@@ -824,6 +1028,9 @@ export const AdminDeleteTeam = async (accessToken: string, discordId: string, ev
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UnbanEventMember = async (accessToken: string, discordId: string, eventId: string, playerUuid: string) =>
 	await DELETE('/guild/{discordId}/events/{eventId}/bans/{playerUuid}', {
 		params: {
@@ -838,6 +1045,9 @@ export const UnbanEventMember = async (accessToken: string, discordId: string, e
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const ForceAddEventMember = async (
 	accessToken: string,
 	discordId: string,
@@ -861,6 +1071,9 @@ export const ForceAddEventMember = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const PermDeleteEventMember = async (
 	accessToken: string,
 	discordId: string,
@@ -880,6 +1093,9 @@ export const PermDeleteEventMember = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetYearlyContestRecords = async (year: number) =>
 	await GET('/contests/records/{year}', {
 		params: {
@@ -889,6 +1105,9 @@ export const GetYearlyContestRecords = async (year: number) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const DisableUpcomingContestPings = async (accessToken: string, discordId: string, reason: string) =>
 	await DELETE('/user/guild/{discordId}/contestpings', {
 		params: {
@@ -904,6 +1123,9 @@ export const DisableUpcomingContestPings = async (accessToken: string, discordId
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateUpcomingContestPings = async (
 	accessToken: string,
 	discordId: string,
@@ -921,6 +1143,9 @@ export const UpdateUpcomingContestPings = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const SearchPlayers = async (query: string) =>
 	await GET('/account/search', {
 		params: {
@@ -930,6 +1155,9 @@ export const SearchPlayers = async (query: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetCropCollectionPoints = async (playerUuid: string, profileUuid: string, start?: string, days = 7) =>
 	await GET('/graph/{playerUuid}/{profileUuid}/crops', {
 		params: {
@@ -944,6 +1172,9 @@ export const GetCropCollectionPoints = async (playerUuid: string, profileUuid: s
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetSkillPoints = async (playerUuid: string, profileUuid: string, start?: string, days = 7) =>
 	await GET('/graph/{playerUuid}/{profileUuid}/crops', {
 		params: {
@@ -958,6 +1189,9 @@ export const GetSkillPoints = async (playerUuid: string, profileUuid: string, st
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
 	await GET('/graph/admin/{playerUuid}/{profileUuid}/crops', {
 		params: {
@@ -974,6 +1208,9 @@ export const GetAdminCropCollectionPoints = async (playerUuid: string, profileUu
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminCropCollectionPointsTimeSpan = async (
 	playerUuid: string,
 	profileUuid: string,
@@ -997,6 +1234,9 @@ export const GetAdminCropCollectionPointsTimeSpan = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminSkillPoints = async (playerUuid: string, profileUuid: string, accessToken: string) =>
 	await GET('/graph/admin/{playerUuid}/{profileUuid}/skills', {
 		params: {
@@ -1013,6 +1253,9 @@ export const GetAdminSkillPoints = async (playerUuid: string, profileUuid: strin
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const EnableGuildLeaderboards = async (discordId: string, accessToken: string, max = 1, enable = true) =>
 	await POST('/guild/{discordId}/jacob', {
 		params: {
@@ -1029,6 +1272,9 @@ export const EnableGuildLeaderboards = async (discordId: string, accessToken: st
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const EnableGuildEvents = async (discordId: string, accessToken: string, max = 1, enable = true) =>
 	await POST('/guild/{discordId}/events', {
 		params: {
@@ -1045,6 +1291,9 @@ export const EnableGuildEvents = async (discordId: string, accessToken: string, 
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const CreateEventTeam = async (
 	accessToken: string,
 	eventId: string,
@@ -1062,6 +1311,9 @@ export const CreateEventTeam = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateEventTeam = async (
 	accessToken: string,
 	eventId: string,
@@ -1081,6 +1333,9 @@ export const UpdateEventTeam = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RegenerateEventTeamCode = async (accessToken: string, eventId: string, teamId: string) =>
 	await POST('/event/{eventId}/team/{teamId}/code', {
 		params: {
@@ -1094,6 +1349,9 @@ export const RegenerateEventTeamCode = async (accessToken: string, eventId: stri
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
 	await GET('/event/{eventId}/team/{teamId}', {
 		params: {
@@ -1107,6 +1365,9 @@ export const GetEventTeam = async (accessToken: string, eventId: string, teamId:
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventTeams = async (eventId: string) =>
 	await GET('/event/{eventId}/teams', {
 		params: {
@@ -1116,8 +1377,14 @@ export const GetEventTeams = async (eventId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetEventTeamWords = async () => await GET('/event/teams/words', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const JoinEventTeam = async (accessToken: string, eventId: string, teamId: string, code: string) =>
 	await POST('/event/{eventId}/team/{teamId}/join', {
 		params: {
@@ -1132,6 +1399,9 @@ export const JoinEventTeam = async (accessToken: string, eventId: string, teamId
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const LeaveEventTeam = async (accessToken: string, eventId: string, teamId: string) =>
 	await POST('/event/{eventId}/team/{teamId}/leave', {
 		params: {
@@ -1145,6 +1415,9 @@ export const LeaveEventTeam = async (accessToken: string, eventId: string, teamI
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const KickEventTeamMember = async (
 	accessToken: string,
 	data: { eventId: string; teamId: string; playerUuid: string }
@@ -1162,6 +1435,9 @@ export const KickEventTeamMember = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const TransferEventTeamOwnership = async (
 	accessToken: string,
 	data: { eventId: string; teamId: string; playerUuid: string }
@@ -1181,6 +1457,9 @@ export const TransferEventTeamOwnership = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AdminTransferEventTeamOwnership = async (
 	accessToken: string,
 	data: { guildId: string; eventId: string; teamId: string; playerUuid: string }
@@ -1201,6 +1480,9 @@ export const AdminTransferEventTeamOwnership = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AddMemberToTeam = async (
 	accessToken: string,
 	discordId: string,
@@ -1222,6 +1504,9 @@ export const AddMemberToTeam = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AdminCreateEventTeam = async (
 	accessToken: string,
 	discordId: string,
@@ -1245,8 +1530,14 @@ export const AdminCreateEventTeam = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetProducts = async () => await GET('/products', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const ClaimFreeProduct = async (accessToken: string, productId: string) =>
 	await POST('/product/{discordId}/claim', {
 		params: {
@@ -1259,6 +1550,9 @@ export const ClaimFreeProduct = async (accessToken: string, productId: string) =
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAdminProducts = async (token: string) =>
 	await GET('/products/admin', {
 		headers: {
@@ -1266,8 +1560,14 @@ export const GetAdminProducts = async (token: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetWeightStyles = async () => await GET('/product/styles', {});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetWeightStyle = async (styleId: number | string) =>
 	await GET('/product/style/{styleId}', {
 		params: {
@@ -1277,6 +1577,9 @@ export const GetWeightStyle = async (styleId: number | string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateWeightStyle = async (
 	accessToken: string,
 	styleId: string,
@@ -1294,6 +1597,9 @@ export const UpdateWeightStyle = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const DeleteWeightStyle = async (accessToken: string, styleId: string) =>
 	await DELETE('/product/style/{styleId}', {
 		params: {
@@ -1306,6 +1612,9 @@ export const DeleteWeightStyle = async (accessToken: string, styleId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const CreateWeightStyle = async (accessToken: string, style: components['schemas']['CreateStyleRequest']) =>
 	await POST('/product/style', {
 		body: style,
@@ -1314,6 +1623,9 @@ export const CreateWeightStyle = async (accessToken: string, style: components['
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateProduct = async (
 	accessToken: string,
 	productId: string,
@@ -1331,6 +1643,9 @@ export const UpdateProduct = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AddProductImage = async (
 	accessToken: string,
 	productId: string,
@@ -1354,6 +1669,9 @@ export const AddProductImage = async (
 		bodySerializer: formDataSerializer,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RemoveProductImage = async (accessToken: string, productId: string, imageUrl: string) =>
 	await DELETE('/product/{discordId}/images/{imagePath}', {
 		params: {
@@ -1367,6 +1685,9 @@ export const RemoveProductImage = async (accessToken: string, productId: string,
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AddCosmeticToProduct = async (accessToken: string, productId: string, cosmeticId: string) =>
 	await POST('/product/{productId}/cosmetics/{cosmeticId}', {
 		params: {
@@ -1380,6 +1701,9 @@ export const AddCosmeticToProduct = async (accessToken: string, productId: strin
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RemoveCosmeticFromProduct = async (accessToken: string, productId: string, cosmeticId: string) =>
 	await DELETE('/product/{productId}/cosmetics/{cosmeticId}', {
 		params: {
@@ -1393,6 +1717,9 @@ export const RemoveCosmeticFromProduct = async (accessToken: string, productId: 
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AddCosmeticImage = async (
 	accessToken: string,
 	styleId: string,
@@ -1416,6 +1743,9 @@ export const AddCosmeticImage = async (
 		bodySerializer: formDataSerializer,
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RemoveCosmeticImage = async (accessToken: string, cosmeticId: string, imageUrl: string) =>
 	await DELETE('/product/style/{styleId}/images/{imagePath}', {
 		params: {
@@ -1429,6 +1759,9 @@ export const RemoveCosmeticImage = async (accessToken: string, cosmeticId: strin
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RefreshProducts = async (accessToken: string) =>
 	await POST('/products/refresh', {
 		headers: {
@@ -1436,6 +1769,9 @@ export const RefreshProducts = async (accessToken: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetShopCategories = async (includeProducts = false, token?: string) =>
 	await GET('/shop/categories', {
 		params: {
@@ -1448,6 +1784,9 @@ export const GetShopCategories = async (includeProducts = false, token?: string)
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetShopCategory = async (categoryId: string, token?: string) =>
 	await GET('/shop/category/{category}', {
 		params: {
@@ -1460,6 +1799,9 @@ export const GetShopCategory = async (categoryId: string, token?: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const CreateShopCategory = async (token: string, category: components['schemas']['CreateCategoryDto']) =>
 	await POST('/shop/category', {
 		body: category,
@@ -1468,6 +1810,9 @@ export const CreateShopCategory = async (token: string, category: components['sc
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateShopCategory = async (
 	token: string,
 	categoryId: string | number,
@@ -1485,6 +1830,9 @@ export const UpdateShopCategory = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateCategoryOrder = async (token: string, order: components['schemas']['ReorderIntRequest']) =>
 	await POST('/shop/categories/reorder', {
 		body: order,
@@ -1493,6 +1841,9 @@ export const UpdateCategoryOrder = async (token: string, order: components['sche
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const DeleteShopCategory = async (token: string, categoryId: string) =>
 	await DELETE('/shop/category/{categoryId}', {
 		params: {
@@ -1505,6 +1856,9 @@ export const DeleteShopCategory = async (token: string, categoryId: string) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const AddProductToCategory = async (token: string, categoryId: string, productId: string) =>
 	await POST('/shop/category/{categoryId}/product/{productId}', {
 		params: {
@@ -1518,6 +1872,9 @@ export const AddProductToCategory = async (token: string, categoryId: string, pr
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const RemoveProductFromCategory = async (token: string, categoryId: string, productId: string) =>
 	await DELETE('/shop/category/{categoryId}/product/{productId}', {
 		params: {
@@ -1531,6 +1888,9 @@ export const RemoveProductFromCategory = async (token: string, categoryId: strin
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const UpdateCategoryProductOrder = async (
 	token: string,
 	categoryId: string,
@@ -1548,10 +1908,22 @@ export const UpdateCategoryProductOrder = async (
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetBazaarData = async () => await GET('/resources/bazaar');
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAuctionHouse = async () => await GET('/resources/auctions');
+/**
+ * @deprecated The method should not be used
+ */
 export const GetSkyblockItems = async () => await GET('/resources/items');
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetItemPrices = async (items: string[]) =>
 	await POST('/resources/items', {
 		body: {
@@ -1559,7 +1931,13 @@ export const GetItemPrices = async (items: string[]) =>
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const GetAnnouncements = async () => await GET('/announcements', {});
+/**
+ * @deprecated The method should not be used
+ */
 export const DismissAnnouncement = async (accessToken: string, announcementId: string) =>
 	await POST('/announcements/{announcementId}/dismiss', {
 		params: {
@@ -1572,6 +1950,9 @@ export const DismissAnnouncement = async (accessToken: string, announcementId: s
 		},
 	});
 
+/**
+ * @deprecated The method should not be used
+ */
 export const CreateAnnouncement = async (
 	accessToken: string,
 	announcement: components['schemas']['CreateAnnouncementDto']
