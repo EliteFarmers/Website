@@ -7,7 +7,7 @@
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import VisibleToggle from '$comp/visible-toggle.svelte';
 	import type { components } from '$lib/api/api';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { EventType } from '$lib/utils';
 	import { Button } from '$ui/button';
@@ -87,9 +87,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	const favorites = getFavoritesContext();

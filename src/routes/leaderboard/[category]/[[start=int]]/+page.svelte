@@ -6,7 +6,7 @@
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
@@ -55,11 +55,11 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	const favorites = getFavoritesContext();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 		favorites.setPage({
 			name: `#${offset} - ` + (data.settings.title || data.lb?.title),
 			href: page.url.pathname,

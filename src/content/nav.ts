@@ -1,4 +1,4 @@
-import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
+import type { Crumb } from '$lib/hooks/page.svelte';
 import Badge from '@lucide/svelte/icons/badge';
 import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 import Command from '@lucide/svelte/icons/command';

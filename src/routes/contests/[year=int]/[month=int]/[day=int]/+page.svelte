@@ -3,7 +3,7 @@
 	import Head from '$comp/head.svelte';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { Button } from '$ui/button';
 	import { SkyBlockTime } from 'farming-weight';
 	import type { PageData } from './$types';
@@ -36,9 +36,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 

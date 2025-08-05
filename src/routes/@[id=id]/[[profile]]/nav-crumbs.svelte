@@ -14,8 +14,7 @@
 	import type { components } from '$lib/api/api';
 	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 	import { formatIgn } from '$lib/format';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
@@ -164,13 +163,12 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
-	const sidebarnav = getSidebarNav();
+	const pageCtx = getPageCtx();
 	const favorites = getFavoritesContext();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
-		sidebarnav.setNav('Stats', sidebarCrumbs);
+		pageCtx.setBreadcrumbs(crumbs);
+		pageCtx.setSidebar('Stats', sidebarCrumbs);
 		favorites.setPage({
 			icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
 			name: document.title,

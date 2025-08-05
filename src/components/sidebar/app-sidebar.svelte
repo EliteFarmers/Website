@@ -6,7 +6,7 @@
 <script lang="ts">
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import NavMain from '$comp/sidebar/nav-main.svelte';
-	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { cn } from '$lib/utils';
 	import { ScrollArea } from '$ui/scroll-area';
 	import * as Sidebar from '$ui/sidebar';
@@ -18,7 +18,7 @@
 
 	let { children }: { children?: Snippet } = $props();
 
-	const sidebarNav = getSidebarNav();
+	const pageCtx = getPageCtx();
 </script>
 
 <Sidebar.Header class="mt-2">
@@ -56,8 +56,8 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if sidebarNav.current.length}
-				<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
+			{#if pageCtx.sidebar.length}
+				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
 			{/if}
 			<NavMain items={SIDEBAR_NAV} title="Main" />
 			{@render children?.()}

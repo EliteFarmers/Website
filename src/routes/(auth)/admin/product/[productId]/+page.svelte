@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
 	import ProductPrice from '$comp/monetization/product-price.svelte';
-	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
 	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
@@ -57,10 +57,10 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 

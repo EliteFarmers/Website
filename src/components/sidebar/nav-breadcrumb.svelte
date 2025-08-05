@@ -1,22 +1,19 @@
-<script lang="ts" module>
-	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-</script>
-
 <script lang="ts">
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import * as Breadcrumb from '$ui/breadcrumb';
 	import { buttonVariants } from '$ui/button';
 	import * as Drawer from '$ui/drawer';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
 	import { useSidebar } from '$ui/sidebar';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import type { Component } from 'svelte';
 
-	const crumbs = getBreadcrumb();
+	const crumbs = getPageCtx();
 	let open = $state(false);
 	const sidebar = useSidebar();
 
-	const items = $derived(crumbs.override ?? crumbs.current);
+	const items = $derived(crumbs.breadcrumbsOverride ?? crumbs.breadcrumbs);
 
 	const first = $derived(items[0]);
 	const showFirst = $derived(first && !sidebar.isMobile);

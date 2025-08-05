@@ -9,7 +9,7 @@
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
 	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
@@ -101,9 +101,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	const favorites = getFavoritesContext();
