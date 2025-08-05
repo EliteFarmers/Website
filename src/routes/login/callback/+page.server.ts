@@ -1,9 +1,9 @@
 import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
 import { LoginUser } from '$lib/api/elite';
 import { error, redirect } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import type { PageServerLoad } from './$types';
 
-export const GET: RequestHandler = async ({ url, cookies }) => {
+export const load: PageServerLoad = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
 	const errorMsg = url.searchParams.get('error');
@@ -17,11 +17,11 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 			throw redirect(303, '/');
 		}
 
-		throw error(400, errorMsg);
+		error(400, errorMsg);
 	}
 
 	if (!code || !state || !storedState || !state.startsWith(storedState)) {
-		throw error(400, "Couldn't verify your request, please try again.");
+		error(400, "Couldn't verify your request, please try again.");
 	}
 
 	const [, redirectTo = '', attemptCount = 0] = state.split('|');
@@ -38,7 +38,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	if (!loginResponse) {
 		console.log(r);
 		console.log(e);
-		throw error(500, 'Failed to login user!');
+		error(500, 'Failed to login user!');
 	}
 
 	const thirtyDays = 30 * 24 * 60 * 60;
@@ -57,5 +57,5 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		path: '/',
 	});
 
-	throw redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}`);
+	redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}`);
 };

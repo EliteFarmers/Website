@@ -24,24 +24,26 @@ const home = {
 };
 
 export class Breadcrumb {
-	#current = $state<Crumb[]>([]);
-	#path = $state<string>('');
+	#breadcrumbs = $state<Crumb[]>([]);
+	#sidebar = $state<Crumb[]>([]);
+	#sidebarName = $state<string>('');
+	#path = $derived<string>(page.url.pathname);
 	#overridePath = $state<string | null>(null);
-	#override = $state<Crumb[] | null>(null);
+	#breadcrumbsOverride = $state<Crumb[] | null>(null);
 
 	constructor() {
-		$effect(() => {
-			const path = page.url.pathname;
-			this.#path = path;
+		$effect.pre(() => {
+			if (this.#overridePath === this.#path) return;
 
-			if (this.#overridePath === path) return;
-			this.#override = null;
+			this.#breadcrumbsOverride = null;
 			this.#overridePath = null;
+			this.#sidebar = [];
+			this.#sidebarName = '';
 
 			untrack(() => {
-				const segments = path.split('/').filter((segment) => segment !== '');
+				const segments = this.#path.split('/').filter((segment) => segment !== '');
 
-				this.#current = [
+				this.#breadcrumbs = [
 					home,
 					...segments.map((segment, index) => {
 						const href = `/${segments.slice(0, index + 1).join('/')}`;
@@ -55,34 +57,53 @@ export class Breadcrumb {
 		});
 	}
 
-	get current() {
-		return this.#current;
+	get breadcrumbs() {
+		return this.#breadcrumbs;
 	}
 
 	get path() {
 		return this.#path;
 	}
 
-	get override() {
-		return this.#override;
+	get breadcrumbsOverride() {
+		return this.#breadcrumbsOverride;
 	}
 
-	setOverride(crumbs: Crumb[], useHome = true) {
-		this.#override = useHome ? [home, ...crumbs] : crumbs;
+	setBreadcrumbs(crumbs: Crumb[], useHome = true) {
+		this.#breadcrumbsOverride = useHome ? [home, ...crumbs] : crumbs;
 		this.#overridePath = page.url.pathname;
+	}
+
+	get name() {
+		return this.#sidebarName;
+	}
+
+	setSidebar(name: string, crumbs: Crumb[]) {
+		this.#sidebarName = name;
+		this.#sidebar = crumbs;
+		this.#overridePath = page.url.pathname;
+	}
+
+	get sidebar() {
+		return this.#sidebar;
+	}
+
+	get sidebarName() {
+		return this.#sidebarName;
 	}
 }
 
-export function initBreadcrumb() {
+export function initPageContext() {
 	const bread = new Breadcrumb();
 	setContext('breadcrumb', bread);
 	return bread;
 }
-export function getBreadcrumb() {
+
+export function getPageCtx() {
 	const bread = getContext<Breadcrumb>('breadcrumb');
 	if (!bread) {
 		try {
-			return initBreadcrumb();
+			return initPageContext();
 		} catch {
 			throw new Error('Breadcrumb context not found');
 		}

@@ -6,7 +6,7 @@
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
 	import type { components } from '$lib/api/api';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
 	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
@@ -84,10 +84,10 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 

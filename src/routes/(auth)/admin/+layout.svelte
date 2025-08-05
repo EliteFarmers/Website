@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ADMIN_NAV_PAGES } from '$content/nav';
-	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -8,10 +8,10 @@
 
 	let { children }: Props = $props();
 
-	const sidebar = getSidebarNav();
+	const pageCtx = getPageCtx();
 
 	$effect.pre(() => {
-		sidebar.setNav('Admin', ADMIN_NAV_PAGES);
+		pageCtx.setSidebar('Admin', ADMIN_NAV_PAGES);
 	});
 </script>
 

@@ -6,7 +6,7 @@
 	import ProductUnlock from '$comp/monetization/product-unlock.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import Badge from '$comp/stats/badge.svelte';
-	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
@@ -37,9 +37,9 @@
 
 	const crumbs = $derived<Crumb[]>([{ name: 'Shop', href: '/shop' }, { name: product.name }]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	let claimModalOpen = $state(false);

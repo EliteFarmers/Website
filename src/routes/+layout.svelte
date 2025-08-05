@@ -10,10 +10,9 @@
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import type { components } from '$lib/api/api';
-	import { initBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
 	import { initGlobalContext } from '$lib/hooks/global.svelte';
 	import { IsHover } from '$lib/hooks/is-hover.svelte';
-	import { initSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
+	import { initPageContext } from '$lib/hooks/page.svelte';
 	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { initRatesData } from '$lib/stores/ratesData';
 	import { getAnyCropSelected, initAnyCropSelected, initSelectedCrops } from '$lib/stores/selectedCrops';
@@ -43,8 +42,7 @@
 	initSelectedCrops(getAnyCropSelected());
 	initRatesData();
 	initFavoritesContext();
-	initBreadcrumb();
-	initSidebarNav();
+	initPageContext();
 
 	watch(
 		() => page.form,

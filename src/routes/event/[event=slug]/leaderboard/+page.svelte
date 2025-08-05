@@ -4,7 +4,7 @@
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import Head from '$comp/head.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
@@ -80,9 +80,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 
