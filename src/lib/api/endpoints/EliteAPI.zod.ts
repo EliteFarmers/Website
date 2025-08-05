@@ -12,21 +12,21 @@ import { z as zod } from 'zod';
 /**
  * @summary Get Minecraft Account
  */
-export const getAccountParams = zod.object({
+export const zodGetAccountParams = zod.object({
 	player: zod.string().describe('Player uuid or ign'),
 });
 
-export const getAccountResponseSettingsFeaturesEmbedColorMax = 6;
-export const getAccountResponseSettingsFeaturesEmojiUrlMax = 256;
-export const getAccountResponseSettingsWeightStyleNameMax = 64;
-export const getAccountResponseSettingsLeaderboardStyleNameMax = 64;
-export const getAccountResponseSettingsNameStyleNameMax = 64;
-export const getAccountResponseProfilesItemMembersItemMetaPrefixMax = 16;
-export const getAccountResponseProfilesItemMembersItemMetaSuffixMax = 16;
-export const getAccountResponseBadgesItemImageTitleMax = 64;
-export const getAccountResponseBadgesItemImageDescriptionMax = 512;
+export const zodGetAccountResponseSettingsFeaturesEmbedColorMax = 6;
+export const zodGetAccountResponseSettingsFeaturesEmojiUrlMax = 256;
+export const zodGetAccountResponseSettingsWeightStyleNameMax = 64;
+export const zodGetAccountResponseSettingsLeaderboardStyleNameMax = 64;
+export const zodGetAccountResponseSettingsNameStyleNameMax = 64;
+export const zodGetAccountResponseProfilesItemMembersItemMetaPrefixMax = 16;
+export const zodGetAccountResponseProfilesItemMembersItemMetaSuffixMax = 16;
+export const zodGetAccountResponseBadgesItemImageTitleMax = 64;
+export const zodGetAccountResponseBadgesItemImageDescriptionMax = 512;
 
-export const getAccountResponse = zod.object({
+export const zodGetAccountResponse = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	formattedName: zod.string(),
@@ -43,14 +43,14 @@ export const getAccountResponse = zod.object({
 				weightStyleOverride: zod.boolean().nullish().describe("Ability to override other's weight styles."),
 				embedColor: zod
 					.string()
-					.max(getAccountResponseSettingsFeaturesEmbedColorMax)
+					.max(zodGetAccountResponseSettingsFeaturesEmbedColorMax)
 					.nullish()
 					.describe('Embed color for the bot.'),
 				moreInfoDefault: zod.boolean().nullish().describe('Show \"More Info\" on weight command by default.'),
 				hideShopPromotions: zod.boolean().nullish().describe('If shop promotions should be hidden.'),
 				emojiUrl: zod
 					.string()
-					.max(getAccountResponseSettingsFeaturesEmojiUrlMax)
+					.max(zodGetAccountResponseSettingsFeaturesEmojiUrlMax)
 					.nullish()
 					.describe('Custom name emoji URL.'),
 			})
@@ -59,21 +59,21 @@ export const getAccountResponse = zod.object({
 		weightStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAccountResponseSettingsWeightStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAccountResponseSettingsWeightStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected weight style for the user'),
 		leaderboardStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAccountResponseSettingsLeaderboardStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAccountResponseSettingsLeaderboardStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected leaderboard style for the user'),
 		nameStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAccountResponseSettingsNameStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAccountResponseSettingsNameStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected name style for the user'),
@@ -119,8 +119,14 @@ export const getAccountResponse = zod.object({
 					farmingWeight: zod.number(),
 					meta: zod
 						.object({
-							prefix: zod.string().max(getAccountResponseProfilesItemMembersItemMetaPrefixMax).nullish(),
-							suffix: zod.string().max(getAccountResponseProfilesItemMembersItemMetaSuffixMax).nullish(),
+							prefix: zod
+								.string()
+								.max(zodGetAccountResponseProfilesItemMembersItemMetaPrefixMax)
+								.nullish(),
+							suffix: zod
+								.string()
+								.max(zodGetAccountResponseProfilesItemMembersItemMetaSuffixMax)
+								.nullish(),
 							leaderboard: zod
 								.object({
 									styleId: zod.number().nullish(),
@@ -142,10 +148,10 @@ export const getAccountResponse = zod.object({
 		zod.object({
 			id: zod.number(),
 			image: zod.object({
-				title: zod.string().max(getAccountResponseBadgesItemImageTitleMax).nullish().describe('Image title'),
+				title: zod.string().max(zodGetAccountResponseBadgesItemImageTitleMax).nullish().describe('Image title'),
 				description: zod
 					.string()
-					.max(getAccountResponseBadgesItemImageDescriptionMax)
+					.max(zodGetAccountResponseBadgesItemImageDescriptionMax)
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
@@ -194,14 +200,14 @@ export const getAccountResponse = zod.object({
 /**
  * @summary Link Account
  */
-export const linkOwnAccountParams = zod.object({
+export const zodLinkOwnAccountParams = zod.object({
 	player: zod.string(),
 });
 
 /**
  * @summary Unlink Account
  */
-export const unlinkOwnAccountParams = zod.object({
+export const zodUnlinkOwnAccountParams = zod.object({
 	player: zod.string(),
 });
 
@@ -209,7 +215,7 @@ export const unlinkOwnAccountParams = zod.object({
  * Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
  * @summary Get Minecraft Account Face Image
  */
-export const getAccountFace1Params = zod.object({
+export const zodGetAccountFace1Params = zod.object({
 	player: zod.string(),
 });
 
@@ -217,28 +223,28 @@ export const getAccountFace1Params = zod.object({
  * Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
  * @summary Get Minecraft Account Face Image
  */
-export const getAccountFace2Params = zod.object({
+export const zodGetAccountFace2Params = zod.object({
 	player: zod.string(),
 });
 
 /**
  * @summary Get Minecraft Account from Discord Id
  */
-export const getAccountFromDiscordParams = zod.object({
+export const zodGetAccountFromDiscordParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const getAccountFromDiscordResponseSettingsFeaturesEmbedColorMax = 6;
-export const getAccountFromDiscordResponseSettingsFeaturesEmojiUrlMax = 256;
-export const getAccountFromDiscordResponseSettingsWeightStyleNameMax = 64;
-export const getAccountFromDiscordResponseSettingsLeaderboardStyleNameMax = 64;
-export const getAccountFromDiscordResponseSettingsNameStyleNameMax = 64;
-export const getAccountFromDiscordResponseProfilesItemMembersItemMetaPrefixMax = 16;
-export const getAccountFromDiscordResponseProfilesItemMembersItemMetaSuffixMax = 16;
-export const getAccountFromDiscordResponseBadgesItemImageTitleMax = 64;
-export const getAccountFromDiscordResponseBadgesItemImageDescriptionMax = 512;
+export const zodGetAccountFromDiscordResponseSettingsFeaturesEmbedColorMax = 6;
+export const zodGetAccountFromDiscordResponseSettingsFeaturesEmojiUrlMax = 256;
+export const zodGetAccountFromDiscordResponseSettingsWeightStyleNameMax = 64;
+export const zodGetAccountFromDiscordResponseSettingsLeaderboardStyleNameMax = 64;
+export const zodGetAccountFromDiscordResponseSettingsNameStyleNameMax = 64;
+export const zodGetAccountFromDiscordResponseProfilesItemMembersItemMetaPrefixMax = 16;
+export const zodGetAccountFromDiscordResponseProfilesItemMembersItemMetaSuffixMax = 16;
+export const zodGetAccountFromDiscordResponseBadgesItemImageTitleMax = 64;
+export const zodGetAccountFromDiscordResponseBadgesItemImageDescriptionMax = 512;
 
-export const getAccountFromDiscordResponse = zod.object({
+export const zodGetAccountFromDiscordResponse = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	formattedName: zod.string(),
@@ -255,14 +261,14 @@ export const getAccountFromDiscordResponse = zod.object({
 				weightStyleOverride: zod.boolean().nullish().describe("Ability to override other's weight styles."),
 				embedColor: zod
 					.string()
-					.max(getAccountFromDiscordResponseSettingsFeaturesEmbedColorMax)
+					.max(zodGetAccountFromDiscordResponseSettingsFeaturesEmbedColorMax)
 					.nullish()
 					.describe('Embed color for the bot.'),
 				moreInfoDefault: zod.boolean().nullish().describe('Show \"More Info\" on weight command by default.'),
 				hideShopPromotions: zod.boolean().nullish().describe('If shop promotions should be hidden.'),
 				emojiUrl: zod
 					.string()
-					.max(getAccountFromDiscordResponseSettingsFeaturesEmojiUrlMax)
+					.max(zodGetAccountFromDiscordResponseSettingsFeaturesEmojiUrlMax)
 					.nullish()
 					.describe('Custom name emoji URL.'),
 			})
@@ -271,21 +277,21 @@ export const getAccountFromDiscordResponse = zod.object({
 		weightStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAccountFromDiscordResponseSettingsWeightStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAccountFromDiscordResponseSettingsWeightStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected weight style for the user'),
 		leaderboardStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAccountFromDiscordResponseSettingsLeaderboardStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAccountFromDiscordResponseSettingsLeaderboardStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected leaderboard style for the user'),
 		nameStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAccountFromDiscordResponseSettingsNameStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAccountFromDiscordResponseSettingsNameStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected name style for the user'),
@@ -333,11 +339,11 @@ export const getAccountFromDiscordResponse = zod.object({
 						.object({
 							prefix: zod
 								.string()
-								.max(getAccountFromDiscordResponseProfilesItemMembersItemMetaPrefixMax)
+								.max(zodGetAccountFromDiscordResponseProfilesItemMembersItemMetaPrefixMax)
 								.nullish(),
 							suffix: zod
 								.string()
-								.max(getAccountFromDiscordResponseProfilesItemMembersItemMetaSuffixMax)
+								.max(zodGetAccountFromDiscordResponseProfilesItemMembersItemMetaSuffixMax)
 								.nullish(),
 							leaderboard: zod
 								.object({
@@ -362,12 +368,12 @@ export const getAccountFromDiscordResponse = zod.object({
 			image: zod.object({
 				title: zod
 					.string()
-					.max(getAccountFromDiscordResponseBadgesItemImageTitleMax)
+					.max(zodGetAccountFromDiscordResponseBadgesItemImageTitleMax)
 					.nullish()
 					.describe('Image title'),
 				description: zod
 					.string()
-					.max(getAccountFromDiscordResponseBadgesItemImageDescriptionMax)
+					.max(zodGetAccountFromDiscordResponseBadgesItemImageDescriptionMax)
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
@@ -416,17 +422,17 @@ export const getAccountFromDiscordResponse = zod.object({
 /**
  * @summary Get Account Settings
  */
-export const getAccountSettingsParams = zod.object({
+export const zodGetAccountSettingsParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getAccountSettingsResponseFeaturesEmbedColorMax = 6;
-export const getAccountSettingsResponseFeaturesEmojiUrlMax = 256;
-export const getAccountSettingsResponseWeightStyleNameMax = 64;
-export const getAccountSettingsResponseLeaderboardStyleNameMax = 64;
-export const getAccountSettingsResponseNameStyleNameMax = 64;
+export const zodGetAccountSettingsResponseFeaturesEmbedColorMax = 6;
+export const zodGetAccountSettingsResponseFeaturesEmojiUrlMax = 256;
+export const zodGetAccountSettingsResponseWeightStyleNameMax = 64;
+export const zodGetAccountSettingsResponseLeaderboardStyleNameMax = 64;
+export const zodGetAccountSettingsResponseNameStyleNameMax = 64;
 
-export const getAccountSettingsResponse = zod.object({
+export const zodGetAccountSettingsResponse = zod.object({
 	prefix: zod.string().nullish().describe('Custom name prefix'),
 	suffix: zod.string().nullish().describe('Custom name suffix'),
 	features: zod
@@ -435,14 +441,14 @@ export const getAccountSettingsResponse = zod.object({
 			weightStyleOverride: zod.boolean().nullish().describe("Ability to override other's weight styles."),
 			embedColor: zod
 				.string()
-				.max(getAccountSettingsResponseFeaturesEmbedColorMax)
+				.max(zodGetAccountSettingsResponseFeaturesEmbedColorMax)
 				.nullish()
 				.describe('Embed color for the bot.'),
 			moreInfoDefault: zod.boolean().nullish().describe('Show \"More Info\" on weight command by default.'),
 			hideShopPromotions: zod.boolean().nullish().describe('If shop promotions should be hidden.'),
 			emojiUrl: zod
 				.string()
-				.max(getAccountSettingsResponseFeaturesEmojiUrlMax)
+				.max(zodGetAccountSettingsResponseFeaturesEmojiUrlMax)
 				.nullish()
 				.describe('Custom name emoji URL.'),
 		})
@@ -451,21 +457,21 @@ export const getAccountSettingsResponse = zod.object({
 	weightStyle: zod
 		.object({
 			id: zod.number(),
-			name: zod.string().max(getAccountSettingsResponseWeightStyleNameMax).nullish(),
+			name: zod.string().max(zodGetAccountSettingsResponseWeightStyleNameMax).nullish(),
 		})
 		.nullish()
 		.describe('Selected weight style for the user'),
 	leaderboardStyle: zod
 		.object({
 			id: zod.number(),
-			name: zod.string().max(getAccountSettingsResponseLeaderboardStyleNameMax).nullish(),
+			name: zod.string().max(zodGetAccountSettingsResponseLeaderboardStyleNameMax).nullish(),
 		})
 		.nullish()
 		.describe('Selected leaderboard style for the user'),
 	nameStyle: zod
 		.object({
 			id: zod.number(),
-			name: zod.string().max(getAccountSettingsResponseNameStyleNameMax).nullish(),
+			name: zod.string().max(zodGetAccountSettingsResponseNameStyleNameMax).nullish(),
 		})
 		.nullish()
 		.describe('Selected name style for the user'),
@@ -493,20 +499,20 @@ export const getAccountSettingsResponse = zod.object({
 /**
  * @summary Get Logged-In Account
  */
-export const getAuthAccountResponseSettingsFeaturesEmbedColorMax = 6;
-export const getAuthAccountResponseSettingsFeaturesEmojiUrlMax = 256;
-export const getAuthAccountResponseSettingsWeightStyleNameMax = 64;
-export const getAuthAccountResponseSettingsLeaderboardStyleNameMax = 64;
-export const getAuthAccountResponseSettingsNameStyleNameMax = 64;
-export const getAuthAccountResponseEntitlementsItemProductWeightStylesItemNameMax = 64;
-export const getAuthAccountResponseEntitlementsItemProductThumbnailTitleMax = 64;
-export const getAuthAccountResponseEntitlementsItemProductThumbnailDescriptionMax = 512;
-export const getAuthAccountResponseEntitlementsItemProductImagesItemTitleMax = 64;
-export const getAuthAccountResponseEntitlementsItemProductImagesItemDescriptionMax = 512;
-export const getAuthAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax = 64;
-export const getAuthAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax = 512;
+export const zodGetAuthAccountResponseSettingsFeaturesEmbedColorMax = 6;
+export const zodGetAuthAccountResponseSettingsFeaturesEmojiUrlMax = 256;
+export const zodGetAuthAccountResponseSettingsWeightStyleNameMax = 64;
+export const zodGetAuthAccountResponseSettingsLeaderboardStyleNameMax = 64;
+export const zodGetAuthAccountResponseSettingsNameStyleNameMax = 64;
+export const zodGetAuthAccountResponseEntitlementsItemProductWeightStylesItemNameMax = 64;
+export const zodGetAuthAccountResponseEntitlementsItemProductThumbnailTitleMax = 64;
+export const zodGetAuthAccountResponseEntitlementsItemProductThumbnailDescriptionMax = 512;
+export const zodGetAuthAccountResponseEntitlementsItemProductImagesItemTitleMax = 64;
+export const zodGetAuthAccountResponseEntitlementsItemProductImagesItemDescriptionMax = 512;
+export const zodGetAuthAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax = 64;
+export const zodGetAuthAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax = 512;
 
-export const getAuthAccountResponse = zod.object({
+export const zodGetAuthAccountResponse = zod.object({
 	id: zod.string().describe('Discord user ID'),
 	displayName: zod.string().describe('Discord display name'),
 	username: zod.string().describe('Discord username (unique)'),
@@ -523,14 +529,14 @@ export const getAuthAccountResponse = zod.object({
 				weightStyleOverride: zod.boolean().nullish().describe("Ability to override other's weight styles."),
 				embedColor: zod
 					.string()
-					.max(getAuthAccountResponseSettingsFeaturesEmbedColorMax)
+					.max(zodGetAuthAccountResponseSettingsFeaturesEmbedColorMax)
 					.nullish()
 					.describe('Embed color for the bot.'),
 				moreInfoDefault: zod.boolean().nullish().describe('Show \"More Info\" on weight command by default.'),
 				hideShopPromotions: zod.boolean().nullish().describe('If shop promotions should be hidden.'),
 				emojiUrl: zod
 					.string()
-					.max(getAuthAccountResponseSettingsFeaturesEmojiUrlMax)
+					.max(zodGetAuthAccountResponseSettingsFeaturesEmojiUrlMax)
 					.nullish()
 					.describe('Custom name emoji URL.'),
 			})
@@ -539,21 +545,21 @@ export const getAuthAccountResponse = zod.object({
 		weightStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAuthAccountResponseSettingsWeightStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAuthAccountResponseSettingsWeightStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected weight style for the user'),
 		leaderboardStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAuthAccountResponseSettingsLeaderboardStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAuthAccountResponseSettingsLeaderboardStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected leaderboard style for the user'),
 		nameStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(getAuthAccountResponseSettingsNameStyleNameMax).nullish(),
+				name: zod.string().max(zodGetAuthAccountResponseSettingsNameStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected name style for the user'),
@@ -650,7 +656,7 @@ export const getAuthAccountResponse = zod.object({
 									id: zod.number(),
 									name: zod
 										.string()
-										.max(getAuthAccountResponseEntitlementsItemProductWeightStylesItemNameMax)
+										.max(zodGetAuthAccountResponseEntitlementsItemProductWeightStylesItemNameMax)
 										.nullish(),
 								})
 							)
@@ -659,12 +665,12 @@ export const getAuthAccountResponse = zod.object({
 							.object({
 								title: zod
 									.string()
-									.max(getAuthAccountResponseEntitlementsItemProductThumbnailTitleMax)
+									.max(zodGetAuthAccountResponseEntitlementsItemProductThumbnailTitleMax)
 									.nullish()
 									.describe('Image title'),
 								description: zod
 									.string()
-									.max(getAuthAccountResponseEntitlementsItemProductThumbnailDescriptionMax)
+									.max(zodGetAuthAccountResponseEntitlementsItemProductThumbnailDescriptionMax)
 									.nullish()
 									.describe('Image description'),
 								order: zod.number().nullish().describe('Image ordering number'),
@@ -677,12 +683,12 @@ export const getAuthAccountResponse = zod.object({
 								zod.object({
 									title: zod
 										.string()
-										.max(getAuthAccountResponseEntitlementsItemProductImagesItemTitleMax)
+										.max(zodGetAuthAccountResponseEntitlementsItemProductImagesItemTitleMax)
 										.nullish()
 										.describe('Image title'),
 									description: zod
 										.string()
-										.max(getAuthAccountResponseEntitlementsItemProductImagesItemDescriptionMax)
+										.max(zodGetAuthAccountResponseEntitlementsItemProductImagesItemDescriptionMax)
 										.nullish()
 										.describe('Image description'),
 									order: zod.number().nullish().describe('Image ordering number'),
@@ -715,12 +721,12 @@ export const getAuthAccountResponse = zod.object({
 						image: zod.object({
 							title: zod
 								.string()
-								.max(getAuthAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax)
+								.max(zodGetAuthAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax)
 								.nullish()
 								.describe('Image title'),
 							description: zod
 								.string()
-								.max(getAuthAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax)
+								.max(zodGetAuthAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax)
 								.nullish()
 								.describe('Image description'),
 							order: zod.number().nullish().describe('Image ordering number'),
@@ -748,44 +754,44 @@ export const getAuthAccountResponse = zod.object({
 /**
  * @summary Search for Minecraft Account
  */
-export const searchAccountsQueryParams = zod.object({
+export const zodSearchAccountsQueryParams = zod.object({
 	q: zod.string().describe('Search query string'),
 	start: zod.string().nullish().describe('Start of results for pagination'),
 });
 
-export const searchAccountsResponseItem = zod.string();
-export const searchAccountsResponse = zod.array(searchAccountsResponseItem);
+export const zodSearchAccountsResponseItem = zod.string();
+export const zodSearchAccountsResponse = zod.array(zodSearchAccountsResponseItem);
 
 /**
  * @summary Set Primary Account
  */
-export const setPrimaryAccountParams = zod.object({
+export const zodSetPrimaryAccountParams = zod.object({
 	player: zod.string(),
 });
 
 /**
  * @summary Update Account Settings
  */
-export const updateBadgesParams = zod.object({
+export const zodUpdateBadgesParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const updateBadgesBodyItem = zod.object({
+export const zodUpdateBadgesBodyItem = zod.object({
 	badgeId: zod.number(),
 	visible: zod.boolean().nullish(),
 	order: zod.number().nullish(),
 });
-export const updateBadgesBody = zod.array(updateBadgesBodyItem);
+export const zodUpdateBadgesBody = zod.array(zodUpdateBadgesBodyItem);
 
 /**
  * @summary Update Fortune Settings for Account
  */
-export const updateFortuneSettingsParams = zod.object({
+export const zodUpdateFortuneSettingsParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const updateFortuneSettingsBody = zod.object({
+export const zodUpdateFortuneSettingsBody = zod.object({
 	strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 	communityCenter: zod.number().describe('Community center farming fortune level'),
 	attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
@@ -795,10 +801,10 @@ export const updateFortuneSettingsBody = zod.object({
 /**
  * @summary Update Account Settings
  */
-export const updateAccountBodyFeaturesEmbedColorMax = 6;
-export const updateAccountBodyFeaturesEmojiUrlMax = 256;
+export const zodUpdateAccountBodyFeaturesEmbedColorMax = 6;
+export const zodUpdateAccountBodyFeaturesEmojiUrlMax = 256;
 
-export const updateAccountBody = zod.object({
+export const zodUpdateAccountBody = zod.object({
 	prefix: zod.string().nullish().describe('Custom name prefix'),
 	suffix: zod.string().nullish().describe('Custom name suffix'),
 	features: zod
@@ -807,14 +813,14 @@ export const updateAccountBody = zod.object({
 			weightStyleOverride: zod.boolean().nullish().describe("Ability to override other's weight styles."),
 			embedColor: zod
 				.string()
-				.max(updateAccountBodyFeaturesEmbedColorMax)
+				.max(zodUpdateAccountBodyFeaturesEmbedColorMax)
 				.nullish()
 				.describe('Embed color for the bot.'),
 			moreInfoDefault: zod.boolean().nullish().describe('Show \"More Info\" on weight command by default.'),
 			hideShopPromotions: zod.boolean().nullish().describe('If shop promotions should be hidden.'),
 			emojiUrl: zod
 				.string()
-				.max(updateAccountBodyFeaturesEmojiUrlMax)
+				.max(zodUpdateAccountBodyFeaturesEmojiUrlMax)
 				.nullish()
 				.describe('Custom name emoji URL.'),
 		})
@@ -828,7 +834,7 @@ export const updateAccountBody = zod.object({
 /**
  * @summary Add a role to a user
  */
-export const addRoleToUserParams = zod.object({
+export const zodAddRoleToUserParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	role: zod.string(),
 });
@@ -836,7 +842,7 @@ export const addRoleToUserParams = zod.object({
 /**
  * @summary Remove a role from a user
  */
-export const removeRoleFromUserParams = zod.object({
+export const zodRemoveRoleFromUserParams = zod.object({
 	discordId: zod.number(),
 	role: zod.string(),
 });
@@ -845,24 +851,24 @@ export const removeRoleFromUserParams = zod.object({
  * This enables a player's data from Hypixel to be refreshed on the next request.
  * @summary Reset a player's cooldowns
  */
-export const clearPlayerCooldownsParams = zod.object({
+export const zodClearPlayerCooldownsParams = zod.object({
 	player: zod.string(),
 });
 
 /**
  * @summary Delete Event
  */
-export const deleteEventApprovalParams = zod.object({
+export const zodDeleteEventApprovalParams = zod.object({
 	eventId: zod.number(),
 });
 
 /**
  * @summary Get events pending approval
  */
-export const getPendingEventsResponseBannerTitleMax = 64;
-export const getPendingEventsResponseBannerDescriptionMax = 512;
+export const zodGetPendingEventsResponseBannerTitleMax = 64;
+export const zodGetPendingEventsResponseBannerDescriptionMax = 512;
 
-export const getPendingEventsResponseItem = zod.object({
+export const zodGetPendingEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -874,10 +880,10 @@ export const getPendingEventsResponseItem = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(getPendingEventsResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetPendingEventsResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getPendingEventsResponseBannerDescriptionMax)
+				.max(zodGetPendingEventsResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -898,25 +904,25 @@ export const getPendingEventsResponseItem = zod.object({
 	guildId: zod.string().nullish().describe('Discord server id as a string'),
 	data: zod.any().nullish().describe('Data specific to the event'),
 });
-export const getPendingEventsResponse = zod.array(getPendingEventsResponseItem);
+export const zodGetPendingEventsResponse = zod.array(zodGetPendingEventsResponseItem);
 
 /**
  * @summary Set event approval
  */
-export const setEventApprovalParams = zod.object({
+export const zodSetEventApprovalParams = zod.object({
 	eventId: zod.number(),
 });
 
-export const setEventApprovalQueryApproveDefault = false;
+export const zodSetEventApprovalQueryApproveDefault = false;
 
-export const setEventApprovalQueryParams = zod.object({
+export const zodSetEventApprovalQueryParams = zod.object({
 	approve: zod.boolean().nullish(),
 });
 
 /**
  * @summary Get list of admins
  */
-export const getAdminsResponseItem = zod.object({
+export const zodGetAdminsResponseItem = zod.object({
 	id: zod.string(),
 	displayName: zod.string(),
 	username: zod.string(),
@@ -924,18 +930,18 @@ export const getAdminsResponseItem = zod.object({
 	discriminator: zod.string().nullish(),
 	avatar: zod.string().nullish(),
 });
-export const getAdminsResponse = zod.array(getAdminsResponseItem);
+export const zodGetAdminsResponse = zod.array(zodGetAdminsResponseItem);
 
 /**
  * @summary Get list of roles
  */
-export const getRolesResponseItem = zod.string();
-export const getRolesResponse = zod.array(getRolesResponseItem);
+export const zodGetRolesResponseItem = zod.string();
+export const zodGetRolesResponse = zod.array(zodGetRolesResponseItem);
 
 /**
  * @summary Link an Account
  */
-export const linkUserAccountBody = zod.object({
+export const zodLinkUserAccountBody = zod.object({
 	discordId: zod.string(),
 	player: zod.string(),
 });
@@ -944,14 +950,14 @@ export const linkUserAccountBody = zod.object({
  * This fetches the latest data from Discord for the specified guild
  * @summary Refresh a guild
  */
-export const refreshDiscordGuildParams = zod.object({
+export const zodRefreshDiscordGuildParams = zod.object({
 	guildId: zod.number(),
 });
 
 /**
  * @summary Unlink an Account
  */
-export const unlinkUserAccountBody = zod.object({
+export const zodUnlinkUserAccountBody = zod.object({
 	discordId: zod.string(),
 	player: zod.string(),
 });
@@ -960,7 +966,7 @@ export const unlinkUserAccountBody = zod.object({
  * Mark an announcement as dismissed for the current user
  * @summary Dismiss an announcement
  */
-export const dismissAnnouncementParams = zod.object({
+export const zodDismissAnnouncementParams = zod.object({
 	announcementId: zod.string(),
 });
 
@@ -968,7 +974,7 @@ export const dismissAnnouncementParams = zod.object({
  * Gets all announcements that should be shown to users
  * @summary Get announcements
  */
-export const getAnnouncementResponseItem = zod.object({
+export const zodGetAnnouncementResponseItem = zod.object({
 	title: zod.string().describe('Announcement title'),
 	content: zod.string().describe('Announcement content'),
 	type: zod
@@ -996,13 +1002,13 @@ export const getAnnouncementResponseItem = zod.object({
 		.describe('Announcement expiration date (will no longer be shown after this date)'),
 	id: zod.string().describe('Announcement id'),
 });
-export const getAnnouncementResponse = zod.array(getAnnouncementResponseItem);
+export const zodGetAnnouncementResponse = zod.array(zodGetAnnouncementResponseItem);
 
 /**
  * Get the account of the currently logged in user
  * @summary Get logged in account
  */
-export const getSessionResponse = zod.object({
+export const zodGetSessionResponse = zod.object({
 	id: zod.string().describe('Discord user ID'),
 	username: zod.string().describe('Discord username'),
 	avatar: zod.string().describe('Discord avatar hash'),
@@ -1016,12 +1022,12 @@ export const getSessionResponse = zod.object({
  * Log in with discord credentials
  * @summary Log in
  */
-export const loginBody = zod.object({
+export const zodLoginBody = zod.object({
 	code: zod.string().describe('Discord login code from OAuth2'),
 	redirect_uri: zod.string().describe('Redirect URI from OAuth2'),
 });
 
-export const loginResponse = zod.object({
+export const zodLoginResponse = zod.object({
 	access_token: zod.string().describe('Access token for the user'),
 	expires_in: zod.string().nullish().describe('Expiry date of the access token in Unix timestamp seconds'),
 	refresh_token: zod.string().describe('Refresh token for the user'),
@@ -1031,12 +1037,12 @@ export const loginResponse = zod.object({
  * Refresh the auth token using the refresh token
  * @summary Refresh Auth Token
  */
-export const refreshAuthBody = zod.object({
+export const zodRefreshAuthBody = zod.object({
 	user_id: zod.string().describe('User ID'),
 	refresh_token: zod.string().describe('Refresh token for the user'),
 });
 
-export const refreshAuthResponse = zod.object({
+export const zodRefreshAuthResponse = zod.object({
 	access_token: zod.string().describe('Access token for the user'),
 	expires_in: zod.string().nullish().describe('Expiry date of the access token in Unix timestamp seconds'),
 	refresh_token: zod.string().describe('Refresh token for the user'),
@@ -1045,7 +1051,7 @@ export const refreshAuthResponse = zod.object({
 /**
  * @summary Add a badge to a user
  */
-export const addBadgeToUserBadgeParams = zod.object({
+export const zodAddBadgeToUserBadgeParams = zod.object({
 	player: zod.string().describe('Player uuid or ign'),
 	badgeId: zod.number().describe('ID of the badge'),
 });
@@ -1053,7 +1059,7 @@ export const addBadgeToUserBadgeParams = zod.object({
 /**
  * @summary Remove a badge from a user
  */
-export const deleteBadgeFromUserBadgeParams = zod.object({
+export const zodDeleteBadgeFromUserBadgeParams = zod.object({
 	player: zod.string(),
 	badgeId: zod.number(),
 });
@@ -1061,20 +1067,20 @@ export const deleteBadgeFromUserBadgeParams = zod.object({
 /**
  * @summary Create a badge
  */
-export const createBadgeBodyNameMin = 0;
+export const zodCreateBadgeBodyNameMin = 0;
 
-export const createBadgeBodyNameMax = 50;
-export const createBadgeBodyDescriptionMin = 0;
+export const zodCreateBadgeBodyNameMax = 50;
+export const zodCreateBadgeBodyDescriptionMin = 0;
 
-export const createBadgeBodyDescriptionMax = 1024;
-export const createBadgeBodyRequirementsMin = 0;
+export const zodCreateBadgeBodyDescriptionMax = 1024;
+export const zodCreateBadgeBodyRequirementsMin = 0;
 
-export const createBadgeBodyRequirementsMax = 512;
+export const zodCreateBadgeBodyRequirementsMax = 512;
 
-export const createBadgeBody = zod.object({
-	name: zod.string().min(createBadgeBodyNameMin).max(createBadgeBodyNameMax),
-	description: zod.string().min(createBadgeBodyDescriptionMin).max(createBadgeBodyDescriptionMax),
-	requirements: zod.string().min(createBadgeBodyRequirementsMin).max(createBadgeBodyRequirementsMax),
+export const zodCreateBadgeBody = zod.object({
+	name: zod.string().min(zodCreateBadgeBodyNameMin).max(zodCreateBadgeBodyNameMax),
+	description: zod.string().min(zodCreateBadgeBodyDescriptionMin).max(zodCreateBadgeBodyDescriptionMax),
+	requirements: zod.string().min(zodCreateBadgeBodyRequirementsMin).max(zodCreateBadgeBodyRequirementsMax),
 	tieToAccount: zod.boolean(),
 	image: zod.instanceof(File).nullish(),
 });
@@ -1082,15 +1088,19 @@ export const createBadgeBody = zod.object({
 /**
  * @summary Get all badges
  */
-export const getBadgesResponseImageTitleMax = 64;
-export const getBadgesResponseImageDescriptionMax = 512;
+export const zodGetBadgesResponseImageTitleMax = 64;
+export const zodGetBadgesResponseImageDescriptionMax = 512;
 
-export const getBadgesResponseItem = zod.object({
+export const zodGetBadgesResponseItem = zod.object({
 	id: zod.number(),
 	image: zod
 		.object({
-			title: zod.string().max(getBadgesResponseImageTitleMax).nullish().describe('Image title'),
-			description: zod.string().max(getBadgesResponseImageDescriptionMax).nullish().describe('Image description'),
+			title: zod.string().max(zodGetBadgesResponseImageTitleMax).nullish().describe('Image title'),
+			description: zod
+				.string()
+				.max(zodGetBadgesResponseImageDescriptionMax)
+				.nullish()
+				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
 			url: zod.string().describe('Full image URL'),
 		})
@@ -1099,43 +1109,43 @@ export const getBadgesResponseItem = zod.object({
 	description: zod.string(),
 	requirements: zod.string(),
 });
-export const getBadgesResponse = zod.array(getBadgesResponseItem);
+export const zodGetBadgesResponse = zod.array(zodGetBadgesResponseItem);
 
 /**
  * @summary Delete a badge
  */
-export const deleteBadgeParams = zod.object({
+export const zodDeleteBadgeParams = zod.object({
 	badgeId: zod.number().describe('ID of the badge'),
 });
 
 /**
  * @summary Update a badge
  */
-export const updateBadgeParams = zod.object({
+export const zodUpdateBadgeParams = zod.object({
 	badgeId: zod.number().describe('ID of the badge'),
 });
 
-export const updateBadgeBodyNameMin = 0;
+export const zodUpdateBadgeBodyNameMin = 0;
 
-export const updateBadgeBodyNameMax = 50;
-export const updateBadgeBodyDescriptionMin = 0;
+export const zodUpdateBadgeBodyNameMax = 50;
+export const zodUpdateBadgeBodyDescriptionMin = 0;
 
-export const updateBadgeBodyDescriptionMax = 1024;
-export const updateBadgeBodyRequirementsMin = 0;
+export const zodUpdateBadgeBodyDescriptionMax = 1024;
+export const zodUpdateBadgeBodyRequirementsMin = 0;
 
-export const updateBadgeBodyRequirementsMax = 512;
+export const zodUpdateBadgeBodyRequirementsMax = 512;
 
-export const updateBadgeBody = zod.object({
-	name: zod.string().min(updateBadgeBodyNameMin).max(updateBadgeBodyNameMax).nullish(),
-	description: zod.string().min(updateBadgeBodyDescriptionMin).max(updateBadgeBodyDescriptionMax).nullish(),
-	requirements: zod.string().min(updateBadgeBodyRequirementsMin).max(updateBadgeBodyRequirementsMax).nullish(),
+export const zodUpdateBadgeBody = zod.object({
+	name: zod.string().min(zodUpdateBadgeBodyNameMin).max(zodUpdateBadgeBodyNameMax).nullish(),
+	description: zod.string().min(zodUpdateBadgeBodyDescriptionMin).max(zodUpdateBadgeBodyDescriptionMax).nullish(),
+	requirements: zod.string().min(zodUpdateBadgeBodyRequirementsMin).max(zodUpdateBadgeBodyRequirementsMax).nullish(),
 	image: zod.instanceof(File).nullish(),
 });
 
 /**
  * @summary Link Account
  */
-export const linkAccountBotParams = zod.object({
+export const zodLinkAccountBotParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	player: zod.string().describe('Player uuid or ign'),
 });
@@ -1143,7 +1153,7 @@ export const linkAccountBotParams = zod.object({
 /**
  * @summary Unlink Account
  */
-export const unlinkAccountBotParams = zod.object({
+export const zodUnlinkAccountBotParams = zod.object({
 	discordId: zod.number(),
 	player: zod.string(),
 });
@@ -1151,7 +1161,7 @@ export const unlinkAccountBotParams = zod.object({
 /**
  * @summary Make Primary Account
  */
-export const makePrimaryAccountParams = zod.object({
+export const zodMakePrimaryAccountParams = zod.object({
 	discordId: zod.number(),
 	player: zod.string(),
 });
@@ -1159,14 +1169,14 @@ export const makePrimaryAccountParams = zod.object({
 /**
  * @summary Refresh User Purchases
  */
-export const refreshUserPurchasesParams = zod.object({
+export const zodRefreshUserPurchasesParams = zod.object({
 	discordId: zod.number(),
 });
 
 /**
  * @summary Grant Badge
  */
-export const grantBadgeParams = zod.object({
+export const zodGrantBadgeParams = zod.object({
 	player: zod.string().describe('Player uuid or ign'),
 	badgeId: zod.number(),
 });
@@ -1174,7 +1184,7 @@ export const grantBadgeParams = zod.object({
 /**
  * @summary Remove Badge
  */
-export const removeBadgeParams = zod.object({
+export const zodRemoveBadgeParams = zod.object({
 	player: zod.string().describe('Player uuid or ign'),
 	badgeId: zod.number(),
 });
@@ -1182,18 +1192,18 @@ export const removeBadgeParams = zod.object({
 /**
  * @summary Disable contest pings for a guild
  */
-export const disableContestPingsPingsParams = zod.object({
+export const zodDisableContestPingsPingsParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const disableContestPingsPingsQueryParams = zod.object({
+export const zodDisableContestPingsPingsQueryParams = zod.object({
 	reason: zod.string().nullish(),
 });
 
 /**
  * @summary Get list of guilds with contest pings enabled
  */
-export const getContestPingsResponseItem = zod.object({
+export const zodGetContestPingsResponseItem = zod.object({
 	enabled: zod.boolean(),
 	guildId: zod.string().nullish(),
 	channelId: zod.string().nullish(),
@@ -1215,22 +1225,22 @@ export const getContestPingsResponseItem = zod.object({
 	delaySeconds: zod.number(),
 	disabledReason: zod.string().nullish(),
 });
-export const getContestPingsResponse = zod.array(getContestPingsResponseItem);
+export const zodGetContestPingsResponse = zod.array(zodGetContestPingsResponseItem);
 
 /**
  * @summary Get guild
  */
-export const getBotGuildParams = zod.object({
+export const zodGetBotGuildParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getBotGuildResponseFeaturesJacobLeaderboardLeaderboardsItemTitleMax = 64;
-export const getBotGuildResponseIconTitleMax = 64;
-export const getBotGuildResponseIconDescriptionMax = 512;
-export const getBotGuildResponseBannerTitleMax = 64;
-export const getBotGuildResponseBannerDescriptionMax = 512;
+export const zodGetBotGuildResponseFeaturesJacobLeaderboardLeaderboardsItemTitleMax = 64;
+export const zodGetBotGuildResponseIconTitleMax = 64;
+export const zodGetBotGuildResponseIconDescriptionMax = 512;
+export const zodGetBotGuildResponseBannerTitleMax = 64;
+export const zodGetBotGuildResponseBannerDescriptionMax = 512;
 
-export const getBotGuildResponse = zod.object({
+export const zodGetBotGuildResponse = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	public: zod.boolean(),
@@ -1273,7 +1283,7 @@ export const getBotGuildResponse = zod.object({
 						endCutoff: zod.number(),
 						title: zod
 							.string()
-							.max(getBotGuildResponseFeaturesJacobLeaderboardLeaderboardsItemTitleMax)
+							.max(zodGetBotGuildResponseFeaturesJacobLeaderboardLeaderboardsItemTitleMax)
 							.nullish(),
 						active: zod.boolean(),
 						requiredRole: zod.string().nullish(),
@@ -1489,10 +1499,10 @@ export const getBotGuildResponse = zod.object({
 	}),
 	icon: zod
 		.object({
-			title: zod.string().max(getBotGuildResponseIconTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetBotGuildResponseIconTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getBotGuildResponseIconDescriptionMax)
+				.max(zodGetBotGuildResponseIconDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -1501,10 +1511,10 @@ export const getBotGuildResponse = zod.object({
 		.nullish(),
 	banner: zod
 		.object({
-			title: zod.string().max(getBotGuildResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetBotGuildResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getBotGuildResponseBannerDescriptionMax)
+				.max(zodGetBotGuildResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -1538,13 +1548,13 @@ export const getBotGuildResponse = zod.object({
 /**
  * @summary Get guild jacob
  */
-export const getJacobFeatureParams = zod.object({
+export const zodGetJacobFeatureParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getJacobFeatureResponseLeaderboardsItemTitleMax = 64;
+export const zodGetJacobFeatureResponseLeaderboardsItemTitleMax = 64;
 
-export const getJacobFeatureResponse = zod.object({
+export const zodGetJacobFeatureResponse = zod.object({
 	maxLeaderboards: zod.number(),
 	blockedRoles: zod.array(
 		zod.object({
@@ -1577,7 +1587,7 @@ export const getJacobFeatureResponse = zod.object({
 			channelId: zod.string().nullish(),
 			startCutoff: zod.number(),
 			endCutoff: zod.number(),
-			title: zod.string().max(getJacobFeatureResponseLeaderboardsItemTitleMax).nullish(),
+			title: zod.string().max(zodGetJacobFeatureResponseLeaderboardsItemTitleMax).nullish(),
 			active: zod.boolean(),
 			requiredRole: zod.string().nullish(),
 			blockedRole: zod.string().nullish(),
@@ -1743,17 +1753,17 @@ export const getJacobFeatureResponse = zod.object({
 /**
  * @summary Update guild jacob feature
  */
-export const updateJacobFeatureParams = zod.object({
+export const zodUpdateJacobFeatureParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const updateJacobFeatureQueryParams = zod.object({
+export const zodUpdateJacobFeatureQueryParams = zod.object({
 	reason: zod.string().nullish(),
 });
 
-export const updateJacobFeatureBodyLeaderboardsItemTitleMax = 64;
+export const zodUpdateJacobFeatureBodyLeaderboardsItemTitleMax = 64;
 
-export const updateJacobFeatureBody = zod.object({
+export const zodUpdateJacobFeatureBody = zod.object({
 	blockedRoles: zod
 		.array(
 			zod.object({
@@ -1796,7 +1806,7 @@ export const updateJacobFeatureBody = zod.object({
 				channelId: zod.string().nullish(),
 				startCutoff: zod.number(),
 				endCutoff: zod.number(),
-				title: zod.string().max(updateJacobFeatureBodyLeaderboardsItemTitleMax).nullish(),
+				title: zod.string().max(zodUpdateJacobFeatureBodyLeaderboardsItemTitleMax).nullish(),
 				active: zod.boolean(),
 				requiredRole: zod.string().nullish(),
 				blockedRole: zod.string().nullish(),
@@ -1960,9 +1970,9 @@ export const updateJacobFeatureBody = zod.object({
 		.describe("Leaderboards for the guild's Jacob Leaderboards"),
 });
 
-export const updateJacobFeatureResponseLeaderboardsItemTitleMax = 64;
+export const zodUpdateJacobFeatureResponseLeaderboardsItemTitleMax = 64;
 
-export const updateJacobFeatureResponse = zod.object({
+export const zodUpdateJacobFeatureResponse = zod.object({
 	maxLeaderboards: zod.number(),
 	blockedRoles: zod.array(
 		zod.object({
@@ -1995,7 +2005,7 @@ export const updateJacobFeatureResponse = zod.object({
 			channelId: zod.string().nullish(),
 			startCutoff: zod.number(),
 			endCutoff: zod.number(),
-			title: zod.string().max(updateJacobFeatureResponseLeaderboardsItemTitleMax).nullish(),
+			title: zod.string().max(zodUpdateJacobFeatureResponseLeaderboardsItemTitleMax).nullish(),
 			active: zod.boolean(),
 			requiredRole: zod.string().nullish(),
 			blockedRole: zod.string().nullish(),
@@ -2161,18 +2171,18 @@ export const updateJacobFeatureResponse = zod.object({
 /**
  * @summary Request Guild Update
  */
-export const refreshGuildParams = zod.object({
+export const zodRefreshGuildParams = zod.object({
 	discordId: zod.number(),
 });
 
 /**
  * @summary Update Guild
  */
-export const updateGuildParams = zod.object({
+export const zodUpdateGuildParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const updateGuildBody = zod.object({
+export const zodUpdateGuildBody = zod.object({
 	id: zod.string().nullish(),
 	name: zod.string(),
 	icon: zod.string().nullish(),
@@ -2202,16 +2212,16 @@ export const updateGuildBody = zod.object({
 		.nullish(),
 });
 
-export const updateGuildResponse = zod.object({});
+export const zodUpdateGuildResponse = zod.object({});
 
 /**
  * @summary Update Guild Channel
  */
-export const updateGuildChannelParams = zod.object({
+export const zodUpdateGuildChannelParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const updateGuildChannelBody = zod.object({
+export const zodUpdateGuildChannelBody = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	type: zod.number(),
@@ -2222,22 +2232,22 @@ export const updateGuildChannelBody = zod.object({
 /**
  * @summary Update Guild Member Roles
  */
-export const updateGuildMemberRolesParams = zod.object({
+export const zodUpdateGuildMemberRolesParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	userId: zod.string(),
 });
 
-export const updateGuildMemberRolesBodyItem = zod.string();
-export const updateGuildMemberRolesBody = zod.array(updateGuildMemberRolesBodyItem);
+export const zodUpdateGuildMemberRolesBodyItem = zod.string();
+export const zodUpdateGuildMemberRolesBody = zod.array(zodUpdateGuildMemberRolesBodyItem);
 
 /**
  * @summary Update Guild Role
  */
-export const updateGuildRoleParams = zod.object({
+export const zodUpdateGuildRoleParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const updateGuildRoleBody = zod.object({
+export const zodUpdateGuildRoleBody = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	position: zod.number(),
@@ -2246,7 +2256,7 @@ export const updateGuildRoleBody = zod.object({
 /**
  * @summary Update user Discord account
  */
-export const updateDiscordAccountBody = zod.object({
+export const zodUpdateDiscordAccountBody = zod.object({
 	id: zod.number(),
 	username: zod.string(),
 	displayName: zod.string().nullish(),
@@ -2256,20 +2266,20 @@ export const updateDiscordAccountBody = zod.object({
 	banner: zod.string().nullish(),
 });
 
-export const updateDiscordAccountResponseSettingsFeaturesEmbedColorMax = 6;
-export const updateDiscordAccountResponseSettingsFeaturesEmojiUrlMax = 256;
-export const updateDiscordAccountResponseSettingsWeightStyleNameMax = 64;
-export const updateDiscordAccountResponseSettingsLeaderboardStyleNameMax = 64;
-export const updateDiscordAccountResponseSettingsNameStyleNameMax = 64;
-export const updateDiscordAccountResponseEntitlementsItemProductWeightStylesItemNameMax = 64;
-export const updateDiscordAccountResponseEntitlementsItemProductThumbnailTitleMax = 64;
-export const updateDiscordAccountResponseEntitlementsItemProductThumbnailDescriptionMax = 512;
-export const updateDiscordAccountResponseEntitlementsItemProductImagesItemTitleMax = 64;
-export const updateDiscordAccountResponseEntitlementsItemProductImagesItemDescriptionMax = 512;
-export const updateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax = 64;
-export const updateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax = 512;
+export const zodUpdateDiscordAccountResponseSettingsFeaturesEmbedColorMax = 6;
+export const zodUpdateDiscordAccountResponseSettingsFeaturesEmojiUrlMax = 256;
+export const zodUpdateDiscordAccountResponseSettingsWeightStyleNameMax = 64;
+export const zodUpdateDiscordAccountResponseSettingsLeaderboardStyleNameMax = 64;
+export const zodUpdateDiscordAccountResponseSettingsNameStyleNameMax = 64;
+export const zodUpdateDiscordAccountResponseEntitlementsItemProductWeightStylesItemNameMax = 64;
+export const zodUpdateDiscordAccountResponseEntitlementsItemProductThumbnailTitleMax = 64;
+export const zodUpdateDiscordAccountResponseEntitlementsItemProductThumbnailDescriptionMax = 512;
+export const zodUpdateDiscordAccountResponseEntitlementsItemProductImagesItemTitleMax = 64;
+export const zodUpdateDiscordAccountResponseEntitlementsItemProductImagesItemDescriptionMax = 512;
+export const zodUpdateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax = 64;
+export const zodUpdateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax = 512;
 
-export const updateDiscordAccountResponse = zod.object({
+export const zodUpdateDiscordAccountResponse = zod.object({
 	id: zod.string().describe('Discord user ID'),
 	displayName: zod.string().describe('Discord display name'),
 	username: zod.string().describe('Discord username (unique)'),
@@ -2286,14 +2296,14 @@ export const updateDiscordAccountResponse = zod.object({
 				weightStyleOverride: zod.boolean().nullish().describe("Ability to override other's weight styles."),
 				embedColor: zod
 					.string()
-					.max(updateDiscordAccountResponseSettingsFeaturesEmbedColorMax)
+					.max(zodUpdateDiscordAccountResponseSettingsFeaturesEmbedColorMax)
 					.nullish()
 					.describe('Embed color for the bot.'),
 				moreInfoDefault: zod.boolean().nullish().describe('Show \"More Info\" on weight command by default.'),
 				hideShopPromotions: zod.boolean().nullish().describe('If shop promotions should be hidden.'),
 				emojiUrl: zod
 					.string()
-					.max(updateDiscordAccountResponseSettingsFeaturesEmojiUrlMax)
+					.max(zodUpdateDiscordAccountResponseSettingsFeaturesEmojiUrlMax)
 					.nullish()
 					.describe('Custom name emoji URL.'),
 			})
@@ -2302,21 +2312,21 @@ export const updateDiscordAccountResponse = zod.object({
 		weightStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(updateDiscordAccountResponseSettingsWeightStyleNameMax).nullish(),
+				name: zod.string().max(zodUpdateDiscordAccountResponseSettingsWeightStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected weight style for the user'),
 		leaderboardStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(updateDiscordAccountResponseSettingsLeaderboardStyleNameMax).nullish(),
+				name: zod.string().max(zodUpdateDiscordAccountResponseSettingsLeaderboardStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected leaderboard style for the user'),
 		nameStyle: zod
 			.object({
 				id: zod.number(),
-				name: zod.string().max(updateDiscordAccountResponseSettingsNameStyleNameMax).nullish(),
+				name: zod.string().max(zodUpdateDiscordAccountResponseSettingsNameStyleNameMax).nullish(),
 			})
 			.nullish()
 			.describe('Selected name style for the user'),
@@ -2413,7 +2423,9 @@ export const updateDiscordAccountResponse = zod.object({
 									id: zod.number(),
 									name: zod
 										.string()
-										.max(updateDiscordAccountResponseEntitlementsItemProductWeightStylesItemNameMax)
+										.max(
+											zodUpdateDiscordAccountResponseEntitlementsItemProductWeightStylesItemNameMax
+										)
 										.nullish(),
 								})
 							)
@@ -2422,12 +2434,12 @@ export const updateDiscordAccountResponse = zod.object({
 							.object({
 								title: zod
 									.string()
-									.max(updateDiscordAccountResponseEntitlementsItemProductThumbnailTitleMax)
+									.max(zodUpdateDiscordAccountResponseEntitlementsItemProductThumbnailTitleMax)
 									.nullish()
 									.describe('Image title'),
 								description: zod
 									.string()
-									.max(updateDiscordAccountResponseEntitlementsItemProductThumbnailDescriptionMax)
+									.max(zodUpdateDiscordAccountResponseEntitlementsItemProductThumbnailDescriptionMax)
 									.nullish()
 									.describe('Image description'),
 								order: zod.number().nullish().describe('Image ordering number'),
@@ -2440,13 +2452,13 @@ export const updateDiscordAccountResponse = zod.object({
 								zod.object({
 									title: zod
 										.string()
-										.max(updateDiscordAccountResponseEntitlementsItemProductImagesItemTitleMax)
+										.max(zodUpdateDiscordAccountResponseEntitlementsItemProductImagesItemTitleMax)
 										.nullish()
 										.describe('Image title'),
 									description: zod
 										.string()
 										.max(
-											updateDiscordAccountResponseEntitlementsItemProductImagesItemDescriptionMax
+											zodUpdateDiscordAccountResponseEntitlementsItemProductImagesItemDescriptionMax
 										)
 										.nullish()
 										.describe('Image description'),
@@ -2480,12 +2492,12 @@ export const updateDiscordAccountResponse = zod.object({
 						image: zod.object({
 							title: zod
 								.string()
-								.max(updateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax)
+								.max(zodUpdateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageTitleMax)
 								.nullish()
 								.describe('Image title'),
 							description: zod
 								.string()
-								.max(updateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax)
+								.max(zodUpdateDiscordAccountResponseMinecraftAccountsItemBadgesItemImageDescriptionMax)
 								.nullish()
 								.describe('Image description'),
 							order: zod.number().nullish().describe('Image ordering number'),
@@ -2513,11 +2525,11 @@ export const updateDiscordAccountResponse = zod.object({
 /**
  * @summary Get a contest from a contest key
  */
-export const getContestFromKeyParams = zod.object({
+export const zodGetContestFromKeyParams = zod.object({
 	contestKey: zod.string().describe('A contest key in the format from the Hypixel API'),
 });
 
-export const getContestFromKeyResponse = zod.object({
+export const zodGetContestFromKeyResponse = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
 	participants: zod.number(),
@@ -2544,11 +2556,11 @@ export const getContestFromKeyResponse = zod.object({
 /**
  * @summary Get the three contests that start at a specific timestamp
  */
-export const getContestsAtTimestampParams = zod.object({
+export const zodGetContestsAtTimestampParams = zod.object({
 	timestamp: zod.number(),
 });
 
-export const getContestsAtTimestampResponseItem = zod.object({
+export const zodGetContestsAtTimestampResponseItem = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
 	participants: zod.number(),
@@ -2571,18 +2583,18 @@ export const getContestsAtTimestampResponseItem = zod.object({
 		})
 	),
 });
-export const getContestsAtTimestampResponse = zod.array(getContestsAtTimestampResponseItem);
+export const zodGetContestsAtTimestampResponse = zod.array(zodGetContestsAtTimestampResponseItem);
 
 /**
  * @summary Get the three contests in a specific SkyBlock day
  */
-export const getContestsInDayParams = zod.object({
+export const zodGetContestsInDayParams = zod.object({
 	year: zod.number().describe('SkyBlock year'),
 	month: zod.number().describe('SkyBlock month'),
 	day: zod.number().describe('SkyBlock day'),
 });
 
-export const getContestsInDayResponseItem = zod.object({
+export const zodGetContestsInDayResponseItem = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
 	participants: zod.number(),
@@ -2605,17 +2617,17 @@ export const getContestsInDayResponseItem = zod.object({
 		})
 	),
 });
-export const getContestsInDayResponse = zod.array(getContestsInDayResponseItem);
+export const zodGetContestsInDayResponse = zod.array(zodGetContestsInDayResponseItem);
 
 /**
  * @summary Get all contests in a SkyBlock month
  */
-export const getContestsInMonthParams = zod.object({
+export const zodGetContestsInMonthParams = zod.object({
 	year: zod.number().describe('SkyBlock year'),
 	month: zod.number().describe('SkyBlock month'),
 });
 
-export const getContestsInMonthResponse = zod.record(
+export const zodGetContestsInMonthResponse = zod.record(
 	zod.string(),
 	zod.array(
 		zod.object({
@@ -2636,17 +2648,17 @@ export const getContestsInMonthResponse = zod.record(
 /**
  * @summary Get all contests in a SkyBlock year
  */
-export const getContestsInYearParams = zod.object({
+export const zodGetContestsInYearParams = zod.object({
 	year: zod.number().describe('SkyBlock year'),
 });
 
-export const getContestsInYearQueryNowDefault = false;
+export const zodGetContestsInYearQueryNowDefault = false;
 
-export const getContestsInYearQueryParams = zod.object({
+export const zodGetContestsInYearQueryParams = zod.object({
 	now: zod.boolean().nullish().describe('If the year being requested is the current year. Not required.'),
 });
 
-export const getContestsInYearResponse = zod.object({
+export const zodGetContestsInYearResponse = zod.object({
 	year: zod.number(),
 	count: zod.number(),
 	complete: zod.boolean(),
@@ -2658,7 +2670,7 @@ export const getContestsInYearResponse = zod.object({
 Data used and provided by <see href="https://github.com/hannibal002/SkyHanni/">SkyHanni</see> to display upcoming contests in-game.
  * @summary Get upcoming contests for the current SkyBlock year
  */
-export const getCurrentContestsResponse = zod.object({
+export const zodGetCurrentContestsResponse = zod.object({
 	year: zod.number(),
 	count: zod.number(),
 	complete: zod.boolean(),
@@ -2669,16 +2681,16 @@ export const getCurrentContestsResponse = zod.object({
  * Data used and provided by <see href="https://github.com/hannibal002/SkyHanni/">SkyHanni</see> to display upcoming contests in-game.
  * @summary Upload upcoming contests for the current SkyBlock year
  */
-export const uploadCurrentContestsBody = zod.record(zod.string(), zod.array(zod.string()));
+export const zodUploadCurrentContestsBody = zod.record(zod.string(), zod.array(zod.string()));
 
 /**
  * @summary Get all contests for a player
  */
-export const getPlayerParticipationsParams = zod.object({
+export const zodGetPlayerParticipationsParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getPlayerParticipationsResponseItem = zod.object({
+export const zodGetPlayerParticipationsResponseItem = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
 	collected: zod.number(),
@@ -2686,17 +2698,17 @@ export const getPlayerParticipationsResponseItem = zod.object({
 	participants: zod.number(),
 	medal: zod.string().nullish(),
 });
-export const getPlayerParticipationsResponse = zod.array(getPlayerParticipationsResponseItem);
+export const zodGetPlayerParticipationsResponse = zod.array(zodGetPlayerParticipationsResponseItem);
 
 /**
  * @summary Get all contests for a profile member
  */
-export const getProfileMemberParticipationsParams = zod.object({
+export const zodGetProfileMemberParticipationsParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getProfileMemberParticipationsResponseItem = zod.object({
+export const zodGetProfileMemberParticipationsResponseItem = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
 	collected: zod.number(),
@@ -2704,16 +2716,16 @@ export const getProfileMemberParticipationsResponseItem = zod.object({
 	participants: zod.number(),
 	medal: zod.string().nullish(),
 });
-export const getProfileMemberParticipationsResponse = zod.array(getProfileMemberParticipationsResponseItem);
+export const zodGetProfileMemberParticipationsResponse = zod.array(zodGetProfileMemberParticipationsResponseItem);
 
 /**
  * @summary Get contest records for a SkyBlock year
  */
-export const getRecordsInYearParams = zod.object({
+export const zodGetRecordsInYearParams = zod.object({
 	year: zod.number().describe('SkyBlock year'),
 });
 
-export const getRecordsInYearResponse = zod.object({
+export const zodGetRecordsInYearResponse = zod.object({
 	year: zod.number(),
 	crops: zod.record(
 		zod.string(),
@@ -2735,11 +2747,11 @@ export const getRecordsInYearResponse = zod.object({
 /**
  * @summary Get contests for the player's selected profile member
  */
-export const getSelectedMemberParticipationsParams = zod.object({
+export const zodGetSelectedMemberParticipationsParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getSelectedMemberParticipationsResponseItem = zod.object({
+export const zodGetSelectedMemberParticipationsResponseItem = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
 	collected: zod.number(),
@@ -2747,12 +2759,12 @@ export const getSelectedMemberParticipationsResponseItem = zod.object({
 	participants: zod.number(),
 	medal: zod.string().nullish(),
 });
-export const getSelectedMemberParticipationsResponse = zod.array(getSelectedMemberParticipationsResponseItem);
+export const zodGetSelectedMemberParticipationsResponse = zod.array(zodGetSelectedMemberParticipationsResponseItem);
 
 /**
  * @summary Add an Event Member to a Team
  */
-export const addTeamMemberAdminParams = zod.object({
+export const zodAddTeamMemberAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	teamId: zod.number(),
@@ -2762,7 +2774,7 @@ export const addTeamMemberAdminParams = zod.object({
 /**
  * @summary Kick an Event Team Member
  */
-export const kickTeamMemberAdminParams = zod.object({
+export const zodKickTeamMemberAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	teamId: zod.number(),
@@ -2772,19 +2784,19 @@ export const kickTeamMemberAdminParams = zod.object({
 /**
  * @summary Ban an Event Member
  */
-export const banMemberParams = zod.object({
+export const zodBanMemberParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const banMemberBody = zod.string();
+export const zodBanMemberBody = zod.string();
 
-export const banMemberResponseMetaPrefixMax = 16;
-export const banMemberResponseMetaSuffixMax = 16;
-export const banMemberResponseNotesMax = 128;
+export const zodBanMemberResponseMetaPrefixMax = 16;
+export const zodBanMemberResponseMetaSuffixMax = 16;
+export const zodBanMemberResponseNotesMax = 128;
 
-export const banMemberResponse = zod.object({
+export const zodBanMemberResponse = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -2798,8 +2810,8 @@ export const banMemberResponse = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(banMemberResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(banMemberResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodBanMemberResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodBanMemberResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -2816,13 +2828,13 @@ export const banMemberResponse = zod.object({
 		.describe('Metadata of the entry'),
 	id: zod.number(),
 	accountId: zod.string().nullish(),
-	notes: zod.string().max(banMemberResponseNotesMax).nullish(),
+	notes: zod.string().max(zodBanMemberResponseNotesMax).nullish(),
 });
 
 /**
  * @summary Unban an Event Member
  */
-export const unbanMemberParams = zod.object({
+export const zodUnbanMemberParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
@@ -2831,19 +2843,19 @@ export const unbanMemberParams = zod.object({
 /**
  * @summary Create Event
  */
-export const createEventParams = zod.object({
+export const zodCreateEventParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const createEventBodyNameMax = 64;
-export const createEventBodyDescriptionMax = 1024;
-export const createEventBodyRulesMax = 1024;
-export const createEventBodyPrizeInfoMax = 1024;
-export const createEventBodyRequiredRoleMax = 24;
-export const createEventBodyBlockedRoleMax = 24;
+export const zodCreateEventBodyNameMax = 64;
+export const zodCreateEventBodyDescriptionMax = 1024;
+export const zodCreateEventBodyRulesMax = 1024;
+export const zodCreateEventBodyPrizeInfoMax = 1024;
+export const zodCreateEventBodyRequiredRoleMax = 24;
+export const zodCreateEventBodyBlockedRoleMax = 24;
 
-export const createEventBody = zod.object({
-	name: zod.string().min(1).max(createEventBodyNameMax).describe('The name of the event'),
+export const zodCreateEventBody = zod.object({
+	name: zod.string().min(1).max(zodCreateEventBodyNameMax).describe('The name of the event'),
 	type: zod
 		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
 		.nullish()
@@ -2851,13 +2863,13 @@ export const createEventBody = zod.object({
 	guildId: zod.string().min(1).describe('The Discord server id as a string for the event'),
 	description: zod
 		.string()
-		.max(createEventBodyDescriptionMax)
+		.max(zodCreateEventBodyDescriptionMax)
 		.nullish()
 		.describe('An optional description for the event'),
-	rules: zod.string().max(createEventBodyRulesMax).nullish().describe('An optional set of rules for the event'),
+	rules: zod.string().max(zodCreateEventBodyRulesMax).nullish().describe('An optional set of rules for the event'),
 	prizeInfo: zod
 		.string()
-		.max(createEventBodyPrizeInfoMax)
+		.max(zodCreateEventBodyPrizeInfoMax)
 		.nullish()
 		.describe('An optional description of prizes for the event'),
 	startTime: zod.number().describe('Unix timestamp for the start time of the event in seconds'),
@@ -2869,22 +2881,22 @@ export const createEventBody = zod.object({
 	dynamicStartTime: zod.boolean().nullish().describe('Currently unused'),
 	requiredRole: zod
 		.string()
-		.max(createEventBodyRequiredRoleMax)
+		.max(zodCreateEventBodyRequiredRoleMax)
 		.nullish()
 		.describe('A Discord role id that is required to participate in the event'),
 	blockedRole: zod
 		.string()
-		.max(createEventBodyBlockedRoleMax)
+		.max(zodCreateEventBodyBlockedRoleMax)
 		.nullish()
 		.describe('A Discord role id that is blocked from participating in the event'),
 	maxTeams: zod.number().describe('Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited'),
 	maxTeamMembers: zod.number().describe('Max amount of members allowed in a team, 0 if solo event, -1 if unlimited'),
 });
 
-export const createEventResponseBannerTitleMax = 64;
-export const createEventResponseBannerDescriptionMax = 512;
+export const zodCreateEventResponseBannerTitleMax = 64;
+export const zodCreateEventResponseBannerDescriptionMax = 512;
 
-export const createEventResponse = zod.object({
+export const zodCreateEventResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -2896,10 +2908,10 @@ export const createEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(createEventResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodCreateEventResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(createEventResponseBannerDescriptionMax)
+				.max(zodCreateEventResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -2925,33 +2937,33 @@ export const createEventResponse = zod.object({
  * This generally should only be used for events with a set amount of teams (when users are not allowed to create their own teams)
  * @summary Create an Event Team
  */
-export const createTeamAdminParams = zod.object({
+export const zodCreateTeamAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const createTeamAdminQueryParams = zod.object({
+export const zodCreateTeamAdminQueryParams = zod.object({
 	userId: zod.string().nullish(),
 });
 
-export const createTeamAdminBodyNameMax = 3;
-export const createTeamAdminBodyColorMax = 7;
+export const zodCreateTeamAdminBodyNameMax = 3;
+export const zodCreateTeamAdminBodyColorMax = 7;
 
-export const createTeamAdminBody = zod.object({
+export const zodCreateTeamAdminBody = zod.object({
 	name: zod
 		.array(zod.string())
 		.min(1)
-		.max(createTeamAdminBodyNameMax)
+		.max(zodCreateTeamAdminBodyNameMax)
 		.nullish()
 		.describe('An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]'),
-	color: zod.string().max(createTeamAdminBodyColorMax).nullish(),
+	color: zod.string().max(zodCreateTeamAdminBodyColorMax).nullish(),
 });
 
 /**
  * Delete an event and all associated data. Only available for unapproved events.
  * @summary Delete Event
  */
-export const deleteEventParams = zod.object({
+export const zodDeleteEventParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
@@ -2959,12 +2971,12 @@ export const deleteEventParams = zod.object({
 /**
  * @summary Update Event
  */
-export const updateEventParams = zod.object({
+export const zodUpdateEventParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const updateEventBody = zod.object({
+export const zodUpdateEventBody = zod.object({
 	name: zod.string().nullish(),
 	type: zod.string().nullish(),
 	description: zod.string().nullish(),
@@ -3006,10 +3018,10 @@ export const updateEventBody = zod.object({
 		.nullish(),
 });
 
-export const updateEventResponseBannerTitleMax = 64;
-export const updateEventResponseBannerDescriptionMax = 512;
+export const zodUpdateEventResponseBannerTitleMax = 64;
+export const zodUpdateEventResponseBannerDescriptionMax = 512;
 
-export const updateEventResponse = zod.object({
+export const zodUpdateEventResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3021,10 +3033,10 @@ export const updateEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(updateEventResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodUpdateEventResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(updateEventResponseBannerDescriptionMax)
+				.max(zodUpdateEventResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3049,7 +3061,7 @@ export const updateEventResponse = zod.object({
 /**
  * @summary Delete Custom Event Banner
  */
-export const deleteEventBannerParams = zod.object({
+export const zodDeleteEventBannerParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
@@ -3057,25 +3069,25 @@ export const deleteEventBannerParams = zod.object({
 /**
  * @summary Set Custom Event Banner
  */
-export const setEventBannerParams = zod.object({
+export const zodSetEventBannerParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const setEventBannerBody = zod.object({
+export const zodSetEventBannerBody = zod.object({
 	image: zod.instanceof(File).nullish(),
 });
 
 /**
  * @summary Delete an Event Member
  */
-export const deleteMemberParams = zod.object({
+export const zodDeleteMemberParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const deleteMemberQueryParams = zod.object({
+export const zodDeleteMemberQueryParams = zod.object({
 	profileUuid: zod.string().nullish(),
 	recordId: zod.number().nullish(),
 });
@@ -3083,20 +3095,20 @@ export const deleteMemberQueryParams = zod.object({
 /**
  * @summary Ban an Event Member
  */
-export const forceAddMemberParams = zod.object({
+export const zodForceAddMemberParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const forceAddMemberQueryParams = zod.object({
+export const zodForceAddMemberQueryParams = zod.object({
 	profileUuid: zod.string(),
 });
 
 /**
  * @summary Delete an Event Team
  */
-export const deleteTeamAdminParams = zod.object({
+export const zodDeleteTeamAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 	teamId: zod.number(),
@@ -3105,39 +3117,39 @@ export const deleteTeamAdminParams = zod.object({
 /**
  * @summary Update a team
  */
-export const updateTeamAdminParams = zod.object({
+export const zodUpdateTeamAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
 
-export const updateTeamAdminBodyNameMax = 3;
-export const updateTeamAdminBodyColorMax = 7;
+export const zodUpdateTeamAdminBodyNameMax = 3;
+export const zodUpdateTeamAdminBodyColorMax = 7;
 
-export const updateTeamAdminBody = zod.object({
+export const zodUpdateTeamAdminBody = zod.object({
 	name: zod
 		.array(zod.string())
 		.min(1)
-		.max(updateTeamAdminBodyNameMax)
+		.max(zodUpdateTeamAdminBodyNameMax)
 		.nullish()
 		.describe('An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]'),
-	color: zod.string().max(updateTeamAdminBodyColorMax).nullish(),
+	color: zod.string().max(zodUpdateTeamAdminBodyColorMax).nullish(),
 	changeCode: zod.boolean().nullish().describe('If join code should be changed'),
 });
 
 /**
  * @summary Get banned event members
  */
-export const getBannedMembersParams = zod.object({
+export const zodGetBannedMembersParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const getBannedMembersResponseMetaPrefixMax = 16;
-export const getBannedMembersResponseMetaSuffixMax = 16;
-export const getBannedMembersResponseNotesMax = 128;
+export const zodGetBannedMembersResponseMetaPrefixMax = 16;
+export const zodGetBannedMembersResponseMetaSuffixMax = 16;
+export const zodGetBannedMembersResponseNotesMax = 128;
 
-export const getBannedMembersResponseItem = zod.object({
+export const zodGetBannedMembersResponseItem = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -3151,8 +3163,8 @@ export const getBannedMembersResponseItem = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(getBannedMembersResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(getBannedMembersResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetBannedMembersResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetBannedMembersResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -3169,23 +3181,23 @@ export const getBannedMembersResponseItem = zod.object({
 		.describe('Metadata of the entry'),
 	id: zod.number(),
 	accountId: zod.string().nullish(),
-	notes: zod.string().max(getBannedMembersResponseNotesMax).nullish(),
+	notes: zod.string().max(zodGetBannedMembersResponseNotesMax).nullish(),
 });
-export const getBannedMembersResponse = zod.array(getBannedMembersResponseItem);
+export const zodGetBannedMembersResponse = zod.array(zodGetBannedMembersResponseItem);
 
 /**
  * @summary Get event members
  */
-export const getGuildEventMembersParams = zod.object({
+export const zodGetGuildEventMembersParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const getGuildEventMembersResponseMetaPrefixMax = 16;
-export const getGuildEventMembersResponseMetaSuffixMax = 16;
-export const getGuildEventMembersResponseNotesMax = 128;
+export const zodGetGuildEventMembersResponseMetaPrefixMax = 16;
+export const zodGetGuildEventMembersResponseMetaSuffixMax = 16;
+export const zodGetGuildEventMembersResponseNotesMax = 128;
 
-export const getGuildEventMembersResponseItem = zod.object({
+export const zodGetGuildEventMembersResponseItem = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -3199,8 +3211,8 @@ export const getGuildEventMembersResponseItem = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(getGuildEventMembersResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(getGuildEventMembersResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetGuildEventMembersResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetGuildEventMembersResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -3217,22 +3229,22 @@ export const getGuildEventMembersResponseItem = zod.object({
 		.describe('Metadata of the entry'),
 	id: zod.number(),
 	accountId: zod.string().nullish(),
-	notes: zod.string().max(getGuildEventMembersResponseNotesMax).nullish(),
+	notes: zod.string().max(zodGetGuildEventMembersResponseNotesMax).nullish(),
 });
-export const getGuildEventMembersResponse = zod.array(getGuildEventMembersResponseItem);
+export const zodGetGuildEventMembersResponse = zod.array(zodGetGuildEventMembersResponseItem);
 
 /**
  * @summary Get an event for a guild
  */
-export const getGuildEventParams = zod.object({
+export const zodGetGuildEventParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const getGuildEventResponseBannerTitleMax = 64;
-export const getGuildEventResponseBannerDescriptionMax = 512;
+export const zodGetGuildEventResponseBannerTitleMax = 64;
+export const zodGetGuildEventResponseBannerDescriptionMax = 512;
 
-export const getGuildEventResponse = zod.object({
+export const zodGetGuildEventResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3244,10 +3256,10 @@ export const getGuildEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(getGuildEventResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetGuildEventResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getGuildEventResponseBannerDescriptionMax)
+				.max(zodGetGuildEventResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3272,14 +3284,14 @@ export const getGuildEventResponse = zod.object({
 /**
  * @summary Get all events for a guild
  */
-export const getGuildEventsParams = zod.object({
+export const zodGetGuildEventsParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getGuildEventsResponseBannerTitleMax = 64;
-export const getGuildEventsResponseBannerDescriptionMax = 512;
+export const zodGetGuildEventsResponseBannerTitleMax = 64;
+export const zodGetGuildEventsResponseBannerDescriptionMax = 512;
 
-export const getGuildEventsResponseItem = zod.object({
+export const zodGetGuildEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3291,10 +3303,10 @@ export const getGuildEventsResponseItem = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(getGuildEventsResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetGuildEventsResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getGuildEventsResponseBannerDescriptionMax)
+				.max(zodGetGuildEventsResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3315,21 +3327,21 @@ export const getGuildEventsResponseItem = zod.object({
 	guildId: zod.string().nullish().describe('Discord server id as a string'),
 	data: zod.any().nullish().describe('Data specific to the event'),
 });
-export const getGuildEventsResponse = zod.array(getGuildEventsResponseItem);
+export const zodGetGuildEventsResponse = zod.array(zodGetGuildEventsResponseItem);
 
 /**
  * @summary Get event teams
  */
-export const getTeamsAdminParams = zod.object({
+export const zodGetTeamsAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const getTeamsAdminResponseMembersItemNotesMax = 128;
-export const getTeamsAdminResponseMembersItemMetaPrefixMax = 16;
-export const getTeamsAdminResponseMembersItemMetaSuffixMax = 16;
+export const zodGetTeamsAdminResponseMembersItemNotesMax = 128;
+export const zodGetTeamsAdminResponseMembersItemMetaPrefixMax = 16;
+export const zodGetTeamsAdminResponseMembersItemMetaSuffixMax = 16;
 
-export const getTeamsAdminResponseItem = zod.object({
+export const zodGetTeamsAdminResponseItem = zod.object({
 	id: zod.number(),
 	eventId: zod.string().nullish(),
 	name: zod.string().nullish(),
@@ -3349,11 +3361,11 @@ export const getTeamsAdminResponseItem = zod.object({
 			data: zod.any().nullish(),
 			lastUpdated: zod.string().nullish(),
 			disqualified: zod.boolean(),
-			notes: zod.string().max(getTeamsAdminResponseMembersItemNotesMax).nullish(),
+			notes: zod.string().max(zodGetTeamsAdminResponseMembersItemNotesMax).nullish(),
 			meta: zod
 				.object({
-					prefix: zod.string().max(getTeamsAdminResponseMembersItemMetaPrefixMax).nullish(),
-					suffix: zod.string().max(getTeamsAdminResponseMembersItemMetaSuffixMax).nullish(),
+					prefix: zod.string().max(zodGetTeamsAdminResponseMembersItemMetaPrefixMax).nullish(),
+					suffix: zod.string().max(zodGetTeamsAdminResponseMembersItemMetaSuffixMax).nullish(),
 					leaderboard: zod
 						.object({
 							styleId: zod.number().nullish(),
@@ -3375,32 +3387,32 @@ export const getTeamsAdminResponseItem = zod.object({
 		.nullish()
 		.describe('Join code for the team, only populated if authenticated user is the owner'),
 });
-export const getTeamsAdminResponse = zod.array(getTeamsAdminResponseItem);
+export const zodGetTeamsAdminResponse = zod.array(zodGetTeamsAdminResponseItem);
 
 /**
  * @summary Set player as team owner
  */
-export const setTeamOwnerAdminParams = zod.object({
+export const zodSetTeamOwnerAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
 
-export const setTeamOwnerAdminBody = zod.object({
+export const zodSetTeamOwnerAdminBody = zod.object({
 	player: zod.string(),
 });
 
 /**
  * @summary Get an event
  */
-export const getEventParams = zod.object({
+export const zodGetEventParams = zod.object({
 	eventId: zod.number(),
 });
 
-export const getEventResponseBannerTitleMax = 64;
-export const getEventResponseBannerDescriptionMax = 512;
+export const zodGetEventResponseBannerTitleMax = 64;
+export const zodGetEventResponseBannerDescriptionMax = 512;
 
-export const getEventResponse = zod.object({
+export const zodGetEventResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3412,8 +3424,12 @@ export const getEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(getEventResponseBannerTitleMax).nullish().describe('Image title'),
-			description: zod.string().max(getEventResponseBannerDescriptionMax).nullish().describe('Image description'),
+			title: zod.string().max(zodGetEventResponseBannerTitleMax).nullish().describe('Image title'),
+			description: zod
+				.string()
+				.max(zodGetEventResponseBannerDescriptionMax)
+				.nullish()
+				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
 			url: zod.string().describe('Full image URL'),
 		})
@@ -3437,7 +3453,7 @@ export const getEventResponse = zod.object({
  * Default constants for event settings.
  * @summary Get event default constants
  */
-export const getEventDefaultsResponse = zod.object({
+export const zodGetEventDefaultsResponse = zod.object({
 	cropWeights: zod.record(zod.string(), zod.number()),
 	medalValues: zod.record(zod.string(), zod.number()),
 	pestWeights: zod.record(zod.string(), zod.number()),
@@ -3446,16 +3462,16 @@ export const getEventDefaultsResponse = zod.object({
 /**
  * @summary Get an event member
  */
-export const getEventMemberParams = zod.object({
+export const zodGetEventMemberParams = zod.object({
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const getEventMemberResponseNotesMax = 128;
-export const getEventMemberResponseMetaPrefixMax = 16;
-export const getEventMemberResponseMetaSuffixMax = 16;
+export const zodGetEventMemberResponseNotesMax = 128;
+export const zodGetEventMemberResponseMetaPrefixMax = 16;
+export const zodGetEventMemberResponseMetaSuffixMax = 16;
 
-export const getEventMemberResponse = zod.object({
+export const zodGetEventMemberResponse = zod.object({
 	playerUuid: zod.string().nullish(),
 	playerName: zod.string().nullish(),
 	profileId: zod.string().nullish(),
@@ -3466,11 +3482,11 @@ export const getEventMemberResponse = zod.object({
 	data: zod.any().nullish(),
 	lastUpdated: zod.string().nullish(),
 	disqualified: zod.boolean(),
-	notes: zod.string().max(getEventMemberResponseNotesMax).nullish(),
+	notes: zod.string().max(zodGetEventMemberResponseNotesMax).nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(getEventMemberResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(getEventMemberResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetEventMemberResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetEventMemberResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -3490,14 +3506,14 @@ export const getEventMemberResponse = zod.object({
 /**
  * @summary Get event members
  */
-export const getEventMembersParams = zod.object({
+export const zodGetEventMembersParams = zod.object({
 	eventId: zod.number(),
 });
 
-export const getEventMembersResponseMetaPrefixMax = 16;
-export const getEventMembersResponseMetaSuffixMax = 16;
+export const zodGetEventMembersResponseMetaPrefixMax = 16;
+export const zodGetEventMembersResponseMetaSuffixMax = 16;
 
-export const getEventMembersResponseItem = zod.object({
+export const zodGetEventMembersResponseItem = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -3511,8 +3527,8 @@ export const getEventMembersResponseItem = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(getEventMembersResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(getEventMembersResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetEventMembersResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetEventMembersResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -3528,21 +3544,21 @@ export const getEventMembersResponseItem = zod.object({
 		.nullish()
 		.describe('Metadata of the entry'),
 });
-export const getEventMembersResponse = zod.array(getEventMembersResponseItem);
+export const zodGetEventMembersResponse = zod.array(zodGetEventMembersResponseItem);
 
 /**
  * @summary Get an event team
  */
-export const getEventTeamParams = zod.object({
+export const zodGetEventTeamParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
 
-export const getEventTeamResponseMembersItemNotesMax = 128;
-export const getEventTeamResponseMembersItemMetaPrefixMax = 16;
-export const getEventTeamResponseMembersItemMetaSuffixMax = 16;
+export const zodGetEventTeamResponseMembersItemNotesMax = 128;
+export const zodGetEventTeamResponseMembersItemMetaPrefixMax = 16;
+export const zodGetEventTeamResponseMembersItemMetaSuffixMax = 16;
 
-export const getEventTeamResponse = zod.object({
+export const zodGetEventTeamResponse = zod.object({
 	id: zod.number(),
 	eventId: zod.string().nullish(),
 	name: zod.string().nullish(),
@@ -3562,11 +3578,11 @@ export const getEventTeamResponse = zod.object({
 			data: zod.any().nullish(),
 			lastUpdated: zod.string().nullish(),
 			disqualified: zod.boolean(),
-			notes: zod.string().max(getEventTeamResponseMembersItemNotesMax).nullish(),
+			notes: zod.string().max(zodGetEventTeamResponseMembersItemNotesMax).nullish(),
 			meta: zod
 				.object({
-					prefix: zod.string().max(getEventTeamResponseMembersItemMetaPrefixMax).nullish(),
-					suffix: zod.string().max(getEventTeamResponseMembersItemMetaSuffixMax).nullish(),
+					prefix: zod.string().max(zodGetEventTeamResponseMembersItemMetaPrefixMax).nullish(),
+					suffix: zod.string().max(zodGetEventTeamResponseMembersItemMetaSuffixMax).nullish(),
 					leaderboard: zod
 						.object({
 							styleId: zod.number().nullish(),
@@ -3592,7 +3608,7 @@ export const getEventTeamResponse = zod.object({
 /**
  * @summary Delete team
  */
-export const deleteTeamParams = zod.object({
+export const zodDeleteTeamParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
@@ -3600,37 +3616,37 @@ export const deleteTeamParams = zod.object({
 /**
  * @summary Update a team
  */
-export const updateTeamParams = zod.object({
+export const zodUpdateTeamParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
 
-export const updateTeamBodyNameMax = 3;
-export const updateTeamBodyColorMax = 7;
+export const zodUpdateTeamBodyNameMax = 3;
+export const zodUpdateTeamBodyColorMax = 7;
 
-export const updateTeamBody = zod.object({
+export const zodUpdateTeamBody = zod.object({
 	name: zod
 		.array(zod.string())
 		.min(1)
-		.max(updateTeamBodyNameMax)
+		.max(zodUpdateTeamBodyNameMax)
 		.nullish()
 		.describe('An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]'),
-	color: zod.string().max(updateTeamBodyColorMax).nullish(),
+	color: zod.string().max(zodUpdateTeamBodyColorMax).nullish(),
 	changeCode: zod.boolean().nullish().describe('If join code should be changed'),
 });
 
 /**
  * @summary Get event teams
  */
-export const getEventTeamsParams = zod.object({
+export const zodGetEventTeamsParams = zod.object({
 	eventId: zod.number(),
 });
 
-export const getEventTeamsResponseMembersItemNotesMax = 128;
-export const getEventTeamsResponseMembersItemMetaPrefixMax = 16;
-export const getEventTeamsResponseMembersItemMetaSuffixMax = 16;
+export const zodGetEventTeamsResponseMembersItemNotesMax = 128;
+export const zodGetEventTeamsResponseMembersItemMetaPrefixMax = 16;
+export const zodGetEventTeamsResponseMembersItemMetaSuffixMax = 16;
 
-export const getEventTeamsResponseItem = zod.object({
+export const zodGetEventTeamsResponseItem = zod.object({
 	id: zod.number(),
 	eventId: zod.string().nullish(),
 	name: zod.string().nullish(),
@@ -3650,11 +3666,11 @@ export const getEventTeamsResponseItem = zod.object({
 			data: zod.any().nullish(),
 			lastUpdated: zod.string().nullish(),
 			disqualified: zod.boolean(),
-			notes: zod.string().max(getEventTeamsResponseMembersItemNotesMax).nullish(),
+			notes: zod.string().max(zodGetEventTeamsResponseMembersItemNotesMax).nullish(),
 			meta: zod
 				.object({
-					prefix: zod.string().max(getEventTeamsResponseMembersItemMetaPrefixMax).nullish(),
-					suffix: zod.string().max(getEventTeamsResponseMembersItemMetaSuffixMax).nullish(),
+					prefix: zod.string().max(zodGetEventTeamsResponseMembersItemMetaPrefixMax).nullish(),
+					suffix: zod.string().max(zodGetEventTeamsResponseMembersItemMetaSuffixMax).nullish(),
 					leaderboard: zod
 						.object({
 							styleId: zod.number().nullish(),
@@ -3676,12 +3692,12 @@ export const getEventTeamsResponseItem = zod.object({
 		.nullish()
 		.describe('Join code for the team, only populated if authenticated user is the owner'),
 });
-export const getEventTeamsResponse = zod.array(getEventTeamsResponseItem);
+export const zodGetEventTeamsResponse = zod.array(zodGetEventTeamsResponseItem);
 
 /**
  * @summary Create a team
  */
-export const createTeamParams = zod.object({
+export const zodCreateTeamParams = zod.object({
 	eventId: zod.number(),
 });
 
@@ -3689,7 +3705,7 @@ export const createTeamParams = zod.object({
  * Lists of whitelisted words for team name generation.
  * @summary Get event team word list constants
  */
-export const getTeamWordListResponse = zod.object({
+export const zodGetTeamWordListResponse = zod.object({
 	first: zod.array(zod.string()),
 	second: zod.array(zod.string()),
 	third: zod.array(zod.string()),
@@ -3698,16 +3714,16 @@ export const getTeamWordListResponse = zod.object({
 /**
  * @summary Get upcoming events
  */
-export const getUpcomingEventsQueryOffsetDefault = 0;
+export const zodGetUpcomingEventsQueryOffsetDefault = 0;
 
-export const getUpcomingEventsQueryParams = zod.object({
+export const zodGetUpcomingEventsQueryParams = zod.object({
 	offset: zod.number().nullish().describe('Offset by an amount of days to also include recently ended events.'),
 });
 
-export const getUpcomingEventsResponseBannerTitleMax = 64;
-export const getUpcomingEventsResponseBannerDescriptionMax = 512;
+export const zodGetUpcomingEventsResponseBannerTitleMax = 64;
+export const zodGetUpcomingEventsResponseBannerDescriptionMax = 512;
 
-export const getUpcomingEventsResponseItem = zod.object({
+export const zodGetUpcomingEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3719,10 +3735,10 @@ export const getUpcomingEventsResponseItem = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(getUpcomingEventsResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetUpcomingEventsResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getUpcomingEventsResponseBannerDescriptionMax)
+				.max(zodGetUpcomingEventsResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3743,16 +3759,16 @@ export const getUpcomingEventsResponseItem = zod.object({
 	guildId: zod.string().nullish().describe('Discord server id as a string'),
 	data: zod.any().nullish().describe('Data specific to the event'),
 });
-export const getUpcomingEventsResponse = zod.array(getUpcomingEventsResponseItem);
+export const zodGetUpcomingEventsResponse = zod.array(zodGetUpcomingEventsResponseItem);
 
 /**
  * @summary Join an event
  */
-export const joinEventParams = zod.object({
+export const zodJoinEventParams = zod.object({
 	eventId: zod.number(),
 });
 
-export const joinEventQueryParams = zod.object({
+export const zodJoinEventQueryParams = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileUuid: zod.string().nullish(),
 });
@@ -3760,18 +3776,18 @@ export const joinEventQueryParams = zod.object({
 /**
  * @summary Join a team
  */
-export const joinTeamParams = zod.object({
+export const zodJoinTeamParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
 
-export const joinTeamBody = zod.string();
+export const zodJoinTeamBody = zod.string();
 
 /**
  * Kicked members can rejoin the team if they have the join code.
  * @summary Kick a team member
  */
-export const kickTeamMemberParams = zod.object({
+export const zodKickTeamMemberParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 	player: zod.string().describe('Player uuid or ign'),
@@ -3780,14 +3796,14 @@ export const kickTeamMemberParams = zod.object({
 /**
  * @summary Join an event
  */
-export const leaveEventParams = zod.object({
+export const zodLeaveEventParams = zod.object({
 	eventId: zod.number(),
 });
 
 /**
  * @summary Leave a team
  */
-export const leaveTeamParams = zod.object({
+export const zodLeaveTeamParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
@@ -3795,7 +3811,7 @@ export const leaveTeamParams = zod.object({
 /**
  * @summary Set player as team owner
  */
-export const setTeamOwnerParams = zod.object({
+export const zodSetTeamOwnerParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
@@ -3803,7 +3819,7 @@ export const setTeamOwnerParams = zod.object({
 /**
  * @summary Generate new team join code
  */
-export const updateTeamJoinCodeParams = zod.object({
+export const zodUpdateTeamJoinCodeParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
 });
@@ -3812,11 +3828,11 @@ export const updateTeamJoinCodeParams = zod.object({
  * Get Garden data for a specific profile by UUID
  * @summary Get Garden data for a profile
  */
-export const getGardenParams = zod.object({
+export const zodGetGardenParams = zod.object({
 	profileUuid: zod.string(),
 });
 
-export const getGardenResponse = zod.object({
+export const zodGetGardenResponse = zod.object({
 	profileId: zod.string().describe('Profile ID'),
 	experience: zod.number().describe('Garden experience'),
 	completedVisitors: zod.number().describe('Total completed visitors'),
@@ -3884,11 +3900,11 @@ export const getGardenResponse = zod.object({
  * Get selected Garden data for a specific player by UUID
  * @summary Get selected Garden data for a player
  */
-export const getSelectedGardenParams = zod.object({
+export const zodGetSelectedGardenParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getSelectedGardenResponse = zod.object({
+export const zodGetSelectedGardenResponse = zod.object({
 	profileId: zod.string().describe('Profile ID'),
 	experience: zod.number().describe('Garden experience'),
 	completedVisitors: zod.number().describe('Total completed visitors'),
@@ -3955,122 +3971,122 @@ export const getSelectedGardenResponse = zod.object({
 /**
  * @summary Get Admin Crop Collections
  */
-export const getAdminCropGraphsParams = zod.object({
+export const zodGetAdminCropGraphsParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getAdminCropGraphsQueryFromDefault = 0;
-export const getAdminCropGraphsQueryDaysDefault = 7;
-export const getAdminCropGraphsQueryPerDayDefault = 4;
+export const zodGetAdminCropGraphsQueryFromDefault = 0;
+export const zodGetAdminCropGraphsQueryDaysDefault = 7;
+export const zodGetAdminCropGraphsQueryPerDayDefault = 4;
 
-export const getAdminCropGraphsQueryParams = zod.object({
+export const zodGetAdminCropGraphsQueryParams = zod.object({
 	from: zod.number().nullish().describe('Unix timestamp in seconds for the start of the data to return'),
 	days: zod
 		.number()
-		.default(getAdminCropGraphsQueryDaysDefault)
+		.default(zodGetAdminCropGraphsQueryDaysDefault)
 		.describe('Amount of days after the \"from\" timestamp to include'),
 	perDay: zod
 		.number()
-		.default(getAdminCropGraphsQueryPerDayDefault)
+		.default(zodGetAdminCropGraphsQueryPerDayDefault)
 		.describe('Data points returned per 24-hour period'),
 });
 
-export const getAdminCropGraphsResponseItem = zod.object({
+export const zodGetAdminCropGraphsResponseItem = zod.object({
 	timestamp: zod.number(),
 	cropWeight: zod.string(),
 	crops: zod.record(zod.string(), zod.number()),
 	pests: zod.record(zod.string(), zod.number()),
 });
-export const getAdminCropGraphsResponse = zod.array(getAdminCropGraphsResponseItem);
+export const zodGetAdminCropGraphsResponse = zod.array(zodGetAdminCropGraphsResponseItem);
 
 /**
  * @summary Get Admin Skill XP
  */
-export const getAdminSkillGraphsParams = zod.object({
+export const zodGetAdminSkillGraphsParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getAdminSkillGraphsQueryFromDefault = 0;
-export const getAdminSkillGraphsQueryDaysDefault = 7;
-export const getAdminSkillGraphsQueryPerDayDefault = 4;
+export const zodGetAdminSkillGraphsQueryFromDefault = 0;
+export const zodGetAdminSkillGraphsQueryDaysDefault = 7;
+export const zodGetAdminSkillGraphsQueryPerDayDefault = 4;
 
-export const getAdminSkillGraphsQueryParams = zod.object({
+export const zodGetAdminSkillGraphsQueryParams = zod.object({
 	from: zod.number().nullish(),
-	days: zod.number().default(getAdminSkillGraphsQueryDaysDefault),
-	perDay: zod.number().default(getAdminSkillGraphsQueryPerDayDefault),
+	days: zod.number().default(zodGetAdminSkillGraphsQueryDaysDefault),
+	perDay: zod.number().default(zodGetAdminSkillGraphsQueryPerDayDefault),
 });
 
-export const getAdminSkillGraphsResponseItem = zod.object({
+export const zodGetAdminSkillGraphsResponseItem = zod.object({
 	timestamp: zod.number(),
 	skills: zod.record(zod.string(), zod.number()),
 });
-export const getAdminSkillGraphsResponse = zod.array(getAdminSkillGraphsResponseItem);
+export const zodGetAdminSkillGraphsResponse = zod.array(zodGetAdminSkillGraphsResponseItem);
 
 /**
  * @summary Get Crop Collections Over Time
  */
-export const getCropGraphsParams = zod.object({
+export const zodGetCropGraphsParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getCropGraphsQueryFromDefault = 0;
-export const getCropGraphsQueryDaysDefault = 7;
-export const getCropGraphsQueryPerDayDefault = 4;
+export const zodGetCropGraphsQueryFromDefault = 0;
+export const zodGetCropGraphsQueryDaysDefault = 7;
+export const zodGetCropGraphsQueryPerDayDefault = 4;
 
-export const getCropGraphsQueryParams = zod.object({
+export const zodGetCropGraphsQueryParams = zod.object({
 	from: zod.number().nullish(),
-	days: zod.number().default(getCropGraphsQueryDaysDefault),
-	perDay: zod.number().default(getCropGraphsQueryPerDayDefault),
+	days: zod.number().default(zodGetCropGraphsQueryDaysDefault),
+	perDay: zod.number().default(zodGetCropGraphsQueryPerDayDefault),
 });
 
-export const getCropGraphsResponseItem = zod.object({
+export const zodGetCropGraphsResponseItem = zod.object({
 	timestamp: zod.number(),
 	cropWeight: zod.string(),
 	crops: zod.record(zod.string(), zod.number()),
 	pests: zod.record(zod.string(), zod.number()),
 });
-export const getCropGraphsResponse = zod.array(getCropGraphsResponseItem);
+export const zodGetCropGraphsResponse = zod.array(zodGetCropGraphsResponseItem);
 
 /**
  * @summary Get Skill XP Over Time
  */
-export const getSkillGraphsParams = zod.object({
+export const zodGetSkillGraphsParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getSkillGraphsQueryFromDefault = 0;
-export const getSkillGraphsQueryDaysDefault = 7;
-export const getSkillGraphsQueryPerDayDefault = 4;
+export const zodGetSkillGraphsQueryFromDefault = 0;
+export const zodGetSkillGraphsQueryDaysDefault = 7;
+export const zodGetSkillGraphsQueryPerDayDefault = 4;
 
-export const getSkillGraphsQueryParams = zod.object({
+export const zodGetSkillGraphsQueryParams = zod.object({
 	from: zod.number().nullish(),
-	days: zod.number().default(getSkillGraphsQueryDaysDefault),
-	perDay: zod.number().default(getSkillGraphsQueryPerDayDefault),
+	days: zod.number().default(zodGetSkillGraphsQueryDaysDefault),
+	perDay: zod.number().default(zodGetSkillGraphsQueryPerDayDefault),
 });
 
-export const getSkillGraphsResponseItem = zod.object({
+export const zodGetSkillGraphsResponseItem = zod.object({
 	timestamp: zod.number(),
 	skills: zod.record(zod.string(), zod.number()),
 });
-export const getSkillGraphsResponse = zod.array(getSkillGraphsResponseItem);
+export const zodGetSkillGraphsResponse = zod.array(zodGetSkillGraphsResponseItem);
 
 /**
  * @summary Get current average medal brackets
  */
-export const getCurrentMedalBracketsQueryMonthsDefault = 2;
+export const zodGetCurrentMedalBracketsQueryMonthsDefault = 2;
 
-export const getCurrentMedalBracketsQueryParams = zod.object({
+export const zodGetCurrentMedalBracketsQueryParams = zod.object({
 	months: zod
 		.number()
-		.default(getCurrentMedalBracketsQueryMonthsDefault)
+		.default(zodGetCurrentMedalBracketsQueryMonthsDefault)
 		.describe('Amount of previous SkyBlock months to include in the average'),
 });
 
-export const getCurrentMedalBracketsResponse = zod.object({
+export const zodGetCurrentMedalBracketsResponse = zod.object({
 	start: zod.string(),
 	end: zod.string(),
 	brackets: zod.record(
@@ -4088,21 +4104,21 @@ export const getCurrentMedalBracketsResponse = zod.object({
 /**
  * @summary Get average medal brackets for a specific SkyBlock month
  */
-export const getMedalBracketsParams = zod.object({
+export const zodGetMedalBracketsParams = zod.object({
 	year: zod.number().describe('SkyBlock year'),
 	month: zod.number().describe('SkyBlock month'),
 });
 
-export const getMedalBracketsQueryMonthsDefault = 2;
+export const zodGetMedalBracketsQueryMonthsDefault = 2;
 
-export const getMedalBracketsQueryParams = zod.object({
+export const zodGetMedalBracketsQueryParams = zod.object({
 	months: zod
 		.number()
-		.default(getMedalBracketsQueryMonthsDefault)
+		.default(zodGetMedalBracketsQueryMonthsDefault)
 		.describe('Amount of previous SkyBlock months to include in the average'),
 });
 
-export const getMedalBracketsResponse = zod.object({
+export const zodGetMedalBracketsResponse = zod.object({
 	start: zod.string(),
 	end: zod.string(),
 	brackets: zod.record(
@@ -4120,25 +4136,25 @@ export const getMedalBracketsResponse = zod.object({
 /**
  * @summary Get average medal brackets for multiple SkyBlock years
  */
-export const getMedalBracketsGraphParams = zod.object({
+export const zodGetMedalBracketsGraphParams = zod.object({
 	year: zod.number().describe('SkyBlock year'),
 });
 
-export const getMedalBracketsGraphQueryYearsDefault = 2;
-export const getMedalBracketsGraphQueryMonthsDefault = 2;
+export const zodGetMedalBracketsGraphQueryYearsDefault = 2;
+export const zodGetMedalBracketsGraphQueryMonthsDefault = 2;
 
-export const getMedalBracketsGraphQueryParams = zod.object({
+export const zodGetMedalBracketsGraphQueryParams = zod.object({
 	years: zod
 		.number()
-		.default(getMedalBracketsGraphQueryYearsDefault)
+		.default(zodGetMedalBracketsGraphQueryYearsDefault)
 		.describe('Amount of previous SkyBlock years to include in the average'),
 	months: zod
 		.number()
-		.default(getMedalBracketsGraphQueryMonthsDefault)
+		.default(zodGetMedalBracketsGraphQueryMonthsDefault)
 		.describe('Amount of previous SkyBlock months to include in the average'),
 });
 
-export const getMedalBracketsGraphResponseItem = zod.object({
+export const zodGetMedalBracketsGraphResponseItem = zod.object({
 	start: zod.string(),
 	end: zod.string(),
 	brackets: zod.record(
@@ -4152,19 +4168,19 @@ export const getMedalBracketsGraphResponseItem = zod.object({
 		})
 	),
 });
-export const getMedalBracketsGraphResponse = zod.array(getMedalBracketsGraphResponseItem);
+export const zodGetMedalBracketsGraphResponse = zod.array(zodGetMedalBracketsGraphResponseItem);
 
 /**
  * @summary Modify guild event permissions
  */
-export const setEventFeatureParams = zod.object({
+export const zodSetEventFeatureParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const setEventFeatureQueryEnableDefault = false;
-export const setEventFeatureQueryMaxDefault = false;
+export const zodSetEventFeatureQueryEnableDefault = false;
+export const zodSetEventFeatureQueryMaxDefault = false;
 
-export const setEventFeatureQueryParams = zod.object({
+export const zodSetEventFeatureQueryParams = zod.object({
 	enable: zod.boolean().nullish(),
 	max: zod.number().nullish(),
 });
@@ -4172,14 +4188,14 @@ export const setEventFeatureQueryParams = zod.object({
 /**
  * @summary Get public guild events
  */
-export const getPublicGuildEventsParams = zod.object({
+export const zodGetPublicGuildEventsParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getPublicGuildEventsResponseBannerTitleMax = 64;
-export const getPublicGuildEventsResponseBannerDescriptionMax = 512;
+export const zodGetPublicGuildEventsResponseBannerTitleMax = 64;
+export const zodGetPublicGuildEventsResponseBannerDescriptionMax = 512;
 
-export const getPublicGuildEventsResponseItem = zod.object({
+export const zodGetPublicGuildEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -4191,10 +4207,10 @@ export const getPublicGuildEventsResponseItem = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(getPublicGuildEventsResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetPublicGuildEventsResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getPublicGuildEventsResponseBannerDescriptionMax)
+				.max(zodGetPublicGuildEventsResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -4215,73 +4231,73 @@ export const getPublicGuildEventsResponseItem = zod.object({
 	guildId: zod.string().nullish().describe('Discord server id as a string'),
 	data: zod.any().nullish().describe('Data specific to the event'),
 });
-export const getPublicGuildEventsResponse = zod.array(getPublicGuildEventsResponseItem);
+export const zodGetPublicGuildEventsResponse = zod.array(zodGetPublicGuildEventsResponseItem);
 
 /**
  * @summary Modify guild jacob permissions
  */
-export const setJacobFeatureParams = zod.object({
+export const zodSetJacobFeatureParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const setJacobFeatureQueryEnableDefault = true;
-export const setJacobFeatureQueryMaxDefault = false;
+export const zodSetJacobFeatureQueryEnableDefault = true;
+export const zodSetJacobFeatureQueryMaxDefault = false;
 
-export const setJacobFeatureQueryParams = zod.object({
-	enable: zod.boolean().default(setJacobFeatureQueryEnableDefault),
+export const zodSetJacobFeatureQueryParams = zod.object({
+	enable: zod.boolean().default(zodSetJacobFeatureQueryEnableDefault),
 	max: zod.number().nullish(),
 });
 
 /**
  * @summary Lock or unlock a guild
  */
-export const setGuildLockedParams = zod.object({
+export const zodSetGuildLockedParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const setGuildLockedQueryLockedDefault = true;
+export const zodSetGuildLockedQueryLockedDefault = true;
 
-export const setGuildLockedQueryParams = zod.object({
+export const zodSetGuildLockedQueryParams = zod.object({
 	locked: zod
 		.boolean()
-		.default(setGuildLockedQueryLockedDefault)
+		.default(zodSetGuildLockedQueryLockedDefault)
 		.describe("If server subscriptions shouldn't override feature values"),
 });
 
 /**
  * @summary Set a guild to public or private
  */
-export const setGuildPublicParams = zod.object({
+export const zodSetGuildPublicParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const setGuildPublicQueryPublicDefault = true;
+export const zodSetGuildPublicQueryPublicDefault = true;
 
-export const setGuildPublicQueryParams = zod.object({
-	public: zod.boolean().default(setGuildPublicQueryPublicDefault),
+export const zodSetGuildPublicQueryParams = zod.object({
+	public: zod.boolean().default(zodSetGuildPublicQueryPublicDefault),
 });
 
 /**
  * @summary Get public guild
  */
-export const getPublicGuildParams = zod.object({
+export const zodGetPublicGuildParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getPublicGuildResponseIconTitleMax = 64;
-export const getPublicGuildResponseIconDescriptionMax = 512;
-export const getPublicGuildResponseBannerTitleMax = 64;
-export const getPublicGuildResponseBannerDescriptionMax = 512;
+export const zodGetPublicGuildResponseIconTitleMax = 64;
+export const zodGetPublicGuildResponseIconDescriptionMax = 512;
+export const zodGetPublicGuildResponseBannerTitleMax = 64;
+export const zodGetPublicGuildResponseBannerDescriptionMax = 512;
 
-export const getPublicGuildResponse = zod.object({
+export const zodGetPublicGuildResponse = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	icon: zod
 		.object({
-			title: zod.string().max(getPublicGuildResponseIconTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetPublicGuildResponseIconTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getPublicGuildResponseIconDescriptionMax)
+				.max(zodGetPublicGuildResponseIconDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -4290,10 +4306,10 @@ export const getPublicGuildResponse = zod.object({
 		.nullish(),
 	banner: zod
 		.object({
-			title: zod.string().max(getPublicGuildResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetPublicGuildResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getPublicGuildResponseBannerDescriptionMax)
+				.max(zodGetPublicGuildResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -4544,20 +4560,20 @@ export const getPublicGuildResponse = zod.object({
 /**
  * @summary Get public guilds
  */
-export const getPublicGuildsResponseIconTitleMax = 64;
-export const getPublicGuildsResponseIconDescriptionMax = 512;
-export const getPublicGuildsResponseBannerTitleMax = 64;
-export const getPublicGuildsResponseBannerDescriptionMax = 512;
+export const zodGetPublicGuildsResponseIconTitleMax = 64;
+export const zodGetPublicGuildsResponseIconDescriptionMax = 512;
+export const zodGetPublicGuildsResponseBannerTitleMax = 64;
+export const zodGetPublicGuildsResponseBannerDescriptionMax = 512;
 
-export const getPublicGuildsResponseItem = zod.object({
+export const zodGetPublicGuildsResponseItem = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	icon: zod
 		.object({
-			title: zod.string().max(getPublicGuildsResponseIconTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetPublicGuildsResponseIconTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getPublicGuildsResponseIconDescriptionMax)
+				.max(zodGetPublicGuildsResponseIconDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -4566,10 +4582,10 @@ export const getPublicGuildsResponseItem = zod.object({
 		.nullish(),
 	banner: zod
 		.object({
-			title: zod.string().max(getPublicGuildsResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetPublicGuildsResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getPublicGuildsResponseBannerDescriptionMax)
+				.max(zodGetPublicGuildsResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -4579,31 +4595,31 @@ export const getPublicGuildsResponseItem = zod.object({
 	inviteCode: zod.string().nullish(),
 	memberCount: zod.number(),
 });
-export const getPublicGuildsResponse = zod.array(getPublicGuildsResponseItem);
+export const zodGetPublicGuildsResponse = zod.array(zodGetPublicGuildsResponseItem);
 
 /**
  * @summary Delete contest pings for a guild
  */
-export const deleteContestPingsParams = zod.object({
+export const zodDeleteContestPingsParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const deleteContestPingsQueryParams = zod.object({
+export const zodDeleteContestPingsQueryParams = zod.object({
 	reason: zod.string().nullish(),
 });
 
 /**
  * @summary Update contest pings for a guild
  */
-export const updateContestPingsParams = zod.object({
+export const zodUpdateContestPingsParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const updateContestPingsBodyDisabledReasonMin = 0;
+export const zodUpdateContestPingsBodyDisabledReasonMin = 0;
 
-export const updateContestPingsBodyDisabledReasonMax = 128;
+export const zodUpdateContestPingsBodyDisabledReasonMax = 128;
 
-export const updateContestPingsBody = zod.object({
+export const zodUpdateContestPingsBody = zod.object({
 	enabled: zod.boolean().describe('Indicates whether the contest pings feature is enabled for the guild.'),
 	channelId: zod.string().nullish().describe('Channel ID to send contest pings to.'),
 	alwaysPingRole: zod.string().nullish().describe('Role ID to ping when a contest starts.'),
@@ -4625,8 +4641,8 @@ export const updateContestPingsBody = zod.object({
 	delaySeconds: zod.number().describe('Not in use yet. Delay in seconds before sending the ping.'),
 	disabledReason: zod
 		.string()
-		.min(updateContestPingsBodyDisabledReasonMin)
-		.max(updateContestPingsBodyDisabledReasonMax)
+		.min(zodUpdateContestPingsBodyDisabledReasonMin)
+		.max(zodUpdateContestPingsBodyDisabledReasonMax)
 		.nullish()
 		.describe('Reason for disabling the feature.'),
 });
@@ -4634,18 +4650,18 @@ export const updateContestPingsBody = zod.object({
 /**
  * @summary Get guild memberships for the current user
  */
-export const getUserGuildsResponseIconTitleMax = 64;
-export const getUserGuildsResponseIconDescriptionMax = 512;
+export const zodGetUserGuildsResponseIconTitleMax = 64;
+export const zodGetUserGuildsResponseIconDescriptionMax = 512;
 
-export const getUserGuildsResponseItem = zod.object({
+export const zodGetUserGuildsResponseItem = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	icon: zod
 		.object({
-			title: zod.string().max(getUserGuildsResponseIconTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetUserGuildsResponseIconTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getUserGuildsResponseIconDescriptionMax)
+				.max(zodGetUserGuildsResponseIconDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -4657,24 +4673,24 @@ export const getUserGuildsResponseItem = zod.object({
 	roles: zod.array(zod.string()),
 	admin: zod.boolean().nullish(),
 });
-export const getUserGuildsResponse = zod.array(getUserGuildsResponseItem);
+export const zodGetUserGuildsResponse = zod.array(zodGetUserGuildsResponseItem);
 
 /**
  * @summary Get a guild membership for the current user
  */
-export const getUserGuildParams = zod.object({
+export const zodGetUserGuildParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getUserGuildResponseGuildFeaturesJacobLeaderboardLeaderboardsItemTitleMax = 64;
-export const getUserGuildResponseGuildIconTitleMax = 64;
-export const getUserGuildResponseGuildIconDescriptionMax = 512;
-export const getUserGuildResponseGuildBannerTitleMax = 64;
-export const getUserGuildResponseGuildBannerDescriptionMax = 512;
-export const getUserGuildResponseMemberIconTitleMax = 64;
-export const getUserGuildResponseMemberIconDescriptionMax = 512;
+export const zodGetUserGuildResponseGuildFeaturesJacobLeaderboardLeaderboardsItemTitleMax = 64;
+export const zodGetUserGuildResponseGuildIconTitleMax = 64;
+export const zodGetUserGuildResponseGuildIconDescriptionMax = 512;
+export const zodGetUserGuildResponseGuildBannerTitleMax = 64;
+export const zodGetUserGuildResponseGuildBannerDescriptionMax = 512;
+export const zodGetUserGuildResponseMemberIconTitleMax = 64;
+export const zodGetUserGuildResponseMemberIconDescriptionMax = 512;
 
-export const getUserGuildResponse = zod.object({
+export const zodGetUserGuildResponse = zod.object({
 	id: zod.string(),
 	permissions: zod.string(),
 	guild: zod
@@ -4721,7 +4737,7 @@ export const getUserGuildResponse = zod.object({
 								endCutoff: zod.number(),
 								title: zod
 									.string()
-									.max(getUserGuildResponseGuildFeaturesJacobLeaderboardLeaderboardsItemTitleMax)
+									.max(zodGetUserGuildResponseGuildFeaturesJacobLeaderboardLeaderboardsItemTitleMax)
 									.nullish(),
 								active: zod.boolean(),
 								requiredRole: zod.string().nullish(),
@@ -4937,10 +4953,10 @@ export const getUserGuildResponse = zod.object({
 			}),
 			icon: zod
 				.object({
-					title: zod.string().max(getUserGuildResponseGuildIconTitleMax).nullish().describe('Image title'),
+					title: zod.string().max(zodGetUserGuildResponseGuildIconTitleMax).nullish().describe('Image title'),
 					description: zod
 						.string()
-						.max(getUserGuildResponseGuildIconDescriptionMax)
+						.max(zodGetUserGuildResponseGuildIconDescriptionMax)
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
@@ -4949,10 +4965,14 @@ export const getUserGuildResponse = zod.object({
 				.nullish(),
 			banner: zod
 				.object({
-					title: zod.string().max(getUserGuildResponseGuildBannerTitleMax).nullish().describe('Image title'),
+					title: zod
+						.string()
+						.max(zodGetUserGuildResponseGuildBannerTitleMax)
+						.nullish()
+						.describe('Image title'),
 					description: zod
 						.string()
-						.max(getUserGuildResponseGuildBannerDescriptionMax)
+						.max(zodGetUserGuildResponseGuildBannerDescriptionMax)
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
@@ -4989,10 +5009,14 @@ export const getUserGuildResponse = zod.object({
 			name: zod.string(),
 			icon: zod
 				.object({
-					title: zod.string().max(getUserGuildResponseMemberIconTitleMax).nullish().describe('Image title'),
+					title: zod
+						.string()
+						.max(zodGetUserGuildResponseMemberIconTitleMax)
+						.nullish()
+						.describe('Image title'),
 					description: zod
 						.string()
-						.max(getUserGuildResponseMemberIconDescriptionMax)
+						.max(zodGetUserGuildResponseMemberIconDescriptionMax)
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
@@ -5010,16 +5034,16 @@ export const getUserGuildResponse = zod.object({
 /**
  * @summary Create a Jacob leaderboard
  */
-export const createGuildJacobFeatureParams = zod.object({
+export const zodCreateGuildJacobFeatureParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const createGuildJacobFeatureBodyTitleMin = 0;
+export const zodCreateGuildJacobFeatureBodyTitleMin = 0;
 
-export const createGuildJacobFeatureBodyTitleMax = 64;
+export const zodCreateGuildJacobFeatureBodyTitleMax = 64;
 
-export const createGuildJacobFeatureBody = zod.object({
-	title: zod.string().min(createGuildJacobFeatureBodyTitleMin).max(createGuildJacobFeatureBodyTitleMax),
+export const zodCreateGuildJacobFeatureBody = zod.object({
+	title: zod.string().min(zodCreateGuildJacobFeatureBodyTitleMin).max(zodCreateGuildJacobFeatureBodyTitleMax),
 	channelId: zod.string().nullish(),
 	startCutoff: zod.number().nullish(),
 	endCutoff: zod.number().nullish(),
@@ -5034,7 +5058,7 @@ export const createGuildJacobFeatureBody = zod.object({
 /**
  * @summary Delete a Jacob leaderboard
  */
-export const deleteGuildJacobFeatureParams = zod.object({
+export const zodDeleteGuildJacobFeatureParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	leaderboardId: zod.string(),
 });
@@ -5042,15 +5066,15 @@ export const deleteGuildJacobFeatureParams = zod.object({
 /**
  * @summary Update a Jacob leaderboard
  */
-export const updateGuildJacobLeaderboardParams = zod.object({
+export const zodUpdateGuildJacobLeaderboardParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	leaderboardId: zod.string(),
 });
 
-export const updateGuildJacobLeaderboardBodyTitleMax = 64;
+export const zodUpdateGuildJacobLeaderboardBodyTitleMax = 64;
 
-export const updateGuildJacobLeaderboardBody = zod.object({
-	title: zod.string().max(updateGuildJacobLeaderboardBodyTitleMax).nullish(),
+export const zodUpdateGuildJacobLeaderboardBody = zod.object({
+	title: zod.string().max(zodUpdateGuildJacobLeaderboardBodyTitleMax).nullish(),
 	channelId: zod.string().nullish(),
 	startCutoff: zod.number().nullish(),
 	endCutoff: zod.number().nullish(),
@@ -5065,13 +5089,13 @@ export const updateGuildJacobLeaderboardBody = zod.object({
 /**
  * @summary Get Jacob leaderboards for a guild
  */
-export const getGuildJacobParams = zod.object({
+export const zodGetGuildJacobParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getGuildJacobResponseLeaderboardsItemTitleMax = 64;
+export const zodGetGuildJacobResponseLeaderboardsItemTitleMax = 64;
 
-export const getGuildJacobResponse = zod.object({
+export const zodGetGuildJacobResponse = zod.object({
 	maxLeaderboards: zod.number(),
 	blockedRoles: zod.array(
 		zod.object({
@@ -5104,7 +5128,7 @@ export const getGuildJacobResponse = zod.object({
 			channelId: zod.string().nullish(),
 			startCutoff: zod.number(),
 			endCutoff: zod.number(),
-			title: zod.string().max(getGuildJacobResponseLeaderboardsItemTitleMax).nullish(),
+			title: zod.string().max(zodGetGuildJacobResponseLeaderboardsItemTitleMax).nullish(),
 			active: zod.boolean(),
 			requiredRole: zod.string().nullish(),
 			blockedRole: zod.string().nullish(),
@@ -5270,17 +5294,17 @@ export const getGuildJacobResponse = zod.object({
 /**
  * @summary Update Jacob leaderboards for a guild
  */
-export const updateGuildJacobFeatureParams = zod.object({
+export const zodUpdateGuildJacobFeatureParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const updateGuildJacobFeatureQueryParams = zod.object({
+export const zodUpdateGuildJacobFeatureQueryParams = zod.object({
 	reason: zod.string().nullish(),
 });
 
-export const updateGuildJacobFeatureBodyLeaderboardsItemTitleMax = 64;
+export const zodUpdateGuildJacobFeatureBodyLeaderboardsItemTitleMax = 64;
 
-export const updateGuildJacobFeatureBody = zod.object({
+export const zodUpdateGuildJacobFeatureBody = zod.object({
 	blockedRoles: zod
 		.array(
 			zod.object({
@@ -5323,7 +5347,7 @@ export const updateGuildJacobFeatureBody = zod.object({
 				channelId: zod.string().nullish(),
 				startCutoff: zod.number(),
 				endCutoff: zod.number(),
-				title: zod.string().max(updateGuildJacobFeatureBodyLeaderboardsItemTitleMax).nullish(),
+				title: zod.string().max(zodUpdateGuildJacobFeatureBodyLeaderboardsItemTitleMax).nullish(),
 				active: zod.boolean(),
 				requiredRole: zod.string().nullish(),
 				blockedRole: zod.string().nullish(),
@@ -5490,7 +5514,7 @@ export const updateGuildJacobFeatureBody = zod.object({
 /**
  * @summary Send a Jacob leaderboard to Discord
  */
-export const sendGuildJacobFeatureParams = zod.object({
+export const zodSendGuildJacobFeatureParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	leaderboardId: zod.string(),
 });
@@ -5499,50 +5523,50 @@ export const sendGuildJacobFeatureParams = zod.object({
  * This fetches the latest data from Discord for the specified guild
  * @summary Request Guild Refresh
  */
-export const requestGuildRefreshParams = zod.object({
+export const zodRequestGuildRefreshParams = zod.object({
 	discordId: zod.number(),
 });
 
 /**
  * @summary Set an admin role for a guild
  */
-export const setAdminRoleParams = zod.object({
+export const zodSetAdminRoleParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const setAdminRoleBody = zod.string();
+export const zodSetAdminRoleBody = zod.string();
 
 /**
  * @summary Set invite code for a guild
  */
-export const setInviteParams = zod.object({
+export const zodSetInviteParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const setInviteBody = zod.string();
+export const zodSetInviteBody = zod.string();
 
 /**
  * @summary Refresh Guild Purchases
  */
-export const updateGuildPurchasesParams = zod.object({
+export const zodUpdateGuildPurchasesParams = zod.object({
 	discordId: zod.number(),
 });
 
 /**
  * @summary Get Leaderboard
  */
-export const getLeaderboardParams = zod.object({
+export const zodGetLeaderboardParams = zod.object({
 	leaderboard: zod.string().describe('Id of leaderboard'),
 });
 
-export const getLeaderboardQueryOffsetDefault = 0;
-export const getLeaderboardQueryLimitDefault = 20;
-export const getLeaderboardQueryRemovedDefault = 0;
-export const getLeaderboardQueryNewDefault = true;
+export const zodGetLeaderboardQueryOffsetDefault = 0;
+export const zodGetLeaderboardQueryLimitDefault = 20;
+export const zodGetLeaderboardQueryRemovedDefault = 0;
+export const zodGetLeaderboardQueryNewDefault = true;
 
-export const getLeaderboardQueryParams = zod.object({
+export const zodGetLeaderboardQueryParams = zod.object({
 	offset: zod.number().nullish(),
-	limit: zod.number().default(getLeaderboardQueryLimitDefault),
+	limit: zod.number().default(zodGetLeaderboardQueryLimitDefault),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
 		.string()
@@ -5558,14 +5582,14 @@ export const getLeaderboardQueryParams = zod.object({
 		),
 	new: zod
 		.boolean()
-		.default(getLeaderboardQueryNewDefault)
+		.default(zodGetLeaderboardQueryNewDefault)
 		.describe('Use new leaderboard backend (will be default in the future)'),
 });
 
-export const getLeaderboardResponseEntriesItemMetaPrefixMax = 16;
-export const getLeaderboardResponseEntriesItemMetaSuffixMax = 16;
+export const zodGetLeaderboardResponseEntriesItemMetaPrefixMax = 16;
+export const zodGetLeaderboardResponseEntriesItemMetaSuffixMax = 16;
 
-export const getLeaderboardResponse = zod.object({
+export const zodGetLeaderboardResponse = zod.object({
 	id: zod.string(),
 	title: zod.string(),
 	shortTitle: zod.string().nullish(),
@@ -5601,8 +5625,8 @@ export const getLeaderboardResponse = zod.object({
 				.nullish(),
 			meta: zod
 				.object({
-					prefix: zod.string().max(getLeaderboardResponseEntriesItemMetaPrefixMax).nullish(),
-					suffix: zod.string().max(getLeaderboardResponseEntriesItemMetaSuffixMax).nullish(),
+					prefix: zod.string().max(zodGetLeaderboardResponseEntriesItemMetaPrefixMax).nullish(),
+					suffix: zod.string().max(zodGetLeaderboardResponseEntriesItemMetaSuffixMax).nullish(),
 					leaderboard: zod
 						.object({
 							styleId: zod.number().nullish(),
@@ -5624,7 +5648,7 @@ export const getLeaderboardResponse = zod.object({
 /**
  * @summary Get leaderboards
  */
-export const getLeaderboardsResponse = zod.object({
+export const zodGetLeaderboardsResponse = zod.object({
 	leaderboards: zod.record(
 		zod.string(),
 		zod.object({
@@ -5646,19 +5670,19 @@ export const getLeaderboardsResponse = zod.object({
 /**
  * @summary Get a Player's Leaderboard Ranks
  */
-export const getPlayerLeaderboardRanksParams = zod.object({
+export const zodGetPlayerLeaderboardRanksParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getPlayerLeaderboardRanksQueryParams = zod.object({
+export const zodGetPlayerLeaderboardRanksQueryParams = zod.object({
 	max: zod
 		.number()
 		.nullish()
 		.describe("Maximum rank number to return. Used if you don't want ranks higher than a certain number."),
 });
 
-export const getPlayerLeaderboardRanksResponse = zod.object({
+export const zodGetPlayerLeaderboardRanksResponse = zod.object({
 	ranks: zod.record(
 		zod.string(),
 		zod.object({
@@ -5678,18 +5702,18 @@ export const getPlayerLeaderboardRanksResponse = zod.object({
 /**
  * @summary Get a Player's Leaderboard Rank
  */
-export const getPlayerRank1Params = zod.object({
+export const zodGetPlayerRank1Params = zod.object({
 	leaderboard: zod.string().describe('Id of leaderboard'),
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getPlayerRank1QueryIncludeUpcomingDefault = false;
-export const getPlayerRank1QueryUpcomingDefault = 0;
-export const getPlayerRank1QueryNewDefault = true;
-export const getPlayerRank1QueryRemovedDefault = 0;
+export const zodGetPlayerRank1QueryIncludeUpcomingDefault = false;
+export const zodGetPlayerRank1QueryUpcomingDefault = 0;
+export const zodGetPlayerRank1QueryNewDefault = true;
+export const zodGetPlayerRank1QueryRemovedDefault = 0;
 
-export const getPlayerRank1QueryParams = zod.object({
+export const zodGetPlayerRank1QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish().describe('Include upcoming players'),
 	upcoming: zod
 		.number()
@@ -5698,7 +5722,7 @@ export const getPlayerRank1QueryParams = zod.object({
 	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
 	new: zod
 		.boolean()
-		.default(getPlayerRank1QueryNewDefault)
+		.default(zodGetPlayerRank1QueryNewDefault)
 		.describe('Use new leaderboard backend (will be removed in the future)'),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
@@ -5715,10 +5739,10 @@ export const getPlayerRank1QueryParams = zod.object({
 		),
 });
 
-export const getPlayerRank1ResponseUpcomingPlayersItemMetaPrefixMax = 16;
-export const getPlayerRank1ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetPlayerRank1ResponseUpcomingPlayersItemMetaPrefixMax = 16;
+export const zodGetPlayerRank1ResponseUpcomingPlayersItemMetaSuffixMax = 16;
 
-export const getPlayerRank1Response = zod.object({
+export const zodGetPlayerRank1Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
 	amount: zod.number().describe('Current score of the player (0 if not on leaderboard)'),
 	initialAmount: zod
@@ -5755,8 +5779,8 @@ export const getPlayerRank1Response = zod.object({
 					.nullish(),
 				meta: zod
 					.object({
-						prefix: zod.string().max(getPlayerRank1ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
-						suffix: zod.string().max(getPlayerRank1ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
+						prefix: zod.string().max(zodGetPlayerRank1ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetPlayerRank1ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
 						leaderboard: zod
 							.object({
 								styleId: zod.number().nullish(),
@@ -5780,31 +5804,31 @@ export const getPlayerRank1Response = zod.object({
 /**
  * @summary Get a Player's Leaderboard Rank
  */
-export const getPlayerRank2Params = zod.object({
+export const zodGetPlayerRank2Params = zod.object({
 	leaderboard: zod.string(),
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getPlayerRank2QueryIncludeUpcomingDefault = false;
-export const getPlayerRank2QueryUpcomingDefault = 0;
-export const getPlayerRank2QueryNewDefault = true;
-export const getPlayerRank2QueryRemovedDefault = 0;
+export const zodGetPlayerRank2QueryIncludeUpcomingDefault = false;
+export const zodGetPlayerRank2QueryUpcomingDefault = 0;
+export const zodGetPlayerRank2QueryNewDefault = true;
+export const zodGetPlayerRank2QueryRemovedDefault = 0;
 
-export const getPlayerRank2QueryParams = zod.object({
+export const zodGetPlayerRank2QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish(),
 	upcoming: zod.number().nullish(),
 	atRank: zod.number().nullish(),
-	new: zod.boolean().default(getPlayerRank2QueryNewDefault),
+	new: zod.boolean().default(zodGetPlayerRank2QueryNewDefault),
 	interval: zod.string().nullish(),
 	mode: zod.string().nullish(),
 	removed: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
 });
 
-export const getPlayerRank2ResponseUpcomingPlayersItemMetaPrefixMax = 16;
-export const getPlayerRank2ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetPlayerRank2ResponseUpcomingPlayersItemMetaPrefixMax = 16;
+export const zodGetPlayerRank2ResponseUpcomingPlayersItemMetaSuffixMax = 16;
 
-export const getPlayerRank2Response = zod.object({
+export const zodGetPlayerRank2Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
 	amount: zod.number().describe('Current score of the player (0 if not on leaderboard)'),
 	initialAmount: zod
@@ -5841,8 +5865,8 @@ export const getPlayerRank2Response = zod.object({
 					.nullish(),
 				meta: zod
 					.object({
-						prefix: zod.string().max(getPlayerRank2ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
-						suffix: zod.string().max(getPlayerRank2ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
+						prefix: zod.string().max(zodGetPlayerRank2ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetPlayerRank2ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
 						leaderboard: zod
 							.object({
 								styleId: zod.number().nullish(),
@@ -5867,12 +5891,12 @@ export const getPlayerRank2Response = zod.object({
  * @deprecated
  * @summary Get a Player's Leaderboard Ranks
  */
-export const getPlayerRanksParams = zod.object({
+export const zodGetPlayerRanksParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getPlayerRanksResponse = zod.object({
+export const zodGetPlayerRanksResponse = zod.object({
 	misc: zod.record(zod.string(), zod.number()),
 	skills: zod.record(zod.string(), zod.number()),
 	collections: zod.record(zod.string(), zod.number()),
@@ -5883,17 +5907,17 @@ export const getPlayerRanksResponse = zod.object({
 /**
  * @summary Get a Profiles's Leaderboard Rank
  */
-export const getProfileRank1Params = zod.object({
+export const zodGetProfileRank1Params = zod.object({
 	leaderboard: zod.string().describe('Id of leaderboard'),
 	profileUuid: zod.string(),
 });
 
-export const getProfileRank1QueryIncludeUpcomingDefault = false;
-export const getProfileRank1QueryUpcomingDefault = 0;
-export const getProfileRank1QueryNewDefault = true;
-export const getProfileRank1QueryRemovedDefault = 0;
+export const zodGetProfileRank1QueryIncludeUpcomingDefault = false;
+export const zodGetProfileRank1QueryUpcomingDefault = 0;
+export const zodGetProfileRank1QueryNewDefault = true;
+export const zodGetProfileRank1QueryRemovedDefault = 0;
 
-export const getProfileRank1QueryParams = zod.object({
+export const zodGetProfileRank1QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish().describe('Include upcoming players'),
 	upcoming: zod
 		.number()
@@ -5902,7 +5926,7 @@ export const getProfileRank1QueryParams = zod.object({
 	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
 	new: zod
 		.boolean()
-		.default(getProfileRank1QueryNewDefault)
+		.default(zodGetProfileRank1QueryNewDefault)
 		.describe('Use new leaderboard backend (will be default in the future)'),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
@@ -5919,10 +5943,10 @@ export const getProfileRank1QueryParams = zod.object({
 		),
 });
 
-export const getProfileRank1ResponseUpcomingPlayersItemMetaPrefixMax = 16;
-export const getProfileRank1ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetProfileRank1ResponseUpcomingPlayersItemMetaPrefixMax = 16;
+export const zodGetProfileRank1ResponseUpcomingPlayersItemMetaSuffixMax = 16;
 
-export const getProfileRank1Response = zod.object({
+export const zodGetProfileRank1Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
 	amount: zod.number().describe('Current score of the player (0 if not on leaderboard)'),
 	initialAmount: zod
@@ -5959,8 +5983,8 @@ export const getProfileRank1Response = zod.object({
 					.nullish(),
 				meta: zod
 					.object({
-						prefix: zod.string().max(getProfileRank1ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
-						suffix: zod.string().max(getProfileRank1ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
+						prefix: zod.string().max(zodGetProfileRank1ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetProfileRank1ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
 						leaderboard: zod
 							.object({
 								styleId: zod.number().nullish(),
@@ -5984,30 +6008,30 @@ export const getProfileRank1Response = zod.object({
 /**
  * @summary Get a Profiles's Leaderboard Rank
  */
-export const getProfileRank2Params = zod.object({
+export const zodGetProfileRank2Params = zod.object({
 	leaderboard: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getProfileRank2QueryIncludeUpcomingDefault = false;
-export const getProfileRank2QueryUpcomingDefault = 0;
-export const getProfileRank2QueryNewDefault = true;
-export const getProfileRank2QueryRemovedDefault = 0;
+export const zodGetProfileRank2QueryIncludeUpcomingDefault = false;
+export const zodGetProfileRank2QueryUpcomingDefault = 0;
+export const zodGetProfileRank2QueryNewDefault = true;
+export const zodGetProfileRank2QueryRemovedDefault = 0;
 
-export const getProfileRank2QueryParams = zod.object({
+export const zodGetProfileRank2QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish(),
 	upcoming: zod.number().nullish(),
 	atRank: zod.number().nullish(),
-	new: zod.boolean().default(getProfileRank2QueryNewDefault),
+	new: zod.boolean().default(zodGetProfileRank2QueryNewDefault),
 	interval: zod.string().nullish(),
 	mode: zod.string().nullish(),
 	removed: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
 });
 
-export const getProfileRank2ResponseUpcomingPlayersItemMetaPrefixMax = 16;
-export const getProfileRank2ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetProfileRank2ResponseUpcomingPlayersItemMetaPrefixMax = 16;
+export const zodGetProfileRank2ResponseUpcomingPlayersItemMetaSuffixMax = 16;
 
-export const getProfileRank2Response = zod.object({
+export const zodGetProfileRank2Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
 	amount: zod.number().describe('Current score of the player (0 if not on leaderboard)'),
 	initialAmount: zod
@@ -6044,8 +6068,8 @@ export const getProfileRank2Response = zod.object({
 					.nullish(),
 				meta: zod
 					.object({
-						prefix: zod.string().max(getProfileRank2ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
-						suffix: zod.string().max(getProfileRank2ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
+						prefix: zod.string().max(zodGetProfileRank2ResponseUpcomingPlayersItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetProfileRank2ResponseUpcomingPlayersItemMetaSuffixMax).nullish(),
 						leaderboard: zod
 							.object({
 								styleId: zod.number().nullish(),
@@ -6069,21 +6093,21 @@ export const getProfileRank2Response = zod.object({
 /**
  * @summary Get all entitlements for a user or guild
  */
-export const getEntitlementsParams = zod.object({
+export const zodGetEntitlementsParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const getEntitlementsQueryParams = zod.object({
+export const zodGetEntitlementsQueryParams = zod.object({
 	target: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
 });
 
-export const getEntitlementsResponseProductWeightStylesItemNameMax = 64;
-export const getEntitlementsResponseProductThumbnailTitleMax = 64;
-export const getEntitlementsResponseProductThumbnailDescriptionMax = 512;
-export const getEntitlementsResponseProductImagesItemTitleMax = 64;
-export const getEntitlementsResponseProductImagesItemDescriptionMax = 512;
+export const zodGetEntitlementsResponseProductWeightStylesItemNameMax = 64;
+export const zodGetEntitlementsResponseProductThumbnailTitleMax = 64;
+export const zodGetEntitlementsResponseProductThumbnailDescriptionMax = 512;
+export const zodGetEntitlementsResponseProductImagesItemTitleMax = 64;
+export const zodGetEntitlementsResponseProductImagesItemDescriptionMax = 512;
 
-export const getEntitlementsResponseItem = zod.object({
+export const zodGetEntitlementsResponseItem = zod.object({
 	id: zod.string().describe('Entitlement ID'),
 	type: zod
 		.union([
@@ -6138,7 +6162,7 @@ export const getEntitlementsResponseItem = zod.object({
 				.array(
 					zod.object({
 						id: zod.number(),
-						name: zod.string().max(getEntitlementsResponseProductWeightStylesItemNameMax).nullish(),
+						name: zod.string().max(zodGetEntitlementsResponseProductWeightStylesItemNameMax).nullish(),
 					})
 				)
 				.describe('Unlocked weight styles'),
@@ -6146,12 +6170,12 @@ export const getEntitlementsResponseItem = zod.object({
 				.object({
 					title: zod
 						.string()
-						.max(getEntitlementsResponseProductThumbnailTitleMax)
+						.max(zodGetEntitlementsResponseProductThumbnailTitleMax)
 						.nullish()
 						.describe('Image title'),
 					description: zod
 						.string()
-						.max(getEntitlementsResponseProductThumbnailDescriptionMax)
+						.max(zodGetEntitlementsResponseProductThumbnailDescriptionMax)
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
@@ -6164,12 +6188,12 @@ export const getEntitlementsResponseItem = zod.object({
 					zod.object({
 						title: zod
 							.string()
-							.max(getEntitlementsResponseProductImagesItemTitleMax)
+							.max(zodGetEntitlementsResponseProductImagesItemTitleMax)
 							.nullish()
 							.describe('Image title'),
 						description: zod
 							.string()
-							.max(getEntitlementsResponseProductImagesItemDescriptionMax)
+							.max(zodGetEntitlementsResponseProductImagesItemDescriptionMax)
 							.nullish()
 							.describe('Image description'),
 						order: zod.number().nullish().describe('Image ordering number'),
@@ -6188,18 +6212,18 @@ export const getEntitlementsResponseItem = zod.object({
 	startDate: zod.string().datetime({}).nullish().describe('Start date of the entitlement'),
 	endDate: zod.string().datetime({}).nullish().describe('End date of the entitlement'),
 });
-export const getEntitlementsResponse = zod.array(getEntitlementsResponseItem);
+export const zodGetEntitlementsResponse = zod.array(zodGetEntitlementsResponseItem);
 
 /**
  * This passes along a request to Discord to grant a test entitlement to a user or guild, which only works on subscription products.
  * @summary Grant a test entitlement to a user or guild
  */
-export const grantTestEntitlementParams = zod.object({
+export const zodGrantTestEntitlementParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	productId: zod.number(),
 });
 
-export const grantTestEntitlementQueryParams = zod.object({
+export const zodGrantTestEntitlementQueryParams = zod.object({
 	target: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
 });
 
@@ -6207,23 +6231,23 @@ export const grantTestEntitlementQueryParams = zod.object({
  * This passes along a request to Discord to remove a test entitlement from a user or guild.
  * @summary Remove a test entitlement from a user or guild
  */
-export const removeTestEntitlementParams = zod.object({
+export const zodRemoveTestEntitlementParams = zod.object({
 	discordId: zod.number(),
 	productId: zod.number(),
 });
 
-export const removeTestEntitlementQueryParams = zod.object({
+export const zodRemoveTestEntitlementQueryParams = zod.object({
 	target: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
 });
 
 /**
  * @summary Get Linked Accounts
  */
-export const getLinkedAccountsParams = zod.object({
+export const zodGetLinkedAccountsParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getLinkedAccountsResponse = zod.object({
+export const zodGetLinkedAccountsResponse = zod.object({
 	selectedUuid: zod.string().nullish(),
 	players: zod.array(
 		zod.object({
@@ -6260,11 +6284,11 @@ export const getLinkedAccountsResponse = zod.object({
 /**
  * @summary Get Player Data
  */
-export const getPlayerDataParams = zod.object({
+export const zodGetPlayerDataParams = zod.object({
 	player: zod.string(),
 });
 
-export const getPlayerDataResponse = zod.object({
+export const zodGetPlayerDataResponse = zod.object({
 	uuid: zod.string(),
 	displayname: zod.string().nullish(),
 	firstLogin: zod.number(),
@@ -6296,14 +6320,14 @@ export const getPlayerDataResponse = zod.object({
 /**
  * @summary Get All Profile Details
  */
-export const getAllProfileDetailsParams = zod.object({
+export const zodGetAllProfileDetailsParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getAllProfileDetailsResponseMembersItemMetaPrefixMax = 16;
-export const getAllProfileDetailsResponseMembersItemMetaSuffixMax = 16;
+export const zodGetAllProfileDetailsResponseMembersItemMetaPrefixMax = 16;
+export const zodGetAllProfileDetailsResponseMembersItemMetaSuffixMax = 16;
 
-export const getAllProfileDetailsResponseItem = zod.object({
+export const zodGetAllProfileDetailsResponseItem = zod.object({
 	profileId: zod.string(),
 	profileName: zod.string(),
 	gameMode: zod.string(),
@@ -6319,8 +6343,8 @@ export const getAllProfileDetailsResponseItem = zod.object({
 			farmingWeight: zod.number(),
 			meta: zod
 				.object({
-					prefix: zod.string().max(getAllProfileDetailsResponseMembersItemMetaPrefixMax).nullish(),
-					suffix: zod.string().max(getAllProfileDetailsResponseMembersItemMetaSuffixMax).nullish(),
+					prefix: zod.string().max(zodGetAllProfileDetailsResponseMembersItemMetaPrefixMax).nullish(),
+					suffix: zod.string().max(zodGetAllProfileDetailsResponseMembersItemMetaSuffixMax).nullish(),
 					leaderboard: zod
 						.object({
 							styleId: zod.number().nullish(),
@@ -6337,20 +6361,20 @@ export const getAllProfileDetailsResponseItem = zod.object({
 		})
 	),
 });
-export const getAllProfileDetailsResponse = zod.array(getAllProfileDetailsResponseItem);
+export const zodGetAllProfileDetailsResponse = zod.array(zodGetAllProfileDetailsResponseItem);
 
 /**
  * @summary Get Profile Member
  */
-export const getProfileParams = zod.object({
+export const zodGetProfileParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getProfileResponseMetaPrefixMax = 16;
-export const getProfileResponseMetaSuffixMax = 16;
+export const zodGetProfileResponseMetaPrefixMax = 16;
+export const zodGetProfileResponseMetaSuffixMax = 16;
 
-export const getProfileResponse = zod.object({
+export const zodGetProfileResponse = zod.object({
 	profileId: zod.string(),
 	playerUuid: zod.string(),
 	profileName: zod.string(),
@@ -6365,8 +6389,8 @@ export const getProfileResponse = zod.object({
 	bankBalance: zod.number(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(getProfileResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(getProfileResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetProfileResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetProfileResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -6787,14 +6811,14 @@ export const getProfileResponse = zod.object({
 /**
  * @summary Get Profile Details
  */
-export const getProfileDetailsParams = zod.object({
+export const zodGetProfileDetailsParams = zod.object({
 	profileUuid: zod.string(),
 });
 
-export const getProfileDetailsResponseMembersItemMetaPrefixMax = 16;
-export const getProfileDetailsResponseMembersItemMetaSuffixMax = 16;
+export const zodGetProfileDetailsResponseMembersItemMetaPrefixMax = 16;
+export const zodGetProfileDetailsResponseMembersItemMetaSuffixMax = 16;
 
-export const getProfileDetailsResponse = zod.object({
+export const zodGetProfileDetailsResponse = zod.object({
 	profileId: zod.string(),
 	profileName: zod.string(),
 	gameMode: zod.string(),
@@ -6810,8 +6834,8 @@ export const getProfileDetailsResponse = zod.object({
 			farmingWeight: zod.number(),
 			meta: zod
 				.object({
-					prefix: zod.string().max(getProfileDetailsResponseMembersItemMetaPrefixMax).nullish(),
-					suffix: zod.string().max(getProfileDetailsResponseMembersItemMetaSuffixMax).nullish(),
+					prefix: zod.string().max(zodGetProfileDetailsResponseMembersItemMetaPrefixMax).nullish(),
+					suffix: zod.string().max(zodGetProfileDetailsResponseMembersItemMetaSuffixMax).nullish(),
 					leaderboard: zod
 						.object({
 							styleId: zod.number().nullish(),
@@ -6832,28 +6856,28 @@ export const getProfileDetailsResponse = zod.object({
 /**
  * @summary Get names of a player's profiles
  */
-export const getProfileNamesParams = zod.object({
+export const zodGetProfileNamesParams = zod.object({
 	player: zod.string(),
 });
 
-export const getProfileNamesResponseItem = zod.object({
+export const zodGetProfileNamesResponseItem = zod.object({
 	id: zod.string(),
 	name: zod.string(),
 	selected: zod.boolean(),
 });
-export const getProfileNamesResponse = zod.array(getProfileNamesResponseItem);
+export const zodGetProfileNamesResponse = zod.array(zodGetProfileNamesResponseItem);
 
 /**
  * @summary Get Profile Member
  */
-export const getSelectedProfileParams = zod.object({
+export const zodGetSelectedProfileParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getSelectedProfileResponseMetaPrefixMax = 16;
-export const getSelectedProfileResponseMetaSuffixMax = 16;
+export const zodGetSelectedProfileResponseMetaPrefixMax = 16;
+export const zodGetSelectedProfileResponseMetaSuffixMax = 16;
 
-export const getSelectedProfileResponse = zod.object({
+export const zodGetSelectedProfileResponse = zod.object({
 	profileId: zod.string(),
 	playerUuid: zod.string(),
 	profileName: zod.string(),
@@ -6868,8 +6892,8 @@ export const getSelectedProfileResponse = zod.object({
 	bankBalance: zod.number(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(getSelectedProfileResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(getSelectedProfileResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetSelectedProfileResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetSelectedProfileResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -7291,7 +7315,7 @@ export const getSelectedProfileResponse = zod.object({
  * Get lowest auction house prices.
  * @summary Get Auction House
  */
-export const getAuctionHouseProductsResponse = zod.object({
+export const zodGetAuctionHouseProductsResponse = zod.object({
 	items: zod.record(
 		zod.string(),
 		zod.array(
@@ -7329,11 +7353,11 @@ export const getAuctionHouseProductsResponse = zod.object({
  * Get a specific bazaar product and it's npc price (if it exists)
  * @summary Get Bazaar Product
  */
-export const getBazaarProductParams = zod.object({
+export const zodGetBazaarProductParams = zod.object({
 	itemId: zod.string(),
 });
 
-export const getBazaarProductResponse = zod.object({
+export const zodGetBazaarProductResponse = zod.object({
 	productId: zod.string(),
 	product: zod.object({
 		name: zod.string().nullish().describe('Name of the item if it exists.'),
@@ -7361,7 +7385,7 @@ export const getBazaarProductResponse = zod.object({
  * Get all bazaar products.
  * @summary Get Bazaar Products
  */
-export const getBazaarProductsResponse = zod.object({
+export const zodGetBazaarProductsResponse = zod.object({
 	products: zod.record(
 		zod.string(),
 		zod.object({
@@ -7391,11 +7415,11 @@ export const getBazaarProductsResponse = zod.object({
  * Get an ItemDto from raw bytes from Hypixel
  * @summary Parse Skyblock Item from Bytes
  */
-export const getItemsFromBytesBody = zod.object({
+export const zodGetItemsFromBytesBody = zod.object({
 	bytes: zod.string(),
 });
 
-export const getItemsFromBytesResponse = zod.object({
+export const zodGetItemsFromBytesResponse = zod.object({
 	items: zod.array(
 		zod
 			.object({
@@ -7445,7 +7469,7 @@ export const getItemsFromBytesResponse = zod.object({
  * Get all items in the Hypixel resources endpoint
  * @summary Get Skyblock Items
  */
-export const getSkyblockItemsResponse = zod.object({
+export const zodGetSkyblockItemsResponse = zod.object({
 	items: zod.record(
 		zod.string(),
 		zod
@@ -7550,11 +7574,11 @@ export const getSkyblockItemsResponse = zod.object({
  * Get specific skyblock items from the Hypixel resources endpoint, along with bazaar data for each.
  * @summary Get Specific Skyblock Items
  */
-export const getSpecifiedSkyblockItemsBody = zod.object({
+export const zodGetSpecifiedSkyblockItemsBody = zod.object({
 	items: zod.array(zod.string()),
 });
 
-export const getSpecifiedSkyblockItemsResponse = zod.object({
+export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 	items: zod.record(
 		zod.string(),
 		zod.object({
@@ -7724,11 +7748,11 @@ export const getSpecifiedSkyblockItemsResponse = zod.object({
  * Get the Hypixel provided data of a specific item, as well as a bazaar summary.
  * @summary Get Skyblock Item
  */
-export const skyblockProductParams = zod.object({
+export const zodSkyblockProductParams = zod.object({
 	itemId: zod.string(),
 });
 
-export const skyblockProductResponse = zod.object({
+export const zodSkyblockProductResponse = zod.object({
 	itemId: zod.string(),
 	name: zod.string().nullish(),
 	data: zod
@@ -7884,7 +7908,7 @@ export const skyblockProductResponse = zod.object({
 /**
  * @summary Add Product to Shop Category
  */
-export const addProductToCategoryParams = zod.object({
+export const zodAddProductToCategoryParams = zod.object({
 	categoryId: zod.number().describe('Id of the category to add the product to'),
 	productId: zod.number().describe('Id of the product to add to the category'),
 });
@@ -7892,7 +7916,7 @@ export const addProductToCategoryParams = zod.object({
 /**
  * @summary Remove Product from Shop Category
  */
-export const removeProductToCategoryParams = zod.object({
+export const zodRemoveProductToCategoryParams = zod.object({
 	categoryId: zod.number().describe('Id of the category to add the product to'),
 	productId: zod.number().describe('Id of the product to add to the category'),
 });
@@ -7900,55 +7924,55 @@ export const removeProductToCategoryParams = zod.object({
 /**
  * @summary Create Shop Category
  */
-export const createCategoryBodyTitleMax = 256;
-export const createCategoryBodySlugMax = 32;
-export const createCategoryBodyDescriptionMax = 512;
+export const zodCreateCategoryBodyTitleMax = 256;
+export const zodCreateCategoryBodySlugMax = 32;
+export const zodCreateCategoryBodyDescriptionMax = 512;
 
-export const createCategoryBody = zod.object({
-	title: zod.string().max(createCategoryBodyTitleMax),
-	slug: zod.string().max(createCategoryBodySlugMax),
-	description: zod.string().max(createCategoryBodyDescriptionMax).nullish(),
+export const zodCreateCategoryBody = zod.object({
+	title: zod.string().max(zodCreateCategoryBodyTitleMax),
+	slug: zod.string().max(zodCreateCategoryBodySlugMax),
+	description: zod.string().max(zodCreateCategoryBodyDescriptionMax).nullish(),
 });
 
 /**
  * @summary Delete Shop Category
  */
-export const deleteCategoryParams = zod.object({
+export const zodDeleteCategoryParams = zod.object({
 	categoryId: zod.number().describe('Id of the category to delete'),
 });
 
 /**
  * @summary Update Shop Category
  */
-export const updateCategoryParams = zod.object({
+export const zodUpdateCategoryParams = zod.object({
 	categoryId: zod.number().describe('Id of the category to update'),
 });
 
-export const updateCategoryBodyTitleMax = 256;
-export const updateCategoryBodySlugMax = 32;
-export const updateCategoryBodyDescriptionMax = 512;
+export const zodUpdateCategoryBodyTitleMax = 256;
+export const zodUpdateCategoryBodySlugMax = 32;
+export const zodUpdateCategoryBodyDescriptionMax = 512;
 
-export const updateCategoryBody = zod.object({
-	title: zod.string().max(updateCategoryBodyTitleMax).nullish(),
-	slug: zod.string().max(updateCategoryBodySlugMax).nullish(),
-	description: zod.string().max(updateCategoryBodyDescriptionMax).nullish(),
+export const zodUpdateCategoryBody = zod.object({
+	title: zod.string().max(zodUpdateCategoryBodyTitleMax).nullish(),
+	slug: zod.string().max(zodUpdateCategoryBodySlugMax).nullish(),
+	description: zod.string().max(zodUpdateCategoryBodyDescriptionMax).nullish(),
 	published: zod.boolean().nullish(),
 });
 
 /**
  * @summary Get Shop Categories
  */
-export const getCategoriesQueryParams = zod.object({
+export const zodGetCategoriesQueryParams = zod.object({
 	includeProducts: zod.boolean().nullish().describe('Include products in response'),
 });
 
-export const getCategoriesResponseProductsItemWeightStylesItemNameMax = 64;
-export const getCategoriesResponseProductsItemThumbnailTitleMax = 64;
-export const getCategoriesResponseProductsItemThumbnailDescriptionMax = 512;
-export const getCategoriesResponseProductsItemImagesItemTitleMax = 64;
-export const getCategoriesResponseProductsItemImagesItemDescriptionMax = 512;
+export const zodGetCategoriesResponseProductsItemWeightStylesItemNameMax = 64;
+export const zodGetCategoriesResponseProductsItemThumbnailTitleMax = 64;
+export const zodGetCategoriesResponseProductsItemThumbnailDescriptionMax = 512;
+export const zodGetCategoriesResponseProductsItemImagesItemTitleMax = 64;
+export const zodGetCategoriesResponseProductsItemImagesItemDescriptionMax = 512;
 
-export const getCategoriesResponseItem = zod.object({
+export const zodGetCategoriesResponseItem = zod.object({
 	id: zod.number(),
 	title: zod.string(),
 	slug: zod.string(),
@@ -7992,7 +8016,7 @@ export const getCategoriesResponseItem = zod.object({
 				.array(
 					zod.object({
 						id: zod.number(),
-						name: zod.string().max(getCategoriesResponseProductsItemWeightStylesItemNameMax).nullish(),
+						name: zod.string().max(zodGetCategoriesResponseProductsItemWeightStylesItemNameMax).nullish(),
 					})
 				)
 				.describe('Unlocked weight styles'),
@@ -8000,12 +8024,12 @@ export const getCategoriesResponseItem = zod.object({
 				.object({
 					title: zod
 						.string()
-						.max(getCategoriesResponseProductsItemThumbnailTitleMax)
+						.max(zodGetCategoriesResponseProductsItemThumbnailTitleMax)
 						.nullish()
 						.describe('Image title'),
 					description: zod
 						.string()
-						.max(getCategoriesResponseProductsItemThumbnailDescriptionMax)
+						.max(zodGetCategoriesResponseProductsItemThumbnailDescriptionMax)
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
@@ -8018,12 +8042,12 @@ export const getCategoriesResponseItem = zod.object({
 					zod.object({
 						title: zod
 							.string()
-							.max(getCategoriesResponseProductsItemImagesItemTitleMax)
+							.max(zodGetCategoriesResponseProductsItemImagesItemTitleMax)
 							.nullish()
 							.describe('Image title'),
 						description: zod
 							.string()
-							.max(getCategoriesResponseProductsItemImagesItemDescriptionMax)
+							.max(zodGetCategoriesResponseProductsItemImagesItemDescriptionMax)
 							.nullish()
 							.describe('Image description'),
 						order: zod.number().nullish().describe('Image ordering number'),
@@ -8038,22 +8062,22 @@ export const getCategoriesResponseItem = zod.object({
 		})
 	),
 });
-export const getCategoriesResponse = zod.array(getCategoriesResponseItem);
+export const zodGetCategoriesResponse = zod.array(zodGetCategoriesResponseItem);
 
 /**
  * @summary Get Shop Category
  */
-export const getCategoryParams = zod.object({
+export const zodGetCategoryParams = zod.object({
 	category: zod.string().describe('Category id or slug'),
 });
 
-export const getCategoryResponseProductsItemWeightStylesItemNameMax = 64;
-export const getCategoryResponseProductsItemThumbnailTitleMax = 64;
-export const getCategoryResponseProductsItemThumbnailDescriptionMax = 512;
-export const getCategoryResponseProductsItemImagesItemTitleMax = 64;
-export const getCategoryResponseProductsItemImagesItemDescriptionMax = 512;
+export const zodGetCategoryResponseProductsItemWeightStylesItemNameMax = 64;
+export const zodGetCategoryResponseProductsItemThumbnailTitleMax = 64;
+export const zodGetCategoryResponseProductsItemThumbnailDescriptionMax = 512;
+export const zodGetCategoryResponseProductsItemImagesItemTitleMax = 64;
+export const zodGetCategoryResponseProductsItemImagesItemDescriptionMax = 512;
 
-export const getCategoryResponse = zod.object({
+export const zodGetCategoryResponse = zod.object({
 	id: zod.number(),
 	title: zod.string(),
 	slug: zod.string(),
@@ -8097,7 +8121,7 @@ export const getCategoryResponse = zod.object({
 				.array(
 					zod.object({
 						id: zod.number(),
-						name: zod.string().max(getCategoryResponseProductsItemWeightStylesItemNameMax).nullish(),
+						name: zod.string().max(zodGetCategoryResponseProductsItemWeightStylesItemNameMax).nullish(),
 					})
 				)
 				.describe('Unlocked weight styles'),
@@ -8105,12 +8129,12 @@ export const getCategoryResponse = zod.object({
 				.object({
 					title: zod
 						.string()
-						.max(getCategoryResponseProductsItemThumbnailTitleMax)
+						.max(zodGetCategoryResponseProductsItemThumbnailTitleMax)
 						.nullish()
 						.describe('Image title'),
 					description: zod
 						.string()
-						.max(getCategoryResponseProductsItemThumbnailDescriptionMax)
+						.max(zodGetCategoryResponseProductsItemThumbnailDescriptionMax)
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
@@ -8123,12 +8147,12 @@ export const getCategoryResponse = zod.object({
 					zod.object({
 						title: zod
 							.string()
-							.max(getCategoryResponseProductsItemImagesItemTitleMax)
+							.max(zodGetCategoryResponseProductsItemImagesItemTitleMax)
 							.nullish()
 							.describe('Image title'),
 						description: zod
 							.string()
-							.max(getCategoryResponseProductsItemImagesItemDescriptionMax)
+							.max(zodGetCategoryResponseProductsItemImagesItemDescriptionMax)
 							.nullish()
 							.describe('Image description'),
 						order: zod.number().nullish().describe('Image ordering number'),
@@ -8147,14 +8171,14 @@ export const getCategoryResponse = zod.object({
 /**
  * @summary Reorder Products in Shop Category
  */
-export const reorderCategoryProductsParams = zod.object({
+export const zodReorderCategoryProductsParams = zod.object({
 	categoryId: zod.number().describe('Category id'),
 });
 
 /**
  * @summary Add Cosmetic to Product
  */
-export const addCosmeticToProductParams = zod.object({
+export const zodAddCosmeticToProductParams = zod.object({
 	productId: zod.number().describe('Id of the produc to add the cosmetic to'),
 	cosmeticId: zod.number().describe('Id of the cosmetic to add to the product'),
 });
@@ -8162,7 +8186,7 @@ export const addCosmeticToProductParams = zod.object({
 /**
  * @summary Remove Cosmetic from Product
  */
-export const removeCosmeticToProductParams = zod.object({
+export const zodRemoveCosmeticToProductParams = zod.object({
 	productId: zod.number().describe('Id of the produc to add the cosmetic to'),
 	cosmeticId: zod.number().describe('Id of the cosmetic to add to the product'),
 });
@@ -8170,29 +8194,29 @@ export const removeCosmeticToProductParams = zod.object({
 /**
  * @summary Add Image To Product
  */
-export const addProductImageParams = zod.object({
+export const zodAddProductImageParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const addProductImageQueryThumbnailDefault = false;
+export const zodAddProductImageQueryThumbnailDefault = false;
 
-export const addProductImageQueryParams = zod.object({
+export const zodAddProductImageQueryParams = zod.object({
 	thumbnail: zod.boolean().nullish().describe("Use this to set the image as the product's thumbnail"),
 });
 
-export const addProductImageBodyTitleMax = 64;
-export const addProductImageBodyDescriptionMax = 512;
+export const zodAddProductImageBodyTitleMax = 64;
+export const zodAddProductImageBodyDescriptionMax = 512;
 
-export const addProductImageBody = zod.object({
-	title: zod.string().max(addProductImageBodyTitleMax).nullish(),
-	description: zod.string().max(addProductImageBodyDescriptionMax).nullish(),
+export const zodAddProductImageBody = zod.object({
+	title: zod.string().max(zodAddProductImageBodyTitleMax).nullish(),
+	description: zod.string().max(zodAddProductImageBodyDescriptionMax).nullish(),
 	image: zod.instanceof(File),
 });
 
 /**
  * @summary Remove Image from Product
  */
-export const deleteProductImageParams = zod.object({
+export const zodDeleteProductImageParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	imagePath: zod.string(),
 });
@@ -8200,13 +8224,13 @@ export const deleteProductImageParams = zod.object({
 /**
  * @summary Get Admin Shop Products
  */
-export const getAllProductsResponseWeightStylesItemNameMax = 64;
-export const getAllProductsResponseThumbnailTitleMax = 64;
-export const getAllProductsResponseThumbnailDescriptionMax = 512;
-export const getAllProductsResponseImagesItemTitleMax = 64;
-export const getAllProductsResponseImagesItemDescriptionMax = 512;
+export const zodGetAllProductsResponseWeightStylesItemNameMax = 64;
+export const zodGetAllProductsResponseThumbnailTitleMax = 64;
+export const zodGetAllProductsResponseThumbnailDescriptionMax = 512;
+export const zodGetAllProductsResponseImagesItemTitleMax = 64;
+export const zodGetAllProductsResponseImagesItemDescriptionMax = 512;
 
-export const getAllProductsResponseItem = zod.object({
+export const zodGetAllProductsResponseItem = zod.object({
 	id: zod.string().describe('Product ID'),
 	name: zod.string().describe('Product name'),
 	slug: zod.string().describe('Slug of the product'),
@@ -8239,16 +8263,16 @@ export const getAllProductsResponseItem = zod.object({
 		.array(
 			zod.object({
 				id: zod.number(),
-				name: zod.string().max(getAllProductsResponseWeightStylesItemNameMax).nullish(),
+				name: zod.string().max(zodGetAllProductsResponseWeightStylesItemNameMax).nullish(),
 			})
 		)
 		.describe('Unlocked weight styles'),
 	thumbnail: zod
 		.object({
-			title: zod.string().max(getAllProductsResponseThumbnailTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetAllProductsResponseThumbnailTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getAllProductsResponseThumbnailDescriptionMax)
+				.max(zodGetAllProductsResponseThumbnailDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -8259,10 +8283,10 @@ export const getAllProductsResponseItem = zod.object({
 	images: zod
 		.array(
 			zod.object({
-				title: zod.string().max(getAllProductsResponseImagesItemTitleMax).nullish().describe('Image title'),
+				title: zod.string().max(zodGetAllProductsResponseImagesItemTitleMax).nullish().describe('Image title'),
 				description: zod
 					.string()
-					.max(getAllProductsResponseImagesItemDescriptionMax)
+					.max(zodGetAllProductsResponseImagesItemDescriptionMax)
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
@@ -8275,18 +8299,18 @@ export const getAllProductsResponseItem = zod.object({
 	isGuildSubscription: zod.boolean(),
 	isUserSubscription: zod.boolean(),
 });
-export const getAllProductsResponse = zod.array(getAllProductsResponseItem);
+export const zodGetAllProductsResponse = zod.array(zodGetAllProductsResponseItem);
 
 /**
  * @summary Refresh Shop Products
  */
-export const refreshProductsResponseWeightStylesItemNameMax = 64;
-export const refreshProductsResponseThumbnailTitleMax = 64;
-export const refreshProductsResponseThumbnailDescriptionMax = 512;
-export const refreshProductsResponseImagesItemTitleMax = 64;
-export const refreshProductsResponseImagesItemDescriptionMax = 512;
+export const zodRefreshProductsResponseWeightStylesItemNameMax = 64;
+export const zodRefreshProductsResponseThumbnailTitleMax = 64;
+export const zodRefreshProductsResponseThumbnailDescriptionMax = 512;
+export const zodRefreshProductsResponseImagesItemTitleMax = 64;
+export const zodRefreshProductsResponseImagesItemDescriptionMax = 512;
 
-export const refreshProductsResponseItem = zod.object({
+export const zodRefreshProductsResponseItem = zod.object({
 	id: zod.string().describe('Product ID'),
 	name: zod.string().describe('Product name'),
 	slug: zod.string().describe('Slug of the product'),
@@ -8319,16 +8343,16 @@ export const refreshProductsResponseItem = zod.object({
 		.array(
 			zod.object({
 				id: zod.number(),
-				name: zod.string().max(refreshProductsResponseWeightStylesItemNameMax).nullish(),
+				name: zod.string().max(zodRefreshProductsResponseWeightStylesItemNameMax).nullish(),
 			})
 		)
 		.describe('Unlocked weight styles'),
 	thumbnail: zod
 		.object({
-			title: zod.string().max(refreshProductsResponseThumbnailTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodRefreshProductsResponseThumbnailTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(refreshProductsResponseThumbnailDescriptionMax)
+				.max(zodRefreshProductsResponseThumbnailDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -8339,10 +8363,10 @@ export const refreshProductsResponseItem = zod.object({
 	images: zod
 		.array(
 			zod.object({
-				title: zod.string().max(refreshProductsResponseImagesItemTitleMax).nullish().describe('Image title'),
+				title: zod.string().max(zodRefreshProductsResponseImagesItemTitleMax).nullish().describe('Image title'),
 				description: zod
 					.string()
-					.max(refreshProductsResponseImagesItemDescriptionMax)
+					.max(zodRefreshProductsResponseImagesItemDescriptionMax)
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
@@ -8355,19 +8379,19 @@ export const refreshProductsResponseItem = zod.object({
 	isGuildSubscription: zod.boolean(),
 	isUserSubscription: zod.boolean(),
 });
-export const refreshProductsResponse = zod.array(refreshProductsResponseItem);
+export const zodRefreshProductsResponse = zod.array(zodRefreshProductsResponseItem);
 
 /**
  * @summary Update Shop Product
  */
-export const updateProductParams = zod.object({
+export const zodUpdateProductParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const updateProductBodyDescriptionMax = 1024;
+export const zodUpdateProductBodyDescriptionMax = 1024;
 
-export const updateProductBody = zod.object({
-	description: zod.string().max(updateProductBodyDescriptionMax).nullish().describe('Description of the product'),
+export const zodUpdateProductBody = zod.object({
+	description: zod.string().max(zodUpdateProductBodyDescriptionMax).nullish().describe('Description of the product'),
 	available: zod.boolean().nullish().describe('If the product is available for purchase'),
 	price: zod.number().nullish().describe('Product price in USD cents'),
 	features: zod
@@ -8396,17 +8420,17 @@ export const updateProductBody = zod.object({
 /**
  * @summary Get Shop Product
  */
-export const getProductParams = zod.object({
+export const zodGetProductParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const getProductResponseWeightStylesItemNameMax = 64;
-export const getProductResponseThumbnailTitleMax = 64;
-export const getProductResponseThumbnailDescriptionMax = 512;
-export const getProductResponseImagesItemTitleMax = 64;
-export const getProductResponseImagesItemDescriptionMax = 512;
+export const zodGetProductResponseWeightStylesItemNameMax = 64;
+export const zodGetProductResponseThumbnailTitleMax = 64;
+export const zodGetProductResponseThumbnailDescriptionMax = 512;
+export const zodGetProductResponseImagesItemTitleMax = 64;
+export const zodGetProductResponseImagesItemDescriptionMax = 512;
 
-export const getProductResponse = zod.object({
+export const zodGetProductResponse = zod.object({
 	id: zod.string().describe('Product ID'),
 	name: zod.string().describe('Product name'),
 	slug: zod.string().describe('Slug of the product'),
@@ -8439,16 +8463,16 @@ export const getProductResponse = zod.object({
 		.array(
 			zod.object({
 				id: zod.number(),
-				name: zod.string().max(getProductResponseWeightStylesItemNameMax).nullish(),
+				name: zod.string().max(zodGetProductResponseWeightStylesItemNameMax).nullish(),
 			})
 		)
 		.describe('Unlocked weight styles'),
 	thumbnail: zod
 		.object({
-			title: zod.string().max(getProductResponseThumbnailTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetProductResponseThumbnailTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getProductResponseThumbnailDescriptionMax)
+				.max(zodGetProductResponseThumbnailDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -8459,10 +8483,10 @@ export const getProductResponse = zod.object({
 	images: zod
 		.array(
 			zod.object({
-				title: zod.string().max(getProductResponseImagesItemTitleMax).nullish().describe('Image title'),
+				title: zod.string().max(zodGetProductResponseImagesItemTitleMax).nullish().describe('Image title'),
 				description: zod
 					.string()
-					.max(getProductResponseImagesItemDescriptionMax)
+					.max(zodGetProductResponseImagesItemDescriptionMax)
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
@@ -8479,20 +8503,20 @@ export const getProductResponse = zod.object({
 /**
  * @summary Claim Free Shop Product
  */
-export const claimProductParams = zod.object({
+export const zodClaimProductParams = zod.object({
 	discordId: zod.number(),
 });
 
 /**
  * @summary Get Shop Products
  */
-export const getProductsResponseWeightStylesItemNameMax = 64;
-export const getProductsResponseThumbnailTitleMax = 64;
-export const getProductsResponseThumbnailDescriptionMax = 512;
-export const getProductsResponseImagesItemTitleMax = 64;
-export const getProductsResponseImagesItemDescriptionMax = 512;
+export const zodGetProductsResponseWeightStylesItemNameMax = 64;
+export const zodGetProductsResponseThumbnailTitleMax = 64;
+export const zodGetProductsResponseThumbnailDescriptionMax = 512;
+export const zodGetProductsResponseImagesItemTitleMax = 64;
+export const zodGetProductsResponseImagesItemDescriptionMax = 512;
 
-export const getProductsResponseItem = zod.object({
+export const zodGetProductsResponseItem = zod.object({
 	id: zod.string().describe('Product ID'),
 	name: zod.string().describe('Product name'),
 	slug: zod.string().describe('Slug of the product'),
@@ -8525,16 +8549,16 @@ export const getProductsResponseItem = zod.object({
 		.array(
 			zod.object({
 				id: zod.number(),
-				name: zod.string().max(getProductsResponseWeightStylesItemNameMax).nullish(),
+				name: zod.string().max(zodGetProductsResponseWeightStylesItemNameMax).nullish(),
 			})
 		)
 		.describe('Unlocked weight styles'),
 	thumbnail: zod
 		.object({
-			title: zod.string().max(getProductsResponseThumbnailTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetProductsResponseThumbnailTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getProductsResponseThumbnailDescriptionMax)
+				.max(zodGetProductsResponseThumbnailDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -8545,10 +8569,10 @@ export const getProductsResponseItem = zod.object({
 	images: zod
 		.array(
 			zod.object({
-				title: zod.string().max(getProductsResponseImagesItemTitleMax).nullish().describe('Image title'),
+				title: zod.string().max(zodGetProductsResponseImagesItemTitleMax).nullish().describe('Image title'),
 				description: zod
 					.string()
-					.max(getProductsResponseImagesItemDescriptionMax)
+					.max(zodGetProductsResponseImagesItemDescriptionMax)
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
@@ -8561,45 +8585,45 @@ export const getProductsResponseItem = zod.object({
 	isGuildSubscription: zod.boolean(),
 	isUserSubscription: zod.boolean(),
 });
-export const getProductsResponse = zod.array(getProductsResponseItem);
+export const zodGetProductsResponse = zod.array(zodGetProductsResponseItem);
 
 /**
  * @summary Add Image To Style
  */
-export const addStyleImageParams = zod.object({
+export const zodAddStyleImageParams = zod.object({
 	styleId: zod.number(),
 });
 
-export const addStyleImageQueryThumbnailDefault = false;
+export const zodAddStyleImageQueryThumbnailDefault = false;
 
-export const addStyleImageQueryParams = zod.object({
+export const zodAddStyleImageQueryParams = zod.object({
 	thumbnail: zod.boolean().nullish().describe("Use this to set the image as the product's thumbnail"),
 });
 
-export const addStyleImageBodyTitleMax = 64;
-export const addStyleImageBodyDescriptionMax = 512;
+export const zodAddStyleImageBodyTitleMax = 64;
+export const zodAddStyleImageBodyDescriptionMax = 512;
 
-export const addStyleImageBody = zod.object({
-	title: zod.string().max(addStyleImageBodyTitleMax).nullish(),
-	description: zod.string().max(addStyleImageBodyDescriptionMax).nullish(),
+export const zodAddStyleImageBody = zod.object({
+	title: zod.string().max(zodAddStyleImageBodyTitleMax).nullish(),
+	description: zod.string().max(zodAddStyleImageBodyDescriptionMax).nullish(),
 	image: zod.instanceof(File),
 });
 
 /**
  * @summary Create Shop Style
  */
-export const createStyleBodyStyleFormatterMax = 64;
-export const createStyleBodyNameMin = 0;
+export const zodCreateStyleBodyStyleFormatterMax = 64;
+export const zodCreateStyleBodyNameMin = 0;
 
-export const createStyleBodyNameMax = 64;
-export const createStyleBodyCollectionMax = 64;
-export const createStyleBodyDescriptionMax = 1024;
+export const zodCreateStyleBodyNameMax = 64;
+export const zodCreateStyleBodyCollectionMax = 64;
+export const zodCreateStyleBodyDescriptionMax = 1024;
 
-export const createStyleBody = zod.object({
-	styleFormatter: zod.string().max(createStyleBodyStyleFormatterMax).nullish(),
-	name: zod.string().min(createStyleBodyNameMin).max(createStyleBodyNameMax),
-	collection: zod.string().max(createStyleBodyCollectionMax).nullish(),
-	description: zod.string().max(createStyleBodyDescriptionMax).nullish(),
+export const zodCreateStyleBody = zod.object({
+	styleFormatter: zod.string().max(zodCreateStyleBodyStyleFormatterMax).nullish(),
+	name: zod.string().min(zodCreateStyleBodyNameMin).max(zodCreateStyleBodyNameMax),
+	collection: zod.string().max(zodCreateStyleBodyCollectionMax).nullish(),
+	description: zod.string().max(zodCreateStyleBodyDescriptionMax).nullish(),
 	data: zod.object({
 		decal: zod
 			.object({
@@ -8884,46 +8908,50 @@ export const createStyleBody = zod.object({
 /**
  * @summary Delete Shop Style
  */
-export const deleteStyleParams = zod.object({
+export const zodDeleteStyleParams = zod.object({
 	styleId: zod.number(),
 });
 
 /**
  * @summary Get Shop Style
  */
-export const getStyleParams = zod.object({
+export const zodGetStyleParams = zod.object({
 	styleId: zod.number(),
 });
 
-export const getStyleResponseStyleFormatterMax = 64;
-export const getStyleResponseNameMax = 64;
-export const getStyleResponseCollectionMax = 64;
-export const getStyleResponseDescriptionMax = 1024;
-export const getStyleResponseImageTitleMax = 64;
-export const getStyleResponseImageDescriptionMax = 512;
-export const getStyleResponseImagesItemTitleMax = 64;
-export const getStyleResponseImagesItemDescriptionMax = 512;
+export const zodGetStyleResponseStyleFormatterMax = 64;
+export const zodGetStyleResponseNameMax = 64;
+export const zodGetStyleResponseCollectionMax = 64;
+export const zodGetStyleResponseDescriptionMax = 1024;
+export const zodGetStyleResponseImageTitleMax = 64;
+export const zodGetStyleResponseImageDescriptionMax = 512;
+export const zodGetStyleResponseImagesItemTitleMax = 64;
+export const zodGetStyleResponseImagesItemDescriptionMax = 512;
 
-export const getStyleResponse = zod.object({
+export const zodGetStyleResponse = zod.object({
 	id: zod.number(),
-	styleFormatter: zod.string().max(getStyleResponseStyleFormatterMax).nullish(),
-	name: zod.string().max(getStyleResponseNameMax).nullish(),
-	collection: zod.string().max(getStyleResponseCollectionMax).nullish(),
-	description: zod.string().max(getStyleResponseDescriptionMax).nullish(),
+	styleFormatter: zod.string().max(zodGetStyleResponseStyleFormatterMax).nullish(),
+	name: zod.string().max(zodGetStyleResponseNameMax).nullish(),
+	collection: zod.string().max(zodGetStyleResponseCollectionMax).nullish(),
+	description: zod.string().max(zodGetStyleResponseDescriptionMax).nullish(),
 	image: zod
 		.object({
-			title: zod.string().max(getStyleResponseImageTitleMax).nullish().describe('Image title'),
-			description: zod.string().max(getStyleResponseImageDescriptionMax).nullish().describe('Image description'),
+			title: zod.string().max(zodGetStyleResponseImageTitleMax).nullish().describe('Image title'),
+			description: zod
+				.string()
+				.max(zodGetStyleResponseImageDescriptionMax)
+				.nullish()
+				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
 			url: zod.string().describe('Full image URL'),
 		})
 		.nullish(),
 	images: zod.array(
 		zod.object({
-			title: zod.string().max(getStyleResponseImagesItemTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetStyleResponseImagesItemTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getStyleResponseImagesItemDescriptionMax)
+				.max(zodGetStyleResponseImagesItemDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -9285,39 +9313,43 @@ export const getStyleResponse = zod.object({
 /**
  * @summary Update Shop Style
  */
-export const updateStyleParams = zod.object({
+export const zodUpdateStyleParams = zod.object({
 	styleId: zod.number(),
 });
 
-export const updateStyleBodyStyleFormatterMax = 64;
-export const updateStyleBodyNameMax = 64;
-export const updateStyleBodyCollectionMax = 64;
-export const updateStyleBodyDescriptionMax = 1024;
-export const updateStyleBodyImageTitleMax = 64;
-export const updateStyleBodyImageDescriptionMax = 512;
-export const updateStyleBodyImagesItemTitleMax = 64;
-export const updateStyleBodyImagesItemDescriptionMax = 512;
+export const zodUpdateStyleBodyStyleFormatterMax = 64;
+export const zodUpdateStyleBodyNameMax = 64;
+export const zodUpdateStyleBodyCollectionMax = 64;
+export const zodUpdateStyleBodyDescriptionMax = 1024;
+export const zodUpdateStyleBodyImageTitleMax = 64;
+export const zodUpdateStyleBodyImageDescriptionMax = 512;
+export const zodUpdateStyleBodyImagesItemTitleMax = 64;
+export const zodUpdateStyleBodyImagesItemDescriptionMax = 512;
 
-export const updateStyleBody = zod.object({
+export const zodUpdateStyleBody = zod.object({
 	id: zod.number(),
-	styleFormatter: zod.string().max(updateStyleBodyStyleFormatterMax).nullish(),
-	name: zod.string().max(updateStyleBodyNameMax).nullish(),
-	collection: zod.string().max(updateStyleBodyCollectionMax).nullish(),
-	description: zod.string().max(updateStyleBodyDescriptionMax).nullish(),
+	styleFormatter: zod.string().max(zodUpdateStyleBodyStyleFormatterMax).nullish(),
+	name: zod.string().max(zodUpdateStyleBodyNameMax).nullish(),
+	collection: zod.string().max(zodUpdateStyleBodyCollectionMax).nullish(),
+	description: zod.string().max(zodUpdateStyleBodyDescriptionMax).nullish(),
 	image: zod
 		.object({
-			title: zod.string().max(updateStyleBodyImageTitleMax).nullish().describe('Image title'),
-			description: zod.string().max(updateStyleBodyImageDescriptionMax).nullish().describe('Image description'),
+			title: zod.string().max(zodUpdateStyleBodyImageTitleMax).nullish().describe('Image title'),
+			description: zod
+				.string()
+				.max(zodUpdateStyleBodyImageDescriptionMax)
+				.nullish()
+				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
 			url: zod.string().describe('Full image URL'),
 		})
 		.nullish(),
 	images: zod.array(
 		zod.object({
-			title: zod.string().max(updateStyleBodyImagesItemTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodUpdateStyleBodyImagesItemTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(updateStyleBodyImagesItemDescriptionMax)
+				.max(zodUpdateStyleBodyImagesItemDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -9679,7 +9711,7 @@ export const updateStyleBody = zod.object({
 /**
  * @summary Remove Image from Style
  */
-export const deleteStyleImageParams = zod.object({
+export const zodDeleteStyleImageParams = zod.object({
 	styleId: zod.number(),
 	imagePath: zod.string(),
 });
@@ -9687,35 +9719,39 @@ export const deleteStyleImageParams = zod.object({
 /**
  * @summary Get Shop Styles
  */
-export const getStylesResponseStyleFormatterMax = 64;
-export const getStylesResponseNameMax = 64;
-export const getStylesResponseCollectionMax = 64;
-export const getStylesResponseDescriptionMax = 1024;
-export const getStylesResponseImageTitleMax = 64;
-export const getStylesResponseImageDescriptionMax = 512;
-export const getStylesResponseImagesItemTitleMax = 64;
-export const getStylesResponseImagesItemDescriptionMax = 512;
+export const zodGetStylesResponseStyleFormatterMax = 64;
+export const zodGetStylesResponseNameMax = 64;
+export const zodGetStylesResponseCollectionMax = 64;
+export const zodGetStylesResponseDescriptionMax = 1024;
+export const zodGetStylesResponseImageTitleMax = 64;
+export const zodGetStylesResponseImageDescriptionMax = 512;
+export const zodGetStylesResponseImagesItemTitleMax = 64;
+export const zodGetStylesResponseImagesItemDescriptionMax = 512;
 
-export const getStylesResponseItem = zod.object({
+export const zodGetStylesResponseItem = zod.object({
 	id: zod.number(),
-	styleFormatter: zod.string().max(getStylesResponseStyleFormatterMax).nullish(),
-	name: zod.string().max(getStylesResponseNameMax).nullish(),
-	collection: zod.string().max(getStylesResponseCollectionMax).nullish(),
-	description: zod.string().max(getStylesResponseDescriptionMax).nullish(),
+	styleFormatter: zod.string().max(zodGetStylesResponseStyleFormatterMax).nullish(),
+	name: zod.string().max(zodGetStylesResponseNameMax).nullish(),
+	collection: zod.string().max(zodGetStylesResponseCollectionMax).nullish(),
+	description: zod.string().max(zodGetStylesResponseDescriptionMax).nullish(),
 	image: zod
 		.object({
-			title: zod.string().max(getStylesResponseImageTitleMax).nullish().describe('Image title'),
-			description: zod.string().max(getStylesResponseImageDescriptionMax).nullish().describe('Image description'),
+			title: zod.string().max(zodGetStylesResponseImageTitleMax).nullish().describe('Image title'),
+			description: zod
+				.string()
+				.max(zodGetStylesResponseImageDescriptionMax)
+				.nullish()
+				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
 			url: zod.string().describe('Full image URL'),
 		})
 		.nullish(),
 	images: zod.array(
 		zod.object({
-			title: zod.string().max(getStylesResponseImagesItemTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetStylesResponseImagesItemTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(getStylesResponseImagesItemDescriptionMax)
+				.max(zodGetStylesResponseImagesItemDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -10073,13 +10109,13 @@ export const getStylesResponseItem = zod.object({
 		})
 		.nullish(),
 });
-export const getStylesResponse = zod.array(getStylesResponseItem);
+export const zodGetStylesResponse = zod.array(zodGetStylesResponseItem);
 
 /**
  * Get all farming weight constants
  * @summary Get all weight constants
  */
-export const getAllWeightsResponse = zod.object({
+export const zodGetAllWeightsResponse = zod.object({
 	crops: zod.record(zod.string(), zod.number()),
 	pests: zod.object({
 		brackets: zod.record(zod.string(), zod.number()),
@@ -10090,18 +10126,18 @@ export const getAllWeightsResponse = zod.object({
 /**
  * @summary Get farming weight for a profile member
  */
-export const getWeightForProfileParams = zod.object({
+export const zodGetWeightForProfileParams = zod.object({
 	playerUuid: zod.string(),
 	profileUuid: zod.string(),
 });
 
-export const getWeightForProfileQueryCollectionsDefault = false;
+export const zodGetWeightForProfileQueryCollectionsDefault = false;
 
-export const getWeightForProfileQueryParams = zod.object({
+export const zodGetWeightForProfileQueryParams = zod.object({
 	collections: zod.boolean().nullish(),
 });
 
-export const getWeightForProfileResponse = zod.object({
+export const zodGetWeightForProfileResponse = zod.object({
 	totalWeight: zod.number(),
 	crops: zod.record(zod.string(), zod.number()).nullish(),
 	cropWeight: zod.record(zod.string(), zod.number()),
@@ -10294,17 +10330,17 @@ export const getWeightForProfileResponse = zod.object({
 /**
  * @summary Get farming weight for a player's selected profile
  */
-export const getWeightForSelectedParams = zod.object({
+export const zodGetWeightForSelectedParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getWeightForSelectedQueryCollectionsDefault = false;
+export const zodGetWeightForSelectedQueryCollectionsDefault = false;
 
-export const getWeightForSelectedQueryParams = zod.object({
+export const zodGetWeightForSelectedQueryParams = zod.object({
 	collections: zod.boolean().nullish(),
 });
 
-export const getWeightForSelectedResponse = zod.object({
+export const zodGetWeightForSelectedResponse = zod.object({
 	totalWeight: zod.number(),
 	crops: zod.record(zod.string(), zod.number()).nullish(),
 	cropWeight: zod.record(zod.string(), zod.number()),
@@ -10498,17 +10534,17 @@ export const getWeightForSelectedResponse = zod.object({
  * Get farming weight for all profiles of a player
  * @summary Get farming weight for all profiles of a player
  */
-export const getWeightForProfilesParams = zod.object({
+export const zodGetWeightForProfilesParams = zod.object({
 	playerUuid: zod.string(),
 });
 
-export const getWeightForProfilesQueryCollectionsDefault = false;
+export const zodGetWeightForProfilesQueryCollectionsDefault = false;
 
-export const getWeightForProfilesQueryParams = zod.object({
+export const zodGetWeightForProfilesQueryParams = zod.object({
 	collections: zod.boolean().nullish(),
 });
 
-export const getWeightForProfilesResponse = zod.object({
+export const zodGetWeightForProfilesResponse = zod.object({
 	selectedProfileId: zod.string().nullish(),
 	profiles: zod.array(
 		zod.object({

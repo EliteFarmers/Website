@@ -31,7 +31,15 @@ export default ts.config(
 		},
 	},
 	{
-		ignores: ['build/', '.svelte-kit/', 'dist/'],
+		ignores: [
+			'build/',
+			'.svelte-kit/',
+			'dist/',
+			'src/lib/api/endpoints/',
+			'src/lib/api/schemas/',
+			'node_modules',
+			'static',
+		],
 	},
 	{
 		files: ['**/*.ts', '**/*.svelte'],

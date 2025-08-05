@@ -24,8 +24,7 @@ export const customFetch = async <T>(input: RequestInfo | URL, init?: RequestIni
 	});
 
 	if (!response.ok) {
-		// You can implement more robust error handling here
-		const errorBody = await response.text();
+		const errorBody = await response.json();
 		console.error('API Error:', errorBody);
 		throw new Error(`API request failed with status ${response.status}`);
 	}

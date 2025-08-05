@@ -44,6 +44,7 @@ export default defineConfig({
 
 			override: {
 				useBigInt: true,
+				transformer: './src/lib/api/zod-transformer.ts',
 			},
 		},
 		hooks: {
