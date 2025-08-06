@@ -165,7 +165,7 @@ export const getGetAccountUrl = (player: string) => {
 	return `http://localhost:5164/account/${player}`;
 };
 
-export const getAccount = async (player: string, options?: RequestInit): Promise<getAccountResponse> => {
+export const getAccount = async (player: string, options?: RequestInit) => {
 	return customFetch<getAccountResponse>(getGetAccountUrl(player), {
 		...options,
 		method: 'GET',
@@ -195,7 +195,7 @@ export const getLinkOwnAccountUrl = (player: string) => {
 	return `http://localhost:5164/account/${player}`;
 };
 
-export const linkOwnAccount = async (player: string, options?: RequestInit): Promise<linkOwnAccountResponse> => {
+export const linkOwnAccount = async (player: string, options?: RequestInit) => {
 	return customFetch<linkOwnAccountResponse>(getLinkOwnAccountUrl(player), {
 		...options,
 		method: 'POST',
@@ -225,7 +225,7 @@ export const getUnlinkOwnAccountUrl = (player: string) => {
 	return `http://localhost:5164/account/${player}`;
 };
 
-export const unlinkOwnAccount = async (player: string, options?: RequestInit): Promise<unlinkOwnAccountResponse> => {
+export const unlinkOwnAccount = async (player: string, options?: RequestInit) => {
 	return customFetch<unlinkOwnAccountResponse>(getUnlinkOwnAccountUrl(player), {
 		...options,
 		method: 'DELETE',
@@ -256,7 +256,7 @@ export const getGetAccountFace1Url = (player: string) => {
 	return `http://localhost:5164/account/${player}/face`;
 };
 
-export const getAccountFace1 = async (player: string, options?: RequestInit): Promise<getAccountFace1Response> => {
+export const getAccountFace1 = async (player: string, options?: RequestInit) => {
 	return customFetch<getAccountFace1Response>(getGetAccountFace1Url(player), {
 		...options,
 		method: 'GET',
@@ -287,7 +287,7 @@ export const getGetAccountFace2Url = (player: string) => {
 	return `http://localhost:5164/account/${player}/face.png`;
 };
 
-export const getAccountFace2 = async (player: string, options?: RequestInit): Promise<getAccountFace2Response> => {
+export const getAccountFace2 = async (player: string, options?: RequestInit) => {
 	return customFetch<getAccountFace2Response>(getGetAccountFace2Url(player), {
 		...options,
 		method: 'GET',
@@ -319,10 +319,7 @@ export const getGetAccountFromDiscordUrl = (discordId: bigint) => {
 	return `http://localhost:5164/account/${discordId}`;
 };
 
-export const getAccountFromDiscord = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<getAccountFromDiscordResponse> => {
+export const getAccountFromDiscord = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getAccountFromDiscordResponse>(getGetAccountFromDiscordUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -352,10 +349,7 @@ export const getGetAccountSettingsUrl = (discordId: bigint) => {
 	return `http://localhost:5164/account/${discordId}/settings`;
 };
 
-export const getAccountSettings = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<getAccountSettingsResponse> => {
+export const getAccountSettings = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getAccountSettingsResponse>(getGetAccountSettingsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -385,7 +379,7 @@ export const getGetAuthAccountUrl = () => {
 	return `http://localhost:5164/account`;
 };
 
-export const getAuthAccount = async (options?: RequestInit): Promise<getAuthAccountResponse> => {
+export const getAuthAccount = async (options?: RequestInit) => {
 	return customFetch<getAuthAccountResponse>(getGetAuthAccountUrl(), {
 		...options,
 		method: 'GET',
@@ -415,7 +409,7 @@ export const getRefreshPurchasesUrl = () => {
 	return `http://localhost:5164/account/purchases`;
 };
 
-export const refreshPurchases = async (options?: RequestInit): Promise<refreshPurchasesResponse> => {
+export const refreshPurchases = async (options?: RequestInit) => {
 	return customFetch<refreshPurchasesResponse>(getRefreshPurchasesUrl(), {
 		...options,
 		method: 'POST',
@@ -457,10 +451,7 @@ export const getSearchAccountsUrl = (params: SearchAccountsParams) => {
 		: `http://localhost:5164/account/search`;
 };
 
-export const searchAccounts = async (
-	params: SearchAccountsParams,
-	options?: RequestInit
-): Promise<searchAccountsResponse> => {
+export const searchAccounts = async (params: SearchAccountsParams, options?: RequestInit) => {
 	return customFetch<searchAccountsResponse>(getSearchAccountsUrl(params), {
 		...options,
 		method: 'GET',
@@ -490,7 +481,7 @@ export const getSetPrimaryAccountUrl = (player: string) => {
 	return `http://localhost:5164/account/primary/${player}`;
 };
 
-export const setPrimaryAccount = async (player: string, options?: RequestInit): Promise<setPrimaryAccountResponse> => {
+export const setPrimaryAccount = async (player: string, options?: RequestInit) => {
 	return customFetch<setPrimaryAccountResponse>(getSetPrimaryAccountUrl(player), {
 		...options,
 		method: 'POST',
@@ -525,11 +516,7 @@ export const getUpdateBadgesUrl = (playerUuid: string) => {
 	return `http://localhost:5164/account/${playerUuid}/badges`;
 };
 
-export const updateBadges = async (
-	playerUuid: string,
-	editUserBadgeDto: EditUserBadgeDto[],
-	options?: RequestInit
-): Promise<updateBadgesResponse> => {
+export const updateBadges = async (playerUuid: string, editUserBadgeDto: EditUserBadgeDto[], options?: RequestInit) => {
 	return customFetch<updateBadgesResponse>(getUpdateBadgesUrl(playerUuid), {
 		...options,
 		method: 'POST',
@@ -568,7 +555,7 @@ export const updateFortuneSettings = async (
 	profileUuid: string,
 	memberFortuneSettingsDto: MemberFortuneSettingsDto,
 	options?: RequestInit
-): Promise<updateFortuneSettingsResponse> => {
+) => {
 	return customFetch<updateFortuneSettingsResponse>(getUpdateFortuneSettingsUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'POST',
@@ -600,10 +587,7 @@ export const getUpdateAccountUrl = () => {
 	return `http://localhost:5164/account/settings`;
 };
 
-export const updateAccount = async (
-	updateUserSettingsDto: UpdateUserSettingsDto,
-	options?: RequestInit
-): Promise<updateAccountResponse> => {
+export const updateAccount = async (updateUserSettingsDto: UpdateUserSettingsDto, options?: RequestInit) => {
 	return customFetch<updateAccountResponse>(getUpdateAccountUrl(), {
 		...options,
 		method: 'PATCH',
@@ -649,11 +633,7 @@ export const getAddRoleToUserUrl = (discordId: bigint, role: string) => {
 	return `http://localhost:5164/admin/user/${discordId}/roles/${role}`;
 };
 
-export const addRoleToUser = async (
-	discordId: bigint,
-	role: string,
-	options?: RequestInit
-): Promise<addRoleToUserResponse> => {
+export const addRoleToUser = async (discordId: bigint, role: string, options?: RequestInit) => {
 	return customFetch<addRoleToUserResponse>(getAddRoleToUserUrl(discordId, role), {
 		...options,
 		method: 'POST',
@@ -697,11 +677,7 @@ export const getRemoveRoleFromUserUrl = (discordId: bigint, role: string) => {
 	return `http://localhost:5164/admin/user/${discordId}/roles/${role}`;
 };
 
-export const removeRoleFromUser = async (
-	discordId: bigint,
-	role: string,
-	options?: RequestInit
-): Promise<removeRoleFromUserResponse> => {
+export const removeRoleFromUser = async (discordId: bigint, role: string, options?: RequestInit) => {
 	return customFetch<removeRoleFromUserResponse>(getRemoveRoleFromUserUrl(discordId, role), {
 		...options,
 		method: 'DELETE',
@@ -746,10 +722,7 @@ export const getClearPlayerCooldownsUrl = (player: string) => {
 	return `http://localhost:5164/admin/cooldowns/player/${player}`;
 };
 
-export const clearPlayerCooldowns = async (
-	player: string,
-	options?: RequestInit
-): Promise<clearPlayerCooldownsResponse> => {
+export const clearPlayerCooldowns = async (player: string, options?: RequestInit) => {
 	return customFetch<clearPlayerCooldownsResponse>(getClearPlayerCooldownsUrl(player), {
 		...options,
 		method: 'POST',
@@ -788,7 +761,7 @@ export const getDeleteUpcomingContestsUrl = () => {
 	return `http://localhost:5164/admin/upcomingcontests`;
 };
 
-export const deleteUpcomingContests = async (options?: RequestInit): Promise<deleteUpcomingContestsResponse> => {
+export const deleteUpcomingContests = async (options?: RequestInit) => {
 	return customFetch<deleteUpcomingContestsResponse>(getDeleteUpcomingContestsUrl(), {
 		...options,
 		method: 'DELETE',
@@ -832,10 +805,7 @@ export const getDeleteEventApprovalUrl = (eventId: bigint) => {
 	return `http://localhost:5164/admin/events/${eventId}`;
 };
 
-export const deleteEventApproval = async (
-	eventId: bigint,
-	options?: RequestInit
-): Promise<deleteEventApprovalResponse> => {
+export const deleteEventApproval = async (eventId: bigint, options?: RequestInit) => {
 	return customFetch<deleteEventApprovalResponse>(getDeleteEventApprovalUrl(eventId), {
 		...options,
 		method: 'DELETE',
@@ -873,7 +843,7 @@ export const getGetPendingEventsUrl = () => {
 	return `http://localhost:5164/admin/events/pending`;
 };
 
-export const getPendingEvents = async (options?: RequestInit): Promise<getPendingEventsResponse> => {
+export const getPendingEvents = async (options?: RequestInit) => {
 	return customFetch<getPendingEventsResponse>(getGetPendingEventsUrl(), {
 		...options,
 		method: 'GET',
@@ -929,11 +899,7 @@ export const getSetEventApprovalUrl = (eventId: bigint, params?: SetEventApprova
 		: `http://localhost:5164/admin/events/${eventId}/approve`;
 };
 
-export const setEventApproval = async (
-	eventId: bigint,
-	params?: SetEventApprovalParams,
-	options?: RequestInit
-): Promise<setEventApprovalResponse> => {
+export const setEventApproval = async (eventId: bigint, params?: SetEventApprovalParams, options?: RequestInit) => {
 	return customFetch<setEventApprovalResponse>(getSetEventApprovalUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -968,7 +934,7 @@ export const getGetAdminsUrl = () => {
 	return `http://localhost:5164/admins`;
 };
 
-export const getAdmins = async (options?: RequestInit): Promise<getAdminsResponse> => {
+export const getAdmins = async (options?: RequestInit) => {
 	return customFetch<getAdminsResponse>(getGetAdminsUrl(), {
 		...options,
 		method: 'GET',
@@ -1003,7 +969,7 @@ export const getGetRolesUrl = () => {
 	return `http://localhost:5164/admin/roles`;
 };
 
-export const getRoles = async (options?: RequestInit): Promise<getRolesResponse> => {
+export const getRoles = async (options?: RequestInit) => {
 	return customFetch<getRolesResponse>(getGetRolesUrl(), {
 		...options,
 		method: 'GET',
@@ -1033,10 +999,7 @@ export const getLinkUserAccountUrl = () => {
 	return `http://localhost:5164/admin/link-account`;
 };
 
-export const linkUserAccount = async (
-	adminLinkAccountRequest: AdminLinkAccountRequest,
-	options?: RequestInit
-): Promise<linkUserAccountResponse> => {
+export const linkUserAccount = async (adminLinkAccountRequest: AdminLinkAccountRequest, options?: RequestInit) => {
 	return customFetch<linkUserAccountResponse>(getLinkUserAccountUrl(), {
 		...options,
 		method: 'POST',
@@ -1083,10 +1046,7 @@ export const getRefreshDiscordGuildUrl = (guildId: bigint) => {
 	return `http://localhost:5164/admin/guild/${guildId}/refresh`;
 };
 
-export const refreshDiscordGuild = async (
-	guildId: bigint,
-	options?: RequestInit
-): Promise<refreshDiscordGuildResponse> => {
+export const refreshDiscordGuild = async (guildId: bigint, options?: RequestInit) => {
 	return customFetch<refreshDiscordGuildResponse>(getRefreshDiscordGuildUrl(guildId), {
 		...options,
 		method: 'POST',
@@ -1119,7 +1079,7 @@ export const getUnlinkUserAccountUrl = () => {
 export const unlinkUserAccount = async (
 	adminUnlinkAccountRequest: AdminUnlinkAccountRequest,
 	options?: RequestInit
-): Promise<unlinkUserAccountResponse> => {
+) => {
 	return customFetch<unlinkUserAccountResponse>(getUnlinkUserAccountUrl(), {
 		...options,
 		method: 'POST',
@@ -1160,10 +1120,7 @@ export const getCreateAnnouncementUrl = () => {
 	return `http://localhost:5164/announcements/create`;
 };
 
-export const createAnnouncement = async (
-	createAnnouncementDto: CreateAnnouncementDto,
-	options?: RequestInit
-): Promise<createAnnouncementResponse> => {
+export const createAnnouncement = async (createAnnouncementDto: CreateAnnouncementDto, options?: RequestInit) => {
 	return customFetch<createAnnouncementResponse>(getCreateAnnouncementUrl(), {
 		...options,
 		method: 'POST',
@@ -1196,10 +1153,7 @@ export const getDismissAnnouncementUrl = (announcementId: string) => {
 	return `http://localhost:5164/announcements/${announcementId}/dismiss`;
 };
 
-export const dismissAnnouncement = async (
-	announcementId: string,
-	options?: RequestInit
-): Promise<dismissAnnouncementResponse> => {
+export const dismissAnnouncement = async (announcementId: string, options?: RequestInit) => {
 	return customFetch<dismissAnnouncementResponse>(getDismissAnnouncementUrl(announcementId), {
 		...options,
 		method: 'POST',
@@ -1225,7 +1179,7 @@ export const getGetAnnouncementUrl = () => {
 	return `http://localhost:5164/announcements`;
 };
 
-export const getAnnouncement = async (options?: RequestInit): Promise<getAnnouncementResponse> => {
+export const getAnnouncement = async (options?: RequestInit) => {
 	return customFetch<getAnnouncementResponse>(getGetAnnouncementUrl(), {
 		...options,
 		method: 'GET',
@@ -1256,7 +1210,7 @@ export const getGetSessionUrl = () => {
 	return `http://localhost:5164/auth/me`;
 };
 
-export const getSession = async (options?: RequestInit): Promise<getSessionResponse> => {
+export const getSession = async (options?: RequestInit) => {
 	return customFetch<getSessionResponse>(getGetSessionUrl(), {
 		...options,
 		method: 'GET',
@@ -1282,7 +1236,7 @@ export const getLoginUrl = () => {
 	return `http://localhost:5164/auth/login`;
 };
 
-export const login = async (discordLoginDto: DiscordLoginDto, options?: RequestInit): Promise<loginResponse> => {
+export const login = async (discordLoginDto: DiscordLoginDto, options?: RequestInit) => {
 	return customFetch<loginResponse>(getLoginUrl(), {
 		...options,
 		method: 'POST',
@@ -1310,10 +1264,7 @@ export const getRefreshAuthUrl = () => {
 	return `http://localhost:5164/auth/refresh`;
 };
 
-export const refreshAuth = async (
-	authRefreshDto: AuthRefreshDto,
-	options?: RequestInit
-): Promise<refreshAuthResponse> => {
+export const refreshAuth = async (authRefreshDto: AuthRefreshDto, options?: RequestInit) => {
 	return customFetch<refreshAuthResponse>(getRefreshAuthUrl(), {
 		...options,
 		method: 'POST',
@@ -1359,11 +1310,7 @@ export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: number) => {
 	return `http://localhost:5164/badge/user/${player}/${badgeId}`;
 };
 
-export const addBadgeToUserBadge = async (
-	player: string,
-	badgeId: number,
-	options?: RequestInit
-): Promise<addBadgeToUserBadgeResponse> => {
+export const addBadgeToUserBadge = async (player: string, badgeId: number, options?: RequestInit) => {
 	return customFetch<addBadgeToUserBadgeResponse>(getAddBadgeToUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1407,11 +1354,7 @@ export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: number) 
 	return `http://localhost:5164/badge/user/${player}/${badgeId}`;
 };
 
-export const deleteBadgeFromUserBadge = async (
-	player: string,
-	badgeId: number,
-	options?: RequestInit
-): Promise<deleteBadgeFromUserBadgeResponse> => {
+export const deleteBadgeFromUserBadge = async (player: string, badgeId: number, options?: RequestInit) => {
 	return customFetch<deleteBadgeFromUserBadgeResponse>(getDeleteBadgeFromUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1458,7 +1401,7 @@ export const getCreateBadgeUrl = () => {
 export const createBadge = async (
 	createBadgeRequestCreateBadge: CreateBadgeRequestCreateBadge,
 	options?: RequestInit
-): Promise<createBadgeResponse> => {
+) => {
 	const formData = new FormData();
 	formData.append(`name`, createBadgeRequestCreateBadge.name);
 	formData.append(`description`, createBadgeRequestCreateBadge.description);
@@ -1493,7 +1436,7 @@ export const getGetBadgesUrl = () => {
 	return `http://localhost:5164/badges`;
 };
 
-export const getBadges = async (options?: RequestInit): Promise<getBadgesResponse> => {
+export const getBadges = async (options?: RequestInit) => {
 	return customFetch<getBadgesResponse>(getGetBadgesUrl(), {
 		...options,
 		method: 'GET',
@@ -1537,7 +1480,7 @@ export const getDeleteBadgeUrl = (badgeId: number) => {
 	return `http://localhost:5164/badge/${badgeId}`;
 };
 
-export const deleteBadge = async (badgeId: number, options?: RequestInit): Promise<deleteBadgeResponse> => {
+export const deleteBadge = async (badgeId: number, options?: RequestInit) => {
 	return customFetch<deleteBadgeResponse>(getDeleteBadgeUrl(badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1585,7 +1528,7 @@ export const updateBadge = async (
 	badgeId: number,
 	updateBadgeRequestUpdateBadge: UpdateBadgeRequestUpdateBadge,
 	options?: RequestInit
-): Promise<updateBadgeResponse> => {
+) => {
 	const formData = new FormData();
 	if (updateBadgeRequestUpdateBadge.name !== undefined && updateBadgeRequestUpdateBadge.name !== null) {
 		formData.append(`name`, updateBadgeRequestUpdateBadge.name);
@@ -1633,11 +1576,7 @@ export const getLinkAccountBotUrl = (discordId: bigint, player: string) => {
 	return `http://localhost:5164/bot/account/${discordId}/${player}`;
 };
 
-export const linkAccountBot = async (
-	discordId: bigint,
-	player: string,
-	options?: RequestInit
-): Promise<linkAccountBotResponse> => {
+export const linkAccountBot = async (discordId: bigint, player: string, options?: RequestInit) => {
 	return customFetch<linkAccountBotResponse>(getLinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1667,11 +1606,7 @@ export const getUnlinkAccountBotUrl = (discordId: bigint, player: string) => {
 	return `http://localhost:5164/bot/account/${discordId}/${player}`;
 };
 
-export const unlinkAccountBot = async (
-	discordId: bigint,
-	player: string,
-	options?: RequestInit
-): Promise<unlinkAccountBotResponse> => {
+export const unlinkAccountBot = async (discordId: bigint, player: string, options?: RequestInit) => {
 	return customFetch<unlinkAccountBotResponse>(getUnlinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'DELETE',
@@ -1701,11 +1636,7 @@ export const getMakePrimaryAccountUrl = (discordId: bigint, player: string) => {
 	return `http://localhost:5164/bot/account/${discordId}/${player}/primary`;
 };
 
-export const makePrimaryAccount = async (
-	discordId: bigint,
-	player: string,
-	options?: RequestInit
-): Promise<makePrimaryAccountResponse> => {
+export const makePrimaryAccount = async (discordId: bigint, player: string, options?: RequestInit) => {
 	return customFetch<makePrimaryAccountResponse>(getMakePrimaryAccountUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1735,10 +1666,7 @@ export const getRefreshUserPurchasesUrl = (discordId: bigint) => {
 	return `http://localhost:5164/bot/account/${discordId}/purchases`;
 };
 
-export const refreshUserPurchases = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<refreshUserPurchasesResponse> => {
+export const refreshUserPurchases = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<refreshUserPurchasesResponse>(getRefreshUserPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -1768,11 +1696,7 @@ export const getGrantBadgeUrl = (player: string, badgeId: number) => {
 	return `http://localhost:5164/bot/badges/${player}/${badgeId}`;
 };
 
-export const grantBadge = async (
-	player: string,
-	badgeId: number,
-	options?: RequestInit
-): Promise<grantBadgeResponse> => {
+export const grantBadge = async (player: string, badgeId: number, options?: RequestInit) => {
 	return customFetch<grantBadgeResponse>(getGrantBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1802,11 +1726,7 @@ export const getRemoveBadgeUrl = (player: string, badgeId: number) => {
 	return `http://localhost:5164/bot/badges/${player}/${badgeId}`;
 };
 
-export const removeBadge = async (
-	player: string,
-	badgeId: number,
-	options?: RequestInit
-): Promise<removeBadgeResponse> => {
+export const removeBadge = async (player: string, badgeId: number, options?: RequestInit) => {
 	return customFetch<removeBadgeResponse>(getRemoveBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1854,7 +1774,7 @@ export const disableContestPingsPings = async (
 	discordId: bigint,
 	params?: DisableContestPingsPingsParams,
 	options?: RequestInit
-): Promise<disableContestPingsPingsResponse> => {
+) => {
 	return customFetch<disableContestPingsPingsResponse>(getDisableContestPingsPingsUrl(discordId, params), {
 		...options,
 		method: 'DELETE',
@@ -1879,7 +1799,7 @@ export const getGetContestPingsUrl = () => {
 	return `http://localhost:5164/bot/contestpings`;
 };
 
-export const getContestPings = async (options?: RequestInit): Promise<getContestPingsResponse> => {
+export const getContestPings = async (options?: RequestInit) => {
 	return customFetch<getContestPingsResponse>(getGetContestPingsUrl(), {
 		...options,
 		method: 'GET',
@@ -1909,7 +1829,7 @@ export const getGetBotGuildUrl = (discordId: bigint) => {
 	return `http://localhost:5164/bot/${discordId}`;
 };
 
-export const getBotGuild = async (discordId: bigint, options?: RequestInit): Promise<getBotGuildResponse> => {
+export const getBotGuild = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getBotGuildResponse>(getGetBotGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -1939,7 +1859,7 @@ export const getGetJacobFeatureUrl = (discordId: bigint) => {
 	return `http://localhost:5164/bot/${discordId}/jacob`;
 };
 
-export const getJacobFeature = async (discordId: bigint, options?: RequestInit): Promise<getJacobFeatureResponse> => {
+export const getJacobFeature = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getJacobFeatureResponse>(getGetJacobFeatureUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -1986,7 +1906,7 @@ export const updateJacobFeature = async (
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateJacobFeatureParams,
 	options?: RequestInit
-): Promise<updateJacobFeatureResponse> => {
+) => {
 	return customFetch<updateJacobFeatureResponse>(getUpdateJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'PUT',
@@ -2018,7 +1938,7 @@ export const getRefreshGuildUrl = (discordId: bigint) => {
 	return `http://localhost:5164/bot/guild/${discordId}`;
 };
 
-export const refreshGuild = async (discordId: bigint, options?: RequestInit): Promise<refreshGuildResponse> => {
+export const refreshGuild = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<refreshGuildResponse>(getRefreshGuildUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2048,11 +1968,7 @@ export const getUpdateGuildUrl = (discordId: bigint) => {
 	return `http://localhost:5164/bot/guild/${discordId}`;
 };
 
-export const updateGuild = async (
-	discordId: bigint,
-	incomingGuildDto: IncomingGuildDto,
-	options?: RequestInit
-): Promise<updateGuildResponse> => {
+export const updateGuild = async (discordId: bigint, incomingGuildDto: IncomingGuildDto, options?: RequestInit) => {
 	return customFetch<updateGuildResponse>(getUpdateGuildUrl(discordId), {
 		...options,
 		method: 'PATCH',
@@ -2088,7 +2004,7 @@ export const updateGuildChannel = async (
 	discordId: bigint,
 	incomingGuildChannelDto: IncomingGuildChannelDto,
 	options?: RequestInit
-): Promise<updateGuildChannelResponse> => {
+) => {
 	return customFetch<updateGuildChannelResponse>(getUpdateGuildChannelUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2127,7 +2043,7 @@ export const updateGuildMemberRoles = async (
 	userId: string,
 	updateGuildMemberRolesBody: string[],
 	options?: RequestInit
-): Promise<updateGuildMemberRolesResponse> => {
+) => {
 	return customFetch<updateGuildMemberRolesResponse>(getUpdateGuildMemberRolesUrl(discordId, userId), {
 		...options,
 		method: 'POST',
@@ -2163,7 +2079,7 @@ export const updateGuildRole = async (
 	discordId: bigint,
 	incomingGuildRoleDto: IncomingGuildRoleDto,
 	options?: RequestInit
-): Promise<updateGuildRoleResponse> => {
+) => {
 	return customFetch<updateGuildRoleResponse>(getUpdateGuildRoleUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2190,10 +2106,7 @@ export const getUpdateDiscordAccountUrl = () => {
 	return `http://localhost:5164/bot/account`;
 };
 
-export const updateDiscordAccount = async (
-	incomingAccountDto: IncomingAccountDto,
-	options?: RequestInit
-): Promise<updateDiscordAccountResponse> => {
+export const updateDiscordAccount = async (incomingAccountDto: IncomingAccountDto, options?: RequestInit) => {
 	return customFetch<updateDiscordAccountResponse>(getUpdateDiscordAccountUrl(), {
 		...options,
 		method: 'PATCH',
@@ -2220,10 +2133,7 @@ export const getGetContestFromKeyUrl = (contestKey: string) => {
 	return `http://localhost:5164/contest/${contestKey}`;
 };
 
-export const getContestFromKey = async (
-	contestKey: string,
-	options?: RequestInit
-): Promise<getContestFromKeyResponse> => {
+export const getContestFromKey = async (contestKey: string, options?: RequestInit) => {
 	return customFetch<getContestFromKeyResponse>(getGetContestFromKeyUrl(contestKey), {
 		...options,
 		method: 'GET',
@@ -2248,10 +2158,7 @@ export const getGetContestsAtTimestampUrl = (timestamp: bigint) => {
 	return `http://localhost:5164/contests/${timestamp}`;
 };
 
-export const getContestsAtTimestamp = async (
-	timestamp: bigint,
-	options?: RequestInit
-): Promise<getContestsAtTimestampResponse> => {
+export const getContestsAtTimestamp = async (timestamp: bigint, options?: RequestInit) => {
 	return customFetch<getContestsAtTimestampResponse>(getGetContestsAtTimestampUrl(timestamp), {
 		...options,
 		method: 'GET',
@@ -2281,12 +2188,7 @@ export const getGetContestsInDayUrl = (year: number, month: number, day: number)
 	return `http://localhost:5164/contests/at/${year}/${month}/${day}`;
 };
 
-export const getContestsInDay = async (
-	year: number,
-	month: number,
-	day: number,
-	options?: RequestInit
-): Promise<getContestsInDayResponse> => {
+export const getContestsInDay = async (year: number, month: number, day: number, options?: RequestInit) => {
 	return customFetch<getContestsInDayResponse>(getGetContestsInDayUrl(year, month, day), {
 		...options,
 		method: 'GET',
@@ -2316,11 +2218,7 @@ export const getGetContestsInMonthUrl = (year: number, month: number) => {
 	return `http://localhost:5164/contests/at/${year}/${month}`;
 };
 
-export const getContestsInMonth = async (
-	year: number,
-	month: number,
-	options?: RequestInit
-): Promise<getContestsInMonthResponse> => {
+export const getContestsInMonth = async (year: number, month: number, options?: RequestInit) => {
 	return customFetch<getContestsInMonthResponse>(getGetContestsInMonthUrl(year, month), {
 		...options,
 		method: 'GET',
@@ -2357,11 +2255,7 @@ export const getGetContestsInYearUrl = (year: number, params?: GetContestsInYear
 		: `http://localhost:5164/contests/at/${year}`;
 };
 
-export const getContestsInYear = async (
-	year: number,
-	params?: GetContestsInYearParams,
-	options?: RequestInit
-): Promise<getContestsInYearResponse> => {
+export const getContestsInYear = async (year: number, params?: GetContestsInYearParams, options?: RequestInit) => {
 	return customFetch<getContestsInYearResponse>(getGetContestsInYearUrl(year, params), {
 		...options,
 		method: 'GET',
@@ -2388,7 +2282,7 @@ export const getGetCurrentContestsUrl = () => {
 	return `http://localhost:5164/contests/at/now`;
 };
 
-export const getCurrentContests = async (options?: RequestInit): Promise<getCurrentContestsResponse> => {
+export const getCurrentContests = async (options?: RequestInit) => {
 	return customFetch<getCurrentContestsResponse>(getGetCurrentContestsUrl(), {
 		...options,
 		method: 'GET',
@@ -2417,7 +2311,7 @@ export const getUploadCurrentContestsUrl = () => {
 export const uploadCurrentContests = async (
 	uploadCurrentContestsBody: UploadCurrentContestsBody,
 	options?: RequestInit
-): Promise<uploadCurrentContestsResponse> => {
+) => {
 	return customFetch<uploadCurrentContestsResponse>(getUploadCurrentContestsUrl(), {
 		...options,
 		method: 'POST',
@@ -2451,10 +2345,7 @@ export const getGetPlayerParticipationsUrl = (playerUuid: string) => {
 	return `http://localhost:5164/contests/${playerUuid}`;
 };
 
-export const getPlayerParticipations = async (
-	playerUuid: string,
-	options?: RequestInit
-): Promise<getPlayerParticipationsResponse> => {
+export const getPlayerParticipations = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getPlayerParticipationsResponse>(getGetPlayerParticipationsUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -2490,7 +2381,7 @@ export const getProfileMemberParticipations = async (
 	playerUuid: string,
 	profileUuid: string,
 	options?: RequestInit
-): Promise<getProfileMemberParticipationsResponse> => {
+) => {
 	return customFetch<getProfileMemberParticipationsResponse>(
 		getGetProfileMemberParticipationsUrl(playerUuid, profileUuid),
 		{
@@ -2523,7 +2414,7 @@ export const getGetRecordsInYearUrl = (year: number) => {
 	return `http://localhost:5164/contests/records/${year}`;
 };
 
-export const getRecordsInYear = async (year: number, options?: RequestInit): Promise<getRecordsInYearResponse> => {
+export const getRecordsInYear = async (year: number, options?: RequestInit) => {
 	return customFetch<getRecordsInYearResponse>(getGetRecordsInYearUrl(year), {
 		...options,
 		method: 'GET',
@@ -2555,10 +2446,7 @@ export const getGetSelectedMemberParticipationsUrl = (playerUuid: string) => {
 	return `http://localhost:5164/contests/${playerUuid}/selected`;
 };
 
-export const getSelectedMemberParticipations = async (
-	playerUuid: string,
-	options?: RequestInit
-): Promise<getSelectedMemberParticipationsResponse> => {
+export const getSelectedMemberParticipations = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getSelectedMemberParticipationsResponse>(getGetSelectedMemberParticipationsUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -2602,7 +2490,7 @@ export const addTeamMemberAdmin = async (
 	teamId: number,
 	player: string,
 	options?: RequestInit
-): Promise<addTeamMemberAdminResponse> => {
+) => {
 	return customFetch<addTeamMemberAdminResponse>(getAddTeamMemberAdminUrl(discordId, eventId, teamId, player), {
 		...options,
 		method: 'POST',
@@ -2646,7 +2534,7 @@ export const kickTeamMemberAdmin = async (
 	teamId: number,
 	player: string,
 	options?: RequestInit
-): Promise<kickTeamMemberAdminResponse> => {
+) => {
 	return customFetch<kickTeamMemberAdminResponse>(getKickTeamMemberAdminUrl(discordId, eventId, teamId, player), {
 		...options,
 		method: 'DELETE',
@@ -2687,7 +2575,7 @@ export const banMember = async (
 	playerUuid: string,
 	banMemberBody: string,
 	options?: RequestInit
-): Promise<banMemberResponse> => {
+) => {
 	return customFetch<banMemberResponse>(getBanMemberUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'POST',
@@ -2724,12 +2612,7 @@ export const getUnbanMemberUrl = (discordId: number, eventId: number, playerUuid
 	return `http://localhost:5164/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
-export const unbanMember = async (
-	discordId: number,
-	eventId: number,
-	playerUuid: string,
-	options?: RequestInit
-): Promise<unbanMemberResponse> => {
+export const unbanMember = async (discordId: number, eventId: number, playerUuid: string, options?: RequestInit) => {
 	return customFetch<unbanMemberResponse>(getUnbanMemberUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'DELETE',
@@ -2764,11 +2647,7 @@ export const getCreateEventUrl = (discordId: bigint) => {
 	return `http://localhost:5164/guild/${discordId}/events/weight`;
 };
 
-export const createEvent = async (
-	discordId: bigint,
-	createEventDto: CreateEventDto,
-	options?: RequestInit
-): Promise<createEventResponse> => {
+export const createEvent = async (discordId: bigint, createEventDto: CreateEventDto, options?: RequestInit) => {
 	return customFetch<createEventResponse>(getCreateEventUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2827,7 +2706,7 @@ export const createTeamAdmin = async (
 	createEventTeamDto: CreateEventTeamDto,
 	params?: CreateTeamAdminParams,
 	options?: RequestInit
-): Promise<createTeamAdminResponse> => {
+) => {
 	return customFetch<createTeamAdminResponse>(getCreateTeamAdminUrl(discordId, eventId, params), {
 		...options,
 		method: 'POST',
@@ -2865,11 +2744,7 @@ export const getDeleteEventUrl = (discordId: bigint, eventId: number) => {
 	return `http://localhost:5164/guild/${discordId}/events/${eventId}`;
 };
 
-export const deleteEvent = async (
-	discordId: bigint,
-	eventId: number,
-	options?: RequestInit
-): Promise<deleteEventResponse> => {
+export const deleteEvent = async (discordId: bigint, eventId: number, options?: RequestInit) => {
 	return customFetch<deleteEventResponse>(getDeleteEventUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2909,7 +2784,7 @@ export const updateEvent = async (
 	eventId: number,
 	editEventDto: EditEventDto,
 	options?: RequestInit
-): Promise<updateEventResponse> => {
+) => {
 	return customFetch<updateEventResponse>(getUpdateEventUrl(discordId, eventId), {
 		...options,
 		method: 'PATCH',
@@ -2949,11 +2824,7 @@ export const getDeleteEventBannerUrl = (discordId: bigint, eventId: number) => {
 	return `http://localhost:5164/guild/${discordId}/events/${eventId}/banner`;
 };
 
-export const deleteEventBanner = async (
-	discordId: bigint,
-	eventId: number,
-	options?: RequestInit
-): Promise<deleteEventBannerResponse> => {
+export const deleteEventBanner = async (discordId: bigint, eventId: number, options?: RequestInit) => {
 	return customFetch<deleteEventBannerResponse>(getDeleteEventBannerUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2996,7 +2867,7 @@ export const setEventBanner = async (
 	eventId: number,
 	editEventBannerDto: EditEventBannerDto,
 	options?: RequestInit
-): Promise<setEventBannerResponse> => {
+) => {
 	const formData = new FormData();
 	if (editEventBannerDto.image !== undefined && editEventBannerDto.image !== null) {
 		formData.append(`image`, editEventBannerDto.image);
@@ -3060,7 +2931,7 @@ export const deleteMember = async (
 	playerUuid: string,
 	params?: DeleteMemberParams,
 	options?: RequestInit
-): Promise<deleteMemberResponse> => {
+) => {
 	return customFetch<deleteMemberResponse>(getDeleteMemberUrl(discordId, eventId, playerUuid, params), {
 		...options,
 		method: 'DELETE',
@@ -3121,7 +2992,7 @@ export const forceAddMember = async (
 	playerUuid: string,
 	params: ForceAddMemberParams,
 	options?: RequestInit
-): Promise<forceAddMemberResponse> => {
+) => {
 	return customFetch<forceAddMemberResponse>(getForceAddMemberUrl(discordId, eventId, playerUuid, params), {
 		...options,
 		method: 'POST',
@@ -3159,12 +3030,7 @@ export const getDeleteTeamAdminUrl = (discordId: bigint, eventId: number, teamId
 	return `http://localhost:5164/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
-export const deleteTeamAdmin = async (
-	discordId: bigint,
-	eventId: number,
-	teamId: number,
-	options?: RequestInit
-): Promise<deleteTeamAdminResponse> => {
+export const deleteTeamAdmin = async (discordId: bigint, eventId: number, teamId: number, options?: RequestInit) => {
 	return customFetch<deleteTeamAdminResponse>(getDeleteTeamAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -3208,7 +3074,7 @@ export const updateTeamAdmin = async (
 	teamId: number,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
-): Promise<updateTeamAdminResponse> => {
+) => {
 	return customFetch<updateTeamAdminResponse>(getUpdateTeamAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'PATCH',
@@ -3248,11 +3114,7 @@ export const getGetBannedMembersUrl = (discordId: bigint, eventId: number) => {
 	return `http://localhost:5164/guild/${discordId}/event/${eventId}/bans`;
 };
 
-export const getBannedMembers = async (
-	discordId: bigint,
-	eventId: number,
-	options?: RequestInit
-): Promise<getBannedMembersResponse> => {
+export const getBannedMembers = async (discordId: bigint, eventId: number, options?: RequestInit) => {
 	return customFetch<getBannedMembersResponse>(getGetBannedMembersUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3290,11 +3152,7 @@ export const getGetGuildEventMembersUrl = (discordId: bigint, eventId: number) =
 	return `http://localhost:5164/guild/${discordId}/event/${eventId}/members`;
 };
 
-export const getGuildEventMembers = async (
-	discordId: bigint,
-	eventId: number,
-	options?: RequestInit
-): Promise<getGuildEventMembersResponse> => {
+export const getGuildEventMembers = async (discordId: bigint, eventId: number, options?: RequestInit) => {
 	return customFetch<getGuildEventMembersResponse>(getGetGuildEventMembersUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3332,11 +3190,7 @@ export const getGetGuildEventUrl = (discordId: bigint, eventId: number) => {
 	return `http://localhost:5164/guild/${discordId}/event/${eventId}/admin`;
 };
 
-export const getGuildEvent = async (
-	discordId: bigint,
-	eventId: number,
-	options?: RequestInit
-): Promise<getGuildEventResponse> => {
+export const getGuildEvent = async (discordId: bigint, eventId: number, options?: RequestInit) => {
 	return customFetch<getGuildEventResponse>(getGetGuildEventUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3374,7 +3228,7 @@ export const getGetGuildEventsUrl = (discordId: bigint) => {
 	return `http://localhost:5164/guild/${discordId}/events/admin`;
 };
 
-export const getGuildEvents = async (discordId: bigint, options?: RequestInit): Promise<getGuildEventsResponse> => {
+export const getGuildEvents = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getGuildEventsResponse>(getGetGuildEventsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -3412,11 +3266,7 @@ export const getGetTeamsAdminUrl = (discordId: bigint, eventId: number) => {
 	return `http://localhost:5164/guild/${discordId}/event/${eventId}/teams`;
 };
 
-export const getTeamsAdmin = async (
-	discordId: bigint,
-	eventId: number,
-	options?: RequestInit
-): Promise<getTeamsAdminResponse> => {
+export const getTeamsAdmin = async (discordId: bigint, eventId: number, options?: RequestInit) => {
 	return customFetch<getTeamsAdminResponse>(getGetTeamsAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3452,7 +3302,7 @@ export const setTeamOwnerAdmin = async (
 	teamId: number,
 	setTeamOwnerRequest: SetTeamOwnerRequest,
 	options?: RequestInit
-): Promise<setTeamOwnerAdminResponse> => {
+) => {
 	return customFetch<setTeamOwnerAdminResponse>(getSetTeamOwnerAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'PUT',
@@ -3479,7 +3329,7 @@ export const getGetEventUrl = (eventId: number) => {
 	return `http://localhost:5164/event/${eventId}`;
 };
 
-export const getEvent = async (eventId: number, options?: RequestInit): Promise<getEventResponse> => {
+export const getEvent = async (eventId: number, options?: RequestInit) => {
 	return customFetch<getEventResponse>(getGetEventUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3505,7 +3355,7 @@ export const getGetEventDefaultsUrl = () => {
 	return `http://localhost:5164/event/defaults`;
 };
 
-export const getEventDefaults = async (options?: RequestInit): Promise<getEventDefaultsResponse> => {
+export const getEventDefaults = async (options?: RequestInit) => {
 	return customFetch<getEventDefaultsResponse>(getGetEventDefaultsUrl(), {
 		...options,
 		method: 'GET',
@@ -3535,11 +3385,7 @@ export const getGetEventMemberUrl = (eventId: number, playerUuid: string) => {
 	return `http://localhost:5164/event/${eventId}/member/${playerUuid}`;
 };
 
-export const getEventMember = async (
-	eventId: number,
-	playerUuid: string,
-	options?: RequestInit
-): Promise<getEventMemberResponse> => {
+export const getEventMember = async (eventId: number, playerUuid: string, options?: RequestInit) => {
 	return customFetch<getEventMemberResponse>(getGetEventMemberUrl(eventId, playerUuid), {
 		...options,
 		method: 'GET',
@@ -3564,7 +3410,7 @@ export const getGetEventMembersUrl = (eventId: number) => {
 	return `http://localhost:5164/event/${eventId}/members`;
 };
 
-export const getEventMembers = async (eventId: number, options?: RequestInit): Promise<getEventMembersResponse> => {
+export const getEventMembers = async (eventId: number, options?: RequestInit) => {
 	return customFetch<getEventMembersResponse>(getGetEventMembersUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3589,11 +3435,7 @@ export const getGetEventTeamUrl = (eventId: number, teamId: number) => {
 	return `http://localhost:5164/event/${eventId}/team/${teamId}`;
 };
 
-export const getEventTeam = async (
-	eventId: number,
-	teamId: number,
-	options?: RequestInit
-): Promise<getEventTeamResponse> => {
+export const getEventTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
 	return customFetch<getEventTeamResponse>(getGetEventTeamUrl(eventId, teamId), {
 		...options,
 		method: 'GET',
@@ -3623,11 +3465,7 @@ export const getDeleteTeamUrl = (eventId: number, teamId: number) => {
 	return `http://localhost:5164/event/${eventId}/team/${teamId}`;
 };
 
-export const deleteTeam = async (
-	eventId: number,
-	teamId: number,
-	options?: RequestInit
-): Promise<deleteTeamResponse> => {
+export const deleteTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
 	return customFetch<deleteTeamResponse>(getDeleteTeamUrl(eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -3662,7 +3500,7 @@ export const updateTeam = async (
 	teamId: number,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
-): Promise<updateTeamResponse> => {
+) => {
 	return customFetch<updateTeamResponse>(getUpdateTeamUrl(eventId, teamId), {
 		...options,
 		method: 'PATCH',
@@ -3689,7 +3527,7 @@ export const getGetEventTeamsUrl = (eventId: number) => {
 	return `http://localhost:5164/event/${eventId}/teams`;
 };
 
-export const getEventTeams = async (eventId: number, options?: RequestInit): Promise<getEventTeamsResponse> => {
+export const getEventTeams = async (eventId: number, options?: RequestInit) => {
 	return customFetch<getEventTeamsResponse>(getGetEventTeamsUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3719,11 +3557,7 @@ export const getCreateTeamUrl = (eventId: number) => {
 	return `http://localhost:5164/event/${eventId}/teams`;
 };
 
-export const createTeam = async (
-	eventId: number,
-	createEventTeamDto: CreateEventTeamDto,
-	options?: RequestInit
-): Promise<createTeamResponse> => {
+export const createTeam = async (eventId: number, createEventTeamDto: CreateEventTeamDto, options?: RequestInit) => {
 	return customFetch<createTeamResponse>(getCreateTeamUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -3751,7 +3585,7 @@ export const getGetTeamWordListUrl = () => {
 	return `http://localhost:5164/event/teams/words`;
 };
 
-export const getTeamWordList = async (options?: RequestInit): Promise<getTeamWordListResponse> => {
+export const getTeamWordList = async (options?: RequestInit) => {
 	return customFetch<getTeamWordListResponse>(getGetTeamWordListUrl(), {
 		...options,
 		method: 'GET',
@@ -3788,10 +3622,7 @@ export const getGetUpcomingEventsUrl = (params?: GetUpcomingEventsParams) => {
 		: `http://localhost:5164/events`;
 };
 
-export const getUpcomingEvents = async (
-	params?: GetUpcomingEventsParams,
-	options?: RequestInit
-): Promise<getUpcomingEventsResponse> => {
+export const getUpcomingEvents = async (params?: GetUpcomingEventsParams, options?: RequestInit) => {
 	return customFetch<getUpcomingEventsResponse>(getGetUpcomingEventsUrl(params), {
 		...options,
 		method: 'GET',
@@ -3838,11 +3669,7 @@ export const getJoinEventUrl = (eventId: number, params?: JoinEventParams) => {
 		: `http://localhost:5164/event/${eventId}/join`;
 };
 
-export const joinEvent = async (
-	eventId: number,
-	params?: JoinEventParams,
-	options?: RequestInit
-): Promise<joinEventResponse> => {
+export const joinEvent = async (eventId: number, params?: JoinEventParams, options?: RequestInit) => {
 	return customFetch<joinEventResponse>(getJoinEventUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -3872,12 +3699,7 @@ export const getJoinTeamUrl = (eventId: number, teamId: number) => {
 	return `http://localhost:5164/event/${eventId}/team/${teamId}/join`;
 };
 
-export const joinTeam = async (
-	eventId: number,
-	teamId: number,
-	joinTeamBody: string,
-	options?: RequestInit
-): Promise<joinTeamResponse> => {
+export const joinTeam = async (eventId: number, teamId: number, joinTeamBody: string, options?: RequestInit) => {
 	return customFetch<joinTeamResponse>(getJoinTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -3918,12 +3740,7 @@ export const getKickTeamMemberUrl = (eventId: number, teamId: number, player: st
 	return `http://localhost:5164/event/${eventId}/team/${teamId}/member/${player}`;
 };
 
-export const kickTeamMember = async (
-	eventId: number,
-	teamId: number,
-	player: string,
-	options?: RequestInit
-): Promise<kickTeamMemberResponse> => {
+export const kickTeamMember = async (eventId: number, teamId: number, player: string, options?: RequestInit) => {
 	return customFetch<kickTeamMemberResponse>(getKickTeamMemberUrl(eventId, teamId, player), {
 		...options,
 		method: 'DELETE',
@@ -3953,7 +3770,7 @@ export const getLeaveEventUrl = (eventId: number) => {
 	return `http://localhost:5164/event/${eventId}/leave`;
 };
 
-export const leaveEvent = async (eventId: number, options?: RequestInit): Promise<leaveEventResponse> => {
+export const leaveEvent = async (eventId: number, options?: RequestInit) => {
 	return customFetch<leaveEventResponse>(getLeaveEventUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -3983,7 +3800,7 @@ export const getLeaveTeamUrl = (eventId: number, teamId: number) => {
 	return `http://localhost:5164/event/${eventId}/team/${teamId}/leave`;
 };
 
-export const leaveTeam = async (eventId: number, teamId: number, options?: RequestInit): Promise<leaveTeamResponse> => {
+export const leaveTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
 	return customFetch<leaveTeamResponse>(getLeaveTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -4018,7 +3835,7 @@ export const setTeamOwner = async (
 	teamId: number,
 	changeTeamOwnerRequest: ChangeTeamOwnerRequest,
 	options?: RequestInit
-): Promise<setTeamOwnerResponse> => {
+) => {
 	return customFetch<setTeamOwnerResponse>(getSetTeamOwnerUrl(eventId, teamId), {
 		...options,
 		method: 'PUT',
@@ -4050,11 +3867,7 @@ export const getUpdateTeamJoinCodeUrl = (eventId: number, teamId: number) => {
 	return `http://localhost:5164/event/${eventId}/team/${teamId}/code`;
 };
 
-export const updateTeamJoinCode = async (
-	eventId: number,
-	teamId: number,
-	options?: RequestInit
-): Promise<updateTeamJoinCodeResponse> => {
+export const updateTeamJoinCode = async (eventId: number, teamId: number, options?: RequestInit) => {
 	return customFetch<updateTeamJoinCodeResponse>(getUpdateTeamJoinCodeUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -4090,7 +3903,7 @@ export const getGetGardenUrl = (profileUuid: string) => {
 	return `http://localhost:5164/garden/${profileUuid}`;
 };
 
-export const getGarden = async (profileUuid: string, options?: RequestInit): Promise<getGardenResponse> => {
+export const getGarden = async (profileUuid: string, options?: RequestInit) => {
 	return customFetch<getGardenResponse>(getGetGardenUrl(profileUuid), {
 		...options,
 		method: 'GET',
@@ -4129,10 +3942,7 @@ export const getGetSelectedGardenUrl = (playerUuid: string) => {
 	return `http://localhost:5164/garden/${playerUuid}/selected`;
 };
 
-export const getSelectedGarden = async (
-	playerUuid: string,
-	options?: RequestInit
-): Promise<getSelectedGardenResponse> => {
+export const getSelectedGarden = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getSelectedGardenResponse>(getGetSelectedGardenUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -4197,7 +4007,7 @@ export const getAdminCropGraphs = async (
 	profileUuid: string,
 	params?: GetAdminCropGraphsParams,
 	options?: RequestInit
-): Promise<getAdminCropGraphsResponse> => {
+) => {
 	return customFetch<getAdminCropGraphsResponse>(getGetAdminCropGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4262,7 +4072,7 @@ export const getAdminSkillGraphs = async (
 	profileUuid: string,
 	params?: GetAdminSkillGraphsParams,
 	options?: RequestInit
-): Promise<getAdminSkillGraphsResponse> => {
+) => {
 	return customFetch<getAdminSkillGraphsResponse>(getGetAdminSkillGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4309,7 +4119,7 @@ export const getCropGraphs = async (
 	profileUuid: string,
 	params?: GetCropGraphsParams,
 	options?: RequestInit
-): Promise<getCropGraphsResponse> => {
+) => {
 	return customFetch<getCropGraphsResponse>(getGetCropGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4356,7 +4166,7 @@ export const getSkillGraphs = async (
 	profileUuid: string,
 	params?: GetSkillGraphsParams,
 	options?: RequestInit
-): Promise<getSkillGraphsResponse> => {
+) => {
 	return customFetch<getSkillGraphsResponse>(getGetSkillGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4393,10 +4203,7 @@ export const getGetCurrentMedalBracketsUrl = (params?: GetCurrentMedalBracketsPa
 		: `http://localhost:5164/graph/medals/now`;
 };
 
-export const getCurrentMedalBrackets = async (
-	params?: GetCurrentMedalBracketsParams,
-	options?: RequestInit
-): Promise<getCurrentMedalBracketsResponse> => {
+export const getCurrentMedalBrackets = async (params?: GetCurrentMedalBracketsParams, options?: RequestInit) => {
 	return customFetch<getCurrentMedalBracketsResponse>(getGetCurrentMedalBracketsUrl(params), {
 		...options,
 		method: 'GET',
@@ -4443,7 +4250,7 @@ export const getMedalBrackets = async (
 	month: number,
 	params?: GetMedalBracketsParams,
 	options?: RequestInit
-): Promise<getMedalBracketsResponse> => {
+) => {
 	return customFetch<getMedalBracketsResponse>(getGetMedalBracketsUrl(year, month, params), {
 		...options,
 		method: 'GET',
@@ -4491,7 +4298,7 @@ export const getMedalBracketsGraph = async (
 	year: number,
 	params?: GetMedalBracketsGraphParams,
 	options?: RequestInit
-): Promise<getMedalBracketsGraphResponse> => {
+) => {
 	return customFetch<getMedalBracketsGraphResponse>(getGetMedalBracketsGraphUrl(year, params), {
 		...options,
 		method: 'GET',
@@ -4547,11 +4354,7 @@ export const getSetEventFeatureUrl = (discordId: bigint, params?: SetEventFeatur
 		: `http://localhost:5164/guild/${discordId}/events`;
 };
 
-export const setEventFeature = async (
-	discordId: bigint,
-	params?: SetEventFeatureParams,
-	options?: RequestInit
-): Promise<setEventFeatureResponse> => {
+export const setEventFeature = async (discordId: bigint, params?: SetEventFeatureParams, options?: RequestInit) => {
 	return customFetch<setEventFeatureResponse>(getSetEventFeatureUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4581,10 +4384,7 @@ export const getGetPublicGuildEventsUrl = (discordId: bigint) => {
 	return `http://localhost:5164/guild/${discordId}/events`;
 };
 
-export const getPublicGuildEvents = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<getPublicGuildEventsResponse> => {
+export const getPublicGuildEvents = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getPublicGuildEventsResponse>(getGetPublicGuildEventsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4640,11 +4440,7 @@ export const getSetJacobFeatureUrl = (discordId: bigint, params?: SetJacobFeatur
 		: `http://localhost:5164/guild/${discordId}/jacob`;
 };
 
-export const setJacobFeature = async (
-	discordId: bigint,
-	params?: SetJacobFeatureParams,
-	options?: RequestInit
-): Promise<setJacobFeatureResponse> => {
+export const setJacobFeature = async (discordId: bigint, params?: SetJacobFeatureParams, options?: RequestInit) => {
 	return customFetch<setJacobFeatureResponse>(getSetJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4700,11 +4496,7 @@ export const getSetGuildLockedUrl = (discordId: bigint, params?: SetGuildLockedP
 		: `http://localhost:5164/guild/${discordId}/lock`;
 };
 
-export const setGuildLocked = async (
-	discordId: bigint,
-	params?: SetGuildLockedParams,
-	options?: RequestInit
-): Promise<setGuildLockedResponse> => {
+export const setGuildLocked = async (discordId: bigint, params?: SetGuildLockedParams, options?: RequestInit) => {
 	return customFetch<setGuildLockedResponse>(getSetGuildLockedUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4760,11 +4552,7 @@ export const getSetGuildPublicUrl = (discordId: bigint, params?: SetGuildPublicP
 		: `http://localhost:5164/guild/${discordId}/public`;
 };
 
-export const setGuildPublic = async (
-	discordId: bigint,
-	params?: SetGuildPublicParams,
-	options?: RequestInit
-): Promise<setGuildPublicResponse> => {
+export const setGuildPublic = async (discordId: bigint, params?: SetGuildPublicParams, options?: RequestInit) => {
 	return customFetch<setGuildPublicResponse>(getSetGuildPublicUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4794,7 +4582,7 @@ export const getGetPublicGuildUrl = (discordId: bigint) => {
 	return `http://localhost:5164/guild/${discordId}`;
 };
 
-export const getPublicGuild = async (discordId: bigint, options?: RequestInit): Promise<getPublicGuildResponse> => {
+export const getPublicGuild = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getPublicGuildResponse>(getGetPublicGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4819,7 +4607,7 @@ export const getGetPublicGuildsUrl = () => {
 	return `http://localhost:5164/guilds`;
 };
 
-export const getPublicGuilds = async (options?: RequestInit): Promise<getPublicGuildsResponse> => {
+export const getPublicGuilds = async (options?: RequestInit) => {
 	return customFetch<getPublicGuildsResponse>(getGetPublicGuildsUrl(), {
 		...options,
 		method: 'GET',
@@ -4873,7 +4661,7 @@ export const deleteContestPings = async (
 	discordId: bigint,
 	params?: DeleteContestPingsParams,
 	options?: RequestInit
-): Promise<deleteContestPingsResponse> => {
+) => {
 	return customFetch<deleteContestPingsResponse>(getDeleteContestPingsUrl(discordId, params), {
 		...options,
 		method: 'DELETE',
@@ -4915,7 +4703,7 @@ export const updateContestPings = async (
 	discordId: bigint,
 	updateContestPingsRequestUpdateContestPings: UpdateContestPingsRequestUpdateContestPings,
 	options?: RequestInit
-): Promise<updateContestPingsResponse> => {
+) => {
 	return customFetch<updateContestPingsResponse>(getUpdateContestPingsUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -4947,7 +4735,7 @@ export const getGetUserGuildsUrl = () => {
 	return `http://localhost:5164/user/guilds`;
 };
 
-export const getUserGuilds = async (options?: RequestInit): Promise<getUserGuildsResponse> => {
+export const getUserGuilds = async (options?: RequestInit) => {
 	return customFetch<getUserGuildsResponse>(getGetUserGuildsUrl(), {
 		...options,
 		method: 'GET',
@@ -4982,7 +4770,7 @@ export const getGetUserGuildUrl = (discordId: bigint) => {
 	return `http://localhost:5164/user/guild/${discordId}`;
 };
 
-export const getUserGuild = async (discordId: bigint, options?: RequestInit): Promise<getUserGuildResponse> => {
+export const getUserGuild = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getUserGuildResponse>(getGetUserGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -5024,7 +4812,7 @@ export const createGuildJacobFeature = async (
 	discordId: bigint,
 	createJacobLeaderboardRequestCreateJacobLeaderboard: CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	options?: RequestInit
-): Promise<createGuildJacobFeatureResponse> => {
+) => {
 	return customFetch<createGuildJacobFeatureResponse>(getCreateGuildJacobFeatureUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5064,11 +4852,7 @@ export const getDeleteGuildJacobFeatureUrl = (discordId: bigint, leaderboardId: 
 	return `http://localhost:5164/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
-export const deleteGuildJacobFeature = async (
-	discordId: bigint,
-	leaderboardId: string,
-	options?: RequestInit
-): Promise<deleteGuildJacobFeatureResponse> => {
+export const deleteGuildJacobFeature = async (discordId: bigint, leaderboardId: string, options?: RequestInit) => {
 	return customFetch<deleteGuildJacobFeatureResponse>(getDeleteGuildJacobFeatureUrl(discordId, leaderboardId), {
 		...options,
 		method: 'DELETE',
@@ -5111,7 +4895,7 @@ export const updateGuildJacobLeaderboard = async (
 	leaderboardId: string,
 	updateJacobLeaderboardRequestUpdateJacobLeaderboard: UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
 	options?: RequestInit
-): Promise<updateGuildJacobLeaderboardResponse> => {
+) => {
 	return customFetch<updateGuildJacobLeaderboardResponse>(
 		getUpdateGuildJacobLeaderboardUrl(discordId, leaderboardId),
 		{
@@ -5154,7 +4938,7 @@ export const getGetGuildJacobUrl = (discordId: bigint) => {
 	return `http://localhost:5164/user/guild/${discordId}/jacob`;
 };
 
-export const getGuildJacob = async (discordId: bigint, options?: RequestInit): Promise<getGuildJacobResponse> => {
+export const getGuildJacob = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getGuildJacobResponse>(getGetGuildJacobUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -5209,7 +4993,7 @@ export const updateGuildJacobFeature = async (
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateGuildJacobFeatureParams,
 	options?: RequestInit
-): Promise<updateGuildJacobFeatureResponse> => {
+) => {
 	return customFetch<updateGuildJacobFeatureResponse>(getUpdateGuildJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'PATCH',
@@ -5249,11 +5033,7 @@ export const getSendGuildJacobFeatureUrl = (discordId: bigint, leaderboardId: st
 	return `http://localhost:5164/user/guild/${discordId}/jacob/${leaderboardId}/send`;
 };
 
-export const sendGuildJacobFeature = async (
-	discordId: bigint,
-	leaderboardId: string,
-	options?: RequestInit
-): Promise<sendGuildJacobFeatureResponse> => {
+export const sendGuildJacobFeature = async (discordId: bigint, leaderboardId: string, options?: RequestInit) => {
 	return customFetch<sendGuildJacobFeatureResponse>(getSendGuildJacobFeatureUrl(discordId, leaderboardId), {
 		...options,
 		method: 'POST',
@@ -5285,7 +5065,7 @@ export const getRefreshGuildMembershipsUrl = () => {
 	return `http://localhost:5164/user/refresh-guilds`;
 };
 
-export const refreshGuildMemberships = async (options?: RequestInit): Promise<refreshGuildMembershipsResponse> => {
+export const refreshGuildMemberships = async (options?: RequestInit) => {
 	return customFetch<refreshGuildMembershipsResponse>(getRefreshGuildMembershipsUrl(), {
 		...options,
 		method: 'POST',
@@ -5324,10 +5104,7 @@ export const getRequestGuildRefreshUrl = (discordId: bigint) => {
 	return `http://localhost:5164/user/guild/${discordId}/refresh`;
 };
 
-export const requestGuildRefresh = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<requestGuildRefreshResponse> => {
+export const requestGuildRefresh = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<requestGuildRefreshResponse>(getRequestGuildRefreshUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5362,11 +5139,7 @@ export const getSetAdminRoleUrl = (discordId: bigint) => {
 	return `http://localhost:5164/user/guild/${discordId}/adminrole`;
 };
 
-export const setAdminRole = async (
-	discordId: bigint,
-	setAdminRoleBody: string,
-	options?: RequestInit
-): Promise<setAdminRoleResponse> => {
+export const setAdminRole = async (discordId: bigint, setAdminRoleBody: string, options?: RequestInit) => {
 	return customFetch<setAdminRoleResponse>(getSetAdminRoleUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -5403,11 +5176,7 @@ export const getSetInviteUrl = (discordId: bigint) => {
 	return `http://localhost:5164/user/guild/${discordId}/invite`;
 };
 
-export const setInvite = async (
-	discordId: bigint,
-	setInviteBody: string,
-	options?: RequestInit
-): Promise<setInviteResponse> => {
+export const setInvite = async (discordId: bigint, setInviteBody: string, options?: RequestInit) => {
 	return customFetch<setInviteResponse>(getSetInviteUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -5447,10 +5216,7 @@ export const getUpdateGuildPurchasesUrl = (discordId: bigint) => {
 	return `http://localhost:5164/user/guild/${discordId}/purchases`;
 };
 
-export const updateGuildPurchases = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<updateGuildPurchasesResponse> => {
+export const updateGuildPurchases = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<updateGuildPurchasesResponse>(getUpdateGuildPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5492,11 +5258,7 @@ export const getGetLeaderboardUrl = (leaderboard: string, params?: GetLeaderboar
 		: `http://localhost:5164/leaderboard/${leaderboard}`;
 };
 
-export const getLeaderboard = async (
-	leaderboard: string,
-	params?: GetLeaderboardParams,
-	options?: RequestInit
-): Promise<getLeaderboardResponse> => {
+export const getLeaderboard = async (leaderboard: string, params?: GetLeaderboardParams, options?: RequestInit) => {
 	return customFetch<getLeaderboardResponse>(getGetLeaderboardUrl(leaderboard, params), {
 		...options,
 		method: 'GET',
@@ -5521,7 +5283,7 @@ export const getGetLeaderboardsUrl = () => {
 	return `http://localhost:5164/leaderboards`;
 };
 
-export const getLeaderboards = async (options?: RequestInit): Promise<getLeaderboardsResponse> => {
+export const getLeaderboards = async (options?: RequestInit) => {
 	return customFetch<getLeaderboardsResponse>(getGetLeaderboardsUrl(), {
 		...options,
 		method: 'GET',
@@ -5567,7 +5329,7 @@ export const getPlayerLeaderboardRanks = async (
 	profileUuid: string,
 	params?: GetPlayerLeaderboardRanksParams,
 	options?: RequestInit
-): Promise<getPlayerLeaderboardRanksResponse> => {
+) => {
 	return customFetch<getPlayerLeaderboardRanksResponse>(
 		getGetPlayerLeaderboardRanksUrl(playerUuid, profileUuid, params),
 		{
@@ -5623,7 +5385,7 @@ export const getPlayerRank1 = async (
 	profileUuid: string,
 	params?: GetPlayerRank1Params,
 	options?: RequestInit
-): Promise<getPlayerRank1Response> => {
+) => {
 	return customFetch<getPlayerRank1Response>(getGetPlayerRank1Url(leaderboard, playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5676,7 +5438,7 @@ export const getPlayerRank2 = async (
 	profileUuid: string,
 	params?: GetPlayerRank2Params,
 	options?: RequestInit
-): Promise<getPlayerRank2Response> => {
+) => {
 	return customFetch<getPlayerRank2Response>(getGetPlayerRank2Url(leaderboard, playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5707,11 +5469,7 @@ export const getGetPlayerRanksUrl = (playerUuid: string, profileUuid: string) =>
 	return `http://localhost:5164/leaderboard/ranks/${playerUuid}/${profileUuid}`;
 };
 
-export const getPlayerRanks = async (
-	playerUuid: string,
-	profileUuid: string,
-	options?: RequestInit
-): Promise<getPlayerRanksResponse> => {
+export const getPlayerRanks = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
 	return customFetch<getPlayerRanksResponse>(getGetPlayerRanksUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
@@ -5758,7 +5516,7 @@ export const getProfileRank1 = async (
 	profileUuid: string,
 	params?: GetProfileRank1Params,
 	options?: RequestInit
-): Promise<getProfileRank1Response> => {
+) => {
 	return customFetch<getProfileRank1Response>(getGetProfileRank1Url(leaderboard, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5805,7 +5563,7 @@ export const getProfileRank2 = async (
 	profileUuid: string,
 	params?: GetProfileRank2Params,
 	options?: RequestInit
-): Promise<getProfileRank2Response> => {
+) => {
 	return customFetch<getProfileRank2Response>(getGetProfileRank2Url(leaderboard, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5861,11 +5619,7 @@ export const getGetEntitlementsUrl = (discordId: bigint, params?: GetEntitlement
 		: `http://localhost:5164/account/${discordId}/entitlements`;
 };
 
-export const getEntitlements = async (
-	discordId: bigint,
-	params?: GetEntitlementsParams,
-	options?: RequestInit
-): Promise<getEntitlementsResponse> => {
+export const getEntitlements = async (discordId: bigint, params?: GetEntitlementsParams, options?: RequestInit) => {
 	return customFetch<getEntitlementsResponse>(getGetEntitlementsUrl(discordId, params), {
 		...options,
 		method: 'GET',
@@ -5931,7 +5685,7 @@ export const grantTestEntitlement = async (
 	productId: bigint,
 	params?: GrantTestEntitlementParams,
 	options?: RequestInit
-): Promise<grantTestEntitlementResponse> => {
+) => {
 	return customFetch<grantTestEntitlementResponse>(getGrantTestEntitlementUrl(discordId, productId, params), {
 		...options,
 		method: 'POST',
@@ -5997,7 +5751,7 @@ export const removeTestEntitlement = async (
 	productId: bigint,
 	params?: RemoveTestEntitlementParams,
 	options?: RequestInit
-): Promise<removeTestEntitlementResponse> => {
+) => {
 	return customFetch<removeTestEntitlementResponse>(getRemoveTestEntitlementUrl(discordId, productId, params), {
 		...options,
 		method: 'DELETE',
@@ -6035,10 +5789,7 @@ export const getGetLinkedAccountsUrl = (discordId: bigint) => {
 	return `http://localhost:5164/player/${discordId}`;
 };
 
-export const getLinkedAccounts = async (
-	discordId: bigint,
-	options?: RequestInit
-): Promise<getLinkedAccountsResponse> => {
+export const getLinkedAccounts = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getLinkedAccountsResponse>(getGetLinkedAccountsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6076,7 +5827,7 @@ export const getGetPlayerDataUrl = (player: string) => {
 	return `http://localhost:5164/player/${player}`;
 };
 
-export const getPlayerData = async (player: string, options?: RequestInit): Promise<getPlayerDataResponse> => {
+export const getPlayerData = async (player: string, options?: RequestInit) => {
 	return customFetch<getPlayerDataResponse>(getGetPlayerDataUrl(player), {
 		...options,
 		method: 'GET',
@@ -6106,10 +5857,7 @@ export const getGetAllProfileDetailsUrl = (playerUuid: string) => {
 	return `http://localhost:5164/profiles/${playerUuid}`;
 };
 
-export const getAllProfileDetails = async (
-	playerUuid: string,
-	options?: RequestInit
-): Promise<getAllProfileDetailsResponse> => {
+export const getAllProfileDetails = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getAllProfileDetailsResponse>(getGetAllProfileDetailsUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -6144,11 +5892,7 @@ export const getGetProfileUrl = (playerUuid: string, profileUuid: string) => {
 	return `http://localhost:5164/profile/${playerUuid}/${profileUuid}`;
 };
 
-export const getProfile = async (
-	playerUuid: string,
-	profileUuid: string,
-	options?: RequestInit
-): Promise<getProfileResponse> => {
+export const getProfile = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
 	return customFetch<getProfileResponse>(getGetProfileUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
@@ -6186,10 +5930,7 @@ export const getGetProfileDetailsUrl = (profileUuid: string) => {
 	return `http://localhost:5164/profile/${profileUuid}`;
 };
 
-export const getProfileDetails = async (
-	profileUuid: string,
-	options?: RequestInit
-): Promise<getProfileDetailsResponse> => {
+export const getProfileDetails = async (profileUuid: string, options?: RequestInit) => {
 	return customFetch<getProfileDetailsResponse>(getGetProfileDetailsUrl(profileUuid), {
 		...options,
 		method: 'GET',
@@ -6219,7 +5960,7 @@ export const getGetProfileNamesUrl = (player: string) => {
 	return `http://localhost:5164/profiles/${player}/names`;
 };
 
-export const getProfileNames = async (player: string, options?: RequestInit): Promise<getProfileNamesResponse> => {
+export const getProfileNames = async (player: string, options?: RequestInit) => {
 	return customFetch<getProfileNamesResponse>(getGetProfileNamesUrl(player), {
 		...options,
 		method: 'GET',
@@ -6257,10 +5998,7 @@ export const getGetSelectedProfileUrl = (playerUuid: string) => {
 	return `http://localhost:5164/profile/${playerUuid}/selected`;
 };
 
-export const getSelectedProfile = async (
-	playerUuid: string,
-	options?: RequestInit
-): Promise<getSelectedProfileResponse> => {
+export const getSelectedProfile = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getSelectedProfileResponse>(getGetSelectedProfileUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -6286,7 +6024,7 @@ export const getGetAuctionHouseProductsUrl = () => {
 	return `http://localhost:5164/resources/auctions`;
 };
 
-export const getAuctionHouseProducts = async (options?: RequestInit): Promise<getAuctionHouseProductsResponse> => {
+export const getAuctionHouseProducts = async (options?: RequestInit) => {
 	return customFetch<getAuctionHouseProductsResponse>(getGetAuctionHouseProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -6312,7 +6050,7 @@ export const getGetBazaarProductUrl = (itemId: string) => {
 	return `http://localhost:5164/resources/bazaar/${itemId}`;
 };
 
-export const getBazaarProduct = async (itemId: string, options?: RequestInit): Promise<getBazaarProductResponse> => {
+export const getBazaarProduct = async (itemId: string, options?: RequestInit) => {
 	return customFetch<getBazaarProductResponse>(getGetBazaarProductUrl(itemId), {
 		...options,
 		method: 'GET',
@@ -6338,7 +6076,7 @@ export const getGetBazaarProductsUrl = () => {
 	return `http://localhost:5164/resources/bazaar`;
 };
 
-export const getBazaarProducts = async (options?: RequestInit): Promise<getBazaarProductsResponse> => {
+export const getBazaarProducts = async (options?: RequestInit) => {
 	return customFetch<getBazaarProductsResponse>(getGetBazaarProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -6364,10 +6102,7 @@ export const getGetItemsFromBytesUrl = () => {
 	return `http://localhost:5164/resources/item-parse`;
 };
 
-export const getItemsFromBytes = async (
-	getItemsFromBytesRequest: GetItemsFromBytesRequest,
-	options?: RequestInit
-): Promise<getItemsFromBytesResponse> => {
+export const getItemsFromBytes = async (getItemsFromBytesRequest: GetItemsFromBytesRequest, options?: RequestInit) => {
 	return customFetch<getItemsFromBytesResponse>(getGetItemsFromBytesUrl(), {
 		...options,
 		method: 'POST',
@@ -6395,7 +6130,7 @@ export const getGetSkyblockItemsUrl = () => {
 	return `http://localhost:5164/resources/items`;
 };
 
-export const getSkyblockItems = async (options?: RequestInit): Promise<getSkyblockItemsResponse> => {
+export const getSkyblockItems = async (options?: RequestInit) => {
 	return customFetch<getSkyblockItemsResponse>(getGetSkyblockItemsUrl(), {
 		...options,
 		method: 'GET',
@@ -6431,7 +6166,7 @@ export const getGetSpecifiedSkyblockItemsUrl = () => {
 export const getSpecifiedSkyblockItems = async (
 	getSpecifiedSkyblockItemsRequest: GetSpecifiedSkyblockItemsRequest,
 	options?: RequestInit
-): Promise<getSpecifiedSkyblockItemsResponse> => {
+) => {
 	return customFetch<getSpecifiedSkyblockItemsResponse>(getGetSpecifiedSkyblockItemsUrl(), {
 		...options,
 		method: 'POST',
@@ -6459,7 +6194,7 @@ export const getSkyblockProductUrl = (itemId: string) => {
 	return `http://localhost:5164/resources/items/${itemId}`;
 };
 
-export const skyblockProduct = async (itemId: string, options?: RequestInit): Promise<skyblockProductResponse> => {
+export const skyblockProduct = async (itemId: string, options?: RequestInit) => {
 	return customFetch<skyblockProductResponse>(getSkyblockProductUrl(itemId), {
 		...options,
 		method: 'GET',
@@ -6497,11 +6232,7 @@ export const getAddProductToCategoryUrl = (categoryId: number, productId: bigint
 	return `http://localhost:5164/shop/category/${categoryId}/product/${productId}`;
 };
 
-export const addProductToCategory = async (
-	categoryId: number,
-	productId: bigint,
-	options?: RequestInit
-): Promise<addProductToCategoryResponse> => {
+export const addProductToCategory = async (categoryId: number, productId: bigint, options?: RequestInit) => {
 	return customFetch<addProductToCategoryResponse>(getAddProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'POST',
@@ -6539,11 +6270,7 @@ export const getRemoveProductToCategoryUrl = (categoryId: number, productId: big
 	return `http://localhost:5164/shop/category/${categoryId}/product/${productId}`;
 };
 
-export const removeProductToCategory = async (
-	categoryId: number,
-	productId: bigint,
-	options?: RequestInit
-): Promise<removeProductToCategoryResponse> => {
+export const removeProductToCategory = async (categoryId: number, productId: bigint, options?: RequestInit) => {
 	return customFetch<removeProductToCategoryResponse>(getRemoveProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'DELETE',
@@ -6581,10 +6308,7 @@ export const getCreateCategoryUrl = () => {
 	return `http://localhost:5164/shop/category`;
 };
 
-export const createCategory = async (
-	createCategoryDto: CreateCategoryDto,
-	options?: RequestInit
-): Promise<createCategoryResponse> => {
+export const createCategory = async (createCategoryDto: CreateCategoryDto, options?: RequestInit) => {
 	return customFetch<createCategoryResponse>(getCreateCategoryUrl(), {
 		...options,
 		method: 'POST',
@@ -6624,7 +6348,7 @@ export const getDeleteCategoryUrl = (categoryId: number) => {
 	return `http://localhost:5164/shop/category/${categoryId}`;
 };
 
-export const deleteCategory = async (categoryId: number, options?: RequestInit): Promise<deleteCategoryResponse> => {
+export const deleteCategory = async (categoryId: number, options?: RequestInit) => {
 	return customFetch<deleteCategoryResponse>(getDeleteCategoryUrl(categoryId), {
 		...options,
 		method: 'DELETE',
@@ -6662,11 +6386,7 @@ export const getUpdateCategoryUrl = (categoryId: number) => {
 	return `http://localhost:5164/shop/category/${categoryId}`;
 };
 
-export const updateCategory = async (
-	categoryId: number,
-	editCategoryDto: EditCategoryDto,
-	options?: RequestInit
-): Promise<updateCategoryResponse> => {
+export const updateCategory = async (categoryId: number, editCategoryDto: EditCategoryDto, options?: RequestInit) => {
 	return customFetch<updateCategoryResponse>(getUpdateCategoryUrl(categoryId), {
 		...options,
 		method: 'PATCH',
@@ -6705,10 +6425,7 @@ export const getGetCategoriesUrl = (params?: GetCategoriesParams) => {
 		: `http://localhost:5164/shop/categories`;
 };
 
-export const getCategories = async (
-	params?: GetCategoriesParams,
-	options?: RequestInit
-): Promise<getCategoriesResponse> => {
+export const getCategories = async (params?: GetCategoriesParams, options?: RequestInit) => {
 	return customFetch<getCategoriesResponse>(getGetCategoriesUrl(params), {
 		...options,
 		method: 'GET',
@@ -6733,7 +6450,7 @@ export const getGetCategoryUrl = (category: string) => {
 	return `http://localhost:5164/shop/category/${category}`;
 };
 
-export const getCategory = async (category: string, options?: RequestInit): Promise<getCategoryResponse> => {
+export const getCategory = async (category: string, options?: RequestInit) => {
 	return customFetch<getCategoryResponse>(getGetCategoryUrl(category), {
 		...options,
 		method: 'GET',
@@ -6777,10 +6494,7 @@ export const getReorderCategoriesUrl = () => {
 	return `http://localhost:5164/shop/categories/reorder`;
 };
 
-export const reorderCategories = async (
-	reorderIntRequest: ReorderIntRequest,
-	options?: RequestInit
-): Promise<reorderCategoriesResponse> => {
+export const reorderCategories = async (reorderIntRequest: ReorderIntRequest, options?: RequestInit) => {
 	return customFetch<reorderCategoriesResponse>(getReorderCategoriesUrl(), {
 		...options,
 		method: 'POST',
@@ -6830,7 +6544,7 @@ export const reorderCategoryProducts = async (
 	categoryId: number,
 	reorderCategoryProductsRequest: ReorderCategoryProductsRequest,
 	options?: RequestInit
-): Promise<reorderCategoryProductsResponse> => {
+) => {
 	return customFetch<reorderCategoryProductsResponse>(getReorderCategoryProductsUrl(categoryId), {
 		...options,
 		method: 'POST',
@@ -6870,11 +6584,7 @@ export const getAddCosmeticToProductUrl = (productId: bigint, cosmeticId: number
 	return `http://localhost:5164/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
-export const addCosmeticToProduct = async (
-	productId: bigint,
-	cosmeticId: number,
-	options?: RequestInit
-): Promise<addCosmeticToProductResponse> => {
+export const addCosmeticToProduct = async (productId: bigint, cosmeticId: number, options?: RequestInit) => {
 	return customFetch<addCosmeticToProductResponse>(getAddCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'POST',
@@ -6912,11 +6622,7 @@ export const getRemoveCosmeticToProductUrl = (productId: bigint, cosmeticId: num
 	return `http://localhost:5164/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
-export const removeCosmeticToProduct = async (
-	productId: bigint,
-	cosmeticId: number,
-	options?: RequestInit
-): Promise<removeCosmeticToProductResponse> => {
+export const removeCosmeticToProduct = async (productId: bigint, cosmeticId: number, options?: RequestInit) => {
 	return customFetch<removeCosmeticToProductResponse>(getRemoveCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'DELETE',
@@ -6977,7 +6683,7 @@ export const addProductImage = async (
 	uploadImageDto: UploadImageDto,
 	params?: AddProductImageParams,
 	options?: RequestInit
-): Promise<addProductImageResponse> => {
+) => {
 	const formData = new FormData();
 	if (uploadImageDto.title !== undefined && uploadImageDto.title !== null) {
 		formData.append(`title`, uploadImageDto.title);
@@ -7031,11 +6737,7 @@ export const getDeleteProductImageUrl = (discordId: bigint, imagePath: string) =
 	return `http://localhost:5164/product/${discordId}/images/${imagePath}`;
 };
 
-export const deleteProductImage = async (
-	discordId: bigint,
-	imagePath: string,
-	options?: RequestInit
-): Promise<deleteProductImageResponse> => {
+export const deleteProductImage = async (discordId: bigint, imagePath: string, options?: RequestInit) => {
 	return customFetch<deleteProductImageResponse>(getDeleteProductImageUrl(discordId, imagePath), {
 		...options,
 		method: 'DELETE',
@@ -7073,7 +6775,7 @@ export const getGetAllProductsUrl = () => {
 	return `http://localhost:5164/products/admin`;
 };
 
-export const getAllProducts = async (options?: RequestInit): Promise<getAllProductsResponse> => {
+export const getAllProducts = async (options?: RequestInit) => {
 	return customFetch<getAllProductsResponse>(getGetAllProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -7111,7 +6813,7 @@ export const getRefreshProductsUrl = () => {
 	return `http://localhost:5164/products/refresh`;
 };
 
-export const refreshProducts = async (options?: RequestInit): Promise<refreshProductsResponse> => {
+export const refreshProducts = async (options?: RequestInit) => {
 	return customFetch<refreshProductsResponse>(getRefreshProductsUrl(), {
 		...options,
 		method: 'POST',
@@ -7155,11 +6857,7 @@ export const getUpdateProductUrl = (discordId: bigint) => {
 	return `http://localhost:5164/product/${discordId}`;
 };
 
-export const updateProduct = async (
-	discordId: bigint,
-	editProductDto: EditProductDto,
-	options?: RequestInit
-): Promise<updateProductResponse> => {
+export const updateProduct = async (discordId: bigint, editProductDto: EditProductDto, options?: RequestInit) => {
 	return customFetch<updateProductResponse>(getUpdateProductUrl(discordId), {
 		...options,
 		method: 'PATCH',
@@ -7191,7 +6889,7 @@ export const getGetProductUrl = (discordId: bigint) => {
 	return `http://localhost:5164/product/${discordId}`;
 };
 
-export const getProduct = async (discordId: bigint, options?: RequestInit): Promise<getProductResponse> => {
+export const getProduct = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<getProductResponse>(getGetProductUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -7226,7 +6924,7 @@ export const getClaimProductUrl = (discordId: bigint) => {
 	return `http://localhost:5164/product/${discordId}/claim`;
 };
 
-export const claimProduct = async (discordId: bigint, options?: RequestInit): Promise<claimProductResponse> => {
+export const claimProduct = async (discordId: bigint, options?: RequestInit) => {
 	return customFetch<claimProductResponse>(getClaimProductUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -7251,7 +6949,7 @@ export const getGetProductsUrl = () => {
 	return `http://localhost:5164/products`;
 };
 
-export const getProducts = async (options?: RequestInit): Promise<getProductsResponse> => {
+export const getProducts = async (options?: RequestInit) => {
 	return customFetch<getProductsResponse>(getGetProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -7306,7 +7004,7 @@ export const addStyleImage = async (
 	uploadImageDto: UploadImageDto,
 	params?: AddStyleImageParams,
 	options?: RequestInit
-): Promise<addStyleImageResponse> => {
+) => {
 	const formData = new FormData();
 	if (uploadImageDto.title !== undefined && uploadImageDto.title !== null) {
 		formData.append(`title`, uploadImageDto.title);
@@ -7360,10 +7058,7 @@ export const getCreateStyleUrl = () => {
 	return `http://localhost:5164/product/style`;
 };
 
-export const createStyle = async (
-	createStyleRequest: CreateStyleRequest,
-	options?: RequestInit
-): Promise<createStyleResponse> => {
+export const createStyle = async (createStyleRequest: CreateStyleRequest, options?: RequestInit) => {
 	return customFetch<createStyleResponse>(getCreateStyleUrl(), {
 		...options,
 		method: 'POST',
@@ -7400,7 +7095,7 @@ export const getDeleteStyleUrl = (styleId: number) => {
 	return `http://localhost:5164/product/style/${styleId}`;
 };
 
-export const deleteStyle = async (styleId: number, options?: RequestInit): Promise<deleteStyleResponse> => {
+export const deleteStyle = async (styleId: number, options?: RequestInit) => {
 	return customFetch<deleteStyleResponse>(getDeleteStyleUrl(styleId), {
 		...options,
 		method: 'DELETE',
@@ -7425,7 +7120,7 @@ export const getGetStyleUrl = (styleId: number) => {
 	return `http://localhost:5164/product/style/${styleId}`;
 };
 
-export const getStyle = async (styleId: number, options?: RequestInit): Promise<getStyleResponse> => {
+export const getStyle = async (styleId: number, options?: RequestInit) => {
 	return customFetch<getStyleResponse>(getGetStyleUrl(styleId), {
 		...options,
 		method: 'GET',
@@ -7473,7 +7168,7 @@ export const updateStyle = async (
 	styleId: number,
 	weightStyleWithDataDto: WeightStyleWithDataDto,
 	options?: RequestInit
-): Promise<updateStyleResponse> => {
+) => {
 	return customFetch<updateStyleResponse>(getUpdateStyleUrl(styleId), {
 		...options,
 		method: 'POST',
@@ -7513,11 +7208,7 @@ export const getDeleteStyleImageUrl = (styleId: number, imagePath: string) => {
 	return `http://localhost:5164/product/style/${styleId}/images/${imagePath}`;
 };
 
-export const deleteStyleImage = async (
-	styleId: number,
-	imagePath: string,
-	options?: RequestInit
-): Promise<deleteStyleImageResponse> => {
+export const deleteStyleImage = async (styleId: number, imagePath: string, options?: RequestInit) => {
 	return customFetch<deleteStyleImageResponse>(getDeleteStyleImageUrl(styleId, imagePath), {
 		...options,
 		method: 'DELETE',
@@ -7542,7 +7233,7 @@ export const getGetStylesUrl = () => {
 	return `http://localhost:5164/product/styles`;
 };
 
-export const getStyles = async (options?: RequestInit): Promise<getStylesResponse> => {
+export const getStyles = async (options?: RequestInit) => {
 	return customFetch<getStylesResponse>(getGetStylesUrl(), {
 		...options,
 		method: 'GET',
@@ -7568,7 +7259,7 @@ export const getGetAllWeightsUrl = () => {
 	return `http://localhost:5164/weights/all`;
 };
 
-export const getAllWeights = async (options?: RequestInit): Promise<getAllWeightsResponse> => {
+export const getAllWeights = async (options?: RequestInit) => {
 	return customFetch<getAllWeightsResponse>(getGetAllWeightsUrl(), {
 		...options,
 		method: 'GET',
@@ -7619,7 +7310,7 @@ export const getWeightForProfile = async (
 	profileUuid: string,
 	params?: GetWeightForProfileParams,
 	options?: RequestInit
-): Promise<getWeightForProfileResponse> => {
+) => {
 	return customFetch<getWeightForProfileResponse>(getGetWeightForProfileUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -7665,7 +7356,7 @@ export const getWeightForSelected = async (
 	playerUuid: string,
 	params?: GetWeightForSelectedParams,
 	options?: RequestInit
-): Promise<getWeightForSelectedResponse> => {
+) => {
 	return customFetch<getWeightForSelectedResponse>(getGetWeightForSelectedUrl(playerUuid, params), {
 		...options,
 		method: 'GET',
@@ -7712,7 +7403,7 @@ export const getWeightForProfiles = async (
 	playerUuid: string,
 	params?: GetWeightForProfilesParams,
 	options?: RequestInit
-): Promise<getWeightForProfilesResponse> => {
+) => {
 	return customFetch<getWeightForProfilesResponse>(getGetWeightForProfilesUrl(playerUuid, params), {
 		...options,
 		method: 'GET',

@@ -1,5 +1,26 @@
 import { getRequestEvent } from '$app/server';
 
+type SuccessStatus = 200 | 201 | 204;
+type ExtractSuccess<T extends { status: number }> = Extract<T, { status: SuccessStatus }>;
+type ExtractError<T extends { status: number }> = Exclude<T, { status: SuccessStatus }>;
+
+type EliteBaseResponse = {
+	response: Response;
+};
+
+// Your desired, more descriptive response type
+export type EliteResponse<SuccessData, ErrorData> =
+	| (EliteBaseResponse & {
+			data: SuccessData;
+			ok: true;
+			error?: never;
+	  })
+	| (EliteBaseResponse & {
+			data?: never;
+			ok: false;
+			error: ErrorData | null;
+	  });
+
 /**
  * Custom fetch mutator for Orval.
  * This function wraps the native fetch call, allowing us to inject
@@ -7,7 +28,10 @@ import { getRequestEvent } from '$app/server';
  * @param input The resource you want to fetch.
  * @param init Custom settings to apply to the request.
  */
-export const customFetch = async <T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> => {
+export const customFetch = async <T extends { status: number; data: unknown }>(
+	input: RequestInfo | URL,
+	init?: RequestInit
+): Promise<EliteResponse<ExtractSuccess<T>['data'], ExtractError<T>['data']>> => {
 	const { request, locals } = getRequestEvent();
 
 	const requestHeaders = new Headers(init?.headers || request.headers);
@@ -18,24 +42,41 @@ export const customFetch = async <T>(input: RequestInfo | URL, init?: RequestIni
 		requestHeaders.set('Authorization', `Bearer ${locals.access_token}`);
 	}
 
-	const response = await fetch(input, {
-		...init,
-		headers: requestHeaders,
-	});
+	const response = await fetch(input, { ...init, headers: requestHeaders });
 
+	// If the response is not OK (e.g., 4xx, 5xx), parse the error and return it.
 	if (!response.ok) {
-		const errorBody = await response.json();
-		console.error('API Error:', errorBody);
-		throw new Error(`API request failed with status ${response.status}`);
+		try {
+			const errorBody = await response.json();
+			return {
+				ok: false,
+				error: errorBody,
+				response,
+			};
+		} catch {
+			return {
+				ok: false,
+				error: null,
+				response,
+			};
+		}
 	}
 
-	// Handle responses that might not have a JSON body (e.g., 204 No Content)
-	const contentType = response.headers.get('content-type');
-	if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
-		return undefined as T;
+	// Handle successful responses that don't have a JSON body (e.g., 204 No Content)
+	if (response.status === 204) {
+		return {
+			ok: true,
+			data: null as ExtractSuccess<T>['data'],
+			response,
+		};
 	}
 
-	return response.json();
+	const json = await response.json();
+	return {
+		ok: true,
+		data: json,
+		response,
+	};
 };
 
 export default customFetch;

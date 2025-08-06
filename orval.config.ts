@@ -24,8 +24,10 @@ export default defineConfig({
 			},
 		},
 		hooks: {
-			// A post-generation hook to run a linter/formatter on the generated files.
-			afterAllFilesWrite: 'pnpm prettier --write',
+			afterAllFilesWrite: {
+				command: 'pnpm postprocess-api',
+				injectGeneratedDirsAndFiles: false,
+			},
 		},
 	},
 	zod: {
@@ -44,7 +46,7 @@ export default defineConfig({
 
 			override: {
 				useBigInt: true,
-				transformer: './src/lib/api/zod-transformer.ts',
+				transformer: './src/lib/api/util/zod-transformer.ts',
 			},
 		},
 		hooks: {
