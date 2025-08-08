@@ -169,6 +169,7 @@ export * from './GetCategoriesParams';
 export * from './GetCategoriesRequest';
 export * from './GetCategoryRequest';
 export * from './GetContestFromKeyRequest';
+export * from './GetContestsAtTimestampParams';
 export * from './GetContestsAtTimestampRequest';
 export * from './GetContestsInMonth200';
 export * from './GetContestsInYearParams';

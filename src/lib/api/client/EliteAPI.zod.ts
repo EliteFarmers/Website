@@ -2560,6 +2560,10 @@ export const zodGetContestsAtTimestampParams = zod.object({
 	timestamp: zod.number(),
 });
 
+export const zodGetContestsAtTimestampQueryParams = zod.object({
+	limit: zod.number().describe('Limit the number of participations returned in each contest.'),
+});
+
 export const zodGetContestsAtTimestampResponseItem = zod.object({
 	crop: zod.string(),
 	timestamp: zod.number(),
@@ -7559,11 +7563,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.boolean(),
 				item_specific: zod
 					.object({
-						rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.any(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -7671,11 +7672,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.boolean(),
 					item_specific: zod
 						.object({
-							rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.any(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -7842,11 +7840,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.boolean(),
 			item_specific: zod
 				.object({
-					rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.any(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()

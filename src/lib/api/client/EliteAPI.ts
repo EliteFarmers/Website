@@ -62,6 +62,7 @@ import type {
 	GetBazaarProductResponse,
 	GetBazaarProductsResponse,
 	GetCategoriesParams,
+	GetContestsAtTimestampParams,
 	GetContestsInMonth200,
 	GetContestsInYearParams,
 	GetCropGraphsParams,
@@ -162,7 +163,7 @@ export type getAccountResponse = getAccountResponseComposite & {
 };
 
 export const getGetAccountUrl = (player: string) => {
-	return `http://localhost:5164/account/${player}`;
+	return `https://api.elitebot.dev/account/${player}`;
 };
 
 export const getAccount = async (player: string, options?: RequestInit) => {
@@ -192,7 +193,7 @@ export type linkOwnAccountResponse = linkOwnAccountResponseComposite & {
 };
 
 export const getLinkOwnAccountUrl = (player: string) => {
-	return `http://localhost:5164/account/${player}`;
+	return `https://api.elitebot.dev/account/${player}`;
 };
 
 export const linkOwnAccount = async (player: string, options?: RequestInit) => {
@@ -222,7 +223,7 @@ export type unlinkOwnAccountResponse = unlinkOwnAccountResponseComposite & {
 };
 
 export const getUnlinkOwnAccountUrl = (player: string) => {
-	return `http://localhost:5164/account/${player}`;
+	return `https://api.elitebot.dev/account/${player}`;
 };
 
 export const unlinkOwnAccount = async (player: string, options?: RequestInit) => {
@@ -253,7 +254,7 @@ export type getAccountFace1Response = getAccountFace1ResponseComposite & {
 };
 
 export const getGetAccountFace1Url = (player: string) => {
-	return `http://localhost:5164/account/${player}/face`;
+	return `https://api.elitebot.dev/account/${player}/face`;
 };
 
 export const getAccountFace1 = async (player: string, options?: RequestInit) => {
@@ -284,7 +285,7 @@ export type getAccountFace2Response = getAccountFace2ResponseComposite & {
 };
 
 export const getGetAccountFace2Url = (player: string) => {
-	return `http://localhost:5164/account/${player}/face.png`;
+	return `https://api.elitebot.dev/account/${player}/face.png`;
 };
 
 export const getAccountFace2 = async (player: string, options?: RequestInit) => {
@@ -316,7 +317,7 @@ export type getAccountFromDiscordResponse = getAccountFromDiscordResponseComposi
 };
 
 export const getGetAccountFromDiscordUrl = (discordId: bigint) => {
-	return `http://localhost:5164/account/${discordId}`;
+	return `https://api.elitebot.dev/account/${discordId}`;
 };
 
 export const getAccountFromDiscord = async (discordId: bigint, options?: RequestInit) => {
@@ -346,7 +347,7 @@ export type getAccountSettingsResponse = getAccountSettingsResponseComposite & {
 };
 
 export const getGetAccountSettingsUrl = (discordId: bigint) => {
-	return `http://localhost:5164/account/${discordId}/settings`;
+	return `https://api.elitebot.dev/account/${discordId}/settings`;
 };
 
 export const getAccountSettings = async (discordId: bigint, options?: RequestInit) => {
@@ -376,7 +377,7 @@ export type getAuthAccountResponse = getAuthAccountResponseComposite & {
 };
 
 export const getGetAuthAccountUrl = () => {
-	return `http://localhost:5164/account`;
+	return `https://api.elitebot.dev/account`;
 };
 
 export const getAuthAccount = async (options?: RequestInit) => {
@@ -406,7 +407,7 @@ export type refreshPurchasesResponse = refreshPurchasesResponseComposite & {
 };
 
 export const getRefreshPurchasesUrl = () => {
-	return `http://localhost:5164/account/purchases`;
+	return `https://api.elitebot.dev/account/purchases`;
 };
 
 export const refreshPurchases = async (options?: RequestInit) => {
@@ -447,8 +448,8 @@ export const getSearchAccountsUrl = (params: SearchAccountsParams) => {
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/account/search?${stringifiedParams}`
-		: `http://localhost:5164/account/search`;
+		? `https://api.elitebot.dev/account/search?${stringifiedParams}`
+		: `https://api.elitebot.dev/account/search`;
 };
 
 export const searchAccounts = async (params: SearchAccountsParams, options?: RequestInit) => {
@@ -478,7 +479,7 @@ export type setPrimaryAccountResponse = setPrimaryAccountResponseComposite & {
 };
 
 export const getSetPrimaryAccountUrl = (player: string) => {
-	return `http://localhost:5164/account/primary/${player}`;
+	return `https://api.elitebot.dev/account/primary/${player}`;
 };
 
 export const setPrimaryAccount = async (player: string, options?: RequestInit) => {
@@ -513,7 +514,7 @@ export type updateBadgesResponse = updateBadgesResponseComposite & {
 };
 
 export const getUpdateBadgesUrl = (playerUuid: string) => {
-	return `http://localhost:5164/account/${playerUuid}/badges`;
+	return `https://api.elitebot.dev/account/${playerUuid}/badges`;
 };
 
 export const updateBadges = async (playerUuid: string, editUserBadgeDto: EditUserBadgeDto[], options?: RequestInit) => {
@@ -547,7 +548,7 @@ export type updateFortuneSettingsResponse = updateFortuneSettingsResponseComposi
 };
 
 export const getUpdateFortuneSettingsUrl = (playerUuid: string, profileUuid: string) => {
-	return `http://localhost:5164/account/${playerUuid}/${profileUuid}/fortune`;
+	return `https://api.elitebot.dev/account/${playerUuid}/${profileUuid}/fortune`;
 };
 
 export const updateFortuneSettings = async (
@@ -584,7 +585,7 @@ export type updateAccountResponse = updateAccountResponseComposite & {
 };
 
 export const getUpdateAccountUrl = () => {
-	return `http://localhost:5164/account/settings`;
+	return `https://api.elitebot.dev/account/settings`;
 };
 
 export const updateAccount = async (updateUserSettingsDto: UpdateUserSettingsDto, options?: RequestInit) => {
@@ -630,7 +631,7 @@ export type addRoleToUserResponse = addRoleToUserResponseComposite & {
 };
 
 export const getAddRoleToUserUrl = (discordId: bigint, role: string) => {
-	return `http://localhost:5164/admin/user/${discordId}/roles/${role}`;
+	return `https://api.elitebot.dev/admin/user/${discordId}/roles/${role}`;
 };
 
 export const addRoleToUser = async (discordId: bigint, role: string, options?: RequestInit) => {
@@ -674,7 +675,7 @@ export type removeRoleFromUserResponse = removeRoleFromUserResponseComposite & {
 };
 
 export const getRemoveRoleFromUserUrl = (discordId: bigint, role: string) => {
-	return `http://localhost:5164/admin/user/${discordId}/roles/${role}`;
+	return `https://api.elitebot.dev/admin/user/${discordId}/roles/${role}`;
 };
 
 export const removeRoleFromUser = async (discordId: bigint, role: string, options?: RequestInit) => {
@@ -719,7 +720,7 @@ export type clearPlayerCooldownsResponse = clearPlayerCooldownsResponseComposite
 };
 
 export const getClearPlayerCooldownsUrl = (player: string) => {
-	return `http://localhost:5164/admin/cooldowns/player/${player}`;
+	return `https://api.elitebot.dev/admin/cooldowns/player/${player}`;
 };
 
 export const clearPlayerCooldowns = async (player: string, options?: RequestInit) => {
@@ -758,7 +759,7 @@ export type deleteUpcomingContestsResponse = deleteUpcomingContestsResponseCompo
 };
 
 export const getDeleteUpcomingContestsUrl = () => {
-	return `http://localhost:5164/admin/upcomingcontests`;
+	return `https://api.elitebot.dev/admin/upcomingcontests`;
 };
 
 export const deleteUpcomingContests = async (options?: RequestInit) => {
@@ -802,7 +803,7 @@ export type deleteEventApprovalResponse = deleteEventApprovalResponseComposite &
 };
 
 export const getDeleteEventApprovalUrl = (eventId: bigint) => {
-	return `http://localhost:5164/admin/events/${eventId}`;
+	return `https://api.elitebot.dev/admin/events/${eventId}`;
 };
 
 export const deleteEventApproval = async (eventId: bigint, options?: RequestInit) => {
@@ -840,7 +841,7 @@ export type getPendingEventsResponse = getPendingEventsResponseComposite & {
 };
 
 export const getGetPendingEventsUrl = () => {
-	return `http://localhost:5164/admin/events/pending`;
+	return `https://api.elitebot.dev/admin/events/pending`;
 };
 
 export const getPendingEvents = async (options?: RequestInit) => {
@@ -895,8 +896,8 @@ export const getSetEventApprovalUrl = (eventId: bigint, params?: SetEventApprova
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/admin/events/${eventId}/approve?${stringifiedParams}`
-		: `http://localhost:5164/admin/events/${eventId}/approve`;
+		? `https://api.elitebot.dev/admin/events/${eventId}/approve?${stringifiedParams}`
+		: `https://api.elitebot.dev/admin/events/${eventId}/approve`;
 };
 
 export const setEventApproval = async (eventId: bigint, params?: SetEventApprovalParams, options?: RequestInit) => {
@@ -931,7 +932,7 @@ export type getAdminsResponse = getAdminsResponseComposite & {
 };
 
 export const getGetAdminsUrl = () => {
-	return `http://localhost:5164/admins`;
+	return `https://api.elitebot.dev/admins`;
 };
 
 export const getAdmins = async (options?: RequestInit) => {
@@ -966,7 +967,7 @@ export type getRolesResponse = getRolesResponseComposite & {
 };
 
 export const getGetRolesUrl = () => {
-	return `http://localhost:5164/admin/roles`;
+	return `https://api.elitebot.dev/admin/roles`;
 };
 
 export const getRoles = async (options?: RequestInit) => {
@@ -996,7 +997,7 @@ export type linkUserAccountResponse = linkUserAccountResponseComposite & {
 };
 
 export const getLinkUserAccountUrl = () => {
-	return `http://localhost:5164/admin/link-account`;
+	return `https://api.elitebot.dev/admin/link-account`;
 };
 
 export const linkUserAccount = async (adminLinkAccountRequest: AdminLinkAccountRequest, options?: RequestInit) => {
@@ -1043,7 +1044,7 @@ export type refreshDiscordGuildResponse = refreshDiscordGuildResponseComposite &
 };
 
 export const getRefreshDiscordGuildUrl = (guildId: bigint) => {
-	return `http://localhost:5164/admin/guild/${guildId}/refresh`;
+	return `https://api.elitebot.dev/admin/guild/${guildId}/refresh`;
 };
 
 export const refreshDiscordGuild = async (guildId: bigint, options?: RequestInit) => {
@@ -1073,7 +1074,7 @@ export type unlinkUserAccountResponse = unlinkUserAccountResponseComposite & {
 };
 
 export const getUnlinkUserAccountUrl = () => {
-	return `http://localhost:5164/admin/unlink-account`;
+	return `https://api.elitebot.dev/admin/unlink-account`;
 };
 
 export const unlinkUserAccount = async (
@@ -1117,7 +1118,7 @@ export type createAnnouncementResponse = createAnnouncementResponseComposite & {
 };
 
 export const getCreateAnnouncementUrl = () => {
-	return `http://localhost:5164/announcements/create`;
+	return `https://api.elitebot.dev/announcements/create`;
 };
 
 export const createAnnouncement = async (createAnnouncementDto: CreateAnnouncementDto, options?: RequestInit) => {
@@ -1150,7 +1151,7 @@ export type dismissAnnouncementResponse = dismissAnnouncementResponseComposite &
 };
 
 export const getDismissAnnouncementUrl = (announcementId: string) => {
-	return `http://localhost:5164/announcements/${announcementId}/dismiss`;
+	return `https://api.elitebot.dev/announcements/${announcementId}/dismiss`;
 };
 
 export const dismissAnnouncement = async (announcementId: string, options?: RequestInit) => {
@@ -1176,7 +1177,7 @@ export type getAnnouncementResponse = getAnnouncementResponseComposite & {
 };
 
 export const getGetAnnouncementUrl = () => {
-	return `http://localhost:5164/announcements`;
+	return `https://api.elitebot.dev/announcements`;
 };
 
 export const getAnnouncement = async (options?: RequestInit) => {
@@ -1207,7 +1208,7 @@ export type getSessionResponse = getSessionResponseComposite & {
 };
 
 export const getGetSessionUrl = () => {
-	return `http://localhost:5164/auth/me`;
+	return `https://api.elitebot.dev/auth/me`;
 };
 
 export const getSession = async (options?: RequestInit) => {
@@ -1233,7 +1234,7 @@ export type loginResponse = loginResponseComposite & {
 };
 
 export const getLoginUrl = () => {
-	return `http://localhost:5164/auth/login`;
+	return `https://api.elitebot.dev/auth/login`;
 };
 
 export const login = async (discordLoginDto: DiscordLoginDto, options?: RequestInit) => {
@@ -1261,7 +1262,7 @@ export type refreshAuthResponse = refreshAuthResponseComposite & {
 };
 
 export const getRefreshAuthUrl = () => {
-	return `http://localhost:5164/auth/refresh`;
+	return `https://api.elitebot.dev/auth/refresh`;
 };
 
 export const refreshAuth = async (authRefreshDto: AuthRefreshDto, options?: RequestInit) => {
@@ -1307,7 +1308,7 @@ export type addBadgeToUserBadgeResponse = addBadgeToUserBadgeResponseComposite &
 };
 
 export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: number) => {
-	return `http://localhost:5164/badge/user/${player}/${badgeId}`;
+	return `https://api.elitebot.dev/badge/user/${player}/${badgeId}`;
 };
 
 export const addBadgeToUserBadge = async (player: string, badgeId: number, options?: RequestInit) => {
@@ -1351,7 +1352,7 @@ export type deleteBadgeFromUserBadgeResponse = deleteBadgeFromUserBadgeResponseC
 };
 
 export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: number) => {
-	return `http://localhost:5164/badge/user/${player}/${badgeId}`;
+	return `https://api.elitebot.dev/badge/user/${player}/${badgeId}`;
 };
 
 export const deleteBadgeFromUserBadge = async (player: string, badgeId: number, options?: RequestInit) => {
@@ -1395,7 +1396,7 @@ export type createBadgeResponse = createBadgeResponseComposite & {
 };
 
 export const getCreateBadgeUrl = () => {
-	return `http://localhost:5164/badges`;
+	return `https://api.elitebot.dev/badges`;
 };
 
 export const createBadge = async (
@@ -1433,7 +1434,7 @@ export type getBadgesResponse = getBadgesResponseComposite & {
 };
 
 export const getGetBadgesUrl = () => {
-	return `http://localhost:5164/badges`;
+	return `https://api.elitebot.dev/badges`;
 };
 
 export const getBadges = async (options?: RequestInit) => {
@@ -1477,7 +1478,7 @@ export type deleteBadgeResponse = deleteBadgeResponseComposite & {
 };
 
 export const getDeleteBadgeUrl = (badgeId: number) => {
-	return `http://localhost:5164/badge/${badgeId}`;
+	return `https://api.elitebot.dev/badge/${badgeId}`;
 };
 
 export const deleteBadge = async (badgeId: number, options?: RequestInit) => {
@@ -1521,7 +1522,7 @@ export type updateBadgeResponse = updateBadgeResponseComposite & {
 };
 
 export const getUpdateBadgeUrl = (badgeId: number) => {
-	return `http://localhost:5164/badge/${badgeId}`;
+	return `https://api.elitebot.dev/badge/${badgeId}`;
 };
 
 export const updateBadge = async (
@@ -1573,7 +1574,7 @@ export type linkAccountBotResponse = linkAccountBotResponseComposite & {
 };
 
 export const getLinkAccountBotUrl = (discordId: bigint, player: string) => {
-	return `http://localhost:5164/bot/account/${discordId}/${player}`;
+	return `https://api.elitebot.dev/bot/account/${discordId}/${player}`;
 };
 
 export const linkAccountBot = async (discordId: bigint, player: string, options?: RequestInit) => {
@@ -1603,7 +1604,7 @@ export type unlinkAccountBotResponse = unlinkAccountBotResponseComposite & {
 };
 
 export const getUnlinkAccountBotUrl = (discordId: bigint, player: string) => {
-	return `http://localhost:5164/bot/account/${discordId}/${player}`;
+	return `https://api.elitebot.dev/bot/account/${discordId}/${player}`;
 };
 
 export const unlinkAccountBot = async (discordId: bigint, player: string, options?: RequestInit) => {
@@ -1633,7 +1634,7 @@ export type makePrimaryAccountResponse = makePrimaryAccountResponseComposite & {
 };
 
 export const getMakePrimaryAccountUrl = (discordId: bigint, player: string) => {
-	return `http://localhost:5164/bot/account/${discordId}/${player}/primary`;
+	return `https://api.elitebot.dev/bot/account/${discordId}/${player}/primary`;
 };
 
 export const makePrimaryAccount = async (discordId: bigint, player: string, options?: RequestInit) => {
@@ -1663,7 +1664,7 @@ export type refreshUserPurchasesResponse = refreshUserPurchasesResponseComposite
 };
 
 export const getRefreshUserPurchasesUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/account/${discordId}/purchases`;
+	return `https://api.elitebot.dev/bot/account/${discordId}/purchases`;
 };
 
 export const refreshUserPurchases = async (discordId: bigint, options?: RequestInit) => {
@@ -1693,7 +1694,7 @@ export type grantBadgeResponse = grantBadgeResponseComposite & {
 };
 
 export const getGrantBadgeUrl = (player: string, badgeId: number) => {
-	return `http://localhost:5164/bot/badges/${player}/${badgeId}`;
+	return `https://api.elitebot.dev/bot/badges/${player}/${badgeId}`;
 };
 
 export const grantBadge = async (player: string, badgeId: number, options?: RequestInit) => {
@@ -1723,7 +1724,7 @@ export type removeBadgeResponse = removeBadgeResponseComposite & {
 };
 
 export const getRemoveBadgeUrl = (player: string, badgeId: number) => {
-	return `http://localhost:5164/bot/badges/${player}/${badgeId}`;
+	return `https://api.elitebot.dev/bot/badges/${player}/${badgeId}`;
 };
 
 export const removeBadge = async (player: string, badgeId: number, options?: RequestInit) => {
@@ -1766,8 +1767,8 @@ export const getDisableContestPingsPingsUrl = (discordId: bigint, params?: Disab
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/bot/contestpings/${discordId}?${stringifiedParams}`
-		: `http://localhost:5164/bot/contestpings/${discordId}`;
+		? `https://api.elitebot.dev/bot/contestpings/${discordId}?${stringifiedParams}`
+		: `https://api.elitebot.dev/bot/contestpings/${discordId}`;
 };
 
 export const disableContestPingsPings = async (
@@ -1796,7 +1797,7 @@ export type getContestPingsResponse = getContestPingsResponseComposite & {
 };
 
 export const getGetContestPingsUrl = () => {
-	return `http://localhost:5164/bot/contestpings`;
+	return `https://api.elitebot.dev/bot/contestpings`;
 };
 
 export const getContestPings = async (options?: RequestInit) => {
@@ -1826,7 +1827,7 @@ export type getBotGuildResponse = getBotGuildResponseComposite & {
 };
 
 export const getGetBotGuildUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/${discordId}`;
+	return `https://api.elitebot.dev/bot/${discordId}`;
 };
 
 export const getBotGuild = async (discordId: bigint, options?: RequestInit) => {
@@ -1856,7 +1857,7 @@ export type getJacobFeatureResponse = getJacobFeatureResponseComposite & {
 };
 
 export const getGetJacobFeatureUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/${discordId}/jacob`;
+	return `https://api.elitebot.dev/bot/${discordId}/jacob`;
 };
 
 export const getJacobFeature = async (discordId: bigint, options?: RequestInit) => {
@@ -1897,8 +1898,8 @@ export const getUpdateJacobFeatureUrl = (discordId: bigint, params?: UpdateJacob
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/bot/${discordId}/jacob?${stringifiedParams}`
-		: `http://localhost:5164/bot/${discordId}/jacob`;
+		? `https://api.elitebot.dev/bot/${discordId}/jacob?${stringifiedParams}`
+		: `https://api.elitebot.dev/bot/${discordId}/jacob`;
 };
 
 export const updateJacobFeature = async (
@@ -1935,7 +1936,7 @@ export type refreshGuildResponse = refreshGuildResponseComposite & {
 };
 
 export const getRefreshGuildUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/guild/${discordId}`;
+	return `https://api.elitebot.dev/bot/guild/${discordId}`;
 };
 
 export const refreshGuild = async (discordId: bigint, options?: RequestInit) => {
@@ -1965,7 +1966,7 @@ export type updateGuildResponse = updateGuildResponseComposite & {
 };
 
 export const getUpdateGuildUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/guild/${discordId}`;
+	return `https://api.elitebot.dev/bot/guild/${discordId}`;
 };
 
 export const updateGuild = async (discordId: bigint, incomingGuildDto: IncomingGuildDto, options?: RequestInit) => {
@@ -1997,7 +1998,7 @@ export type updateGuildChannelResponse = updateGuildChannelResponseComposite & {
 };
 
 export const getUpdateGuildChannelUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/guild/${discordId}/channels`;
+	return `https://api.elitebot.dev/bot/guild/${discordId}/channels`;
 };
 
 export const updateGuildChannel = async (
@@ -2035,7 +2036,7 @@ export type updateGuildMemberRolesResponse = updateGuildMemberRolesResponseCompo
 };
 
 export const getUpdateGuildMemberRolesUrl = (discordId: bigint, userId: string) => {
-	return `http://localhost:5164/bot/guild/${discordId}/members/${userId}/roles`;
+	return `https://api.elitebot.dev/bot/guild/${discordId}/members/${userId}/roles`;
 };
 
 export const updateGuildMemberRoles = async (
@@ -2072,7 +2073,7 @@ export type updateGuildRoleResponse = updateGuildRoleResponseComposite & {
 };
 
 export const getUpdateGuildRoleUrl = (discordId: bigint) => {
-	return `http://localhost:5164/bot/guild/${discordId}/roles`;
+	return `https://api.elitebot.dev/bot/guild/${discordId}/roles`;
 };
 
 export const updateGuildRole = async (
@@ -2103,7 +2104,7 @@ export type updateDiscordAccountResponse = updateDiscordAccountResponseComposite
 };
 
 export const getUpdateDiscordAccountUrl = () => {
-	return `http://localhost:5164/bot/account`;
+	return `https://api.elitebot.dev/bot/account`;
 };
 
 export const updateDiscordAccount = async (incomingAccountDto: IncomingAccountDto, options?: RequestInit) => {
@@ -2130,7 +2131,7 @@ export type getContestFromKeyResponse = getContestFromKeyResponseComposite & {
 };
 
 export const getGetContestFromKeyUrl = (contestKey: string) => {
-	return `http://localhost:5164/contest/${contestKey}`;
+	return `https://api.elitebot.dev/contest/${contestKey}`;
 };
 
 export const getContestFromKey = async (contestKey: string, options?: RequestInit) => {
@@ -2154,12 +2155,28 @@ export type getContestsAtTimestampResponse = getContestsAtTimestampResponseCompo
 	headers: Headers;
 };
 
-export const getGetContestsAtTimestampUrl = (timestamp: bigint) => {
-	return `http://localhost:5164/contests/${timestamp}`;
+export const getGetContestsAtTimestampUrl = (timestamp: bigint, params: GetContestsAtTimestampParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `https://api.elitebot.dev/contests/${timestamp}?${stringifiedParams}`
+		: `https://api.elitebot.dev/contests/${timestamp}`;
 };
 
-export const getContestsAtTimestamp = async (timestamp: bigint, options?: RequestInit) => {
-	return customFetch<getContestsAtTimestampResponse>(getGetContestsAtTimestampUrl(timestamp), {
+export const getContestsAtTimestamp = async (
+	timestamp: bigint,
+	params: GetContestsAtTimestampParams,
+	options?: RequestInit
+) => {
+	return customFetch<getContestsAtTimestampResponse>(getGetContestsAtTimestampUrl(timestamp, params), {
 		...options,
 		method: 'GET',
 	});
@@ -2185,7 +2202,7 @@ export type getContestsInDayResponse = getContestsInDayResponseComposite & {
 };
 
 export const getGetContestsInDayUrl = (year: number, month: number, day: number) => {
-	return `http://localhost:5164/contests/at/${year}/${month}/${day}`;
+	return `https://api.elitebot.dev/contests/at/${year}/${month}/${day}`;
 };
 
 export const getContestsInDay = async (year: number, month: number, day: number, options?: RequestInit) => {
@@ -2215,7 +2232,7 @@ export type getContestsInMonthResponse = getContestsInMonthResponseComposite & {
 };
 
 export const getGetContestsInMonthUrl = (year: number, month: number) => {
-	return `http://localhost:5164/contests/at/${year}/${month}`;
+	return `https://api.elitebot.dev/contests/at/${year}/${month}`;
 };
 
 export const getContestsInMonth = async (year: number, month: number, options?: RequestInit) => {
@@ -2251,8 +2268,8 @@ export const getGetContestsInYearUrl = (year: number, params?: GetContestsInYear
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/contests/at/${year}?${stringifiedParams}`
-		: `http://localhost:5164/contests/at/${year}`;
+		? `https://api.elitebot.dev/contests/at/${year}?${stringifiedParams}`
+		: `https://api.elitebot.dev/contests/at/${year}`;
 };
 
 export const getContestsInYear = async (year: number, params?: GetContestsInYearParams, options?: RequestInit) => {
@@ -2279,7 +2296,7 @@ export type getCurrentContestsResponse = getCurrentContestsResponseComposite & {
 };
 
 export const getGetCurrentContestsUrl = () => {
-	return `http://localhost:5164/contests/at/now`;
+	return `https://api.elitebot.dev/contests/at/now`;
 };
 
 export const getCurrentContests = async (options?: RequestInit) => {
@@ -2305,7 +2322,7 @@ export type uploadCurrentContestsResponse = uploadCurrentContestsResponseComposi
 };
 
 export const getUploadCurrentContestsUrl = () => {
-	return `http://localhost:5164/contests/at/now`;
+	return `https://api.elitebot.dev/contests/at/now`;
 };
 
 export const uploadCurrentContests = async (
@@ -2342,7 +2359,7 @@ export type getPlayerParticipationsResponse = getPlayerParticipationsResponseCom
 };
 
 export const getGetPlayerParticipationsUrl = (playerUuid: string) => {
-	return `http://localhost:5164/contests/${playerUuid}`;
+	return `https://api.elitebot.dev/contests/${playerUuid}`;
 };
 
 export const getPlayerParticipations = async (playerUuid: string, options?: RequestInit) => {
@@ -2374,7 +2391,7 @@ export type getProfileMemberParticipationsResponse = getProfileMemberParticipati
 };
 
 export const getGetProfileMemberParticipationsUrl = (playerUuid: string, profileUuid: string) => {
-	return `http://localhost:5164/contests/${playerUuid}/${profileUuid}`;
+	return `https://api.elitebot.dev/contests/${playerUuid}/${profileUuid}`;
 };
 
 export const getProfileMemberParticipations = async (
@@ -2411,7 +2428,7 @@ export type getRecordsInYearResponse = getRecordsInYearResponseComposite & {
 };
 
 export const getGetRecordsInYearUrl = (year: number) => {
-	return `http://localhost:5164/contests/records/${year}`;
+	return `https://api.elitebot.dev/contests/records/${year}`;
 };
 
 export const getRecordsInYear = async (year: number, options?: RequestInit) => {
@@ -2443,7 +2460,7 @@ export type getSelectedMemberParticipationsResponse = getSelectedMemberParticipa
 };
 
 export const getGetSelectedMemberParticipationsUrl = (playerUuid: string) => {
-	return `http://localhost:5164/contests/${playerUuid}/selected`;
+	return `https://api.elitebot.dev/contests/${playerUuid}/selected`;
 };
 
 export const getSelectedMemberParticipations = async (playerUuid: string, options?: RequestInit) => {
@@ -2481,7 +2498,7 @@ export type addTeamMemberAdminResponse = addTeamMemberAdminResponseComposite & {
 };
 
 export const getAddTeamMemberAdminUrl = (discordId: number, eventId: number, teamId: number, player: string) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
 };
 
 export const addTeamMemberAdmin = async (
@@ -2525,7 +2542,7 @@ export type kickTeamMemberAdminResponse = kickTeamMemberAdminResponseComposite &
 };
 
 export const getKickTeamMemberAdminUrl = (discordId: number, eventId: number, teamId: number, player: string) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
 };
 
 export const kickTeamMemberAdmin = async (
@@ -2566,7 +2583,7 @@ export type banMemberResponse = banMemberResponseComposite & {
 };
 
 export const getBanMemberUrl = (discordId: number, eventId: number, playerUuid: string) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
 export const banMember = async (
@@ -2609,7 +2626,7 @@ export type unbanMemberResponse = unbanMemberResponseComposite & {
 };
 
 export const getUnbanMemberUrl = (discordId: number, eventId: number, playerUuid: string) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
 export const unbanMember = async (discordId: number, eventId: number, playerUuid: string, options?: RequestInit) => {
@@ -2644,7 +2661,7 @@ export type createEventResponse = createEventResponseComposite & {
 };
 
 export const getCreateEventUrl = (discordId: bigint) => {
-	return `http://localhost:5164/guild/${discordId}/events/weight`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/weight`;
 };
 
 export const createEvent = async (discordId: bigint, createEventDto: CreateEventDto, options?: RequestInit) => {
@@ -2696,8 +2713,8 @@ export const getCreateTeamAdminUrl = (discordId: bigint, eventId: number, params
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/events/${eventId}/teams?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/events/${eventId}/teams`;
+		? `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams`;
 };
 
 export const createTeamAdmin = async (
@@ -2741,7 +2758,7 @@ export type deleteEventResponse = deleteEventResponseComposite & {
 };
 
 export const getDeleteEventUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
 export const deleteEvent = async (discordId: bigint, eventId: number, options?: RequestInit) => {
@@ -2776,7 +2793,7 @@ export type updateEventResponse = updateEventResponseComposite & {
 };
 
 export const getUpdateEventUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
 export const updateEvent = async (
@@ -2821,7 +2838,7 @@ export type deleteEventBannerResponse = deleteEventBannerResponseComposite & {
 };
 
 export const getDeleteEventBannerUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/banner`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
 export const deleteEventBanner = async (discordId: bigint, eventId: number, options?: RequestInit) => {
@@ -2859,7 +2876,7 @@ export type setEventBannerResponse = setEventBannerResponseComposite & {
 };
 
 export const getSetEventBannerUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/banner`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
 export const setEventBanner = async (
@@ -2921,8 +2938,8 @@ export const getDeleteMemberUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/events/${eventId}/members/${playerUuid}?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/events/${eventId}/members/${playerUuid}`;
+		? `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/members/${playerUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/members/${playerUuid}`;
 };
 
 export const deleteMember = async (
@@ -2982,8 +2999,8 @@ export const getForceAddMemberUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/events/${eventId}/members/${playerUuid}?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/events/${eventId}/members/${playerUuid}`;
+		? `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/members/${playerUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/members/${playerUuid}`;
 };
 
 export const forceAddMember = async (
@@ -3027,7 +3044,7 @@ export type deleteTeamAdminResponse = deleteTeamAdminResponseComposite & {
 };
 
 export const getDeleteTeamAdminUrl = (discordId: bigint, eventId: number, teamId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/teams/${teamId}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const deleteTeamAdmin = async (discordId: bigint, eventId: number, teamId: number, options?: RequestInit) => {
@@ -3065,7 +3082,7 @@ export type updateTeamAdminResponse = updateTeamAdminResponseComposite & {
 };
 
 export const getUpdateTeamAdminUrl = (discordId: bigint, eventId: number, teamId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/teams/${teamId}`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const updateTeamAdmin = async (
@@ -3111,7 +3128,7 @@ export type getBannedMembersResponse = getBannedMembersResponseComposite & {
 };
 
 export const getGetBannedMembersUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/event/${eventId}/bans`;
+	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/bans`;
 };
 
 export const getBannedMembers = async (discordId: bigint, eventId: number, options?: RequestInit) => {
@@ -3149,7 +3166,7 @@ export type getGuildEventMembersResponse = getGuildEventMembersResponseComposite
 };
 
 export const getGetGuildEventMembersUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/event/${eventId}/members`;
+	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/members`;
 };
 
 export const getGuildEventMembers = async (discordId: bigint, eventId: number, options?: RequestInit) => {
@@ -3187,7 +3204,7 @@ export type getGuildEventResponse = getGuildEventResponseComposite & {
 };
 
 export const getGetGuildEventUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/event/${eventId}/admin`;
+	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/admin`;
 };
 
 export const getGuildEvent = async (discordId: bigint, eventId: number, options?: RequestInit) => {
@@ -3225,7 +3242,7 @@ export type getGuildEventsResponse = getGuildEventsResponseComposite & {
 };
 
 export const getGetGuildEventsUrl = (discordId: bigint) => {
-	return `http://localhost:5164/guild/${discordId}/events/admin`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/admin`;
 };
 
 export const getGuildEvents = async (discordId: bigint, options?: RequestInit) => {
@@ -3263,7 +3280,7 @@ export type getTeamsAdminResponse = getTeamsAdminResponseComposite & {
 };
 
 export const getGetTeamsAdminUrl = (discordId: bigint, eventId: number) => {
-	return `http://localhost:5164/guild/${discordId}/event/${eventId}/teams`;
+	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/teams`;
 };
 
 export const getTeamsAdmin = async (discordId: bigint, eventId: number, options?: RequestInit) => {
@@ -3293,7 +3310,7 @@ export type setTeamOwnerAdminResponse = setTeamOwnerAdminResponseComposite & {
 };
 
 export const getSetTeamOwnerAdminUrl = (discordId: number, eventId: number, teamId: number) => {
-	return `http://localhost:5164/guild/${discordId}/events/${eventId}/teams/${teamId}/owner`;
+	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}/owner`;
 };
 
 export const setTeamOwnerAdmin = async (
@@ -3326,7 +3343,7 @@ export type getEventResponse = getEventResponseComposite & {
 };
 
 export const getGetEventUrl = (eventId: number) => {
-	return `http://localhost:5164/event/${eventId}`;
+	return `https://api.elitebot.dev/event/${eventId}`;
 };
 
 export const getEvent = async (eventId: number, options?: RequestInit) => {
@@ -3352,7 +3369,7 @@ export type getEventDefaultsResponse = getEventDefaultsResponseComposite & {
 };
 
 export const getGetEventDefaultsUrl = () => {
-	return `http://localhost:5164/event/defaults`;
+	return `https://api.elitebot.dev/event/defaults`;
 };
 
 export const getEventDefaults = async (options?: RequestInit) => {
@@ -3382,7 +3399,7 @@ export type getEventMemberResponse = getEventMemberResponseComposite & {
 };
 
 export const getGetEventMemberUrl = (eventId: number, playerUuid: string) => {
-	return `http://localhost:5164/event/${eventId}/member/${playerUuid}`;
+	return `https://api.elitebot.dev/event/${eventId}/member/${playerUuid}`;
 };
 
 export const getEventMember = async (eventId: number, playerUuid: string, options?: RequestInit) => {
@@ -3407,7 +3424,7 @@ export type getEventMembersResponse = getEventMembersResponseComposite & {
 };
 
 export const getGetEventMembersUrl = (eventId: number) => {
-	return `http://localhost:5164/event/${eventId}/members`;
+	return `https://api.elitebot.dev/event/${eventId}/members`;
 };
 
 export const getEventMembers = async (eventId: number, options?: RequestInit) => {
@@ -3432,7 +3449,7 @@ export type getEventTeamResponse = getEventTeamResponseComposite & {
 };
 
 export const getGetEventTeamUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}`;
 };
 
 export const getEventTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
@@ -3462,7 +3479,7 @@ export type deleteTeamResponse = deleteTeamResponseComposite & {
 };
 
 export const getDeleteTeamUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}`;
 };
 
 export const deleteTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
@@ -3492,7 +3509,7 @@ export type updateTeamResponse = updateTeamResponseComposite & {
 };
 
 export const getUpdateTeamUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}`;
 };
 
 export const updateTeam = async (
@@ -3524,7 +3541,7 @@ export type getEventTeamsResponse = getEventTeamsResponseComposite & {
 };
 
 export const getGetEventTeamsUrl = (eventId: number) => {
-	return `http://localhost:5164/event/${eventId}/teams`;
+	return `https://api.elitebot.dev/event/${eventId}/teams`;
 };
 
 export const getEventTeams = async (eventId: number, options?: RequestInit) => {
@@ -3554,7 +3571,7 @@ export type createTeamResponse = createTeamResponseComposite & {
 };
 
 export const getCreateTeamUrl = (eventId: number) => {
-	return `http://localhost:5164/event/${eventId}/teams`;
+	return `https://api.elitebot.dev/event/${eventId}/teams`;
 };
 
 export const createTeam = async (eventId: number, createEventTeamDto: CreateEventTeamDto, options?: RequestInit) => {
@@ -3582,7 +3599,7 @@ export type getTeamWordListResponse = getTeamWordListResponseComposite & {
 };
 
 export const getGetTeamWordListUrl = () => {
-	return `http://localhost:5164/event/teams/words`;
+	return `https://api.elitebot.dev/event/teams/words`;
 };
 
 export const getTeamWordList = async (options?: RequestInit) => {
@@ -3618,8 +3635,8 @@ export const getGetUpcomingEventsUrl = (params?: GetUpcomingEventsParams) => {
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/events?${stringifiedParams}`
-		: `http://localhost:5164/events`;
+		? `https://api.elitebot.dev/events?${stringifiedParams}`
+		: `https://api.elitebot.dev/events`;
 };
 
 export const getUpcomingEvents = async (params?: GetUpcomingEventsParams, options?: RequestInit) => {
@@ -3665,8 +3682,8 @@ export const getJoinEventUrl = (eventId: number, params?: JoinEventParams) => {
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/event/${eventId}/join?${stringifiedParams}`
-		: `http://localhost:5164/event/${eventId}/join`;
+		? `https://api.elitebot.dev/event/${eventId}/join?${stringifiedParams}`
+		: `https://api.elitebot.dev/event/${eventId}/join`;
 };
 
 export const joinEvent = async (eventId: number, params?: JoinEventParams, options?: RequestInit) => {
@@ -3696,7 +3713,7 @@ export type joinTeamResponse = joinTeamResponseComposite & {
 };
 
 export const getJoinTeamUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}/join`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/join`;
 };
 
 export const joinTeam = async (eventId: number, teamId: number, joinTeamBody: string, options?: RequestInit) => {
@@ -3737,7 +3754,7 @@ export type kickTeamMemberResponse = kickTeamMemberResponseComposite & {
 };
 
 export const getKickTeamMemberUrl = (eventId: number, teamId: number, player: string) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}/member/${player}`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/member/${player}`;
 };
 
 export const kickTeamMember = async (eventId: number, teamId: number, player: string, options?: RequestInit) => {
@@ -3767,7 +3784,7 @@ export type leaveEventResponse = leaveEventResponseComposite & {
 };
 
 export const getLeaveEventUrl = (eventId: number) => {
-	return `http://localhost:5164/event/${eventId}/leave`;
+	return `https://api.elitebot.dev/event/${eventId}/leave`;
 };
 
 export const leaveEvent = async (eventId: number, options?: RequestInit) => {
@@ -3797,7 +3814,7 @@ export type leaveTeamResponse = leaveTeamResponseComposite & {
 };
 
 export const getLeaveTeamUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}/leave`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/leave`;
 };
 
 export const leaveTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
@@ -3827,7 +3844,7 @@ export type setTeamOwnerResponse = setTeamOwnerResponseComposite & {
 };
 
 export const getSetTeamOwnerUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}/owner`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/owner`;
 };
 
 export const setTeamOwner = async (
@@ -3864,7 +3881,7 @@ export type updateTeamJoinCodeResponse = updateTeamJoinCodeResponseComposite & {
 };
 
 export const getUpdateTeamJoinCodeUrl = (eventId: number, teamId: number) => {
-	return `http://localhost:5164/event/${eventId}/team/${teamId}/code`;
+	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/code`;
 };
 
 export const updateTeamJoinCode = async (eventId: number, teamId: number, options?: RequestInit) => {
@@ -3900,7 +3917,7 @@ export type getGardenResponse = getGardenResponseComposite & {
 };
 
 export const getGetGardenUrl = (profileUuid: string) => {
-	return `http://localhost:5164/garden/${profileUuid}`;
+	return `https://api.elitebot.dev/garden/${profileUuid}`;
 };
 
 export const getGarden = async (profileUuid: string, options?: RequestInit) => {
@@ -3939,7 +3956,7 @@ export type getSelectedGardenResponse = getSelectedGardenResponseComposite & {
 };
 
 export const getGetSelectedGardenUrl = (playerUuid: string) => {
-	return `http://localhost:5164/garden/${playerUuid}/selected`;
+	return `https://api.elitebot.dev/garden/${playerUuid}/selected`;
 };
 
 export const getSelectedGarden = async (playerUuid: string, options?: RequestInit) => {
@@ -3998,8 +4015,8 @@ export const getGetAdminCropGraphsUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/admin/${playerUuid}/${profileUuid}/crops?${stringifiedParams}`
-		: `http://localhost:5164/graph/admin/${playerUuid}/${profileUuid}/crops`;
+		? `https://api.elitebot.dev/graph/admin/${playerUuid}/${profileUuid}/crops?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/admin/${playerUuid}/${profileUuid}/crops`;
 };
 
 export const getAdminCropGraphs = async (
@@ -4063,8 +4080,8 @@ export const getGetAdminSkillGraphsUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/admin/${playerUuid}/${profileUuid}/skills?${stringifiedParams}`
-		: `http://localhost:5164/graph/admin/${playerUuid}/${profileUuid}/skills`;
+		? `https://api.elitebot.dev/graph/admin/${playerUuid}/${profileUuid}/skills?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/admin/${playerUuid}/${profileUuid}/skills`;
 };
 
 export const getAdminSkillGraphs = async (
@@ -4110,8 +4127,8 @@ export const getGetCropGraphsUrl = (playerUuid: string, profileUuid: string, par
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/${playerUuid}/${profileUuid}/crops?${stringifiedParams}`
-		: `http://localhost:5164/graph/${playerUuid}/${profileUuid}/crops`;
+		? `https://api.elitebot.dev/graph/${playerUuid}/${profileUuid}/crops?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/${playerUuid}/${profileUuid}/crops`;
 };
 
 export const getCropGraphs = async (
@@ -4157,8 +4174,8 @@ export const getGetSkillGraphsUrl = (playerUuid: string, profileUuid: string, pa
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/${playerUuid}/${profileUuid}/skills?${stringifiedParams}`
-		: `http://localhost:5164/graph/${playerUuid}/${profileUuid}/skills`;
+		? `https://api.elitebot.dev/graph/${playerUuid}/${profileUuid}/skills?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/${playerUuid}/${profileUuid}/skills`;
 };
 
 export const getSkillGraphs = async (
@@ -4199,8 +4216,8 @@ export const getGetCurrentMedalBracketsUrl = (params?: GetCurrentMedalBracketsPa
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/medals/now?${stringifiedParams}`
-		: `http://localhost:5164/graph/medals/now`;
+		? `https://api.elitebot.dev/graph/medals/now?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/medals/now`;
 };
 
 export const getCurrentMedalBrackets = async (params?: GetCurrentMedalBracketsParams, options?: RequestInit) => {
@@ -4241,8 +4258,8 @@ export const getGetMedalBracketsUrl = (year: number, month: number, params?: Get
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/medals/${year}/${month}?${stringifiedParams}`
-		: `http://localhost:5164/graph/medals/${year}/${month}`;
+		? `https://api.elitebot.dev/graph/medals/${year}/${month}?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/medals/${year}/${month}`;
 };
 
 export const getMedalBrackets = async (
@@ -4290,8 +4307,8 @@ export const getGetMedalBracketsGraphUrl = (year: number, params?: GetMedalBrack
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/graph/medals/${year}?${stringifiedParams}`
-		: `http://localhost:5164/graph/medals/${year}`;
+		? `https://api.elitebot.dev/graph/medals/${year}?${stringifiedParams}`
+		: `https://api.elitebot.dev/graph/medals/${year}`;
 };
 
 export const getMedalBracketsGraph = async (
@@ -4350,8 +4367,8 @@ export const getSetEventFeatureUrl = (discordId: bigint, params?: SetEventFeatur
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/events?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/events`;
+		? `https://api.elitebot.dev/guild/${discordId}/events?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/events`;
 };
 
 export const setEventFeature = async (discordId: bigint, params?: SetEventFeatureParams, options?: RequestInit) => {
@@ -4381,7 +4398,7 @@ export type getPublicGuildEventsResponse = getPublicGuildEventsResponseComposite
 };
 
 export const getGetPublicGuildEventsUrl = (discordId: bigint) => {
-	return `http://localhost:5164/guild/${discordId}/events`;
+	return `https://api.elitebot.dev/guild/${discordId}/events`;
 };
 
 export const getPublicGuildEvents = async (discordId: bigint, options?: RequestInit) => {
@@ -4436,8 +4453,8 @@ export const getSetJacobFeatureUrl = (discordId: bigint, params?: SetJacobFeatur
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/jacob?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/jacob`;
+		? `https://api.elitebot.dev/guild/${discordId}/jacob?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/jacob`;
 };
 
 export const setJacobFeature = async (discordId: bigint, params?: SetJacobFeatureParams, options?: RequestInit) => {
@@ -4492,8 +4509,8 @@ export const getSetGuildLockedUrl = (discordId: bigint, params?: SetGuildLockedP
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/lock?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/lock`;
+		? `https://api.elitebot.dev/guild/${discordId}/lock?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/lock`;
 };
 
 export const setGuildLocked = async (discordId: bigint, params?: SetGuildLockedParams, options?: RequestInit) => {
@@ -4548,8 +4565,8 @@ export const getSetGuildPublicUrl = (discordId: bigint, params?: SetGuildPublicP
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/guild/${discordId}/public?${stringifiedParams}`
-		: `http://localhost:5164/guild/${discordId}/public`;
+		? `https://api.elitebot.dev/guild/${discordId}/public?${stringifiedParams}`
+		: `https://api.elitebot.dev/guild/${discordId}/public`;
 };
 
 export const setGuildPublic = async (discordId: bigint, params?: SetGuildPublicParams, options?: RequestInit) => {
@@ -4579,7 +4596,7 @@ export type getPublicGuildResponse = getPublicGuildResponseComposite & {
 };
 
 export const getGetPublicGuildUrl = (discordId: bigint) => {
-	return `http://localhost:5164/guild/${discordId}`;
+	return `https://api.elitebot.dev/guild/${discordId}`;
 };
 
 export const getPublicGuild = async (discordId: bigint, options?: RequestInit) => {
@@ -4604,7 +4621,7 @@ export type getPublicGuildsResponse = getPublicGuildsResponseComposite & {
 };
 
 export const getGetPublicGuildsUrl = () => {
-	return `http://localhost:5164/guilds`;
+	return `https://api.elitebot.dev/guilds`;
 };
 
 export const getPublicGuilds = async (options?: RequestInit) => {
@@ -4653,8 +4670,8 @@ export const getDeleteContestPingsUrl = (discordId: bigint, params?: DeleteConte
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/user/guild/${discordId}/contestpings?${stringifiedParams}`
-		: `http://localhost:5164/user/guild/${discordId}/contestpings`;
+		? `https://api.elitebot.dev/user/guild/${discordId}/contestpings?${stringifiedParams}`
+		: `https://api.elitebot.dev/user/guild/${discordId}/contestpings`;
 };
 
 export const deleteContestPings = async (
@@ -4696,7 +4713,7 @@ export type updateContestPingsResponse = updateContestPingsResponseComposite & {
 };
 
 export const getUpdateContestPingsUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/contestpings`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/contestpings`;
 };
 
 export const updateContestPings = async (
@@ -4732,7 +4749,7 @@ export type getUserGuildsResponse = getUserGuildsResponseComposite & {
 };
 
 export const getGetUserGuildsUrl = () => {
-	return `http://localhost:5164/user/guilds`;
+	return `https://api.elitebot.dev/user/guilds`;
 };
 
 export const getUserGuilds = async (options?: RequestInit) => {
@@ -4767,7 +4784,7 @@ export type getUserGuildResponse = getUserGuildResponseComposite & {
 };
 
 export const getGetUserGuildUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}`;
+	return `https://api.elitebot.dev/user/guild/${discordId}`;
 };
 
 export const getUserGuild = async (discordId: bigint, options?: RequestInit) => {
@@ -4805,7 +4822,7 @@ export type createGuildJacobFeatureResponse = createGuildJacobFeatureResponseCom
 };
 
 export const getCreateGuildJacobFeatureUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/jacob/leaderboard`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/leaderboard`;
 };
 
 export const createGuildJacobFeature = async (
@@ -4849,7 +4866,7 @@ export type deleteGuildJacobFeatureResponse = deleteGuildJacobFeatureResponseCom
 };
 
 export const getDeleteGuildJacobFeatureUrl = (discordId: bigint, leaderboardId: string) => {
-	return `http://localhost:5164/user/guild/${discordId}/jacob/${leaderboardId}`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
 export const deleteGuildJacobFeature = async (discordId: bigint, leaderboardId: string, options?: RequestInit) => {
@@ -4887,7 +4904,7 @@ export type updateGuildJacobLeaderboardResponse = updateGuildJacobLeaderboardRes
 };
 
 export const getUpdateGuildJacobLeaderboardUrl = (discordId: bigint, leaderboardId: string) => {
-	return `http://localhost:5164/user/guild/${discordId}/jacob/${leaderboardId}`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
 export const updateGuildJacobLeaderboard = async (
@@ -4935,7 +4952,7 @@ export type getGuildJacobResponse = getGuildJacobResponseComposite & {
 };
 
 export const getGetGuildJacobUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/jacob`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/jacob`;
 };
 
 export const getGuildJacob = async (discordId: bigint, options?: RequestInit) => {
@@ -4984,8 +5001,8 @@ export const getUpdateGuildJacobFeatureUrl = (discordId: bigint, params?: Update
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/user/guild/${discordId}/jacob?${stringifiedParams}`
-		: `http://localhost:5164/user/guild/${discordId}/jacob`;
+		? `https://api.elitebot.dev/user/guild/${discordId}/jacob?${stringifiedParams}`
+		: `https://api.elitebot.dev/user/guild/${discordId}/jacob`;
 };
 
 export const updateGuildJacobFeature = async (
@@ -5030,7 +5047,7 @@ export type sendGuildJacobFeatureResponse = sendGuildJacobFeatureResponseComposi
 };
 
 export const getSendGuildJacobFeatureUrl = (discordId: bigint, leaderboardId: string) => {
-	return `http://localhost:5164/user/guild/${discordId}/jacob/${leaderboardId}/send`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}/send`;
 };
 
 export const sendGuildJacobFeature = async (discordId: bigint, leaderboardId: string, options?: RequestInit) => {
@@ -5062,7 +5079,7 @@ export type refreshGuildMembershipsResponse = refreshGuildMembershipsResponseCom
 };
 
 export const getRefreshGuildMembershipsUrl = () => {
-	return `http://localhost:5164/user/refresh-guilds`;
+	return `https://api.elitebot.dev/user/refresh-guilds`;
 };
 
 export const refreshGuildMemberships = async (options?: RequestInit) => {
@@ -5101,7 +5118,7 @@ export type requestGuildRefreshResponse = requestGuildRefreshResponseComposite &
 };
 
 export const getRequestGuildRefreshUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/refresh`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/refresh`;
 };
 
 export const requestGuildRefresh = async (discordId: bigint, options?: RequestInit) => {
@@ -5136,7 +5153,7 @@ export type setAdminRoleResponse = setAdminRoleResponseComposite & {
 };
 
 export const getSetAdminRoleUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/adminrole`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/adminrole`;
 };
 
 export const setAdminRole = async (discordId: bigint, setAdminRoleBody: string, options?: RequestInit) => {
@@ -5173,7 +5190,7 @@ export type setInviteResponse = setInviteResponseComposite & {
 };
 
 export const getSetInviteUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/invite`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/invite`;
 };
 
 export const setInvite = async (discordId: bigint, setInviteBody: string, options?: RequestInit) => {
@@ -5213,7 +5230,7 @@ export type updateGuildPurchasesResponse = updateGuildPurchasesResponseComposite
 };
 
 export const getUpdateGuildPurchasesUrl = (discordId: bigint) => {
-	return `http://localhost:5164/user/guild/${discordId}/purchases`;
+	return `https://api.elitebot.dev/user/guild/${discordId}/purchases`;
 };
 
 export const updateGuildPurchases = async (discordId: bigint, options?: RequestInit) => {
@@ -5254,8 +5271,8 @@ export const getGetLeaderboardUrl = (leaderboard: string, params?: GetLeaderboar
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/leaderboard/${leaderboard}?${stringifiedParams}`
-		: `http://localhost:5164/leaderboard/${leaderboard}`;
+		? `https://api.elitebot.dev/leaderboard/${leaderboard}?${stringifiedParams}`
+		: `https://api.elitebot.dev/leaderboard/${leaderboard}`;
 };
 
 export const getLeaderboard = async (leaderboard: string, params?: GetLeaderboardParams, options?: RequestInit) => {
@@ -5280,7 +5297,7 @@ export type getLeaderboardsResponse = getLeaderboardsResponseComposite & {
 };
 
 export const getGetLeaderboardsUrl = () => {
-	return `http://localhost:5164/leaderboards`;
+	return `https://api.elitebot.dev/leaderboards`;
 };
 
 export const getLeaderboards = async (options?: RequestInit) => {
@@ -5320,8 +5337,8 @@ export const getGetPlayerLeaderboardRanksUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/leaderboards/${playerUuid}/${profileUuid}?${stringifiedParams}`
-		: `http://localhost:5164/leaderboards/${playerUuid}/${profileUuid}`;
+		? `https://api.elitebot.dev/leaderboards/${playerUuid}/${profileUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/leaderboards/${playerUuid}/${profileUuid}`;
 };
 
 export const getPlayerLeaderboardRanks = async (
@@ -5375,8 +5392,8 @@ export const getGetPlayerRank1Url = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/leaderboard/rank/${leaderboard}/${playerUuid}/${profileUuid}?${stringifiedParams}`
-		: `http://localhost:5164/leaderboard/rank/${leaderboard}/${playerUuid}/${profileUuid}`;
+		? `https://api.elitebot.dev/leaderboard/rank/${leaderboard}/${playerUuid}/${profileUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/leaderboard/rank/${leaderboard}/${playerUuid}/${profileUuid}`;
 };
 
 export const getPlayerRank1 = async (
@@ -5428,8 +5445,8 @@ export const getGetPlayerRank2Url = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/leaderboard/${leaderboard}/${playerUuid}/${profileUuid}?${stringifiedParams}`
-		: `http://localhost:5164/leaderboard/${leaderboard}/${playerUuid}/${profileUuid}`;
+		? `https://api.elitebot.dev/leaderboard/${leaderboard}/${playerUuid}/${profileUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/leaderboard/${leaderboard}/${playerUuid}/${profileUuid}`;
 };
 
 export const getPlayerRank2 = async (
@@ -5466,7 +5483,7 @@ export type getPlayerRanksResponse = getPlayerRanksResponseComposite & {
 };
 
 export const getGetPlayerRanksUrl = (playerUuid: string, profileUuid: string) => {
-	return `http://localhost:5164/leaderboard/ranks/${playerUuid}/${profileUuid}`;
+	return `https://api.elitebot.dev/leaderboard/ranks/${playerUuid}/${profileUuid}`;
 };
 
 export const getPlayerRanks = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
@@ -5507,8 +5524,8 @@ export const getGetProfileRank1Url = (leaderboard: string, profileUuid: string, 
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/leaderboard/rank/${leaderboard}/${profileUuid}?${stringifiedParams}`
-		: `http://localhost:5164/leaderboard/rank/${leaderboard}/${profileUuid}`;
+		? `https://api.elitebot.dev/leaderboard/rank/${leaderboard}/${profileUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/leaderboard/rank/${leaderboard}/${profileUuid}`;
 };
 
 export const getProfileRank1 = async (
@@ -5554,8 +5571,8 @@ export const getGetProfileRank2Url = (leaderboard: string, profileUuid: string, 
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/leaderboard/${leaderboard}/${profileUuid}?${stringifiedParams}`
-		: `http://localhost:5164/leaderboard/${leaderboard}/${profileUuid}`;
+		? `https://api.elitebot.dev/leaderboard/${leaderboard}/${profileUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/leaderboard/${leaderboard}/${profileUuid}`;
 };
 
 export const getProfileRank2 = async (
@@ -5615,8 +5632,8 @@ export const getGetEntitlementsUrl = (discordId: bigint, params?: GetEntitlement
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/account/${discordId}/entitlements?${stringifiedParams}`
-		: `http://localhost:5164/account/${discordId}/entitlements`;
+		? `https://api.elitebot.dev/account/${discordId}/entitlements?${stringifiedParams}`
+		: `https://api.elitebot.dev/account/${discordId}/entitlements`;
 };
 
 export const getEntitlements = async (discordId: bigint, params?: GetEntitlementsParams, options?: RequestInit) => {
@@ -5676,8 +5693,8 @@ export const getGrantTestEntitlementUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/account/${discordId}/entitlement/${productId}?${stringifiedParams}`
-		: `http://localhost:5164/account/${discordId}/entitlement/${productId}`;
+		? `https://api.elitebot.dev/account/${discordId}/entitlement/${productId}?${stringifiedParams}`
+		: `https://api.elitebot.dev/account/${discordId}/entitlement/${productId}`;
 };
 
 export const grantTestEntitlement = async (
@@ -5742,8 +5759,8 @@ export const getRemoveTestEntitlementUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/account/${discordId}/entitlement/${productId}?${stringifiedParams}`
-		: `http://localhost:5164/account/${discordId}/entitlement/${productId}`;
+		? `https://api.elitebot.dev/account/${discordId}/entitlement/${productId}?${stringifiedParams}`
+		: `https://api.elitebot.dev/account/${discordId}/entitlement/${productId}`;
 };
 
 export const removeTestEntitlement = async (
@@ -5786,7 +5803,7 @@ export type getLinkedAccountsResponse = getLinkedAccountsResponseComposite & {
 };
 
 export const getGetLinkedAccountsUrl = (discordId: bigint) => {
-	return `http://localhost:5164/player/${discordId}`;
+	return `https://api.elitebot.dev/player/${discordId}`;
 };
 
 export const getLinkedAccounts = async (discordId: bigint, options?: RequestInit) => {
@@ -5824,7 +5841,7 @@ export type getPlayerDataResponse = getPlayerDataResponseComposite & {
 };
 
 export const getGetPlayerDataUrl = (player: string) => {
-	return `http://localhost:5164/player/${player}`;
+	return `https://api.elitebot.dev/player/${player}`;
 };
 
 export const getPlayerData = async (player: string, options?: RequestInit) => {
@@ -5854,7 +5871,7 @@ export type getAllProfileDetailsResponse = getAllProfileDetailsResponseComposite
 };
 
 export const getGetAllProfileDetailsUrl = (playerUuid: string) => {
-	return `http://localhost:5164/profiles/${playerUuid}`;
+	return `https://api.elitebot.dev/profiles/${playerUuid}`;
 };
 
 export const getAllProfileDetails = async (playerUuid: string, options?: RequestInit) => {
@@ -5889,7 +5906,7 @@ export type getProfileResponse = getProfileResponseComposite & {
 };
 
 export const getGetProfileUrl = (playerUuid: string, profileUuid: string) => {
-	return `http://localhost:5164/profile/${playerUuid}/${profileUuid}`;
+	return `https://api.elitebot.dev/profile/${playerUuid}/${profileUuid}`;
 };
 
 export const getProfile = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
@@ -5927,7 +5944,7 @@ export type getProfileDetailsResponse = getProfileDetailsResponseComposite & {
 };
 
 export const getGetProfileDetailsUrl = (profileUuid: string) => {
-	return `http://localhost:5164/profile/${profileUuid}`;
+	return `https://api.elitebot.dev/profile/${profileUuid}`;
 };
 
 export const getProfileDetails = async (profileUuid: string, options?: RequestInit) => {
@@ -5957,7 +5974,7 @@ export type getProfileNamesResponse = getProfileNamesResponseComposite & {
 };
 
 export const getGetProfileNamesUrl = (player: string) => {
-	return `http://localhost:5164/profiles/${player}/names`;
+	return `https://api.elitebot.dev/profiles/${player}/names`;
 };
 
 export const getProfileNames = async (player: string, options?: RequestInit) => {
@@ -5995,7 +6012,7 @@ export type getSelectedProfileResponse = getSelectedProfileResponseComposite & {
 };
 
 export const getGetSelectedProfileUrl = (playerUuid: string) => {
-	return `http://localhost:5164/profile/${playerUuid}/selected`;
+	return `https://api.elitebot.dev/profile/${playerUuid}/selected`;
 };
 
 export const getSelectedProfile = async (playerUuid: string, options?: RequestInit) => {
@@ -6021,7 +6038,7 @@ export type getAuctionHouseProductsResponse = getAuctionHouseProductsResponseCom
 };
 
 export const getGetAuctionHouseProductsUrl = () => {
-	return `http://localhost:5164/resources/auctions`;
+	return `https://api.elitebot.dev/resources/auctions`;
 };
 
 export const getAuctionHouseProducts = async (options?: RequestInit) => {
@@ -6047,7 +6064,7 @@ export type getBazaarProductResponse = getBazaarProductResponseComposite & {
 };
 
 export const getGetBazaarProductUrl = (itemId: string) => {
-	return `http://localhost:5164/resources/bazaar/${itemId}`;
+	return `https://api.elitebot.dev/resources/bazaar/${itemId}`;
 };
 
 export const getBazaarProduct = async (itemId: string, options?: RequestInit) => {
@@ -6073,7 +6090,7 @@ export type getBazaarProductsResponse = getBazaarProductsResponseComposite & {
 };
 
 export const getGetBazaarProductsUrl = () => {
-	return `http://localhost:5164/resources/bazaar`;
+	return `https://api.elitebot.dev/resources/bazaar`;
 };
 
 export const getBazaarProducts = async (options?: RequestInit) => {
@@ -6099,7 +6116,7 @@ export type getItemsFromBytesResponse = getItemsFromBytesResponseComposite & {
 };
 
 export const getGetItemsFromBytesUrl = () => {
-	return `http://localhost:5164/resources/item-parse`;
+	return `https://api.elitebot.dev/resources/item-parse`;
 };
 
 export const getItemsFromBytes = async (getItemsFromBytesRequest: GetItemsFromBytesRequest, options?: RequestInit) => {
@@ -6127,7 +6144,7 @@ export type getSkyblockItemsResponse = getSkyblockItemsResponseComposite & {
 };
 
 export const getGetSkyblockItemsUrl = () => {
-	return `http://localhost:5164/resources/items`;
+	return `https://api.elitebot.dev/resources/items`;
 };
 
 export const getSkyblockItems = async (options?: RequestInit) => {
@@ -6160,7 +6177,7 @@ export type getSpecifiedSkyblockItemsResponse = getSpecifiedSkyblockItemsRespons
 };
 
 export const getGetSpecifiedSkyblockItemsUrl = () => {
-	return `http://localhost:5164/resources/items`;
+	return `https://api.elitebot.dev/resources/items`;
 };
 
 export const getSpecifiedSkyblockItems = async (
@@ -6191,7 +6208,7 @@ export type skyblockProductResponse = skyblockProductResponseComposite & {
 };
 
 export const getSkyblockProductUrl = (itemId: string) => {
-	return `http://localhost:5164/resources/items/${itemId}`;
+	return `https://api.elitebot.dev/resources/items/${itemId}`;
 };
 
 export const skyblockProduct = async (itemId: string, options?: RequestInit) => {
@@ -6229,7 +6246,7 @@ export type addProductToCategoryResponse = addProductToCategoryResponseComposite
 };
 
 export const getAddProductToCategoryUrl = (categoryId: number, productId: bigint) => {
-	return `http://localhost:5164/shop/category/${categoryId}/product/${productId}`;
+	return `https://api.elitebot.dev/shop/category/${categoryId}/product/${productId}`;
 };
 
 export const addProductToCategory = async (categoryId: number, productId: bigint, options?: RequestInit) => {
@@ -6267,7 +6284,7 @@ export type removeProductToCategoryResponse = removeProductToCategoryResponseCom
 };
 
 export const getRemoveProductToCategoryUrl = (categoryId: number, productId: bigint) => {
-	return `http://localhost:5164/shop/category/${categoryId}/product/${productId}`;
+	return `https://api.elitebot.dev/shop/category/${categoryId}/product/${productId}`;
 };
 
 export const removeProductToCategory = async (categoryId: number, productId: bigint, options?: RequestInit) => {
@@ -6305,7 +6322,7 @@ export type createCategoryResponse = createCategoryResponseComposite & {
 };
 
 export const getCreateCategoryUrl = () => {
-	return `http://localhost:5164/shop/category`;
+	return `https://api.elitebot.dev/shop/category`;
 };
 
 export const createCategory = async (createCategoryDto: CreateCategoryDto, options?: RequestInit) => {
@@ -6345,7 +6362,7 @@ export type deleteCategoryResponse = deleteCategoryResponseComposite & {
 };
 
 export const getDeleteCategoryUrl = (categoryId: number) => {
-	return `http://localhost:5164/shop/category/${categoryId}`;
+	return `https://api.elitebot.dev/shop/category/${categoryId}`;
 };
 
 export const deleteCategory = async (categoryId: number, options?: RequestInit) => {
@@ -6383,7 +6400,7 @@ export type updateCategoryResponse = updateCategoryResponseComposite & {
 };
 
 export const getUpdateCategoryUrl = (categoryId: number) => {
-	return `http://localhost:5164/shop/category/${categoryId}`;
+	return `https://api.elitebot.dev/shop/category/${categoryId}`;
 };
 
 export const updateCategory = async (categoryId: number, editCategoryDto: EditCategoryDto, options?: RequestInit) => {
@@ -6421,8 +6438,8 @@ export const getGetCategoriesUrl = (params?: GetCategoriesParams) => {
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/shop/categories?${stringifiedParams}`
-		: `http://localhost:5164/shop/categories`;
+		? `https://api.elitebot.dev/shop/categories?${stringifiedParams}`
+		: `https://api.elitebot.dev/shop/categories`;
 };
 
 export const getCategories = async (params?: GetCategoriesParams, options?: RequestInit) => {
@@ -6447,7 +6464,7 @@ export type getCategoryResponse = getCategoryResponseComposite & {
 };
 
 export const getGetCategoryUrl = (category: string) => {
-	return `http://localhost:5164/shop/category/${category}`;
+	return `https://api.elitebot.dev/shop/category/${category}`;
 };
 
 export const getCategory = async (category: string, options?: RequestInit) => {
@@ -6491,7 +6508,7 @@ export type reorderCategoriesResponse = reorderCategoriesResponseComposite & {
 };
 
 export const getReorderCategoriesUrl = () => {
-	return `http://localhost:5164/shop/categories/reorder`;
+	return `https://api.elitebot.dev/shop/categories/reorder`;
 };
 
 export const reorderCategories = async (reorderIntRequest: ReorderIntRequest, options?: RequestInit) => {
@@ -6537,7 +6554,7 @@ export type reorderCategoryProductsResponse = reorderCategoryProductsResponseCom
 };
 
 export const getReorderCategoryProductsUrl = (categoryId: number) => {
-	return `http://localhost:5164/shop/category/${categoryId}/reorder`;
+	return `https://api.elitebot.dev/shop/category/${categoryId}/reorder`;
 };
 
 export const reorderCategoryProducts = async (
@@ -6581,7 +6598,7 @@ export type addCosmeticToProductResponse = addCosmeticToProductResponseComposite
 };
 
 export const getAddCosmeticToProductUrl = (productId: bigint, cosmeticId: number) => {
-	return `http://localhost:5164/product/${productId}/cosmetics/${cosmeticId}`;
+	return `https://api.elitebot.dev/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
 export const addCosmeticToProduct = async (productId: bigint, cosmeticId: number, options?: RequestInit) => {
@@ -6619,7 +6636,7 @@ export type removeCosmeticToProductResponse = removeCosmeticToProductResponseCom
 };
 
 export const getRemoveCosmeticToProductUrl = (productId: bigint, cosmeticId: number) => {
-	return `http://localhost:5164/product/${productId}/cosmetics/${cosmeticId}`;
+	return `https://api.elitebot.dev/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
 export const removeCosmeticToProduct = async (productId: bigint, cosmeticId: number, options?: RequestInit) => {
@@ -6674,8 +6691,8 @@ export const getAddProductImageUrl = (discordId: bigint, params?: AddProductImag
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/product/${discordId}/images?${stringifiedParams}`
-		: `http://localhost:5164/product/${discordId}/images`;
+		? `https://api.elitebot.dev/product/${discordId}/images?${stringifiedParams}`
+		: `https://api.elitebot.dev/product/${discordId}/images`;
 };
 
 export const addProductImage = async (
@@ -6734,7 +6751,7 @@ export type deleteProductImageResponse = deleteProductImageResponseComposite & {
 };
 
 export const getDeleteProductImageUrl = (discordId: bigint, imagePath: string) => {
-	return `http://localhost:5164/product/${discordId}/images/${imagePath}`;
+	return `https://api.elitebot.dev/product/${discordId}/images/${imagePath}`;
 };
 
 export const deleteProductImage = async (discordId: bigint, imagePath: string, options?: RequestInit) => {
@@ -6772,7 +6789,7 @@ export type getAllProductsResponse = getAllProductsResponseComposite & {
 };
 
 export const getGetAllProductsUrl = () => {
-	return `http://localhost:5164/products/admin`;
+	return `https://api.elitebot.dev/products/admin`;
 };
 
 export const getAllProducts = async (options?: RequestInit) => {
@@ -6810,7 +6827,7 @@ export type refreshProductsResponse = refreshProductsResponseComposite & {
 };
 
 export const getRefreshProductsUrl = () => {
-	return `http://localhost:5164/products/refresh`;
+	return `https://api.elitebot.dev/products/refresh`;
 };
 
 export const refreshProducts = async (options?: RequestInit) => {
@@ -6854,7 +6871,7 @@ export type updateProductResponse = updateProductResponseComposite & {
 };
 
 export const getUpdateProductUrl = (discordId: bigint) => {
-	return `http://localhost:5164/product/${discordId}`;
+	return `https://api.elitebot.dev/product/${discordId}`;
 };
 
 export const updateProduct = async (discordId: bigint, editProductDto: EditProductDto, options?: RequestInit) => {
@@ -6886,7 +6903,7 @@ export type getProductResponse = getProductResponseComposite & {
 };
 
 export const getGetProductUrl = (discordId: bigint) => {
-	return `http://localhost:5164/product/${discordId}`;
+	return `https://api.elitebot.dev/product/${discordId}`;
 };
 
 export const getProduct = async (discordId: bigint, options?: RequestInit) => {
@@ -6921,7 +6938,7 @@ export type claimProductResponse = claimProductResponseComposite & {
 };
 
 export const getClaimProductUrl = (discordId: bigint) => {
-	return `http://localhost:5164/product/${discordId}/claim`;
+	return `https://api.elitebot.dev/product/${discordId}/claim`;
 };
 
 export const claimProduct = async (discordId: bigint, options?: RequestInit) => {
@@ -6946,7 +6963,7 @@ export type getProductsResponse = getProductsResponseComposite & {
 };
 
 export const getGetProductsUrl = () => {
-	return `http://localhost:5164/products`;
+	return `https://api.elitebot.dev/products`;
 };
 
 export const getProducts = async (options?: RequestInit) => {
@@ -6995,8 +7012,8 @@ export const getAddStyleImageUrl = (styleId: number, params?: AddStyleImageParam
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/product/style/${styleId}/images?${stringifiedParams}`
-		: `http://localhost:5164/product/style/${styleId}/images`;
+		? `https://api.elitebot.dev/product/style/${styleId}/images?${stringifiedParams}`
+		: `https://api.elitebot.dev/product/style/${styleId}/images`;
 };
 
 export const addStyleImage = async (
@@ -7055,7 +7072,7 @@ export type createStyleResponse = createStyleResponseComposite & {
 };
 
 export const getCreateStyleUrl = () => {
-	return `http://localhost:5164/product/style`;
+	return `https://api.elitebot.dev/product/style`;
 };
 
 export const createStyle = async (createStyleRequest: CreateStyleRequest, options?: RequestInit) => {
@@ -7092,7 +7109,7 @@ export type deleteStyleResponse = deleteStyleResponseComposite & {
 };
 
 export const getDeleteStyleUrl = (styleId: number) => {
-	return `http://localhost:5164/product/style/${styleId}`;
+	return `https://api.elitebot.dev/product/style/${styleId}`;
 };
 
 export const deleteStyle = async (styleId: number, options?: RequestInit) => {
@@ -7117,7 +7134,7 @@ export type getStyleResponse = getStyleResponseComposite & {
 };
 
 export const getGetStyleUrl = (styleId: number) => {
-	return `http://localhost:5164/product/style/${styleId}`;
+	return `https://api.elitebot.dev/product/style/${styleId}`;
 };
 
 export const getStyle = async (styleId: number, options?: RequestInit) => {
@@ -7161,7 +7178,7 @@ export type updateStyleResponse = updateStyleResponseComposite & {
 };
 
 export const getUpdateStyleUrl = (styleId: number) => {
-	return `http://localhost:5164/product/style/${styleId}`;
+	return `https://api.elitebot.dev/product/style/${styleId}`;
 };
 
 export const updateStyle = async (
@@ -7205,7 +7222,7 @@ export type deleteStyleImageResponse = deleteStyleImageResponseComposite & {
 };
 
 export const getDeleteStyleImageUrl = (styleId: number, imagePath: string) => {
-	return `http://localhost:5164/product/style/${styleId}/images/${imagePath}`;
+	return `https://api.elitebot.dev/product/style/${styleId}/images/${imagePath}`;
 };
 
 export const deleteStyleImage = async (styleId: number, imagePath: string, options?: RequestInit) => {
@@ -7230,7 +7247,7 @@ export type getStylesResponse = getStylesResponseComposite & {
 };
 
 export const getGetStylesUrl = () => {
-	return `http://localhost:5164/product/styles`;
+	return `https://api.elitebot.dev/product/styles`;
 };
 
 export const getStyles = async (options?: RequestInit) => {
@@ -7256,7 +7273,7 @@ export type getAllWeightsResponse = getAllWeightsResponseComposite & {
 };
 
 export const getGetAllWeightsUrl = () => {
-	return `http://localhost:5164/weights/all`;
+	return `https://api.elitebot.dev/weights/all`;
 };
 
 export const getAllWeights = async (options?: RequestInit) => {
@@ -7301,8 +7318,8 @@ export const getGetWeightForProfileUrl = (
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/weight/${playerUuid}/${profileUuid}?${stringifiedParams}`
-		: `http://localhost:5164/weight/${playerUuid}/${profileUuid}`;
+		? `https://api.elitebot.dev/weight/${playerUuid}/${profileUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/weight/${playerUuid}/${profileUuid}`;
 };
 
 export const getWeightForProfile = async (
@@ -7348,8 +7365,8 @@ export const getGetWeightForSelectedUrl = (playerUuid: string, params?: GetWeigh
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/weight/${playerUuid}/selected?${stringifiedParams}`
-		: `http://localhost:5164/weight/${playerUuid}/selected`;
+		? `https://api.elitebot.dev/weight/${playerUuid}/selected?${stringifiedParams}`
+		: `https://api.elitebot.dev/weight/${playerUuid}/selected`;
 };
 
 export const getWeightForSelected = async (
@@ -7395,8 +7412,8 @@ export const getGetWeightForProfilesUrl = (playerUuid: string, params?: GetWeigh
 	const stringifiedParams = normalizedParams.toString();
 
 	return stringifiedParams.length > 0
-		? `http://localhost:5164/weight/${playerUuid}?${stringifiedParams}`
-		: `http://localhost:5164/weight/${playerUuid}`;
+		? `https://api.elitebot.dev/weight/${playerUuid}?${stringifiedParams}`
+		: `https://api.elitebot.dev/weight/${playerUuid}`;
 };
 
 export const getWeightForProfiles = async (

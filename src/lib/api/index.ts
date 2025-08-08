@@ -1,3 +1,3 @@
-export * from './endpoints/EliteAPI';
-export * from './endpoints/EliteAPI.zod';
+export * from './client/EliteAPI';
+export * from './client/EliteAPI.zod';
 export * from './schemas';

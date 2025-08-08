@@ -8,4 +8,9 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type GetContestsAtTimestampParams = {
+	/**
+	 * Limit the number of participations returned in each contest.
+	 */
+	limit: number;
+};

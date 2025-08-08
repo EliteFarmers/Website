@@ -9,12 +9,9 @@ export default defineConfig({
 		output: {
 			baseUrl: process.env.ELITE_API_URL,
 			client: 'fetch',
-			target: './src/lib/api/endpoints',
+			target: './src/lib/api/client',
 			schemas: './src/lib/api/schemas',
 			namingConvention: 'PascalCase',
-			// Split generated files by tags.
-			// mode: 'tags-split',
-
 			override: {
 				useBigInt: true,
 				mutator: {
@@ -36,14 +33,10 @@ export default defineConfig({
 		},
 		output: {
 			baseUrl: process.env.ELITE_API_URL,
-
 			client: 'zod',
-			target: './src/lib/api/endpoints',
+			target: './src/lib/api/client',
 			fileExtension: '.zod.ts',
 			namingConvention: 'PascalCase',
-			// Split generated files by tags.
-			// mode: 'tags-split',
-
 			override: {
 				useBigInt: true,
 				transformer: './src/lib/api/util/zod-transformer.ts',

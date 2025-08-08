@@ -22,7 +22,7 @@
 		"down": "docker-compose down",
 		"license": "pnpm exec pnpm-licenses generate-disclaimer --output-file=./static/oss.txt",
 		"generate-api": "pnpm orval",
-        "postprocess-api": "node ./src/lib/api/util/morph-api.ts src/lib/api/endpoints/EliteApi.ts && pnpm prettier --write src/lib/api/"
+        "postprocess-api": "node ./src/lib/api/util/morph-api.ts src/lib/api/client/EliteApi.ts && pnpm prettier --write src/lib/api/"
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.76"
