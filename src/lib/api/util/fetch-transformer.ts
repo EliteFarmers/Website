@@ -6,16 +6,14 @@ import type { GeneratorVerbOptions } from 'orval';
  * @returns The transformed fetch options.
  */
 export default function fetchTransformer(options: GeneratorVerbOptions): GeneratorVerbOptions {
-	for (const param of options.params) {
+	for (const param of options.props) {
 		if (param.definition.endsWith(': number')) {
 			param.definition = param.definition.replace(': number', ': number | string');
 			param.implementation = param.definition;
 		}
-	}
 
-	for (const param of options.props) {
-		if (param.definition.endsWith(': number')) {
-			param.definition = param.definition.replace(': number', ': number | string');
+		if (param.definition.endsWith(': bigint')) {
+			param.definition = param.definition.replace(': bigint', ': bigint | number | string');
 			param.implementation = param.definition;
 		}
 	}

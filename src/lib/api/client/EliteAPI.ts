@@ -316,11 +316,11 @@ export type getAccountFromDiscordResponse = getAccountFromDiscordResponseComposi
 	headers: Headers;
 };
 
-export const getGetAccountFromDiscordUrl = (discordId: bigint) => {
+export const getGetAccountFromDiscordUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/account/${discordId}`;
 };
 
-export const getAccountFromDiscord = async (discordId: bigint, options?: RequestInit) => {
+export const getAccountFromDiscord = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getAccountFromDiscordResponse>(getGetAccountFromDiscordUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -346,11 +346,11 @@ export type getAccountSettingsResponse = getAccountSettingsResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetAccountSettingsUrl = (discordId: bigint) => {
+export const getGetAccountSettingsUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/account/${discordId}/settings`;
 };
 
-export const getAccountSettings = async (discordId: bigint, options?: RequestInit) => {
+export const getAccountSettings = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getAccountSettingsResponse>(getGetAccountSettingsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -630,11 +630,11 @@ export type addRoleToUserResponse = addRoleToUserResponseComposite & {
 	headers: Headers;
 };
 
-export const getAddRoleToUserUrl = (discordId: bigint, role: string) => {
+export const getAddRoleToUserUrl = (discordId: bigint | number | string, role: string) => {
 	return `https://api.elitebot.dev/admin/user/${discordId}/roles/${role}`;
 };
 
-export const addRoleToUser = async (discordId: bigint, role: string, options?: RequestInit) => {
+export const addRoleToUser = async (discordId: bigint | number | string, role: string, options?: RequestInit) => {
 	return customFetch<addRoleToUserResponse>(getAddRoleToUserUrl(discordId, role), {
 		...options,
 		method: 'POST',
@@ -674,11 +674,11 @@ export type removeRoleFromUserResponse = removeRoleFromUserResponseComposite & {
 	headers: Headers;
 };
 
-export const getRemoveRoleFromUserUrl = (discordId: bigint, role: string) => {
+export const getRemoveRoleFromUserUrl = (discordId: bigint | number | string, role: string) => {
 	return `https://api.elitebot.dev/admin/user/${discordId}/roles/${role}`;
 };
 
-export const removeRoleFromUser = async (discordId: bigint, role: string, options?: RequestInit) => {
+export const removeRoleFromUser = async (discordId: bigint | number | string, role: string, options?: RequestInit) => {
 	return customFetch<removeRoleFromUserResponse>(getRemoveRoleFromUserUrl(discordId, role), {
 		...options,
 		method: 'DELETE',
@@ -802,11 +802,11 @@ export type deleteEventApprovalResponse = deleteEventApprovalResponseComposite &
 	headers: Headers;
 };
 
-export const getDeleteEventApprovalUrl = (eventId: bigint) => {
+export const getDeleteEventApprovalUrl = (eventId: bigint | number | string) => {
 	return `https://api.elitebot.dev/admin/events/${eventId}`;
 };
 
-export const deleteEventApproval = async (eventId: bigint, options?: RequestInit) => {
+export const deleteEventApproval = async (eventId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<deleteEventApprovalResponse>(getDeleteEventApprovalUrl(eventId), {
 		...options,
 		method: 'DELETE',
@@ -884,7 +884,7 @@ export type setEventApprovalResponse = setEventApprovalResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetEventApprovalUrl = (eventId: bigint, params?: SetEventApprovalParams) => {
+export const getSetEventApprovalUrl = (eventId: bigint | number | string, params?: SetEventApprovalParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -900,7 +900,11 @@ export const getSetEventApprovalUrl = (eventId: bigint, params?: SetEventApprova
 		: `https://api.elitebot.dev/admin/events/${eventId}/approve`;
 };
 
-export const setEventApproval = async (eventId: bigint, params?: SetEventApprovalParams, options?: RequestInit) => {
+export const setEventApproval = async (
+	eventId: bigint | number | string,
+	params?: SetEventApprovalParams,
+	options?: RequestInit
+) => {
 	return customFetch<setEventApprovalResponse>(getSetEventApprovalUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -1043,11 +1047,11 @@ export type refreshDiscordGuildResponse = refreshDiscordGuildResponseComposite &
 	headers: Headers;
 };
 
-export const getRefreshDiscordGuildUrl = (guildId: bigint) => {
+export const getRefreshDiscordGuildUrl = (guildId: bigint | number | string) => {
 	return `https://api.elitebot.dev/admin/guild/${guildId}/refresh`;
 };
 
-export const refreshDiscordGuild = async (guildId: bigint, options?: RequestInit) => {
+export const refreshDiscordGuild = async (guildId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<refreshDiscordGuildResponse>(getRefreshDiscordGuildUrl(guildId), {
 		...options,
 		method: 'POST',
@@ -1573,11 +1577,11 @@ export type linkAccountBotResponse = linkAccountBotResponseComposite & {
 	headers: Headers;
 };
 
-export const getLinkAccountBotUrl = (discordId: bigint, player: string) => {
+export const getLinkAccountBotUrl = (discordId: bigint | number | string, player: string) => {
 	return `https://api.elitebot.dev/bot/account/${discordId}/${player}`;
 };
 
-export const linkAccountBot = async (discordId: bigint, player: string, options?: RequestInit) => {
+export const linkAccountBot = async (discordId: bigint | number | string, player: string, options?: RequestInit) => {
 	return customFetch<linkAccountBotResponse>(getLinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1603,11 +1607,11 @@ export type unlinkAccountBotResponse = unlinkAccountBotResponseComposite & {
 	headers: Headers;
 };
 
-export const getUnlinkAccountBotUrl = (discordId: bigint, player: string) => {
+export const getUnlinkAccountBotUrl = (discordId: bigint | number | string, player: string) => {
 	return `https://api.elitebot.dev/bot/account/${discordId}/${player}`;
 };
 
-export const unlinkAccountBot = async (discordId: bigint, player: string, options?: RequestInit) => {
+export const unlinkAccountBot = async (discordId: bigint | number | string, player: string, options?: RequestInit) => {
 	return customFetch<unlinkAccountBotResponse>(getUnlinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'DELETE',
@@ -1633,11 +1637,15 @@ export type makePrimaryAccountResponse = makePrimaryAccountResponseComposite & {
 	headers: Headers;
 };
 
-export const getMakePrimaryAccountUrl = (discordId: bigint, player: string) => {
+export const getMakePrimaryAccountUrl = (discordId: bigint | number | string, player: string) => {
 	return `https://api.elitebot.dev/bot/account/${discordId}/${player}/primary`;
 };
 
-export const makePrimaryAccount = async (discordId: bigint, player: string, options?: RequestInit) => {
+export const makePrimaryAccount = async (
+	discordId: bigint | number | string,
+	player: string,
+	options?: RequestInit
+) => {
 	return customFetch<makePrimaryAccountResponse>(getMakePrimaryAccountUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1663,11 +1671,11 @@ export type refreshUserPurchasesResponse = refreshUserPurchasesResponseComposite
 	headers: Headers;
 };
 
-export const getRefreshUserPurchasesUrl = (discordId: bigint) => {
+export const getRefreshUserPurchasesUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/account/${discordId}/purchases`;
 };
 
-export const refreshUserPurchases = async (discordId: bigint, options?: RequestInit) => {
+export const refreshUserPurchases = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<refreshUserPurchasesResponse>(getRefreshUserPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -1755,7 +1763,10 @@ export type disableContestPingsPingsResponse = disableContestPingsPingsResponseC
 	headers: Headers;
 };
 
-export const getDisableContestPingsPingsUrl = (discordId: bigint, params?: DisableContestPingsPingsParams) => {
+export const getDisableContestPingsPingsUrl = (
+	discordId: bigint | number | string,
+	params?: DisableContestPingsPingsParams
+) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -1772,7 +1783,7 @@ export const getDisableContestPingsPingsUrl = (discordId: bigint, params?: Disab
 };
 
 export const disableContestPingsPings = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	params?: DisableContestPingsPingsParams,
 	options?: RequestInit
 ) => {
@@ -1826,11 +1837,11 @@ export type getBotGuildResponse = getBotGuildResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetBotGuildUrl = (discordId: bigint) => {
+export const getGetBotGuildUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/${discordId}`;
 };
 
-export const getBotGuild = async (discordId: bigint, options?: RequestInit) => {
+export const getBotGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getBotGuildResponse>(getGetBotGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -1856,11 +1867,11 @@ export type getJacobFeatureResponse = getJacobFeatureResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetJacobFeatureUrl = (discordId: bigint) => {
+export const getGetJacobFeatureUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/${discordId}/jacob`;
 };
 
-export const getJacobFeature = async (discordId: bigint, options?: RequestInit) => {
+export const getJacobFeature = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getJacobFeatureResponse>(getGetJacobFeatureUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -1886,7 +1897,7 @@ export type updateJacobFeatureResponse = updateJacobFeatureResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateJacobFeatureUrl = (discordId: bigint, params?: UpdateJacobFeatureParams) => {
+export const getUpdateJacobFeatureUrl = (discordId: bigint | number | string, params?: UpdateJacobFeatureParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -1903,7 +1914,7 @@ export const getUpdateJacobFeatureUrl = (discordId: bigint, params?: UpdateJacob
 };
 
 export const updateJacobFeature = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateJacobFeatureParams,
 	options?: RequestInit
@@ -1935,11 +1946,11 @@ export type refreshGuildResponse = refreshGuildResponseComposite & {
 	headers: Headers;
 };
 
-export const getRefreshGuildUrl = (discordId: bigint) => {
+export const getRefreshGuildUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/guild/${discordId}`;
 };
 
-export const refreshGuild = async (discordId: bigint, options?: RequestInit) => {
+export const refreshGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<refreshGuildResponse>(getRefreshGuildUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -1965,11 +1976,15 @@ export type updateGuildResponse = updateGuildResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateGuildUrl = (discordId: bigint) => {
+export const getUpdateGuildUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/guild/${discordId}`;
 };
 
-export const updateGuild = async (discordId: bigint, incomingGuildDto: IncomingGuildDto, options?: RequestInit) => {
+export const updateGuild = async (
+	discordId: bigint | number | string,
+	incomingGuildDto: IncomingGuildDto,
+	options?: RequestInit
+) => {
 	return customFetch<updateGuildResponse>(getUpdateGuildUrl(discordId), {
 		...options,
 		method: 'PATCH',
@@ -1997,12 +2012,12 @@ export type updateGuildChannelResponse = updateGuildChannelResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateGuildChannelUrl = (discordId: bigint) => {
+export const getUpdateGuildChannelUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/guild/${discordId}/channels`;
 };
 
 export const updateGuildChannel = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	incomingGuildChannelDto: IncomingGuildChannelDto,
 	options?: RequestInit
 ) => {
@@ -2035,12 +2050,12 @@ export type updateGuildMemberRolesResponse = updateGuildMemberRolesResponseCompo
 	headers: Headers;
 };
 
-export const getUpdateGuildMemberRolesUrl = (discordId: bigint, userId: string) => {
+export const getUpdateGuildMemberRolesUrl = (discordId: bigint | number | string, userId: string) => {
 	return `https://api.elitebot.dev/bot/guild/${discordId}/members/${userId}/roles`;
 };
 
 export const updateGuildMemberRoles = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	userId: string,
 	updateGuildMemberRolesBody: string[],
 	options?: RequestInit
@@ -2072,12 +2087,12 @@ export type updateGuildRoleResponse = updateGuildRoleResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateGuildRoleUrl = (discordId: bigint) => {
+export const getUpdateGuildRoleUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/bot/guild/${discordId}/roles`;
 };
 
 export const updateGuildRole = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	incomingGuildRoleDto: IncomingGuildRoleDto,
 	options?: RequestInit
 ) => {
@@ -2155,7 +2170,10 @@ export type getContestsAtTimestampResponse = getContestsAtTimestampResponseCompo
 	headers: Headers;
 };
 
-export const getGetContestsAtTimestampUrl = (timestamp: bigint, params: GetContestsAtTimestampParams) => {
+export const getGetContestsAtTimestampUrl = (
+	timestamp: bigint | number | string,
+	params: GetContestsAtTimestampParams
+) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -2172,7 +2190,7 @@ export const getGetContestsAtTimestampUrl = (timestamp: bigint, params: GetConte
 };
 
 export const getContestsAtTimestamp = async (
-	timestamp: bigint,
+	timestamp: bigint | number | string,
 	params: GetContestsAtTimestampParams,
 	options?: RequestInit
 ) => {
@@ -2684,11 +2702,15 @@ export type createEventResponse = createEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getCreateEventUrl = (discordId: bigint) => {
+export const getCreateEventUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/weight`;
 };
 
-export const createEvent = async (discordId: bigint, createEventDto: CreateEventDto, options?: RequestInit) => {
+export const createEvent = async (
+	discordId: bigint | number | string,
+	createEventDto: CreateEventDto,
+	options?: RequestInit
+) => {
 	return customFetch<createEventResponse>(getCreateEventUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2725,7 +2747,11 @@ export type createTeamAdminResponse = createTeamAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getCreateTeamAdminUrl = (discordId: bigint, eventId: number | string, params?: CreateTeamAdminParams) => {
+export const getCreateTeamAdminUrl = (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	params?: CreateTeamAdminParams
+) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -2742,7 +2768,7 @@ export const getCreateTeamAdminUrl = (discordId: bigint, eventId: number | strin
 };
 
 export const createTeamAdmin = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	eventId: number | string,
 	createEventTeamDto: CreateEventTeamDto,
 	params?: CreateTeamAdminParams,
@@ -2781,11 +2807,15 @@ export type deleteEventResponse = deleteEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteEventUrl = (discordId: bigint, eventId: number | string) => {
+export const getDeleteEventUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
-export const deleteEvent = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
+export const deleteEvent = async (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<deleteEventResponse>(getDeleteEventUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2816,12 +2846,12 @@ export type updateEventResponse = updateEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateEventUrl = (discordId: bigint, eventId: number | string) => {
+export const getUpdateEventUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
 export const updateEvent = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	eventId: number | string,
 	editEventDto: EditEventDto,
 	options?: RequestInit
@@ -2861,11 +2891,15 @@ export type deleteEventBannerResponse = deleteEventBannerResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteEventBannerUrl = (discordId: bigint, eventId: number | string) => {
+export const getDeleteEventBannerUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
-export const deleteEventBanner = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
+export const deleteEventBanner = async (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<deleteEventBannerResponse>(getDeleteEventBannerUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2899,12 +2933,12 @@ export type setEventBannerResponse = setEventBannerResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetEventBannerUrl = (discordId: bigint, eventId: number | string) => {
+export const getSetEventBannerUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
 export const setEventBanner = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	eventId: number | string,
 	editEventBannerDto: EditEventBannerDto,
 	options?: RequestInit
@@ -3067,12 +3101,16 @@ export type deleteTeamAdminResponse = deleteTeamAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteTeamAdminUrl = (discordId: bigint, eventId: number | string, teamId: number | string) => {
+export const getDeleteTeamAdminUrl = (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	teamId: number | string
+) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const deleteTeamAdmin = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	eventId: number | string,
 	teamId: number | string,
 	options?: RequestInit
@@ -3110,12 +3148,16 @@ export type updateTeamAdminResponse = updateTeamAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateTeamAdminUrl = (discordId: bigint, eventId: number | string, teamId: number | string) => {
+export const getUpdateTeamAdminUrl = (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	teamId: number | string
+) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const updateTeamAdmin = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	eventId: number | string,
 	teamId: number | string,
 	updateEventTeamDto: UpdateEventTeamDto,
@@ -3156,11 +3198,15 @@ export type getBannedMembersResponse = getBannedMembersResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetBannedMembersUrl = (discordId: bigint, eventId: number | string) => {
+export const getGetBannedMembersUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/bans`;
 };
 
-export const getBannedMembers = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
+export const getBannedMembers = async (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<getBannedMembersResponse>(getGetBannedMembersUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3194,11 +3240,15 @@ export type getGuildEventMembersResponse = getGuildEventMembersResponseComposite
 	headers: Headers;
 };
 
-export const getGetGuildEventMembersUrl = (discordId: bigint, eventId: number | string) => {
+export const getGetGuildEventMembersUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/members`;
 };
 
-export const getGuildEventMembers = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
+export const getGuildEventMembers = async (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<getGuildEventMembersResponse>(getGetGuildEventMembersUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3232,11 +3282,15 @@ export type getGuildEventResponse = getGuildEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildEventUrl = (discordId: bigint, eventId: number | string) => {
+export const getGetGuildEventUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/admin`;
 };
 
-export const getGuildEvent = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
+export const getGuildEvent = async (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<getGuildEventResponse>(getGetGuildEventUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3270,11 +3324,11 @@ export type getGuildEventsResponse = getGuildEventsResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildEventsUrl = (discordId: bigint) => {
+export const getGetGuildEventsUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/admin`;
 };
 
-export const getGuildEvents = async (discordId: bigint, options?: RequestInit) => {
+export const getGuildEvents = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getGuildEventsResponse>(getGetGuildEventsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -3308,11 +3362,15 @@ export type getTeamsAdminResponse = getTeamsAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetTeamsAdminUrl = (discordId: bigint, eventId: number | string) => {
+export const getGetTeamsAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/teams`;
 };
 
-export const getTeamsAdmin = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
+export const getTeamsAdmin = async (
+	discordId: bigint | number | string,
+	eventId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<getTeamsAdminResponse>(getGetTeamsAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -4406,7 +4464,7 @@ export type setEventFeatureResponse = setEventFeatureResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetEventFeatureUrl = (discordId: bigint, params?: SetEventFeatureParams) => {
+export const getSetEventFeatureUrl = (discordId: bigint | number | string, params?: SetEventFeatureParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4422,7 +4480,11 @@ export const getSetEventFeatureUrl = (discordId: bigint, params?: SetEventFeatur
 		: `https://api.elitebot.dev/guild/${discordId}/events`;
 };
 
-export const setEventFeature = async (discordId: bigint, params?: SetEventFeatureParams, options?: RequestInit) => {
+export const setEventFeature = async (
+	discordId: bigint | number | string,
+	params?: SetEventFeatureParams,
+	options?: RequestInit
+) => {
 	return customFetch<setEventFeatureResponse>(getSetEventFeatureUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4448,11 +4510,11 @@ export type getPublicGuildEventsResponse = getPublicGuildEventsResponseComposite
 	headers: Headers;
 };
 
-export const getGetPublicGuildEventsUrl = (discordId: bigint) => {
+export const getGetPublicGuildEventsUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events`;
 };
 
-export const getPublicGuildEvents = async (discordId: bigint, options?: RequestInit) => {
+export const getPublicGuildEvents = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getPublicGuildEventsResponse>(getGetPublicGuildEventsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4492,7 +4554,7 @@ export type setJacobFeatureResponse = setJacobFeatureResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetJacobFeatureUrl = (discordId: bigint, params?: SetJacobFeatureParams) => {
+export const getSetJacobFeatureUrl = (discordId: bigint | number | string, params?: SetJacobFeatureParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4508,7 +4570,11 @@ export const getSetJacobFeatureUrl = (discordId: bigint, params?: SetJacobFeatur
 		: `https://api.elitebot.dev/guild/${discordId}/jacob`;
 };
 
-export const setJacobFeature = async (discordId: bigint, params?: SetJacobFeatureParams, options?: RequestInit) => {
+export const setJacobFeature = async (
+	discordId: bigint | number | string,
+	params?: SetJacobFeatureParams,
+	options?: RequestInit
+) => {
 	return customFetch<setJacobFeatureResponse>(getSetJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4548,7 +4614,7 @@ export type setGuildLockedResponse = setGuildLockedResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetGuildLockedUrl = (discordId: bigint, params?: SetGuildLockedParams) => {
+export const getSetGuildLockedUrl = (discordId: bigint | number | string, params?: SetGuildLockedParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4564,7 +4630,11 @@ export const getSetGuildLockedUrl = (discordId: bigint, params?: SetGuildLockedP
 		: `https://api.elitebot.dev/guild/${discordId}/lock`;
 };
 
-export const setGuildLocked = async (discordId: bigint, params?: SetGuildLockedParams, options?: RequestInit) => {
+export const setGuildLocked = async (
+	discordId: bigint | number | string,
+	params?: SetGuildLockedParams,
+	options?: RequestInit
+) => {
 	return customFetch<setGuildLockedResponse>(getSetGuildLockedUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4604,7 +4674,7 @@ export type setGuildPublicResponse = setGuildPublicResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetGuildPublicUrl = (discordId: bigint, params?: SetGuildPublicParams) => {
+export const getSetGuildPublicUrl = (discordId: bigint | number | string, params?: SetGuildPublicParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4620,7 +4690,11 @@ export const getSetGuildPublicUrl = (discordId: bigint, params?: SetGuildPublicP
 		: `https://api.elitebot.dev/guild/${discordId}/public`;
 };
 
-export const setGuildPublic = async (discordId: bigint, params?: SetGuildPublicParams, options?: RequestInit) => {
+export const setGuildPublic = async (
+	discordId: bigint | number | string,
+	params?: SetGuildPublicParams,
+	options?: RequestInit
+) => {
 	return customFetch<setGuildPublicResponse>(getSetGuildPublicUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4646,11 +4720,11 @@ export type getPublicGuildResponse = getPublicGuildResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetPublicGuildUrl = (discordId: bigint) => {
+export const getGetPublicGuildUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}`;
 };
 
-export const getPublicGuild = async (discordId: bigint, options?: RequestInit) => {
+export const getPublicGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getPublicGuildResponse>(getGetPublicGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4709,7 +4783,7 @@ export type deleteContestPingsResponse = deleteContestPingsResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteContestPingsUrl = (discordId: bigint, params?: DeleteContestPingsParams) => {
+export const getDeleteContestPingsUrl = (discordId: bigint | number | string, params?: DeleteContestPingsParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4726,7 +4800,7 @@ export const getDeleteContestPingsUrl = (discordId: bigint, params?: DeleteConte
 };
 
 export const deleteContestPings = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	params?: DeleteContestPingsParams,
 	options?: RequestInit
 ) => {
@@ -4763,12 +4837,12 @@ export type updateContestPingsResponse = updateContestPingsResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateContestPingsUrl = (discordId: bigint) => {
+export const getUpdateContestPingsUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/contestpings`;
 };
 
 export const updateContestPings = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	updateContestPingsRequestUpdateContestPings: UpdateContestPingsRequestUpdateContestPings,
 	options?: RequestInit
 ) => {
@@ -4834,11 +4908,11 @@ export type getUserGuildResponse = getUserGuildResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetUserGuildUrl = (discordId: bigint) => {
+export const getGetUserGuildUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}`;
 };
 
-export const getUserGuild = async (discordId: bigint, options?: RequestInit) => {
+export const getUserGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getUserGuildResponse>(getGetUserGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4872,12 +4946,12 @@ export type createGuildJacobFeatureResponse = createGuildJacobFeatureResponseCom
 	headers: Headers;
 };
 
-export const getCreateGuildJacobFeatureUrl = (discordId: bigint) => {
+export const getCreateGuildJacobFeatureUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/leaderboard`;
 };
 
 export const createGuildJacobFeature = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	createJacobLeaderboardRequestCreateJacobLeaderboard: CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	options?: RequestInit
 ) => {
@@ -4916,11 +4990,15 @@ export type deleteGuildJacobFeatureResponse = deleteGuildJacobFeatureResponseCom
 	headers: Headers;
 };
 
-export const getDeleteGuildJacobFeatureUrl = (discordId: bigint, leaderboardId: string) => {
+export const getDeleteGuildJacobFeatureUrl = (discordId: bigint | number | string, leaderboardId: string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
-export const deleteGuildJacobFeature = async (discordId: bigint, leaderboardId: string, options?: RequestInit) => {
+export const deleteGuildJacobFeature = async (
+	discordId: bigint | number | string,
+	leaderboardId: string,
+	options?: RequestInit
+) => {
 	return customFetch<deleteGuildJacobFeatureResponse>(getDeleteGuildJacobFeatureUrl(discordId, leaderboardId), {
 		...options,
 		method: 'DELETE',
@@ -4954,12 +5032,12 @@ export type updateGuildJacobLeaderboardResponse = updateGuildJacobLeaderboardRes
 	headers: Headers;
 };
 
-export const getUpdateGuildJacobLeaderboardUrl = (discordId: bigint, leaderboardId: string) => {
+export const getUpdateGuildJacobLeaderboardUrl = (discordId: bigint | number | string, leaderboardId: string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
 export const updateGuildJacobLeaderboard = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	leaderboardId: string,
 	updateJacobLeaderboardRequestUpdateJacobLeaderboard: UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
 	options?: RequestInit
@@ -5002,11 +5080,11 @@ export type getGuildJacobResponse = getGuildJacobResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildJacobUrl = (discordId: bigint) => {
+export const getGetGuildJacobUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob`;
 };
 
-export const getGuildJacob = async (discordId: bigint, options?: RequestInit) => {
+export const getGuildJacob = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getGuildJacobResponse>(getGetGuildJacobUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -5040,7 +5118,10 @@ export type updateGuildJacobFeatureResponse = updateGuildJacobFeatureResponseCom
 	headers: Headers;
 };
 
-export const getUpdateGuildJacobFeatureUrl = (discordId: bigint, params?: UpdateGuildJacobFeatureParams) => {
+export const getUpdateGuildJacobFeatureUrl = (
+	discordId: bigint | number | string,
+	params?: UpdateGuildJacobFeatureParams
+) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -5057,7 +5138,7 @@ export const getUpdateGuildJacobFeatureUrl = (discordId: bigint, params?: Update
 };
 
 export const updateGuildJacobFeature = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateGuildJacobFeatureParams,
 	options?: RequestInit
@@ -5097,11 +5178,15 @@ export type sendGuildJacobFeatureResponse = sendGuildJacobFeatureResponseComposi
 	headers: Headers;
 };
 
-export const getSendGuildJacobFeatureUrl = (discordId: bigint, leaderboardId: string) => {
+export const getSendGuildJacobFeatureUrl = (discordId: bigint | number | string, leaderboardId: string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}/send`;
 };
 
-export const sendGuildJacobFeature = async (discordId: bigint, leaderboardId: string, options?: RequestInit) => {
+export const sendGuildJacobFeature = async (
+	discordId: bigint | number | string,
+	leaderboardId: string,
+	options?: RequestInit
+) => {
 	return customFetch<sendGuildJacobFeatureResponse>(getSendGuildJacobFeatureUrl(discordId, leaderboardId), {
 		...options,
 		method: 'POST',
@@ -5168,11 +5253,11 @@ export type requestGuildRefreshResponse = requestGuildRefreshResponseComposite &
 	headers: Headers;
 };
 
-export const getRequestGuildRefreshUrl = (discordId: bigint) => {
+export const getRequestGuildRefreshUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/refresh`;
 };
 
-export const requestGuildRefresh = async (discordId: bigint, options?: RequestInit) => {
+export const requestGuildRefresh = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<requestGuildRefreshResponse>(getRequestGuildRefreshUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5203,11 +5288,15 @@ export type setAdminRoleResponse = setAdminRoleResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetAdminRoleUrl = (discordId: bigint) => {
+export const getSetAdminRoleUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/adminrole`;
 };
 
-export const setAdminRole = async (discordId: bigint, setAdminRoleBody: string, options?: RequestInit) => {
+export const setAdminRole = async (
+	discordId: bigint | number | string,
+	setAdminRoleBody: string,
+	options?: RequestInit
+) => {
 	return customFetch<setAdminRoleResponse>(getSetAdminRoleUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -5240,11 +5329,11 @@ export type setInviteResponse = setInviteResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetInviteUrl = (discordId: bigint) => {
+export const getSetInviteUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/invite`;
 };
 
-export const setInvite = async (discordId: bigint, setInviteBody: string, options?: RequestInit) => {
+export const setInvite = async (discordId: bigint | number | string, setInviteBody: string, options?: RequestInit) => {
 	return customFetch<setInviteResponse>(getSetInviteUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -5280,11 +5369,11 @@ export type updateGuildPurchasesResponse = updateGuildPurchasesResponseComposite
 	headers: Headers;
 };
 
-export const getUpdateGuildPurchasesUrl = (discordId: bigint) => {
+export const getUpdateGuildPurchasesUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/purchases`;
 };
 
-export const updateGuildPurchases = async (discordId: bigint, options?: RequestInit) => {
+export const updateGuildPurchases = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<updateGuildPurchasesResponse>(getUpdateGuildPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5671,7 +5760,7 @@ export type getEntitlementsResponse = getEntitlementsResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetEntitlementsUrl = (discordId: bigint, params?: GetEntitlementsParams) => {
+export const getGetEntitlementsUrl = (discordId: bigint | number | string, params?: GetEntitlementsParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -5687,7 +5776,11 @@ export const getGetEntitlementsUrl = (discordId: bigint, params?: GetEntitlement
 		: `https://api.elitebot.dev/account/${discordId}/entitlements`;
 };
 
-export const getEntitlements = async (discordId: bigint, params?: GetEntitlementsParams, options?: RequestInit) => {
+export const getEntitlements = async (
+	discordId: bigint | number | string,
+	params?: GetEntitlementsParams,
+	options?: RequestInit
+) => {
 	return customFetch<getEntitlementsResponse>(getGetEntitlementsUrl(discordId, params), {
 		...options,
 		method: 'GET',
@@ -5729,8 +5822,8 @@ export type grantTestEntitlementResponse = grantTestEntitlementResponseComposite
 };
 
 export const getGrantTestEntitlementUrl = (
-	discordId: bigint,
-	productId: bigint,
+	discordId: bigint | number | string,
+	productId: bigint | number | string,
 	params?: GrantTestEntitlementParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -5749,8 +5842,8 @@ export const getGrantTestEntitlementUrl = (
 };
 
 export const grantTestEntitlement = async (
-	discordId: bigint,
-	productId: bigint,
+	discordId: bigint | number | string,
+	productId: bigint | number | string,
 	params?: GrantTestEntitlementParams,
 	options?: RequestInit
 ) => {
@@ -5795,8 +5888,8 @@ export type removeTestEntitlementResponse = removeTestEntitlementResponseComposi
 };
 
 export const getRemoveTestEntitlementUrl = (
-	discordId: bigint,
-	productId: bigint,
+	discordId: bigint | number | string,
+	productId: bigint | number | string,
 	params?: RemoveTestEntitlementParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -5815,8 +5908,8 @@ export const getRemoveTestEntitlementUrl = (
 };
 
 export const removeTestEntitlement = async (
-	discordId: bigint,
-	productId: bigint,
+	discordId: bigint | number | string,
+	productId: bigint | number | string,
 	params?: RemoveTestEntitlementParams,
 	options?: RequestInit
 ) => {
@@ -5853,11 +5946,11 @@ export type getLinkedAccountsResponse = getLinkedAccountsResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetLinkedAccountsUrl = (discordId: bigint) => {
+export const getGetLinkedAccountsUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/player/${discordId}`;
 };
 
-export const getLinkedAccounts = async (discordId: bigint, options?: RequestInit) => {
+export const getLinkedAccounts = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getLinkedAccountsResponse>(getGetLinkedAccountsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6296,11 +6389,15 @@ export type addProductToCategoryResponse = addProductToCategoryResponseComposite
 	headers: Headers;
 };
 
-export const getAddProductToCategoryUrl = (categoryId: number | string, productId: bigint) => {
+export const getAddProductToCategoryUrl = (categoryId: number | string, productId: bigint | number | string) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}/product/${productId}`;
 };
 
-export const addProductToCategory = async (categoryId: number | string, productId: bigint, options?: RequestInit) => {
+export const addProductToCategory = async (
+	categoryId: number | string,
+	productId: bigint | number | string,
+	options?: RequestInit
+) => {
 	return customFetch<addProductToCategoryResponse>(getAddProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'POST',
@@ -6334,13 +6431,13 @@ export type removeProductToCategoryResponse = removeProductToCategoryResponseCom
 	headers: Headers;
 };
 
-export const getRemoveProductToCategoryUrl = (categoryId: number | string, productId: bigint) => {
+export const getRemoveProductToCategoryUrl = (categoryId: number | string, productId: bigint | number | string) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}/product/${productId}`;
 };
 
 export const removeProductToCategory = async (
 	categoryId: number | string,
-	productId: bigint,
+	productId: bigint | number | string,
 	options?: RequestInit
 ) => {
 	return customFetch<removeProductToCategoryResponse>(getRemoveProductToCategoryUrl(categoryId, productId), {
@@ -6656,11 +6753,15 @@ export type addCosmeticToProductResponse = addCosmeticToProductResponseComposite
 	headers: Headers;
 };
 
-export const getAddCosmeticToProductUrl = (productId: bigint, cosmeticId: number | string) => {
+export const getAddCosmeticToProductUrl = (productId: bigint | number | string, cosmeticId: number | string) => {
 	return `https://api.elitebot.dev/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
-export const addCosmeticToProduct = async (productId: bigint, cosmeticId: number | string, options?: RequestInit) => {
+export const addCosmeticToProduct = async (
+	productId: bigint | number | string,
+	cosmeticId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<addCosmeticToProductResponse>(getAddCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'POST',
@@ -6694,12 +6795,12 @@ export type removeCosmeticToProductResponse = removeCosmeticToProductResponseCom
 	headers: Headers;
 };
 
-export const getRemoveCosmeticToProductUrl = (productId: bigint, cosmeticId: number | string) => {
+export const getRemoveCosmeticToProductUrl = (productId: bigint | number | string, cosmeticId: number | string) => {
 	return `https://api.elitebot.dev/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
 export const removeCosmeticToProduct = async (
-	productId: bigint,
+	productId: bigint | number | string,
 	cosmeticId: number | string,
 	options?: RequestInit
 ) => {
@@ -6742,7 +6843,7 @@ export type addProductImageResponse = addProductImageResponseComposite & {
 	headers: Headers;
 };
 
-export const getAddProductImageUrl = (discordId: bigint, params?: AddProductImageParams) => {
+export const getAddProductImageUrl = (discordId: bigint | number | string, params?: AddProductImageParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -6759,7 +6860,7 @@ export const getAddProductImageUrl = (discordId: bigint, params?: AddProductImag
 };
 
 export const addProductImage = async (
-	discordId: bigint,
+	discordId: bigint | number | string,
 	uploadImageDto: UploadImageDto,
 	params?: AddProductImageParams,
 	options?: RequestInit
@@ -6813,11 +6914,15 @@ export type deleteProductImageResponse = deleteProductImageResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteProductImageUrl = (discordId: bigint, imagePath: string) => {
+export const getDeleteProductImageUrl = (discordId: bigint | number | string, imagePath: string) => {
 	return `https://api.elitebot.dev/product/${discordId}/images/${imagePath}`;
 };
 
-export const deleteProductImage = async (discordId: bigint, imagePath: string, options?: RequestInit) => {
+export const deleteProductImage = async (
+	discordId: bigint | number | string,
+	imagePath: string,
+	options?: RequestInit
+) => {
 	return customFetch<deleteProductImageResponse>(getDeleteProductImageUrl(discordId, imagePath), {
 		...options,
 		method: 'DELETE',
@@ -6933,11 +7038,15 @@ export type updateProductResponse = updateProductResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateProductUrl = (discordId: bigint) => {
+export const getUpdateProductUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/product/${discordId}`;
 };
 
-export const updateProduct = async (discordId: bigint, editProductDto: EditProductDto, options?: RequestInit) => {
+export const updateProduct = async (
+	discordId: bigint | number | string,
+	editProductDto: EditProductDto,
+	options?: RequestInit
+) => {
 	return customFetch<updateProductResponse>(getUpdateProductUrl(discordId), {
 		...options,
 		method: 'PATCH',
@@ -6965,11 +7074,11 @@ export type getProductResponse = getProductResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetProductUrl = (discordId: bigint) => {
+export const getGetProductUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/product/${discordId}`;
 };
 
-export const getProduct = async (discordId: bigint, options?: RequestInit) => {
+export const getProduct = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<getProductResponse>(getGetProductUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -7000,11 +7109,11 @@ export type claimProductResponse = claimProductResponseComposite & {
 	headers: Headers;
 };
 
-export const getClaimProductUrl = (discordId: bigint) => {
+export const getClaimProductUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/product/${discordId}/claim`;
 };
 
-export const claimProduct = async (discordId: bigint, options?: RequestInit) => {
+export const claimProduct = async (discordId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<claimProductResponse>(getClaimProductUrl(discordId), {
 		...options,
 		method: 'POST',
