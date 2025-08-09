@@ -35,7 +35,7 @@ export default ts.config(
 			'build/',
 			'.svelte-kit/',
 			'dist/',
-			'src/lib/api/endpoints/',
+			'src/lib/api/client/',
 			'src/lib/api/schemas/',
 			'node_modules',
 			'static',

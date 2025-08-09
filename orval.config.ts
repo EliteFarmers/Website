@@ -14,6 +14,7 @@ export default defineConfig({
 			namingConvention: 'PascalCase',
 			override: {
 				useBigInt: true,
+				transformer: './src/lib/api/util/fetch-transformer.ts',
 				mutator: {
 					path: './src/lib/api/custom-fetch.ts',
 					name: 'customFetch',

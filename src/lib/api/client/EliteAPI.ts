@@ -1307,11 +1307,11 @@ export type addBadgeToUserBadgeResponse = addBadgeToUserBadgeResponseComposite &
 	headers: Headers;
 };
 
-export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: number) => {
+export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: number | string) => {
 	return `https://api.elitebot.dev/badge/user/${player}/${badgeId}`;
 };
 
-export const addBadgeToUserBadge = async (player: string, badgeId: number, options?: RequestInit) => {
+export const addBadgeToUserBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
 	return customFetch<addBadgeToUserBadgeResponse>(getAddBadgeToUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1351,11 +1351,11 @@ export type deleteBadgeFromUserBadgeResponse = deleteBadgeFromUserBadgeResponseC
 	headers: Headers;
 };
 
-export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: number) => {
+export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: number | string) => {
 	return `https://api.elitebot.dev/badge/user/${player}/${badgeId}`;
 };
 
-export const deleteBadgeFromUserBadge = async (player: string, badgeId: number, options?: RequestInit) => {
+export const deleteBadgeFromUserBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
 	return customFetch<deleteBadgeFromUserBadgeResponse>(getDeleteBadgeFromUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1477,11 +1477,11 @@ export type deleteBadgeResponse = deleteBadgeResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteBadgeUrl = (badgeId: number) => {
+export const getDeleteBadgeUrl = (badgeId: number | string) => {
 	return `https://api.elitebot.dev/badge/${badgeId}`;
 };
 
-export const deleteBadge = async (badgeId: number, options?: RequestInit) => {
+export const deleteBadge = async (badgeId: number | string, options?: RequestInit) => {
 	return customFetch<deleteBadgeResponse>(getDeleteBadgeUrl(badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1521,12 +1521,12 @@ export type updateBadgeResponse = updateBadgeResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateBadgeUrl = (badgeId: number) => {
+export const getUpdateBadgeUrl = (badgeId: number | string) => {
 	return `https://api.elitebot.dev/badge/${badgeId}`;
 };
 
 export const updateBadge = async (
-	badgeId: number,
+	badgeId: number | string,
 	updateBadgeRequestUpdateBadge: UpdateBadgeRequestUpdateBadge,
 	options?: RequestInit
 ) => {
@@ -1693,11 +1693,11 @@ export type grantBadgeResponse = grantBadgeResponseComposite & {
 	headers: Headers;
 };
 
-export const getGrantBadgeUrl = (player: string, badgeId: number) => {
+export const getGrantBadgeUrl = (player: string, badgeId: number | string) => {
 	return `https://api.elitebot.dev/bot/badges/${player}/${badgeId}`;
 };
 
-export const grantBadge = async (player: string, badgeId: number, options?: RequestInit) => {
+export const grantBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
 	return customFetch<grantBadgeResponse>(getGrantBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1723,11 +1723,11 @@ export type removeBadgeResponse = removeBadgeResponseComposite & {
 	headers: Headers;
 };
 
-export const getRemoveBadgeUrl = (player: string, badgeId: number) => {
+export const getRemoveBadgeUrl = (player: string, badgeId: number | string) => {
 	return `https://api.elitebot.dev/bot/badges/${player}/${badgeId}`;
 };
 
-export const removeBadge = async (player: string, badgeId: number, options?: RequestInit) => {
+export const removeBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
 	return customFetch<removeBadgeResponse>(getRemoveBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -2201,11 +2201,16 @@ export type getContestsInDayResponse = getContestsInDayResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetContestsInDayUrl = (year: number, month: number, day: number) => {
+export const getGetContestsInDayUrl = (year: number | string, month: number | string, day: number | string) => {
 	return `https://api.elitebot.dev/contests/at/${year}/${month}/${day}`;
 };
 
-export const getContestsInDay = async (year: number, month: number, day: number, options?: RequestInit) => {
+export const getContestsInDay = async (
+	year: number | string,
+	month: number | string,
+	day: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<getContestsInDayResponse>(getGetContestsInDayUrl(year, month, day), {
 		...options,
 		method: 'GET',
@@ -2231,11 +2236,11 @@ export type getContestsInMonthResponse = getContestsInMonthResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetContestsInMonthUrl = (year: number, month: number) => {
+export const getGetContestsInMonthUrl = (year: number | string, month: number | string) => {
 	return `https://api.elitebot.dev/contests/at/${year}/${month}`;
 };
 
-export const getContestsInMonth = async (year: number, month: number, options?: RequestInit) => {
+export const getContestsInMonth = async (year: number | string, month: number | string, options?: RequestInit) => {
 	return customFetch<getContestsInMonthResponse>(getGetContestsInMonthUrl(year, month), {
 		...options,
 		method: 'GET',
@@ -2256,7 +2261,7 @@ export type getContestsInYearResponse = getContestsInYearResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetContestsInYearUrl = (year: number, params?: GetContestsInYearParams) => {
+export const getGetContestsInYearUrl = (year: number | string, params?: GetContestsInYearParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -2272,7 +2277,11 @@ export const getGetContestsInYearUrl = (year: number, params?: GetContestsInYear
 		: `https://api.elitebot.dev/contests/at/${year}`;
 };
 
-export const getContestsInYear = async (year: number, params?: GetContestsInYearParams, options?: RequestInit) => {
+export const getContestsInYear = async (
+	year: number | string,
+	params?: GetContestsInYearParams,
+	options?: RequestInit
+) => {
 	return customFetch<getContestsInYearResponse>(getGetContestsInYearUrl(year, params), {
 		...options,
 		method: 'GET',
@@ -2427,11 +2436,11 @@ export type getRecordsInYearResponse = getRecordsInYearResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetRecordsInYearUrl = (year: number) => {
+export const getGetRecordsInYearUrl = (year: number | string) => {
 	return `https://api.elitebot.dev/contests/records/${year}`;
 };
 
-export const getRecordsInYear = async (year: number, options?: RequestInit) => {
+export const getRecordsInYear = async (year: number | string, options?: RequestInit) => {
 	return customFetch<getRecordsInYearResponse>(getGetRecordsInYearUrl(year), {
 		...options,
 		method: 'GET',
@@ -2497,14 +2506,19 @@ export type addTeamMemberAdminResponse = addTeamMemberAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getAddTeamMemberAdminUrl = (discordId: number, eventId: number, teamId: number, player: string) => {
+export const getAddTeamMemberAdminUrl = (
+	discordId: number | string,
+	eventId: number | string,
+	teamId: number | string,
+	player: string
+) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
 };
 
 export const addTeamMemberAdmin = async (
-	discordId: number,
-	eventId: number,
-	teamId: number,
+	discordId: number | string,
+	eventId: number | string,
+	teamId: number | string,
 	player: string,
 	options?: RequestInit
 ) => {
@@ -2541,14 +2555,19 @@ export type kickTeamMemberAdminResponse = kickTeamMemberAdminResponseComposite &
 	headers: Headers;
 };
 
-export const getKickTeamMemberAdminUrl = (discordId: number, eventId: number, teamId: number, player: string) => {
+export const getKickTeamMemberAdminUrl = (
+	discordId: number | string,
+	eventId: number | string,
+	teamId: number | string,
+	player: string
+) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
 };
 
 export const kickTeamMemberAdmin = async (
-	discordId: number,
-	eventId: number,
-	teamId: number,
+	discordId: number | string,
+	eventId: number | string,
+	teamId: number | string,
 	player: string,
 	options?: RequestInit
 ) => {
@@ -2582,13 +2601,13 @@ export type banMemberResponse = banMemberResponseComposite & {
 	headers: Headers;
 };
 
-export const getBanMemberUrl = (discordId: number, eventId: number, playerUuid: string) => {
+export const getBanMemberUrl = (discordId: number | string, eventId: number | string, playerUuid: string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
 export const banMember = async (
-	discordId: number,
-	eventId: number,
+	discordId: number | string,
+	eventId: number | string,
 	playerUuid: string,
 	banMemberBody: string,
 	options?: RequestInit
@@ -2625,11 +2644,16 @@ export type unbanMemberResponse = unbanMemberResponseComposite & {
 	headers: Headers;
 };
 
-export const getUnbanMemberUrl = (discordId: number, eventId: number, playerUuid: string) => {
+export const getUnbanMemberUrl = (discordId: number | string, eventId: number | string, playerUuid: string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
-export const unbanMember = async (discordId: number, eventId: number, playerUuid: string, options?: RequestInit) => {
+export const unbanMember = async (
+	discordId: number | string,
+	eventId: number | string,
+	playerUuid: string,
+	options?: RequestInit
+) => {
 	return customFetch<unbanMemberResponse>(getUnbanMemberUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'DELETE',
@@ -2701,7 +2725,7 @@ export type createTeamAdminResponse = createTeamAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getCreateTeamAdminUrl = (discordId: bigint, eventId: number, params?: CreateTeamAdminParams) => {
+export const getCreateTeamAdminUrl = (discordId: bigint, eventId: number | string, params?: CreateTeamAdminParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -2719,7 +2743,7 @@ export const getCreateTeamAdminUrl = (discordId: bigint, eventId: number, params
 
 export const createTeamAdmin = async (
 	discordId: bigint,
-	eventId: number,
+	eventId: number | string,
 	createEventTeamDto: CreateEventTeamDto,
 	params?: CreateTeamAdminParams,
 	options?: RequestInit
@@ -2757,11 +2781,11 @@ export type deleteEventResponse = deleteEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteEventUrl = (discordId: bigint, eventId: number) => {
+export const getDeleteEventUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
-export const deleteEvent = async (discordId: bigint, eventId: number, options?: RequestInit) => {
+export const deleteEvent = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
 	return customFetch<deleteEventResponse>(getDeleteEventUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2792,13 +2816,13 @@ export type updateEventResponse = updateEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateEventUrl = (discordId: bigint, eventId: number) => {
+export const getUpdateEventUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
 export const updateEvent = async (
 	discordId: bigint,
-	eventId: number,
+	eventId: number | string,
 	editEventDto: EditEventDto,
 	options?: RequestInit
 ) => {
@@ -2837,11 +2861,11 @@ export type deleteEventBannerResponse = deleteEventBannerResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteEventBannerUrl = (discordId: bigint, eventId: number) => {
+export const getDeleteEventBannerUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
-export const deleteEventBanner = async (discordId: bigint, eventId: number, options?: RequestInit) => {
+export const deleteEventBanner = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
 	return customFetch<deleteEventBannerResponse>(getDeleteEventBannerUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2875,13 +2899,13 @@ export type setEventBannerResponse = setEventBannerResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetEventBannerUrl = (discordId: bigint, eventId: number) => {
+export const getSetEventBannerUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
 export const setEventBanner = async (
 	discordId: bigint,
-	eventId: number,
+	eventId: number | string,
 	editEventBannerDto: EditEventBannerDto,
 	options?: RequestInit
 ) => {
@@ -2922,8 +2946,8 @@ export type deleteMemberResponse = deleteMemberResponseComposite & {
 };
 
 export const getDeleteMemberUrl = (
-	discordId: number,
-	eventId: number,
+	discordId: number | string,
+	eventId: number | string,
 	playerUuid: string,
 	params?: DeleteMemberParams
 ) => {
@@ -2943,8 +2967,8 @@ export const getDeleteMemberUrl = (
 };
 
 export const deleteMember = async (
-	discordId: number,
-	eventId: number,
+	discordId: number | string,
+	eventId: number | string,
 	playerUuid: string,
 	params?: DeleteMemberParams,
 	options?: RequestInit
@@ -2983,8 +3007,8 @@ export type forceAddMemberResponse = forceAddMemberResponseComposite & {
 };
 
 export const getForceAddMemberUrl = (
-	discordId: number,
-	eventId: number,
+	discordId: number | string,
+	eventId: number | string,
 	playerUuid: string,
 	params: ForceAddMemberParams
 ) => {
@@ -3004,8 +3028,8 @@ export const getForceAddMemberUrl = (
 };
 
 export const forceAddMember = async (
-	discordId: number,
-	eventId: number,
+	discordId: number | string,
+	eventId: number | string,
 	playerUuid: string,
 	params: ForceAddMemberParams,
 	options?: RequestInit
@@ -3043,11 +3067,16 @@ export type deleteTeamAdminResponse = deleteTeamAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteTeamAdminUrl = (discordId: bigint, eventId: number, teamId: number) => {
+export const getDeleteTeamAdminUrl = (discordId: bigint, eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
-export const deleteTeamAdmin = async (discordId: bigint, eventId: number, teamId: number, options?: RequestInit) => {
+export const deleteTeamAdmin = async (
+	discordId: bigint,
+	eventId: number | string,
+	teamId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<deleteTeamAdminResponse>(getDeleteTeamAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -3081,14 +3110,14 @@ export type updateTeamAdminResponse = updateTeamAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateTeamAdminUrl = (discordId: bigint, eventId: number, teamId: number) => {
+export const getUpdateTeamAdminUrl = (discordId: bigint, eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const updateTeamAdmin = async (
 	discordId: bigint,
-	eventId: number,
-	teamId: number,
+	eventId: number | string,
+	teamId: number | string,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
 ) => {
@@ -3127,11 +3156,11 @@ export type getBannedMembersResponse = getBannedMembersResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetBannedMembersUrl = (discordId: bigint, eventId: number) => {
+export const getGetBannedMembersUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/bans`;
 };
 
-export const getBannedMembers = async (discordId: bigint, eventId: number, options?: RequestInit) => {
+export const getBannedMembers = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
 	return customFetch<getBannedMembersResponse>(getGetBannedMembersUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3165,11 +3194,11 @@ export type getGuildEventMembersResponse = getGuildEventMembersResponseComposite
 	headers: Headers;
 };
 
-export const getGetGuildEventMembersUrl = (discordId: bigint, eventId: number) => {
+export const getGetGuildEventMembersUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/members`;
 };
 
-export const getGuildEventMembers = async (discordId: bigint, eventId: number, options?: RequestInit) => {
+export const getGuildEventMembers = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
 	return customFetch<getGuildEventMembersResponse>(getGetGuildEventMembersUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3203,11 +3232,11 @@ export type getGuildEventResponse = getGuildEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildEventUrl = (discordId: bigint, eventId: number) => {
+export const getGetGuildEventUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/admin`;
 };
 
-export const getGuildEvent = async (discordId: bigint, eventId: number, options?: RequestInit) => {
+export const getGuildEvent = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
 	return customFetch<getGuildEventResponse>(getGetGuildEventUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3279,11 +3308,11 @@ export type getTeamsAdminResponse = getTeamsAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetTeamsAdminUrl = (discordId: bigint, eventId: number) => {
+export const getGetTeamsAdminUrl = (discordId: bigint, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/teams`;
 };
 
-export const getTeamsAdmin = async (discordId: bigint, eventId: number, options?: RequestInit) => {
+export const getTeamsAdmin = async (discordId: bigint, eventId: number | string, options?: RequestInit) => {
 	return customFetch<getTeamsAdminResponse>(getGetTeamsAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3309,14 +3338,18 @@ export type setTeamOwnerAdminResponse = setTeamOwnerAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetTeamOwnerAdminUrl = (discordId: number, eventId: number, teamId: number) => {
+export const getSetTeamOwnerAdminUrl = (
+	discordId: number | string,
+	eventId: number | string,
+	teamId: number | string
+) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/teams/${teamId}/owner`;
 };
 
 export const setTeamOwnerAdmin = async (
-	discordId: number,
-	eventId: number,
-	teamId: number,
+	discordId: number | string,
+	eventId: number | string,
+	teamId: number | string,
 	setTeamOwnerRequest: SetTeamOwnerRequest,
 	options?: RequestInit
 ) => {
@@ -3342,11 +3375,11 @@ export type getEventResponse = getEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetEventUrl = (eventId: number) => {
+export const getGetEventUrl = (eventId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}`;
 };
 
-export const getEvent = async (eventId: number, options?: RequestInit) => {
+export const getEvent = async (eventId: number | string, options?: RequestInit) => {
 	return customFetch<getEventResponse>(getGetEventUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3398,11 +3431,11 @@ export type getEventMemberResponse = getEventMemberResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetEventMemberUrl = (eventId: number, playerUuid: string) => {
+export const getGetEventMemberUrl = (eventId: number | string, playerUuid: string) => {
 	return `https://api.elitebot.dev/event/${eventId}/member/${playerUuid}`;
 };
 
-export const getEventMember = async (eventId: number, playerUuid: string, options?: RequestInit) => {
+export const getEventMember = async (eventId: number | string, playerUuid: string, options?: RequestInit) => {
 	return customFetch<getEventMemberResponse>(getGetEventMemberUrl(eventId, playerUuid), {
 		...options,
 		method: 'GET',
@@ -3423,11 +3456,11 @@ export type getEventMembersResponse = getEventMembersResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetEventMembersUrl = (eventId: number) => {
+export const getGetEventMembersUrl = (eventId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/members`;
 };
 
-export const getEventMembers = async (eventId: number, options?: RequestInit) => {
+export const getEventMembers = async (eventId: number | string, options?: RequestInit) => {
 	return customFetch<getEventMembersResponse>(getGetEventMembersUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3448,11 +3481,11 @@ export type getEventTeamResponse = getEventTeamResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetEventTeamUrl = (eventId: number, teamId: number) => {
+export const getGetEventTeamUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}`;
 };
 
-export const getEventTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
+export const getEventTeam = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
 	return customFetch<getEventTeamResponse>(getGetEventTeamUrl(eventId, teamId), {
 		...options,
 		method: 'GET',
@@ -3478,11 +3511,11 @@ export type deleteTeamResponse = deleteTeamResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteTeamUrl = (eventId: number, teamId: number) => {
+export const getDeleteTeamUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}`;
 };
 
-export const deleteTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
+export const deleteTeam = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
 	return customFetch<deleteTeamResponse>(getDeleteTeamUrl(eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -3508,13 +3541,13 @@ export type updateTeamResponse = updateTeamResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateTeamUrl = (eventId: number, teamId: number) => {
+export const getUpdateTeamUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}`;
 };
 
 export const updateTeam = async (
-	eventId: number,
-	teamId: number,
+	eventId: number | string,
+	teamId: number | string,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
 ) => {
@@ -3540,11 +3573,11 @@ export type getEventTeamsResponse = getEventTeamsResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetEventTeamsUrl = (eventId: number) => {
+export const getGetEventTeamsUrl = (eventId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/teams`;
 };
 
-export const getEventTeams = async (eventId: number, options?: RequestInit) => {
+export const getEventTeams = async (eventId: number | string, options?: RequestInit) => {
 	return customFetch<getEventTeamsResponse>(getGetEventTeamsUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3570,11 +3603,15 @@ export type createTeamResponse = createTeamResponseComposite & {
 	headers: Headers;
 };
 
-export const getCreateTeamUrl = (eventId: number) => {
+export const getCreateTeamUrl = (eventId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/teams`;
 };
 
-export const createTeam = async (eventId: number, createEventTeamDto: CreateEventTeamDto, options?: RequestInit) => {
+export const createTeam = async (
+	eventId: number | string,
+	createEventTeamDto: CreateEventTeamDto,
+	options?: RequestInit
+) => {
 	return customFetch<createTeamResponse>(getCreateTeamUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -3670,7 +3707,7 @@ export type joinEventResponse = joinEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getJoinEventUrl = (eventId: number, params?: JoinEventParams) => {
+export const getJoinEventUrl = (eventId: number | string, params?: JoinEventParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -3686,7 +3723,7 @@ export const getJoinEventUrl = (eventId: number, params?: JoinEventParams) => {
 		: `https://api.elitebot.dev/event/${eventId}/join`;
 };
 
-export const joinEvent = async (eventId: number, params?: JoinEventParams, options?: RequestInit) => {
+export const joinEvent = async (eventId: number | string, params?: JoinEventParams, options?: RequestInit) => {
 	return customFetch<joinEventResponse>(getJoinEventUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -3712,11 +3749,16 @@ export type joinTeamResponse = joinTeamResponseComposite & {
 	headers: Headers;
 };
 
-export const getJoinTeamUrl = (eventId: number, teamId: number) => {
+export const getJoinTeamUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/join`;
 };
 
-export const joinTeam = async (eventId: number, teamId: number, joinTeamBody: string, options?: RequestInit) => {
+export const joinTeam = async (
+	eventId: number | string,
+	teamId: number | string,
+	joinTeamBody: string,
+	options?: RequestInit
+) => {
 	return customFetch<joinTeamResponse>(getJoinTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -3753,11 +3795,16 @@ export type kickTeamMemberResponse = kickTeamMemberResponseComposite & {
 	headers: Headers;
 };
 
-export const getKickTeamMemberUrl = (eventId: number, teamId: number, player: string) => {
+export const getKickTeamMemberUrl = (eventId: number | string, teamId: number | string, player: string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/member/${player}`;
 };
 
-export const kickTeamMember = async (eventId: number, teamId: number, player: string, options?: RequestInit) => {
+export const kickTeamMember = async (
+	eventId: number | string,
+	teamId: number | string,
+	player: string,
+	options?: RequestInit
+) => {
 	return customFetch<kickTeamMemberResponse>(getKickTeamMemberUrl(eventId, teamId, player), {
 		...options,
 		method: 'DELETE',
@@ -3783,11 +3830,11 @@ export type leaveEventResponse = leaveEventResponseComposite & {
 	headers: Headers;
 };
 
-export const getLeaveEventUrl = (eventId: number) => {
+export const getLeaveEventUrl = (eventId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/leave`;
 };
 
-export const leaveEvent = async (eventId: number, options?: RequestInit) => {
+export const leaveEvent = async (eventId: number | string, options?: RequestInit) => {
 	return customFetch<leaveEventResponse>(getLeaveEventUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -3813,11 +3860,11 @@ export type leaveTeamResponse = leaveTeamResponseComposite & {
 	headers: Headers;
 };
 
-export const getLeaveTeamUrl = (eventId: number, teamId: number) => {
+export const getLeaveTeamUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/leave`;
 };
 
-export const leaveTeam = async (eventId: number, teamId: number, options?: RequestInit) => {
+export const leaveTeam = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
 	return customFetch<leaveTeamResponse>(getLeaveTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -3843,13 +3890,13 @@ export type setTeamOwnerResponse = setTeamOwnerResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetTeamOwnerUrl = (eventId: number, teamId: number) => {
+export const getSetTeamOwnerUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/owner`;
 };
 
 export const setTeamOwner = async (
-	eventId: number,
-	teamId: number,
+	eventId: number | string,
+	teamId: number | string,
 	changeTeamOwnerRequest: ChangeTeamOwnerRequest,
 	options?: RequestInit
 ) => {
@@ -3880,11 +3927,11 @@ export type updateTeamJoinCodeResponse = updateTeamJoinCodeResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateTeamJoinCodeUrl = (eventId: number, teamId: number) => {
+export const getUpdateTeamJoinCodeUrl = (eventId: number | string, teamId: number | string) => {
 	return `https://api.elitebot.dev/event/${eventId}/team/${teamId}/code`;
 };
 
-export const updateTeamJoinCode = async (eventId: number, teamId: number, options?: RequestInit) => {
+export const updateTeamJoinCode = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
 	return customFetch<updateTeamJoinCodeResponse>(getUpdateTeamJoinCodeUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -4246,7 +4293,11 @@ export type getMedalBracketsResponse = getMedalBracketsResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetMedalBracketsUrl = (year: number, month: number, params?: GetMedalBracketsParams) => {
+export const getGetMedalBracketsUrl = (
+	year: number | string,
+	month: number | string,
+	params?: GetMedalBracketsParams
+) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4263,8 +4314,8 @@ export const getGetMedalBracketsUrl = (year: number, month: number, params?: Get
 };
 
 export const getMedalBrackets = async (
-	year: number,
-	month: number,
+	year: number | string,
+	month: number | string,
 	params?: GetMedalBracketsParams,
 	options?: RequestInit
 ) => {
@@ -4295,7 +4346,7 @@ export type getMedalBracketsGraphResponse = getMedalBracketsGraphResponseComposi
 	headers: Headers;
 };
 
-export const getGetMedalBracketsGraphUrl = (year: number, params?: GetMedalBracketsGraphParams) => {
+export const getGetMedalBracketsGraphUrl = (year: number | string, params?: GetMedalBracketsGraphParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4312,7 +4363,7 @@ export const getGetMedalBracketsGraphUrl = (year: number, params?: GetMedalBrack
 };
 
 export const getMedalBracketsGraph = async (
-	year: number,
+	year: number | string,
 	params?: GetMedalBracketsGraphParams,
 	options?: RequestInit
 ) => {
@@ -6245,11 +6296,11 @@ export type addProductToCategoryResponse = addProductToCategoryResponseComposite
 	headers: Headers;
 };
 
-export const getAddProductToCategoryUrl = (categoryId: number, productId: bigint) => {
+export const getAddProductToCategoryUrl = (categoryId: number | string, productId: bigint) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}/product/${productId}`;
 };
 
-export const addProductToCategory = async (categoryId: number, productId: bigint, options?: RequestInit) => {
+export const addProductToCategory = async (categoryId: number | string, productId: bigint, options?: RequestInit) => {
 	return customFetch<addProductToCategoryResponse>(getAddProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'POST',
@@ -6283,11 +6334,15 @@ export type removeProductToCategoryResponse = removeProductToCategoryResponseCom
 	headers: Headers;
 };
 
-export const getRemoveProductToCategoryUrl = (categoryId: number, productId: bigint) => {
+export const getRemoveProductToCategoryUrl = (categoryId: number | string, productId: bigint) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}/product/${productId}`;
 };
 
-export const removeProductToCategory = async (categoryId: number, productId: bigint, options?: RequestInit) => {
+export const removeProductToCategory = async (
+	categoryId: number | string,
+	productId: bigint,
+	options?: RequestInit
+) => {
 	return customFetch<removeProductToCategoryResponse>(getRemoveProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'DELETE',
@@ -6361,11 +6416,11 @@ export type deleteCategoryResponse = deleteCategoryResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteCategoryUrl = (categoryId: number) => {
+export const getDeleteCategoryUrl = (categoryId: number | string) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}`;
 };
 
-export const deleteCategory = async (categoryId: number, options?: RequestInit) => {
+export const deleteCategory = async (categoryId: number | string, options?: RequestInit) => {
 	return customFetch<deleteCategoryResponse>(getDeleteCategoryUrl(categoryId), {
 		...options,
 		method: 'DELETE',
@@ -6399,11 +6454,15 @@ export type updateCategoryResponse = updateCategoryResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateCategoryUrl = (categoryId: number) => {
+export const getUpdateCategoryUrl = (categoryId: number | string) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}`;
 };
 
-export const updateCategory = async (categoryId: number, editCategoryDto: EditCategoryDto, options?: RequestInit) => {
+export const updateCategory = async (
+	categoryId: number | string,
+	editCategoryDto: EditCategoryDto,
+	options?: RequestInit
+) => {
 	return customFetch<updateCategoryResponse>(getUpdateCategoryUrl(categoryId), {
 		...options,
 		method: 'PATCH',
@@ -6553,12 +6612,12 @@ export type reorderCategoryProductsResponse = reorderCategoryProductsResponseCom
 	headers: Headers;
 };
 
-export const getReorderCategoryProductsUrl = (categoryId: number) => {
+export const getReorderCategoryProductsUrl = (categoryId: number | string) => {
 	return `https://api.elitebot.dev/shop/category/${categoryId}/reorder`;
 };
 
 export const reorderCategoryProducts = async (
-	categoryId: number,
+	categoryId: number | string,
 	reorderCategoryProductsRequest: ReorderCategoryProductsRequest,
 	options?: RequestInit
 ) => {
@@ -6597,11 +6656,11 @@ export type addCosmeticToProductResponse = addCosmeticToProductResponseComposite
 	headers: Headers;
 };
 
-export const getAddCosmeticToProductUrl = (productId: bigint, cosmeticId: number) => {
+export const getAddCosmeticToProductUrl = (productId: bigint, cosmeticId: number | string) => {
 	return `https://api.elitebot.dev/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
-export const addCosmeticToProduct = async (productId: bigint, cosmeticId: number, options?: RequestInit) => {
+export const addCosmeticToProduct = async (productId: bigint, cosmeticId: number | string, options?: RequestInit) => {
 	return customFetch<addCosmeticToProductResponse>(getAddCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'POST',
@@ -6635,11 +6694,15 @@ export type removeCosmeticToProductResponse = removeCosmeticToProductResponseCom
 	headers: Headers;
 };
 
-export const getRemoveCosmeticToProductUrl = (productId: bigint, cosmeticId: number) => {
+export const getRemoveCosmeticToProductUrl = (productId: bigint, cosmeticId: number | string) => {
 	return `https://api.elitebot.dev/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
-export const removeCosmeticToProduct = async (productId: bigint, cosmeticId: number, options?: RequestInit) => {
+export const removeCosmeticToProduct = async (
+	productId: bigint,
+	cosmeticId: number | string,
+	options?: RequestInit
+) => {
 	return customFetch<removeCosmeticToProductResponse>(getRemoveCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'DELETE',
@@ -7000,7 +7063,7 @@ export type addStyleImageResponse = addStyleImageResponseComposite & {
 	headers: Headers;
 };
 
-export const getAddStyleImageUrl = (styleId: number, params?: AddStyleImageParams) => {
+export const getAddStyleImageUrl = (styleId: number | string, params?: AddStyleImageParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -7017,7 +7080,7 @@ export const getAddStyleImageUrl = (styleId: number, params?: AddStyleImageParam
 };
 
 export const addStyleImage = async (
-	styleId: number,
+	styleId: number | string,
 	uploadImageDto: UploadImageDto,
 	params?: AddStyleImageParams,
 	options?: RequestInit
@@ -7108,11 +7171,11 @@ export type deleteStyleResponse = deleteStyleResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteStyleUrl = (styleId: number) => {
+export const getDeleteStyleUrl = (styleId: number | string) => {
 	return `https://api.elitebot.dev/product/style/${styleId}`;
 };
 
-export const deleteStyle = async (styleId: number, options?: RequestInit) => {
+export const deleteStyle = async (styleId: number | string, options?: RequestInit) => {
 	return customFetch<deleteStyleResponse>(getDeleteStyleUrl(styleId), {
 		...options,
 		method: 'DELETE',
@@ -7133,11 +7196,11 @@ export type getStyleResponse = getStyleResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetStyleUrl = (styleId: number) => {
+export const getGetStyleUrl = (styleId: number | string) => {
 	return `https://api.elitebot.dev/product/style/${styleId}`;
 };
 
-export const getStyle = async (styleId: number, options?: RequestInit) => {
+export const getStyle = async (styleId: number | string, options?: RequestInit) => {
 	return customFetch<getStyleResponse>(getGetStyleUrl(styleId), {
 		...options,
 		method: 'GET',
@@ -7177,12 +7240,12 @@ export type updateStyleResponse = updateStyleResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateStyleUrl = (styleId: number) => {
+export const getUpdateStyleUrl = (styleId: number | string) => {
 	return `https://api.elitebot.dev/product/style/${styleId}`;
 };
 
 export const updateStyle = async (
-	styleId: number,
+	styleId: number | string,
 	weightStyleWithDataDto: WeightStyleWithDataDto,
 	options?: RequestInit
 ) => {
@@ -7221,11 +7284,11 @@ export type deleteStyleImageResponse = deleteStyleImageResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteStyleImageUrl = (styleId: number, imagePath: string) => {
+export const getDeleteStyleImageUrl = (styleId: number | string, imagePath: string) => {
 	return `https://api.elitebot.dev/product/style/${styleId}/images/${imagePath}`;
 };
 
-export const deleteStyleImage = async (styleId: number, imagePath: string, options?: RequestInit) => {
+export const deleteStyleImage = async (styleId: number | string, imagePath: string, options?: RequestInit) => {
 	return customFetch<deleteStyleImageResponse>(getDeleteStyleImageUrl(styleId, imagePath), {
 		...options,
 		method: 'DELETE',
