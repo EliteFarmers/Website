@@ -168,11 +168,11 @@
 										</form>
 										<div class="flex flex-col gap-8 md:flex-row">
 											<div class="flex flex-col gap-2">
-												<p>{new Date((t.start ?? 0) * 1000).toLocaleDateString()}</p>
+												<p>{new Date(Number(t.start ?? 0) * 1000).toLocaleDateString()}</p>
 												<p>{getReadableSkyblockDate(t.start ?? 0)}</p>
 											</div>
 											<div class="flex flex-col gap-2">
-												<p>{new Date((t.end ?? 0) * 1000).toLocaleDateString()}</p>
+												<p>{new Date(Number(t.end ?? 0) * 1000).toLocaleDateString()}</p>
 												<p>{getReadableSkyblockDate(t.end ?? 0)}</p>
 											</div>
 										</div>

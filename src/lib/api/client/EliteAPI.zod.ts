@@ -1299,7 +1299,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1314,7 +1316,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1329,7 +1333,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1344,7 +1350,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1359,7 +1367,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1374,7 +1384,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1389,7 +1401,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1404,7 +1418,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1419,7 +1435,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1434,7 +1452,9 @@ export const zodGetBotGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -1602,7 +1622,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1617,7 +1637,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1632,7 +1652,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1647,7 +1667,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1662,7 +1682,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1677,7 +1697,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1692,7 +1712,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1707,7 +1727,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1722,7 +1742,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1737,7 +1757,7 @@ export const zodGetJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -1821,7 +1841,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1836,7 +1858,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1851,7 +1875,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1866,7 +1892,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1881,7 +1909,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1896,7 +1926,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1911,7 +1943,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1926,7 +1960,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1941,7 +1977,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -1956,7 +1994,9 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -2020,7 +2060,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2035,7 +2075,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2050,7 +2090,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2065,7 +2105,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2080,7 +2120,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2095,7 +2135,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2110,7 +2150,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2125,7 +2165,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2140,7 +2180,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2155,7 +2195,7 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -2696,7 +2736,7 @@ export const zodGetPlayerParticipationsParams = zod.object({
 
 export const zodGetPlayerParticipationsResponseItem = zod.object({
 	crop: zod.string(),
-	timestamp: zod.number(),
+	timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 	collected: zod.number(),
 	position: zod.number(),
 	participants: zod.number(),
@@ -2714,7 +2754,7 @@ export const zodGetProfileMemberParticipationsParams = zod.object({
 
 export const zodGetProfileMemberParticipationsResponseItem = zod.object({
 	crop: zod.string(),
-	timestamp: zod.number(),
+	timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 	collected: zod.number(),
 	position: zod.number(),
 	participants: zod.number(),
@@ -2757,7 +2797,7 @@ export const zodGetSelectedMemberParticipationsParams = zod.object({
 
 export const zodGetSelectedMemberParticipationsResponseItem = zod.object({
 	crop: zod.string(),
-	timestamp: zod.number(),
+	timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 	collected: zod.number(),
 	position: zod.number(),
 	participants: zod.number(),
@@ -2788,19 +2828,19 @@ export const zodKickTeamMemberAdminParams = zod.object({
 /**
  * @summary Ban an Event Member
  */
-export const zodBanMemberParams = zod.object({
+export const zodBanMemberAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const zodBanMemberBody = zod.string();
+export const zodBanMemberAdminBody = zod.string();
 
-export const zodBanMemberResponseMetaPrefixMax = 16;
-export const zodBanMemberResponseMetaSuffixMax = 16;
-export const zodBanMemberResponseNotesMax = 128;
+export const zodBanMemberAdminResponseMetaPrefixMax = 16;
+export const zodBanMemberAdminResponseMetaSuffixMax = 16;
+export const zodBanMemberAdminResponseNotesMax = 128;
 
-export const zodBanMemberResponse = zod.object({
+export const zodBanMemberAdminResponse = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -2814,8 +2854,8 @@ export const zodBanMemberResponse = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(zodBanMemberResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(zodBanMemberResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodBanMemberAdminResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodBanMemberAdminResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -2832,13 +2872,13 @@ export const zodBanMemberResponse = zod.object({
 		.describe('Metadata of the entry'),
 	id: zod.number(),
 	accountId: zod.string().nullish(),
-	notes: zod.string().max(zodBanMemberResponseNotesMax).nullish(),
+	notes: zod.string().max(zodBanMemberAdminResponseNotesMax).nullish(),
 });
 
 /**
  * @summary Unban an Event Member
  */
-export const zodUnbanMemberParams = zod.object({
+export const zodUnbanMemberAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
@@ -2847,19 +2887,19 @@ export const zodUnbanMemberParams = zod.object({
 /**
  * @summary Create Event
  */
-export const zodCreateEventParams = zod.object({
+export const zodCreateEventAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const zodCreateEventBodyNameMax = 64;
-export const zodCreateEventBodyDescriptionMax = 1024;
-export const zodCreateEventBodyRulesMax = 1024;
-export const zodCreateEventBodyPrizeInfoMax = 1024;
-export const zodCreateEventBodyRequiredRoleMax = 24;
-export const zodCreateEventBodyBlockedRoleMax = 24;
+export const zodCreateEventAdminBodyNameMax = 64;
+export const zodCreateEventAdminBodyDescriptionMax = 1024;
+export const zodCreateEventAdminBodyRulesMax = 1024;
+export const zodCreateEventAdminBodyPrizeInfoMax = 1024;
+export const zodCreateEventAdminBodyRequiredRoleMax = 24;
+export const zodCreateEventAdminBodyBlockedRoleMax = 24;
 
-export const zodCreateEventBody = zod.object({
-	name: zod.string().min(1).max(zodCreateEventBodyNameMax).describe('The name of the event'),
+export const zodCreateEventAdminBody = zod.object({
+	name: zod.string().min(1).max(zodCreateEventAdminBodyNameMax).describe('The name of the event'),
 	type: zod
 		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
 		.nullish()
@@ -2867,13 +2907,17 @@ export const zodCreateEventBody = zod.object({
 	guildId: zod.string().min(1).describe('The Discord server id as a string for the event'),
 	description: zod
 		.string()
-		.max(zodCreateEventBodyDescriptionMax)
+		.max(zodCreateEventAdminBodyDescriptionMax)
 		.nullish()
 		.describe('An optional description for the event'),
-	rules: zod.string().max(zodCreateEventBodyRulesMax).nullish().describe('An optional set of rules for the event'),
+	rules: zod
+		.string()
+		.max(zodCreateEventAdminBodyRulesMax)
+		.nullish()
+		.describe('An optional set of rules for the event'),
 	prizeInfo: zod
 		.string()
-		.max(zodCreateEventBodyPrizeInfoMax)
+		.max(zodCreateEventAdminBodyPrizeInfoMax)
 		.nullish()
 		.describe('An optional description of prizes for the event'),
 	startTime: zod.number().describe('Unix timestamp for the start time of the event in seconds'),
@@ -2885,22 +2929,22 @@ export const zodCreateEventBody = zod.object({
 	dynamicStartTime: zod.boolean().nullish().describe('Currently unused'),
 	requiredRole: zod
 		.string()
-		.max(zodCreateEventBodyRequiredRoleMax)
+		.max(zodCreateEventAdminBodyRequiredRoleMax)
 		.nullish()
 		.describe('A Discord role id that is required to participate in the event'),
 	blockedRole: zod
 		.string()
-		.max(zodCreateEventBodyBlockedRoleMax)
+		.max(zodCreateEventAdminBodyBlockedRoleMax)
 		.nullish()
 		.describe('A Discord role id that is blocked from participating in the event'),
 	maxTeams: zod.number().describe('Max amount of teams allowed in the event, 0 if solo event, -1 if unlimited'),
 	maxTeamMembers: zod.number().describe('Max amount of members allowed in a team, 0 if solo event, -1 if unlimited'),
 });
 
-export const zodCreateEventResponseBannerTitleMax = 64;
-export const zodCreateEventResponseBannerDescriptionMax = 512;
+export const zodCreateEventAdminResponseBannerTitleMax = 64;
+export const zodCreateEventAdminResponseBannerDescriptionMax = 512;
 
-export const zodCreateEventResponse = zod.object({
+export const zodCreateEventAdminResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -2912,10 +2956,10 @@ export const zodCreateEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(zodCreateEventResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodCreateEventAdminResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(zodCreateEventResponseBannerDescriptionMax)
+				.max(zodCreateEventAdminResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -2967,7 +3011,7 @@ export const zodCreateTeamAdminBody = zod.object({
  * Delete an event and all associated data. Only available for unapproved events.
  * @summary Delete Event
  */
-export const zodDeleteEventParams = zod.object({
+export const zodDeleteEventAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
@@ -2975,12 +3019,12 @@ export const zodDeleteEventParams = zod.object({
 /**
  * @summary Update Event
  */
-export const zodUpdateEventParams = zod.object({
+export const zodUpdateEventAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const zodUpdateEventBody = zod.object({
+export const zodUpdateEventAdminBody = zod.object({
 	name: zod.string().nullish(),
 	type: zod.string().nullish(),
 	description: zod.string().nullish(),
@@ -3022,10 +3066,10 @@ export const zodUpdateEventBody = zod.object({
 		.nullish(),
 });
 
-export const zodUpdateEventResponseBannerTitleMax = 64;
-export const zodUpdateEventResponseBannerDescriptionMax = 512;
+export const zodUpdateEventAdminResponseBannerTitleMax = 64;
+export const zodUpdateEventAdminResponseBannerDescriptionMax = 512;
 
-export const zodUpdateEventResponse = zod.object({
+export const zodUpdateEventAdminResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3037,10 +3081,10 @@ export const zodUpdateEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(zodUpdateEventResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodUpdateEventAdminResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(zodUpdateEventResponseBannerDescriptionMax)
+				.max(zodUpdateEventAdminResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3065,7 +3109,7 @@ export const zodUpdateEventResponse = zod.object({
 /**
  * @summary Delete Custom Event Banner
  */
-export const zodDeleteEventBannerParams = zod.object({
+export const zodDeleteEventBannerAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
@@ -3073,25 +3117,25 @@ export const zodDeleteEventBannerParams = zod.object({
 /**
  * @summary Set Custom Event Banner
  */
-export const zodSetEventBannerParams = zod.object({
+export const zodSetEventBannerAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const zodSetEventBannerBody = zod.object({
+export const zodSetEventBannerAdminBody = zod.object({
 	image: zod.instanceof(File).nullish(),
 });
 
 /**
  * @summary Delete an Event Member
  */
-export const zodDeleteMemberParams = zod.object({
+export const zodDeleteMemberAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const zodDeleteMemberQueryParams = zod.object({
+export const zodDeleteMemberAdminQueryParams = zod.object({
 	profileUuid: zod.string().nullish(),
 	recordId: zod.number().nullish(),
 });
@@ -3099,13 +3143,13 @@ export const zodDeleteMemberQueryParams = zod.object({
 /**
  * @summary Ban an Event Member
  */
-export const zodForceAddMemberParams = zod.object({
+export const zodForceAddMemberAdminParams = zod.object({
 	discordId: zod.number(),
 	eventId: zod.number(),
 	playerUuid: zod.string(),
 });
 
-export const zodForceAddMemberQueryParams = zod.object({
+export const zodForceAddMemberAdminQueryParams = zod.object({
 	profileUuid: zod.string(),
 });
 
@@ -3144,16 +3188,16 @@ export const zodUpdateTeamAdminBody = zod.object({
 /**
  * @summary Get banned event members
  */
-export const zodGetBannedMembersParams = zod.object({
+export const zodGetBannedMembersAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const zodGetBannedMembersResponseMetaPrefixMax = 16;
-export const zodGetBannedMembersResponseMetaSuffixMax = 16;
-export const zodGetBannedMembersResponseNotesMax = 128;
+export const zodGetBannedMembersAdminResponseMetaPrefixMax = 16;
+export const zodGetBannedMembersAdminResponseMetaSuffixMax = 16;
+export const zodGetBannedMembersAdminResponseNotesMax = 128;
 
-export const zodGetBannedMembersResponseItem = zod.object({
+export const zodGetBannedMembersAdminResponseItem = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -3167,8 +3211,8 @@ export const zodGetBannedMembersResponseItem = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(zodGetBannedMembersResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(zodGetBannedMembersResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetBannedMembersAdminResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetBannedMembersAdminResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -3185,23 +3229,23 @@ export const zodGetBannedMembersResponseItem = zod.object({
 		.describe('Metadata of the entry'),
 	id: zod.number(),
 	accountId: zod.string().nullish(),
-	notes: zod.string().max(zodGetBannedMembersResponseNotesMax).nullish(),
+	notes: zod.string().max(zodGetBannedMembersAdminResponseNotesMax).nullish(),
 });
-export const zodGetBannedMembersResponse = zod.array(zodGetBannedMembersResponseItem);
+export const zodGetBannedMembersAdminResponse = zod.array(zodGetBannedMembersAdminResponseItem);
 
 /**
  * @summary Get event members
  */
-export const zodGetGuildEventMembersParams = zod.object({
+export const zodGetGuildEventMembersAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const zodGetGuildEventMembersResponseMetaPrefixMax = 16;
-export const zodGetGuildEventMembersResponseMetaSuffixMax = 16;
-export const zodGetGuildEventMembersResponseNotesMax = 128;
+export const zodGetGuildEventMembersAdminResponseMetaPrefixMax = 16;
+export const zodGetGuildEventMembersAdminResponseMetaSuffixMax = 16;
+export const zodGetGuildEventMembersAdminResponseNotesMax = 128;
 
-export const zodGetGuildEventMembersResponseItem = zod.object({
+export const zodGetGuildEventMembersAdminResponseItem = zod.object({
 	playerUuid: zod.string().nullish(),
 	profileId: zod.string().nullish(),
 	playerName: zod.string().nullish(),
@@ -3215,8 +3259,8 @@ export const zodGetGuildEventMembersResponseItem = zod.object({
 	estimatedTimeActive: zod.string().nullish(),
 	meta: zod
 		.object({
-			prefix: zod.string().max(zodGetGuildEventMembersResponseMetaPrefixMax).nullish(),
-			suffix: zod.string().max(zodGetGuildEventMembersResponseMetaSuffixMax).nullish(),
+			prefix: zod.string().max(zodGetGuildEventMembersAdminResponseMetaPrefixMax).nullish(),
+			suffix: zod.string().max(zodGetGuildEventMembersAdminResponseMetaSuffixMax).nullish(),
 			leaderboard: zod
 				.object({
 					styleId: zod.number().nullish(),
@@ -3233,22 +3277,22 @@ export const zodGetGuildEventMembersResponseItem = zod.object({
 		.describe('Metadata of the entry'),
 	id: zod.number(),
 	accountId: zod.string().nullish(),
-	notes: zod.string().max(zodGetGuildEventMembersResponseNotesMax).nullish(),
+	notes: zod.string().max(zodGetGuildEventMembersAdminResponseNotesMax).nullish(),
 });
-export const zodGetGuildEventMembersResponse = zod.array(zodGetGuildEventMembersResponseItem);
+export const zodGetGuildEventMembersAdminResponse = zod.array(zodGetGuildEventMembersAdminResponseItem);
 
 /**
  * @summary Get an event for a guild
  */
-export const zodGetGuildEventParams = zod.object({
+export const zodGetGuildEventAdminParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	eventId: zod.number(),
 });
 
-export const zodGetGuildEventResponseBannerTitleMax = 64;
-export const zodGetGuildEventResponseBannerDescriptionMax = 512;
+export const zodGetGuildEventAdminResponseBannerTitleMax = 64;
+export const zodGetGuildEventAdminResponseBannerDescriptionMax = 512;
 
-export const zodGetGuildEventResponse = zod.object({
+export const zodGetGuildEventAdminResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3260,10 +3304,10 @@ export const zodGetGuildEventResponse = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(zodGetGuildEventResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetGuildEventAdminResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(zodGetGuildEventResponseBannerDescriptionMax)
+				.max(zodGetGuildEventAdminResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3288,14 +3332,14 @@ export const zodGetGuildEventResponse = zod.object({
 /**
  * @summary Get all events for a guild
  */
-export const zodGetGuildEventsParams = zod.object({
+export const zodGetGuildEventsAdminParams = zod.object({
 	discordId: zod.number(),
 });
 
-export const zodGetGuildEventsResponseBannerTitleMax = 64;
-export const zodGetGuildEventsResponseBannerDescriptionMax = 512;
+export const zodGetGuildEventsAdminResponseBannerTitleMax = 64;
+export const zodGetGuildEventsAdminResponseBannerDescriptionMax = 512;
 
-export const zodGetGuildEventsResponseItem = zod.object({
+export const zodGetGuildEventsAdminResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
@@ -3307,10 +3351,10 @@ export const zodGetGuildEventsResponseItem = zod.object({
 	prizeInfo: zod.string().nullish().describe('Event prize information'),
 	banner: zod
 		.object({
-			title: zod.string().max(zodGetGuildEventsResponseBannerTitleMax).nullish().describe('Image title'),
+			title: zod.string().max(zodGetGuildEventsAdminResponseBannerTitleMax).nullish().describe('Image title'),
 			description: zod
 				.string()
-				.max(zodGetGuildEventsResponseBannerDescriptionMax)
+				.max(zodGetGuildEventsAdminResponseBannerDescriptionMax)
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
@@ -3331,7 +3375,7 @@ export const zodGetGuildEventsResponseItem = zod.object({
 	guildId: zod.string().nullish().describe('Discord server id as a string'),
 	data: zod.any().nullish().describe('Data specific to the event'),
 });
-export const zodGetGuildEventsResponse = zod.array(zodGetGuildEventsResponseItem);
+export const zodGetGuildEventsAdminResponse = zod.array(zodGetGuildEventsAdminResponseItem);
 
 /**
  * @summary Get event teams
@@ -4372,7 +4416,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4387,7 +4433,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4402,7 +4450,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4417,7 +4467,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4432,7 +4484,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4447,7 +4501,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4462,7 +4518,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4477,7 +4535,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4492,7 +4552,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4507,7 +4569,9 @@ export const zodGetPublicGuildResponse = zod.object({
 									discordId: zod.string(),
 									record: zod.object({
 										crop: zod.string(),
-										timestamp: zod.number(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
 										collected: zod.number(),
 										position: zod.number(),
 										participants: zod.number(),
@@ -4757,7 +4821,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4772,7 +4838,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4787,7 +4855,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4802,7 +4872,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4817,7 +4889,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4832,7 +4906,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4847,7 +4923,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4862,7 +4940,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4877,7 +4957,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -4892,7 +4974,9 @@ export const zodGetUserGuildResponse = zod.object({
 											discordId: zod.string(),
 											record: zod.object({
 												crop: zod.string(),
-												timestamp: zod.number(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
 												collected: zod.number(),
 												position: zod.number(),
 												participants: zod.number(),
@@ -5038,16 +5122,16 @@ export const zodGetUserGuildResponse = zod.object({
 /**
  * @summary Create a Jacob leaderboard
  */
-export const zodCreateGuildJacobFeatureParams = zod.object({
+export const zodCreateGuildJacobLeaderboardParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 });
 
-export const zodCreateGuildJacobFeatureBodyTitleMin = 0;
+export const zodCreateGuildJacobLeaderboardBodyTitleMin = 0;
 
-export const zodCreateGuildJacobFeatureBodyTitleMax = 64;
+export const zodCreateGuildJacobLeaderboardBodyTitleMax = 64;
 
-export const zodCreateGuildJacobFeatureBody = zod.object({
-	title: zod.string().min(zodCreateGuildJacobFeatureBodyTitleMin).max(zodCreateGuildJacobFeatureBodyTitleMax),
+export const zodCreateGuildJacobLeaderboardBody = zod.object({
+	title: zod.string().min(zodCreateGuildJacobLeaderboardBodyTitleMin).max(zodCreateGuildJacobLeaderboardBodyTitleMax),
 	channelId: zod.string().nullish(),
 	startCutoff: zod.number().nullish(),
 	endCutoff: zod.number().nullish(),
@@ -5062,7 +5146,7 @@ export const zodCreateGuildJacobFeatureBody = zod.object({
 /**
  * @summary Delete a Jacob leaderboard
  */
-export const zodDeleteGuildJacobFeatureParams = zod.object({
+export const zodDeleteGuildJacobLeaderboardParams = zod.object({
 	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
 	leaderboardId: zod.string(),
 });
@@ -5147,7 +5231,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5162,7 +5246,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5177,7 +5261,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5192,7 +5276,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5207,7 +5291,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5222,7 +5306,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5237,7 +5321,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5252,7 +5336,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5267,7 +5351,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5282,7 +5366,7 @@ export const zodGetGuildJacobResponse = zod.object({
 						discordId: zod.string(),
 						record: zod.object({
 							crop: zod.string(),
-							timestamp: zod.number(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 							collected: zod.number(),
 							position: zod.number(),
 							participants: zod.number(),
@@ -5366,7 +5450,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5381,7 +5467,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5396,7 +5484,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5411,7 +5501,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5426,7 +5518,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5441,7 +5535,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5456,7 +5552,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5471,7 +5569,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5486,7 +5586,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -5501,7 +5603,9 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 							discordId: zod.string(),
 							record: zod.object({
 								crop: zod.string(),
-								timestamp: zod.number(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
 								collected: zod.number(),
 								position: zod.number(),
 								participants: zod.number(),
@@ -6493,7 +6597,7 @@ export const zodGetProfileResponse = zod.object({
 		contests: zod.array(
 			zod.object({
 				crop: zod.string(),
-				timestamp: zod.number(),
+				timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 				collected: zod.number(),
 				position: zod.number(),
 				participants: zod.number(),
@@ -6996,7 +7100,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 		contests: zod.array(
 			zod.object({
 				crop: zod.string(),
-				timestamp: zod.number(),
+				timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
 				collected: zod.number(),
 				position: zod.number(),
 				participants: zod.number(),

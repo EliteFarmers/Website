@@ -8,13 +8,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface ContestParticipationDto {
-	crop: string;
-	/** Timestamp of the contest in seconds since unix epoch. */
-	timestamp: bigint;
-	collected: number;
-	position: number;
-	participants: number;
-	/** @nullable */
-	medal?: string | null;
-}
+export type ForceAddMemberAdminParams = {
+	profileUuid: string;
+};

@@ -32,7 +32,9 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 	input: RequestInfo | URL,
 	init?: RequestInit
 ): Promise<EliteResponse<ExtractSuccess<T>['data'], ExtractError<T>['data']>> => {
-	const { request, locals } = getRequestEvent();
+	const { request, locals, fetch: f } = getRequestEvent();
+
+	const fetchFunction = f ?? fetch;
 
 	const requestHeaders = new Headers(init?.headers || request.headers);
 	requestHeaders.set('User-Agent', 'EliteWebsite');
@@ -42,7 +44,7 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 		requestHeaders.set('Authorization', `Bearer ${locals.access_token}`);
 	}
 
-	const response = await fetch(input, { ...init, headers: requestHeaders });
+	const response = await fetchFunction(input, { ...init, headers: requestHeaders });
 
 	// If the response is not OK (e.g., 4xx, 5xx), parse the error and return it.
 	if (!response.ok) {

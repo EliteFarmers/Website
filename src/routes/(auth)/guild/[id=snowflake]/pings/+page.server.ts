@@ -1,4 +1,4 @@
-import { DisableUpcomingContestPings, UpdateUpcomingContestPings } from '$lib/api/elite';
+import { disableContestPingsPings, updateContestPings } from '$lib/api';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -52,7 +52,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await UpdateUpcomingContestPings(token, guildId, body).catch(() => {
+		const { response, error: e } = await updateContestPings(guildId, body).catch(() => {
 			throw error(500, 'Internal Server Error');
 		});
 
@@ -72,7 +72,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const { response, error: e } = await DisableUpcomingContestPings(token, guildId, 'Manually disabled').catch(
+		const { response, error: e } = await disableContestPingsPings(guildId, { reason: 'Manually disabled' }).catch(
 			(e) => {
 				console.log(e);
 				throw error(500, 'Internal Server Error');

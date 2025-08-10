@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	import type { components } from '$lib/api/api';
+	import type { GuildJacobLeaderboard } from '$lib/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import * as Accordion from '$ui/accordion';
 	import * as AlertDialog from '$ui/alert-dialog';
@@ -14,7 +14,7 @@
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	interface Props {
-		lb: components['schemas']['GuildJacobLeaderboard'];
+		lb: GuildJacobLeaderboard;
 		channels: { value: string; label: string }[];
 		roles: { value: string; label: string }[];
 	}
@@ -87,13 +87,13 @@
 			<p>
 				<span class="font-semibold">Start:</span>
 				<span class="bg-background rounded-md border p-1"
-					>{lb.startCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.startCutoff ?? 0)}</span
+					>{lb.startCutoff == -1n ? 'Not Set' : getReadableSkyblockDate(lb.startCutoff ?? 0)}</span
 				>
 			</p>
 			<p>
 				<span class="font-semibold">End:</span>
 				<span class="bg-background rounded-md border p-1"
-					>{lb.endCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(lb.endCutoff ?? 0)}</span
+					>{lb.endCutoff == -1n ? 'Not Set' : getReadableSkyblockDate(lb.endCutoff ?? 0)}</span
 				>
 			</p>
 		</div>

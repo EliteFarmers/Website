@@ -1,5 +1,4 @@
-import type { components } from '$lib/api/api';
-import { CreateWeightStyle } from '$lib/api/elite';
+import { createStyle, type CreateStyleRequest } from '$lib/api';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -20,7 +19,7 @@ export const actions = {
 
 		const data = await request.formData();
 
-		const body: components['schemas']['CreateStyleRequest'] = {
+		const body: CreateStyleRequest = {
 			name: data.get('name') as string,
 			description: data.get('description') as string,
 			styleFormatter: 'data',
@@ -78,7 +77,7 @@ export const actions = {
 			return fail(400, { error: 'Invalid style name.' });
 		}
 
-		const { error: e, response } = await CreateWeightStyle(locals.access_token, body);
+		const { error: e, response } = await createStyle(body);
 
 		if (e) {
 			return fail(response.status, { error: e });

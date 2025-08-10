@@ -36,7 +36,7 @@ import type {
 	CreateTeamAdminParams,
 	CropCollectionsDataPointDto,
 	DeleteContestPingsParams,
-	DeleteMemberParams,
+	DeleteMemberAdminParams,
 	DisableContestPingsPingsParams,
 	DiscordIdRequest,
 	DiscordLoginDto,
@@ -55,7 +55,7 @@ import type {
 	EventTeamsWordListDto,
 	FarmingWeightAllProfilesDto,
 	FarmingWeightDto,
-	ForceAddMemberParams,
+	ForceAddMemberAdminParams,
 	GardenDto,
 	GetAdminCropGraphsParams,
 	GetAdminSkillGraphsParams,
@@ -2598,81 +2598,87 @@ export const kickTeamMemberAdmin = async (
 /**
  * @summary Ban an Event Member
  */
-export type banMemberResponse200 = {
+export type banMemberAdminResponse200 = {
 	data: AdminEventMemberDto;
 	status: 200;
 };
 
-export type banMemberResponse400 = {
+export type banMemberAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type banMemberResponse401 = {
+export type banMemberAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type banMemberResponseComposite = banMemberResponse200 | banMemberResponse400 | banMemberResponse401;
+export type banMemberAdminResponseComposite =
+	| banMemberAdminResponse200
+	| banMemberAdminResponse400
+	| banMemberAdminResponse401;
 
-export type banMemberResponse = banMemberResponseComposite & {
+export type banMemberAdminResponse = banMemberAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getBanMemberUrl = (discordId: number | string, eventId: number | string, playerUuid: string) => {
+export const getBanMemberAdminUrl = (discordId: number | string, eventId: number | string, playerUuid: string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
-export const banMember = async (
+export const banMemberAdmin = async (
 	discordId: number | string,
 	eventId: number | string,
 	playerUuid: string,
-	banMemberBody: string,
+	banMemberAdminBody: string,
 	options?: RequestInit
 ) => {
-	return customFetch<banMemberResponse>(getBanMemberUrl(discordId, eventId, playerUuid), {
+	return customFetch<banMemberAdminResponse>(getBanMemberAdminUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
-		body: JSON.stringify(banMemberBody),
+		body: JSON.stringify(banMemberAdminBody),
 	});
 };
 
 /**
  * @summary Unban an Event Member
  */
-export type unbanMemberResponse204 = {
+export type unbanMemberAdminResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type unbanMemberResponse400 = {
+export type unbanMemberAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type unbanMemberResponse401 = {
+export type unbanMemberAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type unbanMemberResponseComposite = unbanMemberResponse204 | unbanMemberResponse400 | unbanMemberResponse401;
+export type unbanMemberAdminResponseComposite =
+	| unbanMemberAdminResponse204
+	| unbanMemberAdminResponse400
+	| unbanMemberAdminResponse401;
 
-export type unbanMemberResponse = unbanMemberResponseComposite & {
+export type unbanMemberAdminResponse = unbanMemberAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getUnbanMemberUrl = (discordId: number | string, eventId: number | string, playerUuid: string) => {
+export const getUnbanMemberAdminUrl = (discordId: number | string, eventId: number | string, playerUuid: string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
-export const unbanMember = async (
+export const unbanMemberAdmin = async (
 	discordId: number | string,
 	eventId: number | string,
 	playerUuid: string,
 	options?: RequestInit
 ) => {
-	return customFetch<unbanMemberResponse>(getUnbanMemberUrl(discordId, eventId, playerUuid), {
+	return customFetch<unbanMemberAdminResponse>(getUnbanMemberAdminUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'DELETE',
 	});
@@ -2681,37 +2687,40 @@ export const unbanMember = async (
 /**
  * @summary Create Event
  */
-export type createEventResponse200 = {
+export type createEventAdminResponse200 = {
 	data: EventDetailsDto;
 	status: 200;
 };
 
-export type createEventResponse400 = {
+export type createEventAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type createEventResponse401 = {
+export type createEventAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type createEventResponseComposite = createEventResponse200 | createEventResponse400 | createEventResponse401;
+export type createEventAdminResponseComposite =
+	| createEventAdminResponse200
+	| createEventAdminResponse400
+	| createEventAdminResponse401;
 
-export type createEventResponse = createEventResponseComposite & {
+export type createEventAdminResponse = createEventAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getCreateEventUrl = (discordId: bigint | number | string) => {
+export const getCreateEventAdminUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/weight`;
 };
 
-export const createEvent = async (
+export const createEventAdmin = async (
 	discordId: bigint | number | string,
 	createEventDto: CreateEventDto,
 	options?: RequestInit
 ) => {
-	return customFetch<createEventResponse>(getCreateEventUrl(discordId), {
+	return customFetch<createEventAdminResponse>(getCreateEventAdminUrl(discordId), {
 		...options,
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -2786,37 +2795,40 @@ export const createTeamAdmin = async (
  * Delete an event and all associated data. Only available for unapproved events.
  * @summary Delete Event
  */
-export type deleteEventResponse204 = {
+export type deleteEventAdminResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type deleteEventResponse400 = {
+export type deleteEventAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type deleteEventResponse401 = {
+export type deleteEventAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type deleteEventResponseComposite = deleteEventResponse204 | deleteEventResponse400 | deleteEventResponse401;
+export type deleteEventAdminResponseComposite =
+	| deleteEventAdminResponse204
+	| deleteEventAdminResponse400
+	| deleteEventAdminResponse401;
 
-export type deleteEventResponse = deleteEventResponseComposite & {
+export type deleteEventAdminResponse = deleteEventAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteEventUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getDeleteEventAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
-export const deleteEvent = async (
+export const deleteEventAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
 ) => {
-	return customFetch<deleteEventResponse>(getDeleteEventUrl(discordId, eventId), {
+	return customFetch<deleteEventAdminResponse>(getDeleteEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
 	});
@@ -2825,38 +2837,41 @@ export const deleteEvent = async (
 /**
  * @summary Update Event
  */
-export type updateEventResponse200 = {
+export type updateEventAdminResponse200 = {
 	data: EventDetailsDto;
 	status: 200;
 };
 
-export type updateEventResponse400 = {
+export type updateEventAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type updateEventResponse401 = {
+export type updateEventAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type updateEventResponseComposite = updateEventResponse200 | updateEventResponse400 | updateEventResponse401;
+export type updateEventAdminResponseComposite =
+	| updateEventAdminResponse200
+	| updateEventAdminResponse400
+	| updateEventAdminResponse401;
 
-export type updateEventResponse = updateEventResponseComposite & {
+export type updateEventAdminResponse = updateEventAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getUpdateEventUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getUpdateEventAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}`;
 };
 
-export const updateEvent = async (
+export const updateEventAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	editEventDto: EditEventDto,
 	options?: RequestInit
 ) => {
-	return customFetch<updateEventResponse>(getUpdateEventUrl(discordId, eventId), {
+	return customFetch<updateEventAdminResponse>(getUpdateEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -2867,40 +2882,40 @@ export const updateEvent = async (
 /**
  * @summary Delete Custom Event Banner
  */
-export type deleteEventBannerResponse204 = {
+export type deleteEventBannerAdminResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type deleteEventBannerResponse400 = {
+export type deleteEventBannerAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type deleteEventBannerResponse401 = {
+export type deleteEventBannerAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type deleteEventBannerResponseComposite =
-	| deleteEventBannerResponse204
-	| deleteEventBannerResponse400
-	| deleteEventBannerResponse401;
+export type deleteEventBannerAdminResponseComposite =
+	| deleteEventBannerAdminResponse204
+	| deleteEventBannerAdminResponse400
+	| deleteEventBannerAdminResponse401;
 
-export type deleteEventBannerResponse = deleteEventBannerResponseComposite & {
+export type deleteEventBannerAdminResponse = deleteEventBannerAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteEventBannerUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getDeleteEventBannerAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
-export const deleteEventBanner = async (
+export const deleteEventBannerAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
 ) => {
-	return customFetch<deleteEventBannerResponse>(getDeleteEventBannerUrl(discordId, eventId), {
+	return customFetch<deleteEventBannerAdminResponse>(getDeleteEventBannerAdminUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
 	});
@@ -2909,35 +2924,35 @@ export const deleteEventBanner = async (
 /**
  * @summary Set Custom Event Banner
  */
-export type setEventBannerResponse204 = {
+export type setEventBannerAdminResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type setEventBannerResponse400 = {
+export type setEventBannerAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type setEventBannerResponse401 = {
+export type setEventBannerAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type setEventBannerResponseComposite =
-	| setEventBannerResponse204
-	| setEventBannerResponse400
-	| setEventBannerResponse401;
+export type setEventBannerAdminResponseComposite =
+	| setEventBannerAdminResponse204
+	| setEventBannerAdminResponse400
+	| setEventBannerAdminResponse401;
 
-export type setEventBannerResponse = setEventBannerResponseComposite & {
+export type setEventBannerAdminResponse = setEventBannerAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getSetEventBannerUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getSetEventBannerAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/banner`;
 };
 
-export const setEventBanner = async (
+export const setEventBannerAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	editEventBannerDto: EditEventBannerDto,
@@ -2948,7 +2963,7 @@ export const setEventBanner = async (
 		formData.append(`image`, editEventBannerDto.image);
 	}
 
-	return customFetch<setEventBannerResponse>(getSetEventBannerUrl(discordId, eventId), {
+	return customFetch<setEventBannerAdminResponse>(getSetEventBannerAdminUrl(discordId, eventId), {
 		...options,
 		method: 'POST',
 		body: formData,
@@ -2958,32 +2973,35 @@ export const setEventBanner = async (
 /**
  * @summary Delete an Event Member
  */
-export type deleteMemberResponse204 = {
+export type deleteMemberAdminResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type deleteMemberResponse400 = {
+export type deleteMemberAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type deleteMemberResponse401 = {
+export type deleteMemberAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type deleteMemberResponseComposite = deleteMemberResponse204 | deleteMemberResponse400 | deleteMemberResponse401;
+export type deleteMemberAdminResponseComposite =
+	| deleteMemberAdminResponse204
+	| deleteMemberAdminResponse400
+	| deleteMemberAdminResponse401;
 
-export type deleteMemberResponse = deleteMemberResponseComposite & {
+export type deleteMemberAdminResponse = deleteMemberAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteMemberUrl = (
+export const getDeleteMemberAdminUrl = (
 	discordId: number | string,
 	eventId: number | string,
 	playerUuid: string,
-	params?: DeleteMemberParams
+	params?: DeleteMemberAdminParams
 ) => {
 	const normalizedParams = new URLSearchParams();
 
@@ -3000,14 +3018,14 @@ export const getDeleteMemberUrl = (
 		: `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/members/${playerUuid}`;
 };
 
-export const deleteMember = async (
+export const deleteMemberAdmin = async (
 	discordId: number | string,
 	eventId: number | string,
 	playerUuid: string,
-	params?: DeleteMemberParams,
+	params?: DeleteMemberAdminParams,
 	options?: RequestInit
 ) => {
-	return customFetch<deleteMemberResponse>(getDeleteMemberUrl(discordId, eventId, playerUuid, params), {
+	return customFetch<deleteMemberAdminResponse>(getDeleteMemberAdminUrl(discordId, eventId, playerUuid, params), {
 		...options,
 		method: 'DELETE',
 	});
@@ -3016,35 +3034,35 @@ export const deleteMember = async (
 /**
  * @summary Ban an Event Member
  */
-export type forceAddMemberResponse204 = {
+export type forceAddMemberAdminResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type forceAddMemberResponse400 = {
+export type forceAddMemberAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type forceAddMemberResponse401 = {
+export type forceAddMemberAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type forceAddMemberResponseComposite =
-	| forceAddMemberResponse204
-	| forceAddMemberResponse400
-	| forceAddMemberResponse401;
+export type forceAddMemberAdminResponseComposite =
+	| forceAddMemberAdminResponse204
+	| forceAddMemberAdminResponse400
+	| forceAddMemberAdminResponse401;
 
-export type forceAddMemberResponse = forceAddMemberResponseComposite & {
+export type forceAddMemberAdminResponse = forceAddMemberAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getForceAddMemberUrl = (
+export const getForceAddMemberAdminUrl = (
 	discordId: number | string,
 	eventId: number | string,
 	playerUuid: string,
-	params: ForceAddMemberParams
+	params: ForceAddMemberAdminParams
 ) => {
 	const normalizedParams = new URLSearchParams();
 
@@ -3061,14 +3079,14 @@ export const getForceAddMemberUrl = (
 		: `https://api.elitebot.dev/guild/${discordId}/events/${eventId}/members/${playerUuid}`;
 };
 
-export const forceAddMember = async (
+export const forceAddMemberAdmin = async (
 	discordId: number | string,
 	eventId: number | string,
 	playerUuid: string,
-	params: ForceAddMemberParams,
+	params: ForceAddMemberAdminParams,
 	options?: RequestInit
 ) => {
-	return customFetch<forceAddMemberResponse>(getForceAddMemberUrl(discordId, eventId, playerUuid, params), {
+	return customFetch<forceAddMemberAdminResponse>(getForceAddMemberAdminUrl(discordId, eventId, playerUuid, params), {
 		...options,
 		method: 'POST',
 	});
@@ -3174,40 +3192,40 @@ export const updateTeamAdmin = async (
 /**
  * @summary Get banned event members
  */
-export type getBannedMembersResponse200 = {
+export type getBannedMembersAdminResponse200 = {
 	data: AdminEventMemberDto[];
 	status: 200;
 };
 
-export type getBannedMembersResponse400 = {
+export type getBannedMembersAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type getBannedMembersResponse401 = {
+export type getBannedMembersAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type getBannedMembersResponseComposite =
-	| getBannedMembersResponse200
-	| getBannedMembersResponse400
-	| getBannedMembersResponse401;
+export type getBannedMembersAdminResponseComposite =
+	| getBannedMembersAdminResponse200
+	| getBannedMembersAdminResponse400
+	| getBannedMembersAdminResponse401;
 
-export type getBannedMembersResponse = getBannedMembersResponseComposite & {
+export type getBannedMembersAdminResponse = getBannedMembersAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetBannedMembersUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getGetBannedMembersAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/bans`;
 };
 
-export const getBannedMembers = async (
+export const getBannedMembersAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
 ) => {
-	return customFetch<getBannedMembersResponse>(getGetBannedMembersUrl(discordId, eventId), {
+	return customFetch<getBannedMembersAdminResponse>(getGetBannedMembersAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
 	});
@@ -3216,40 +3234,40 @@ export const getBannedMembers = async (
 /**
  * @summary Get event members
  */
-export type getGuildEventMembersResponse200 = {
+export type getGuildEventMembersAdminResponse200 = {
 	data: AdminEventMemberDto[];
 	status: 200;
 };
 
-export type getGuildEventMembersResponse400 = {
+export type getGuildEventMembersAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type getGuildEventMembersResponse401 = {
+export type getGuildEventMembersAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type getGuildEventMembersResponseComposite =
-	| getGuildEventMembersResponse200
-	| getGuildEventMembersResponse400
-	| getGuildEventMembersResponse401;
+export type getGuildEventMembersAdminResponseComposite =
+	| getGuildEventMembersAdminResponse200
+	| getGuildEventMembersAdminResponse400
+	| getGuildEventMembersAdminResponse401;
 
-export type getGuildEventMembersResponse = getGuildEventMembersResponseComposite & {
+export type getGuildEventMembersAdminResponse = getGuildEventMembersAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildEventMembersUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getGetGuildEventMembersAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/members`;
 };
 
-export const getGuildEventMembers = async (
+export const getGuildEventMembersAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
 ) => {
-	return customFetch<getGuildEventMembersResponse>(getGetGuildEventMembersUrl(discordId, eventId), {
+	return customFetch<getGuildEventMembersAdminResponse>(getGetGuildEventMembersAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
 	});
@@ -3258,40 +3276,40 @@ export const getGuildEventMembers = async (
 /**
  * @summary Get an event for a guild
  */
-export type getGuildEventResponse200 = {
+export type getGuildEventAdminResponse200 = {
 	data: EventDetailsDto;
 	status: 200;
 };
 
-export type getGuildEventResponse400 = {
+export type getGuildEventAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type getGuildEventResponse401 = {
+export type getGuildEventAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type getGuildEventResponseComposite =
-	| getGuildEventResponse200
-	| getGuildEventResponse400
-	| getGuildEventResponse401;
+export type getGuildEventAdminResponseComposite =
+	| getGuildEventAdminResponse200
+	| getGuildEventAdminResponse400
+	| getGuildEventAdminResponse401;
 
-export type getGuildEventResponse = getGuildEventResponseComposite & {
+export type getGuildEventAdminResponse = getGuildEventAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildEventUrl = (discordId: bigint | number | string, eventId: number | string) => {
+export const getGetGuildEventAdminUrl = (discordId: bigint | number | string, eventId: number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/event/${eventId}/admin`;
 };
 
-export const getGuildEvent = async (
+export const getGuildEventAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
 ) => {
-	return customFetch<getGuildEventResponse>(getGetGuildEventUrl(discordId, eventId), {
+	return customFetch<getGuildEventAdminResponse>(getGetGuildEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
 	});
@@ -3300,36 +3318,36 @@ export const getGuildEvent = async (
 /**
  * @summary Get all events for a guild
  */
-export type getGuildEventsResponse200 = {
+export type getGuildEventsAdminResponse200 = {
 	data: EventDetailsDto[];
 	status: 200;
 };
 
-export type getGuildEventsResponse400 = {
+export type getGuildEventsAdminResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type getGuildEventsResponse401 = {
+export type getGuildEventsAdminResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type getGuildEventsResponseComposite =
-	| getGuildEventsResponse200
-	| getGuildEventsResponse400
-	| getGuildEventsResponse401;
+export type getGuildEventsAdminResponseComposite =
+	| getGuildEventsAdminResponse200
+	| getGuildEventsAdminResponse400
+	| getGuildEventsAdminResponse401;
 
-export type getGuildEventsResponse = getGuildEventsResponseComposite & {
+export type getGuildEventsAdminResponse = getGuildEventsAdminResponseComposite & {
 	headers: Headers;
 };
 
-export const getGetGuildEventsUrl = (discordId: bigint | number | string) => {
+export const getGetGuildEventsAdminUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/guild/${discordId}/events/admin`;
 };
 
-export const getGuildEvents = async (discordId: bigint | number | string, options?: RequestInit) => {
-	return customFetch<getGuildEventsResponse>(getGetGuildEventsUrl(discordId), {
+export const getGuildEventsAdmin = async (discordId: bigint | number | string, options?: RequestInit) => {
+	return customFetch<getGuildEventsAdminResponse>(getGetGuildEventsAdminUrl(discordId), {
 		...options,
 		method: 'GET',
 	});
@@ -4922,40 +4940,40 @@ export const getUserGuild = async (discordId: bigint | number | string, options?
 /**
  * @summary Create a Jacob leaderboard
  */
-export type createGuildJacobFeatureResponse204 = {
+export type createGuildJacobLeaderboardResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type createGuildJacobFeatureResponse400 = {
+export type createGuildJacobLeaderboardResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type createGuildJacobFeatureResponse401 = {
+export type createGuildJacobLeaderboardResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type createGuildJacobFeatureResponseComposite =
-	| createGuildJacobFeatureResponse204
-	| createGuildJacobFeatureResponse400
-	| createGuildJacobFeatureResponse401;
+export type createGuildJacobLeaderboardResponseComposite =
+	| createGuildJacobLeaderboardResponse204
+	| createGuildJacobLeaderboardResponse400
+	| createGuildJacobLeaderboardResponse401;
 
-export type createGuildJacobFeatureResponse = createGuildJacobFeatureResponseComposite & {
+export type createGuildJacobLeaderboardResponse = createGuildJacobLeaderboardResponseComposite & {
 	headers: Headers;
 };
 
-export const getCreateGuildJacobFeatureUrl = (discordId: bigint | number | string) => {
+export const getCreateGuildJacobLeaderboardUrl = (discordId: bigint | number | string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/leaderboard`;
 };
 
-export const createGuildJacobFeature = async (
+export const createGuildJacobLeaderboard = async (
 	discordId: bigint | number | string,
 	createJacobLeaderboardRequestCreateJacobLeaderboard: CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	options?: RequestInit
 ) => {
-	return customFetch<createGuildJacobFeatureResponse>(getCreateGuildJacobFeatureUrl(discordId), {
+	return customFetch<createGuildJacobLeaderboardResponse>(getCreateGuildJacobLeaderboardUrl(discordId), {
 		...options,
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -4966,43 +4984,46 @@ export const createGuildJacobFeature = async (
 /**
  * @summary Delete a Jacob leaderboard
  */
-export type deleteGuildJacobFeatureResponse204 = {
+export type deleteGuildJacobLeaderboardResponse204 = {
 	data: null;
 	status: 204;
 };
 
-export type deleteGuildJacobFeatureResponse400 = {
+export type deleteGuildJacobLeaderboardResponse400 = {
 	data: ErrorResponse;
 	status: 400;
 };
 
-export type deleteGuildJacobFeatureResponse401 = {
+export type deleteGuildJacobLeaderboardResponse401 = {
 	data: null;
 	status: 401;
 };
 
-export type deleteGuildJacobFeatureResponseComposite =
-	| deleteGuildJacobFeatureResponse204
-	| deleteGuildJacobFeatureResponse400
-	| deleteGuildJacobFeatureResponse401;
+export type deleteGuildJacobLeaderboardResponseComposite =
+	| deleteGuildJacobLeaderboardResponse204
+	| deleteGuildJacobLeaderboardResponse400
+	| deleteGuildJacobLeaderboardResponse401;
 
-export type deleteGuildJacobFeatureResponse = deleteGuildJacobFeatureResponseComposite & {
+export type deleteGuildJacobLeaderboardResponse = deleteGuildJacobLeaderboardResponseComposite & {
 	headers: Headers;
 };
 
-export const getDeleteGuildJacobFeatureUrl = (discordId: bigint | number | string, leaderboardId: string) => {
+export const getDeleteGuildJacobLeaderboardUrl = (discordId: bigint | number | string, leaderboardId: string) => {
 	return `https://api.elitebot.dev/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
-export const deleteGuildJacobFeature = async (
+export const deleteGuildJacobLeaderboard = async (
 	discordId: bigint | number | string,
 	leaderboardId: string,
 	options?: RequestInit
 ) => {
-	return customFetch<deleteGuildJacobFeatureResponse>(getDeleteGuildJacobFeatureUrl(discordId, leaderboardId), {
-		...options,
-		method: 'DELETE',
-	});
+	return customFetch<deleteGuildJacobLeaderboardResponse>(
+		getDeleteGuildJacobLeaderboardUrl(discordId, leaderboardId),
+		{
+			...options,
+			method: 'DELETE',
+		}
+	);
 };
 
 /**

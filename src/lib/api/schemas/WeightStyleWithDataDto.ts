@@ -7,10 +7,10 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { WeightStyleWithDataDtoImage } from './WeightStyleWithDataDtoImage';
 import type { ImageAttachmentDto } from './ImageAttachmentDto';
 import type { ParentProductDto } from './ParentProductDto';
 import type { WeightStyleWithDataDtoData } from './WeightStyleWithDataDtoData';
+import type { WeightStyleWithDataDtoImage } from './WeightStyleWithDataDtoImage';
 import type { WeightStyleWithDataDtoLeaderboard } from './WeightStyleWithDataDtoLeaderboard';
 
 export interface WeightStyleWithDataDto {

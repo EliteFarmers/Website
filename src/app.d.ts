@@ -3,15 +3,15 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 
+import type { AuthorizedAccountDto } from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
-import type { AuthorizedUser } from '$lib/api/elite';
 
 declare global {
 	declare namespace App {
 		interface Locals {
 			access_token?: string;
 			refresh_token?: string;
-			user?: AuthorizedUser;
+			user?: AuthorizedAccountDto;
 			session?: AuthSession;
 			cache?: typeof import('$lib/servercache').cache;
 		}

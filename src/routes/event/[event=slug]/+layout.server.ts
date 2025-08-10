@@ -1,4 +1,4 @@
-import { GetEventDetails, GetEventMember, GetEventMembers, GetEventTeams, GetPublicGuild } from '$lib/api/elite';
+import { getEvent, getEventMember, getEventMembers, getEventTeams, getPublicGuild } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
@@ -9,7 +9,7 @@ export const load = (async ({ params, url, locals, depends }) => {
 	// Remove everything before the last dash
 	const eventId = event.slice(event.lastIndexOf('-') + 1);
 
-	const { data: eventData } = await GetEventDetails(eventId).catch(() => ({ data: undefined }));
+	const { data: eventData } = await getEvent(eventId as unknown as number).catch(() => ({ data: undefined }));
 
 	if (!eventData?.id || !eventData.name || !eventData.guildId) {
 		throw error(404, 'Event not found');
@@ -21,20 +21,24 @@ export const load = (async ({ params, url, locals, depends }) => {
 		throw redirect(307, `/event/${properUrl}`);
 	}
 
-	const { data: guild } = await GetPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
+	const { data: guild } = await getPublicGuild(BigInt(eventData.guildId)).catch(() => ({ data: undefined }));
 
 	const { data: self } = locals.session?.uuid
-		? await GetEventMember(eventData.id, locals.session?.uuid, locals.access_token).catch(() => ({
+		? await getEventMember(eventData.id as unknown as number, locals.session?.uuid).catch(() => ({
 				data: undefined,
 			}))
 		: { data: undefined };
 
-	const { data: members } = await GetEventMembers(eventData.id).catch(() => ({ data: undefined }));
+	const { data: members } = await getEventMembers(eventData.id as unknown as number).catch(() => ({
+		data: undefined,
+	}));
 
 	const joined = locals.session?.uuid ? members?.some((m) => m.playerUuid === locals.session?.uuid) : undefined;
 
 	if (eventData.maxTeamMembers !== 0 || eventData.maxTeams !== 0) {
-		const { data: teams } = await GetEventTeams(eventData.id).catch(() => ({ data: undefined }));
+		const { data: teams } = await getEventTeams(eventData.id as unknown as number).catch(() => ({
+			data: undefined,
+		}));
 
 		return {
 			event: eventData,

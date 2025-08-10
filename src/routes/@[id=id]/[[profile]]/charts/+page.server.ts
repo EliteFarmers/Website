@@ -1,18 +1,19 @@
-import { GetCropCollectionPoints } from '$lib/api/elite';
+import { getCropGraphs } from '$lib/api';
 import { preprocessCropCharts, preprocessWeightChart } from '$lib/utils';
-import { error, fail } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ parent }) => {
+export const load = (async ({ parent, setHeaders }) => {
 	const { account, profile } = await parent();
 
-	if (!account.id || !account.name || !profile.profileId) {
-		error(404, 'Player not found');
-	}
-
-	const { data: crops } = await GetCropCollectionPoints(account.id, profile.profileId).catch(() => ({
+	const { data: crops } = await getCropGraphs(account.id, profile.profileId).catch(() => ({
 		data: undefined,
 	}));
+
+	// 5 minute cache
+	setHeaders({
+		'Cache-Control': 'max-age=300',
+	});
 
 	return {
 		weight: preprocessWeightChart(crops ?? []),
@@ -38,7 +39,7 @@ export const actions: Actions = {
 				data: collectionGraph,
 				error: e,
 				response,
-			} = await GetCropCollectionPoints(uuid, profile, start, daysNum);
+			} = await getCropGraphs(uuid, profile, { from: BigInt(start), days: daysNum });
 
 			if (!response?.ok || e) {
 				return fail(response?.status ?? 500, { error: e ?? 'Failed to fetch data.' });

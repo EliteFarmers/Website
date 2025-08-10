@@ -1,4 +1,4 @@
-import { SetUserFortuneSettings } from '$lib/api/elite';
+import { updateFortuneSettings } from '$lib/api';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -33,7 +33,7 @@ export const actions: Actions = {
 			}
 		}
 
-		const { error: e } = await SetUserFortuneSettings(token, playerUuid, profile, {
+		const { error: e } = await updateFortuneSettings(playerUuid, profile, {
 			strength: strength,
 			communityCenter: communityCenter,
 			attributes: shards,

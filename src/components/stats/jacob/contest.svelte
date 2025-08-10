@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ContestParticipationDto } from '$lib/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { cn } from '$lib/utils';
 
 	interface Props {
-		contest: components['schemas']['ContestParticipationDto'];
+		contest: ContestParticipationDto;
 		irlTime?: boolean;
 		class?: string;
 	}
@@ -41,7 +41,7 @@
 	</p>
 	{#if irlTime}
 		<span class="font-mono text-xs font-semibold">
-			{new Date((timestamp ?? 0) * 1000).toLocaleString(undefined, {
+			{new Date(Number(timestamp ?? 0) * 1000).toLocaleString(undefined, {
 				timeStyle: 'short',
 				dateStyle: 'medium',
 			})}

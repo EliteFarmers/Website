@@ -1,4 +1,4 @@
-import { GetAllBadges, GetShopCategories } from '$lib/api/elite';
+import { getBadges, getCategories } from '$lib/api';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ setHeaders, locals }) => {
@@ -11,11 +11,11 @@ export const load = (async ({ setHeaders, locals }) => {
 		products: locals.cache?.products ?? [],
 		styles: locals.cache?.styles ?? [],
 		categories:
-			(await GetShopCategories(true)
+			(await getCategories({ includeProducts: true })
 				.then((res) => res.data)
 				.catch(() => undefined)) ?? [],
 		badges:
-			(await GetAllBadges()
+			(await getBadges()
 				.then((res) => res.data)
 				.catch(() => undefined)) ?? [],
 	};

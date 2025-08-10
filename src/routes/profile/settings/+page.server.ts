@@ -1,11 +1,11 @@
+import { getSelectedProfile, refreshPurchases, updateAccount, updateBadges } from '$lib/api';
 import type { components } from '$lib/api/api';
 import { FetchDiscordUserData } from '$lib/api/auth';
-import { GetSelectedProfileMember, RefreshPurchases, UpdateUserBadges, UpdateUserSettings } from '$lib/api/elite';
 import { IsUUID } from '$params/uuid';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, parent, url, request }) => {
+export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { session } = await parent();
 	const { access_token: token } = locals;
 
@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ locals, parent, url, request }) => 
 		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
-	const discord = await FetchDiscordUserData(token);
+	const discord = await FetchDiscordUserData();
 
 	if (!discord) {
 		throw redirect(307, '/login?redirect=' + url.pathname);
@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ locals, parent, url, request }) => 
 		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
 	const { data: weight } = account?.id
-		? await GetSelectedProfileMember(account?.id, request.headers).catch(() => ({ data: undefined }))
+		? await getSelectedProfile(account?.id).catch(() => ({ data: undefined }))
 		: { data: undefined };
 
 	return {
@@ -70,7 +70,7 @@ export const actions: Actions = {
 		}
 
 		const body = Object.values(badges);
-		const { response, error: e } = await UpdateUserBadges(locals.access_token, uuid, body);
+		const { response, error: e } = await updateBadges(uuid, body);
 
 		if (!response.ok || e) {
 			return fail(response.status, {
@@ -130,7 +130,7 @@ export const actions: Actions = {
 			body.features.moreInfoDefault = info === 'true';
 		}
 
-		const { response, error: e } = await UpdateUserSettings(locals.access_token, body);
+		const { response, error: e } = await updateAccount(body);
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e || 'Failed to update settings!' });
@@ -143,7 +143,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const { response, error: e } = await RefreshPurchases(locals.access_token);
+		const { response, error: e } = await refreshPurchases();
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e || 'Failed to refresh purchases!' });

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
@@ -55,17 +54,15 @@
 			<Button
 				class="flex-1 rounded-lg p-2"
 				variant="secondary"
-				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day - 3}">Previous</Button
+				href="/contests/{data.year}/{data.month}/{data.day - 3}">Previous</Button
+			>
+			<Button class="flex-1 rounded-lg p-2" variant="secondary" href="/contests/{data.year}/{data.month}"
+				>View&nbsp;Month</Button
 			>
 			<Button
 				class="flex-1 rounded-lg p-2"
 				variant="secondary"
-				href="/contests/{page.params.year}/{page.params.month}">View&nbsp;Month</Button
-			>
-			<Button
-				class="flex-1 rounded-lg p-2"
-				variant="secondary"
-				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day + 3}">Next</Button
+				href="/contests/{data.year}/{data.month}/{+data.day + 3}">Next</Button
 			>
 		</div>
 	</div>
@@ -81,7 +78,7 @@
 	<div class="mx-8 mt-4 mb-16 flex w-full flex-wrap justify-center gap-4 md:flex-row">
 		{#each contests ?? [] as contest ((contest.timestamp ?? 0) + (contest.crop ?? ''))}
 			<Singlecontest
-				timestamp={contest.timestamp ?? 0}
+				timestamp={(contest.timestamp as unknown as number) ?? 0}
 				crop={contest.crop}
 				participants={contest.participants}
 				entries={contest.participations}

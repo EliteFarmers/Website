@@ -3,7 +3,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import { twMerge } from 'tailwind-merge';
-import type { components } from './api/api';
+import type { AuthorizedGuildDto, CropCollectionsDataPointDto, EventType as EventTypeType } from './api';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -68,10 +68,7 @@ export const pending = (node: HTMLFormElement, pending: boolean) => {
 	});
 };
 
-export function CanManageGuild(
-	guild: Partial<components['schemas']['AuthorizedGuildDto']>,
-	session?: App.Locals['session']
-) {
+export function CanManageGuild(guild: Partial<AuthorizedGuildDto>, session?: App.Locals['session']) {
 	if (session?.flags?.admin) return true;
 	// Check if the user has the admin role
 	if (guild.guild?.adminRole && guild.member?.roles?.includes(guild.guild.adminRole)) return true;
@@ -119,20 +116,20 @@ const cropToPest = (crop: string) => {
 	return CROP_TO_PEST[crop];
 };
 
-export function preprocessCropCharts(crops: components['schemas']['CropCollectionsDataPointDto'][]) {
+export function preprocessCropCharts(crops: CropCollectionsDataPointDto[]) {
 	return (
 		crops
-			.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0))
+			.sort((a, b) => Number((a.timestamp ?? 0) - (b.timestamp ?? 0)))
 			.reduce<Record<string, { date: string; value: number; pests: number }[]>>((acc, curr) => {
 				for (const [crop, value = 0] of Object.entries(curr.crops ?? {})) {
 					acc[crop] ??= [];
 
 					const last = acc[crop].at(-1);
-					if ((last && last.value > value) || +(last?.date ?? 0) > +(curr.timestamp ?? 0)) continue;
+					if ((last && last.value > value) || +(last?.date ?? 0) > Number(curr.timestamp ?? 0)) continue;
 
 					acc[crop].push({
 						date: (curr.timestamp ?? 0) + '',
-						value: value ?? 0,
+						value: (value as unknown as number) ?? 0,
 						pests: curr.pests[cropToPest(crop) as keyof typeof curr.pests] ?? 0,
 					});
 				}
@@ -141,16 +138,16 @@ export function preprocessCropCharts(crops: components['schemas']['CropCollectio
 	);
 }
 
-export function preprocessWeightChart(data: components['schemas']['CropCollectionsDataPointDto'][]) {
+export function preprocessWeightChart(data: CropCollectionsDataPointDto[]) {
 	return data
-		.sort((a, b) => (a.timestamp ?? 0) - (b.timestamp ?? 0))
+		.sort((a, b) => Number((a.timestamp ?? 0) - (b.timestamp ?? 0)))
 		.map((point) => ({
 			date: point.timestamp ?? 0,
 			value: point.cropWeight ?? 0,
 		}));
 }
 
-export const EventType: Record<string, components['schemas']['EventType']> = {
+export const EventType: Record<string, EventTypeType> = {
 	FarmingWeight: 'farming-weight',
 	Collections: 'collection',
 	Experience: 'experience',

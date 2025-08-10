@@ -1,12 +1,12 @@
-import type { components } from '$lib/api/api';
 import {
-	AddGuildJacobLeadeboard,
-	DeleteGuildJacobLeadeboard,
-	GetGuild,
-	PatchGuildJacob,
-	SendGuildJacobLeadeboard,
-	UpdateGuildJacobLeadeboard,
-} from '$lib/api/elite';
+	createGuildJacobLeaderboard,
+	deleteGuildJacobLeaderboard,
+	getUserGuild,
+	sendGuildJacobFeature,
+	updateGuildJacobFeature,
+	updateGuildJacobLeaderboard,
+} from '$lib/api';
+import type { components } from '$lib/api/api';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -57,13 +57,13 @@ export const actions: Actions = {
 			updateChannelId: updatesChannelId,
 			updateRoleId: mentionRoleId,
 			pingForSmallImprovements: tinyUpdatesPing,
-			startCutoff: startDate ? new Date(startDate).getTime() / 1000 : undefined,
-			endCutoff: endDate ? new Date(endDate).getTime() / 1000 : undefined,
+			startCutoff: startDate ? BigInt(new Date(startDate).getTime() / 1000) : undefined,
+			endCutoff: endDate ? BigInt(new Date(endDate).getTime() / 1000) : undefined,
 			requiredRole: requiredRoleId,
 			blockedRole: blockedRoleId,
 		};
 
-		const { response, error: e } = await AddGuildJacobLeadeboard(guildId, token, body).catch((e) => {
+		const { response, error: e } = await createGuildJacobLeaderboard(guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -90,7 +90,7 @@ export const actions: Actions = {
 
 		if (!lbId) throw error(400, 'Missing required field: id');
 
-		const { response, error: e } = await DeleteGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
+		const { response, error: e } = await deleteGuildJacobLeaderboard(guildId, lbId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -118,7 +118,7 @@ export const actions: Actions = {
 
 		if (!lbId) throw error(400, 'Missing required field: id');
 
-		const { response, error: e } = await SendGuildJacobLeadeboard(guildId, token, lbId).catch((e) => {
+		const { response, error: e } = await sendGuildJacobFeature(guildId, lbId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -140,7 +140,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.session);
+		const guild = await getGuild(guildId, locals.session);
 
 		const data = await request.formData();
 		const lbId = data.get('id') as string;
@@ -158,7 +158,7 @@ export const actions: Actions = {
 			lb.crops[crop as keyof components['schemas']['CropRecords']] = [];
 		}
 
-		const { response, error: e } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
+		const { response, error: e } = await updateGuildJacobLeaderboard(guildId, lb.id, lb).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -180,7 +180,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token);
+		const guild = await getGuild(guildId, locals.session);
 		const data = await request.formData();
 
 		const lbId = data.get('id') as string;
@@ -206,7 +206,7 @@ export const actions: Actions = {
 
 		feature.excludedParticipations.push(key);
 
-		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await updateGuildJacobFeature(guildId, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -227,9 +227,9 @@ export const actions: Actions = {
 		) as keyof components['schemas']['CropRecords'];
 
 		lb.crops[cropKey] =
-			lb.crops[cropKey]?.filter((p) => p.uuid !== uuid && p.record?.timestamp !== +timestamp) ?? [];
+			lb.crops[cropKey]?.filter((p) => p.uuid !== uuid && p.record?.timestamp !== BigInt(timestamp)) ?? [];
 
-		const { response: response2 } = await UpdateGuildJacobLeadeboard(guildId, token, lb).catch((e) => {
+		const { response: response2 } = await updateGuildJacobLeaderboard(guildId, lb.id, lb).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -251,7 +251,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.session);
+		const guild = await getGuild(guildId, locals.session);
 		const data = await request.formData();
 
 		const pId = data.get('participationId') as string;
@@ -267,7 +267,7 @@ export const actions: Actions = {
 
 		feature.excludedParticipations = feature.excludedParticipations.filter((p) => p !== pId);
 
-		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await updateGuildJacobFeature(guildId, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -289,7 +289,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.session);
+		const guild = await getGuild(guildId, locals.session);
 		const data = await request.formData();
 
 		const startDate = data.get('startDate') as string;
@@ -311,8 +311,8 @@ export const actions: Actions = {
 		feature.excludedTimespans ??= [];
 
 		const span = {
-			start: Math.floor(start.getTime() / 1000),
-			end: Math.floor(end.getTime() / 1000),
+			start: BigInt(Math.floor(start.getTime() / 1000)),
+			end: BigInt(Math.floor(end.getTime() / 1000)),
 			reason,
 		};
 
@@ -321,7 +321,7 @@ export const actions: Actions = {
 
 		feature.excludedTimespans.push(span);
 
-		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await updateGuildJacobFeature(guildId, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -343,7 +343,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, token, locals.session);
+		const guild = await getGuild(guildId);
 		const data = await request.formData();
 
 		const startTime = +((data.get('startTime') as string | undefined) ?? 0);
@@ -357,12 +357,14 @@ export const actions: Actions = {
 
 		feature.excludedTimespans ??= [];
 
-		if (!feature.excludedTimespans.some((t) => t.start === startTime && t.end === endTime))
+		if (!feature.excludedTimespans.some((t) => Number(t.start) === startTime && Number(t.end) === endTime))
 			return fail(409, { error: 'Timespan already excluded' });
 
-		feature.excludedTimespans = feature.excludedTimespans.filter((t) => t.start !== startTime || t.end !== endTime);
+		feature.excludedTimespans = feature.excludedTimespans.filter(
+			(t) => Number(t.start) !== startTime || Number(t.end) !== endTime
+		);
 
-		const { response, error: e } = await PatchGuildJacob(guildId, token, feature).catch((e) => {
+		const { response, error: e } = await updateGuildJacobFeature(guildId, feature).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -378,8 +380,8 @@ export const actions: Actions = {
 	},
 };
 
-async function getGuild(guildId: string, token: string, session?: App.Locals['session']) {
-	const guild = await GetGuild(guildId, token)
+async function getGuild(guildId: string, session?: App.Locals['session']) {
+	const guild = await getUserGuild(guildId)
 		.then((guild) => guild.data ?? undefined)
 		.catch(() => undefined);
 

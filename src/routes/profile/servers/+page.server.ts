@@ -1,6 +1,6 @@
+import { getPublicGuilds, getUserGuilds } from '$lib/api';
 import type { components } from '$lib/api/api';
 import { FetchDiscordUserData } from '$lib/api/auth';
-import { GetPublicGuilds, GetUsersGuilds } from '$lib/api/elite';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
-	const discord = await FetchDiscordUserData(token);
+	const discord = await FetchDiscordUserData();
 
 	if (!discord) {
 		throw redirect(307, '/login?redirect=' + url.pathname);
@@ -22,11 +22,11 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
 	const guilds =
-		(await GetUsersGuilds(token)
+		(await getUserGuilds()
 			.then((guilds) => guilds.data ?? undefined)
 			.catch(() => undefined)) ?? ([] as components['schemas']['GuildMemberDto'][]);
 
-	const { data: publicGuilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
+	const { data: publicGuilds } = await getPublicGuilds().catch(() => ({ data: undefined }));
 
 	return {
 		adminGuilds: guilds.filter((guild) => guild.hasBot && guild.admin),

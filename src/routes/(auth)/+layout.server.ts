@@ -13,7 +13,7 @@ export const load = (async ({ locals, url, cookies, parent }) => {
 	}
 
 	if (!locals.user && locals.access_token) {
-		const discord = await FetchDiscordUserData(locals.access_token);
+		const discord = await FetchDiscordUserData();
 
 		locals.user = discord ?? undefined;
 	}
