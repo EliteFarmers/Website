@@ -22,7 +22,7 @@
 		"down": "docker-compose down",
 		"license": "pnpm exec pnpm-licenses generate-disclaimer --output-file=./static/oss.txt",
 		"generate-api": "pnpm orval",
-        "postprocess-api": "node ./src/lib/api/util/morph-api.ts src/lib/api/client/EliteApi.ts && pnpm prettier --write src/lib/api/"
+		"postprocess-api": "node ./src/lib/api/util/morph-api.ts src/lib/api/client/EliteApi.ts && pnpm prettier --write src/lib/api/"
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.76"
@@ -76,7 +76,6 @@
 		"layercake": "^8.4.4",
 		"layerchart": "2.0.0-next.23",
 		"mode-watcher": "^1.1.0",
-		"openapi-fetch": "^0.14.0",
 		"orval": "^7.11.2",
 		"paneforge": "1.0.0-next.6",
 		"prettier": "^3.6.2",

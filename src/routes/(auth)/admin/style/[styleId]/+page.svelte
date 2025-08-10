@@ -5,7 +5,7 @@
 	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
-	import type { components } from '$lib/api/api';
+	import type { LeaderboardStyleDataDto, WeightStyleDataDto } from '$lib/api';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
 	import { pending } from '$lib/utils';
@@ -62,11 +62,9 @@
 
 	let styleDataObj = $derived({
 		...untrack(() => data.style),
-		data: (styleDataValid?.success ? styleDataValid.data : data.style.data) as
-			| components['schemas']['WeightStyleDataDto']
-			| undefined,
+		data: (styleDataValid?.success ? styleDataValid.data : data.style.data) as WeightStyleDataDto | undefined,
 		leaderboard: (leaderboardDataValid?.success ? leaderboardDataValid.data : data.style.leaderboard) as
-			| components['schemas']['LeaderboardStyleDataDto']
+			| LeaderboardStyleDataDto
 			| undefined,
 	});
 

@@ -5,8 +5,8 @@ import {
 	sendGuildJacobFeature,
 	updateGuildJacobFeature,
 	updateGuildJacobLeaderboard,
+	type CropRecords,
 } from '$lib/api';
-import type { components } from '$lib/api/api';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -155,7 +155,7 @@ export const actions: Actions = {
 
 		// Reset all fields in lb.crops to empty arrays
 		for (const crop in lb.crops) {
-			lb.crops[crop as keyof components['schemas']['CropRecords']] = [];
+			lb.crops[crop as keyof CropRecords] = [];
 		}
 
 		const { response, error: e } = await updateGuildJacobLeaderboard(guildId, lb.id, lb).catch((e) => {
@@ -222,9 +222,7 @@ export const actions: Actions = {
 			'Nether Wart': 'netherWart',
 		};
 
-		const cropKey = (
-			crop in keys ? keys[crop as keyof typeof keys] : crop.toLowerCase()
-		) as keyof components['schemas']['CropRecords'];
+		const cropKey = (crop in keys ? keys[crop as keyof typeof keys] : crop.toLowerCase()) as keyof CropRecords;
 
 		lb.crops[cropKey] =
 			lb.crops[cropKey]?.filter((p) => p.uuid !== uuid && p.record?.timestamp !== BigInt(timestamp)) ?? [];

@@ -1,5 +1,4 @@
-import { getPublicGuilds, getUserGuilds } from '$lib/api';
-import type { components } from '$lib/api/api';
+import { getPublicGuilds, getUserGuilds, type GuildMemberDto } from '$lib/api';
 import { FetchDiscordUserData } from '$lib/api/auth';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -24,7 +23,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const guilds =
 		(await getUserGuilds()
 			.then((guilds) => guilds.data ?? undefined)
-			.catch(() => undefined)) ?? ([] as components['schemas']['GuildMemberDto'][]);
+			.catch(() => undefined)) ?? ([] as GuildMemberDto[]);
 
 	const { data: publicGuilds } = await getPublicGuilds().catch(() => ({ data: undefined }));
 

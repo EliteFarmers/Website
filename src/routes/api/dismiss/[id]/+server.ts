@@ -1,4 +1,4 @@
-import { DismissAnnouncement } from '$lib/api/elite';
+import { dismissAnnouncement } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 		error(403, 'You must be logged in to dismiss an announcement.');
 	}
 
-	const { response, error: e } = await DismissAnnouncement(locals.access_token, id);
+	const { response, error: e } = await dismissAnnouncement(id);
 	if (e) {
 		error(500, 'Failed to dismiss announcement.');
 	}

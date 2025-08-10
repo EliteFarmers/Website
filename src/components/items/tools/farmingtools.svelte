@@ -23,7 +23,7 @@
 		() => ctx.tools,
 		(tools) => {
 			const options = {
-				milestones: getCropMilestoneLevels(garden?.crops ?? {}),
+				milestones: getCropMilestoneLevels((garden?.crops ?? {}) as Record<string, number>),
 			};
 
 			actualTools = FT.fromArray(tools as EliteItemDto[], options).sort((a, b) => {

@@ -7,7 +7,7 @@
 	import Plots from '$comp/stats/garden/plots.svelte';
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
-	import type { components } from '$lib/api/api';
+	import type { GardenDto } from '$lib/api';
 	import { getCopperSpent } from '$lib/calc/garden';
 	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -17,7 +17,7 @@
 	let overflow = $state(true);
 
 	const ctx = getStatsContext();
-	const garden = $derived((ctx.member.garden ?? {}) as components['schemas']['GardenDto']);
+	const garden = $derived((ctx.member.garden ?? {}) as GardenDto);
 
 	const maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
 	const totalVisits = $derived(
@@ -30,7 +30,7 @@
 
 	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
 
-	let upgrades = $derived(getCropUpgrades(garden?.cropUpgrades ?? {}));
+	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as unknown as Record<string, number>));
 	let crops = $derived(
 		Object.entries(upgrades)
 			.map(([crop, level]) => {

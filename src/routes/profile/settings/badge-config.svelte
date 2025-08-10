@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { UserBadgeDto } from '$lib/api';
 	import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
 	import BadgeItem from './badge-item.svelte';
 
 	interface Props {
-		badges: components['schemas']['UserBadgeDto'][];
+		badges: UserBadgeDto[];
 	}
 
 	let { badges }: Props = $props();
@@ -12,11 +12,11 @@
 	let items = $state(badges.filter((badge) => badge.visible));
 	let hidden = $state(badges.filter((badge) => !badge.visible));
 
-	function handle(e: CustomEvent<DndEvent<components['schemas']['UserBadgeDto']>>) {
+	function handle(e: CustomEvent<DndEvent<UserBadgeDto>>) {
 		items = e.detail.items;
 	}
 
-	function handleHidden(e: CustomEvent<DndEvent<components['schemas']['UserBadgeDto']>>) {
+	function handleHidden(e: CustomEvent<DndEvent<UserBadgeDto>>) {
 		hidden = e.detail.items;
 	}
 </script>

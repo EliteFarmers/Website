@@ -11,15 +11,15 @@
 	import { page } from '$app/state';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
-	import type { components } from '$lib/api/api';
+	import type { MinecraftAccountDto, ProfileDetailsDto } from '$lib/api';
 	import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 	import { formatIgn } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 
 	interface Props {
-		account: components['schemas']['MinecraftAccountDto'];
-		profile: components['schemas']['ProfileDetailsDto'];
+		account: MinecraftAccountDto;
+		profile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
 	}
 

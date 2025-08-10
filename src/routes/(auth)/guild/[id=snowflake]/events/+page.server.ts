@@ -1,5 +1,4 @@
-import { createEventAdmin, getGuildEventsAdmin, type CreateEventDto } from '$lib/api';
-import type { components } from '$lib/api/api';
+import { createEventAdmin, EventType, getGuildEventsAdmin, type CreateEventDto } from '$lib/api';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
@@ -37,7 +36,7 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 
-		const type = data.get('type') as components['schemas']['EventType'];
+		const type = data.get('type') as EventType;
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
 		const rules = data.get('rules') as string;

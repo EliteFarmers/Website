@@ -2,7 +2,7 @@
 	import CropSelector from '$comp/stats/contests/crop-selector.svelte';
 	import ContestList from '$comp/stats/jacob/contest-list.svelte';
 	import CropMedalCounts from '$comp/stats/jacob/crop-medal-counts.svelte';
-	import type { components } from '$lib/api/api';
+	import type { ContestParticipationDto, JacobCropStatsDto, JacobDataDto } from '$lib/api';
 	import { CROP_TO_ELITE_CROP } from '$lib/constants/crops';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
@@ -12,10 +12,10 @@
 	const ctx = getStatsContext();
 	const jacob = $derived(ctx.member.jacob);
 
-	type CropStats = components['schemas']['JacobDataDto']['stats'];
+	type CropStats = JacobDataDto['stats'];
 
 	const contestsByCrop = $derived(
-		jacob?.contests?.reduce<Record<string, components['schemas']['ContestParticipationDto'][]>>((acc, contest) => {
+		jacob?.contests?.reduce<Record<string, ContestParticipationDto[]>>((acc, contest) => {
 			if (!contest.crop) return acc;
 
 			acc[contest.crop] ??= [];
@@ -56,7 +56,7 @@
 				}
 				case 'recent':
 				default:
-					return (b?.timestamp ?? 0) - (a?.timestamp ?? 0);
+					return Number(b?.timestamp ?? 0) - Number(a?.timestamp ?? 0);
 			}
 		});
 	});
@@ -73,7 +73,7 @@
 				participations: 0,
 				firstPlaceScores: 0,
 				medals: {},
-			} as components['schemas']['JacobCropStatsDto'])
+			} as JacobCropStatsDto)
 		);
 	});
 
@@ -83,7 +83,7 @@
 		medals: Record<(typeof MEDAL_TYPES)[number], number>;
 	};
 
-	const combineCropStats = $derived((crops: components['schemas']['JacobCropStatsDto'][]) => {
+	const combineCropStats = $derived((crops: JacobCropStatsDto[]) => {
 		return crops.reduce<ReducedCropStats>(
 			(acc, crop) => {
 				acc.participations += crop.participations ?? 0;

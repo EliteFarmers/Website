@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { StrippedContestParticipationDto } from '$lib/api';
 	import * as Popover from '$ui/popover';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 
 	interface Props {
-		entry: components['schemas']['StrippedContestParticipationDto'];
+		entry: StrippedContestParticipationDto;
 	}
 
 	let { entry }: Props = $props();

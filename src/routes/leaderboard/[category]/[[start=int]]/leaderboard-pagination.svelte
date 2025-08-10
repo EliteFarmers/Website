@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { components } from '$lib/api/api';
+	import type { LeaderboardDto } from '$lib/api';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { Button } from '$ui/button';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
@@ -10,7 +10,7 @@
 
 	interface Props {
 		info: LeaderboardInfo;
-		leaderboard: components['schemas']['LeaderboardDto'];
+		leaderboard: LeaderboardDto;
 	}
 
 	let { info, leaderboard }: Props = $props();

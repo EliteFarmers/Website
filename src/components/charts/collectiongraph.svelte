@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { CropCollectionsDataPointDto } from '$lib/api';
 	import { CROP_TO_HEX, PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { toReadable } from '$lib/format';
 	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
@@ -7,7 +7,7 @@
 	import Apex from './apex.svelte';
 
 	interface Props {
-		points: components['schemas']['CropCollectionsDataPointDto'][];
+		points: CropCollectionsDataPointDto[];
 	}
 
 	let { points }: Props = $props();
@@ -31,11 +31,11 @@
 	$effect(() => {
 		const newData = {} as Record<string, { name: string; data: { x: number; y: number }[] }>;
 		for (const point of points) {
-			const timestamp = (point.timestamp ?? 0) * 1000;
+			const timestamp = Number(point.timestamp ?? 0) * 1000;
 			const crops = Object.entries(point.crops ?? {});
 
 			for (const [crop, value] of crops) {
-				const val = { x: timestamp, y: value ?? 0 };
+				const val = { x: timestamp, y: Number(value ?? 0) };
 				if (!newData[crop]) newData[crop] = { name: crop, data: [val] };
 				newData[crop].data.push(val);
 			}

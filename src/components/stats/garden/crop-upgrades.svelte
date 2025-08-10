@@ -1,19 +1,19 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GardenDto } from '$lib/api';
 	import { getCopperSpent, getCopperToMaxUpgrade } from '$lib/calc/garden';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';
 	import { Crop, getCropDisplayName, getCropUpgrades } from 'farming-weight';
 
 	interface Props {
-		garden?: components['schemas']['GardenDto'] | undefined;
+		garden?: GardenDto | undefined;
 	}
 
 	let { garden = undefined }: Props = $props();
 
 	const upgradesList = [...Array(9).keys()];
 
-	let upgrades = $derived(getCropUpgrades(garden?.cropUpgrades ?? {}));
+	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as Record<string, number>));
 	let crops = $derived(
 		Object.entries(upgrades)
 			.map(([c, level]) => {

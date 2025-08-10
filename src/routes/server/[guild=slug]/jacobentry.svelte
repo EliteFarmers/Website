@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GuildJacobLeaderboardEntry } from '$lib/api';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 
 	interface Props {
-		record: components['schemas']['GuildJacobLeaderboardEntry'];
+		record: GuildJacobLeaderboardEntry;
 	}
 
 	let { record }: Props = $props();
@@ -34,7 +34,7 @@
 				<div class="flex flex-col items-center gap-1">
 					<span class="font-semibold">{getReadableSkyblockDate(contest?.timestamp ?? 0)}</span>
 					<span class="font-semibold">
-						{new Date((contest?.timestamp ?? 0) * 1000).toLocaleString(undefined, {
+						{new Date(Number(contest?.timestamp ?? 0) * 1000).toLocaleString(undefined, {
 							timeStyle: 'short',
 							dateStyle: 'medium',
 						})}

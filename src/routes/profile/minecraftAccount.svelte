@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import type { components } from '$lib/api/api';
+	import type { MinecraftAccountDetailsDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
@@ -10,7 +10,7 @@
 	import Unlink from '@lucide/svelte/icons/unlink';
 
 	interface Props {
-		mc?: Partial<components['schemas']['MinecraftAccountDetailsDto']>;
+		mc?: Partial<MinecraftAccountDetailsDto>;
 		confirmMcUnlink?: (mcUsername: string | undefined) => void;
 	}
 

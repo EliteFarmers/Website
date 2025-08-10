@@ -9,7 +9,7 @@
 	let recentContests = $derived(
 		contests
 			?.slice()
-			?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0))
+			?.sort((a, b) => Number(b?.timestamp ?? 0) - Number(a?.timestamp ?? 0))
 			.slice(0, 8) ?? []
 	);
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import type { components } from '$lib/api/api';
+	import type { BadgeDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
@@ -17,7 +17,7 @@
 
 	let { data }: Props = $props();
 
-	let selectedBadge = $state<components['schemas']['BadgeDto'] | null>(null);
+	let selectedBadge = $state<BadgeDto | null>(null);
 	let manageBadgeModal = $state(false);
 	let createBadgeModal = $state(false);
 	let grantBadgeModal = $state(false);

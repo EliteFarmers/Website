@@ -1,5 +1,13 @@
-import { getSelectedProfile, refreshPurchases, updateAccount, updateBadges } from '$lib/api';
-import type { components } from '$lib/api/api';
+import {
+	getSelectedProfile,
+	refreshPurchases,
+	updateAccount,
+	updateBadges,
+	type ConfiguredProductFeaturesDto,
+	type EditUserBadgeDto,
+	type UpdateUserSettingsDto,
+	type WeightStyleWithDataDto,
+} from '$lib/api';
 import { FetchDiscordUserData } from '$lib/api/auth';
 import { IsUUID } from '$params/uuid';
 import { error, fail, redirect } from '@sveltejs/kit';
@@ -30,7 +38,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		mcAccount: account ?? null,
 		user: discord,
 		weight: weight?.farmingWeight ?? null,
-		styles: locals.cache?.styleLookup ?? ({} as Record<string, components['schemas']['WeightStyleWithDataDto']>),
+		styles: locals.cache?.styleLookup ?? ({} as Record<string, WeightStyleWithDataDto>),
 	};
 };
 
@@ -50,7 +58,7 @@ export const actions: Actions = {
 		}
 
 		const entries = Array.from(data.entries()).filter(([key]) => key.startsWith('badge.'));
-		const badges = {} as Record<string, components['schemas']['EditUserBadgeDto']>;
+		const badges = {} as Record<string, EditUserBadgeDto>;
 
 		for (const [key, value] of entries) {
 			const [, id, setting] = key.split('.');
@@ -89,11 +97,11 @@ export const actions: Actions = {
 
 		const body = {
 			suffix: data.get('emoji')?.toString() ?? '',
-			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
+			features: {} as ConfiguredProductFeaturesDto,
 			weightStyleId: undefined as number | undefined,
 			nameStyleId: undefined as number | undefined,
 			leaderboardStyleId: undefined as number | undefined,
-		} satisfies components['schemas']['UpdateUserSettingsDto'];
+		} satisfies UpdateUserSettingsDto;
 
 		const style = data.get('style')?.toString() ?? undefined;
 		if (style !== undefined && isFinite(+style)) {

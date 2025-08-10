@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GardenDto, LeaderboardRanksResponse } from '$lib/api';
 	import { API_CROP_TO_CROP } from '$lib/constants/crops';
 	import { getCropMilestones } from 'farming-weight';
 	import MilestoneBar from './milestone-bar.svelte';
 
 	interface Props {
-		garden?: components['schemas']['GardenDto'] | undefined;
-		ranks?: components['schemas']['LeaderboardRanksResponse']['ranks'] | undefined;
+		garden?: GardenDto | undefined;
+		ranks?: LeaderboardRanksResponse['ranks'] | undefined;
 		overflow?: boolean;
 	}
 

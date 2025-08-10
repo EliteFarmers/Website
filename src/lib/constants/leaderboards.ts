@@ -1,4 +1,4 @@
-import type { components } from '$lib/api/api';
+import type { LeaderboardInfoDto, LeaderboardsResponse } from '$lib/api';
 
 export interface LeaderboardConfig {
 	icon?: string;
@@ -8,7 +8,7 @@ export interface LeaderboardConfig {
 
 type IntervalType = 'current' | 'weekly' | 'monthly';
 
-export type LeaderboardInfo = components['schemas']['LeaderboardInfoDto'] &
+export type LeaderboardInfo = LeaderboardInfoDto &
 	LeaderboardConfig & {
 		id: string;
 		intervals?: IntervalType[];
@@ -22,7 +22,7 @@ const sortByOrder = (a: LeaderboardInfo, b: LeaderboardInfo) => {
 	return a.order - b.order;
 };
 
-export function parseLeaderboards(response?: components['schemas']['LeaderboardsResponse']): {
+export function parseLeaderboards(response?: LeaderboardsResponse): {
 	leaderboards: Record<string, LeaderboardInfo>;
 	categories: Record<string, LeaderboardInfo[]>;
 } {

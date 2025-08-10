@@ -1,8 +1,15 @@
-import type { components } from './api';
+import type {
+	AuctionItemDto,
+	AuthorizedAccountDto,
+	BazaarProductSummaryDto,
+	ItemResponse,
+	LeaderboardEntryDto,
+	WeightStyleWithDataDto,
+} from './schemas';
 
-export type AuthorizedUser = components['schemas']['AuthorizedAccountDto'];
-export type LeaderboardEntry = components['schemas']['LeaderboardEntryDto'] & {
-	style?: components['schemas']['WeightStyleWithDataDto']['leaderboard'];
+export type AuthorizedUser = AuthorizedAccountDto;
+export type LeaderboardEntry = LeaderboardEntryDto & {
+	style?: WeightStyleWithDataDto['leaderboard'];
 };
 export interface UserInfo {
 	id: string;
@@ -25,8 +32,8 @@ export interface ProfileDetails {
 export type RatesItemPriceData = Record<
 	string,
 	{
-		auctions?: components['schemas']['AuctionItemDto'][];
-		bazaar?: components['schemas']['BazaarProductSummaryDto'];
-		item?: components['schemas']['ItemResponse'];
+		auctions?: AuctionItemDto[];
+		bazaar?: BazaarProductSummaryDto;
+		item?: ItemResponse;
 	}
 >;

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import EventType from '$comp/events/event-type.svelte';
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto, GuildDetailsDto } from '$lib/api';
 
 	interface Props {
-		event: components['schemas']['EventDetailsDto'];
-		guild: components['schemas']['GuildDetailsDto'] | undefined;
+		event: EventDetailsDto;
+		guild: GuildDetailsDto | undefined;
 		showRecentlyEnded?: boolean;
 	}
 

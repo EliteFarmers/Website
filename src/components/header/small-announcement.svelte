@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { AnnouncementDto } from '$lib/api';
 	import ArrowUp from '@lucide/svelte/icons/arrow-up';
 	import { IsInViewport } from 'runed';
 	import { onMount, tick } from 'svelte';
@@ -9,7 +9,7 @@
 	const inViewport = new IsInViewport(() => targetNode);
 
 	type Props = {
-		announcement: components['schemas']['AnnouncementDto'];
+		announcement: AnnouncementDto;
 	};
 
 	let { announcement }: Props = $props();

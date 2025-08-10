@@ -1,6 +1,6 @@
 <script lang="ts">
 	import EventTeam from '$comp/events/event-team.svelte';
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto, EventTeamWithMembersDto } from '$lib/api';
 	import * as Accordion from '$ui/accordion';
 
 	interface Props {
@@ -8,8 +8,8 @@
 		highlightTeam?: string | undefined;
 		started?: boolean;
 		running?: boolean;
-		event: components['schemas']['EventDetailsDto'];
-		teams: components['schemas']['EventTeamWithMembersDto'][];
+		event: EventDetailsDto;
+		teams: EventTeamWithMembersDto[];
 	}
 
 	let {

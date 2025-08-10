@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { components } from '$lib/api/api';
+	import type { JacobDataDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import ContestList from './contest-list.svelte';
 
 	interface Props {
-		contests: components['schemas']['JacobDataDto']['contests'];
+		contests: JacobDataDto['contests'];
 	}
 
 	let { contests }: Props = $props();
@@ -13,7 +13,7 @@
 	let recentContests = $derived(
 		contests
 			?.slice()
-			?.sort((a, b) => (b?.timestamp ?? 0) - (a?.timestamp ?? 0))
+			?.sort((a, b) => Number(b?.timestamp ?? 0) - Number(a?.timestamp ?? 0))
 			.slice(0, 30) ?? []
 	);
 </script>
