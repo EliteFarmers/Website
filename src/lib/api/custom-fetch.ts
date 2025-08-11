@@ -32,15 +32,23 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 	input: RequestInfo | URL,
 	init?: RequestInit
 ): Promise<EliteResponse<ExtractSuccess<T>['data'], ExtractError<T>['data']>> => {
-	const { request, locals, fetch: f } = getRequestEvent();
+	let request: Request | undefined;
+	let locals: App.Locals | undefined;
+	let fetchFunction = fetch;
+	try {
+		const event = getRequestEvent();
+		request = event.request;
+		locals = event.locals;
+		fetchFunction = event.fetch;
+	} catch {
+		// Ignore this, we just won't have access to the request/locals for this call
+	}
 
-	const fetchFunction = f ?? fetch;
-
-	const requestHeaders = new Headers(init?.headers || request.headers);
+	const requestHeaders = new Headers(init?.headers || request?.headers);
 	requestHeaders.set('User-Agent', 'EliteWebsite');
 	requestHeaders.delete('accept-encoding');
 
-	if (locals.access_token) {
+	if (locals?.access_token) {
 		requestHeaders.set('Authorization', `Bearer ${locals.access_token}`);
 	}
 
