@@ -31,8 +31,15 @@ async function removeReturnTypesFromFile(filePath: string) {
 		}
 	}
 
+	sourceFile.addImportDeclaration({
+		namedImports: ['ELITE_API_URL'],
+		moduleSpecifier: '$env/static/private',
+	});
+	console.log(`Added import for ELITE_API_URL.`);
+
+	await sourceFile.save();
+
 	if (changesMade > 0) {
-		await sourceFile.save();
 		console.log(`✅ Successfully removed ${changesMade} return types and saved the file.`);
 	} else {
 		console.log('No explicit return types found to remove.');

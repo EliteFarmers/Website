@@ -8,7 +8,6 @@ type EliteBaseResponse = {
 	response: Response;
 };
 
-// Your desired, more descriptive response type
 export type EliteResponse<SuccessData, ErrorData> =
 	| (EliteBaseResponse & {
 			data: SuccessData;
