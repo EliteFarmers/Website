@@ -7,7 +7,7 @@ export default defineConfig({
 			target: process.env.ELITE_API_URL + '/openapi/v1.json',
 		},
 		output: {
-			baseUrl: process.env.ELITE_API_URL,
+			baseUrl: '${ELITE_API_URL}',
 			client: 'fetch',
 			target: './src/lib/api/client',
 			schemas: './src/lib/api/schemas',
@@ -33,7 +33,6 @@ export default defineConfig({
 			target: process.env.ELITE_API_URL + '/openapi/v1.json',
 		},
 		output: {
-			baseUrl: process.env.ELITE_API_URL,
 			client: 'zod',
 			target: './src/lib/api/client',
 			fileExtension: '.zod.ts',
