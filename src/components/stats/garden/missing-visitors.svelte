@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GardenDto } from '$lib/api';
 	import {
 		compareRarity,
 		GARDEN_VISITORS,
@@ -10,7 +10,7 @@
 	import MissingVisitor from './missing-visitor.svelte';
 
 	interface Props {
-		garden?: components['schemas']['GardenDto'] | undefined;
+		garden?: GardenDto | undefined;
 	}
 
 	let { garden = undefined }: Props = $props();

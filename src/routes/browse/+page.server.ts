@@ -1,9 +1,9 @@
-import { GetPublicGuilds, GetUpcomingEvents } from '$lib/api/elite';
+import { getPublicGuilds, getUpcomingEvents } from '$lib/api';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ setHeaders }) => {
-	const { data: guilds } = await GetPublicGuilds().catch(() => ({ data: undefined }));
-	const { data: events } = await GetUpcomingEvents().catch(() => ({ data: undefined }));
+	const { data: guilds } = await getPublicGuilds().catch(() => ({ data: undefined }));
+	const { data: events } = await getUpcomingEvents().catch(() => ({ data: undefined }));
 
 	if (guilds && events) {
 		setHeaders({

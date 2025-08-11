@@ -34,7 +34,7 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 		'Access-Control-Allow-Origin': 'elitebot.dev',
 	});
 
-	return new Response(buffer, {
+	return new Response(new Uint8Array(buffer), {
 		headers: {
 			'Content-Type': 'image/webp',
 			'Access-Control-Allow-Origin': 'elitebot.dev',

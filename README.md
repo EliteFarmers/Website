@@ -23,6 +23,36 @@ Note that this website requires the backend API to be running as well. You can f
 
     Navigate to the link sent in the terminal, and it _should_ load!
 
+## Developing with the API
+
+If you have the [API project](https://github.com/EliteFarmers/API) running as well, you'll need to do the following to use it properly.
+
+1. Update `ELITE_API_URL` in `.env`
+
+    ```
+    ELITE_API_URL="http://localhost:5164"
+    ```
+
+2. Optionally update `PUBLIC_DISCORD_CLIENT_ID` in `.env`. You need this to match the Discord bot/application you've registered to get the API working. Without this auth won't work properly.
+
+    ```
+    PUBLIC_DISCORD_CLIENT_ID="application-id-here"
+    ```
+
+3. After making a change to any API endpoint or DTO, you need to run `pnpm run generate-api`! This will automatically update any schemas and add/update API calls!
+
+You should be all set to use your local instance of the API after doing those steps!
+
+## Developing with `farming-weight`
+
+If you have the [`farming-weight`](https://github.com/EliteFarmers/FarmingWeight) package locally for developing that, you'll need to link it to the website.
+
+1. Run `pnpm link ../Path/To/Folder` with the correct path to the farming weight package folder. I typically have these folders side by side, and just do `pnpm link ../FarmingWeight`.
+
+2. Run `pnpm build` every time you make a change in the npm package. This will trigger hot reloading and have your changes show up in the website.
+
+3. Make sure not to commit the pnpm link or revert it before opening a PR! Also mention the dependency to the PR for your changes to `farming-weight`.
+
 ## Building
 
 To create a production version of your app, follow these steps.

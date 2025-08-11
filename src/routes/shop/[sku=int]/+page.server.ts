@@ -1,8 +1,9 @@
-import { ClaimFreeProduct, GetSelectedProfileMember } from '$lib/api/elite';
+import { claimProduct } from '$lib/api';
+import { getSelectedMember } from '$lib/remote';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ params, parent, request }) => {
+export const load = (async ({ params, parent }) => {
 	const { products, session } = await parent();
 
 	const product = products?.find((p) => p.id === params.sku);
@@ -17,9 +18,7 @@ export const load = (async ({ params, parent, request }) => {
 		};
 	}
 
-	const { data: weight } = await GetSelectedProfileMember(session.uuid, request.headers).catch(() => ({
-		data: undefined,
-	}));
+	const { data: weight } = await getSelectedMember({ playerUuid: session.uuid });
 
 	return {
 		product: product,
@@ -40,7 +39,7 @@ export const actions: Actions = {
 			return { error: 'Invalid SKU.' };
 		}
 
-		const { response, error: e } = await ClaimFreeProduct(locals.access_token, sku);
+		const { response, error: e } = await claimProduct(BigInt(+sku));
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to claim item!' });
 		}

@@ -5,7 +5,7 @@
 	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
 	import { NumberInput } from '$comp/ui/number-input';
-	import type { components } from '$lib/api/api';
+	import type { CollectionEventData, MedalEventData, PestEventData, WeightEventData } from '$lib/api';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
@@ -44,22 +44,16 @@
 	let event = $derived(data.event);
 
 	let medalWeights = $state(
-		((data.event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
-			| Record<string, number>
-			| undefined
+		((data.event?.data as MedalEventData)?.medalWeights ?? undefined) as Record<string, number> | undefined
 	);
 	let cropWeights = $state(
-		((data.event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
-			| Record<string, number>
-			| undefined
+		((data.event?.data as WeightEventData)?.cropWeights ?? undefined) as Record<string, number> | undefined
 	);
 	let pestWeights = $state(
-		((data.event?.data as components['schemas']['PestEventData'])?.pestWeights ?? undefined) as
-			| Record<string, number>
-			| undefined
+		((data.event?.data as PestEventData)?.pestWeights ?? undefined) as Record<string, number> | undefined
 	);
 	let collectionWeights = $state(
-		((data.event?.data as components['schemas']['CollectionEventData'])?.collectionWeights ?? undefined) as
+		((data.event?.data as CollectionEventData)?.collectionWeights ?? undefined) as
 			| Record<string, { weight: number; name: string }>
 			| undefined
 	);

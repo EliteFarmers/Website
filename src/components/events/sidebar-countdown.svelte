@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto } from '$lib/api';
 	import { getCountdownParts } from '$lib/format';
 	import NumberFlow, { NumberFlowGroup } from '@number-flow/svelte';
 	import { onMount } from 'svelte';
 
 	type Props = {
-		event: components['schemas']['EventDetailsDto'];
+		event: EventDetailsDto;
 	};
 
 	let { event }: Props = $props();

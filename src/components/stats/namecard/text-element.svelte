@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { WeightStyleElementDto } from '$lib/api';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		element: components['schemas']['WeightStyleElementDto'] | null | undefined;
+		element: WeightStyleElementDto | null | undefined;
 		color?: string;
 		children?: Snippet;
 		class?: string;

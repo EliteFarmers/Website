@@ -1,4 +1,12 @@
-import { DELETE, POST } from '$lib/api/elite';
+import {
+	clearPlayerCooldowns,
+	deleteUpcomingContests,
+	grantTestEntitlement,
+	linkUserAccount,
+	refreshDiscordGuild,
+	removeTestEntitlement,
+	unlinkUserAccount,
+} from '$lib/api';
 import { reloadCachedItems } from '$lib/servercache';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -25,9 +33,7 @@ export const actions: Actions = {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
-		const { response } = await DELETE(`/admin/upcomingcontests`, {
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response } = await deleteUpcomingContests();
 
 		if (!response.ok) {
 			return fail(500, { error: 'Failed to delete contests' });
@@ -47,12 +53,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const playerId = data.get('player') as string;
 
-		const { response, error: e } = await POST(`/admin/cooldowns/player/{player}`, {
-			params: {
-				path: { player: playerId },
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response, error: e } = await clearPlayerCooldowns(playerId);
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to reset cooldowns' });
@@ -72,12 +73,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const guildId = data.get('guild') as string;
 
-		const { response, error: e } = await POST(`/admin/guild/{guildId}/refresh`, {
-			params: {
-				path: { guildId: guildId as unknown as number },
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response, error: e } = await refreshDiscordGuild(guildId);
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to reset cooldowns' });
@@ -111,12 +107,9 @@ export const actions: Actions = {
 		const playerId = data.get('player') as string;
 		const discordId = data.get('discord') as string;
 
-		const { response, error: e } = await POST('/admin/link-account', {
-			body: {
-				discordId: discordId,
-				player: playerId,
-			},
-			headers: { Authorization: `Bearer ${token}` },
+		const { response, error: e } = await linkUserAccount({
+			player: playerId,
+			discordId: discordId,
 		});
 
 		if (!response.ok) {
@@ -138,12 +131,9 @@ export const actions: Actions = {
 		const playerId = data.get('player') as string;
 		const discordId = data.get('discord') as string;
 
-		const { response, error: e } = await POST('/admin/unlink-account', {
-			body: {
-				discordId: discordId,
-				player: playerId,
-			},
-			headers: { Authorization: `Bearer ${token}` },
+		const { response, error: e } = await unlinkUserAccount({
+			discordId: discordId,
+			player: playerId,
 		});
 
 		if (!response.ok) {
@@ -165,15 +155,10 @@ export const actions: Actions = {
 		const playerId = data.get('player') as string;
 		const productId = data.get('product') as string;
 
-		const { response, error: e } = await POST('/account/{discordId}/entitlement/{productId}', {
-			params: {
-				path: {
-					discordId: playerId as unknown as number,
-					productId: productId as unknown as number,
-				},
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response, error: e } = await grantTestEntitlement(
+			playerId as unknown as number,
+			productId as unknown as number
+		);
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to grant entitlement' });
@@ -194,15 +179,10 @@ export const actions: Actions = {
 		const playerId = data.get('player') as string;
 		const productId = data.get('product') as string;
 
-		const { response, error: e } = await DELETE('/account/{discordId}/entitlement/{productId}', {
-			params: {
-				path: {
-					discordId: playerId as unknown as number,
-					productId: productId as unknown as number,
-				},
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response, error: e } = await removeTestEntitlement(
+			playerId as unknown as number,
+			productId as unknown as number
+		);
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to revoke entitlement' });

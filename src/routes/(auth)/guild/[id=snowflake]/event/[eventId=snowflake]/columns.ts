@@ -1,4 +1,4 @@
-import type { components } from '$lib/api/api';
+import type { AdminEventMemberDto, EventTeamWithMembersDto } from '$lib/api';
 import { renderComponent, renderSnippet } from '$ui/data-table';
 import Activity from '@lucide/svelte/icons/activity';
 import CircleOff from '@lucide/svelte/icons/circle-off';
@@ -11,8 +11,8 @@ import MemberRow from './member-row.svelte';
 import MemberTableActions from './member-table-actions.svelte';
 import MemberTeamRow from './member-team-row.svelte';
 
-export type AdminEventMember = components['schemas']['AdminEventMemberDto'];
-export type AdminEventTeam = components['schemas']['EventTeamWithMembersDto'];
+export type AdminEventMember = AdminEventMemberDto;
+export type AdminEventTeam = EventTeamWithMembersDto;
 
 const statusCellSnippet = createRawSnippet<[string]>((getStatus) => {
 	const status = getStatus();
@@ -35,7 +35,7 @@ const amountCellSnippet = createRawSnippet<[string]>((getAmount) => {
 });
 
 export const getColumns = (
-	teams: Record<number, components['schemas']['EventTeamWithMembersDto']>,
+	teams: Record<number, EventTeamWithMembersDto>,
 	actions: Record<string, (member: AdminEventMember) => void>
 ) =>
 	[

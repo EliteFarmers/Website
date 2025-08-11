@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { EventType } from '$lib/utils';
 	import * as Accordion from '$ui/accordion';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	interface Props {
-		event: components['schemas']['EventDetailsDto'];
+		event: EventDetailsDto;
 	}
 
 	let { event }: Props = $props();

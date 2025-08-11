@@ -6,7 +6,7 @@
 	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import VisibleToggle from '$comp/visible-toggle.svelte';
-	import type { components } from '$lib/api/api';
+	import type { EventMemberDetailsDto } from '$lib/api';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { EventType } from '$lib/utils';
@@ -39,7 +39,7 @@
 
 	let kickMemberModal = $state(false);
 	let promoteMemberModal = $state(false);
-	let selectedMember = $state<components['schemas']['EventMemberDetailsDto']>();
+	let selectedMember = $state<EventMemberDetailsDto>();
 
 	let event = $derived(data.event);
 	let teams = $derived(

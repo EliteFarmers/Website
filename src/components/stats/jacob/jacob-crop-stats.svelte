@@ -1,12 +1,12 @@
 <script lang="ts">
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import type { components } from '$lib/api/api';
+	import type { JacobDataDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';
 	import { fortuneFromPersonalBestContest, getCropFromName } from 'farming-weight';
 
 	interface Props {
-		jacob: components['schemas']['JacobDataDto'] | undefined | null;
+		jacob: JacobDataDto | undefined | null;
 		crop: string;
 		count: number;
 	}
@@ -23,7 +23,7 @@
 		const key = crop.replace(' ', '');
 		const amount = jacob?.stats?.personalBests?.[key as keyof typeof jacob.stats.personalBests];
 		const timestamp = jacob?.stats?.crops?.[key as keyof typeof jacob.stats.crops]?.personalBestTimestamp;
-		return { amount: amount ? +amount : undefined, timestamp: timestamp ? +timestamp : undefined };
+		return { amount: amount ? Number(amount) : undefined, timestamp: timestamp ? Number(timestamp) : undefined };
 	}
 
 	const medals = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];

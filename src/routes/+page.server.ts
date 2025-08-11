@@ -1,10 +1,11 @@
 import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
-import { GetLeaderboardSlice, GetPublicGuild } from '$lib/api/elite';
+import { getPublicGuild } from '$lib/api';
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
+import { getLeaderboardSlice } from '$lib/remote/leaderboards.remote';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ setHeaders, locals }) => {
-	const { data: eliteGuild } = await GetPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
+	const { data: eliteGuild } = await getPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
 
 	const leaderboardInfo = locals.cache?.leaderboards?.leaderboards?.['farmingweight'];
 	if (!leaderboardInfo) {
@@ -15,7 +16,7 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 		};
 	}
 
-	const leaderboard = GetLeaderboardSlice('farmingweight', { offset: 0, limit: 10 }).catch(() => undefined);
+	const leaderboard = getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10, new: true });
 
 	setHeaders({
 		'Cache-Control': `max-age=${LEADERBOARD_UPDATE_INTERVAL / 1000}, public`,

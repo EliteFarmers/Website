@@ -8,8 +8,15 @@ const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
 	preprocess: sveltePreprocess(),
-
+	compilerOptions: {
+		experimental: {
+			async: true,
+		},
+	},
 	kit: {
+		experimental: {
+			remoteFunctions: true,
+		},
 		adapter: adapter({
 			precompress: true,
 		}),

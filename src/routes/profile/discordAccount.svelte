@@ -1,11 +1,11 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import UserIcon from '$comp/discord/user-icon.svelte';
-	import type { components } from '$lib/api/api';
+	import type { AuthorizedAccountDto } from '$lib/api';
 	import { Avatar } from 'bits-ui';
 
 	interface Props {
-		account?: Partial<components['schemas']['AuthorizedAccountDto']>;
+		account?: Partial<AuthorizedAccountDto>;
 	}
 
 	let { account = {} }: Props = $props();

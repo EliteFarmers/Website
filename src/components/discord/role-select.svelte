@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GuildRoleDto } from '$lib/api';
 	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import type { ComponentProps } from 'svelte';
 
@@ -7,7 +7,7 @@
 		name?: string;
 		disabled?: boolean;
 		value: string | undefined;
-		roles?: components['schemas']['GuildRoleDto'][];
+		roles?: GuildRoleDto[];
 		placeholder?: string;
 	}
 

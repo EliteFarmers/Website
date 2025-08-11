@@ -3,14 +3,14 @@
 	import SidebarCountdown from '$comp/events/sidebar-countdown.svelte';
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto } from '$lib/api';
 	import { cn } from '$lib/utils';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 
 	const sidebar = Sidebar.useSidebar();
 
 	interface Props {
-		events?: components['schemas']['EventDetailsDto'][];
+		events?: EventDetailsDto[];
 	}
 
 	let { events }: Props = $props();
@@ -52,7 +52,7 @@
 	</Sidebar.Group>
 {/if}
 
-{#snippet eventLink(event: components['schemas']['EventDetailsDto'])}
+{#snippet eventLink(event: EventDetailsDto)}
 	{@const href = `/event/${event.name.replaceAll(' ', '-') + '-' + event.id}`}
 	{@const started = +(event.startTime ?? 0) * 1000 < Date.now()}
 	{@const ended = +(event.endTime ?? 0) * 1000 < Date.now()}

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
@@ -60,18 +59,13 @@
 		</p>
 		<div class="my-4 flex flex-col items-center justify-center gap-2 md:gap-4">
 			<div class="flex flex-col gap-4 @md:flex-row">
-				<Button
-					class="w-32 rounded-lg"
-					variant="secondary"
-					href="/contests/{page.params.year}/{+page.params.month - 1}">Previous</Button
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{data.year}/{data.month - 1}"
+					>Previous</Button
 				>
-				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{page.params.year}/records"
-					>Records</Button
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{data.year}/records">Records</Button
 				>
-				<Button
-					class="w-32 rounded-lg"
-					variant="secondary"
-					href="/contests/{page.params.year}/{+page.params.month + 1}">Next</Button
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{data.year}/{data.month + 1}"
+					>Next</Button
 				>
 			</div>
 		</div>
@@ -107,7 +101,7 @@
 			<Button
 				variant="secondary"
 				class="w-40 rounded-lg whitespace-nowrap {i === month ? 'ring-2' : ''}"
-				href="/contests/{page.params.year}/{i}"
+				href="/contests/{data.year}/{i}"
 			>
 				{getSkyblockMonth(i)}
 			</Button>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ProductDto } from '$lib/api';
 
 	interface Props {
-		product: components['schemas']['ProductDto'];
+		product: ProductDto;
 	}
 
 	let { product }: Props = $props();

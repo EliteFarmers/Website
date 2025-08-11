@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto, EventMemberDetailsDto, EventMemberDto } from '$lib/api';
 	import { formatIgn } from '$lib/format';
 	import { EventType } from '$lib/utils';
 	import * as Accordion from '$ui/accordion';
@@ -11,8 +11,8 @@
 
 	interface Props {
 		owner?: boolean;
-		event: components['schemas']['EventDetailsDto'];
-		member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
+		event: EventDetailsDto;
+		member: EventMemberDto | EventMemberDetailsDto;
 		rank?: number | undefined;
 		running: boolean;
 	}

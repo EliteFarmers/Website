@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import type { components } from '$lib/api/api';
+	import type { ShopCategoryDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
@@ -23,7 +23,7 @@
 
 	let createCategoryModal = $state(false);
 
-	function handle(e: CustomEvent<DndEvent<components['schemas']['ShopCategoryDto']>>) {
+	function handle(e: CustomEvent<DndEvent<ShopCategoryDto>>) {
 		items = e.detail.items;
 	}
 </script>

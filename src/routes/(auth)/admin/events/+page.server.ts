@@ -1,4 +1,4 @@
-import { DELETE, GetAdminPendingEvents, GetUpcomingEvents, POST } from '$lib/api/elite';
+import { deleteEventAdmin, getPendingEvents, getUpcomingEvents, setEventApproval } from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -10,8 +10,8 @@ export const load = (async ({ parent, locals }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: pending } = await GetAdminPendingEvents(token).catch(() => ({ data: undefined }));
-	const { data: upcoming } = await GetUpcomingEvents().catch(() => ({ data: undefined }));
+	const { data: pending } = await getPendingEvents().catch(() => ({ data: undefined }));
+	const { data: upcoming } = await getUpcomingEvents().catch(() => ({ data: undefined }));
 
 	return {
 		user,
@@ -32,18 +32,8 @@ export const actions: Actions = {
 		const eventId = data.get('eventId') as string;
 		const revoke = data.get('approve') === 'false';
 
-		const { response, error: e } = await POST('/admin/events/{eventId}/approve', {
-			params: {
-				query: {
-					approve: !revoke,
-				},
-				path: {
-					eventId: eventId as unknown as number,
-				},
-			},
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
+		const { response, error: e } = await setEventApproval(eventId, {
+			approve: !revoke,
 		});
 
 		if (!response.ok || e) {
@@ -63,17 +53,9 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const eventId = data.get('id') as string;
+		const guildId = data.get('guildId') as string;
 
-		const { response } = await DELETE('/admin/events/{eventId}', {
-			params: {
-				path: {
-					eventId: eventId as unknown as number,
-				},
-			},
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const { response } = await deleteEventAdmin(guildId, eventId);
 
 		if (!response.ok) {
 			return fail(500, { error: 'Failed to delete event' });

@@ -1,4 +1,4 @@
-import { GetAdminProducts, RefreshProducts } from '$lib/api/elite';
+import { getAllProducts, refreshProducts } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -10,7 +10,7 @@ export const load = (async ({ parent, locals }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: products } = await GetAdminProducts(token).catch(() => ({ data: undefined }));
+	const { data: products } = await getAllProducts().catch(() => ({ data: undefined }));
 
 	return {
 		user,
@@ -24,7 +24,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		await RefreshProducts(locals.access_token);
+		await refreshProducts();
 
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 

@@ -1,5 +1,5 @@
 import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
-import { LoginUser } from '$lib/api/elite';
+import { login } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		data: loginResponse,
 		response: r,
 		error: e,
-	} = await LoginUser({
+	} = await login({
 		code: code,
 		redirect_uri: url.origin + PUBLIC_DISCORD_REDIRECT_ROUTE,
 	});

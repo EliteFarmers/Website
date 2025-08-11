@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto, EventTeamWithMembersDto } from '$lib/api';
 	import * as Accordion from '$ui/accordion';
 	import Users from '@lucide/svelte/icons/users';
 	import EventMember from './event-member.svelte';
 
 	interface Props {
-		event: components['schemas']['EventDetailsDto'];
-		team: components['schemas']['EventTeamWithMembersDto'];
+		event: EventDetailsDto;
+		team: EventTeamWithMembersDto;
 		rank: number;
 		started: boolean;
 		running: boolean;

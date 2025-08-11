@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ProductDto } from '$lib/api';
 	import { cn } from '$lib/utils';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Package from '@lucide/svelte/icons/package';
 
 	interface Props {
-		product: components['schemas']['ProductDto'];
+		product: ProductDto;
 		class?: string;
 	}
 

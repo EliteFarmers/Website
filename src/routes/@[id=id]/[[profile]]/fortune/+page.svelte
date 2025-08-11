@@ -117,7 +117,7 @@
 		selectedTool: (() => selectedTool)(),
 
 		refinedTruffles: ctx.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
-		personalBests: ctx.member?.jacob?.stats?.personalBests ?? {},
+		personalBests: (ctx.member?.jacob?.stats?.personalBests ?? {}) as unknown as Record<string, number>,
 		anitaBonus: ctx.member?.jacob?.perks?.doubleDrops ?? 0,
 		plots: ctx.member.garden?.plots,
 		farmingXp: ctx.member?.skills?.farming,
@@ -129,8 +129,8 @@
 			ctx.member?.skills?.farming ?? 0,
 			(ctx.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
-		milestones: getCropMilestoneLevels(ctx.member?.garden?.crops ?? {}),
-		cropUpgrades: getCropUpgrades(ctx.member?.garden?.cropUpgrades ?? {}),
+		milestones: getCropMilestoneLevels((ctx.member?.garden?.crops ?? {}) as unknown as Record<string, number>),
+		cropUpgrades: getCropUpgrades((ctx.member?.garden?.cropUpgrades ?? {}) as unknown as Record<string, number>),
 		gardenLevel: getGardenLevel(ctx.member.garden?.experience ?? 0).level,
 
 		exportableCrops: $ratesData.exported,

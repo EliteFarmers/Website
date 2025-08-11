@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { components } from '$lib/api/api';
+	import type { AnnouncementType } from '$lib/api';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
@@ -14,7 +14,7 @@
 
 	let createModal = $state(false);
 
-	const types: Record<components['schemas']['AnnouncementType'], string> = {
+	const types: Record<AnnouncementType, string> = {
 		news: 'News',
 		update: 'Update',
 		maintenance: 'Maintenance',

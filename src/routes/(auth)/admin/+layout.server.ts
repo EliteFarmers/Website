@@ -1,4 +1,4 @@
-import { GetAllBadges, GetWeightStyles } from '$lib/api/elite';
+import { getBadges, getStyles } from '$lib/api';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ setHeaders }) => {
@@ -6,8 +6,8 @@ export const load = (async ({ setHeaders }) => {
 		'Cache-Control': 'no-store',
 	});
 
-	const { data: badges } = await GetAllBadges().catch(() => ({ data: undefined }));
-	const { data: styles } = await GetWeightStyles().catch(() => ({ data: undefined }));
+	const { data: badges } = await getBadges().catch(() => ({ data: undefined }));
+	const { data: styles } = await getStyles().catch(() => ({ data: undefined }));
 
 	return {
 		badges: badges ?? [],

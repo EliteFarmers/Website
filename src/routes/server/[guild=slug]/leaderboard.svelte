@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { PublicJacobLeaderboardDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import Jacobentry from './jacobentry.svelte';
 
 	interface Props {
-		leaderboard: components['schemas']['PublicJacobLeaderboardDto'];
+		leaderboard: PublicJacobLeaderboardDto;
 	}
 
 	let { leaderboard }: Props = $props();
@@ -34,14 +34,16 @@
 	<div>
 		<p>
 			<span class="font-semibold">Contests Starting From:</span>
-			{leaderboard.startCutoff === -1
+			{Number(leaderboard.startCutoff) === -1
 				? 'Beginning of SkyBlock'
-				: getReadableSkyblockDate(leaderboard.startCutoff ?? 0)}
+				: getReadableSkyblockDate(Number(leaderboard.startCutoff ?? 0))}
 		</p>
-		{#if leaderboard.endCutoff !== -1}
+		{#if Number(leaderboard.endCutoff) !== -1}
 			<p>
 				<span class="font-semibold">End:</span>
-				{leaderboard.endCutoff === -1 ? 'Not Set' : getReadableSkyblockDate(leaderboard.endCutoff ?? 0)}
+				{Number(leaderboard.endCutoff) === -1
+					? 'Not Set'
+					: getReadableSkyblockDate(Number(leaderboard.endCutoff ?? 0))}
 			</p>
 		{/if}
 	</div>

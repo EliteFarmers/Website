@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import type { components } from '$lib/api/api';
+	import type { ProductDto } from '$lib/api';
 	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
 	import ComboBox from '$ui/combobox/combo-box.svelte';
@@ -25,7 +25,7 @@
 	let loading = $state(false);
 	let productId = $state('');
 
-	function handle(e: CustomEvent<DndEvent<components['schemas']['ProductDto']>>) {
+	function handle(e: CustomEvent<DndEvent<ProductDto>>) {
 		items = e.detail.items;
 	}
 </script>

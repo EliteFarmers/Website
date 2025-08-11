@@ -9,6 +9,7 @@
 	import { Separator } from '$ui/separator';
 	import Check from '@lucide/svelte/icons/check';
 	import CirclePlus from '@lucide/svelte/icons/circle-plus';
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 
 	type Props = {
 		query: string;
@@ -61,13 +62,13 @@
 							onSelect={() => {
 								if (isSelected) {
 									selectedValue = '';
-									const newQuery = new URLSearchParams(page.url.searchParams);
+									const newQuery = new SvelteURLSearchParams(page.url.searchParams);
 									newQuery.delete(query);
 									goto(`${page.url.pathname}?${newQuery}`);
 								} else {
 									selectedValue = option.value;
 									goto(
-										`${page.url.pathname}?${new URLSearchParams({
+										`${page.url.pathname}?${new SvelteURLSearchParams({
 											...Object.fromEntries(page.url.searchParams),
 											[query]: option.value,
 										})}`

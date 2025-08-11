@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GuildChannelDto } from '$lib/api';
 	import { ChannelType } from '$lib/utils';
 	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import type { ComponentProps } from 'svelte';
@@ -8,7 +8,7 @@
 		name?: string;
 		disabled?: boolean;
 		value: string | undefined;
-		channels?: components['schemas']['GuildChannelDto'][];
+		channels?: GuildChannelDto[];
 		placeholder?: string;
 		class?: string;
 	}

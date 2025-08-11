@@ -6,7 +6,7 @@
 	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
 	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
-	import type { components } from '$lib/api/api';
+	import type { LeaderboardRanksResponse } from '$lib/api';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
@@ -21,7 +21,7 @@
 		selectedProfile: data.profile,
 		profiles: data.profiles,
 		member: data.member,
-		ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
+		ranks: data.ranks ?? ({} as LeaderboardRanksResponse),
 		style: data.style,
 	});
 
@@ -35,7 +35,7 @@
 				selectedProfile: data.profile,
 				profiles: data.profiles,
 				member: data.member,
-				ranks: data.ranks ?? ({} as components['schemas']['LeaderboardRanksResponse']),
+				ranks: data.ranks ?? ({} as LeaderboardRanksResponse),
 				style: data.style,
 			});
 
@@ -94,7 +94,8 @@
 			{/if}
 			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
 				<span class="text-muted-foreground select-none">Profile Last Updated</span>
-				<span class="select-all">{new Date((data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span>
+				<span class="select-all">{new Date(Number(data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span
+				>
 			</div>
 			{#if page.url.pathname.includes('/garden')}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">

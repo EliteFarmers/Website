@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ItemResponse } from '$lib/api';
 	import { getSkillLevel } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import Check from '@lucide/svelte/icons/check';
@@ -9,7 +9,7 @@
 	import { getGardenLevel } from 'farming-weight';
 
 	interface Props {
-		itemData: components['schemas']['ItemResponse'];
+		itemData: ItemResponse;
 	}
 
 	let { itemData }: Props = $props();
@@ -22,16 +22,14 @@
 				({
 					...req,
 					completed: isCompleted(req),
-				}) as Exclude<components['schemas']['ItemResponse']['requirements'], null | undefined>[number] & {
+				}) as Exclude<ItemResponse['requirements'], null | undefined>[number] & {
 					completed: boolean | undefined;
 				}
 		)
 	);
 	const allCompleted = $derived(requirements.every((req) => req.completed !== undefined && req.completed));
 
-	function isCompleted(
-		requirement: Exclude<components['schemas']['ItemResponse']['requirements'], null | undefined>[number]
-	) {
+	function isCompleted(requirement: Exclude<ItemResponse['requirements'], null | undefined>[number]) {
 		if (requirement.type === 'GARDEN_LEVEL') {
 			if (!ctx.garden?.experience) return undefined; // Garden level not available
 			const { level } = getGardenLevel(ctx.garden?.experience ?? 0);

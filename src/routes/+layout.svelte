@@ -9,7 +9,7 @@
 	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
-	import type { components } from '$lib/api/api';
+	import type { ErrorResponse } from '$lib/api';
 	import { initGlobalContext } from '$lib/hooks/global.svelte';
 	import { IsHover } from '$lib/hooks/is-hover.svelte';
 	import { initPageContext } from '$lib/hooks/page.svelte';
@@ -57,10 +57,10 @@
 				return;
 			}
 
-			let problem = page.form.problem as components['schemas']['ErrorResponse'] | undefined;
+			let problem = page.form.problem as ErrorResponse | undefined;
 
 			if (!problem && page.form?.error && typeof page.form.error === 'object') {
-				problem = page.form.error as components['schemas']['ErrorResponse'];
+				problem = page.form.error as ErrorResponse;
 			}
 
 			if (problem) {

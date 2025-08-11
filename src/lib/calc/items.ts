@@ -1,7 +1,7 @@
-import type { components } from '$lib/api/api';
+import type { ItemDto } from '$lib/api';
 import { REFORGES, Rarity, type Reforge } from '$lib/constants/reforges';
 
-export type Item = components['schemas']['ItemDto'];
+export type Item = ItemDto;
 
 export function GetRarity(item: Item): Rarity {
 	const line = item?.lore?.at(-1);

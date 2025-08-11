@@ -1,12 +1,12 @@
 <script lang="ts">
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import type { components } from '$lib/api/api';
+	import type { AdminEventMemberDto, EventMemberDto } from '$lib/api';
 	import { formatIgn } from '$lib/format';
 	import * as Popover from '$ui/popover';
 	import FileText from '@lucide/svelte/icons/file-text';
 
 	interface Props {
-		member: components['schemas']['EventMemberDto'] | components['schemas']['AdminEventMemberDto'];
+		member: EventMemberDto | AdminEventMemberDto;
 		children?: import('svelte').Snippet;
 	}
 

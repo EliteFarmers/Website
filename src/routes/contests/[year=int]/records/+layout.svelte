@@ -12,7 +12,7 @@
 
 	let { children }: Props = $props();
 
-	let year = $derived(+page.params.year);
+	let year = $derived(+(page.params.year ?? 0));
 
 	const crumbs = $derived<Crumb[]>([
 		{

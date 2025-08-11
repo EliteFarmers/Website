@@ -1,12 +1,7 @@
 import { dev } from '$app/environment';
 import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
-import {
-	GetAccount,
-	GetPlayerRanks,
-	GetProfileMember,
-	type ProfileDetails,
-	type ProfileGameMode,
-} from '$lib/api/elite';
+import { getAccount, getPlayerLeaderboardRanks, getProfile } from '$lib/api';
+import { type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import type { LayoutServerLoad } from './$types';
@@ -23,7 +18,7 @@ const limiter = new RateLimiter({
 });
 
 export const load: LayoutServerLoad = async (event) => {
-	const { params, request } = event;
+	const { params } = event;
 
 	if (!dev) {
 		await limiter.cookieLimiter?.preflight(event);
@@ -36,7 +31,7 @@ export const load: LayoutServerLoad = async (event) => {
 
 	const { id, profile } = params;
 
-	const { data: account } = await GetAccount(id.replaceAll('-', ''), request.headers);
+	const { data: account } = await getAccount(id.replaceAll('-', ''));
 
 	if (!account?.id || !account.name) {
 		throw error(404, 'Player not found');
@@ -60,17 +55,15 @@ export const load: LayoutServerLoad = async (event) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: member } = await GetProfileMember(account.id, selectedProfile.profileId, request.headers).catch(
-		() => ({
-			data: undefined,
-		})
-	);
+	const { data: member } = await getProfile(account.id, selectedProfile.profileId).catch(() => ({
+		data: undefined,
+	}));
 
 	if (!member) {
 		throw error(404, 'Profile data not found');
 	}
 
-	const { data: ranks } = await GetPlayerRanks(account.id, selectedProfile.profileId, undefined, request.headers);
+	const { data: ranks } = await getPlayerLeaderboardRanks(account.id, selectedProfile.profileId);
 
 	const profileIds: ProfileDetails[] = profiles
 		// Filter out the current profile

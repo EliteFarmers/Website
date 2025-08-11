@@ -1,19 +1,19 @@
 <script lang="ts">
 	import ComboBox from '$comp/ui/combobox/combo-box.svelte';
-	import type { components } from '$lib/api/api';
+	import type { EventTeamsWordListDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import RefreshCcw from '@lucide/svelte/icons/refresh-ccw';
 	import { onMount } from 'svelte';
 
 	interface Props {
-		words?: components['schemas']['EventTeamsWordListDto'];
+		words?: EventTeamsWordListDto;
 		loading?: boolean;
 		selected?: string[];
 		displayName?: string;
 	}
 
 	let {
-		words = { first: [], second: [], third: [] } as components['schemas']['EventTeamsWordListDto'],
+		words = { first: [], second: [], third: [] } as EventTeamsWordListDto,
 		loading = $bindable(false),
 		selected = $bindable([]),
 		displayName = $bindable(''),

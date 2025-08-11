@@ -1,5 +1,5 @@
 import { Crop, getCropFromName } from 'farming-weight';
-import type { components } from './api/api';
+import type { MemberCosmeticsDto, PlayerDataDto, UserSettingsDto } from './api';
 import { MINECRAFT_COLORS, MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
 import { DEFAULT_SKILL_CAPS, LEVEL_XP, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
@@ -24,7 +24,7 @@ export function getSkillLevel(skill: Skill, xp: number, max?: number) {
 	const levels = Object.values(XP_CHART).slice(0, cap);
 
 	for (const xpRequired of levels) {
-		if ((xp -= xpRequired) > 0) level++;
+		if ((xp -= xpRequired) >= 0) level++;
 		else {
 			xp += xpRequired;
 			break;
@@ -118,14 +118,14 @@ export function getContestTimeStamp(contestKey: string) {
  *
  * Converts a unix timestamp to a skyblock date.
  *
- * @param  {string|number} unixSeconds
+ * @param  {string|number|bigint} unixSeconds
  */
-export function getSkyblockDate(unixSeconds: string | number) {
+export function getSkyblockDate(unixSeconds: string | number | bigint) {
 	// SkyBlock epoch is 2019/06/11
 	const epochSeconds = 1560275700;
 
 	// Convert unix time to real life time
-	const realLifeSeconds = +unixSeconds - epochSeconds;
+	const realLifeSeconds = Number(unixSeconds) - epochSeconds;
 
 	// Convert real life time to skyblock days
 	const totalDays = realLifeSeconds / (20 * 60);
@@ -139,7 +139,7 @@ export function getSkyblockDate(unixSeconds: string | number) {
 	return { year, month, day };
 }
 
-export function getReadableSkyblockDate(unixSeconds: string | number) {
+export function getReadableSkyblockDate(unixSeconds: string | number | bigint) {
 	const { year, month, day } = getSkyblockDate(unixSeconds);
 
 	const suffix = appendOrdinalSuffix(day + 1);
@@ -170,7 +170,7 @@ export function appendOrdinalSuffix(i: number) {
 	return `${i}th`;
 }
 
-export function getRankInformation(player?: components['schemas']['PlayerDataDto'] | null) {
+export function getRankInformation(player?: PlayerDataDto | null) {
 	const rankName = GetRankName(player);
 	const defaults = GetRankDefaults(rankName);
 	if (!defaults) {
@@ -190,7 +190,7 @@ export function getRankInformation(player?: components['schemas']['PlayerDataDto
 	return defaults;
 }
 
-export function GetRankName(player?: components['schemas']['PlayerDataDto'] | null): string | undefined {
+export function GetRankName(player?: PlayerDataDto | null): string | undefined {
 	if (!player) return undefined;
 
 	if (player.prefix) {
@@ -323,11 +323,7 @@ export function getCropColor(crop: string | Crop) {
 	}
 }
 
-export function formatIgn(
-	ign?: string | null,
-	meta?: components['schemas']['MemberCosmeticsDto'] | null,
-	settings?: components['schemas']['UserSettingsDto']
-): string {
+export function formatIgn(ign?: string | null, meta?: MemberCosmeticsDto | null, settings?: UserSettingsDto): string {
 	if ((!meta && !settings) || !ign) return ign ?? '';
 	const prefix = meta?.prefix || settings?.prefix || '';
 	const suffix = meta?.suffix || settings?.suffix || '';

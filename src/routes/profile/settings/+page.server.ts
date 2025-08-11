@@ -1,11 +1,19 @@
-import type { components } from '$lib/api/api';
+import {
+	getSelectedProfile,
+	refreshPurchases,
+	updateAccount,
+	updateBadges,
+	type ConfiguredProductFeaturesDto,
+	type EditUserBadgeDto,
+	type UpdateUserSettingsDto,
+	type WeightStyleWithDataDto,
+} from '$lib/api';
 import { FetchDiscordUserData } from '$lib/api/auth';
-import { GetSelectedProfileMember, RefreshPurchases, UpdateUserBadges, UpdateUserSettings } from '$lib/api/elite';
 import { IsUUID } from '$params/uuid';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, parent, url, request }) => {
+export const load: PageServerLoad = async ({ locals, parent, url }) => {
 	const { session } = await parent();
 	const { access_token: token } = locals;
 
@@ -13,7 +21,7 @@ export const load: PageServerLoad = async ({ locals, parent, url, request }) => 
 		throw redirect(307, '/login?redirect=' + url.pathname);
 	}
 
-	const discord = await FetchDiscordUserData(token);
+	const discord = await FetchDiscordUserData();
 
 	if (!discord) {
 		throw redirect(307, '/login?redirect=' + url.pathname);
@@ -23,14 +31,14 @@ export const load: PageServerLoad = async ({ locals, parent, url, request }) => 
 		discord.minecraftAccounts?.find((account) => account.primaryAccount) ?? discord.minecraftAccounts?.[0];
 
 	const { data: weight } = account?.id
-		? await GetSelectedProfileMember(account?.id, request.headers).catch(() => ({ data: undefined }))
+		? await getSelectedProfile(account?.id).catch(() => ({ data: undefined }))
 		: { data: undefined };
 
 	return {
 		mcAccount: account ?? null,
 		user: discord,
 		weight: weight?.farmingWeight ?? null,
-		styles: locals.cache?.styleLookup ?? ({} as Record<string, components['schemas']['WeightStyleWithDataDto']>),
+		styles: locals.cache?.styleLookup ?? ({} as Record<string, WeightStyleWithDataDto>),
 	};
 };
 
@@ -50,7 +58,7 @@ export const actions: Actions = {
 		}
 
 		const entries = Array.from(data.entries()).filter(([key]) => key.startsWith('badge.'));
-		const badges = {} as Record<string, components['schemas']['EditUserBadgeDto']>;
+		const badges = {} as Record<string, EditUserBadgeDto>;
 
 		for (const [key, value] of entries) {
 			const [, id, setting] = key.split('.');
@@ -70,7 +78,7 @@ export const actions: Actions = {
 		}
 
 		const body = Object.values(badges);
-		const { response, error: e } = await UpdateUserBadges(locals.access_token, uuid, body);
+		const { response, error: e } = await updateBadges(uuid, body);
 
 		if (!response.ok || e) {
 			return fail(response.status, {
@@ -89,11 +97,11 @@ export const actions: Actions = {
 
 		const body = {
 			suffix: data.get('emoji')?.toString() ?? '',
-			features: {} as components['schemas']['ConfiguredProductFeaturesDto'],
+			features: {} as ConfiguredProductFeaturesDto,
 			weightStyleId: undefined as number | undefined,
 			nameStyleId: undefined as number | undefined,
 			leaderboardStyleId: undefined as number | undefined,
-		} satisfies components['schemas']['UpdateUserSettingsDto'];
+		} satisfies UpdateUserSettingsDto;
 
 		const style = data.get('style')?.toString() ?? undefined;
 		if (style !== undefined && isFinite(+style)) {
@@ -130,7 +138,7 @@ export const actions: Actions = {
 			body.features.moreInfoDefault = info === 'true';
 		}
 
-		const { response, error: e } = await UpdateUserSettings(locals.access_token, body);
+		const { response, error: e } = await updateAccount(body);
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e || 'Failed to update settings!' });
@@ -143,7 +151,7 @@ export const actions: Actions = {
 			throw error(401, 'Unauthorized');
 		}
 
-		const { response, error: e } = await RefreshPurchases(locals.access_token);
+		const { response, error: e } = await refreshPurchases();
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e || 'Failed to refresh purchases!' });

@@ -1,4 +1,12 @@
-import type { components } from '$lib/api/api';
+import type {
+	ItemDto,
+	LeaderboardRanksResponse,
+	MinecraftAccountDto,
+	PetDto,
+	ProfileDetailsDto,
+	ProfileMemberDto,
+	WeightStyleWithDataDto,
+} from '$lib/api';
 import type { ProfileDetails } from '$lib/api/elite';
 import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { CROP_TO_PEST } from '$lib/constants/pests';
@@ -8,34 +16,34 @@ import { getContext, setContext } from 'svelte';
 import { getRatesData } from './ratesData';
 
 export class PlayerStats {
-	#account = $state<NonNullable<components['schemas']['MinecraftAccountDto']>>(null!);
-	#selectedProfile = $state<components['schemas']['ProfileDetailsDto']>();
+	#account = $state<NonNullable<MinecraftAccountDto>>(null!);
+	#selectedProfile = $state<ProfileDetailsDto>();
 	#profiles = $state<ProfileDetails[]>();
-	#member = $state<NonNullable<components['schemas']['ProfileMemberDto']>>(null!);
-	#ranks = $state<components['schemas']['LeaderboardRanksResponse']>(null!);
-	#filteredRanks = $state<components['schemas']['LeaderboardRanksResponse']['ranks']>(null!);
+	#member = $state<NonNullable<ProfileMemberDto>>(null!);
+	#ranks = $state<LeaderboardRanksResponse>(null!);
+	#filteredRanks = $state<LeaderboardRanksResponse['ranks']>(null!);
 	#collections = $state<Collection[]>([]);
 	#fortuneSettings = $derived(
 		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
 	);
-	#style = $state.raw<components['schemas']['WeightStyleWithDataDto'] | undefined>(undefined);
+	#style = $state.raw<WeightStyleWithDataDto | undefined>(undefined);
 
-	#tools = $state.raw<components['schemas']['ItemDto'][]>([]);
-	#pets = $state.raw<components['schemas']['PetDto'][]>([]);
-	#armor = $state.raw<components['schemas']['ItemDto'][]>([]);
-	#equipment = $state.raw<components['schemas']['ItemDto'][]>([]);
+	#tools = $state.raw<ItemDto[]>([]);
+	#pets = $state.raw<PetDto[]>([]);
+	#armor = $state.raw<ItemDto[]>([]);
+	#equipment = $state.raw<ItemDto[]>([]);
 
 	#garden = $derived.by(() => this.#member?.garden);
 	#rank = $derived.by(() => getRankInformation(this.#account.playerData));
 	#ignMeta = $derived.by(() => formatIgn(this.#account?.name, this.#member.meta));
 
 	constructor(data: {
-		account: NonNullable<components['schemas']['MinecraftAccountDto']>;
-		selectedProfile: components['schemas']['ProfileDetailsDto'];
+		account: NonNullable<MinecraftAccountDto>;
+		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
-		member: NonNullable<components['schemas']['ProfileMemberDto']>;
-		ranks: components['schemas']['LeaderboardRanksResponse'];
-		style?: components['schemas']['WeightStyleWithDataDto'];
+		member: NonNullable<ProfileMemberDto>;
+		ranks: LeaderboardRanksResponse;
+		style?: WeightStyleWithDataDto;
 	}) {
 		this.setValues(data);
 	}
@@ -152,13 +160,13 @@ export class PlayerStats {
 		return this.#equipment ?? [];
 	}
 
-	static parseCollections(member: NonNullable<components['schemas']['ProfileMemberDto']>) {
+	static parseCollections(member: NonNullable<ProfileMemberDto>) {
 		const collections = Object.entries(member.collections ?? {})
 			.filter(([key]) => PROPER_CROP_NAME[key])
 			.map(([key, value]) => ({
 				key: API_CROP_TO_CROP[key as keyof typeof API_CROP_TO_CROP],
 				name: PROPER_CROP_NAME[key],
-				value: value,
+				value: Number(value),
 				minionTierField: 0,
 				weight: 0,
 				pest: '',

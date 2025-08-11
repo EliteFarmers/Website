@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ProductFeature from '$comp/monetization/product-feature.svelte';
 	import { Button } from '$comp/ui/button';
-	import type { components } from '$lib/api/api';
+	import type { ProductDto } from '$lib/api';
 	import { cn } from '$lib/utils';
 	import Check from '@lucide/svelte/icons/check';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
@@ -16,7 +16,7 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		product: components['schemas']['ProductDto'];
+		product: ProductDto;
 		class?: string;
 		children?: Snippet;
 		showPublished?: boolean;

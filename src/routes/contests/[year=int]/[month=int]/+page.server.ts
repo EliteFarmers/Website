@@ -1,9 +1,9 @@
-import { GetMonthlyContests } from '$lib/api/elite';
+import { getContestsInMonth } from '$lib/api';
 import { getSkyblockDate, getTimeStamp } from '$lib/format';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders, request }) => {
+export const load = (async ({ params, setHeaders }) => {
 	const { year, month } = params;
 
 	const timestamp = getTimeStamp(+year - 1, +month - 1, 0);
@@ -17,7 +17,7 @@ export const load = (async ({ params, setHeaders, request }) => {
 		throw error(400, 'Invalid year or month');
 	}
 
-	const { data } = await GetMonthlyContests(+params.year, +params.month, request.headers).catch(() => ({
+	const { data } = await getContestsInMonth(+params.year, +params.month).catch(() => ({
 		data: undefined,
 	}));
 
