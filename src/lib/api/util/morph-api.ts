@@ -7,10 +7,10 @@ import path from 'path';
 import { Project, SyntaxKind, type ArrowFunction, type FunctionDeclaration, type MethodDeclaration } from 'ts-morph';
 
 async function removeReturnTypesFromFile(filePath: string) {
+	console.log(`Analyzing ${path.basename(filePath)}...`);
+
 	const project = new Project();
 	const sourceFile = project.addSourceFileAtPath(filePath);
-
-	console.log(`Analyzing ${path.basename(filePath)}...`);
 
 	const functionDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.FunctionDeclaration);
 	const arrowFunctions = sourceFile.getDescendantsOfKind(SyntaxKind.ArrowFunction);
