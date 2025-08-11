@@ -143,8 +143,6 @@ import type {
 } from '../schemas';
 
 import { customFetch } from '../custom-fetch';
-import { ELITE_API_URL } from '$env/static/private';
-
 /**
  * @summary Get Minecraft Account
  */
@@ -168,7 +166,7 @@ export const getGetAccountUrl = (player: string) => {
 	return `${ELITE_API_URL}/account/${player}`;
 };
 
-export const getAccount = async (player: string, options?: RequestInit) => {
+export const getAccount = async (player: string, options?: RequestInit): Promise<getAccountResponse> => {
 	return customFetch<getAccountResponse>(getGetAccountUrl(player), {
 		...options,
 		method: 'GET',
@@ -198,7 +196,7 @@ export const getLinkOwnAccountUrl = (player: string) => {
 	return `${ELITE_API_URL}/account/${player}`;
 };
 
-export const linkOwnAccount = async (player: string, options?: RequestInit) => {
+export const linkOwnAccount = async (player: string, options?: RequestInit): Promise<linkOwnAccountResponse> => {
 	return customFetch<linkOwnAccountResponse>(getLinkOwnAccountUrl(player), {
 		...options,
 		method: 'POST',
@@ -228,7 +226,7 @@ export const getUnlinkOwnAccountUrl = (player: string) => {
 	return `${ELITE_API_URL}/account/${player}`;
 };
 
-export const unlinkOwnAccount = async (player: string, options?: RequestInit) => {
+export const unlinkOwnAccount = async (player: string, options?: RequestInit): Promise<unlinkOwnAccountResponse> => {
 	return customFetch<unlinkOwnAccountResponse>(getUnlinkOwnAccountUrl(player), {
 		...options,
 		method: 'DELETE',
@@ -259,7 +257,7 @@ export const getGetAccountFace1Url = (player: string) => {
 	return `${ELITE_API_URL}/account/${player}/face`;
 };
 
-export const getAccountFace1 = async (player: string, options?: RequestInit) => {
+export const getAccountFace1 = async (player: string, options?: RequestInit): Promise<getAccountFace1Response> => {
 	return customFetch<getAccountFace1Response>(getGetAccountFace1Url(player), {
 		...options,
 		method: 'GET',
@@ -290,7 +288,7 @@ export const getGetAccountFace2Url = (player: string) => {
 	return `${ELITE_API_URL}/account/${player}/face.png`;
 };
 
-export const getAccountFace2 = async (player: string, options?: RequestInit) => {
+export const getAccountFace2 = async (player: string, options?: RequestInit): Promise<getAccountFace2Response> => {
 	return customFetch<getAccountFace2Response>(getGetAccountFace2Url(player), {
 		...options,
 		method: 'GET',
@@ -322,7 +320,10 @@ export const getGetAccountFromDiscordUrl = (discordId: bigint | number | string)
 	return `${ELITE_API_URL}/account/${discordId}`;
 };
 
-export const getAccountFromDiscord = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getAccountFromDiscord = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getAccountFromDiscordResponse> => {
 	return customFetch<getAccountFromDiscordResponse>(getGetAccountFromDiscordUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -352,7 +353,10 @@ export const getGetAccountSettingsUrl = (discordId: bigint | number | string) =>
 	return `${ELITE_API_URL}/account/${discordId}/settings`;
 };
 
-export const getAccountSettings = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getAccountSettings = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getAccountSettingsResponse> => {
 	return customFetch<getAccountSettingsResponse>(getGetAccountSettingsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -382,7 +386,7 @@ export const getGetAuthAccountUrl = () => {
 	return `${ELITE_API_URL}/account`;
 };
 
-export const getAuthAccount = async (options?: RequestInit) => {
+export const getAuthAccount = async (options?: RequestInit): Promise<getAuthAccountResponse> => {
 	return customFetch<getAuthAccountResponse>(getGetAuthAccountUrl(), {
 		...options,
 		method: 'GET',
@@ -412,7 +416,7 @@ export const getRefreshPurchasesUrl = () => {
 	return `${ELITE_API_URL}/account/purchases`;
 };
 
-export const refreshPurchases = async (options?: RequestInit) => {
+export const refreshPurchases = async (options?: RequestInit): Promise<refreshPurchasesResponse> => {
 	return customFetch<refreshPurchasesResponse>(getRefreshPurchasesUrl(), {
 		...options,
 		method: 'POST',
@@ -454,7 +458,10 @@ export const getSearchAccountsUrl = (params: SearchAccountsParams) => {
 		: `${ELITE_API_URL}/account/search`;
 };
 
-export const searchAccounts = async (params: SearchAccountsParams, options?: RequestInit) => {
+export const searchAccounts = async (
+	params: SearchAccountsParams,
+	options?: RequestInit
+): Promise<searchAccountsResponse> => {
 	return customFetch<searchAccountsResponse>(getSearchAccountsUrl(params), {
 		...options,
 		method: 'GET',
@@ -484,7 +491,7 @@ export const getSetPrimaryAccountUrl = (player: string) => {
 	return `${ELITE_API_URL}/account/primary/${player}`;
 };
 
-export const setPrimaryAccount = async (player: string, options?: RequestInit) => {
+export const setPrimaryAccount = async (player: string, options?: RequestInit): Promise<setPrimaryAccountResponse> => {
 	return customFetch<setPrimaryAccountResponse>(getSetPrimaryAccountUrl(player), {
 		...options,
 		method: 'POST',
@@ -519,7 +526,11 @@ export const getUpdateBadgesUrl = (playerUuid: string) => {
 	return `${ELITE_API_URL}/account/${playerUuid}/badges`;
 };
 
-export const updateBadges = async (playerUuid: string, editUserBadgeDto: EditUserBadgeDto[], options?: RequestInit) => {
+export const updateBadges = async (
+	playerUuid: string,
+	editUserBadgeDto: EditUserBadgeDto[],
+	options?: RequestInit
+): Promise<updateBadgesResponse> => {
 	return customFetch<updateBadgesResponse>(getUpdateBadgesUrl(playerUuid), {
 		...options,
 		method: 'POST',
@@ -558,7 +569,7 @@ export const updateFortuneSettings = async (
 	profileUuid: string,
 	memberFortuneSettingsDto: MemberFortuneSettingsDto,
 	options?: RequestInit
-) => {
+): Promise<updateFortuneSettingsResponse> => {
 	return customFetch<updateFortuneSettingsResponse>(getUpdateFortuneSettingsUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'POST',
@@ -590,7 +601,10 @@ export const getUpdateAccountUrl = () => {
 	return `${ELITE_API_URL}/account/settings`;
 };
 
-export const updateAccount = async (updateUserSettingsDto: UpdateUserSettingsDto, options?: RequestInit) => {
+export const updateAccount = async (
+	updateUserSettingsDto: UpdateUserSettingsDto,
+	options?: RequestInit
+): Promise<updateAccountResponse> => {
 	return customFetch<updateAccountResponse>(getUpdateAccountUrl(), {
 		...options,
 		method: 'PATCH',
@@ -636,7 +650,11 @@ export const getAddRoleToUserUrl = (discordId: bigint | number | string, role: s
 	return `${ELITE_API_URL}/admin/user/${discordId}/roles/${role}`;
 };
 
-export const addRoleToUser = async (discordId: bigint | number | string, role: string, options?: RequestInit) => {
+export const addRoleToUser = async (
+	discordId: bigint | number | string,
+	role: string,
+	options?: RequestInit
+): Promise<addRoleToUserResponse> => {
 	return customFetch<addRoleToUserResponse>(getAddRoleToUserUrl(discordId, role), {
 		...options,
 		method: 'POST',
@@ -680,7 +698,11 @@ export const getRemoveRoleFromUserUrl = (discordId: bigint | number | string, ro
 	return `${ELITE_API_URL}/admin/user/${discordId}/roles/${role}`;
 };
 
-export const removeRoleFromUser = async (discordId: bigint | number | string, role: string, options?: RequestInit) => {
+export const removeRoleFromUser = async (
+	discordId: bigint | number | string,
+	role: string,
+	options?: RequestInit
+): Promise<removeRoleFromUserResponse> => {
 	return customFetch<removeRoleFromUserResponse>(getRemoveRoleFromUserUrl(discordId, role), {
 		...options,
 		method: 'DELETE',
@@ -725,7 +747,10 @@ export const getClearPlayerCooldownsUrl = (player: string) => {
 	return `${ELITE_API_URL}/admin/cooldowns/player/${player}`;
 };
 
-export const clearPlayerCooldowns = async (player: string, options?: RequestInit) => {
+export const clearPlayerCooldowns = async (
+	player: string,
+	options?: RequestInit
+): Promise<clearPlayerCooldownsResponse> => {
 	return customFetch<clearPlayerCooldownsResponse>(getClearPlayerCooldownsUrl(player), {
 		...options,
 		method: 'POST',
@@ -764,7 +789,7 @@ export const getDeleteUpcomingContestsUrl = () => {
 	return `${ELITE_API_URL}/admin/upcomingcontests`;
 };
 
-export const deleteUpcomingContests = async (options?: RequestInit) => {
+export const deleteUpcomingContests = async (options?: RequestInit): Promise<deleteUpcomingContestsResponse> => {
 	return customFetch<deleteUpcomingContestsResponse>(getDeleteUpcomingContestsUrl(), {
 		...options,
 		method: 'DELETE',
@@ -808,7 +833,10 @@ export const getDeleteEventApprovalUrl = (eventId: bigint | number | string) => 
 	return `${ELITE_API_URL}/admin/events/${eventId}`;
 };
 
-export const deleteEventApproval = async (eventId: bigint | number | string, options?: RequestInit) => {
+export const deleteEventApproval = async (
+	eventId: bigint | number | string,
+	options?: RequestInit
+): Promise<deleteEventApprovalResponse> => {
 	return customFetch<deleteEventApprovalResponse>(getDeleteEventApprovalUrl(eventId), {
 		...options,
 		method: 'DELETE',
@@ -846,7 +874,7 @@ export const getGetPendingEventsUrl = () => {
 	return `${ELITE_API_URL}/admin/events/pending`;
 };
 
-export const getPendingEvents = async (options?: RequestInit) => {
+export const getPendingEvents = async (options?: RequestInit): Promise<getPendingEventsResponse> => {
 	return customFetch<getPendingEventsResponse>(getGetPendingEventsUrl(), {
 		...options,
 		method: 'GET',
@@ -906,7 +934,7 @@ export const setEventApproval = async (
 	eventId: bigint | number | string,
 	params?: SetEventApprovalParams,
 	options?: RequestInit
-) => {
+): Promise<setEventApprovalResponse> => {
 	return customFetch<setEventApprovalResponse>(getSetEventApprovalUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -941,7 +969,7 @@ export const getGetAdminsUrl = () => {
 	return `${ELITE_API_URL}/admins`;
 };
 
-export const getAdmins = async (options?: RequestInit) => {
+export const getAdmins = async (options?: RequestInit): Promise<getAdminsResponse> => {
 	return customFetch<getAdminsResponse>(getGetAdminsUrl(), {
 		...options,
 		method: 'GET',
@@ -976,7 +1004,7 @@ export const getGetRolesUrl = () => {
 	return `${ELITE_API_URL}/admin/roles`;
 };
 
-export const getRoles = async (options?: RequestInit) => {
+export const getRoles = async (options?: RequestInit): Promise<getRolesResponse> => {
 	return customFetch<getRolesResponse>(getGetRolesUrl(), {
 		...options,
 		method: 'GET',
@@ -1006,7 +1034,10 @@ export const getLinkUserAccountUrl = () => {
 	return `${ELITE_API_URL}/admin/link-account`;
 };
 
-export const linkUserAccount = async (adminLinkAccountRequest: AdminLinkAccountRequest, options?: RequestInit) => {
+export const linkUserAccount = async (
+	adminLinkAccountRequest: AdminLinkAccountRequest,
+	options?: RequestInit
+): Promise<linkUserAccountResponse> => {
 	return customFetch<linkUserAccountResponse>(getLinkUserAccountUrl(), {
 		...options,
 		method: 'POST',
@@ -1053,7 +1084,10 @@ export const getRefreshDiscordGuildUrl = (guildId: bigint | number | string) => 
 	return `${ELITE_API_URL}/admin/guild/${guildId}/refresh`;
 };
 
-export const refreshDiscordGuild = async (guildId: bigint | number | string, options?: RequestInit) => {
+export const refreshDiscordGuild = async (
+	guildId: bigint | number | string,
+	options?: RequestInit
+): Promise<refreshDiscordGuildResponse> => {
 	return customFetch<refreshDiscordGuildResponse>(getRefreshDiscordGuildUrl(guildId), {
 		...options,
 		method: 'POST',
@@ -1086,7 +1120,7 @@ export const getUnlinkUserAccountUrl = () => {
 export const unlinkUserAccount = async (
 	adminUnlinkAccountRequest: AdminUnlinkAccountRequest,
 	options?: RequestInit
-) => {
+): Promise<unlinkUserAccountResponse> => {
 	return customFetch<unlinkUserAccountResponse>(getUnlinkUserAccountUrl(), {
 		...options,
 		method: 'POST',
@@ -1127,7 +1161,10 @@ export const getCreateAnnouncementUrl = () => {
 	return `${ELITE_API_URL}/announcements/create`;
 };
 
-export const createAnnouncement = async (createAnnouncementDto: CreateAnnouncementDto, options?: RequestInit) => {
+export const createAnnouncement = async (
+	createAnnouncementDto: CreateAnnouncementDto,
+	options?: RequestInit
+): Promise<createAnnouncementResponse> => {
 	return customFetch<createAnnouncementResponse>(getCreateAnnouncementUrl(), {
 		...options,
 		method: 'POST',
@@ -1160,7 +1197,10 @@ export const getDismissAnnouncementUrl = (announcementId: string) => {
 	return `${ELITE_API_URL}/announcements/${announcementId}/dismiss`;
 };
 
-export const dismissAnnouncement = async (announcementId: string, options?: RequestInit) => {
+export const dismissAnnouncement = async (
+	announcementId: string,
+	options?: RequestInit
+): Promise<dismissAnnouncementResponse> => {
 	return customFetch<dismissAnnouncementResponse>(getDismissAnnouncementUrl(announcementId), {
 		...options,
 		method: 'POST',
@@ -1186,7 +1226,7 @@ export const getGetAnnouncementUrl = () => {
 	return `${ELITE_API_URL}/announcements`;
 };
 
-export const getAnnouncement = async (options?: RequestInit) => {
+export const getAnnouncement = async (options?: RequestInit): Promise<getAnnouncementResponse> => {
 	return customFetch<getAnnouncementResponse>(getGetAnnouncementUrl(), {
 		...options,
 		method: 'GET',
@@ -1217,7 +1257,7 @@ export const getGetSessionUrl = () => {
 	return `${ELITE_API_URL}/auth/me`;
 };
 
-export const getSession = async (options?: RequestInit) => {
+export const getSession = async (options?: RequestInit): Promise<getSessionResponse> => {
 	return customFetch<getSessionResponse>(getGetSessionUrl(), {
 		...options,
 		method: 'GET',
@@ -1243,7 +1283,7 @@ export const getLoginUrl = () => {
 	return `${ELITE_API_URL}/auth/login`;
 };
 
-export const login = async (discordLoginDto: DiscordLoginDto, options?: RequestInit) => {
+export const login = async (discordLoginDto: DiscordLoginDto, options?: RequestInit): Promise<loginResponse> => {
 	return customFetch<loginResponse>(getLoginUrl(), {
 		...options,
 		method: 'POST',
@@ -1271,7 +1311,10 @@ export const getRefreshAuthUrl = () => {
 	return `${ELITE_API_URL}/auth/refresh`;
 };
 
-export const refreshAuth = async (authRefreshDto: AuthRefreshDto, options?: RequestInit) => {
+export const refreshAuth = async (
+	authRefreshDto: AuthRefreshDto,
+	options?: RequestInit
+): Promise<refreshAuthResponse> => {
 	return customFetch<refreshAuthResponse>(getRefreshAuthUrl(), {
 		...options,
 		method: 'POST',
@@ -1317,7 +1360,11 @@ export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: number | stri
 	return `${ELITE_API_URL}/badge/user/${player}/${badgeId}`;
 };
 
-export const addBadgeToUserBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const addBadgeToUserBadge = async (
+	player: string,
+	badgeId: number | string,
+	options?: RequestInit
+): Promise<addBadgeToUserBadgeResponse> => {
 	return customFetch<addBadgeToUserBadgeResponse>(getAddBadgeToUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1361,7 +1408,11 @@ export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: number |
 	return `${ELITE_API_URL}/badge/user/${player}/${badgeId}`;
 };
 
-export const deleteBadgeFromUserBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const deleteBadgeFromUserBadge = async (
+	player: string,
+	badgeId: number | string,
+	options?: RequestInit
+): Promise<deleteBadgeFromUserBadgeResponse> => {
 	return customFetch<deleteBadgeFromUserBadgeResponse>(getDeleteBadgeFromUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1408,7 +1459,7 @@ export const getCreateBadgeUrl = () => {
 export const createBadge = async (
 	createBadgeRequestCreateBadge: CreateBadgeRequestCreateBadge,
 	options?: RequestInit
-) => {
+): Promise<createBadgeResponse> => {
 	const formData = new FormData();
 	formData.append(`name`, createBadgeRequestCreateBadge.name);
 	formData.append(`description`, createBadgeRequestCreateBadge.description);
@@ -1443,7 +1494,7 @@ export const getGetBadgesUrl = () => {
 	return `${ELITE_API_URL}/badges`;
 };
 
-export const getBadges = async (options?: RequestInit) => {
+export const getBadges = async (options?: RequestInit): Promise<getBadgesResponse> => {
 	return customFetch<getBadgesResponse>(getGetBadgesUrl(), {
 		...options,
 		method: 'GET',
@@ -1487,7 +1538,7 @@ export const getDeleteBadgeUrl = (badgeId: number | string) => {
 	return `${ELITE_API_URL}/badge/${badgeId}`;
 };
 
-export const deleteBadge = async (badgeId: number | string, options?: RequestInit) => {
+export const deleteBadge = async (badgeId: number | string, options?: RequestInit): Promise<deleteBadgeResponse> => {
 	return customFetch<deleteBadgeResponse>(getDeleteBadgeUrl(badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1535,7 +1586,7 @@ export const updateBadge = async (
 	badgeId: number | string,
 	updateBadgeRequestUpdateBadge: UpdateBadgeRequestUpdateBadge,
 	options?: RequestInit
-) => {
+): Promise<updateBadgeResponse> => {
 	const formData = new FormData();
 	if (updateBadgeRequestUpdateBadge.name !== undefined && updateBadgeRequestUpdateBadge.name !== null) {
 		formData.append(`name`, updateBadgeRequestUpdateBadge.name);
@@ -1583,7 +1634,11 @@ export const getLinkAccountBotUrl = (discordId: bigint | number | string, player
 	return `${ELITE_API_URL}/bot/account/${discordId}/${player}`;
 };
 
-export const linkAccountBot = async (discordId: bigint | number | string, player: string, options?: RequestInit) => {
+export const linkAccountBot = async (
+	discordId: bigint | number | string,
+	player: string,
+	options?: RequestInit
+): Promise<linkAccountBotResponse> => {
 	return customFetch<linkAccountBotResponse>(getLinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1613,7 +1668,11 @@ export const getUnlinkAccountBotUrl = (discordId: bigint | number | string, play
 	return `${ELITE_API_URL}/bot/account/${discordId}/${player}`;
 };
 
-export const unlinkAccountBot = async (discordId: bigint | number | string, player: string, options?: RequestInit) => {
+export const unlinkAccountBot = async (
+	discordId: bigint | number | string,
+	player: string,
+	options?: RequestInit
+): Promise<unlinkAccountBotResponse> => {
 	return customFetch<unlinkAccountBotResponse>(getUnlinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'DELETE',
@@ -1647,7 +1706,7 @@ export const makePrimaryAccount = async (
 	discordId: bigint | number | string,
 	player: string,
 	options?: RequestInit
-) => {
+): Promise<makePrimaryAccountResponse> => {
 	return customFetch<makePrimaryAccountResponse>(getMakePrimaryAccountUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1677,7 +1736,10 @@ export const getRefreshUserPurchasesUrl = (discordId: bigint | number | string) 
 	return `${ELITE_API_URL}/bot/account/${discordId}/purchases`;
 };
 
-export const refreshUserPurchases = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const refreshUserPurchases = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<refreshUserPurchasesResponse> => {
 	return customFetch<refreshUserPurchasesResponse>(getRefreshUserPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -1707,7 +1769,11 @@ export const getGrantBadgeUrl = (player: string, badgeId: number | string) => {
 	return `${ELITE_API_URL}/bot/badges/${player}/${badgeId}`;
 };
 
-export const grantBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const grantBadge = async (
+	player: string,
+	badgeId: number | string,
+	options?: RequestInit
+): Promise<grantBadgeResponse> => {
 	return customFetch<grantBadgeResponse>(getGrantBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1737,7 +1803,11 @@ export const getRemoveBadgeUrl = (player: string, badgeId: number | string) => {
 	return `${ELITE_API_URL}/bot/badges/${player}/${badgeId}`;
 };
 
-export const removeBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const removeBadge = async (
+	player: string,
+	badgeId: number | string,
+	options?: RequestInit
+): Promise<removeBadgeResponse> => {
 	return customFetch<removeBadgeResponse>(getRemoveBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1788,7 +1858,7 @@ export const disableContestPingsPings = async (
 	discordId: bigint | number | string,
 	params?: DisableContestPingsPingsParams,
 	options?: RequestInit
-) => {
+): Promise<disableContestPingsPingsResponse> => {
 	return customFetch<disableContestPingsPingsResponse>(getDisableContestPingsPingsUrl(discordId, params), {
 		...options,
 		method: 'DELETE',
@@ -1813,7 +1883,7 @@ export const getGetContestPingsUrl = () => {
 	return `${ELITE_API_URL}/bot/contestpings`;
 };
 
-export const getContestPings = async (options?: RequestInit) => {
+export const getContestPings = async (options?: RequestInit): Promise<getContestPingsResponse> => {
 	return customFetch<getContestPingsResponse>(getGetContestPingsUrl(), {
 		...options,
 		method: 'GET',
@@ -1843,7 +1913,10 @@ export const getGetBotGuildUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/bot/${discordId}`;
 };
 
-export const getBotGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getBotGuild = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getBotGuildResponse> => {
 	return customFetch<getBotGuildResponse>(getGetBotGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -1873,7 +1946,10 @@ export const getGetJacobFeatureUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/bot/${discordId}/jacob`;
 };
 
-export const getJacobFeature = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getJacobFeature = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getJacobFeatureResponse> => {
 	return customFetch<getJacobFeatureResponse>(getGetJacobFeatureUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -1920,7 +1996,7 @@ export const updateJacobFeature = async (
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateJacobFeatureParams,
 	options?: RequestInit
-) => {
+): Promise<updateJacobFeatureResponse> => {
 	return customFetch<updateJacobFeatureResponse>(getUpdateJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'PUT',
@@ -1952,7 +2028,10 @@ export const getRefreshGuildUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/bot/guild/${discordId}`;
 };
 
-export const refreshGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const refreshGuild = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<refreshGuildResponse> => {
 	return customFetch<refreshGuildResponse>(getRefreshGuildUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -1986,7 +2065,7 @@ export const updateGuild = async (
 	discordId: bigint | number | string,
 	incomingGuildDto: IncomingGuildDto,
 	options?: RequestInit
-) => {
+): Promise<updateGuildResponse> => {
 	return customFetch<updateGuildResponse>(getUpdateGuildUrl(discordId), {
 		...options,
 		method: 'PATCH',
@@ -2022,7 +2101,7 @@ export const updateGuildChannel = async (
 	discordId: bigint | number | string,
 	incomingGuildChannelDto: IncomingGuildChannelDto,
 	options?: RequestInit
-) => {
+): Promise<updateGuildChannelResponse> => {
 	return customFetch<updateGuildChannelResponse>(getUpdateGuildChannelUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2061,7 +2140,7 @@ export const updateGuildMemberRoles = async (
 	userId: string,
 	updateGuildMemberRolesBody: string[],
 	options?: RequestInit
-) => {
+): Promise<updateGuildMemberRolesResponse> => {
 	return customFetch<updateGuildMemberRolesResponse>(getUpdateGuildMemberRolesUrl(discordId, userId), {
 		...options,
 		method: 'POST',
@@ -2097,7 +2176,7 @@ export const updateGuildRole = async (
 	discordId: bigint | number | string,
 	incomingGuildRoleDto: IncomingGuildRoleDto,
 	options?: RequestInit
-) => {
+): Promise<updateGuildRoleResponse> => {
 	return customFetch<updateGuildRoleResponse>(getUpdateGuildRoleUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2124,7 +2203,10 @@ export const getUpdateDiscordAccountUrl = () => {
 	return `${ELITE_API_URL}/bot/account`;
 };
 
-export const updateDiscordAccount = async (incomingAccountDto: IncomingAccountDto, options?: RequestInit) => {
+export const updateDiscordAccount = async (
+	incomingAccountDto: IncomingAccountDto,
+	options?: RequestInit
+): Promise<updateDiscordAccountResponse> => {
 	return customFetch<updateDiscordAccountResponse>(getUpdateDiscordAccountUrl(), {
 		...options,
 		method: 'PATCH',
@@ -2151,7 +2233,10 @@ export const getGetContestFromKeyUrl = (contestKey: string) => {
 	return `${ELITE_API_URL}/contest/${contestKey}`;
 };
 
-export const getContestFromKey = async (contestKey: string, options?: RequestInit) => {
+export const getContestFromKey = async (
+	contestKey: string,
+	options?: RequestInit
+): Promise<getContestFromKeyResponse> => {
 	return customFetch<getContestFromKeyResponse>(getGetContestFromKeyUrl(contestKey), {
 		...options,
 		method: 'GET',
@@ -2195,7 +2280,7 @@ export const getContestsAtTimestamp = async (
 	timestamp: bigint | number | string,
 	params: GetContestsAtTimestampParams,
 	options?: RequestInit
-) => {
+): Promise<getContestsAtTimestampResponse> => {
 	return customFetch<getContestsAtTimestampResponse>(getGetContestsAtTimestampUrl(timestamp, params), {
 		...options,
 		method: 'GET',
@@ -2230,7 +2315,7 @@ export const getContestsInDay = async (
 	month: number | string,
 	day: number | string,
 	options?: RequestInit
-) => {
+): Promise<getContestsInDayResponse> => {
 	return customFetch<getContestsInDayResponse>(getGetContestsInDayUrl(year, month, day), {
 		...options,
 		method: 'GET',
@@ -2260,7 +2345,11 @@ export const getGetContestsInMonthUrl = (year: number | string, month: number | 
 	return `${ELITE_API_URL}/contests/at/${year}/${month}`;
 };
 
-export const getContestsInMonth = async (year: number | string, month: number | string, options?: RequestInit) => {
+export const getContestsInMonth = async (
+	year: number | string,
+	month: number | string,
+	options?: RequestInit
+): Promise<getContestsInMonthResponse> => {
 	return customFetch<getContestsInMonthResponse>(getGetContestsInMonthUrl(year, month), {
 		...options,
 		method: 'GET',
@@ -2301,7 +2390,7 @@ export const getContestsInYear = async (
 	year: number | string,
 	params?: GetContestsInYearParams,
 	options?: RequestInit
-) => {
+): Promise<getContestsInYearResponse> => {
 	return customFetch<getContestsInYearResponse>(getGetContestsInYearUrl(year, params), {
 		...options,
 		method: 'GET',
@@ -2328,7 +2417,7 @@ export const getGetCurrentContestsUrl = () => {
 	return `${ELITE_API_URL}/contests/at/now`;
 };
 
-export const getCurrentContests = async (options?: RequestInit) => {
+export const getCurrentContests = async (options?: RequestInit): Promise<getCurrentContestsResponse> => {
 	return customFetch<getCurrentContestsResponse>(getGetCurrentContestsUrl(), {
 		...options,
 		method: 'GET',
@@ -2357,7 +2446,7 @@ export const getUploadCurrentContestsUrl = () => {
 export const uploadCurrentContests = async (
 	uploadCurrentContestsBody: UploadCurrentContestsBody,
 	options?: RequestInit
-) => {
+): Promise<uploadCurrentContestsResponse> => {
 	return customFetch<uploadCurrentContestsResponse>(getUploadCurrentContestsUrl(), {
 		...options,
 		method: 'POST',
@@ -2391,7 +2480,10 @@ export const getGetPlayerParticipationsUrl = (playerUuid: string) => {
 	return `${ELITE_API_URL}/contests/${playerUuid}`;
 };
 
-export const getPlayerParticipations = async (playerUuid: string, options?: RequestInit) => {
+export const getPlayerParticipations = async (
+	playerUuid: string,
+	options?: RequestInit
+): Promise<getPlayerParticipationsResponse> => {
 	return customFetch<getPlayerParticipationsResponse>(getGetPlayerParticipationsUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -2427,7 +2519,7 @@ export const getProfileMemberParticipations = async (
 	playerUuid: string,
 	profileUuid: string,
 	options?: RequestInit
-) => {
+): Promise<getProfileMemberParticipationsResponse> => {
 	return customFetch<getProfileMemberParticipationsResponse>(
 		getGetProfileMemberParticipationsUrl(playerUuid, profileUuid),
 		{
@@ -2460,7 +2552,10 @@ export const getGetRecordsInYearUrl = (year: number | string) => {
 	return `${ELITE_API_URL}/contests/records/${year}`;
 };
 
-export const getRecordsInYear = async (year: number | string, options?: RequestInit) => {
+export const getRecordsInYear = async (
+	year: number | string,
+	options?: RequestInit
+): Promise<getRecordsInYearResponse> => {
 	return customFetch<getRecordsInYearResponse>(getGetRecordsInYearUrl(year), {
 		...options,
 		method: 'GET',
@@ -2492,7 +2587,10 @@ export const getGetSelectedMemberParticipationsUrl = (playerUuid: string) => {
 	return `${ELITE_API_URL}/contests/${playerUuid}/selected`;
 };
 
-export const getSelectedMemberParticipations = async (playerUuid: string, options?: RequestInit) => {
+export const getSelectedMemberParticipations = async (
+	playerUuid: string,
+	options?: RequestInit
+): Promise<getSelectedMemberParticipationsResponse> => {
 	return customFetch<getSelectedMemberParticipationsResponse>(getGetSelectedMemberParticipationsUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -2541,7 +2639,7 @@ export const addTeamMemberAdmin = async (
 	teamId: number | string,
 	player: string,
 	options?: RequestInit
-) => {
+): Promise<addTeamMemberAdminResponse> => {
 	return customFetch<addTeamMemberAdminResponse>(getAddTeamMemberAdminUrl(discordId, eventId, teamId, player), {
 		...options,
 		method: 'POST',
@@ -2590,7 +2688,7 @@ export const kickTeamMemberAdmin = async (
 	teamId: number | string,
 	player: string,
 	options?: RequestInit
-) => {
+): Promise<kickTeamMemberAdminResponse> => {
 	return customFetch<kickTeamMemberAdminResponse>(getKickTeamMemberAdminUrl(discordId, eventId, teamId, player), {
 		...options,
 		method: 'DELETE',
@@ -2634,7 +2732,7 @@ export const banMemberAdmin = async (
 	playerUuid: string,
 	banMemberAdminBody: string,
 	options?: RequestInit
-) => {
+): Promise<banMemberAdminResponse> => {
 	return customFetch<banMemberAdminResponse>(getBanMemberAdminUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'POST',
@@ -2679,7 +2777,7 @@ export const unbanMemberAdmin = async (
 	eventId: number | string,
 	playerUuid: string,
 	options?: RequestInit
-) => {
+): Promise<unbanMemberAdminResponse> => {
 	return customFetch<unbanMemberAdminResponse>(getUnbanMemberAdminUrl(discordId, eventId, playerUuid), {
 		...options,
 		method: 'DELETE',
@@ -2721,7 +2819,7 @@ export const createEventAdmin = async (
 	discordId: bigint | number | string,
 	createEventDto: CreateEventDto,
 	options?: RequestInit
-) => {
+): Promise<createEventAdminResponse> => {
 	return customFetch<createEventAdminResponse>(getCreateEventAdminUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2784,7 +2882,7 @@ export const createTeamAdmin = async (
 	createEventTeamDto: CreateEventTeamDto,
 	params?: CreateTeamAdminParams,
 	options?: RequestInit
-) => {
+): Promise<createTeamAdminResponse> => {
 	return customFetch<createTeamAdminResponse>(getCreateTeamAdminUrl(discordId, eventId, params), {
 		...options,
 		method: 'POST',
@@ -2829,7 +2927,7 @@ export const deleteEventAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
-) => {
+): Promise<deleteEventAdminResponse> => {
 	return customFetch<deleteEventAdminResponse>(getDeleteEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2872,7 +2970,7 @@ export const updateEventAdmin = async (
 	eventId: number | string,
 	editEventDto: EditEventDto,
 	options?: RequestInit
-) => {
+): Promise<updateEventAdminResponse> => {
 	return customFetch<updateEventAdminResponse>(getUpdateEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'PATCH',
@@ -2916,7 +3014,7 @@ export const deleteEventBannerAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
-) => {
+): Promise<deleteEventBannerAdminResponse> => {
 	return customFetch<deleteEventBannerAdminResponse>(getDeleteEventBannerAdminUrl(discordId, eventId), {
 		...options,
 		method: 'DELETE',
@@ -2959,7 +3057,7 @@ export const setEventBannerAdmin = async (
 	eventId: number | string,
 	editEventBannerDto: EditEventBannerDto,
 	options?: RequestInit
-) => {
+): Promise<setEventBannerAdminResponse> => {
 	const formData = new FormData();
 	if (editEventBannerDto.image !== undefined && editEventBannerDto.image !== null) {
 		formData.append(`image`, editEventBannerDto.image);
@@ -3026,7 +3124,7 @@ export const deleteMemberAdmin = async (
 	playerUuid: string,
 	params?: DeleteMemberAdminParams,
 	options?: RequestInit
-) => {
+): Promise<deleteMemberAdminResponse> => {
 	return customFetch<deleteMemberAdminResponse>(getDeleteMemberAdminUrl(discordId, eventId, playerUuid, params), {
 		...options,
 		method: 'DELETE',
@@ -3087,7 +3185,7 @@ export const forceAddMemberAdmin = async (
 	playerUuid: string,
 	params: ForceAddMemberAdminParams,
 	options?: RequestInit
-) => {
+): Promise<forceAddMemberAdminResponse> => {
 	return customFetch<forceAddMemberAdminResponse>(getForceAddMemberAdminUrl(discordId, eventId, playerUuid, params), {
 		...options,
 		method: 'POST',
@@ -3134,7 +3232,7 @@ export const deleteTeamAdmin = async (
 	eventId: number | string,
 	teamId: number | string,
 	options?: RequestInit
-) => {
+): Promise<deleteTeamAdminResponse> => {
 	return customFetch<deleteTeamAdminResponse>(getDeleteTeamAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -3182,7 +3280,7 @@ export const updateTeamAdmin = async (
 	teamId: number | string,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
-) => {
+): Promise<updateTeamAdminResponse> => {
 	return customFetch<updateTeamAdminResponse>(getUpdateTeamAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'PATCH',
@@ -3226,7 +3324,7 @@ export const getBannedMembersAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
-) => {
+): Promise<getBannedMembersAdminResponse> => {
 	return customFetch<getBannedMembersAdminResponse>(getGetBannedMembersAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3268,7 +3366,7 @@ export const getGuildEventMembersAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
-) => {
+): Promise<getGuildEventMembersAdminResponse> => {
 	return customFetch<getGuildEventMembersAdminResponse>(getGetGuildEventMembersAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3310,7 +3408,7 @@ export const getGuildEventAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
-) => {
+): Promise<getGuildEventAdminResponse> => {
 	return customFetch<getGuildEventAdminResponse>(getGetGuildEventAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3348,7 +3446,10 @@ export const getGetGuildEventsAdminUrl = (discordId: bigint | number | string) =
 	return `${ELITE_API_URL}/guild/${discordId}/events/admin`;
 };
 
-export const getGuildEventsAdmin = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getGuildEventsAdmin = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getGuildEventsAdminResponse> => {
 	return customFetch<getGuildEventsAdminResponse>(getGetGuildEventsAdminUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -3390,7 +3491,7 @@ export const getTeamsAdmin = async (
 	discordId: bigint | number | string,
 	eventId: number | string,
 	options?: RequestInit
-) => {
+): Promise<getTeamsAdminResponse> => {
 	return customFetch<getTeamsAdminResponse>(getGetTeamsAdminUrl(discordId, eventId), {
 		...options,
 		method: 'GET',
@@ -3430,7 +3531,7 @@ export const setTeamOwnerAdmin = async (
 	teamId: number | string,
 	setTeamOwnerRequest: SetTeamOwnerRequest,
 	options?: RequestInit
-) => {
+): Promise<setTeamOwnerAdminResponse> => {
 	return customFetch<setTeamOwnerAdminResponse>(getSetTeamOwnerAdminUrl(discordId, eventId, teamId), {
 		...options,
 		method: 'PUT',
@@ -3457,7 +3558,7 @@ export const getGetEventUrl = (eventId: number | string) => {
 	return `${ELITE_API_URL}/event/${eventId}`;
 };
 
-export const getEvent = async (eventId: number | string, options?: RequestInit) => {
+export const getEvent = async (eventId: number | string, options?: RequestInit): Promise<getEventResponse> => {
 	return customFetch<getEventResponse>(getGetEventUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3483,7 +3584,7 @@ export const getGetEventDefaultsUrl = () => {
 	return `${ELITE_API_URL}/event/defaults`;
 };
 
-export const getEventDefaults = async (options?: RequestInit) => {
+export const getEventDefaults = async (options?: RequestInit): Promise<getEventDefaultsResponse> => {
 	return customFetch<getEventDefaultsResponse>(getGetEventDefaultsUrl(), {
 		...options,
 		method: 'GET',
@@ -3513,7 +3614,11 @@ export const getGetEventMemberUrl = (eventId: number | string, playerUuid: strin
 	return `${ELITE_API_URL}/event/${eventId}/member/${playerUuid}`;
 };
 
-export const getEventMember = async (eventId: number | string, playerUuid: string, options?: RequestInit) => {
+export const getEventMember = async (
+	eventId: number | string,
+	playerUuid: string,
+	options?: RequestInit
+): Promise<getEventMemberResponse> => {
 	return customFetch<getEventMemberResponse>(getGetEventMemberUrl(eventId, playerUuid), {
 		...options,
 		method: 'GET',
@@ -3538,7 +3643,10 @@ export const getGetEventMembersUrl = (eventId: number | string) => {
 	return `${ELITE_API_URL}/event/${eventId}/members`;
 };
 
-export const getEventMembers = async (eventId: number | string, options?: RequestInit) => {
+export const getEventMembers = async (
+	eventId: number | string,
+	options?: RequestInit
+): Promise<getEventMembersResponse> => {
 	return customFetch<getEventMembersResponse>(getGetEventMembersUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3563,7 +3671,11 @@ export const getGetEventTeamUrl = (eventId: number | string, teamId: number | st
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}`;
 };
 
-export const getEventTeam = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
+export const getEventTeam = async (
+	eventId: number | string,
+	teamId: number | string,
+	options?: RequestInit
+): Promise<getEventTeamResponse> => {
 	return customFetch<getEventTeamResponse>(getGetEventTeamUrl(eventId, teamId), {
 		...options,
 		method: 'GET',
@@ -3593,7 +3705,11 @@ export const getDeleteTeamUrl = (eventId: number | string, teamId: number | stri
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}`;
 };
 
-export const deleteTeam = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
+export const deleteTeam = async (
+	eventId: number | string,
+	teamId: number | string,
+	options?: RequestInit
+): Promise<deleteTeamResponse> => {
 	return customFetch<deleteTeamResponse>(getDeleteTeamUrl(eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -3628,7 +3744,7 @@ export const updateTeam = async (
 	teamId: number | string,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
-) => {
+): Promise<updateTeamResponse> => {
 	return customFetch<updateTeamResponse>(getUpdateTeamUrl(eventId, teamId), {
 		...options,
 		method: 'PATCH',
@@ -3655,7 +3771,10 @@ export const getGetEventTeamsUrl = (eventId: number | string) => {
 	return `${ELITE_API_URL}/event/${eventId}/teams`;
 };
 
-export const getEventTeams = async (eventId: number | string, options?: RequestInit) => {
+export const getEventTeams = async (
+	eventId: number | string,
+	options?: RequestInit
+): Promise<getEventTeamsResponse> => {
 	return customFetch<getEventTeamsResponse>(getGetEventTeamsUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -3689,7 +3808,7 @@ export const createTeam = async (
 	eventId: number | string,
 	createEventTeamDto: CreateEventTeamDto,
 	options?: RequestInit
-) => {
+): Promise<createTeamResponse> => {
 	return customFetch<createTeamResponse>(getCreateTeamUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -3717,7 +3836,7 @@ export const getGetTeamWordListUrl = () => {
 	return `${ELITE_API_URL}/event/teams/words`;
 };
 
-export const getTeamWordList = async (options?: RequestInit) => {
+export const getTeamWordList = async (options?: RequestInit): Promise<getTeamWordListResponse> => {
 	return customFetch<getTeamWordListResponse>(getGetTeamWordListUrl(), {
 		...options,
 		method: 'GET',
@@ -3752,7 +3871,10 @@ export const getGetUpcomingEventsUrl = (params?: GetUpcomingEventsParams) => {
 	return stringifiedParams.length > 0 ? `${ELITE_API_URL}/events?${stringifiedParams}` : `${ELITE_API_URL}/events`;
 };
 
-export const getUpcomingEvents = async (params?: GetUpcomingEventsParams, options?: RequestInit) => {
+export const getUpcomingEvents = async (
+	params?: GetUpcomingEventsParams,
+	options?: RequestInit
+): Promise<getUpcomingEventsResponse> => {
 	return customFetch<getUpcomingEventsResponse>(getGetUpcomingEventsUrl(params), {
 		...options,
 		method: 'GET',
@@ -3799,7 +3921,11 @@ export const getJoinEventUrl = (eventId: number | string, params?: JoinEventPara
 		: `${ELITE_API_URL}/event/${eventId}/join`;
 };
 
-export const joinEvent = async (eventId: number | string, params?: JoinEventParams, options?: RequestInit) => {
+export const joinEvent = async (
+	eventId: number | string,
+	params?: JoinEventParams,
+	options?: RequestInit
+): Promise<joinEventResponse> => {
 	return customFetch<joinEventResponse>(getJoinEventUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -3834,7 +3960,7 @@ export const joinTeam = async (
 	teamId: number | string,
 	joinTeamBody: string,
 	options?: RequestInit
-) => {
+): Promise<joinTeamResponse> => {
 	return customFetch<joinTeamResponse>(getJoinTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -3880,7 +4006,7 @@ export const kickTeamMember = async (
 	teamId: number | string,
 	player: string,
 	options?: RequestInit
-) => {
+): Promise<kickTeamMemberResponse> => {
 	return customFetch<kickTeamMemberResponse>(getKickTeamMemberUrl(eventId, teamId, player), {
 		...options,
 		method: 'DELETE',
@@ -3910,7 +4036,7 @@ export const getLeaveEventUrl = (eventId: number | string) => {
 	return `${ELITE_API_URL}/event/${eventId}/leave`;
 };
 
-export const leaveEvent = async (eventId: number | string, options?: RequestInit) => {
+export const leaveEvent = async (eventId: number | string, options?: RequestInit): Promise<leaveEventResponse> => {
 	return customFetch<leaveEventResponse>(getLeaveEventUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -3940,7 +4066,11 @@ export const getLeaveTeamUrl = (eventId: number | string, teamId: number | strin
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/leave`;
 };
 
-export const leaveTeam = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
+export const leaveTeam = async (
+	eventId: number | string,
+	teamId: number | string,
+	options?: RequestInit
+): Promise<leaveTeamResponse> => {
 	return customFetch<leaveTeamResponse>(getLeaveTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -3975,7 +4105,7 @@ export const setTeamOwner = async (
 	teamId: number | string,
 	changeTeamOwnerRequest: ChangeTeamOwnerRequest,
 	options?: RequestInit
-) => {
+): Promise<setTeamOwnerResponse> => {
 	return customFetch<setTeamOwnerResponse>(getSetTeamOwnerUrl(eventId, teamId), {
 		...options,
 		method: 'PUT',
@@ -4007,7 +4137,11 @@ export const getUpdateTeamJoinCodeUrl = (eventId: number | string, teamId: numbe
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/code`;
 };
 
-export const updateTeamJoinCode = async (eventId: number | string, teamId: number | string, options?: RequestInit) => {
+export const updateTeamJoinCode = async (
+	eventId: number | string,
+	teamId: number | string,
+	options?: RequestInit
+): Promise<updateTeamJoinCodeResponse> => {
 	return customFetch<updateTeamJoinCodeResponse>(getUpdateTeamJoinCodeUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -4043,7 +4177,7 @@ export const getGetGardenUrl = (profileUuid: string) => {
 	return `${ELITE_API_URL}/garden/${profileUuid}`;
 };
 
-export const getGarden = async (profileUuid: string, options?: RequestInit) => {
+export const getGarden = async (profileUuid: string, options?: RequestInit): Promise<getGardenResponse> => {
 	return customFetch<getGardenResponse>(getGetGardenUrl(profileUuid), {
 		...options,
 		method: 'GET',
@@ -4082,7 +4216,10 @@ export const getGetSelectedGardenUrl = (playerUuid: string) => {
 	return `${ELITE_API_URL}/garden/${playerUuid}/selected`;
 };
 
-export const getSelectedGarden = async (playerUuid: string, options?: RequestInit) => {
+export const getSelectedGarden = async (
+	playerUuid: string,
+	options?: RequestInit
+): Promise<getSelectedGardenResponse> => {
 	return customFetch<getSelectedGardenResponse>(getGetSelectedGardenUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -4147,7 +4284,7 @@ export const getAdminCropGraphs = async (
 	profileUuid: string,
 	params?: GetAdminCropGraphsParams,
 	options?: RequestInit
-) => {
+): Promise<getAdminCropGraphsResponse> => {
 	return customFetch<getAdminCropGraphsResponse>(getGetAdminCropGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4212,7 +4349,7 @@ export const getAdminSkillGraphs = async (
 	profileUuid: string,
 	params?: GetAdminSkillGraphsParams,
 	options?: RequestInit
-) => {
+): Promise<getAdminSkillGraphsResponse> => {
 	return customFetch<getAdminSkillGraphsResponse>(getGetAdminSkillGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4259,7 +4396,7 @@ export const getCropGraphs = async (
 	profileUuid: string,
 	params?: GetCropGraphsParams,
 	options?: RequestInit
-) => {
+): Promise<getCropGraphsResponse> => {
 	return customFetch<getCropGraphsResponse>(getGetCropGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4306,7 +4443,7 @@ export const getSkillGraphs = async (
 	profileUuid: string,
 	params?: GetSkillGraphsParams,
 	options?: RequestInit
-) => {
+): Promise<getSkillGraphsResponse> => {
 	return customFetch<getSkillGraphsResponse>(getGetSkillGraphsUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -4343,7 +4480,10 @@ export const getGetCurrentMedalBracketsUrl = (params?: GetCurrentMedalBracketsPa
 		: `${ELITE_API_URL}/graph/medals/now`;
 };
 
-export const getCurrentMedalBrackets = async (params?: GetCurrentMedalBracketsParams, options?: RequestInit) => {
+export const getCurrentMedalBrackets = async (
+	params?: GetCurrentMedalBracketsParams,
+	options?: RequestInit
+): Promise<getCurrentMedalBracketsResponse> => {
 	return customFetch<getCurrentMedalBracketsResponse>(getGetCurrentMedalBracketsUrl(params), {
 		...options,
 		method: 'GET',
@@ -4394,7 +4534,7 @@ export const getMedalBrackets = async (
 	month: number | string,
 	params?: GetMedalBracketsParams,
 	options?: RequestInit
-) => {
+): Promise<getMedalBracketsResponse> => {
 	return customFetch<getMedalBracketsResponse>(getGetMedalBracketsUrl(year, month, params), {
 		...options,
 		method: 'GET',
@@ -4442,7 +4582,7 @@ export const getMedalBracketsGraph = async (
 	year: number | string,
 	params?: GetMedalBracketsGraphParams,
 	options?: RequestInit
-) => {
+): Promise<getMedalBracketsGraphResponse> => {
 	return customFetch<getMedalBracketsGraphResponse>(getGetMedalBracketsGraphUrl(year, params), {
 		...options,
 		method: 'GET',
@@ -4502,7 +4642,7 @@ export const setEventFeature = async (
 	discordId: bigint | number | string,
 	params?: SetEventFeatureParams,
 	options?: RequestInit
-) => {
+): Promise<setEventFeatureResponse> => {
 	return customFetch<setEventFeatureResponse>(getSetEventFeatureUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4532,7 +4672,10 @@ export const getGetPublicGuildEventsUrl = (discordId: bigint | number | string) 
 	return `${ELITE_API_URL}/guild/${discordId}/events`;
 };
 
-export const getPublicGuildEvents = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getPublicGuildEvents = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getPublicGuildEventsResponse> => {
 	return customFetch<getPublicGuildEventsResponse>(getGetPublicGuildEventsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4592,7 +4735,7 @@ export const setJacobFeature = async (
 	discordId: bigint | number | string,
 	params?: SetJacobFeatureParams,
 	options?: RequestInit
-) => {
+): Promise<setJacobFeatureResponse> => {
 	return customFetch<setJacobFeatureResponse>(getSetJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4652,7 +4795,7 @@ export const setGuildLocked = async (
 	discordId: bigint | number | string,
 	params?: SetGuildLockedParams,
 	options?: RequestInit
-) => {
+): Promise<setGuildLockedResponse> => {
 	return customFetch<setGuildLockedResponse>(getSetGuildLockedUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4712,7 +4855,7 @@ export const setGuildPublic = async (
 	discordId: bigint | number | string,
 	params?: SetGuildPublicParams,
 	options?: RequestInit
-) => {
+): Promise<setGuildPublicResponse> => {
 	return customFetch<setGuildPublicResponse>(getSetGuildPublicUrl(discordId, params), {
 		...options,
 		method: 'POST',
@@ -4742,7 +4885,10 @@ export const getGetPublicGuildUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/guild/${discordId}`;
 };
 
-export const getPublicGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getPublicGuild = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getPublicGuildResponse> => {
 	return customFetch<getPublicGuildResponse>(getGetPublicGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4767,7 +4913,7 @@ export const getGetPublicGuildsUrl = () => {
 	return `${ELITE_API_URL}/guilds`;
 };
 
-export const getPublicGuilds = async (options?: RequestInit) => {
+export const getPublicGuilds = async (options?: RequestInit): Promise<getPublicGuildsResponse> => {
 	return customFetch<getPublicGuildsResponse>(getGetPublicGuildsUrl(), {
 		...options,
 		method: 'GET',
@@ -4821,7 +4967,7 @@ export const deleteContestPings = async (
 	discordId: bigint | number | string,
 	params?: DeleteContestPingsParams,
 	options?: RequestInit
-) => {
+): Promise<deleteContestPingsResponse> => {
 	return customFetch<deleteContestPingsResponse>(getDeleteContestPingsUrl(discordId, params), {
 		...options,
 		method: 'DELETE',
@@ -4863,7 +5009,7 @@ export const updateContestPings = async (
 	discordId: bigint | number | string,
 	updateContestPingsRequestUpdateContestPings: UpdateContestPingsRequestUpdateContestPings,
 	options?: RequestInit
-) => {
+): Promise<updateContestPingsResponse> => {
 	return customFetch<updateContestPingsResponse>(getUpdateContestPingsUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -4895,7 +5041,7 @@ export const getGetUserGuildsUrl = () => {
 	return `${ELITE_API_URL}/user/guilds`;
 };
 
-export const getUserGuilds = async (options?: RequestInit) => {
+export const getUserGuilds = async (options?: RequestInit): Promise<getUserGuildsResponse> => {
 	return customFetch<getUserGuildsResponse>(getGetUserGuildsUrl(), {
 		...options,
 		method: 'GET',
@@ -4930,7 +5076,10 @@ export const getGetUserGuildUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}`;
 };
 
-export const getUserGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getUserGuild = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getUserGuildResponse> => {
 	return customFetch<getUserGuildResponse>(getGetUserGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4972,7 +5121,7 @@ export const createGuildJacobLeaderboard = async (
 	discordId: bigint | number | string,
 	createJacobLeaderboardRequestCreateJacobLeaderboard: CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	options?: RequestInit
-) => {
+): Promise<createGuildJacobLeaderboardResponse> => {
 	return customFetch<createGuildJacobLeaderboardResponse>(getCreateGuildJacobLeaderboardUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5016,7 +5165,7 @@ export const deleteGuildJacobLeaderboard = async (
 	discordId: bigint | number | string,
 	leaderboardId: string,
 	options?: RequestInit
-) => {
+): Promise<deleteGuildJacobLeaderboardResponse> => {
 	return customFetch<deleteGuildJacobLeaderboardResponse>(
 		getDeleteGuildJacobLeaderboardUrl(discordId, leaderboardId),
 		{
@@ -5062,7 +5211,7 @@ export const updateGuildJacobLeaderboard = async (
 	leaderboardId: string,
 	updateJacobLeaderboardRequestUpdateJacobLeaderboard: UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
 	options?: RequestInit
-) => {
+): Promise<updateGuildJacobLeaderboardResponse> => {
 	return customFetch<updateGuildJacobLeaderboardResponse>(
 		getUpdateGuildJacobLeaderboardUrl(discordId, leaderboardId),
 		{
@@ -5105,7 +5254,10 @@ export const getGetGuildJacobUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/jacob`;
 };
 
-export const getGuildJacob = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getGuildJacob = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getGuildJacobResponse> => {
 	return customFetch<getGuildJacobResponse>(getGetGuildJacobUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -5163,7 +5315,7 @@ export const updateGuildJacobFeature = async (
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateGuildJacobFeatureParams,
 	options?: RequestInit
-) => {
+): Promise<updateGuildJacobFeatureResponse> => {
 	return customFetch<updateGuildJacobFeatureResponse>(getUpdateGuildJacobFeatureUrl(discordId, params), {
 		...options,
 		method: 'PATCH',
@@ -5207,7 +5359,7 @@ export const sendGuildJacobFeature = async (
 	discordId: bigint | number | string,
 	leaderboardId: string,
 	options?: RequestInit
-) => {
+): Promise<sendGuildJacobFeatureResponse> => {
 	return customFetch<sendGuildJacobFeatureResponse>(getSendGuildJacobFeatureUrl(discordId, leaderboardId), {
 		...options,
 		method: 'POST',
@@ -5239,7 +5391,7 @@ export const getRefreshGuildMembershipsUrl = () => {
 	return `${ELITE_API_URL}/user/refresh-guilds`;
 };
 
-export const refreshGuildMemberships = async (options?: RequestInit) => {
+export const refreshGuildMemberships = async (options?: RequestInit): Promise<refreshGuildMembershipsResponse> => {
 	return customFetch<refreshGuildMembershipsResponse>(getRefreshGuildMembershipsUrl(), {
 		...options,
 		method: 'POST',
@@ -5278,7 +5430,10 @@ export const getRequestGuildRefreshUrl = (discordId: bigint | number | string) =
 	return `${ELITE_API_URL}/user/guild/${discordId}/refresh`;
 };
 
-export const requestGuildRefresh = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const requestGuildRefresh = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<requestGuildRefreshResponse> => {
 	return customFetch<requestGuildRefreshResponse>(getRequestGuildRefreshUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5317,7 +5472,7 @@ export const setAdminRole = async (
 	discordId: bigint | number | string,
 	setAdminRoleBody: string,
 	options?: RequestInit
-) => {
+): Promise<setAdminRoleResponse> => {
 	return customFetch<setAdminRoleResponse>(getSetAdminRoleUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -5354,7 +5509,11 @@ export const getSetInviteUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/invite`;
 };
 
-export const setInvite = async (discordId: bigint | number | string, setInviteBody: string, options?: RequestInit) => {
+export const setInvite = async (
+	discordId: bigint | number | string,
+	setInviteBody: string,
+	options?: RequestInit
+): Promise<setInviteResponse> => {
 	return customFetch<setInviteResponse>(getSetInviteUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -5394,7 +5553,10 @@ export const getUpdateGuildPurchasesUrl = (discordId: bigint | number | string) 
 	return `${ELITE_API_URL}/user/guild/${discordId}/purchases`;
 };
 
-export const updateGuildPurchases = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const updateGuildPurchases = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<updateGuildPurchasesResponse> => {
 	return customFetch<updateGuildPurchasesResponse>(getUpdateGuildPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -5436,7 +5598,11 @@ export const getGetLeaderboardUrl = (leaderboard: string, params?: GetLeaderboar
 		: `${ELITE_API_URL}/leaderboard/${leaderboard}`;
 };
 
-export const getLeaderboard = async (leaderboard: string, params?: GetLeaderboardParams, options?: RequestInit) => {
+export const getLeaderboard = async (
+	leaderboard: string,
+	params?: GetLeaderboardParams,
+	options?: RequestInit
+): Promise<getLeaderboardResponse> => {
 	return customFetch<getLeaderboardResponse>(getGetLeaderboardUrl(leaderboard, params), {
 		...options,
 		method: 'GET',
@@ -5461,7 +5627,7 @@ export const getGetLeaderboardsUrl = () => {
 	return `${ELITE_API_URL}/leaderboards`;
 };
 
-export const getLeaderboards = async (options?: RequestInit) => {
+export const getLeaderboards = async (options?: RequestInit): Promise<getLeaderboardsResponse> => {
 	return customFetch<getLeaderboardsResponse>(getGetLeaderboardsUrl(), {
 		...options,
 		method: 'GET',
@@ -5507,7 +5673,7 @@ export const getPlayerLeaderboardRanks = async (
 	profileUuid: string,
 	params?: GetPlayerLeaderboardRanksParams,
 	options?: RequestInit
-) => {
+): Promise<getPlayerLeaderboardRanksResponse> => {
 	return customFetch<getPlayerLeaderboardRanksResponse>(
 		getGetPlayerLeaderboardRanksUrl(playerUuid, profileUuid, params),
 		{
@@ -5563,7 +5729,7 @@ export const getPlayerRank1 = async (
 	profileUuid: string,
 	params?: GetPlayerRank1Params,
 	options?: RequestInit
-) => {
+): Promise<getPlayerRank1Response> => {
 	return customFetch<getPlayerRank1Response>(getGetPlayerRank1Url(leaderboard, playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5616,7 +5782,7 @@ export const getPlayerRank2 = async (
 	profileUuid: string,
 	params?: GetPlayerRank2Params,
 	options?: RequestInit
-) => {
+): Promise<getPlayerRank2Response> => {
 	return customFetch<getPlayerRank2Response>(getGetPlayerRank2Url(leaderboard, playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5647,7 +5813,11 @@ export const getGetPlayerRanksUrl = (playerUuid: string, profileUuid: string) =>
 	return `${ELITE_API_URL}/leaderboard/ranks/${playerUuid}/${profileUuid}`;
 };
 
-export const getPlayerRanks = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
+export const getPlayerRanks = async (
+	playerUuid: string,
+	profileUuid: string,
+	options?: RequestInit
+): Promise<getPlayerRanksResponse> => {
 	return customFetch<getPlayerRanksResponse>(getGetPlayerRanksUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
@@ -5694,7 +5864,7 @@ export const getProfileRank1 = async (
 	profileUuid: string,
 	params?: GetProfileRank1Params,
 	options?: RequestInit
-) => {
+): Promise<getProfileRank1Response> => {
 	return customFetch<getProfileRank1Response>(getGetProfileRank1Url(leaderboard, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5741,7 +5911,7 @@ export const getProfileRank2 = async (
 	profileUuid: string,
 	params?: GetProfileRank2Params,
 	options?: RequestInit
-) => {
+): Promise<getProfileRank2Response> => {
 	return customFetch<getProfileRank2Response>(getGetProfileRank2Url(leaderboard, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -5801,7 +5971,7 @@ export const getEntitlements = async (
 	discordId: bigint | number | string,
 	params?: GetEntitlementsParams,
 	options?: RequestInit
-) => {
+): Promise<getEntitlementsResponse> => {
 	return customFetch<getEntitlementsResponse>(getGetEntitlementsUrl(discordId, params), {
 		...options,
 		method: 'GET',
@@ -5867,7 +6037,7 @@ export const grantTestEntitlement = async (
 	productId: bigint | number | string,
 	params?: GrantTestEntitlementParams,
 	options?: RequestInit
-) => {
+): Promise<grantTestEntitlementResponse> => {
 	return customFetch<grantTestEntitlementResponse>(getGrantTestEntitlementUrl(discordId, productId, params), {
 		...options,
 		method: 'POST',
@@ -5933,7 +6103,7 @@ export const removeTestEntitlement = async (
 	productId: bigint | number | string,
 	params?: RemoveTestEntitlementParams,
 	options?: RequestInit
-) => {
+): Promise<removeTestEntitlementResponse> => {
 	return customFetch<removeTestEntitlementResponse>(getRemoveTestEntitlementUrl(discordId, productId, params), {
 		...options,
 		method: 'DELETE',
@@ -5971,7 +6141,10 @@ export const getGetLinkedAccountsUrl = (discordId: bigint | number | string) => 
 	return `${ELITE_API_URL}/player/${discordId}`;
 };
 
-export const getLinkedAccounts = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getLinkedAccounts = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getLinkedAccountsResponse> => {
 	return customFetch<getLinkedAccountsResponse>(getGetLinkedAccountsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6009,7 +6182,7 @@ export const getGetPlayerDataUrl = (player: string) => {
 	return `${ELITE_API_URL}/player/${player}`;
 };
 
-export const getPlayerData = async (player: string, options?: RequestInit) => {
+export const getPlayerData = async (player: string, options?: RequestInit): Promise<getPlayerDataResponse> => {
 	return customFetch<getPlayerDataResponse>(getGetPlayerDataUrl(player), {
 		...options,
 		method: 'GET',
@@ -6039,7 +6212,10 @@ export const getGetAllProfileDetailsUrl = (playerUuid: string) => {
 	return `${ELITE_API_URL}/profiles/${playerUuid}`;
 };
 
-export const getAllProfileDetails = async (playerUuid: string, options?: RequestInit) => {
+export const getAllProfileDetails = async (
+	playerUuid: string,
+	options?: RequestInit
+): Promise<getAllProfileDetailsResponse> => {
 	return customFetch<getAllProfileDetailsResponse>(getGetAllProfileDetailsUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -6074,7 +6250,11 @@ export const getGetProfileUrl = (playerUuid: string, profileUuid: string) => {
 	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}`;
 };
 
-export const getProfile = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
+export const getProfile = async (
+	playerUuid: string,
+	profileUuid: string,
+	options?: RequestInit
+): Promise<getProfileResponse> => {
 	return customFetch<getProfileResponse>(getGetProfileUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
@@ -6112,7 +6292,10 @@ export const getGetProfileDetailsUrl = (profileUuid: string) => {
 	return `${ELITE_API_URL}/profile/${profileUuid}`;
 };
 
-export const getProfileDetails = async (profileUuid: string, options?: RequestInit) => {
+export const getProfileDetails = async (
+	profileUuid: string,
+	options?: RequestInit
+): Promise<getProfileDetailsResponse> => {
 	return customFetch<getProfileDetailsResponse>(getGetProfileDetailsUrl(profileUuid), {
 		...options,
 		method: 'GET',
@@ -6142,7 +6325,7 @@ export const getGetProfileNamesUrl = (player: string) => {
 	return `${ELITE_API_URL}/profiles/${player}/names`;
 };
 
-export const getProfileNames = async (player: string, options?: RequestInit) => {
+export const getProfileNames = async (player: string, options?: RequestInit): Promise<getProfileNamesResponse> => {
 	return customFetch<getProfileNamesResponse>(getGetProfileNamesUrl(player), {
 		...options,
 		method: 'GET',
@@ -6180,7 +6363,10 @@ export const getGetSelectedProfileUrl = (playerUuid: string) => {
 	return `${ELITE_API_URL}/profile/${playerUuid}/selected`;
 };
 
-export const getSelectedProfile = async (playerUuid: string, options?: RequestInit) => {
+export const getSelectedProfile = async (
+	playerUuid: string,
+	options?: RequestInit
+): Promise<getSelectedProfileResponse> => {
 	return customFetch<getSelectedProfileResponse>(getGetSelectedProfileUrl(playerUuid), {
 		...options,
 		method: 'GET',
@@ -6206,7 +6392,7 @@ export const getGetAuctionHouseProductsUrl = () => {
 	return `${ELITE_API_URL}/resources/auctions`;
 };
 
-export const getAuctionHouseProducts = async (options?: RequestInit) => {
+export const getAuctionHouseProducts = async (options?: RequestInit): Promise<getAuctionHouseProductsResponse> => {
 	return customFetch<getAuctionHouseProductsResponse>(getGetAuctionHouseProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -6232,7 +6418,7 @@ export const getGetBazaarProductUrl = (itemId: string) => {
 	return `${ELITE_API_URL}/resources/bazaar/${itemId}`;
 };
 
-export const getBazaarProduct = async (itemId: string, options?: RequestInit) => {
+export const getBazaarProduct = async (itemId: string, options?: RequestInit): Promise<getBazaarProductResponse> => {
 	return customFetch<getBazaarProductResponse>(getGetBazaarProductUrl(itemId), {
 		...options,
 		method: 'GET',
@@ -6258,7 +6444,7 @@ export const getGetBazaarProductsUrl = () => {
 	return `${ELITE_API_URL}/resources/bazaar`;
 };
 
-export const getBazaarProducts = async (options?: RequestInit) => {
+export const getBazaarProducts = async (options?: RequestInit): Promise<getBazaarProductsResponse> => {
 	return customFetch<getBazaarProductsResponse>(getGetBazaarProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -6284,7 +6470,10 @@ export const getGetItemsFromBytesUrl = () => {
 	return `${ELITE_API_URL}/resources/item-parse`;
 };
 
-export const getItemsFromBytes = async (getItemsFromBytesRequest: GetItemsFromBytesRequest, options?: RequestInit) => {
+export const getItemsFromBytes = async (
+	getItemsFromBytesRequest: GetItemsFromBytesRequest,
+	options?: RequestInit
+): Promise<getItemsFromBytesResponse> => {
 	return customFetch<getItemsFromBytesResponse>(getGetItemsFromBytesUrl(), {
 		...options,
 		method: 'POST',
@@ -6312,7 +6501,7 @@ export const getGetSkyblockItemsUrl = () => {
 	return `${ELITE_API_URL}/resources/items`;
 };
 
-export const getSkyblockItems = async (options?: RequestInit) => {
+export const getSkyblockItems = async (options?: RequestInit): Promise<getSkyblockItemsResponse> => {
 	return customFetch<getSkyblockItemsResponse>(getGetSkyblockItemsUrl(), {
 		...options,
 		method: 'GET',
@@ -6348,7 +6537,7 @@ export const getGetSpecifiedSkyblockItemsUrl = () => {
 export const getSpecifiedSkyblockItems = async (
 	getSpecifiedSkyblockItemsRequest: GetSpecifiedSkyblockItemsRequest,
 	options?: RequestInit
-) => {
+): Promise<getSpecifiedSkyblockItemsResponse> => {
 	return customFetch<getSpecifiedSkyblockItemsResponse>(getGetSpecifiedSkyblockItemsUrl(), {
 		...options,
 		method: 'POST',
@@ -6376,7 +6565,7 @@ export const getSkyblockProductUrl = (itemId: string) => {
 	return `${ELITE_API_URL}/resources/items/${itemId}`;
 };
 
-export const skyblockProduct = async (itemId: string, options?: RequestInit) => {
+export const skyblockProduct = async (itemId: string, options?: RequestInit): Promise<skyblockProductResponse> => {
 	return customFetch<skyblockProductResponse>(getSkyblockProductUrl(itemId), {
 		...options,
 		method: 'GET',
@@ -6418,7 +6607,7 @@ export const addProductToCategory = async (
 	categoryId: number | string,
 	productId: bigint | number | string,
 	options?: RequestInit
-) => {
+): Promise<addProductToCategoryResponse> => {
 	return customFetch<addProductToCategoryResponse>(getAddProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'POST',
@@ -6460,7 +6649,7 @@ export const removeProductToCategory = async (
 	categoryId: number | string,
 	productId: bigint | number | string,
 	options?: RequestInit
-) => {
+): Promise<removeProductToCategoryResponse> => {
 	return customFetch<removeProductToCategoryResponse>(getRemoveProductToCategoryUrl(categoryId, productId), {
 		...options,
 		method: 'DELETE',
@@ -6498,7 +6687,10 @@ export const getCreateCategoryUrl = () => {
 	return `${ELITE_API_URL}/shop/category`;
 };
 
-export const createCategory = async (createCategoryDto: CreateCategoryDto, options?: RequestInit) => {
+export const createCategory = async (
+	createCategoryDto: CreateCategoryDto,
+	options?: RequestInit
+): Promise<createCategoryResponse> => {
 	return customFetch<createCategoryResponse>(getCreateCategoryUrl(), {
 		...options,
 		method: 'POST',
@@ -6538,7 +6730,10 @@ export const getDeleteCategoryUrl = (categoryId: number | string) => {
 	return `${ELITE_API_URL}/shop/category/${categoryId}`;
 };
 
-export const deleteCategory = async (categoryId: number | string, options?: RequestInit) => {
+export const deleteCategory = async (
+	categoryId: number | string,
+	options?: RequestInit
+): Promise<deleteCategoryResponse> => {
 	return customFetch<deleteCategoryResponse>(getDeleteCategoryUrl(categoryId), {
 		...options,
 		method: 'DELETE',
@@ -6580,7 +6775,7 @@ export const updateCategory = async (
 	categoryId: number | string,
 	editCategoryDto: EditCategoryDto,
 	options?: RequestInit
-) => {
+): Promise<updateCategoryResponse> => {
 	return customFetch<updateCategoryResponse>(getUpdateCategoryUrl(categoryId), {
 		...options,
 		method: 'PATCH',
@@ -6619,7 +6814,10 @@ export const getGetCategoriesUrl = (params?: GetCategoriesParams) => {
 		: `${ELITE_API_URL}/shop/categories`;
 };
 
-export const getCategories = async (params?: GetCategoriesParams, options?: RequestInit) => {
+export const getCategories = async (
+	params?: GetCategoriesParams,
+	options?: RequestInit
+): Promise<getCategoriesResponse> => {
 	return customFetch<getCategoriesResponse>(getGetCategoriesUrl(params), {
 		...options,
 		method: 'GET',
@@ -6644,7 +6842,7 @@ export const getGetCategoryUrl = (category: string) => {
 	return `${ELITE_API_URL}/shop/category/${category}`;
 };
 
-export const getCategory = async (category: string, options?: RequestInit) => {
+export const getCategory = async (category: string, options?: RequestInit): Promise<getCategoryResponse> => {
 	return customFetch<getCategoryResponse>(getGetCategoryUrl(category), {
 		...options,
 		method: 'GET',
@@ -6688,7 +6886,10 @@ export const getReorderCategoriesUrl = () => {
 	return `${ELITE_API_URL}/shop/categories/reorder`;
 };
 
-export const reorderCategories = async (reorderIntRequest: ReorderIntRequest, options?: RequestInit) => {
+export const reorderCategories = async (
+	reorderIntRequest: ReorderIntRequest,
+	options?: RequestInit
+): Promise<reorderCategoriesResponse> => {
 	return customFetch<reorderCategoriesResponse>(getReorderCategoriesUrl(), {
 		...options,
 		method: 'POST',
@@ -6738,7 +6939,7 @@ export const reorderCategoryProducts = async (
 	categoryId: number | string,
 	reorderCategoryProductsRequest: ReorderCategoryProductsRequest,
 	options?: RequestInit
-) => {
+): Promise<reorderCategoryProductsResponse> => {
 	return customFetch<reorderCategoryProductsResponse>(getReorderCategoryProductsUrl(categoryId), {
 		...options,
 		method: 'POST',
@@ -6782,7 +6983,7 @@ export const addCosmeticToProduct = async (
 	productId: bigint | number | string,
 	cosmeticId: number | string,
 	options?: RequestInit
-) => {
+): Promise<addCosmeticToProductResponse> => {
 	return customFetch<addCosmeticToProductResponse>(getAddCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'POST',
@@ -6824,7 +7025,7 @@ export const removeCosmeticToProduct = async (
 	productId: bigint | number | string,
 	cosmeticId: number | string,
 	options?: RequestInit
-) => {
+): Promise<removeCosmeticToProductResponse> => {
 	return customFetch<removeCosmeticToProductResponse>(getRemoveCosmeticToProductUrl(productId, cosmeticId), {
 		...options,
 		method: 'DELETE',
@@ -6885,7 +7086,7 @@ export const addProductImage = async (
 	uploadImageDto: UploadImageDto,
 	params?: AddProductImageParams,
 	options?: RequestInit
-) => {
+): Promise<addProductImageResponse> => {
 	const formData = new FormData();
 	if (uploadImageDto.title !== undefined && uploadImageDto.title !== null) {
 		formData.append(`title`, uploadImageDto.title);
@@ -6943,7 +7144,7 @@ export const deleteProductImage = async (
 	discordId: bigint | number | string,
 	imagePath: string,
 	options?: RequestInit
-) => {
+): Promise<deleteProductImageResponse> => {
 	return customFetch<deleteProductImageResponse>(getDeleteProductImageUrl(discordId, imagePath), {
 		...options,
 		method: 'DELETE',
@@ -6981,7 +7182,7 @@ export const getGetAllProductsUrl = () => {
 	return `${ELITE_API_URL}/products/admin`;
 };
 
-export const getAllProducts = async (options?: RequestInit) => {
+export const getAllProducts = async (options?: RequestInit): Promise<getAllProductsResponse> => {
 	return customFetch<getAllProductsResponse>(getGetAllProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -7019,7 +7220,7 @@ export const getRefreshProductsUrl = () => {
 	return `${ELITE_API_URL}/products/refresh`;
 };
 
-export const refreshProducts = async (options?: RequestInit) => {
+export const refreshProducts = async (options?: RequestInit): Promise<refreshProductsResponse> => {
 	return customFetch<refreshProductsResponse>(getRefreshProductsUrl(), {
 		...options,
 		method: 'POST',
@@ -7067,7 +7268,7 @@ export const updateProduct = async (
 	discordId: bigint | number | string,
 	editProductDto: EditProductDto,
 	options?: RequestInit
-) => {
+): Promise<updateProductResponse> => {
 	return customFetch<updateProductResponse>(getUpdateProductUrl(discordId), {
 		...options,
 		method: 'PATCH',
@@ -7099,7 +7300,10 @@ export const getGetProductUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/product/${discordId}`;
 };
 
-export const getProduct = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getProduct = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<getProductResponse> => {
 	return customFetch<getProductResponse>(getGetProductUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -7134,7 +7338,10 @@ export const getClaimProductUrl = (discordId: bigint | number | string) => {
 	return `${ELITE_API_URL}/product/${discordId}/claim`;
 };
 
-export const claimProduct = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const claimProduct = async (
+	discordId: bigint | number | string,
+	options?: RequestInit
+): Promise<claimProductResponse> => {
 	return customFetch<claimProductResponse>(getClaimProductUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -7159,7 +7366,7 @@ export const getGetProductsUrl = () => {
 	return `${ELITE_API_URL}/products`;
 };
 
-export const getProducts = async (options?: RequestInit) => {
+export const getProducts = async (options?: RequestInit): Promise<getProductsResponse> => {
 	return customFetch<getProductsResponse>(getGetProductsUrl(), {
 		...options,
 		method: 'GET',
@@ -7214,7 +7421,7 @@ export const addStyleImage = async (
 	uploadImageDto: UploadImageDto,
 	params?: AddStyleImageParams,
 	options?: RequestInit
-) => {
+): Promise<addStyleImageResponse> => {
 	const formData = new FormData();
 	if (uploadImageDto.title !== undefined && uploadImageDto.title !== null) {
 		formData.append(`title`, uploadImageDto.title);
@@ -7268,7 +7475,10 @@ export const getCreateStyleUrl = () => {
 	return `${ELITE_API_URL}/product/style`;
 };
 
-export const createStyle = async (createStyleRequest: CreateStyleRequest, options?: RequestInit) => {
+export const createStyle = async (
+	createStyleRequest: CreateStyleRequest,
+	options?: RequestInit
+): Promise<createStyleResponse> => {
 	return customFetch<createStyleResponse>(getCreateStyleUrl(), {
 		...options,
 		method: 'POST',
@@ -7305,7 +7515,7 @@ export const getDeleteStyleUrl = (styleId: number | string) => {
 	return `${ELITE_API_URL}/product/style/${styleId}`;
 };
 
-export const deleteStyle = async (styleId: number | string, options?: RequestInit) => {
+export const deleteStyle = async (styleId: number | string, options?: RequestInit): Promise<deleteStyleResponse> => {
 	return customFetch<deleteStyleResponse>(getDeleteStyleUrl(styleId), {
 		...options,
 		method: 'DELETE',
@@ -7330,7 +7540,7 @@ export const getGetStyleUrl = (styleId: number | string) => {
 	return `${ELITE_API_URL}/product/style/${styleId}`;
 };
 
-export const getStyle = async (styleId: number | string, options?: RequestInit) => {
+export const getStyle = async (styleId: number | string, options?: RequestInit): Promise<getStyleResponse> => {
 	return customFetch<getStyleResponse>(getGetStyleUrl(styleId), {
 		...options,
 		method: 'GET',
@@ -7378,7 +7588,7 @@ export const updateStyle = async (
 	styleId: number | string,
 	weightStyleWithDataDto: WeightStyleWithDataDto,
 	options?: RequestInit
-) => {
+): Promise<updateStyleResponse> => {
 	return customFetch<updateStyleResponse>(getUpdateStyleUrl(styleId), {
 		...options,
 		method: 'POST',
@@ -7418,7 +7628,11 @@ export const getDeleteStyleImageUrl = (styleId: number | string, imagePath: stri
 	return `${ELITE_API_URL}/product/style/${styleId}/images/${imagePath}`;
 };
 
-export const deleteStyleImage = async (styleId: number | string, imagePath: string, options?: RequestInit) => {
+export const deleteStyleImage = async (
+	styleId: number | string,
+	imagePath: string,
+	options?: RequestInit
+): Promise<deleteStyleImageResponse> => {
 	return customFetch<deleteStyleImageResponse>(getDeleteStyleImageUrl(styleId, imagePath), {
 		...options,
 		method: 'DELETE',
@@ -7443,7 +7657,7 @@ export const getGetStylesUrl = () => {
 	return `${ELITE_API_URL}/product/styles`;
 };
 
-export const getStyles = async (options?: RequestInit) => {
+export const getStyles = async (options?: RequestInit): Promise<getStylesResponse> => {
 	return customFetch<getStylesResponse>(getGetStylesUrl(), {
 		...options,
 		method: 'GET',
@@ -7469,7 +7683,7 @@ export const getGetAllWeightsUrl = () => {
 	return `${ELITE_API_URL}/weights/all`;
 };
 
-export const getAllWeights = async (options?: RequestInit) => {
+export const getAllWeights = async (options?: RequestInit): Promise<getAllWeightsResponse> => {
 	return customFetch<getAllWeightsResponse>(getGetAllWeightsUrl(), {
 		...options,
 		method: 'GET',
@@ -7520,7 +7734,7 @@ export const getWeightForProfile = async (
 	profileUuid: string,
 	params?: GetWeightForProfileParams,
 	options?: RequestInit
-) => {
+): Promise<getWeightForProfileResponse> => {
 	return customFetch<getWeightForProfileResponse>(getGetWeightForProfileUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
@@ -7566,7 +7780,7 @@ export const getWeightForSelected = async (
 	playerUuid: string,
 	params?: GetWeightForSelectedParams,
 	options?: RequestInit
-) => {
+): Promise<getWeightForSelectedResponse> => {
 	return customFetch<getWeightForSelectedResponse>(getGetWeightForSelectedUrl(playerUuid, params), {
 		...options,
 		method: 'GET',
@@ -7613,7 +7827,7 @@ export const getWeightForProfiles = async (
 	playerUuid: string,
 	params?: GetWeightForProfilesParams,
 	options?: RequestInit
-) => {
+): Promise<getWeightForProfilesResponse> => {
 	return customFetch<getWeightForProfilesResponse>(getGetWeightForProfilesUrl(playerUuid, params), {
 		...options,
 		method: 'GET',
