@@ -1,0 +1,39 @@
+name: Update API
+
+on:
+    workflow_dispatch:
+    repository_dispatch:
+        types: [update-api]
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/create-github-app-token@v2
+              id: generate-token
+              with:
+                app-id: ${{ secrets.APP_ID }}
+                private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup
+              uses: ./.github/actions/setup
+
+            - name: Generate API client from latest spec
+              run: pnpm generate-api
+
+            - name: Create Pull Request for updated client
+              uses: peter-evans/create-pull-request@v7
+              with:
+                token: ${{ steps.generate-token.outputs.token }}
+                sign-commits: true
+                commit-message: "chore: Regenerate API client"
+                title: "API Client Update"
+                body: |
+                    An updated OpenAPI specification was pushed to the backend.
+                    This PR contains the newly generated TypeScript client and Zod schemas.
+                branch: "chore/api-client-update"
+                delete-branch: true
