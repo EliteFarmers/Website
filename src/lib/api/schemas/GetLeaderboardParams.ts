@@ -38,9 +38,4 @@ Default is profiles that have not been removed/wiped.
  * @nullable
  */
 	removed?: RemovedFilter | null;
-	/**
-	 * Use new leaderboard backend (will be default in the future)
-	 * @nullable
-	 */
-	new?: boolean | null;
 };

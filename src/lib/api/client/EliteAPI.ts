@@ -5445,7 +5445,7 @@ export const getLeaderboard = async (leaderboard: string, params?: GetLeaderboar
 };
 
 /**
- * @summary Get leaderboards
+ * @summary Get Leaderboards
  */
 export type getLeaderboardsResponse200 = {
 	data: LeaderboardsResponse;
