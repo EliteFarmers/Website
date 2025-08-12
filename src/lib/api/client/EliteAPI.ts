@@ -146,7 +146,8 @@ import { customFetch } from '../custom-fetch';
 import { ELITE_API_URL } from '$env/static/private';
 
 /**
- * @summary Get Minecraft Account
+ * Retrieves the Minecraft account information for a given player, along with an overview of their profiles and player data.
+ * @summary Get Account
  */
 export type getAccountResponse200 = {
 	data: MinecraftAccountDto;
