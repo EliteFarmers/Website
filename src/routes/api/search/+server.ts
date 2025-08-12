@@ -16,7 +16,7 @@ export async function GET({ url }) {
 	}
 
 	if (topPlayersUpdated < Date.now() - LEADERBOARD_UPDATE_INTERVAL) {
-		const data = await getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10, new: true });
+		const data = await getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10 });
 		const players = (data?.entries ?? []).slice(0, 10).map((entry) => entry.ign ?? '');
 
 		topPlayers = players;

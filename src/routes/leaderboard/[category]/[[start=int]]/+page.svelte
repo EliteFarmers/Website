@@ -14,6 +14,7 @@
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
 	import type { PageData } from './$types';
+	import IntervalSelect from './interval-select.svelte';
 	import LeaderboardFilter from './leaderboard-filter.svelte';
 	import LeaderboardPagination from './leaderboard-pagination.svelte';
 
@@ -76,7 +77,6 @@
 
 <section class="mt-16 flex w-full flex-col justify-center">
 	<h1 class="mt-8 mb-16 max-w-2xl self-center text-center text-4xl">{title}</h1>
-	<div class="flex w-full justify-end gap-4 text-center"></div>
 	<div class="my-2 flex flex-col items-end justify-center gap-2 rounded-lg lg:h-16 lg:flex-row">
 		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
 			<div class="flex w-full max-w-xl flex-row items-center justify-center gap-2 md:justify-start">
@@ -114,6 +114,7 @@
 						}}
 					/>
 				</form>
+				<IntervalSelect leaderboard={data.lb} />
 				<LeaderboardFilter
 					query="mode"
 					title="Game Mode"
