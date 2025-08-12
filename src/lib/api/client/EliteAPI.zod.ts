@@ -10,7 +10,8 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 import { z as zod } from 'zod';
 
 /**
- * @summary Get Minecraft Account
+ * Retrieves the Minecraft account information for a given player, along with an overview of their profiles and player data.
+ * @summary Get Account
  */
 export const zodGetAccountParams = zod.object({
 	player: zod.string().describe('Player uuid or ign'),
