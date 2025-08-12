@@ -105,7 +105,9 @@
 							{player}
 						</Command.Item>
 					{:else}
-						<Command.Empty>No players found.</Command.Empty>
+						{#if searchStr == ''}
+							<p class="text-sm text-muted-foreground text-center">No players found.</p>
+						{/if}
 					{/each}
 				</Command.Group>
 			</Command.List>
