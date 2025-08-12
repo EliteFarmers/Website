@@ -25,10 +25,6 @@ export type GetPlayerRank2Params = {
 	/**
 	 * @nullable
 	 */
-	new?: boolean | null;
-	/**
-	 * @nullable
-	 */
 	interval?: string | null;
 	/**
 	 * @nullable

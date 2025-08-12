@@ -30,7 +30,10 @@ jobs:
               with:
                 token: ${{ steps.generate-token.outputs.token }}
                 sign-commits: true
-                commit-message: "chore: Regenerate API client"
+                commit-message: |
+                    chore: Regenerate API client
+
+                    Co-authored-by: Kaeso <24925519+ptlthg@users.noreply.github.com>
                 title: "API Client Update"
                 body: |
                     An updated OpenAPI specification was pushed to the backend.

@@ -43,7 +43,6 @@ export const load = (async ({ params, parent, url }) => {
 			limit: 20,
 			mode,
 			interval,
-			new: true,
 			removed: removed ? (+removed as 0) : undefined,
 		});
 

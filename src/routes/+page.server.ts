@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 		};
 	}
 
-	const leaderboard = getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10, new: true });
+	const leaderboard = getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10 });
 
 	setHeaders({
 		'Cache-Control': `max-age=${LEADERBOARD_UPDATE_INTERVAL / 1000}, public`,

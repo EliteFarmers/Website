@@ -17,6 +17,9 @@ export const getLeaderboardSlice = query(
 		const { data: leaderboard } = await getLeaderboard(params.leaderboard, {
 			offset: params.offset,
 			limit: params.limit,
+			mode: params.mode,
+			removed: params.removed,
+			interval: params.interval,
 		}).catch(() => ({
 			data: null,
 		}));

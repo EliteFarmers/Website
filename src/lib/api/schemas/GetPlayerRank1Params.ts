@@ -26,11 +26,6 @@ export type GetPlayerRank1Params = {
 	 */
 	atRank?: number | null;
 	/**
-	 * Use new leaderboard backend (will be removed in the future)
-	 * @nullable
-	 */
-	new?: boolean | null;
-	/**
 	 * Time interval key of a monthly leaderboard. Format: yyyy-MM
 	 * @nullable
 	 */

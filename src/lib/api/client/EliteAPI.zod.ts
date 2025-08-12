@@ -5671,7 +5671,6 @@ export const zodGetLeaderboardParams = zod.object({
 export const zodGetLeaderboardQueryOffsetDefault = 0;
 export const zodGetLeaderboardQueryLimitDefault = 20;
 export const zodGetLeaderboardQueryRemovedDefault = 0;
-export const zodGetLeaderboardQueryNewDefault = true;
 
 export const zodGetLeaderboardQueryParams = zod.object({
 	offset: zod.number().nullish(),
@@ -5689,10 +5688,6 @@ export const zodGetLeaderboardQueryParams = zod.object({
 		.describe(
 			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\nDefault is profiles that have not been removed/wiped.\n0 = Not Removed\n1 = Removed\n2 = All'
 		),
-	new: zod
-		.boolean()
-		.default(zodGetLeaderboardQueryNewDefault)
-		.describe('Use new leaderboard backend (will be default in the future)'),
 });
 
 export const zodGetLeaderboardResponseEntriesItemMetaPrefixMax = 16;
@@ -5703,6 +5698,7 @@ export const zodGetLeaderboardResponse = zod.object({
 	title: zod.string(),
 	shortTitle: zod.string().nullish(),
 	interval: zod.string().nullish(),
+	firstInterval: zod.string().nullish(),
 	limit: zod.number(),
 	offset: zod.number(),
 	maxEntries: zod.number(),
@@ -5755,7 +5751,7 @@ export const zodGetLeaderboardResponse = zod.object({
 });
 
 /**
- * @summary Get leaderboards
+ * @summary Get Leaderboards
  */
 export const zodGetLeaderboardsResponse = zod.object({
 	leaderboards: zod.record(
@@ -5819,7 +5815,6 @@ export const zodGetPlayerRank1Params = zod.object({
 
 export const zodGetPlayerRank1QueryIncludeUpcomingDefault = false;
 export const zodGetPlayerRank1QueryUpcomingDefault = 0;
-export const zodGetPlayerRank1QueryNewDefault = true;
 export const zodGetPlayerRank1QueryRemovedDefault = 0;
 
 export const zodGetPlayerRank1QueryParams = zod.object({
@@ -5829,10 +5824,6 @@ export const zodGetPlayerRank1QueryParams = zod.object({
 		.nullish()
 		.describe('Amount of upcoming players to include (max 100). Only works with new leaderboard backend'),
 	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
-	new: zod
-		.boolean()
-		.default(zodGetPlayerRank1QueryNewDefault)
-		.describe('Use new leaderboard backend (will be removed in the future)'),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
 		.string()
@@ -5921,14 +5912,12 @@ export const zodGetPlayerRank2Params = zod.object({
 
 export const zodGetPlayerRank2QueryIncludeUpcomingDefault = false;
 export const zodGetPlayerRank2QueryUpcomingDefault = 0;
-export const zodGetPlayerRank2QueryNewDefault = true;
 export const zodGetPlayerRank2QueryRemovedDefault = 0;
 
 export const zodGetPlayerRank2QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish(),
 	upcoming: zod.number().nullish(),
 	atRank: zod.number().nullish(),
-	new: zod.boolean().default(zodGetPlayerRank2QueryNewDefault),
 	interval: zod.string().nullish(),
 	mode: zod.string().nullish(),
 	removed: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),

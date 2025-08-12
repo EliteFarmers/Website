@@ -32,7 +32,6 @@ export const load = (async ({ params, parent, url, request }) => {
 		mode,
 		interval,
 		removed: removed ? (+removed as RemovedFilter) : undefined,
-		new: true,
 	};
 
 	const { data: rank } = leaderboard?.profile

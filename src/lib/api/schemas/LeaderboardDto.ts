@@ -16,6 +16,8 @@ export interface LeaderboardDto {
 	shortTitle?: string | null;
 	/** @nullable */
 	interval?: string | null;
+	/** @nullable */
+	firstInterval?: string | null;
 	limit: number;
 	offset: number;
 	maxEntries: number;
