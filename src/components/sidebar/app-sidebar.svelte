@@ -1,25 +1,24 @@
 <script lang="ts" module>
-	import Search from '@lucide/svelte/icons/search';
-
 	import { SIDEBAR_NAV } from '$content/sidebar';
+	import Search from '@lucide/svelte/icons/search';
 </script>
 
 <script lang="ts">
-	import NavMain from '$comp/sidebar/nav-main.svelte';
-	import * as Sidebar from '$ui/sidebar';
-	import SideBarFooter from './side-bar-footer.svelte';
-	import { ScrollArea } from '$ui/scroll-area';
 	import SearchMenu from '$comp/header/search-menu.svelte';
+	import NavMain from '$comp/sidebar/nav-main.svelte';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { cn } from '$lib/utils';
-	import { getSidebarNav } from '$lib/hooks/sidebar-nav.svelte';
-	import NavDynamic from './nav-dynamic.svelte';
+	import { ScrollArea } from '$ui/scroll-area';
+	import * as Sidebar from '$ui/sidebar';
 	import type { Snippet } from 'svelte';
+	import NavDynamic from './nav-dynamic.svelte';
+	import SideBarFooter from './side-bar-footer.svelte';
 
 	let searchOpen = $state(false);
 
 	let { children }: { children?: Snippet } = $props();
 
-	const sidebarNav = getSidebarNav();
+	const pageCtx = getPageCtx();
 </script>
 
 <Sidebar.Header class="mt-2">
@@ -57,8 +56,8 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if sidebarNav.current.length}
-				<NavDynamic items={sidebarNav.current} title={sidebarNav.name} />
+			{#if pageCtx.sidebar.length}
+				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
 			{/if}
 			<NavMain items={SIDEBAR_NAV} title="Main" />
 			{@render children?.()}

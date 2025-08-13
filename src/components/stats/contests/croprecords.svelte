@@ -1,14 +1,14 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ContestParticipationWithTimestampDto } from '$lib/api';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 	import Recordparticipation from './recordparticipation.svelte';
-	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
 
 	interface Props {
 		crop?: string;
-		entries?: components['schemas']['ContestParticipationWithTimestampDto'][];
+		entries?: ContestParticipationWithTimestampDto[];
 	}
 
 	let { crop = 'Wheat', entries = [] }: Props = $props();

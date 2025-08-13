@@ -1,15 +1,15 @@
+import {
+	addStyleImage,
+	createStyle,
+	deleteStyle,
+	deleteStyleImage,
+	getStyle,
+	updateStyle,
+	type WeightStyleWithDataDto,
+} from '$lib/api';
+import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
 import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { components } from '$lib/api/api';
-import {
-	AddCosmeticImage,
-	CreateWeightStyle,
-	DeleteWeightStyle,
-	GetWeightStyle,
-	RemoveCosmeticImage,
-	UpdateWeightStyle,
-} from '$lib/api/elite';
-import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { session } = await parent();
@@ -19,7 +19,7 @@ export const load = (async ({ parent, locals, params }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: style } = await GetWeightStyle(params.styleId).catch(() => ({ data: undefined }));
+	const { data: style } = await getStyle(params.styleId).catch(() => ({ data: undefined }));
 
 	if (!style) {
 		throw error(404, 'Style Not Found');
@@ -43,7 +43,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const body: components['schemas']['WeightStyleWithDataDto'] = {
+		const body: WeightStyleWithDataDto = {
 			id: +styleId,
 			name: (data.get('name') as string) || undefined,
 			styleFormatter: (data.get('formatter') as string) || undefined,
@@ -60,10 +60,10 @@ export const actions: Actions = {
 				return fail(400, { error: 'Invalid style data.' });
 			}
 
-			body.data = styleData as components['schemas']['WeightStyleDataDto'];
+			body.data = styleData as WeightStyleWithDataDto['data'];
 		}
 
-		const { error: e, response } = await UpdateWeightStyle(locals.access_token, styleId, body);
+		const { error: e, response } = await updateStyle(styleId, body);
 
 		if (e) {
 			return fail(response.status, { error: e });
@@ -83,7 +83,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const body: components['schemas']['WeightStyleWithDataDto'] = {
+		const body: WeightStyleWithDataDto = {
 			id: +styleId,
 			name: (data.get('name') as string) || undefined,
 			styleFormatter: (data.get('formatter') as string) || undefined,
@@ -100,10 +100,10 @@ export const actions: Actions = {
 				return fail(400, { error: 'Invalid style data.' });
 			}
 
-			body.leaderboard = styleData as components['schemas']['LeaderboardStyleDataDto'];
+			body.leaderboard = styleData as WeightStyleWithDataDto['leaderboard'];
 		}
 
-		const { error: e, response } = await UpdateWeightStyle(locals.access_token, styleId, body);
+		const { error: e, response } = await updateStyle(styleId, body);
 
 		if (e) {
 			return fail(response.status, { error: e });
@@ -123,10 +123,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const { error: e, response } = await DeleteWeightStyle(locals.access_token, styleId);
+		const { error: e } = await deleteStyle(styleId);
 
 		if (e) {
-			return fail(response.status, { error: e });
+			return fail(400, { error: e });
 		}
 
 		redirect(307, '/admin/styles');
@@ -143,17 +143,17 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const { data: style } = await GetWeightStyle(styleId).catch(() => ({ data: undefined }));
+		const { data: style } = await getStyle(styleId).catch(() => ({ data: undefined }));
 
 		if (!style) {
 			return fail(404, { error: 'Style not found.' });
 		}
 
-		const { error: e, response } = await CreateWeightStyle(locals.access_token, {
+		const { error: e, response } = await createStyle({
 			name: style.name + ' (Copy)',
 			styleFormatter: style.styleFormatter,
 			description: style.description,
-			data: style.data as components['schemas']['WeightStyleDataDto'],
+			data: style.data ?? { elements: { background: { fill: '#ffffff' } } },
 		});
 
 		if (e) {
@@ -174,7 +174,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid style ID.' });
 		}
 
-		const image = data.get('image') as string;
+		const image = data.get('image') as Blob;
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
 		const thumbnail = data.get('thumbnail') === 'true';
@@ -183,15 +183,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response, error: e } = await AddCosmeticImage(
-			locals.access_token,
+		const { response, error: e } = await addStyleImage(
 			styleId,
 			{
 				image: image,
 				title: title,
 				description: description,
 			},
-			thumbnail
+			{ thumbnail }
 		);
 
 		if (!response.ok || e) {
@@ -218,7 +217,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response, error: e } = await RemoveCosmeticImage(locals.access_token, productId, image);
+		const { response, error: e } = await deleteStyleImage(productId, image);
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e });

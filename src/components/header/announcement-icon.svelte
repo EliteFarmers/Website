@@ -1,14 +1,14 @@
 <script lang="ts" module>
-	import type { components } from '$lib/api/api';
-	import Megaphone from '@lucide/svelte/icons/megaphone';
-	import Newspaper from '@lucide/svelte/icons/newspaper';
+	import type { AnnouncementDto, AnnouncementType } from '$lib/api';
 	import ArrowBigUpDash from '@lucide/svelte/icons/arrow-big-up-dash';
-	import LetterText from '@lucide/svelte/icons/letter-text';
 	import Calendar from '@lucide/svelte/icons/calendar';
 	import Construction from '@lucide/svelte/icons/construction';
+	import LetterText from '@lucide/svelte/icons/letter-text';
+	import Megaphone from '@lucide/svelte/icons/megaphone';
+	import Newspaper from '@lucide/svelte/icons/newspaper';
 	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 
-	const icons: Record<components['schemas']['AnnouncementType'], typeof Megaphone> = {
+	const icons: Record<AnnouncementType, typeof Megaphone> = {
 		other: Megaphone,
 		article: LetterText,
 		update: ArrowBigUpDash,
@@ -21,7 +21,7 @@
 
 <script lang="ts">
 	type Props = {
-		announcement: components['schemas']['AnnouncementDto'];
+		announcement: AnnouncementDto;
 		class?: string;
 	};
 

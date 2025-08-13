@@ -38,4 +38,4 @@ runs:
           run: |
               echo "ls -a ."
               ls -a .
-              mv .env.example .env
+              cp .env.example .env

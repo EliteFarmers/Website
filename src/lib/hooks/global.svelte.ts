@@ -1,30 +1,30 @@
 import { page } from '$app/state';
-import type { components } from '$lib/api/api';
+import type { AnnouncementDto, AuthorizedAccountDto } from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
 import { PersistedState } from 'runed';
 import { getContext, setContext, tick } from 'svelte';
 
 type ConstructorData = {
-	user?: components['schemas']['AuthorizedAccountDto'] | null;
+	user?: AuthorizedAccountDto | null;
 	session?: AuthSession | null;
-	announcements?: components['schemas']['AnnouncementDto'][];
+	announcements?: AnnouncementDto[];
 };
 
 type PersistedData = {
 	dismissedAnnouncements: string[];
-	settings: components['schemas']['AuthorizedAccountDto']['settings'];
+	settings: AuthorizedAccountDto['settings'];
 	minecraftAccounts?: string[];
 };
 
 export class GlobalContext {
-	#user = $state<components['schemas']['AuthorizedAccountDto'] | undefined>();
+	#user = $state<AuthorizedAccountDto | undefined>();
 	#session = $state<AuthSession | undefined>();
 	#authorized = $derived(this.#session !== undefined);
 	#data = new PersistedState<PersistedData>('global-data', {
 		dismissedAnnouncements: [],
 		settings: {},
 	});
-	#announcements = $state<components['schemas']['AnnouncementDto'][]>([]);
+	#announcements = $state<AnnouncementDto[]>([]);
 	#initialized = $state(false);
 
 	constructor(data: ConstructorData) {
@@ -63,7 +63,7 @@ export class GlobalContext {
 		}
 	}
 
-	set user(user: components['schemas']['AuthorizedAccountDto'] | undefined | null) {
+	set user(user: AuthorizedAccountDto | undefined | null) {
 		this.#user = user ?? undefined;
 
 		if (this.#session?.id !== user?.id) {

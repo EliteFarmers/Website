@@ -1,11 +1,11 @@
+import type { LeaderboardRanksResponse } from '$lib/api';
 import { renderComponent } from '$ui/data-table';
-import type { ColumnDef } from '@tanstack/table-core';
-import DataTableColumnHeader from './data-table-column-header.svelte';
-import type { components } from '$lib/api/api';
 import Calendar from '@lucide/svelte/icons/calendar';
 import SquareActivity from '@lucide/svelte/icons/square-activity';
+import type { ColumnDef } from '@tanstack/table-core';
+import DataTableColumnHeader from './data-table-column-header.svelte';
 
-export type LbRanking = components['schemas']['LeaderboardRanksResponse']['ranks'][number] & {
+export type LbRanking = LeaderboardRanksResponse['ranks'][number] & {
 	id: string;
 	interval: 'none' | 'monthly';
 };

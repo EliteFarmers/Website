@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
-	import WeightNum from './weight-num.svelte';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { drawBackgroundCanvas } from '$lib/styles/maker';
 	import { isValidWeightStyle } from '$lib/styles/style';
-	import TextElement from './text-element.svelte';
 	import StatElements from './stat-elements.svelte';
-	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import TextElement from './text-element.svelte';
+	import WeightNum from './weight-num.svelte';
 
 	const ctx = getStatsContext();
 	const style = $derived(isValidWeightStyle(ctx.style?.data) ? ctx.style.data : undefined);
@@ -14,8 +14,8 @@
 	const rankText = $derived(rank !== -1 ? `#${rank}` : '');
 
 	const bg = $derived(
-		style?.elements?.name?.outline?.fill
-			? style.elements.name.outline.fill +
+		style?.elements?.name?.outline
+			? (style.elements.name.outline.fill ?? '#000000') +
 					Math.round((style.elements.name.outline.opacity ?? 0.8) * 255).toString(16)
 			: 'inherit'
 	);
@@ -35,12 +35,12 @@
 	</canvas>
 	<div class="absolute top-0 right-0 bottom-0 left-0 z-10 flex h-full flex-row items-center justify-between p-4">
 		<div
-			class="flex h-full w-full flex-row items-center justify-center gap-4 @md:gap-8 {bg !== 'inherit'
+			class="flex h-full w-full flex-row items-center justify-center gap-4 @md:gap-8 {style
 				? '@md:justify-start'
 				: ''}"
 		>
 			<img
-				class="hidden h-full flex-1 self-center object-contain @md:inline-block @md:flex-none"
+				class="hidden h-full flex-1 self-center object-contain @md:ml-8 @md:inline-block @md:flex-none"
 				src="https://mc-heads.net/body/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
@@ -49,21 +49,30 @@
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
 				<div class="hidden flex-row items-center gap-2 pt-2 @md:flex">
-					<div class={bg === 'inherit' ? 'rounded-md border' : ''}>
+					<div class={!style ? 'rounded-md border' : ''}>
 						<PlayerName
 							bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
 								?.fill ?? 'inherit'};"
+							class={style ? 'text-shadow-[brightness(currentColor, 70%)]/30 text-shadow-md' : ''}
 						/>
 					</div>
 					{#if rankText}
-						<TextElement class="h-full" element={style?.elements?.rank}>
-							<div class="{bg === 'inherit' ? 'rounded-md border' : ''} h-full">
+						<TextElement
+							class="{style
+								? 'text-shadow-[brightness(currentColor, 70%)]/30 text-shadow-md'
+								: ''} h-full"
+							element={style?.elements?.rank}
+						>
+							<div class="{!style ? 'rounded-md border' : ''} h-full">
 								{@render rankLink()}
 							</div>
 						</TextElement>
 					{/if}
 				</div>
-				<TextElement element={style?.elements?.weight}>
+				<TextElement
+					element={style?.elements?.weight}
+					class={style ? 'text-shadow-[brightness(currentColor, 70%)]/30 text-shadow-md' : ''}
+				>
 					<div class="flex flex-col items-end">
 						<WeightNum />
 						{#if bg == 'inherit'}

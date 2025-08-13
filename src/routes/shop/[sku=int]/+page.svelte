@@ -1,29 +1,29 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
-	import WeightStyle from '$comp/monetization/weight-style.svelte';
-	import type { PageData } from './$types';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import ProductPrice from '$comp/monetization/product-price.svelte';
+	import ProductUnlock from '$comp/monetization/product-unlock.svelte';
+	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import Badge from '$comp/stats/badge.svelte';
+	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
+	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
 	import * as Carousel from '$ui/carousel';
-	import * as Popover from '$ui/popover';
 	import * as Dialog from '$ui/dialog';
-	import { Button } from '$ui/button';
+	import * as Popover from '$ui/popover';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Heart from '@lucide/svelte/icons/heart';
 	import Image from '@lucide/svelte/icons/image';
+	import Info from '@lucide/svelte/icons/info';
+	import Package from '@lucide/svelte/icons/package';
 	import Palette from '@lucide/svelte/icons/palette';
-	import Tag from '@lucide/svelte/icons/tag';
-	import TicketX from '@lucide/svelte/icons/ticket-x';
 	import Replace from '@lucide/svelte/icons/replace';
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import ProductUnlock from '$comp/monetization/product-unlock.svelte';
-	import Badge from '$comp/stats/badge.svelte';
-	import Package from '@lucide/svelte/icons/package';
-	import Info from '@lucide/svelte/icons/info';
-	import Heart from '@lucide/svelte/icons/heart';
-	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
-	import { enhance } from '$app/forms';
-	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
+	import Tag from '@lucide/svelte/icons/tag';
+	import TicketX from '@lucide/svelte/icons/ticket-x';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -37,9 +37,9 @@
 
 	const crumbs = $derived<Crumb[]>([{ name: 'Shop', href: '/shop' }, { name: product.name }]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	let claimModalOpen = $state(false);

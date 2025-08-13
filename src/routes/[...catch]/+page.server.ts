@@ -1,9 +1,9 @@
 import {
 	PUBLIC_COMMUNITY_INVITE,
 	PUBLIC_DONATION_URL,
+	PUBLIC_PRIVACY_URL,
 	PUBLIC_SUPPORT_SERVER_INVITE,
 	PUBLIC_TOS_URL,
-	PUBLIC_PRIVACY_URL,
 } from '$env/static/public';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { BadgeDto, UserBadgeDto } from '$lib/api';
 	import * as Popover from '$ui/popover';
 
 	interface Props {
-		badge: components['schemas']['UserBadgeDto'] | components['schemas']['BadgeDto'];
+		badge: UserBadgeDto | BadgeDto;
 	}
 
 	let { badge }: Props = $props();

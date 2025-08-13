@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { GuildDetailsDto } from '$lib/api';
 
 	interface Props {
-		guild: Partial<components['schemas']['GuildDetailsDto']> | undefined;
+		guild: Partial<GuildDetailsDto> | undefined;
 		size?: keyof typeof sizes;
 		class?: string | undefined | null;
 	}

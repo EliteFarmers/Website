@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import type { GuildDetailsDto } from '$lib/api';
 	import Users from '@lucide/svelte/icons/users';
 
 	interface Props {
 		lazy?: boolean;
-		guild: components['schemas']['GuildDetailsDto'];
+		guild: GuildDetailsDto;
 	}
 
 	let { lazy = true, guild }: Props = $props();

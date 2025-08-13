@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Sidebar from '$ui/sidebar';
+	import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from '$ui/sidebar/constants';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -10,6 +11,11 @@
 	const sidebar = Sidebar.useSidebar();
 </script>
 
-<div class="mx-4 {!sidebar.isMobile ? (sidebar.open ? 'md:mr-66' : 'md:mr-28') : 'md:mr-12 md:ml-8'} @container">
-	{@render children?.()}
+<div class="@container">
+	<div
+		class="mx-4 @7xl:mr-[calc(var(--sidebarWidth)+1rem)]"
+		style="--sidebarWidth: {sidebar.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON}"
+	>
+		{@render children?.()}
+	</div>
 </div>

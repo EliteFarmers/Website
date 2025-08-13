@@ -1,15 +1,15 @@
-import type { Crumb } from '$lib/hooks/breadcrumb.svelte';
-import ShieldPlus from '@lucide/svelte/icons/shield-plus';
+import type { Crumb } from '$lib/hooks/page.svelte';
 import Badge from '@lucide/svelte/icons/badge';
-import Layers from '@lucide/svelte/icons/layers';
-import Package from '@lucide/svelte/icons/package';
-import Palette from '@lucide/svelte/icons/palette';
 import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 import Command from '@lucide/svelte/icons/command';
-import UserPen from '@lucide/svelte/icons/user-pen';
-import Settings from '@lucide/svelte/icons/settings';
-import ServerCog from '@lucide/svelte/icons/server-cog';
+import Layers from '@lucide/svelte/icons/layers';
 import Megaphone from '@lucide/svelte/icons/megaphone';
+import Package from '@lucide/svelte/icons/package';
+import Palette from '@lucide/svelte/icons/palette';
+import ServerCog from '@lucide/svelte/icons/server-cog';
+import Settings from '@lucide/svelte/icons/settings';
+import ShieldPlus from '@lucide/svelte/icons/shield-plus';
+import UserPen from '@lucide/svelte/icons/user-pen';
 
 export interface NavItem {
 	name: string;

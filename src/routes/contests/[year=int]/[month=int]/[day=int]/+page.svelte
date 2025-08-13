@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
-	import type { PageData } from './$types';
-
 	import Head from '$comp/head.svelte';
-	import { page } from '$app/state';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
-	import { SkyBlockTime } from 'farming-weight';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { Button } from '$ui/button';
+	import { SkyBlockTime } from 'farming-weight';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -37,9 +35,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 
@@ -56,17 +54,15 @@
 			<Button
 				class="flex-1 rounded-lg p-2"
 				variant="secondary"
-				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day - 3}">Previous</Button
+				href="/contests/{data.year}/{data.month}/{data.day - 3}">Previous</Button
+			>
+			<Button class="flex-1 rounded-lg p-2" variant="secondary" href="/contests/{data.year}/{data.month}"
+				>View&nbsp;Month</Button
 			>
 			<Button
 				class="flex-1 rounded-lg p-2"
 				variant="secondary"
-				href="/contests/{page.params.year}/{page.params.month}">View&nbsp;Month</Button
-			>
-			<Button
-				class="flex-1 rounded-lg p-2"
-				variant="secondary"
-				href="/contests/{page.params.year}/{page.params.month}/{+page.params.day + 3}">Next</Button
+				href="/contests/{data.year}/{data.month}/{+data.day + 3}">Next</Button
 			>
 		</div>
 	</div>
@@ -82,7 +78,7 @@
 	<div class="mx-8 mt-4 mb-16 flex w-full flex-wrap justify-center gap-4 md:flex-row">
 		{#each contests ?? [] as contest ((contest.timestamp ?? 0) + (contest.crop ?? ''))}
 			<Singlecontest
-				timestamp={contest.timestamp ?? 0}
+				timestamp={(contest.timestamp as unknown as number) ?? 0}
 				crop={contest.crop}
 				participants={contest.participants}
 				entries={contest.participations}

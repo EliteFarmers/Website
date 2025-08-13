@@ -1,9 +1,9 @@
 <script lang="ts">
 	import {
-		PUBLIC_SUPPORT_SERVER_INVITE,
+		PUBLIC_COMMIT_HASH,
 		PUBLIC_COMMUNITY_INVITE,
 		PUBLIC_DONATION_URL,
-		PUBLIC_COMMIT_HASH,
+		PUBLIC_SUPPORT_SERVER_INVITE,
 	} from '$env/static/public';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';

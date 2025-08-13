@@ -1,31 +1,31 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import { enhance } from '$app/forms';
+	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
+	import type { EventDetailsDto, EventTeamWithMembersDto, EventTeamsWordListDto } from '$lib/api';
+	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
+	import SelectSimple from '$ui/select/select-simple.svelte';
 	import { getColumns, type AdminEventMember } from './columns.js';
 	import MemberTable from './data-table.svelte';
-	import * as Dialog from '$ui/dialog';
-	import { enhance } from '$app/forms';
-	import { Label } from '$ui/label';
-	import { Input } from '$ui/input';
-	import { Button } from '$ui/button';
-	import SelectSimple from '$ui/select/select-simple.svelte';
-	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 
 	interface Props {
-		event: components['schemas']['EventDetailsDto'];
+		event: EventDetailsDto;
 		members: AdminEventMember[];
-		teams: components['schemas']['EventTeamWithMembersDto'][] | undefined;
-		teamWords?: components['schemas']['EventTeamsWordListDto'];
+		teams: EventTeamWithMembersDto[] | undefined;
+		teamWords?: EventTeamsWordListDto;
 	}
 
 	let { members, teams, event, teamWords }: Props = $props();
 
 	let teamLookup = $derived.by(() => {
-		if (!teams) return [] as components['schemas']['EventTeamWithMembersDto'][];
+		if (!teams) return [] as EventTeamWithMembersDto[];
 		return Object.fromEntries(
 			teams.map((team) => {
 				return [team.id, team];
 			})
-		) as Record<number, components['schemas']['EventTeamWithMembersDto']>;
+		) as Record<number, EventTeamWithMembersDto>;
 	});
 
 	let pending = $state(false);

@@ -1,26 +1,26 @@
+import {
+	addTeamMemberAdmin,
+	banMemberAdmin,
+	createTeamAdmin,
+	deleteEventBannerAdmin,
+	deleteMemberAdmin,
+	deleteTeamAdmin,
+	forceAddMemberAdmin,
+	getBannedMembersAdmin,
+	getEventDefaults,
+	getGuildEventAdmin,
+	getGuildEventMembersAdmin,
+	getTeamsAdmin,
+	kickTeamMemberAdmin,
+	setEventBannerAdmin,
+	setTeamOwnerAdmin,
+	unbanMemberAdmin,
+	updateEventAdmin,
+	type EditEventDto,
+} from '$lib/api';
 import { CanManageGuild } from '$lib/utils';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import {
-	BanEventMember,
-	EditEvent,
-	GetAdminEventMembers,
-	GetEventBans,
-	GetAdminEventDetails,
-	UnbanEventMember,
-	SetEventBanner,
-	ClearEventBanner,
-	GetEventDefaults,
-	ForceAddEventMember,
-	PermDeleteEventMember,
-	GetAdminEventTeams,
-	AdminTransferEventTeamOwnership,
-	AdminKickTeamMember,
-	AdminDeleteTeam,
-	AddMemberToTeam,
-	AdminCreateEventTeam,
-} from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 
 export const load = (async ({ parent, params, locals }) => {
 	const { guild, authGuild, session } = await parent();
@@ -33,25 +33,25 @@ export const load = (async ({ parent, params, locals }) => {
 		throw error(403, 'You do not have permission to edit this guild.');
 	}
 
-	const { data: event } = await GetAdminEventDetails(token, guild.id, eventId).catch(() => ({ data: undefined }));
+	const { data: event } = await getGuildEventAdmin(guild.id, eventId).catch(() => ({ data: undefined }));
 
 	if (!event || event.guildId !== guild.id) {
 		throw error(404, 'Event not found');
 	}
 
-	const members = GetAdminEventMembers(token, event.guildId, event.id)
+	const members = getGuildEventMembersAdmin(event.guildId, event.id)
 		.then((r) => r.data)
 		.catch(() => undefined);
-	const bans = GetEventBans(token, event.guildId, event.id)
+	const bans = getBannedMembersAdmin(event.guildId, event.id)
 		.then((r) => r.data)
 		.catch(() => undefined);
-	const defaults = GetEventDefaults()
+	const defaults = getEventDefaults()
 		.then((r) => r.data)
 		.catch(() => undefined);
 
 	let teams = undefined;
 	if (event.mode !== 'solo') {
-		teams = GetAdminEventTeams(token, event.guildId, event.id)
+		teams = getTeamsAdmin(event.guildId, event.id)
 			.then((r) => r.data)
 			.catch(() => undefined);
 	}
@@ -94,18 +94,18 @@ export const actions: Actions = {
 		const endTime = endDate ? (new Date(endDate + '+00:00').getTime() / 1000).toString() : undefined;
 		const joinUntilTime = joinDate ? (new Date(joinDate + '+00:00').getTime() / 1000).toString() : undefined;
 
-		const body: components['schemas']['EditEventDto'] = {
+		const body: EditEventDto = {
 			name: title,
 			rules,
 			description,
 			prizeInfo: prizes,
-			startTime: startTime as unknown as number, // These are parsed into numbers in the API
-			endTime: endTime as unknown as number,
-			joinTime: joinUntilTime as unknown as number,
+			startTime: startTime as unknown as bigint, // These are parsed into numbers in the API
+			endTime: endTime as unknown as bigint,
+			joinTime: joinUntilTime as unknown as bigint,
 			guildId: guildId,
 		};
 
-		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -136,7 +136,7 @@ export const actions: Actions = {
 
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		const { response, error: e } = await BanEventMember(token, guildId, eventId, uuid, reason).catch((e) => {
+		const { response, error: e } = await banMemberAdmin(guildId, eventId, uuid, reason).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -165,7 +165,7 @@ export const actions: Actions = {
 		const uuid = data.get('uuid') as string;
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		await UnbanEventMember(token, guildId, eventId, uuid).catch((e) => {
+		await unbanMemberAdmin(guildId, eventId, uuid).catch((e) => {
 			console.log(e);
 			return fail(500, { error: 'Internal Server Error' });
 		});
@@ -190,7 +190,9 @@ export const actions: Actions = {
 		const image = (data.get('image') as string) || undefined;
 		if (!image) return fail(400, { error: 'Missing required field: banner' });
 
-		const { response, error: e } = await SetEventBanner(token, eventId, guildId, image).catch((e) => {
+		const { response, error: e } = await setEventBannerAdmin(eventId, guildId, {
+			image: image as unknown as Blob,
+		}).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -216,7 +218,7 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const { response, error: e } = await ClearEventBanner(token, eventId, guildId).catch((e) => {
+		const { response, error: e } = await deleteEventBannerAdmin(eventId, guildId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -242,7 +244,7 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const body: components['schemas']['EditEventDto'] = {
+		const body: EditEventDto = {
 			guildId: guildId,
 			weightData: {
 				cropWeights: {
@@ -260,7 +262,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -286,7 +288,7 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const body: components['schemas']['EditEventDto'] = {
+		const body: EditEventDto = {
 			guildId: guildId,
 			medalData: {
 				medalWeights: {
@@ -299,7 +301,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -325,7 +327,7 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const body: components['schemas']['EditEventDto'] = {
+		const body: EditEventDto = {
 			guildId: guildId,
 			pestData: {
 				pestWeights: {
@@ -344,7 +346,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(token, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -389,14 +391,14 @@ export const actions: Actions = {
 			}
 		}
 
-		const body: components['schemas']['EditEventDto'] = {
+		const body: EditEventDto = {
 			guildId: guildId,
 			collectionData: {
 				collectionWeights: weights,
 			},
 		};
 
-		const { response, error: e } = await EditEvent(token, eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -428,7 +430,9 @@ export const actions: Actions = {
 		const profile = data.get('profile') as string;
 		if (!profile) return fail(400, { error: 'Missing required field: profile' });
 
-		const { response, error: e } = await ForceAddEventMember(token, guildId, eventId, uuid, profile).catch((e) => {
+		const { response, error: e } = await forceAddMemberAdmin(guildId, eventId, uuid, {
+			profileUuid: profile,
+		}).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -457,7 +461,7 @@ export const actions: Actions = {
 		const uuid = data.get('uuid') as string;
 		if (!uuid) return fail(400, { error: 'Missing required field: uuid' });
 
-		const { response, error: e } = await PermDeleteEventMember(token, guildId, eventId, uuid).catch((e) => {
+		const { response, error: e } = await deleteMemberAdmin(guildId, eventId, uuid).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -487,11 +491,8 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse, error: problem } = await AdminTransferEventTeamOwnership(token, {
-			guildId,
-			eventId,
-			teamId,
-			playerUuid: memberUuid,
+		const { response: codeResponse, error: problem } = await setTeamOwnerAdmin(guildId, eventId, teamId, {
+			player: memberUuid,
 		});
 
 		if (!codeResponse.ok) {
@@ -517,8 +518,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse, error: problem } = await AdminKickTeamMember(
-			token,
+		const { response: codeResponse, error: problem } = await kickTeamMemberAdmin(
 			guildId,
 			eventId,
 			memberUuid,
@@ -547,10 +547,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse, error: problem } = await AdminDeleteTeam(token, guildId, eventId, teamId);
+		const { response: codeResponse, error: problem } = await deleteTeamAdmin(guildId, eventId, teamId);
 
 		if (!codeResponse.ok) {
-			return fail(codeResponse.status, { error: 'Failed to kick team member!', problem });
+			return fail(codeResponse.status, { error: 'Failed to delete team!', problem });
 		}
 
 		return { success: true };
@@ -572,8 +572,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse, error: problem } = await AddMemberToTeam(
-			token,
+		const { response: codeResponse, error: problem } = await addTeamMemberAdmin(
 			guildId,
 			eventId,
 			teamId,
@@ -603,12 +602,17 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid request' });
 		}
 
-		const { response: codeResponse, error: problem } = await AdminCreateEventTeam(token, guildId, eventId, member, {
-			name: teamName
-				.split(' ')
-				.filter((w) => w)
-				.map((w) => w.replace('_', ' ')),
-		});
+		const { response: codeResponse, error: problem } = await createTeamAdmin(
+			guildId,
+			eventId,
+			{
+				name: teamName
+					.split(' ')
+					.filter((w) => w)
+					.map((w) => w.replace('_', ' ')),
+			},
+			{ userId: member }
+		);
 
 		if (!codeResponse.ok) {
 			return fail(codeResponse.status, { error: 'Failed to create team!', problem });

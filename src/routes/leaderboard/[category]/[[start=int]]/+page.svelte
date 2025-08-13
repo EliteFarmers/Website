@@ -1,21 +1,22 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import type { PageData } from './$types';
-	import Entry from '$comp/leaderboards/entry.svelte';
-	import { afterNavigate } from '$app/navigation';
-	import Head from '$comp/head.svelte';
-	import type { LeaderboardEntry } from '$lib/api/elite';
-	import { Switch } from '$ui/switch';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import { PersistedState } from 'runed';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import LeaderboardPagination from './leaderboard-pagination.svelte';
-	import LeaderboardFilter from './leaderboard-filter.svelte';
-	import PlayerSearch from '$comp/player-search.svelte';
 	import { enhance } from '$app/forms';
-	import { tick } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
+	import Head from '$comp/head.svelte';
+	import Entry from '$comp/leaderboards/entry.svelte';
+	import PlayerSearch from '$comp/player-search.svelte';
+	import type { LeaderboardEntry } from '$lib/api/elite';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
+	import { Switch } from '$ui/switch';
 	import Search from '@lucide/svelte/icons/search';
+	import { PersistedState } from 'runed';
+	import { tick } from 'svelte';
+	import type { PageData } from './$types';
+	import IntervalSelect from './interval-select.svelte';
+	import LeaderboardFilter from './leaderboard-filter.svelte';
+	import LeaderboardPagination from './leaderboard-pagination.svelte';
 
 	interface Props {
 		data: PageData;
@@ -55,11 +56,11 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	const favorites = getFavoritesContext();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 		favorites.setPage({
 			name: `#${offset} - ` + (data.settings.title || data.lb?.title),
 			href: page.url.pathname,
@@ -76,7 +77,6 @@
 
 <section class="mt-16 flex w-full flex-col justify-center">
 	<h1 class="mt-8 mb-16 max-w-2xl self-center text-center text-4xl">{title}</h1>
-	<div class="flex w-full justify-end gap-4 text-center"></div>
 	<div class="my-2 flex flex-col items-end justify-center gap-2 rounded-lg lg:h-16 lg:flex-row">
 		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
 			<div class="flex w-full max-w-xl flex-row items-center justify-center gap-2 md:justify-start">
@@ -114,6 +114,7 @@
 						}}
 					/>
 				</form>
+				<IntervalSelect leaderboard={data.lb} />
 				<LeaderboardFilter
 					query="mode"
 					title="Game Mode"

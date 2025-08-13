@@ -1,7 +1,15 @@
+import {
+	clearPlayerCooldowns,
+	deleteUpcomingContests,
+	grantTestEntitlement,
+	linkUserAccount,
+	refreshDiscordGuild,
+	removeTestEntitlement,
+	unlinkUserAccount,
+} from '$lib/api';
+import { reloadCachedItems } from '$lib/servercache';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { DELETE, POST } from '$lib/api/elite';
-import { reloadCachedItems } from '$lib/servercache';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -13,6 +21,7 @@ export const load = (async ({ parent, locals }) => {
 
 	return {
 		user,
+		subscriptions: locals.cache?.products.filter((p) => p.isSubscription) ?? [],
 	};
 }) satisfies PageServerLoad;
 
@@ -24,9 +33,7 @@ export const actions: Actions = {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
-		const { response } = await DELETE(`/admin/upcomingcontests`, {
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response } = await deleteUpcomingContests();
 
 		if (!response.ok) {
 			return fail(500, { error: 'Failed to delete contests' });
@@ -46,12 +53,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const playerId = data.get('player') as string;
 
-		const { response, error: e } = await POST(`/admin/cooldowns/player/{player}`, {
-			params: {
-				path: { player: playerId },
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response, error: e } = await clearPlayerCooldowns(playerId);
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to reset cooldowns' });
@@ -71,12 +73,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const guildId = data.get('guild') as string;
 
-		const { response, error: e } = await POST(`/admin/guild/{guildId}/refresh`, {
-			params: {
-				path: { guildId: guildId as unknown as number },
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response, error: e } = await refreshDiscordGuild(guildId);
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to reset cooldowns' });
@@ -110,12 +107,9 @@ export const actions: Actions = {
 		const playerId = data.get('player') as string;
 		const discordId = data.get('discord') as string;
 
-		const { response, error: e } = await POST('/admin/link-account', {
-			body: {
-				discordId: discordId,
-				player: playerId,
-			},
-			headers: { Authorization: `Bearer ${token}` },
+		const { response, error: e } = await linkUserAccount({
+			player: playerId,
+			discordId: discordId,
 		});
 
 		if (!response.ok) {
@@ -137,16 +131,61 @@ export const actions: Actions = {
 		const playerId = data.get('player') as string;
 		const discordId = data.get('discord') as string;
 
-		const { response, error: e } = await POST('/admin/unlink-account', {
-			body: {
-				discordId: discordId,
-				player: playerId,
-			},
-			headers: { Authorization: `Bearer ${token}` },
+		const { response, error: e } = await unlinkUserAccount({
+			discordId: discordId,
+			player: playerId,
 		});
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to unlink account' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	grantTestEntitlement: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token || !locals.session?.flags.admin) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const playerId = data.get('player') as string;
+		const productId = data.get('product') as string;
+
+		const { response, error: e } = await grantTestEntitlement(
+			playerId as unknown as number,
+			productId as unknown as number
+		);
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to grant entitlement' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	revokeTestEntitlement: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token || !locals.session?.flags.admin) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const playerId = data.get('player') as string;
+		const productId = data.get('product') as string;
+
+		const { response, error: e } = await removeTestEntitlement(
+			playerId as unknown as number,
+			productId as unknown as number
+		);
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to revoke entitlement' });
 		}
 
 		return {

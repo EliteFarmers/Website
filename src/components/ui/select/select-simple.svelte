@@ -2,16 +2,18 @@
 
 <script lang="ts" module>
 	export type T = string | number;
+	export type Extra = Record<string, unknown>;
 
-	export type Option<T = string | number> = {
+	export type Option<T = string | number, Extra = unknown> = {
 		value: T;
 		label: string;
 		color?: string;
-	};
+	} & Extra;
 </script>
 
-<script lang="ts" generics="T extends string | number">
+<script lang="ts" generics="T extends string | number, Extra extends object">
 	import { Select as Primitive } from 'bits-ui';
+	import type { Snippet } from 'svelte';
 	import * as Select from '.';
 
 	interface Props extends Primitive.TriggerProps {
@@ -20,10 +22,12 @@
 		required?: boolean;
 		id?: string | undefined;
 		name?: string | undefined;
-		options: Option<T>[];
+		options: Option<T, Extra>[];
+		option?: Snippet<[Option<T, Extra>]>;
 		value?: T | null | undefined;
 		placeholder?: string;
 		change?: (value?: T) => void;
+		size?: 'sm' | 'default';
 	}
 
 	let {
@@ -36,6 +40,7 @@
 		value = $bindable(undefined),
 		placeholder = 'Select option',
 		change = () => undefined,
+		option,
 		...rest
 	}: Props = $props();
 
@@ -61,7 +66,11 @@
 	<Select.Content class="max-h-96 overflow-y-auto overscroll-y-contain p-0">
 		{#each options as o (o.value)}
 			<Select.Item value={o.value.toString()}>
-				{@render item(o)}
+				{#if option}
+					{@render option(o)}
+				{:else}
+					{@render item(o)}
+				{/if}
 			</Select.Item>
 		{/each}
 	</Select.Content>

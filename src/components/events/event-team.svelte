@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
-	import EventMember from './event-member.svelte';
+	import type { EventDetailsDto, EventTeamWithMembersDto } from '$lib/api';
 	import * as Accordion from '$ui/accordion';
 	import Users from '@lucide/svelte/icons/users';
+	import EventMember from './event-member.svelte';
 
 	interface Props {
-		event: components['schemas']['EventDetailsDto'];
-		team: components['schemas']['EventTeamWithMembersDto'];
+		event: EventDetailsDto;
+		team: EventTeamWithMembersDto;
 		rank: number;
 		started: boolean;
 		running: boolean;
@@ -20,7 +20,7 @@
 	let full = $derived(event.maxTeamMembers && event.maxTeamMembers > 0 && members.length >= event.maxTeamMembers);
 </script>
 
-<Accordion.Item value={key} id={key} class="outline-border my-2 rounded-lg outline outline-2">
+<Accordion.Item value={key} id={key} class="outline-border my-2 rounded-lg outline-2">
 	<Accordion.Trigger class="w-full pr-4">
 		<div class="flex w-full flex-col gap-2 px-4">
 			<div class="flex flex-row items-center justify-between">

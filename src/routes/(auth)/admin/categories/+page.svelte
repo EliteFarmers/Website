@@ -1,17 +1,17 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
+	import type { ShopCategoryDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
-	import Settings from '@lucide/svelte/icons/settings';
-	import type { PageData } from './$types';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import { enhance } from '$app/forms';
-	import type { components } from '$lib/api/api';
-	import { Label } from '$ui/label';
 	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
 	import { Textarea } from '$ui/textarea';
-	import { dragHandleZone, dragHandle, type DndEvent } from 'svelte-dnd-action';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import GripHorizontal from '@lucide/svelte/icons/grip-horizontal';
+	import Settings from '@lucide/svelte/icons/settings';
+	import { dragHandle, dragHandleZone, type DndEvent } from 'svelte-dnd-action';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -23,7 +23,7 @@
 
 	let createCategoryModal = $state(false);
 
-	function handle(e: CustomEvent<DndEvent<components['schemas']['ShopCategoryDto']>>) {
+	function handle(e: CustomEvent<DndEvent<ShopCategoryDto>>) {
 		items = e.detail.items;
 	}
 </script>

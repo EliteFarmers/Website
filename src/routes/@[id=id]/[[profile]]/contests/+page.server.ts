@@ -1,11 +1,11 @@
-import type { PageServerLoad } from './$types';
-import type { components } from '$lib/api/api';
+import type { ContestParticipationDto } from '$lib/api';
 import { getSkyblockDate } from '$lib/format';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent }) => {
 	const { member } = await parent();
 
-	const years = {} as Partial<Record<number, components['schemas']['ContestParticipationDto'][]>>;
+	const years = {} as Partial<Record<number, ContestParticipationDto[]>>;
 
 	for (const contest of member.jacob?.contests ?? []) {
 		const year = getSkyblockDate(contest.timestamp ?? 0).year + 1;
@@ -16,7 +16,7 @@ export const load = (async ({ parent }) => {
 
 	// Sort each year by timestamp
 	for (const year in years) {
-		years[year] = years[year]?.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
+		years[year] = years[year]?.sort((a, b) => Number(b.timestamp ?? 0) - Number(a.timestamp ?? 0));
 	}
 
 	return {

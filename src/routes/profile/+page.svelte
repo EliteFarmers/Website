@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import Head from '$comp/head.svelte';
-	import DiscordAccount from './discordAccount.svelte';
+	import * as AlertDialog from '$ui/alert-dialog';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
-	import { invalidateAll } from '$app/navigation';
-	import type { PageData, ActionData } from './$types';
+	import type { Snippet } from 'svelte';
+	import type { ActionData, PageData } from './$types';
+	import DiscordAccount from './discordAccount.svelte';
 	import MinecraftAccount from './minecraftAccount.svelte';
 
 	interface Props {
@@ -15,65 +17,83 @@
 
 	let { data, form }: Props = $props();
 	let loading = $state(false);
+	let unlinkForm = $state<HTMLFormElement>(null!);
+	let mcUsername = $state<string | undefined>(undefined);
+	let dialogOpen = $state(false);
 
-	let user = $derived(data.user || undefined);
-	let primary = $derived(user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined);
-	let secondary = $derived(user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || []);
+	const user = $derived(data.user || undefined);
+	const primaryAccount = $derived(user?.minecraftAccounts?.find((mc) => mc.primaryAccount) || undefined);
+	const hasPrimary = $derived(!!primaryAccount);
+	const secondaryAccount = $derived(user?.minecraftAccounts?.filter((mc) => !mc.primaryAccount) || []);
 
 	let discordUsername = $derived(
 		user?.discriminator && user.discriminator !== '0' ? `${user?.username}#${user.discriminator}` : user?.username
 	);
+
+	function deleteConfirmation(username: string | undefined): void {
+		if (!username) return;
+		username = username.trim();
+		if (username.length === 0) return;
+		console.log('Unlinking Minecraft account:', username);
+		mcUsername = username;
+		dialogOpen = true;
+	}
 </script>
 
 <Head title="Profile" description="View your profile and link your Minecraft account!" />
 
 <div class="mx-2 my-16 flex flex-col justify-start gap-12">
-	<section class="flex flex-col items-start gap-4">
-		<h1 class="mb-4 text-3xl">Discord Account</h1>
-		{#key loading}
-			<DiscordAccount account={user} />
-		{/key}
-	</section>
-	<section class="flex flex-col items-start gap-4">
-		<h2 class="mb-4 text-2xl">Primary Minecraft Account</h2>
+	<DiscordAccount account={user} />
+	{#if hasPrimary}
+		{@render section(primaryAccountSection)}
+		{#snippet primaryAccountSection()}
+			<h2 class="mb-4 text-2xl">Primary Minecraft Account</h2>
 
-		{#if primary}
-			<MinecraftAccount mc={primary} />
-		{:else}
-			<p class="text-lg">No primary account set.</p>
-		{/if}
+			<MinecraftAccount mc={primaryAccount} confirmMcUnlink={deleteConfirmation} />
+		{/snippet}
+	{/if}
 
-		<p class="max-w-2xl text-sm">
-			Your primary account is the account that will be used for all Elite features by default. Secondary accounts
-			essentially only exist for the purpose of confirming ownership of the account.
-		</p>
-	</section>
-	<section class="flex flex-col items-start gap-4">
-		<h2 class="mb-4 text-2xl">Secondary Minecraft Account{secondary.length > 1 ? 's' : ''}</h2>
+	{#if secondaryAccount.length || hasPrimary}
+		{@render section(secondaryAccountSection)}
+		{#snippet secondaryAccountSection()}
+			<h2 class="text-2xl">Secondary Minecraft Account{secondaryAccount.length > 1 ? 's' : ''}</h2>
+			<p class="mb-4 max-w-2xl text-sm">
+				Your primary account is the account that will be used for all Elite features by default. Secondary
+				accounts essentially only exist for the purpose of confirming ownership of the account.
+			</p>
+			<div class="mx-auto grid grid-cols-2 gap-2">
+				{#if secondaryAccount.length > 0}
+					{#each secondaryAccount as mc, i (mc.id ?? i)}
+						<MinecraftAccount {mc} />
+					{/each}
+				{:else}
+					{@render emptyMessage('No secondary accounts linked.')}
+				{/if}
+			</div>
+		{/snippet}
+	{/if}
 
-		{#if secondary.length > 0}
-			{#each secondary as mc, i (mc.id ?? i)}
-				<MinecraftAccount {mc} />
-			{/each}
-		{:else}
-			<p class="text-lg">No secondary accounts linked.</p>
-		{/if}
-	</section>
-	<section class="flex flex-col items-start gap-4">
-		<h2 class="mb-4 text-2xl">Link/Unlink an Account</h2>
+	{@render section(accountLinkingSection)}
+	{#snippet accountLinkingSection()}
+		<h2 class="text-2xl">Link a Minecraft Account</h2>
 
 		<!-- Form to input username to link account -->
 		<form
 			method="POST"
-			class="w-full max-w-md"
+			class="mx-auto w-full max-w-md"
 			use:enhance={() => {
 				loading = true;
-				return async ({ result }) => {
+				return async ({ result, formElement }) => {
 					// Wait for a bit so the user can see the loading state
 					await new Promise((r) => setTimeout(r, 500));
 					loading = false;
 					await invalidateAll();
 					await applyAction(result);
+					if (result.status === 200) {
+						mcUsername = undefined;
+						dialogOpen = false;
+						formElement.reset();
+					}
 				};
 			}}
 		>
@@ -88,11 +108,14 @@
 					/>
 				</div>
 				<div class="flex w-full flex-col gap-2 lg:flex-row">
-					<Button type="submit" formaction="?/link" class="flex-1" variant="secondary" disabled={loading}>
-						Link Account
-					</Button>
-					<Button type="submit" formaction="?/unlink" class="flex-1" variant="secondary" disabled={loading}>
-						Unlink Account
+					<Button
+						type="submit"
+						formaction="?/link"
+						class="flex-1"
+						variant={hasPrimary ? 'secondary' : 'default'}
+						disabled={loading}
+					>
+						Link
 					</Button>
 				</div>
 				{#if form?.error}
@@ -104,11 +127,11 @@
 		</form>
 
 		{#if !user?.minecraftAccounts?.length}
-			<div class="flex flex-col text-center">
+			<div class="mx-auto flex flex-col text-center">
 				<h1 class="py-2 text-lg">
 					Ensure <span class="text-progress select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
 				</h1>
-				<video autoplay loop muted class="w-full max-w-md rounded-md" src="/images/HypixelLink.mp4">
+				<video autoplay loop muted playsinline class="w-full max-w-md rounded-md" src="/videos/HypixelLink.mp4">
 					<h1 class="text-md py-2">
 						(Enter <span class="text-progress select-all">{discordUsername}</span>, the video is just the
 						example)
@@ -116,5 +139,51 @@
 				</video>
 			</div>
 		{/if}
-	</section>
+	{/snippet}
 </div>
+
+<form
+	class="contents"
+	method="POST"
+	action="?/unlink"
+	bind:this={unlinkForm}
+	use:enhance={() => {
+		loading = true;
+		return async ({ result, update }) => {
+			if (result) loading = false;
+			update();
+			dialogOpen = false;
+		};
+	}}
+>
+	<input type="hidden" name="username" bind:value={mcUsername} />
+</form>
+
+<AlertDialog.Root bind:open={dialogOpen}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>Are you sure?</AlertDialog.Title>
+			<AlertDialog.Description>
+				This will unlink the {mcUsername} Minecraft account from your Elite account.
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+			<AlertDialog.Action
+				onclick={() => {
+					unlinkForm.requestSubmit();
+				}}>Continue</AlertDialog.Action
+			>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
+
+{#snippet section(children?: Snippet)}
+	<section class="flex flex-col items-start gap-4 rounded-lg border p-4">
+		{@render children?.()}
+	</section>
+{/snippet}
+
+{#snippet emptyMessage(text: string)}
+	<p class="text-muted-foreground w-full text-center text-sm">{text}</p>
+{/snippet}

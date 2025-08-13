@@ -1,24 +1,24 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import Head from '$comp/head.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import { getReadableSkyblockDate } from '$lib/format';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { ChannelType } from '$lib/utils';
+	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
 	import { Checkbox } from '$ui/checkbox';
+	import * as Dialog from '$ui/dialog';
+	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import * as Select from '$ui/select';
-	import * as Accordion from '$ui/accordion';
-	import * as Dialog from '$ui/dialog';
-	import type { PageData, ActionData } from './$types';
-	import { ChannelType } from '$lib/utils';
-	import Jacobsettings from './jacobsettings.svelte';
-	import { getReadableSkyblockDate } from '$lib/format';
-	import Head from '$comp/head.svelte';
 	import Plus from '@lucide/svelte/icons/plus';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
-	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import { page } from '$app/state';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import type { ActionData, PageData } from './$types';
+	import Jacobsettings from './jacobsettings.svelte';
 
 	interface Props {
 		data: PageData;
@@ -73,9 +73,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	const favorites = getFavoritesContext();
@@ -168,11 +168,11 @@
 										</form>
 										<div class="flex flex-col gap-8 md:flex-row">
 											<div class="flex flex-col gap-2">
-												<p>{new Date((t.start ?? 0) * 1000).toLocaleDateString()}</p>
+												<p>{new Date(Number(t.start ?? 0) * 1000).toLocaleDateString()}</p>
 												<p>{getReadableSkyblockDate(t.start ?? 0)}</p>
 											</div>
 											<div class="flex flex-col gap-2">
-												<p>{new Date((t.end ?? 0) * 1000).toLocaleDateString()}</p>
+												<p>{new Date(Number(t.end ?? 0) * 1000).toLocaleDateString()}</p>
 												<p>{getReadableSkyblockDate(t.end ?? 0)}</p>
 											</div>
 										</div>

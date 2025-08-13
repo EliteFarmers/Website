@@ -6,15 +6,15 @@ const Root = PopoverPrimitive.Root;
 const Close = PopoverPrimitive.Close;
 
 export {
-	Root,
-	Content,
-	Trigger,
 	Close,
+	Content,
 	Mobile,
 	//
 	Root as Popover,
-	Content as PopoverContent,
-	Trigger as PopoverTrigger,
 	Close as PopoverClose,
+	Content as PopoverContent,
 	Mobile as PopoverMobile,
+	Trigger as PopoverTrigger,
+	Root,
+	Trigger,
 };

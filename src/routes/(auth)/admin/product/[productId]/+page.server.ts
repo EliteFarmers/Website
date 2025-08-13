@@ -1,14 +1,14 @@
+import {
+	addCosmeticToProduct,
+	addProductImage,
+	deleteProductImage,
+	getAllProducts,
+	removeCosmeticToProduct,
+	updateProduct,
+	type EditProductDto,
+} from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { components } from '$lib/api/api';
-import {
-	AddCosmeticToProduct,
-	AddProductImage,
-	GetAdminProducts,
-	RemoveCosmeticFromProduct,
-	UpdateProduct,
-	RemoveProductImage,
-} from '$lib/api/elite';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { user, session } = await parent();
@@ -18,7 +18,7 @@ export const load = (async ({ parent, locals, params }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: products = [] } = await GetAdminProducts(token).catch(() => ({ data: undefined }));
+	const { data: products = [] } = await getAllProducts().catch(() => ({ data: undefined }));
 
 	const product = products.find((p) => p.id === params.productId);
 
@@ -59,9 +59,9 @@ export const actions: Actions = {
 				embedColors: (data.getAll('color') as string[])?.filter((c) => c) ?? undefined,
 				customEmoji: data.get('emoji') === 'true',
 			},
-		} satisfies components['schemas']['EditProductDto'];
+		} satisfies EditProductDto;
 
-		const { response, error: e } = await UpdateProduct(locals.access_token, productId, body);
+		const { response, error: e } = await updateProduct(productId, body);
 
 		if (!response.ok || e) {
 			console.log(e);
@@ -82,7 +82,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid product ID.' });
 		}
 
-		const image = data.get('image') as string;
+		const image = data.get('image') as Blob;
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
 		const thumbnail = data.get('thumbnail') === 'true';
@@ -91,15 +91,14 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response, error: e } = await AddProductImage(
-			locals.access_token,
+		const { response, error: e } = await addProductImage(
 			productId,
 			{
 				image: image,
 				title: title,
 				description: description,
 			},
-			thumbnail
+			{ thumbnail }
 		);
 
 		if (!response.ok || e) {
@@ -127,7 +126,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid image data.' });
 		}
 
-		const { response, error: e } = await RemoveProductImage(locals.access_token, productId, image);
+		const { response, error: e } = await deleteProductImage(productId, image);
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e ?? 'Failed to delete image!' });
@@ -148,7 +147,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid product Id or cosmetic.' });
 		}
 
-		const { response, error: e } = await AddCosmeticToProduct(locals.access_token, productId, cosmeticId);
+		const { response, error: e } = await addCosmeticToProduct(productId, cosmeticId);
 
 		if (!response.ok || e) {
 			console.log(e);
@@ -170,7 +169,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid product Id or cosmetic.' });
 		}
 
-		const { response, error: e } = await RemoveCosmeticFromProduct(locals.access_token, productId, cosmeticId);
+		const { response, error: e } = await removeCosmeticToProduct(productId, cosmeticId);
 
 		if (!response.ok || e) {
 			console.log(e);

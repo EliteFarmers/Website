@@ -1,6 +1,6 @@
+import { FetchDiscordUserData } from '$lib/api/auth';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { FetchDiscordUserData } from '$lib/api/auth';
 
 export const load = (async ({ locals, url, cookies, parent }) => {
 	await parent();
@@ -13,7 +13,7 @@ export const load = (async ({ locals, url, cookies, parent }) => {
 	}
 
 	if (!locals.user && locals.access_token) {
-		const discord = await FetchDiscordUserData(locals.access_token);
+		const discord = await FetchDiscordUserData();
 
 		locals.user = discord ?? undefined;
 	}

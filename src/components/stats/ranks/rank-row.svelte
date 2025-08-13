@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { HTMLAttributes } from 'svelte/elements';
-	import type { LbList, LbRanking } from './columns';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import type { HTMLAttributes } from 'svelte/elements';
+	import type { LbList, LbRanking } from './columns';
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		original: LbRanking;

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Contest from '$comp/stats/jacob/contest.svelte';
-	import { ScrollArea } from '$ui/scroll-area';
-	import type { components } from '$lib/api/api';
-	import { Button } from '$ui/button';
 	import { page } from '$app/state';
+	import Contest from '$comp/stats/jacob/contest.svelte';
+	import type { JacobDataDto } from '$lib/api';
+	import { Button } from '$ui/button';
+	import { ScrollArea } from '$ui/scroll-area';
 
 	interface Props {
-		contests: NonNullable<components['schemas']['JacobDataDto']['contests']>;
+		contests: NonNullable<JacobDataDto['contests']>;
 		remaining?: number;
 	}
 

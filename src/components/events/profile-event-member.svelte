@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ProfileEventMemberDto } from '$lib/api';
 	import * as Popover from '$ui/popover';
 
 	interface Props {
-		member: components['schemas']['ProfileEventMemberDto'];
+		member: ProfileEventMemberDto;
 		memberUuid: string;
 		ign: string;
 	}

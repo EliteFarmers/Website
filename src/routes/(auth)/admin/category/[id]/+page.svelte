@@ -1,17 +1,17 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
+	import type { ProductDto } from '$lib/api';
+	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
+	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { Switch } from '$ui/switch';
 	import { Textarea } from '$ui/textarea';
-	import ComboBox from '$ui/combobox/combo-box.svelte';
-	import { pending } from '$lib/utils';
-	import { enhance } from '$app/forms';
-	import Settings from '@lucide/svelte/icons/settings-2';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Settings from '@lucide/svelte/icons/settings-2';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
-	import type { components } from '$lib/api/api';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -25,7 +25,7 @@
 	let loading = $state(false);
 	let productId = $state('');
 
-	function handle(e: CustomEvent<DndEvent<components['schemas']['ProductDto']>>) {
+	function handle(e: CustomEvent<DndEvent<ProductDto>>) {
 		items = e.detail.items;
 	}
 </script>

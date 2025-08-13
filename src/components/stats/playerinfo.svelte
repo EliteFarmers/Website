@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Weight from '$comp/stats/player/weight.svelte';
 	import Discord from '$comp/stats/player/discord.svelte';
 	import PlayerName from '$comp/stats/player/playername.svelte';
-	import Skyblocklevel from './player/skyblocklevel.svelte';
+	import Weight from '$comp/stats/player/weight.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import ExternalLinks from './namecard/external-links.svelte';
+	import Skyblocklevel from './player/skyblocklevel.svelte';
 
 	const ctx = getStatsContext();
 </script>

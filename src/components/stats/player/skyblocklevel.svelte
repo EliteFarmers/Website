@@ -11,7 +11,7 @@
 </script>
 
 <Popover.Mobile
-	triggerRootClass="relative flex max-w-fit flex-row items-center justify-between gap-1 border rounded-md py-1.5 md:py-2 px-3 text-lg"
+	triggerClass="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md border px-3 py-1.5 text-lg md:py-2"
 >
 	{#snippet trigger()}
 		<div>

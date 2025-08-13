@@ -1,4 +1,4 @@
-import { GetGuildEvents, GetPublicGuild } from '$lib/api/elite';
+import { getPublicGuild, getPublicGuildEvents } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
@@ -8,7 +8,7 @@ export const load = (async ({ params, setHeaders, url }) => {
 	// Remove everything before the last dash
 	const guildId = guild.slice(guild.lastIndexOf('-') + 1);
 
-	const { data: guildData } = await GetPublicGuild(guildId).catch(() => ({ data: undefined }));
+	const { data: guildData } = await getPublicGuild(BigInt(+guildId)).catch(() => ({ data: undefined }));
 
 	if (!guildData?.id || !guildData.name) {
 		throw error(404, 'Guild not found');
@@ -20,7 +20,7 @@ export const load = (async ({ params, setHeaders, url }) => {
 		throw redirect(307, `/server/${properUrl}`);
 	}
 
-	const { data: events } = await GetGuildEvents(guildData.id).catch(() => ({ data: undefined }));
+	const { data: events } = await getPublicGuildEvents(BigInt(guildData.id)).catch(() => ({ data: undefined }));
 
 	setHeaders({
 		'Cache-Control': 'public, max-age=300',

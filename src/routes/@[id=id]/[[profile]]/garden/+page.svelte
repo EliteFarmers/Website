@@ -1,24 +1,27 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
+	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
-	import Skillbar from '$comp/stats/skillbar.svelte';
-	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
-	import type { components } from '$lib/api/api';
+	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import Plots from '$comp/stats/garden/plots.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
-	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
-	import { page } from '$app/state';
+	import Skillbar from '$comp/stats/skillbar.svelte';
+	import type { GardenDto } from '$lib/api';
+	import { getCopperSpent } from '$lib/calc/garden';
+	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
 	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getCopperSpentCropUpgrades } from '$lib/calc/garden';
+	import { Crop, GARDEN_VISITORS, getCropDisplayName, getCropUpgrades, getGardenLevel } from 'farming-weight';
 
 	let overflow = $state(true);
 
 	const ctx = getStatsContext();
-	const garden = $derived((ctx.member.garden ?? {}) as components['schemas']['GardenDto']);
+	const garden = $derived((ctx.member.garden ?? {}) as GardenDto);
 
 	const maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
 	const totalVisits = $derived(
@@ -31,7 +34,7 @@
 
 	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
 
-	let upgrades = $derived(getCropUpgrades(garden?.cropUpgrades ?? {}));
+	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as unknown as Record<string, number>));
 	let crops = $derived(
 		Object.entries(upgrades)
 			.map(([crop, level]) => {
@@ -65,7 +68,7 @@
 						<Plots plots={garden.plots} />
 					</div>
 					<div class="-mt-0.5 flex flex-col">
-						<Popover.Mobile triggerRootClass="inline-block w-fit">
+						<Popover.Mobile triggerClass="inline-block w-fit">
 							{#snippet trigger()}
 								<h3 class="text-lg leading-none font-semibold">Crop Upgrades</h3>
 							{/snippet}

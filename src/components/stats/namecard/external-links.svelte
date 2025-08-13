@@ -1,18 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Globe from '@lucide/svelte/icons/globe';
-	import * as Popover from '$ui/popover';
 	import { OTHER_SITES } from '$content/othersites';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Popover from '$ui/popover';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Globe from '@lucide/svelte/icons/globe';
 
 	const ctx = getStatsContext();
 </script>
 
-<Popover.Mobile
-	triggerRootClass="rounded-md border p-2 md:p-3"
-	triggerClass="p-0 m-0 flex flex-row items-center justify-between gap-2"
->
+<Popover.Mobile triggerClass="m-0 flex flex-row items-center justify-between gap-2 rounded-md border p-2 md:p-3">
 	{#snippet trigger()}
 		<Globe class="inline-block" />
 	{/snippet}

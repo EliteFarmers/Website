@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
-	import { dragHandle } from 'svelte-dnd-action';
+	import type { UserBadgeDto } from '$lib/api';
 	import GripHorizontal from '@lucide/svelte/icons/grip-horizontal';
+	import { dragHandle } from 'svelte-dnd-action';
 
 	interface Props {
-		badge: components['schemas']['UserBadgeDto'];
+		badge: UserBadgeDto;
 		visible: boolean;
 		order: number;
 	}

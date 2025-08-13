@@ -3,12 +3,12 @@
 </script>
 
 <script lang="ts">
-	import * as DropdownMenu from '$ui/dropdown-menu';
-	import * as Sidebar from '$ui/sidebar';
+	import AnnouncementIcon from '$comp/header/announcement-icon.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import Button from '$ui/button/button.svelte';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import * as Sidebar from '$ui/sidebar';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import AnnouncementIcon from '$comp/header/announcement-icon.svelte';
 
 	const ctx = getGlobalContext();
 	const sidebar = Sidebar.useSidebar();

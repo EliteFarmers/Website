@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { WeightStyleWithDataDto } from '$lib/api';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardStyle } from '$lib/styles/style';
 	import Entry from './entry.svelte';
@@ -8,7 +8,7 @@
 		ign: string;
 		uuid: string;
 		styleId?: number;
-		style?: components['schemas']['WeightStyleWithDataDto']['leaderboard'] | LeaderboardStyle;
+		style?: WeightStyleWithDataDto['leaderboard'] | LeaderboardStyle;
 		showLeaderboardName?: boolean;
 	}
 

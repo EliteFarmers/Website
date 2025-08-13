@@ -1,8 +1,8 @@
 import { cache } from '$lib/servercache';
-import { error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
 import { getLeaderboardBackground } from '$lib/styles/render';
 import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
+import { error } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 
 export async function OPTIONS() {
 	return new Response(null, {
@@ -34,7 +34,7 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 		'Access-Control-Allow-Origin': 'elitebot.dev',
 	});
 
-	return new Response(buffer, {
+	return new Response(new Uint8Array(buffer), {
 		headers: {
 			'Content-Type': 'image/webp',
 			'Access-Control-Allow-Origin': 'elitebot.dev',

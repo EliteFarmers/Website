@@ -1,11 +1,10 @@
+import { getAccount, getAdminCropGraphs, getCropGraphs, type MinecraftAccountDto } from '$lib/api';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad, PageServerParentData } from './$types';
-import { GetAccount, GetAdminCropCollectionPointsTimeSpan, GetCropCollectionPoints } from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 
-export const load = (async ({ params, parent, locals, request }) => {
+export const load = (async ({ params, parent, locals }) => {
 	const { session, account: aData } = (await parent()) as PageServerParentData & {
-		account?: components['schemas']['MinecraftAccountDto'];
+		account?: MinecraftAccountDto;
 	};
 	const { access_token: token } = locals;
 	const { id, profile } = params;
@@ -16,7 +15,7 @@ export const load = (async ({ params, parent, locals, request }) => {
 	}
 
 	if (!account?.id) {
-		const { data: accountData } = await GetAccount(id, request.headers).catch(() => ({ data: undefined }));
+		const { data: accountData } = await getAccount(id).catch(() => ({ data: undefined }));
 		if (!accountData?.id) {
 			throw error(404, 'Account not found');
 		}
@@ -36,12 +35,10 @@ export const load = (async ({ params, parent, locals, request }) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: collectionGraph, response } = await GetCropCollectionPoints(
-		account.id,
-		selectedProfile.profileId,
-		undefined,
-		14
-	).catch(() => ({ data: undefined, response: undefined }));
+	const { data: collectionGraph, response } = await getCropGraphs(account.id, selectedProfile.profileId, {
+		days: 14,
+		perDay: 4,
+	}).catch(() => ({ data: undefined, response: undefined }));
 
 	if (response && !response.ok) {
 		console.log(response.statusText);
@@ -80,12 +77,10 @@ export const actions: Actions = {
 		}
 
 		if (!showAll) {
-			const { data: collectionGraph, response } = await GetCropCollectionPoints(
-				uuid,
-				profile,
-				start,
-				+days
-			).catch(() => ({ data: undefined, response: undefined }));
+			const { data: collectionGraph, response } = await getCropGraphs(uuid, profile, {
+				from: BigInt(start),
+				days: +days,
+			}).catch(() => ({ data: undefined, response: undefined }));
 
 			if (response && !response.ok) {
 				console.log(response.statusText);
@@ -96,13 +91,10 @@ export const actions: Actions = {
 			};
 		}
 
-		const { data: collectionGraph, response } = await GetAdminCropCollectionPointsTimeSpan(
-			uuid,
-			profile,
-			token,
-			start as unknown as number,
-			days as unknown as number
-		).catch(() => ({ data: undefined, response: undefined }));
+		const { data: collectionGraph, response } = await getAdminCropGraphs(uuid, profile, {
+			from: BigInt(start),
+			days: +days,
+		}).catch(() => ({ data: undefined, response: undefined }));
 
 		if (response && !response.ok) {
 			console.log(response.statusText);

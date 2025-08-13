@@ -1,12 +1,12 @@
 <script lang="ts">
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import type { components } from '$lib/api/api';
+	import type { GuildDetailsDto, GuildMemberDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Settings from '@lucide/svelte/icons/settings';
 
 	interface Props {
-		guild: components['schemas']['GuildMemberDto'] | components['schemas']['GuildDetailsDto'];
+		guild: GuildMemberDto | GuildDetailsDto;
 		link?: boolean;
 	}
 

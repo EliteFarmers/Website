@@ -1,24 +1,23 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import Head from '$comp/head.svelte';
+	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
+	import WeightStyle from '$comp/monetization/weight-style.svelte';
+	import Switch from '$comp/ui/switch/switch.svelte';
+	import type { LeaderboardStyleDataDto, WeightStyleDataDto } from '$lib/api';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
+	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { Textarea } from '$ui/textarea';
-	import * as Dialog from '$ui/dialog';
-	import { applyAction, enhance } from '$app/forms';
-
-	import type { PageData, ActionData } from './$types';
-	import WeightStyle from '$comp/monetization/weight-style.svelte';
-	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
-	import { untrack } from 'svelte';
-	import Switch from '$comp/ui/switch/switch.svelte';
 	import X from '@lucide/svelte/icons/x';
-	import { pending } from '$lib/utils';
-	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
-	import EntryPreview from '$comp/leaderboards/entry-preview.svelte';
 	import { PersistedState } from 'runed';
-	import type { components } from '$lib/api/api';
+	import { untrack } from 'svelte';
+	import type { ActionData, PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -63,11 +62,9 @@
 
 	let styleDataObj = $derived({
 		...untrack(() => data.style),
-		data: (styleDataValid?.success ? styleDataValid.data : data.style.data) as
-			| components['schemas']['WeightStyleDataDto']
-			| undefined,
+		data: (styleDataValid?.success ? styleDataValid.data : data.style.data) as WeightStyleDataDto | undefined,
 		leaderboard: (leaderboardDataValid?.success ? leaderboardDataValid.data : data.style.leaderboard) as
-			| components['schemas']['LeaderboardStyleDataDto']
+			| LeaderboardStyleDataDto
 			| undefined,
 	});
 
@@ -85,10 +82,10 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 

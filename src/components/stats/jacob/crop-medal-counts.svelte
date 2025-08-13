@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { JacobCropStatsDto } from '$lib/api';
 
 	interface Props {
-		stats: NonNullable<components['schemas']['JacobCropStatsDto']>;
+		stats: NonNullable<JacobCropStatsDto>;
 	}
 
 	let { stats }: Props = $props();

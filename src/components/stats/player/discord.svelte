@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
-	import DiscordIcon from './discord-icon.svelte';
 	import Check from '@lucide/svelte/icons/check';
 	import CircleX from '@lucide/svelte/icons/circle-x';
+	import DiscordIcon from './discord-icon.svelte';
 
 	const ctx = getStatsContext();
 	const linked = $derived((ctx.account.discordUsername?.length ?? 0) > 0);
@@ -22,7 +22,7 @@
 </script>
 
 <Popover.Mobile
-	triggerRootClass="relative flex max-w-fit flex-row items-center justify-between gap-1 border rounded-md p-2 px-3 @md:p-3 text-lg"
+	triggerClass="relative flex max-w-fit flex-row items-center justify-between gap-1 rounded-md border p-2 px-3 text-lg @md:p-3"
 >
 	{#snippet trigger()}
 		<div class="block max-w-fit rounded-md" id="discordId">

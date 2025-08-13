@@ -1,5 +1,6 @@
-import { GetLeaderboardSlice, SearchPlayers } from '$lib/api/elite';
+import { searchAccounts } from '$lib/api';
 import { LEADERBOARD_UPDATE_INTERVAL } from '$lib/constants/data';
+import { getLeaderboardSlice } from '$lib/remote/leaderboards.remote.js';
 import { json } from '@sveltejs/kit';
 
 let topPlayers: string[] = [];
@@ -9,13 +10,13 @@ export async function GET({ url }) {
 	const username = url.searchParams.get('q')?.replace(/[^a-zA-Z0-9_]/g, '');
 
 	if (username) {
-		const { data: results } = await SearchPlayers(username).catch(() => ({ data: null }));
+		const { data: results } = await searchAccounts({ q: username }).catch(() => ({ data: null }));
 
 		return json(results?.slice(0, 9) ?? topPlayers);
 	}
 
 	if (topPlayersUpdated < Date.now() - LEADERBOARD_UPDATE_INTERVAL) {
-		const data = await GetLeaderboardSlice('farmingweight', { offset: 0, limit: 10 });
+		const data = await getLeaderboardSlice({ leaderboard: 'farmingweight', offset: 0, limit: 10 });
 		const players = (data?.entries ?? []).slice(0, 10).map((entry) => entry.ign ?? '');
 
 		topPlayers = players;

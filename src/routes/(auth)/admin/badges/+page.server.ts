@@ -1,6 +1,6 @@
+import { addBadgeToUserBadge, createBadge, deleteBadge, removeBadge, updateBadge } from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { DELETE, formDataSerializer, PATCH, POST } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -25,28 +25,21 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const badgeName = data.get('name') as string;
-		const badgeImage = data.get('image') as string;
+		const badgeImage = data.get('image') as Blob;
 		const badgeDescription = data.get('description') as string;
 		const badgeRequirements = data.get('requirements') as string;
 		const tied = data.get('tied') as string;
 
-		const { response } = await POST('/badges', {
-			body: {
-				image: badgeImage,
-				name: badgeName,
-				description: badgeDescription,
-				requirements: badgeRequirements,
-				tieToAccount: tied === 'on',
-			},
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			// @ts-expect-error FormData typing not working
-			bodySerializer: formDataSerializer,
+		const { ok, error: e } = await createBadge({
+			image: badgeImage,
+			name: badgeName,
+			description: badgeDescription,
+			requirements: badgeRequirements,
+			tieToAccount: tied === 'on',
 		});
 
-		if (!response.ok) {
-			return fail(500, { error: 'Failed to create badge' });
+		if (!ok) {
+			return fail(500, { error: e || 'Failed to create badge' });
 		}
 
 		return {
@@ -63,31 +56,19 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const badgeId = data.get('badgeId') as string;
 		const badgeName = data.get('name') as string;
-		const badgeImage = data.get('image') as string;
+		const badgeImage = data.get('image') as Blob;
 		const badgeDescription = data.get('description') as string;
 		const badgeRequirements = data.get('requirements') as string;
 
-		const { response } = await PATCH('/badge/{badgeId}', {
-			params: {
-				path: {
-					badgeId: badgeId as unknown as number,
-				},
-			},
-			body: {
-				image: badgeImage,
-				name: badgeName,
-				description: badgeDescription,
-				requirements: badgeRequirements,
-			},
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			// @ts-expect-error FormData typing not working
-			bodySerializer: formDataSerializer,
+		const { ok, error: e } = await updateBadge(badgeId, {
+			image: badgeImage,
+			name: badgeName,
+			description: badgeDescription,
+			requirements: badgeRequirements,
 		});
 
-		if (!response.ok) {
-			return fail(500, { error: 'Failed to edit badge' });
+		if (!ok) {
+			return fail(500, { error: e || 'Failed to edit badge' });
 		}
 
 		return {
@@ -104,19 +85,10 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const badgeId = data.get('id') as string;
 
-		const { response } = await DELETE('/badge/{badgeId}', {
-			params: {
-				path: {
-					badgeId: badgeId as unknown as number,
-				},
-			},
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const { ok, error: e } = await deleteBadge(badgeId);
 
-		if (!response.ok) {
-			return fail(500, { error: 'Failed to delete badge' });
+		if (!ok) {
+			return fail(500, { error: e || 'Failed to delete badge' });
 		}
 
 		return {
@@ -134,18 +106,10 @@ export const actions: Actions = {
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
 
-		const { response } = await POST('/badge/user/{player}/{badgeId}', {
-			params: {
-				path: {
-					player: playerUuid,
-					badgeId: badgeId as unknown as number,
-				},
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { ok, error: e } = await addBadgeToUserBadge(playerUuid, badgeId);
 
-		if (!response.ok) {
-			return fail(500, { error: 'Failed to add badge.' });
+		if (!ok) {
+			return fail(500, { error: e || 'Failed to add badge.' });
 		}
 
 		return {
@@ -163,18 +127,10 @@ export const actions: Actions = {
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
 
-		const { response } = await DELETE('/badge/user/{player}/{badgeId}', {
-			params: {
-				path: {
-					player: playerUuid,
-					badgeId: badgeId as unknown as number,
-				},
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { ok, error: e } = await removeBadge(playerUuid, badgeId);
 
-		if (!response.ok) {
-			return fail(500, { error: 'Failed to delete badge.' });
+		if (!ok) {
+			return fail(500, { error: e || 'Failed to delete badge.' });
 		}
 
 		return {

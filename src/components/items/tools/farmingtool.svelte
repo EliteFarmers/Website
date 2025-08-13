@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { FarmingToolType, getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
-	import { FormatMinecraftText } from '$lib/format';
-	import FortuneBreakdown from './fortune-breakdown.svelte';
-	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import Lorebtn from '../lorebtn.svelte';
 	import { UNUSED_MATHEMATICAL_HOE } from '$content/random';
+	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { FormatMinecraftText } from '$lib/format';
+	import { FarmingToolType, getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
+	import Lorebtn from '../lorebtn.svelte';
+	import FortuneBreakdown from './fortune-breakdown.svelte';
 
 	let { tool }: { tool: FT } = $props();
 

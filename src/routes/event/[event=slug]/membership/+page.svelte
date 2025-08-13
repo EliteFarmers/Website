@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { Button } from '$ui/button';
-	import * as Checkbox from '$ui/checkbox';
-	import * as Popover from '$ui/popover';
-	import * as Dialog from '$ui/dialog';
-	import * as Tooltip from '$ui/tooltip';
-	import { Label } from '$ui/label';
-	import type { ActionData, PageData } from './$types';
-	import { page } from '$app/state';
 	import { enhance } from '$app/forms';
-	import { EventType } from '$lib/utils';
-	import { Input } from '$ui/input';
-	import { SelectSimple } from '$ui/select';
-	import Check from '@lucide/svelte/icons/check';
-	import Trash from '@lucide/svelte/icons/trash-2';
-	import Crown from '@lucide/svelte/icons/crown';
-	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 	import { invalidate } from '$app/navigation';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import VisibleToggle from '$comp/visible-toggle.svelte';
-	import type { components } from '$lib/api/api';
+	import { page } from '$app/state';
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import TeamNameSelector from '$comp/events/team-name-selector.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import VisibleToggle from '$comp/visible-toggle.svelte';
+	import type { EventMemberDetailsDto } from '$lib/api';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { EventType } from '$lib/utils';
+	import { Button } from '$ui/button';
+	import * as Checkbox from '$ui/checkbox';
+	import * as Dialog from '$ui/dialog';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
+	import * as Popover from '$ui/popover';
+	import { SelectSimple } from '$ui/select';
+	import * as Tooltip from '$ui/tooltip';
+	import Check from '@lucide/svelte/icons/check';
+	import Crown from '@lucide/svelte/icons/crown';
+	import Trash from '@lucide/svelte/icons/trash-2';
+	import type { ActionData, PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -39,7 +39,7 @@
 
 	let kickMemberModal = $state(false);
 	let promoteMemberModal = $state(false);
-	let selectedMember = $state<components['schemas']['EventMemberDetailsDto']>();
+	let selectedMember = $state<EventMemberDetailsDto>();
 
 	let event = $derived(data.event);
 	let teams = $derived(
@@ -87,9 +87,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	const favorites = getFavoritesContext();

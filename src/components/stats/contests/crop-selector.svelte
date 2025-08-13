@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ScrollArea } from '$ui/scroll-area';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { ScrollArea } from '$ui/scroll-area';
 	const selectedCrops = getSelectedCrops();
 
 	interface Props {

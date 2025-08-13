@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import type { AnnouncementType } from '$lib/api';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
+	import { SelectSimple } from '$ui/select';
+	import { Textarea } from '$ui/textarea';
 	import Plus from '@lucide/svelte/icons/plus';
 	import type { PageProps } from './$types';
-	import { Textarea } from '$ui/textarea';
-	import { SelectSimple } from '$ui/select';
-	import type { components } from '$lib/api/api';
 
 	let { data }: PageProps = $props();
 
 	let createModal = $state(false);
 
-	const types: Record<components['schemas']['AnnouncementType'], string> = {
+	const types: Record<AnnouncementType, string> = {
 		news: 'News',
 		update: 'Update',
 		maintenance: 'Maintenance',

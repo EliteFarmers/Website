@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { FarmingWeightDto, WeightStyleWithDataDto } from '$lib/api';
 	import { createFromData } from '$lib/styles/maker';
 	import { isValidWeightStyle } from '$lib/styles/style';
 
 	interface Props {
-		style: components['schemas']['WeightStyleWithDataDto'];
+		style: WeightStyleWithDataDto;
 		ign: string;
 		uuid: string;
-		weight?: components['schemas']['FarmingWeightDto'] | undefined;
+		weight?: FarmingWeightDto | undefined;
 		rank?: number;
 		badgeUrl?: string;
 	}

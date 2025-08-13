@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
+	import ChannelSelect from '$comp/discord/channel-select.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import RoleSelect from '$comp/discord/role-select.svelte';
 	import Head from '$comp/head.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
 	import type { PageData } from './$types';
-	import { enhance } from '$app/forms';
-	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
-	import { page } from '$app/state';
-	import RoleSelect from '$comp/discord/role-select.svelte';
-	import ChannelSelect from '$comp/discord/channel-select.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
 
 	interface Props {
 		data: PageData;
@@ -33,9 +33,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	const favorites = getFavoritesContext();
@@ -69,7 +69,7 @@
 						<ChannelSelect
 							channels={data.guild.channels}
 							value={pings.channelId ?? ''}
-							triggerClass="w-full justify-between max-w-sm"
+							triggerClass="w-full max-w-sm justify-between"
 							placeholder="Select a channel"
 							name="channel"
 						/>
@@ -80,7 +80,7 @@
 						<RoleSelect
 							roles={data.guild.roles}
 							value={pings.alwaysPingRole ?? ''}
-							triggerClass="w-full justify-between max-w-sm"
+							triggerClass="w-full max-w-sm justify-between"
 							placeholder="Select a role to ping"
 							name="pingrole"
 						/>
@@ -93,7 +93,7 @@
 							<Label>Cactus Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.cactus ?? ''}
 								placeholder="Select a role for Cactus"
 								name="cactus"
@@ -103,7 +103,7 @@
 							<Label>Carrot Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.carrot ?? ''}
 								placeholder="Select a role for Carrot"
 								name="carrot"
@@ -113,7 +113,7 @@
 							<Label>Potato Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.potato ?? ''}
 								placeholder="Select a role for Potato"
 								name="potato"
@@ -123,7 +123,7 @@
 							<Label>Wheat Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.wheat ?? ''}
 								placeholder="Select a role for Wheat"
 								name="wheat"
@@ -133,7 +133,7 @@
 							<Label>Melon Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.melon ?? ''}
 								placeholder="Select a role for Melon"
 								name="melon"
@@ -145,7 +145,7 @@
 							<Label>Pumpkin Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.pumpkin ?? ''}
 								placeholder="Select a role for Pumpkin"
 								name="pumpkin"
@@ -155,7 +155,7 @@
 							<Label>Mushroom Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.mushroom ?? ''}
 								placeholder="Select a role for Mushroom"
 								name="mushroom"
@@ -165,7 +165,7 @@
 							<Label>Cocoa Beans Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.cocoaBeans ?? ''}
 								placeholder="Select a role for Cocoa Beans"
 								name="cocoa"
@@ -175,7 +175,7 @@
 							<Label>Sugar Cane Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.sugarCane ?? ''}
 								placeholder="Select a role for Sugar Cane"
 								name="cane"
@@ -185,7 +185,7 @@
 							<Label>Nether Wart Ping Role</Label>
 							<RoleSelect
 								roles={data.guild.roles}
-								triggerClass="w-full justify-between max-w-sm"
+								triggerClass="w-full max-w-sm justify-between"
 								value={pings.cropPingRoles?.netherWart ?? ''}
 								placeholder="Select a role for Nether Wart"
 								name="wart"

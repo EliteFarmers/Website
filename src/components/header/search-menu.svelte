@@ -3,15 +3,15 @@
 </script>
 
 <script lang="ts">
-	import * as Command from '$ui/command';
-	import * as Tabs from '$ui/tabs';
-	import { Button, type ButtonProps } from '$ui/button';
-	import cn from 'classnames';
 	import { browser } from '$app/environment';
-	import { Debounced, watch } from 'runed';
 	import { beforeNavigate, goto } from '$app/navigation';
-	import { ScrollArea } from '$ui/scroll-area';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { Button, type ButtonProps } from '$ui/button';
+	import * as Command from '$ui/command';
+	import { ScrollArea } from '$ui/scroll-area';
+	import * as Tabs from '$ui/tabs';
+	import cn from 'classnames';
+	import { Debounced, watch } from 'runed';
 
 	let {
 		open = $bindable(false),
@@ -92,69 +92,64 @@
 		<span class="text-muted-foreground inline-flex lg:hidden">Search...</span>
 	</Button>
 {/if}
-{#key open}
-	<Command.Dialog bind:open>
-		<Command.Root shouldFilter={false}>
-			<Command.Input placeholder="Search for a player" bind:value={searchStr} />
-			<Tabs.Root class="w-full" bind:value={destination}>
-				<ScrollArea class="w-full py-1" orientation="horizontal">
-					<Tabs.List class="flex w-full gap-2 rounded-none bg-inherit">
-						<Tabs.Trigger value="" class="data-[state=active]:border-border border-2 border-transparent"
-							>Stats</Tabs.Trigger
-						>
-						<Tabs.Trigger
-							value="/garden"
-							class="data-[state=active]:border-border border-2 border-transparent">Garden</Tabs.Trigger
-						>
-						<Tabs.Trigger
-							value="/fortune"
-							class="data-[state=active]:border-border border-2 border-transparent">Fortune</Tabs.Trigger
-						>
-						<Tabs.Trigger
-							value="/contests"
-							class="data-[state=active]:border-border border-2 border-transparent">Contests</Tabs.Trigger
-						>
-						<Tabs.Trigger
-							value="/charts"
-							class="data-[state=active]:border-border border-2 border-transparent">Charts</Tabs.Trigger
-						>
-					</Tabs.List>
-				</ScrollArea>
-			</Tabs.Root>
-			<hr />
-			<ScrollArea class="flex h-full max-h-[300px] flex-row">
-				<Command.List class="max-h-none">
-					<Command.Group heading="Players">
-						{#if searchStr !== ''}
-							<Command.Item
-								value={searchStr ?? ''}
-								onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
-							>
-								{searchStr}
-							</Command.Item>
-						{/if}
-						{#each players as player, i (i)}
-							<Command.Item
-								value={player ?? ''}
-								onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
-							>
-								{player}
-							</Command.Item>
-						{:else}
-							<Command.Empty>No players found.</Command.Empty>
-						{/each}
-					</Command.Group>
-					<Command.Group heading="Leaderboards">
-						{#each leaderboardList as { name, id } (id)}
-							<Command.Item value={name} onSelect={() => runCommand(() => goto(`/leaderboard/${id}`))}>
-								{name}
-							</Command.Item>
-						{:else}
-							<Command.Empty>No leaderboards found.</Command.Empty>
-						{/each}
-					</Command.Group>
-				</Command.List>
-			</ScrollArea>
-		</Command.Root>
-	</Command.Dialog>
-{/key}
+
+<Command.Dialog bind:open shouldFilter={false}>
+	<Command.Input placeholder="Search for a player" bind:value={searchStr} />
+	<Tabs.Root class="w-full" bind:value={destination}>
+		<ScrollArea class="w-full py-1" orientation="horizontal">
+			<Tabs.List class="flex w-full gap-2 rounded-none bg-inherit">
+				<Tabs.Trigger value="" class="data-[state=active]:border-border border-2 border-transparent"
+					>Stats</Tabs.Trigger
+				>
+				<Tabs.Trigger value="/garden" class="data-[state=active]:border-border border-2 border-transparent"
+					>Garden</Tabs.Trigger
+				>
+				<Tabs.Trigger value="/fortune" class="data-[state=active]:border-border border-2 border-transparent"
+					>Fortune</Tabs.Trigger
+				>
+				<Tabs.Trigger value="/contests" class="data-[state=active]:border-border border-2 border-transparent"
+					>Contests</Tabs.Trigger
+				>
+				<Tabs.Trigger value="/charts" class="data-[state=active]:border-border border-2 border-transparent"
+					>Charts</Tabs.Trigger
+				>
+			</Tabs.List>
+		</ScrollArea>
+	</Tabs.Root>
+	<hr />
+	<ScrollArea class="flex h-full max-h-[300px] flex-row">
+		<Command.List class="max-h-none">
+			<Command.Group heading="Players">
+				{#if searchStr !== ''}
+					<Command.Item
+						value={searchStr ?? ''}
+						onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
+					>
+						{searchStr}
+					</Command.Item>
+				{/if}
+				{#each players as player, i (i)}
+					<Command.Item
+						value={player ?? ''}
+						onSelect={() => runCommand(() => goto(`/@${player}${destination}`))}
+					>
+						{player}
+					</Command.Item>
+				{:else}
+					{#if searchStr == ''}
+						<p class="text-sm text-muted-foreground text-center">No players found.</p>
+					{/if}
+				{/each}
+			</Command.Group>
+			<Command.Group heading="Leaderboards">
+				{#each leaderboardList as { name, id } (id)}
+					<Command.Item value={name} onSelect={() => runCommand(() => goto(`/leaderboard/${id}`))}>
+						{name}
+					</Command.Item>
+				{:else}
+					<p class="text-sm text-muted-foreground text-center">No leaderboards found.</p>
+				{/each}
+			</Command.Group>
+		</Command.List>
+	</ScrollArea>
+</Command.Dialog>

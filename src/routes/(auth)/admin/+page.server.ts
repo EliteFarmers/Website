@@ -1,6 +1,6 @@
-import { error, type Actions, fail } from '@sveltejs/kit';
+import { addRoleToUser, getAdmins, getAllProducts, getRoles, removeRoleFromUser } from '$lib/api';
+import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { DELETE, GET, GetAdminProducts, POST } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -10,19 +10,14 @@ export const load = (async ({ parent, locals }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: roles } = await GET('/admin/roles', {
-		headers: { Authorization: `Bearer ${token}` },
-	}).catch(() => ({ data: undefined }));
+	const { data: roles } = await getRoles().catch(() => ({ data: undefined }));
 
 	if (!roles) {
 		throw error(500, 'Failed to fetch roles');
 	}
 
-	const { data: admins } = await GET('/admins', {
-		headers: { Authorization: `Bearer ${token}` },
-	}).catch(() => ({ data: undefined }));
-
-	const { data: products } = await GetAdminProducts(token).catch(() => ({ data: undefined }));
+	const { data: admins } = await getAdmins().catch(() => ({ data: undefined }));
+	const { data: products } = await getAllProducts().catch(() => ({ data: undefined }));
 
 	return {
 		user,
@@ -44,15 +39,7 @@ export const actions: Actions = {
 		const memberId = data.get('id') as string;
 		const role = data.get('role') as string;
 
-		const { response } = await POST('/admin/user/{discordId}/roles/{role}', {
-			params: {
-				path: {
-					discordId: memberId as unknown as number,
-					role: role,
-				},
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response } = await addRoleToUser(memberId as unknown as number, role);
 
 		if (!response.ok) {
 			return fail(500, { error: 'Failed to promote user' });
@@ -73,15 +60,7 @@ export const actions: Actions = {
 		const memberId = data.get('id') as string;
 		const role = data.get('role') as string;
 
-		const { response } = await DELETE(`/admin/user/{discordId}/roles/{role}`, {
-			params: {
-				path: {
-					discordId: memberId as unknown as number,
-					role: role,
-				},
-			},
-			headers: { Authorization: `Bearer ${token}` },
-		});
+		const { response } = await removeRoleFromUser(memberId as unknown as number, role);
 
 		if (!response.ok) {
 			return fail(500, { error: 'Failed to demote user' });

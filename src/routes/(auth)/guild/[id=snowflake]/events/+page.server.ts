@@ -1,8 +1,7 @@
+import { createEventAdmin, EventType, getGuildEventsAdmin, type CreateEventDto } from '$lib/api';
+import { CanManageGuild } from '$lib/utils';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CanManageGuild } from '$lib/utils';
-import { GetAdminGuildEvents, CreateEvent } from '$lib/api/elite';
-import type { components } from '$lib/api/api';
 
 export const load: PageServerLoad = async ({ parent, locals }) => {
 	const { guild, authGuild, session } = await parent();
@@ -14,7 +13,7 @@ export const load: PageServerLoad = async ({ parent, locals }) => {
 		throw error(403, 'You do not have permission to edit this guild.');
 	}
 
-	const { data: events } = await GetAdminGuildEvents(token, guild.id).catch(() => ({ data: undefined }));
+	const { data: events } = await getGuildEventsAdmin(guild.id).catch(() => ({ data: undefined }));
 
 	if ((!guild?.features?.eventsEnabled && !events) || !guild?.id) {
 		throw error(402, 'This guild does not have the Events feature enabled.');
@@ -37,7 +36,7 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 
-		const type = data.get('type') as components['schemas']['EventType'];
+		const type = data.get('type') as EventType;
 		const title = data.get('title') as string;
 		const description = data.get('description') as string;
 		const rules = data.get('rules') as string;
@@ -67,15 +66,15 @@ export const actions: Actions = {
 			rules,
 			description,
 			prizeInfo: prizes,
-			startTime: startTime as unknown as number, // These are parsed into numbers in the API
-			endTime: endTime as unknown as number,
-			joinTime: joinUntilTime as unknown as number,
+			startTime: startTime as unknown as bigint, // These are parsed into numbers in the API
+			endTime: endTime as unknown as bigint,
+			joinTime: joinUntilTime as unknown as bigint,
 			guildId: guildId,
 			maxTeamMembers: maxTeamSize ? parseInt(maxTeamSize) : 0,
 			maxTeams: 0,
-		} satisfies components['schemas']['CreateEventDto'];
+		} satisfies CreateEventDto;
 
-		const { response, error: e } = await CreateEvent(token, guildId, body).catch((e) => {
+		const { response, error: e } = await createEventAdmin(guildId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

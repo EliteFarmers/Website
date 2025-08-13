@@ -1,8 +1,8 @@
-import { PUBLIC_DISCORD_REDIRECT_ROUTE, PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
-import { GetAuthorizedAccount } from '$lib/api/elite';
-import type { PageServerLoad } from './$types';
+import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
+import { getAuthAccount } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import crypto from 'crypto';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 	const success = url.searchParams.get('success');
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 			error(500, 'Login failed too many times! Please try again later.');
 		}
 
-		const { data: auth } = locals.access_token ? await GetAuthorizedAccount(locals.access_token) : { data: null };
+		const { data: auth } = locals.access_token ? await getAuthAccount() : { data: null };
 
 		if (redirectTo) {
 			return {

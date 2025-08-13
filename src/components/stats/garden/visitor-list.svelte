@@ -1,10 +1,10 @@
 <script lang="ts">
+	import type { GardenDto } from '$lib/api';
 	import { compareRarity, groupGardenVisitors, type GardenVisitorStats } from 'farming-weight';
-	import type { components } from '$lib/api/api';
 	import Visitor from './visitor.svelte';
 
 	interface Props {
-		garden?: components['schemas']['GardenDto'] | undefined;
+		garden?: GardenDto | undefined;
 	}
 
 	let { garden = undefined }: Props = $props();

@@ -1,9 +1,14 @@
+import {
+	getAuthAccount,
+	getSession,
+	refreshAuth,
+	type AuthorizedAccountDto,
+	type AuthResponseDto,
+	type AuthSessionDto,
+} from '$lib/api';
 import type { Cookies } from '@sveltejs/kit';
-import type { components } from './api';
-import { GetUserSession, RefreshUserSession } from './elite';
-import { GetAuthorizedAccount, type AuthorizedUser } from '$lib/api/elite';
 
-export type AuthSession = components['schemas']['AuthSessionDto'] & { flags: AuthFlags };
+export type AuthSession = AuthSessionDto & { flags: AuthFlags };
 
 export interface AuthFlags {
 	admin: boolean;
@@ -15,20 +20,24 @@ export interface AuthFlags {
 export async function FetchUserSession(
 	cookies: Cookies,
 	access: string,
-	refresh = '',
+	refreshToken = '',
 	forceRefresh = false
 ): Promise<AuthSession | undefined> {
 	// Fetch the user session
-	const { data: session } = await GetUserSession(access).catch(() => ({ data: undefined }));
+	const { data: session } = await getSession({
+		headers: {
+			Authorization: `Bearer ${access}`,
+		},
+	}).catch(() => ({ data: undefined }));
 
 	if (session && !forceRefresh) {
 		return setAuthFlags(session);
 	}
 
-	if (refresh && (!session || forceRefresh)) {
-		const { data: newTokens } = await RefreshUserSession({
+	if (refreshToken && (!session || forceRefresh)) {
+		const { data: newTokens } = await refreshAuth({
 			user_id: access,
-			refresh_token: refresh,
+			refresh_token: refreshToken,
 		}).catch(() => ({ data: undefined }));
 
 		if (newTokens) {
@@ -44,7 +53,7 @@ export async function FetchUserSession(
 	return session ? setAuthFlags(session) : undefined;
 }
 
-function setAuthFlags(session?: components['schemas']['AuthSessionDto']): AuthSession | undefined {
+function setAuthFlags(session?: AuthSessionDto): AuthSession | undefined {
 	if (!session) return undefined;
 
 	const newSession = session as AuthSession;
@@ -70,7 +79,7 @@ export function DeleteAuthCookies(cookies: Cookies) {
 	cookies.delete('auth_state', { path: '/' });
 }
 
-export function UpdateAuthCookies(cookies: Cookies, tokens: components['schemas']['AuthResponseDto']) {
+export function UpdateAuthCookies(cookies: Cookies, tokens: AuthResponseDto) {
 	cookies.set('access_token', tokens.access_token, {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 20,
@@ -82,8 +91,8 @@ export function UpdateAuthCookies(cookies: Cookies, tokens: components['schemas'
 	});
 }
 
-export async function FetchDiscordUserData(accessToken: string): Promise<AuthorizedUser | null> {
-	const { data } = await GetAuthorizedAccount(accessToken);
+export async function FetchDiscordUserData(): Promise<AuthorizedAccountDto | null> {
+	const { data } = await getAuthAccount();
 
 	if (!data) return null;
 

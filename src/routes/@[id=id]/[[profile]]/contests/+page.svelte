@@ -2,49 +2,65 @@
 	import Head from '$comp/head.svelte';
 	import Contest from '$comp/stats/jacob/contest.svelte';
 	import MedalCounts from '$comp/stats/jacob/medalcounts.svelte';
-	import { getTimeStamp } from '$lib/format';
-	import type { PageData } from './$types';
-	import * as Accordion from '$ui/accordion';
-	import { Switch } from '$ui/switch';
-	import { Button } from '$ui/button';
+	import type { ContestParticipationDto } from '$lib/api';
+	import { getSkyblockDate, getTimeStamp } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
+	import { Switch } from '$ui/switch';
 
 	let timeType = $state(false);
 	let accordionValues = $state<string[]>([]);
 
 	function expandAll() {
-		accordionValues = Object.keys(data.years ?? {}).map((year) => `year-${year}`);
+		accordionValues = Object.keys(years ?? {}).map((year) => `year-${year}`);
 	}
 
 	function collapseAll() {
 		accordionValues = [];
 	}
 
-	interface Props {
-		data: PageData;
-	}
-
-	let { data }: Props = $props();
-
 	const ctx = getStatsContext();
+	const member = ctx.member;
+
+	const contestsCount = $derived(member.jacob?.contests?.length ?? 0);
+	const years = $derived(processContests());
+
+	function processContests() {
+		const years = {} as Partial<Record<number, ContestParticipationDto[]>>;
+
+		for (const contest of member.jacob?.contests ?? []) {
+			const year = getSkyblockDate(contest.timestamp ?? 0n).year + 1;
+			if (!years[year]) years[year] = [];
+
+			years[year]?.push(contest);
+		}
+
+		// Sort each year by timestamp
+		for (const year in years) {
+			years[year] = years[year]?.sort((a, b) => Number((b.timestamp ?? 0) - (a.timestamp ?? 0)));
+		}
+
+		return years;
+	}
 </script>
 
 <Head
 	title="{ctx.ignMeta ?? 'Unknown'} | Jacob's Contests"
-	description="View all {data.contestsCount} Jacob's Contests participated in by {ctx.ignMeta ?? 'Unknown'}!"
+	description="View all {contestsCount} Jacob's Contests participated in by {ctx.ignMeta ?? 'Unknown'}!"
 />
 
 <section class="flex w-full flex-col items-center justify-center">
 	<div class="mx-4 flex flex-col items-center justify-center sm:w-full md:w-[90%] lg:w-[80%]">
 		<div class="my-8 flex flex-col items-center">
 			<MedalCounts
-				participations={data.contestsCount}
+				participations={contestsCount}
 				medals={{
-					diamond: data.member?.jacob?.earnedMedals?.diamond ?? 0,
-					platinum: data.member?.jacob?.earnedMedals?.platinum ?? 0,
-					gold: data.member?.jacob?.earnedMedals?.gold ?? 0,
-					silver: data.member?.jacob?.earnedMedals?.silver ?? 0,
-					bronze: data.member?.jacob?.earnedMedals?.bronze ?? 0,
+					diamond: member?.jacob?.earnedMedals?.diamond ?? 0,
+					platinum: member?.jacob?.earnedMedals?.platinum ?? 0,
+					gold: member?.jacob?.earnedMedals?.gold ?? 0,
+					silver: member?.jacob?.earnedMedals?.silver ?? 0,
+					bronze: member?.jacob?.earnedMedals?.bronze ?? 0,
 				}}
 			/>
 
@@ -60,7 +76,7 @@
 		</div>
 
 		<Accordion.Root type="multiple" class="mx-4 w-full max-w-6xl items-center" value={accordionValues}>
-			{#each Object.entries(data.years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
+			{#each Object.entries(years ?? {}).sort((a, b) => +b[0] - +a[0]) as [year, conts] (year)}
 				<Accordion.Item value="year-{year}">
 					<Accordion.Trigger class="flex justify-center hover:no-underline">
 						<div class="mr-4 flex flex-col items-center justify-center gap-2">
@@ -99,7 +115,7 @@
 			{/each}
 		</Accordion.Root>
 
-		{#if data.contestsCount === 0}
+		{#if contestsCount === 0}
 			<div class="flex w-full flex-col items-center justify-center">
 				<p class="text-2xl font-bold">No Contests</p>
 				<p class="text-lg">This player has not participated in any contests.</p>

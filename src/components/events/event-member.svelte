@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
-	import { Button } from '$ui/button';
-	import * as Accordion from '$ui/accordion';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import type { EventDetailsDto, EventMemberDetailsDto, EventMemberDto } from '$lib/api';
+	import { formatIgn } from '$lib/format';
 	import { EventType } from '$lib/utils';
-	import Crown from '@lucide/svelte/icons/crown';
+	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
 	import * as Tooltip from '$ui/tooltip';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import { formatIgn } from '$lib/format';
-	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import Crown from '@lucide/svelte/icons/crown';
 
 	interface Props {
 		owner?: boolean;
-		event: components['schemas']['EventDetailsDto'];
-		member: components['schemas']['EventMemberDto'] | components['schemas']['EventMemberDetailsDto'];
+		event: EventDetailsDto;
+		member: EventMemberDto | EventMemberDetailsDto;
 		rank?: number | undefined;
 		running: boolean;
 	}

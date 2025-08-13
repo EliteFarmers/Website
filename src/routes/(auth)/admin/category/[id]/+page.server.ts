@@ -1,8 +1,13 @@
+import {
+	addProductToCategory,
+	getAllProducts,
+	getCategory,
+	removeProductToCategory,
+	reorderCategoryProducts,
+	updateCategory,
+} from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { GetAdminProducts, GetShopCategory, UpdateCategoryProductOrder, UpdateShopCategory } from '$lib/api/elite';
-import { AddProductToCategory } from '$lib/api/elite';
-import { RemoveProductFromCategory } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals, params }) => {
 	const { user, session } = await parent();
@@ -12,8 +17,8 @@ export const load = (async ({ parent, locals, params }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: category } = await GetShopCategory(params.id, token).catch(() => ({ data: undefined }));
-	const { data: products } = await GetAdminProducts(token).catch(() => ({ data: undefined }));
+	const { data: category } = await getCategory(params.id).catch(() => ({ data: undefined }));
+	const { data: products } = await getAllProducts().catch(() => ({ data: undefined }));
 
 	if (!category) {
 		throw error(404, 'Category Not Found');
@@ -43,7 +48,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category data.' });
 		}
 
-		const { response, error: e } = await UpdateShopCategory(locals.access_token, id, {
+		const { response, error: e } = await updateCategory(id, {
 			title,
 			description,
 			slug,
@@ -69,7 +74,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category Id or product.' });
 		}
 
-		const { response, error: e } = await AddProductToCategory(locals.access_token, categoryId, productId);
+		const { response, error: e } = await addProductToCategory(categoryId, productId);
 
 		if (e || !response.ok) {
 			return fail(response.status ?? 400, { error: e || 'Failed to add product.' });
@@ -90,10 +95,10 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category Id or product.' });
 		}
 
-		const { response, error: e } = await RemoveProductFromCategory(locals.access_token, categoryId, productId);
+		const { ok, error: e } = await removeProductToCategory(categoryId, productId);
 
-		if (!e || !response.ok) {
-			return fail(response.status ?? 400, { error: e || 'Failed to remove product.' });
+		if (e || !ok) {
+			return fail(400, { error: e || 'Failed to remove product.' });
 		}
 
 		return { success: true };
@@ -120,7 +125,7 @@ export const actions: Actions = {
 			order.push({ id: id, order: i });
 		}
 
-		const { response, error: e } = await UpdateCategoryProductOrder(locals.access_token, categoryId, {
+		const { response, error: e } = await reorderCategoryProducts(categoryId, {
 			elements: order,
 		});
 

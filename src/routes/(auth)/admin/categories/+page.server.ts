@@ -1,6 +1,6 @@
+import { createCategory, getCategories, reorderCategories, updateCategory } from '$lib/api';
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { CreateShopCategory, GetShopCategories, UpdateCategoryOrder, UpdateShopCategory } from '$lib/api/elite';
 
 export const load = (async ({ parent, locals }) => {
 	const { user, session } = await parent();
@@ -10,7 +10,7 @@ export const load = (async ({ parent, locals }) => {
 		throw error(404, 'Not Found');
 	}
 
-	const { data: categories } = await GetShopCategories(true, token).catch(() => ({ data: undefined }));
+	const { data: categories } = await getCategories({ includeProducts: true }).catch(() => ({ data: undefined }));
 
 	return {
 		user,
@@ -40,7 +40,7 @@ export const actions: Actions = {
 			order.push({ id: +id, order: i });
 		}
 
-		const { response, error: e } = await UpdateCategoryOrder(locals.access_token, { elements: order });
+		const { response, error: e } = await reorderCategories({ elements: order });
 
 		if (e || !response.ok) {
 			return fail(response.status ?? 400, { error: e || 'Failed to update order.' });
@@ -62,7 +62,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category data.' });
 		}
 
-		const { response, error: e } = await CreateShopCategory(locals.access_token, { title, description, slug });
+		const { response, error: e } = await createCategory({ title, description, slug });
 
 		if (e || !response.ok) {
 			return fail(response.status ?? 400, { error: e || 'Failed to create category.' });
@@ -86,7 +86,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid category data.' });
 		}
 
-		const { response, error: e } = await UpdateShopCategory(locals.access_token, id, {
+		const { response, error: e } = await updateCategory(id, {
 			title,
 			description,
 			slug,

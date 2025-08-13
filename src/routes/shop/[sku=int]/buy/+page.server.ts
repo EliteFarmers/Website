@@ -1,6 +1,6 @@
+import { PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { PUBLIC_DISCORD_CLIENT_ID } from '$env/static/public';
 
 export const load = (async ({ params }) => {
 	const sku = params.sku;

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import CropTable from './croptable.svelte';
-	import BonusTable from './bonustable.svelte';
 	import Head from '$comp/head.svelte';
 	import { CREDITS } from '$content/credits';
-	import * as Card from '$ui/card';
 	import { FAQ } from '$content/faq';
+	import * as Card from '$ui/card';
 	import type { PageData } from './$types';
+	import BonusTable from './bonustable.svelte';
+	import CropTable from './croptable.svelte';
 	import PestTable from './pest-table.svelte';
 
 	interface Props {

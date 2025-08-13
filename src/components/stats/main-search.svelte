@@ -3,9 +3,9 @@
 </script>
 
 <script lang="ts">
-	import { Button } from '$ui/button';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import { cn } from '$lib/utils';
+	import { Button } from '$ui/button';
 
 	interface Props {
 		class?: string;

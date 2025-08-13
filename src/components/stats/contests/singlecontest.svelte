@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
-	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import Participation from '$comp/stats/contests/participation.svelte';
+	import type { StrippedContestParticipationDto } from '$lib/api';
+	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getReadableSkyblockDate } from '$lib/format';
 	import { Button } from '$ui/button';
 	import { ScrollArea } from '$ui/scroll-area';
@@ -11,7 +11,7 @@
 		crop?: string;
 		participants?: number;
 		timestamp: number;
-		entries?: components['schemas']['StrippedContestParticipationDto'][];
+		entries?: StrippedContestParticipationDto[];
 	}
 
 	let { crop = 'Wheat', participants = -1, timestamp, entries = [] }: Props = $props();

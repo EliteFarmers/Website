@@ -1,20 +1,20 @@
 <script lang="ts" module>
-	import UserRound from '@lucide/svelte/icons/user-round';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-	import Settings from '@lucide/svelte/icons/settings';
-	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
 	import Clover from '@lucide/svelte/icons/clover';
-	import Shield from '@lucide/svelte/icons/shield';
-	import LogOut from '@lucide/svelte/icons/log-out';
+	import FileChartColumn from '@lucide/svelte/icons/file-chart-column';
 	import LogIn from '@lucide/svelte/icons/log-in';
+	import LogOut from '@lucide/svelte/icons/log-out';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Shield from '@lucide/svelte/icons/shield';
+	import UserRound from '@lucide/svelte/icons/user-round';
 </script>
 
 <script lang="ts">
 	import UserIcon from '$comp/discord/user-icon.svelte';
-	import * as DropdownMenu from '$ui/dropdown-menu';
-	import * as Avatar from '$ui/avatar';
-	import * as Sidebar from '$ui/sidebar';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
+	import * as Avatar from '$ui/avatar';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import * as Sidebar from '$ui/sidebar';
 
 	const ctx = getGlobalContext();
 	const session = $derived(ctx.session);

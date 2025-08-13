@@ -1,22 +1,22 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Head from '$comp/head.svelte';
 	import ProductPrice from '$comp/monetization/product-price.svelte';
+	import { type Crumb, getPageCtx } from '$lib/hooks/page.svelte';
+	import { pending } from '$lib/utils';
 	import { Button } from '$ui/button';
-	import { Input } from '$ui/input';
-	import { Label } from '$ui/label';
-	import { Switch } from '$ui/switch';
-	import { SelectSimple } from '$ui/select';
-	import { Textarea } from '$ui/textarea';
+	import * as Card from '$ui/card';
 	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import * as Dialog from '$ui/dialog';
-	import * as Card from '$ui/card';
-	import { pending } from '$lib/utils';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
+	import { SelectSimple } from '$ui/select';
+	import { Switch } from '$ui/switch';
+	import { Textarea } from '$ui/textarea';
 	import Plus from '@lucide/svelte/icons/plus';
-	import X from '@lucide/svelte/icons/x';
-	import { enhance } from '$app/forms';
 	import Settings from '@lucide/svelte/icons/settings-2';
-	import type { PageData, ActionData } from './$types';
-	import { type Crumb, getBreadcrumb } from '$lib/hooks/breadcrumb.svelte';
+	import X from '@lucide/svelte/icons/x';
+	import type { ActionData, PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -57,10 +57,10 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 

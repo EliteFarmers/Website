@@ -1,6 +1,6 @@
+import { getUserGuild } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { GetGuild } from '$lib/api/elite';
 
 export const load = (async ({ params, parent, locals }) => {
 	const { user } = await parent();
@@ -11,7 +11,7 @@ export const load = (async ({ params, parent, locals }) => {
 		throw error(401, 'Unauthorized');
 	}
 
-	const guild = await GetGuild(id, token)
+	const guild = await getUserGuild(id)
 		.then((guild) => guild.data ?? undefined)
 		.catch(() => undefined);
 

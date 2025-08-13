@@ -1,7 +1,7 @@
 import { IsMobile } from '$lib/hooks/is-mobile.svelte.js';
+import { PersistedState } from 'runed';
 import { getContext, setContext } from 'svelte';
 import { SIDEBAR_KEYBOARD_SHORTCUT } from './constants.js';
-import { PersistedState } from 'runed';
 
 type Getter<T> = () => T;
 
@@ -70,7 +70,7 @@ class SidebarState {
 	};
 
 	toggle = () => {
-		return this.#isMobile.current ? (this.openMobile = !this.openMobile) : this.setOpen(!this.open);
+		return this.#isMobile.medium.current ? (this.openMobile = !this.openMobile) : this.setOpen(!this.open);
 	};
 }
 

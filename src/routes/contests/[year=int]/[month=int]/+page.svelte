@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getSkyblockMonth, getTimeStamp } from '$lib/format';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { Button } from '$ui/button';
 	import type { PageData } from './$types';
 
@@ -36,16 +35,16 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 </script>
 
 <Head title="Contests | {monthString}, Year {year}" description="View all known Jacob contests in this month!" />
 
 <div class="flex flex-col items-center justify-center px-2">
-	<div class="mt-16 mb-4 flex flex-col gap-4 text-center font-semibold">
+	<div class="mt-16 mb-4 flex w-full flex-col gap-4 text-center font-semibold">
 		<h1 class="text-4xl">{monthString}, Year {year}</h1>
 		<p>
 			{new Date(getTimeStamp(+year - 1, month - 1, 0) * 1000).toLocaleString(undefined, {
@@ -59,19 +58,14 @@
 				})}
 		</p>
 		<div class="my-4 flex flex-col items-center justify-center gap-2 md:gap-4">
-			<div class="flex flex-row gap-4">
-				<Button
-					class="w-32 rounded-lg"
-					variant="secondary"
-					href="/contests/{page.params.year}/{+page.params.month - 1}">Previous</Button
+			<div class="flex flex-col gap-4 @md:flex-row">
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{data.year}/{data.month - 1}"
+					>Previous</Button
 				>
-				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{page.params.year}/records"
-					>Records</Button
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{data.year}/records">Records</Button
 				>
-				<Button
-					class="w-32 rounded-lg"
-					variant="secondary"
-					href="/contests/{page.params.year}/{+page.params.month + 1}">Next</Button
+				<Button class="w-32 rounded-lg" variant="secondary" href="/contests/{data.year}/{data.month + 1}"
+					>Next</Button
 				>
 			</div>
 		</div>
@@ -102,12 +96,12 @@
 		</div>
 	{/if}
 
-	<div class="mb-16 grid grid-cols-3 items-center gap-1 text-center">
+	<div class="mb-16 grid grid-cols-1 items-center gap-1 text-center @md:grid-cols-3">
 		{#each Array.from({ length: 12 }, (_, i) => i + 1) as i (i)}
 			<Button
 				variant="secondary"
 				class="w-40 rounded-lg whitespace-nowrap {i === month ? 'ring-2' : ''}"
-				href="/contests/{page.params.year}/{i}"
+				href="/contests/{data.year}/{i}"
 			>
 				{getSkyblockMonth(i)}
 			</Button>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { AnnouncementDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Button } from '$ui/button';
 	import X from '@lucide/svelte/icons/x';
@@ -18,7 +18,7 @@
 	</div>
 {/if}
 
-{#snippet announcement(a: components['schemas']['AnnouncementDto'])}
+{#snippet announcement(a: AnnouncementDto)}
 	<div
 		class="bg-card border-completed group flex scroll-mt-32 flex-col items-center justify-between gap-4 rounded-lg border-2 p-2 text-sm transition-transform sm:flex-row"
 		id="announcement-{a.id}"

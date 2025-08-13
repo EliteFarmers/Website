@@ -1,13 +1,8 @@
-import {
-	GetAccount,
-	GetLeaderboardSlice,
-	GetPlayersRank,
-	GetProfilesRank,
-	LeaderboardRemovedFilter,
-} from '$lib/api/elite';
+import { getAccount, getPlayerRank2, getProfileRank2, RemovedFilter } from '$lib/api';
+import { getLeaderboardSlice } from '$lib/remote/leaderboards.remote';
 import { error, fail, redirect } from '@sveltejs/kit';
-
 import type { PageServerLoad } from './$types';
+
 export const load = (async ({ params, parent, url }) => {
 	const { leaderboard: settings } = await parent();
 
@@ -42,12 +37,13 @@ export const load = (async ({ params, parent, url }) => {
 	}
 
 	try {
-		const lb = await GetLeaderboardSlice(category, {
+		const lb = await getLeaderboardSlice({
+			leaderboard: category,
 			offset: startNum,
 			limit: 20,
 			mode,
 			interval,
-			removed: removed ? (+removed as LeaderboardRemovedFilter) : undefined,
+			removed: removed ? (+removed as 0) : undefined,
 		});
 
 		if (!lb) {
@@ -80,7 +76,9 @@ export const actions = {
 			});
 		}
 
-		const { data: account } = await GetAccount(search, request.headers).catch(() => ({ data: undefined }));
+		const { data: account } = await getAccount(search).catch(() => ({
+			data: undefined,
+		}));
 		if (!account) {
 			return fail(400, {
 				error: 'User not found!',
@@ -101,14 +99,14 @@ export const actions = {
 		const query = {
 			mode,
 			interval,
-			removed: removed ? (+removed as LeaderboardRemovedFilter) : undefined,
+			removed: removed ? (+removed as RemovedFilter) : undefined,
 		};
 
 		const results = await Promise.all(
 			profiles.map(async (p) => {
 				const { data: rank } = leaderboard?.profile
-					? await GetProfilesRank(category, p.profileId, false, query)
-					: await GetPlayersRank(category, account.id, p.profileId, false, query);
+					? await getProfileRank2(category, p.profileId, query, { headers: request.headers })
+					: await getPlayerRank2(category, account.id, p.profileId, query, { headers: request.headers });
 
 				if (!rank?.rank || rank.rank === -1) {
 					return null;

@@ -1,14 +1,14 @@
 <script lang="ts">
-	import type { components } from '$lib/api/api';
+	import type { ContestParticipationWithTimestampDto } from '$lib/api';
 	import { getReadableSkyblockMonthDay } from '$lib/format';
-	import { Button } from '$ui/button';
 	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
 	import * as Popover from '$ui/popover';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
 
 	interface Props {
 		rank?: number;
-		entry: components['schemas']['ContestParticipationWithTimestampDto'];
+		entry: ContestParticipationWithTimestampDto;
 	}
 
 	let { rank = 0, entry }: Props = $props();
@@ -67,14 +67,14 @@
 				</p>
 				<p class="text-center font-mono text-sm font-light">
 					<span class="bg-card rounded-md p-1 whitespace-nowrap">
-						{new Date((entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
+						{new Date(Number(entry.timestamp ?? 0) * 1000).toLocaleString(undefined, {
 							timeStyle: 'short',
 							dateStyle: 'short',
 							timeZone: 'UTC',
 						})}
 					</span>
 					<span class="bg-card rounded-md p-1 whitespace-nowrap">
-						{getReadableSkyblockMonthDay(entry.timestamp ?? 0)}
+						{getReadableSkyblockMonthDay(Number(entry.timestamp ?? 0))}
 					</span>
 				</p>
 			</div>

@@ -1,30 +1,30 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Button } from '$ui/button';
-	import { Label } from '$ui/label';
-	import { Input } from '$ui/input';
-	import { Textarea } from '$ui/textarea';
-	import * as Popover from '$ui/popover';
-	import * as Dialog from '$ui/dialog';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import Trash2 from '@lucide/svelte/icons/trash-2';
-	import Settings from '@lucide/svelte/icons/settings';
-	import Image from '@lucide/svelte/icons/image';
-	import Head from '$comp/head.svelte';
-	import GuildIcon from '$comp/discord/guild-icon.svelte';
-	import { EventType } from '$lib/utils';
-	import type { PageData } from './$types';
-	import { NumberInput } from '$comp/ui/number-input';
-	import type { components } from '$lib/api/api';
-	import { Crop, getCropDisplayName, getCropFromName, Pest } from 'farming-weight';
-	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import HeroBanner from '$comp/hero-banner.svelte';
-	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { page } from '$app/state';
-	import MemberList from './member-list.svelte';
+	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import Head from '$comp/head.svelte';
+	import HeroBanner from '$comp/hero-banner.svelte';
+	import { NumberInput } from '$comp/ui/number-input';
+	import type { CollectionEventData, MedalEventData, PestEventData, WeightEventData } from '$lib/api';
+	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { EventType } from '$lib/utils';
+	import { Button } from '$ui/button';
+	import * as Dialog from '$ui/dialog';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
+	import * as Popover from '$ui/popover';
+	import { Textarea } from '$ui/textarea';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
-	import { getBreadcrumb, type Crumb } from '$lib/hooks/breadcrumb.svelte';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import Image from '@lucide/svelte/icons/image';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import { Crop, getCropDisplayName, getCropFromName, Pest } from 'farming-weight';
+	import type { PageData } from './$types';
+	import MemberList from './member-list.svelte';
 
 	interface Props {
 		data: PageData;
@@ -44,22 +44,16 @@
 	let event = $derived(data.event);
 
 	let medalWeights = $state(
-		((data.event?.data as components['schemas']['MedalEventData'])?.medalWeights ?? undefined) as
-			| Record<string, number>
-			| undefined
+		((data.event?.data as MedalEventData)?.medalWeights ?? undefined) as Record<string, number> | undefined
 	);
 	let cropWeights = $state(
-		((data.event?.data as components['schemas']['WeightEventData'])?.cropWeights ?? undefined) as
-			| Record<string, number>
-			| undefined
+		((data.event?.data as WeightEventData)?.cropWeights ?? undefined) as Record<string, number> | undefined
 	);
 	let pestWeights = $state(
-		((data.event?.data as components['schemas']['PestEventData'])?.pestWeights ?? undefined) as
-			| Record<string, number>
-			| undefined
+		((data.event?.data as PestEventData)?.pestWeights ?? undefined) as Record<string, number> | undefined
 	);
 	let collectionWeights = $state(
-		((data.event?.data as components['schemas']['CollectionEventData'])?.collectionWeights ?? undefined) as
+		((data.event?.data as CollectionEventData)?.collectionWeights ?? undefined) as
 			| Record<string, { weight: number; name: string }>
 			| undefined
 	);
@@ -83,9 +77,9 @@
 		},
 	]);
 
-	const breadcrumb = getBreadcrumb();
+	const breadcrumb = getPageCtx();
 	$effect.pre(() => {
-		breadcrumb.setOverride(crumbs);
+		breadcrumb.setBreadcrumbs(crumbs);
 	});
 
 	const favorites = getFavoritesContext();

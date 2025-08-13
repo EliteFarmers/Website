@@ -1,13 +1,13 @@
 <script lang="ts">
 	import EventMember from '$comp/events/event-member.svelte';
-	import type { components } from '$lib/api/api';
+	import type { EventDetailsDto, EventMemberDetailsDto } from '$lib/api';
 	import * as Accordion from '$ui/accordion';
 
 	interface Props {
 		highlightUuid?: string | undefined;
 		running?: boolean;
-		event: components['schemas']['EventDetailsDto'];
-		members: components['schemas']['EventMemberDetailsDto'][];
+		event: EventDetailsDto;
+		members: EventMemberDetailsDto[];
 	}
 
 	let { highlightUuid = undefined, running = false, event, members }: Props = $props();

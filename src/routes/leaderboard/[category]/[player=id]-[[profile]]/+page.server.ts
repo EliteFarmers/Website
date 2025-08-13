@@ -1,4 +1,4 @@
-import { GetAccount, GetPlayersRank, GetProfilesRank, LeaderboardRemovedFilter } from '$lib/api/elite';
+import { getAccount, getPlayerRank2, getProfileRank2, RemovedFilter } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -14,7 +14,7 @@ export const load = (async ({ params, parent, url, request }) => {
 		throw error(400, 'Search query is required!');
 	}
 
-	const { data: account } = await GetAccount(ign, request.headers).catch(() => ({ data: undefined }));
+	const { data: account } = await getAccount(ign, { headers: request.headers }).catch(() => ({ data: undefined }));
 	if (!account) {
 		throw error(400, 'User not found!');
 	}
@@ -31,12 +31,12 @@ export const load = (async ({ params, parent, url, request }) => {
 	const query = {
 		mode,
 		interval,
-		removed: removed ? (+removed as LeaderboardRemovedFilter) : undefined,
+		removed: removed ? (+removed as RemovedFilter) : undefined,
 	};
 
 	const { data: rank } = leaderboard?.profile
-		? await GetProfilesRank(category, profile.profileId, false, query)
-		: await GetPlayersRank(category, account.id, profile.profileId, false, query);
+		? await getProfileRank2(category, profile.profileId, query, { headers: request.headers })
+		: await getPlayerRank2(category, account.id, profile.profileId, query, { headers: request.headers });
 
 	if (!rank?.rank || rank.rank === -1) {
 		throw error(400, 'Player not found in leaderboard!');

@@ -1,18 +1,18 @@
-import type { components } from '$lib/api/api';
+import type { AdminEventMemberDto, EventTeamWithMembersDto } from '$lib/api';
 import { renderComponent, renderSnippet } from '$ui/data-table';
-import type { ColumnDef } from '@tanstack/table-core';
-import { createRawSnippet } from 'svelte';
-import MemberTableActions from './member-table-actions.svelte';
+import Activity from '@lucide/svelte/icons/activity';
 import CircleOff from '@lucide/svelte/icons/circle-off';
 import LogOut from '@lucide/svelte/icons/log-out';
-import Activity from '@lucide/svelte/icons/activity';
-import DataTableColumnHeader from './data-table-column-header.svelte';
 import Pause from '@lucide/svelte/icons/pause';
-import MemberTeamRow from './member-team-row.svelte';
+import type { ColumnDef } from '@tanstack/table-core';
+import { createRawSnippet } from 'svelte';
+import DataTableColumnHeader from './data-table-column-header.svelte';
 import MemberRow from './member-row.svelte';
+import MemberTableActions from './member-table-actions.svelte';
+import MemberTeamRow from './member-team-row.svelte';
 
-export type AdminEventMember = components['schemas']['AdminEventMemberDto'];
-export type AdminEventTeam = components['schemas']['EventTeamWithMembersDto'];
+export type AdminEventMember = AdminEventMemberDto;
+export type AdminEventTeam = EventTeamWithMembersDto;
 
 const statusCellSnippet = createRawSnippet<[string]>((getStatus) => {
 	const status = getStatus();
@@ -35,7 +35,7 @@ const amountCellSnippet = createRawSnippet<[string]>((getAmount) => {
 });
 
 export const getColumns = (
-	teams: Record<number, components['schemas']['EventTeamWithMembersDto']>,
+	teams: Record<number, EventTeamWithMembersDto>,
 	actions: Record<string, (member: AdminEventMember) => void>
 ) =>
 	[

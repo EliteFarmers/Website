@@ -1,41 +1,48 @@
 import { building } from '$app/environment';
-import type { components } from './api/api';
-import {
-	GetAnnouncements,
-	GetAuctionHouse,
-	GetBazaarData,
-	GetEventTeamWords,
-	GetLeaderboards,
-	GetProducts,
-	GetSkyblockItems,
-	GetUpcomingEvents,
-	GetWeightStyles,
-} from './api/elite';
 import { ELITE_API_URL } from '$env/static/private';
+import {
+	getAnnouncement,
+	getAuctionHouseProducts,
+	getBazaarProducts,
+	getLeaderboards,
+	getProducts,
+	getSkyblockItems,
+	getStyles,
+	getTeamWordList,
+	getUpcomingEvents,
+	type AnnouncementDto,
+	type AuctionHouseDto,
+	type EventDetailsDto,
+	type EventTeamsWordListDto,
+	type GetBazaarProductsResponse,
+	type GetSkyblockItemsResponse,
+	type ProductDto,
+	type WeightStyleWithDataDto,
+} from './api';
 import { parseLeaderboards } from './constants/leaderboards';
 
 const cacheEntries = {
 	events: {
-		data: [] as components['schemas']['EventDetailsDto'][],
+		data: [] as EventDetailsDto[],
 		update: async () => {
-			const { data } = await GetUpcomingEvents();
+			const { data } = await getUpcomingEvents();
 			return data ?? [];
 		},
 	},
 	products: {
-		data: [] as components['schemas']['ProductDto'][],
+		data: [] as ProductDto[],
 		update: async () => {
-			const { data } = await GetProducts();
+			const { data } = await getProducts();
 			return data ?? [];
 		},
 	},
 	styles: {
 		data: {
-			list: [] as components['schemas']['WeightStyleWithDataDto'][],
-			lookup: {} as Record<string, components['schemas']['WeightStyleWithDataDto']>,
+			list: [] as WeightStyleWithDataDto[],
+			lookup: {} as Record<string, WeightStyleWithDataDto>,
 		},
 		update: async () => {
-			const { data } = await GetWeightStyles();
+			const { data } = await getStyles();
 			return {
 				list: data ?? [],
 				lookup:
@@ -44,52 +51,52 @@ const cacheEntries = {
 							acc[style.id] = style;
 							return acc;
 						},
-						{} as Record<string, components['schemas']['WeightStyleWithDataDto']>
+						{} as Record<string, WeightStyleWithDataDto>
 					) || {},
 			};
 		},
 	},
 	teamwords: {
-		data: {} as components['schemas']['EventTeamsWordListDto'],
+		data: {} as EventTeamsWordListDto,
 		update: async () => {
-			const { data } = await GetEventTeamWords();
+			const { data } = await getTeamWordList();
 			return data ?? { first: [] as string[], second: [] as string[], third: [] as string[] };
 		},
 	},
 	leaderboards: {
 		data: {} as ReturnType<typeof parseLeaderboards>,
 		update: async () => {
-			const { data } = await GetLeaderboards();
+			const { data } = await getLeaderboards();
 			return parseLeaderboards(data);
 		},
 	},
 	bazaar: {
 		interval: 180, // 3 minutes
-		data: {} as components['schemas']['GetBazaarProductsResponse'],
+		data: {} as GetBazaarProductsResponse,
 		update: async () => {
-			const { data } = await GetBazaarData();
+			const { data } = await getBazaarProducts();
 			return data;
 		},
 	},
 	auctions: {
 		interval: 10, // 10 minutes
-		data: {} as components['schemas']['AuctionHouseDto'],
+		data: {} as AuctionHouseDto,
 		update: async () => {
-			const { data } = await GetAuctionHouse();
+			const { data } = await getAuctionHouseProducts();
 			return data ?? { items: {} };
 		},
 	},
 	items: {
-		data: {} as components['schemas']['GetSkyblockItemsResponse']['items'],
+		data: {} as GetSkyblockItemsResponse['items'],
 		update: async () => {
-			const { data } = await GetSkyblockItems();
-			return ((data ?? {}).items ?? {}) as components['schemas']['GetSkyblockItemsResponse']['items'];
+			const { data } = await getSkyblockItems();
+			return ((data ?? {}).items ?? {}) as GetSkyblockItemsResponse['items'];
 		},
 	},
 	announcements: {
-		data: [] as components['schemas']['AnnouncementDto'][],
+		data: [] as AnnouncementDto[],
 		update: async () => {
-			const { data } = await GetAnnouncements();
+			const { data } = await getAnnouncement();
 			return data ?? [];
 		},
 	},

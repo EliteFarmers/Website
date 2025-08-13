@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { getLevelProgress } from '$lib/format';
-	import Skillbar from './skillbar.svelte';
-	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-	import * as Collapsible from '$ui/collapsible';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
+	import * as Collapsible from '$ui/collapsible';
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
 	import { getGardenLevel } from 'farming-weight';
 	import { slide } from 'svelte/transition';
-	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import Skillbar from './skillbar.svelte';
 
 	interface Props {
 		open?: boolean;
