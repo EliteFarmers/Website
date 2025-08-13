@@ -3,17 +3,12 @@ import { preprocessCropCharts, preprocessWeightChart } from '$lib/utils';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ parent, setHeaders }) => {
+export const load = (async ({ parent }) => {
 	const { account, profile } = await parent();
 
 	const { data: crops } = await getCropGraphs(account.id, profile.profileId).catch(() => ({
 		data: undefined,
 	}));
-
-	// 5 minute cache
-	setHeaders({
-		'Cache-Control': 'max-age=300',
-	});
 
 	return {
 		weight: preprocessWeightChart(crops ?? []),
