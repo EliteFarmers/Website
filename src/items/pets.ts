@@ -282,7 +282,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			},
 			[Stat.BonusPestChance]: {
 				name: 'Bonus Pest Chance',
-				value: 0.4,
+				value: 0.5,
 				type: FarmingPetStatType.Base,
 			},
 		},
