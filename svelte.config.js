@@ -10,7 +10,7 @@ const config = {
 	preprocess: sveltePreprocess(),
 	compilerOptions: {
 		experimental: {
-			async: true,
+			// async: true, // Soon hopefully
 		},
 	},
 	kit: {
