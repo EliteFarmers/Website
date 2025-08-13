@@ -438,3 +438,6 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		...turboEnchant,
 	},
 } as const;
+
+export const depthStriderLevels = [1, 2, 3] as const;
+export type DepthStriderLevels = (typeof depthStriderLevels)[number];

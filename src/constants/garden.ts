@@ -1,4 +1,5 @@
 import { Crop } from './crops.js';
+import type { DepthStriderLevels } from './enchants.js';
 import { Rarity } from './reforges.js';
 
 export const GARDEN_EXP_REQUIRED = [
@@ -499,5 +500,708 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Zog',
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Zog',
+	},
+};
+
+export const mcVersions = ['1.8.9', '1.21'] as const;
+export type MinecraftVersion = (typeof mcVersions)[number];
+
+export const directions = ['North', 'South', 'East', 'West'] as const;
+export type Direction = (typeof directions)[number];
+
+export const farmingMethods = ['straight', 'running into wall', 'angled into wall'] as const;
+export type FarmingMethod = (typeof farmingMethods)[number];
+
+export enum ResourceType {
+	Thread,
+	Video,
+	Schematic,
+	Garden,
+}
+
+export interface FarmDesignInfo {
+	name: string;
+	description?: string;
+	crops: Crop[];
+	speed: {
+		'1.8.9': number;
+		'1.21'?: number;
+		depthStrider?: DepthStriderLevels;
+		soulSand: boolean;
+		method: FarmingMethod;
+	};
+	angle: {
+		yaw: number;
+		pitch: number;
+	};
+	bps: number;
+	laneDepth: number;
+	resources?: {
+		source: string;
+		type: ResourceType;
+	}[];
+	authors?: {
+		name: string;
+		url?: string;
+	}[];
+	replacedBy?: string[];
+	notes?: string[];
+}
+
+const blackCatNote = 'Despite the name, this farm **does not** use a black cat pet anymore';
+
+export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
+	idkdomPumpkin: {
+		name: 'IdkDom Melon/Pumpkin',
+		crops: [Crop.Melon, Crop.Pumpkin],
+		speed: {
+			'1.8.9': 155,
+			soulSand: false,
+			method: 'straight',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 28.5,
+		},
+		bps: 19.7,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'https://youtu.be/Zy_w332uUic',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'IdkDom',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'IdkDom',
+				url: 'https://www.youtube.com/@IdkDom',
+			},
+		],
+		replacedBy: ['easierMelon', 'chisslMelon'],
+	},
+	blackCatMelon: {
+		name: 'SunTzu & MelonKingDe Black Cat Melon',
+		crops: [Crop.Melon, Crop.Pumpkin],
+		speed: {
+			'1.8.9': 400,
+			'1.21': 368,
+			depthStrider: 3,
+			soulSand: true,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: -59,
+		},
+		bps: 19.93,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159960881287942234',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/5k9c7qK0l58',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
+		replacedBy: ['easierMelon', 'chisslMelon'],
+		notes: [blackCatNote],
+	},
+	easierMelon: {
+		name: 'Easier to Build Melon/Pumpkin',
+		crops: [Crop.Melon, Crop.Pumpkin],
+		speed: {
+			'1.8.9': 400,
+			'1.21': 368,
+			depthStrider: 3,
+			soulSand: true,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: -59,
+		},
+		bps: 19.94,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1358514959247741068',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/s4HV0RyWcoI',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'IdkVenom',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'IdkVenom',
+				url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
+			},
+			{
+				name: 'DeadlyIPanda',
+				url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
+			},
+		],
+	},
+	chisslMelon: {
+		name: 'Chissl Waterless Melon/Pumpkin',
+		crops: [Crop.Melon, Crop.Pumpkin],
+		speed: {
+			'1.8.9': 360,
+			depthStrider: 1,
+			soulSand: false,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 59,
+		},
+		bps: 19.95,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'Chissl',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'Chissl',
+			},
+		],
+		notes: [
+			'Very difficult and time consuming to build, only worthwhile for extreme farmers',
+			'Great for pest farming, most recommended design if you pest farm with melons often',
+		],
+	},
+	dropdownWheat: {
+		name: 'Dropdown Wheat/Potato/Carrot/Netherwart',
+		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
+		speed: {
+			'1.8.9': 93,
+			depthStrider: 3,
+			soulSand: false,
+			method: 'straight',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 3,
+		},
+		bps: 19.85,
+		laneDepth: 5,
+		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
+		notes: ['Annoying to use', 'Not infinite even at garden 15', 'Requires 5 plots, no less'],
+	},
+	aceWheat: {
+		name: 'Ace Wheat/Potato/Carrot/Netherwart',
+		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
+		speed: {
+			'1.8.9': 347,
+			'1.21': 308,
+			depthStrider: 2,
+			soulSand: true,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 3,
+		},
+		bps: 20,
+		laneDepth: 5,
+		resources: [
+			{
+				source: 'https://youtu.be/hz4lGUz0JP4',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'sageuk',
+				type: ResourceType.Garden,
+			},
+			{
+				source: 'FarmingHub',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+		],
+	},
+	draipWheat: {
+		name: 'Draip Looping Wheat/Potato/Carrot/Netherwart',
+		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
+		speed: {
+			'1.8.9': 328,
+			depthStrider: 3,
+			soulSand: false,
+			method: 'angled into wall',
+		},
+		angle: {
+			yaw: 45,
+			pitch: 3,
+		},
+		bps: 20,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159965565218201721',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/gcJ5U7SyA-c',
+				type: ResourceType.Video,
+			},
+		],
+		authors: [
+			{
+				name: 'Draip',
+				url: 'https://www.youtube.com/@draiping',
+			},
+		],
+		notes: [
+			'Nice for pest farming because it loops, but it doesn require more plots than other designs',
+			'Lanes can be as deep as you want, deeper means laneswitches are easier',
+		],
+	},
+	z109Wheat: {
+		name: 'Z109 Sprial Wheat/Potato/Carrot/Netherwart',
+		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
+		speed: {
+			'1.8.9': 328,
+			depthStrider: 3,
+			soulSand: false,
+			method: 'angled into wall',
+		},
+		angle: {
+			yaw: 45,
+			pitch: 3,
+		},
+		bps: 20,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1253213095984365629',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/9yVNsafjOCA',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'Z109',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'Z109',
+				url: 'https://www.youtube.com/@Z109',
+			},
+		],
+	},
+	blackCatWheat: {
+		name: 'Black Cat Wheat/Potato/Carrot',
+		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot],
+		speed: {
+			'1.8.9': 347,
+			'1.21': 308,
+			depthStrider: 2,
+			soulSand: true,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 3,
+		},
+		bps: 19.93,
+		laneDepth: 5,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159961248545374290',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/KBGIuETQI-g',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
+		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
+		notes: [blackCatNote],
+	},
+	blackCatNetherwart: {
+		name: 'Black Cat Nether Wart',
+		crops: [Crop.NetherWart],
+		speed: {
+			'1.8.9': 347,
+			'1.21': 308,
+			depthStrider: 2,
+			soulSand: true,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 3,
+		},
+		bps: 19.93,
+		laneDepth: 5,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159961642952556636',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/n218KDmL-5s',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
+		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
+		notes: [blackCatNote],
+	},
+	sdsMushroom: {
+		name: 'Slanted Downward Spiral (SDS) Mushroom',
+		crops: [Crop.Mushroom],
+		speed: {
+			'1.8.9': 233,
+			depthStrider: 3,
+			soulSand: true,
+			method: 'angled into wall',
+		},
+		angle: {
+			yaw: 16,
+			pitch: 5.5,
+		},
+		bps: 19.8,
+		laneDepth: 4,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159960305300930631',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/QyWf0DO831g',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
+		replacedBy: ['idkpoisonMushroom'],
+	},
+	idkpoisonMushroom: {
+		name: 'IdkPoison_ Mushroom',
+		crops: [Crop.Mushroom],
+		speed: {
+			'1.8.9': 259,
+			soulSand: false,
+			method: 'angled into wall',
+		},
+		angle: {
+			yaw: 26.57,
+			pitch: 0,
+		},
+		bps: 19.98,
+		laneDepth: 4,
+		resources: [
+			{
+				source: 'IdkPoison_',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'IdkPoison_',
+			},
+		],
+	},
+	blackCatCocoa: {
+		name: 'Black Cat Cocoa',
+		crops: [Crop.CocoaBeans],
+		speed: {
+			'1.8.9': 400,
+			'1.21': 368,
+			depthStrider: 3,
+			soulSand: true,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: -45,
+		},
+		bps: 19.98,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159959995329298443',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/WWR2duiwxK4',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'FarmingHub',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+		],
+		notes: [blackCatNote],
+	},
+	singleLaneCocoa: {
+		name: 'Single Lane Cocoa',
+		crops: [Crop.CocoaBeans],
+		speed: {
+			'1.8.9': 215,
+			soulSand: false,
+			method: 'running into wall',
+		},
+		angle: {
+			yaw: 0,
+			pitch: -45,
+		},
+		bps: 19.97,
+		laneDepth: 3,
+		resources: [
+			{
+				source: 'not_a_cowfr',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'not a cow',
+			},
+			{
+				name: 'Binrich',
+			},
+		],
+		notes: [
+			"Easier to build and use than regular cocoa, but wont work if you don't hold D (but doing so is better anyway so it doesn't really matter)",
+			'The trapdoors used are **not needed**',
+		],
+	},
+	blackCatCactus: {
+		name: 'Black Cat Cactus',
+		crops: [Crop.Cactus],
+		speed: {
+			'1.8.9': 464,
+			depthStrider: 3,
+			soulSand: false,
+			method: 'straight',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 0,
+		},
+		bps: 19.7,
+		laneDepth: 1,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159959766748119050',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/Kj7qxeq1jEw',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
+		notes: [
+			'Despite the name, this farm **does not** use a black cat pet anymore, instead, cactus knife raises speed cap now',
+		],
+	},
+	aceCactus: {
+		name: 'Ace Cactus',
+		crops: [Crop.Cactus],
+		speed: {
+			'1.8.9': 464,
+			depthStrider: 3,
+			soulSand: false,
+			method: 'straight',
+		},
+		angle: {
+			yaw: 0,
+			pitch: 0,
+		},
+		bps: 20,
+		laneDepth: 1,
+		resources: [
+			{
+				source: 'LunaSappho',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+		],
+		notes: ["Don't worry about getting over 400 speed, cactus knife raises speed cap by 100"],
+	},
+	regularCane: {
+		name: 'Regular Sugar Cane',
+		crops: [Crop.SugarCane],
+		speed: {
+			'1.8.9': 328,
+			soulSand: false,
+			method: 'angled into wall',
+		},
+		angle: {
+			yaw: 45,
+			pitch: 0,
+		},
+		bps: 19.95,
+		laneDepth: 2,
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159960545487761479',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://youtu.be/nQ5yjQU9gmo',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+	},
+	reverseCane: {
+		name: 'Reverse Sugar Cane',
+		crops: [Crop.SugarCane],
+		speed: {
+			'1.8.9': 328,
+			soulSand: false,
+			method: 'angled into wall',
+		},
+		angle: {
+			yaw: 45,
+			pitch: 0,
+		},
+		bps: 20,
+		laneDepth: 2,
+		resources: [
+			{
+				source: 'FarmingHub',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+			{
+				name: 'AgitatedSnake92',
+			},
+		],
 	},
 };

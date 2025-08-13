@@ -100,6 +100,20 @@ const fullNamesToCrop: Record<string, Crop> = {
 	seeds: Crop.Seeds,
 };
 
+export const cropToFullName: Record<Crop, string> = {
+	[Crop.Cactus]: 'cactus',
+	[Crop.Carrot]: 'carrot',
+	[Crop.CocoaBeans]: 'cocoabeans',
+	[Crop.Melon]: 'melon',
+	[Crop.Mushroom]: 'mushroom',
+	[Crop.NetherWart]: 'netherwart',
+	[Crop.Potato]: 'potato',
+	[Crop.Pumpkin]: 'pumpkin',
+	[Crop.SugarCane]: 'sugarcane',
+	[Crop.Wheat]: 'wheat',
+	[Crop.Seeds]: 'seeds',
+};
+
 const cropItemIds: Record<string, Crop> = {
 	CACTUS: Crop.Cactus,
 	CARROT_ITEM: Crop.Carrot,
