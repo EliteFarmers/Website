@@ -34,7 +34,9 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 		.map<DynamicFortuneSource<ArmorSet>>(gearslot),
 	{
 		name: 'Equipment Set Bonus',
-		exists: (set) => set.equipmentSetBonuses.length > 0,
+		exists: (set) =>
+			set.equipmentSetBonuses.length > 0 &&
+			(ARMOR_SET_BONUS.PESTHUNTERS?.stats[4]?.[Stat.FarmingFortune] ?? 0) > 0,
 		wiki: () => 'https://wiki.hypixel.net/Pesthunter%27s_Gloves',
 		max: () => ARMOR_SET_BONUS.PESTHUNTERS?.stats[4]?.[Stat.FarmingFortune] ?? 0,
 		current: (set) =>
