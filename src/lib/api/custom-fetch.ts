@@ -43,9 +43,11 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 		// Ignore this, we just won't have access to the request/locals for this call
 	}
 
-	const requestHeaders = new Headers(init?.headers || request?.headers);
+	const requestHeaders = mergeHeaders(request?.headers, init?.headers);
 	requestHeaders.set('User-Agent', 'EliteWebsite');
 	requestHeaders.delete('accept-encoding');
+	// Don't forward the user's IP address for requests through the website
+	requestHeaders.delete('CF-Connecting-IP');
 
 	if (locals?.access_token) {
 		requestHeaders.set('Authorization', `Bearer ${locals.access_token}`);
@@ -89,3 +91,18 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 };
 
 export default customFetch;
+
+function mergeHeaders(...sources: (HeadersInit | undefined)[]) {
+	const result = new Headers();
+
+	for (const headersInit of sources) {
+		if (!headersInit) continue;
+		const headers = new Headers(headersInit);
+
+		for (const [key, value] of headers.entries()) {
+			result.set(key, value);
+		}
+	}
+
+	return result;
+}
