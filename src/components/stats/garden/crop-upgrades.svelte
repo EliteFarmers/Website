@@ -1,9 +1,8 @@
 <script lang="ts">
 	import type { GardenDto } from '$lib/api';
-	import { getCopperSpent, getCopperToMaxUpgrade } from '$lib/calc/garden';
+	import { getCopperSpentCropUpgrades, getCropUpgradeCopperCost } from '$lib/calc/garden';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';
-	import { getCopperSpentCropUpgrades, getCropUpgradeCopperCost } from '$lib/calc/garden';
 	import { Crop, getCropDisplayName, getCropUpgrades } from 'farming-weight';
 
 	interface Props {
@@ -44,18 +43,18 @@
 										: 'bg-progress'}"
 							></div>
 						{/each}
-						<span class="text-foreground -my-1 pl-1 pr-2 font-semibold leading-none md:text-lg">
+						<span class="text-foreground -my-1 pr-2 pl-1 leading-none font-semibold md:text-lg">
 							{level}
 						</span>
 					</div>
 				{/snippet}
 				<div class="flex flex-col gap-1">
 					<p class="font-semibold">{name}</p>
-					<p class="max-w-xs whitespace-normal break-words">
+					<p class="max-w-xs break-words whitespace-normal">
 						<span class="font-semibold">{getCopperSpentCropUpgrades(level).toLocaleString()}</span> Copper
 						Spent <br />
 					</p>
-					<p class="max-w-xs whitespace-normal break-words">
+					<p class="max-w-xs break-words whitespace-normal">
 						<span class="font-semibold">{getCropUpgradeCopperCost(level).toLocaleString()}</span> Copper Until
 						Max
 					</p>

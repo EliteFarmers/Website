@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { getComposterUpgradeCost } from '$lib/calc/garden';
+	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
+	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
+	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Popover from '$ui/popover';
 	import {
 		API_COMPOSTER_UPGRADE_TO_UPGRADE,
-		getCropDisplayName,
 		getComposterUpgradeDisplayName,
+		getCropDisplayName,
 		getSpecialCropDisplayName,
 	} from 'farming-weight';
-	import { PROPER_CROP_TO_IMG, SPECIAL_CROP_TO_IMG } from '$lib/constants/crops';
-	import { COMPOSTER_UPGRADE_TO_IMG } from '$lib/constants/composter';
-	import * as Popover from '$ui/popover';
-	import { getComposterUpgradeCost } from '$lib/calc/garden';
-	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const garden = getStatsContext().garden;
 
