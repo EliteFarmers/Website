@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
+	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
@@ -8,7 +9,7 @@
 	import VisitorList from '$comp/stats/garden/visitor-list.svelte';
 	import Skillbar from '$comp/stats/skillbar.svelte';
 	import type { GardenDto } from '$lib/api';
-	import { getCopperSpent } from '$lib/calc/garden';
+	import { getCopperSpentCropUpgrades } from '$lib/calc/garden';
 	import { CROP_UPGRADES_MAX_COST, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
@@ -42,7 +43,9 @@
 			.sort((a, b) => a.name.localeCompare(b.name))
 	);
 
-	let totalCopperSpent = $derived.by(() => crops.reduce((sum, { level }) => sum + getCopperSpent(level), 0));
+	let totalCopperSpent = $derived.by(() =>
+		crops.reduce((sum, { level }) => sum + getCopperSpentCropUpgrades(level), 0)
+	);
 </script>
 
 <Head title="{ctx.ignMeta} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
@@ -131,6 +134,8 @@
 			</div>
 		</div>
 	</section>
+
+	<ComposterUpgrades />
 
 	<div class="mx-4 mt-16 flex max-w-lg flex-col justify-center gap-1">
 		<h5 class="text-center text-lg font-semibold">Garden Disclaimer</h5>

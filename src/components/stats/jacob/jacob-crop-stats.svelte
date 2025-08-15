@@ -43,12 +43,18 @@
 		<img src={PROPER_CROP_TO_IMG[crop]} alt="Crop" class="pixelated h-12 w-12 p-1" />
 
 		<div class="flex flex-col items-start gap-1">
-			<a
-				href="/contest/{pbData.timestamp}"
-				class="text-lg leading-none font-semibold no-underline hover:underline"
-			>
-				{pbData.amount?.toLocaleString() ?? 'Not Set!'}
-			</a>
+			{#if pbData.timestamp}
+				<a
+					href="/contest/{pbData.timestamp}"
+					class="text-lg leading-none font-semibold no-underline hover:underline"
+				>
+					{pbData.amount?.toLocaleString() ?? 'Not Set!'}
+				</a>
+			{:else}
+				<span class="text-lg leading-none font-semibold no-underline">
+					{pbData.amount?.toLocaleString() ?? 'Not Set!'}
+				</span>
+			{/if}
 
 			<Popover.Mobile>
 				{#snippet trigger()}
@@ -70,7 +76,11 @@
 				alt="{unique} Medal"
 				class="pixelated highest-bracket h-10 w-10 p-1"
 			/>
+			<FortuneBreakdown total={ff} small={true} max={100} />
+		{:else}
+			<div class="my-5">
+				<FortuneBreakdown total={ff} small={true} max={100} />
+			</div>
 		{/if}
-		<FortuneBreakdown total={ff} small={true} max={100} />
 	</div>
 </div>

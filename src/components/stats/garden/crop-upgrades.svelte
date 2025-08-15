@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { GardenDto } from '$lib/api';
-	import { getCopperSpent, getCopperToMaxUpgrade } from '$lib/calc/garden';
+	import { getCopperSpentCropUpgrades, getCropUpgradeCopperCost } from '$lib/calc/garden';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import * as Popover from '$ui/popover';
 	import { Crop, getCropDisplayName, getCropUpgrades } from 'farming-weight';
@@ -51,10 +51,12 @@
 				<div class="flex flex-col gap-1">
 					<p class="font-semibold">{name}</p>
 					<p class="max-w-xs break-words whitespace-normal">
-						<span class="font-semibold">{getCopperSpent(level).toLocaleString()}</span> Copper Spent <br />
+						<span class="font-semibold">{getCopperSpentCropUpgrades(level).toLocaleString()}</span> Copper
+						Spent <br />
 					</p>
 					<p class="max-w-xs break-words whitespace-normal">
-						<span class="font-semibold">{getCopperToMaxUpgrade(level).toLocaleString()}</span> Copper Until Max
+						<span class="font-semibold">{getCropUpgradeCopperCost(level).toLocaleString()}</span> Copper Until
+						Max
 					</p>
 				</div>
 			</Popover.Mobile>
