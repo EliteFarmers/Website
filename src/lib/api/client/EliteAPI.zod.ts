@@ -964,6 +964,38 @@ export const zodUnlinkUserAccountBody = zod.object({
 });
 
 /**
+ * Creates a new announcement that will be displayed to users
+ * @summary Create an announcement
+ */
+export const zodCreateAnnouncementBody = zod.object({
+	title: zod.string().describe('Announcement title'),
+	content: zod.string().describe('Announcement content'),
+	type: zod
+		.enum(['other', 'update', 'article', 'news', 'event', 'maintenance', 'shop'])
+		.describe('Type of the announcement'),
+	targetLabel: zod
+		.string()
+		.nullish()
+		.describe('Label for the target of the announcement (e.g. \"Read more\", \"View article\")'),
+	targetUrl: zod.string().nullish().describe('Url to read more about the announcement'),
+	targetStartsAt: zod
+		.string()
+		.datetime({})
+		.nullish()
+		.describe('Optional time stamp for when the topic of the announcement starts'),
+	targetEndsAt: zod
+		.string()
+		.datetime({})
+		.nullish()
+		.describe('Optional time stamp for when the topic of the announcement ends'),
+	createdAt: zod.string().datetime({}).describe('Announcement creation date'),
+	expiresAt: zod
+		.string()
+		.datetime({})
+		.describe('Announcement expiration date (will no longer be shown after this date)'),
+});
+
+/**
  * Mark an announcement as dismissed for the current user
  * @summary Dismiss an announcement
  */
@@ -3750,6 +3782,19 @@ export const zodCreateTeamParams = zod.object({
 	eventId: zod.number(),
 });
 
+export const zodCreateTeamBodyNameMax = 3;
+export const zodCreateTeamBodyColorMax = 7;
+
+export const zodCreateTeamBody = zod.object({
+	name: zod
+		.array(zod.string())
+		.min(1)
+		.max(zodCreateTeamBodyNameMax)
+		.nullish()
+		.describe('An array of strings for the team name, example: [ \"Bountiful\", \"Farmers\" ]'),
+	color: zod.string().max(zodCreateTeamBodyColorMax).nullish(),
+});
+
 /**
  * Lists of whitelisted words for team name generation.
  * @summary Get event team word list constants
@@ -3863,6 +3908,10 @@ export const zodLeaveTeamParams = zod.object({
 export const zodSetTeamOwnerParams = zod.object({
 	eventId: zod.number(),
 	teamId: zod.number(),
+});
+
+export const zodSetTeamOwnerBody = zod.object({
+	player: zod.string(),
 });
 
 /**
@@ -8258,10 +8307,35 @@ export const zodGetCategoryResponse = zod.object({
 });
 
 /**
+ * @summary Reorder Shop Categories
+ */
+export const zodReorderCategoriesBody = zod.object({
+	elements: zod
+		.array(
+			zod.object({
+				id: zod.number(),
+				order: zod.number(),
+			})
+		)
+		.min(1),
+});
+
+/**
  * @summary Reorder Products in Shop Category
  */
 export const zodReorderCategoryProductsParams = zod.object({
 	categoryId: zod.number().describe('Category id'),
+});
+
+export const zodReorderCategoryProductsBody = zod.object({
+	elements: zod
+		.array(
+			zod.object({
+				id: zod.string().nullish(),
+				order: zod.number(),
+			})
+		)
+		.min(1),
 });
 
 /**
