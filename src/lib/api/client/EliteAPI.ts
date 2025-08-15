@@ -1132,7 +1132,7 @@ export const createAnnouncement = async (createAnnouncementDto: CreateAnnounceme
 	return customFetch<createAnnouncementResponse>(getCreateAnnouncementUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': '*/*', ...options?.headers },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createAnnouncementDto),
 	});
 };
@@ -3694,7 +3694,7 @@ export const createTeam = async (
 	return customFetch<createTeamResponse>(getCreateTeamUrl(eventId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': '*/*', ...options?.headers },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(createEventTeamDto),
 	});
 };
@@ -3980,7 +3980,7 @@ export const setTeamOwner = async (
 	return customFetch<setTeamOwnerResponse>(getSetTeamOwnerUrl(eventId, teamId), {
 		...options,
 		method: 'PUT',
-		headers: { 'Content-Type': '*/*', ...options?.headers },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(changeTeamOwnerRequest),
 	});
 };
@@ -6693,7 +6693,7 @@ export const reorderCategories = async (reorderIntRequest: ReorderIntRequest, op
 	return customFetch<reorderCategoriesResponse>(getReorderCategoriesUrl(), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': '*/*', ...options?.headers },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(reorderIntRequest),
 	});
 };
@@ -6743,7 +6743,7 @@ export const reorderCategoryProducts = async (
 	return customFetch<reorderCategoryProductsResponse>(getReorderCategoryProductsUrl(categoryId), {
 		...options,
 		method: 'POST',
-		headers: { 'Content-Type': '*/*', ...options?.headers },
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(reorderCategoryProductsRequest),
 	});
 };
