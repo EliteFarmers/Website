@@ -86,8 +86,6 @@
 					</div>
 				</div>
 
-				<ComposterUpgrades />
-
 				<div class="flex flex-col gap-2 text-lg">
 					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
@@ -136,6 +134,8 @@
 			</div>
 		</div>
 	</section>
+
+	<ComposterUpgrades />
 
 	<div class="mx-4 mt-16 flex max-w-lg flex-col justify-center gap-1">
 		<h5 class="text-center text-lg font-semibold">Garden Disclaimer</h5>

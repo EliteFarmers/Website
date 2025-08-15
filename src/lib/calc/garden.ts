@@ -1,14 +1,4 @@
 import { CROP_UPGRADE_COSTS } from '$lib/constants/crops';
-import {
-	COMPOSTER_UPGRADE_CROPS,
-	ComposterUpgrade,
-	Crop,
-	getComposterUpgradeCollectionAmount,
-	LEVEL_REQUIREMENTS,
-	SpecialCrop,
-	UPGRADE_CROP_AMOUNTS,
-	type ComposterUpgradeCost,
-} from 'farming-weight';
 
 export function getCropUpgradeCopperCost(level: number): number {
 	let totalCost = 0;
@@ -24,40 +14,4 @@ export function getCopperSpentCropUpgrades(level: number): number {
 		totalCost += CROP_UPGRADE_COSTS[i] || 0;
 	}
 	return totalCost;
-}
-
-export function getComposterRequiredCrop(upgradeType: ComposterUpgrade, level: number): Crop {
-	const cropIndex = level % 2 === 1 ? 0 : 1;
-	return COMPOSTER_UPGRADE_CROPS[upgradeType][cropIndex];
-}
-
-export function getComposterCropAmount(upgradeType: ComposterUpgrade, level: number): number {
-	return UPGRADE_CROP_AMOUNTS[upgradeType][level];
-}
-
-export function getComposterCopperCost(level: number): number {
-	return LEVEL_REQUIREMENTS[level - 1].copper;
-}
-
-export function getComposterSpecialCropRequirement(level: number): { specialCrop: SpecialCrop | null; amount: number } {
-	const requirement = LEVEL_REQUIREMENTS[level - 1];
-	return {
-		specialCrop: requirement.specialCrop,
-		amount: requirement.specialCropAmount,
-	};
-}
-
-export function getComposterUpgradeCost(upgradeType: ComposterUpgrade, level: number): ComposterUpgradeCost {
-	const { specialCrop, amount: specialCropAmount } = getComposterSpecialCropRequirement(level);
-	const copper = getComposterCopperCost(level);
-	const crop = getComposterRequiredCrop(upgradeType, level);
-	const cropAmount = getComposterUpgradeCollectionAmount(upgradeType, level);
-
-	return {
-		copper,
-		specialCrop,
-		specialCropAmount,
-		crop,
-		cropAmount,
-	};
 }

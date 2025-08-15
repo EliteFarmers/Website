@@ -3,10 +3,12 @@
 	import JumpLink from '$comp/jump-link.svelte';
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
+	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { getItems } from '$lib/remote/items.remote';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Crop, type FortuneUpgrade } from 'farming-weight';
+	import { Crop } from 'farming-weight';
 	import { Debounced, useDebounce, watch } from 'runed';
 
 	const ctx = getStatsContext();
@@ -23,15 +25,7 @@
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
 		if (items.length === 0) return {} as RatesItemPriceData;
-		const response = await fetch('/api/items/' + items.join('|'));
-		try {
-			const jsonData = await response.json();
-
-			const data = jsonData as RatesItemPriceData;
-			return data;
-		} catch {
-			return undefined;
-		}
+		return await getItems(items);
 	}
 
 	let upgrades = $state([...$player.getUpgrades(), ...$player.getCropUpgrades(crop)]);
@@ -44,49 +38,11 @@
 		getUpgrades();
 	});
 
-	const neededItems = $derived([
-		...new Set(
-			upgrades
-				.map((up) => [
-					Object.keys(up.cost?.items ?? {}),
-					Object.keys(up.cost?.applyCost?.items ?? {}),
-					up.purchase,
-				])
-				.flat(2)
-				.filter(Boolean)
-				.flat() as string[]
-		),
-	]);
+	const neededItems = $derived(getItemsFromUpgrades(upgrades));
 
 	const debouncedItems = new Debounced(() => neededItems, 500);
 
 	let itemsPromise = $derived<Promise<FetchedItems | undefined>>(getBazaarData(debouncedItems.current));
-
-	function upgradeCost(upgrade: FortuneUpgrade, items: FetchedItems): number {
-		let total = 0;
-
-		if (upgrade.cost) {
-			sumItems(upgrade.cost.items);
-			total += upgrade.cost.coins ?? 0;
-		}
-		if (upgrade.cost?.applyCost) {
-			sumItems(upgrade.cost.applyCost.items);
-			total += upgrade.cost.applyCost.coins ?? 0;
-		}
-
-		return total;
-
-		function sumItems(requiredItems?: Record<string, number>) {
-			for (const [item, amount] of Object.entries(requiredItems ?? {})) {
-				const itemCost = items?.[item];
-				if (!itemCost) continue;
-				const lowestPrice = itemCost.auctions?.length
-					? Math.min(...itemCost.auctions.filter((a) => a.lowest3Day > 0).map((a) => a.lowest3Day))
-					: (itemCost.bazaar?.averageBuyOrder ?? 0);
-				total += lowestPrice * amount;
-			}
-		}
-	}
 </script>
 
 <div class="flex w-full flex-col gap-2">
@@ -110,7 +66,7 @@
 	{#await itemsPromise}
 		<p class="text-muted-foreground text-sm">Loading item prices...</p>
 	{:then loadedItems}
-		<UpgradeList {upgrades} items={loadedItems} costFn={upgradeCost} />
+		<UpgradeList {upgrades} items={loadedItems} costFn={getUpgradeCost} />
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
 	{/await}

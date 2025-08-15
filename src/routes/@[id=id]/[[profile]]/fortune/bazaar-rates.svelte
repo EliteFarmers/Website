@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import CoinsBreakdown from '$comp/rates/coins-breakdown.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
+	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import * as Select from '$ui/select';
 	import { Skeleton } from '$ui/skeleton';
@@ -26,15 +27,7 @@
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
 		if (items.length === 0) return undefined;
-		const response = await fetch('/api/items/' + items.join('|'));
-		try {
-			const jsonData = await response.json();
-
-			const data = jsonData as RatesItemPriceData;
-			return data;
-		} catch {
-			return undefined;
-		}
+		return await getItems(items);
 	}
 
 	let bzPromise = $state<ReturnType<typeof getBazaarData> | undefined>(undefined);
