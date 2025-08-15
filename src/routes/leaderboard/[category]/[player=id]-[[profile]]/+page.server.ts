@@ -2,7 +2,7 @@ import { getAccount, getPlayerRank2, getProfileRank2, RemovedFilter } from '$lib
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params, parent, url, request }) => {
+export const load = (async ({ params, parent, url }) => {
 	const { category, player: ign, profile: profileName } = params;
 	const { leaderboard } = await parent();
 
@@ -14,7 +14,7 @@ export const load = (async ({ params, parent, url, request }) => {
 		throw error(400, 'Search query is required!');
 	}
 
-	const { data: account } = await getAccount(ign, { headers: request.headers }).catch(() => ({ data: undefined }));
+	const { data: account } = await getAccount(ign).catch(() => ({ data: undefined }));
 	if (!account) {
 		throw error(400, 'User not found!');
 	}
@@ -35,8 +35,8 @@ export const load = (async ({ params, parent, url, request }) => {
 	};
 
 	const { data: rank } = leaderboard?.profile
-		? await getProfileRank2(category, profile.profileId, query, { headers: request.headers })
-		: await getPlayerRank2(category, account.id, profile.profileId, query, { headers: request.headers });
+		? await getProfileRank2(category, profile.profileId, query)
+		: await getPlayerRank2(category, account.id, profile.profileId, query);
 
 	if (!rank?.rank || rank.rank === -1) {
 		throw error(400, 'Player not found in leaderboard!');

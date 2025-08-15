@@ -105,8 +105,8 @@ export const actions = {
 		const results = await Promise.all(
 			profiles.map(async (p) => {
 				const { data: rank } = leaderboard?.profile
-					? await getProfileRank2(category, p.profileId, query, { headers: request.headers })
-					: await getPlayerRank2(category, account.id, p.profileId, query, { headers: request.headers });
+					? await getProfileRank2(category, p.profileId, query)
+					: await getPlayerRank2(category, account.id, p.profileId, query);
 
 				if (!rank?.rank || rank.rank === -1) {
 					return null;

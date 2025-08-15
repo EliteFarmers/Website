@@ -43,17 +43,23 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 		// Ignore this, we just won't have access to the request/locals for this call
 	}
 
-	const requestHeaders = mergeHeaders(request?.headers, init?.headers);
+	const requestHeaders = mergeHeaders(init?.headers);
 	requestHeaders.set('User-Agent', 'EliteWebsite');
-	requestHeaders.delete('accept-encoding');
-	// Don't forward the user's IP address for requests through the website
-	requestHeaders.delete('CF-Connecting-IP');
+
+	if (request?.headers) {
+		for (const header of request.headers) {
+			if (header[0].startsWith('x-')) {
+				requestHeaders.set(header[0], header[1]);
+			}
+		}
+	}
 
 	if (locals?.access_token) {
 		requestHeaders.set('Authorization', `Bearer ${locals.access_token}`);
 	}
 
-	const response = await fetchFunction(input, { ...init, headers: requestHeaders });
+	const rInit = { ...init, headers: requestHeaders };
+	const response = await fetchFunction(input, rInit);
 
 	// If the response is not OK (e.g., 4xx, 5xx), parse the error and return it.
 	if (!response.ok) {

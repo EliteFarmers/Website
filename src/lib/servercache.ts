@@ -79,7 +79,7 @@ const cacheEntries = {
 		},
 	},
 	auctions: {
-		interval: 10, // 10 minutes
+		interval: 600, // 10 minutes
 		data: {} as AuctionHouseDto,
 		update: async () => {
 			const { data } = await getAuctionHouseProducts();
