@@ -1,3 +1,4 @@
+import { ITEM_IDS } from './itemids.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
 
@@ -152,19 +153,19 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		startingTool: 'FUNGI_CUTTER',
 		crafts: [
 			{
-				item: 'ENCHANTED_BROWN_MUSHROOM',
+				item: ITEM_IDS.EnchantedBrownMushroom,
 				takes: 160,
 			},
 			{
-				item: 'ENCHANTED_HUGE_MUSHROOM_1',
+				item: ITEM_IDS.EnchantedBrownMushroomBlock,
 				takes: 160 * 32,
 			},
 			{
-				item: 'ENCHANTED_RED_MUSHROOM',
+				item: ITEM_IDS.EnchantedRedMushroom,
 				takes: 160,
 			},
 			{
-				item: 'ENCHANTED_HUGE_MUSHROOM_2',
+				item: ITEM_IDS.EnchantedRedMushroomBlock,
 				takes: 160 * 32,
 			},
 		],
@@ -192,11 +193,11 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		startingTool: 'THEORETICAL_HOE_WARTS_1',
 		crafts: [
 			{
-				item: 'ENCHANTED_NETHER_STALK',
+				item: ITEM_IDS.EnchantedNetherWart,
 				takes: 160,
 			},
 			{
-				item: 'MUTANT_NETHER_STALK',
+				item: ITEM_IDS.MutantNetherWart,
 				takes: 160 * 160,
 			},
 		],

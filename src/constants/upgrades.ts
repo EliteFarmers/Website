@@ -59,6 +59,46 @@ export interface UpgradeCost {
 	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
 
+export function mergeCost(...costs: UpgradeCost[]): UpgradeCost {
+	const result: UpgradeCost = {};
+	for (const cost of costs) {
+		addCost(result, cost);
+	}
+	return result;
+}
+
+function addCost(left: UpgradeCost, right: UpgradeCost) {
+	if (right.items) {
+		left.items ??= {};
+		for (const [key, value] of Object.entries(right.items)) {
+			left.items[key] = (left.items[key] || 0) + value;
+		}
+	}
+
+	if (right.coins) {
+		left.coins = (left.coins || 0) + (right.coins || 0);
+	}
+	if (right.copper) {
+		left.copper = (left.copper || 0) + (right.copper || 0);
+	}
+	if (right.bits) {
+		left.bits = (left.bits || 0) + (right.bits || 0);
+	}
+
+	if (right.medals) {
+		left.medals ??= {};
+		for (const [key, value] of Object.entries(right.medals) as [keyof typeof left.medals, number][]) {
+			left.medals[key] = (left.medals[key] || 0) + value;
+		}
+	}
+
+	if (right.applyCost) {
+		left.applyCost = addCost(left.applyCost || {}, right.applyCost);
+	}
+
+	return left;
+}
+
 export enum UpgradeCategory {
 	Enchant = 'enchantment',
 	Rarity = 'rarity',
@@ -71,6 +111,7 @@ export enum UpgradeCategory {
 	Anita = 'anita',
 	Misc = 'misc',
 	Attribute = 'attribute',
+	Composter = 'composter',
 }
 
 export enum UpgradeAction {
@@ -83,9 +124,36 @@ export enum UpgradeAction {
 	Unlock = 'unlock',
 }
 
+export interface UpgradeInfoImprovement<T> {
+	name: string;
+	output: T;
+}
+
 export interface FortuneUpgradeImprovement {
 	name: string;
 	fortune: number;
+}
+
+export interface UpgradeInfo<T = number> {
+	title: string;
+	onto?: {
+		name?: string | null;
+		skyblockId?: string | null;
+		slot?: GearSlot;
+	};
+	max?: T;
+	current: T;
+	increase: T;
+	action: UpgradeAction;
+	purchase?: string;
+	category: UpgradeCategory;
+	optional?: boolean;
+	api?: boolean;
+	repeatable?: number;
+	deadEnd?: boolean;
+	cost?: UpgradeCost;
+	wiki?: string;
+	improvements?: UpgradeInfoImprovement<T>[];
 }
 
 export interface FortuneUpgrade {
@@ -123,29 +191,3 @@ export interface InitialItems {
 	armor: Record<GearSlot, string | string[]>;
 	pets: string[];
 }
-
-// export const INITIAL_ITEMS: InitialItems = {
-// 	tools: {
-// 		[Crop.Cactus]: 'CACTUS_KNIFE',
-// 		[Crop.CocoaBeans]: 'COCO_CHOPPER',
-// 		[Crop.Carrot]: 'THEORETICAL_HOE_CARROT_1',
-// 		[Crop.Melon]: 'MELON_DICER',
-// 		[Crop.Mushroom]: 'FUNGI_CUTTER',
-// 		[Crop.NetherWart]: 'THEORETICAL_HOE_WARTS_1',
-// 		[Crop.Potato]: 'THEORETICAL_HOE_POTATO_1',
-// 		[Crop.Pumpkin]: 'PUMPKIN_DICER',
-// 		[Crop.SugarCane]: 'THEORETICAL_HOE_CANE_1',
-// 		[Crop.Wheat]: 'THEORETICAL_HOE_WHEAT_1'
-// 	},
-// 	armor: {
-// 		[GearSlot.Boots]: [ 'MELON_BOOTS', 'FARMER_BOOTS', 'RANCHERS_BOOTS' ],
-// 		[GearSlot.Leggings]: 'MELON_LEGGINGS',
-// 		[GearSlot.Chestplate]: 'MELON_CHESTPLATE',
-// 		[GearSlot.Helmet]: 'MELON_HELMET',
-// 		[GearSlot.Necklace]: 'LOTUS_NECKLACE',
-// 		[GearSlot.Cloak]: 'LOTUS_CLOAK',
-// 		[GearSlot.Belt]: 'LOTUS_BELT',
-// 		[GearSlot.Gloves]: 'LOTUS_BRACELET',
-// 	},
-// 	pets: [ 'ELEPHANT', 'MOOSHROOM_COW' ]
-// };

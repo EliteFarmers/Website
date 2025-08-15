@@ -16,6 +16,7 @@ export * from './constants/weight.js';
 export * from './crops/melon.js';
 export * from './crops/pumpkin.js';
 export * from './crops/special.js';
+export * from './features/index.js';
 export * from './fortune/farmingaccessory.js';
 export * from './fortune/farmingarmor.js';
 export * from './fortune/farmingequipment.js';
