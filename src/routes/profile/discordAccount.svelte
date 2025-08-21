@@ -14,11 +14,13 @@
 <div class="bg-card relative isolate flex w-full flex-col overflow-clip rounded-lg border-2">
 	<div class="relative">
 		<Avatar.Root class="relative z-20 aspect-video size-full max-h-64 overflow-clip">
-			<Avatar.Image
-				class="pointer-events-none size-full object-cover select-none"
-				src="https://cdn.discordapp.com/banners/{account.id}/{account.banner}.webp?size=1024&animated=true"
-				alt="{account.username}'s Banner"
-			/>
+			{#if account.banner}
+				<Avatar.Image
+					class="pointer-events-none size-full object-cover select-none"
+					src="https://cdn.discordapp.com/banners/{account.id}/{account.banner}.webp?size=1024&animated=true"
+					alt="{account.username}'s Banner"
+				/>
+			{/if}
 			<Avatar.Fallback class="bg-muted/20 size-full">
 				{#snippet child({ props })}
 					<div {...props}></div>

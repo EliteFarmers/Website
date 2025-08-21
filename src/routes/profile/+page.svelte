@@ -61,15 +61,15 @@
 				Your primary account is the account that will be used for all Elite features by default. Secondary
 				accounts essentially only exist for the purpose of confirming ownership of the account.
 			</p>
-			<div class="mx-auto grid grid-cols-2 gap-2">
-				{#if secondaryAccount.length > 0}
+			{#if secondaryAccount.length > 0}
+				<div class="mx-auto grid grid-cols-2 gap-2">
 					{#each secondaryAccount as mc, i (mc.id ?? i)}
-						<MinecraftAccount {mc} />
+						<MinecraftAccount {mc} confirmMcUnlink={deleteConfirmation} />
 					{/each}
-				{:else}
-					{@render emptyMessage('No secondary accounts linked.')}
-				{/if}
-			</div>
+				</div>
+			{:else}
+				{@render emptyMessage('No secondary accounts linked.')}
+			{/if}
 		{/snippet}
 	{/if}
 
@@ -164,7 +164,7 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>Are you sure?</AlertDialog.Title>
 			<AlertDialog.Description>
-				This will unlink the {mcUsername} Minecraft account from your Elite account.
+				This will unlink the <strong>{mcUsername}</strong> Minecraft account from your Elite account.
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
