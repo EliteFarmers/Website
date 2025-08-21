@@ -61,15 +61,21 @@
 			<Button variant="link" class="h-8 p-0" href="/oss">Open Sourced Software</Button>
 		</div>
 	</div>
-	{#if PUBLIC_COMMIT_HASH !== ''}
-		<div class="flex w-full flex-row items-center justify-start gap-2 px-4 md:px-8">
-			<p class="text-muted-foreground text-xs">
+
+	<div class="flex w-full flex-wrap items-start justify-center gap-4 px-4 md:gap-8 md:px-8">
+		{#if PUBLIC_COMMIT_HASH !== ''}
+			<p class="text-muted-foreground/50 flex-1 text-xs">
 				Running version <a
 					href="https://github.com/EliteFarmers/Website/commit/{PUBLIC_COMMIT_HASH}"
 					target="_blank"
-					class="bg-card text-primary rounded-sm border p-0.5 hover:underline">{PUBLIC_COMMIT_HASH}</a
+					class="bg-card text-muted-foreground rounded-sm border p-0.5 hover:underline"
+					>{PUBLIC_COMMIT_HASH}</a
 				>
 			</p>
-		</div>
-	{/if}
+		{/if}
+		<p class="text-muted-foreground/50 text-xs">Not affiliated with Hypixel, Inc.</p>
+		<p class="text-muted-foreground/50 text-xs">
+			NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
+		</p>
+	</div>
 </footer>
