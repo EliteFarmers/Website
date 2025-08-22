@@ -849,6 +849,25 @@ export const zodRemoveRoleFromUserParams = zod.object({
 });
 
 /**
+ * @summary Get list of admins
+ */
+export const zodGetAdminsResponseItem = zod.object({
+	id: zod.string(),
+	displayName: zod.string(),
+	username: zod.string(),
+	roles: zod.array(zod.string()),
+	discriminator: zod.string().nullish(),
+	avatar: zod.string().nullish(),
+});
+export const zodGetAdminsResponse = zod.array(zodGetAdminsResponseItem);
+
+/**
+ * @summary Get list of roles
+ */
+export const zodGetRolesResponseItem = zod.string();
+export const zodGetRolesResponse = zod.array(zodGetRolesResponseItem);
+
+/**
  * This enables a player's data from Hypixel to be refreshed on the next request.
  * @summary Reset a player's cooldowns
  */
@@ -919,25 +938,6 @@ export const zodSetEventApprovalQueryApproveDefault = false;
 export const zodSetEventApprovalQueryParams = zod.object({
 	approve: zod.boolean().nullish(),
 });
-
-/**
- * @summary Get list of admins
- */
-export const zodGetAdminsResponseItem = zod.object({
-	id: zod.string(),
-	displayName: zod.string(),
-	username: zod.string(),
-	roles: zod.array(zod.string()),
-	discriminator: zod.string().nullish(),
-	avatar: zod.string().nullish(),
-});
-export const zodGetAdminsResponse = zod.array(zodGetAdminsResponseItem);
-
-/**
- * @summary Get list of roles
- */
-export const zodGetRolesResponseItem = zod.string();
-export const zodGetRolesResponse = zod.array(zodGetRolesResponseItem);
 
 /**
  * @summary Link an Account
@@ -5820,6 +5820,112 @@ export const zodGetLeaderboardsResponse = zod.object({
 		})
 	),
 });
+
+/**
+ * @summary Get multiple leaderboard ranks for a player
+ */
+export const zodGetMultiplePlayerRanksParams = zod.object({
+	playerUuid: zod.string(),
+	profileUuid: zod.string(),
+});
+
+export const zodGetMultiplePlayerRanksQueryIncludeUpcomingDefault = false;
+export const zodGetMultiplePlayerRanksQueryUpcomingDefault = 0;
+export const zodGetMultiplePlayerRanksQueryRemovedDefault = 0;
+
+export const zodGetMultiplePlayerRanksQueryParams = zod.object({
+	leaderboards: zod.string().describe('Ids of leaderboards (comma-separated)'),
+	includeUpcoming: zod.boolean().nullish().describe('Include upcoming players'),
+	upcoming: zod
+		.number()
+		.nullish()
+		.describe('Amount of upcoming players to include (max 100). Only works with new leaderboard backend'),
+	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
+	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
+	mode: zod
+		.string()
+		.nullish()
+		.describe(
+			'Game mode to filter leaderboard by. Leave empty to get all modes.\nOptions: \"ironman\", \"island\", \"classic\"'
+		),
+	removed: zod
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
+		.nullish()
+		.describe(
+			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\nDefault is profiles that have not been removed/wiped.\n0 = Not Removed\n1 = Removed\n2 = All'
+		),
+});
+
+export const zodGetMultiplePlayerRanksResponseUpcomingPlayersItemMetaPrefixMax = 16;
+export const zodGetMultiplePlayerRanksResponseUpcomingPlayersItemMetaSuffixMax = 16;
+
+export const zodGetMultiplePlayerRanksResponse = zod.record(
+	zod.string(),
+	zod.object({
+		rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
+		amount: zod.number().describe('Current score of the player (0 if not on leaderboard)'),
+		initialAmount: zod
+			.number()
+			.describe('The starting amount of the leaderboard entry for interval based leaderboards'),
+		minAmount: zod
+			.number()
+			.describe(
+				'The minimum amount required to be on the leaderboard. If this is a time based leaderboard,\nthis score is instead required on the normal leaderboard before the player can be on the\ntime based leaderboard'
+			),
+		upcomingRank: zod.number().describe('The starting rank of the returned upcoming players list'),
+		upcomingPlayers: zod
+			.array(
+				zod.object({
+					ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+					profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+					uuid: zod.string().describe('Uuid of the player or profile'),
+					amount: zod.number().describe('Score of the entry'),
+					removed: zod.boolean(),
+					initialAmount: zod.number().describe('Initial score of the entry'),
+					mode: zod
+						.string()
+						.nullish()
+						.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+					members: zod
+						.array(
+							zod.object({
+								ign: zod.string(),
+								uuid: zod.string(),
+								xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+								removed: zod.boolean(),
+							})
+						)
+						.nullish(),
+					meta: zod
+						.object({
+							prefix: zod
+								.string()
+								.max(zodGetMultiplePlayerRanksResponseUpcomingPlayersItemMetaPrefixMax)
+								.nullish(),
+							suffix: zod
+								.string()
+								.max(zodGetMultiplePlayerRanksResponseUpcomingPlayersItemMetaSuffixMax)
+								.nullish(),
+							leaderboard: zod
+								.object({
+									styleId: zod.number().nullish(),
+									backgroundColor: zod.string().nullish(),
+									borderColor: zod.string().nullish(),
+									textColor: zod.string().nullish(),
+									rankColor: zod.string().nullish(),
+									backgroundImage: zod.string().nullish(),
+									overlayImage: zod.string().nullish(),
+								})
+								.nullish(),
+						})
+						.nullish()
+						.describe('Metadata of the entry'),
+				})
+			)
+			.nullish()
+			.describe('List of upcoming players'),
+	})
+);
 
 /**
  * @summary Get a Player's Leaderboard Ranks

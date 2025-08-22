@@ -73,6 +73,8 @@ import type {
 	GetLeaderboardParams,
 	GetMedalBracketsGraphParams,
 	GetMedalBracketsParams,
+	GetMultiplePlayerRanks200,
+	GetMultiplePlayerRanksParams,
 	GetPlayerLeaderboardRanksParams,
 	GetPlayerRank1Params,
 	GetPlayerRank2Params,
@@ -689,6 +691,76 @@ export const removeRoleFromUser = async (discordId: bigint | number | string, ro
 };
 
 /**
+ * @summary Get list of admins
+ */
+export type getAdminsResponse200 = {
+	data: AccountWithPermsDto[];
+	status: 200;
+};
+
+export type getAdminsResponse401 = {
+	data: null;
+	status: 401;
+};
+
+export type getAdminsResponse403 = {
+	data: null;
+	status: 403;
+};
+
+export type getAdminsResponseComposite = getAdminsResponse200 | getAdminsResponse401 | getAdminsResponse403;
+
+export type getAdminsResponse = getAdminsResponseComposite & {
+	headers: Headers;
+};
+
+export const getGetAdminsUrl = () => {
+	return `${ELITE_API_URL}/admins`;
+};
+
+export const getAdmins = async (options?: RequestInit) => {
+	return customFetch<getAdminsResponse>(getGetAdminsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get list of roles
+ */
+export type getRolesResponse200 = {
+	data: string[];
+	status: 200;
+};
+
+export type getRolesResponse401 = {
+	data: null;
+	status: 401;
+};
+
+export type getRolesResponse403 = {
+	data: null;
+	status: 403;
+};
+
+export type getRolesResponseComposite = getRolesResponse200 | getRolesResponse401 | getRolesResponse403;
+
+export type getRolesResponse = getRolesResponseComposite & {
+	headers: Headers;
+};
+
+export const getGetRolesUrl = () => {
+	return `${ELITE_API_URL}/admin/roles`;
+};
+
+export const getRoles = async (options?: RequestInit) => {
+	return customFetch<getRolesResponse>(getGetRolesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * This enables a player's data from Hypixel to be refreshed on the next request.
  * @summary Reset a player's cooldowns
  */
@@ -911,76 +983,6 @@ export const setEventApproval = async (
 	return customFetch<setEventApprovalResponse>(getSetEventApprovalUrl(eventId, params), {
 		...options,
 		method: 'POST',
-	});
-};
-
-/**
- * @summary Get list of admins
- */
-export type getAdminsResponse200 = {
-	data: AccountWithPermsDto[];
-	status: 200;
-};
-
-export type getAdminsResponse401 = {
-	data: null;
-	status: 401;
-};
-
-export type getAdminsResponse403 = {
-	data: null;
-	status: 403;
-};
-
-export type getAdminsResponseComposite = getAdminsResponse200 | getAdminsResponse401 | getAdminsResponse403;
-
-export type getAdminsResponse = getAdminsResponseComposite & {
-	headers: Headers;
-};
-
-export const getGetAdminsUrl = () => {
-	return `${ELITE_API_URL}/admins`;
-};
-
-export const getAdmins = async (options?: RequestInit) => {
-	return customFetch<getAdminsResponse>(getGetAdminsUrl(), {
-		...options,
-		method: 'GET',
-	});
-};
-
-/**
- * @summary Get list of roles
- */
-export type getRolesResponse200 = {
-	data: string[];
-	status: 200;
-};
-
-export type getRolesResponse401 = {
-	data: null;
-	status: 401;
-};
-
-export type getRolesResponse403 = {
-	data: null;
-	status: 403;
-};
-
-export type getRolesResponseComposite = getRolesResponse200 | getRolesResponse401 | getRolesResponse403;
-
-export type getRolesResponse = getRolesResponseComposite & {
-	headers: Headers;
-};
-
-export const getGetRolesUrl = () => {
-	return `${ELITE_API_URL}/admin/roles`;
-};
-
-export const getRoles = async (options?: RequestInit) => {
-	return customFetch<getRolesResponse>(getGetRolesUrl(), {
-		...options,
-		method: 'GET',
 	});
 };
 
@@ -5464,6 +5466,59 @@ export const getGetLeaderboardsUrl = () => {
 
 export const getLeaderboards = async (options?: RequestInit) => {
 	return customFetch<getLeaderboardsResponse>(getGetLeaderboardsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get multiple leaderboard ranks for a player
+ */
+export type getMultiplePlayerRanksResponse200 = {
+	data: GetMultiplePlayerRanks200;
+	status: 200;
+};
+
+export type getMultiplePlayerRanksResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getMultiplePlayerRanksResponseComposite =
+	| getMultiplePlayerRanksResponse200
+	| getMultiplePlayerRanksResponse400;
+
+export type getMultiplePlayerRanksResponse = getMultiplePlayerRanksResponseComposite & {
+	headers: Headers;
+};
+
+export const getGetMultiplePlayerRanksUrl = (
+	playerUuid: string,
+	profileUuid: string,
+	params: GetMultiplePlayerRanksParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/leaderboards-multiple/${playerUuid}/${profileUuid}?${stringifiedParams}`
+		: `${ELITE_API_URL}/leaderboards-multiple/${playerUuid}/${profileUuid}`;
+};
+
+export const getMultiplePlayerRanks = async (
+	playerUuid: string,
+	profileUuid: string,
+	params: GetMultiplePlayerRanksParams,
+	options?: RequestInit
+) => {
+	return customFetch<getMultiplePlayerRanksResponse>(getGetMultiplePlayerRanksUrl(playerUuid, profileUuid, params), {
 		...options,
 		method: 'GET',
 	});
