@@ -20,10 +20,15 @@ export type GetMultiplePlayerRanksParams = {
 	 */
 	includeUpcoming?: boolean | null;
 	/**
-	 * Amount of upcoming players to include (max 100). Only works with new leaderboard backend
+	 * Amount of upcoming players to include (max 10).
 	 * @nullable
 	 */
 	upcoming?: number | null;
+	/**
+	 * Amount of passed players to include (max 3).
+	 * @nullable
+	 */
+	previous?: number | null;
 	/**
 	 * Start at a specified rank for upcoming players
 	 * @nullable

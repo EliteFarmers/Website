@@ -21,6 +21,11 @@ export type GetPlayerRank1Params = {
 	 */
 	upcoming?: number | null;
 	/**
+	 * Amount of passed players to include (max 3).
+	 * @nullable
+	 */
+	previous?: number | null;
+	/**
 	 * Start at a specified rank for upcoming players
 	 * @nullable
 	 */
