@@ -21,6 +21,10 @@ export type GetPlayerRank2Params = {
 	/**
 	 * @nullable
 	 */
+	previous?: number | null;
+	/**
+	 * @nullable
+	 */
 	atRank?: number | null;
 	/**
 	 * @nullable

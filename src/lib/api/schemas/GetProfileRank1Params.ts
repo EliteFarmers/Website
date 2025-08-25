@@ -16,20 +16,20 @@ export type GetProfileRank1Params = {
 	 */
 	includeUpcoming?: boolean | null;
 	/**
-	 * Amount of upcoming players to include (max 100). Only works with new leaderboard backend
+	 * Amount of upcoming players to include (max 100).
 	 * @nullable
 	 */
 	upcoming?: number | null;
+	/**
+	 * Amount of passed players to include (max 3).
+	 * @nullable
+	 */
+	previous?: number | null;
 	/**
 	 * Start at a specified rank for upcoming players
 	 * @nullable
 	 */
 	atRank?: number | null;
-	/**
-	 * Use new leaderboard backend (will be default in the future)
-	 * @nullable
-	 */
-	new?: boolean | null;
 	/**
 	 * Time interval key of a monthly leaderboard. Format: yyyy-MM
 	 * @nullable

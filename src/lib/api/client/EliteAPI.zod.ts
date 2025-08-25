@@ -5831,15 +5831,14 @@ export const zodGetMultiplePlayerRanksParams = zod.object({
 
 export const zodGetMultiplePlayerRanksQueryIncludeUpcomingDefault = false;
 export const zodGetMultiplePlayerRanksQueryUpcomingDefault = 0;
+export const zodGetMultiplePlayerRanksQueryPreviousDefault = 0;
 export const zodGetMultiplePlayerRanksQueryRemovedDefault = 0;
 
 export const zodGetMultiplePlayerRanksQueryParams = zod.object({
 	leaderboards: zod.string().describe('Ids of leaderboards (comma-separated)'),
 	includeUpcoming: zod.boolean().nullish().describe('Include upcoming players'),
-	upcoming: zod
-		.number()
-		.nullish()
-		.describe('Amount of upcoming players to include (max 100). Only works with new leaderboard backend'),
+	upcoming: zod.number().nullish().describe('Amount of upcoming players to include (max 10).'),
+	previous: zod.number().nullish().describe('Amount of passed players to include (max 3).'),
 	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
@@ -5858,6 +5857,8 @@ export const zodGetMultiplePlayerRanksQueryParams = zod.object({
 
 export const zodGetMultiplePlayerRanksResponseUpcomingPlayersItemMetaPrefixMax = 16;
 export const zodGetMultiplePlayerRanksResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetMultiplePlayerRanksResponsePreviousItemMetaPrefixMax = 16;
+export const zodGetMultiplePlayerRanksResponsePreviousItemMetaSuffixMax = 16;
 
 export const zodGetMultiplePlayerRanksResponse = zod.record(
 	zod.string(),
@@ -5924,6 +5925,57 @@ export const zodGetMultiplePlayerRanksResponse = zod.record(
 			)
 			.nullish()
 			.describe('List of upcoming players'),
+		previous: zod
+			.array(
+				zod.object({
+					ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+					profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+					uuid: zod.string().describe('Uuid of the player or profile'),
+					amount: zod.number().describe('Score of the entry'),
+					removed: zod.boolean(),
+					initialAmount: zod.number().describe('Initial score of the entry'),
+					mode: zod
+						.string()
+						.nullish()
+						.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+					members: zod
+						.array(
+							zod.object({
+								ign: zod.string(),
+								uuid: zod.string(),
+								xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+								removed: zod.boolean(),
+							})
+						)
+						.nullish(),
+					meta: zod
+						.object({
+							prefix: zod
+								.string()
+								.max(zodGetMultiplePlayerRanksResponsePreviousItemMetaPrefixMax)
+								.nullish(),
+							suffix: zod
+								.string()
+								.max(zodGetMultiplePlayerRanksResponsePreviousItemMetaSuffixMax)
+								.nullish(),
+							leaderboard: zod
+								.object({
+									styleId: zod.number().nullish(),
+									backgroundColor: zod.string().nullish(),
+									borderColor: zod.string().nullish(),
+									textColor: zod.string().nullish(),
+									rankColor: zod.string().nullish(),
+									backgroundImage: zod.string().nullish(),
+									overlayImage: zod.string().nullish(),
+								})
+								.nullish(),
+						})
+						.nullish()
+						.describe('Metadata of the entry'),
+				})
+			)
+			.nullish()
+			.describe('List of previous players'),
 	})
 );
 
@@ -5970,6 +6022,7 @@ export const zodGetPlayerRank1Params = zod.object({
 
 export const zodGetPlayerRank1QueryIncludeUpcomingDefault = false;
 export const zodGetPlayerRank1QueryUpcomingDefault = 0;
+export const zodGetPlayerRank1QueryPreviousDefault = 0;
 export const zodGetPlayerRank1QueryRemovedDefault = 0;
 
 export const zodGetPlayerRank1QueryParams = zod.object({
@@ -5978,6 +6031,7 @@ export const zodGetPlayerRank1QueryParams = zod.object({
 		.number()
 		.nullish()
 		.describe('Amount of upcoming players to include (max 100). Only works with new leaderboard backend'),
+	previous: zod.number().nullish().describe('Amount of passed players to include (max 3).'),
 	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
@@ -5996,6 +6050,8 @@ export const zodGetPlayerRank1QueryParams = zod.object({
 
 export const zodGetPlayerRank1ResponseUpcomingPlayersItemMetaPrefixMax = 16;
 export const zodGetPlayerRank1ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetPlayerRank1ResponsePreviousItemMetaPrefixMax = 16;
+export const zodGetPlayerRank1ResponsePreviousItemMetaSuffixMax = 16;
 
 export const zodGetPlayerRank1Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
@@ -6054,6 +6110,51 @@ export const zodGetPlayerRank1Response = zod.object({
 		)
 		.nullish()
 		.describe('List of upcoming players'),
+	previous: zod
+		.array(
+			zod.object({
+				ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+				profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+				uuid: zod.string().describe('Uuid of the player or profile'),
+				amount: zod.number().describe('Score of the entry'),
+				removed: zod.boolean(),
+				initialAmount: zod.number().describe('Initial score of the entry'),
+				mode: zod
+					.string()
+					.nullish()
+					.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+				members: zod
+					.array(
+						zod.object({
+							ign: zod.string(),
+							uuid: zod.string(),
+							xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+							removed: zod.boolean(),
+						})
+					)
+					.nullish(),
+				meta: zod
+					.object({
+						prefix: zod.string().max(zodGetPlayerRank1ResponsePreviousItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetPlayerRank1ResponsePreviousItemMetaSuffixMax).nullish(),
+						leaderboard: zod
+							.object({
+								styleId: zod.number().nullish(),
+								backgroundColor: zod.string().nullish(),
+								borderColor: zod.string().nullish(),
+								textColor: zod.string().nullish(),
+								rankColor: zod.string().nullish(),
+								backgroundImage: zod.string().nullish(),
+								overlayImage: zod.string().nullish(),
+							})
+							.nullish(),
+					})
+					.nullish()
+					.describe('Metadata of the entry'),
+			})
+		)
+		.nullish()
+		.describe('List of previous players'),
 });
 
 /**
@@ -6067,11 +6168,13 @@ export const zodGetPlayerRank2Params = zod.object({
 
 export const zodGetPlayerRank2QueryIncludeUpcomingDefault = false;
 export const zodGetPlayerRank2QueryUpcomingDefault = 0;
+export const zodGetPlayerRank2QueryPreviousDefault = 0;
 export const zodGetPlayerRank2QueryRemovedDefault = 0;
 
 export const zodGetPlayerRank2QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish(),
 	upcoming: zod.number().nullish(),
+	previous: zod.number().nullish(),
 	atRank: zod.number().nullish(),
 	interval: zod.string().nullish(),
 	mode: zod.string().nullish(),
@@ -6080,6 +6183,8 @@ export const zodGetPlayerRank2QueryParams = zod.object({
 
 export const zodGetPlayerRank2ResponseUpcomingPlayersItemMetaPrefixMax = 16;
 export const zodGetPlayerRank2ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetPlayerRank2ResponsePreviousItemMetaPrefixMax = 16;
+export const zodGetPlayerRank2ResponsePreviousItemMetaSuffixMax = 16;
 
 export const zodGetPlayerRank2Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
@@ -6138,6 +6243,51 @@ export const zodGetPlayerRank2Response = zod.object({
 		)
 		.nullish()
 		.describe('List of upcoming players'),
+	previous: zod
+		.array(
+			zod.object({
+				ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+				profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+				uuid: zod.string().describe('Uuid of the player or profile'),
+				amount: zod.number().describe('Score of the entry'),
+				removed: zod.boolean(),
+				initialAmount: zod.number().describe('Initial score of the entry'),
+				mode: zod
+					.string()
+					.nullish()
+					.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+				members: zod
+					.array(
+						zod.object({
+							ign: zod.string(),
+							uuid: zod.string(),
+							xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+							removed: zod.boolean(),
+						})
+					)
+					.nullish(),
+				meta: zod
+					.object({
+						prefix: zod.string().max(zodGetPlayerRank2ResponsePreviousItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetPlayerRank2ResponsePreviousItemMetaSuffixMax).nullish(),
+						leaderboard: zod
+							.object({
+								styleId: zod.number().nullish(),
+								backgroundColor: zod.string().nullish(),
+								borderColor: zod.string().nullish(),
+								textColor: zod.string().nullish(),
+								rankColor: zod.string().nullish(),
+								backgroundImage: zod.string().nullish(),
+								overlayImage: zod.string().nullish(),
+							})
+							.nullish(),
+					})
+					.nullish()
+					.describe('Metadata of the entry'),
+			})
+		)
+		.nullish()
+		.describe('List of previous players'),
 });
 
 /**
@@ -6167,20 +6317,14 @@ export const zodGetProfileRank1Params = zod.object({
 
 export const zodGetProfileRank1QueryIncludeUpcomingDefault = false;
 export const zodGetProfileRank1QueryUpcomingDefault = 0;
-export const zodGetProfileRank1QueryNewDefault = true;
+export const zodGetProfileRank1QueryPreviousDefault = 0;
 export const zodGetProfileRank1QueryRemovedDefault = 0;
 
 export const zodGetProfileRank1QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish().describe('Include upcoming players'),
-	upcoming: zod
-		.number()
-		.nullish()
-		.describe('Amount of upcoming players to include (max 100). Only works with new leaderboard backend'),
+	upcoming: zod.number().nullish().describe('Amount of upcoming players to include (max 100).'),
+	previous: zod.number().nullish().describe('Amount of passed players to include (max 3).'),
 	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
-	new: zod
-		.boolean()
-		.default(zodGetProfileRank1QueryNewDefault)
-		.describe('Use new leaderboard backend (will be default in the future)'),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
 		.string()
@@ -6198,6 +6342,8 @@ export const zodGetProfileRank1QueryParams = zod.object({
 
 export const zodGetProfileRank1ResponseUpcomingPlayersItemMetaPrefixMax = 16;
 export const zodGetProfileRank1ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetProfileRank1ResponsePreviousItemMetaPrefixMax = 16;
+export const zodGetProfileRank1ResponsePreviousItemMetaSuffixMax = 16;
 
 export const zodGetProfileRank1Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
@@ -6256,6 +6402,51 @@ export const zodGetProfileRank1Response = zod.object({
 		)
 		.nullish()
 		.describe('List of upcoming players'),
+	previous: zod
+		.array(
+			zod.object({
+				ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+				profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+				uuid: zod.string().describe('Uuid of the player or profile'),
+				amount: zod.number().describe('Score of the entry'),
+				removed: zod.boolean(),
+				initialAmount: zod.number().describe('Initial score of the entry'),
+				mode: zod
+					.string()
+					.nullish()
+					.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+				members: zod
+					.array(
+						zod.object({
+							ign: zod.string(),
+							uuid: zod.string(),
+							xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+							removed: zod.boolean(),
+						})
+					)
+					.nullish(),
+				meta: zod
+					.object({
+						prefix: zod.string().max(zodGetProfileRank1ResponsePreviousItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetProfileRank1ResponsePreviousItemMetaSuffixMax).nullish(),
+						leaderboard: zod
+							.object({
+								styleId: zod.number().nullish(),
+								backgroundColor: zod.string().nullish(),
+								borderColor: zod.string().nullish(),
+								textColor: zod.string().nullish(),
+								rankColor: zod.string().nullish(),
+								backgroundImage: zod.string().nullish(),
+								overlayImage: zod.string().nullish(),
+							})
+							.nullish(),
+					})
+					.nullish()
+					.describe('Metadata of the entry'),
+			})
+		)
+		.nullish()
+		.describe('List of previous players'),
 });
 
 /**
@@ -6268,14 +6459,14 @@ export const zodGetProfileRank2Params = zod.object({
 
 export const zodGetProfileRank2QueryIncludeUpcomingDefault = false;
 export const zodGetProfileRank2QueryUpcomingDefault = 0;
-export const zodGetProfileRank2QueryNewDefault = true;
+export const zodGetProfileRank2QueryPreviousDefault = 0;
 export const zodGetProfileRank2QueryRemovedDefault = 0;
 
 export const zodGetProfileRank2QueryParams = zod.object({
 	includeUpcoming: zod.boolean().nullish(),
 	upcoming: zod.number().nullish(),
+	previous: zod.number().nullish(),
 	atRank: zod.number().nullish(),
-	new: zod.boolean().default(zodGetProfileRank2QueryNewDefault),
 	interval: zod.string().nullish(),
 	mode: zod.string().nullish(),
 	removed: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
@@ -6283,6 +6474,8 @@ export const zodGetProfileRank2QueryParams = zod.object({
 
 export const zodGetProfileRank2ResponseUpcomingPlayersItemMetaPrefixMax = 16;
 export const zodGetProfileRank2ResponseUpcomingPlayersItemMetaSuffixMax = 16;
+export const zodGetProfileRank2ResponsePreviousItemMetaPrefixMax = 16;
+export const zodGetProfileRank2ResponsePreviousItemMetaSuffixMax = 16;
 
 export const zodGetProfileRank2Response = zod.object({
 	rank: zod.number().describe('Current rank of the player (-1 if not on leaderboard)'),
@@ -6341,6 +6534,51 @@ export const zodGetProfileRank2Response = zod.object({
 		)
 		.nullish()
 		.describe('List of upcoming players'),
+	previous: zod
+		.array(
+			zod.object({
+				ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+				profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+				uuid: zod.string().describe('Uuid of the player or profile'),
+				amount: zod.number().describe('Score of the entry'),
+				removed: zod.boolean(),
+				initialAmount: zod.number().describe('Initial score of the entry'),
+				mode: zod
+					.string()
+					.nullish()
+					.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+				members: zod
+					.array(
+						zod.object({
+							ign: zod.string(),
+							uuid: zod.string(),
+							xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+							removed: zod.boolean(),
+						})
+					)
+					.nullish(),
+				meta: zod
+					.object({
+						prefix: zod.string().max(zodGetProfileRank2ResponsePreviousItemMetaPrefixMax).nullish(),
+						suffix: zod.string().max(zodGetProfileRank2ResponsePreviousItemMetaSuffixMax).nullish(),
+						leaderboard: zod
+							.object({
+								styleId: zod.number().nullish(),
+								backgroundColor: zod.string().nullish(),
+								borderColor: zod.string().nullish(),
+								textColor: zod.string().nullish(),
+								rankColor: zod.string().nullish(),
+								backgroundImage: zod.string().nullish(),
+								overlayImage: zod.string().nullish(),
+							})
+							.nullish(),
+					})
+					.nullish()
+					.describe('Metadata of the entry'),
+			})
+		)
+		.nullish()
+		.describe('List of previous players'),
 });
 
 /**

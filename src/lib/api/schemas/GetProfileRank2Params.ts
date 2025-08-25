@@ -21,11 +21,11 @@ export type GetProfileRank2Params = {
 	/**
 	 * @nullable
 	 */
-	atRank?: number | null;
+	previous?: number | null;
 	/**
 	 * @nullable
 	 */
-	new?: boolean | null;
+	atRank?: number | null;
 	/**
 	 * @nullable
 	 */

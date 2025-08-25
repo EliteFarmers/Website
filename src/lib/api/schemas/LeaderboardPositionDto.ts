@@ -27,4 +27,9 @@ time based leaderboard */
 	 * @nullable
 	 */
 	upcomingPlayers?: LeaderboardEntryDto[] | null;
+	/**
+	 * List of previous players
+	 * @nullable
+	 */
+	previous?: LeaderboardEntryDto[] | null;
 }
