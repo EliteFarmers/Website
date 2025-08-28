@@ -34,13 +34,15 @@
 				month >= (year === startYear ? startMonth : 1);
 				month--
 			) {
-				const label = new Date(Date.UTC(year, month)).toLocaleString('default', {
+				const label = new Date(Date.UTC(year, month - 1)).toLocaleString('default', {
 					year: 'numeric',
 					month: 'long',
+					timeZone: 'UTC',
 				});
 
-				const monthName = new Date(Date.UTC(year, month)).toLocaleString('default', {
+				const monthName = new Date(Date.UTC(year, month - 1)).toLocaleString('default', {
 					month: 'long',
+					timeZone: 'UTC',
 				});
 
 				options.push({
