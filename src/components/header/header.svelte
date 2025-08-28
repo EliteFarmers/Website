@@ -8,8 +8,8 @@
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
 	import * as Sidebar from '$ui/sidebar';
+	import Heart from '@lucide/svelte/icons/heart';
 	import Search from '@lucide/svelte/icons/search';
-	import Star from '@lucide/svelte/icons/star';
 	import { quadInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import SmallAnnouncements from './small-announcements.svelte';
@@ -40,7 +40,7 @@
 	</div>
 	<div class="flex items-center justify-between gap-2 md:justify-end">
 		<Button variant="ghost" class="px-3 py-1" onclick={toggleFavorite}>
-			<Star class={favorites.favorited ? 'fill-completed text-completed' : ''}></Star>
+			<Heart class={favorites.favorited ? 'fill-destructive text-destructive' : ''}></Heart>
 		</Button>
 		{#if sidebar.isMobile}
 			<Button
