@@ -228,9 +228,6 @@ importers:
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(yaml@2.8.1)
-      vite-bundle-analyzer:
-        specifier: ^1.2.3
-        version: 1.2.3
       yup:
         specifier: ^1.7.0
         version: 1.7.0
@@ -3255,10 +3252,6 @@ packages:
     engines: {node: '>=18', pnpm: '>=8.7.0'}
     peerDependencies:
       svelte: ^5.0.0
-
-  vite-bundle-analyzer@1.2.3:
-    resolution: {integrity: sha512-8nhwDGHWMKKgg6oegAOpDgTT7/yzTVzeYzLF4y8WBJoYu9gO7h29UpHiQnXD2rAvfQzDy5Wqe/Za5cgqhnxi5g==}
-    hasBin: true
 
   vite@6.3.5:
     resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
@@ -6584,8 +6577,6 @@ snapshots:
       runed: 0.23.4(svelte@5.38.1)
       svelte: 5.38.1
       svelte-toolbelt: 0.7.1(svelte@5.38.1)
-
-  vite-bundle-analyzer@1.2.3: {}
 
   vite@6.3.5(@types/node@24.2.0)(jiti@2.5.1)(lightningcss@1.30.1)(yaml@2.8.1):
     dependencies:
