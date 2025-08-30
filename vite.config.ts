@@ -2,10 +2,9 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { defineConfig } from 'vite';
-import { analyzer } from 'vite-bundle-analyzer';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit(), analyzer()],
+	plugins: [tailwindcss(), sveltekit()],
 	optimizeDeps: {
 		exclude: ['@napi-rs/canvas'],
 	},
