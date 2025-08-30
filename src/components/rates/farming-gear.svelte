@@ -8,7 +8,7 @@
 	import * as Popover from '$ui/popover';
 	import Menu from '@lucide/svelte/icons/menu';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { GearSlot } from 'farming-weight';
+	import type { GearSlot } from 'farming-weight';
 
 	interface Props {
 		player: RatesPlayerStore;
