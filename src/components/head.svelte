@@ -11,7 +11,7 @@
 
 	let {
 		title,
-		keywords = 'farming, profile, skyblock, weight, calculate, Hypixel, elite',
+		keywords = 'farming, profile, skyblock, weight, calculate, Hypixel, elite, leaderboards, skyblock leaderboards',
 		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
 		description,
 		children,
