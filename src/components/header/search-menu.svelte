@@ -32,6 +32,8 @@
 
 	async function search(query: string) {
 		if (!browser) return [];
+		query = query.trim();
+
 		try {
 			const results = await fetch(`/api/search?q=${query}`);
 			const json = await results.json();
@@ -123,7 +125,7 @@
 				{#if searchStr !== ''}
 					<Command.Item
 						value={searchStr ?? ''}
-						onSelect={() => runCommand(() => goto(`/@${searchStr}${destination}`))}
+						onSelect={() => runCommand(() => goto(`/@${searchStr.trim()}${destination}`))}
 					>
 						{searchStr}
 					</Command.Item>
