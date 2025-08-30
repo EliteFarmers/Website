@@ -1,5 +1,5 @@
-FROM node:23-alpine AS builder
-RUN npm install -g pnpm@10.12.2
+FROM node:24-alpine AS builder
+RUN npm install -g pnpm@10.15.0
 WORKDIR /app
 
 COPY package*.json .
@@ -17,8 +17,8 @@ RUN pnpm run build
 RUN pnpm prune --production
 
 
-FROM node:23-alpine
-RUN npm install -g pnpm@10.12.2
+FROM node:24-alpine
+RUN npm install -g pnpm@10.15.0
 WORKDIR /app
 
 ENV PUBLIC_COMMIT_HASH=$PUBLIC_COMMIT_HASH
