@@ -2,14 +2,12 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { defineConfig } from 'vite';
+import { analyzer } from 'vite-bundle-analyzer';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [tailwindcss(), sveltekit(), analyzer()],
 	optimizeDeps: {
 		exclude: ['@napi-rs/canvas'],
-	},
-	ssr: {
-		noExternal: process.env.NODE_ENV === 'production' ? ['apexcharts'] : [],
 	},
 	resolve: {
 		alias: {
