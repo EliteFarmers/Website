@@ -3,7 +3,6 @@
 	import { CROP_TO_HEX, PROPER_CROP_NAME } from '$lib/constants/crops';
 	import { toReadable } from '$lib/format';
 	import { getAnyCropSelected, getSelectedCrops } from '$lib/stores/selectedCrops';
-	import type { ApexOptions } from 'apexcharts';
 	import Apex from './apex.svelte';
 
 	interface Props {
@@ -85,7 +84,7 @@
 		},
 		yaxis: {
 			labels: {
-				formatter: function (val) {
+				formatter: function (val: number) {
 					return toReadable(val);
 				},
 			},
@@ -99,17 +98,17 @@
 		tooltip: {
 			shared: false,
 			y: {
-				formatter: function (val) {
+				formatter: function (val: number) {
 					return val.toLocaleString();
 				},
 			},
 			x: {
-				formatter: function (val) {
+				formatter: function (val: number) {
 					return new Date(val).toLocaleString();
 				},
 			},
 		},
-	} satisfies ApexOptions);
+	});
 </script>
 
 <Apex {options} animate={false} />

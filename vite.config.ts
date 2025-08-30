@@ -8,9 +8,6 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['@napi-rs/canvas'],
 	},
-	ssr: {
-		noExternal: process.env.NODE_ENV === 'production' ? ['apexcharts'] : [],
-	},
 	resolve: {
 		alias: {
 			$ui: path.resolve('./src/components/ui'),

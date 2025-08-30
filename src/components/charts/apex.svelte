@@ -1,19 +1,20 @@
 <script lang="ts">
 	import Loader from '@lucide/svelte/icons/loader';
-	import type ApexCharts from 'apexcharts';
 	import { onMount } from 'svelte';
 
 	interface Props {
-		options: ApexCharts.ApexOptions;
+		options: unknown;
 		animate?: boolean;
 	}
 
 	let { options, animate = true }: Props = $props();
 
-	let charts: typeof ApexCharts | null = null;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let charts: any = null;
 	let loaded = $state(false);
 
-	const apex = (node: HTMLElement, options: ApexCharts.ApexOptions) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const apex = (node: HTMLElement, options: any) => {
 		if (!charts || !loaded) return;
 
 		if (!animate) {
@@ -30,7 +31,7 @@
 		chart.render();
 
 		return {
-			update: (newOptions: ApexCharts.ApexOptions) => {
+			update: (newOptions: unknown) => {
 				chart.updateOptions(newOptions, animate, animate);
 			},
 			destroy: () => {
@@ -42,12 +43,15 @@
 	onMount(render);
 
 	async function render() {
-		const { default: ApexCharts } = await import('apexcharts');
-
-		charts = ApexCharts;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		charts = (window as any).ApexCharts;
 		loaded = true;
 	}
 </script>
+
+<svelte:head>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</svelte:head>
 
 <div class="flex w-full max-w-6xl items-center justify-center">
 	{#if loaded}
