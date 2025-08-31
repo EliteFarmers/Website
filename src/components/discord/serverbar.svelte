@@ -1,5 +1,6 @@
 <script lang="ts">
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
+	import ResponsiveImage from '$comp/responsive-image.svelte';
 	import type { GuildDetailsDto } from '$lib/api';
 	import Users from '@lucide/svelte/icons/users';
 
@@ -18,10 +19,10 @@
 		: ''}"
 >
 	{#if guild.banner?.url}
-		<img
-			class="pixelated absolute right-0 left-0 w-full rounded-lg"
+		<ResponsiveImage
+			image={guild.banner}
 			loading={lazy ? 'lazy' : 'eager'}
-			src={guild.banner.url}
+			class="absolute right-0 left-0 w-full rounded-lg"
 			alt="Server Banner"
 		/>
 		<div

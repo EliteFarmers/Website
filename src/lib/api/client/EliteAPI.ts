@@ -92,6 +92,7 @@ import type {
 	GuildDetailsDto,
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
+	ImageAttachmentDto,
 	IncomingAccountDto,
 	IncomingGuildChannelDto,
 	IncomingGuildDto,
@@ -5401,6 +5402,31 @@ export const updateGuildPurchases = async (discordId: bigint | number | string, 
 	return customFetch<updateGuildPurchasesResponse>(getUpdateGuildPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * @summary Get Image
+ */
+export type testImageResponse200 = {
+	data: ImageAttachmentDto;
+	status: 200;
+};
+
+export type testImageResponseComposite = testImageResponse200;
+
+export type testImageResponse = testImageResponseComposite & {
+	headers: Headers;
+};
+
+export const getTestImageUrl = () => {
+	return `${ELITE_API_URL}/image`;
+};
+
+export const testImage = async (options?: RequestInit) => {
+	return customFetch<testImageResponse>(getTestImageUrl(), {
+		...options,
+		method: 'GET',
 	});
 };
 

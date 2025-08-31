@@ -9,13 +9,20 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  */
 import type { ProblemDetailsError } from './ProblemDetailsError';
 
+/**
+ * RFC7807 compatible problem details/ error response class. this can be used by configuring startup like so:
+app.UseFastEndpoints(c => c.Errors.UseProblemDetails())
+ */
 export interface ProblemDetails {
 	type: string;
 	title: string;
 	status: number;
 	instance: string;
 	traceId: string;
-	/** @nullable */
+	/**
+	 * the details of the error
+	 * @nullable
+	 */
 	detail?: string | null;
 	errors: ProblemDetailsError[];
 }

@@ -7,6 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { ImageAttachmentDtoSources } from './ImageAttachmentDtoSources';
 
 export interface ImageAttachmentDto {
 	/**
@@ -26,6 +27,12 @@ export interface ImageAttachmentDto {
 	 * @nullable
 	 */
 	order?: number | null;
-	/** Full image URL */
+	/** The original width of the image. */
+	width: number;
+	/** The original height of the image. */
+	height: number;
+	/** A dictionary of available image sources, keyed by a logical name (e.g., "small", "medium"). */
+	sources: ImageAttachmentDtoSources;
+	/** Lowest quality image URL */
 	url: string;
 }
