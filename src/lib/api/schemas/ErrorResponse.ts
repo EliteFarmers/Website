@@ -9,8 +9,14 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  */
 import type { ErrorResponseErrors } from './ErrorResponseErrors';
 
+/**
+ * the dto used to send an error response to the client
+ */
 export interface ErrorResponse {
+	/** the http status code sent to the client. default is 400. */
 	statusCode: number;
+	/** the message for the error response */
 	message: string;
+	/** the collection of errors for the current context */
 	errors: ErrorResponseErrors;
 }

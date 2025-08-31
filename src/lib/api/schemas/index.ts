@@ -241,6 +241,8 @@ export * from './GuildMemberDto';
 export * from './GuildMemberDtoIcon';
 export * from './GuildRoleDto';
 export * from './ImageAttachmentDto';
+export * from './ImageAttachmentDtoSources';
+export * from './ImageSourceDto';
 export * from './IncomingAccountDto';
 export * from './IncomingGuildChannelDto';
 export * from './IncomingGuildDto';

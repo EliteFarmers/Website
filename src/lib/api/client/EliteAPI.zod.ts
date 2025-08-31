@@ -156,7 +156,20 @@ export const zodGetAccountResponse = zod.object({
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
-				url: zod.string().describe('Full image URL'),
+				width: zod.number().describe('The original width of the image.'),
+				height: zod.number().describe('The original height of the image.'),
+				sources: zod
+					.record(
+						zod.string(),
+						zod.object({
+							url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+							width: zod.number().describe('The width of this image variant in pixels.'),
+						})
+					)
+					.describe(
+						'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+					),
+				url: zod.string().describe('Lowest quality image URL'),
 			}),
 			name: zod.string(),
 			description: zod.string(),
@@ -378,7 +391,20 @@ export const zodGetAccountFromDiscordResponse = zod.object({
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
-				url: zod.string().describe('Full image URL'),
+				width: zod.number().describe('The original width of the image.'),
+				height: zod.number().describe('The original height of the image.'),
+				sources: zod
+					.record(
+						zod.string(),
+						zod.object({
+							url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+							width: zod.number().describe('The width of this image variant in pixels.'),
+						})
+					)
+					.describe(
+						'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+					),
+				url: zod.string().describe('Lowest quality image URL'),
 			}),
 			name: zod.string(),
 			description: zod.string(),
@@ -675,7 +701,22 @@ export const zodGetAuthAccountResponse = zod.object({
 									.nullish()
 									.describe('Image description'),
 								order: zod.number().nullish().describe('Image ordering number'),
-								url: zod.string().describe('Full image URL'),
+								width: zod.number().describe('The original width of the image.'),
+								height: zod.number().describe('The original height of the image.'),
+								sources: zod
+									.record(
+										zod.string(),
+										zod.object({
+											url: zod
+												.string()
+												.describe('The fully-qualified public URL for this image variant.'),
+											width: zod.number().describe('The width of this image variant in pixels.'),
+										})
+									)
+									.describe(
+										'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+									),
+								url: zod.string().describe('Lowest quality image URL'),
 							})
 							.nullish()
 							.describe('Product thumbnail'),
@@ -693,7 +734,24 @@ export const zodGetAuthAccountResponse = zod.object({
 										.nullish()
 										.describe('Image description'),
 									order: zod.number().nullish().describe('Image ordering number'),
-									url: zod.string().describe('Full image URL'),
+									width: zod.number().describe('The original width of the image.'),
+									height: zod.number().describe('The original height of the image.'),
+									sources: zod
+										.record(
+											zod.string(),
+											zod.object({
+												url: zod
+													.string()
+													.describe('The fully-qualified public URL for this image variant.'),
+												width: zod
+													.number()
+													.describe('The width of this image variant in pixels.'),
+											})
+										)
+										.describe(
+											'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+										),
+									url: zod.string().describe('Lowest quality image URL'),
 								})
 							)
 							.describe('Product Images'),
@@ -731,7 +789,22 @@ export const zodGetAuthAccountResponse = zod.object({
 								.nullish()
 								.describe('Image description'),
 							order: zod.number().nullish().describe('Image ordering number'),
-							url: zod.string().describe('Full image URL'),
+							width: zod.number().describe('The original width of the image.'),
+							height: zod.number().describe('The original height of the image.'),
+							sources: zod
+								.record(
+									zod.string(),
+									zod.object({
+										url: zod
+											.string()
+											.describe('The fully-qualified public URL for this image variant.'),
+										width: zod.number().describe('The width of this image variant in pixels.'),
+									})
+								)
+								.describe(
+									'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+								),
+							url: zod.string().describe('Lowest quality image URL'),
 						}),
 						name: zod.string(),
 						description: zod.string(),
@@ -907,7 +980,20 @@ export const zodGetPendingEventsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -1135,7 +1221,20 @@ export const zodGetBadgesResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	name: zod.string(),
@@ -1559,7 +1658,20 @@ export const zodGetBotGuildResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	banner: zod
@@ -1571,7 +1683,20 @@ export const zodGetBotGuildResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	inviteCode: zod.string().nullish(),
@@ -2516,7 +2641,22 @@ export const zodUpdateDiscordAccountResponse = zod.object({
 									.nullish()
 									.describe('Image description'),
 								order: zod.number().nullish().describe('Image ordering number'),
-								url: zod.string().describe('Full image URL'),
+								width: zod.number().describe('The original width of the image.'),
+								height: zod.number().describe('The original height of the image.'),
+								sources: zod
+									.record(
+										zod.string(),
+										zod.object({
+											url: zod
+												.string()
+												.describe('The fully-qualified public URL for this image variant.'),
+											width: zod.number().describe('The width of this image variant in pixels.'),
+										})
+									)
+									.describe(
+										'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+									),
+								url: zod.string().describe('Lowest quality image URL'),
 							})
 							.nullish()
 							.describe('Product thumbnail'),
@@ -2536,7 +2676,24 @@ export const zodUpdateDiscordAccountResponse = zod.object({
 										.nullish()
 										.describe('Image description'),
 									order: zod.number().nullish().describe('Image ordering number'),
-									url: zod.string().describe('Full image URL'),
+									width: zod.number().describe('The original width of the image.'),
+									height: zod.number().describe('The original height of the image.'),
+									sources: zod
+										.record(
+											zod.string(),
+											zod.object({
+												url: zod
+													.string()
+													.describe('The fully-qualified public URL for this image variant.'),
+												width: zod
+													.number()
+													.describe('The width of this image variant in pixels.'),
+											})
+										)
+										.describe(
+											'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+										),
+									url: zod.string().describe('Lowest quality image URL'),
 								})
 							)
 							.describe('Product Images'),
@@ -2574,7 +2731,22 @@ export const zodUpdateDiscordAccountResponse = zod.object({
 								.nullish()
 								.describe('Image description'),
 							order: zod.number().nullish().describe('Image ordering number'),
-							url: zod.string().describe('Full image URL'),
+							width: zod.number().describe('The original width of the image.'),
+							height: zod.number().describe('The original height of the image.'),
+							sources: zod
+								.record(
+									zod.string(),
+									zod.object({
+										url: zod
+											.string()
+											.describe('The fully-qualified public URL for this image variant.'),
+										width: zod.number().describe('The width of this image variant in pixels.'),
+									})
+								)
+								.describe(
+									'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+								),
+							url: zod.string().describe('Lowest quality image URL'),
 						}),
 						name: zod.string(),
 						description: zod.string(),
@@ -2996,7 +3168,20 @@ export const zodCreateEventAdminResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -3121,7 +3306,20 @@ export const zodUpdateEventAdminResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -3344,7 +3542,20 @@ export const zodGetGuildEventAdminResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -3391,7 +3602,20 @@ export const zodGetGuildEventsAdminResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -3512,7 +3736,20 @@ export const zodGetEventResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -3836,7 +4073,20 @@ export const zodGetUpcomingEventsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -4312,7 +4562,20 @@ export const zodGetPublicGuildEventsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Image URL for the event banner'),
@@ -4399,7 +4662,20 @@ export const zodGetPublicGuildResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	banner: zod
@@ -4411,7 +4687,20 @@ export const zodGetPublicGuildResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	inviteCode: zod.string().nullish(),
@@ -4695,7 +4984,20 @@ export const zodGetPublicGuildsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	banner: zod
@@ -4707,7 +5009,20 @@ export const zodGetPublicGuildsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	inviteCode: zod.string().nullish(),
@@ -4783,7 +5098,20 @@ export const zodGetUserGuildsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	hasBot: zod.boolean(),
@@ -5098,7 +5426,20 @@ export const zodGetUserGuildResponse = zod.object({
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
-					url: zod.string().describe('Full image URL'),
+					width: zod.number().describe('The original width of the image.'),
+					height: zod.number().describe('The original height of the image.'),
+					sources: zod
+						.record(
+							zod.string(),
+							zod.object({
+								url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+								width: zod.number().describe('The width of this image variant in pixels.'),
+							})
+						)
+						.describe(
+							'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+						),
+					url: zod.string().describe('Lowest quality image URL'),
 				})
 				.nullish(),
 			banner: zod
@@ -5114,7 +5455,20 @@ export const zodGetUserGuildResponse = zod.object({
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
-					url: zod.string().describe('Full image URL'),
+					width: zod.number().describe('The original width of the image.'),
+					height: zod.number().describe('The original height of the image.'),
+					sources: zod
+						.record(
+							zod.string(),
+							zod.object({
+								url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+								width: zod.number().describe('The width of this image variant in pixels.'),
+							})
+						)
+						.describe(
+							'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+						),
+					url: zod.string().describe('Lowest quality image URL'),
 				})
 				.nullish(),
 			inviteCode: zod.string().nullish(),
@@ -5158,7 +5512,20 @@ export const zodGetUserGuildResponse = zod.object({
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
-					url: zod.string().describe('Full image URL'),
+					width: zod.number().describe('The original width of the image.'),
+					height: zod.number().describe('The original height of the image.'),
+					sources: zod
+						.record(
+							zod.string(),
+							zod.object({
+								url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+								width: zod.number().describe('The width of this image variant in pixels.'),
+							})
+						)
+						.describe(
+							'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+						),
+					url: zod.string().describe('Lowest quality image URL'),
 				})
 				.nullish(),
 			hasBot: zod.boolean(),
@@ -5708,6 +6075,30 @@ export const zodSetInviteBody = zod.string();
  */
 export const zodUpdateGuildPurchasesParams = zod.object({
 	discordId: zod.number(),
+});
+
+/**
+ * @summary Get Image
+ */
+export const zodTestImageResponseTitleMax = 64;
+export const zodTestImageResponseDescriptionMax = 512;
+
+export const zodTestImageResponse = zod.object({
+	title: zod.string().max(zodTestImageResponseTitleMax).nullish().describe('Image title'),
+	description: zod.string().max(zodTestImageResponseDescriptionMax).nullish().describe('Image description'),
+	order: zod.number().nullish().describe('Image ordering number'),
+	width: zod.number().describe('The original width of the image.'),
+	height: zod.number().describe('The original height of the image.'),
+	sources: zod
+		.record(
+			zod.string(),
+			zod.object({
+				url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+				width: zod.number().describe('The width of this image variant in pixels.'),
+			})
+		)
+		.describe('A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'),
+	url: zod.string().describe('Lowest quality image URL'),
 });
 
 /**
@@ -6670,7 +7061,20 @@ export const zodGetEntitlementsResponseItem = zod.object({
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
-					url: zod.string().describe('Full image URL'),
+					width: zod.number().describe('The original width of the image.'),
+					height: zod.number().describe('The original height of the image.'),
+					sources: zod
+						.record(
+							zod.string(),
+							zod.object({
+								url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+								width: zod.number().describe('The width of this image variant in pixels.'),
+							})
+						)
+						.describe(
+							'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+						),
+					url: zod.string().describe('Lowest quality image URL'),
 				})
 				.nullish()
 				.describe('Product thumbnail'),
@@ -6688,7 +7092,22 @@ export const zodGetEntitlementsResponseItem = zod.object({
 							.nullish()
 							.describe('Image description'),
 						order: zod.number().nullish().describe('Image ordering number'),
-						url: zod.string().describe('Full image URL'),
+						width: zod.number().describe('The original width of the image.'),
+						height: zod.number().describe('The original height of the image.'),
+						sources: zod
+							.record(
+								zod.string(),
+								zod.object({
+									url: zod
+										.string()
+										.describe('The fully-qualified public URL for this image variant.'),
+									width: zod.number().describe('The width of this image variant in pixels.'),
+								})
+							)
+							.describe(
+								'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+							),
+						url: zod.string().describe('Lowest quality image URL'),
 					})
 				)
 				.describe('Product Images'),
@@ -8050,8 +8469,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.boolean(),
 				item_specific: zod
 					.object({
-						rootElement: zod.any(),
+						rootElement: zod.any().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -8159,8 +8581,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.boolean(),
 					item_specific: zod
 						.object({
-							rootElement: zod.any(),
+							rootElement: zod.any().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -8327,8 +8752,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.boolean(),
 			item_specific: zod
 				.object({
-					rootElement: zod.any(),
+					rootElement: zod.any().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()
@@ -8515,7 +8943,20 @@ export const zodGetCategoriesResponseItem = zod.object({
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
-					url: zod.string().describe('Full image URL'),
+					width: zod.number().describe('The original width of the image.'),
+					height: zod.number().describe('The original height of the image.'),
+					sources: zod
+						.record(
+							zod.string(),
+							zod.object({
+								url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+								width: zod.number().describe('The width of this image variant in pixels.'),
+							})
+						)
+						.describe(
+							'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+						),
+					url: zod.string().describe('Lowest quality image URL'),
 				})
 				.nullish()
 				.describe('Product thumbnail'),
@@ -8533,7 +8974,22 @@ export const zodGetCategoriesResponseItem = zod.object({
 							.nullish()
 							.describe('Image description'),
 						order: zod.number().nullish().describe('Image ordering number'),
-						url: zod.string().describe('Full image URL'),
+						width: zod.number().describe('The original width of the image.'),
+						height: zod.number().describe('The original height of the image.'),
+						sources: zod
+							.record(
+								zod.string(),
+								zod.object({
+									url: zod
+										.string()
+										.describe('The fully-qualified public URL for this image variant.'),
+									width: zod.number().describe('The width of this image variant in pixels.'),
+								})
+							)
+							.describe(
+								'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+							),
+						url: zod.string().describe('Lowest quality image URL'),
 					})
 				)
 				.describe('Product Images'),
@@ -8620,7 +9076,20 @@ export const zodGetCategoryResponse = zod.object({
 						.nullish()
 						.describe('Image description'),
 					order: zod.number().nullish().describe('Image ordering number'),
-					url: zod.string().describe('Full image URL'),
+					width: zod.number().describe('The original width of the image.'),
+					height: zod.number().describe('The original height of the image.'),
+					sources: zod
+						.record(
+							zod.string(),
+							zod.object({
+								url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+								width: zod.number().describe('The width of this image variant in pixels.'),
+							})
+						)
+						.describe(
+							'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+						),
+					url: zod.string().describe('Lowest quality image URL'),
 				})
 				.nullish()
 				.describe('Product thumbnail'),
@@ -8638,7 +9107,22 @@ export const zodGetCategoryResponse = zod.object({
 							.nullish()
 							.describe('Image description'),
 						order: zod.number().nullish().describe('Image ordering number'),
-						url: zod.string().describe('Full image URL'),
+						width: zod.number().describe('The original width of the image.'),
+						height: zod.number().describe('The original height of the image.'),
+						sources: zod
+							.record(
+								zod.string(),
+								zod.object({
+									url: zod
+										.string()
+										.describe('The fully-qualified public URL for this image variant.'),
+									width: zod.number().describe('The width of this image variant in pixels.'),
+								})
+							)
+							.describe(
+								'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+							),
+						url: zod.string().describe('Lowest quality image URL'),
 					})
 				)
 				.describe('Product Images'),
@@ -8783,7 +9267,20 @@ export const zodGetAllProductsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Product thumbnail'),
@@ -8797,7 +9294,20 @@ export const zodGetAllProductsResponseItem = zod.object({
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
-				url: zod.string().describe('Full image URL'),
+				width: zod.number().describe('The original width of the image.'),
+				height: zod.number().describe('The original height of the image.'),
+				sources: zod
+					.record(
+						zod.string(),
+						zod.object({
+							url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+							width: zod.number().describe('The width of this image variant in pixels.'),
+						})
+					)
+					.describe(
+						'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+					),
+				url: zod.string().describe('Lowest quality image URL'),
 			})
 		)
 		.describe('Product Images'),
@@ -8863,7 +9373,20 @@ export const zodRefreshProductsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Product thumbnail'),
@@ -8877,7 +9400,20 @@ export const zodRefreshProductsResponseItem = zod.object({
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
-				url: zod.string().describe('Full image URL'),
+				width: zod.number().describe('The original width of the image.'),
+				height: zod.number().describe('The original height of the image.'),
+				sources: zod
+					.record(
+						zod.string(),
+						zod.object({
+							url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+							width: zod.number().describe('The width of this image variant in pixels.'),
+						})
+					)
+					.describe(
+						'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+					),
+				url: zod.string().describe('Lowest quality image URL'),
 			})
 		)
 		.describe('Product Images'),
@@ -8983,7 +9519,20 @@ export const zodGetProductResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Product thumbnail'),
@@ -8997,7 +9546,20 @@ export const zodGetProductResponse = zod.object({
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
-				url: zod.string().describe('Full image URL'),
+				width: zod.number().describe('The original width of the image.'),
+				height: zod.number().describe('The original height of the image.'),
+				sources: zod
+					.record(
+						zod.string(),
+						zod.object({
+							url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+							width: zod.number().describe('The width of this image variant in pixels.'),
+						})
+					)
+					.describe(
+						'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+					),
+				url: zod.string().describe('Lowest quality image URL'),
 			})
 		)
 		.describe('Product Images'),
@@ -9069,7 +9631,20 @@ export const zodGetProductsResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish()
 		.describe('Product thumbnail'),
@@ -9083,7 +9658,20 @@ export const zodGetProductsResponseItem = zod.object({
 					.nullish()
 					.describe('Image description'),
 				order: zod.number().nullish().describe('Image ordering number'),
-				url: zod.string().describe('Full image URL'),
+				width: zod.number().describe('The original width of the image.'),
+				height: zod.number().describe('The original height of the image.'),
+				sources: zod
+					.record(
+						zod.string(),
+						zod.object({
+							url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+							width: zod.number().describe('The width of this image variant in pixels.'),
+						})
+					)
+					.describe(
+						'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+					),
+				url: zod.string().describe('Lowest quality image URL'),
 			})
 		)
 		.describe('Product Images'),
@@ -9450,7 +10038,20 @@ export const zodGetStyleResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	images: zod.array(
@@ -9462,7 +10063,20 @@ export const zodGetStyleResponse = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 	),
 	products: zod.array(
@@ -9848,7 +10462,20 @@ export const zodUpdateStyleBody = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	images: zod.array(
@@ -9860,7 +10487,20 @@ export const zodUpdateStyleBody = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 	),
 	products: zod.array(
@@ -10250,7 +10890,20 @@ export const zodGetStylesResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 		.nullish(),
 	images: zod.array(
@@ -10262,7 +10915,20 @@ export const zodGetStylesResponseItem = zod.object({
 				.nullish()
 				.describe('Image description'),
 			order: zod.number().nullish().describe('Image ordering number'),
-			url: zod.string().describe('Full image URL'),
+			width: zod.number().describe('The original width of the image.'),
+			height: zod.number().describe('The original height of the image.'),
+			sources: zod
+				.record(
+					zod.string(),
+					zod.object({
+						url: zod.string().describe('The fully-qualified public URL for this image variant.'),
+						width: zod.number().describe('The width of this image variant in pixels.'),
+					})
+				)
+				.describe(
+					'A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'
+				),
+			url: zod.string().describe('Lowest quality image URL'),
 		})
 	),
 	products: zod.array(

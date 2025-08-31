@@ -7,11 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { ImageSourceDto } from './ImageSourceDto';
 
 /**
- * Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.
+ * A dictionary of available image sources, keyed by a logical name (e.g., "small", "medium").
  */
-export interface JsonDocument {
-	/** Gets the root element of this JSON document. */
-	rootElement: unknown;
-}
+export type ImageAttachmentDtoSources = { [key: string]: ImageSourceDto };

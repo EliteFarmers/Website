@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ResponsiveImage from '$comp/responsive-image.svelte';
 	import type { GuildDetailsDto } from '$lib/api';
 
 	interface Props {
@@ -39,10 +40,10 @@
 		</p>
 	</div>
 {:else}
-	<img
+	<ResponsiveImage
+		image={guild.icon}
 		loading="lazy"
 		class="w-{size} h-{size} rounded-md {className ?? ''}"
-		src={guild.icon.url}
 		alt="Server Icon"
 		onerror={() => (errored = true)}
 	/>
