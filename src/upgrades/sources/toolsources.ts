@@ -136,7 +136,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		upgrades: (tool) => {
 			const count = +(tool.item.attributes?.farming_for_dummies_count ?? 0);
-			if (count <= 0 || count >= 5) return [];
+			if (count < 0 || count >= 5) return [];
 
 			return [
 				{

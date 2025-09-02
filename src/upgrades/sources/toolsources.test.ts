@@ -277,7 +277,7 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 
 	const upgrades = tool.getUpgrades();
 
-	expect(upgrades).toHaveLength(8);
+	expect(upgrades).toHaveLength(9);
 
 	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe");
 	expect(selfUpgrade).toBeDefined();
@@ -360,5 +360,14 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	expect(dedication?.category).toBe(UpgradeCategory.Enchant);
 	expect(dedication?.cost?.items).toStrictEqual({
 		ENCHANTMENT_DEDICATION_1: 1,
+	});
+
+	const farmingForDummies = upgrades.find((u) => u.title === 'Farming For Dummies');
+	expect(farmingForDummies).toBeDefined();
+	expect(farmingForDummies?.increase).toBe(1);
+	expect(farmingForDummies?.action).toBe(UpgradeAction.Apply);
+	expect(farmingForDummies?.category).toBe(UpgradeCategory.Item);
+	expect(farmingForDummies?.cost?.items).toStrictEqual({
+		FARMING_FOR_DUMMIES: 1,
 	});
 });
