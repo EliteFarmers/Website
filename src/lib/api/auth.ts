@@ -23,7 +23,6 @@ export async function FetchUserSession(
 	refreshToken = '',
 	forceRefresh = false
 ): Promise<AuthSession | undefined> {
-	forceRefresh = Math.random() < 0.2 || forceRefresh; // 1% chance to force refresh
 	// Fetch the user session
 	const { data: session, response } = await getSession({
 		headers: {
@@ -38,7 +37,6 @@ export async function FetchUserSession(
 	if (refreshToken && (!session || forceRefresh)) {
 		if (response?.status !== 401 && !forceRefresh) {
 			// If the response is not 401 Unauthorized, do not attempt to refresh
-			console.log('Session fetch failed with status:', response?.status);
 			return undefined;
 		}
 
@@ -48,13 +46,11 @@ export async function FetchUserSession(
 		}).catch(() => ({ data: undefined }));
 
 		if (newTokens) {
-			console.log('Tokens refreshed:', newTokens);
 			UpdateAuthCookies(cookies, newTokens);
 
 			// Omit the refresh token to not cause infinite loop
 			return await FetchUserSession(cookies, newTokens.access_token);
 		} else {
-			console.log('Failed to refresh tokens, deleting auth cookies.');
 			DeleteAuthCookies(cookies);
 		}
 	}

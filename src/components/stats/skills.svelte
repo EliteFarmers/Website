@@ -30,6 +30,7 @@
 					<div class="flex w-full flex-1 flex-col items-end justify-center gap-4 md:flex-row">
 						<Skillbar
 							name="Farming"
+							loading={ctx.member.loading}
 							rank={ranks?.farming?.rank}
 							progress={getLevelProgress('farming', skills?.farming ?? 0, 50 + (levelCaps?.farming ?? 0))}
 						/>
@@ -37,7 +38,12 @@
 							<ChevronsUpDown class="h-4 w-4" />
 							<span class="sr-only">Skill Toggle</span>
 						</Button>
-						<Skillbar name="Garden" rank={ctx.ranks?.garden?.rank} progress={getGardenLevel(gardenXp)} />
+						<Skillbar
+							name="Garden"
+							loading={ctx.member.loading}
+							rank={ctx.ranks?.garden?.rank}
+							progress={getGardenLevel(gardenXp)}
+						/>
 					</div>
 					<div class="md:hidden">
 						<Button variant="outline" class="-mb-1 w-10 p-0" {...props}>
@@ -58,16 +64,19 @@
 							<Skillbar
 								name="Combat"
 								rank={ranks?.combat?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('combat', skills?.combat ?? 0)}
 							/>
 							<Skillbar
 								name="Mining"
+								loading={ctx.member.loading}
 								rank={ranks?.mining?.rank}
 								progress={getLevelProgress('mining', skills?.mining ?? 0)}
 							/>
 							<Skillbar
 								name="Taming"
 								rank={ranks?.taming?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress(
 									'taming',
 									skills?.taming ?? 0,
@@ -77,11 +86,13 @@
 							<Skillbar
 								name="Alchemy"
 								rank={ranks?.alchemy?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('alchemy', skills?.alchemy ?? 0)}
 							/>
 							<Skillbar
 								name="Runecrafting"
 								rank={ranks?.runecrafting?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('runecrafting', skills?.runecrafting ?? 0)}
 							/>
 						</div>
@@ -89,26 +100,31 @@
 							<Skillbar
 								name="Fishing"
 								rank={ranks?.fishing?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('fishing', skills?.fishing ?? 0)}
 							/>
 							<Skillbar
 								name="Foraging"
 								rank={ranks?.foraging?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('foraging', skills?.foraging ?? 0)}
 							/>
 							<Skillbar
 								name="Enchanting"
 								rank={ranks?.enchanting?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('enchanting', skills?.enchanting ?? 0)}
 							/>
 							<Skillbar
 								name="Carpentry"
 								rank={ranks?.carpentry?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('carpentry', skills?.carpentry ?? 0)}
 							/>
 							<Skillbar
 								name="Social"
 								rank={ranks?.social?.rank}
+								loading={ctx.member.loading}
 								progress={getLevelProgress('social', skills?.social ?? 0)}
 							/>
 						</div>

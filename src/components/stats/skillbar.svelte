@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { toReadable } from '$lib/format';
+	import { Skeleton } from '$ui/skeleton';
 
 	interface Props {
 		name: string;
@@ -11,9 +12,10 @@
 			goal?: number;
 		};
 		rank?: number;
+		loading?: boolean;
 	}
 
-	let { name, progress, rank = -1 }: Props = $props();
+	let { name, progress, rank = -1, loading = false }: Props = $props();
 
 	let percent = $derived(Math.round(progress.ratio * 100));
 	let readable = $state('');
@@ -47,7 +49,14 @@
 				>
 			</a>
 		{/if}
-		<span class="text-md xs:text-lg sm:text-xl">{name} <strong>{progress.level.toLocaleString()}</strong></span>
+		<div class="text-md xs:text-lg sm:text-xl">
+			<span>{name}</span>
+			{#if loading}
+				<Skeleton class="m-0 -mb-1 inline-block h-6 w-8 rounded-md" />
+			{:else}
+				<span><strong>{progress.level.toLocaleString()}</strong></span>
+			{/if}
+		</div>
 	</div>
 	<div
 		class="bg-card relative h-8 w-full rounded-lg"
@@ -55,7 +64,9 @@
 		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
-		{#if percent >= 100}
+		{#if loading}
+			<div class="bg-muted absolute top-0 bottom-0 left-0 animate-pulse rounded-lg" style="width: 100%;"></div>
+		{:else if percent >= 100}
 			<div class="bg-completed absolute top-0 bottom-0 left-0 rounded-lg" style="width: 100%;"></div>
 		{:else}
 			<div
@@ -63,8 +74,10 @@
 				style="width: {Math.max(2, percent)}%;"
 			></div>
 		{/if}
-		<div class="absolute flex h-full w-full items-center justify-center">
-			<p class="text-lg leading-none font-semibold">{hovering ? expanded : readable}</p>
-		</div>
+		{#if !loading}
+			<div class="absolute flex h-full w-full items-center justify-center">
+				<p class="text-lg leading-none font-semibold">{hovering ? expanded : readable}</p>
+			</div>
+		{/if}
 	</div>
 </div>

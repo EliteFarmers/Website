@@ -2,6 +2,7 @@
 	import { SKYBLOCK_LEVEL_COLORS } from '$lib/constants/levels';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import * as Popover from '$ui/popover';
+	import { Skeleton } from '$ui/skeleton';
 
 	const ctx = getStatsContext();
 	const xp = $derived(ctx.member.current?.skyblockXp ?? 0);
@@ -26,9 +27,13 @@
 					>
 				</a>
 			{/if}
-			<span class="px-1 font-mono text-xl font-bold md:text-2xl" style="color: {color};"
-				>{Math.floor(xp / 100)}</span
-			>
+			{#if ctx.member.loading}
+				<Skeleton class="my-1 h-5 w-10 rounded-md sm:h-6 sm:w-12" />
+			{:else}
+				<span class="px-1 font-mono text-xl font-bold md:text-2xl" style="color: {color};"
+					>{Math.floor(xp / 100)}</span
+				>
+			{/if}
 		</div>
 	{/snippet}
 	<div class="px-4">
