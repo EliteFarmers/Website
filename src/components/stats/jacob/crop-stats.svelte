@@ -10,7 +10,7 @@
 	import { calcWeightForCrop, Crop, getCropFromName } from 'farming-weight';
 
 	const ctx = getStatsContext();
-	const jacob = $derived(ctx.member.jacob);
+	const jacob = $derived(ctx.member.current?.jacob);
 
 	type CropStats = JacobDataDto['stats'];
 

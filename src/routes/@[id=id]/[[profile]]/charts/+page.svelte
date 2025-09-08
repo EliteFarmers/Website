@@ -122,7 +122,7 @@
 		}}
 	>
 		<input type="hidden" value={ctx.uuid} name="uuid" />
-		<input type="hidden" value={ctx.member.profileId} name="profile" />
+		<input type="hidden" value={ctx.member.current?.profileId} name="profile" />
 		<input type="hidden" value={startTime} name="start" />
 		<input type="hidden" bind:value={daysString} name="days" />
 

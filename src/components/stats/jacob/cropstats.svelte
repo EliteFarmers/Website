@@ -6,7 +6,7 @@
 	let { class: className }: { class?: string } = $props();
 
 	const ctx = getStatsContext();
-	const jacob = $derived(ctx.member.jacob);
+	const jacob = $derived(ctx.member.current?.jacob);
 
 	let highest = $derived(
 		Object.entries(

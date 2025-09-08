@@ -18,7 +18,7 @@
 	let overflow = $state(true);
 
 	const ctx = getStatsContext();
-	const garden = $derived((ctx.member.garden ?? {}) as GardenDto);
+	const garden = $derived((ctx.member.current?.garden ?? {}) as GardenDto);
 
 	const maxVisitors = $derived(Object.keys(GARDEN_VISITORS).length);
 	const totalVisits = $derived(
@@ -29,7 +29,7 @@
 	const rate = $derived(((accepted / totalVisits) * 100).toFixed(2));
 	const ranks = $derived(ctx.ranks);
 
-	const copper = $derived(ctx.member.unparsed?.copper ?? 0);
+	const copper = $derived(ctx.member.current?.unparsed?.copper ?? 0);
 
 	let upgrades = $derived(getCropUpgrades((garden?.cropUpgrades ?? {}) as unknown as Record<string, number>));
 	let crops = $derived(

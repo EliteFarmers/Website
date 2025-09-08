@@ -37,14 +37,19 @@
 		}
 		if (!requirement.skill || !requirement.level) return undefined;
 
-		const skillName = requirement.skill.toLowerCase() as keyof typeof ctx.member.skills;
-		if (!ctx.member.skills || !(skillName in ctx.member.skills)) return undefined; // Skill not found, requirement not met
+		if (ctx.member.current) {
+			const skillName = requirement.skill.toLowerCase() as keyof typeof ctx.member.current.skills;
+			if (!ctx.member.current.skills || !(skillName in ctx.member.current.skills)) return undefined; // Skill not found, requirement not met
 
-		const skill = ctx.member.skills?.[requirement.skill.toLowerCase() as keyof typeof ctx.member.skills];
-		if (skill === undefined) return undefined; // Skill not found, requirement not met
+			const skill =
+				ctx.member.current.skills?.[requirement.skill.toLowerCase() as keyof typeof ctx.member.current.skills];
+			if (skill === undefined) return undefined; // Skill not found, requirement not met
 
-		const { level } = getSkillLevel(skillName, ctx.member.skills[skillName]);
-		return level >= requirement.level;
+			const { level } = getSkillLevel(skillName, ctx.member.current.skills[skillName]);
+			return level >= requirement.level;
+		} else {
+			return undefined; // Member data not available
+		}
 	}
 </script>
 

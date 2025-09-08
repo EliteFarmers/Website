@@ -17,7 +17,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	locals.cache = cache;
 
 	// Skip getting the user session if the request is /api/
-	if (event.url.pathname.startsWith('/api/')) {
+	if (event.url.pathname.startsWith('/api/') || event.isSubRequest || event.isRemoteRequest) {
 		return await ResolveWithSecurityHeaders(resolve, event);
 	}
 

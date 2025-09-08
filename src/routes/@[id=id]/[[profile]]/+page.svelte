@@ -3,7 +3,6 @@
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
-	import APIstatus from '$comp/stats/apistatus.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import Collections from '$comp/stats/collections.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
@@ -16,7 +15,7 @@
 
 	const ctx = getStatsContext();
 
-	const member = $derived(ctx.member);
+	const member = $derived(ctx.member.current);
 	const profile = $derived(ctx.selectedProfile);
 	const uuid = $derived(ctx.uuid);
 	const ign = $derived(ctx.ign);
@@ -33,7 +32,9 @@
 	let showSkills = $state(page.url.href.includes('#Skills'));
 
 	let weightStr = $derived(
-		member?.farmingWeight?.totalWeight?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'
+		(
+			member?.farmingWeight?.totalWeight ?? profile?.members.find((m) => m.uuid === uuid)?.farmingWeight
+		)?.toLocaleString(undefined, { maximumFractionDigits: 0 }) ?? 'Not Found!'
 	);
 
 	const topCollections = $derived(ctx.collections?.toSorted((a, b) => b.weight - a.weight).slice(0, 3));
@@ -70,8 +71,6 @@
 	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>
 
-<APIstatus />
-
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">
 	<div class="flex w-full max-w-7xl flex-1">
 		<Skills bind:open={showSkills} />
@@ -81,7 +80,7 @@
 <section class="my-8 flex w-full justify-center align-middle">
 	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">
 		<Collections />
-		{#if member?.farmingWeight?.inventory?.tools?.length || member?.events?.length}
+		{#if member?.farmingWeight?.inventory?.tools?.length || member?.events?.length || ctx.member.loading}
 			<div class="flex flex-1 flex-col gap-2">
 				{#each member?.events ?? [] as event (event.eventId)}
 					<ProfileEventMember member={event} ign={ign || ''} memberUuid={uuid ?? ''} />

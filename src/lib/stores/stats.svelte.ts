@@ -11,6 +11,8 @@ import type { ProfileDetails } from '$lib/api/elite';
 import { API_CROP_TO_CROP, PROPER_CROP_NAME, PROPER_CROP_TO_MINION } from '$lib/constants/crops';
 import { CROP_TO_PEST } from '$lib/constants/pests';
 import { formatIgn, getRankInformation } from '$lib/format';
+import { getMemberRanks, getProfileMember } from '$lib/remote';
+import { type RemoteQuery } from '@sveltejs/kit';
 import { Crop, getCropFromName } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { getRatesData } from './ratesData';
@@ -19,10 +21,12 @@ export class PlayerStats {
 	#account = $state<NonNullable<MinecraftAccountDto>>(null!);
 	#selectedProfile = $state<ProfileDetailsDto>();
 	#profiles = $state<ProfileDetails[]>();
-	#member = $state<NonNullable<ProfileMemberDto>>(null!);
-	#ranks = $state<LeaderboardRanksResponse>(null!);
-	#filteredRanks = $state<LeaderboardRanksResponse['ranks']>(null!);
-	#collections = $state<Collection[]>([]);
+	#member = $state<RemoteQuery<ProfileMemberDto | undefined>>(null!);
+	#ranks = $state<RemoteQuery<LeaderboardRanksResponse | undefined>>(null!);
+	#filteredRanks = $derived<LeaderboardRanksResponse['ranks'] | null>(
+		Object.fromEntries(Object.entries(this.#ranks?.current?.ranks ?? {}).filter((r) => r[1].rank <= 10_000))
+	);
+	#collections = $derived<Collection[]>(PlayerStats.parseCollections(this.#member.current));
 	#fortuneSettings = $derived(
 		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
 	);
@@ -33,35 +37,33 @@ export class PlayerStats {
 	#armor = $state.raw<ItemDto[]>([]);
 	#equipment = $state.raw<ItemDto[]>([]);
 
-	#garden = $derived.by(() => this.#member?.garden);
+	#garden = $derived.by(() => this.#member.current?.garden);
 	#rank = $derived.by(() => getRankInformation(this.#account.playerData));
-	#ignMeta = $derived.by(() => formatIgn(this.#account?.name, this.#member.meta));
+	#ignMeta = $derived.by(() => formatIgn(this.#account?.name, this.#member.current?.meta));
 
 	constructor(data: {
 		account: NonNullable<MinecraftAccountDto>;
 		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
-		member: NonNullable<ProfileMemberDto>;
-		ranks: LeaderboardRanksResponse;
+		// member: Promise<ProfileMemberDto | undefined>;
+		// ranks: Promise<LeaderboardRanksResponse | undefined>;
 		style?: WeightStyleWithDataDto;
 	}) {
 		this.setValues(data);
 	}
 
-	setValues({
+	async setValues({
 		account,
 		selectedProfile,
 		profiles,
-		member,
-		ranks,
+		// member,
+		// ranks,
 		style,
 	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
-		this.#ranks = ranks;
 		this.#style = style;
-		this.#filteredRanks = Object.fromEntries(Object.entries(ranks.ranks ?? {}).filter((r) => r[1].rank <= 10_000));
 
 		if (this.fortuneSettings) {
 			const ratesData = getRatesData();
@@ -74,7 +76,26 @@ export class PlayerStats {
 			});
 		}
 
-		this.member = member;
+		const memberData = getProfileMember({
+			playerUuid: account.id,
+			profileUuid: selectedProfile?.profileId ?? '',
+		});
+
+		const memberRanks = getMemberRanks({
+			playerUuid: account.id,
+			profileUuid: selectedProfile?.profileId ?? '',
+		});
+
+		this.#ranks = memberRanks;
+		this.member = memberData;
+
+		$effect(() => {
+			console.log(this.#member.current);
+			this.#tools = $state.snapshot(this.#member.current?.farmingWeight.inventory?.tools ?? []);
+			this.#pets = $state.snapshot(this.#member.current?.pets ?? []);
+			this.#armor = $state.snapshot(this.#member.current?.farmingWeight.inventory?.armor ?? []);
+			this.#equipment = $state.snapshot(this.#member.current?.farmingWeight.inventory?.equipment ?? []);
+		});
 	}
 
 	get account() {
@@ -115,13 +136,6 @@ export class PlayerStats {
 
 	set member(value) {
 		this.#member = value;
-
-		this.#collections = PlayerStats.parseCollections(value);
-
-		this.#tools = $state.snapshot(value?.farmingWeight.inventory?.tools ?? []);
-		this.#pets = $state.snapshot(value?.pets ?? []);
-		this.#armor = $state.snapshot(value?.farmingWeight.inventory?.armor ?? []);
-		this.#equipment = $state.snapshot(value?.farmingWeight.inventory?.equipment ?? []);
 	}
 
 	get member() {
@@ -137,7 +151,7 @@ export class PlayerStats {
 	}
 
 	get allRanks() {
-		return this.#ranks.ranks ?? {};
+		return this.#ranks.current?.ranks ?? {};
 	}
 
 	get collections() {
@@ -160,7 +174,9 @@ export class PlayerStats {
 		return this.#equipment ?? [];
 	}
 
-	static parseCollections(member: NonNullable<ProfileMemberDto>) {
+	static parseCollections(member: ProfileMemberDto | undefined) {
+		if (!member) return [];
+
 		const collections = Object.entries(member.collections ?? {})
 			.filter(([key]) => PROPER_CROP_NAME[key])
 			.map(([key, value]) => ({

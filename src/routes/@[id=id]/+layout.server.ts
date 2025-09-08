@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
 import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
-import { getAccount, getPlayerLeaderboardRanks, getProfile } from '$lib/api';
+import { getAccount } from '$lib/api';
 import { type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
 import { error } from '@sveltejs/kit';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
@@ -55,16 +55,6 @@ export const load: LayoutServerLoad = async (event) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: member } = await getProfile(account.id, selectedProfile.profileId).catch(() => ({
-		data: undefined,
-	}));
-
-	if (!member) {
-		throw error(404, 'Profile data not found');
-	}
-
-	const { data: ranks } = await getPlayerLeaderboardRanks(account.id, selectedProfile.profileId);
-
 	const profileIds: ProfileDetails[] = profiles
 		// Filter out the current profile
 		.filter((p) => p.profileId !== selectedProfile.profileId)
@@ -88,7 +78,5 @@ export const load: LayoutServerLoad = async (event) => {
 		account,
 		profile: selectedProfile,
 		profiles: profileIds,
-		member,
-		ranks,
 	};
 };

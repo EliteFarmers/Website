@@ -21,7 +21,10 @@
 	}
 </script>
 
-<section class="md:bg-card flex w-full flex-1 flex-col justify-center gap-2 rounded-lg md:border-2 md:p-4">
+<section
+	class="md:bg-card flex w-full flex-1 flex-col justify-center gap-2 rounded-lg md:border-2 md:p-4"
+	data-sveltekit-preload-data="tap"
+>
 	<h2 class="text-2xl font-semibold">{title}</h2>
 
 	<div

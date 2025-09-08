@@ -18,7 +18,7 @@ export const load = (async ({ params, parent }) => {
 		};
 	}
 
-	const { data: weight } = await getSelectedMember({ playerUuid: session.uuid });
+	const weight = await getSelectedMember({ playerUuid: session.uuid });
 
 	return {
 		product: product,

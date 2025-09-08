@@ -17,8 +17,8 @@
 	const ctx = getStatsContext();
 
 	const ranks = $derived(ctx.ranks);
-	const skills = $derived(ctx.member.skills);
-	const levelCaps = $derived((ctx.member.unparsed?.levelCaps ?? {}) as Record<string, number | undefined>);
+	const skills = $derived(ctx.member.current?.skills);
+	const levelCaps = $derived((ctx.member.current?.unparsed?.levelCaps ?? {}) as Record<string, number | undefined>);
 	const gardenXp = $derived(ctx.garden?.experience ?? 0);
 </script>
 
