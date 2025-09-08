@@ -4,7 +4,7 @@
 	import * as Popover from '$ui/popover';
 
 	const ctx = getStatsContext();
-	const xp = $derived(ctx.member.skyblockXp ?? 0);
+	const xp = $derived(ctx.member.current?.skyblockXp ?? 0);
 	const rank = $derived(ctx.ranks?.skyblockxp?.rank ?? -1);
 
 	let [, color] = $derived(Object.entries(SKYBLOCK_LEVEL_COLORS).find(([key]) => +key > xp / 100) ?? []);
@@ -17,7 +17,8 @@
 		<div>
 			{#if rank !== -1}
 				<a
-					href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.profileName}"
+					href="/leaderboard/skyblockxp/{ctx.ign}-{ctx.member.current?.profileName ??
+						ctx.selectedProfile?.profileName}"
 					class="bg-card hover:bg-muted rounded-md px-1.5"
 				>
 					<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"

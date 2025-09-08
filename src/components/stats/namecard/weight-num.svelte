@@ -2,8 +2,11 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	const ctx = getStatsContext();
 
-	const weightInfo = $derived(ctx.member.farmingWeight);
-	const weightStr = $derived(weightInfo?.totalWeight?.toLocaleString() ?? '0');
+	const weightInfo = $derived(
+		ctx.member.current?.farmingWeight?.totalWeight ??
+			ctx.selectedProfile?.members.find((m) => m.uuid === ctx.uuid)?.farmingWeight
+	);
+	const weightStr = $derived(weightInfo?.toLocaleString() ?? '0');
 </script>
 
 <div class="block">

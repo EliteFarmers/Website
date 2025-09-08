@@ -3,7 +3,7 @@
 
 	const ctx = getStatsContext();
 	const weight = $derived(
-		ctx.member.farmingWeight ?? {
+		ctx.member.current?.farmingWeight ?? {
 			totalWeight: 0,
 			cropWeight: {},
 			bonusWeight: {},

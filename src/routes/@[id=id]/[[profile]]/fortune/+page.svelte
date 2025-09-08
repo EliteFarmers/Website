@@ -107,43 +107,47 @@
 
 	let armorSet = $state(new ArmorSet(armor, equipment));
 
-	let options = $state({
+	let options = $derived({
 		tools: tools,
 		armor: armorSet,
-		accessories: (ctx.member?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
+		accessories: (ctx.member.current?.farmingWeight?.inventory?.accessories ?? []) as EliteItemDto[],
 		pets: pets,
 
 		selectedPet: (() => selectedPet)(),
 		selectedTool: (() => selectedTool)(),
 
-		refinedTruffles: ctx.member.chocolateFactory?.refinedTrufflesConsumed ?? 0,
-		personalBests: (ctx.member?.jacob?.stats?.personalBests ?? {}) as unknown as Record<string, number>,
-		anitaBonus: ctx.member?.jacob?.perks?.doubleDrops ?? 0,
-		plots: ctx.member.garden?.plots,
-		farmingXp: ctx.member?.skills?.farming,
-		bestiaryKills: (ctx.member?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
-		uniqueVisitors: ctx.member?.garden?.uniqueVisitors ?? 0,
+		refinedTruffles: ctx.member.current?.chocolateFactory?.refinedTrufflesConsumed ?? 0,
+		personalBests: (ctx.member.current?.jacob?.stats?.personalBests ?? {}) as unknown as Record<string, number>,
+		anitaBonus: ctx.member.current?.jacob?.perks?.doubleDrops ?? 0,
+		plots: ctx.member.current?.garden?.plots,
+		farmingXp: ctx.member.current?.skills?.farming,
+		bestiaryKills: (ctx.member.current?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
+		uniqueVisitors: ctx.member.current?.garden?.uniqueVisitors ?? 0,
 
 		farmingLevel: getLevelProgress(
 			'farming',
-			ctx.member?.skills?.farming ?? 0,
-			(ctx.member?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
+			ctx.member.current?.skills?.farming ?? 0,
+			(ctx.member.current?.jacob?.perks?.levelCap ?? 0) + DEFAULT_SKILL_CAPS.farming
 		).level,
-		milestones: getCropMilestoneLevels((ctx.member?.garden?.crops ?? {}) as unknown as Record<string, number>),
-		cropUpgrades: getCropUpgrades((ctx.member?.garden?.cropUpgrades ?? {}) as unknown as Record<string, number>),
-		gardenLevel: getGardenLevel(ctx.member.garden?.experience ?? 0).level,
+		milestones: getCropMilestoneLevels(
+			(ctx.member.current?.garden?.crops ?? {}) as unknown as Record<string, number>
+		),
+		cropUpgrades: getCropUpgrades(
+			(ctx.member.current?.garden?.cropUpgrades ?? {}) as unknown as Record<string, number>
+		),
+		gardenLevel: getGardenLevel(ctx.member.current?.garden?.experience ?? 0).level,
 
 		exportableCrops: $ratesData.exported,
 		communityCenter: $ratesData.communityCenter,
 		strength: $ratesData.strength,
 		attributes: $ratesData.attributes,
 
-		cocoaFortuneUpgrade: ctx.member.chocolateFactory?.cocoaFortuneUpgrades,
+		cocoaFortuneUpgrade: ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 
 		zorro: $ratesData.zorroMode
 			? {
-					enabled: ctx.member.chocolateFactory?.unlockedZorro ?? false,
+					enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 					mode: $ratesData.zorroMode,
 				}
 			: undefined,
@@ -166,7 +170,7 @@
 			sprayedPlot: $ratesData.sprayedPlot,
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
 			zorro: {
-				enabled: ctx.member.chocolateFactory?.unlockedZorro ?? false,
+				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 				mode: $ratesData.zorroMode,
 			},
 		};

@@ -21,15 +21,15 @@
 	}
 
 	const ctx = getStatsContext();
-	const member = ctx.member;
+	const member = $derived(ctx.member.current);
 
-	const contestsCount = $derived(member.jacob?.contests?.length ?? 0);
+	const contestsCount = $derived(member?.jacob?.contests?.length ?? 0);
 	const years = $derived(processContests());
 
 	function processContests() {
 		const years = {} as Partial<Record<number, ContestParticipationDto[]>>;
 
-		for (const contest of member.jacob?.contests ?? []) {
+		for (const contest of member?.jacob?.contests ?? []) {
 			const year = getSkyblockDate(contest.timestamp ?? 0n).year + 1;
 			if (!years[year]) years[year] = [];
 

@@ -45,7 +45,7 @@
 					<span>
 						{(
 							profiles.reduce((sum, profile) => sum + profile.weight, 0) +
-							+(ctx.member.farmingWeight.totalWeight ?? 0)
+							+(ctx.member.current?.farmingWeight.totalWeight ?? 0)
 						).toLocaleString()}
 					</span>
 				</div>

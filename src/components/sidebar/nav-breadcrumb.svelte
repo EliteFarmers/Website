@@ -10,10 +10,10 @@
 	import type { Component } from 'svelte';
 
 	const crumbs = getPageCtx();
-	let open = $state(false);
 	const sidebar = useSidebar();
+	let open = $state(false);
 
-	const items = $derived(crumbs.breadcrumbsOverride ?? crumbs.breadcrumbs);
+	const items = $derived(crumbs.breadcrumbsOverride ?? crumbs.breadcrumbs ?? []);
 
 	const first = $derived(items[0]);
 	const showFirst = $derived(first && !sidebar.isMobile);
@@ -137,7 +137,7 @@
 		<Icon class="size-4" {...crumb.data} />
 	{/if}
 	{#if crumb.snippet}
-		{@render crumb.snippet(crumb)}
+		{@render crumb.snippet?.(crumb)}
 	{:else if crumb.name}
 		<span class="mt-1 inline-block max-w-28 truncate first-letter:capitalize">
 			{crumb.name}

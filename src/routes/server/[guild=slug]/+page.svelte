@@ -33,15 +33,15 @@
 	]);
 
 	const breadcrumb = getPageCtx();
+	const favorites = getFavoritesContext();
+
 	$effect.pre(() => {
 		breadcrumb.setBreadcrumbs(crumbs);
-	});
-
-	const favorites = getFavoritesContext();
-	favorites.setPage({
-		icon: data.guild?.icon?.url ?? undefined,
-		name: data.guild.name ?? 'Server',
-		href: page.url.pathname,
+		favorites.setPage({
+			icon: data.guild?.icon?.url ?? undefined,
+			name: data.guild.name ?? 'Server',
+			href: page.url.pathname,
+		});
 	});
 </script>
 

@@ -7,7 +7,7 @@ interface CrumbBase {
 	capitalize?: boolean;
 	href?: string;
 	icon?: Component | unknown;
-	snippet?: Snippet;
+	snippet?: Snippet<[Crumb | Omit<CrumbBase, 'dropdown'>]>;
 	tooltip?: string;
 	dropdown?: Omit<CrumbBase, 'dropdown'>[];
 	data?: Record<string, string | undefined | boolean | number>;
@@ -16,7 +16,7 @@ interface CrumbBase {
 export type Crumb =
 	| (CrumbBase & { name: string })
 	| (CrumbBase & { icon: Component | unknown })
-	| (CrumbBase & { snippet: Snippet<[Crumb | Omit<CrumbBase, 'dropdown'>]> });
+	| (CrumbBase & { snippet?: Snippet<[Crumb | Omit<CrumbBase, 'dropdown'>]> });
 
 const home = {
 	icon: Home as unknown as Component,

@@ -3,21 +3,21 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const ctx = getStatsContext();
-	const jacob = $derived(ctx.member.jacob);
+	const jacob = $derived(ctx.member.current?.jacob);
 	const ranks = $derived(ctx.ranks);
 
 	let medals = $derived({
-		gold: jacob.medals?.gold ?? 0,
-		silver: jacob.medals?.silver ?? 0,
-		bronze: jacob.medals?.bronze ?? 0,
+		gold: jacob?.medals?.gold ?? 0,
+		silver: jacob?.medals?.silver ?? 0,
+		bronze: jacob?.medals?.bronze ?? 0,
 	} as Record<string, number>);
 
 	let earnedMedals = $derived([
-		['diamond', jacob.earnedMedals?.diamond ?? 0],
-		['platinum', jacob.earnedMedals?.platinum ?? 0],
-		['gold', jacob.earnedMedals?.gold ?? 0],
-		['silver', jacob.earnedMedals?.silver ?? 0],
-		['bronze', jacob.earnedMedals?.bronze ?? 0],
+		['diamond', jacob?.earnedMedals?.diamond ?? 0],
+		['platinum', jacob?.earnedMedals?.platinum ?? 0],
+		['gold', jacob?.earnedMedals?.gold ?? 0],
+		['silver', jacob?.earnedMedals?.silver ?? 0],
+		['bronze', jacob?.earnedMedals?.bronze ?? 0],
 	] as [string, number][]);
 </script>
 

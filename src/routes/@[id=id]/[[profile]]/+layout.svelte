@@ -3,10 +3,10 @@
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import APIstatus from '$comp/stats/apistatus.svelte';
 	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
 	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
-	import type { LeaderboardRanksResponse } from '$lib/api';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
@@ -16,12 +16,10 @@
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
-	initStatsContext({
+	const ctx = initStatsContext({
 		account: data.account,
 		selectedProfile: data.profile,
 		profiles: data.profiles,
-		member: data.member,
-		ranks: data.ranks ?? ({} as LeaderboardRanksResponse),
 		style: data.style,
 	});
 
@@ -34,8 +32,6 @@
 				account: data.account,
 				selectedProfile: data.profile,
 				profiles: data.profiles,
-				member: data.member,
-				ranks: data.ranks ?? ({} as LeaderboardRanksResponse),
 				style: data.style,
 			});
 
@@ -62,6 +58,8 @@
 	<BadgeList />
 
 	{@render pagenav()}
+
+	<APIstatus />
 
 	{@render children?.()}
 
@@ -92,18 +90,21 @@
 					</div>
 				</div>
 			{/if}
-			<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-				<span class="text-muted-foreground select-none">Profile Last Updated</span>
-				<span class="select-all">{new Date(Number(data.member?.lastUpdated ?? 0) * 1000).toLocaleString()}</span
-				>
-			</div>
-			{#if page.url.pathname.includes('/garden')}
+			{#if ctx.member.current}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-					<span class="text-muted-foreground select-none">Garden Last Updated</span>
+					<span class="text-muted-foreground select-none">Profile Last Updated</span>
 					<span class="select-all"
-						>{new Date(+(data.member?.garden?.lastSave ?? 0) * 1000).toLocaleString()}</span
+						>{new Date(Number(ctx.member.current?.lastUpdated ?? 0) * 1000).toLocaleString()}</span
 					>
 				</div>
+				{#if page.url.pathname.includes('/garden')}
+					<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+						<span class="text-muted-foreground select-none">Garden Last Updated</span>
+						<span class="select-all"
+							>{new Date(+(ctx.member.current?.garden?.lastSave ?? 0) * 1000).toLocaleString()}</span
+						>
+					</div>
+				{/if}
 			{/if}
 		</div>
 	</div>

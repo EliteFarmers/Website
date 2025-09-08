@@ -4,7 +4,7 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 
 	const ctx = getStatsContext();
-	const contests = $derived(ctx.member.jacob.contests);
+	const contests = $derived(ctx.member.current?.jacob.contests);
 
 	let recentContests = $derived(
 		contests
