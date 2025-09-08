@@ -74,23 +74,9 @@ export const load: LayoutServerLoad = async (event) => {
 		weight: selectedProfile.members?.find((m) => m.uuid === account.id)?.farmingWeight ?? 0,
 	});
 
-	// const memberPromise = getProfile(account.id, selectedProfile.profileId)
-	// 	.then((res) => res.data)
-	// 	.catch(() => ({
-	// 		data: undefined,
-	// 	}));
-
-	// const ranksPromise = getPlayerLeaderboardRanks(account.id, selectedProfile.profileId)
-	// 	.then((res) => res.data)
-	// 	.catch(() => ({
-	// 		data: undefined,
-	// 	}));
-
 	return {
 		account,
 		profile: selectedProfile,
 		profiles: profileIds,
-		// memberPromise,
-		// ranksPromise,
 	};
 };
