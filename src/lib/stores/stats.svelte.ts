@@ -31,6 +31,7 @@ export class PlayerStats {
 		this.#account.settings?.fortune?.accounts?.[this.uuid]?.[this.selectedProfile?.profileId ?? ''] ?? null
 	);
 	#style = $state.raw<WeightStyleWithDataDto | undefined>(undefined);
+	#ready = $state(false);
 
 	#tools = $state.raw<ItemDto[]>([]);
 	#pets = $state.raw<PetDto[]>([]);
@@ -90,12 +91,16 @@ export class PlayerStats {
 		this.member = memberData;
 
 		$effect(() => {
-			console.log(this.#member.current);
-			this.#tools = $state.snapshot(this.#member.current?.farmingWeight.inventory?.tools ?? []);
-			this.#pets = $state.snapshot(this.#member.current?.pets ?? []);
-			this.#armor = $state.snapshot(this.#member.current?.farmingWeight.inventory?.armor ?? []);
-			this.#equipment = $state.snapshot(this.#member.current?.farmingWeight.inventory?.equipment ?? []);
+			this.#tools = this.#member.current?.farmingWeight.inventory?.tools ?? [];
+			this.#pets = this.#member.current?.pets ?? [];
+			this.#armor = this.#member.current?.farmingWeight.inventory?.armor ?? [];
+			this.#equipment = this.#member.current?.farmingWeight.inventory?.equipment ?? [];
+			this.#ready = !this.#member.loading;
 		});
+	}
+
+	get ready() {
+		return this.#ready;
 	}
 
 	get account() {
