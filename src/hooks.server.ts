@@ -1,3 +1,4 @@
+import { PUBLIC_HOST_URL } from '$env/static/public';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
 import type { Handle, ServerInit } from '@sveltejs/kit';
@@ -26,7 +27,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 		locals.session = await FetchUserSession(event.cookies, access, refresh);
 	}
 
-	return await ResolveWithSecurityHeaders(resolve, event);
+	const response = await ResolveWithSecurityHeaders(resolve, event);
+
+	// Check if the response is a bot redirect to the login page
+	if (response.headers.get('location')?.startsWith('/login') && event.request.headers.get('X-Known-Bot') === 'true') {
+		return getLoginHeadResponse(response.headers.get('location') || '/login');
+	}
+
+	return response;
 };
 
 async function ResolveWithSecurityHeaders(
@@ -45,4 +53,32 @@ async function ResolveWithSecurityHeaders(
 	response.headers.set('X-Content-Type-Options', 'nosniff');
 
 	return response;
+}
+
+// Returns a simple HTML page that has a nice open graph preview for bots
+// and redirects normal users to the login page
+function getLoginHeadResponse(redirectTo: string) {
+	return new Response(
+		`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Required</title>
+    <meta property="og:title" content="Login Required">
+    <meta property="og:description" content="Please log in to access this content.">
+    <meta property="og:image" content="${PUBLIC_HOST_URL}/favicon.webp">
+    <meta http-equiv="refresh" content="0; url='${redirectTo}'" />
+</head>
+<body>
+    <p>If you are not redirected automatically, follow this <a href="${redirectTo}">link to login</a>.</p>
+</body>
+</html>`,
+		{
+			status: 200,
+			headers: {
+				'Content-Type': 'text/html',
+			},
+		}
+	);
 }
