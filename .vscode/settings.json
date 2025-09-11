@@ -13,6 +13,7 @@
 	},
 	"files.associations": {
 		"*.css": "tailwindcss",
+		"*.pcss": "tailwindcss",
 		".env*": "properties"
 	},
 	"workbench.editor.customLabels.patterns": {
