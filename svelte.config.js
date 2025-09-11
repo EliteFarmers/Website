@@ -1,17 +1,18 @@
 import adapter from '@sveltejs/adapter-node';
+import { mdsx } from 'mdsx';
 import path from 'path';
 import { sveltePreprocess } from 'svelte-preprocess';
+import { mdsxConfig } from './mdsx.config.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: sveltePreprocess(),
+	preprocess: [mdsx(mdsxConfig), sveltePreprocess()],
 	compilerOptions: {
 		experimental: {
 			// async: true, // Soon hopefully
 		},
 	},
+    extensions: ['.svelte', '.md'],
 	kit: {
 		experimental: {
 			remoteFunctions: true,
@@ -38,6 +39,7 @@ const config = {
 			$params: './src/params',
 			$content: './src/content',
 			$css: './src/app.css',
+            '$posts/*': '.velite/*'
 		},
 	},
 	// Only way I found to hide warnings from node_modules that doesn't break everything
