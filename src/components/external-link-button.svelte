@@ -6,11 +6,11 @@
 		href: string;
 		text?: string | undefined;
 		icon?: boolean;
-		class: string | undefined;
+		class?: string | undefined;
 		children?: import('svelte').Snippet;
 	}
 
-	let { href, text = undefined, icon = true, children, class: className }: Props = $props();
+	let { href, text = undefined, icon = true, children, class: className = '' }: Props = $props();
 </script>
 
 <a {href} class={cn('text-link decoration-link inline-block', className)}>
