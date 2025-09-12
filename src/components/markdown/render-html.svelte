@@ -1,16 +1,14 @@
 <script lang="ts">
 	/* eslint svelte/no-at-html-tags: "off" */
-	import DOMPurify from 'isomorphic-dompurify';
+	// content is assumed to be sanitized already
 
 	interface Props {
 		content: string;
 	}
 
 	let { content }: Props = $props();
-
-	const sanitized = $derived(DOMPurify.sanitize(content));
 </script>
 
 <div class="markdown contents">
-	{@html sanitized}
+	{@html content}
 </div>

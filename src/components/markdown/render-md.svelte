@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mdToHtml } from '$lib/md';
+	import { getHtmlFromMarkdown } from '$lib/remote/md.remote';
 	/* eslint svelte/no-at-html-tags: "off" */
 	// mdToHtml already sanitizes the HTML
 
@@ -9,7 +9,7 @@
 
 	let { content }: Props = $props();
 
-	const sanitized = $derived(mdToHtml(content ?? ''));
+	const sanitized = getHtmlFromMarkdown(content ?? '');
 </script>
 
 <div class="markdown contents">
