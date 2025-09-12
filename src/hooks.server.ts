@@ -21,17 +21,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 		locals.persistSession = true;
 	}
 
-	console.log('Handling request for', event.url.pathname);
-
 	// Skip getting the user session if the request is /api/
 	if (event.url.pathname.startsWith('/api/')) {
-		console.log('Skipping session fetch for', event.url.pathname);
 		return await ResolveWithSecurityHeaders(resolve, event);
 	}
 
 	// Fetch the user session
 	if (access && refresh) {
-		console.log('Fetching user session for', event.url.pathname);
 		locals.session = await FetchUserSession(event.cookies, access, refresh);
 	}
 
