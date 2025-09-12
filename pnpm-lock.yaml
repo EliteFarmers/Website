@@ -11,6 +11,9 @@ importers:
       '@napi-rs/canvas':
         specifier: ^0.1.76
         version: 0.1.76
+      isomorphic-dompurify:
+        specifier: ^2.26.0
+        version: 2.26.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.32.0
@@ -144,9 +147,6 @@ importers:
       globals:
         specifier: ^16.3.0
         version: 16.3.0
-      isomorphic-dompurify:
-        specifier: ^2.26.0
-        version: 2.26.0
       joi:
         specifier: ^17.13.3
         version: 17.13.3
