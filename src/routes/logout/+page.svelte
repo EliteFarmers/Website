@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		await invalidateAll();
-		goto('/');
+		window.location.href = '/';
 	});
 </script>
 
-<!-- It took entirely too much time to discover that this page was needed -->
-<!-- Why couldn't I just do this in +page.ts -->
+<p class="text-center">Logging out...</p>
+<p>If you are not redirected, <a href="/">click here</a>.</p>

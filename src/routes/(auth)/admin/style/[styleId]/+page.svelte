@@ -6,6 +6,7 @@
 	import WeightStyle from '$comp/monetization/weight-style.svelte';
 	import Switch from '$comp/ui/switch/switch.svelte';
 	import type { LeaderboardStyleDataDto, WeightStyleDataDto } from '$lib/api';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { leaderboardStyleParse, weightStyleParse } from '$lib/styles/style';
 	import { pending } from '$lib/utils';
@@ -82,6 +83,8 @@
 		},
 	]);
 
+	const ctx = getGlobalContext();
+
 	const breadcrumb = getPageCtx();
 
 	$effect.pre(() => {
@@ -153,8 +156,8 @@
 					{#key badgeUrl}
 						<WeightStyle
 							style={styleDataObj}
-							ign={data.user.username ?? 'Steve'}
-							uuid={data.user.username ?? 'Steve'}
+							ign={ctx.user?.username ?? 'Steve'}
+							uuid={ctx.user?.username ?? 'Steve'}
 							{rank}
 							{badgeUrl}
 						/>
@@ -228,8 +231,8 @@
 				<div class="max-h-16">
 					<EntryPreview
 						style={leaderboardDataValid.data}
-						ign={data.user.username ?? 'Steve'}
-						uuid={data.user.username ?? 'Steve'}
+						ign={ctx.user?.username ?? 'Steve'}
+						uuid={ctx.user?.username ?? 'Steve'}
 						showLeaderboardName={showLeaderboardName.current}
 						styleId={style.id}
 					/>

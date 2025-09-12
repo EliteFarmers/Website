@@ -2,9 +2,8 @@ import { createStyle, type CreateStyleRequest } from '$lib/api';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ parent, locals }) => {
-	const { session } = await parent();
-	const { access_token: token } = locals;
+export const load = (async ({ locals }) => {
+	const { access_token: token, session } = locals;
 
 	if (!session || !session.flags.moderator || !token) {
 		throw error(404, 'Not Found');

@@ -1,7 +1,7 @@
 import {
 	getAuthAccount,
-	getSession,
-	refreshAuth,
+	getGetSessionUrl,
+	getRefreshAuthUrl,
 	type AuthorizedAccountDto,
 	type AuthResponseDto,
 	type AuthSessionDto,
@@ -17,6 +17,8 @@ export interface AuthFlags {
 	wiki: boolean;
 }
 
+const refreshLock = new Map<string, Promise<AuthSession | undefined>>();
+
 export async function FetchUserSession(
 	cookies: Cookies,
 	access: string,
@@ -24,12 +26,13 @@ export async function FetchUserSession(
 	forceRefresh = false
 ): Promise<AuthSession | undefined> {
 	// Fetch the user session
-	const { data: session, response } = await getSession({
+	const response = await fetch(getGetSessionUrl(), {
 		headers: {
 			Authorization: `Bearer ${access}`,
 		},
-	}).catch(() => ({ data: undefined, response: undefined }));
+	});
 
+	const session = (await response?.json().catch(() => undefined)) as AuthSessionDto | undefined;
 	if (session && !forceRefresh) {
 		return setAuthFlags(session);
 	}
@@ -40,22 +43,47 @@ export async function FetchUserSession(
 			return undefined;
 		}
 
-		const { data: newTokens } = await refreshAuth({
-			user_id: access,
-			refresh_token: refreshToken,
-		}).catch(() => ({ data: undefined }));
-
-		if (newTokens) {
-			UpdateAuthCookies(cookies, newTokens);
-
-			// Omit the refresh token to not cause infinite loop
-			return await FetchUserSession(cookies, newTokens.access_token);
-		} else {
-			DeleteAuthCookies(cookies);
+		const current = refreshLock.get(refreshToken);
+		if (current) {
+			const session = await current;
+			setTimeout(() => refreshLock.delete(refreshToken), 100);
+			return session;
 		}
+
+		const refreshPromise = refreshUserSession(cookies, access, refreshToken);
+		refreshLock.set(refreshToken, refreshPromise);
+		const session = await refreshPromise;
+
+		setTimeout(() => refreshLock.delete(refreshToken), 100);
+		return session;
 	}
 
 	return session ? setAuthFlags(session) : undefined;
+}
+
+async function refreshUserSession(
+	cookies: Cookies,
+	access: string,
+	refreshToken: string
+): Promise<AuthSession | undefined> {
+	const newTokensResponse = await fetch(getRefreshAuthUrl(), {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ user_id: access, refresh_token: refreshToken }),
+	}).catch(() => undefined);
+
+	const newTokens = (await newTokensResponse?.json().catch(() => undefined)) as AuthResponseDto | undefined;
+
+	if (newTokens) {
+		UpdateAuthCookies(cookies, newTokens);
+
+		// Omit the refresh token to not cause infinite loop
+		return await FetchUserSession(cookies, newTokens.access_token);
+	} else {
+		DeleteAuthCookies(cookies);
+	}
+
+	return undefined;
 }
 
 function setAuthFlags(session?: AuthSessionDto): AuthSession | undefined {

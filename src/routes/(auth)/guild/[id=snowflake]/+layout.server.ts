@@ -2,12 +2,11 @@ import { getUserGuild } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, parent, locals }) => {
-	const { user } = await parent();
+export const load = (async ({ params, locals }) => {
 	const { access_token: token } = locals;
 	const { id } = params;
 
-	if (!user.id || !token) {
+	if (!token) {
 		throw error(401, 'Unauthorized');
 	}
 

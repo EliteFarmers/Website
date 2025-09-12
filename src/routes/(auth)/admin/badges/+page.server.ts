@@ -2,9 +2,8 @@ import { addBadgeToUserBadge, createBadge, deleteBadge, removeBadge, updateBadge
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ parent, locals }) => {
-	const { user, session } = await parent();
-	const { access_token: token } = locals;
+export const load = (async ({ locals }) => {
+	const { access_token: token, user, session } = locals;
 
 	if (!session || !session.flags.moderator || !token) {
 		throw error(404, 'Not Found');
