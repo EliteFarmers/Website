@@ -31,8 +31,10 @@ export class GlobalContext {
 		this.setValues(data);
 
 		$effect(() => {
-			this.session = page.data.session as AuthSession | undefined;
 			tick().then(() => {
+				if (page.data.session || !page.data.persistSession) {
+					this.session = page.data.session as AuthSession | undefined;
+				}
 				this.#initialized = true;
 			});
 		});

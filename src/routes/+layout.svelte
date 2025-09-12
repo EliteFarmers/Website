@@ -45,14 +45,6 @@
 	initPageContext();
 
 	watch(
-		() => data.session,
-		(session) => {
-			if (!session && data.persistSession) return;
-			initGlobalContext({ session, announcements: data.cache?.announcements ?? [] });
-		}
-	);
-
-	watch(
 		() => page.form,
 		() => {
 			if (!page.form) return;
