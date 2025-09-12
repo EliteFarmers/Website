@@ -1,6 +1,11 @@
+import { ORIGIN } from '$env/static/private';
 import DOMPurify from 'isomorphic-dompurify';
 import { parse } from 'marked';
 import { createRawSnippet } from 'svelte';
+
+if (!ORIGIN) {
+	// This is just to make sure this module can't be imported into the browser
+}
 
 export async function mdToHtml(markdown: string) {
 	const html = await parse(markdown, { breaks: true });

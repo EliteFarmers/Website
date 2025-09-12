@@ -8,6 +8,7 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 
 	return {
 		session: locals.session,
+		persistSession: locals.persistSession ?? false,
 		cache: {
 			leaderboards: locals.cache?.leaderboards,
 			events: locals.cache?.events,

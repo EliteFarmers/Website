@@ -13,6 +13,7 @@ declare global {
 			refresh_token?: string;
 			user?: AuthorizedAccountDto;
 			session?: AuthSession;
+			persistSession?: boolean;
 			cache?: typeof import('$lib/servercache').cache;
 		}
 		// interface Platform {}
