@@ -4,6 +4,7 @@
 	import GuildIcon from '$comp/discord/guild-icon.svelte';
 	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import RenderMd from '$comp/markdown/render-md.svelte';
 	import { NumberInput } from '$comp/ui/number-input';
 	import type { CollectionEventData, MedalEventData, PestEventData, WeightEventData } from '$lib/api';
 	import { CROP_TO_ELITE_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
@@ -123,9 +124,9 @@
 						<h2 class="text-3xl">{event.name}</h2>
 					</div>
 
-					<p class="text-lg">{event.description}</p>
-					<p class="text-lg">{event.rules}</p>
-					<p class="text-lg">{event.prizeInfo}</p>
+					<p class="text-lg"><RenderMd content={event.description} /></p>
+					<p class="text-lg"><RenderMd content={event.rules} /></p>
+					<p class="text-lg"><RenderMd content={event.prizeInfo} /></p>
 					<div class="flex flex-col justify-start gap-2 text-lg font-semibold md:flex-row md:items-center">
 						<div>
 							<span>{new Date(+(event.startTime ?? 0) * 1000).toLocaleDateString()}</span>
@@ -566,15 +567,25 @@
 			</div>
 			<div class="space-y-2">
 				<Label>Event Description</Label>
-				<Textarea name="description" placeholder="Farm as much as you can in 24 hours!" maxlength={1024} />
+				<Textarea
+					name="description"
+					placeholder="Farm as much as you can in 24 hours!"
+					value={event.description}
+					maxlength={1024}
+				/>
 			</div>
 			<div class="space-y-2">
 				<Label>Event Rules</Label>
-				<Textarea name="rules" placeholder="No cheating." maxlength={1024} />
+				<Textarea name="rules" placeholder="No cheating." value={event.rules} maxlength={1024} />
 			</div>
 			<div class="space-y-2">
 				<Label>Event Prizes</Label>
-				<Textarea name="prizes" placeholder="First Place: $20 in Gems!" maxlength={1024} />
+				<Textarea
+					name="prizes"
+					placeholder="First Place: $20 in Gems!"
+					value={event.prizeInfo}
+					maxlength={1024}
+				/>
 			</div>
 			<div class="mt-4 space-y-2">
 				<Label>Event Start Time</Label>

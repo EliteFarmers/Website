@@ -1,6 +1,5 @@
 <script module>
 	import type { Snippet } from 'svelte';
-	import './markdown.pcss';
 	export { a, blockquote, h1, h2, h3, h4, h5, h6, hr, img, li, ol, p, pre, table, td, th, tr, ul } from './index.js';
 </script>
 

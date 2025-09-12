@@ -20,6 +20,7 @@ import {
 	type WeightStyleWithDataDto,
 } from './api';
 import { parseLeaderboards } from './constants/leaderboards';
+import { mdToHtml } from './md';
 
 const cacheEntries = {
 	events: {
@@ -97,7 +98,12 @@ const cacheEntries = {
 		data: [] as AnnouncementDto[],
 		update: async () => {
 			const { data } = await getAnnouncement();
-			return data ?? [];
+			const announcements = (data ?? []) as AnnouncementDto[];
+			for (const announcement of announcements) {
+				if (!announcement.content) continue;
+				announcement.content = (await mdToHtml(announcement.content)) ?? announcement.content;
+			}
+			return announcements;
 		},
 	},
 };

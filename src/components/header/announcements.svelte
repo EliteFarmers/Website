@@ -1,4 +1,5 @@
 <script lang="ts">
+	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import type { AnnouncementDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Button } from '$ui/button';
@@ -11,7 +12,7 @@
 </script>
 
 {#if filteredAnnouncements.length > 0}
-	<div class="flex flex-col gap-2 py-4 sm:px-1">
+	<div class="mx-2 flex flex-col gap-2 py-4 sm:px-1">
 		{#each filteredAnnouncements as a (a.id)}
 			{@render announcement(a)}
 		{/each}
@@ -30,7 +31,9 @@
 					<AnnouncementIcon announcement={a} class="mb-1 inline size-6 md:hidden" />
 					<span class="text-lg font-semibold md:text-xl">{a.title}</span>
 				</span>
-				<span class="text-muted-foreground mt-3 max-w-2xl text-sm sm:mt-1">{a.content}</span>
+				<span class="text-muted-foreground mt-3 max-w-2xl text-sm sm:mt-1">
+					<RenderHtml content={a.content} />
+				</span>
 			</div>
 		</div>
 		<div class="mx-2 flex w-full flex-row items-center justify-evenly gap-2 sm:w-fit sm:flex-col md:flex-row">
