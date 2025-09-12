@@ -29,7 +29,8 @@
 		"postprocess-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.ts && pnpm prettier --write ./src/lib/api/"
 	},
 	"dependencies": {
-		"@napi-rs/canvas": "^0.1.76"
+		"@napi-rs/canvas": "^0.1.76",
+		"isomorphic-dompurify": "^2.26.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.32.0",
@@ -76,7 +77,6 @@
 		"farming-weight": "^0.10.5",
 		"formsnap": "2.0.1",
 		"globals": "^16.3.0",
-		"isomorphic-dompurify": "^2.26.0",
 		"joi": "^17.13.3",
 		"layercake": "^10.0.1",
 		"layerchart": "^2.0.0-next.37",
