@@ -11,7 +11,7 @@
 	const sidebar = Sidebar.useSidebar();
 </script>
 
-<div class="@container">
+<div class="@container relative">
 	<div
 		class="mx-4 @7xl:mr-[calc(var(--sidebarWidth)+1rem)]"
 		style="--sidebarWidth: {sidebar.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON}"
