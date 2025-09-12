@@ -4,6 +4,7 @@
 
 <script lang="ts">
 	import AnnouncementIcon from '$comp/header/announcement-icon.svelte';
+	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import Button from '$ui/button/button.svelte';
 	import * as DropdownMenu from '$ui/dropdown-menu';
@@ -58,7 +59,9 @@
 						<AnnouncementIcon {announcement} class="text-primary mr-1 mb-0.5 inline size-4" />
 						{announcement.title}
 					</span>
-					<span class="text-muted-foreground text-xs">{announcement.content}</span>
+					<span class="text-muted-foreground text-xs">
+						<RenderHtml content={announcement.content} />
+					</span>
 					<div class="flex flex-row justify-between">
 						{#if !isDismissed}
 							<Button

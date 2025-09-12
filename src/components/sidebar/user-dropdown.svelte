@@ -10,6 +10,7 @@
 </script>
 
 <script lang="ts">
+	import { page } from '$app/state';
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import * as Avatar from '$ui/avatar';
@@ -17,7 +18,7 @@
 	import * as Sidebar from '$ui/sidebar';
 
 	const ctx = getGlobalContext();
-	const session = $derived(ctx.session);
+	const session = $derived(ctx.initialized ? ctx.session : null);
 
 	const sidebar = Sidebar.useSidebar();
 </script>
@@ -98,7 +99,10 @@
 				Log out
 			</DropdownMenu.LinkItem>
 		{:else}
-			<DropdownMenu.LinkItem data-sveltekit-preload-data="off" href="/login">
+			<DropdownMenu.LinkItem
+				data-sveltekit-preload-data="off"
+				href="/login?redirect={encodeURIComponent(page.url.pathname + page.url.search + page.url.hash)}"
+			>
 				<LogIn />
 				Login with Discord
 			</DropdownMenu.LinkItem>

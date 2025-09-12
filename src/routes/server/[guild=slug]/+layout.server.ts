@@ -2,7 +2,7 @@ import { getPublicGuild, getPublicGuildEvents } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders, url }) => {
+export const load = (async ({ params, url }) => {
 	const { guild } = params;
 
 	// Remove everything before the last dash
@@ -21,10 +21,6 @@ export const load = (async ({ params, setHeaders, url }) => {
 	}
 
 	const { data: events } = await getPublicGuildEvents(BigInt(guildData.id)).catch(() => ({ data: undefined }));
-
-	setHeaders({
-		'Cache-Control': 'public, max-age=300',
-	});
 
 	return {
 		guild: guildData,

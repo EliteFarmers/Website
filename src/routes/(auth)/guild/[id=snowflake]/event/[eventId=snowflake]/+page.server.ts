@@ -105,7 +105,7 @@ export const actions: Actions = {
 			guildId: guildId,
 		};
 
-		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(guildId, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -190,7 +190,7 @@ export const actions: Actions = {
 		const image = (data.get('image') as string) || undefined;
 		if (!image) return fail(400, { error: 'Missing required field: banner' });
 
-		const { response, error: e } = await setEventBannerAdmin(eventId, guildId, {
+		const { response, error: e } = await setEventBannerAdmin(guildId, eventId, {
 			image: image as unknown as Blob,
 		}).catch((e) => {
 			console.log(e);
@@ -218,7 +218,7 @@ export const actions: Actions = {
 		const eventId = data.get('id') as string;
 		if (!eventId) throw error(400, 'Missing required field: id');
 
-		const { response, error: e } = await deleteEventBannerAdmin(eventId, guildId).catch((e) => {
+		const { response, error: e } = await deleteEventBannerAdmin(guildId, eventId).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -262,7 +262,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(guildId, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -301,7 +301,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(guildId, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -346,7 +346,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await updateEventAdmin(token, eventId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(guildId, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});
@@ -398,7 +398,7 @@ export const actions: Actions = {
 			},
 		};
 
-		const { response, error: e } = await updateEventAdmin(eventId, guildId, body).catch((e) => {
+		const { response, error: e } = await updateEventAdmin(guildId, eventId, body).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

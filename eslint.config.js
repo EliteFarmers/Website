@@ -42,6 +42,7 @@ export default ts.config(
 			'src/lib/api/schemas/',
 			'node_modules',
 			'static',
+			'.velite',
 		],
 	},
 	{

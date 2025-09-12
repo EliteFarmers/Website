@@ -2,9 +2,8 @@ import { deleteEventAdmin, getPendingEvents, getUpcomingEvents, setEventApproval
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ parent, locals }) => {
-	const { user, session } = await parent();
-	const { access_token: token } = locals;
+export const load = (async ({ locals }) => {
+	const { access_token: token, session } = locals;
 
 	if (!session || !session.flags.moderator || !token) {
 		throw error(404, 'Not Found');
@@ -14,7 +13,7 @@ export const load = (async ({ parent, locals }) => {
 	const { data: upcoming } = await getUpcomingEvents().catch(() => ({ data: undefined }));
 
 	return {
-		user,
+		user: locals.user,
 		pending: pending ?? [],
 		upcoming: upcoming ?? [],
 	};

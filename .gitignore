@@ -12,6 +12,7 @@ vite.config.ts.timestamp-*
 static/packs
 static/oss.txt
 .idea
+.velite
 
 # Admin routes
 src/routes/(auth)/**/graphs/+l*

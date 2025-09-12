@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import { useSidebar } from '$ui/sidebar';
+	import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from '$ui/sidebar/constants';
 
 	interface Props {
 		src?: string;
@@ -15,12 +16,15 @@
 
 <div
 	class={cn(
-		'absolute top-16 right-0 left-0 flex h-96 flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat',
+		'absolute top-0 right-0 left-0 flex h-96 flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat',
 		className
 	)}
 	style={src ? `background-image: url('${src}')` : ''}
 >
-	<div class={!sidebar.isMobile ? (sidebar.open ? 'md:mr-66' : 'md:mr-28') : 'md:mr-12 md:ml-8'}>
+	<div
+		class="mx-4 @7xl:mr-[calc(var(--sidebarWidth)+1rem)]"
+		style="--sidebarWidth: {sidebar.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON}"
+	>
 		{@render children?.()}
 	</div>
 </div>

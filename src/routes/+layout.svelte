@@ -45,6 +45,13 @@
 	initPageContext();
 
 	watch(
+		() => data.session,
+		(session) => {
+			initGlobalContext({ session, announcements: data.cache?.announcements ?? [] });
+		}
+	);
+
+	watch(
 		() => page.form,
 		() => {
 			if (!page.form) return;
@@ -106,9 +113,9 @@
 		<div class="max-h-screen flex-1 overflow-y-auto">
 			<Sidebar.Inset>
 				<Header leaderboards={data.cache?.leaderboards?.leaderboards} />
+				<Announcements />
 
 				<Content>
-					<Announcements />
 					{@render children?.()}
 					<FooterPills />
 				</Content>

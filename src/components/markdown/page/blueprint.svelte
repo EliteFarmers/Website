@@ -1,7 +1,6 @@
 <script module>
 	import Head from '$comp/head.svelte';
 	import type { Snippet } from 'svelte';
-	import '../default/markdown.pcss';
 	export {
 		a,
 		blockquote,

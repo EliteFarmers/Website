@@ -5,10 +5,10 @@
 	import EventLeaderboard from '$comp/events/event-leaderboard.svelte';
 	import EventTeamLeaderboard from '$comp/events/event-team-leaderboard.svelte';
 	import EventType from '$comp/events/event-type.svelte';
-	import Linebreaks from '$comp/events/linebreaks.svelte';
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
 	import Head from '$comp/head.svelte';
 	import HeroBanner from '$comp/hero-banner.svelte';
+	import RenderMd from '$comp/markdown/render-md.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import * as Accordion from '$ui/accordion';
@@ -122,7 +122,7 @@
 	<div class="flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">
 		<GuildIcon guild={data.guild} size={16} />
 		<h1 class="xs:text-2xl mx-8 text-xl text-white sm:text-3xl md:text-4xl">
-			{data.event?.name}
+			<RenderMd content={data.event?.name} />
 		</h1>
 		<Button href="/server/{event.guildId}/join" variant="link">
 			<ExternalLink size={16} class="text-white" />
@@ -175,15 +175,15 @@
 						})}
 					</p>
 				</div>
-				<p><Linebreaks text={event.description ?? ''} /></p>
+				<p><RenderMd content={event.description ?? ''} /></p>
 				{#if event.prizeInfo}
 					<p><strong>Prizes</strong></p>
-					<p><Linebreaks text={event.prizeInfo ?? ''} /></p>
+					<p><RenderMd content={event.prizeInfo ?? ''} /></p>
 				{/if}
 				<p><strong>Rules</strong></p>
 				{#if event.rules}
 					<p>
-						<Linebreaks text={event.rules ?? ''} />
+						<RenderMd content={event.rules ?? ''} />
 					</p>
 				{/if}
 				<EventData {event} />

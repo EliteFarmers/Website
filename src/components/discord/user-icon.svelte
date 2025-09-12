@@ -15,7 +15,7 @@
 	let errored = $state(false);
 </script>
 
-{#if !user.avatar || errored}
+{#if !user?.avatar || errored}
 	<div class="{className} flex items-center justify-center rounded-full bg-black bg-blend-darken select-none">
 		<UserRound />
 	</div>

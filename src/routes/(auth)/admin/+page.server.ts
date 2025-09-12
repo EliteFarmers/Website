@@ -3,7 +3,7 @@ import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent, locals }) => {
-	const { user, session } = await parent();
+	const { session } = await parent();
 	const { access_token: token } = locals;
 
 	if (!session || !session.flags.moderator || !token) {
@@ -20,7 +20,7 @@ export const load = (async ({ parent, locals }) => {
 	const { data: products } = await getAllProducts().catch(() => ({ data: undefined }));
 
 	return {
-		user,
+		user: locals.user,
 		roles,
 		admins: admins ?? [],
 		products: products ?? [],

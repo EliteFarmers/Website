@@ -11,9 +11,8 @@ import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
 import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ parent, locals, params }) => {
-	const { session } = await parent();
-	const { access_token: token } = locals;
+export const load = (async ({ locals, params }) => {
+	const { access_token: token, session } = locals;
 
 	if (!session || !session.flags.moderator || !token) {
 		throw error(404, 'Not Found');

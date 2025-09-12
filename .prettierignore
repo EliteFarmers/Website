@@ -26,3 +26,4 @@ src/lib/api/api.d.ts
 node_modules/.pnpm/svelte-ux*
 
 static
+.velite
