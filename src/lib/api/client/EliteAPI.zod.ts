@@ -6078,30 +6078,6 @@ export const zodUpdateGuildPurchasesParams = zod.object({
 });
 
 /**
- * @summary Get Image
- */
-export const zodTestImageResponseTitleMax = 64;
-export const zodTestImageResponseDescriptionMax = 512;
-
-export const zodTestImageResponse = zod.object({
-	title: zod.string().max(zodTestImageResponseTitleMax).nullish().describe('Image title'),
-	description: zod.string().max(zodTestImageResponseDescriptionMax).nullish().describe('Image description'),
-	order: zod.number().nullish().describe('Image ordering number'),
-	width: zod.number().describe('The original width of the image.'),
-	height: zod.number().describe('The original height of the image.'),
-	sources: zod
-		.record(
-			zod.string(),
-			zod.object({
-				url: zod.string().describe('The fully-qualified public URL for this image variant.'),
-				width: zod.number().describe('The width of this image variant in pixels.'),
-			})
-		)
-		.describe('A dictionary of available image sources, keyed by a logical name (e.g., \"small\", \"medium\").'),
-	url: zod.string().describe('Lowest quality image URL'),
-});
-
-/**
  * @summary Get Leaderboard
  */
 export const zodGetLeaderboardParams = zod.object({
@@ -7295,6 +7271,7 @@ export const zodGetProfileResponse = zod.object({
 		vault: zod.boolean(),
 	}),
 	skyblockXp: zod.number(),
+	socialXp: zod.number(),
 	purse: zod.number(),
 	bankBalance: zod.number(),
 	meta: zod
@@ -7798,6 +7775,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 		vault: zod.boolean(),
 	}),
 	skyblockXp: zod.number(),
+	socialXp: zod.number(),
 	purse: zod.number(),
 	bankBalance: zod.number(),
 	meta: zod
@@ -8322,6 +8300,28 @@ export const zodGetBazaarProductsResponse = zod.object({
 });
 
 /**
+ * Get the current/upcoming Skyblock firesales.
+ * @summary Get Current Skyblock Firesale
+ */
+export const zodSkyblockFiresaleResponse = zod.object({
+	firesales: zod.array(
+		zod.object({
+			startsAt: zod.number(),
+			endsAt: zod.number(),
+			items: zod.array(
+				zod.object({
+					itemId: zod.string(),
+					amount: zod.number(),
+					price: zod.number().describe('Price in Skyblock Gems'),
+					startsAt: zod.number().describe('Unix seconds'),
+					endsAt: zod.number().describe('Unix seconds'),
+				})
+			),
+		})
+	),
+});
+
+/**
  * Get an ItemDto from raw bytes from Hypixel
  * @summary Parse Skyblock Item from Bytes
  */
@@ -8469,11 +8469,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.boolean(),
 				item_specific: zod
 					.object({
-						rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.any(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -8581,11 +8578,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.boolean(),
 					item_specific: zod
 						.object({
-							rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.any(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -8752,11 +8746,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.boolean(),
 			item_specific: zod
 				.object({
-					rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.any(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()

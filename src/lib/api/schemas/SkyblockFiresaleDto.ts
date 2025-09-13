@@ -7,5 +7,10 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { SkyblockFiresaleItemDto } from './SkyblockFiresaleItemDto';
 
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface SkyblockFiresaleDto {
+	startsAt: bigint;
+	endsAt: bigint;
+	items: SkyblockFiresaleItemDto[];
+}
