@@ -92,7 +92,6 @@ import type {
 	GuildDetailsDto,
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
-	ImageAttachmentDto,
 	IncomingAccountDto,
 	IncomingGuildChannelDto,
 	IncomingGuildDto,
@@ -127,6 +126,7 @@ import type {
 	SetTeamOwnerRequest,
 	ShopCategoryDto,
 	SkillsDataPointDto,
+	SkyblockFiresalesResponse,
 	SkyblockItemResponse,
 	UpdateBadgeRequestUpdateBadge,
 	UpdateContestPingsRequestUpdateContestPings,
@@ -5406,31 +5406,6 @@ export const updateGuildPurchases = async (discordId: bigint | number | string, 
 };
 
 /**
- * @summary Get Image
- */
-export type testImageResponse200 = {
-	data: ImageAttachmentDto;
-	status: 200;
-};
-
-export type testImageResponseComposite = testImageResponse200;
-
-export type testImageResponse = testImageResponseComposite & {
-	headers: Headers;
-};
-
-export const getTestImageUrl = () => {
-	return `${ELITE_API_URL}/image`;
-};
-
-export const testImage = async (options?: RequestInit) => {
-	return customFetch<testImageResponse>(getTestImageUrl(), {
-		...options,
-		method: 'GET',
-	});
-};
-
-/**
  * @summary Get Leaderboard
  */
 export type getLeaderboardResponse200 = {
@@ -6342,6 +6317,32 @@ export const getGetBazaarProductsUrl = () => {
 
 export const getBazaarProducts = async (options?: RequestInit) => {
 	return customFetch<getBazaarProductsResponse>(getGetBazaarProductsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get the current/upcoming Skyblock firesales.
+ * @summary Get Current Skyblock Firesale
+ */
+export type skyblockFiresaleResponse200 = {
+	data: SkyblockFiresalesResponse;
+	status: 200;
+};
+
+export type skyblockFiresaleResponseComposite = skyblockFiresaleResponse200;
+
+export type skyblockFiresaleResponse = skyblockFiresaleResponseComposite & {
+	headers: Headers;
+};
+
+export const getSkyblockFiresaleUrl = () => {
+	return `${ELITE_API_URL}/resources/firesales/current`;
+};
+
+export const skyblockFiresale = async (options?: RequestInit) => {
+	return customFetch<skyblockFiresaleResponse>(getSkyblockFiresaleUrl(), {
 		...options,
 		method: 'GET',
 	});

@@ -8,4 +8,13 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface SkyblockFiresaleItemDto {
+	itemId: string;
+	amount: number;
+	/** Price in Skyblock Gems */
+	price: number;
+	/** Unix seconds */
+	startsAt: bigint;
+	/** Unix seconds */
+	endsAt: bigint;
+}

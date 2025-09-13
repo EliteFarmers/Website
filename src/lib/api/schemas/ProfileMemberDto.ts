@@ -27,6 +27,7 @@ export interface ProfileMemberDto {
 	profileName: string;
 	api: ApiAccessDto;
 	skyblockXp: number;
+	socialXp: number;
 	purse: number;
 	bankBalance: number;
 	/** @nullable */
