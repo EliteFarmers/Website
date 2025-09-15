@@ -15,7 +15,7 @@ export const load = (async ({ params, url, locals, depends }) => {
 		throw error(404, 'Event not found');
 	}
 
-	const properUrl = eventData.name.replaceAll(' ', '-') + '-' + eventData.id;
+	const properUrl = encodeURIComponent(eventData.name.replaceAll(' ', '-')) + '-' + eventData.id;
 
 	if (properUrl !== event && !url.pathname.includes('membership') && !url.pathname.includes('leaderboard')) {
 		throw redirect(307, `/event/${properUrl}`);

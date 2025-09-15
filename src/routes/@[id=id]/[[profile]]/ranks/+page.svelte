@@ -8,7 +8,11 @@
 	const ctx = getStatsContext();
 </script>
 
-<Head title="{ctx.ignMeta} | Ranks" description="See this player's leaderboard ranks in Hypixel Skyblock!" />
+<Head
+	title="{ctx.ignMeta} | Ranks"
+	description="See this player's leaderboard ranks in Hypixel Skyblock!"
+	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/ranks"
+/>
 
 <div class="mb-16 flex flex-col items-center gap-8">
 	<h1 class="mt-4 max-w-2xl self-center text-center text-4xl">Leaderboard Ranks</h1>

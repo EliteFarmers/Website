@@ -116,7 +116,12 @@
 
 <svelte:document onvisibilitychange={visibilityChange} />
 
-<Head title={event.name || 'Farming Weight Event'} {description} imageUrl={data.guild?.icon?.url} />
+<Head
+	title={event.name || 'Farming Weight Event'}
+	{description}
+	imageUrl={data.guild?.icon?.url}
+	canonicalPath="/event/{encodeURIComponent(event.name.replaceAll(' ', '-'))}-{event.id}"
+/>
 
 <HeroBanner src={banner} class="h-64">
 	<div class="flex flex-row items-center justify-center gap-4 rounded-lg bg-zinc-900/75 p-4">

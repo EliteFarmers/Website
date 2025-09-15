@@ -48,7 +48,11 @@
 	);
 </script>
 
-<Head title="{ctx.ignMeta} | Garden" description="See this player's garden stats in Hypixel Skyblock!" />
+<Head
+	title="{ctx.ignMeta} | Garden"
+	description="See this player's garden stats in Hypixel Skyblock!"
+	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/garden"
+/>
 
 <div class="flex w-full flex-col items-center justify-center gap-8">
 	<section class="flex w-full flex-row items-center justify-center gap-4 px-2">

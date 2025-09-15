@@ -86,7 +86,12 @@
 	});
 </script>
 
-<Head title={(event.name || 'Farming Weight Event') + ' Leaderboard'} {description} imageUrl={guild?.icon?.url} />
+<Head
+	title={(event.name || 'Farming Weight Event') + ' Leaderboard'}
+	{description}
+	imageUrl={guild?.icon?.url}
+	canonicalPath="/event/{encodeURIComponent(event.name.replaceAll(' ', '-'))}-{event.id}/leaderboard"
+/>
 
 <div class="mb-16 flex flex-col items-center justify-center gap-8" data-sveltekit-preload-data="tap">
 	<section class="bg-card mt-16 flex w-full max-w-4xl flex-col items-center gap-4 rounded-md border-2 p-8">

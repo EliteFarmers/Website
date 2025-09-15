@@ -104,7 +104,11 @@
 	let startTime = $derived(Math.floor(value.toDate(tz).getTime() / 1000));
 </script>
 
-<Head title="{ctx.ignMeta} | Charts" description="See crop collection charts for Hypixel Skyblock!" />
+<Head
+	title="{ctx.ignMeta} | Charts"
+	description="See crop collection charts for Hypixel Skyblock!"
+	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/charts"
+/>
 
 <div class="flex w-full flex-col items-center justify-center gap-4">
 	<Cropselector />

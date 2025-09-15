@@ -45,7 +45,11 @@
 	let claimModalOpen = $state(false);
 </script>
 
-<Head title={product.name ?? 'Product'} description="Help support development with cosmetics!" />
+<Head
+	title={product.name ?? 'Product'}
+	description="Help support development with cosmetics!"
+	canonicalPath="/shop/{product.id}"
+/>
 
 <div class="my-16 flex w-full flex-col items-center gap-12 px-2">
 	<section class="flex flex-col items-start gap-4">

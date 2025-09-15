@@ -67,6 +67,7 @@
 	title="{ctx.ignMeta} ({profile?.profileName}) | Farming Weight"
 	{description}
 	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
+	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
 >
 	<link rel="preload" href="/images/cropatlas.webp" as="image" />
 </Head>
