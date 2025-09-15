@@ -1,10 +1,4 @@
-import {
-	PUBLIC_COMMUNITY_INVITE,
-	PUBLIC_DONATION_URL,
-	PUBLIC_PRIVACY_URL,
-	PUBLIC_SUPPORT_SERVER_INVITE,
-	PUBLIC_TOS_URL,
-} from '$env/static/public';
+import { PUBLIC_COMMUNITY_INVITE, PUBLIC_DONATION_URL, PUBLIC_SUPPORT_SERVER_INVITE } from '$env/static/public';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -13,8 +7,6 @@ const urls: Partial<Record<string, string>> = {
 	discord: PUBLIC_COMMUNITY_INVITE,
 	support: PUBLIC_SUPPORT_SERVER_INVITE,
 	stickers: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
-	terms: PUBLIC_TOS_URL,
-	privacy: PUBLIC_PRIVACY_URL,
 	leaderboards: '/leaderboard',
 	oss: '/oss.txt',
 	store: '/shop',
