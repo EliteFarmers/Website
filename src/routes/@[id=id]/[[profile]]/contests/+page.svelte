@@ -48,6 +48,7 @@
 <Head
 	title="{ctx.ignMeta ?? 'Unknown'} | Jacob's Contests"
 	description="View all {contestsCount} Jacob's Contests participated in by {ctx.ignMeta ?? 'Unknown'}!"
+	canonicalPath="/@{ctx.ign}/{encodeURIComponent(ctx.selectedProfile?.profileName ?? '')}/contests"
 />
 
 <section class="flex w-full flex-col items-center justify-center">

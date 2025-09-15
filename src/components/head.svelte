@@ -7,6 +7,7 @@
 		imageUrl?: string | false;
 		description: string;
 		children?: import('svelte').Snippet;
+		canonicalPath?: string;
 	}
 
 	let {
@@ -15,7 +16,14 @@
 		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
 		description,
 		children,
+		canonicalPath,
 	}: Props = $props();
+
+	const canonicalUrl = $derived(
+		canonicalPath?.startsWith('http')
+			? canonicalPath
+			: PUBLIC_HOST_URL + (canonicalPath?.startsWith('/') ? '' : '/') + canonicalPath
+	);
 </script>
 
 <svelte:head>
@@ -32,6 +40,9 @@
 	{/if}
 	{#if imageUrl}
 		<meta property="og:image" content={imageUrl} />
+	{/if}
+	{#if canonicalPath}
+		<link rel="canonical" href={canonicalUrl} />
 	{/if}
 	{@render children?.()}
 </svelte:head>

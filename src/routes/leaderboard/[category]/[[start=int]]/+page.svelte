@@ -73,7 +73,11 @@
 	let searchOpen = $state(false);
 </script>
 
-<Head {title} description="{title} for Hypixel Skyblock.\n\n{topTen}" />
+<Head
+	{title}
+	description="{title} for Hypixel Skyblock.\n\n{topTen}"
+	canonicalPath="/leaderboard/{data.leaderboard.id}{data.lb.offset ? `/${data.lb.offset + 1}` : ''}"
+/>
 
 <section class="mt-16 flex w-full flex-col justify-center">
 	<h1 class="mt-8 mb-16 max-w-2xl self-center text-center text-4xl">{title}</h1>
@@ -184,7 +188,7 @@
 	</div>
 
 	{#if data.lb.interval}
-		<p class="mx-auto w-1/2 py-4 text-center text-sm">
+		<p class="mx-auto max-w-lg py-4 text-center text-sm">
 			Leaderboards on an interval work by saving an initial score the first time a player's data is pulled for an
 			interval, then using the difference between their current score and the initial score for their score shown
 			here. High scores on these leaderboards may be due to minions or other factors. A player must have reached
@@ -192,7 +196,7 @@
 			<strong>{data.lb.minimumScore.toLocaleString()}</strong> to have their initial score saved.
 		</p>
 	{:else}
-		<p class="mx-auto w-1/2 py-4 text-center text-sm">
+		<p class="mx-auto max-w-lg py-4 text-center text-sm">
 			This leaderboard only consists of the top players who have been searched on this website and have hit the
 			minimum score of <strong>{data.lb.minimumScore.toLocaleString()}</strong>.
 		</p>

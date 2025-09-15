@@ -49,6 +49,7 @@
 	title={guild.name ?? 'Server'}
 	description={`View all features and events happening in the Discord server: "${guild.name ?? 'Unknown'}"!`}
 	imageUrl={guild.icon?.url}
+	canonicalPath="/server/{guild.id}"
 />
 
 <HeroBanner src={guild.banner?.url} class="h-64">
