@@ -46,21 +46,12 @@ export class PlayerStats {
 		account: NonNullable<MinecraftAccountDto>;
 		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
-		// member: Promise<ProfileMemberDto | undefined>;
-		// ranks: Promise<LeaderboardRanksResponse | undefined>;
 		style?: WeightStyleWithDataDto;
 	}) {
 		this.setValues(data);
 	}
 
-	async setValues({
-		account,
-		selectedProfile,
-		profiles,
-		// member,
-		// ranks,
-		style,
-	}: ConstructorParameters<typeof PlayerStats>[0]) {
+	async setValues({ account, selectedProfile, profiles, style }: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;

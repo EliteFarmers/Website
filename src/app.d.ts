@@ -15,6 +15,7 @@ declare global {
 			session?: AuthSession;
 			persistSession?: boolean;
 			cache?: typeof import('$lib/servercache').cache;
+			bot: boolean;
 		}
 		// interface Platform {}
 		interface Session {

@@ -15,5 +15,6 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 			announcements: locals.cache?.announcements ?? [],
 		},
 		sidebar: (sidebarState ?? 'true') === 'true',
+		bot: locals.bot ?? false,
 	};
 };

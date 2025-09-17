@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
 
 	interface Props {
 		title: string | undefined; // 'Elite | Skyblock Farming Weight';
-		keywords?: string | false;
-		imageUrl?: string | false;
+		keywords?: string | undefined;
+		imageUrl?: string | undefined;
 		description: string;
 		children?: import('svelte').Snippet;
 		canonicalPath?: string;
@@ -27,22 +28,28 @@
 </script>
 
 <svelte:head>
-	{#if title}
-		<title>{title}</title>
-		<meta property="og:title" content={title} />
-	{/if}
+	<title>{title ?? 'Elite | Skyblock Farming Weight'}</title>
+	<meta property="og:title" content={title ?? 'Elite | Skyblock Farming Weight'} />
+
+	<meta property="twitter:card" content="summary" />
+
 	{#if description}
 		<meta name="description" content={description} />
 		<meta property="og:description" content={description} />
+		<meta property="twitter:description" content={description} />
 	{/if}
-	{#if keywords}
-		<meta name="keywords" content={keywords} />
-	{/if}
+
+	<meta name="keywords" content={keywords} />
+
 	{#if imageUrl}
+		<meta property="twitter:image" content={imageUrl} />
 		<meta property="og:image" content={imageUrl} />
 	{/if}
+
 	{#if canonicalPath}
+		<meta property="og:url" content={canonicalUrl ?? page.url.toString()} />
 		<link rel="canonical" href={canonicalUrl} />
 	{/if}
+
 	{@render children?.()}
 </svelte:head>

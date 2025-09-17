@@ -8,6 +8,9 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['@napi-rs/canvas', 'isomorphic-dompurify'],
 	},
+	server: {
+		allowedHosts: ['.kaeso.dev'],
+	},
 	resolve: {
 		alias: {
 			$ui: path.resolve('./src/components/ui'),

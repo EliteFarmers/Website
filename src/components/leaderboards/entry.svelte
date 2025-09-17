@@ -24,7 +24,7 @@
 	}: Props = $props();
 
 	let options = $derived.by(() => {
-		if (leaderboard?.id === 'skyblockxp') {
+		if (leaderboard?.id.startsWith('skyblockxp')) {
 			return {
 				maximumFractionDigits: 2,
 				minimumFractionDigits: 2,
@@ -44,7 +44,7 @@
 	});
 
 	let ign = $state(entry.ign);
-	let amount = $derived(leaderboard?.id === 'skyblockxp' ? (entry.amount ?? 0) / 100 : entry.amount);
+	let amount = $derived(leaderboard?.id.startsWith('skyblockxp') ? (entry.amount ?? 0) / 100 : entry.amount);
 	let profile = $state(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
 	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
