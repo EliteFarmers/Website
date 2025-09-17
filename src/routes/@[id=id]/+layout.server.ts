@@ -2,7 +2,7 @@ import { dev } from '$app/environment';
 import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
 import { getAccount } from '$lib/api';
 import { type ProfileDetails, type ProfileGameMode } from '$lib/api/elite';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import type { LayoutServerLoad } from './$types';
 
@@ -18,7 +18,11 @@ const limiter = new RateLimiter({
 });
 
 export const load: LayoutServerLoad = async (event) => {
-	const { params } = event;
+	const { params, locals, url } = event;
+
+	if (locals.bot) {
+		throw redirect(307, `/og${url.pathname}`);
+	}
 
 	if (!dev) {
 		await limiter.cookieLimiter?.preflight(event);

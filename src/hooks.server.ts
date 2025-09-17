@@ -9,6 +9,7 @@ export const init: ServerInit = async () => {
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const { locals, cookies } = event;
+	locals.bot = event.request.headers.get('X-Known-Bot') === 'true';
 
 	const access = cookies.get('access_token');
 	const refresh = cookies.get('refresh_token');
@@ -34,7 +35,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const response = await ResolveWithSecurityHeaders(resolve, event);
 
 	// Check if the response is a bot redirect to the login page
-	if (response.headers.get('location')?.startsWith('/login') && event.request.headers.get('X-Known-Bot') === 'true') {
+	if (locals.bot && response.headers.get('location')?.startsWith('/login')) {
 		return getLoginHeadResponse(response.headers.get('location') || '/login');
 	}
 

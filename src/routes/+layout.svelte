@@ -88,40 +88,33 @@
 <svelte:head>
 	<meta name="author" content="Kaeso" />
 	<meta name="robots" content="index, follow" />
-	<meta property="og:url" content={page.url.toString()} />
 
 	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
 </svelte:head>
 
-<svelte:boundary>
-	<Sidebar.Provider open={data.sidebar}>
-		<Sidebar.Root collapsible="icon" class="z-50">
-			<AppSidebar>
-				<FavoritedLinks />
-				<UpcomingEvents events={data.cache?.events} />
-			</AppSidebar>
-		</Sidebar.Root>
+<Sidebar.Provider open={data.sidebar}>
+	<Sidebar.Root collapsible="icon" class="z-50">
+		<AppSidebar>
+			<FavoritedLinks />
+			<UpcomingEvents events={data.cache?.events} />
+		</AppSidebar>
+	</Sidebar.Root>
 
-		<div class="max-h-screen flex-1 overflow-y-auto">
-			<Sidebar.Inset>
-				<Header leaderboards={data.cache?.leaderboards?.leaderboards} />
-				<Announcements />
+	<div class="max-h-screen flex-1 overflow-y-auto">
+		<Sidebar.Inset>
+			<Header leaderboards={data.cache?.leaderboards?.leaderboards} />
+			<Announcements />
 
-				<Content>
-					{@render children?.()}
-					<FooterPills />
-				</Content>
+			<Content>
+				{@render children?.()}
+				<FooterPills />
+			</Content>
 
-				<Footer />
-			</Sidebar.Inset>
-		</div>
-	</Sidebar.Provider>
+			<Footer />
+		</Sidebar.Inset>
+	</div>
+</Sidebar.Provider>
 
-	<Toaster />
-	<ThemeWatcher />
-
-	{#snippet pending()}
-		<!-- Intentionally left blank -->
-	{/snippet}
-</svelte:boundary>
+<Toaster />
+<ThemeWatcher />

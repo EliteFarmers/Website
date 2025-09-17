@@ -1,12 +1,11 @@
 import adapter from '@sveltejs/adapter-node';
 import { mdsx } from 'mdsx';
 import path from 'path';
-import { sveltePreprocess } from 'svelte-preprocess';
 import { mdsxConfig } from './mdsx.config.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: [mdsx(mdsxConfig), sveltePreprocess()],
+	preprocess: [mdsx(mdsxConfig)],
 	compilerOptions: {
 		experimental: {
 			// async: true, // Soon hopefully
