@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 		throw redirect(308, `/contests/${date.year + 1}/${date.month + 1}/${date.day + 1}`);
 	}
 
-	const { data: contests } = await getContestsAtTimestamp(BigInt(timestamp), { limit: 10 }).catch(() => ({
+	const { data: contests } = await getContestsAtTimestamp(BigInt(timestamp), { limit: -1 }).catch(() => ({
 		data: undefined,
 	}));
 
