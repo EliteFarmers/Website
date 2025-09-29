@@ -15,7 +15,7 @@
 	<button
 		{...rest}
 		class={cn(
-			buttonVariants({ variant: 'secondary' }),
+			buttonVariants({ variant: 'default' }),
 			'flex h-full w-full flex-row items-center justify-center rounded-full',
 			className
 		)}

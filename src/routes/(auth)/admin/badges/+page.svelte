@@ -176,7 +176,7 @@
 		<Dialog.Title>{grant ? 'Grant' : 'Remove'} User Badge</Dialog.Title>
 		<form
 			method="post"
-			action={grant ? '?/adduserbadge' : '?/deleteuserbadge'}
+			action="?/adduserbadge"
 			class="flex flex-col gap-2"
 			use:enhance={() => {
 				return async ({ result, update }) => {
@@ -186,19 +186,23 @@
 			}}
 		>
 			{#if selectedBadge}
-				<input type="hidden" name="badgeId" bind:value={selectedBadge.id} />
+				<input type="hidden" name="badgeId" value={selectedBadge.id} />
 
 				<div class="flex flex-col items-start gap-2">
 					<Label>Player UUID</Label>
 					<Input name="uuid" placeholder="Player UUID" maxlength={36} />
 				</div>
+			{/if}
 
-				<div class="flex flex-col items-start gap-2">
-					<Label>Mode Toggle</Label>
-					<Switch bind:checked={grant} />
-				</div>
+			<div class="flex flex-col items-start gap-2">
+				<Label>Mode Toggle</Label>
+				<Switch bind:checked={grant} />
+			</div>
 
-				<Button type="submit">{grant ? 'Grant' : 'Remove'} Badge</Button>
+			{#if grant}
+				<Button type="submit">Grant Badge</Button>
+			{:else}
+				<Button type="submit" formaction="?/deleteuserbadge">Remove Badge</Button>
 			{/if}
 		</form>
 	</Dialog.Content>

@@ -1,4 +1,4 @@
-import { addBadgeToUserBadge, createBadge, deleteBadge, removeBadge, updateBadge } from '$lib/api';
+import { addBadgeToUserBadge, createBadge, deleteBadge, deleteBadgeFromUserBadge, updateBadge } from '$lib/api';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -126,7 +126,7 @@ export const actions: Actions = {
 		const playerUuid = data.get('uuid') as string;
 		const badgeId = data.get('badgeId') as string;
 
-		const { ok, error: e } = await removeBadge(playerUuid, badgeId);
+		const { ok, error: e } = await deleteBadgeFromUserBadge(playerUuid, badgeId);
 
 		if (!ok) {
 			return fail(500, { error: e || 'Failed to delete badge.' });
