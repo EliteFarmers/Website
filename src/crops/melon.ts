@@ -9,7 +9,7 @@ const melonDicerRollem = {
 			chance: 45 / 100208,
 		},
 		{
-			drops: 64 * 160,
+			drops: 75 * 160,
 			chance: 7 / 100208,
 		},
 		{
