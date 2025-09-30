@@ -44,7 +44,7 @@
 		<Skeleton class="aspect-square size-16" />
 		<Skeleton class="aspect-square size-16" />
 	</div>
-	<div class="flex flex-col items-center gap-8 md:flex-row">
+	<div class="flex flex-col items-center gap-4 md:flex-row">
 		<Skeleton class="h-8xl w-full" />
 		<Skeleton class="h-8xl w-full" />
 	</div>

@@ -117,6 +117,7 @@
 		selectedTool: (() => selectedTool)(),
 
 		refinedTruffles: ctx.member.current?.chocolateFactory?.refinedTrufflesConsumed ?? 0,
+		personalBestsUnlocked: ctx.member.current?.jacob?.perks?.personalBests ?? false,
 		personalBests: (ctx.member.current?.jacob?.stats?.personalBests ?? {}) as unknown as Record<string, number>,
 		anitaBonus: ctx.member.current?.jacob?.perks?.doubleDrops ?? 0,
 		plots: ctx.member.current?.garden?.plots,
