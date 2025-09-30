@@ -127,6 +127,7 @@ import type {
 	ShopCategoryDto,
 	SkillsDataPointDto,
 	SkyblockFiresalesResponse,
+	SkyblockGemShopsResponse,
 	SkyblockItemResponse,
 	UpdateBadgeRequestUpdateBadge,
 	UpdateContestPingsRequestUpdateContestPings,
@@ -6343,6 +6344,32 @@ export const getSkyblockFiresaleUrl = () => {
 
 export const skyblockFiresale = async (options?: RequestInit) => {
 	return customFetch<skyblockFiresaleResponse>(getSkyblockFiresaleUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get the current/upcoming Skyblock firesales, Taylor's Collection, and Seasonal Bundles.
+ * @summary Get Skyblock Gem Shops
+ */
+export type skyblockGemShopResponse200 = {
+	data: SkyblockGemShopsResponse;
+	status: 200;
+};
+
+export type skyblockGemShopResponseComposite = skyblockGemShopResponse200;
+
+export type skyblockGemShopResponse = skyblockGemShopResponseComposite & {
+	headers: Headers;
+};
+
+export const getSkyblockGemShopUrl = () => {
+	return `${ELITE_API_URL}/resources/gems`;
+};
+
+export const skyblockGemShop = async (options?: RequestInit) => {
+	return customFetch<skyblockGemShopResponse>(getSkyblockGemShopUrl(), {
 		...options,
 		method: 'GET',
 	});

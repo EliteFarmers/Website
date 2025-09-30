@@ -8,8 +8,18 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface JacobPerksDto {
-	doubleDrops: number;
-	levelCap: number;
-	personalBests: boolean;
-}
+export type UpgradeCostType = (typeof UpgradeCostType)[keyof typeof UpgradeCostType];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UpgradeCostType = {
+	Unknown: 0,
+	Item: 1,
+	Essence: 2,
+	Coins: 3,
+	Motes: 4,
+	Copper: 5,
+	Gems: 6,
+	Bits: 7,
+	JacobMedal: 8,
+	Pelts: 9,
+} as const;

@@ -7,9 +7,11 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { SkyblockFiresaleDto } from './SkyblockFiresaleDto';
+import type { TaylorCollection } from './TaylorCollection';
 
-export interface JacobPerksDto {
-	doubleDrops: number;
-	levelCap: number;
-	personalBests: boolean;
+export interface SkyblockGemShopsResponse {
+	firesales: SkyblockFiresaleDto[];
+	taylorCollection: TaylorCollection;
+	seasonalBundles: TaylorCollection;
 }

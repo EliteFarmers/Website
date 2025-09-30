@@ -7341,6 +7341,7 @@ export const zodGetProfileResponse = zod.object({
 		perks: zod.object({
 			doubleDrops: zod.number(),
 			levelCap: zod.number(),
+			personalBests: zod.boolean(),
 		}),
 		stats: zod.object({
 			brackets: zod.record(
@@ -7845,6 +7846,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 		perks: zod.object({
 			doubleDrops: zod.number(),
 			levelCap: zod.number(),
+			personalBests: zod.boolean(),
 		}),
 		stats: zod.object({
 			brackets: zod.record(
@@ -8319,6 +8321,124 @@ export const zodSkyblockFiresaleResponse = zod.object({
 			),
 		})
 	),
+});
+
+/**
+ * Get the current/upcoming Skyblock firesales, Taylor's Collection, and Seasonal Bundles.
+ * @summary Get Skyblock Gem Shops
+ */
+export const zodSkyblockGemShopResponse = zod.object({
+	firesales: zod.array(
+		zod.object({
+			startsAt: zod.number(),
+			endsAt: zod.number(),
+			items: zod.array(
+				zod.object({
+					itemId: zod.string(),
+					amount: zod.number(),
+					price: zod.number().describe('Price in Skyblock Gems'),
+					startsAt: zod.number().describe('Unix seconds'),
+					endsAt: zod.number().describe('Unix seconds'),
+				})
+			),
+		})
+	),
+	taylorCollection: zod.object({
+		items: zod.array(
+			zod.object({
+				name: zod.string(),
+				output: zod.array(
+					zod.object({
+						type: zod.union([
+							zod.literal(0),
+							zod.literal(1),
+							zod.literal(2),
+							zod.literal(3),
+							zod.literal(4),
+							zod.literal(5),
+							zod.literal(6),
+							zod.literal(7),
+							zod.literal(8),
+							zod.literal(9),
+						]),
+						essence_type: zod.string().nullish(),
+						item_id: zod.string().nullish(),
+						medal_type: zod.string().nullish(),
+						amount: zod.number(),
+					})
+				),
+				cost: zod.array(
+					zod.object({
+						type: zod.union([
+							zod.literal(0),
+							zod.literal(1),
+							zod.literal(2),
+							zod.literal(3),
+							zod.literal(4),
+							zod.literal(5),
+							zod.literal(6),
+							zod.literal(7),
+							zod.literal(8),
+							zod.literal(9),
+						]),
+						essence_type: zod.string().nullish(),
+						item_id: zod.string().nullish(),
+						medal_type: zod.string().nullish(),
+						amount: zod.number(),
+					})
+				),
+				released: zod.string(),
+			})
+		),
+	}),
+	seasonalBundles: zod.object({
+		items: zod.array(
+			zod.object({
+				name: zod.string(),
+				output: zod.array(
+					zod.object({
+						type: zod.union([
+							zod.literal(0),
+							zod.literal(1),
+							zod.literal(2),
+							zod.literal(3),
+							zod.literal(4),
+							zod.literal(5),
+							zod.literal(6),
+							zod.literal(7),
+							zod.literal(8),
+							zod.literal(9),
+						]),
+						essence_type: zod.string().nullish(),
+						item_id: zod.string().nullish(),
+						medal_type: zod.string().nullish(),
+						amount: zod.number(),
+					})
+				),
+				cost: zod.array(
+					zod.object({
+						type: zod.union([
+							zod.literal(0),
+							zod.literal(1),
+							zod.literal(2),
+							zod.literal(3),
+							zod.literal(4),
+							zod.literal(5),
+							zod.literal(6),
+							zod.literal(7),
+							zod.literal(8),
+							zod.literal(9),
+						]),
+						essence_type: zod.string().nullish(),
+						item_id: zod.string().nullish(),
+						medal_type: zod.string().nullish(),
+						amount: zod.number(),
+					})
+				),
+				released: zod.string(),
+			})
+		),
+	}),
 });
 
 /**
