@@ -32,7 +32,7 @@
 		{#if upgrade.api === false}
 			<Popover.Mobile>
 				{#snippet trigger()}
-					<TriangleAlert size={16} class="text-completed mt-1.5" />
+					<TriangleAlert size={16} class="text-completed" />
 				{/snippet}
 				<p class="max-w-sm text-sm">
 					This fortune source is not available in the Hypixel API. Configure settings on this page to mark it

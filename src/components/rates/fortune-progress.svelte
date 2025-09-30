@@ -1,6 +1,6 @@
 <script lang="ts">
+	import ItemName from '$comp/items/item-name.svelte';
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
-	import { FormatMinecraftText } from '$lib/format';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import Info from '@lucide/svelte/icons/info';
@@ -50,20 +50,19 @@
 	<div class="flex w-full items-center justify-between">
 		<div class="flex flex-row items-center gap-1">
 			{#if progress.item?.name}
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<span class="font-semibold">{@html FormatMinecraftText(progress.item.name)}</span>
+				<ItemName name={progress.item.name} />
 			{:else}
 				<span>{progress.name}</span>
 			{/if}
 			{#if progress.wiki}
-				<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="text-link mt-1">
+				<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="text-link">
 					<Info size={16} />
 				</a>
 			{/if}
 			{#if progress.api === false}
 				<TooltipSimple side="bottom">
 					{#snippet trigger()}
-						<TriangleAlert size={16} class="text-completed -mb-1" />
+						<TriangleAlert size={16} class="text-completed" />
 					{/snippet}
 					<p class=" max-w-64 text-sm">
 						This fortune source is not available in the Hypixel API. Configure settings on this page to mark
@@ -77,9 +76,9 @@
 				<TooltipSimple side="left">
 					{#snippet trigger()}
 						{#if !progress.active?.active}
-							<OctagonAlert size={16} class="text-completed -mb-1" />
+							<OctagonAlert size={16} class="text-completed" />
 						{:else}
-							<FileText size={16} class="text-muted-foreground -mb-1" />
+							<FileText size={16} class="text-muted-foreground" />
 						{/if}
 					{/snippet}
 					<p class="max-w-32 text-sm">{progress.active.reason}</p>
