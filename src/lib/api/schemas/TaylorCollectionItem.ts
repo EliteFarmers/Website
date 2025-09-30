@@ -7,9 +7,11 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { UpgradeCost } from './UpgradeCost';
 
-export interface JacobPerksDto {
-	doubleDrops: number;
-	levelCap: number;
-	personalBests: boolean;
+export interface TaylorCollectionItem {
+	name: string;
+	output: UpgradeCost[];
+	cost: UpgradeCost[];
+	released: string;
 }
