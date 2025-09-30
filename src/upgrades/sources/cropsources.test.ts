@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { CROP_INFO, Crop } from '../../constants/crops.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../../items/tools.js';
@@ -46,6 +47,7 @@ test('Wheat fortune test', () => {
 		cropUpgrades: {
 			[Crop.Wheat]: 1,
 		},
+		personalBestsUnlocked: true,
 		personalBests: {
 			[Crop.Wheat]: 10000,
 		},
@@ -153,6 +155,24 @@ test('Potato fortune test', () => {
 			fortune: 0,
 			maxFortune: 100,
 			ratio: 0,
+			upgrades: [
+				{
+					action: UpgradeAction.Unlock,
+					category: UpgradeCategory.Anita,
+					cost: {
+						items: {
+							JACOBS_TICKET: 64,
+						},
+						medals: {
+							gold: 2,
+						},
+					},
+					increase: 0,
+					max: 100,
+					title: 'Personal Best Fortune',
+					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',
+				},
+			],
 		},
 	]);
 });
@@ -160,6 +180,7 @@ test('Potato fortune test', () => {
 test('Nether Wart fortune test', () => {
 	const player = new FarmingPlayer({
 		accessories: [squashRing, cropieTalisman],
+		personalBestsUnlocked: true,
 		personalBests: {
 			[Crop.NetherWart]: 30000,
 		},

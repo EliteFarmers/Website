@@ -385,7 +385,7 @@ export class FarmingPlayer {
 		const personalBest =
 			this.options.personalBests?.[getItemIdFromCrop(crop)] ??
 			this.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
-		if (personalBest) {
+		if (this.options.personalBestsUnlocked && personalBest) {
 			const fortune = fortuneFromPersonalBestContest(crop, personalBest);
 			if (fortune > 0) {
 				breakdown['Personal Best'] = fortune;

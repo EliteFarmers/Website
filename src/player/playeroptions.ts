@@ -56,6 +56,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	selectedTool?: FarmingTool;
 	selectedPet?: FarmingPet;
 
+	personalBestsUnlocked?: boolean;
 	personalBests?: Record<string, number>;
 	bestiaryKills?: Record<string, number>;
 	anitaBonus?: number;

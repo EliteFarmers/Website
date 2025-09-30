@@ -174,10 +174,38 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		wiki: () => 'https://wiki.hypixel.net/Anita#Personal_Bests',
 		max: () => 100,
 		current: ({ player, crop }) => {
+			if (!player.options.personalBestsUnlocked) return 0;
+
 			const personalBest =
 				player.options.personalBests?.[getItemIdFromCrop(crop)] ??
 				player.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
 			return fortuneFromPersonalBestContest(crop, personalBest ?? 0);
+		},
+		upgrades: ({ player, crop }) => {
+			if (player.options.personalBestsUnlocked) return [];
+
+			const personalBest =
+				player.options.personalBests?.[getItemIdFromCrop(crop)] ??
+				player.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
+			const increase = fortuneFromPersonalBestContest(crop, personalBest ?? 0);
+
+			return [
+				{
+					title: 'Personal Best Fortune',
+					increase: increase,
+					action: UpgradeAction.Unlock,
+					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',
+					category: UpgradeCategory.Anita,
+					cost: {
+						items: {
+							JACOBS_TICKET: 64,
+						},
+						medals: {
+							gold: 2,
+						},
+					},
+				},
+			];
 		},
 	},
 ];
