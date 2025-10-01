@@ -40,6 +40,10 @@ const config = {
 			$css: './src/app.css',
             '$posts/*': '.velite/*'
 		},
+        version: {
+            name: process.env.PUBLIC_COMMIT_HASH ?? undefined,
+            pollInterval: 1000 * 60 // 1 minute
+        }
 	},
 	// Only way I found to hide warnings from node_modules that doesn't break everything
 	// vitePlugin: { exclude: ['**/node_modules/**'] } doesn't work
