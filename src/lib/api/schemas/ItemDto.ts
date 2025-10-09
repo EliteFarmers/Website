@@ -63,4 +63,19 @@ export interface ItemDto {
 	 * @nullable
 	 */
 	petInfo?: ItemDtoPetInfo;
+	/**
+	 * Image url for the item
+	 * @nullable
+	 */
+	imageUrl?: string | null;
+	/**
+	 * Texture id for the item, used to look up the image in our image service
+	 * @nullable
+	 */
+	textureId?: string | null;
+	/**
+	 * Slot identifier where the item was located, if applicable
+	 * @nullable
+	 */
+	slot?: string | null;
 }

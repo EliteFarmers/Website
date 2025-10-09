@@ -9,9 +9,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  */
 
 /**
- * Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.
+ * @nullable
  */
-export interface JsonDocument {
-	/** Gets the root element of this JSON document. */
-	rootElement: unknown;
-}
+export type HypixelInventoryDtoMetadata = { [key: string]: string } | null;

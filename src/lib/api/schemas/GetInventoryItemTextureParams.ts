@@ -8,10 +8,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.
- */
-export interface JsonDocument {
-	/** Gets the root element of this JSON document. */
-	rootElement: unknown;
-}
+export type GetInventoryItemTextureParams = {
+	inventoryUuid: string;
+};

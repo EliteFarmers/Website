@@ -7259,6 +7259,7 @@ export const zodGetProfileParams = zod.object({
 
 export const zodGetProfileResponseMetaPrefixMax = 16;
 export const zodGetProfileResponseMetaSuffixMax = 16;
+export const zodGetProfileResponseInventoriesItemNameMax = 64;
 
 export const zodGetProfileResponse = zod.object({
 	profileId: zod.string(),
@@ -7445,6 +7446,15 @@ export const zodGetProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 				tools: zod.array(
@@ -7486,6 +7496,15 @@ export const zodGetProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 				equipment: zod.array(
@@ -7527,6 +7546,15 @@ export const zodGetProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 				accessories: zod.array(
@@ -7568,6 +7596,15 @@ export const zodGetProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 			})
@@ -7691,6 +7728,60 @@ export const zodGetProfileResponse = zod.object({
 			score: zod.string().nullish(),
 		})
 	),
+	inventories: zod.array(
+		zod.object({
+			id: zod.string(),
+			name: zod.string().max(zodGetProfileResponseInventoriesItemNameMax),
+			items: zod.array(
+				zod.object({
+					id: zod.number().describe('Old Minecraft id of the item'),
+					count: zod.number().describe('Minecraft stack count of the item'),
+					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
+					uuid: zod
+						.string()
+						.nullish()
+						.describe('Item UUID to uniquely identify a specific instance of this item'),
+					name: zod.string().nullish().describe('Item name, first line of the lore'),
+					lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
+					enchantments: zod
+						.record(zod.string(), zod.number())
+						.nullish()
+						.describe('Applied enchantments with their levels'),
+					attributes: zod
+						.record(zod.string(), zod.string())
+						.nullish()
+						.describe('ExtraAttributes not included elsewhere'),
+					itemAttributes: zod
+						.record(zod.string(), zod.string())
+						.nullish()
+						.describe('ExtraAtrributes.Attributes for attribute shards'),
+					gems: zod
+						.record(zod.string(), zod.string().nullable())
+						.nullish()
+						.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
+					petInfo: zod
+						.object({
+							type: zod.string(),
+							active: zod.boolean(),
+							exp: zod.number(),
+							level: zod.number(),
+							tier: zod.string(),
+							candyUsed: zod.number(),
+							heldItem: zod.string().nullish(),
+						})
+						.nullish()
+						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
+				})
+			),
+			metadata: zod.record(zod.string(), zod.string()).nullish(),
+		})
+	),
 	isSelected: zod.boolean(),
 	wasRemoved: zod.boolean(),
 	lastUpdated: zod.number(),
@@ -7764,6 +7855,7 @@ export const zodGetSelectedProfileParams = zod.object({
 
 export const zodGetSelectedProfileResponseMetaPrefixMax = 16;
 export const zodGetSelectedProfileResponseMetaSuffixMax = 16;
+export const zodGetSelectedProfileResponseInventoriesItemNameMax = 64;
 
 export const zodGetSelectedProfileResponse = zod.object({
 	profileId: zod.string(),
@@ -7950,6 +8042,15 @@ export const zodGetSelectedProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 				tools: zod.array(
@@ -7991,6 +8092,15 @@ export const zodGetSelectedProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 				equipment: zod.array(
@@ -8032,6 +8142,15 @@ export const zodGetSelectedProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 				accessories: zod.array(
@@ -8073,6 +8192,15 @@ export const zodGetSelectedProfileResponse = zod.object({
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
+						imageUrl: zod.string().nullish().describe('Image url for the item'),
+						textureId: zod
+							.string()
+							.nullish()
+							.describe('Texture id for the item, used to look up the image in our image service'),
+						slot: zod
+							.string()
+							.nullish()
+							.describe('Slot identifier where the item was located, if applicable'),
 					})
 				),
 			})
@@ -8194,6 +8322,60 @@ export const zodGetSelectedProfileResponse = zod.object({
 			status: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]),
 			rank: zod.number().describe('Currently not populated'),
 			score: zod.string().nullish(),
+		})
+	),
+	inventories: zod.array(
+		zod.object({
+			id: zod.string(),
+			name: zod.string().max(zodGetSelectedProfileResponseInventoriesItemNameMax),
+			items: zod.array(
+				zod.object({
+					id: zod.number().describe('Old Minecraft id of the item'),
+					count: zod.number().describe('Minecraft stack count of the item'),
+					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
+					uuid: zod
+						.string()
+						.nullish()
+						.describe('Item UUID to uniquely identify a specific instance of this item'),
+					name: zod.string().nullish().describe('Item name, first line of the lore'),
+					lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
+					enchantments: zod
+						.record(zod.string(), zod.number())
+						.nullish()
+						.describe('Applied enchantments with their levels'),
+					attributes: zod
+						.record(zod.string(), zod.string())
+						.nullish()
+						.describe('ExtraAttributes not included elsewhere'),
+					itemAttributes: zod
+						.record(zod.string(), zod.string())
+						.nullish()
+						.describe('ExtraAtrributes.Attributes for attribute shards'),
+					gems: zod
+						.record(zod.string(), zod.string().nullable())
+						.nullish()
+						.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
+					petInfo: zod
+						.object({
+							type: zod.string(),
+							active: zod.boolean(),
+							exp: zod.number(),
+							level: zod.number(),
+							tier: zod.string(),
+							candyUsed: zod.number(),
+							heldItem: zod.string().nullish(),
+						})
+						.nullish()
+						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
+				})
+			),
+			metadata: zod.record(zod.string(), zod.string()).nullish(),
 		})
 	),
 	isSelected: zod.boolean(),
@@ -8490,6 +8672,12 @@ export const zodGetItemsFromBytesResponse = zod.object({
 					})
 					.nullish()
 					.describe('Pet info if item is a pet'),
+				imageUrl: zod.string().nullish().describe('Image url for the item'),
+				textureId: zod
+					.string()
+					.nullish()
+					.describe('Texture id for the item, used to look up the image in our image service'),
+				slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 			})
 			.nullable()
 	),
@@ -8589,8 +8777,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.boolean(),
 				item_specific: zod
 					.object({
-						rootElement: zod.any(),
+						rootElement: zod.any().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -8698,8 +8889,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.boolean(),
 					item_specific: zod
 						.object({
-							rootElement: zod.any(),
+							rootElement: zod.any().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -8866,8 +9060,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.boolean(),
 			item_specific: zod
 				.object({
-					rootElement: zod.any(),
+					rootElement: zod.any().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()
@@ -11396,6 +11593,25 @@ export const zodGetStylesResponseItem = zod.object({
 export const zodGetStylesResponse = zod.array(zodGetStylesResponseItem);
 
 /**
+ * @summary Get Inventory Item Texture
+ */
+export const zodGetInventoryItemTextureParams = zod.object({
+	itemId: zod.string(),
+	slotId: zod.string(),
+});
+
+export const zodGetInventoryItemTextureQueryParams = zod.object({
+	inventoryUuid: zod.string(),
+});
+
+/**
+ * @summary Get Minecraft Item Texture
+ */
+export const zodGetItemTextureParams = zod.object({
+	itemId: zod.string(),
+});
+
+/**
  * Get all farming weight constants
  * @summary Get all weight constants
  */
@@ -11481,6 +11697,12 @@ export const zodGetWeightForProfileResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 			tools: zod.array(
@@ -11522,6 +11744,12 @@ export const zodGetWeightForProfileResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 			equipment: zod.array(
@@ -11563,6 +11791,12 @@ export const zodGetWeightForProfileResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 			accessories: zod.array(
@@ -11604,6 +11838,12 @@ export const zodGetWeightForProfileResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 		})
@@ -11684,6 +11924,12 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 			tools: zod.array(
@@ -11725,6 +11971,12 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 			equipment: zod.array(
@@ -11766,6 +12018,12 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 			accessories: zod.array(
@@ -11807,6 +12065,12 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 			),
 		})

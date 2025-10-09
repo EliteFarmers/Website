@@ -20,6 +20,7 @@ import type { ProfileMemberDtoGarden } from './ProfileMemberDtoGarden';
 import type { SkillsDto } from './SkillsDto';
 import type { ChocolateFactoryDto } from './ChocolateFactoryDto';
 import type { ProfileEventMemberDto } from './ProfileEventMemberDto';
+import type { HypixelInventoryDto } from './HypixelInventoryDto';
 
 export interface ProfileMemberDto {
 	profileId: string;
@@ -44,6 +45,7 @@ export interface ProfileMemberDto {
 	skills: SkillsDto;
 	chocolateFactory: ChocolateFactoryDto;
 	events: ProfileEventMemberDto[];
+	inventories: HypixelInventoryDto[];
 	isSelected: boolean;
 	wasRemoved: boolean;
 	lastUpdated: bigint;

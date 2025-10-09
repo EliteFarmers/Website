@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
+	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import Collections from '$comp/stats/collections.svelte';
@@ -11,6 +12,7 @@
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import Button from '$ui/button/button.svelte';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	const ctx = getStatsContext();
@@ -61,6 +63,8 @@
 				})
 				.join('\n') ?? '')
 	);
+
+	let selectedItem = $state<ItemDto>(null);
 </script>
 
 <Head
@@ -77,6 +81,43 @@
 		<Skills bind:open={showSkills} />
 	</div>
 </section>
+
+<div>
+	{#each ctx.member.current?.inventories ?? [] as inv, i (i)}
+		<span>{inv.name}</span>
+		<div class="my-1 flex flex-wrap items-center justify-center gap-2">
+			{#each inv.items as item (item.slot)}
+				{#if item}
+					<img
+						src="/api/texture/{inv.id}/{item.slot}"
+						alt={item.name ?? 'Unknown Item'}
+						title={item.name ?? 'Unknown Item'}
+						class="bg-card h-12 w-12 rounded-md border p-1 shadow-md"
+						loading="lazy"
+					/>
+				{/if}
+				<Lorebtn class="relative" {item}>
+					{#if item?.count && item.count > 1}
+						<span
+							class="bg-opacity-75 text-shadow absolute right-0.5 bottom-0.5 rounded-md px-1 text-sm font-bold text-white"
+							>{item.count}</span
+						>
+					{/if}
+				</Lorebtn>
+			{/each}
+		</div>
+	{/each}
+</div>
+
+{#if selectedItem}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+		<div class="bg-card w-full max-w-md rounded-lg p-6 shadow-lg">
+			<h2 class="mb-4 text-xl font-bold">{selectedItem.name}</h2>
+			<Lorebtn {selectedItem} />
+			<Button onclick={() => (selectedItem = null)}>Close</Button>
+		</div>
+	</div>
+{/if}
 
 <section class="my-8 flex w-full justify-center align-middle">
 	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">

@@ -7,11 +7,14 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { ItemDto } from './ItemDto';
+import type { HypixelInventoryDtoMetadata } from './HypixelInventoryDtoMetadata';
 
-/**
- * Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.
- */
-export interface JsonDocument {
-	/** Gets the root element of this JSON document. */
-	rootElement: unknown;
+export interface HypixelInventoryDto {
+	id: string;
+	/** @maxLength 64 */
+	name: string;
+	items: ItemDto[];
+	/** @nullable */
+	metadata?: HypixelInventoryDtoMetadata;
 }

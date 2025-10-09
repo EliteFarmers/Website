@@ -68,6 +68,7 @@ import type {
 	GetCropGraphsParams,
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
+	GetInventoryItemTextureParams,
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
 	GetLeaderboardParams,
@@ -7555,6 +7556,77 @@ export const getGetStylesUrl = () => {
 
 export const getStyles = async (options?: RequestInit) => {
 	return customFetch<getStylesResponse>(getGetStylesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Inventory Item Texture
+ */
+export type getInventoryItemTextureResponse204 = {
+	data: null;
+	status: 204;
+};
+
+export type getInventoryItemTextureResponseComposite = getInventoryItemTextureResponse204;
+
+export type getInventoryItemTextureResponse = getInventoryItemTextureResponseComposite & {
+	headers: Headers;
+};
+
+export const getGetInventoryItemTextureUrl = (
+	itemId: string,
+	slotId: string,
+	params: GetInventoryItemTextureParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/${itemId}/${slotId}?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/${itemId}/${slotId}`;
+};
+
+export const getInventoryItemTexture = async (
+	itemId: string,
+	slotId: string,
+	params: GetInventoryItemTextureParams,
+	options?: RequestInit
+) => {
+	return customFetch<getInventoryItemTextureResponse>(getGetInventoryItemTextureUrl(itemId, slotId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Minecraft Item Texture
+ */
+export type getItemTextureResponse204 = {
+	data: null;
+	status: 204;
+};
+
+export type getItemTextureResponseComposite = getItemTextureResponse204;
+
+export type getItemTextureResponse = getItemTextureResponseComposite & {
+	headers: Headers;
+};
+
+export const getGetItemTextureUrl = (itemId: string) => {
+	return `${ELITE_API_URL}/textures/${itemId}`;
+};
+
+export const getItemTexture = async (itemId: string, options?: RequestInit) => {
+	return customFetch<getItemTextureResponse>(getGetItemTextureUrl(itemId), {
 		...options,
 		method: 'GET',
 	});
