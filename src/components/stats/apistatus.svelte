@@ -8,7 +8,7 @@
 	const entries = $derived(Object.entries(api));
 </script>
 
-{#if ctx.member.ready}
+{#if ctx.ready}
 	{#if !api.collections}
 		<div class="flex w-full justify-center">
 			<Alert.Root class="items-centers bg-destructive/80 flex w-full max-w-xl flex-col">
