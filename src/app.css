@@ -45,6 +45,8 @@
 
 		--radius: 0.5rem;
 
+		--accent-green: hsl(153, 57%, 60%);
+
 		--wheat: hsl(62 67% 56%);
 		--melon: hsl(4 89% 39%);
 		--cactus: hsl(91 52% 24%);
@@ -147,6 +149,8 @@
 
 		--link: hsl(240 80% 55%);
 		--active: hsl(55 100% 82%);
+
+		--accent-green: hsl(131, 70%, 36%);
 
 		--ring: hsl(240 10% 3.9%);
 
@@ -310,6 +314,7 @@
 	--color-completed: var(--completed);
 	--color-link: var(--link);
 	--color-active: var(--active);
+	--color-accent-green: var(--accent-green);
 
 	/* Spacing */
 	--spacing-8xl: 90rem;

@@ -1,3 +1,4 @@
+import Gem from '@lucide/svelte/icons/gem';
 import Home from '@lucide/svelte/icons/home';
 import Info from '@lucide/svelte/icons/info';
 import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
@@ -31,6 +32,11 @@ export const SIDEBAR_NAV = [
 		title: 'Shop',
 		href: '/shop',
 		icon: ShoppingCart as unknown as Component,
+	},
+	{
+		title: 'Gems',
+		href: '/gems',
+		icon: Gem as unknown as Component,
 	},
 	{
 		title: 'Info',
