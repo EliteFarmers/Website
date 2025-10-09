@@ -1,25 +1,25 @@
 export const OTHER_SITES = [
 	{
 		name: 'SkyCrypt',
-		url: (player, profile) => {
-			return `https://sky.shiiyu.moe/stats/${player}/${profile ?? ''}`;
+		url: ({ uuid, ign, profile }) => {
+			return `https://sky.shiiyu.moe/stats/${uuid ?? ign}/${profile ?? ''}`;
 		},
 	},
 	{
 		name: 'Plancke',
-		url: (player) => {
-			return `https://plancke.io/hypixel/player/stats/${player}`;
+		url: ({ ign }) => {
+			return `https://plancke.io/hypixel/player/stats/${ign}`;
 		},
 	},
 	{
 		name: 'nadeshiko',
-		url: (player) => {
-			return `https://nadeshiko.io/player/${player}`;
+		url: ({ ign, uuid }) => {
+			return `https://nadeshiko.io/player/${uuid ?? ign}`;
 		},
 	},
 ] as OtherSite[];
 
 interface OtherSite {
 	name: string;
-	url: (player: string, profile?: string) => string;
+	url: (opt: { uuid?: string; ign?: string; profile?: string }) => string;
 }
