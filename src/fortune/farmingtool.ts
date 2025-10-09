@@ -280,13 +280,19 @@ export class FarmingTool extends UpgradeableBase {
 
 	// Check if the tool has the Axed Perk by seeing if the stats in the lore have an additional 2% bonus
 	hasAxedPerk(): boolean {
+		if (this.tool.type !== FarmingToolType.Dicer) return false;
 		if (this.fortuneBreakdown['Axed Perk']) return true;
 
 		const regex = /§7Farming Fortune: §.\+(\d+\.\d+)/g;
 		const found = getNumberFromMatchingLine(this.item.lore ?? [], regex);
 		if (!found) return false;
 
-		return found >= this.fortune * 0.02;
+		const cropRegex = /§7[^F].*? Fortune: §.\+(\d+\.\d+)/g;
+		const cropFound = getNumberFromMatchingLine(this.item.lore ?? [], cropRegex) ?? 0;
+		if (!cropFound) return false;
+
+		const total = found + cropFound;
+		return total >= this.fortune * 1.02;
 	}
 
 	private getFarmingAbilityFortune() {
