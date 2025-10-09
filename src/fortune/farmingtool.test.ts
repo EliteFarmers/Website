@@ -89,3 +89,83 @@ test('Farming Tool Test', () => {
 	expect(tool.collAnalysis).toBe(40);
 	expect(tool.logCounter).toBe(96);
 });
+
+const pumpkinDicer = {
+	id: 286,
+	count: 1,
+	skyblockId: 'PUMPKIN_DICER_3',
+	uuid: '36ef96fb-eca8-407f-9ce4-5ad9d861816d',
+	name: '§dBlessed Pumpkin Dicer 3.0',
+	lore: [
+		'§7Damage: §c+30.6 §e(+30)',
+		'§7Strength: §c+30.6 §e(+30)',
+		'§7Farming Fortune: §6+144.84 §2(+5) §9(+20) §d(+24)',
+		'§7Pumpkin Fortune: §6+119.34',
+		'§7Speed: §f+20.4 §9(+20)',
+		'§7Farming Wisdom: §3+15.3 §9(+6)',
+		' §5[§2☘§5] §5[§2☘§5] §5[§2☘§5]',
+		'',
+		'§9Cultivating IX §882,128,493',
+		'§9Dedication IV',
+		'§9Delicate V',
+		'§9Efficiency V',
+		'§9Sunder VI',
+		'§9Turbo-Pumpkin V',
+		'',
+		'§7§7Gain §3+10☯ Farming Wisdom §7while',
+		'§7harvesting pumpkins§7.',
+		'',
+		"§6Ability: Roll em'++ ",
+		'§7Every pumpkin you break, you',
+		'§7make a wish to §dRNGesus §7which may',
+		'§7grant you with a few or TONS of',
+		'§7extra pumpkins!',
+		'',
+		'§7§o"3.0 is better than the 2.0 version" -',
+		'§7§oCEO of PumpkinDicer LLC.',
+		'',
+		'§9Blessed Bonus',
+		'§7Grants §6+20☘ Farming Fortune §7and',
+		'§7§3+6☯ Farming Wisdom§7.',
+		'',
+		'§d§l§ka§r §d§lMYTHIC AXE §d§l§ka',
+	],
+	enchantments: {
+		sunder: 6,
+		delicate: 5,
+		dedication: 4,
+		efficiency: 5,
+		cultivating: 9,
+		turbo_pumpkin: 5,
+	},
+	attributes: {
+		modifier: 'blessed',
+		timestamp: '1755381054902',
+		rarity_upgrades: '1',
+		hot_potato_count: '15',
+		farmed_cultivating: '82128493',
+		farming_for_dummies_count: '5',
+	},
+	gems: {
+		PERIDOT_0: 'FLAWLESS',
+		PERIDOT_1: 'FLAWLESS',
+		PERIDOT_2: 'FLAWLESS',
+	},
+};
+
+test('Pumpkin Dicer Test', () => {
+	const tool = new FarmingTool(pumpkinDicer, {
+		milestones: { PUMPKIN: 46 },
+	});
+	expect(tool.cultivating).toBe(82128493);
+	expect(tool.recombobulated).toBe(true);
+	expect(tool.farmingForDummies).toBe(5);
+
+	expect(tool.fortune).toBe(264.18);
+
+	const progress = tool.getProgress();
+	const axed = progress.find((p) => p.name === 'Axed Perk');
+
+	expect(axed).toBeDefined();
+	expect(axed?.fortune).toBe(5.18);
+});
