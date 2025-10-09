@@ -16,7 +16,11 @@
 	<div class="flex flex-col gap-2" data-sveltekit-preload-data="tap">
 		{#each OTHER_SITES as site (site.name)}
 			<a
-				href={site.url(ctx.uuid ?? page.params.id, ctx.selectedProfile?.profileName ?? page.params.profile)}
+				href={site.url({
+					uuid: ctx.uuid ?? page.params.id,
+					ign: ctx.ign,
+					profile: ctx.selectedProfile?.profileName ?? page.params.profile,
+				})}
 				class="hover:bg-muted flex flex-row items-center justify-between gap-2 rounded-md p-2 px-3"
 				target="_blank"
 				rel="noopener noreferrer nofollow"
