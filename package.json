@@ -74,7 +74,7 @@
 		"eslint": "^9.32.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.12.1",
-		"farming-weight": "^0.10.6",
+		"farming-weight": "^0.10.7",
 		"formsnap": "2.0.1",
 		"globals": "^16.3.0",
 		"joi": "^17.13.3",
