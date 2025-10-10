@@ -7,6 +7,12 @@ export interface GemPackage {
 	url: string;
 }
 
+export const STORE_CODE = {
+	code: 'SWEET',
+	youtube: 'https://www.youtube.com/@SweetBootieee',
+	uuid: '13e823891b29408f8b8ea3272001a4e6',
+};
+
 export const SKYBLOCK_GEM_PACKAGES: GemPackage[] = [
 	{
 		gems: {

@@ -10,6 +10,7 @@ import {
 	getStyles,
 	getTeamWordList,
 	getUpcomingEvents,
+	skyblockGemShop,
 	type AnnouncementDto,
 	type AuctionHouseDto,
 	type EventDetailsDto,
@@ -17,6 +18,7 @@ import {
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
 	type ProductDto,
+	type SkyblockGemShopsResponse,
 	type WeightStyleWithDataDto,
 } from './api';
 import { parseLeaderboards } from './constants/leaderboards';
@@ -106,6 +108,13 @@ const cacheEntries = {
 			return announcements;
 		},
 	},
+	gems: {
+		data: {} as SkyblockGemShopsResponse,
+		update: async () => {
+			const { data } = await skyblockGemShop();
+			return data;
+		},
+	},
 };
 
 export const cache = {
@@ -138,6 +147,9 @@ export const cache = {
 	},
 	get announcements() {
 		return cacheEntries.announcements.data;
+	},
+	get gems() {
+		return cacheEntries.gems.data;
 	},
 };
 
