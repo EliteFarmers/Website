@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { FormatMinecraftText } from '$lib/format';
 	import type { EliteItemDto } from 'farming-weight';
+	import FormattedText from './formatted-text.svelte';
 	import Lore from './lore.svelte';
 
 	interface Props {
@@ -12,12 +12,11 @@
 	let { item, title = true, children }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="dark bg-background flex flex-col gap-2">
 	{#if title}
-		<h3 class="font-mono text-lg">
-			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			{@html FormatMinecraftText(item.name ?? '')}
-		</h3>
+		<span class="font-mono text-lg">
+			<FormattedText text={item.name ?? 'Unknown Item'} />
+		</span>
 	{/if}
 	<Lore lore={item.lore?.slice() ?? []} />
 	<div class="text-muted-foreground">
@@ -33,16 +32,22 @@
 		{#if item.attributes?.player}
 			<p>
 				<span class="font-semibold select-none">Player:</span>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				<span>{@html FormatMinecraftText(item.attributes?.player ?? '')}</span>
+				<FormattedText text={item.attributes?.player ?? ''} />
 			</p>
 		{/if}
 		{#if item.attributes?.bid}
 			<p>
 				<span class="font-semibold select-none">Bid:</span>
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				<span class="select-all">#{item.attributes.bid}</span>
 			</p>
 		{/if}
+		{#each Object.entries(item.attributes ?? {}) as [key, value] (key)}
+			{#if key !== 'player' && key !== 'bid'}
+				<p>
+					<span class="font-semibold select-none">{key}:</span>
+					<span class="select-all">{value}</span>
+				</p>
+			{/if}
+		{/each}
 	</div>
 </div>

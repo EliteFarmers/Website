@@ -1,6 +1,6 @@
 <script lang="ts">
+	import FormattedText from '$comp/items/formatted-text.svelte';
 	import ItemLore from '$comp/items/item-lore.svelte';
-	import { FormatMinecraftText } from '$lib/format';
 	import Info from '@lucide/svelte/icons/info';
 	import { RARITY_COLORS, UpgradeReason, previousRarity, type FortuneSourceProgress } from 'farming-weight';
 	import FortuneProgress from './fortune-progress.svelte';
@@ -40,17 +40,14 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if progress.info?.upgrade?.reason === UpgradeReason.Situational || (progress?.info?.upgrade?.reason === UpgradeReason.NextTier && progress.item?.attributes?.rarity_upgrades)}
 						<p>
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							{@html FormatMinecraftText(
-								RARITY_COLORS[progress.nextInfo.maxRarity] + progress.nextInfo.name
-							)}
+							<FormattedText text={RARITY_COLORS[progress.nextInfo.maxRarity] + progress.nextInfo.name} />
 						</p>
 					{:else}
 						<p>
-							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-							{@html FormatMinecraftText(
-								RARITY_COLORS[previousRarity(progress.nextInfo.maxRarity)] + progress.nextInfo.name
-							)}
+							<FormattedText
+								text={RARITY_COLORS[previousRarity(progress.nextInfo.maxRarity)] +
+									progress.nextInfo.name}
+							/>
 						</p>
 					{/if}
 					{#if progress.nextInfo.wiki}
@@ -75,8 +72,7 @@
 				<h3 class="text-lg">Max Item</h3>
 				<div class="flex flex-row items-center gap-1">
 					<p>
-						<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-						{@html FormatMinecraftText(RARITY_COLORS[progress.maxInfo.maxRarity] + progress.maxInfo.name)}
+						<FormattedText text={RARITY_COLORS[progress.maxInfo.maxRarity] + progress.maxInfo.name} />
 					</p>
 					{#if progress.maxInfo.wiki}
 						<a

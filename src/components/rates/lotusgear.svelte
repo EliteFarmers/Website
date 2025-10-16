@@ -1,7 +1,7 @@
 <script lang="ts">
+	import FormattedText from '$comp/items/formatted-text.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import { FormatMinecraftText } from '$lib/format';
 	import type { FarmingEquipment } from 'farming-weight';
 
 	interface Props {
@@ -26,7 +26,9 @@
 {#each Object.values(bySlot) as item, i (item.item.uuid ?? i)}
 	<div class="flex w-full items-center justify-between px-4 py-2">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		<span class="text-lg font-semibold">{@html FormatMinecraftText(item.item.name ?? '')}</span>
+		<span class="text-lg font-semibold">
+			<FormattedText text={item.item.name ?? ''} />
+		</span>
 		<div class="flex flex-row items-center gap-1">
 			<Lorebtn item={item.item} />
 			<FortuneBreakdown total={item.fortune} breakdown={item.fortuneBreakdown} />

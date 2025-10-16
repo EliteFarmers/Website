@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { FormatMinecraftText } from '$lib/format';
 	import * as Popover from '$ui/popover';
 	import { STAT_ICONS, Stat } from 'farming-weight';
+	import FormattedText from '../formatted-text.svelte';
 
 	interface Props {
 		title?: string;
@@ -79,8 +79,7 @@
 							class="even:bg-card flex flex-row justify-between gap-8 rounded-sm p-0.5 pb-1 text-base leading-none"
 						>
 							{#if key.includes('§')}
-								<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-								<p>{@html FormatMinecraftText(key ?? '')}</p>
+								<FormattedText text={key} />
 							{:else}
 								<p>{key}</p>
 							{/if}
