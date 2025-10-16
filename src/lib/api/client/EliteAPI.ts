@@ -68,7 +68,6 @@ import type {
 	GetCropGraphsParams,
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
-	GetInventoryItemTextureParams,
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
 	GetLeaderboardParams,
@@ -7575,33 +7574,12 @@ export type getInventoryItemTextureResponse = getInventoryItemTextureResponseCom
 	headers: Headers;
 };
 
-export const getGetInventoryItemTextureUrl = (
-	itemId: string,
-	slotId: string,
-	params: GetInventoryItemTextureParams
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? 'null' : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `${ELITE_API_URL}/textures/${itemId}/${slotId}?${stringifiedParams}`
-		: `${ELITE_API_URL}/textures/${itemId}/${slotId}`;
+export const getGetInventoryItemTextureUrl = (inventoryUuid: string, slotId: string) => {
+	return `${ELITE_API_URL}/textures/${inventoryUuid}/${slotId}`;
 };
 
-export const getInventoryItemTexture = async (
-	itemId: string,
-	slotId: string,
-	params: GetInventoryItemTextureParams,
-	options?: RequestInit
-) => {
-	return customFetch<getInventoryItemTextureResponse>(getGetInventoryItemTextureUrl(itemId, slotId, params), {
+export const getInventoryItemTexture = async (inventoryUuid: string, slotId: string, options?: RequestInit) => {
+	return customFetch<getInventoryItemTextureResponse>(getGetInventoryItemTextureUrl(inventoryUuid, slotId), {
 		...options,
 		method: 'GET',
 	});

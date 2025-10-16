@@ -7,14 +7,15 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { ItemDto } from './ItemDto';
+import type { HypixelInventoryDtoItems } from './HypixelInventoryDtoItems';
 import type { HypixelInventoryDtoMetadata } from './HypixelInventoryDtoMetadata';
 
 export interface HypixelInventoryDto {
 	id: string;
 	/** @maxLength 64 */
 	name: string;
-	items: ItemDto[];
+	/** Dictionary of slot to item mapping, null if the slot is empty */
+	items: HypixelInventoryDtoItems;
 	/** @nullable */
 	metadata?: HypixelInventoryDtoMetadata;
 }

@@ -244,6 +244,7 @@ export * from './GuildMemberDto';
 export * from './GuildMemberDtoIcon';
 export * from './GuildRoleDto';
 export * from './HypixelInventoryDto';
+export * from './HypixelInventoryDtoItems';
 export * from './HypixelInventoryDtoMetadata';
 export * from './ImageAttachmentDto';
 export * from './ImageAttachmentDtoSources';

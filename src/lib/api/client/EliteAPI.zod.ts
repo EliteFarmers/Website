@@ -7411,6 +7411,7 @@ export const zodGetProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -7461,6 +7462,7 @@ export const zodGetProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -7511,6 +7513,7 @@ export const zodGetProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -7561,6 +7564,7 @@ export const zodGetProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -7732,53 +7736,62 @@ export const zodGetProfileResponse = zod.object({
 		zod.object({
 			id: zod.string(),
 			name: zod.string().max(zodGetProfileResponseInventoriesItemNameMax),
-			items: zod.array(
-				zod.object({
-					id: zod.number().describe('Old Minecraft id of the item'),
-					count: zod.number().describe('Minecraft stack count of the item'),
-					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
-					uuid: zod
-						.string()
-						.nullish()
-						.describe('Item UUID to uniquely identify a specific instance of this item'),
-					name: zod.string().nullish().describe('Item name, first line of the lore'),
-					lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
-					enchantments: zod
-						.record(zod.string(), zod.number())
-						.nullish()
-						.describe('Applied enchantments with their levels'),
-					attributes: zod
-						.record(zod.string(), zod.string())
-						.nullish()
-						.describe('ExtraAttributes not included elsewhere'),
-					itemAttributes: zod
-						.record(zod.string(), zod.string())
-						.nullish()
-						.describe('ExtraAtrributes.Attributes for attribute shards'),
-					gems: zod
-						.record(zod.string(), zod.string().nullable())
-						.nullish()
-						.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
-					petInfo: zod
+			items: zod
+				.record(
+					zod.string(),
+					zod
 						.object({
-							type: zod.string(),
-							active: zod.boolean(),
-							exp: zod.number(),
-							level: zod.number(),
-							tier: zod.string(),
-							candyUsed: zod.number(),
-							heldItem: zod.string().nullish(),
+							id: zod.number().describe('Old Minecraft id of the item'),
+							count: zod.number().describe('Minecraft stack count of the item'),
+							damage: zod.number().describe('Minecraft damage value of the item'),
+							skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
+							uuid: zod
+								.string()
+								.nullish()
+								.describe('Item UUID to uniquely identify a specific instance of this item'),
+							name: zod.string().nullish().describe('Item name, first line of the lore'),
+							lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
+							enchantments: zod
+								.record(zod.string(), zod.number())
+								.nullish()
+								.describe('Applied enchantments with their levels'),
+							attributes: zod
+								.record(zod.string(), zod.string())
+								.nullish()
+								.describe('ExtraAttributes not included elsewhere'),
+							itemAttributes: zod
+								.record(zod.string(), zod.string())
+								.nullish()
+								.describe('ExtraAtrributes.Attributes for attribute shards'),
+							gems: zod
+								.record(zod.string(), zod.string().nullable())
+								.nullish()
+								.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
+							petInfo: zod
+								.object({
+									type: zod.string(),
+									active: zod.boolean(),
+									exp: zod.number(),
+									level: zod.number(),
+									tier: zod.string(),
+									candyUsed: zod.number(),
+									heldItem: zod.string().nullish(),
+								})
+								.nullish()
+								.describe('Pet info if item is a pet'),
+							imageUrl: zod.string().nullish().describe('Image url for the item'),
+							textureId: zod
+								.string()
+								.nullish()
+								.describe('Texture id for the item, used to look up the image in our image service'),
+							slot: zod
+								.string()
+								.nullish()
+								.describe('Slot identifier where the item was located, if applicable'),
 						})
-						.nullish()
-						.describe('Pet info if item is a pet'),
-					imageUrl: zod.string().nullish().describe('Image url for the item'),
-					textureId: zod
-						.string()
-						.nullish()
-						.describe('Texture id for the item, used to look up the image in our image service'),
-					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
-				})
-			),
+						.nullable()
+				)
+				.describe('Dictionary of slot to item mapping, null if the slot is empty'),
 			metadata: zod.record(zod.string(), zod.string()).nullish(),
 		})
 	),
@@ -8007,6 +8020,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -8057,6 +8071,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -8107,6 +8122,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -8157,6 +8173,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 					zod.object({
 						id: zod.number().describe('Old Minecraft id of the item'),
 						count: zod.number().describe('Minecraft stack count of the item'),
+						damage: zod.number().describe('Minecraft damage value of the item'),
 						skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 						uuid: zod
 							.string()
@@ -8328,53 +8345,62 @@ export const zodGetSelectedProfileResponse = zod.object({
 		zod.object({
 			id: zod.string(),
 			name: zod.string().max(zodGetSelectedProfileResponseInventoriesItemNameMax),
-			items: zod.array(
-				zod.object({
-					id: zod.number().describe('Old Minecraft id of the item'),
-					count: zod.number().describe('Minecraft stack count of the item'),
-					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
-					uuid: zod
-						.string()
-						.nullish()
-						.describe('Item UUID to uniquely identify a specific instance of this item'),
-					name: zod.string().nullish().describe('Item name, first line of the lore'),
-					lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
-					enchantments: zod
-						.record(zod.string(), zod.number())
-						.nullish()
-						.describe('Applied enchantments with their levels'),
-					attributes: zod
-						.record(zod.string(), zod.string())
-						.nullish()
-						.describe('ExtraAttributes not included elsewhere'),
-					itemAttributes: zod
-						.record(zod.string(), zod.string())
-						.nullish()
-						.describe('ExtraAtrributes.Attributes for attribute shards'),
-					gems: zod
-						.record(zod.string(), zod.string().nullable())
-						.nullish()
-						.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
-					petInfo: zod
+			items: zod
+				.record(
+					zod.string(),
+					zod
 						.object({
-							type: zod.string(),
-							active: zod.boolean(),
-							exp: zod.number(),
-							level: zod.number(),
-							tier: zod.string(),
-							candyUsed: zod.number(),
-							heldItem: zod.string().nullish(),
+							id: zod.number().describe('Old Minecraft id of the item'),
+							count: zod.number().describe('Minecraft stack count of the item'),
+							damage: zod.number().describe('Minecraft damage value of the item'),
+							skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
+							uuid: zod
+								.string()
+								.nullish()
+								.describe('Item UUID to uniquely identify a specific instance of this item'),
+							name: zod.string().nullish().describe('Item name, first line of the lore'),
+							lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
+							enchantments: zod
+								.record(zod.string(), zod.number())
+								.nullish()
+								.describe('Applied enchantments with their levels'),
+							attributes: zod
+								.record(zod.string(), zod.string())
+								.nullish()
+								.describe('ExtraAttributes not included elsewhere'),
+							itemAttributes: zod
+								.record(zod.string(), zod.string())
+								.nullish()
+								.describe('ExtraAtrributes.Attributes for attribute shards'),
+							gems: zod
+								.record(zod.string(), zod.string().nullable())
+								.nullish()
+								.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
+							petInfo: zod
+								.object({
+									type: zod.string(),
+									active: zod.boolean(),
+									exp: zod.number(),
+									level: zod.number(),
+									tier: zod.string(),
+									candyUsed: zod.number(),
+									heldItem: zod.string().nullish(),
+								})
+								.nullish()
+								.describe('Pet info if item is a pet'),
+							imageUrl: zod.string().nullish().describe('Image url for the item'),
+							textureId: zod
+								.string()
+								.nullish()
+								.describe('Texture id for the item, used to look up the image in our image service'),
+							slot: zod
+								.string()
+								.nullish()
+								.describe('Slot identifier where the item was located, if applicable'),
 						})
-						.nullish()
-						.describe('Pet info if item is a pet'),
-					imageUrl: zod.string().nullish().describe('Image url for the item'),
-					textureId: zod
-						.string()
-						.nullish()
-						.describe('Texture id for the item, used to look up the image in our image service'),
-					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
-				})
-			),
+						.nullable()
+				)
+				.describe('Dictionary of slot to item mapping, null if the slot is empty'),
 			metadata: zod.record(zod.string(), zod.string()).nullish(),
 		})
 	),
@@ -8637,6 +8663,7 @@ export const zodGetItemsFromBytesResponse = zod.object({
 			.object({
 				id: zod.number().describe('Old Minecraft id of the item'),
 				count: zod.number().describe('Minecraft stack count of the item'),
+				damage: zod.number().describe('Minecraft damage value of the item'),
 				skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 				uuid: zod
 					.string()
@@ -11596,12 +11623,8 @@ export const zodGetStylesResponse = zod.array(zodGetStylesResponseItem);
  * @summary Get Inventory Item Texture
  */
 export const zodGetInventoryItemTextureParams = zod.object({
-	itemId: zod.string(),
-	slotId: zod.string(),
-});
-
-export const zodGetInventoryItemTextureQueryParams = zod.object({
 	inventoryUuid: zod.string(),
+	slotId: zod.string(),
 });
 
 /**
@@ -11662,6 +11685,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -11709,6 +11733,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -11756,6 +11781,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -11803,6 +11829,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -11889,6 +11916,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -11936,6 +11964,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -11983,6 +12012,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()
@@ -12030,6 +12060,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 				zod.object({
 					id: zod.number().describe('Old Minecraft id of the item'),
 					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
 					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
 					uuid: zod
 						.string()

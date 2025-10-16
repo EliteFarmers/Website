@@ -18,6 +18,8 @@ export interface ItemDto {
 	id: number;
 	/** Minecraft stack count of the item */
 	count: number;
+	/** Minecraft damage value of the item */
+	damage: number;
 	/**
 	 * Skyblock ID of the item
 	 * @nullable
