@@ -481,6 +481,18 @@
 		@apply text-link font-medium underline underline-offset-4;
 	}
 
+	.markdown h1 {
+		@apply scroll-mt-32 text-3xl font-bold;
+	}
+
+	.markdown h2 {
+		@apply mt-4 mb-2 scroll-mt-32 text-2xl font-bold;
+	}
+
+	.markdown h3 {
+		@apply mt-4 mb-2 scroll-mt-32 text-xl font-semibold;
+	}
+
 	.markdown ol {
 		list-style-type: decimal;
 		padding-inline-start: 1.5rem;

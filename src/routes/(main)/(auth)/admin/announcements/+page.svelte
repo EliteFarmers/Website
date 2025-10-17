@@ -2,17 +2,20 @@
 	import { enhance } from '$app/forms';
 	import type { AnnouncementType } from '$lib/api';
 	import { Button } from '$ui/button';
+	import { Checkbox } from '$ui/checkbox';
 	import * as Dialog from '$ui/dialog';
 	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { SelectSimple } from '$ui/select';
 	import { Textarea } from '$ui/textarea';
 	import Plus from '@lucide/svelte/icons/plus';
+	import { createConfirmationForm, getConfirmations } from '../../../../../lib/remote/confirmations.remote';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
 	let createModal = $state(false);
+	let createConfirmationModal = $state(false);
 
 	const types: Record<AnnouncementType, string> = {
 		news: 'News',
@@ -52,6 +55,31 @@
 				</p>
 			</div>
 		{/each}
+	</div>
+
+	<h2 class="mb-8 text-4xl">Login Confirmations</h2>
+	<p class="mb-4 text-lg">Add a required login confirmation.</p>
+
+	<Button onclick={() => (createConfirmationModal = true)} class="mb-4">
+		<Plus size={16} />
+		Create Confirmation
+	</Button>
+
+	<div class="flex w-full max-w-2xl flex-col items-start gap-4">
+		{#await getConfirmations() then confirmations}
+			{#each confirmations as confirmation (confirmation.id)}
+				<div class="bg-card w-full rounded-md p-4">
+					<h2 class="text-xl font-semibold">{confirmation.title}</h2>
+					<p class="text-muted-foreground">{confirmation.content}</p>
+					<p class="text-muted-foreground text-sm">
+						Posted on: {new Date(confirmation.createdAt).toLocaleDateString()}
+					</p>
+					<p class="text-muted-foreground text-sm">
+						Active: {confirmation.isActive ? 'Yes' : 'No'}
+					</p>
+				</div>
+			{/each}
+		{/await}
 	</div>
 </div>
 
@@ -100,6 +128,30 @@
 			</div>
 
 			<Button type="submit">Create Announcement</Button>
+		</form>
+	</Dialog.ScrollContent>
+</Dialog.Root>
+
+<Dialog.Root bind:open={createConfirmationModal}>
+	<Dialog.ScrollContent>
+		<Dialog.Title class="mb-4">Create Confirmation</Dialog.Title>
+		<form class="flex flex-col gap-2" {...createConfirmationForm}>
+			<div class="flex flex-col items-start gap-2">
+				<Label>Title</Label>
+				<Input {...createConfirmationForm.fields.title.as('text')} />
+			</div>
+
+			<div class="flex flex-col items-start gap-2">
+				<Label>Content</Label>
+				<Textarea {...createConfirmationForm.fields.content.as('text')} />
+			</div>
+
+			<div class="my-4 flex flex-row items-start gap-2">
+				<Label>Active</Label>
+				<Checkbox {...{ ...createConfirmationForm.fields.isActive.as('checkbox'), type: 'button' }} />
+			</div>
+
+			<Button type="submit">Create Confirmation</Button>
 		</form>
 	</Dialog.ScrollContent>
 </Dialog.Root>

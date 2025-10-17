@@ -8,6 +8,7 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 	const success = url.searchParams.get('success');
 	const redirectTo = url.searchParams.get('redirect');
 	const attemptCount = url.searchParams.get('attempt');
+	const accept = url.searchParams.get('accept');
 
 	if (success) {
 		if (attemptCount && +attemptCount > 3) {
@@ -36,7 +37,7 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 		'&redirect_uri=' +
 		encodeURIComponent(`${url.origin}${PUBLIC_DISCORD_REDIRECT_ROUTE}`) +
 		'&response_type=code&scope=identify%20guilds%20role_connections.write' +
-		`&state=${uuid}|${encodeURIComponent(redirectTo ?? '/profile')}|${attemptCount ?? 0}` +
+		`&state=${uuid}|${encodeURIComponent(redirectTo ?? '/profile')}|${attemptCount ?? 0}|${accept ?? ''}` +
 		`&prompt=${attemptCount ? 'consent' : 'none'}`;
 
 	cookies.set('auth_state', uuid, {

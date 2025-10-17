@@ -43,8 +43,10 @@ export default defineConfig({
 			},
 		},
 		hooks: {
-			// A post-generation hook to run a linter/formatter on the generated files.
-			afterAllFilesWrite: 'pnpm prettier --write',
+			afterAllFilesWrite: {
+				command: 'pnpm postprocess-zod',
+				injectGeneratedDirsAndFiles: false,
+			},
 		},
 	},
 });
