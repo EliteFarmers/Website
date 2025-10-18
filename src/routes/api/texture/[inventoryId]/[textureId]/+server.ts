@@ -1,6 +1,8 @@
-import { getGetInventoryItemTextureUrl } from '$lib/api/index.js';
+import { getGetInventoryItemTextureUrl } from '$lib/api';
 import { redirect } from '@sveltejs/kit';
 
-export async function GET({ params }) {
-	redirect(307, getGetInventoryItemTextureUrl(params.inventoryId, params.textureId));
+export async function GET({ params, fetch }) {
+	const url = getGetInventoryItemTextureUrl(params.inventoryId, params.textureId);
+	const response = await fetch(url, { method: 'HEAD' });
+	redirect(307, response.url);
 }
