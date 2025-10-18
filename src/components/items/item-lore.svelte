@@ -41,13 +41,5 @@
 				<span class="select-all">#{item.attributes.bid}</span>
 			</p>
 		{/if}
-		{#each Object.entries(item.attributes ?? {}) as [key, value] (key)}
-			{#if key !== 'player' && key !== 'bid'}
-				<p>
-					<span class="font-semibold select-none">{key}:</span>
-					<span class="select-all">{value}</span>
-				</p>
-			{/if}
-		{/each}
 	</div>
 </div>

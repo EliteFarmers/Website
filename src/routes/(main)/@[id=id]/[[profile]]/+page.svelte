@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
-	import Inventory from '$comp/items/inventories/inventory.svelte';
+	import InventorySelect from '$comp/items/inventories/inventory-select.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import Collections from '$comp/stats/collections.svelte';
@@ -79,13 +79,6 @@
 	</div>
 </section>
 
-<div>
-	{#each ctx.member.current?.inventories ?? [] as inv, i (i)}
-		<span>{inv.name}</span>
-		<Inventory inventory={inv} />
-	{/each}
-</div>
-
 <section class="my-8 flex w-full justify-center align-middle">
 	<div class="mx-2 flex w-full max-w-7xl flex-col justify-center gap-8 align-middle lg:flex-row">
 		<Collections />
@@ -100,5 +93,6 @@
 	</div>
 </section>
 
+<InventorySelect />
 <JacobInfo />
 <Breakdown />

@@ -224,6 +224,7 @@ export * from './GetSpecifiedSkyblockItemsResponse';
 export * from './GetSpecifiedSkyblockItemsResponseItems';
 export * from './GetStyleRequest';
 export * from './GetTeamsRequest';
+export * from './GetTexturePackIcon';
 export * from './GetUpcomingEventsParams';
 export * from './GetUpcomingEventsRequest';
 export * from './GetWeightForProfileParams';

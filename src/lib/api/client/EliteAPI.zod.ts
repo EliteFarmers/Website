@@ -11852,6 +11852,14 @@ export const zodGetItemTextureParams = zod.object({
 });
 
 /**
+ * Retrieves the icon image for a registered texture pack by its ID.
+ * @summary Get Registered Texture Pack Icon
+ */
+export const zodGetTexturePackIconParams = zod.object({
+	packId: zod.string(),
+});
+
+/**
  * Get all farming weight constants
  * @summary Get all weight constants
  */

@@ -6730,7 +6730,7 @@ export type getProfileInventoryResponseError = getProfileInventoryResponse400 & 
 export type getProfileInventoryResponse = getProfileInventoryResponseSuccess | getProfileInventoryResponseError;
 
 export const getGetProfileInventoryUrl = (playerUuid: string, profileUuid: string, inventory: string) => {
-	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/${inventory}`;
+	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/inventories/${inventory}`;
 };
 
 export const getProfileInventory = async (
@@ -8213,6 +8213,31 @@ export const getGetItemTextureUrl = (itemId: string) => {
 
 export const getItemTexture = async (itemId: string, options?: RequestInit) => {
 	return customFetch<getItemTextureResponse>(getGetItemTextureUrl(itemId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Retrieves the icon image for a registered texture pack by its ID.
+ * @summary Get Registered Texture Pack Icon
+ */
+export type getTexturePackIconResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getTexturePackIconResponseSuccess = getTexturePackIconResponse204 & {
+	headers: Headers;
+};
+export type getTexturePackIconResponse = getTexturePackIconResponseSuccess;
+
+export const getGetTexturePackIconUrl = (packId: string) => {
+	return `${ELITE_API_URL}/texturepacks/${packId}/icon`;
+};
+
+export const getTexturePackIcon = async (packId: string, options?: RequestInit) => {
+	return customFetch<getTexturePackIconResponse>(getGetTexturePackIconUrl(packId), {
 		...options,
 		method: 'GET',
 	});
