@@ -1,8 +1,13 @@
-import { getGetInventoryItemTextureUrl } from '$lib/api';
-import { redirect } from '@sveltejs/kit';
+import { getInventoryItemTexture } from '$lib/api';
 
-export async function GET({ params, fetch }) {
-	const url = getGetInventoryItemTextureUrl(params.inventoryId, params.textureId);
-	const response = await fetch(url, { method: 'HEAD' });
-	redirect(307, response.url);
+export async function GET({ params }) {
+	const { response } = await getInventoryItemTexture(params.inventoryId, params.textureId);
+	return new Response(response.body, {
+		status: response.status,
+		headers: {
+			'Content-Type': response.headers.get('Content-Type') || 'application/octet-stream',
+			'Content-Length': response.headers.get('Content-Length') || '0',
+			'Cache-Control': response.headers.get('Cache-Control') || 'public, max-age=604800',
+		},
+	});
 }
