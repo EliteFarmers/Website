@@ -14,6 +14,9 @@ importers:
       isomorphic-dompurify:
         specifier: ^2.26.0
         version: 2.26.0
+      vanilla-cookieconsent:
+        specifier: ^3.1.0
+        version: 3.1.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.32.0
@@ -4348,6 +4351,9 @@ packages:
   validator@13.15.15:
     resolution: {integrity: sha512-BgWVbCI72aIQy937xbawcs+hrVaN/CZ2UwutgaJ36hGqRrLNM+f5LUT/YPRbo8IV/ASeFzXszezV+y2+rq3l8A==}
     engines: {node: '>= 0.10'}
+
+  vanilla-cookieconsent@3.1.0:
+    resolution: {integrity: sha512-/McNRtm/3IXzb9dhqMIcbquoU45SzbN2VB+To4jxEPqMmp7uVniP6BhGLjU8MC7ZCDsNQVOp27fhQTM/ruIXAA==}
 
   vaul-svelte@1.0.0-next.7:
     resolution: {integrity: sha512-7zN7Bi3dFQixvvbUJY9uGDe7Ws/dGZeBQR2pXdXmzQiakjrxBvWo0QrmsX3HK+VH+SZOltz378cmgmCS9f9rSg==}
@@ -9297,6 +9303,8 @@ snapshots:
     optional: true
 
   validator@13.15.15: {}
+
+  vanilla-cookieconsent@3.1.0: {}
 
   vaul-svelte@1.0.0-next.7(svelte@5.40.1):
     dependencies:

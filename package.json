@@ -31,7 +31,8 @@
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.76",
-		"isomorphic-dompurify": "^2.26.0"
+		"isomorphic-dompurify": "^2.26.0",
+		"vanilla-cookieconsent": "^3.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.32.0",

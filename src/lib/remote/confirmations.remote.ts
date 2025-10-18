@@ -41,11 +41,15 @@ export const getConfirmations = query(async () => {
 
 export const acceptConfirmationForm = form(zodAcceptConfirmationParams, async (data) => {
 	const event = getRequestEvent();
+
+	console.log('Request event locals:', event.locals);
 	if (!event.locals.access_token) {
 		error(401, 'Unauthorized');
 	}
 
 	const { response, error: e } = await acceptConfirmation(data.id);
+
+	console.log('Accepting confirmation ID:', data.id);
 
 	if (!response.ok) {
 		error(response.status, e ?? 'Failed to accept confirmation');

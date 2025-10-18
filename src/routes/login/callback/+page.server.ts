@@ -68,13 +68,6 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		}
 	}
 
-	if (loginResponse.pending_confirmation) {
-		throw redirect(
-			307,
-			`/login/confirm?id=${loginResponse.pending_confirmation.id}&redirect=${redirectTo}&attempt=${attemptCount}`
-		);
-	}
-
 	cookies.set('access_token', loginResponse.access_token, {
 		// The access token expires sooner, but we keep it to use with the refresh token
 		expires: refreshTokenExpires,
@@ -87,6 +80,13 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		maxAge: thirtyDays,
 		path: '/',
 	});
+
+	if (loginResponse.pending_confirmation) {
+		throw redirect(
+			307,
+			`/login/confirm?id=${loginResponse.pending_confirmation.id}&redirect=${redirectTo}&attempt=${attemptCount}`
+		);
+	}
 
 	redirect(307, `/login?success=true&redirect=${redirectTo}&attempt=${attemptCount}`);
 };

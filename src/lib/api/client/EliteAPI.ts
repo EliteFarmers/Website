@@ -94,6 +94,7 @@ import type {
 	GuildDetailsDto,
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
+	HypixelInventoryDto,
 	IncomingAccountDto,
 	IncomingGuildChannelDto,
 	IncomingGuildDto,
@@ -1319,19 +1320,10 @@ export type getConfirmationResponse200 = {
 	status: 200;
 };
 
-export type getConfirmationResponse401 = {
-	data: void;
-	status: 401;
-};
-
 export type getConfirmationResponseSuccess = getConfirmationResponse200 & {
 	headers: Headers;
 };
-export type getConfirmationResponseError = getConfirmationResponse401 & {
-	headers: Headers;
-};
-
-export type getConfirmationResponse = getConfirmationResponseSuccess | getConfirmationResponseError;
+export type getConfirmationResponse = getConfirmationResponseSuccess;
 
 export const getGetConfirmationUrl = (id: number | string) => {
 	return `${ELITE_API_URL}/auth/confirmations/${id}`;
@@ -6716,6 +6708,44 @@ export const getProfileDetails = async (profileUuid: string, options?: RequestIn
 };
 
 /**
+ * @summary Get Specific Profile Member Inventory
+ */
+export type getProfileInventoryResponse200 = {
+	data: HypixelInventoryDto;
+	status: 200;
+};
+
+export type getProfileInventoryResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getProfileInventoryResponseSuccess = getProfileInventoryResponse200 & {
+	headers: Headers;
+};
+export type getProfileInventoryResponseError = getProfileInventoryResponse400 & {
+	headers: Headers;
+};
+
+export type getProfileInventoryResponse = getProfileInventoryResponseSuccess | getProfileInventoryResponseError;
+
+export const getGetProfileInventoryUrl = (playerUuid: string, profileUuid: string, inventory: string) => {
+	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/${inventory}`;
+};
+
+export const getProfileInventory = async (
+	playerUuid: string,
+	profileUuid: string,
+	inventory: string,
+	options?: RequestInit
+) => {
+	return customFetch<getProfileInventoryResponse>(getGetProfileInventoryUrl(playerUuid, profileUuid, inventory), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * @summary Get names of a player's profiles
  */
 export type getProfileNamesResponse200 = {
@@ -8150,6 +8180,7 @@ export const getInventoryItemTexture = async (inventoryUuid: string, slotId: str
 };
 
 /**
+ * Not available to the public yet.
  * @summary Get Minecraft Item Texture
  */
 export type getItemTextureResponse204 = {
@@ -8157,10 +8188,24 @@ export type getItemTextureResponse204 = {
 	status: 204;
 };
 
+export type getItemTextureResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getItemTextureResponse403 = {
+	data: void;
+	status: 403;
+};
+
 export type getItemTextureResponseSuccess = getItemTextureResponse204 & {
 	headers: Headers;
 };
-export type getItemTextureResponse = getItemTextureResponseSuccess;
+export type getItemTextureResponseError = (getItemTextureResponse401 | getItemTextureResponse403) & {
+	headers: Headers;
+};
+
+export type getItemTextureResponse = getItemTextureResponseSuccess | getItemTextureResponseError;
 
 export const getGetItemTextureUrl = (itemId: string) => {
 	return `${ELITE_API_URL}/textures/${itemId}`;

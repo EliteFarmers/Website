@@ -1,4 +1,5 @@
 <script lang="ts">
+	import GTag from '$comp/analytics/g-tag.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
 	import { initGlobalContext } from '$lib/hooks/global.svelte';
 	import { IsHover } from '$lib/hooks/is-hover.svelte';
@@ -34,3 +35,4 @@
 
 <Toaster />
 <ThemeWatcher />
+<GTag />

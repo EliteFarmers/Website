@@ -5,6 +5,7 @@ import {
 	type AuthorizedAccountDto,
 	type AuthResponseDto,
 	type AuthSessionDto,
+	type AuthSessionDtoPendingConfirmation,
 } from '$lib/api';
 import type { Cookies } from '@sveltejs/kit';
 
@@ -21,10 +22,13 @@ const refreshLock = new Map<string, Promise<AuthSession | undefined>>();
 
 export async function FetchUserSession(
 	cookies: Cookies,
-	access: string,
-	refreshToken = '',
-	forceRefresh = false
+	skipRefresh = false,
+	forceRefresh = false,
+	pendingConfirmation?: AuthSessionDtoPendingConfirmation
 ): Promise<AuthSession | undefined> {
+	const access = cookies.get('access_token');
+	const refreshToken = cookies.get('refresh_token');
+
 	// Fetch the user session
 	const response = await fetch(getGetSessionUrl(), {
 		headers: {
@@ -37,7 +41,7 @@ export async function FetchUserSession(
 		return setAuthFlags(session);
 	}
 
-	if (refreshToken && (!session || forceRefresh)) {
+	if (refreshToken && !skipRefresh && (!session || forceRefresh)) {
 		if (response?.status !== 401 && !forceRefresh) {
 			// If the response is not 401 Unauthorized, do not attempt to refresh
 			return undefined;
@@ -46,26 +50,29 @@ export async function FetchUserSession(
 		const current = refreshLock.get(refreshToken);
 		if (current) {
 			const session = await current;
-			setTimeout(() => refreshLock.delete(refreshToken), 100);
+			setTimeout(() => refreshLock.delete(refreshToken), 300);
 			return session;
 		}
 
-		const refreshPromise = refreshUserSession(cookies, access, refreshToken);
+		const refreshPromise = refreshUserSession(cookies);
 		refreshLock.set(refreshToken, refreshPromise);
 		const session = await refreshPromise;
 
-		setTimeout(() => refreshLock.delete(refreshToken), 100);
+		setTimeout(() => refreshLock.delete(refreshToken), 300);
 		return session;
+	}
+
+	if (session && pendingConfirmation) {
+		session.pending_confirmation = pendingConfirmation;
 	}
 
 	return session ? setAuthFlags(session) : undefined;
 }
 
-async function refreshUserSession(
-	cookies: Cookies,
-	access: string,
-	refreshToken: string
-): Promise<AuthSession | undefined> {
+async function refreshUserSession(cookies: Cookies): Promise<AuthSession | undefined> {
+	const access = cookies.get('access_token');
+	const refreshToken = cookies.get('refresh_token');
+
 	const newTokensResponse = await fetch(getRefreshAuthUrl(), {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -76,9 +83,8 @@ async function refreshUserSession(
 
 	if (newTokens) {
 		UpdateAuthCookies(cookies, newTokens);
-
-		// Omit the refresh token to not cause infinite loop
-		return await FetchUserSession(cookies, newTokens.access_token);
+		// Skip refresh to not cause infinite loop
+		return await FetchUserSession(cookies, true, false, newTokens.pending_confirmation);
 	} else {
 		DeleteAuthCookies(cookies);
 	}

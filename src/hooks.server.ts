@@ -1,7 +1,7 @@
 import { PUBLIC_HOST_URL } from '$env/static/public';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
-import type { Handle, ServerInit } from '@sveltejs/kit';
+import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
 
 export const init: ServerInit = async () => {
 	initCachedItems();
@@ -11,11 +11,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { locals, cookies } = event;
 	locals.bot = event.request.headers.get('X-Known-Bot') === 'true';
 
-	const access = cookies.get('access_token');
-	const refresh = cookies.get('refresh_token');
-
-	locals.access_token = access;
-	locals.refresh_token = refresh;
+	locals.access_token = cookies.get('access_token');
+	locals.refresh_token = cookies.get('refresh_token');
 	locals.cache = cache;
 
 	if (locals.access_token) {
@@ -28,8 +25,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	// Fetch the user session
-	if (access && refresh) {
-		locals.session = await FetchUserSession(event.cookies, access, refresh);
+	if (locals.access_token && locals.refresh_token) {
+		locals.session = await FetchUserSession(event.cookies);
+		locals.access_token = cookies.get('access_token');
+		locals.refresh_token = cookies.get('refresh_token');
+	}
+
+	if (locals.session?.pending_confirmation && event.url.pathname !== '/login/confirm') {
+		console.log('Redirecting to confirmation page for ID:', locals.session.pending_confirmation.id);
+		redirect(
+			307,
+			`/login/confirm?id=${locals.session.pending_confirmation.id}&redirect=${encodeURIComponent(event.url.pathname)}`
+		);
 	}
 
 	const response = await ResolveWithSecurityHeaders(resolve, event);
