@@ -26,16 +26,19 @@
 
 <script lang="ts">
 	type Props = {
-		title: string;
-		description: string;
-		source: string;
-		component: string;
-		radix: string;
+		metadata: {
+			title: string;
+			description: string;
+		};
 		children: Snippet<[unknown]>;
 	};
-	let { title, description, source, component, radix, children }: Props = $props();
+	let { children, metadata, ...rest }: Props = $props();
 </script>
 
-<Head {title} {description} />
+<Head title={metadata.title} description={metadata.description} />
 
-{@render children({ title, description, source, component, radix })}
+<div class="mt-8 mb-16 flex flex-row items-center justify-center md:mt-16 md:mb-32">
+	<div class="mx-2 max-w-4xl sm:mx-4">
+		{@render children({ metadata, title: metadata.title, description: metadata.description, ...rest })}
+	</div>
+</div>

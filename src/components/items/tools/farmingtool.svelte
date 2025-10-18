@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { UNUSED_MATHEMATICAL_HOE } from '$content/random';
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
-	import { FormatMinecraftText } from '$lib/format';
 	import { FarmingToolType, getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
+	import FormattedText from '../formatted-text.svelte';
 	import Lorebtn from '../lorebtn.svelte';
 	import FortuneBreakdown from './fortune-breakdown.svelte';
 
@@ -23,8 +23,9 @@
 			alt="Tool"
 		/>
 		<div class="flex flex-col items-start">
-			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-			<div class="text-md font-semibold md:text-lg">{@html FormatMinecraftText(tool.item.name ?? '')}</div>
+			<div class="text-md font-semibold md:text-lg">
+				<FormattedText text={tool.item.name ?? 'Unknown Tool'} />
+			</div>
 			{#if tool.supportsCultivating()}
 				<div class="flex flex-row items-center gap-1">
 					<img src={crop} alt="Crop" class="pixelated h-5 w-5" />

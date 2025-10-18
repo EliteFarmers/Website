@@ -26,11 +26,13 @@
 		"down": "docker-compose down",
 		"license": "pnpm exec pnpm-licenses generate-disclaimer --output-file=./static/oss.txt",
 		"generate-api": "pnpm orval",
-		"postprocess-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.ts && pnpm prettier --write ./src/lib/api/"
+		"postprocess-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.ts ./src/lib/api/schemas",
+		"postprocess-zod": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.zod.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.zod.ts"
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.76",
-		"isomorphic-dompurify": "^2.26.0"
+		"isomorphic-dompurify": "^2.26.0",
+		"vanilla-cookieconsent": "^3.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.32.0",
@@ -43,7 +45,7 @@
 		"@quantco/pnpm-licenses": "^2.2.1",
 		"@sinclair/typebox": "^0.34.38",
 		"@sveltejs/adapter-node": "^5.3.2",
-		"@sveltejs/kit": "2.42.1",
+		"@sveltejs/kit": "2.47.0",
 		"@sveltejs/vite-plugin-svelte": "6.2.0",
 		"@tailwindcss/vite": "^4.1.12",
 		"@tanstack/table-core": "^8.21.3",
@@ -83,7 +85,7 @@
 		"marked": "^16.2.1",
 		"mdsx": "^0.0.7",
 		"mode-watcher": "^1.1.0",
-		"orval": "^7.11.2",
+		"orval": "^7.13.2",
 		"paneforge": "1.0.0-next.6",
 		"prettier": "^3.6.2",
 		"prettier-plugin-svelte": "^3.4.0",
@@ -93,8 +95,8 @@
 		"remark-gfm": "^4.0.1",
 		"runed": "^0.31.1",
 		"superstruct": "^2.0.2",
-		"svelte": "^5.38.10",
-		"svelte-check": "^4.3.1",
+		"svelte": "^5.40.1",
+		"svelte-check": "^4.3.3",
 		"svelte-dnd-action": "^0.9.65",
 		"svelte-sonner": "^1.0.5",
 		"sveltekit-rate-limiter": "^0.7.0",
@@ -112,6 +114,6 @@
 		"velite": "^0.3.0",
 		"vite": "^7.1.5",
 		"yup": "^1.7.0",
-		"zod": "^3.25.76"
+		"zod": "^4.1.12"
 	}
 }

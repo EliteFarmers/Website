@@ -13,6 +13,3 @@
 		goto(data.redirect ?? '/');
 	});
 </script>
-
-<!-- It took entirely too much time to discover that this page was needed -->
-<!-- Why couldn't I just do this in +page.ts -->

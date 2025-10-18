@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
 	:root {
@@ -330,6 +330,17 @@
 			transform: translateX(-25%);
 		}
 	}
+
+	/* Minecraft style obfuscated text animation, works by cycling the character through an alphabet, so we need to scroll up one character height at a time */
+	--animate-obfuscated: obfuscated 4s steps(var(--obfuscated-distance, 89), end) infinite;
+	@keyframes obfuscated {
+		0% {
+			transform: translateY(0);
+		}
+		100% {
+			transform: translateY(calc(-1em * var(--obfuscated-distance, 84)));
+		}
+	}
 }
 
 @layer base {
@@ -356,6 +367,10 @@
 @layer components {
 	.pixelated {
 		image-rendering: pixelated;
+	}
+
+	.animate-obfuscated {
+		line-height: 1;
 	}
 
 	[data-rehype-pretty-code-figure] {
@@ -464,6 +479,18 @@
 
 	.markdown a {
 		@apply text-link font-medium underline underline-offset-4;
+	}
+
+	.markdown h1 {
+		@apply scroll-mt-32 text-3xl font-bold;
+	}
+
+	.markdown h2 {
+		@apply mt-4 mb-2 scroll-mt-32 text-2xl font-bold;
+	}
+
+	.markdown h3 {
+		@apply mt-4 mb-2 scroll-mt-32 text-xl font-semibold;
 	}
 
 	.markdown ol {

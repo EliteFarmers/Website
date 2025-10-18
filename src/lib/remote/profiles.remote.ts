@@ -2,8 +2,10 @@ import { query } from '$app/server';
 import {
 	getPlayerLeaderboardRanks,
 	getProfile,
+	getProfileInventory,
 	getSelectedProfile,
 	zodGetPlayerLeaderboardRanksParams,
+	zodGetProfileInventoryParams,
 	zodGetProfileParams,
 	zodGetSelectedProfileParams,
 } from '$lib/api';
@@ -18,4 +20,8 @@ export const getSelectedMember = query(zodGetSelectedProfileParams, async (param
 
 export const getMemberRanks = query(zodGetPlayerLeaderboardRanksParams, async (params) => {
 	return await getPlayerLeaderboardRanks(params.playerUuid, params.profileUuid).then((res) => res.data);
+});
+
+export const getMemberInventory = query(zodGetProfileInventoryParams, async (params) => {
+	return await getProfileInventory(params.playerUuid, params.profileUuid, params.inventory).then((res) => res.data);
 });

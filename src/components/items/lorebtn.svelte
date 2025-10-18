@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { FormatMinecraftText } from '$lib/format';
 	import { buttonVariants } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import FileText from '@lucide/svelte/icons/file-text';
@@ -18,14 +17,8 @@
 	<Dialog.Trigger class={buttonVariants({ variant: 'ghost', class: 'px-2', size: 'sm' })}>
 		<FileText size={20} />
 	</Dialog.Trigger>
-	<Dialog.ScrollContent class="dark">
-		<Dialog.Header>
-			<h3 class="font-mono text-xl">
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html FormatMinecraftText(item.name ?? '')}
-			</h3>
-		</Dialog.Header>
-		<ItemLore {item} title={false}>
+	<Dialog.ScrollContent class="dark bg-background border-border text-primary">
+		<ItemLore {item}>
 			{@render children?.()}
 		</ItemLore>
 	</Dialog.ScrollContent>

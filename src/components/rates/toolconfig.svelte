@@ -1,7 +1,7 @@
 <script lang="ts">
+	import FormattedText from '$comp/items/formatted-text.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import { FormatMinecraftText } from '$lib/format';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { Button } from '$ui/button';
 	import { Label } from '$ui/label';
@@ -27,8 +27,7 @@
 
 <div class="flex w-full flex-col gap-2 rounded-md">
 	<div class="flex w-full items-center justify-between">
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		<span class="text-lg font-semibold">{@html FormatMinecraftText(tool.name ?? '')}</span>
+		<span class="text-lg font-semibold"><FormattedText text={tool.name ?? ''} /></span>
 
 		<div class="flex items-center gap-2">
 			{#if tool.supportsCultivating()}

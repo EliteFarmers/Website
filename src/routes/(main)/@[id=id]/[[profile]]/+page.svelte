@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import ProfileEventMember from '$comp/events/profile-event-member.svelte';
 	import Head from '$comp/head.svelte';
+	import InventorySelect from '$comp/items/inventories/inventory-select.svelte';
 	import Farmingtools from '$comp/items/tools/farmingtools.svelte';
 	import Breakdown from '$comp/stats/breakdown.svelte';
 	import Collections from '$comp/stats/collections.svelte';
@@ -92,5 +93,6 @@
 	</div>
 </section>
 
+<InventorySelect />
 <JacobInfo />
 <Breakdown />

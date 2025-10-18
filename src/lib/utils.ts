@@ -1,5 +1,5 @@
 import { enhance } from '$app/forms';
-import { type ClassValue, clsx } from 'clsx';
+import { clsx, type ClassValue } from 'clsx';
 import { cubicOut } from 'svelte/easing';
 import type {
 	HTMLAnchorAttributes,

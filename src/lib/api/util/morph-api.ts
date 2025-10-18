@@ -10,6 +10,16 @@ async function removeReturnTypesFromFile(filePath: string) {
 	console.log(`Analyzing ${path.basename(filePath)}...`);
 
 	const project = new Project();
+
+	// Run a regex replacement on filePath.replace('.ts', '.zod.ts') to change all zod.boolean() to zod.coerce.boolean<boolean>()
+	if (filePath.includes('.zod.')) {
+		const zodFileContent = await project.getFileSystem().readFile(filePath);
+		const updatedZodFileContent = zodFileContent.replace(/zod\.boolean\(\)/g, 'zod.coerce.boolean<boolean>()');
+		await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
+		console.log(`✅ Updated zod.boolean() to zod.coerce.boolean<boolean>() in ${path.basename(filePath)}.`);
+		return;
+	}
+
 	const sourceFile = project.addSourceFileAtPath(filePath);
 
 	const functionDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.FunctionDeclaration);
