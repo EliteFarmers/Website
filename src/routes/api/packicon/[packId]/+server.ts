@@ -3,6 +3,7 @@ import { redirect } from '@sveltejs/kit';
 
 export async function GET({ params }) {
 	const id = params.packId;
-
-	redirect(307, getGetTexturePackIconUrl(id));
+	const url = getGetTexturePackIconUrl(id);
+	const response = await fetch(url, { method: 'HEAD' });
+	redirect(307, response.url);
 }
