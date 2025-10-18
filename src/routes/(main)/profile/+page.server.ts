@@ -76,7 +76,7 @@ export const actions: Actions = {
 		}
 
 		if (!locals.session?.uuid) {
-			await FetchUserSession(cookies, locals.access_token, locals.refresh_token, true);
+			await FetchUserSession(cookies, false, true);
 		}
 
 		return { success: true };
@@ -102,7 +102,7 @@ export const actions: Actions = {
 			});
 		}
 
-		await FetchUserSession(cookies, locals.access_token, locals.refresh_token, true);
+		await FetchUserSession(cookies, false, true);
 
 		return { success: true };
 	},
@@ -126,7 +126,7 @@ export const actions: Actions = {
 			});
 		}
 
-		await FetchUserSession(cookies, locals.access_token, locals.refresh_token, true);
+		await FetchUserSession(cookies, false, true);
 
 		return { success: true };
 	},

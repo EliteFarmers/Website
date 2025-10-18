@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { AnnouncementType } from '$lib/api';
+	import { createConfirmationForm, getConfirmations } from '$lib/remote/confirmations.remote';
 	import { Button } from '$ui/button';
 	import { Checkbox } from '$ui/checkbox';
 	import * as Dialog from '$ui/dialog';
@@ -9,7 +10,6 @@
 	import { SelectSimple } from '$ui/select';
 	import { Textarea } from '$ui/textarea';
 	import Plus from '@lucide/svelte/icons/plus';
-	import { createConfirmationForm, getConfirmations } from '../../../../../lib/remote/confirmations.remote';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();

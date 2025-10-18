@@ -59,7 +59,7 @@
 				{/if}
 			</button>
 		{:else}
-			<div class="bg-card h-12 w-12 rounded-md border p-1 shadow-md"></div>
+			<div class="bg-card size-9 rounded-md border p-1 shadow-md sm:size-12"></div>
 		{/if}
 	{/each}
 </div>

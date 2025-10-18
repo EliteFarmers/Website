@@ -96,7 +96,7 @@
 		"runed": "^0.31.1",
 		"superstruct": "^2.0.2",
 		"svelte": "^5.40.1",
-		"svelte-check": "^4.3.1",
+		"svelte-check": "^4.3.3",
 		"svelte-dnd-action": "^0.9.65",
 		"svelte-sonner": "^1.0.5",
 		"sveltekit-rate-limiter": "^0.7.0",
