@@ -88,10 +88,19 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 		};
 	}
 
-	const json = await response.json();
+	if (response.headers.get('Content-Type')?.includes('application/json')) {
+		const json = await response.json();
+		return {
+			ok: true,
+			data: json,
+			response,
+		};
+	}
+
+	const blob = await response.blob();
 	return {
 		ok: true,
-		data: json,
+		data: blob as ExtractSuccess<T>['data'],
 		response,
 	};
 };
