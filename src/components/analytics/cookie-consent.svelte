@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import * as CookieConsent from 'vanilla-cookieconsent';
 	import 'vanilla-cookieconsent/dist/cookieconsent.css';
+	import './cookie-consent.css';
 
 	const CAT_NECESSARY = 'necessary';
 	const CAT_ANALYTICS = 'analytics';

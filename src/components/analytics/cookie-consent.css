@@ -1,0 +1,63 @@
+:root {
+	--cc-bg: var(--background);
+	--cc-primary-color: var(--foreground);
+	--cc-secondary-color: var(--muted-foreground);
+	--cc-btn-primary-bg: var(--primary);
+	--cc-btn-primary-color: var(--primary-foreground);
+
+	--cc-btn-primary-hover-bg: color-mix(in oklab, var(--primary) 90%, transparent);
+	--cc-btn-primary-hover-color: var(--cc-btn-primary-color);
+
+	--cc-btn-secondary-bg: var(--secondary);
+	--cc-btn-secondary-color: var(--secondary-foreground);
+
+	--cc-btn-secondary-hover-bg: color-mix(in oklab, var(--secondary) 80%, transparent);
+	--cc-btn-secondary-hover-color: var(--cc-btn-secondary-color);
+	--cc-btn-secondary-hover-border-color: var(--cc-btn-secondary-bg);
+	--cc-separator-border-color: var(--border);
+
+	--cc-toggle-on-bg: var(--primary);
+	--cc-toggle-off-bg: color-mix(in oklab, var(--input) 80%, transparent);
+	--cc-toggle-on-knob-bg: var(--primary-foreground);
+	--cc-toggle-off-knob-bg: var(--foreground);
+	--cc-toggle-enabled-icon-color: transparent;
+	--cc-toggle-disabled-icon-color: transparent;
+	--cc-toggle-readonly-bg: color-mix(in oklab, var(--primary) 50%, transparent);
+	--cc-toggle-readonly-knob-bg: color-mix(in oklab, var(--primary-foreground) 100%, var(--cc-bg));
+	--cc-toggle-readonly-knob-icon-color: transparent;
+
+	--cc-section-category-border: var(--border);
+	--cc-cookie-category-block-bg: var(--card);
+	--cc-cookie-category-block-border: var(--border);
+	--cc-cookie-category-block-hover-bg: var(--sidebar-background);
+	--cc-cookie-category-block-hover-border: var(--border);
+
+	--cc-cookie-category-expanded-block-hover-bg: var(--border);
+	/* --cc-overlay-bg: rgba(0, 0, 0, .65); */
+
+	--cc-footer-border-color: var(--border);
+}
+
+#cc-main .toggle__icon-on svg {
+	stroke: var(--cc-toggle-enabled-icon-color);
+}
+
+#cc-main .toggle__icon-off svg {
+	stroke: var(--cc-toggle-disabled-icon-color);
+}
+
+#cc-main .cm__body,
+#cc-main .pm--box {
+	border-style: solid;
+	border-width: 2px;
+	border-radius: var(--cc-modal-border-radius);
+	border-color: var(--border);
+}
+
+#cc-main .pm__section-services {
+	padding-bottom: 0.5rem;
+}
+
+#cc-main .pm__service {
+	margin-top: 0.5rem;
+}
