@@ -1,8 +1,8 @@
 import { getInventoryItemTexture } from '$lib/api';
 
 export async function GET({ params }) {
-	const { response } = await getInventoryItemTexture(params.inventoryId, params.textureId);
-	return new Response(response.body, {
+	const { response, data } = await getInventoryItemTexture(params.inventoryId, params.textureId);
+	return new Response(data as unknown as Blob, {
 		status: response.status,
 		headers: {
 			'Content-Type': response.headers.get('Content-Type') || 'application/octet-stream',
