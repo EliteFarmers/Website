@@ -8,7 +8,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export type GetInventoryItemTextureParams = {
+export type GetInventoryItemMetaParams = {
 	/**
 	 * @nullable
 	 */

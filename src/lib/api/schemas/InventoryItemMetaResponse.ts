@@ -8,9 +8,10 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export type GetInventoryItemTextureParams = {
+export interface InventoryItemMetaResponse {
 	/**
+	 * Texture Pack ID where the item texture is located
 	 * @nullable
 	 */
-	packs?: string | null;
-};
+	packId?: string | null;
+}

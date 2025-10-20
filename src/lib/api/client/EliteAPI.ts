@@ -70,6 +70,8 @@ import type {
 	GetCropGraphsParams,
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
+	GetInventoryItemMetaParams,
+	GetInventoryItemTextureParams,
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
 	GetLeaderboardParams,
@@ -99,6 +101,7 @@ import type {
 	IncomingGuildChannelDto,
 	IncomingGuildDto,
 	IncomingGuildRoleDto,
+	InventoryItemMetaResponse,
 	JacobContestWithParticipationsDto,
 	JoinEventParams,
 	LeaderboardDto,
@@ -8156,6 +8159,51 @@ export const getStyles = async (options?: RequestInit) => {
 };
 
 /**
+ * @summary Get Inventory Item Texture Metadata
+ */
+export type getInventoryItemMetaResponse200 = {
+	data: InventoryItemMetaResponse;
+	status: 200;
+};
+
+export type getInventoryItemMetaResponseSuccess = getInventoryItemMetaResponse200 & {
+	headers: Headers;
+};
+export type getInventoryItemMetaResponse = getInventoryItemMetaResponseSuccess;
+
+export const getGetInventoryItemMetaUrl = (
+	inventoryUuid: string,
+	slotId: string,
+	params?: GetInventoryItemMetaParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/${inventoryUuid}/${slotId}/meta?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/${inventoryUuid}/${slotId}/meta`;
+};
+
+export const getInventoryItemMeta = async (
+	inventoryUuid: string,
+	slotId: string,
+	params?: GetInventoryItemMetaParams,
+	options?: RequestInit
+) => {
+	return customFetch<getInventoryItemMetaResponse>(getGetInventoryItemMetaUrl(inventoryUuid, slotId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * @summary Get Inventory Item Texture
  */
 export type getInventoryItemTextureResponse204 = {
@@ -8168,12 +8216,33 @@ export type getInventoryItemTextureResponseSuccess = getInventoryItemTextureResp
 };
 export type getInventoryItemTextureResponse = getInventoryItemTextureResponseSuccess;
 
-export const getGetInventoryItemTextureUrl = (inventoryUuid: string, slotId: string) => {
-	return `${ELITE_API_URL}/textures/${inventoryUuid}/${slotId}`;
+export const getGetInventoryItemTextureUrl = (
+	inventoryUuid: string,
+	slotId: string,
+	params?: GetInventoryItemTextureParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/${inventoryUuid}/${slotId}?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/${inventoryUuid}/${slotId}`;
 };
 
-export const getInventoryItemTexture = async (inventoryUuid: string, slotId: string, options?: RequestInit) => {
-	return customFetch<getInventoryItemTextureResponse>(getGetInventoryItemTextureUrl(inventoryUuid, slotId), {
+export const getInventoryItemTexture = async (
+	inventoryUuid: string,
+	slotId: string,
+	params?: GetInventoryItemTextureParams,
+	options?: RequestInit
+) => {
+	return customFetch<getInventoryItemTextureResponse>(getGetInventoryItemTextureUrl(inventoryUuid, slotId, params), {
 		...options,
 		method: 'GET',
 	});
