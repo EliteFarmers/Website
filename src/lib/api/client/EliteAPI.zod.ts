@@ -11836,11 +11836,31 @@ export const zodGetStylesResponseItem = zod.object({
 export const zodGetStylesResponse = zod.array(zodGetStylesResponseItem);
 
 /**
+ * @summary Get Inventory Item Texture Metadata
+ */
+export const zodGetInventoryItemMetaParams = zod.object({
+	inventoryUuid: zod.string(),
+	slotId: zod.string(),
+});
+
+export const zodGetInventoryItemMetaQueryParams = zod.object({
+	packs: zod.string().nullish(),
+});
+
+export const zodGetInventoryItemMetaResponse = zod.object({
+	packId: zod.string().nullish().describe('Texture Pack ID where the item texture is located'),
+});
+
+/**
  * @summary Get Inventory Item Texture
  */
 export const zodGetInventoryItemTextureParams = zod.object({
 	inventoryUuid: zod.string(),
 	slotId: zod.string(),
+});
+
+export const zodGetInventoryItemTextureQueryParams = zod.object({
+	packs: zod.string().nullish(),
 });
 
 /**

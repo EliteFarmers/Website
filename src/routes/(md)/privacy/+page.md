@@ -7,7 +7,7 @@ blueprint: page
 
 # Privacy Policy
 
-<sub>Last updated: <strong>October 18, 2025</strong></sub>
+<sub>Last updated: <strong>October 19, 2025</strong></sub>
 
 This Privacy Policy explains how we collect, use, and protect your information when you use our Service. By using the Service, you agree to the practices described in this policy.
 
@@ -42,7 +42,7 @@ When you log in to our Service using Discord, we receive and store limited infor
 ### 4. Automatically Collected Usage Data
 
 - **Service Analytics**: We collect anonymous data about how you interact with our Service (e.g., which features are used most). This helps us improve the user experience.
-- **Google Analytics**: We use Google Analytics to analyze website traffic. This service collects anonymous data like your browser and which pages you visit. This data is aggregated and cannot be used to identify you personally.
+- **Google Analytics**: We use Google Analytics to help us analyze website traffic. If you provide consent through our cookie banner, we may also enable Google Signals. This feature enhances our analytics by associating your visit information with your Google account, if you are signed-in and have consented to Ads Personalization on Google.<br/><br/>This provides us with aggregated and anonymized demographic data (like age, gender) and interest data, which helps us better understand our users. This data is always aggregated and we cannot see information about individual users. You can access and manage this data at any time through Google's [My Ad Center](https://myadcenter.google.com/).
 
 ## Cookies and Similar Technologies
 
@@ -76,16 +76,12 @@ We do not sell your Personal Data. We only share your information in the followi
 - **Publicly**: Public Data (like your linked Minecraft accounts and game stats) is visible to other users of the Service.
 - **For Legal Reasons**: We may disclose your information if required by law or to protect the rights, property, or safety of our company, our users, or the public.
 - **Business Transfers**: If we are involved in a merger or acquisition, your data may be transferred. We will notify you before this happens.
-- **With Ad Partners**: We may display ads on our website. To do this, we may partner with third-party ad networks. These networks may use cookies and similar technologies to collect anonymous data about your browsing activities to show you more relevant ads. You can typically opt out of personalized advertising through industry tools like the [NAI Opt-Out](https://optout.networkadvertising.org/) or [DAA WebChoices Tool](https://optout.aboutads.info/).
+- **With Advertising Partners**: If you consent to advertising cookies, we may use data collected through services like Google Signals to enable remarketing, which means you might see ads for our Service on other websites. In the future, we may partner with other third-party ad networks that use similar technologies. Your consent is always required, and you can manage your preferences through our cookie banner and your Google account settings.
 
-## Data Security and Retention
+## Data Security, Retention and International Transfer
 
 - **Security**: We take reasonable measures to protect your information, but no online service is 100% secure. We cannot guarantee absolute security.
 - **Retention**: We retain your Personal Data only as long as necessary to provide the Service and comply with our legal obligations. You can request account and data deletion by contacting us.
-
-## Data Security and International Transfer
-
-- **Security**: We take reasonable measures to protect your information, but no online service is 100% secure. We cannot guarantee absolute security.
 - **International Data Transfer**: Your information is processed on servers that may be located outside of your state, province, or country, where the data protection laws may differ. By using our Service, you consent to the transfer of your information to the United States. We will take all steps reasonably necessary to ensure that your data is treated securely.
 
 ## Your Rights and Choices

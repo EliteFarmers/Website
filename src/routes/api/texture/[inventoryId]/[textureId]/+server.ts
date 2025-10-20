@@ -1,7 +1,16 @@
 import { getInventoryItemTexture } from '$lib/api';
 
-export async function GET({ params }) {
-	const { response, data } = await getInventoryItemTexture(params.inventoryId, params.textureId);
+export async function GET({ params, url }) {
+	const packIds = url.searchParams.get('packs');
+	const { response, data } = await getInventoryItemTexture(
+		params.inventoryId,
+		params.textureId,
+		packIds
+			? {
+					packs: packIds,
+				}
+			: undefined
+	);
 	return new Response(data as unknown as Blob, {
 		status: response.status,
 		headers: {
