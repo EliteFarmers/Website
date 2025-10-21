@@ -6,6 +6,7 @@
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
+	import { formatLeaderboardAmount } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
@@ -36,7 +37,9 @@
 	const topTen = $derived(
 		entries
 			.slice(0, 10)
-			.map((entry, i) => `${i + offset}. ${entry.ign} - ${entry.amount?.toLocaleString()}`)
+			.map(
+				(entry, i) => `${i + offset}. ${entry.ign} - ${formatLeaderboardAmount(data.leaderboard, entry.amount)}`
+			)
 			.join('\n')
 	);
 
@@ -193,12 +196,13 @@
 			interval, then using the difference between their current score and the initial score for their score shown
 			here. High scores on these leaderboards may be due to minions or other factors. A player must have reached
 			the minimum amount of
-			<strong>{data.lb.minimumScore.toLocaleString()}</strong> to have their initial score saved.
+			<strong>{formatLeaderboardAmount(data.leaderboard, data.lb.minimumScore)}</strong> to have their initial score
+			saved.
 		</p>
 	{:else}
 		<p class="mx-auto max-w-lg py-4 text-center text-sm">
 			This leaderboard only consists of the top players who have been searched on this website and have hit the
-			minimum score of <strong>{data.lb.minimumScore.toLocaleString()}</strong>.
+			minimum score of <strong>{formatLeaderboardAmount(data.leaderboard, data.lb.minimumScore)}</strong>.
 		</p>
 	{/if}
 </section>

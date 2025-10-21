@@ -2,6 +2,7 @@ import { Crop, getCropFromName } from 'farming-weight';
 import type { MemberCosmeticsDto, PlayerDataDto, UserSettingsDto } from './api';
 import { MINECRAFT_COLORS, MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
 import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
+import type { LeaderboardInfo } from './constants/leaderboards';
 import { DEFAULT_SKILL_CAPS, LEVEL_XP, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
 import type { PlusColor, RankName, Skill } from './skyblock';
 
@@ -329,4 +330,31 @@ export function formatIgn(ign?: string | null, meta?: MemberCosmeticsDto | null,
 	const suffix = meta?.suffix || settings?.suffix || '';
 
 	return `${prefix} ${ign} ${suffix}`;
+}
+
+export function formatLeaderboardAmount(leaderboard?: LeaderboardInfo, amount = 0): string {
+	const options = getLeaderboardFormatOptions(leaderboard);
+	return leaderboard?.id.startsWith('skyblockxp')
+		? (amount / 100).toLocaleString(undefined, options)
+		: amount.toLocaleString(undefined, options);
+}
+
+export function getLeaderboardFormatOptions(leaderboard?: LeaderboardInfo): Intl.NumberFormatOptions {
+	if (!leaderboard) return {};
+
+	if (leaderboard.id.startsWith('skyblockxp')) {
+		return {
+			maximumFractionDigits: 2,
+			minimumFractionDigits: 2,
+		};
+	}
+
+	if (leaderboard.scoreDataType.toString() === 'Decimal') {
+		return {
+			maximumFractionDigits: 1,
+			minimumFractionDigits: 1,
+		};
+	}
+
+	return {};
 }
