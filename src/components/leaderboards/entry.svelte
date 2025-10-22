@@ -2,7 +2,7 @@
 	import Gamemode from '$comp/stats/player/gamemode.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { type LeaderboardInfo } from '$lib/constants/leaderboards';
-	import { formatIgn } from '$lib/format';
+	import { formatIgn, formatLeaderboardAmount } from '$lib/format';
 	import { isValidLeaderboardStyle, type LeaderboardStyleText } from '$lib/styles/style';
 
 	interface Props {
@@ -23,28 +23,8 @@
 		disabled = false,
 	}: Props = $props();
 
-	let options = $derived.by(() => {
-		if (leaderboard?.id.startsWith('skyblockxp')) {
-			return {
-				maximumFractionDigits: 2,
-				minimumFractionDigits: 2,
-			};
-		}
-
-		if (leaderboard?.scoreDataType.toString() === 'Decimal') {
-			return {
-				maximumFractionDigits: 1,
-				minimumFractionDigits: 1,
-			};
-		}
-
-		return {
-			maximumFractionDigits: 1,
-		};
-	});
-
 	let ign = $state(entry.ign);
-	let amount = $derived(leaderboard?.id.startsWith('skyblockxp') ? (entry.amount ?? 0) / 100 : entry.amount);
+	let amount = $derived(entry.amount);
 	let profile = $state(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
 	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
@@ -153,7 +133,7 @@
 			</div>
 			<div class="mr-2 flex flex-col items-end justify-center align-middle md:mx-2">
 				<span class="xs:text-xl text-sm leading-none sm:text-2xl" style={scoreStyles}>
-					{amount?.toLocaleString(undefined, options)}
+					{formatLeaderboardAmount(leaderboard, amount)}
 				</span>
 				{#if showLeaderboardName}
 					<div

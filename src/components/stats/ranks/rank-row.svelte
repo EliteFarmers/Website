@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatLeaderboardAmount } from '$lib/format';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -14,7 +15,7 @@
 	const ctx = getStatsContext();
 
 	const lb = $derived.by(() => {
-		if (!leaderboards) return null;
+		if (!leaderboards) return undefined;
 		return leaderboards.leaderboards?.[rank.id];
 	});
 </script>
@@ -29,7 +30,7 @@
 			{#if rank.amount === 0}
 				<span class="text-muted-foreground text-sm">No progress yet!</span>
 			{:else}
-				<span class="text-sm">{rank.amount.toLocaleString()}</span>
+				<span class="text-sm">{formatLeaderboardAmount(lb, rank.amount)}</span>
 			{/if}
 		</div>
 		<a
