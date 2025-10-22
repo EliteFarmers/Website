@@ -1,0 +1,39 @@
+<script lang="ts">
+	import type { ItemDto } from '$lib/api';
+	import ItemIcon from '../item-icon.svelte';
+	interface Props {
+		item: ItemDto | null;
+		inventoryId: string;
+		onSelect?: (item: ItemDto) => void;
+		highlight?: boolean;
+	}
+
+	let { item, inventoryId, onSelect, highlight = false }: Props = $props();
+</script>
+
+{#if item}
+	{@const texture = item.imageUrl ?? `/api/texture/${inventoryId}/${item.slot}.webp`}
+	{#if onSelect}
+		<button class="relative" onclick={() => onSelect?.(item)}>
+			<ItemIcon url={texture} class={highlight ? 'border-link/50' : ''} />
+			{#if item?.count && item.count > 1}
+				<span
+					class="absolute right-0.5 bottom-0.5 rounded-md px-1 text-sm font-bold text-white text-shadow-lg/40"
+					>{item.count}</span
+				>
+			{/if}
+		</button>
+	{:else}
+		<div class="relative">
+			<ItemIcon url={texture} class={highlight ? 'border-link/50' : ''} />
+			{#if item?.count && item.count > 1}
+				<span
+					class="absolute right-0.5 bottom-0.5 rounded-md px-1 text-sm font-bold text-white text-shadow-lg/40"
+					>{item.count}</span
+				>
+			{/if}
+		</div>
+	{/if}
+{:else}
+	<div class="{highlight ? 'border-link/50' : ''} bg-card size-9 rounded-md border p-1 shadow-md sm:size-12"></div>
+{/if}
