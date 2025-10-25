@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FormattedText from '$comp/items/formatted-text.svelte';
+	import ItemRender from '$comp/items/item-render.svelte';
 	import Lorebtn from '$comp/items/lorebtn.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
@@ -48,7 +49,7 @@
 			)}
 			{#if piece}
 				<div class="flex w-full items-center justify-between">
-					<div class="flex flex-row items-center gap-2">
+					<div class="flex flex-row items-center">
 						<DropdownMenu.Root>
 							<DropdownMenu.Trigger class={buttonVariants({ variant: 'ghost' })}>
 								<Menu size={20} />
@@ -81,7 +82,10 @@
 								</DropdownMenu.RadioGroup>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
-						<span class="text-lg font-semibold"><FormattedText text={piece.item.name ?? ''} /></span>
+						<div class="flex flex-row items-center gap-1">
+							<ItemRender skyblockId={piece.item.skyblockId ?? ''} class="size-10" />
+							<span class="text-lg font-semibold"><FormattedText text={piece.item.name ?? ''} /></span>
+						</div>
 					</div>
 					<div class="flex flex-row items-center gap-2">
 						{#if !best}

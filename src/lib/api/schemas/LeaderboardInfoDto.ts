@@ -18,6 +18,11 @@ export interface LeaderboardInfoDto {
 	 * @nullable
 	 */
 	short?: string | null;
+	/**
+	 * Item Id if a collection based leaderboard
+	 * @nullable
+	 */
+	itemId?: string | null;
 	/** Leaderboard category */
 	category: string;
 	/** If true, the leaderboard is profile based */

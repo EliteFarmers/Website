@@ -72,6 +72,7 @@ import type {
 	GetEntitlementsParams,
 	GetInventoryItemMetaParams,
 	GetInventoryItemTextureParams,
+	GetItemTextureParams,
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
 	GetLeaderboardParams,
@@ -79,6 +80,7 @@ import type {
 	GetMedalBracketsParams,
 	GetMultiplePlayerRanks200,
 	GetMultiplePlayerRanksParams,
+	GetPetTextureParams,
 	GetPlayerLeaderboardRanksParams,
 	GetPlayerRank1Params,
 	GetPlayerRank2Params,
@@ -8249,39 +8251,72 @@ export const getInventoryItemTexture = async (
 };
 
 /**
- * Not available to the public yet.
- * @summary Get Minecraft Item Texture
+ * @summary Get Skyblock Item Texture
  */
 export type getItemTextureResponse204 = {
 	data: void;
 	status: 204;
 };
 
-export type getItemTextureResponse401 = {
-	data: void;
-	status: 401;
-};
-
-export type getItemTextureResponse403 = {
-	data: void;
-	status: 403;
-};
-
 export type getItemTextureResponseSuccess = getItemTextureResponse204 & {
 	headers: Headers;
 };
-export type getItemTextureResponseError = (getItemTextureResponse401 | getItemTextureResponse403) & {
+export type getItemTextureResponse = getItemTextureResponseSuccess;
+
+export const getGetItemTextureUrl = (itemId: string, params?: GetItemTextureParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/items/${itemId}?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/items/${itemId}`;
+};
+
+export const getItemTexture = async (itemId: string, params?: GetItemTextureParams, options?: RequestInit) => {
+	return customFetch<getItemTextureResponse>(getGetItemTextureUrl(itemId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Skyblock Pet Texture
+ */
+export type getPetTextureResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getPetTextureResponseSuccess = getPetTextureResponse204 & {
 	headers: Headers;
 };
+export type getPetTextureResponse = getPetTextureResponseSuccess;
 
-export type getItemTextureResponse = getItemTextureResponseSuccess | getItemTextureResponseError;
+export const getGetPetTextureUrl = (petId: string, params?: GetPetTextureParams) => {
+	const normalizedParams = new URLSearchParams();
 
-export const getGetItemTextureUrl = (itemId: string) => {
-	return `${ELITE_API_URL}/textures/${itemId}`;
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/pets/${petId}?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/pets/${petId}`;
 };
 
-export const getItemTexture = async (itemId: string, options?: RequestInit) => {
-	return customFetch<getItemTextureResponse>(getGetItemTextureUrl(itemId), {
+export const getPetTexture = async (petId: string, params?: GetPetTextureParams, options?: RequestInit) => {
+	return customFetch<getPetTextureResponse>(getGetPetTextureUrl(petId, params), {
 		...options,
 		method: 'GET',
 	});

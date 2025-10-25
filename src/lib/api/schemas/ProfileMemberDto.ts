@@ -12,6 +12,7 @@ import type { ProfileMemberDtoMeta } from './ProfileMemberDtoMeta';
 import type { ProfileMemberDtoCollections } from './ProfileMemberDtoCollections';
 import type { ProfileMemberDtoCollectionTiers } from './ProfileMemberDtoCollectionTiers';
 import type { ProfileMemberDtoCraftedMinions } from './ProfileMemberDtoCraftedMinions';
+import type { ProfileMemberDtoSacks } from './ProfileMemberDtoSacks';
 import type { PetDto } from './PetDto';
 import type { UnparsedApiDataDto } from './UnparsedApiDataDto';
 import type { JacobDataDto } from './JacobDataDto';
@@ -36,6 +37,7 @@ export interface ProfileMemberDto {
 	collections: ProfileMemberDtoCollections;
 	collectionTiers: ProfileMemberDtoCollectionTiers;
 	craftedMinions: ProfileMemberDtoCraftedMinions;
+	sacks: ProfileMemberDtoSacks;
 	pets: PetDto[];
 	unparsed: UnparsedApiDataDto;
 	jacob: JacobDataDto;

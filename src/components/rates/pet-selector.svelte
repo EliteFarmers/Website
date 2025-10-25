@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FormattedText from '$comp/items/formatted-text.svelte';
+	import ItemRender from '$comp/items/item-render.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { buttonVariants } from '$ui/button';
@@ -84,7 +85,7 @@
 						? 'border-muted'
 						: 'border-transparent'} has-[.selectable:hover]:bg-muted/30 flex w-full cursor-pointer items-center justify-between rounded-lg border-[3px] border-solid px-1"
 				>
-					<div class="flex h-full flex-1 flex-row items-center gap-2">
+					<div class="flex h-full flex-1 flex-row items-center">
 						<DropdownMenu.Root>
 							<DropdownMenu.Trigger class={buttonVariants({ variant: 'ghost' })}>
 								<Menu size={20} />
@@ -114,7 +115,12 @@
 								</DropdownMenu.RadioGroup>
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
-						<button class="selectable h-10 flex-1 text-left" onclick={() => onSelectedChange(type, pet)}>
+						<button
+							class="selectable flex h-10 flex-1 items-center text-left"
+							onclick={() => onSelectedChange(type, pet)}
+						>
+							<ItemRender skyblockId={pet.pet.type ?? ''} pet class="size-10" />
+
 							<span class="text-lg font-semibold"><FormattedText text={pet.getFormattedName()} /></span>
 						</button>
 					</div>

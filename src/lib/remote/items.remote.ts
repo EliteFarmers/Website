@@ -24,3 +24,29 @@ export const getItems = query(z.array(z.string()), async (items) => {
 
 	return result;
 });
+
+export const getItemValue = query.batch(z.string(), async (itemIds) => {
+	const lookup = new Map(itemIds.map((id) => [id, getSingleItemValue(id)]));
+	return (itemId) => lookup.get(itemId) ?? { ah: 0, bazaar: 0, npc: 0, lowest: 0 };
+});
+
+function getSingleItemValue(itemId: string) {
+	const bz = cache?.bazaar.products;
+	const ah = cache?.auctions.items;
+
+	const npcPrice = bz?.[itemId]?.npc ?? 0;
+	const ahPrice = Math.min(...(ah?.[itemId]?.filter((a) => a.lowest3Day !== -1).map((a) => a.lowest3Day) ?? [0]));
+	const bazaarPrice = bz?.[itemId]?.averageSellOrder ?? 0;
+
+	const lowestValue = Math.max(
+		npcPrice,
+		Math.min(ahPrice ? ahPrice : npcPrice, bazaarPrice ? bazaarPrice : npcPrice)
+	);
+
+	return {
+		ah: ahPrice,
+		bazaar: bazaarPrice,
+		npc: npcPrice,
+		lowest: lowestValue,
+	};
+}
