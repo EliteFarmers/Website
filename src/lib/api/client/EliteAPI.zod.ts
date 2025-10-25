@@ -6300,6 +6300,7 @@ export const zodGetLeaderboardResponse = zod.object({
 	id: zod.string(),
 	title: zod.string(),
 	shortTitle: zod.string().nullish(),
+	itemId: zod.string().nullish().describe('Item Id if this is a collection leaderboard'),
 	interval: zod.string().nullish(),
 	firstInterval: zod.string().nullish(),
 	limit: zod.number(),
@@ -6362,6 +6363,7 @@ export const zodGetLeaderboardsResponse = zod.object({
 		zod.object({
 			title: zod.string().describe('Leaderboard title'),
 			short: zod.string().nullish().describe('Leaderboard short title'),
+			itemId: zod.string().nullish().describe('Item Id if a collection based leaderboard'),
 			category: zod.string().describe('Leaderboard category'),
 			profile: zod.coerce.boolean<boolean>().describe('If true, the leaderboard is profile based'),
 			minimumScore: zod.number().describe('Minimum score required to be on the leaderboard'),
@@ -7491,6 +7493,7 @@ export const zodGetProfileResponse = zod.object({
 	collections: zod.record(zod.string(), zod.number()),
 	collectionTiers: zod.record(zod.string(), zod.number()),
 	craftedMinions: zod.record(zod.string(), zod.number()),
+	sacks: zod.record(zod.string(), zod.number()),
 	pets: zod.array(
 		zod.object({
 			uuid: zod.string().nullish(),
@@ -8114,6 +8117,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 	collections: zod.record(zod.string(), zod.number()),
 	collectionTiers: zod.record(zod.string(), zod.number()),
 	craftedMinions: zod.record(zod.string(), zod.number()),
+	sacks: zod.record(zod.string(), zod.number()),
 	pets: zod.array(
 		zod.object({
 			uuid: zod.string().nullish(),
@@ -11864,11 +11868,25 @@ export const zodGetInventoryItemTextureQueryParams = zod.object({
 });
 
 /**
- * Not available to the public yet.
- * @summary Get Minecraft Item Texture
+ * @summary Get Skyblock Item Texture
  */
 export const zodGetItemTextureParams = zod.object({
 	itemId: zod.string(),
+});
+
+export const zodGetItemTextureQueryParams = zod.object({
+	packs: zod.string().nullish(),
+});
+
+/**
+ * @summary Get Skyblock Pet Texture
+ */
+export const zodGetPetTextureParams = zod.object({
+	petId: zod.string(),
+});
+
+export const zodGetPetTextureQueryParams = zod.object({
+	packs: zod.string().nullish(),
 });
 
 /**

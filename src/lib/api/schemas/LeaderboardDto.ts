@@ -14,6 +14,11 @@ export interface LeaderboardDto {
 	title: string;
 	/** @nullable */
 	shortTitle?: string | null;
+	/**
+	 * Item Id if this is a collection leaderboard
+	 * @nullable
+	 */
+	itemId?: string | null;
 	/** @nullable */
 	interval?: string | null;
 	/** @nullable */

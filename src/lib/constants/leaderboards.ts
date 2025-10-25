@@ -35,13 +35,14 @@ export function parseLeaderboards(response?: LeaderboardsResponse): {
 		.filter(([, v]) => v.intervalType + '' === 'Current')
 		.map<LeaderboardInfo>(([key, value]) => {
 			const config = LEADERBOARDS[key as keyof typeof LEADERBOARDS];
+
 			const data = {
 				...value,
 				...(config ?? {}),
 				intervals: ['current'] as IntervalType[],
 				id: key,
 				suffix: '',
-			};
+			} satisfies LeaderboardInfo;
 
 			if (leaderboards[`${key}-weekly`]) {
 				data.intervals.push('weekly');
@@ -51,6 +52,10 @@ export function parseLeaderboards(response?: LeaderboardsResponse): {
 			if (leaderboards[`${key}-monthly`]) {
 				data.intervals.push('monthly');
 				lookup[`${key}-monthly`] = { ...data, id: `${key}-monthly`, suffix: ' Monthly' };
+			}
+
+			if (data.itemId && !data.icon) {
+				data.icon = `/api/item/${data.itemId}.webp`;
 			}
 
 			lookup[key] = data;
