@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ItemName from '$comp/items/item-name.svelte';
+	import ItemRender from '$comp/items/item-render.svelte';
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import FileText from '@lucide/svelte/icons/file-text';
@@ -48,8 +49,11 @@
 
 <div class="flex w-full flex-col items-start">
 	<div class="flex w-full items-center justify-between">
-		<div class="flex flex-row items-center gap-1">
+		<div class="flex h-10 flex-row items-center gap-1">
 			{#if progress.item?.name}
+				{#if progress.item?.skyblockId}
+					<ItemRender skyblockId={progress.item.skyblockId} class="size-10" />
+				{/if}
 				<ItemName name={progress.item.name} />
 			{:else}
 				<span>{progress.name}</span>

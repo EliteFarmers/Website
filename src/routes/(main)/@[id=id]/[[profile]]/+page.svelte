@@ -94,5 +94,6 @@
 </section>
 
 <InventorySelect />
+<!-- <SackContents /> -->
 <JacobInfo />
 <Breakdown />
