@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { HypixelInventoryDto, ItemDto } from '$lib/api';
 	import { TEXTURE_PACKS } from '$lib/constants/packs';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getInventoryItemDetails } from '$lib/remote';
 	import * as Dialog from '$ui/dialog';
 	import { Skeleton } from '$ui/skeleton';
 	import ItemLore from '../item-lore.svelte';
+	import PackIcon from '../pack-icon.svelte';
 	import InventorySlot from './inventory-slot.svelte';
 
 	interface Props {
@@ -34,6 +36,7 @@
 	let selectedItem = $state<ItemDto | null>(null);
 	let open = $state(false);
 	let itemDetails = $state<ReturnType<typeof getInventoryItemDetails> | null>(null);
+	const gbl = getGlobalContext();
 
 	function onSelect(item: ItemDto | null) {
 		selectedItem = item;
@@ -44,7 +47,10 @@
 			inventoryUuid: inventory.id,
 			skyblockId: selectedItem?.skyblockId ?? '',
 			slotId: selectedItem ? String(selectedItem.slot) : '',
-			// packs: 'hypixelplus',
+			packs: gbl.packs
+				.filter((p) => p.on)
+				.map((p) => p.id)
+				.join(','),
 		});
 	}
 </script>
@@ -121,11 +127,7 @@
 						target="_blank"
 						rel="noopener"
 					>
-						<img
-							src="/api/packicon/{itemDetails.current.meta.packId}.png"
-							alt="{pack.name} Icon"
-							class="pixelated size-8"
-						/>
+						<PackIcon packId={itemDetails.current.meta.packId} class="size-10" />
 						<div class="flex flex-col items-start">
 							<p class="text-xs">Texture provided by</p>
 							<p class="text-primary underline">{pack.name} by {pack.author}</p>

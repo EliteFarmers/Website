@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { PersistedState } from 'runed';
 import { getContext, setContext } from 'svelte';
 
@@ -28,18 +29,25 @@ export class Theme {
 	}
 
 	useSystem() {
+		if (!browser) return;
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		const systemTheme = prefersDark ? 'dark' : 'light';
 		this.theme = systemTheme;
 	}
 }
 
+export interface ThemeInfo {
+	name: string;
+	class: string;
+	isDark: boolean;
+}
+
 export const themes = [
-	{ name: 'Default Light', class: 'light' as const, isDark: false },
-	{ name: 'Default Dark', class: 'dark' as const, isDark: true },
+	{ name: 'Light', class: 'light' as const, isDark: false },
+	{ name: 'Dark', class: 'dark' as const, isDark: true },
 	{ name: 'Shallow Coast', class: 'sea' as const, isDark: false },
 	{ name: 'Vampire', class: 'vampire' as const, isDark: true },
-] as const;
+] satisfies ThemeInfo[];
 export type ThemeClass = (typeof themes)[number]['class'];
 
 export function initThemeContext() {
