@@ -14,6 +14,7 @@ type PersistedData = {
 	dismissedAnnouncements: string[];
 	settings: AuthorizedAccountDto['settings'];
 	minecraftAccounts?: string[];
+	packs?: { id: string; on: boolean; order: number }[];
 };
 
 export class GlobalContext {
@@ -23,9 +24,11 @@ export class GlobalContext {
 	#data = new PersistedState<PersistedData>('global-data', {
 		dismissedAnnouncements: [],
 		settings: {},
+		packs: [],
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
 	#initialized = $state(false);
+	#packsParam = $state('');
 
 	constructor(data: ConstructorData) {
 		this.setValues(data);
@@ -82,7 +85,10 @@ export class GlobalContext {
 			dismissedAnnouncements: dismissed,
 			settings: user?.settings ?? this.data.settings,
 			minecraftAccounts: user?.minecraftAccounts?.map((a) => a.id) ?? this.data.minecraftAccounts,
+			packs: this.data.packs ?? [],
 		};
+
+		this.updatePacksParam();
 	}
 
 	get authorized() {
@@ -91,6 +97,28 @@ export class GlobalContext {
 
 	get data() {
 		return this.#data.current;
+	}
+
+	get packs() {
+		return this.data.packs ?? [];
+	}
+
+	get packsParam() {
+		return this.#packsParam;
+	}
+
+	set packs(packs: { id: string; on: boolean; order: number }[]) {
+		this.#data.current = {
+			...this.#data.current,
+			packs,
+		};
+		this.updatePacksParam();
+	}
+
+	updatePacksParam() {
+		this.#packsParam = this.packs.length
+			? '?packs=' + this.packs.filter((p) => p.on).sort((a, b) => a.order - b.order)[0]?.id
+			: '';
 	}
 
 	get allAnnouncements() {
