@@ -14,13 +14,6 @@
 	let errored = $state(false);
 	let loading = $state(true);
 
-	$effect(() => {
-		if (skyblockId) {
-			loading = true;
-			errored = false;
-		}
-	});
-
 	const gbl = getGlobalContext();
 </script>
 
