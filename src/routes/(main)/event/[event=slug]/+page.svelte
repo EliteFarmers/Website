@@ -180,16 +180,14 @@
 						})}
 					</p>
 				</div>
-				<p><RenderMd content={event.description ?? ''} /></p>
+				<RenderMd content={event.description ?? ''} />
 				{#if event.prizeInfo}
 					<p><strong>Prizes</strong></p>
-					<p><RenderMd content={event.prizeInfo ?? ''} /></p>
+					<RenderMd content={event.prizeInfo ?? ''} />
 				{/if}
 				<p><strong>Rules</strong></p>
 				{#if event.rules}
-					<p>
-						<RenderMd content={event.rules ?? ''} />
-					</p>
+					<RenderMd content={event.rules ?? ''} />
 				{/if}
 				<EventData {event} />
 				<a href="#agreement" class="text-link underline">Event Agreement</a>

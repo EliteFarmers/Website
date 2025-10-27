@@ -15,7 +15,17 @@
 	const currentTheme = getThemeContext();
 	const gbl = getGlobalContext();
 
-	let items = $derived(Object.entries(TEXTURE_PACKS).map(([id], i) => ({ id: i, pack: id })));
+	let items = $derived(
+		Object.entries(TEXTURE_PACKS)
+			.map(([id], i) => ({ id: i, pack: id }))
+			.sort((a, b) => {
+				const packA = gbl.packs.find((p) => p.id === a.pack);
+				const packB = gbl.packs.find((p) => p.id === b.pack);
+				const orderA = packA ? packA.order : Number.MAX_SAFE_INTEGER;
+				const orderB = packB ? packB.order : Number.MAX_SAFE_INTEGER;
+				return orderA - orderB;
+			})
+	);
 
 	function onconsider(e: CustomEvent<DndEvent<{ id: number; pack: string }>>) {
 		items = e.detail.items;
