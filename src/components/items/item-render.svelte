@@ -6,11 +6,11 @@
 	interface Props {
 		skyblockId: string;
 		pet?: boolean;
+		packs?: boolean;
 		class?: string;
 	}
 
-	let { skyblockId, pet = false, class: customClass }: Props = $props();
-
+	let { skyblockId, pet = false, packs = true, class: customClass }: Props = $props();
 	let errored = $state(false);
 	let loading = $state(true);
 
@@ -32,7 +32,7 @@
 	<img
 		loading="lazy"
 		class="h-full w-full rounded-md p-1 {loading || errored ? 'opacity-0' : 'opacity-100'} pixelated aspect-square"
-		src="/api/{pet ? 'pet' : 'item'}/{skyblockId}.webp{gbl.packsParam}"
+		src="/api/{pet ? 'pet' : 'item'}/{skyblockId}.webp{packs ? gbl.packsParam : ''}"
 		alt="Item"
 		onload={() => (loading = false)}
 		onerror={() => {
