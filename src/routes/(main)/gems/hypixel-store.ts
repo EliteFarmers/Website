@@ -8,7 +8,7 @@ export interface GemPackage {
 }
 
 export const STORE_CODE = {
-	code: 'SWEET',
+	code: 'ELITE',
 	youtube: 'https://www.youtube.com/@SweetBootieee',
 	uuid: '13e823891b29408f8b8ea3272001a4e6',
 };
