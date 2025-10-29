@@ -158,6 +158,10 @@
 				]}
 			/>
 		</div>
-		<ContestList contests={recentContests} remaining={Math.max(0, contests.length - recentContests.length)} />
+		<ContestList
+			contests={recentContests}
+			remaining={Math.max(0, contests.length - recentContests.length)}
+			showGhosts={false}
+		/>
 	</div>
 </div>

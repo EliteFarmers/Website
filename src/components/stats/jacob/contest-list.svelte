@@ -7,15 +7,16 @@
 
 	interface Props {
 		contests: NonNullable<JacobDataDto['contests']>;
+		showGhosts: boolean;
 		remaining?: number;
 	}
 
-	let { contests, remaining = 0 }: Props = $props();
+	let { contests, remaining = 0, showGhosts = false }: Props = $props();
 </script>
 
 <ScrollArea orientation="vertical" class="h-96">
 	<div class="flex flex-wrap items-center justify-center gap-2 px-3">
-		{#each contests as contest (`${contest.crop}${contest.timestamp}`)}
+		{#each contests.filter((contest) => showGhosts || contest.medal !== 'ghost') as contest (`${contest.crop}${contest.timestamp}`)}
 			<Contest {contest} class="" />
 		{/each}
 	</div>
