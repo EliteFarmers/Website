@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { page } from '$app/state';
-	import FooterPills from '$comp/footer/footer-pills.svelte';
 	import Footer from '$comp/footer/footer.svelte';
 	import Announcements from '$comp/header/announcements.svelte';
 	import Header from '$comp/header/header.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
 	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
+	import Siderail from '$comp/siderail/siderail.svelte';
 	import type { ErrorResponse } from '$lib/api';
 	import { initPageContext } from '$lib/hooks/page.svelte';
 	import { initFavoritesContext } from '$lib/stores/favorites.svelte';
@@ -88,7 +88,9 @@
 
 			<Content>
 				{@render children?.()}
-				<FooterPills />
+				{#snippet sidebar()}
+					<Siderail />
+				{/snippet}
 			</Content>
 
 			<Footer />

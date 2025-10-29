@@ -43,7 +43,7 @@
 	const gbl = getGlobalContext();
 
 	let selectedPackage = $state<(typeof SKYBLOCK_GEM_PACKAGES)[number] | null>(null);
-	let dialogOpen = $state(true);
+	let dialogOpen = $state(false);
 	const packageUrl = $derived(
 		gbl.session?.ign ? selectedPackage?.url + '?ign=' + gbl.session?.ign : selectedPackage?.url
 	);
@@ -73,11 +73,11 @@
 		</div>
 	</div>
 
-	<h1 class="my-12 text-4xl font-semibold">SkyBlock Gems</h1>
+	<h1 class="my-16 text-4xl font-semibold">SkyBlock Gems</h1>
 	<div class="flex flex-col justify-center gap-4 md:flex-row md:flex-wrap">
 		{#each SKYBLOCK_GEM_PACKAGES as gemPackage (gemPackage.url)}
 			<GemPackage {gemPackage} cookieValue={cookieCoinValue}>
-				{#snippet button(url)}
+				{#snippet button()}
 					<Button
 						onclick={() => {
 							selectedPackage = gemPackage;
@@ -114,7 +114,7 @@
 	<h2 class="my-12 text-4xl font-semibold">Firesales</h2>
 	<div class="flex flex-wrap justify-center gap-4">
 		{#if !firesales?.length}
-			<p class="text-muted-foreground">There are no firesales at the moment!</p>
+			<p class="text-muted-foreground mb-8">There are no firesales at the moment!</p>
 		{:else}
 			{#each firesales as sale (sale.startsAt)}
 				{#each sale.items as item (item.itemId)}
@@ -218,7 +218,7 @@
 						{STORE_CODE.code}
 					</div>
 				</div>
-				<span class="text-xs">You should see this!</span>
+				<span class="text-xs">You should see this when successful!</span>
 			</div>
 
 			<p class="mx-4 my-4 text-center text-sm">

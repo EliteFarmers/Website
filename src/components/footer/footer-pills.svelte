@@ -1,4 +1,5 @@
-<div class="mx-4 mt-24 flex flex-wrap items-center justify-center gap-4 md:mx-8" role="banner">
+<div class="mt-24 flex flex-wrap items-center justify-center gap-4" role="banner">
+	{@render card()}
 	<div
 		class="group border-border/50 bg-card relative h-24 w-64 rounded-md border-2 bg-cover hover:shadow-lg"
 		style="background-image: url(/images/LuminiBanner.webp);"
@@ -48,6 +49,30 @@
 		</a>
 	</div>
 </div>
+
+{#snippet card()}
+	<div
+		class="group border-border/50 bg-card relative h-24 w-64 rounded-md border-2 bg-cover hover:shadow-lg"
+		style="background-image: url(/images/LuminiBanner.webp);"
+	>
+		<a href="/stickers" rel="noopener nofollow" target="_blank" class="h-full w-full">
+			<div class="h-full w-full px-4 py-2">
+				<p class="text-xl text-black">Sticker Shop</p>
+				<div class="absolute top-4 right-4 size-16 overflow-visible rounded-md">
+					<div class="sticker-sprite relative size-full"></div>
+				</div>
+			</div>
+		</a>
+		<div
+			class="bg-card absolute -top-8 -right-[2px] hidden h-8 w-fit rounded-md border-2 px-2 transition-all duration-200 group-hover:block"
+		>
+			<span class="text-xs">
+				Unlock <strong>Patron of The Arts</strong>
+				<a href="/info#Badges" class="text-link hover:underline">badge</a>!
+			</span>
+		</div>
+	</div>
+{/snippet}
 
 <style lang="css">
 	.sticker-sprite {

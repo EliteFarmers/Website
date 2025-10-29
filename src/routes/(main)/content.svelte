@@ -4,18 +4,23 @@
 
 	interface Props {
 		children?: import('svelte').Snippet;
+		sidebar?: import('svelte').Snippet;
 	}
 
-	let { children }: Props = $props();
+	let { children, sidebar }: Props = $props();
 
-	const sidebar = Sidebar.useSidebar();
+	const sidebarState = Sidebar.useSidebar();
 </script>
 
-<div class="@container relative">
+<div class="@container">
 	<div
-		class="mx-4 @7xl:mr-[calc(var(--sidebarWidth)+1rem)]"
-		style="--sidebarWidth: {sidebar.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON}"
+		class="relative flex flex-col @7xl:flex-row @7xl:gap-4"
+		style="--sidebarWidth: {sidebarState.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON};"
 	>
-		{@render children?.()}
+		<div class="min-w-0 flex-1">
+			{@render children?.()}
+		</div>
+
+		<div class="block @7xl:w-[var(--sidebarWidth)]">{@render sidebar?.()}</div>
 	</div>
 </div>
