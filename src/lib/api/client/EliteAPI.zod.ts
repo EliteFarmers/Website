@@ -7553,6 +7553,7 @@ export const zodGetProfileResponse = zod.object({
 					zod.literal(3),
 					zod.literal(4),
 					zod.literal(5),
+					zod.literal(-1),
 				])
 			),
 			personalBests: zod.record(zod.string(), zod.number()),
@@ -8177,6 +8178,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 					zod.literal(3),
 					zod.literal(4),
 					zod.literal(5),
+					zod.literal(-1),
 				])
 			),
 			personalBests: zod.record(zod.string(), zod.number()),

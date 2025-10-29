@@ -2,6 +2,7 @@
 	import type { StrippedContestParticipationDto } from '$lib/api';
 	import * as Popover from '$ui/popover';
 	import CircleAlert from '@lucide/svelte/icons/circle-alert';
+	import Ghost from '@lucide/svelte/icons/ghost';
 
 	interface Props {
 		entry: StrippedContestParticipationDto;
@@ -28,12 +29,24 @@
 					<span class="xs:text-md text-sm sm:text-xl md:text-2xl">???</span>
 				{/if}
 			</p>
+			{#if entry.medal === 'ghost'}
+				<Popover.Mobile>
+					{#snippet trigger()}
+						<Ghost class="text-muted-foreground" />
+					{/snippet}
+					<div>
+						<p class="text-lg font-semibold">Ghost Contest</p>
+						<p class="max-w-xs break-words whitespace-normal">
+							This participation is a "ghost" entry and is not claimable. This player claimed a different
+							crop during the contest.
+						</p>
+					</div>
+				</Popover.Mobile>
+			{/if}
 			{#if entry.removed}
 				<Popover.Mobile>
 					{#snippet trigger()}
-						<div class="mt-2">
-							<CircleAlert class="text-destructive" size={24} />
-						</div>
+						<CircleAlert class="text-destructive mt-0.5" />
 					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
@@ -54,7 +67,7 @@
 			<div class="xs:text-xl font-mono text-sm sm:text-2xl">
 				{entry.collected?.toLocaleString()}
 			</div>
-			{#if entry.medal && entry.medal !== 'none'}
+			{#if entry.medal && entry.medal !== 'none' && entry.medal !== 'ghost'}
 				<img
 					class="pixelated inline-block h-6 w-6"
 					src="/images/medals/{entry.medal}.webp"
