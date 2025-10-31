@@ -1,10 +1,22 @@
+import { sentrySvelteKit } from '@sentry/sveltekit';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { defineConfig } from 'vite';
 
+const plugins = [
+	process.env.SENTRY_ORG && process.env.SENTRY_PROJECT
+		? sentrySvelteKit({
+				org: 'kaeso',
+				project: 'elite-website',
+			})
+		: null,
+	tailwindcss(),
+	sveltekit(),
+];
+
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: plugins.filter((p) => p !== null),
 	optimizeDeps: {
 		exclude: ['@napi-rs/canvas', 'isomorphic-dompurify'],
 	},

@@ -16,7 +16,7 @@
 
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, ContestParticipationDto[]>>((acc, contest) => {
-			if (!contest.crop) return acc;
+			if (!contest.crop || contest.medal === 'ghost') return acc;
 
 			acc[contest.crop] ??= [];
 			acc[contest.crop].push(contest);
