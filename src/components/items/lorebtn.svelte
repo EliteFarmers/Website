@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { ItemDto } from '$lib/api';
 	import { buttonVariants } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import FileText from '@lucide/svelte/icons/file-text';
@@ -6,7 +7,7 @@
 	import ItemLore from './item-lore.svelte';
 
 	interface Props {
-		item: EliteItemDto;
+		item: ItemDto | EliteItemDto;
 		children?: import('svelte').Snippet;
 	}
 

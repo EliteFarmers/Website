@@ -1,10 +1,11 @@
 <script lang="ts">
+	import type { ItemDto } from '$lib/api';
 	import type { EliteItemDto } from 'farming-weight';
 	import FormattedText from './formatted-text.svelte';
 	import Lore from './lore.svelte';
 
 	interface Props {
-		item: EliteItemDto;
+		item: ItemDto | EliteItemDto;
 		title?: boolean;
 		children?: import('svelte').Snippet;
 	}
@@ -32,7 +33,7 @@
 		{#if item.attributes?.player}
 			<p>
 				<span class="font-semibold select-none">Player:</span>
-				<FormattedText text={item.attributes?.player ?? ''} />
+				<FormattedText text={item.attributes?.player.toString() ?? ''} />
 			</p>
 		{/if}
 		{#if item.attributes?.bid}

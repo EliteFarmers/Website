@@ -30,7 +30,7 @@ export function GetRarity(item: Item): Rarity {
 }
 
 export function GetReforge(item: Item): Reforge | undefined {
-	const modifier = item.attributes?.modifier;
+	const modifier = item.attributes?.modifier as string | undefined;
 	if (!modifier) return undefined;
 
 	const reforge = REFORGES[modifier];
