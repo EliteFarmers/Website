@@ -7,10 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { ErrorResponseErrors } from './ErrorResponseErrors';
+import type { DungeonData } from './DungeonData';
 
-export interface ErrorResponse {
-	statusCode: number;
-	message: string;
-	errors: ErrorResponseErrors;
+export interface DungeonTypes {
+	catacombs: DungeonData;
+	master_catacombs: DungeonData;
 }

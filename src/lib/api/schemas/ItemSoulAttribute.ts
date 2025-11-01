@@ -7,10 +7,12 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { ErrorResponseErrors } from './ErrorResponseErrors';
 
-export interface ErrorResponse {
-	statusCode: number;
-	message: string;
-	errors: ErrorResponseErrors;
+export interface ItemSoulAttribute {
+	/** @nullable */
+	mob_id?: string | null;
+	/** @nullable */
+	dropped_instance_id?: string | null;
+	/** @nullable */
+	dropped_mode_id?: string | null;
 }

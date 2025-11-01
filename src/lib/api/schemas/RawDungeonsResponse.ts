@@ -7,12 +7,13 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { RawDungeonsResponseDungeonTypes } from './RawDungeonsResponseDungeonTypes';
+import type { RawDungeonsResponsePlayerClasses } from './RawDungeonsResponsePlayerClasses';
 
-export interface ProblemDetailsError {
-	name: string;
-	reason: string;
+export interface RawDungeonsResponse {
 	/** @nullable */
-	code?: string | null;
+	dungeon_types?: RawDungeonsResponseDungeonTypes;
 	/** @nullable */
-	severity?: string | null;
+	player_classes?: RawDungeonsResponsePlayerClasses;
+	secrets: bigint;
 }

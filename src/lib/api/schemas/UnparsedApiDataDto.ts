@@ -13,6 +13,7 @@ import type { UnparsedApiDataDtoPerks } from './UnparsedApiDataDtoPerks';
 import type { TempStatBuffResponse } from './TempStatBuffResponse';
 import type { UnparsedApiDataDtoAccessoryBagSettings } from './UnparsedApiDataDtoAccessoryBagSettings';
 import type { UnparsedApiDataDtoBestiary } from './UnparsedApiDataDtoBestiary';
+import type { UnparsedApiDataDtoDungeons } from './UnparsedApiDataDtoDungeons';
 
 export interface UnparsedApiDataDto {
 	copper: number;
@@ -26,4 +27,6 @@ export interface UnparsedApiDataDto {
 	accessoryBagSettings?: UnparsedApiDataDtoAccessoryBagSettings;
 	/** @nullable */
 	bestiary?: UnparsedApiDataDtoBestiary;
+	/** @nullable */
+	dungeons?: UnparsedApiDataDtoDungeons;
 }
