@@ -79,9 +79,9 @@
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
 
 	let pets = $derived.by(() => (ctx.member.ready ? FarmingPet.fromArray(ctx.pets) : []));
-	let tools = $derived.by(() => (ctx.member.ready ? FarmingTool.fromArray(ctx.tools) : []));
-	let armor = $derived.by(() => (ctx.member.ready ? FarmingArmor.fromArray(ctx.armor) : []));
-	let equipment = $derived.by(() => (ctx.member.ready ? LotusGear.fromArray(ctx.equipment) : []));
+	let tools = $derived.by(() => (ctx.member.ready ? FarmingTool.fromArray(ctx.tools as EliteItemDto[]) : []));
+	let armor = $derived.by(() => (ctx.member.ready ? FarmingArmor.fromArray(ctx.armor as EliteItemDto[]) : []));
+	let equipment = $derived.by(() => (ctx.member.ready ? LotusGear.fromArray(ctx.equipment as EliteItemDto[]) : []));
 
 	// Deselect pet if it's not on this player
 	onMount(() => {

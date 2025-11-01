@@ -7524,6 +7524,72 @@ export const zodGetProfileResponse = zod.object({
 			.nullish(),
 		accessoryBagSettings: zod.any().nullish(),
 		bestiary: zod.any().nullish(),
+		dungeons: zod
+			.object({
+				dungeon_types: zod
+					.object({
+						catacombs: zod.object({
+							experience: zod.number(),
+							highest_tier_completed: zod.number(),
+							tier_completions: zod.record(zod.string(), zod.number()),
+							times_played: zod.record(zod.string(), zod.number()),
+							best_score: zod.record(zod.string(), zod.number()),
+							mobs_killed: zod.record(zod.string(), zod.number()),
+							most_mobs_killed: zod.record(zod.string(), zod.number()),
+							watcher_kills: zod.record(zod.string(), zod.number()),
+							most_healing: zod.record(zod.string(), zod.number()),
+							fastest_time: zod.record(zod.string(), zod.number()),
+							fastest_time_s: zod.record(zod.string(), zod.number()),
+							fastest_time_s_plus: zod.record(zod.string(), zod.number()),
+							most_damage_tank: zod.record(zod.string(), zod.number()),
+							most_damage_mage: zod.record(zod.string(), zod.number()),
+							most_damage_healer: zod.record(zod.string(), zod.number()),
+							most_damage_archer: zod.record(zod.string(), zod.number()),
+							milestone_completions: zod.record(zod.string(), zod.number()),
+						}),
+						master_catacombs: zod.object({
+							experience: zod.number(),
+							highest_tier_completed: zod.number(),
+							tier_completions: zod.record(zod.string(), zod.number()),
+							times_played: zod.record(zod.string(), zod.number()),
+							best_score: zod.record(zod.string(), zod.number()),
+							mobs_killed: zod.record(zod.string(), zod.number()),
+							most_mobs_killed: zod.record(zod.string(), zod.number()),
+							watcher_kills: zod.record(zod.string(), zod.number()),
+							most_healing: zod.record(zod.string(), zod.number()),
+							fastest_time: zod.record(zod.string(), zod.number()),
+							fastest_time_s: zod.record(zod.string(), zod.number()),
+							fastest_time_s_plus: zod.record(zod.string(), zod.number()),
+							most_damage_tank: zod.record(zod.string(), zod.number()),
+							most_damage_mage: zod.record(zod.string(), zod.number()),
+							most_damage_healer: zod.record(zod.string(), zod.number()),
+							most_damage_archer: zod.record(zod.string(), zod.number()),
+							milestone_completions: zod.record(zod.string(), zod.number()),
+						}),
+					})
+					.nullish(),
+				player_classes: zod
+					.object({
+						healer: zod.object({
+							experience: zod.number(),
+						}),
+						mage: zod.object({
+							experience: zod.number(),
+						}),
+						berserk: zod.object({
+							experience: zod.number(),
+						}),
+						archer: zod.object({
+							experience: zod.number(),
+						}),
+						tank: zod.object({
+							experience: zod.number(),
+						}),
+					})
+					.nullish(),
+				secrets: zod.number(),
+			})
+			.nullish(),
 	}),
 	jacob: zod.object({
 		medals: zod.object({
@@ -7624,7 +7690,44 @@ export const zodGetProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -7675,7 +7778,44 @@ export const zodGetProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -7726,7 +7866,44 @@ export const zodGetProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -7777,7 +7954,44 @@ export const zodGetProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -8023,7 +8237,44 @@ export const zodGetProfileInventoryResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -8149,6 +8400,72 @@ export const zodGetSelectedProfileResponse = zod.object({
 			.nullish(),
 		accessoryBagSettings: zod.any().nullish(),
 		bestiary: zod.any().nullish(),
+		dungeons: zod
+			.object({
+				dungeon_types: zod
+					.object({
+						catacombs: zod.object({
+							experience: zod.number(),
+							highest_tier_completed: zod.number(),
+							tier_completions: zod.record(zod.string(), zod.number()),
+							times_played: zod.record(zod.string(), zod.number()),
+							best_score: zod.record(zod.string(), zod.number()),
+							mobs_killed: zod.record(zod.string(), zod.number()),
+							most_mobs_killed: zod.record(zod.string(), zod.number()),
+							watcher_kills: zod.record(zod.string(), zod.number()),
+							most_healing: zod.record(zod.string(), zod.number()),
+							fastest_time: zod.record(zod.string(), zod.number()),
+							fastest_time_s: zod.record(zod.string(), zod.number()),
+							fastest_time_s_plus: zod.record(zod.string(), zod.number()),
+							most_damage_tank: zod.record(zod.string(), zod.number()),
+							most_damage_mage: zod.record(zod.string(), zod.number()),
+							most_damage_healer: zod.record(zod.string(), zod.number()),
+							most_damage_archer: zod.record(zod.string(), zod.number()),
+							milestone_completions: zod.record(zod.string(), zod.number()),
+						}),
+						master_catacombs: zod.object({
+							experience: zod.number(),
+							highest_tier_completed: zod.number(),
+							tier_completions: zod.record(zod.string(), zod.number()),
+							times_played: zod.record(zod.string(), zod.number()),
+							best_score: zod.record(zod.string(), zod.number()),
+							mobs_killed: zod.record(zod.string(), zod.number()),
+							most_mobs_killed: zod.record(zod.string(), zod.number()),
+							watcher_kills: zod.record(zod.string(), zod.number()),
+							most_healing: zod.record(zod.string(), zod.number()),
+							fastest_time: zod.record(zod.string(), zod.number()),
+							fastest_time_s: zod.record(zod.string(), zod.number()),
+							fastest_time_s_plus: zod.record(zod.string(), zod.number()),
+							most_damage_tank: zod.record(zod.string(), zod.number()),
+							most_damage_mage: zod.record(zod.string(), zod.number()),
+							most_damage_healer: zod.record(zod.string(), zod.number()),
+							most_damage_archer: zod.record(zod.string(), zod.number()),
+							milestone_completions: zod.record(zod.string(), zod.number()),
+						}),
+					})
+					.nullish(),
+				player_classes: zod
+					.object({
+						healer: zod.object({
+							experience: zod.number(),
+						}),
+						mage: zod.object({
+							experience: zod.number(),
+						}),
+						berserk: zod.object({
+							experience: zod.number(),
+						}),
+						archer: zod.object({
+							experience: zod.number(),
+						}),
+						tank: zod.object({
+							experience: zod.number(),
+						}),
+					})
+					.nullish(),
+				secrets: zod.number(),
+			})
+			.nullish(),
 	}),
 	jacob: zod.object({
 		medals: zod.object({
@@ -8249,7 +8566,44 @@ export const zodGetSelectedProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -8300,7 +8654,44 @@ export const zodGetSelectedProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -8351,7 +8742,44 @@ export const zodGetSelectedProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -8402,7 +8830,44 @@ export const zodGetSelectedProfileResponse = zod.object({
 							.nullish()
 							.describe('Applied enchantments with their levels'),
 						attributes: zod
-							.record(zod.string(), zod.string())
+							.object({
+								runes: zod.record(zod.string(), zod.number()).nullish(),
+								effects: zod
+									.array(
+										zod.object({
+											level: zod.number(),
+											effect: zod.string().nullish(),
+											duration_ticks: zod.number(),
+										})
+									)
+									.nullish(),
+								necromancer_souls: zod
+									.array(
+										zod.object({
+											mob_id: zod.string().nullish(),
+											dropped_instance_id: zod.string().nullish(),
+											dropped_mode_id: zod.string().nullish(),
+										})
+									)
+									.nullish(),
+								hook: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								line: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								sinker: zod
+									.object({
+										part: zod.string().nullish(),
+									})
+									.nullish(),
+								ability_scroll: zod.array(zod.string()).nullish(),
+								inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+							})
 							.nullish()
 							.describe('ExtraAttributes not included elsewhere'),
 						itemAttributes: zod
@@ -8836,7 +9301,44 @@ export const zodGetItemsFromBytesResponse = zod.object({
 					.nullish()
 					.describe('Applied enchantments with their levels'),
 				attributes: zod
-					.record(zod.string(), zod.string())
+					.object({
+						runes: zod.record(zod.string(), zod.number()).nullish(),
+						effects: zod
+							.array(
+								zod.object({
+									level: zod.number(),
+									effect: zod.string().nullish(),
+									duration_ticks: zod.number(),
+								})
+							)
+							.nullish(),
+						necromancer_souls: zod
+							.array(
+								zod.object({
+									mob_id: zod.string().nullish(),
+									dropped_instance_id: zod.string().nullish(),
+									dropped_mode_id: zod.string().nullish(),
+								})
+							)
+							.nullish(),
+						hook: zod
+							.object({
+								part: zod.string().nullish(),
+							})
+							.nullish(),
+						line: zod
+							.object({
+								part: zod.string().nullish(),
+							})
+							.nullish(),
+						sinker: zod
+							.object({
+								part: zod.string().nullish(),
+							})
+							.nullish(),
+						ability_scroll: zod.array(zod.string()).nullish(),
+						inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+					})
 					.nullish()
 					.describe('ExtraAttributes not included elsewhere'),
 				itemAttributes: zod
@@ -8964,11 +9466,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.any(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -9076,11 +9575,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.any(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -9247,11 +9743,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.any().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.any(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()
@@ -11963,7 +12456,44 @@ export const zodGetWeightForProfileResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12011,7 +12541,44 @@ export const zodGetWeightForProfileResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12059,7 +12626,44 @@ export const zodGetWeightForProfileResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12107,7 +12711,44 @@ export const zodGetWeightForProfileResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12194,7 +12835,44 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12242,7 +12920,44 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12290,7 +13005,44 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
@@ -12338,7 +13090,44 @@ export const zodGetWeightForSelectedResponse = zod.object({
 						.nullish()
 						.describe('Applied enchantments with their levels'),
 					attributes: zod
-						.record(zod.string(), zod.string())
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.any().nullable()).nullish(),
+						})
 						.nullish()
 						.describe('ExtraAttributes not included elsewhere'),
 					itemAttributes: zod
