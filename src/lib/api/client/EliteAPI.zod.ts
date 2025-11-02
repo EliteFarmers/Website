@@ -12344,6 +12344,7 @@ export const zodGetInventoryItemMetaParams = zod.object({
 
 export const zodGetInventoryItemMetaQueryParams = zod.object({
 	packs: zod.string().nullish(),
+	sub: zod.string().nullish().describe('Sub slot if nested inventory'),
 });
 
 export const zodGetInventoryItemMetaResponse = zod.object({
@@ -12360,6 +12361,7 @@ export const zodGetInventoryItemTextureParams = zod.object({
 
 export const zodGetInventoryItemTextureQueryParams = zod.object({
 	packs: zod.string().nullish(),
+	sub: zod.string().nullish().describe('Sub slot if nested inventory'),
 });
 
 /**

@@ -6,7 +6,9 @@
 	import * as Dialog from '$ui/dialog';
 	import { Skeleton } from '$ui/skeleton';
 	import ItemLore from '../item-lore.svelte';
+	import ItemRender from '../item-render.svelte';
 	import PackIcon from '../pack-icon.svelte';
+	import InventoryBasic from './inventory-basic.svelte';
 	import InventorySlot from './inventory-slot.svelte';
 
 	interface Props {
@@ -19,6 +21,7 @@
 		) => { inventory: string; item: ItemDto | null; highlight?: boolean };
 		wrap?: boolean;
 		inventorySize?: number;
+		subSlot?: string;
 	}
 
 	let {
@@ -27,6 +30,7 @@
 		itemModifier = undefined,
 		wrap = false,
 		inventorySize = 27,
+		subSlot = undefined,
 	}: Props = $props();
 
 	let items = $derived.by(() => {
@@ -53,6 +57,26 @@
 				.join(','),
 		});
 	}
+
+	const deletorCompactorItems = $derived(
+		Object.entries(selectedItem?.attributes ?? {})
+			.filter(([k]) => k.startsWith('personal_deletor_') || k.startsWith('personal_compact_'))
+			.map(([k, v]) => [+(k.split('_').at(-1) ?? 0), v] as [number, string])
+			.sort((a, b) => a[0] - b[0])
+	);
+
+	// const itemIdModifier: Props['itemModifier'] = (invId, slot, item) => {
+	// 	if (item) {
+	// 		return {
+	// 			inventory: invId,
+	// 			item: { ...item, slot: selectedItem?.slot },
+	// 		};
+	// 	}
+	// 	return {
+	// 		inventory: invId,
+	// 		item,
+	// 	};
+	// };
 </script>
 
 {#if wrap}
@@ -66,9 +90,10 @@
 						inventoryId={modified.inventory}
 						{onSelect}
 						highlight={modified.highlight}
+						{subSlot}
 					/>
 				{:else}
-					<InventorySlot {item} inventoryId={inventory.id} {onSelect} />
+					<InventorySlot {item} inventoryId={inventory.id} {onSelect} {subSlot} />
 				{/if}
 			{/each}
 		</div>
@@ -82,9 +107,10 @@
 				inventoryId={modified.inventory}
 				{onSelect}
 				highlight={modified.highlight}
+				{subSlot}
 			/>
 		{:else}
-			<InventorySlot {item} inventoryId={inventory.id} {onSelect} />
+			<InventorySlot {item} inventoryId={inventory.id} {onSelect} {subSlot} />
 		{/if}
 	{/each}
 {/if}
@@ -93,6 +119,25 @@
 	<Dialog.ScrollContent class="dark bg-background border-border text-primary">
 		{#if selectedItem}
 			<ItemLore item={selectedItem}>
+				{#if selectedItem.attributes?.inventory_data}
+					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">
+						<InventoryBasic
+							inventory={{
+								items: selectedItem.attributes.inventory_data,
+								id: inventory.id,
+								name: inventory.name,
+							}}
+							inventorySize={200}
+							subSlot={selectedItem.slot ?? undefined}
+						/>
+					</div>
+				{:else if deletorCompactorItems.length > 0}
+					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">
+						{#each deletorCompactorItems as [key, itemId] (key)}
+							<ItemRender skyblockId={itemId} class="bg-card size-12 rounded-sm border" />
+						{/each}
+					</div>
+				{/if}
 				<div class="text-primary bg-card mt-4 mb-4 rounded-md border p-2">
 					<p class="mb-2 text-lg font-semibold">Estimated Value</p>
 					{#if itemDetails?.ready && itemDetails?.current?.auctions && itemDetails?.current.auctions.length > 0}

@@ -24,7 +24,7 @@
 	<img
 		loading="lazy"
 		class="h-full w-full rounded-md p-1 {loading || errored ? 'opacity-0' : 'opacity-100'} pixelated aspect-square"
-		src="{url}{gbl.packsParam}"
+		src="{url}{gbl.packsParam && url.includes('?') ? gbl.packsParam.replace('?', '&') : gbl.packsParam}"
 		alt="Item"
 		onload={() => (loading = false)}
 		onerror={() => {
