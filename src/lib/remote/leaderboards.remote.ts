@@ -41,3 +41,7 @@ export const getLeaderboardSlice = query(
 		};
 	}
 );
+
+export const getLeaderboardList = query(async () => {
+	return cache.leaderboards;
+});

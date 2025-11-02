@@ -1,14 +1,9 @@
 <script lang="ts">
-	import type { WeightsDto } from '$lib/api';
+	import { getWeights } from '$lib/remote';
 	import { Crop, getCropFromName, getCropInfo } from 'farming-weight';
 
-	interface Props {
-		weights?: WeightsDto;
-	}
-
-	let { weights }: Props = $props();
-
-	let crops = $derived(weights?.crops ?? {});
+	const weights = getWeights();
+	let crops = $derived(weights?.current?.crops ?? {});
 </script>
 
 <div class="scrollbar-none flex w-full overflow-x-auto">

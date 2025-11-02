@@ -56,10 +56,13 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if pageCtx.sidebar.length}
+			{#if pageCtx.sidebar.length && pageCtx.above}
 				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
 			{/if}
 			<NavMain items={SIDEBAR_NAV} title="Main" />
+			{#if pageCtx.sidebar.length && !pageCtx.above}
+				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
+			{/if}
 			{@render children?.()}
 		</Sidebar.Content>
 	</ScrollArea>

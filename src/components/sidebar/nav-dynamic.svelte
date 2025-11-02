@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import * as Collapsible from '$comp/ui/collapsible/index.js';
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
@@ -73,7 +74,17 @@
 				<Sidebar.MenuItem class="px-0">
 					<Collapsible.Trigger>
 						{#snippet child({ props })}
-							<Sidebar.MenuButton {...props}>
+							<Sidebar.MenuButton
+								{...props}
+								onclick={(e) => {
+									if (typeof props.onclick === 'function') {
+										props.onclick?.(e);
+									}
+									if (crumb.href) {
+										goto(crumb.href);
+									}
+								}}
+							>
 								{@render inner(crumb)}
 								{#snippet tooltipContent()}
 									<span class="inline-block {capital}">{crumb.tooltip ?? crumb.name}</span>

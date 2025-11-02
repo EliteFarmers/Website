@@ -1,19 +1,14 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
+	import BonusTable from '$comp/info/bonustable.svelte';
+	import CropTable from '$comp/info/croptable.svelte';
+	import PestTable from '$comp/info/pest-table.svelte';
 	import { CREDITS } from '$content/credits';
 	import { FAQ } from '$content/faq';
+	import { getBadges } from '$lib/remote';
 	import * as Card from '$ui/card';
-	import type { PageData } from './$types';
-	import BonusTable from './bonustable.svelte';
-	import CropTable from './croptable.svelte';
-	import PestTable from './pest-table.svelte';
 
-	interface Props {
-		data: PageData;
-	}
-
-	let { data }: Props = $props();
-	let weights = $derived(data.weights);
+	const badges = getBadges();
 </script>
 
 <Head title="Information" description="View all information about the site and how farming weight is calculated." />
@@ -39,7 +34,7 @@
 				of crops that can be farmed in the same timespan. The following table shows the amount of each crop
 				needed to increase your farming weight by 1.
 			</p>
-			<CropTable {weights} />
+			<CropTable />
 			<p class="mt-4 mb-2 text-sm">
 				Base Drops Per Break refers to the average amount of drops you get from breaking a crop without any
 				buffs. Sugar Cane and Cactus actually have a base drop of 1 per block, but because you can break 2
@@ -71,7 +66,7 @@
 				pests you have killed. The amounts are calculated in brackets, with an associated farming fortune noted
 				that was used to calculate your average drops per pest kill.
 			</p>
-			<PestTable {weights} />
+			<PestTable />
 			<p class="mt-4 mb-2 text-sm">
 				This system is progressive, which means that as you hit the next bracket, the previous bracket's pest
 				amounts are still using their associated bracket's fortune values.
@@ -111,7 +106,7 @@
 			</p>
 			<div class="flex flex-col gap-4">
 				<h3 class="mt-4 text-2xl">List of Badges</h3>
-				{#each data?.badges ?? [] as badge, i (i)}
+				{#each badges.current ?? [] as badge, i (i)}
 					<div class="flex flex-row items-center gap-4">
 						{#if badge.image?.url}
 							<img

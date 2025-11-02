@@ -1,13 +1,11 @@
 <script lang="ts">
 	import type { WeightsDto } from '$lib/api';
+	import { getWeights } from '$lib/remote';
 	import { STAT_ICONS, Stat } from 'farming-weight';
-	interface Props {
-		weights?: WeightsDto;
-	}
 
-	let { weights }: Props = $props();
+	const weights = getWeights();
 
-	let stats = $derived(weights?.pests ?? ({} as WeightsDto['pests']));
+	let stats = $derived(weights?.current?.pests ?? ({} as WeightsDto['pests']));
 	let pests = $derived(stats?.values ?? {});
 	let brackets = $derived(Object.entries(stats?.brackets ?? {}));
 </script>
