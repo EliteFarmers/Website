@@ -31,10 +31,7 @@
 {#if inventoryOptions.length > 0}
 	<section id="inventories" class="my-16 flex flex-col items-center gap-2 transition-transform duration-400">
 		<div class="flex w-full max-w-lg flex-row items-center justify-between px-2">
-			<h2 class="flex flex-row items-center gap-2 text-2xl font-semibold">
-				Inventories
-				<span class="bg-completed text-primary-foreground rounded-md p-0.5 text-sm">BETA</span>
-			</h2>
+			<h2 class="flex flex-row items-center gap-2 text-2xl font-semibold">Inventories</h2>
 			<div class="flex flex-row items-center justify-between">
 				<Select.Simple options={inventoryOptions} bind:value={selectedInventoryId} />
 			</div>
