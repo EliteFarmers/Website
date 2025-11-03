@@ -68,7 +68,7 @@ export async function getPost(slug: string): Promise<PostData> {
 	const match = findMatch(slug, modules);
 	const post = await match?.resolver?.();
 
-	const metadata = posts.find((post) => post.path === slug);
+	const metadata = posts.find((post) => post.slug === slug);
 	if (!post || !metadata) {
 		error(404);
 	}
@@ -99,7 +99,7 @@ function findMatch(slug: string, modules: Modules) {
 }
 
 export function slugFromPath(path: string) {
-	return path.replace('/src/docs/', '').replace('.md', '');
+	return path.replace('/src/posts/', '').replace('.md', '');
 }
 
 export function slugFromPathname(pathname: string) {
@@ -133,23 +133,26 @@ export const getAllPostRoutes = async () => {
 
 export const getPostsSidebar = async () => {
 	const entries = await getAllPostRoutes();
-	const navGroups = {} as Record<string, { title: string; href: string; order: number | undefined }[]>;
+	const navGroups = {} as Record<string, { title: string; href: string; order: number; slug: string }[]>;
 
 	for (const entry of entries) {
 		const doc = await getPost(entry.slug);
 		navGroups[doc.metadata.category] ??= [];
 		navGroups[doc.metadata.category].push({
 			title: doc.title,
-			href: `/posts/${entry.slug}`,
-			order: doc.metadata.order,
+			href: `/info/${entry.slug}`,
+			order: doc.metadata.order ?? 0,
+			slug: entry.slug,
 		});
 	}
 
-	return Object.entries(navGroups).map(([category, docs]) => ({
+	return Object.entries(navGroups).map(([category, posts]) => ({
 		category,
-		docs: docs.sort((a, b) => {
+		posts: posts.sort((a, b) => {
+			b.order ??= 0;
+			a.order ??= 0;
 			if (a.order !== b.order) {
-				return (b.order ?? 0) - (a.order ?? 0);
+				return b.order - a.order;
 			}
 			return a.title.localeCompare(b.title);
 		}),

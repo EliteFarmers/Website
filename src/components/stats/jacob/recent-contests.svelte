@@ -23,7 +23,7 @@
 
 	{#if recentContests.length > 0}
 		<div class="flex flex-col items-center gap-2">
-			<ContestList contests={recentContests} />
+			<ContestList contests={recentContests} showGhosts={false} />
 			<Button
 				href={page.url.pathname + '/contests'}
 				data-sveltekit-preload-data="off"

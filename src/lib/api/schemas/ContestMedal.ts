@@ -18,4 +18,5 @@ export const ContestMedal = {
 	Gold: 3,
 	Platinum: 4,
 	Diamond: 5,
+	Unclaimable: -1,
 } as const;

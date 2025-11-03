@@ -16,7 +16,7 @@
 
 	const contestsByCrop = $derived(
 		jacob?.contests?.reduce<Record<string, ContestParticipationDto[]>>((acc, contest) => {
-			if (!contest.crop) return acc;
+			if (!contest.crop || contest.medal === 'ghost') return acc;
 
 			acc[contest.crop] ??= [];
 			acc[contest.crop].push(contest);
@@ -158,6 +158,10 @@
 				]}
 			/>
 		</div>
-		<ContestList contests={recentContests} remaining={Math.max(0, contests.length - recentContests.length)} />
+		<ContestList
+			contests={recentContests}
+			remaining={Math.max(0, contests.length - recentContests.length)}
+			showGhosts={false}
+		/>
 	</div>
 </div>

@@ -50,5 +50,9 @@
 		"javascript": "javascript",
 		"typescript": "typescript",
 		"svelte": "html"
-	}
+	},
+	"markdown.copyFiles.destination": {
+		"**/*": "${documentWorkspaceFolder}/static/images/md/"
+	},
+	"cSpell.words": ["Hanni", "hypixel", "lucide", "Mooshroom", "Skyblock"]
 }

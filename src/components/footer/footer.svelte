@@ -62,7 +62,7 @@
 				class="h-8 p-0"
 				href="https://github.com/EliteFarmers/Website">Open Source on GitHub</Button
 			>
-			<Button variant="link" class="h-8 p-0" href="/info#Credits">Website Credits</Button>
+			<Button variant="link" class="h-8 p-0" href="/info/credits">Website Credits</Button>
 			<Button variant="link" class="h-8 p-0" href="/oss">Open Sourced Software</Button>
 		</div>
 	</div>

@@ -6,6 +6,7 @@
 	import { browser } from '$app/environment';
 	import { beforeNavigate, goto } from '$app/navigation';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { getLeaderboardList } from '$lib/remote';
 	import { Button, type ButtonProps } from '$ui/button';
 	import * as Command from '$ui/command';
 	import { ScrollArea } from '$ui/scroll-area';
@@ -17,7 +18,6 @@
 		open = $bindable(false),
 		useButton = true,
 		class: className,
-		leaderboards = {} as Record<string, LeaderboardInfo>,
 		...rest
 	}: ButtonProps & {
 		open?: boolean;
@@ -25,7 +25,9 @@
 		leaderboards?: Record<string, LeaderboardInfo>;
 	} = $props();
 
-	let lbEntries = Object.entries(leaderboards).map(([id, { title, short, suffix }]) => ({
+	const leaderboards = getLeaderboardList();
+
+	let lbEntries = Object.entries(leaderboards.current?.leaderboards ?? {}).map(([id, { title, short, suffix }]) => ({
 		id,
 		name: (short ?? title) + suffix,
 	}));

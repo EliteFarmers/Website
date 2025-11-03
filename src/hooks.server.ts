@@ -1,13 +1,15 @@
 import { PUBLIC_HOST_URL } from '$env/static/public';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
+import * as Sentry from '@sentry/sveltekit';
 import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 
 export const init: ServerInit = async () => {
 	initCachedItems();
 };
 
-export const handle: Handle = async ({ event, resolve }) => {
+export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
 	const { locals, cookies } = event;
 	locals.bot = event.request.headers.get('X-Known-Bot') === 'true';
 
@@ -47,7 +49,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	return response;
-};
+});
 
 async function ResolveWithSecurityHeaders(
 	resolve: Parameters<Handle>[0]['resolve'],
@@ -94,3 +96,4 @@ function getLoginHeadResponse(redirectTo: string) {
 		}
 	);
 }
+export const handleError = Sentry.handleErrorWithSentry();

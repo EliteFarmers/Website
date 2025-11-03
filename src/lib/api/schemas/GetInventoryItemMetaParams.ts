@@ -13,4 +13,9 @@ export type GetInventoryItemMetaParams = {
 	 * @nullable
 	 */
 	packs?: string | null;
+	/**
+	 * Sub slot if nested inventory
+	 * @nullable
+	 */
+	sub?: string | null;
 };

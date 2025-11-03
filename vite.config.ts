@@ -1,15 +1,34 @@
+import { sentrySvelteKit } from '@sentry/sveltekit';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { fileURLToPath } from 'node:url';
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, type PluginOption } from 'vite';
+
+const plugins = [
+	process.env.SENTRY_ORG && process.env.SENTRY_PROJECT
+		? sentrySvelteKit({
+				org: 'kaeso',
+				project: 'elite-website',
+			})
+		: null,
+	tailwindcss(),
+	sveltekit(),
+];
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+export const veliteDirPath = path.join(__dirname, '.velite');
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: plugins.filter((p) => p !== null) as PluginOption[],
 	optimizeDeps: {
 		exclude: ['@napi-rs/canvas', 'isomorphic-dompurify'],
 	},
 	server: {
-		allowedHosts: ['.kaeso.dev'],
+		allowedHosts: ['.elitebot.dev', '.kaeso.dev'],
+		fs: {
+			allow: [veliteDirPath],
+		},
 	},
 	resolve: {
 		alias: {

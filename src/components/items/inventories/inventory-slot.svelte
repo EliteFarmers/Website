@@ -6,13 +6,16 @@
 		inventoryId: string;
 		onSelect?: (item: ItemDto) => void;
 		highlight?: boolean;
+		subSlot?: string;
 	}
 
-	let { item, inventoryId, onSelect, highlight = false }: Props = $props();
+	let { item, inventoryId, onSelect, highlight = false, subSlot = undefined }: Props = $props();
 </script>
 
 {#if item}
-	{@const texture = item.imageUrl ?? `/api/texture/${inventoryId}/${item.slot}.webp`}
+	{@const texture = item.imageUrl
+		? item.imageUrl
+		: `/api/texture/${inventoryId}/${subSlot ?? item.slot}.webp${subSlot && item.slot ? `?sub=${item.slot}` : ''}`}
 	{#if onSelect}
 		<button class="relative" onclick={() => onSelect?.(item)}>
 			<ItemIcon url={texture} class={highlight ? 'border-link/50' : ''} />

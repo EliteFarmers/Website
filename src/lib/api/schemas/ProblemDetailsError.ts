@@ -8,22 +8,11 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the error details object
- */
 export interface ProblemDetailsError {
-	/** the name of the error or property of the dto that caused the error */
 	name: string;
-	/** the reason for the error */
 	reason: string;
-	/**
-	 * the code of the error
-	 * @nullable
-	 */
+	/** @nullable */
 	code?: string | null;
-	/**
-	 * the severity of the error
-	 * @nullable
-	 */
+	/** @nullable */
 	severity?: string | null;
 }

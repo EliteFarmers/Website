@@ -16,3 +16,5 @@ static/oss.txt
 
 # Admin routes
 src/routes/(auth)/**/graphs/+l*
+# Sentry Config File
+.env.sentry-build-plugin

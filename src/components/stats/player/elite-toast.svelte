@@ -15,7 +15,7 @@
 	<h3 class="text-xl font-bold">You qualify for Elite Farmer!</h3>
 	<p>
 		Join the <a href={PUBLIC_COMMUNITY_INVITE} target="_blank" class="text-link">Discord</a> and make a ticket to
-		apply for the Elite Farmer Discord role and <a href="/info#Badges" class="text-link">badge</a> for reaching
+		apply for the Elite Farmer Discord role and <a href="/info/badges" class="text-link">badge</a> for reaching
 		<strong>{(+PUBLIC_WEIGHT_REQ).toLocaleString()}</strong> farming weight!
 	</p>
 	<span class="text-muted-foreground -mt-1 text-xs leading-none">Application not guaranteed to be accepted.</span>
