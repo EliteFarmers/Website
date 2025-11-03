@@ -56,11 +56,25 @@
 <div class="flex h-full flex-col overflow-hidden">
 	<ScrollArea class="h-full" orientation="vertical">
 		<Sidebar.Content class="gap-0">
-			{#if pageCtx.sidebar.length}
+			{#if pageCtx.sidebar.length && pageCtx.above}
 				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
 			{/if}
 			<NavMain items={SIDEBAR_NAV} title="Main" />
+			{#if pageCtx.sidebar.length && !pageCtx.above}
+				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
+			{/if}
 			{@render children?.()}
+			<!-- {#await infoSidebar then data}
+				<NavDynamic items={data} title="Resources" hideOnCollapse>
+					{#snippet collapsed()}
+						<Sidebar.Group data-sveltekit-preload-data="tap">
+							<Sidebar.MenuButton class="truncate md:max-w-none" onclick={() => sidebar.toggle()}>
+								<Info />
+							</Sidebar.MenuButton>
+						</Sidebar.Group>
+					{/snippet}
+				</NavDynamic>
+			{/await} -->
 		</Sidebar.Content>
 	</ScrollArea>
 </div>

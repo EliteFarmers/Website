@@ -502,4 +502,398 @@
 		list-style-type: disc;
 		padding-inline-start: 1.5rem;
 	}
+
+	.markdown-alert {
+		& {
+			@apply my-6 space-y-2 rounded-lg border border-blue-600/20 bg-blue-400/20 p-4 pb-5 dark:border-blue-800/20 dark:bg-blue-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply flex flex-row items-start gap-2 p-0 font-bold text-blue-500;
+			}
+
+			&:not(:only-child) {
+				@apply mb-2;
+			}
+
+			&:empty::after {
+				content: 'Note';
+			}
+
+			&::before {
+				@apply mt-1 block h-5 w-5 bg-current content-[""];
+				mask-repeat: no-repeat;
+				mask-size: cover;
+
+				/* lucide-pencil */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNUwyIDIybDEuNS01LjVabS0yIDJsNCA0Ii8+PC9zdmc+');
+			}
+		}
+
+		& > [data-callout-body] {
+			& {
+				@apply space-y-2;
+			}
+
+			& > * {
+				@apply m-0;
+			}
+		}
+	}
+
+	details.markdown-alert > summary.markdown-alert-title {
+		& {
+			@apply cursor-pointer;
+		}
+
+		&::after {
+			@apply w-full bg-right bg-no-repeat;
+			content: '';
+
+			/* lucide:chevron-right */
+			background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4ODg4OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Im05IDE4bDYtNmwtNi02Ii8+PC9zdmc+');
+			background-size: 1.5rem;
+		}
+
+		&:not(:empty)::after {
+			@apply my-auto ml-auto h-6 w-6;
+		}
+	}
+
+	details.markdown-alert [open] > summary.markdown-alert-title::after {
+		/* lucide:chevron-down */
+		background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4ODg4OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Im02IDlsNiA2bDYtNiIvPjwvc3ZnPg==');
+	}
+
+	.markdown-alert .markdown-alert-info {
+		& {
+			@apply border-blue-600/20 bg-blue-400/20 dark:border-blue-800/20 dark:bg-blue-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-blue-500;
+			}
+
+			&:empty::after {
+				content: 'Info';
+			}
+
+			&::before {
+				content: 'hi';
+				/* lucide:info */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4ODg4OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDE2di00bTAtNGguMDEiLz48L2c+PC9zdmc+');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-todo {
+		& {
+			@apply border-blue-600/20 bg-blue-400/20 dark:border-blue-800/20 dark:bg-blue-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-blue-500;
+			}
+
+			&:empty::after {
+				content: 'ToDo';
+			}
+
+			&::before {
+				/* lucide:circle-check-big */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4ODg4OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMiAxMS4wOFYxMmExMCAxMCAwIDEgMS01LjkzLTkuMTQiLz48cGF0aCBkPSJtOSAxMWwzIDNMMjIgNCIvPjwvZz48L3N2Zz4=');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-abstract,
+	.markdown-alert .markdown-alert-summary,
+	.markdown-alert .markdown-alert-tldr {
+		& {
+			@apply border-cyan-600/20 bg-cyan-400/20 dark:border-cyan-800/20 dark:bg-cyan-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-cyan-500;
+			}
+
+			&::before {
+				/* lucide:clipboard-list */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iNCIgeD0iOCIgeT0iMiIgcng9IjEiIHJ5PSIxIi8+PHBhdGggZD0iTTE2IDRoMmEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJINmEyIDIgMCAwIDEtMi0yVjZhMiAyIDAgMCAxIDItMmgybTQgN2g0bS00IDVoNG0tOC01aC4wMU04IDE2aC4wMSIvPjwvZz48L3N2Zz4=');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-abstract > .markdown-alert-title:empty::after {
+		content: 'Abstract';
+	}
+
+	.markdown-alert .markdown-alert-summary > .markdown-alert-title:empty::after {
+		content: 'Summary';
+	}
+
+	.markdown-alert .markdown-alert-tldr > .markdown-alert-title:empty::after {
+		content: 'TL;DR';
+	}
+
+	.markdown-alert .markdown-alert-tip,
+	.markdown-alert .markdown-alert-hint,
+	.markdown-alert .markdown-alert-important {
+		& {
+			@apply border-cyan-600/20 bg-cyan-400/20 dark:border-cyan-800/20 dark:bg-cyan-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-cyan-500;
+			}
+
+			&::before {
+				/* lucide:flame */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTguNSAxNC41QTIuNSAyLjUgMCAwIDAgMTEgMTJjMC0xLjM4LS41LTItMS0zYy0xLjA3Mi0yLjE0My0uMjI0LTQuMDU0IDItNmMuNSAyLjUgMiA0LjkgNCA2LjVjMiAxLjYgMyAzLjUgMyA1LjVhNyA3IDAgMSAxLTE0IDBjMC0xLjE1My40MzMtMi4yOTQgMS0zYTIuNSAyLjUgMCAwIDAgMi41IDIuNSIvPjwvc3ZnPg==');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-tip > .markdown-alert-title:empty::after {
+		content: 'Tip';
+	}
+
+	.markdown-alert .markdown-alert-hint > .markdown-alert-title:empty::after {
+		content: 'Hint';
+	}
+
+	.markdown-alert .markdown-alert-important > .markdown-alert-title:empty::after {
+		content: 'Important';
+	}
+
+	.markdown-alert .markdown-alert-success,
+	.markdown-alert .markdown-alert-check,
+	.markdown-alert .markdown-alert-done {
+		& {
+			@apply border-green-600/20 bg-green-400/20 dark:border-green-800/20 dark:bg-green-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-green-500;
+			}
+
+			&::before {
+				/* lucide:check */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTIwIDZMOSAxN2wtNS01Ii8+PC9zdmc+');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-success > .markdown-alert-title:empty::after {
+		content: 'Success';
+	}
+
+	.markdown-alert .markdown-alert-check > .markdown-alert-title:empty::after {
+		content: 'Check';
+	}
+
+	.markdown-alert .markdown-alert-done > .markdown-alert-title:empty::after {
+		content: 'Done';
+	}
+
+	.markdown-alert .markdown-alert-question,
+	.markdown-alert .markdown-alert-help,
+	.markdown-alert .markdown-alert-faq {
+		& {
+			@apply border-orange-600/20 bg-orange-400/20 dark:border-orange-800/20 dark:bg-orange-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-orange-500;
+			}
+
+			&::before {
+				/* lucide:circle-help */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDNtLjA4IDRoLjAxIi8+PC9nPjwvc3ZnPg==');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-question > .markdown-alert-title:empty::after {
+		content: 'Question';
+	}
+
+	.markdown-alert .markdown-alert-help > .markdown-alert-title:empty::after {
+		content: 'Help';
+	}
+
+	.markdown-alert .markdown-alert-faq > .markdown-alert-title:empty::after {
+		content: 'FAQ';
+	}
+
+	.markdown-alert .markdown-alert-warning,
+	.markdown-alert .markdown-alert-caution,
+	.markdown-alert .markdown-alert-attention {
+		& {
+			@apply border-orange-600/20 bg-orange-400/20 dark:border-orange-800/20 dark:bg-orange-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-orange-500;
+			}
+
+			&::before {
+				/* lucide:triangle-alert */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0ibTIxLjczIDE4bC04LTE0YTIgMiAwIDAgMC0zLjQ4IDBsLTggMTRBMiAyIDAgMCAwIDQgMjFoMTZhMiAyIDAgMCAwIDEuNzMtM00xMiA5djRtMCA0aC4wMSIvPjwvc3ZnPg==');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-warning > .markdown-alert-title:empty::after {
+		content: 'Warning';
+	}
+
+	.markdown-alert .markdown-alert-caution > .markdown-alert-title:empty::after {
+		content: 'Caution';
+	}
+
+	.markdown-alert .markdown-alert-attention > .markdown-alert-title:empty::after {
+		content: 'Attention';
+	}
+
+	.markdown-alert .markdown-alert-failure,
+	.markdown-alert .markdown-alert-fail,
+	.markdown-alert .markdown-alert-missing {
+		& {
+			@apply border-red-600/20 bg-red-400/20 dark:border-red-800/20 dark:bg-red-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-red-500;
+			}
+
+			&::before {
+				/* lucide:check */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTIwIDZMOSAxN2wtNS01Ii8+PC9zdmc+');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-failure > .markdown-alert-title:empty::after {
+		content: 'Failure';
+	}
+
+	.markdown-alert .markdown-alert-fail > .markdown-alert-title:empty::after {
+		content: 'Fail';
+	}
+
+	.markdown-alert .markdown-alert-missing > .markdown-alert-title:empty::after {
+		content: 'Missing';
+	}
+
+	.markdown-alert .markdown-alert-danger,
+	.markdown-alert .markdown-alert-error {
+		& {
+			@apply border-red-600/20 bg-red-400/20 dark:border-red-800/20 dark:bg-red-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-red-500;
+			}
+
+			&::before {
+				/* lucide:zap */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBhdGggZD0iTTQgMTRhMSAxIDAgMCAxLS43OC0xLjYzbDkuOS0xMC4yYS41LjUgMCAwIDEgLjg2LjQ2bC0xLjkyIDYuMDJBMSAxIDAgMCAwIDEzIDEwaDdhMSAxIDAgMCAxIC43OCAxLjYzbC05LjkgMTAuMmEuNS41IDAgMCAxLS44Ni0uNDZsMS45Mi02LjAyQTEgMSAwIDAgMCAxMSAxNHoiLz48L3N2Zz4=');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-danger > .markdown-alert-title:empty::after {
+		content: 'Danger';
+	}
+
+	.markdown-alert .markdown-alert-error > .markdown-alert-title:empty::after {
+		content: 'Error';
+	}
+
+	.markdown-alert .markdown-alert-bug {
+		& {
+			@apply border-red-600/20 bg-red-400/20 dark:border-red-800/20 dark:bg-red-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-red-500;
+			}
+
+			&::before {
+				/* lucide:bug */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0ibTggMmwxLjg4IDEuODhtNC4yNCAwTDE2IDJNOSA3LjEzdi0xYTMuMDAzIDMuMDAzIDAgMSAxIDYgMHYxIi8+PHBhdGggZD0iTTEyIDIwYy0zLjMgMC02LTIuNy02LTZ2LTNhNCA0IDAgMCAxIDQtNGg0YTQgNCAwIDAgMSA0IDR2M2MwIDMuMy0yLjcgNi02IDZtMCAwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNW0zIDhIMm0xIDhjMC0yLjEgMS43LTMuOSAzLjgtNE0yMC45NyA1YzAgMi4xLTEuNiAzLjgtMy41IDRNMjIgMTNoLTRtLS44IDRjMi4xLjEgMy44IDEuOSAzLjggNCIvPjwvZz48L3N2Zz4=');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-bug > .markdown-alert-title:empty::after {
+		content: 'Bug';
+	}
+
+	.markdown-alert .markdown-alert-example {
+		& {
+			@apply border-purple-600/20 bg-purple-400/20 dark:border-purple-800/20 dark:bg-purple-600/10;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-purple-500;
+			}
+
+			&::before {
+				/* lucide:list */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTggNmgxM004IDEyaDEzTTggMThoMTNNMyA2aC4wMU0zIDEyaC4wMU0zIDE4aC4wMSIvPjwvc3ZnPg==');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-example > .markdown-alert-title:empty::after {
+		content: 'Example';
+	}
+
+	.markdown-alert .markdown-alert-quote,
+	.markdown-alert .markdown-alert-cite {
+		& {
+			@apply border-zinc-600/20 bg-zinc-400/20 dark:border-zinc-800/20 dark:bg-zinc-600/15;
+		}
+
+		& > .markdown-alert-title {
+			& {
+				@apply text-zinc-500;
+			}
+
+			&::before {
+				/* lucide:quote */
+				mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTMgMjFjMyAwIDctMSA3LThWNWMwLTEuMjUtLjc1Ni0yLjAxNy0yLTJINGMtMS4yNSAwLTIgLjc1LTIgMS45NzJWMTFjMCAxLjI1Ljc1IDIgMiAyYzEgMCAxIDAgMSAxdjFjMCAxLTEgMi0yIDJzLTEgLjAwOC0xIDEuMDMxVjIwYzAgMSAwIDEgMSAxbTEyIDBjMyAwIDctMSA3LThWNWMwLTEuMjUtLjc1Ny0yLjAxNy0yLTJoLTRjLTEuMjUgMC0yIC43NS0yIDEuOTcyVjExYzAgMS4yNS43NSAyIDIgMmguNzVjMCAyLjI1LjI1IDQtMi43NSA0djNjMCAxIDAgMSAxIDEiLz48L3N2Zz4=');
+			}
+		}
+	}
+
+	.markdown-alert .markdown-alert-quote > .markdown-alert-title:empty::after {
+		content: 'Quote';
+	}
+
+	.markdown-alert .markdown-alert-cite > .markdown-alert-title:empty::after {
+		content: 'Cite';
+	}
+
+	.octicon {
+		display: none;
+	}
+
+	.markdown-alert > p {
+		@apply [&:not(:first-child)]:!mt-2;
+	}
 }

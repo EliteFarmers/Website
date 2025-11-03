@@ -3,7 +3,6 @@
 	import ModeToggle from '$comp/header/mode-toggle.svelte';
 	import SearchMenu from '$comp/header/search-menu.svelte';
 	import NavBreadcrumb from '$comp/sidebar/nav-breadcrumb.svelte';
-	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
@@ -13,12 +12,6 @@
 	import { quadInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import SmallAnnouncements from './small-announcements.svelte';
-
-	interface Props {
-		leaderboards?: Record<string, LeaderboardInfo>;
-	}
-
-	let { leaderboards }: Props = $props();
 
 	const sidebar = Sidebar.useSidebar();
 	let searchOpen = $state(false);
@@ -51,10 +44,10 @@
 			>
 				<Search />
 			</Button>
-			<SearchMenu bind:open={searchOpen} useButton={false} {leaderboards} />
+			<SearchMenu bind:open={searchOpen} useButton={false} />
 		{:else}
 			<div class="order-2 w-full flex-1 md:w-auto md:flex-none">
-				<SearchMenu {leaderboards} />
+				<SearchMenu />
 			</div>
 		{/if}
 		<div class="order-3 flex items-center gap-2">

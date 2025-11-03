@@ -37,8 +37,8 @@
 
 <Head title={metadata.title} description={metadata.description} />
 
-<div class="mt-8 mb-16 flex flex-row items-center justify-center md:mt-16 md:mb-32">
-	<div class="mx-2 max-w-4xl sm:mx-4">
+<div class="mt-8 mb-16 flex w-full flex-row items-center justify-center md:mt-16 md:mb-32">
+	<div class="mx-2 w-full max-w-4xl sm:mx-4">
 		{@render children({ metadata, title: metadata.title, description: metadata.description, ...rest })}
 	</div>
 </div>

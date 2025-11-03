@@ -16,7 +16,7 @@
 		>
 			<span class="text-xs">
 				Unlock <strong>Patron of The Arts</strong>
-				<a href="/info#Badges" class="text-link hover:underline">badge</a>!
+				<a href="/info/badges" class="text-link hover:underline">badge</a>!
 			</span>
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 			class="bg-card absolute -top-8 -right-[2px] hidden h-8 w-fit rounded-md border-2 px-2 transition-all duration-200 group-hover:block"
 		>
 			<span class="text-xs">
-				Unlocks the <strong>Donator</strong> <a href="/info#Badges" class="text-link hover:underline">badge</a>!
+				Unlocks the <strong>Donator</strong> <a href="/info/badges" class="text-link hover:underline">badge</a>!
 			</span>
 		</div>
 	</div>

@@ -15,4 +15,4 @@
 	let { title, description, source, component, radix, children }: Props = $props();
 </script>
 
-{@render children({ title, description, source, component, radix })}
+{@render children?.({ title, description, source, component, radix })}

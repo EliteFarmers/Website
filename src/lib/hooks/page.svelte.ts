@@ -30,6 +30,7 @@ export class Breadcrumb {
 	#path = $derived<string>(page.url.pathname);
 	#overridePath = $state<string | null>(null);
 	#breadcrumbsOverride = $state<Crumb[] | null>(null);
+	#above = $state<boolean>(true);
 
 	constructor() {
 		$effect.pre(() => {
@@ -78,10 +79,15 @@ export class Breadcrumb {
 		return this.#sidebarName;
 	}
 
-	setSidebar(name: string, crumbs: Crumb[]) {
+	setSidebar(name: string, crumbs: Crumb[], above = true) {
 		this.#sidebarName = name;
 		this.#sidebar = crumbs;
 		this.#overridePath = page.url.pathname;
+		this.#above = above;
+	}
+
+	get above() {
+		return this.#above;
 	}
 
 	get sidebar() {

@@ -4,52 +4,62 @@
 	import * as Sidebar from '$comp/ui/sidebar/index.js';
 	import type { Crumb } from '$lib/hooks/page.svelte';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
-	import type { Component } from 'svelte';
+	import type { Component, Snippet } from 'svelte';
 
 	let {
 		items,
 		title = 'Group',
+		open = true,
+		hideOnCollapse = false,
+		collapsed = undefined,
 	}: {
 		items: Crumb[];
 		title: string;
+		open?: boolean;
+		hideOnCollapse?: boolean;
+		collapsed?: Snippet;
 	} = $props();
 
 	const sidebar = Sidebar.useSidebar();
 </script>
 
-<Sidebar.Group data-sveltekit-preload-data="tap">
-	<Collapsible.Root open={true} class="group/collapsible">
-		{#snippet child({ props })}
-			<Sidebar.MenuItem {...props}>
-				<Collapsible.Trigger>
-					{#snippet child({ props })}
-						<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
-							{#snippet tooltipContent()}
-								<span class="inline-block first-letter:capitalize">{title}</span>
-							{/snippet}
-							{#if !sidebar.open && !sidebar.isMobile}
+{#if hideOnCollapse && sidebar.state === 'collapsed' && !sidebar.isMobile}
+	{@render collapsed?.()}
+{:else}
+	<Sidebar.Group data-sveltekit-preload-data="tap">
+		<Collapsible.Root {open} class="group/collapsible">
+			{#snippet child({ props })}
+				<Sidebar.MenuItem {...props}>
+					<Collapsible.Trigger>
+						{#snippet child({ props })}
+							<Sidebar.MenuButton {...props} class="text-sidebar-foreground/70">
+								{#snippet tooltipContent()}
+									<span class="inline-block first-letter:capitalize">{title}</span>
+								{/snippet}
+								{#if !sidebar.open && !sidebar.isMobile}
+									<ChevronRight
+										class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+									/>
+								{/if}
+								<span>{title}</span>
 								<ChevronRight
 									class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 								/>
-							{/if}
-							<span>{title}</span>
-							<ChevronRight
-								class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-							/>
-						</Sidebar.MenuButton>
-					{/snippet}
-				</Collapsible.Trigger>
-				<Collapsible.Content>
-					<Sidebar.Menu>
-						{#each items as mainItem, i (i)}
-							{@render content(mainItem, i === items.length - 1)}
-						{/each}
-					</Sidebar.Menu>
-				</Collapsible.Content>
-			</Sidebar.MenuItem>
-		{/snippet}
-	</Collapsible.Root>
-</Sidebar.Group>
+							</Sidebar.MenuButton>
+						{/snippet}
+					</Collapsible.Trigger>
+					<Collapsible.Content>
+						<Sidebar.Menu>
+							{#each items as mainItem, i (i)}
+								{@render content(mainItem, i === items.length - 1)}
+							{/each}
+						</Sidebar.Menu>
+					</Collapsible.Content>
+				</Sidebar.MenuItem>
+			{/snippet}
+		</Collapsible.Root>
+	</Sidebar.Group>
+{/if}
 
 {#snippet content(crumb: Crumb | Omit<Crumb, 'dropdown'>, open = false, drop = true)}
 	{@const capital = crumb.capitalize === false ? '' : 'first-letter:capitalize'}
@@ -67,6 +77,17 @@
 						{/snippet}
 					</Sidebar.MenuButton>
 				{/if}
+			</Sidebar.MenuItem>
+		{:else if crumb.href}
+			<Sidebar.MenuItem>
+				{@render link(crumb)}
+				<Sidebar.MenuSub>
+					{#each crumb.dropdown as item (item)}
+						<Sidebar.MenuSubItem>
+							{@render content(item, false, false)}
+						</Sidebar.MenuSubItem>
+					{/each}
+				</Sidebar.MenuSub>
 			</Sidebar.MenuItem>
 		{:else}
 			<Collapsible.Root {open} class="group/subcollapsible">
