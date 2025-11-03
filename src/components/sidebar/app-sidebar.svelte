@@ -64,6 +64,17 @@
 				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
 			{/if}
 			{@render children?.()}
+			<!-- {#await infoSidebar then data}
+				<NavDynamic items={data} title="Resources" hideOnCollapse>
+					{#snippet collapsed()}
+						<Sidebar.Group data-sveltekit-preload-data="tap">
+							<Sidebar.MenuButton class="truncate md:max-w-none" onclick={() => sidebar.toggle()}>
+								<Info />
+							</Sidebar.MenuButton>
+						</Sidebar.Group>
+					{/snippet}
+				</NavDynamic>
+			{/await} -->
 		</Sidebar.Content>
 	</ScrollArea>
 </div>

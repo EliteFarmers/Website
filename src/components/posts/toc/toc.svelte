@@ -66,9 +66,9 @@
 </script>
 
 <script lang="ts">
-	import * as DropdownMenu from '$ui/dropdown-menu/index.js';
-	import { Button } from '$ui/button/index.js';
 	import { cn } from '$lib/utils.js';
+	import { Button } from '$ui/button/index.js';
+	import * as DropdownMenu from '$ui/dropdown-menu/index.js';
 	import MenuIcon from '@lucide/svelte/icons/menu';
 
 	let {
@@ -108,7 +108,7 @@
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	{:else}
-		<div class={cn('flex flex-col gap-2 p-4 pt-0 text-sm', className)}>
+		<div class={cn('flex flex-col items-end gap-2 p-4 pt-0 text-sm', className)}>
 			<p class="bg-background text-muted-foreground sticky top-0 h-6 text-xs">On This Page</p>
 			{#each flattenedToc as item (item.url)}
 				<a

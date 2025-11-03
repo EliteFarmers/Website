@@ -133,7 +133,7 @@ export const getAllPostRoutes = async () => {
 
 export const getPostsSidebar = async () => {
 	const entries = await getAllPostRoutes();
-	const navGroups = {} as Record<string, { title: string; href: string; order: number | undefined; slug: string }[]>;
+	const navGroups = {} as Record<string, { title: string; href: string; order: number; slug: string }[]>;
 
 	for (const entry of entries) {
 		const doc = await getPost(entry.slug);
@@ -141,7 +141,7 @@ export const getPostsSidebar = async () => {
 		navGroups[doc.metadata.category].push({
 			title: doc.title,
 			href: `/info/${entry.slug}`,
-			order: doc.metadata.order,
+			order: doc.metadata.order ?? 0,
 			slug: entry.slug,
 		});
 	}
@@ -149,8 +149,10 @@ export const getPostsSidebar = async () => {
 	return Object.entries(navGroups).map(([category, posts]) => ({
 		category,
 		posts: posts.sort((a, b) => {
+			b.order ??= 0;
+			a.order ??= 0;
 			if (a.order !== b.order) {
-				return (b.order ?? 0) - (a.order ?? 0);
+				return b.order - a.order;
 			}
 			return a.title.localeCompare(b.title);
 		}),
