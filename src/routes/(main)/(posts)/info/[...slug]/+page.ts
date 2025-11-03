@@ -1,7 +1,7 @@
 import { getPost } from '$lib/posts';
 import type { EntryGenerator, PageLoad } from './$types';
 
-export const prerender = true;
+// export const prerender = true;
 
 export const entries: EntryGenerator = async () => {
 	const modules = import.meta.glob('/src/posts/**/*.md');

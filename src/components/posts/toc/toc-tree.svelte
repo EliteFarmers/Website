@@ -1,7 +1,7 @@
 <script lang="ts">
+	import type { TableOfContents, TableOfContentsItem } from '$lib/posts';
+	import { cn } from '$lib/utils';
 	import Tree from './toc-tree.svelte';
-	import type { TableOfContents, TableOfContentsItem } from '$lib/index.js';
-	import { cn } from '$lib/utils.js';
 
 	type Props = {
 		tree?: TableOfContents | TableOfContentsItem;
