@@ -5,7 +5,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { beforeNavigate, goto } from '$app/navigation';
-	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { getLeaderboardList } from '$lib/remote';
 	import { Button, type ButtonProps } from '$ui/button';
 	import * as Command from '$ui/command';
@@ -22,15 +21,16 @@
 	}: ButtonProps & {
 		open?: boolean;
 		useButton?: boolean;
-		leaderboards?: Record<string, LeaderboardInfo>;
 	} = $props();
 
-	const leaderboards = getLeaderboardList();
+	let leaderboards = getLeaderboardList();
 
-	let lbEntries = Object.entries(leaderboards.current?.leaderboards ?? {}).map(([id, { title, short, suffix }]) => ({
-		id,
-		name: (short ?? title) + suffix,
-	}));
+	let lbEntries = $derived(
+		Object.entries(leaderboards?.current?.leaderboards ?? {}).map(([id, { title, short, suffix }]) => ({
+			id,
+			name: (short ?? title) + suffix,
+		}))
+	);
 
 	async function search(query: string) {
 		if (!browser) return [];
