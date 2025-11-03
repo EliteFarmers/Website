@@ -2,7 +2,7 @@
 title: Server Management
 date: 2025-11-03
 author: Kaeso
-category: help
+category: servers
 description: What bot settings are available to server owners!
 blueprint: page
 ---

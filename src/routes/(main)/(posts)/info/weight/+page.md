@@ -2,7 +2,7 @@
 title: Farming Weight
 date: 2025-11-02
 author: Kaeso
-category: Farming Weight
+category: weight
 description: Farming weight is a number that essentially represents how long and how efficient a player has been farming.
 blueprint: page
 ---

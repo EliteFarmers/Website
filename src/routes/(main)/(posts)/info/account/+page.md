@@ -3,7 +3,7 @@ title: Account
 date: 2025-11-03
 author: Kaeso
 category: account
-description: Example doc page.
+description: All about accounts on elitebot.dev!
 blueprint: page
 ---
 

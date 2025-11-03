@@ -3,7 +3,7 @@ title: Credits
 date: 2025-11-03
 author: Kaeso
 category: credits
-description: Example doc page.
+description: Credits for elitebot.dev!
 blueprint: page
 ---
 
