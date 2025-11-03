@@ -107,8 +107,9 @@
 					<div class="flex max-w-md flex-col items-center gap-2">
 						<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 						<p>{pestKills.toLocaleString()}</p>
-						<a class="text-link text-lg font-semibold hover:underline" href="/info#Pests"
-							>Weight Adjustment</a
+						<a
+							class="text-link text-lg font-semibold hover:underline"
+							href="/info/weight#pest-weight-adjustment">Weight Adjustment</a
 						>
 						{#if uncounted === 0}
 							<p>None!</p>
@@ -185,8 +186,9 @@
 							<div class="flex max-w-md flex-col items-center gap-2">
 								<p class="text-lg font-semibold first-letter:capitalize">{pest} Kills</p>
 								<p>{pestKills.toLocaleString()}</p>
-								<a class="text-link text-lg font-semibold hover:underline" href="/info#Pests"
-									>Weight Adjustment</a
+								<a
+									class="text-link text-lg font-semibold hover:underline"
+									href="/info/weight#pest-weight-adjustment">Weight Adjustment</a
 								>
 								{#if uncounted === 0}
 									<p>None!</p>
