@@ -2,9 +2,11 @@
 	import { afterNavigate } from '$app/navigation';
 	import { cn } from '$lib/utils';
 	import { Separator } from '$ui/separator';
+	import * as Sidebar from '$ui/sidebar';
 	import Question from '@lucide/svelte/icons/circle-question-mark';
 	import { STORE_CODE } from '../../routes/(main)/gems/hypixel-store';
 	import RailItem from './rail-item.svelte';
+	const sidebarState = Sidebar.useSidebar();
 
 	interface Props {
 		class?: string;
@@ -24,8 +26,11 @@
 	});
 </script>
 
-<aside class={cn('flex flex-col items-center gap-2 @7xl:mt-64 @7xl:items-start', className)} bind:this={asideElement}>
-	<div class="hidden w-full justify-end @7xl:flex">
+<aside
+	class={cn(`flex flex-col items-center gap-2 ${sidebarState.open ? '@7xl:mt-64 @7xl:items-start' : ''}`, className)}
+	bind:this={asideElement}
+>
+	<div class="hidden w-full justify-end {sidebarState.open ? '@7xl:flex' : ''}">
 		<Separator class="mb-3 max-w-1/2" />
 	</div>
 	<p class="font-semibold">Support The Site</p>
@@ -63,7 +68,7 @@
 		{/snippet}
 	</RailItem>
 
-	<div class="hidden w-full justify-end @7xl:flex">
+	<div class="hidden w-full justify-end {sidebarState.open ? '@7xl:flex' : ''}">
 		<Separator class="mt-4 max-w-1/2" />
 	</div>
 </aside>
