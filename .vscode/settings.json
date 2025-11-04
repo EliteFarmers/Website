@@ -54,5 +54,10 @@
 	"markdown.copyFiles.destination": {
 		"**/*": "${documentWorkspaceFolder}/static/images/md/"
 	},
+	"cSpell.checkOnlyEnabledFileTypes": true,
+	"cSpell.enabledFileTypes": {
+		"*": false,
+		"markdown": true
+	},
 	"cSpell.words": ["Hanni", "hypixel", "lucide", "Mooshroom", "Skyblock"]
 }

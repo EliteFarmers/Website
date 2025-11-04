@@ -11,6 +11,9 @@
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
+	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
+	import Crown from '@lucide/svelte/icons/crown';
+	import Hourglass from '@lucide/svelte/icons/hourglass';
 	import Search from '@lucide/svelte/icons/search';
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
@@ -25,11 +28,14 @@
 
 	let { data }: Props = $props();
 
-	let showLeaderboardName = new PersistedState('showleaderboardname', false);
+	let showLeaderboardName = new PersistedState('showleaderboardname', true);
 
 	let title = $derived(`${data.lb?.title}${data.leaderboard.suffix} Leaderboard`);
 	let entries = $derived(data.lb?.entries ?? []);
 	let offset = $derived((data.lb?.offset ?? 0) + 1);
+	let intervalType = $derived(
+		data.lb.id.endsWith('-monthly') ? 'monthly' : data.lb.id.endsWith('-weekly') ? 'weekly' : 'current'
+	);
 
 	let firstHalf = $derived(entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
 	let secondHalf = $derived(entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
@@ -131,10 +137,36 @@
 						{ label: 'Stranded', value: 'island' },
 					]}
 				/>
-				<!-- <LeaderboardFilter query="removed" title="Removed" options={[
-					{ label: 'Removed Players', value: '1' },
-					{ label: 'All Players', value: '2' },
-				]} /> -->
+				{#if data.leaderboard.intervals?.length && data.leaderboard.intervals.length > 1}
+					{#each data.leaderboard.intervals as interval (interval)}
+						{#if interval !== intervalType}
+							<Button
+								class="size-8"
+								variant="outline"
+								href="/leaderboard/{data.settings.id.replace('-' + intervalType, '')}{interval ===
+								'current'
+									? ''
+									: '-' + interval}"
+							>
+								{#if interval === 'monthly'}
+									<CalendarClock />
+								{:else if interval === 'weekly'}
+									<Hourglass />
+								{:else}
+									<Crown />
+								{/if}
+							</Button>
+						{/if}
+					{/each}
+				{/if}
+				<!-- <LeaderboardFilter
+					query="removed"
+					title="Removed"
+					options={[
+						{ label: 'Removed Players', value: '1' },
+						{ label: 'All Players', value: '2' },
+					]}
+				/> -->
 			</div>
 		</div>
 		<div class="flex w-full flex-col items-center gap-2 lg:items-start">

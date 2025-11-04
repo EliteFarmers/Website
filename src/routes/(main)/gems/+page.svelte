@@ -1,5 +1,6 @@
 <script lang="ts">
 	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
+	import Countdown from '$comp/countdown.svelte';
 	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
@@ -22,13 +23,14 @@
 	]);
 
 	const firesales = $derived(data.gems.firesales);
-	const taylorsCollection = $derived(data.gems.taylorCollection);
+	const taylorCollection = $derived(data.gems.taylorCollection);
 	const seasonalBundle = $derived(data.gems.seasonalBundles);
+	const currentYear = new Date().getFullYear();
 	const currentSeason = $derived(
-		seasonalBundle?.items.map((b) => +b.released.split(' ')[1]).sort((a, b) => b - a)[0]
+		seasonalBundle?.items.filter((b) => b.released.endsWith(currentYear.toString())).at(1)?.released
 	);
 	const seasonalBundleCurrent = $derived(
-		seasonalBundle?.items.filter((b) => b.released.endsWith(currentSeason.toString()))
+		seasonalBundle?.items.filter((b) => b.released === currentSeason?.toString())
 	);
 
 	const breadcrumb = getPageCtx();
@@ -54,7 +56,7 @@
 	description="Use creator code {STORE_CODE.code} for 5% off the Hypixel Store! Creator codes are the only way to get discounts on SkyBlock Gems!"
 />
 
-<div class="my-4 flex w-full flex-col items-center">
+<div class="mx-2 my-4 flex w-full flex-col items-center">
 	<div
 		class="bg-card relative flex h-20 w-full max-w-7xl items-center justify-center gap-1 overflow-hidden rounded-md border-2"
 	>
@@ -90,8 +92,8 @@
 	</div>
 
 	<h2 class="my-12 text-4xl font-semibold">Booster Cookies</h2>
-	<div class="flex flex-wrap justify-center gap-4">
-		<div class="flex basis-64 flex-row items-center gap-2 rounded-md border-2 p-2">
+	<div class="mx-2 flex w-full flex-wrap justify-center gap-4">
+		<div class="flex w-full max-w-md flex-row items-center gap-2 rounded-md border-2 p-2">
 			<ItemRender skyblockId="BOOSTER_COOKIE" class="size-16" />
 			<div class="flex w-full flex-col justify-center">
 				<p class="font-semibold">Booster Cookie</p>
@@ -112,19 +114,46 @@
 	</div>
 
 	<h2 class="my-12 text-4xl font-semibold">Firesales</h2>
-	<div class="flex flex-wrap justify-center gap-4">
+	<div class="mx-2 flex w-full flex-wrap justify-center gap-4">
 		{#if !firesales?.length}
 			<p class="text-muted-foreground mb-8">There are no firesales at the moment!</p>
 		{:else}
 			{#each firesales as sale (sale.startsAt)}
 				{#each sale.items as item (item.itemId)}
-					<div>
-						<span>{item.itemId}</span> - <span>{item.price} Gems</span>
+					<div class="flex w-full max-w-md flex-row items-center gap-2 rounded-md border-2 p-2">
+						<ItemRender skyblockId={item.itemId} class="size-16" />
+						<div class="flex w-full flex-col justify-center">
+							<p class="font-semibold">{item.itemId}</p>
+							<p class="">{item.price.toLocaleString()} Gems</p>
+							<p>
+								{item.amount.toLocaleString()} Available*
+							</p>
+							<div class="flex max-w-sm flex-row items-center gap-2">
+								<Countdown
+									start={Number(item.startsAt) * 1000}
+									end={Number(item.endsAt) * 1000}
+									class="max-w-fit gap-4"
+								>
+									{#snippet starting()}
+										<p class="text-muted-foreground text-sm">Starts in:</p>
+									{/snippet}
+
+									{#snippet ending()}
+										<p class="text-muted-foreground text-sm">Ends in:</p>
+									{/snippet}
+								</Countdown>
+							</div>
+						</div>
 					</div>
 				{/each}
 			{/each}
 		{/if}
 	</div>
+	{#if firesales?.length}
+		<span class="text-muted-foreground mt-2 text-sm"
+			>* Stock number doesn't update! Items could be sold out already if the sale has started.</span
+		>
+	{/if}
 
 	<h2 class="my-12 text-4xl font-semibold">Seasonal Bundle</h2>
 	<div class="flex flex-wrap justify-center gap-4">
@@ -159,10 +188,10 @@
 
 	<h2 class="my-12 text-4xl font-semibold">Taylor's Collection</h2>
 	<div class="flex flex-wrap justify-center gap-4">
-		{#if !taylorsCollection?.items.length}
+		{#if !taylorCollection?.items.length}
 			<p class="text-muted-foreground">Taylor's Collection is not available at the moment!</p>
 		{:else}
-			{#each taylorsCollection.items as item (item.name)}
+			{#each taylorCollection.items as item (item.name)}
 				{@const outputItem = item.output[0]}
 				{#if outputItem?.item_id}
 					<div class="flex basis-64 flex-row items-center gap-2 rounded-md border-2 p-2">
@@ -212,7 +241,7 @@
 			<div class="bg-card flex w-full max-w-80 flex-col items-center gap-1 rounded-md border px-1 py-1">
 				<div
 					style="background-image: url('/images/creatorcode.webp');"
-					class="@container relative aspect-[3/1] w-full max-w-80 rounded-sm bg-cover bg-no-repeat"
+					class="@container relative aspect-3/1 w-full max-w-80 rounded-sm bg-cover bg-no-repeat"
 				>
 					<div class="absolute top-2/5 left-1/3 text-[6cqw] font-semibold text-[#1ec64c]">
 						{STORE_CODE.code}

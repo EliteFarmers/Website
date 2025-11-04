@@ -17,10 +17,10 @@
 		class="relative flex flex-col @7xl:flex-row @7xl:gap-4"
 		style="--sidebarWidth: {sidebarState.open ? SIDEBAR_WIDTH : SIDEBAR_WIDTH_ICON};"
 	>
-		<div class="min-w-0 flex-1">
+		<div class="mx-2 min-w-0 flex-1 md:mx-4">
 			{@render children?.()}
 		</div>
 
-		<div class="block @7xl:w-[var(--sidebarWidth)]">{@render sidebar?.()}</div>
+		<div class="block @7xl:w-(--sidebarWidth)">{@render sidebar?.()}</div>
 	</div>
 </div>

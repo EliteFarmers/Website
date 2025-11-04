@@ -13,12 +13,13 @@
 		absolute?: Snippet;
 	}
 
-	let { img, name, href, class: className = '', absolute, imgClass }: Props = $props();
+	let { img, name, href, class: className = '', absolute, imgClass, ...rest }: Props = $props();
 </script>
 
 <a
 	class={cn('group bg-card shadow-primary inline-block max-w-48 rounded-lg border-2 hover:drop-shadow-lg', className)}
 	{href}
+	{...rest}
 >
 	<div class="flex min-h-12 w-full min-w-0 flex-col justify-start">
 		<div class="@container-normal relative grid min-h-12 w-full items-center justify-center rounded-md">
