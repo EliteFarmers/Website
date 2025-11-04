@@ -49,6 +49,10 @@ export const NAV_PAGES = [
 		name: 'Shop',
 		href: '/shop',
 	},
+	{
+		name: 'Gems',
+		href: '/gems',
+	},
 ] as NavItem[];
 
 export const PROFILE_NAV_PAGES = [

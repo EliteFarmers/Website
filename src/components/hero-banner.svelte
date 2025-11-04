@@ -20,6 +20,7 @@
 		className
 	)}
 	style={src ? `background-image: url('${src}')` : ''}
+	id="hero-banner"
 >
 	<div
 		class="mx-4 @7xl:mr-[calc(var(--sidebarWidth)+1rem)]"

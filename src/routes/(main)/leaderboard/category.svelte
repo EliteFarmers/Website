@@ -28,7 +28,7 @@
 	<h2 class="text-2xl font-semibold">{title}</h2>
 
 	<div
-		class="bg-border grid h-full w-full flex-1 border-collapse grid-cols-1 gap-[2px] overflow-clip rounded-md border-2 sm:grid-cols-2 md:grid-cols-3"
+		class="bg-border grid h-full w-full flex-1 border-collapse grid-cols-1 gap-0.5 overflow-clip rounded-md border-2 sm:grid-cols-2 md:grid-cols-3"
 	>
 		{#each leaderboards ?? [] as lb (lb.id)}
 			<div class="bg-background flex h-10 w-full flex-row items-center">
