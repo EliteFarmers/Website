@@ -62,7 +62,7 @@
 
 	<RailItem img="/images/creatorcode.webp" name="Use code {STORE_CODE.code}" href="/gems" imgClass="object-top">
 		{#snippet absolute()}
-			<div class="absolute top-[45%] left-[28%] text-[1cqw] font-semibold text-[#1ec64c]">
+			<div class="absolute top-[48%] left-[28%] text-sm font-semibold text-[#1ec64c]">
 				{STORE_CODE.code}
 			</div>
 		{/snippet}
