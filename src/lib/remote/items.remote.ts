@@ -1,4 +1,5 @@
 import { query } from '$app/server';
+import { searchAuctionItems } from '$lib/api';
 import type { RatesItemPriceData } from '$lib/api/elite';
 import { cache } from '$lib/servercache';
 import z from 'zod';
@@ -49,3 +50,13 @@ function getSingleItemValue(itemId: string) {
 		lowest: lowestValue,
 	};
 }
+
+export const searchItems = query(z.string(), async (search) => {
+	if (!search) {
+		return [];
+	}
+
+	const response = await searchAuctionItems({ query: search, limit: 10 });
+
+	return response.data?.results ?? [];
+});

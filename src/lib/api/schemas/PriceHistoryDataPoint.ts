@@ -10,7 +10,15 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 
 export interface PriceHistoryDataPoint {
 	timestamp: string;
-	lowestPrice: number;
-	averagePrice: number;
-	volume: number;
+	/** @nullable */
+	lowestBinPrice?: number | null;
+	/** @nullable */
+	averageBinPrice?: number | null;
+	binListings: number;
+	/** @nullable */
+	lowestSalePrice?: number | null;
+	/** @nullable */
+	averageSalePrice?: number | null;
+	saleAuctions: number;
+	itemsSold: number;
 }
