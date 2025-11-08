@@ -13,13 +13,11 @@
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
-	import { utc, UTCDate } from '@date-fns/utc';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
 	import Search from '@lucide/svelte/icons/search';
 	import SquareActivity from '@lucide/svelte/icons/square-activity';
-	import { addMonths, endOfISOWeek, endOfMonth, startOfISOWeek, startOfMonth } from 'date-fns';
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
 	import type { PageData } from './$types';
@@ -73,8 +71,8 @@
 	const breadcrumb = getPageCtx();
 	const favorites = getFavoritesContext();
 
-	let startTime = $state(0);
-	let endTime = $state(0);
+	let startTime = $derived(Number(data.lb.startsAt ?? 0) * 1000);
+	let endTime = $derived(Number(data.lb.endsAt ?? 0) * 1000);
 	let active = $derived(endTime > Date.now());
 
 	$effect.pre(() => {
@@ -83,24 +81,6 @@
 			name: `#${offset} - ` + (data.settings.title || data.lb?.title),
 			href: page.url.pathname,
 		});
-
-		if (intervalType === 'weekly') {
-			const weekStart = startOfISOWeek(new Date(), { in: utc });
-			startTime = weekStart.getTime();
-			const weekEnd = endOfISOWeek(new Date(), { in: utc });
-			endTime = weekEnd.getTime() + 1;
-		}
-
-		if (intervalType === 'monthly' && data.lb.interval) {
-			const [selectedYear, selectedMonth] = data.lb.interval.split('-').map(Number);
-			startTime = startOfMonth(addMonths(new UTCDate(selectedYear, selectedMonth), -1)).getTime();
-			endTime = endOfMonth(new UTCDate(startTime)).getTime() + 1;
-		}
-
-		if (intervalType === 'current') {
-			startTime = 0;
-			endTime = 0;
-		}
 	});
 
 	let searchForm = $state<HTMLFormElement | null>(null);
@@ -121,14 +101,14 @@
 	>
 		<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
 		{#if startTime && endTime}
-			<div class="flex flex-row items-center text-sm md:text-base">
+			<div class="flex flex-row items-center text-sm md:text-base {active ? '' : 'mb-10'}">
 				<DateDisplay timestamp={startTime} />
 				<ArrowRight class="mx-2 inline-block size-4" />
 				<DateDisplay timestamp={endTime} />
 			</div>
 		{/if}
 		{#if active}
-			<div class="flex flex-row items-center gap-2">
+			<div class="flex h-8 flex-row items-center gap-2">
 				<Countdown start={startTime} end={endTime} class="gap-2 text-sm md:text-base">
 					{#snippet ending()}
 						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
