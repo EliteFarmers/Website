@@ -5,6 +5,7 @@
 	import * as Sidebar from '$ui/sidebar';
 	import Question from '@lucide/svelte/icons/circle-question-mark';
 	import { STORE_CODE } from '../../routes/(main)/gems/hypixel-store';
+	import RailGroup from './rail-group.svelte';
 	import RailItem from './rail-item.svelte';
 	const sidebarState = Sidebar.useSidebar();
 
@@ -27,46 +28,58 @@
 </script>
 
 <aside
-	class={cn(`flex flex-col items-center gap-2 ${sidebarState.open ? '@7xl:mt-64 @7xl:items-start' : ''}`, className)}
+	class={cn(
+		`flex flex-col items-center justify-start gap-2 md:flex-row md:flex-wrap md:items-start md:justify-center md:gap-6 @max-7xl:mt-8 ${sidebarState.open ? '@7xl:mt-64 @7xl:items-start @7xl:gap-2' : 'mt-8'}`,
+		className
+	)}
 	bind:this={asideElement}
 >
 	<div class="hidden w-full justify-end {sidebarState.open ? '@7xl:flex' : ''}">
 		<Separator class="mb-3 max-w-1/2" />
 	</div>
-	<p class="font-semibold">Support The Site</p>
 
-	<RailItem img="/images/farm-rat.png" name="View the Shop!" href="/shop" imgClass="object-bottom"></RailItem>
-	<Separator class="mt-4 mb-2 w-full max-w-48" />
-	<div class="flex items-center justify-center gap-1">
-		<p class="font-semibold">Unlock Badges</p>
-		<a href="/info/badges" class="-mb-0.5 inline-block"><Question class="text-muted-foreground size-4" /> </a>
-	</div>
+	<RailGroup>
+		<p class="font-semibold">Support The Site</p>
+		<RailItem img="/images/farm-rat.png" name="View the Shop!" href="/shop" imgClass="object-bottom" />
+	</RailGroup>
 
-	<RailItem img="/images/LuminiBanner.webp" name="Buy Stickers!" href="/stickers" target="_blank">
-		{#snippet absolute()}
-			<div class="absolute top-2 right-4 size-8 overflow-visible rounded-md">
-				<div class="sticker-sprite relative size-full"></div>
-			</div>
-		{/snippet}
-	</RailItem>
-	<RailItem
-		img="/images/kofi_logo.webp"
-		name="Donate!"
-		href="/donate"
-		target="_blank"
-		imgClass="object-contain p-2"
-	/>
+	<Separator class="mt-4 mb-2 w-full max-w-48 md:hidden {sidebarState.open ? '@7xl:block' : ''}" />
 
-	<Separator class="mt-4 mb-2 w-full max-w-48" />
-	<p class="font-semibold">Buy Gems</p>
+	<RailGroup>
+		<div class="flex items-center justify-center gap-1">
+			<p class="font-semibold">Unlock Badges</p>
+			<a href="/info/badges" class="-mb-0.5 inline-block"><Question class="text-muted-foreground size-4" /> </a>
+		</div>
 
-	<RailItem img="/images/creatorcode.webp" name="Use code {STORE_CODE.code}" href="/gems" imgClass="object-top">
-		{#snippet absolute()}
-			<div class="absolute top-[48%] left-[28%] text-sm font-semibold text-[#1ec64c]">
-				{STORE_CODE.code}
-			</div>
-		{/snippet}
-	</RailItem>
+		<RailItem img="/images/LuminiBanner.webp" name="Buy Stickers!" href="/stickers" target="_blank">
+			{#snippet absolute()}
+				<div class="absolute top-2 right-4 size-8 overflow-visible rounded-md">
+					<div class="sticker-sprite relative size-full"></div>
+				</div>
+			{/snippet}
+		</RailItem>
+		<RailItem
+			img="/images/kofi_logo.webp"
+			name="Donate!"
+			href="/donate"
+			target="_blank"
+			imgClass="object-contain p-2"
+		/>
+	</RailGroup>
+
+	<Separator class="mt-4 mb-2 w-full max-w-48 md:hidden {sidebarState.open ? '@7xl:block' : ''}" />
+
+	<RailGroup>
+		<p class="font-semibold">Buy Gems</p>
+
+		<RailItem img="/images/creatorcode.webp" name="Use code {STORE_CODE.code}" href="/gems" imgClass="object-top">
+			{#snippet absolute()}
+				<div class="absolute top-[48%] left-[28%] text-sm font-semibold text-[#1ec64c]">
+					{STORE_CODE.code}
+				</div>
+			{/snippet}
+		</RailItem>
+	</RailGroup>
 
 	<div class="hidden w-full justify-end {sidebarState.open ? '@7xl:flex' : ''}">
 		<Separator class="mt-4 max-w-1/2" />
