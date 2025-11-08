@@ -272,7 +272,7 @@ export const unlinkOwnAccount = async (player: string, options?: RequestInit) =>
 };
 
 /**
- * Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
+ * Returns a 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
  * @summary Get Minecraft Account Face Image
  */
 export type getAccountFace1Response204 = {
@@ -306,7 +306,7 @@ export const getAccountFace1 = async (player: string, options?: RequestInit) => 
 };
 
 /**
- * Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
+ * Returns a 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
  * @summary Get Minecraft Account Face Image
  */
 export type getAccountFace2Response204 = {

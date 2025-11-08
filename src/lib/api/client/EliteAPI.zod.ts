@@ -245,7 +245,7 @@ export const zodUnlinkOwnAccountParams = zod.object({
 });
 
 /**
- * Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
+ * Returns a 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
  * @summary Get Minecraft Account Face Image
  */
 export const zodGetAccountFace1Params = zod.object({
@@ -253,7 +253,7 @@ export const zodGetAccountFace1Params = zod.object({
 });
 
 /**
- * Returns an 8x8 or 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
+ * Returns a 72x72 face png image of the Minecraft account associated with the provided player name or UUID. 72x72 response includes the player's "hat" overlay. If not found, returns Steve's face.
  * @summary Get Minecraft Account Face Image
  */
 export const zodGetAccountFace2Params = zod.object({
@@ -9726,6 +9726,7 @@ export const zodSearchAuctionItemsResponse = zod.object({
 	results: zod.array(
 		zod.object({
 			skyblockId: zod.string(),
+			variantKey: zod.string().nullish(),
 			name: zod.string().nullish(),
 			hasVariants: zod.coerce.boolean<boolean>(),
 			variantCount: zod.number(),

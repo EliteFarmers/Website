@@ -11,6 +11,8 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 export interface AuctionItemSearchResult {
 	skyblockId: string;
 	/** @nullable */
+	variantKey?: string | null;
+	/** @nullable */
 	name?: string | null;
 	hasVariants: boolean;
 	variantCount: number;

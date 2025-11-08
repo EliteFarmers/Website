@@ -69,6 +69,8 @@
 	}
 
 	.dark {
+		color-scheme: dark;
+
 		--background: hsl(240 10% 3.9%);
 		--foreground: hsl(0 0% 98%);
 
@@ -376,6 +378,16 @@
 
 	.animate-obfuscated {
 		line-height: 1;
+	}
+
+	.grid-stack {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr;
+		& > * {
+			grid-column: 1 / -1;
+			grid-row: 1 / -1;
+		}
 	}
 
 	[data-rehype-pretty-code-figure] {

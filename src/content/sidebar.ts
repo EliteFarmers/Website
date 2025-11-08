@@ -1,3 +1,5 @@
+import ChartCandlestick from '@lucide/svelte/icons/chart-candlestick';
+import Gavel from '@lucide/svelte/icons/gavel';
 import Gem from '@lucide/svelte/icons/gem';
 import Home from '@lucide/svelte/icons/home';
 import Info from '@lucide/svelte/icons/info';
@@ -22,6 +24,16 @@ export const SIDEBAR_NAV = [
 		title: 'Top Players',
 		href: '/leaderboard',
 		icon: Trophy as unknown as Component,
+	},
+	{
+		title: 'Auction House',
+		href: '/auctions',
+		icon: Gavel as unknown as Component,
+	},
+	{
+		title: 'Bazaar',
+		href: '/bazaar',
+		icon: ChartCandlestick as unknown as Component,
 	},
 	{
 		title: 'Browse',
