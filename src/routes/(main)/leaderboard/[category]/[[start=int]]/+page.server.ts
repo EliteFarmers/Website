@@ -16,8 +16,8 @@ export const load = (async ({ params, parent, url }) => {
 	}
 
 	const interval = url.searchParams.get('interval') ?? undefined;
-	if (interval && !interval.match(/^[0-9]{4}-[0-9]{2}$/)) {
-		throw error(400, 'Invalid interval provided! Must be yyyy-MM');
+	if (interval && !interval.match(/^[0-9]{4}-W?[0-9]{2}$/)) {
+		throw error(400, 'Invalid interval provided! Must be yyyy-MM or yyyy-Www');
 	}
 
 	const removed = url.searchParams.get('removed') ?? undefined;

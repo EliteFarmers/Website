@@ -45,18 +45,19 @@
 					{:else}
 						<CirclePlus />
 					{/if}
-					<Badge variant="secondary" class="rounded-sm px-1 font-normal lg:hidden">
-						{selectedValues.size}
-					</Badge>
-					<div class="hidden space-x-1 lg:flex">
+					<div class="flex space-x-1">
 						{#if selectedValues.size > 2}
 							<Badge variant="secondary" class="rounded-sm px-1 font-normal">
-								{selectedValues.size} selected
+								{selectedValues.size}<span class="hidden lg:inline-block"> selected</span>
 							</Badge>
 						{:else}
 							{#each options.filter((opt) => selectedValues.has(opt.value)) as option (option)}
 								<Badge variant="secondary" class="rounded-sm px-1 font-normal">
-									{option.label}
+									{#if option.icon}
+										<option.icon /><span class="hidden lg:inline-block"> {option.label}</span>
+									{:else}
+										<span>{option.label}</span>
+									{/if}
 								</Badge>
 							{/each}
 						{/if}

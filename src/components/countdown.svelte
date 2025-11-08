@@ -65,7 +65,7 @@
 			class={cn('flex w-full flex-row items-center font-mono text-sm', rest.class)}
 		>
 			<div
-				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 {counter.days > 0
+				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 leading-0 {counter.days > 0
 					? ''
 					: 'text-muted'}"
 			>
@@ -80,7 +80,7 @@
 				<!-- <span class="text-sm font-normal text-muted-foreground">Days</span> -->
 			</div>
 			<div
-				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 {counter.hours <= 0 &&
+				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 leading-0 {counter.hours <= 0 &&
 				counter.days <= 0
 					? 'text-muted'
 					: ''}"
@@ -96,7 +96,7 @@
 				<!-- <span class="text-sm font-normal text-muted-foreground">Hours</span> -->
 			</div>
 			<div
-				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 {counter.minutes <= 0 &&
+				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 leading-0 {counter.minutes <= 0 &&
 				counter.hours <= 0 &&
 				counter.days <= 0
 					? 'text-muted'
@@ -113,7 +113,7 @@
 				<!-- <span class="text-sm font-normal text-muted-foreground">Minutes</span> -->
 			</div>
 			<div
-				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 {counter.seconds <= 0 &&
+				class="flex min-w-4 flex-1 flex-col items-center justify-center gap-1 leading-0 {counter.seconds <= 0 &&
 				counter.minutes <= 0 &&
 				counter.hours <= 0 &&
 				counter.days <= 0

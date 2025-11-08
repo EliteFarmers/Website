@@ -20,6 +20,20 @@
 		scrollbarXClasses?: string | undefined;
 		scrollbarYClasses?: string | undefined;
 	} = $props();
+
+	function handleWheel(e: WheelEvent) {
+		if (!viewRef) return;
+
+		// Check if the user is primarily scrolling vertically. This helps avoid
+		// interfering with touchpad gestures that might have both X and Y deltas.
+		if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+			// Prevent the default vertical scroll behavior of the page.
+			e.preventDefault();
+
+			// Apply the vertical scroll amount to the horizontal scroll position.
+			viewRef.scrollLeft += e.deltaY;
+		}
+	}
 </script>
 
 <ScrollAreaPrimitive.Root bind:ref data-slot="scroll-area" class={cn('relative', className)} {...restProps}>
@@ -27,6 +41,7 @@
 		bind:ref={viewRef}
 		data-slot="scroll-area-viewport"
 		class={cn('h-full w-full rounded-[inherit]', viewClass)}
+		onwheel={orientation === 'horizontal' || orientation === 'both' ? handleWheel : undefined}
 	>
 		{@render children?.()}
 	</ScrollAreaPrimitive.Viewport>

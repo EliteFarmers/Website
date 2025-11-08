@@ -4,6 +4,7 @@
 	import { type LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { formatIgn, formatLeaderboardAmount } from '$lib/format';
 	import { isValidLeaderboardStyle, type LeaderboardStyleText } from '$lib/styles/style';
+	import CircleSlash from '@lucide/svelte/icons/circle-slash';
 
 	interface Props {
 		entry: LeaderboardEntry;
@@ -74,7 +75,7 @@
 			src={img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
 			class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
 		/>
-		<div class="absolute inset-0 rounded-sm bg-gradient-to-r from-black/20 via-transparent to-black/20"></div>
+		<div class="absolute inset-0 rounded-sm bg-linear-to-r from-black/20 via-transparent to-black/20"></div>
 	{/if}
 	<a
 		href={disabled
@@ -111,6 +112,7 @@
 								class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs"
 								style={subtitleStyles}
 							>
+								{@render removed()}
 								<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
 								{#each entry.members.slice(1, 3) ?? [] as member, i (member.uuid ?? i)}
 									<p>{member.ign}</p>
@@ -124,6 +126,7 @@
 								class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
 								style={subtitleStyles}
 							>
+								{@render removed()}
 								<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
 								{profile}
 							</div>
@@ -147,3 +150,9 @@
 		</div>
 	</a>
 </div>
+
+{#snippet removed()}
+	{#if entry.removed}
+		<CircleSlash class="text-destructive size-4" />
+	{/if}
+{/snippet}

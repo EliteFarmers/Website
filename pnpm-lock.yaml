@@ -21,6 +21,9 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
     devDependencies:
+      '@date-fns/utc':
+        specifier: ^2.1.1
+        version: 2.1.1
       '@eslint/js':
         specifier: ^9.39.0
         version: 9.39.0
@@ -216,6 +219,9 @@ importers:
       svelte-sonner:
         specifier: ^1.0.5
         version: 1.0.5(svelte@5.43.2)
+      svelte-time:
+        specifier: ^2.0.2
+        version: 2.0.2
       sveltekit-rate-limiter:
         specifier: ^0.7.0
         version: 0.7.0(@sveltejs/kit@2.47.0(@opentelemetry/api@1.9.0)(@sveltejs/vite-plugin-svelte@6.2.0(svelte@5.43.2)(vite@7.1.12(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1)))(svelte@5.43.2)(vite@7.1.12(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1)))
@@ -429,6 +435,9 @@ packages:
   '@dagrejs/graphlib@2.2.4':
     resolution: {integrity: sha512-mepCf/e9+SKYy1d02/UkvSy6+6MoyXhVxP8lLDfA7BPE1X1d4dR0sZznmbM8/XVJ1GPM+Svnx7Xj6ZweByWUkw==}
     engines: {node: '>17.0.0'}
+
+  '@date-fns/utc@2.1.1':
+    resolution: {integrity: sha512-SlJDfG6RPeEX8wEVv6ZB3kak4MmbtyiI2qX/5zuKdordbrhB/iaJ58GVMZgJ6P1sJaM1gMgENFYYeg1JWrCFrA==}
 
   '@emnapi/runtime@1.6.0':
     resolution: {integrity: sha512-obtUmAHTMjll499P+D9A3axeJFlhdjOWdKUNs/U6QIGT7V5RjcUW1xToAzjvmgTSQhDbYn/NwfTRoJcQ2rNBxA==}
@@ -4355,6 +4364,9 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
+  svelte-time@2.0.2:
+    resolution: {integrity: sha512-Ne3eG92bxvttZV3lrMfL5/Vs3PSEJiNpPOqpY90rorXBLXsbmdS7HScXZt7mb42mX/eTCRJyAKgyBlgzlcYLrQ==}
+
   svelte-toolbelt@0.5.0:
     resolution: {integrity: sha512-t3tenZcnfQoIeRuQf/jBU7bvTeT3TGkcEE+1EUr5orp0lR7NEpprflpuie3x9Dn0W9nOKqs3HwKGJeeN5Ok1sQ==}
     engines: {node: '>=18', pnpm: '>=8.7.0'}
@@ -5052,6 +5064,8 @@ snapshots:
       '@dagrejs/graphlib': 2.2.4
 
   '@dagrejs/graphlib@2.2.4': {}
+
+  '@date-fns/utc@2.1.1': {}
 
   '@emnapi/runtime@1.6.0':
     dependencies:
@@ -9770,6 +9784,10 @@ snapshots:
     dependencies:
       runed: 0.28.0(svelte@5.43.2)
       svelte: 5.43.2
+
+  svelte-time@2.0.2:
+    dependencies:
+      dayjs: 1.11.19
 
   svelte-toolbelt@0.5.0(svelte@5.43.2):
     dependencies:

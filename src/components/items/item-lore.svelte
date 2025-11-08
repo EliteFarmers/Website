@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ItemDto } from '$lib/api';
+	import Bug from '@lucide/svelte/icons/bug';
 	import type { EliteItemDto } from 'farming-weight';
 	import FormattedText from './formatted-text.svelte';
 	import Lore from './lore.svelte';
@@ -11,9 +12,11 @@
 	}
 
 	let { item, title = true, children }: Props = $props();
+
+	let showDebugInfo = $state(false);
 </script>
 
-<div class="dark bg-background flex flex-col gap-2">
+<div class="dark bg-background relative flex flex-col gap-2 rounded-md p-2">
 	{#if title}
 		<span class="font-mono text-lg">
 			<FormattedText text={item.name ?? 'Unknown Item'} />
@@ -43,4 +46,15 @@
 			</p>
 		{/if}
 	</div>
+	<button
+		class="text-muted-foreground hover:text-destructive absolute right-2 bottom-2 flex items-center gap-1 text-sm"
+		onclick={() => (showDebugInfo = !showDebugInfo)}
+	>
+		<Bug class="size-4" />
+	</button>
+	{#if showDebugInfo}
+		<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
+			<pre class="break-all whitespace-pre-wrap">{JSON.stringify(item, null, 2)}</pre>
+		</div>
+	{/if}
 </div>
