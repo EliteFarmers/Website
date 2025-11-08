@@ -3,19 +3,33 @@
 	import ItemIcon from '../item-icon.svelte';
 	interface Props {
 		item: ItemDto | null;
-		inventoryId: string;
+		inventoryId?: string;
 		onSelect?: (item: ItemDto) => void;
 		highlight?: boolean;
 		subSlot?: string;
 	}
 
-	let { item, inventoryId, onSelect, highlight = false, subSlot = undefined }: Props = $props();
+	let { item, inventoryId = undefined, onSelect, highlight = false, subSlot = undefined }: Props = $props();
+
+	let texture = $derived.by(() => {
+		if (!item) return '';
+		if (item.imageUrl) {
+			return item.imageUrl;
+		}
+
+		if (inventoryId) {
+			return `/api/texture/${inventoryId}/${subSlot ?? item?.slot}.webp${subSlot && item?.slot ? `?sub=${item.slot}` : ''}`;
+		}
+
+		if (item?.petInfo) {
+			return `/api/pet/${item.petInfo.type}.webp`;
+		}
+
+		return `/api/item/${item?.skyblockId}.webp`;
+	});
 </script>
 
 {#if item}
-	{@const texture = item.imageUrl
-		? item.imageUrl
-		: `/api/texture/${inventoryId}/${subSlot ?? item.slot}.webp${subSlot && item.slot ? `?sub=${item.slot}` : ''}`}
 	{#if onSelect}
 		<button class="relative" onclick={() => onSelect?.(item)}>
 			<ItemIcon url={texture} class={highlight ? 'border-link/50' : ''} />
