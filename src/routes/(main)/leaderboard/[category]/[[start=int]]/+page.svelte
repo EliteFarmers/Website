@@ -2,19 +2,24 @@
 	import { enhance } from '$app/forms';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+	import Countdown from '$comp/countdown.svelte';
 	import Head from '$comp/head.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
+	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
+	import { utc, UTCDate } from '@date-fns/utc';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
-	import Crown from '@lucide/svelte/icons/crown';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
 	import Search from '@lucide/svelte/icons/search';
+	import SquareActivity from '@lucide/svelte/icons/square-activity';
+	import { addMonths, endOfISOWeek, endOfMonth, startOfISOWeek, startOfMonth } from 'date-fns';
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
 	import type { PageData } from './$types';
@@ -68,12 +73,34 @@
 	const breadcrumb = getPageCtx();
 	const favorites = getFavoritesContext();
 
+	let startTime = $state(0);
+	let endTime = $state(0);
+	let active = $derived(endTime > Date.now());
+
 	$effect.pre(() => {
 		breadcrumb.setBreadcrumbs(crumbs);
 		favorites.setPage({
 			name: `#${offset} - ` + (data.settings.title || data.lb?.title),
 			href: page.url.pathname,
 		});
+
+		if (intervalType === 'weekly') {
+			const weekStart = startOfISOWeek(new Date(), { in: utc });
+			startTime = weekStart.getTime();
+			const weekEnd = endOfISOWeek(new Date(), { in: utc });
+			endTime = weekEnd.getTime() + 1;
+		}
+
+		if (intervalType === 'monthly' && data.lb.interval) {
+			const [selectedYear, selectedMonth] = data.lb.interval.split('-').map(Number);
+			startTime = startOfMonth(addMonths(new UTCDate(selectedYear, selectedMonth), -1)).getTime();
+			endTime = endOfMonth(new UTCDate(startTime)).getTime() + 1;
+		}
+
+		if (intervalType === 'current') {
+			startTime = 0;
+			endTime = 0;
+		}
 	});
 
 	let searchForm = $state<HTMLFormElement | null>(null);
@@ -89,10 +116,33 @@
 />
 
 <section class="mt-16 flex w-full flex-col justify-center">
-	<h1 class="mt-8 mb-16 max-w-2xl self-center text-center text-4xl">{title}</h1>
+	<div
+		class="mt-8 flex w-full flex-col items-center justify-center gap-2 {startTime && endTime ? 'mb-6.5' : 'mb-22'}"
+	>
+		<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
+		{#if startTime && endTime}
+			<div class="flex flex-row items-center text-sm md:text-base">
+				<DateDisplay timestamp={startTime} />
+				<ArrowRight class="mx-2 inline-block size-4" />
+				<DateDisplay timestamp={endTime} />
+			</div>
+		{/if}
+		{#if active}
+			<div class="flex flex-row items-center gap-2">
+				<Countdown start={startTime} end={endTime} class="gap-2 text-sm md:text-base">
+					{#snippet ending()}
+						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+							Ending in
+						</p>
+					{/snippet}
+				</Countdown>
+			</div>
+		{/if}
+	</div>
+
 	<div class="my-2 flex flex-col items-end justify-center gap-2 rounded-lg lg:h-16 lg:flex-row">
 		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
-			<div class="flex w-full max-w-xl flex-row items-center justify-center gap-2 md:justify-start">
+			<div class="flex w-full max-w-xl flex-row flex-wrap items-center justify-center gap-2 md:justify-start">
 				<form
 					method="post"
 					action={page.url.search}
@@ -153,7 +203,7 @@
 								{:else if interval === 'weekly'}
 									<Hourglass />
 								{:else}
-									<Crown />
+									<SquareActivity />
 								{/if}
 							</Button>
 						{/if}

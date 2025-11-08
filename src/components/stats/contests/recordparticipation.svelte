@@ -33,7 +33,7 @@
 					{/snippet}
 					<div>
 						<p class="text-lg font-semibold">This participation no longer exists!</p>
-						<p class="max-w-xs break-words whitespace-normal">
+						<p class="max-w-xs wrap-break-word whitespace-normal">
 							{entry.playerName} may have been banned or deleted their profile.
 						</p>
 					</div>
