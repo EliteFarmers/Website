@@ -16,7 +16,7 @@ export default defineConfig({
 				useBigInt: true,
 				transformer: './src/lib/api/util/fetch-transformer.ts',
 				mutator: {
-					path: './src/lib/api/custom-fetch.ts',
+					path: './src/lib/api/custom-fetch-placeholder.ts',
 					name: 'customFetch',
 				},
 			},

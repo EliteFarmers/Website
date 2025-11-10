@@ -20,6 +20,27 @@ async function removeReturnTypesFromFile(filePath: string) {
 		return;
 	}
 
+	// Find and replace text
+	const cmsFileContent = await project.getFileSystem().readFile(filePath);
+	const updatedCmsFileContent = cmsFileContent.replace('../custom-fetch-placeholder', '../custom-fetch');
+	await project.getFileSystem().writeFile(filePath, updatedCmsFileContent);
+	console.log(`Replaced custom-fetch-placeholder import in ${path.basename(filePath)}.`);
+
+	if (filePath.includes('CMS')) {
+		// Load all schemas in the cms/schemas directory, and replace " |  | " with " | "
+		const cmsSchemasDir = path.resolve(path.dirname(filePath), '../schemas');
+		const schemaFiles = project.getFileSystem().readDirSync(cmsSchemasDir);
+		for (const schemaFile of schemaFiles) {
+			if (schemaFile.name.endsWith('.ts')) {
+				const schemaFilePath = schemaFile.name;
+				const schemaContent = await project.getFileSystem().readFile(schemaFilePath);
+				const updatedSchemaContent = schemaContent.replace(' |  | ', ' | ');
+				await project.getFileSystem().writeFile(schemaFilePath, updatedSchemaContent);
+				console.log(`Cleaned up union types in schema: ${schemaFile.name}`);
+			}
+		}
+	}
+
 	const sourceFile = project.addSourceFileAtPath(filePath);
 
 	const functionDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.FunctionDeclaration);
@@ -42,10 +63,10 @@ async function removeReturnTypesFromFile(filePath: string) {
 	}
 
 	sourceFile.addImportDeclaration({
-		namedImports: ['ELITE_API_URL'],
+		namedImports: [filePath.includes('CMS') ? 'STRAPI_API_URL' : 'ELITE_API_URL'],
 		moduleSpecifier: '$env/static/private',
 	});
-	console.log(`Added import for ELITE_API_URL.`);
+	console.log(`Added import for api URL.`);
 
 	await sourceFile.save();
 
