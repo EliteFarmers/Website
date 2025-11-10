@@ -9,6 +9,7 @@
 		description: string;
 		children?: import('svelte').Snippet;
 		canonicalPath?: string;
+		twitterCardType?: 'summary' | 'summary_large_image' | 'app' | 'player' | undefined;
 	}
 
 	let {
@@ -17,6 +18,7 @@
 		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
 		description,
 		children,
+		twitterCardType,
 		canonicalPath,
 	}: Props = $props();
 
@@ -31,7 +33,7 @@
 	<title>{title ?? 'Elite | Skyblock Farming Weight'}</title>
 	<meta property="og:title" content={title ?? 'Elite | Skyblock Farming Weight'} />
 
-	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 
 	{#if description}
 		<meta name="description" content={description} />

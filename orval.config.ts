@@ -49,4 +49,21 @@ export default defineConfig({
 			},
 		},
 	},
+	strapi: {
+		input: {
+			target: process.env.PUBLIC_STRAPI_API_URL + '/openapi.json',
+		},
+		output: {
+			client: 'zod',
+			target: './src/lib/api/client',
+			fileExtension: '.zod.ts',
+			namingConvention: 'PascalCase',
+		},
+		hooks: {
+			afterAllFilesWrite: {
+				command: 'pnpm postprocess-cms',
+				injectGeneratedDirsAndFiles: false,
+			},
+		},
+	},
 });

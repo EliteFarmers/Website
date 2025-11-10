@@ -1,0 +1,142 @@
+import { STRAPI_TOKEN } from '$env/static/private';
+import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
+import { articleGetArticlesResponse } from '$lib/api/client/EliteCms.zod';
+import qs from 'qs';
+import * as z from 'zod';
+
+export async function fetchCmsData<T>(endpoint: string): Promise<T> {
+	const res = await fetch(`${PUBLIC_STRAPI_API_URL}/api${endpoint}`, {
+		headers: {
+			Authorization: `Bearer ${STRAPI_TOKEN}`,
+		},
+	});
+
+	if (!res.ok) {
+		throw new Error(`Failed to fetch CMS data from ${endpoint}: ${res.status} ${res.statusText}`);
+	}
+
+	return await (res.json() as Promise<T>);
+}
+
+export async function fetchArticleBySlug(slug: string) {
+	const data = await fetchCmsData<z.infer<typeof articleGetArticlesResponse>>(`/articles?filters[slug][$eq]=${slug}`);
+
+	if (data.data.length === 0) {
+		return null;
+	}
+
+	return data.data[0];
+}
+
+const flatCoverSchema = z
+	.object({
+		id: z.number(),
+		documentId: z.string(),
+		url: z.string(),
+		alternativeText: z.string().nullable(),
+		width: z.number(),
+		height: z.number(),
+	})
+	.nullable();
+
+const flatAuthorSchema = z
+	.object({
+		id: z.number(),
+		documentId: z.string(),
+		name: z.string(),
+		avatar: z
+			.object({
+				url: z.string(),
+			})
+			.nullable(),
+	})
+	.nullable();
+
+const flatTaxonomyItemSchema = z.object({
+	id: z.number(),
+	documentId: z.string(),
+	name: z.string(),
+	slug: z.string(),
+});
+
+export const articleItemSchema = z.object({
+	id: z.number(),
+	documentId: z.string(),
+	title: z.string(),
+	releasedAt: z.string(),
+	summary: z.string().nullable(),
+	slug: z.string().nullable(),
+	lastUpdated: z.string(),
+
+	cover: flatCoverSchema,
+	author: flatAuthorSchema,
+	categories: z.array(flatTaxonomyItemSchema),
+	tags: z.array(flatTaxonomyItemSchema),
+});
+
+export type ArticleItemType = z.infer<typeof articleItemSchema>;
+
+const paginatedArticlesResponseSchema = z.object({
+	data: z.array(articleItemSchema),
+	meta: z.object({
+		pagination: z.object({
+			page: z.number(),
+			pageSize: z.number(),
+			pageCount: z.number(),
+			total: z.number(),
+		}),
+	}),
+});
+
+/**
+ * Fetch a paginated list of articles. Sorted by published date newest.
+ * Only returns some fields for each article.
+ * @param page Page number
+ * @param pageSize Max results per page
+ * @returns
+ */
+export async function fetchArticlesPaginated(page: number, pageSize: number, ascending = false, category?: string) {
+	const query = qs.stringify(
+		{
+			pagination: {
+				page: page,
+				pageSize: pageSize,
+			},
+			sort: ['releasedAt:' + (ascending ? 'asc' : 'desc')],
+			filters: category ? { categories: { slug: { $eq: category } } } : undefined,
+			fields: ['title', 'releasedAt', 'summary', 'slug', 'lastUpdated'],
+			populate: {
+				cover: {
+					fields: ['url', 'alternativeText', 'width', 'height'],
+				},
+				author: {
+					fields: ['name'],
+					populate: {
+						avatar: {
+							fields: ['url'],
+						},
+					},
+				},
+				categories: {
+					fields: ['name', 'slug'],
+				},
+				tags: {
+					fields: ['name', 'slug'],
+				},
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		}
+	);
+
+	const data = await fetchCmsData<unknown>(`/articles?${query}`);
+
+	const parsed = paginatedArticlesResponseSchema.safeParse(data);
+	if (!parsed.success) {
+		console.error('Failed to parse paginated articles:', parsed.error);
+		throw new Error('Failed to parse paginated articles');
+	}
+
+	return parsed.data;
+}

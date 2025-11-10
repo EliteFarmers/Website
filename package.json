@@ -27,7 +27,8 @@
 		"license": "pnpm exec pnpm-licenses generate-disclaimer --output-file=./static/oss.txt",
 		"generate-api": "pnpm orval",
 		"postprocess-api": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.ts ./src/lib/api/schemas",
-		"postprocess-zod": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.zod.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.zod.ts"
+		"postprocess-zod": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteAPI.zod.ts && pnpm prettier --write ./src/lib/api/client/EliteAPI.zod.ts",
+		"postprocess-cms": "node ./src/lib/api/util/morph-api.ts ./src/lib/api/client/EliteCms.zod.ts && pnpm prettier --write ./src/lib/api/client/EliteCms.zod.ts"
 	},
 	"dependencies": {
 		"@napi-rs/canvas": "^0.1.81",
@@ -57,6 +58,7 @@
 		"@types/d3-time-format": "^4.0.3",
 		"@types/eslint": "^9.6.1",
 		"@types/node": "^24.10.0",
+		"@types/qs": "^6.14.0",
 		"@typeschema/class-validator": "^0.2.0",
 		"@vinejs/vine": "^1.8.0",
 		"arktype": "^2.1.25",
@@ -92,6 +94,7 @@
 		"prettier": "^3.6.2",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.6.14",
+		"qs": "^6.14.0",
 		"rehype-github-alerts": "^4.1.1",
 		"rehype-pretty-code": "^0.14.1",
 		"rehype-slug": "^6.0.0",

@@ -13,10 +13,18 @@ async function removeReturnTypesFromFile(filePath: string) {
 
 	// Run a regex replacement on filePath.replace('.ts', '.zod.ts') to change all zod.boolean() to zod.coerce.boolean<boolean>()
 	if (filePath.includes('.zod.')) {
-		const zodFileContent = await project.getFileSystem().readFile(filePath);
-		const updatedZodFileContent = zodFileContent.replace(/zod\.boolean\(\)/g, 'zod.coerce.boolean<boolean>()');
-		await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
-		console.log(`✅ Updated zod.boolean() to zod.coerce.boolean<boolean>() in ${path.basename(filePath)}.`);
+		if (filePath.includes('Cms')) {
+			const zodFileContent = await project.getFileSystem().readFile(filePath);
+			const updatedZodFileContent = zodFileContent.replace(/\.optional\(\)/g, '.optional().nullable()');
+			await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
+			console.log(`Updated .optional() to .optional().nullable() in ${path.basename(filePath)}.`);
+		} else {
+			const zodFileContent = await project.getFileSystem().readFile(filePath);
+			const updatedZodFileContent = zodFileContent.replace(/zod\.boolean\(\)/g, 'zod.coerce.boolean<boolean>()');
+			await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
+			console.log(`Updated zod.boolean() to zod.coerce.boolean<boolean>() in ${path.basename(filePath)}.`);
+		}
+
 		return;
 	}
 
@@ -25,21 +33,6 @@ async function removeReturnTypesFromFile(filePath: string) {
 	const updatedCmsFileContent = cmsFileContent.replace('../custom-fetch-placeholder', '../custom-fetch');
 	await project.getFileSystem().writeFile(filePath, updatedCmsFileContent);
 	console.log(`Replaced custom-fetch-placeholder import in ${path.basename(filePath)}.`);
-
-	if (filePath.includes('CMS')) {
-		// Load all schemas in the cms/schemas directory, and replace " |  | " with " | "
-		const cmsSchemasDir = path.resolve(path.dirname(filePath), '../schemas');
-		const schemaFiles = project.getFileSystem().readDirSync(cmsSchemasDir);
-		for (const schemaFile of schemaFiles) {
-			if (schemaFile.name.endsWith('.ts')) {
-				const schemaFilePath = schemaFile.name;
-				const schemaContent = await project.getFileSystem().readFile(schemaFilePath);
-				const updatedSchemaContent = schemaContent.replace(' |  | ', ' | ');
-				await project.getFileSystem().writeFile(schemaFilePath, updatedSchemaContent);
-				console.log(`Cleaned up union types in schema: ${schemaFile.name}`);
-			}
-		}
-	}
 
 	const sourceFile = project.addSourceFileAtPath(filePath);
 
@@ -63,7 +56,7 @@ async function removeReturnTypesFromFile(filePath: string) {
 	}
 
 	sourceFile.addImportDeclaration({
-		namedImports: [filePath.includes('CMS') ? 'STRAPI_API_URL' : 'ELITE_API_URL'],
+		namedImports: ['ELITE_API_URL'],
 		moduleSpecifier: '$env/static/private',
 	});
 	console.log(`Added import for api URL.`);

@@ -1,6 +1,6 @@
 import { ORIGIN } from '$env/static/private';
 import DOMPurify from 'isomorphic-dompurify';
-import { parse } from 'marked';
+import { parse, parseInline } from 'marked';
 import { createRawSnippet } from 'svelte';
 
 if (!ORIGIN) {
@@ -9,6 +9,13 @@ if (!ORIGIN) {
 
 export async function mdToHtml(markdown: string) {
 	const html = await parse(markdown, { breaks: true });
+	const sanitized = DOMPurify.sanitize(html);
+
+	return sanitized;
+}
+
+export async function mdToInline(markdown: string) {
+	const html = await parseInline(markdown, { breaks: true });
 	const sanitized = DOMPurify.sanitize(html);
 
 	return sanitized;

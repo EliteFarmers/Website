@@ -4,6 +4,6 @@
 	let { class: className, children, ...restProps }: PrimitiveElementAttributes = $props();
 </script>
 
-<ul class={cn('my-6 ml-6 list-disc', className)} {...restProps}>
+<ul class={cn('my-6 ml-6 list-disc [&_ul,li]:my-2', className)} {...restProps}>
 	{@render children?.()}
 </ul>
