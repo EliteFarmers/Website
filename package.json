@@ -58,7 +58,7 @@
 		"@types/eslint": "^9.6.1",
 		"@types/node": "^24.10.0",
 		"@typeschema/class-validator": "^0.2.0",
-		"@vinejs/vine": "^1.8.0",
+		"@vinejs/vine": "^4.0.0",
 		"arktype": "^2.1.25",
 		"bits-ui": "2.9.6",
 		"class-validator": "^0.14.2",
