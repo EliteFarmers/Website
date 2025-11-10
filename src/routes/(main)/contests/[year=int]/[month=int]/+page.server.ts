@@ -3,7 +3,7 @@ import { getSkyblockDate, getTimeStamp } from '$lib/format';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params, setHeaders }) => {
+export const load = (async ({ params }) => {
 	const { year, month } = params;
 
 	const timestamp = getTimeStamp(+year - 1, +month - 1, 0);
@@ -24,10 +24,6 @@ export const load = (async ({ params, setHeaders }) => {
 	if (!data) {
 		throw error(500, 'Failed to load contests');
 	}
-
-	setHeaders({
-		'Cache-Control': 'public, max-age=600',
-	});
 
 	return {
 		contests: data,
