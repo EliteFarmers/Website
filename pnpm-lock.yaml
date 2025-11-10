@@ -253,8 +253,8 @@ importers:
         specifier: ^8.46.2
         version: 8.46.2(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3)
       valibot:
-        specifier: ^0.42.1
-        version: 0.42.1(typescript@5.9.3)
+        specifier: ^1.0.0
+        version: 1.1.0(typescript@5.9.3)
       vaul-svelte:
         specifier: 1.0.0-next.7
         version: 1.0.0-next.7(svelte@5.43.2)
@@ -10118,11 +10118,11 @@ snapshots:
   valibot@0.42.1(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
+    optional: true
 
   valibot@1.1.0(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
-    optional: true
 
   validator@13.15.20: {}
 
