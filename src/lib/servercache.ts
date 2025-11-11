@@ -1,5 +1,6 @@
-import { building } from '$app/environment';
+import { building, dev } from '$app/environment';
 import { ELITE_API_URL } from '$env/static/private';
+import fs from 'fs/promises';
 import {
 	getAnnouncement,
 	getAuctionHouseProducts,
@@ -21,6 +22,7 @@ import {
 	type SkyblockGemShopsResponse,
 	type WeightStyleWithDataDto,
 } from './api';
+import { fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
 
@@ -115,6 +117,12 @@ const cacheEntries = {
 			return data;
 		},
 	},
+	businessInfo: {
+		data: {} as Awaited<ReturnType<typeof fetchBusinessInfo>>,
+		update: async () => {
+			return await fetchBusinessInfo();
+		},
+	},
 };
 
 export const cache = {
@@ -150,6 +158,9 @@ export const cache = {
 	},
 	get gems() {
 		return cacheEntries.gems.data;
+	},
+	get businessInfo() {
+		return cacheEntries.businessInfo.data;
 	},
 };
 
@@ -198,8 +209,38 @@ export async function initCachedItems() {
 
 async function refreshCacheItem(item: (typeof cacheEntries)[keyof typeof cacheEntries]) {
 	try {
+		if (dev) {
+			// Check if cached json file exists
+			const cacheFilePath = `./cache/${Object.entries(cacheEntries).find(([, entry]) => entry === item)?.[0]}.json`;
+			try {
+				const fileData = await fs.readFile(cacheFilePath, 'utf-8');
+				const cached = JSON.parse(fileData);
+				const cacheTime = 1000 * 60 * 10;
+				if (Date.now() - cached.lastUpdated < cacheTime) {
+					item.data = cached.data;
+					return;
+				}
+			} catch {
+				// File doesn't exist, proceed to update from API
+			}
+		}
+
 		const result = await item.update();
 		item.data = result ?? item.data;
+
+		if (dev) {
+			// Save to cached json file
+			const cacheFilePath = `./cache/${Object.entries(cacheEntries).find(([, entry]) => entry === item)?.[0]}.json`;
+			await fs.mkdir('./cache', { recursive: true });
+			await fs.writeFile(
+				cacheFilePath,
+				JSON.stringify({
+					data: item.data,
+					lastUpdated: Date.now(),
+				}),
+				'utf-8'
+			);
+		}
 	} catch (e) {
 		console.log(
 			'Failed to update cached item ' + Object.entries(cacheEntries).find(([, entry]) => entry === item)?.[0],
