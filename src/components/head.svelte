@@ -10,6 +10,7 @@
 		children?: import('svelte').Snippet;
 		canonicalPath?: string;
 		twitterCardType?: 'summary' | 'summary_large_image' | 'app' | 'player' | undefined;
+		ldJson?: unknown;
 	}
 
 	let {
@@ -20,6 +21,7 @@
 		children,
 		twitterCardType,
 		canonicalPath,
+		ldJson = undefined,
 	}: Props = $props();
 
 	const canonicalUrl = $derived(
@@ -51,6 +53,14 @@
 	{#if canonicalPath}
 		<meta property="og:url" content={canonicalUrl ?? page.url.toString()} />
 		<link rel="canonical" href={canonicalUrl} />
+	{/if}
+
+	{#if ldJson}
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+		{@html `<[placeholder] type="application/ld+json">${JSON.stringify(ldJson)}</[placeholder]>`.replaceAll(
+			'[placeholder]',
+			'script'
+		)}`}
 	{/if}
 
 	{@render children?.()}

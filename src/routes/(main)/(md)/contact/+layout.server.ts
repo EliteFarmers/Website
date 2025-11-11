@@ -1,7 +1,6 @@
-import { getBusinessInfo } from '$lib/remote/business.remote';
+import { cache } from '$lib/servercache';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async () => {
-	const businessInfo = await getBusinessInfo();
-	return { contact: businessInfo.contact };
+	return { contact: cache.businessInfo.contact };
 }) satisfies LayoutServerLoad;

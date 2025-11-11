@@ -7,7 +7,7 @@
 	let { article }: { article: ArticleItemType } = $props();
 </script>
 
-<a class="group flex w-sm flex-col items-start gap-2 p-1" href="/articles/{article.slug}">
+<a class="group flex w-full flex-col items-start gap-2 p-1 @sm:w-sm" href="/articles/{article.slug}">
 	<article class="mb-6 flex flex-col gap-2">
 		<img
 			src={article.cover?.url
@@ -27,7 +27,7 @@
 			{/if}
 		</div>
 
-		<h3 class="text-2xl font-semibold">{article.title}</h3>
+		<h3 class="text-xl font-semibold sm:text-2xl">{article.title}</h3>
 		<p class="text-sm">{article.summary}</p>
 	</article>
 </a>

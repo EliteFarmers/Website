@@ -1,10 +1,15 @@
 import { STRAPI_TOKEN } from '$env/static/private';
 import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
 import { articleGetArticlesResponse } from '$lib/api/client/EliteCms.zod';
+import { mdToHtml, mdToInline } from '$lib/md';
 import qs from 'qs';
 import * as z from 'zod';
 
-export async function fetchCmsData<T>(endpoint: string): Promise<T> {
+export async function fetchCmsData<T>(endpoint: string): Promise<T | null> {
+	if (!STRAPI_TOKEN || !PUBLIC_STRAPI_API_URL) {
+		return null;
+	}
+
 	const res = await fetch(`${PUBLIC_STRAPI_API_URL}/api${endpoint}`, {
 		headers: {
 			Authorization: `Bearer ${STRAPI_TOKEN}`,
@@ -49,11 +54,11 @@ export async function fetchArticleBySlug(slug: string) {
 
 	const data = await fetchCmsData<z.infer<typeof articleGetArticlesResponse>>(`/articles?${query}`);
 
-	if (data.data.length === 0) {
+	if (data?.data.length === 0) {
 		return null;
 	}
 
-	return data.data[0];
+	return data?.data[0];
 }
 
 const flatCoverSchema = z
@@ -167,4 +172,29 @@ export async function fetchArticlesPaginated(page: number, pageSize: number, asc
 	}
 
 	return parsed.data;
+}
+
+export async function fetchBusinessInfo() {
+	try {
+		const response = await fetchCmsData<{ data: { name: string; contact: string; footer: string } }>(
+			`/business-info`
+		);
+
+		if (!response || !response.data) {
+			return { name: 'Placeholder Name', contact: 'Placeholder Contact', footer: 'Placeholder Footer' };
+		}
+
+		const result = {
+			name: await mdToInline(response.data.name),
+			contact: await mdToHtml(response.data.contact),
+			footer: await mdToInline(response.data.footer),
+		};
+
+		return result;
+	} catch (error) {
+		if (STRAPI_TOKEN) {
+			console.error('Error fetching business info:', error);
+		}
+		return { name: 'Placeholder Name', contact: 'Placeholder Contact', footer: 'Placeholder Footer' };
+	}
 }

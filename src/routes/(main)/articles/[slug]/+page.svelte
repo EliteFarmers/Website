@@ -21,19 +21,60 @@
 	$effect(() => {
 		page.setBreadcrumbs(crumbs);
 	});
+
+	const fullCoverUrl = $derived(
+		article.cover?.url
+			? `${PUBLIC_STRAPI_API_URL}${article.cover.url}`
+			: `${PUBLIC_HOST_URL}/images/default-farming-news.png`
+	);
+
+	const jsonData = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'Article',
+		mainEntityOfPage: {
+			'@type': 'WebPage',
+			'@id': `${PUBLIC_HOST_URL}/articles/${article.slug}`,
+		},
+		headline: article.title,
+		description: article.summary,
+		image: {
+			'@type': 'ImageObject',
+			url: fullCoverUrl,
+			width: article.cover?.width || 1280,
+			height: article.cover?.height || 720,
+		},
+		author: {
+			'@type': 'Person',
+			name: article.author?.name || 'elitebot.dev Team',
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: 'elitebot.dev',
+			logo: {
+				'@type': 'ImageObject',
+				url: `${PUBLIC_HOST_URL}/favicon.webp`, // Replace with your actual logo URL
+			},
+		},
+		datePublished: new Date(article.releasedAt ?? Date.now()).toISOString(),
+		dateModified: new Date(article.lastUpdated ?? article.releasedAt ?? Date.now()).toISOString(),
+	});
 </script>
 
 <Head
 	title={article.metaTitle ?? article.title ?? 'Elite | Skyblock Farming Weight'}
 	description={article.metaDescription ?? article.summary ?? 'Read this article on elitebot.dev!'}
-	imageUrl={article.cover?.url
-		? `${PUBLIC_STRAPI_API_URL}${article.cover.url}`
-		: PUBLIC_HOST_URL + '/images/default-farming-news.png'}
+	imageUrl={fullCoverUrl}
+	canonicalPath="/articles/{article.slug}"
 	twitterCardType="summary_large_image"
-/>
+	ldJson={jsonData}
+>
+	<meta property="twitter:title" content={article.title} />
+	<meta property="og:type" content="article" />
+	<meta name="twitter:description" content={article.summary} />
+</Head>
 
 <main class="flex w-full flex-col items-center">
-	<article class="bg-card my-8 flex max-w-4xl flex-col justify-center p-16">
+	<article class="md:bg-card my-8 flex max-w-4xl flex-col justify-center px-2 py-8 md:p-16">
 		<div>
 			<img
 				src={article.cover?.url
@@ -41,6 +82,8 @@
 					: '/images/default-farming-news.png'}
 				alt={article.title}
 				class="aspect-video w-full max-w-3xl rounded-md"
+				width={article.cover?.width || 1280}
+				height={article.cover?.height || 720}
 			/>
 		</div>
 

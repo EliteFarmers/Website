@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import {
 		PUBLIC_COMMIT_HASH,
 		PUBLIC_COMMUNITY_INVITE,
@@ -55,7 +57,7 @@
 		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">
 			<h5 class="text-lg font-semibold">Made by Kaeso</h5>
 			<Separator />
-			<Button variant="link" class="h-8 p-0" href="/contact">Contact</Button>
+			<Button variant="link" class="h-8 p-0" href="/contact">Contact / Imprint</Button>
 			<Button
 				variant="link"
 				rel="nofollow noreferrer noopener"
@@ -82,5 +84,8 @@
 		<p class="text-muted-foreground/50 text-xs">
 			NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
 		</p>
+		<div class="text-muted-foreground/50 [&_a]:text-muted-foreground/50 text-xs">
+			<RenderHtml content={page.data.cache.footer} />
+		</div>
 	</div>
 </footer>
