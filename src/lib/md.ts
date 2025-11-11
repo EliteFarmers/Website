@@ -8,17 +8,27 @@ if (!ORIGIN) {
 }
 
 export async function mdToHtml(markdown: string) {
-	const html = await parse(markdown, { breaks: true });
-	const sanitized = DOMPurify.sanitize(html);
+	try {
+		const html = await parse(markdown, { breaks: true });
+		const sanitized = DOMPurify.sanitize(html);
 
-	return sanitized;
+		return sanitized;
+	} catch (error) {
+		console.error('Error parsing markdown:', error);
+		return '';
+	}
 }
 
 export async function mdToInline(markdown: string) {
-	const html = await parseInline(markdown, { breaks: true });
-	const sanitized = DOMPurify.sanitize(html);
+	try {
+		const html = await parseInline(markdown, { breaks: true });
+		const sanitized = DOMPurify.sanitize(html);
 
-	return sanitized;
+		return sanitized;
+	} catch (error) {
+		console.error('Error parsing inline markdown:', error);
+		return '';
+	}
 }
 
 export async function mdToSnippet(markdown: string) {

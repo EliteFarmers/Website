@@ -40,13 +40,13 @@ export const SIDEBAR_NAV = [
 		icon: Gem as unknown as Component,
 	},
 	{
-		title: 'Info',
-		href: '/info',
-		icon: Info as unknown as Component,
-	},
-	{
 		title: 'Articles',
 		href: '/articles',
 		icon: Newspaper as unknown as Component,
+	},
+	{
+		title: 'Info',
+		href: '/info',
+		icon: Info as unknown as Component,
 	},
 ];

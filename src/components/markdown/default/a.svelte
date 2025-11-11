@@ -6,11 +6,16 @@
 	let { class: className, children, href, ...restProps }: PrimitiveAnchorAttributes = $props();
 
 	const internal = $derived(href?.startsWith('/') || href?.startsWith('#') || href?.startsWith(PUBLIC_HOST_URL));
+	const emailLink = $derived(href?.startsWith('mailto:'));
 	const rel = $derived(!internal ? 'noopener noreferrer' : undefined);
 	const target = $derived(!internal ? '_blank' : undefined);
 </script>
 
-{#if internal}
+{#if emailLink}
+	<a {href} class={cn('text-link font-medium underline underline-offset-4', className)} {...restProps}>
+		{@render children?.()}
+	</a>
+{:else if internal}
 	<a {href} {target} {rel} class={cn('text-link font-medium underline underline-offset-4', className)} {...restProps}>
 		{@render children?.()}
 	</a>

@@ -19,7 +19,35 @@ export async function fetchCmsData<T>(endpoint: string): Promise<T> {
 }
 
 export async function fetchArticleBySlug(slug: string) {
-	const data = await fetchCmsData<z.infer<typeof articleGetArticlesResponse>>(`/articles?filters[slug][$eq]=${slug}`);
+	const query = qs.stringify(
+		{
+			filters: { slug: { $eq: slug } },
+			populate: {
+				cover: {
+					fields: ['url', 'alternativeText', 'width', 'height'],
+				},
+				author: {
+					fields: ['name'],
+					populate: {
+						avatar: {
+							fields: ['url'],
+						},
+					},
+				},
+				categories: {
+					fields: ['name', 'slug'],
+				},
+				tags: {
+					fields: ['name', 'slug'],
+				},
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		}
+	);
+
+	const data = await fetchCmsData<z.infer<typeof articleGetArticlesResponse>>(`/articles?${query}`);
 
 	if (data.data.length === 0) {
 		return null;
@@ -62,11 +90,11 @@ const flatTaxonomyItemSchema = z.object({
 export const articleItemSchema = z.object({
 	id: z.number(),
 	documentId: z.string(),
-	title: z.string(),
-	releasedAt: z.string(),
+	title: z.string().nullable(),
+	releasedAt: z.string().nullable(),
 	summary: z.string().nullable(),
 	slug: z.string().nullable(),
-	lastUpdated: z.string(),
+	lastUpdated: z.string().nullable(),
 
 	cover: flatCoverSchema,
 	author: flatAuthorSchema,

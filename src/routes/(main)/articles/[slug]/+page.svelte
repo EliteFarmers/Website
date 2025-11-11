@@ -2,8 +2,10 @@
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
 	import Head from '$comp/head.svelte';
+	import DateDisplay from '$comp/time/date-display.svelte';
 	import { PUBLIC_HOST_URL, PUBLIC_STRAPI_API_URL } from '$env/static/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
+	import ArticleAuthor from '../article-author.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -42,14 +44,21 @@
 			/>
 		</div>
 
-		<h1 class="mt-6 mb-6 text-4xl font-bold">{article.title}</h1>
-		<!-- <p class="mb-6 text-lg">{article.summary}</p> -->
+		<h1 class="mt-6 mb-3 text-4xl font-bold">{article.title}</h1>
+		<ArticleAuthor {article}>
+			{#if article.releasedAt}
+				<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
+			{/if}
+		</ArticleAuthor>
+
+		{#if article.lastUpdated && article.lastUpdated !== article.releasedAt}
+			<div class="text-muted-foreground mt-1 text-sm">
+				Last updated: <DateDisplay timestamp={new Date(article.lastUpdated).getTime()} />
+			</div>
+		{/if}
 
 		<svelte:boundary onerror={(e) => console.error(e)}>
 			<BlockRenderer content={article.content as RootNode} />
-			{#snippet failed(_error, reset)}
-				<button onclick={reset}>oops! try again</button>
-			{/snippet}
 		</svelte:boundary>
 	</article>
 </main>

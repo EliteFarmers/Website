@@ -4,16 +4,23 @@
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import MainSearch from '$comp/stats/main-search.svelte';
 	import { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } from '$env/static/public';
+	import { getArticlesPaginated } from '$lib/remote/articles.remote';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
+	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import type { PageData } from './$types';
+	import ArticlePill from './articles/article-pill.svelte';
+	import ArticleSkeleton from './articles/article-skeleton.svelte';
 
 	interface Props {
 		data: PageData;
 	}
 
 	let { data }: Props = $props();
+
+	const recentArticles = getArticlesPaginated({ page: 1, pageSize: 4 });
 </script>
 
 <Head
@@ -37,6 +44,32 @@
 				<Serverbar guild={data.eliteGuild} lazy={false} />
 			</div>
 		{/if}
+
+		<div class="flex flex-col gap-4">
+			<h2 class="text-3xl">Recent Articles</h2>
+			<ScrollArea class="flex max-w-4xl" orientation="horizontal">
+				<div class="flex flex-row items-start gap-6">
+					{#await recentArticles}
+						{#each { length: 4 }, i (i)}
+							<ArticleSkeleton />
+						{/each}
+					{:then articles}
+						{#if articles.data.length > 0}
+							{#each articles.data as article (article.slug)}
+								<ArticlePill {article} />
+							{/each}
+						{/if}
+					{/await}
+				</div>
+			</ScrollArea>
+			<a href="/articles" class="group relative flex flex-row items-center justify-end gap-4">
+				<span class="mr-10 font-semibold underline">View All Articles</span>
+				<div class="group-hover:animate-bounce-horizontal absolute top-0 right-2">
+					<ArrowRight class="size-6" />
+				</div>
+			</a>
+		</div>
+
 		<div class="flex flex-col items-center justify-center gap-4 md:flex-row">
 			<div class="flex flex-col items-center gap-4">
 				<Card.Root class="max-w-md">

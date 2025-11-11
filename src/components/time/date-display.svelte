@@ -1,15 +1,17 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import PopoverMobile from '$ui/popover/popover-mobile.svelte';
 	import Time from 'svelte-time';
 
 	interface Props {
 		timestamp: number;
+		class?: string;
 	}
 
-	let { timestamp }: Props = $props();
+	let { timestamp, class: className }: Props = $props();
 </script>
 
-<PopoverMobile class="inline-block w-fit" triggerClass="w-fit">
+<PopoverMobile class={cn('inline-block w-fit', className)} triggerClass="w-fit">
 	{#snippet trigger()}
 		<span class="bg-muted max-w-fit rounded px-1">
 			<Time {timestamp} format="MMMM D, YYYY" />
