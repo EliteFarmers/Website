@@ -214,6 +214,7 @@ export const zodGetAccountResponse = zod.object({
 			totalRewards: zod.number(),
 			prefix: zod.string().nullish(),
 			rank: zod.string().nullish(),
+			packageRank: zod.string().nullish(),
 			newPackageRank: zod.string().nullish(),
 			rankPlusColor: zod.string().nullish(),
 			monthlyPackageRank: zod.string().nullish(),
@@ -468,6 +469,7 @@ export const zodGetAccountFromDiscordResponse = zod.object({
 			totalRewards: zod.number(),
 			prefix: zod.string().nullish(),
 			rank: zod.string().nullish(),
+			packageRank: zod.string().nullish(),
 			newPackageRank: zod.string().nullish(),
 			rankPlusColor: zod.string().nullish(),
 			monthlyPackageRank: zod.string().nullish(),
@@ -7511,6 +7513,7 @@ export const zodGetLinkedAccountsResponse = zod.object({
 			totalRewards: zod.number(),
 			prefix: zod.string().nullish(),
 			rank: zod.string().nullish(),
+			packageRank: zod.string().nullish(),
 			newPackageRank: zod.string().nullish(),
 			rankPlusColor: zod.string().nullish(),
 			monthlyPackageRank: zod.string().nullish(),
@@ -7549,6 +7552,7 @@ export const zodGetPlayerDataResponse = zod.object({
 	totalRewards: zod.number(),
 	prefix: zod.string().nullish(),
 	rank: zod.string().nullish(),
+	packageRank: zod.string().nullish(),
 	newPackageRank: zod.string().nullish(),
 	rankPlusColor: zod.string().nullish(),
 	monthlyPackageRank: zod.string().nullish(),
@@ -10175,8 +10179,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown(),
+						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -10284,8 +10291,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown(),
+							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -10452,8 +10462,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()

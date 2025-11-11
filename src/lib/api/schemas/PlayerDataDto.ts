@@ -28,6 +28,8 @@ export interface PlayerDataDto {
 	/** @nullable */
 	rank?: string | null;
 	/** @nullable */
+	packageRank?: string | null;
+	/** @nullable */
 	newPackageRank?: string | null;
 	/** @nullable */
 	rankPlusColor?: string | null;
