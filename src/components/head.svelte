@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import HeadLdJson from './head-ld-json.svelte';
 
 	interface Props {
 		title: string | undefined; // 'Elite | Skyblock Farming Weight';
@@ -56,11 +57,7 @@
 	{/if}
 
 	{#if ldJson}
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		{@html `<[placeholder] type="application/ld+json">${JSON.stringify(ldJson)}</[placeholder]>`.replaceAll(
-			'[placeholder]',
-			'script'
-		)}`}
+		<HeadLdJson content={ldJson} />
 	{/if}
 
 	{@render children?.()}
