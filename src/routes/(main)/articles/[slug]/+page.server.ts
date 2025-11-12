@@ -1,13 +1,12 @@
 import type { BlockNode, InlineNode, RootNode } from '$comp/blocks/blocks';
-import { STRAPI_TOKEN } from '$env/static/private';
-import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
+import { STRAPI_API_URL, STRAPI_TOKEN } from '$env/static/private';
 import { fetchArticleBySlug } from '$lib/api/cms';
 import { mdToInline } from '$lib/md';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
-	if (!PUBLIC_STRAPI_API_URL || !STRAPI_TOKEN) throw error(500, 'Strapi environment variables are not set');
+	if (!STRAPI_API_URL || !STRAPI_TOKEN) throw error(500, 'Strapi environment variables are not set');
 
 	const { slug } = params;
 
