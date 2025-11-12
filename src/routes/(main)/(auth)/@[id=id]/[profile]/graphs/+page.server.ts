@@ -10,7 +10,7 @@ export const load = (async ({ params, parent, locals }) => {
 	const { id, profile } = params;
 	let account = aData;
 
-	if (!token || !session?.flags?.support) {
+	if (!token || !session?.perms?.support) {
 		throw error(404, 'Not Found');
 	}
 
@@ -60,7 +60,7 @@ export const actions: Actions = {
 	collectiongraph: async ({ request, locals }) => {
 		const { access_token: token, session } = locals;
 
-		if (!token || !session?.flags?.support) {
+		if (!token || !session?.perms?.support) {
 			return fail(403);
 		}
 

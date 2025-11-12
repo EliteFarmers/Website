@@ -21,6 +21,10 @@ declare global {
 		interface Session {
 			session?: AuthSession;
 		}
+		interface PageData {
+			session?: AuthSession;
+			bot: boolean;
+		}
 		// interface Stuff {}
 	}
 

@@ -13,7 +13,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals, params }) => {
 	const { session, access_token: token } = locals;
 
-	if (!session || !session.flags.moderator || !token) {
+	if (!session || !session.perms.moderator || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -56,6 +56,7 @@ export const actions: Actions = {
 				weightStyleOverride: data.get('override') === 'true',
 				moreInfoDefault: data.get('info') === 'true',
 				embedColors: (data.getAll('color') as string[])?.filter((c) => c) ?? undefined,
+				flags: (data.getAll('flag') as string[])?.filter((f) => f) ?? undefined,
 				customEmoji: data.get('emoji') === 'true',
 			},
 		} satisfies EditProductDto;

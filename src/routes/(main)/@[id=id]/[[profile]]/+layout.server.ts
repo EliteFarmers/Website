@@ -3,7 +3,7 @@ import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ parent, locals }) => {
 	const { account, profile, session } = await parent();
-	const authorized = session?.flags?.support;
+	const authorized = session?.perms?.support;
 
 	if (!account.id || !account.name || !profile.profileId) {
 		throw error(404, 'Player not found');

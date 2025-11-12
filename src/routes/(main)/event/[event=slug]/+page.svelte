@@ -154,7 +154,7 @@
 		<section class="bg-card flex max-w-md flex-1 basis-1 flex-col justify-between gap-4 rounded-md border-2 p-8">
 			<div class="flex flex-row items-center gap-2">
 				<h2 class="text-3xl">{event.name}</h2>
-				{#if data.session?.flags.admin}
+				{#if data.session?.perms.admin}
 					<Button href="/guild/{event.guildId}/event/{event.id}" variant="outline" size="sm" class="ml-auto">
 						Edit
 					</Button>
