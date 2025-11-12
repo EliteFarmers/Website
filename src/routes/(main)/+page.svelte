@@ -45,7 +45,7 @@
 			</div>
 		{/if}
 
-		<div class="flex flex-col gap-4">
+		<div class="flex max-w-full flex-col gap-4">
 			<h2 class="text-3xl">Recent Articles</h2>
 			<ScrollArea class="flex max-w-4xl" orientation="horizontal">
 				<div class="flex flex-row items-start gap-6">

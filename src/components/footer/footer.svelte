@@ -69,6 +69,7 @@
 		</div>
 	</div>
 	<div class="flex w-full flex-col gap-2 px-4 md:px-8">
+		<span data-ccpa-link="1" class="text-sm hover:underline"></span>
 		<div class="flex w-full flex-wrap items-start justify-center gap-x-4 gap-y-2 md:gap-x-8">
 			{#if PUBLIC_COMMIT_HASH !== ''}
 				<p class="text-muted-foreground/50 flex-1 text-xs">
