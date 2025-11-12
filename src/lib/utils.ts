@@ -86,7 +86,7 @@ export const pending = (node: HTMLFormElement, pending: boolean) => {
 };
 
 export function CanManageGuild(guild: Partial<AuthorizedGuildDto>, session?: App.Locals['session']) {
-	if (session?.flags?.admin) return true;
+	if (session?.perms?.admin) return true;
 	// Check if the user has the admin role
 	if (guild.guild?.adminRole && guild.member?.roles?.includes(guild.guild.adminRole)) return true;
 

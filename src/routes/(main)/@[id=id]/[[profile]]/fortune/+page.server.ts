@@ -5,7 +5,7 @@ import type { Actions } from './$types';
 export const actions: Actions = {
 	save: async ({ request, locals }) => {
 		const { access_token: token, session } = locals;
-		if (!token || !session?.flags?.support) {
+		if (!token || !session?.perms?.support) {
 			return fail(403);
 		}
 

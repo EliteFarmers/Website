@@ -5,7 +5,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals }) => {
 	const { access_token: token, session } = locals;
 
-	if (!session || !session.flags.moderator || !token) {
+	if (!session || !session.perms.moderator || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -23,7 +23,7 @@ export const actions: Actions = {
 	approveevent: async ({ request, locals }) => {
 		const { access_token: token, session } = locals;
 
-		if (!token || !session?.flags.admin) {
+		if (!token || !session?.perms.admin) {
 			throw error(404, 'Not Found');
 		}
 
@@ -46,7 +46,7 @@ export const actions: Actions = {
 	deleteevent: async ({ request, locals }) => {
 		const { access_token: token, session } = locals;
 
-		if (!token || !session?.flags.admin) {
+		if (!token || !session?.perms.admin) {
 			throw error(404, 'Not Found');
 		}
 

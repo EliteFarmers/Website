@@ -54,4 +54,9 @@ export interface UnlockedProductFeaturesDto {
 	 * @nullable
 	 */
 	maxJacobLeaderboards?: number | null;
+	/**
+	 * Unlocked product flags
+	 * @nullable
+	 */
+	flags?: string[] | null;
 }

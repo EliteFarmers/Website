@@ -6,7 +6,7 @@ import type { LayoutServerLoad } from './$types';
 export const load = (async ({ locals, params }) => {
 	const { access_token: token, session } = locals;
 
-	if (!token || !session?.flags?.support) {
+	if (!token || !session?.perms?.support) {
 		throw error(404, 'Not Found');
 	}
 
@@ -18,7 +18,7 @@ export const load = (async ({ locals, params }) => {
 		throw error(404, 'Account not found');
 	}
 
-	if (!session?.flags?.moderator) {
+	if (!session?.perms?.moderator) {
 		return {
 			account,
 		};
@@ -37,6 +37,6 @@ export const load = (async ({ locals, params }) => {
 	return {
 		contests: contests ?? [],
 		account,
-		moderator: session?.flags?.moderator ?? false,
+		moderator: session?.perms?.moderator ?? false,
 	};
 }) satisfies LayoutServerLoad;

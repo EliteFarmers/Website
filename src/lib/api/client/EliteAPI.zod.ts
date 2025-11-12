@@ -752,6 +752,7 @@ export const zodGetAuthAccountResponse = zod.object({
 									.describe(
 										'Maximum number of jacob leaderboard that can be active at once. (For guilds)'
 									),
+								flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 							})
 							.describe('Features of the product'),
 						weightStyles: zod
@@ -1248,6 +1249,7 @@ export const zodGetSessionResponse = zod.object({
 	fIgn: zod.string().nullish().describe('Formatted Primary Minecraft IGN'),
 	uuid: zod.string().describe('Primary Minecraft UUID'),
 	roles: zod.array(zod.string()).describe('List of user roles'),
+	flags: zod.array(zod.string()).describe('List of account flags'),
 	pending_confirmation: zod
 		.object({
 			id: zod.number(),
@@ -2781,6 +2783,7 @@ export const zodUpdateDiscordAccountResponse = zod.object({
 									.describe(
 										'Maximum number of jacob leaderboard that can be active at once. (For guilds)'
 									),
+								flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 							})
 							.describe('Features of the product'),
 						weightStyles: zod
@@ -7376,6 +7379,7 @@ export const zodGetEntitlementsResponseItem = zod.object({
 						.number()
 						.nullish()
 						.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+					flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 				})
 				.describe('Features of the product'),
 			weightStyles: zod
@@ -10647,6 +10651,7 @@ export const zodGetCategoriesResponseItem = zod.object({
 						.number()
 						.nullish()
 						.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+					flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 				})
 				.describe('Features of the product'),
 			weightStyles: zod
@@ -10793,6 +10798,7 @@ export const zodGetCategoryResponse = zod.object({
 						.number()
 						.nullish()
 						.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+					flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 				})
 				.describe('Features of the product'),
 			weightStyles: zod
@@ -11003,6 +11009,7 @@ export const zodGetAllProductsResponseItem = zod.object({
 				.number()
 				.nullish()
 				.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+			flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 		})
 		.describe('Features of the product'),
 	weightStyles: zod
@@ -11122,6 +11129,7 @@ export const zodRefreshProductsResponseItem = zod.object({
 				.number()
 				.nullish()
 				.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+			flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 		})
 		.describe('Features of the product'),
 	weightStyles: zod
@@ -11231,6 +11239,7 @@ export const zodUpdateProductBody = zod.object({
 				.number()
 				.nullish()
 				.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+			flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 		})
 		.nullish()
 		.describe('Features of the product'),
@@ -11290,6 +11299,7 @@ export const zodGetProductResponse = zod.object({
 				.number()
 				.nullish()
 				.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+			flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 		})
 		.describe('Features of the product'),
 	weightStyles: zod
@@ -11415,6 +11425,7 @@ export const zodGetProductsResponseItem = zod.object({
 				.number()
 				.nullish()
 				.describe('Maximum number of jacob leaderboard that can be active at once. (For guilds)'),
+			flags: zod.array(zod.string()).nullish().describe('Unlocked product flags'),
 		})
 		.describe('Features of the product'),
 	weightStyles: zod

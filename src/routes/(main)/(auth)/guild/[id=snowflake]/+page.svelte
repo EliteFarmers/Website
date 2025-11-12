@@ -176,7 +176,7 @@
 		</SettingListItem>
 	</section>
 
-	{#if data.session?.flags.admin}
+	{#if data.session?.perms.admin}
 		<section class="mb-16 flex max-w-4xl flex-wrap justify-center gap-8 text-center align-middle">
 			<Card.Root class="flex max-w-md flex-1 basis-64 flex-col">
 				<Card.Header>

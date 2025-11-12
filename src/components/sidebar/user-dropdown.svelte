@@ -86,7 +86,7 @@
 					<Clover />
 					My Fortune
 				</DropdownMenu.LinkItem>
-				{#if session.flags.moderator}
+				{#if session.perms.moderator}
 					<DropdownMenu.LinkItem href="/admin">
 						<Shield />
 						Admin

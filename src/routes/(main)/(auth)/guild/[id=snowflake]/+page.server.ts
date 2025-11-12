@@ -64,7 +64,7 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { session, access_token: token } = locals;
 
-		if (!session?.flags.admin || !token) {
+		if (!session?.perms.admin || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -89,7 +89,7 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { session, access_token: token } = locals;
 
-		if (!session?.flags.admin || !token) {
+		if (!session?.perms.admin || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -120,7 +120,7 @@ export const actions: Actions = {
 		const guildId = params.id;
 		const { session, access_token: token } = locals;
 
-		if (!session?.flags.admin || !token) {
+		if (!session?.perms.admin || !token) {
 			throw error(401, 'Unauthorized');
 		}
 
