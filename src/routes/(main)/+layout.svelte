@@ -26,7 +26,7 @@
 		</AppSidebar>
 	</Sidebar.Root>
 
-	<div class="flex-1 overflow-y-auto">
+	<div class="m-0 min-h-screen flex-1 overflow-y-auto p-0">
 		<Sidebar.Inset>
 			<Header />
 			<Announcements />

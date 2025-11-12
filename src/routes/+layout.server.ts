@@ -11,7 +11,6 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 		session: locals.session,
 		persistSession: locals.persistSession ?? false,
 		cache: {
-			leaderboards: cache.leaderboards,
 			events: cache.events,
 			announcements: cache.announcements ?? [],
 			footer: cache.businessInfo.footer,
