@@ -1,16 +1,15 @@
-import { STRAPI_TOKEN } from '$env/static/private';
-import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
+import { STRAPI_API_URL, STRAPI_TOKEN } from '$env/static/private';
 import { articleGetArticlesResponse } from '$lib/api/client/EliteCms.zod';
 import { mdToHtml, mdToInline } from '$lib/md';
 import qs from 'qs';
 import * as z from 'zod';
 
 export async function fetchCmsData<T>(endpoint: string): Promise<T | null> {
-	if (!STRAPI_TOKEN || !PUBLIC_STRAPI_API_URL) {
+	if (!STRAPI_TOKEN || !STRAPI_API_URL) {
 		return null;
 	}
 
-	const res = await fetch(`${PUBLIC_STRAPI_API_URL}/api${endpoint}`, {
+	const res = await fetch(`${STRAPI_API_URL}/api${endpoint}`, {
 		headers: {
 			Authorization: `Bearer ${STRAPI_TOKEN}`,
 		},
