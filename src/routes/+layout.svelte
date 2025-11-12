@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { beforeNavigate } from '$app/navigation';
+	import { updated } from '$app/state';
 	import GTag from '$comp/analytics/g-tag.svelte';
 	import PageToast from '$comp/page-toast.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
@@ -30,6 +32,13 @@
 	initRatesData();
 	initFavoritesContext();
 	initPageContext();
+
+	// Force hard navigation if the websites was updated
+	beforeNavigate(({ to, willUnload }) => {
+		if (updated && willUnload && to?.url) {
+			location.href = to.url.href;
+		}
+	});
 </script>
 
 <svelte:head>
