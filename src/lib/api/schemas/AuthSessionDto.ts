@@ -27,6 +27,8 @@ export interface AuthSessionDto {
 	uuid: string;
 	/** List of user roles */
 	roles: string[];
+	/** List of account flags */
+	flags: string[];
 	/**
 	 * The pending confirmation for the user, if any
 	 * @nullable
