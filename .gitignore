@@ -13,6 +13,7 @@ static/packs
 static/oss.txt
 .idea
 .velite
+/cache
 
 # Admin routes
 src/routes/(auth)/**/graphs/+l*

@@ -6,11 +6,16 @@
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		content: string;
+		wrap?: boolean;
 	}
 
-	let { content, ...props }: Props = $props();
+	let { content, wrap = true, ...props }: Props = $props();
 </script>
 
-<div class="markdown contents" {...props}>
+{#if wrap}
+	<div class="markdown contents" {...props}>
+		{@html content}
+	</div>
+{:else}
 	{@html content}
-</div>
+{/if}

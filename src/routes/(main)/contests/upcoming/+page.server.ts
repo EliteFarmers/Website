@@ -2,7 +2,7 @@ import { getCurrentContests } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ setHeaders }) => {
+export const load = (async () => {
 	const { data, response, error: e } = await getCurrentContests();
 
 	if (!data || !response.ok || e) {
@@ -13,10 +13,6 @@ export const load = (async ({ setHeaders }) => {
 			throw error(500, 'Failed to load contests');
 		}
 	}
-
-	setHeaders({
-		'Cache-Control': 'public, max-age=300',
-	});
 
 	return {
 		...data,

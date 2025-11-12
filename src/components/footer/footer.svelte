@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import {
 		PUBLIC_COMMIT_HASH,
 		PUBLIC_COMMUNITY_INVITE,
@@ -55,7 +57,7 @@
 		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">
 			<h5 class="text-lg font-semibold">Made by Kaeso</h5>
 			<Separator />
-			<Button variant="link" class="h-8 p-0" href="/contact">Contact</Button>
+			<Button variant="link" class="h-8 p-0" href="/contact">Contact / Imprint</Button>
 			<Button
 				variant="link"
 				rel="nofollow noreferrer noopener"
@@ -66,21 +68,29 @@
 			<Button variant="link" class="h-8 p-0" href="/oss">Open Sourced Software</Button>
 		</div>
 	</div>
-
-	<div class="flex w-full flex-wrap items-start justify-center gap-4 px-4 md:gap-8 md:px-8">
-		{#if PUBLIC_COMMIT_HASH !== ''}
-			<p class="text-muted-foreground/50 flex-1 text-xs">
-				Running version <a
-					href="https://github.com/EliteFarmers/Website/commit/{PUBLIC_COMMIT_HASH}"
-					target="_blank"
-					class="bg-card text-muted-foreground rounded-sm border p-0.5 hover:underline"
-					>{PUBLIC_COMMIT_HASH}</a
-				>
+	<div class="flex w-full flex-col gap-2 px-4 md:px-8">
+		<div class="flex w-full flex-wrap items-start justify-center gap-x-4 gap-y-2 md:gap-x-8">
+			{#if PUBLIC_COMMIT_HASH !== ''}
+				<p class="text-muted-foreground/50 flex-1 text-xs">
+					Running version <a
+						href="https://github.com/EliteFarmers/Website/commit/{PUBLIC_COMMIT_HASH}"
+						target="_blank"
+						class="bg-card text-muted-foreground rounded-sm border p-0.5 hover:underline"
+						>{PUBLIC_COMMIT_HASH}</a
+					>
+				</p>
+			{/if}
+			<p class="text-muted-foreground/50 text-xs">Not affiliated with Hypixel, Inc.</p>
+			<p class="text-muted-foreground/50 text-xs">
+				NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
 			</p>
-		{/if}
-		<p class="text-muted-foreground/50 text-xs">Not affiliated with Hypixel, Inc.</p>
-		<p class="text-muted-foreground/50 text-xs">
-			NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
-		</p>
+		</div>
+		<div
+			class="text-muted-foreground/50 [&_a]:text-muted-foreground/50 flex w-full flex-col items-center justify-start text-xs md:items-start"
+		>
+			<div class="w-fit">
+				<RenderHtml content={page.data.cache.footer} />
+			</div>
+		</div>
 	</div>
 </footer>

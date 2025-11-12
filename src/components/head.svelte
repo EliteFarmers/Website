@@ -9,6 +9,8 @@
 		description: string;
 		children?: import('svelte').Snippet;
 		canonicalPath?: string;
+		twitterCardType?: 'summary' | 'summary_large_image' | 'app' | 'player' | undefined;
+		ldJson?: unknown;
 	}
 
 	let {
@@ -17,7 +19,9 @@
 		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
 		description,
 		children,
+		twitterCardType,
 		canonicalPath,
+		ldJson = undefined,
 	}: Props = $props();
 
 	const canonicalUrl = $derived(
@@ -31,7 +35,7 @@
 	<title>{title ?? 'Elite | Skyblock Farming Weight'}</title>
 	<meta property="og:title" content={title ?? 'Elite | Skyblock Farming Weight'} />
 
-	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 
 	{#if description}
 		<meta name="description" content={description} />
@@ -49,6 +53,14 @@
 	{#if canonicalPath}
 		<meta property="og:url" content={canonicalUrl ?? page.url.toString()} />
 		<link rel="canonical" href={canonicalUrl} />
+	{/if}
+
+	{#if ldJson}
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+		{@html `<[placeholder] type="application/ld+json">${JSON.stringify(ldJson)}</[placeholder]>`.replaceAll(
+			'[placeholder]',
+			'script'
+		)}`}
 	{/if}
 
 	{@render children?.()}

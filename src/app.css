@@ -899,6 +899,6 @@
 	}
 
 	.markdown-alert > p {
-		@apply [&:not(:first-child)]:!mt-2;
+		@apply not-first:mt-2!;
 	}
 }

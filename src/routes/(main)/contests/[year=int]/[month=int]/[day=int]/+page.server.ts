@@ -3,7 +3,7 @@ import { getSkyblockDate, getTimeStamp } from '$lib/format';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load: PageServerLoad = async ({ params }) => {
 	const { year, month, day } = params;
 
 	const daysSinceFirstContestOfTheYear = +day + (+month - 1) * 31 - 2;
@@ -26,10 +26,6 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	if (!contests) {
 		throw error(404, 'Contests not found!');
 	}
-
-	setHeaders({
-		'Cache-Control': 'max-age=600, public',
-	});
 
 	return {
 		timestamp,

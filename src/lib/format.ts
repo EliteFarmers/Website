@@ -210,7 +210,7 @@ export function GetRankName(player?: PlayerDataDto | null): string | undefined {
 		return player.newPackageRank;
 	}
 
-	return undefined;
+	return player.packageRank && player.packageRank !== 'NONE' ? player.packageRank : undefined;
 }
 
 export function GetRankDefaults(rank?: RankName | string) {

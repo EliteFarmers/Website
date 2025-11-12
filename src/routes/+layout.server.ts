@@ -1,3 +1,4 @@
+import { cache } from '$lib/servercache';
 import { SIDEBAR_COOKIE_NAME } from '$ui/sidebar/constants';
 import type { LayoutServerLoad } from './$types';
 
@@ -10,9 +11,9 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 		session: locals.session,
 		persistSession: locals.persistSession ?? false,
 		cache: {
-			leaderboards: locals.cache?.leaderboards,
-			events: locals.cache?.events,
-			announcements: locals.cache?.announcements ?? [],
+			events: cache.events,
+			announcements: cache.announcements ?? [],
+			footer: cache.businessInfo.footer,
 		},
 		sidebar: (sidebarState ?? 'true') === 'true',
 		bot: locals.bot ?? false,
