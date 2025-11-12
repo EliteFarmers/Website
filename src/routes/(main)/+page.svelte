@@ -54,7 +54,7 @@
 							<ArticleSkeleton />
 						{/each}
 					{:then articles}
-						{#if articles.data.length > 0}
+						{#if articles?.data.length}
 							{#each articles.data as article (article.slug)}
 								<ArticlePill {article} />
 							{/each}

@@ -9,5 +9,5 @@ export const load = (async ({ url }) => {
 
 	const defaultArticles = await fetchArticlesPaginated(page, limit, sort === 'asc', catgeory);
 
-	return { defaultArticles: defaultArticles.data, defaultMeta: defaultArticles.meta };
+	return { defaultArticles: defaultArticles?.data ?? [], defaultMeta: defaultArticles?.meta ?? {} };
 }) satisfies PageServerLoad;

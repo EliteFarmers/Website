@@ -165,6 +165,10 @@ export async function fetchArticlesPaginated(page: number, pageSize: number, asc
 
 	const data = await fetchCmsData<unknown>(`/articles?${query}`);
 
+	if (!data) {
+		return null;
+	}
+
 	const parsed = paginatedArticlesResponseSchema.safeParse(data);
 	if (!parsed.success) {
 		console.error('Failed to parse paginated articles:', parsed.error);
