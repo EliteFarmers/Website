@@ -11,7 +11,7 @@
 	import * as Popover from '$ui/popover';
 	import Check from '@lucide/svelte/icons/check';
 	import CircleMinus from '@lucide/svelte/icons/circle-minus';
-	import CirclePlus from '@lucide/svelte/icons/circle-plus';
+	import Funnel from '@lucide/svelte/icons/funnel';
 	import type { Column } from '@tanstack/table-core';
 	import { SvelteSet } from 'svelte/reactivity';
 
@@ -43,7 +43,7 @@
 					{#if radio}
 						<CircleMinus />
 					{:else}
-						<CirclePlus />
+						<Funnel />
 					{/if}
 					<div class="flex space-x-1">
 						{#if selectedValues.size > 2}
@@ -63,7 +63,7 @@
 						{/if}
 					</div>
 				{:else}
-					<CirclePlus />
+					<Funnel />
 					{title}
 				{/if}
 			</Button>
