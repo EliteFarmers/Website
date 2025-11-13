@@ -77,7 +77,7 @@ const flatCoverSchema = z
 		alternativeText: z.string().nullable(),
 		width: z.number(),
 		height: z.number(),
-		formats: z.record(z.string(), formatSchema).optional(),
+		formats: z.record(z.string(), formatSchema).optional().nullable(),
 		hash: z.string().optional(),
 		ext: z.string().optional(),
 		mime: z.string().optional(),

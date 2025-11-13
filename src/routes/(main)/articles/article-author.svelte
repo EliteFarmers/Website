@@ -4,8 +4,16 @@
 	import type { DeepPartialNullable } from '$lib/utils';
 	import type { Snippet } from 'svelte';
 
-	let { article, children }: { article: ArticleItemType | DeepPartialNullable<ArticleItemType>; children?: Snippet } =
-		$props();
+	let {
+		article,
+		children,
+	}: {
+		article:
+			| ArticleItemType
+			| DeepPartialNullable<ArticleItemType>
+			| Pick<DeepPartialNullable<ArticleItemType>, 'author'>;
+		children?: Snippet;
+	} = $props();
 </script>
 
 <div class="flex flex-row items-center gap-2">
