@@ -116,7 +116,7 @@
 					<Tooltip.Header>
 						{tooltipFormatter.format(new Date(data.date * 1000))}
 					</Tooltip.Header>
-					<div class="" id="tooltip-content">
+					<div>
 						<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
 						<p class="font-mono">{(+data.value).toLocaleString()}</p>
 						{#if pests}
