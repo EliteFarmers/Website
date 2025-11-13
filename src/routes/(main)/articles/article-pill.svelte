@@ -27,5 +27,10 @@
 
 		<h3 class="text-xl font-semibold sm:text-2xl">{article.title}</h3>
 		<p class="text-sm">{article.summary}</p>
+		<div class="flex flex-row items-center gap-1">
+			{#each article.categories as c (c.slug)}
+				<span class="bg-muted inline-block rounded-sm px-2 py-0.5 text-xs font-semibold">{c.name}</span>
+			{/each}
+		</div>
 	</article>
 </a>
