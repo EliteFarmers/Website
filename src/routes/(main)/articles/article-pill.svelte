@@ -1,6 +1,6 @@
 <script lang="ts">
+	import StrapiImage from '$comp/strapi-image.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
 	import type { ArticleItemType } from '$lib/api/cms';
 	import ArticleAuthor from './article-author.svelte';
 
@@ -9,10 +9,8 @@
 
 <a class="group flex w-full flex-col items-start gap-2 p-1 @sm:w-sm" href="/articles/{article.slug}">
 	<article class="mb-6 flex flex-col gap-2">
-		<img
-			src={article.cover?.url
-				? `${PUBLIC_STRAPI_API_URL}${article.cover.url}`
-				: '/images/default-farming-news.png'}
+		<StrapiImage
+			cover={article.cover}
 			alt={article.title}
 			class="aspect-video w-full rounded-md bg-black object-cover opacity-85 transition-all duration-300 ease-in-out group-hover:opacity-100"
 		/>

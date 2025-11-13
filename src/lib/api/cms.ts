@@ -60,6 +60,15 @@ export async function fetchArticleBySlug(slug: string) {
 	return data?.data[0];
 }
 
+const formatSchema = z.object({
+	url: z.string(),
+	name: z.string(),
+	path: z.string().nullable(),
+	size: z.number(),
+	width: z.number(),
+	height: z.number(),
+});
+
 const flatCoverSchema = z
 	.object({
 		id: z.number(),
@@ -68,8 +77,16 @@ const flatCoverSchema = z
 		alternativeText: z.string().nullable(),
 		width: z.number(),
 		height: z.number(),
+		formats: z.record(z.string(), formatSchema).optional(),
+		hash: z.string().optional(),
+		ext: z.string().optional(),
+		mime: z.string().optional(),
+		size: z.number().optional(),
+		previewUrl: z.string().nullable().optional(),
 	})
 	.nullable();
+
+export type StrapiCover = z.infer<typeof flatCoverSchema>;
 
 const flatAuthorSchema = z
 	.object({
@@ -138,9 +155,7 @@ export async function fetchArticlesPaginated(page: number, pageSize: number, asc
 			filters: category ? { categories: { slug: { $eq: category } } } : undefined,
 			fields: ['title', 'releasedAt', 'summary', 'slug', 'lastUpdated'],
 			populate: {
-				cover: {
-					fields: ['url', 'alternativeText', 'width', 'height'],
-				},
+				cover: true,
 				author: {
 					fields: ['name'],
 					populate: {
