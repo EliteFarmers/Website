@@ -22,7 +22,7 @@ import {
 	type SkyblockGemShopsResponse,
 	type WeightStyleWithDataDto,
 } from './api';
-import { fetchBusinessInfo } from './api/cms';
+import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
 
@@ -123,6 +123,12 @@ const cacheEntries = {
 			return await fetchBusinessInfo();
 		},
 	},
+	categories: {
+		data: [] as Awaited<ReturnType<typeof fetchAllArticleCategories>>,
+		update: async () => {
+			return await fetchAllArticleCategories();
+		},
+	},
 };
 
 export const cache = {
@@ -161,6 +167,9 @@ export const cache = {
 	},
 	get businessInfo() {
 		return cacheEntries.businessInfo.data;
+	},
+	get categories() {
+		return cacheEntries.categories.data;
 	},
 };
 

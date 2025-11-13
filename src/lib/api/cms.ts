@@ -216,3 +216,34 @@ export async function fetchBusinessInfo() {
 		return { name: 'Placeholder Name', contact: 'Placeholder Contact', footer: 'Placeholder Footer' };
 	}
 }
+
+export async function fetchAllArticleCategories() {
+	const query = qs.stringify(
+		{
+			sort: ['name:asc'],
+			fields: ['name', 'slug'],
+			// Check that only categories with at least one article are returned
+			filters: { articles: { id: { $notNull: true } } },
+			populate: {
+				articles: { fields: ['id'] },
+			},
+		},
+		{
+			encodeValuesOnly: true,
+		}
+	);
+
+	const data = await fetchCmsData<{ data: unknown }>(`/categories?${query}`);
+
+	if (!data?.data) {
+		return null;
+	}
+
+	const parsed = z.array(flatTaxonomyItemSchema).safeParse(data.data);
+	if (!parsed.success) {
+		console.error('Failed to parse article categories:', parsed.error);
+		throw new Error('Failed to parse article categories');
+	}
+
+	return parsed.data;
+}
