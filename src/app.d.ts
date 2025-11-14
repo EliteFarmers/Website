@@ -16,6 +16,7 @@ declare global {
 			persistSession?: boolean;
 			cache?: typeof import('$lib/servercache').cache;
 			bot: boolean;
+			ads: boolean;
 		}
 		// interface Platform {}
 		interface Session {
@@ -24,6 +25,7 @@ declare global {
 		interface PageData {
 			session?: AuthSession;
 			bot: boolean;
+			ads: boolean;
 		}
 		// interface Stuff {}
 	}
@@ -31,5 +33,10 @@ declare global {
 	declare interface Window {
 		gtag: (...args: unknown[]) => void;
 		updateGtagConsent: () => void;
+		nitroAds: {
+			createAd: (id: string, settings: Record<string, unknown>) => void;
+			removeAd: (id: string) => void;
+		};
+		[key: string]: unknown;
 	}
 }

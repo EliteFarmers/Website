@@ -1,4 +1,5 @@
 <script lang="ts">
+	import NitroAdSlot from '$comp/ads/nitro-ad-slot.svelte';
 	import Footer from '$comp/footer/footer.svelte';
 	import Announcements from '$comp/header/announcements.svelte';
 	import Header from '$comp/header/header.svelte';
@@ -26,18 +27,30 @@
 		</AppSidebar>
 	</Sidebar.Root>
 
-	<div class="m-0 min-h-screen flex-1 overflow-y-auto p-0">
+	<div class="m-0 flex-1 p-0">
 		<Sidebar.Inset>
 			<Header />
 			<Announcements />
 
 			<Content>
 				{@render children?.()}
+				<NitroAdSlot
+					class="mt-8 h-[250px] w-full"
+					slotId="anchor-bottom"
+					config={{
+						delayLoading: true,
+						report: {
+							enabled: true,
+							icon: true,
+							wording: 'Report Ad',
+							position: 'top-right-side',
+						},
+					}}
+				/>
 				{#snippet sidebar()}
 					<Siderail />
 				{/snippet}
 			</Content>
-
 			<Footer />
 		</Sidebar.Inset>
 	</div>

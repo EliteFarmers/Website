@@ -1,4 +1,5 @@
 <script lang="ts">
+	import NitroAdSlot from '$comp/ads/nitro-ad-slot.svelte';
 	import Head from '$comp/head.svelte';
 	import type { PageData } from './$types';
 	import Category from './category.svelte';
@@ -20,8 +21,44 @@
 	<h1 class="mt-16 text-center text-4xl">Leaderboards</h1>
 
 	<div class="flex w-full max-w-6xl flex-col items-center justify-center gap-4">
-		{#each Object.entries(data.leaderboards ?? {}) as [category, leaderboards] (category)}
+		{#each Object.entries(data.leaderboards ?? {}) as [category, leaderboards], i (category)}
 			<Category {leaderboards} title={category} />
+			{#if i % 2 == 0 && i !== Object.entries(data.leaderboards ?? {}).length - 1}
+				<NitroAdSlot
+					class="hidden h-[100px] w-full max-w-svw flex-row items-center justify-center overflow-hidden object-scale-down sm:flex"
+					slotId="leaderboard-midpage-{i}"
+					config={{
+						sizes: [
+							['728', '90'],
+							['970', '90'],
+						],
+						report: {
+							enabled: true,
+							icon: true,
+							wording: 'Report Ad',
+							position: 'top-right-side',
+						},
+						mediaQuery: '(min-width: 640px)',
+					}}
+				/>
+				<NitroAdSlot
+					class="flex h-[100px] w-full max-w-svw flex-row items-center justify-center overflow-hidden object-scale-down sm:hidden"
+					slotId="leaderboard-midpage-sm-{i}"
+					config={{
+						sizes: [
+							['320', '50'],
+							['320', '100'],
+						],
+						report: {
+							enabled: true,
+							icon: true,
+							wording: 'Report Ad',
+							position: 'top-right-side',
+						},
+						mediaQuery: '(min-width: 320px) and (max-width: 640px)',
+					}}
+				/>
+			{/if}
 		{/each}
 	</div>
 </div>

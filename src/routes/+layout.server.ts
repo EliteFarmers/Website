@@ -17,5 +17,6 @@ export const load: LayoutServerLoad = async ({ locals, parent, cookies }) => {
 		},
 		sidebar: (sidebarState ?? 'true') === 'true',
 		bot: locals.bot ?? false,
+		ads: locals.ads ?? true,
 	};
 };

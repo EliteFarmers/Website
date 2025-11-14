@@ -16,6 +16,7 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 	locals.access_token = cookies.get('access_token');
 	locals.refresh_token = cookies.get('refresh_token');
 	locals.cache = cache;
+	locals.ads = !event.route.id?.includes('/(auth)');
 
 	if (locals.access_token) {
 		locals.persistSession = true;
