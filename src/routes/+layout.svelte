@@ -37,7 +37,7 @@
 
 	// Force hard navigation if the websites was updated
 	beforeNavigate(({ to, willUnload }) => {
-		if (updated && willUnload && to?.url) {
+		if (updated.current && !willUnload && to?.url) {
 			location.href = to.url.href;
 		}
 	});
