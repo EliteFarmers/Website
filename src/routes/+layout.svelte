@@ -4,6 +4,7 @@
 	import GTag from '$comp/analytics/g-tag.svelte';
 	import PageToast from '$comp/page-toast.svelte';
 	import ThemeWatcher from '$comp/theme-watcher.svelte';
+	import { initAdContext } from '$lib/hooks/ads.svelte';
 	import { initGlobalContext } from '$lib/hooks/global.svelte';
 	import { IsHover } from '$lib/hooks/is-hover.svelte';
 	import { initPageContext } from '$lib/hooks/page.svelte';
@@ -32,6 +33,7 @@
 	initRatesData();
 	initFavoritesContext();
 	initPageContext();
+	initAdContext();
 
 	// Force hard navigation if the websites was updated
 	beforeNavigate(({ to, willUnload }) => {

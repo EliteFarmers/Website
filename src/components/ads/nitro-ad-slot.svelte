@@ -6,7 +6,9 @@
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		slotId: string;
+		createDiv?: boolean;
 		config: Record<string, unknown>;
+		onCreated?: (el: HTMLDivElement | null) => void;
 	}
 
 	let { ...rest }: Props = $props();

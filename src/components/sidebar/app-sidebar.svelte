@@ -37,7 +37,7 @@
 					)}
 				>
 					<img src="/favicon.webp" class="aspect-square max-w-8" alt="Elite Logo" />
-					<span class="px-1 text-lg leading-none font-semibold md:text-xl">Elite Farmers</span>
+					<span class="px-1 leading-none font-semibold sm:text-lg md:text-xl">Elite Farmers</span>
 				</a>
 			{/snippet}
 		</Sidebar.MenuButton>
@@ -64,17 +64,6 @@
 				<NavDynamic items={pageCtx.sidebar} title={pageCtx.sidebarName} />
 			{/if}
 			{@render children?.()}
-			<!-- {#await infoSidebar then data}
-				<NavDynamic items={data} title="Resources" hideOnCollapse>
-					{#snippet collapsed()}
-						<Sidebar.Group data-sveltekit-preload-data="tap">
-							<Sidebar.MenuButton class="truncate md:max-w-none" onclick={() => sidebar.toggle()}>
-								<Info />
-							</Sidebar.MenuButton>
-						</Sidebar.Group>
-					{/snippet}
-				</NavDynamic>
-			{/await} -->
 		</Sidebar.Content>
 	</ScrollArea>
 </div>
