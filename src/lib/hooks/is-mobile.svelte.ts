@@ -1,9 +1,9 @@
 import { MediaQuery } from 'svelte/reactivity';
 
-const TINY_BREAKPOINT = 400;
-const MOBILE_BREAKPOINT = 1024;
-const MEDIUM_BREAKPOINT = 1148;
-const LARGE_BREAKPOINT = 1280;
+export const TINY_BREAKPOINT = 400;
+export const MOBILE_BREAKPOINT = 1024;
+export const MEDIUM_BREAKPOINT = 1148;
+export const LARGE_BREAKPOINT = 1280;
 
 export class IsMobile extends MediaQuery {
 	#tiny: MediaQuery;

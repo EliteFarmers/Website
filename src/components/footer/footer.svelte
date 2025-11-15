@@ -8,13 +8,17 @@
 		PUBLIC_GTAG_MEASUREMENT_ID,
 		PUBLIC_SUPPORT_SERVER_INVITE,
 	} from '$env/static/public';
+	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
 	import * as CookieConsent from 'vanilla-cookieconsent';
+
+	const adCtx = getAdCtx();
 </script>
 
 <footer
 	class="border-border/40 bg-background/95 supports-backdrop-filter:bg-background/60 bottom-0 mt-4 flex w-full flex-col pb-4 backdrop-blur"
+	style={adCtx.bottomAnchorSize.height ? `margin-bottom: ${adCtx.bottomAnchorSize.height}px;` : ''}
 >
 	<div class="container flex flex-wrap items-start justify-between">
 		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">

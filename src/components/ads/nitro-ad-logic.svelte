@@ -5,9 +5,11 @@
 
 	interface Props extends HTMLAttributes<HTMLDivElement> {
 		slotId: string;
+		createDiv?: boolean;
 		config: Record<string, unknown>;
+		onCreated?: (el: HTMLDivElement | null) => void;
 	}
-	let { slotId, config, ...rest }: Props = $props();
+	let { slotId, config, createDiv = true, onCreated: onCreated = () => {}, ...rest }: Props = $props();
 
 	let wrapper = $state<HTMLDivElement | null>(null);
 
@@ -16,7 +18,7 @@
 	let adConfig = $derived(dev ? { ...config, demo: true } : config);
 
 	function createContainer() {
-		if (!wrapper) return;
+		if (!wrapper || !createDiv) return;
 		// eslint-disable-next-line svelte/no-dom-manipulating
 		wrapper.innerHTML = '';
 
@@ -24,6 +26,7 @@
 		el.id = slotId;
 		// eslint-disable-next-line svelte/no-dom-manipulating
 		wrapper.appendChild(el);
+		onCreated(el);
 	}
 
 	function createAd(): boolean {
@@ -32,6 +35,16 @@
 		try {
 			window.nitroAds.createAd(slotId, adConfig);
 			hasRequested = true;
+
+			if (!createDiv) {
+				setTimeout(() => {
+					const el = document.getElementById(slotId) as HTMLDivElement | null;
+					if (el) {
+						onCreated(el);
+					}
+				}, 0);
+			}
+
 			return true;
 		} catch (e) {
 			console.warn('Failed to create NitroAd:', e);
@@ -84,4 +97,6 @@
 	});
 </script>
 
-<div bind:this={wrapper} {...rest}></div>
+{#if createDiv}
+	<div bind:this={wrapper} {...rest}></div>
+{/if}
