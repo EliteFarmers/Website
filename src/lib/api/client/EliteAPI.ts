@@ -77,7 +77,13 @@ import type {
 	GetCropGraphsParams,
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
+	GetHypixelGuildMembersLeaderboardParams,
+	GetHypixelGuildMembersLeaderboardResponse,
+	GetHypixelGuildRankParams,
+	GetHypixelGuildRankResponse,
 	GetHypixelGuildResponse,
+	GetHypixelGuildsParams,
+	GetHypixelGuildsResponse,
 	GetInventoryItemMetaParams,
 	GetInventoryItemTextureParams,
 	GetItemTextureParams,
@@ -139,6 +145,8 @@ import type {
 	SearchAccountsParams,
 	SearchAuctionItemsParams,
 	SearchAuctionItemsResponse,
+	SearchHypixelGuildsParams,
+	SearchHypixelGuildsResponse,
 	SetEventApprovalParams,
 	SetEventFeatureParams,
 	SetGuildLockedParams,
@@ -5939,6 +5947,193 @@ export const getGetHypixelGuildUrl = (guildId: string) => {
 
 export const getHypixelGuild = async (guildId: string, options?: RequestInit) => {
 	return customFetch<getHypixelGuildResponse>(getGetHypixelGuildUrl(guildId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Hypixel Guild Members Leaderboard
+ */
+export type getHypixelGuildMembersLeaderboardResponse200 = {
+	data: GetHypixelGuildMembersLeaderboardResponse;
+	status: 200;
+};
+
+export type getHypixelGuildMembersLeaderboardResponseSuccess = getHypixelGuildMembersLeaderboardResponse200 & {
+	headers: Headers;
+};
+export type getHypixelGuildMembersLeaderboardResponse = getHypixelGuildMembersLeaderboardResponseSuccess;
+
+export const getGetHypixelGuildMembersLeaderboardUrl = (
+	guildId: string,
+	leaderboard: string,
+	params?: GetHypixelGuildMembersLeaderboardParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/hguilds/${guildId}/leaderboards/${leaderboard}?${stringifiedParams}`
+		: `${ELITE_API_URL}/hguilds/${guildId}/leaderboards/${leaderboard}`;
+};
+
+export const getHypixelGuildMembersLeaderboard = async (
+	guildId: string,
+	leaderboard: string,
+	params?: GetHypixelGuildMembersLeaderboardParams,
+	options?: RequestInit
+) => {
+	return customFetch<getHypixelGuildMembersLeaderboardResponse>(
+		getGetHypixelGuildMembersLeaderboardUrl(guildId, leaderboard, params),
+		{
+			...options,
+			method: 'GET',
+		}
+	);
+};
+
+/**
+ * Get the rank of a Hypixel guild on a specific leaderboard
+ * @summary Get Hypixel Guild Rank
+ */
+export type getHypixelGuildRankResponse200 = {
+	data: GetHypixelGuildRankResponse;
+	status: 200;
+};
+
+export type getHypixelGuildRankResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getHypixelGuildRankResponseSuccess = getHypixelGuildRankResponse200 & {
+	headers: Headers;
+};
+export type getHypixelGuildRankResponseError = getHypixelGuildRankResponse400 & {
+	headers: Headers;
+};
+
+export type getHypixelGuildRankResponse = getHypixelGuildRankResponseSuccess | getHypixelGuildRankResponseError;
+
+export const getGetHypixelGuildRankUrl = (guildId: string, params?: GetHypixelGuildRankParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/hguilds/${guildId}/rank?${stringifiedParams}`
+		: `${ELITE_API_URL}/hguilds/${guildId}/rank`;
+};
+
+export const getHypixelGuildRank = async (
+	guildId: string,
+	params?: GetHypixelGuildRankParams,
+	options?: RequestInit
+) => {
+	return customFetch<getHypixelGuildRankResponse>(getGetHypixelGuildRankUrl(guildId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Hypixel Guilds
+ */
+export type getHypixelGuildsResponse200 = {
+	data: GetHypixelGuildsResponse;
+	status: 200;
+};
+
+export type getHypixelGuildsResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getHypixelGuildsResponseSuccess = getHypixelGuildsResponse200 & {
+	headers: Headers;
+};
+export type getHypixelGuildsResponseError = getHypixelGuildsResponse400 & {
+	headers: Headers;
+};
+
+export type getHypixelGuildsResponse = getHypixelGuildsResponseSuccess | getHypixelGuildsResponseError;
+
+export const getGetHypixelGuildsUrl = (params?: GetHypixelGuildsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0 ? `${ELITE_API_URL}/hguilds?${stringifiedParams}` : `${ELITE_API_URL}/hguilds`;
+};
+
+export const getHypixelGuilds = async (params?: GetHypixelGuildsParams, options?: RequestInit) => {
+	return customFetch<getHypixelGuildsResponse>(getGetHypixelGuildsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Fuzzy search across Hypixel guild names
+ * @summary Search Hypixel Guilds
+ */
+export type searchHypixelGuildsResponse200 = {
+	data: SearchHypixelGuildsResponse;
+	status: 200;
+};
+
+export type searchHypixelGuildsResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type searchHypixelGuildsResponseSuccess = searchHypixelGuildsResponse200 & {
+	headers: Headers;
+};
+export type searchHypixelGuildsResponseError = searchHypixelGuildsResponse400 & {
+	headers: Headers;
+};
+
+export type searchHypixelGuildsResponse = searchHypixelGuildsResponseSuccess | searchHypixelGuildsResponseError;
+
+export const getSearchHypixelGuildsUrl = (params: SearchHypixelGuildsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/hguilds/search?${stringifiedParams}`
+		: `${ELITE_API_URL}/hguilds/search`;
+};
+
+export const searchHypixelGuilds = async (params: SearchHypixelGuildsParams, options?: RequestInit) => {
+	return customFetch<searchHypixelGuildsResponse>(getSearchHypixelGuildsUrl(params), {
 		...options,
 		method: 'GET',
 	});

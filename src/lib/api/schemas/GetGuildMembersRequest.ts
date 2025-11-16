@@ -8,14 +8,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export type EventType = (typeof EventType)[keyof typeof EventType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const EventType = {
-	none: 'none',
-	farmingWeight: 'farmingWeight',
-	collection: 'collection',
-	experience: 'experience',
-	medals: 'medals',
-	pests: 'pests',
-} as const;
+export interface GetGuildMembersRequest {
+	[key: string]: unknown;
+}

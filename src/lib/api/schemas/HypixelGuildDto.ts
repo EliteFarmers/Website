@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 import type { HypixelGuildDtoGameExp } from './HypixelGuildDtoGameExp';
 import type { RawHypixelGuildRank } from './RawHypixelGuildRank';
 import type { HypixelGuildMemberDto } from './HypixelGuildMemberDto';
+import type { HypixelGuildStatsFullDto } from './HypixelGuildStatsFullDto';
 
 export interface HypixelGuildDto {
 	id: string;
@@ -28,5 +29,7 @@ export interface HypixelGuildDto {
 	gameExp: HypixelGuildDtoGameExp;
 	ranks: RawHypixelGuildRank[];
 	members: HypixelGuildMemberDto[];
+	memberCount: number;
 	lastUpdated: bigint;
+	stats: HypixelGuildStatsFullDto[];
 }

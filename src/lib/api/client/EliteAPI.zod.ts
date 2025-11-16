@@ -1057,7 +1057,7 @@ export const zodGetPendingEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -3358,7 +3358,7 @@ export const zodCreateEventAdminBodyBlockedRoleMax = 24;
 export const zodCreateEventAdminBody = zod.object({
 	name: zod.string().min(1).max(zodCreateEventAdminBodyNameMax).describe('The name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.nullish()
 		.describe('The type of the event'),
 	guildId: zod.string().min(1).describe('The Discord server id as a string for the event'),
@@ -3406,7 +3406,7 @@ export const zodCreateEventAdminResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -3546,7 +3546,7 @@ export const zodUpdateEventAdminResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -3788,7 +3788,7 @@ export const zodGetGuildEventAdminResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -3849,7 +3849,7 @@ export const zodGetGuildEventsAdminResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -3986,7 +3986,7 @@ export const zodGetEventResponse = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -4333,7 +4333,7 @@ export const zodGetUpcomingEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -4823,7 +4823,7 @@ export const zodGetPublicGuildEventsResponseItem = zod.object({
 	id: zod.string().describe('Event id as a string'),
 	name: zod.string().describe('Name of the event'),
 	type: zod
-		.enum(['none', 'farming-weight', 'collection', 'experience', 'medals', 'pests'])
+		.enum(['none', 'farmingWeight', 'collection', 'experience', 'medals', 'pests'])
 		.describe('Type of the event'),
 	mode: zod.string().nullish().describe('Team mode of the event'),
 	description: zod.string().nullish().describe('Event description'),
@@ -6407,8 +6407,258 @@ export const zodGetHypixelGuildResponse = zod.object({
 				expHistory: zod.record(zod.string(), zod.number()),
 			})
 		),
+		memberCount: zod.number(),
 		lastUpdated: zod.number(),
+		stats: zod.array(
+			zod.object({
+				recordedAt: zod.iso.datetime({}),
+				memberCount: zod.number(),
+				hypixelLevel: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				skyblockExperience: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				skillLevel: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				slayerExperience: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				catacombsExperience: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				farmingWeight: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				networth: zod.object({
+					total: zod.number(),
+					average: zod.number(),
+				}),
+				collections: zod.record(zod.string(), zod.number()),
+				skills: zod.record(zod.string(), zod.number()),
+			})
+		),
 	}),
+});
+
+/**
+ * @summary Get Hypixel Guild Members Leaderboard
+ */
+export const zodGetHypixelGuildMembersLeaderboardParams = zod.object({
+	guildId: zod.string().describe('Guild id to fetch members for (discord/hypixel guild id)'),
+	leaderboard: zod.string().describe('Id of leaderboard'),
+});
+
+export const zodGetHypixelGuildMembersLeaderboardQueryRemovedDefault = 0;
+
+export const zodGetHypixelGuildMembersLeaderboardQueryParams = zod.object({
+	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
+	mode: zod
+		.string()
+		.nullish()
+		.describe(
+			'Game mode to filter leaderboard by. Leave empty to get all modes.\nOptions: \"ironman\", \"island\", \"classic\"'
+		),
+	removed: zod
+		.union([zod.literal(0), zod.literal(1), zod.literal(2)])
+		.nullish()
+		.describe(
+			'Removed filter to get leaderboard entries that have been removed from the leaderboard.\nDefault is profiles that have not been removed/wiped.\n0 = Not Removed\n1 = Removed\n2 = All'
+		),
+});
+
+export const zodGetHypixelGuildMembersLeaderboardResponseEntriesItemMetaPrefixMax = 16;
+
+export const zodGetHypixelGuildMembersLeaderboardResponseEntriesItemMetaSuffixMax = 16;
+
+export const zodGetHypixelGuildMembersLeaderboardResponse = zod.object({
+	guildId: zod.string(),
+	entries: zod.array(
+		zod.object({
+			ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
+			profile: zod.string().nullish().describe("Player's profile name if player leaderboard"),
+			uuid: zod.string().describe('Uuid of the player or profile'),
+			amount: zod.number().describe('Score of the entry'),
+			removed: zod.coerce.boolean<boolean>(),
+			initialAmount: zod.number().describe('Initial score of the entry'),
+			mode: zod
+				.string()
+				.nullish()
+				.describe('Game mode of the entry. Classic profiles are considered default/null.'),
+			members: zod
+				.array(
+					zod.object({
+						ign: zod.string(),
+						uuid: zod.string(),
+						xp: zod.number().describe('Skyblock xp of the player (used for sorting)'),
+						removed: zod.coerce.boolean<boolean>(),
+					})
+				)
+				.nullish(),
+			meta: zod
+				.object({
+					prefix: zod
+						.string()
+						.max(zodGetHypixelGuildMembersLeaderboardResponseEntriesItemMetaPrefixMax)
+						.nullish(),
+					suffix: zod
+						.string()
+						.max(zodGetHypixelGuildMembersLeaderboardResponseEntriesItemMetaSuffixMax)
+						.nullish(),
+					leaderboard: zod
+						.object({
+							styleId: zod.number().nullish(),
+							backgroundColor: zod.string().nullish(),
+							borderColor: zod.string().nullish(),
+							textColor: zod.string().nullish(),
+							rankColor: zod.string().nullish(),
+							backgroundImage: zod.string().nullish(),
+							overlayImage: zod.string().nullish(),
+						})
+						.nullish(),
+				})
+				.nullish()
+				.describe('Metadata of the entry'),
+		})
+	),
+});
+
+/**
+ * Get the rank of a Hypixel guild on a specific leaderboard
+ * @summary Get Hypixel Guild Rank
+ */
+export const zodGetHypixelGuildRankParams = zod.object({
+	guildId: zod.string(),
+});
+
+export const zodGetHypixelGuildRankQueryParams = zod.object({
+	sortBy: zod
+		.enum([
+			'memberCount',
+			'skyblockExperience',
+			'skyblockExperienceAverage',
+			'skillLevel',
+			'skillLevelAverage',
+			'hypixelLevelAverage',
+			'slayerExperience',
+			'catacombsExperience',
+			'farmingWeight',
+			'networth',
+			'networthAverage',
+		])
+		.nullish(),
+	collection: zod.string().nullish(),
+	skill: zod.string().nullish(),
+});
+
+export const zodGetHypixelGuildRankResponse = zod.object({
+	guildId: zod.string(),
+	guildName: zod.string(),
+	rank: zod.number(),
+	amount: zod.number(),
+});
+
+/**
+ * @summary Get Hypixel Guilds
+ */
+export const zodGetHypixelGuildsQueryParams = zod.object({
+	sortBy: zod
+		.enum([
+			'memberCount',
+			'skyblockExperience',
+			'skyblockExperienceAverage',
+			'skillLevel',
+			'skillLevelAverage',
+			'hypixelLevelAverage',
+			'slayerExperience',
+			'catacombsExperience',
+			'farmingWeight',
+			'networth',
+			'networthAverage',
+		])
+		.nullish(),
+	collection: zod.string().nullish(),
+	skill: zod.string().nullish(),
+	descending: zod.coerce.boolean<boolean>().nullish(),
+	page: zod.number().nullish(),
+	pageSize: zod.number().nullish(),
+});
+
+export const zodGetHypixelGuildsResponse = zod.object({
+	guilds: zod.array(
+		zod.object({
+			id: zod.string(),
+			name: zod.string(),
+			createdAt: zod.number(),
+			tag: zod.string().nullish(),
+			tagColor: zod.string().nullish(),
+			memberCount: zod.number(),
+			lastUpdated: zod.number(),
+			stats: zod
+				.object({
+					recordedAt: zod.iso.datetime({}),
+					memberCount: zod.number(),
+					hypixelLevel: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+					skyblockExperience: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+					skillLevel: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+					slayerExperience: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+					catacombsExperience: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+					farmingWeight: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+					networth: zod.object({
+						total: zod.number(),
+						average: zod.number(),
+					}),
+				})
+				.nullish(),
+			amount: zod.number().describe('Populated when sorting guilds by a specific collection or skill'),
+		})
+	),
+});
+
+/**
+ * Fuzzy search across Hypixel guild names
+ * @summary Search Hypixel Guilds
+ */
+export const zodSearchHypixelGuildsQueryParams = zod.object({
+	query: zod.string(),
+	limit: zod.number(),
+});
+
+export const zodSearchHypixelGuildsResponse = zod.object({
+	results: zod.array(
+		zod.object({
+			id: zod.string(),
+			name: zod.string(),
+			memberCount: zod.number(),
+			tag: zod.string().nullish(),
+			tagColor: zod.string().nullish(),
+		})
+	),
 });
 
 /**
@@ -10183,11 +10433,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.unknown(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -10295,11 +10542,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.unknown(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -10466,11 +10710,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()

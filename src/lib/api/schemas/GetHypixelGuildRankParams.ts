@@ -7,15 +7,19 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { SortHypixelGuildsBy } from './SortHypixelGuildsBy';
 
-export type EventType = (typeof EventType)[keyof typeof EventType];
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const EventType = {
-	none: 'none',
-	farmingWeight: 'farmingWeight',
-	collection: 'collection',
-	experience: 'experience',
-	medals: 'medals',
-	pests: 'pests',
-} as const;
+export type GetHypixelGuildRankParams = {
+	/**
+	 * @nullable
+	 */
+	sortBy?: SortHypixelGuildsBy | null;
+	/**
+	 * @nullable
+	 */
+	collection?: string | null;
+	/**
+	 * @nullable
+	 */
+	skill?: string | null;
+};
