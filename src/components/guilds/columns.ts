@@ -73,19 +73,6 @@ export const getColumns = () =>
 			},
 		},
 		{
-			id: 'Slayer Xp',
-			accessorKey: 'stats.slayer.total',
-			header: ({ column }) =>
-				renderComponent(DataTableColumnHeader<HypixelGuildDetailsDto, unknown>, {
-					column,
-					title: 'Slayer Xp',
-				}),
-			enableSorting: true,
-			cell: ({ row }) => {
-				return renderComponent(GuildSlayerXp, { guild: row.original });
-			},
-		},
-		{
 			id: 'Catacombs Level',
 			accessorKey: 'stats.catacombsExperience.average',
 			header: ({ column }) =>
@@ -96,6 +83,19 @@ export const getColumns = () =>
 			enableSorting: true,
 			cell: ({ row }) => {
 				return renderComponent(GuildCatacombsXp, { guild: row.original });
+			},
+		},
+		{
+			id: 'Slayer Xp',
+			accessorKey: 'stats.slayer.total',
+			header: ({ column }) =>
+				renderComponent(DataTableColumnHeader<HypixelGuildDetailsDto, unknown>, {
+					column,
+					title: 'Slayer Xp',
+				}),
+			enableSorting: true,
+			cell: ({ row }) => {
+				return renderComponent(GuildSlayerXp, { guild: row.original });
 			},
 		},
 	] as ColumnDef<HypixelGuildDetailsDto>[];

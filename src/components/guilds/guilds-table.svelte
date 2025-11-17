@@ -25,6 +25,8 @@
 		initialVisibility?: VisibilityState;
 		pageIndex?: number;
 		pageSize?: number;
+		onSortingChange?: (sorting: SortingState) => void;
+		loading?: boolean;
 	};
 
 	let {
@@ -35,6 +37,8 @@
 		initialVisibility = {},
 		pageIndex = 0,
 		pageSize = 30,
+		onSortingChange: onSortingChangeProp,
+		loading = false,
 	}: DataTableProps<TData, TValue> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
@@ -79,6 +83,7 @@
 			} else {
 				sorting = updater;
 			}
+			onSortingChangeProp?.(sorting);
 		},
 		onColumnFiltersChange: (updater) => {
 			if (typeof updater === 'function') {
@@ -123,7 +128,10 @@
 				class="max-w-sm"
 			/> -->
 		</div>
-		<Table.Root class="border-separate border-spacing-x-0 border-spacing-y-2 border-0">
+		<Table.Root
+			class="border-separate border-spacing-x-0 border-spacing-y-2 border-0 {loading ? 'opacity-60' : ''}"
+			aria-busy={loading}
+		>
 			<Table.Header>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<Table.Row>
