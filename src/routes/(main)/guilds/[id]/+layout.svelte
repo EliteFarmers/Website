@@ -91,7 +91,7 @@
 					</div>
 				{/if}
 			</div>
-			<div class="text-muted-foreground flex flex-row gap-3 text-sm">
+			<div class="text-muted-foreground flex flex-col items-start gap-3 text-sm sm:items-center md:flex-row">
 				{#if createdAt}
 					<span class="flex items-center gap-2">
 						<span class="text-foreground font-medium">Created</span>

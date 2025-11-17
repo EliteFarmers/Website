@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
+	import Head from '$comp/head.svelte';
 	import LeaderboardEntriesColumns from '$comp/leaderboards/entries-columns.svelte';
 	import IntervalSelect from '$comp/leaderboards/interval-select.svelte';
 	import LeaderboardPaginationLocal from '$comp/leaderboards/pagination-local.svelte';
@@ -188,6 +189,11 @@
 		]);
 	});
 </script>
+
+<Head
+	title="{data.guild.name} Guild Members"
+	description="Browse and rank members of the {data.guild.name} guild on Elite across various leaderboards!"
+/>
 
 <section class="flex flex-col gap-2">
 	<div class="flex flex-col gap-4">
