@@ -3,6 +3,7 @@ import { Crop, ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 
 import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
+import * as z from 'zod';
 
 interface RatesData {
 	v: number;
@@ -20,6 +21,14 @@ interface RatesData {
 	bzMode: 'order' | 'insta';
 	attributes: Record<string, number>;
 }
+
+export const MissingRatesDataSchema = z.object({
+	communityCenter: z.number().optional(),
+	strength: z.number().optional(),
+	exported: z.record(z.enum(Object.values(Crop)), z.boolean().optional()).optional(),
+	attributes: z.record(z.string(), z.number()).optional(),
+	from: z.string().optional(),
+});
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {

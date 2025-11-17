@@ -165,7 +165,7 @@ export function preprocessWeightChart(data: CropCollectionsDataPointDto[]) {
 }
 
 export const EventType: Record<string, EventTypeType> = {
-	FarmingWeight: 'farming-weight',
+	FarmingWeight: 'farmingWeight',
 	Collections: 'collection',
 	Experience: 'experience',
 	Medals: 'medals',

@@ -1,4 +1,5 @@
 import Gem from '@lucide/svelte/icons/gem';
+import Handshake from '@lucide/svelte/icons/handshake';
 import Home from '@lucide/svelte/icons/home';
 import Info from '@lucide/svelte/icons/info';
 import Newspaper from '@lucide/svelte/icons/newspaper';
@@ -23,6 +24,11 @@ export const SIDEBAR_NAV = [
 		title: 'Top Players',
 		href: '/leaderboard',
 		icon: Trophy as unknown as Component,
+	},
+	{
+		title: 'Guilds',
+		href: '/guilds',
+		icon: Handshake as unknown as Component,
 	},
 	{
 		title: 'Browse',

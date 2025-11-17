@@ -16,12 +16,6 @@ export class AdsContext {
 	set bottomAnchor(el: HTMLElement | null) {
 		this.#bottomAnchor = el;
 	}
-
-	constructor() {
-		$effect.pre(() => {
-			console.debug('AdsContext bottomAnchorSize updated:', this.#bottomAnchorSize.height);
-		});
-	}
 }
 
 export function initAdContext() {
