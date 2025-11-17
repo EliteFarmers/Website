@@ -10,7 +10,6 @@
 	import ArrowDown from '@lucide/svelte/icons/arrow-down';
 	import ArrowUp from '@lucide/svelte/icons/arrow-up';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import type { Column } from '@tanstack/table-core';
 	import type { WithoutChildren } from 'bits-ui';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -55,11 +54,11 @@
 					<ArrowDown class="text-muted-foreground/70 mr-2 size-3.5" />
 					Desc
 				</DropdownMenu.Item>
-				<DropdownMenu.Separator />
+				<!-- <DropdownMenu.Separator />
 				<DropdownMenu.Item onclick={() => column.toggleVisibility(false)}>
 					<EyeOff class="text-muted-foreground/70 mr-2 size-3.5" />
 					Hide
-				</DropdownMenu.Item>
+				</DropdownMenu.Item> -->
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>

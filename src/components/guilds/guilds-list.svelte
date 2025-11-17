@@ -78,9 +78,6 @@
 </script>
 
 <div class="w-full max-w-6xl py-2">
-	{#if isLoading}
-		<p class="text-muted-foreground mb-2 text-xs">Refreshing guild standings...</p>
-	{/if}
 	<GuildsTable
 		data={tableData}
 		{columns}
