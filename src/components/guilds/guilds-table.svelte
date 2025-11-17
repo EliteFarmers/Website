@@ -23,6 +23,8 @@
 		initialSorting?: SortingState;
 		initialFilters?: ColumnFiltersState;
 		initialVisibility?: VisibilityState;
+		pageIndex?: number;
+		pageSize?: number;
 	};
 
 	let {
@@ -31,13 +33,15 @@
 		initialFilters = [],
 		initialSorting = [],
 		initialVisibility = {},
+		pageIndex = 0,
+		pageSize = 30,
 	}: DataTableProps<TData, TValue> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
 	let columnVisibility = $state<VisibilityState>(initialVisibility);
 	let columnFilters = $state<ColumnFiltersState>(initialFilters);
 	let sorting = $state<SortingState>(initialSorting);
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+	let pagination = $derived<PaginationState>({ pageIndex, pageSize });
 
 	const table = createSvelteTable({
 		get data() {
@@ -107,13 +111,26 @@
 </script>
 
 <div class="space-y-4">
-	<div class="rounded-md border">
-		<Table.Root>
+	<div>
+		<div class="flex items-center py-4">
+			<!-- <Input
+				placeholder="Filter emails..."
+				value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+				oninput={(e) => table.getColumn('email')?.setFilterValue(e.currentTarget.value)}
+				onchange={(e) => {
+					table.getColumn('email')?.setFilterValue(e.currentTarget.value);
+				}}
+				class="max-w-sm"
+			/> -->
+		</div>
+		<Table.Root class="border-separate border-spacing-x-0 border-spacing-y-2 border-0">
 			<Table.Header>
 				{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
 					<Table.Row>
 						{#each headerGroup.headers as header (header.id)}
-							<Table.Head>
+							<Table.Head
+								class="bg-card border-t border-b first:rounded-l-md first:border-l last:rounded-r-md last:border-r"
+							>
 								{#if !header.isPlaceholder}
 									<FlexRender
 										content={header.column.columnDef.header}
@@ -129,7 +146,9 @@
 				{#each table.getRowModel().rows as row (row.id)}
 					<Table.Row data-state={row.getIsSelected() && 'selected'}>
 						{#each row.getVisibleCells() as cell (cell.id)}
-							<Table.Cell>
+							<Table.Cell
+								class="border-t border-b first:rounded-l-md first:border-l last:rounded-r-md last:border-r"
+							>
 								<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />
 							</Table.Cell>
 						{/each}

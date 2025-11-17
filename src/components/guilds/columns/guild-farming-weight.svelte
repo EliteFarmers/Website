@@ -7,7 +7,7 @@
 
 	let { guild }: Props = $props();
 
-	const level = $derived(+((guild.stats?.skyblockExperience.average ?? 0) / 100).toFixed(1));
+	const level = $derived(+(guild.stats?.farmingWeight.total ?? 0).toFixed(1));
 </script>
 
 <div class="flex flex-1 flex-col items-start justify-center gap-1">

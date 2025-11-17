@@ -13,5 +13,5 @@
 </script>
 
 <div class="w-full max-w-4xl py-2">
-	<GuildsTable data={guilds} {columns} initialSorting={[{ id: 'memberCount', desc: true }]} />
+	<GuildsTable data={guilds} {columns} initialSorting={[{ id: 'Member Count', desc: true }]} />
 </div>

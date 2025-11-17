@@ -207,6 +207,63 @@ export const zodGetAccountResponse = zod.object({
 			lastLogout: zod.number(),
 			karma: zod.number(),
 			networkExp: zod.number(),
+			guildMember: zod
+				.object({
+					guild: zod
+						.object({
+							id: zod.string(),
+							name: zod.string(),
+							createdAt: zod.number(),
+							tag: zod.string().nullish(),
+							tagColor: zod.string().nullish(),
+							memberCount: zod.number(),
+							lastUpdated: zod.number(),
+							stats: zod
+								.object({
+									recordedAt: zod.iso.datetime({}),
+									memberCount: zod.number(),
+									hypixelLevel: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									skyblockExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									skillLevel: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									slayerExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									catacombsExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									farmingWeight: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									networth: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+								})
+								.nullish(),
+							amount: zod
+								.number()
+								.describe('Populated when sorting guilds by a specific collection or skill'),
+						})
+						.nullish(),
+					rank: zod.string().nullish(),
+					joinedAt: zod.number(),
+					questParticipation: zod.number(),
+					active: zod.coerce.boolean<boolean>(),
+					expHistory: zod.record(zod.string(), zod.number()),
+				})
+				.nullish(),
 			rewardHighScore: zod.number(),
 			rewardScore: zod.number(),
 			rewardStreak: zod.number(),
@@ -462,6 +519,63 @@ export const zodGetAccountFromDiscordResponse = zod.object({
 			lastLogout: zod.number(),
 			karma: zod.number(),
 			networkExp: zod.number(),
+			guildMember: zod
+				.object({
+					guild: zod
+						.object({
+							id: zod.string(),
+							name: zod.string(),
+							createdAt: zod.number(),
+							tag: zod.string().nullish(),
+							tagColor: zod.string().nullish(),
+							memberCount: zod.number(),
+							lastUpdated: zod.number(),
+							stats: zod
+								.object({
+									recordedAt: zod.iso.datetime({}),
+									memberCount: zod.number(),
+									hypixelLevel: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									skyblockExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									skillLevel: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									slayerExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									catacombsExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									farmingWeight: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									networth: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+								})
+								.nullish(),
+							amount: zod
+								.number()
+								.describe('Populated when sorting guilds by a specific collection or skill'),
+						})
+						.nullish(),
+					rank: zod.string().nullish(),
+					joinedAt: zod.number(),
+					questParticipation: zod.number(),
+					active: zod.coerce.boolean<boolean>(),
+					expHistory: zod.record(zod.string(), zod.number()),
+				})
+				.nullish(),
 			rewardHighScore: zod.number(),
 			rewardScore: zod.number(),
 			rewardStreak: zod.number(),
@@ -7760,6 +7874,63 @@ export const zodGetLinkedAccountsResponse = zod.object({
 			lastLogout: zod.number(),
 			karma: zod.number(),
 			networkExp: zod.number(),
+			guildMember: zod
+				.object({
+					guild: zod
+						.object({
+							id: zod.string(),
+							name: zod.string(),
+							createdAt: zod.number(),
+							tag: zod.string().nullish(),
+							tagColor: zod.string().nullish(),
+							memberCount: zod.number(),
+							lastUpdated: zod.number(),
+							stats: zod
+								.object({
+									recordedAt: zod.iso.datetime({}),
+									memberCount: zod.number(),
+									hypixelLevel: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									skyblockExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									skillLevel: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									slayerExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									catacombsExperience: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									farmingWeight: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+									networth: zod.object({
+										total: zod.number(),
+										average: zod.number(),
+									}),
+								})
+								.nullish(),
+							amount: zod
+								.number()
+								.describe('Populated when sorting guilds by a specific collection or skill'),
+						})
+						.nullish(),
+					rank: zod.string().nullish(),
+					joinedAt: zod.number(),
+					questParticipation: zod.number(),
+					active: zod.coerce.boolean<boolean>(),
+					expHistory: zod.record(zod.string(), zod.number()),
+				})
+				.nullish(),
 			rewardHighScore: zod.number(),
 			rewardScore: zod.number(),
 			rewardStreak: zod.number(),
@@ -7799,6 +7970,61 @@ export const zodGetPlayerDataResponse = zod.object({
 	lastLogout: zod.number(),
 	karma: zod.number(),
 	networkExp: zod.number(),
+	guildMember: zod
+		.object({
+			guild: zod
+				.object({
+					id: zod.string(),
+					name: zod.string(),
+					createdAt: zod.number(),
+					tag: zod.string().nullish(),
+					tagColor: zod.string().nullish(),
+					memberCount: zod.number(),
+					lastUpdated: zod.number(),
+					stats: zod
+						.object({
+							recordedAt: zod.iso.datetime({}),
+							memberCount: zod.number(),
+							hypixelLevel: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+							skyblockExperience: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+							skillLevel: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+							slayerExperience: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+							catacombsExperience: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+							farmingWeight: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+							networth: zod.object({
+								total: zod.number(),
+								average: zod.number(),
+							}),
+						})
+						.nullish(),
+					amount: zod.number().describe('Populated when sorting guilds by a specific collection or skill'),
+				})
+				.nullish(),
+			rank: zod.string().nullish(),
+			joinedAt: zod.number(),
+			questParticipation: zod.number(),
+			active: zod.coerce.boolean<boolean>(),
+			expHistory: zod.record(zod.string(), zod.number()),
+		})
+		.nullish(),
 	rewardHighScore: zod.number(),
 	rewardScore: zod.number(),
 	rewardStreak: zod.number(),
