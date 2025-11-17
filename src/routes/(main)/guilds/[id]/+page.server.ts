@@ -7,11 +7,11 @@ export const load = (async ({ params }) => {
 
 	const { data: guild } = await getHypixelGuild(id);
 
-	if (!guild) {
+	if (!guild?.guild) {
 		error(404, 'Guild not found');
 	}
 
 	return {
-		guild,
+		guild: guild.guild,
 	};
 }) satisfies PageServerLoad;

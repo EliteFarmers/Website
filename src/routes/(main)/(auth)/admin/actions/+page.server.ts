@@ -4,6 +4,7 @@ import {
 	grantTestEntitlement,
 	linkUserAccount,
 	refreshDiscordGuild,
+	refreshHypixelGuild,
 	removeTestEntitlement,
 	unlinkUserAccount,
 } from '$lib/api';
@@ -75,7 +76,27 @@ export const actions: Actions = {
 		const { response, error: e } = await refreshDiscordGuild(guildId);
 
 		if (!response.ok) {
-			return fail(500, { error: e || 'Failed to reset cooldowns' });
+			return fail(500, { error: e || 'Failed to refresh Discord guild' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	refreshHypixelGuild: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const guildId = data.get('guild') as string;
+
+		const { response, error: e } = await refreshHypixelGuild(guildId);
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to refresh Hypixel guild' });
 		}
 
 		return {

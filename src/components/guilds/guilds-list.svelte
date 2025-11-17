@@ -11,7 +11,7 @@
 	}
 
 	const DEFAULT_PAGE_SIZE = 30;
-	const DEFAULT_SORTING: SortingState = [{ id: 'Member Count', desc: true }];
+	const DEFAULT_SORTING: SortingState = [{ id: 'Skyblock Level', desc: true }];
 
 	type GuildSort = (typeof SortHypixelGuildsBy)[keyof typeof SortHypixelGuildsBy];
 

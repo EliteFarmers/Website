@@ -78,7 +78,6 @@ import type {
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
 	GetHypixelGuildMembersLeaderboardParams,
-	GetHypixelGuildMembersLeaderboardResponse,
 	GetHypixelGuildRankParams,
 	GetHypixelGuildRankResponse,
 	GetHypixelGuildResponse,
@@ -115,6 +114,7 @@ import type {
 	GuildDetailsDto,
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
+	GuildMembersLeaderboardDto,
 	HypixelInventoryDto,
 	IncomingAccountDto,
 	IncomingGuildChannelDto,
@@ -1160,6 +1160,45 @@ export const getRefreshDiscordGuildUrl = (guildId: bigint | number | string) => 
 
 export const refreshDiscordGuild = async (guildId: bigint | number | string, options?: RequestInit) => {
 	return customFetch<refreshDiscordGuildResponse>(getRefreshDiscordGuildUrl(guildId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * This fetches the latest data from Hypixel for the specified guild
+ * @summary Refresh a Hypixel Guild
+ */
+export type refreshHypixelGuildResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type refreshHypixelGuildResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type refreshHypixelGuildResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type refreshHypixelGuildResponseSuccess = refreshHypixelGuildResponse204 & {
+	headers: Headers;
+};
+export type refreshHypixelGuildResponseError = (refreshHypixelGuildResponse401 | refreshHypixelGuildResponse403) & {
+	headers: Headers;
+};
+
+export type refreshHypixelGuildResponse = refreshHypixelGuildResponseSuccess | refreshHypixelGuildResponseError;
+
+export const getRefreshHypixelGuildUrl = (guildId: string) => {
+	return `${ELITE_API_URL}/admin/hguilds/${guildId}/refresh`;
+};
+
+export const refreshHypixelGuild = async (guildId: string, options?: RequestInit) => {
+	return customFetch<refreshHypixelGuildResponse>(getRefreshHypixelGuildUrl(guildId), {
 		...options,
 		method: 'POST',
 	});
@@ -5956,7 +5995,7 @@ export const getHypixelGuild = async (guildId: string, options?: RequestInit) =>
  * @summary Get Hypixel Guild Members Leaderboard
  */
 export type getHypixelGuildMembersLeaderboardResponse200 = {
-	data: GetHypixelGuildMembersLeaderboardResponse;
+	data: GuildMembersLeaderboardDto;
 	status: 200;
 };
 

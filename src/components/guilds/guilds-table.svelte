@@ -15,7 +15,6 @@
 		getPaginationRowModel,
 		getSortedRowModel,
 	} from '@tanstack/table-core';
-	import DataTablePagination from './data-table-pagination.svelte';
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -169,5 +168,5 @@
 			</Table.Body>
 		</Table.Root>
 	</div>
-	<DataTablePagination {table} />
+	<!-- <DataTablePagination {table} /> -->
 </div>

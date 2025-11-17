@@ -51,6 +51,16 @@
 				</form>
 			</SettingListItem>
 			<SettingSeperator />
+			<SettingListItem
+				title="Refresh Hypixel Guild"
+				description="Fetch new data for a Hypixel guild. This will update the guild data with the latest data from Hypixel."
+			>
+				<form method="post" action="?/refreshHypixelGuild" class="flex flex-row gap-2" use:enhance>
+					<Input name="guild" placeholder="Hypixel Guild ID" maxlength={64} required />
+					<Button type="submit" class="w-24">Fetch</Button>
+				</form>
+			</SettingListItem>
+			<SettingSeperator />
 			<SettingListItem title="Link Account" description="Link a Minecraft account to a Discord account.">
 				<form method="post" action="?/linkAccount" class="flex flex-row gap-2" use:enhance>
 					<Input name="player" placeholder="Player name/uuid" maxlength={64} required />

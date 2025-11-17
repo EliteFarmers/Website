@@ -1,4 +1,5 @@
 <script lang="ts">
+	import GuildSearch from '$comp/guilds/guild-search.svelte';
 	import GuildsList from '$comp/guilds/guilds-list.svelte';
 	import Head from '$comp/head.svelte';
 	import type { PageProps } from './$types';
@@ -21,8 +22,9 @@
 
 <Head title="Hypixel Guilds" {description} />
 
-<main class="flex flex-col items-center gap-8">
-	<h1 class="my-16 text-4xl">Hypixel Guilds</h1>
+<main class="flex w-full flex-col items-center gap-8">
+	<h1 class="mt-16 mb-12 text-4xl">Hypixel Guilds</h1>
+	<GuildSearch />
 	{#if data.guilds?.length}
 		<GuildsList guilds={data.guilds} />
 	{:else}

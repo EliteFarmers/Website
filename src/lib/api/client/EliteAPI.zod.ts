@@ -1248,6 +1248,14 @@ export const zodRefreshDiscordGuildParams = zod.object({
 });
 
 /**
+ * This fetches the latest data from Hypixel for the specified guild
+ * @summary Refresh a Hypixel Guild
+ */
+export const zodRefreshHypixelGuildParams = zod.object({
+	guildId: zod.string(),
+});
+
+/**
  * @summary Unlink an Account
  */
 export const zodUnlinkUserAccountBody = zod.object({
@@ -6593,7 +6601,19 @@ export const zodGetHypixelGuildMembersLeaderboardResponseEntriesItemMetaPrefixMa
 export const zodGetHypixelGuildMembersLeaderboardResponseEntriesItemMetaSuffixMax = 16;
 
 export const zodGetHypixelGuildMembersLeaderboardResponse = zod.object({
-	guildId: zod.string(),
+	id: zod.string(),
+	title: zod.string(),
+	shortTitle: zod.string().nullish(),
+	itemId: zod.string().nullish().describe('Item Id if this is a collection leaderboard'),
+	interval: zod.string().nullish(),
+	firstInterval: zod.string().nullish(),
+	limit: zod.number(),
+	offset: zod.number(),
+	maxEntries: zod.number(),
+	minimumScore: zod.number().describe('The minimum score required to be on the leaderboard'),
+	startsAt: zod.number(),
+	endsAt: zod.number(),
+	profile: zod.coerce.boolean<boolean>(),
 	entries: zod.array(
 		zod.object({
 			ign: zod.string().nullish().describe("Player's IGN if player leaderboard"),
@@ -6642,6 +6662,7 @@ export const zodGetHypixelGuildMembersLeaderboardResponse = zod.object({
 				.describe('Metadata of the entry'),
 		})
 	),
+	guildId: zod.string(),
 });
 
 /**
@@ -10659,8 +10680,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown(),
+						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -10768,8 +10792,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown(),
+							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -10936,8 +10963,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()

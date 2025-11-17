@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
 	const guilds = await getHypixelGuildsList({
-		sortBy: SortHypixelGuildsBy.memberCount,
+		sortBy: SortHypixelGuildsBy.skyblockExperienceAverage,
 		descending: true,
 		pageSize: 30,
 	});

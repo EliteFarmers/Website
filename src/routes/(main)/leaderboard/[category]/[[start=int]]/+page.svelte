@@ -4,10 +4,10 @@
 	import { page } from '$app/state';
 	import Countdown from '$comp/countdown.svelte';
 	import Head from '$comp/head.svelte';
-	import Entry from '$comp/leaderboards/entry.svelte';
+	import LeaderboardEntriesColumns from '$comp/leaderboards/entries-columns.svelte';
+	import IntervalSelect from '$comp/leaderboards/interval-select.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import type { LeaderboardEntry } from '$lib/api/elite';
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
@@ -21,7 +21,6 @@
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
 	import type { PageData } from './$types';
-	import IntervalSelect from './interval-select.svelte';
 	import LeaderboardFilter from './leaderboard-filter.svelte';
 	import LeaderboardPagination from './leaderboard-pagination.svelte';
 
@@ -39,9 +38,6 @@
 	let intervalType = $derived(
 		data.lb.id.endsWith('-monthly') ? 'monthly' : data.lb.id.endsWith('-weekly') ? 'weekly' : 'current'
 	);
-
-	let firstHalf = $derived(entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
-	let secondHalf = $derived(entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
 
 	const topTen = $derived(
 		entries
@@ -205,31 +201,13 @@
 			</div>
 		</div>
 	</div>
-	<div
-		data-sveltekit-preload-data="tap"
-		class="mb-2 flex flex-col justify-center gap-2 rounded-lg align-middle lg:flex-row"
-	>
-		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
-			{#each firstHalf as entry, i (entry)}
-				<Entry
-					rank={i + offset}
-					{entry}
-					leaderboard={data.leaderboard}
-					showLeaderboardName={showLeaderboardName.current}
-				/>
-			{/each}
-		</div>
-		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
-			{#each secondHalf as entry, i (entry)}
-				<Entry
-					rank={i + firstHalf.length + offset}
-					{entry}
-					leaderboard={data.leaderboard}
-					showLeaderboardName={showLeaderboardName.current}
-				/>
-			{/each}
-		</div>
-	</div>
+	<LeaderboardEntriesColumns
+		class="mb-2"
+		{entries}
+		leaderboard={data.leaderboard}
+		{offset}
+		showLeaderboardName={showLeaderboardName.current}
+	/>
 	{#if !data.lb.entries.length}
 		<div class="mb-8 flex flex-row items-center justify-center">
 			<p class="text-muted-foreground w-full max-w-4xl rounded-lg border-2 py-16 text-center">
