@@ -91,8 +91,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(@types/json-schema@7.0.15)(class-validator@0.14.2)
       '@vinejs/vine':
-        specifier: ^1.8.0
-        version: 1.8.0
+        specifier: ^4.0.0
+        version: 4.1.0
       arktype:
         specifier: ^2.1.25
         version: 2.1.25
@@ -647,6 +647,7 @@ packages:
 
   '@finom/zod-to-json-schema@3.24.12':
     resolution: {integrity: sha512-mf8CyoW+dFvsvROvHIXznrYWdmlxvBJGIeQpGJaD9iBn23kSSPiC7H0YIqgziMZJDFIzL4VEFCwpcUSHmoeNVw==}
+    deprecated: 'Use https://www.npmjs.com/package/zod-v3-to-json-schema instead. See issue comment for details: https://github.com/StefanTerdell/zod-to-json-schema/issues/178#issuecomment-3533122539'
     peerDependencies:
       zod: ^3.25 || ^4.0.14
 
@@ -1949,20 +1950,20 @@ packages:
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
-  '@vinejs/compiler@2.5.1':
-    resolution: {integrity: sha512-efiO/SCQSMCqz6LDZTI4R3Ceq1ik3K2IqefEbbch+ko4dZncaYmQWJpX/fXVwgmO78jTZuerzD4I2WphPJUCwg==}
-    engines: {node: '>=18.0.0'}
-
   '@vinejs/compiler@3.0.0':
     resolution: {integrity: sha512-v9Lsv59nR56+bmy2p0+czjZxsLHwaibJ+SV5iK9JJfehlJMa501jUJQqqz4X/OqKXrxtE3uTQmSqjUqzF3B2mw==}
     engines: {node: '>=18.0.0'}
 
-  '@vinejs/vine@1.8.0':
-    resolution: {integrity: sha512-Qq3XxbA26jzqS9ICifkqzT399lMQZ2fWtqeV3luI2as+UIK7qDifJFU2Q4W3q3IB5VXoWxgwAZSZEO0em9I/qQ==}
-    engines: {node: '>=18.16.0'}
+  '@vinejs/compiler@4.1.1':
+    resolution: {integrity: sha512-52k+YhWKSXaOkw3vUd7YzA70ycHp2JIwrgtljm0ZVZLFEtSK+LzDM9iSwDbtUBlXNSCamVTWrl5ZueTLi8f6SQ==}
+    engines: {node: '>=18.0.0'}
 
   '@vinejs/vine@3.0.1':
     resolution: {integrity: sha512-ZtvYkYpZOYdvbws3uaOAvTFuvFXoQGAtmzeiXu+XSMGxi5GVsODpoI9Xu9TplEMuD/5fmAtBbKb9cQHkWkLXDQ==}
+    engines: {node: '>=18.16.0'}
+
+  '@vinejs/vine@4.1.0':
+    resolution: {integrity: sha512-B+pstmyJKmLEwEM51SADJ7gNABOgglRFd9nKi9Xm2gLXBVi093v3FU+toaUlZeBC5gHwQJFPm6Z6km4KTcv5sw==}
     engines: {node: '>=18.16.0'}
 
   abort-controller@3.0.0:
@@ -6841,21 +6842,10 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vinejs/compiler@2.5.1': {}
-
   '@vinejs/compiler@3.0.0':
     optional: true
 
-  '@vinejs/vine@1.8.0':
-    dependencies:
-      '@poppinss/macroable': 1.1.0
-      '@types/validator': 13.15.4
-      '@vinejs/compiler': 2.5.1
-      camelcase: 8.0.0
-      dayjs: 1.11.19
-      dlv: 1.1.3
-      normalize-url: 8.1.0
-      validator: 13.15.20
+  '@vinejs/compiler@4.1.1': {}
 
   '@vinejs/vine@3.0.1':
     dependencies:
@@ -6868,6 +6858,18 @@ snapshots:
       normalize-url: 8.1.0
       validator: 13.15.20
     optional: true
+
+  '@vinejs/vine@4.1.0':
+    dependencies:
+      '@poppinss/macroable': 1.1.0
+      '@standard-schema/spec': 1.0.0
+      '@types/validator': 13.15.4
+      '@vinejs/compiler': 4.1.1
+      camelcase: 8.0.0
+      dayjs: 1.11.19
+      dlv: 1.1.3
+      normalize-url: 8.1.0
+      validator: 13.15.20
 
   abort-controller@3.0.0:
     dependencies:
