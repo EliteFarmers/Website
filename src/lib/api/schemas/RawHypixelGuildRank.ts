@@ -10,7 +10,8 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 
 export interface RawHypixelGuildRank {
 	name: string;
-	tag: string;
+	/** @nullable */
+	tag?: string | null;
 	default: boolean;
 	created: bigint;
 	priority: number;

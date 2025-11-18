@@ -34,19 +34,40 @@ const getGuildListParams = z.object({
 	skill: z.string().min(1).optional(),
 });
 
-type GuildListResponse = HypixelGuildDetailsDto[];
+type GuildListResponse = {
+    guilds: HypixelGuildDetailsDto[];
+    total: number | null;
+};
 
 export const getHypixelGuildsList = query(getGuildListParams, async (params): Promise<GuildListResponse> => {
-	const { data } = await getHypixelGuilds({
+	const result = await getHypixelGuilds({
 		sortBy: params.sortBy,
 		descending: params.descending,
 		page: params.page,
 		pageSize: params.pageSize,
 		collection: params.collection,
 		skill: params.skill,
-	}).catch(() => ({ data: undefined }));
+	}).catch(() => undefined);
 
-	return data?.guilds ?? [];
+	if (!result?.ok || !result.data) {
+		return { guilds: [], total: null };
+	}
+
+	const payload = result.data as { guilds?: HypixelGuildDetailsDto[]; total?: number };
+	const headerTotal = result.response.headers.get('x-total-count');
+	const bodyTotal = payload.total;
+	let total: number | null = null;
+
+	if (headerTotal) {
+		const parsed = Number.parseInt(headerTotal, 10);
+		if (Number.isFinite(parsed)) {
+			total = parsed;
+		}
+	} else if (typeof bodyTotal === 'number' && Number.isFinite(bodyTotal)) {
+		total = bodyTotal;
+	}
+
+	return { guilds: payload.guilds ?? [], total };
 });
 
 const guildSearchParams = z.object({
