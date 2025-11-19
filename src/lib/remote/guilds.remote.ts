@@ -35,8 +35,8 @@ const getGuildListParams = z.object({
 });
 
 type GuildListResponse = {
-    guilds: HypixelGuildDetailsDto[];
-    total: number | null;
+	guilds: HypixelGuildDetailsDto[];
+	total: number | null;
 };
 
 export const getHypixelGuildsList = query(getGuildListParams, async (params): Promise<GuildListResponse> => {
@@ -53,21 +53,7 @@ export const getHypixelGuildsList = query(getGuildListParams, async (params): Pr
 		return { guilds: [], total: null };
 	}
 
-	const payload = result.data as { guilds?: HypixelGuildDetailsDto[]; total?: number };
-	const headerTotal = result.response.headers.get('x-total-count');
-	const bodyTotal = payload.total;
-	let total: number | null = null;
-
-	if (headerTotal) {
-		const parsed = Number.parseInt(headerTotal, 10);
-		if (Number.isFinite(parsed)) {
-			total = parsed;
-		}
-	} else if (typeof bodyTotal === 'number' && Number.isFinite(bodyTotal)) {
-		total = bodyTotal;
-	}
-
-	return { guilds: payload.guilds ?? [], total };
+	return { guilds: result.data.guilds, total: result.data.totalGuilds };
 });
 
 const guildSearchParams = z.object({

@@ -16,8 +16,12 @@ export const getColumns = () =>
 			id: 'title',
 			accessorKey: 'title',
 			header: 'Guild',
-			cell: ({ row }) => {
-				return renderComponent(GuildName, { guild: row.original });
+			cell: ({ row, table }) => {
+				const rankCalculator = table.options.meta as
+					| { getRankNumber?: (rowIndex: number) => number }
+					| undefined;
+				const rank = rankCalculator?.getRankNumber?.(row.index) ?? row.index + 1;
+				return renderComponent(GuildName, { guild: row.original, rank });
 			},
 		},
 		{

@@ -12,16 +12,16 @@
 	import type { Table } from '@tanstack/table-core';
 
 	let { table }: { table: Table<TData> } = $props();
+	const visibleRows = $derived.by(() => table.getRowModel().rows.length);
 </script>
 
 <div class="flex flex-col items-center justify-between gap-2 px-2 md:flex-row">
 	<div class="text-muted-foreground flex-1 text-sm">
-		<!-- {table.getFilteredSelectedRowModel().rows.length} of -->
-		Showing {table.getFilteredRowModel().rows.length} of {table.getCoreRowModel().rows.length} upgrade(s)
+		Showing {visibleRows} guild{visibleRows === 1 ? '' : 's'}
 	</div>
 	<div class="flex flex-col items-center gap-2 md:flex-row lg:space-x-8">
 		<div class="flex items-center space-x-2">
-			<p class="text-sm font-medium">Upgrades per page</p>
+			<p class="text-sm font-medium">Guilds per page</p>
 			<Select.Root
 				allowDeselect={false}
 				type="single"
