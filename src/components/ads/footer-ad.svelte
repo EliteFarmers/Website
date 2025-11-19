@@ -8,13 +8,24 @@
 	const adCtx = getAdCtx();
 </script>
 
-<div class="flex h-[250px] w-full justify-center overflow-clip">
+<div class="flex h-[280px] w-full justify-center overflow-clip">
 	{#key sidebar.isMobile}
 		<NitroAdSlot
-			class="mt-8 block h-[250px] w-full"
+			class="mt-8 block h-fit w-full"
 			slotId="footer-bottom"
+			onCreated={(element) => {
+				adCtx.footerBottom = element;
+			}}
 			config={{
-				delayLoading: true,
+				sizes: [
+					['728', '90'],
+					['970', '90'],
+					['970', '250'],
+					['300', '250'],
+					['336', '280'],
+					['320', '50'],
+					['320', '100'],
+				],
 				report: {
 					enabled: true,
 					icon: true,

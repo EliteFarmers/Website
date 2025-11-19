@@ -26,7 +26,13 @@
 	<h1 class="mt-16 mb-12 text-4xl">Hypixel Guilds</h1>
 	<GuildSearch />
 	{#if data.guilds?.length}
-		<GuildsList guilds={data.guilds} />
+		<GuildsList
+			guilds={data.guilds}
+			total={data.total}
+			page={data.page}
+			pageSize={data.pageSize}
+			sortBy={data.sortBy}
+		/>
 	{:else}
 		<p>No guilds found.</p>
 	{/if}

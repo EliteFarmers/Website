@@ -10,5 +10,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 import type { HypixelGuildDetailsDto } from './HypixelGuildDetailsDto';
 
 export interface GetHypixelGuildsResponse {
+	totalGuilds: number;
 	guilds: HypixelGuildDetailsDto[];
 }

@@ -15,6 +15,12 @@
 		getPaginationRowModel,
 		getSortedRowModel,
 	} from '@tanstack/table-core';
+	import DataTablePagination from './data-table-pagination.svelte';
+
+	type PaginationChangeHandler = (pagination: PaginationState) => void;
+	type TableMeta = {
+		getRankNumber: (rowIndex: number) => number;
+	};
 
 	type DataTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
@@ -24,7 +30,10 @@
 		initialVisibility?: VisibilityState;
 		pageIndex?: number;
 		pageSize?: number;
+		pageCount?: number;
+		manualPagination?: boolean;
 		onSortingChange?: (sorting: SortingState) => void;
+		onPaginationChange?: PaginationChangeHandler;
 		loading?: boolean;
 	};
 
@@ -35,8 +44,11 @@
 		initialSorting = [],
 		initialVisibility = {},
 		pageIndex = 0,
-		pageSize = 30,
+		pageSize = 10,
+		pageCount,
+		manualPagination = false,
 		onSortingChange: onSortingChangeProp,
+		onPaginationChange: onPaginationChangeProp,
 		loading = false,
 	}: DataTableProps<TData, TValue> = $props();
 
@@ -44,8 +56,7 @@
 	let columnVisibility = $state<VisibilityState>(initialVisibility);
 	let columnFilters = $state<ColumnFiltersState>(initialFilters);
 	let sorting = $state<SortingState>(initialSorting);
-	let pagination = $derived<PaginationState>({ pageIndex, pageSize });
-
+	const pagination = $derived.by(() => ({ pageIndex, pageSize }));
 	const table = createSvelteTable({
 		get data() {
 			return data;
@@ -69,6 +80,13 @@
 		},
 		columns,
 		enableRowSelection: true,
+		manualPagination,
+		get pageCount() {
+			return pageCount;
+		},
+		meta: {
+			getRankNumber: (rowIndex: number) => pagination.pageIndex * pagination.pageSize + rowIndex + 1,
+		} satisfies TableMeta,
 		onRowSelectionChange: (updater) => {
 			if (typeof updater === 'function') {
 				rowSelection = updater(rowSelection);
@@ -99,15 +117,12 @@
 			}
 		},
 		onPaginationChange: (updater) => {
-			if (typeof updater === 'function') {
-				pagination = updater(pagination);
-			} else {
-				pagination = updater;
-			}
+			const next = typeof updater === 'function' ? updater(pagination) : updater;
+			onPaginationChangeProp?.(next);
 		},
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
+		...(manualPagination ? {} : { getPaginationRowModel: getPaginationRowModel() }),
 		getSortedRowModel: getSortedRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -168,5 +183,5 @@
 			</Table.Body>
 		</Table.Root>
 	</div>
-	<!-- <DataTablePagination {table} /> -->
+	<DataTablePagination {table} />
 </div>

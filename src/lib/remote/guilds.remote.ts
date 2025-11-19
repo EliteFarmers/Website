@@ -34,19 +34,26 @@ const getGuildListParams = z.object({
 	skill: z.string().min(1).optional(),
 });
 
-type GuildListResponse = HypixelGuildDetailsDto[];
+type GuildListResponse = {
+	guilds: HypixelGuildDetailsDto[];
+	total: number | null;
+};
 
 export const getHypixelGuildsList = query(getGuildListParams, async (params): Promise<GuildListResponse> => {
-	const { data } = await getHypixelGuilds({
+	const result = await getHypixelGuilds({
 		sortBy: params.sortBy,
 		descending: params.descending,
 		page: params.page,
 		pageSize: params.pageSize,
 		collection: params.collection,
 		skill: params.skill,
-	}).catch(() => ({ data: undefined }));
+	}).catch(() => undefined);
 
-	return data?.guilds ?? [];
+	if (!result?.ok || !result.data) {
+		return { guilds: [], total: null };
+	}
+
+	return { guilds: result.data.guilds, total: result.data.totalGuilds };
 });
 
 const guildSearchParams = z.object({

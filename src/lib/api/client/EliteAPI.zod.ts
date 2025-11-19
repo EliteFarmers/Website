@@ -6511,7 +6511,7 @@ export const zodGetHypixelGuildResponse = zod.object({
 		ranks: zod.array(
 			zod.object({
 				name: zod.string(),
-				tag: zod.string(),
+				tag: zod.string().nullish(),
 				default: zod.coerce.boolean<boolean>(),
 				created: zod.number(),
 				priority: zod.number(),
@@ -6727,6 +6727,7 @@ export const zodGetHypixelGuildsQueryParams = zod.object({
 });
 
 export const zodGetHypixelGuildsResponse = zod.object({
+	totalGuilds: zod.number(),
 	guilds: zod.array(
 		zod.object({
 			id: zod.string(),
@@ -10680,11 +10681,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.unknown(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -10792,11 +10790,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.unknown(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -10963,11 +10958,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()
