@@ -10683,9 +10683,6 @@ export const zodGetSkyblockItemsResponse = zod.object({
 					.object({
 						rootElement: zod.unknown(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -10795,9 +10792,6 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 						.object({
 							rootElement: zod.unknown(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -10966,9 +10960,6 @@ export const zodSkyblockProductResponse = zod.object({
 				.object({
 					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()

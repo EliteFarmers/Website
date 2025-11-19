@@ -176,8 +176,8 @@ import type {
 	YearlyCropRecordsDto,
 } from '../schemas';
 
-import { ELITE_API_URL } from '$env/static/private';
 import { customFetch } from '../custom-fetch';
+import { ELITE_API_URL } from '$env/static/private';
 
 /**
  * Retrieves the Minecraft account information for a given player, along with an overview of their profiles and player data.
