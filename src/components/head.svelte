@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import HeadLdJson from './head-ld-json.svelte';
 
 	interface Props {
 		title: string | undefined; // 'Elite | Skyblock Farming Weight';
@@ -9,6 +10,8 @@
 		description: string;
 		children?: import('svelte').Snippet;
 		canonicalPath?: string;
+		twitterCardType?: 'summary' | 'summary_large_image' | 'app' | 'player' | undefined;
+		ldJson?: unknown;
 	}
 
 	let {
@@ -17,7 +20,9 @@
 		imageUrl = `${PUBLIC_HOST_URL}/favicon.webp`,
 		description,
 		children,
+		twitterCardType,
 		canonicalPath,
+		ldJson = undefined,
 	}: Props = $props();
 
 	const canonicalUrl = $derived(
@@ -31,7 +36,7 @@
 	<title>{title ?? 'Elite | Skyblock Farming Weight'}</title>
 	<meta property="og:title" content={title ?? 'Elite | Skyblock Farming Weight'} />
 
-	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 
 	{#if description}
 		<meta name="description" content={description} />
@@ -49,6 +54,10 @@
 	{#if canonicalPath}
 		<meta property="og:url" content={canonicalUrl ?? page.url.toString()} />
 		<link rel="canonical" href={canonicalUrl} />
+	{/if}
+
+	{#if ldJson}
+		<HeadLdJson content={ldJson} />
 	{/if}
 
 	{@render children?.()}

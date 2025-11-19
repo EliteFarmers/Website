@@ -7,6 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { PlayerDataDtoGuildMember } from './PlayerDataDtoGuildMember';
 import type { PlayerDataDtoSocialMedia } from './PlayerDataDtoSocialMedia';
 
 export interface PlayerDataDto {
@@ -18,6 +19,8 @@ export interface PlayerDataDto {
 	lastLogout: bigint;
 	karma: bigint;
 	networkExp: number;
+	/** @nullable */
+	guildMember?: PlayerDataDtoGuildMember;
 	rewardHighScore: number;
 	rewardScore: number;
 	rewardStreak: number;
@@ -27,6 +30,8 @@ export interface PlayerDataDto {
 	prefix?: string | null;
 	/** @nullable */
 	rank?: string | null;
+	/** @nullable */
+	packageRank?: string | null;
 	/** @nullable */
 	newPackageRank?: string | null;
 	/** @nullable */

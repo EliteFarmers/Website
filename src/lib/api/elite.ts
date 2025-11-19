@@ -2,6 +2,7 @@ import type {
 	AuctionItemDto,
 	AuthorizedAccountDto,
 	BazaarProductSummaryDto,
+	GuildMembersLeaderboardDto,
 	ItemResponse,
 	LeaderboardEntryDto,
 	WeightStyleWithDataDto,
@@ -10,6 +11,10 @@ import type {
 export type AuthorizedUser = AuthorizedAccountDto;
 export type LeaderboardEntry = LeaderboardEntryDto & {
 	style?: WeightStyleWithDataDto['leaderboard'];
+};
+
+export type GuildMembersLeaderboard = GuildMembersLeaderboardDto & {
+	entries: LeaderboardEntry[];
 };
 export interface UserInfo {
 	id: string;

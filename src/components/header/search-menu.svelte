@@ -12,6 +12,7 @@
 	import * as Tabs from '$ui/tabs';
 	import cn from 'classnames';
 	import { Debounced, watch } from 'runed';
+	import { onMount } from 'svelte';
 
 	let {
 		open = $bindable(false),
@@ -23,7 +24,7 @@
 		useButton?: boolean;
 	} = $props();
 
-	let leaderboards = getLeaderboardList();
+	let leaderboards = $state<ReturnType<typeof getLeaderboardList> | null>(null);
 
 	let lbEntries = $derived(
 		Object.entries(leaderboards?.current?.leaderboards ?? {}).map(([id, { title, short, suffix }]) => ({
@@ -63,6 +64,10 @@
 	const debounced = new Debounced(() => searchStr, 100);
 	let players = $state([] as string[]);
 	let leaderboardList = $state([] as { name: string; id: string }[]);
+
+	onMount(() => {
+		leaderboards = getLeaderboardList();
+	});
 
 	$effect(() => {
 		search(debounced.current);

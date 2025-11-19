@@ -16,7 +16,10 @@
 			.filter(([, rank]) => rank.amount)
 			.map(([id, rank]) => ({
 				id,
-				interval: (id.endsWith('-monthly') ? 'monthly' : 'none') as 'none' | 'monthly',
+				interval: (id.endsWith('-monthly') ? 'monthly' : id.endsWith('-weekly') ? 'weekly' : 'none') as
+					| 'none'
+					| 'monthly'
+					| 'weekly',
 				...rank,
 			}))
 	);

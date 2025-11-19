@@ -8,7 +8,7 @@ export const load = (async ({ params, url }) => {
 	// Remove everything before the last dash
 	const guildId = guild.slice(guild.lastIndexOf('-') + 1);
 
-	const { data: guildData } = await getPublicGuild(BigInt(guildId)).catch(() => ({ data: undefined }));
+	const { data: guildData } = await getPublicGuild(guildId).catch(() => ({ data: undefined }));
 
 	if (!guildData?.id || !guildData.name) {
 		throw error(404, 'Guild not found');
@@ -20,7 +20,7 @@ export const load = (async ({ params, url }) => {
 		throw redirect(307, `/server/${properUrl}`);
 	}
 
-	const { data: events } = await getPublicGuildEvents(BigInt(guildData.id)).catch(() => ({ data: undefined }));
+	const { data: events } = await getPublicGuildEvents(guildData.id).catch(() => ({ data: undefined }));
 
 	return {
 		guild: guildData,

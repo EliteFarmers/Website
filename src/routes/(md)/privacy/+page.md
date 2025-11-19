@@ -1,13 +1,13 @@
 ---
 title: Privacy Policy
 description: The Privacy Policy for Our Application
-lastUpdated: 2025-10-18
+lastUpdated: 2025-11-12
 blueprint: page
 ---
 
 # Privacy Policy
 
-<sub>Last updated: <strong>October 19, 2025</strong></sub>
+<sub>Last updated: <strong>November 12, 2025</strong></sub>
 
 This Privacy Policy explains how we collect, use, and protect your information when you use our Service. By using the Service, you agree to the practices described in this policy.
 
@@ -54,10 +54,11 @@ We use the following types of cookies:
 
 - **Essential Cookies**: These are necessary for the website to function properly. They handle tasks like keeping you logged in (session management) and remembering your preferences. You cannot opt out of these cookies as the website will not work correctly without them.
 - **Analytics Cookies**: We use these cookies to understand how users interact with our Service. We use Google Analytics, which helps us collect anonymous data like which pages are most popular and how long visitors stay on our site. This information helps us improve the Service for everyone.
+- **Advertising Cookies**: If you provide consent, our advertising partners use these cookies to collect data about your browsing activity. This helps them build a profile of your interests to show you advertisements that are more relevant to you on our site and others.
 
 ### How to Control Cookies
 
-Most web browsers allow you to control cookies through their settings. You can set your browser to block or delete cookies, but be aware that if you block our essential cookies, parts of our Service may not work.
+Most web browsers allow you to control cookies through their settings. You can set your browser to block or delete cookies, but be aware that if you block our essential cookies, parts of our Service may not work. You can manage your consent for Analytics and Advertising cookies at any time through our cookie banner.
 
 ## How We Use Your Information
 
@@ -76,7 +77,17 @@ We do not sell your Personal Data. We only share your information in the followi
 - **Publicly**: Public Data (like your linked Minecraft accounts and game stats) is visible to other users of the Service.
 - **For Legal Reasons**: We may disclose your information if required by law or to protect the rights, property, or safety of our company, our users, or the public.
 - **Business Transfers**: If we are involved in a merger or acquisition, your data may be transferred. We will notify you before this happens.
-- **With Advertising Partners**: If you consent to advertising cookies, we may use data collected through services like Google Signals to enable remarketing, which means you might see ads for our Service on other websites. In the future, we may partner with other third-party ad networks that use similar technologies. Your consent is always required, and you can manage your preferences through our cookie banner and your Google account settings.
+- **With Advertising Partners**: If you consent to advertising cookies, we share data with our advertising partners. This is done to enable personalized advertising and remarketing. This includes:
+    - **Google Analytics**: We may use data collected through Google Signals for remarketing purposes, which means you might see ads for our Service on other websites.
+    - **NitroPay**: We partner with NitroPay to display third-party advertisements on our website. Details on this are in the section below.
+
+    Your consent for sharing data with these partners is required and can be managed at any time through our cookie banner and your Google account settings.
+
+## Third-Party Advertising
+
+Our website displays advertisements from our partner, **NitroPay**. When you consent to advertising, NitroPay and its partners may use cookies and other tracking technologies to collect information such as your IP address, device ID, and browsing behavior. This information is used to serve personalized ads that are relevant to your interests.
+
+We do not share your Personal Data (like your Discord ID) directly with NitroPay. The data collected by NitroPay is governed by their own privacy policy. We encourage you to review the **[NitroPay Privacy Policy](https://nitropay.com/privacy)** to understand how they collect and use your data.
 
 ## Data Security, Retention and International Transfer
 
@@ -86,8 +97,23 @@ We do not sell your Personal Data. We only share your information in the followi
 
 ## Your Rights and Choices
 
+### California Privacy Rights (CCPA)
+
+If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA):
+
+- Right to know what personal information is collected, used, shared, or sold
+- Right to delete personal information held by businesses
+- Right to opt-out of sale of personal information (we do not sell personal information)
+- Right to non-discrimination for exercising your CCPA rights
+
+### European Privacy Rights (GDPR)
+
+If you are in the European Economic Area (EEA), you have rights under the General Data Protection Regulation (GDPR), including the rights listed above and the right to lodge a complaint with a supervisory authority.
+
+### How to Exercise Your Rights
+
 - **Access and Update**: You can manage your linked accounts and settings through our Service.
-- **Data Deletion**: You can request the deletion of your account and associated Personal Data by contacting us. Please note that we cannot delete Public Data sourced from third-party game APIs.
+- **Other**: You can request that your rights be exercised by contacting us. Please note that we cannot delete Public Data sourced from third-party game APIs, you must contact them directly to do so.
 
 ## Children's Privacy
 

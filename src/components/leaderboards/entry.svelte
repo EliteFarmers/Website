@@ -4,6 +4,8 @@
 	import { type LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { formatIgn, formatLeaderboardAmount } from '$lib/format';
 	import { isValidLeaderboardStyle, type LeaderboardStyleText } from '$lib/styles/style';
+	import CircleSlash from '@lucide/svelte/icons/circle-slash';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		entry: LeaderboardEntry;
@@ -12,6 +14,15 @@
 		leaderboard?: LeaderboardInfo;
 		showLeaderboardName?: boolean;
 		disabled?: boolean;
+		namePrefix?: Snippet<
+			[
+				{
+					entry: LeaderboardEntry;
+					rank: number;
+					leaderboard?: LeaderboardInfo;
+				},
+			]
+		>;
 	}
 
 	let {
@@ -21,6 +32,7 @@
 		leaderboard,
 		showLeaderboardName = false,
 		disabled = false,
+		namePrefix,
 	}: Props = $props();
 
 	let ign = $state(entry.ign);
@@ -74,7 +86,7 @@
 			src={img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
 			class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
 		/>
-		<div class="absolute inset-0 rounded-sm bg-gradient-to-r from-black/20 via-transparent to-black/20"></div>
+		<div class="absolute inset-0 rounded-sm bg-linear-to-r from-black/20 via-transparent to-black/20"></div>
 	{/if}
 	<a
 		href={disabled
@@ -95,40 +107,37 @@
 					>
 				</div>
 				<div class="flex grow flex-col overflow-hidden text-ellipsis whitespace-nowrap">
-					<span>
-						<p
-							class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl"
-							style={nameStyles}
-						>
-							{#if leaderboard?.profile}
-								{entry.members?.[0].ign}
-							{:else}
-								{formatIgn(ign, entry.meta)}
-							{/if}
-						</p>
-						{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
-							<div
-								class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs"
-								style={subtitleStyles}
-							>
-								<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
-								{#each entry.members.slice(1, 3) ?? [] as member, i (member.uuid ?? i)}
-									<p>{member.ign}</p>
-								{/each}
-								{#if entry.members.length > 3}
-									<p class="font-semibold">+{entry.members.length - 3}</p>
-								{/if}
-							</div>
+					<p class="xs:text-xl inline-block text-start text-sm font-semibold sm:text-2xl" style={nameStyles}>
+						{#if leaderboard?.profile}
+							{entry.members?.[0].ign}
 						{:else}
-							<div
-								class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
-								style={subtitleStyles}
-							>
-								<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
-								{profile}
-							</div>
+							{formatIgn(ign, entry.meta)}
 						{/if}
-					</span>
+					</p>
+					{#if leaderboard?.profile && entry.members?.length && entry.members.length > 1}
+						<div
+							class="xs:text-sm sm:text-md flex flex-row gap-1.5 text-start text-xs"
+							style={subtitleStyles}
+						>
+							{@render removed()}
+							<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
+							{#each entry.members.slice(1, 3) ?? [] as member, i (member.uuid ?? i)}
+								<p>{member.ign}</p>
+							{/each}
+							{#if entry.members.length > 3}
+								<p class="font-semibold">+{entry.members.length - 3}</p>
+							{/if}
+						</div>
+					{:else}
+						<div
+							class="xs:text-sm sm:text-md flex flex-row gap-1.5 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
+							style={subtitleStyles}
+						>
+							{@render removed()}
+							<Gamemode popover={false} gameMode={entry.mode} class="mt-0.5 size-3" />
+							{profile}
+						</div>
+					{/if}
 				</div>
 			</div>
 			<div class="mr-2 flex flex-col items-end justify-center align-middle md:mx-2">
@@ -137,9 +146,12 @@
 				</span>
 				{#if showLeaderboardName}
 					<div
-						class="xs:text-sm sm:text-md inline overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
+						class="xs:text-sm sm:text-md inline-flex items-center gap-1 overflow-hidden text-start text-xs text-ellipsis whitespace-nowrap"
 						style={subtitleStyles}
 					>
+						{#if namePrefix}
+							{@render namePrefix({ entry, rank, leaderboard })}
+						{/if}
 						{leaderboard?.short ?? leaderboard?.title}{leaderboard?.suffix ?? ''}
 					</div>
 				{/if}
@@ -147,3 +159,9 @@
 		</div>
 	</a>
 </div>
+
+{#snippet removed()}
+	{#if entry.removed}
+		<CircleSlash class="text-destructive size-4" />
+	{/if}
+{/snippet}

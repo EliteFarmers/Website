@@ -2,23 +2,25 @@
 	import { enhance } from '$app/forms';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+	import Countdown from '$comp/countdown.svelte';
 	import Head from '$comp/head.svelte';
-	import Entry from '$comp/leaderboards/entry.svelte';
+	import LeaderboardEntriesColumns from '$comp/leaderboards/entries-columns.svelte';
+	import IntervalSelect from '$comp/leaderboards/interval-select.svelte';
 	import PlayerSearch from '$comp/player-search.svelte';
-	import type { LeaderboardEntry } from '$lib/api/elite';
+	import DateDisplay from '$comp/time/date-display.svelte';
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { Switch } from '$ui/switch';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
-	import Crown from '@lucide/svelte/icons/crown';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
 	import Search from '@lucide/svelte/icons/search';
+	import SquareActivity from '@lucide/svelte/icons/square-activity';
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
 	import type { PageData } from './$types';
-	import IntervalSelect from './interval-select.svelte';
 	import LeaderboardFilter from './leaderboard-filter.svelte';
 	import LeaderboardPagination from './leaderboard-pagination.svelte';
 
@@ -36,9 +38,6 @@
 	let intervalType = $derived(
 		data.lb.id.endsWith('-monthly') ? 'monthly' : data.lb.id.endsWith('-weekly') ? 'weekly' : 'current'
 	);
-
-	let firstHalf = $derived(entries.slice(0, Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
-	let secondHalf = $derived(entries.slice(Math.ceil(entries.length / 2)) as LeaderboardEntry[]);
 
 	const topTen = $derived(
 		entries
@@ -68,6 +67,10 @@
 	const breadcrumb = getPageCtx();
 	const favorites = getFavoritesContext();
 
+	let startTime = $derived(Number(data.lb.startsAt ?? 0) * 1000);
+	let endTime = $derived(Number(data.lb.endsAt ?? 0) * 1000);
+	let active = $derived(endTime > Date.now());
+
 	$effect.pre(() => {
 		breadcrumb.setBreadcrumbs(crumbs);
 		favorites.setPage({
@@ -89,10 +92,33 @@
 />
 
 <section class="mt-16 flex w-full flex-col justify-center">
-	<h1 class="mt-8 mb-16 max-w-2xl self-center text-center text-4xl">{title}</h1>
+	<div
+		class="mt-8 flex w-full flex-col items-center justify-center gap-2 {startTime && endTime ? 'mb-6.5' : 'mb-22'}"
+	>
+		<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
+		{#if startTime && endTime}
+			<div class="flex flex-row items-center text-sm md:text-base {active ? '' : 'mb-10'}">
+				<DateDisplay timestamp={startTime} />
+				<ArrowRight class="mx-2 inline-block size-4" />
+				<DateDisplay timestamp={endTime} />
+			</div>
+		{/if}
+		{#if active}
+			<div class="flex h-8 flex-row items-center gap-2">
+				<Countdown start={startTime} end={endTime} class="gap-2 text-sm md:text-base">
+					{#snippet ending()}
+						<p class="text-muted-foreground mb-0.5 text-sm leading-none whitespace-nowrap md:text-base">
+							Ending in
+						</p>
+					{/snippet}
+				</Countdown>
+			</div>
+		{/if}
+	</div>
+
 	<div class="my-2 flex flex-col items-end justify-center gap-2 rounded-lg lg:h-16 lg:flex-row">
 		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
-			<div class="flex w-full max-w-xl flex-row items-center justify-center gap-2 md:justify-start">
+			<div class="flex w-full max-w-xl flex-row flex-wrap items-center justify-center gap-2 md:justify-start">
 				<form
 					method="post"
 					action={page.url.search}
@@ -153,7 +179,7 @@
 								{:else if interval === 'weekly'}
 									<Hourglass />
 								{:else}
-									<Crown />
+									<SquareActivity />
 								{/if}
 							</Button>
 						{/if}
@@ -175,31 +201,13 @@
 			</div>
 		</div>
 	</div>
-	<div
-		data-sveltekit-preload-data="tap"
-		class="mb-2 flex flex-col justify-center gap-2 rounded-lg align-middle lg:flex-row"
-	>
-		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
-			{#each firstHalf as entry, i (entry)}
-				<Entry
-					rank={i + offset}
-					{entry}
-					leaderboard={data.leaderboard}
-					showLeaderboardName={showLeaderboardName.current}
-				/>
-			{/each}
-		</div>
-		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
-			{#each secondHalf as entry, i (entry)}
-				<Entry
-					rank={i + firstHalf.length + offset}
-					{entry}
-					leaderboard={data.leaderboard}
-					showLeaderboardName={showLeaderboardName.current}
-				/>
-			{/each}
-		</div>
-	</div>
+	<LeaderboardEntriesColumns
+		class="mb-2"
+		{entries}
+		leaderboard={data.leaderboard}
+		{offset}
+		showLeaderboardName={showLeaderboardName.current}
+	/>
 	{#if !data.lb.entries.length}
 		<div class="mb-8 flex flex-row items-center justify-center">
 			<p class="text-muted-foreground w-full max-w-4xl rounded-lg border-2 py-16 text-center">

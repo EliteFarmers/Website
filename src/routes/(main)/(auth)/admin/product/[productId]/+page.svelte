@@ -30,6 +30,7 @@
 	let deleteProductImageModal = $state(false);
 
 	let selectedColors = $state<string[]>(data.product?.features?.embedColors ?? []);
+	let selectedFlags = $state<string[]>(data.product?.features?.flags ?? []);
 	let selectedImageId = $state('');
 
 	let styles = $derived(
@@ -40,6 +41,7 @@
 	);
 
 	let newColor = $state('');
+	let newFlag = $state('');
 	let isThumbnail = $state(false);
 	let cosmeticId = $state('');
 
@@ -190,6 +192,37 @@
 							size="sm"
 							onclick={() => {
 								selectedColors = [...selectedColors, newColor];
+							}}
+						>
+							<Plus size={16} />
+						</Button>
+					</div>
+				</div>
+
+				<div class="flex flex-col items-start gap-2">
+					<p class="font-semibold">Unlocked Flags</p>
+					{#each selectedFlags as flag, i (i)}
+						<input type="hidden" name="flag" value={flag} />
+						<div class="flex flex-row items-center gap-2">
+							<Button
+								variant="secondary"
+								size="sm"
+								onclick={() => {
+									selectedFlags = selectedFlags.filter((f) => f !== flag);
+								}}
+							>
+								<X size={16} />
+							</Button>
+							<Label>{flag}</Label>
+						</div>
+					{/each}
+					<div class="flex flex-row items-center gap-2">
+						<Input placeholder="Add Flag" bind:value={newFlag} />
+						<Button
+							variant="secondary"
+							size="sm"
+							onclick={() => {
+								selectedFlags = [...selectedFlags, newFlag];
 							}}
 						>
 							<Plus size={16} />

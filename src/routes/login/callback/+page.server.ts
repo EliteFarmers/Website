@@ -44,9 +44,6 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 	const thirtyDays = 30 * 24 * 60 * 60;
 	const refreshTokenExpires = new Date(Date.now() + thirtyDays * 1000); // 30 days
 
-	console.log('Accept Confirmation:', acceptConfirmation);
-	console.log('Pending Confirmation:', loginResponse.pending_confirmation);
-
 	if (
 		acceptConfirmation &&
 		loginResponse.pending_confirmation &&

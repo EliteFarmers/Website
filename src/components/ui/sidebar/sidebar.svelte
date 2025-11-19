@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Sheet from '$comp/ui/sheet/index.js';
+	import { getAdCtx } from '$lib/hooks/ads.svelte.js';
 	import { cn, type WithElementRef } from '$lib/utils.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { SIDEBAR_WIDTH_MOBILE } from './constants.js';
@@ -20,6 +21,7 @@
 	} = $props();
 
 	const sidebar = useSidebar();
+	const adCtx = getAdCtx();
 </script>
 
 {#if collapsible === 'none'}
@@ -44,7 +46,7 @@
 				<Sheet.Title>Sidebar</Sheet.Title>
 				<Sheet.Description>Displays the mobile sidebar.</Sheet.Description>
 			</Sheet.Header>
-			<div class="flex h-full w-full flex-col">
+			<div class="flex h-full w-full flex-col" style="margin-bottom: {adCtx.bottomAnchorSize.height}px;">
 				{@render children?.()}
 			</div>
 		</Sheet.Content>

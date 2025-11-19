@@ -4,6 +4,7 @@ import {
 	grantTestEntitlement,
 	linkUserAccount,
 	refreshDiscordGuild,
+	refreshHypixelGuild,
 	removeTestEntitlement,
 	unlinkUserAccount,
 } from '$lib/api';
@@ -14,7 +15,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async ({ locals }) => {
 	const { access_token: token, user, session } = locals;
 
-	if (!session || !session.flags.moderator || !token) {
+	if (!session || !session.perms.moderator || !token) {
 		throw error(404, 'Not Found');
 	}
 
@@ -75,7 +76,27 @@ export const actions: Actions = {
 		const { response, error: e } = await refreshDiscordGuild(guildId);
 
 		if (!response.ok) {
-			return fail(500, { error: e || 'Failed to reset cooldowns' });
+			return fail(500, { error: e || 'Failed to refresh Discord guild' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	refreshHypixelGuild: async ({ locals, request }) => {
+		const { access_token: token } = locals;
+
+		if (!token) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const data = await request.formData();
+		const guildId = data.get('guild') as string;
+
+		const { response, error: e } = await refreshHypixelGuild(guildId);
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to refresh Hypixel guild' });
 		}
 
 		return {
@@ -85,7 +106,7 @@ export const actions: Actions = {
 	refreshWebsite: async ({ locals }) => {
 		const { session } = locals;
 
-		if (!session?.flags.admin) {
+		if (!session?.perms.admin) {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
@@ -146,7 +167,7 @@ export const actions: Actions = {
 	grantTestEntitlement: async ({ locals, request }) => {
 		const { access_token: token } = locals;
 
-		if (!token || !locals.session?.flags.admin) {
+		if (!token || !locals.session?.perms.admin) {
 			return fail(401, { error: 'Unauthorized' });
 		}
 
@@ -170,7 +191,7 @@ export const actions: Actions = {
 	revokeTestEntitlement: async ({ locals, request }) => {
 		const { access_token: token } = locals;
 
-		if (!token || !locals.session?.flags.admin) {
+		if (!token || !locals.session?.perms.admin) {
 			return fail(401, { error: 'Unauthorized' });
 		}
 

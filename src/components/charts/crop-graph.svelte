@@ -54,7 +54,7 @@
 	};
 </script>
 
-<div class="m-2 h-[200px] rounded">
+<div class="m-2 h-[200px] rounded dark:scheme-dark">
 	<Chart
 		{data}
 		x="date"
@@ -116,7 +116,7 @@
 					<Tooltip.Header>
 						{tooltipFormatter.format(new Date(data.date * 1000))}
 					</Tooltip.Header>
-					<div class="">
+					<div>
 						<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
 						<p class="font-mono">{(+data.value).toLocaleString()}</p>
 						{#if pests}

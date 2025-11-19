@@ -9,7 +9,7 @@ import {
 } from '$lib/api';
 import type { Cookies } from '@sveltejs/kit';
 
-export type AuthSession = AuthSessionDto & { flags: AuthFlags };
+export type AuthSession = AuthSessionDto & { perms: AuthFlags };
 
 export interface AuthFlags {
 	admin: boolean;
@@ -102,7 +102,7 @@ function setAuthFlags(session?: AuthSessionDto): AuthSession | undefined {
 	const includesSupport = session.roles.includes('Support');
 	const includesWiki = session.roles.includes('Wiki');
 
-	newSession.flags = {
+	newSession.perms = {
 		admin: includesAdmin,
 		moderator: includesModerator || includesAdmin,
 		support: includesSupport || includesModerator || includesAdmin,

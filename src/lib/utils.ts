@@ -23,6 +23,9 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+export type Nullable<T> = { [P in keyof T]: T[P] | null };
+export type PartialNullable<T> = Partial<Nullable<T>>;
+
 type FlyAndScaleParams = {
 	y?: number;
 	x?: number;
@@ -83,7 +86,7 @@ export const pending = (node: HTMLFormElement, pending: boolean) => {
 };
 
 export function CanManageGuild(guild: Partial<AuthorizedGuildDto>, session?: App.Locals['session']) {
-	if (session?.flags?.admin) return true;
+	if (session?.perms?.admin) return true;
 	// Check if the user has the admin role
 	if (guild.guild?.adminRole && guild.member?.roles?.includes(guild.guild.adminRole)) return true;
 
@@ -162,7 +165,7 @@ export function preprocessWeightChart(data: CropCollectionsDataPointDto[]) {
 }
 
 export const EventType: Record<string, EventTypeType> = {
-	FarmingWeight: 'farming-weight',
+	FarmingWeight: 'farmingWeight',
 	Collections: 'collection',
 	Experience: 'experience',
 	Medals: 'medals',
@@ -198,3 +201,29 @@ export type PrimitiveTrAttributes = WithElementRef<HTMLAttributes<HTMLTableRowEl
 export type PrimitiveThAttributes = WithElementRef<HTMLThAttributes>;
 export type PrimitiveTableSectionAttributes = WithElementRef<HTMLAttributes<HTMLTableSectionElement>>;
 export type PrimitiveImgAttributes = WithElementRef<HTMLImgAttributes>;
+
+type Primitive = string | number | boolean | bigint | symbol | undefined | null;
+
+export type DeepNullable<T> = T extends Primitive
+	? T | null
+	: T extends Array<infer U>
+		? Array<DeepNullable<U> | null>
+		: T extends object
+			? { [P in keyof T]: DeepNullable<T[P]> | null }
+			: T | null;
+
+export type DeepPartial<T> = T extends Primitive
+	? T
+	: T extends Array<infer U>
+		? Array<DeepPartial<U>>
+		: T extends object
+			? { [P in keyof T]?: DeepPartial<T[P]> }
+			: T;
+
+export type DeepPartialNullable<T> = T extends Primitive
+	? T | null
+	: T extends Array<infer U>
+		? Array<DeepPartialNullable<U> | null>
+		: T extends object
+			? { [P in keyof T]?: DeepPartialNullable<T[P]> | null }
+			: T | null;

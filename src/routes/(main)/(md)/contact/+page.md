@@ -2,7 +2,6 @@
 title: Contact Us
 description: How to contact the Elite team.
 lastUpdated: 2025-09-15
-blueprint: page
 ---
 
 # Contact Us
@@ -23,7 +22,7 @@ being taken.
 
 You can ask questions about farming or Hypixel in the [community Discord server](/discord). Do not contact us directly with questions like these.
 
-## Email Contact
+## Legal Contact
 
 For business or legal inquiries, please email [contact@elitebot.dev](mailto:contact@elitebot.dev).
 Any other inquiries may be ignored, and should instead be directed to the [support Discord server](/support).

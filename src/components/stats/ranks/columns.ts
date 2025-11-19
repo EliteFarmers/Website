@@ -1,13 +1,14 @@
 import type { LeaderboardRanksResponse } from '$lib/api';
 import { renderComponent } from '$ui/data-table';
 import Calendar from '@lucide/svelte/icons/calendar';
+import Hourglass from '@lucide/svelte/icons/hourglass';
 import SquareActivity from '@lucide/svelte/icons/square-activity';
 import type { ColumnDef } from '@tanstack/table-core';
 import DataTableColumnHeader from './data-table-column-header.svelte';
 
 export type LbRanking = LeaderboardRanksResponse['ranks'][number] & {
 	id: string;
-	interval: 'none' | 'monthly';
+	interval: 'none' | 'monthly' | 'weekly';
 };
 export type LbList = (typeof import('$lib/servercache').cache)['leaderboards'];
 
@@ -69,50 +70,6 @@ export const getColumns = (leaderboards?: LbList) => {
 				return value.includes(leaderboard?.category || 'General');
 			},
 		},
-		// {
-		// 	accessorKey: 'costper',
-		// 	accessorFn: (row) => {
-		// 		if (costFn) {
-		// 			const increase = row.increase || row.max || 0;
-		// 			return increase > 0 ? Math.round(costFn(row, itemsLookup) / increase) : 0;
-		// 		}
-		// 		return 0;
-		// 	},
-		// 	cell: ({ row }) => {
-		// 		return renderComponent(UpgradeCostPer, {
-		// 			upgrade: row.original,
-		// 			totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
-		// 		});
-		// 	},
-		// 	enableSorting: true,
-		// 	header: ({ column }) =>
-		// 		renderComponent(DataTableColumnHeader<FortuneUpgrade, unknown>, {
-		// 			column,
-		// 			title: 'Cost Per Fortune',
-		// 		}),
-		// },
-		// {
-		// 	accessorKey: 'cost',
-		// 	header: ({ column }) =>
-		// 		renderComponent(DataTableColumnHeader<FortuneUpgrade, unknown>, {
-		// 			column,
-		// 			title: 'Cost',
-		// 			class: 'justify-end',
-		// 		}),
-		// 	cell: ({ row }) =>
-		// 		renderComponent(UpgradeCost, {
-		// 			upgrade: row.original,
-		// 			items: itemsLookup,
-		// 			totalCost: costFn ? costFn(row.original, itemsLookup) : 0,
-		// 		}),
-		// 	enableSorting: true,
-		// 	accessorFn: (row) => {
-		// 		if (costFn) {
-		// 			return costFn(row, itemsLookup);
-		// 		}
-		// 		return 0;
-		// 	},
-		// },
 	] as ColumnDef<LbRanking>[];
 };
 
@@ -126,5 +83,10 @@ export const types = [
 		value: 'monthly',
 		label: 'Monthly',
 		icon: Calendar,
+	},
+	{
+		value: 'weekly',
+		label: 'Weekly',
+		icon: Hourglass,
 	},
 ];

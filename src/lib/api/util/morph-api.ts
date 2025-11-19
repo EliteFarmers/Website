@@ -13,12 +13,26 @@ async function removeReturnTypesFromFile(filePath: string) {
 
 	// Run a regex replacement on filePath.replace('.ts', '.zod.ts') to change all zod.boolean() to zod.coerce.boolean<boolean>()
 	if (filePath.includes('.zod.')) {
-		const zodFileContent = await project.getFileSystem().readFile(filePath);
-		const updatedZodFileContent = zodFileContent.replace(/zod\.boolean\(\)/g, 'zod.coerce.boolean<boolean>()');
-		await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
-		console.log(`✅ Updated zod.boolean() to zod.coerce.boolean<boolean>() in ${path.basename(filePath)}.`);
+		if (filePath.includes('Cms')) {
+			const zodFileContent = await project.getFileSystem().readFile(filePath);
+			const updatedZodFileContent = zodFileContent.replace(/\.optional\(\)/g, '.optional().nullable()');
+			await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
+			console.log(`Updated .optional() to .optional().nullable() in ${path.basename(filePath)}.`);
+		} else {
+			const zodFileContent = await project.getFileSystem().readFile(filePath);
+			const updatedZodFileContent = zodFileContent.replace(/zod\.boolean\(\)/g, 'zod.coerce.boolean<boolean>()');
+			await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
+			console.log(`Updated zod.boolean() to zod.coerce.boolean<boolean>() in ${path.basename(filePath)}.`);
+		}
+
 		return;
 	}
+
+	// Find and replace text
+	const cmsFileContent = await project.getFileSystem().readFile(filePath);
+	const updatedCmsFileContent = cmsFileContent.replace('../custom-fetch-placeholder', '../custom-fetch');
+	await project.getFileSystem().writeFile(filePath, updatedCmsFileContent);
+	console.log(`Replaced custom-fetch-placeholder import in ${path.basename(filePath)}.`);
 
 	const sourceFile = project.addSourceFileAtPath(filePath);
 
@@ -45,7 +59,7 @@ async function removeReturnTypesFromFile(filePath: string) {
 		namedImports: ['ELITE_API_URL'],
 		moduleSpecifier: '$env/static/private',
 	});
-	console.log(`Added import for ELITE_API_URL.`);
+	console.log(`Added import for api URL.`);
 
 	await sourceFile.save();
 

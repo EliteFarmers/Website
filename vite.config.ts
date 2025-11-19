@@ -10,6 +10,7 @@ const plugins = [
 		? sentrySvelteKit({
 				org: 'kaeso',
 				project: 'elite-website',
+				authToken: process.env.SENTRY_AUTH_TOKEN,
 			})
 		: null,
 	tailwindcss(),

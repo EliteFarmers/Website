@@ -2,7 +2,7 @@ import { getRecordsInYear } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ parent, params, setHeaders }) => {
+export const load = (async ({ parent, params }) => {
 	await parent();
 
 	const { year } = params;
@@ -12,10 +12,6 @@ export const load = (async ({ parent, params, setHeaders }) => {
 	if (!data?.crops || !response.ok) {
 		throw error(404, 'Contest records not found!');
 	}
-
-	setHeaders({
-		'Cache-Control': 'public, max-age=3600',
-	});
 
 	return {
 		year: +year,

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Discord from '../player/discord.svelte';
+	import GuildMembership from '../player/guild-membership.svelte';
 	import Profiles from '../player/profiles.svelte';
 	import Skyblocklevel from '../player/skyblocklevel.svelte';
 	import ExternalLinks from './external-links.svelte';
@@ -12,6 +13,7 @@
 	{@render children?.()}
 	<Profiles />
 	<Skyblocklevel />
+	<GuildMembership />
 	<Discord />
 	<ExternalLinks />
 </div>

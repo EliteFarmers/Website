@@ -16,7 +16,7 @@ export default defineConfig({
 				useBigInt: true,
 				transformer: './src/lib/api/util/fetch-transformer.ts',
 				mutator: {
-					path: './src/lib/api/custom-fetch.ts',
+					path: './src/lib/api/custom-fetch-placeholder.ts',
 					name: 'customFetch',
 				},
 			},
@@ -45,6 +45,23 @@ export default defineConfig({
 		hooks: {
 			afterAllFilesWrite: {
 				command: 'pnpm postprocess-zod',
+				injectGeneratedDirsAndFiles: false,
+			},
+		},
+	},
+	strapi: {
+		input: {
+			target: process.env.PUBLIC_STRAPI_API_URL + '/openapi.json',
+		},
+		output: {
+			client: 'zod',
+			target: './src/lib/api/client',
+			fileExtension: '.zod.ts',
+			namingConvention: 'PascalCase',
+		},
+		hooks: {
+			afterAllFilesWrite: {
+				command: 'pnpm postprocess-cms',
 				injectGeneratedDirsAndFiles: false,
 			},
 		},

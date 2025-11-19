@@ -1,11 +1,14 @@
 <script lang="ts">
+	import FooterAd from '$comp/ads/footer-ad.svelte';
 	import Footer from '$comp/footer/footer.svelte';
 	import Announcements from '$comp/header/announcements.svelte';
 	import Header from '$comp/header/header.svelte';
 	import AppSidebar from '$comp/sidebar/app-sidebar.svelte';
 	import FavoritedLinks from '$comp/sidebar/favorited-links.svelte';
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
+	import FooterItems from '$comp/siderail/footer-items.svelte';
 	import Siderail from '$comp/siderail/siderail.svelte';
+	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import * as Sidebar from '$ui/sidebar';
 	import type { LayoutData } from './$types';
 	import Content from './content.svelte';
@@ -16,28 +19,31 @@
 	}
 
 	let { children, data }: Props = $props();
+
+	const adCtx = getAdCtx();
 </script>
 
 <Sidebar.Provider open={data.sidebar}>
-	<Sidebar.Root collapsible="icon" class="z-50">
+	<Sidebar.Root collapsible="icon" class="z-50" style="margin-bottom: {adCtx.bottomAnchorSize.height}px;">
 		<AppSidebar>
 			<FavoritedLinks />
 			<UpcomingEvents events={data.cache?.events} />
 		</AppSidebar>
 	</Sidebar.Root>
 
-	<div class="flex-1 overflow-y-auto">
+	<div class="m-0 flex-1 p-0">
 		<Sidebar.Inset>
 			<Header />
 			<Announcements />
 
 			<Content>
 				{@render children?.()}
+				<FooterAd />
+				<FooterItems />
 				{#snippet sidebar()}
 					<Siderail />
 				{/snippet}
 			</Content>
-
 			<Footer />
 		</Sidebar.Inset>
 	</div>

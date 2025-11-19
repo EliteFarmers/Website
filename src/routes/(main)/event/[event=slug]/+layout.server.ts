@@ -21,7 +21,7 @@ export const load = (async ({ params, url, locals, depends }) => {
 		throw redirect(307, `/event/${properUrl}`);
 	}
 
-	const { data: guild } = await getPublicGuild(BigInt(eventData.guildId)).catch(() => ({ data: undefined }));
+	const { data: guild } = await getPublicGuild(eventData.guildId).catch(() => ({ data: undefined }));
 
 	const { data: self } = locals.session?.uuid
 		? await getEventMember(eventData.id as unknown as number, locals.session?.uuid).catch(() => ({
