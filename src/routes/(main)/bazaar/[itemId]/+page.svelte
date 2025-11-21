@@ -1,71 +1,79 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import FormattedText from '$comp/items/formatted-text.svelte';
-	import ItemDialog from '$comp/items/item-dialog.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
-	import AuctionItemGraph from '$comp/resources/auctions/auction-item-graph.svelte';
-	import type { ItemDto } from '$lib/api';
-	import { getAuctionItem, getItemEndedAuctions } from '$lib/remote';
+	import BazaarItemGraph from '$comp/resources/bazaar/bazaar-item-graph.svelte';
+	import { getBazaarItem } from '$lib/remote/bazaar.remote';
 	import { getItemRelated } from '$lib/remote/items.remote';
-	import { ScrollArea } from '$ui/scroll-area';
-	import * as Select from '$ui/select';
-	import EndedAuctionSkeleton from '../ended-auction-skeleton.svelte';
-	import EndedAuction from '../ended-auction.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
-	const item = $derived(data.item.item);
-	const itemData = $derived(getAuctionItem(page.params.itemId ?? ''));
-	const endedAuctions = $derived(getItemEndedAuctions(page.params.itemId ?? ''));
-	const related = $derived(getItemRelated(page.params.itemId ?? ''));
-
-	let selectedVariant = $state<string | undefined>(undefined);
-	let selectedItem = $state<ItemDto | null>(null);
-	let open = $state(false);
+	const item = $derived(data.item);
+	const itemData = getBazaarItem(page.params.itemId ?? '');
+	const related = getItemRelated(page.params.itemId ?? '');
 </script>
-
-<ItemDialog bind:open bind:selectedItem />
 
 <main class="flex w-full max-w-5xl flex-col items-start gap-8 py-8">
 	<div class="flex w-full flex-row items-center gap-4">
-		<ItemRender skyblockId={item?.id ?? ''} class="size-16" />
-		<div class="flex flex-col">
-			<h1 class="text-3xl font-bold"><FormattedText text={item?.name ?? ''} /></h1>
-			<p class="text-muted-foreground">{item?.category ?? 'Unknown Category'}</p>
-		</div>
+		{#if item}
+			<ItemRender skyblockId={item.id} class="size-16" />
+			<div class="flex flex-col">
+				<h1 class="text-3xl font-bold"><FormattedText text={item.name ?? ''} /></h1>
+				<p class="text-muted-foreground">Bazaar Product</p>
+			</div>
+		{:else}
+			<div class="bg-muted size-16 animate-pulse rounded-md"></div>
+			<div class="flex flex-col gap-2">
+				<div class="bg-muted h-8 w-48 animate-pulse rounded-md"></div>
+				<div class="bg-muted h-4 w-24 animate-pulse rounded-md"></div>
+			</div>
+		{/if}
 	</div>
 
 	{#await itemData}
 		<div class="flex h-[400px] w-full items-center justify-center">Loading item data...</div>
 	{:then data}
+		{@const buyVolume = data.product.orders?.buySummary?.reduce((acc, order) => acc + order.amount, 0) ?? 0}
+		{@const sellVolume = data.product.orders?.sellSummary?.reduce((acc, order) => acc + order.amount, 0) ?? 0}
 		<div class="flex w-full flex-col gap-4">
-			<div class="flex flex-row items-center justify-between">
-				<h2 class="text-xl font-semibold">Price History</h2>
-				{#if data.variants.length > 1}
-					<Select.Root
-						type="single"
-						value={selectedVariant ?? data.variants[0]?.variantKey ?? 'default'}
-						onValueChange={(v) => (selectedVariant = v)}
-					>
-						<Select.Trigger class="w-[200px]">
-							{data.variants.find(
-								(v) => (v.variantKey ?? 'default') === (selectedVariant ?? data.variants[0]?.variantKey)
-							)?.variantKey ?? 'Default'}
-						</Select.Trigger>
-						<Select.Content>
-							{#each data.variants as variant (variant.variantKey)}
-								<Select.Item
-									value={variant.variantKey ?? 'default'}
-									label={variant.variantKey ?? 'Default'}
-								/>
-							{/each}
-						</Select.Content>
-					</Select.Root>
-				{/if}
-			</div>
+			<h2 class="text-xl font-semibold">Price History</h2>
+			{#if data.history}
+				<BazaarItemGraph history={data.history} />
+			{:else}
+				<div class="text-muted-foreground flex h-[300px] w-full items-center justify-center">
+					No price history available.
+				</div>
+			{/if}
 
-			<AuctionItemGraph histories={data.history} variant={selectedVariant} />
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div class="bg-card rounded-lg border p-4">
+					<h3 class="mb-4 font-semibold">Buy Order</h3>
+					<div class="flex flex-col gap-2">
+						<div class="flex justify-between">
+							<span class="text-muted-foreground">Price</span>
+							<span class="font-bold">{data.product.buyOrder?.toLocaleString()}</span>
+						</div>
+						<div class="flex justify-between">
+							<span class="text-muted-foreground">Volume</span>
+							<span class="font-bold">{buyVolume.toLocaleString()}</span>
+						</div>
+					</div>
+				</div>
+				<div class="bg-card rounded-lg border p-4">
+					<h3 class="mb-4 font-semibold">Sell Order</h3>
+					<div class="flex flex-col gap-2">
+						<div class="flex justify-between">
+							<span class="text-muted-foreground">Price</span>
+							<span class="font-bold">{data.product.sellOrder?.toLocaleString()}</span>
+						</div>
+						<div class="flex justify-between">
+							<span class="text-muted-foreground">Volume</span>
+							<span class="font-bold">{sellVolume.toLocaleString()}</span>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
 				<div class="bg-card rounded-lg border p-4">
@@ -122,7 +130,7 @@
 						<div class="flex flex-wrap gap-2">
 							{#each data?.similar ?? [] as item (item.id)}
 								<a
-									href="/auctions/{item.id}"
+									href="/bazaar/{item.id}"
 									class="bg-muted hover:bg-muted/80 flex items-center justify-center rounded-md p-1 transition-colors"
 									title={item.name ?? item.id}
 								>
@@ -139,33 +147,6 @@
 				<div class="bg-muted/50 flex items-center justify-center rounded-lg border border-dashed p-4">
 					<span class="text-muted-foreground text-sm">Ad Placement</span>
 				</div>
-			</div>
-
-			<div class="flex flex-col gap-4">
-				<h2 class="text-xl font-semibold">Recently Ended Auctions</h2>
-				<ScrollArea class="flex w-full rounded-md border" orientation="horizontal">
-					<div class="flex flex-row items-center gap-2 p-4">
-						{#await endedAuctions}
-							{#each { length: 5 }}
-								<EndedAuctionSkeleton />
-							{/each}
-						{:then auctions}
-							{#each auctions ?? [] as auction (auction.auctionId)}
-								<EndedAuction
-									{auction}
-									onclick={() => {
-										selectedItem = auction.item ?? null;
-										open = true;
-									}}
-								/>
-							{:else}
-								<p class="text-muted-foreground">No recently ended auctions found.</p>
-							{/each}
-						{:catch}
-							<p class="text-destructive">Error loading ended auctions.</p>
-						{/await}
-					</div>
-				</ScrollArea>
 			</div>
 		</div>
 	{:catch error}

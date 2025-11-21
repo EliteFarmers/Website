@@ -6,12 +6,14 @@
 
 	interface Props {
 		histories: Record<string, GetAuctionPriceHistoryResponse | undefined>;
+		variant?: string;
 	}
 
-	let { histories }: Props = $props();
+	let { histories, variant }: Props = $props();
 
 	const data = $derived.by(() => {
-		return histories['default']?.history ?? histories[Object.keys(histories)[0]]?.history ?? [];
+		const key = variant ?? 'default';
+		return histories[key]?.history ?? histories[Object.keys(histories)[0]]?.history ?? [];
 	});
 </script>
 

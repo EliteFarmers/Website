@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import ItemDialog from '$comp/items/item-dialog.svelte';
+	import PopularAuctionCard from '$comp/resources/auctions/popular-auction-card.svelte';
 	import ItemSearch from '$comp/resources/item-search.svelte';
 	import type { ItemDto } from '$lib/api';
 	import { getAuctions, getAuctionsOverview } from '$lib/remote/auctions.remote';
@@ -52,12 +54,11 @@
 					<EndedAuctionSkeleton />
 				{/each}
 			{:then data}
-				{#each data?.items ?? [] as auction, i (i)}
-					<EndedAuction
-						{auction}
+				{#each data?.items ?? [] as item, i (i)}
+					<PopularAuctionCard
+						{item}
 						onclick={() => {
-							selectedItem = auction.item ?? null;
-							open = true;
+							goto(`/auctions/${item.skyblockId}`);
 						}}
 					/>
 				{/each}

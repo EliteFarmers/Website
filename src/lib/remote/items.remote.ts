@@ -1,5 +1,5 @@
 import { query } from '$app/server';
-import { searchAuctionItems } from '$lib/api';
+import { getItemRelated as getItemRelatedApi, searchAuctionItems } from '$lib/api';
 import type { RatesItemPriceData } from '$lib/api/elite';
 import { cache } from '$lib/servercache';
 import z from 'zod';
@@ -59,4 +59,9 @@ export const searchItems = query(z.string(), async (search) => {
 	const response = await searchAuctionItems({ query: search, limit: 10 });
 
 	return response.data?.results ?? [];
+});
+
+export const getItemRelated = query(z.string(), async (itemId: string) => {
+	const response = await getItemRelatedApi(itemId);
+	return response.data;
 });

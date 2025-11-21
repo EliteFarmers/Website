@@ -2,11 +2,11 @@
 	import FormattedText from '$comp/items/formatted-text.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import type { EndedAuctionDto } from '$lib/api';
+	import type { AuctionDto } from '$lib/api';
 
 	interface Props {
-		auction: EndedAuctionDto;
-		onclick?: (auction: EndedAuctionDto) => void;
+		auction: AuctionDto;
+		onclick?: (auction: AuctionDto) => void;
 	}
 
 	let { auction, onclick }: Props = $props();
@@ -21,12 +21,13 @@
 			skyblockId={auction.item?.petInfo?.type ?? auction.skyblockId ?? ''}
 			class="size-10"
 			pet={auction.item?.petInfo !== undefined}
+			count={auction.item?.count}
 		/>
 		<p class="text-left leading-none font-semibold"><FormattedText text={auction.item?.name ?? ''} /></p>
 	</button>
 	<div class="p-1">
 		<p class="text-muted-foreground text-sm">
-			Ended at {new Date(Number(auction.timestamp)).toLocaleString()}
+			Ended at {new Date(Number(auction.soldAt)).toLocaleString()}
 		</p>
 		<p class="my-1"><strong>{auction.price.toLocaleString()} coins</strong></p>
 	</div>

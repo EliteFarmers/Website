@@ -8,9 +8,10 @@
 		pet?: boolean;
 		packs?: boolean;
 		class?: string;
+		count?: number;
 	}
 
-	let { skyblockId, pet = false, packs = true, class: customClass }: Props = $props();
+	let { skyblockId, pet = false, packs = true, class: customClass, count }: Props = $props();
 	let errored = $state(false);
 	let loading = $state(true);
 
@@ -33,4 +34,10 @@
 			loading = false;
 		}}
 	/>
+
+	{#if count !== undefined}
+		<div class="bg-opacity-50 absolute right-0 bottom-0 rounded-tl-md bg-black px-1 text-xs text-white">
+			x{count}
+		</div>
+	{/if}
 </div>

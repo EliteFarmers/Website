@@ -3,6 +3,7 @@ import {
 	getAuctionHouseOverview,
 	getAuctionPriceHistory,
 	getAuctionVariants,
+	getItemEndedAuctions as getItemEndedAuctionsApi,
 	getPopularAuctions,
 	type GetAuctionPriceHistoryResponse,
 } from '$lib/api';
@@ -15,6 +16,11 @@ export const getAuctionsOverview = query(async () => {
 
 export const getAuctions = query(async () => {
 	const response = await getPopularAuctions({ timespan: '1d', page: 0, pageSize: 20 });
+	return response.data;
+});
+
+export const getItemEndedAuctions = query(z.string(), async (itemId: string) => {
+	const response = await getItemEndedAuctionsApi(itemId, { limit: 10 });
 	return response.data;
 });
 
