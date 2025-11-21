@@ -13,7 +13,7 @@
 
 <div class="bg-card relative flex h-52 w-64 flex-col rounded-lg border p-3 transition-shadow hover:shadow-lg">
 	<button
-		class="dark bg-muted flex w-full flex-row items-center gap-2 rounded-md p-2"
+		class="dark text-primary bg-muted flex w-full flex-row items-center gap-2 rounded-md p-2"
 		onclick={() => onclick?.(item)}
 	>
 		<ItemRender skyblockId={item.skyblockId} class="size-10" />

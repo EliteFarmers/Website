@@ -35,9 +35,9 @@
 		}}
 	/>
 
-	{#if count !== undefined}
-		<div class="bg-opacity-50 absolute right-0 bottom-0 rounded-tl-md bg-black px-1 text-xs text-white">
-			x{count}
+	{#if count !== undefined && count > 1}
+		<div class="bg-opacity-50 absolute right-0.5 bottom-0.5 rounded-md bg-black/60 px-1 text-xs text-white">
+			{count}
 		</div>
 	{/if}
 </div>

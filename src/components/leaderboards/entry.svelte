@@ -67,6 +67,7 @@
 		return styles;
 	}
 
+	const hasStyle = $derived(style?.background?.imageUrl || entry.meta?.leaderboard?.styleId);
 	const nameStyles = $derived(getStyles(style?.name));
 	const rankStyles = $derived(getStyles(style?.rank));
 	const subtitleStyles = $derived(getStyles(style?.subtitle));
@@ -78,7 +79,7 @@
 	style="justify-content: {style?.background?.align ?? 'center'};"
 	data-sveltekit-preload-data="tap"
 >
-	{#if style?.background?.imageUrl || entry.meta?.leaderboard?.styleId}
+	{#if hasStyle}
 		{@const img = style?.background?.imageUrl}
 		<!-- svelte-ignore a11y_missing_attribute -->
 		<img
@@ -94,7 +95,7 @@
 			: `/@${encodeURIComponent(pageLink ?? '')}/${encodeURIComponent(profileLink ?? '')}${leaderboard?.subpage ?? ''}`}
 		class="absolute top-0 right-0 bottom-0 left-0 z-10 flex h-full w-full max-w-xl items-center py-1 align-middle sm:p-1 {highlight
 			? 'border-completed'
-			: ''} rounded-md {style ? 'text-shadow-md/40' : ''}"
+			: ''} rounded-md {style ? 'text-shadow-md/40' : ''} {hasStyle ? 'dark text-primary' : ''}"
 		style={customStyles}
 	>
 		<div class="flex flex-1 items-center justify-between gap-0 md:gap-2">

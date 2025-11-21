@@ -65,7 +65,7 @@
 						<UserIcon user={session} class="aspect-square" />
 					</Avatar.Root>
 					<div class="grid flex-1 text-left text-sm leading-tight">
-						<span class="truncate font-semibold">{session.ign || session.username}</span>
+						<span class="truncate font-semibold">{session.fIgn || session.username}</span>
 						{#if session.ign && session.username}
 							<span class="truncate text-xs">{session.username}</span>
 						{/if}

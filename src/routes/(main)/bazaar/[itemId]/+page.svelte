@@ -3,6 +3,7 @@
 	import FormattedText from '$comp/items/formatted-text.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import BazaarItemGraph from '$comp/resources/bazaar/bazaar-item-graph.svelte';
+	import { formatItemIdToName } from '$lib/format';
 	import { getBazaarItem } from '$lib/remote/bazaar.remote';
 	import { getItemRelated } from '$lib/remote/items.remote';
 	import type { PageProps } from './$types';
@@ -19,7 +20,9 @@
 		{#if item}
 			<ItemRender skyblockId={item.id} class="size-16" />
 			<div class="flex flex-col">
-				<h1 class="text-3xl font-bold"><FormattedText text={item.name ?? ''} /></h1>
+				<h1 class="text-3xl font-bold">
+					<FormattedText text={item.name ?? formatItemIdToName(item.id)} />
+				</h1>
 				<p class="text-muted-foreground">Bazaar Product</p>
 			</div>
 		{:else}
@@ -41,7 +44,9 @@
 			{#if data.history}
 				<BazaarItemGraph history={data.history} />
 			{:else}
-				<div class="text-muted-foreground flex h-[300px] w-full items-center justify-center">
+				<div
+					class="text-muted-foreground flex h-[300px] w-full items-center justify-center rounded-lg border border-dashed"
+				>
 					No price history available.
 				</div>
 			{/if}

@@ -6,15 +6,16 @@
 	interface Props {
 		timestamp: number;
 		class?: string;
+		format?: string;
 	}
 
-	let { timestamp, class: className }: Props = $props();
+	let { timestamp, class: className, format = 'MMMM D, YYYY' }: Props = $props();
 </script>
 
 <PopoverMobile class={cn('inline-block w-fit', className)} triggerClass="w-fit">
 	{#snippet trigger()}
 		<span class="bg-muted max-w-fit rounded px-1">
-			<Time {timestamp} format="MMMM D, YYYY" />
+			<Time {timestamp} {format} />
 		</span>
 	{/snippet}
 	<div class="flex flex-col items-center gap-4 p-2">

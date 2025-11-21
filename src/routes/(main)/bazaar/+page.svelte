@@ -20,7 +20,7 @@
 			.filter((p) => {
 				if (!search) return true;
 				return (
-					(p.name ?? '').toLowerCase().includes(search.toLowerCase()) ||
+					(p.name ?? p.productId).toLowerCase().includes(search.toLowerCase()) ||
 					p.productId.toLowerCase().includes(search.toLowerCase())
 				);
 			})

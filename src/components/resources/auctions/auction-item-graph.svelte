@@ -15,6 +15,15 @@
 		const key = variant ?? 'default';
 		return histories[key]?.history ?? histories[Object.keys(histories)[0]]?.history ?? [];
 	});
+
+	function coinsFormatter(value: number): string {
+		return (
+			(Math.floor(value * 100) / 100).toLocaleString(undefined, {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+			}) + ' coins'
+		);
+	}
 </script>
 
 <!-- <div class="h-[300px] rounded-sm border p-4">
@@ -73,12 +82,12 @@
 		{#snippet tooltip({ context })}
 			<Tooltip.Root {context}>
 				{#snippet children({ data })}
-					<Tooltip.Header value={data.timestamp} format="hour" />
+					<Tooltip.Header value={data.timestamp} format="daytime" />
 					<Tooltip.List>
-						<Tooltip.Item label="Lowest BIN" value={data.lowestBinPrice} format="currency" />
-						<Tooltip.Item label="Average BIN" value={data.averageBinPrice} format="currency" />
-						<Tooltip.Item label="Lowest Sale" value={data.lowestSalePrice} format="currency" />
-						<Tooltip.Item label="Average Sale" value={data.averageSalePrice} format="currency" />
+						<Tooltip.Item label="Lowest BIN" value={data.lowestBinPrice} format={coinsFormatter} />
+						<Tooltip.Item label="Average BIN" value={data.averageBinPrice} format={coinsFormatter} />
+						<Tooltip.Item label="Lowest Sale" value={data.lowestSalePrice} format={coinsFormatter} />
+						<Tooltip.Item label="Average Sale" value={data.averageSalePrice} format={coinsFormatter} />
 						<Tooltip.Item label="Volume" value={data.binListings} format="integer" />
 					</Tooltip.List>
 				{/snippet}

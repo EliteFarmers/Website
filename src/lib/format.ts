@@ -358,3 +358,11 @@ export function getLeaderboardFormatOptions(leaderboard?: LeaderboardInfo): Intl
 
 	return {};
 }
+
+export function formatItemIdToName(itemId: string): string {
+	return itemId
+		.toLowerCase()
+		.split('_')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+}
