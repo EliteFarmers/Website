@@ -10,5 +10,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 import type { AuctionDto } from './AuctionDto';
 
 export interface AuctionOverviewResponse {
+	new: AuctionDto[];
 	ended: AuctionDto[];
 }

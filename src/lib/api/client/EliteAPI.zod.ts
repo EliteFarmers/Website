@@ -9978,6 +9978,126 @@ export const zodGetAuctionResponse = zod.object({
  * @summary Get Auction House Overview
  */
 export const zodGetAuctionHouseOverviewResponse = zod.object({
+	new: zod.array(
+		zod.object({
+			auctionId: zod.string(),
+			sellerUuid: zod.string(),
+			sellerProfileUuid: zod.string(),
+			seller: zod
+				.object({
+					id: zod.string(),
+					name: zod.string(),
+					formattedName: zod.string(),
+				})
+				.nullish(),
+			buyerUuid: zod.string().nullish(),
+			buyerProfileUuid: zod.string().nullish(),
+			buyer: zod
+				.object({
+					id: zod.string(),
+					name: zod.string(),
+					formattedName: zod.string(),
+				})
+				.nullish(),
+			start: zod.number(),
+			end: zod.number(),
+			soldAt: zod.number(),
+			price: zod.number(),
+			count: zod.number(),
+			bin: zod.coerce.boolean<boolean>(),
+			skyblockId: zod.string().nullish(),
+			variantKey: zod.string(),
+			itemUuid: zod.string().nullish(),
+			item: zod
+				.object({
+					id: zod.number().describe('Old Minecraft id of the item'),
+					count: zod.number().describe('Minecraft stack count of the item'),
+					damage: zod.number().describe('Minecraft damage value of the item'),
+					skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
+					uuid: zod
+						.string()
+						.nullish()
+						.describe('Item UUID to uniquely identify a specific instance of this item'),
+					name: zod.string().nullish().describe('Item name, first line of the lore'),
+					lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
+					enchantments: zod
+						.record(zod.string(), zod.number())
+						.nullish()
+						.describe('Applied enchantments with their levels'),
+					attributes: zod
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										duration_ticks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancer_souls: zod
+								.array(
+									zod.object({
+										mob_id: zod.string().nullish(),
+										dropped_instance_id: zod.string().nullish(),
+										dropped_mode_id: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							ability_scroll: zod.array(zod.string()).nullish(),
+							inventory_data: zod.record(zod.string(), zod.unknown().nullable()).nullish(),
+						})
+						.nullish()
+						.describe('ExtraAttributes not included elsewhere'),
+					itemAttributes: zod
+						.record(zod.string(), zod.string())
+						.nullish()
+						.describe('ExtraAtrributes.Attributes for attribute shards'),
+					gems: zod
+						.record(zod.string(), zod.string().nullable())
+						.nullish()
+						.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
+					petInfo: zod
+						.object({
+							type: zod.string(),
+							active: zod.coerce.boolean<boolean>(),
+							exp: zod.number(),
+							level: zod.number(),
+							tier: zod.string(),
+							candyUsed: zod.number(),
+							heldItem: zod.string().nullish(),
+						})
+						.nullish()
+						.describe('Pet info if item is a pet'),
+					imageUrl: zod.string().nullish().describe('Image url for the item'),
+					textureId: zod
+						.string()
+						.nullish()
+						.describe('Texture id for the item, used to look up the image in our image service'),
+					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
+				})
+				.nullish(),
+			lastUpdatedAt: zod.iso.datetime({}),
+			startingBid: zod.number(),
+			highestBid: zod.number().nullish(),
+		})
+	),
 	ended: zod.array(
 		zod.object({
 			auctionId: zod.string(),
@@ -10987,11 +11107,8 @@ export const zodGetItemRelatedResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 	),
@@ -11195,11 +11312,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.unknown(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -11307,11 +11421,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.unknown(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -11501,11 +11612,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()
