@@ -8851,8 +8851,8 @@ export const zodGetProfileAuctionsResponse = zod.object({
 						formattedName: zod.string(),
 					})
 					.nullish(),
-				buyerUuid: zod.string(),
-				buyerProfileUuid: zod.string(),
+				buyerUuid: zod.string().nullish(),
+				buyerProfileUuid: zod.string().nullish(),
 				buyer: zod
 					.object({
 						id: zod.string(),
@@ -8860,7 +8860,9 @@ export const zodGetProfileAuctionsResponse = zod.object({
 						formattedName: zod.string(),
 					})
 					.nullish(),
-				timestamp: zod.number(),
+				start: zod.number(),
+				end: zod.number(),
+				soldAt: zod.number(),
 				price: zod.number(),
 				count: zod.number(),
 				bin: zod.coerce.boolean<boolean>(),
@@ -8955,6 +8957,9 @@ export const zodGetProfileAuctionsResponse = zod.object({
 							.describe('Slot identifier where the item was located, if applicable'),
 					})
 					.nullish(),
+				lastUpdatedAt: zod.iso.datetime({}),
+				startingBid: zod.number(),
+				highestBid: zod.number().nullish(),
 			})
 		)
 		.describe('Ended auctions'),
@@ -9848,7 +9853,7 @@ export const zodGetAuctionParams = zod.object({
 });
 
 export const zodGetAuctionResponse = zod.object({
-	ended: zod.object({
+	auction: zod.object({
 		auctionId: zod.string(),
 		sellerUuid: zod.string(),
 		sellerProfileUuid: zod.string(),
@@ -9859,8 +9864,8 @@ export const zodGetAuctionResponse = zod.object({
 				formattedName: zod.string(),
 			})
 			.nullish(),
-		buyerUuid: zod.string(),
-		buyerProfileUuid: zod.string(),
+		buyerUuid: zod.string().nullish(),
+		buyerProfileUuid: zod.string().nullish(),
 		buyer: zod
 			.object({
 				id: zod.string(),
@@ -9868,7 +9873,9 @@ export const zodGetAuctionResponse = zod.object({
 				formattedName: zod.string(),
 			})
 			.nullish(),
-		timestamp: zod.number(),
+		start: zod.number(),
+		end: zod.number(),
+		soldAt: zod.number(),
 		price: zod.number(),
 		count: zod.number(),
 		bin: zod.coerce.boolean<boolean>(),
@@ -9960,6 +9967,9 @@ export const zodGetAuctionResponse = zod.object({
 				slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 			})
 			.nullish(),
+		lastUpdatedAt: zod.iso.datetime({}),
+		startingBid: zod.number(),
+		highestBid: zod.number().nullish(),
 	}),
 });
 
@@ -9980,8 +9990,8 @@ export const zodGetAuctionHouseOverviewResponse = zod.object({
 					formattedName: zod.string(),
 				})
 				.nullish(),
-			buyerUuid: zod.string(),
-			buyerProfileUuid: zod.string(),
+			buyerUuid: zod.string().nullish(),
+			buyerProfileUuid: zod.string().nullish(),
 			buyer: zod
 				.object({
 					id: zod.string(),
@@ -9989,7 +9999,9 @@ export const zodGetAuctionHouseOverviewResponse = zod.object({
 					formattedName: zod.string(),
 				})
 				.nullish(),
-			timestamp: zod.number(),
+			start: zod.number(),
+			end: zod.number(),
+			soldAt: zod.number(),
 			price: zod.number(),
 			count: zod.number(),
 			bin: zod.coerce.boolean<boolean>(),
@@ -10081,6 +10093,9 @@ export const zodGetAuctionHouseOverviewResponse = zod.object({
 					slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
 				})
 				.nullish(),
+			lastUpdatedAt: zod.iso.datetime({}),
+			startingBid: zod.number(),
+			highestBid: zod.number().nullish(),
 		})
 	),
 });
@@ -10190,6 +10205,136 @@ export const zodGetAuctionVariantsResponse = zod.object({
 });
 
 /**
+ * Get recently ended auctions for a specific item and optional variant. Supports bundle: format for pets and runes.
+ * @summary Get Recently Ended Auctions for Item
+ */
+export const zodGetItemEndedAuctionsParams = zod.object({
+	skyblockId: zod.string(),
+});
+
+export const zodGetItemEndedAuctionsQueryParams = zod.object({
+	variant: zod.string().nullish(),
+	limit: zod.number(),
+});
+
+export const zodGetItemEndedAuctionsResponseItem = zod.object({
+	auctionId: zod.string(),
+	sellerUuid: zod.string(),
+	sellerProfileUuid: zod.string(),
+	seller: zod
+		.object({
+			id: zod.string(),
+			name: zod.string(),
+			formattedName: zod.string(),
+		})
+		.nullish(),
+	buyerUuid: zod.string().nullish(),
+	buyerProfileUuid: zod.string().nullish(),
+	buyer: zod
+		.object({
+			id: zod.string(),
+			name: zod.string(),
+			formattedName: zod.string(),
+		})
+		.nullish(),
+	start: zod.number(),
+	end: zod.number(),
+	soldAt: zod.number(),
+	price: zod.number(),
+	count: zod.number(),
+	bin: zod.coerce.boolean<boolean>(),
+	skyblockId: zod.string().nullish(),
+	variantKey: zod.string(),
+	itemUuid: zod.string().nullish(),
+	item: zod
+		.object({
+			id: zod.number().describe('Old Minecraft id of the item'),
+			count: zod.number().describe('Minecraft stack count of the item'),
+			damage: zod.number().describe('Minecraft damage value of the item'),
+			skyblockId: zod.string().nullish().describe('Skyblock ID of the item'),
+			uuid: zod.string().nullish().describe('Item UUID to uniquely identify a specific instance of this item'),
+			name: zod.string().nullish().describe('Item name, first line of the lore'),
+			lore: zod.array(zod.string()).nullish().describe('List of item lore in order'),
+			enchantments: zod
+				.record(zod.string(), zod.number())
+				.nullish()
+				.describe('Applied enchantments with their levels'),
+			attributes: zod
+				.object({
+					runes: zod.record(zod.string(), zod.number()).nullish(),
+					effects: zod
+						.array(
+							zod.object({
+								level: zod.number(),
+								effect: zod.string().nullish(),
+								duration_ticks: zod.number(),
+							})
+						)
+						.nullish(),
+					necromancer_souls: zod
+						.array(
+							zod.object({
+								mob_id: zod.string().nullish(),
+								dropped_instance_id: zod.string().nullish(),
+								dropped_mode_id: zod.string().nullish(),
+							})
+						)
+						.nullish(),
+					hook: zod
+						.object({
+							part: zod.string().nullish(),
+						})
+						.nullish(),
+					line: zod
+						.object({
+							part: zod.string().nullish(),
+						})
+						.nullish(),
+					sinker: zod
+						.object({
+							part: zod.string().nullish(),
+						})
+						.nullish(),
+					ability_scroll: zod.array(zod.string()).nullish(),
+					inventory_data: zod.record(zod.string(), zod.unknown().nullable()).nullish(),
+				})
+				.nullish()
+				.describe('ExtraAttributes not included elsewhere'),
+			itemAttributes: zod
+				.record(zod.string(), zod.string())
+				.nullish()
+				.describe('ExtraAtrributes.Attributes for attribute shards'),
+			gems: zod
+				.record(zod.string(), zod.string().nullable())
+				.nullish()
+				.describe('Applied gems with gem rarity, null for an unlocked gem slot without a gem'),
+			petInfo: zod
+				.object({
+					type: zod.string(),
+					active: zod.coerce.boolean<boolean>(),
+					exp: zod.number(),
+					level: zod.number(),
+					tier: zod.string(),
+					candyUsed: zod.number(),
+					heldItem: zod.string().nullish(),
+				})
+				.nullish()
+				.describe('Pet info if item is a pet'),
+			imageUrl: zod.string().nullish().describe('Image url for the item'),
+			textureId: zod
+				.string()
+				.nullish()
+				.describe('Texture id for the item, used to look up the image in our image service'),
+			slot: zod.string().nullish().describe('Slot identifier where the item was located, if applicable'),
+		})
+		.nullish(),
+	lastUpdatedAt: zod.iso.datetime({}),
+	startingBid: zod.number(),
+	highestBid: zod.number().nullish(),
+});
+export const zodGetItemEndedAuctionsResponse = zod.array(zodGetItemEndedAuctionsResponseItem);
+
+/**
  * Returns a paginated list of auction items ranked by recent trading volume.
  * @summary List Popular Auction Items
  */
@@ -10243,6 +10388,125 @@ export const zodSearchAuctionItemsResponse = zod.object({
 });
 
 /**
+ * Get overview of bazaar with top movers and most traded items.
+ * @summary Get Bazaar Overview
+ */
+export const zodGetBazaarOverviewResponse = zod.object({
+	topMovers: zod.array(
+		zod.object({
+			itemId: zod.string(),
+			name: zod.string().nullish(),
+			category: zod.string().nullish(),
+			summary: zod.object({
+				name: zod.string().nullish().describe('Name of the item if it exists.'),
+				npc: zod.number().describe('NPC sell price of the item if it exists.'),
+				sell: zod.number().describe('Instant Sell price taken directly from most recently fetched data'),
+				buy: zod.number().describe('Instant Buy price taken directly from most recently fetched data'),
+				sellOrder: zod.number().describe('Sell Order price calculated from most recently fetched data'),
+				buyOrder: zod.number().describe('Buy Order price calculated from most recently fetched data'),
+				averageSell: zod
+					.number()
+					.describe(
+						'Calculated average Instant Sell price that should be more resistant to price fluctuations'
+					),
+				averageBuy: zod
+					.number()
+					.describe(
+						'Calculated average Instant Buy price that should be more resistant to price fluctuations'
+					),
+				averageSellOrder: zod
+					.number()
+					.describe(
+						'Calculated average Sell Order price that should be more resistant to price fluctuations'
+					),
+				averageBuyOrder: zod
+					.number()
+					.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+				orders: zod
+					.object({
+						sellSummary: zod
+							.array(
+								zod.object({
+									amount: zod.number(),
+									pricePerUnit: zod.number(),
+									orders: zod.number(),
+								})
+							)
+							.nullish(),
+						buySummary: zod
+							.array(
+								zod.object({
+									amount: zod.number(),
+									pricePerUnit: zod.number(),
+									orders: zod.number(),
+								})
+							)
+							.nullish(),
+					})
+					.nullish()
+					.describe('Current orders in the bazaar for this item if they exist.'),
+			}),
+		})
+	),
+	mostTraded: zod.array(
+		zod.object({
+			itemId: zod.string(),
+			name: zod.string().nullish(),
+			category: zod.string().nullish(),
+			summary: zod.object({
+				name: zod.string().nullish().describe('Name of the item if it exists.'),
+				npc: zod.number().describe('NPC sell price of the item if it exists.'),
+				sell: zod.number().describe('Instant Sell price taken directly from most recently fetched data'),
+				buy: zod.number().describe('Instant Buy price taken directly from most recently fetched data'),
+				sellOrder: zod.number().describe('Sell Order price calculated from most recently fetched data'),
+				buyOrder: zod.number().describe('Buy Order price calculated from most recently fetched data'),
+				averageSell: zod
+					.number()
+					.describe(
+						'Calculated average Instant Sell price that should be more resistant to price fluctuations'
+					),
+				averageBuy: zod
+					.number()
+					.describe(
+						'Calculated average Instant Buy price that should be more resistant to price fluctuations'
+					),
+				averageSellOrder: zod
+					.number()
+					.describe(
+						'Calculated average Sell Order price that should be more resistant to price fluctuations'
+					),
+				averageBuyOrder: zod
+					.number()
+					.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+				orders: zod
+					.object({
+						sellSummary: zod
+							.array(
+								zod.object({
+									amount: zod.number(),
+									pricePerUnit: zod.number(),
+									orders: zod.number(),
+								})
+							)
+							.nullish(),
+						buySummary: zod
+							.array(
+								zod.object({
+									amount: zod.number(),
+									pricePerUnit: zod.number(),
+									orders: zod.number(),
+								})
+							)
+							.nullish(),
+					})
+					.nullish()
+					.describe('Current orders in the bazaar for this item if they exist.'),
+			}),
+		})
+	),
+});
+
+/**
  * Get a specific bazaar product and it's npc price (if it exists)
  * @summary Get Bazaar Product
  */
@@ -10271,6 +10535,29 @@ export const zodGetBazaarProductResponse = zod.object({
 		averageBuyOrder: zod
 			.number()
 			.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+		orders: zod
+			.object({
+				sellSummary: zod
+					.array(
+						zod.object({
+							amount: zod.number(),
+							pricePerUnit: zod.number(),
+							orders: zod.number(),
+						})
+					)
+					.nullish(),
+				buySummary: zod
+					.array(
+						zod.object({
+							amount: zod.number(),
+							pricePerUnit: zod.number(),
+							orders: zod.number(),
+						})
+					)
+					.nullish(),
+			})
+			.nullish()
+			.describe('Current orders in the bazaar for this item if they exist.'),
 	}),
 });
 
@@ -10307,6 +10594,29 @@ export const zodGetBazaarProductHistoryResponse = zod.object({
 		averageBuyOrder: zod
 			.number()
 			.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+		orders: zod
+			.object({
+				sellSummary: zod
+					.array(
+						zod.object({
+							amount: zod.number(),
+							pricePerUnit: zod.number(),
+							orders: zod.number(),
+						})
+					)
+					.nullish(),
+				buySummary: zod
+					.array(
+						zod.object({
+							amount: zod.number(),
+							pricePerUnit: zod.number(),
+							orders: zod.number(),
+						})
+					)
+					.nullish(),
+			})
+			.nullish()
+			.describe('Current orders in the bazaar for this item if they exist.'),
 	}),
 	history: zod.array(
 		zod.object({
@@ -10345,6 +10655,98 @@ export const zodGetBazaarProductsResponse = zod.object({
 			averageBuyOrder: zod
 				.number()
 				.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+			orders: zod
+				.object({
+					sellSummary: zod
+						.array(
+							zod.object({
+								amount: zod.number(),
+								pricePerUnit: zod.number(),
+								orders: zod.number(),
+							})
+						)
+						.nullish(),
+					buySummary: zod
+						.array(
+							zod.object({
+								amount: zod.number(),
+								pricePerUnit: zod.number(),
+								orders: zod.number(),
+							})
+						)
+						.nullish(),
+				})
+				.nullish()
+				.describe('Current orders in the bazaar for this item if they exist.'),
+		})
+	),
+});
+
+/**
+ * Search bazaar products by name or category. Returns all products if no filters provided.
+ * @summary Search Bazaar Products
+ */
+export const zodSearchBazaarProductsQueryParams = zod.object({
+	query: zod.string().nullish(),
+	category: zod.string().nullish(),
+	limit: zod.number(),
+});
+
+export const zodSearchBazaarProductsResponse = zod.object({
+	products: zod.array(
+		zod.object({
+			itemId: zod.string(),
+			name: zod.string().nullish(),
+			category: zod.string().nullish(),
+			summary: zod.object({
+				name: zod.string().nullish().describe('Name of the item if it exists.'),
+				npc: zod.number().describe('NPC sell price of the item if it exists.'),
+				sell: zod.number().describe('Instant Sell price taken directly from most recently fetched data'),
+				buy: zod.number().describe('Instant Buy price taken directly from most recently fetched data'),
+				sellOrder: zod.number().describe('Sell Order price calculated from most recently fetched data'),
+				buyOrder: zod.number().describe('Buy Order price calculated from most recently fetched data'),
+				averageSell: zod
+					.number()
+					.describe(
+						'Calculated average Instant Sell price that should be more resistant to price fluctuations'
+					),
+				averageBuy: zod
+					.number()
+					.describe(
+						'Calculated average Instant Buy price that should be more resistant to price fluctuations'
+					),
+				averageSellOrder: zod
+					.number()
+					.describe(
+						'Calculated average Sell Order price that should be more resistant to price fluctuations'
+					),
+				averageBuyOrder: zod
+					.number()
+					.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+				orders: zod
+					.object({
+						sellSummary: zod
+							.array(
+								zod.object({
+									amount: zod.number(),
+									pricePerUnit: zod.number(),
+									orders: zod.number(),
+								})
+							)
+							.nullish(),
+						buySummary: zod
+							.array(
+								zod.object({
+									amount: zod.number(),
+									pricePerUnit: zod.number(),
+									orders: zod.number(),
+								})
+							)
+							.nullish(),
+					})
+					.nullish()
+					.describe('Current orders in the bazaar for this item if they exist.'),
+			}),
 		})
 	),
 });
@@ -10487,6 +10889,118 @@ export const zodSkyblockGemShopResponse = zod.object({
 			})
 		),
 	}),
+});
+
+/**
+ * Get similar items and trend data for a specific item.
+ * @summary Get Related Items and Trends
+ */
+export const zodGetItemRelatedParams = zod.object({
+	skyblockId: zod.string(),
+});
+
+export const zodGetItemRelatedResponse = zod.object({
+	similar: zod.array(
+		zod.object({
+			id: zod.string().nullish(),
+			material: zod.string().nullish(),
+			color: zod.string().nullish(),
+			durability: zod.number(),
+			skin: zod
+				.object({
+					value: zod.string().nullish(),
+					signature: zod.string().nullish(),
+				})
+				.nullish(),
+			name: zod.string().nullish(),
+			category: zod.string().nullish(),
+			tier: zod.string().nullish(),
+			unstackable: zod.coerce.boolean<boolean>(),
+			glowing: zod.coerce.boolean<boolean>(),
+			npc_sell_price: zod.number(),
+			can_auction: zod.coerce.boolean<boolean>(),
+			can_trade: zod.coerce.boolean<boolean>(),
+			can_place: zod.coerce.boolean<boolean>(),
+			gemstone_slots: zod
+				.array(
+					zod.object({
+						slot_type: zod.string().nullish(),
+						costs: zod.array(
+							zod.object({
+								type: zod.string(),
+								item_id: zod.string().nullish(),
+								coins: zod.number(),
+							})
+						),
+					})
+				)
+				.nullish(),
+			requirements: zod
+				.array(
+					zod.object({
+						type: zod.string(),
+						skill: zod.string().nullish(),
+						level: zod.number(),
+					})
+				)
+				.nullish(),
+			museum: zod.coerce.boolean<boolean>(),
+			museum_data: zod
+				.object({
+					donation_xp: zod.number(),
+					parent: zod.record(zod.string(), zod.string()),
+					type: zod.string().nullish(),
+					armor_set_donation_xp: zod.record(zod.string(), zod.number()).nullish(),
+					game_stage: zod.string().nullish(),
+				})
+				.nullish(),
+			stats: zod.record(zod.string(), zod.number()).nullish(),
+			generator_tier: zod.number(),
+			dungeon_item_conversion_cost: zod
+				.object({
+					essence_type: zod.string().nullish(),
+					amount: zod.number(),
+				})
+				.nullish(),
+			upgrade_costs: zod
+				.array(
+					zod.array(
+						zod.object({
+							type: zod.string().nullish(),
+							essence_type: zod.string().nullish(),
+							item_id: zod.string().nullish(),
+							amount: zod.number(),
+						})
+					)
+				)
+				.nullish(),
+			catacombs_requirements: zod
+				.array(
+					zod.object({
+						type: zod.string().nullish(),
+						dungeon_type: zod.string().nullish(),
+						level: zod.number(),
+					})
+				)
+				.nullish(),
+			hide_from_viewrecipe_command: zod.coerce.boolean<boolean>(),
+			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
+			item_specific: zod
+				.object({
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
+				.nullish(),
+		})
+	),
+	trends: zod
+		.object({
+			priceChangePercentage: zod.number(),
+			volumeChangePercentage: zod.number(),
+		})
+		.nullish(),
 });
 
 /**
@@ -10681,8 +11195,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown(),
+						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -10790,8 +11307,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown(),
+							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -10824,6 +11344,29 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 						.describe(
 							'Calculated average Buy Order price that should be more resistant to price fluctuations'
 						),
+					orders: zod
+						.object({
+							sellSummary: zod
+								.array(
+									zod.object({
+										amount: zod.number(),
+										pricePerUnit: zod.number(),
+										orders: zod.number(),
+									})
+								)
+								.nullish(),
+							buySummary: zod
+								.array(
+									zod.object({
+										amount: zod.number(),
+										pricePerUnit: zod.number(),
+										orders: zod.number(),
+									})
+								)
+								.nullish(),
+						})
+						.nullish()
+						.describe('Current orders in the bazaar for this item if they exist.'),
 				})
 				.nullish(),
 			auctions: zod
@@ -10958,8 +11501,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()
@@ -10984,6 +11530,29 @@ export const zodSkyblockProductResponse = zod.object({
 			averageBuyOrder: zod
 				.number()
 				.describe('Calculated average Buy Order price that should be more resistant to price fluctuations'),
+			orders: zod
+				.object({
+					sellSummary: zod
+						.array(
+							zod.object({
+								amount: zod.number(),
+								pricePerUnit: zod.number(),
+								orders: zod.number(),
+							})
+						)
+						.nullish(),
+					buySummary: zod
+						.array(
+							zod.object({
+								amount: zod.number(),
+								pricePerUnit: zod.number(),
+								orders: zod.number(),
+							})
+						)
+						.nullish(),
+				})
+				.nullish()
+				.describe('Current orders in the bazaar for this item if they exist.'),
 		})
 		.nullish(),
 	auctions: zod
