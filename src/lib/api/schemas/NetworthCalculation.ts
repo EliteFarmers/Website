@@ -8,7 +8,9 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface NetworthCalculation {
+	id: string;
+	type: string;
+	value: number;
+	count: number;
+}

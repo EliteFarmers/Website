@@ -153,6 +153,31 @@
 					<span class="text-muted-foreground text-sm">Ad Placement</span>
 				</div>
 			</div>
+			<div class="flex flex-row items-start gap-4">
+				<div class="bg-card flex flex-1 flex-col gap-2 rounded-md border p-4">
+					<h3 class="text-lg font-semibold">Sell Orders</h3>
+					{#each data.product.orders?.sellSummary ?? [] as order, i (i)}
+						<div class="flex justify-between">
+							<span>Price: {order.pricePerUnit.toLocaleString()}</span>
+							<span>Amount: {order.amount.toLocaleString()}</span>
+						</div>
+					{:else}
+						<p class="text-muted-foreground text-sm">No sell orders available.</p>
+					{/each}
+				</div>
+
+				<div class="bg-card flex flex-1 flex-col gap-2 rounded-md border p-4">
+					<h3 class="text-lg font-semibold">Buy Orders</h3>
+					{#each data.product.orders?.buySummary ?? [] as order, i (i)}
+						<div class="flex justify-between">
+							<span>Price: {order.pricePerUnit.toLocaleString()}</span>
+							<span>Amount: {order.amount.toLocaleString()}</span>
+						</div>
+					{:else}
+						<p class="text-muted-foreground text-sm">No buy orders available.</p>
+					{/each}
+				</div>
+			</div>
 		</div>
 	{:catch error}
 		<div class="text-destructive">Error loading item data: {error.message}</div>

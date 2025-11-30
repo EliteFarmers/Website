@@ -8,7 +8,15 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface NetworthItemPetInfo {
+	type: string;
+	active: boolean;
+	exp: number;
+	level: number;
+	tier: string;
+	candyUsed: number;
+	/** @nullable */
+	heldItem?: string | null;
+	/** @nullable */
+	skin?: string | null;
+}

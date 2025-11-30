@@ -7,17 +7,18 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { NetworthResultItem } from './NetworthResultItem';
+import type { NetworthCalculation } from './NetworthCalculation';
 
-export interface ItemPetInfoDto {
-	type: string;
-	active: boolean;
-	exp: number;
-	level: number;
-	tier: string;
-	candyUsed: number;
+export interface NetworthResult {
 	/** @nullable */
-	heldItem?: string | null;
+	item?: NetworthResultItem;
+	basePrice: number;
+	price: number;
+	networth: number;
 	/** @nullable */
-	skin?: string | null;
-	[key: string]: unknown;
+	calculation?: NetworthCalculation[] | null;
+	soulbound: boolean;
+	cosmetic: boolean;
+	unsoulboundNetworth: number;
 }

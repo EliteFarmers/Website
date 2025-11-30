@@ -135,6 +135,7 @@ import type {
 	LinkedAccountsDto,
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
+	NetworthBreakdown,
 	PlayerDataDto,
 	PrivateGuildDto,
 	ProblemDetails,
@@ -7088,6 +7089,36 @@ export const getGetProfileNamesUrl = (player: string) => {
 
 export const getProfileNames = async (player: string, options?: RequestInit) => {
 	return customFetch<getProfileNamesResponse>(getGetProfileNamesUrl(player), {
+		...options,
+		method: 'GET',
+	});
+};
+
+export type getProfileNetworthResponse200 = {
+	data: NetworthBreakdown;
+	status: 200;
+};
+
+export type getProfileNetworthResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getProfileNetworthResponseSuccess = getProfileNetworthResponse200 & {
+	headers: Headers;
+};
+export type getProfileNetworthResponseError = getProfileNetworthResponse400 & {
+	headers: Headers;
+};
+
+export type getProfileNetworthResponse = getProfileNetworthResponseSuccess | getProfileNetworthResponseError;
+
+export const getGetProfileNetworthUrl = (playerUuid: string, profileUuid: string) => {
+	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/networth`;
+};
+
+export const getProfileNetworth = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
+	return customFetch<getProfileNetworthResponse>(getGetProfileNetworthUrl(playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
 	});

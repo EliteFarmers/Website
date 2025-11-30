@@ -8418,6 +8418,7 @@ export const zodGetProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -8506,6 +8507,7 @@ export const zodGetProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -8594,6 +8596,7 @@ export const zodGetProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -8682,6 +8685,7 @@ export const zodGetProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -8943,6 +8947,7 @@ export const zodGetProfileAuctionsResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -9102,6 +9107,7 @@ export const zodGetProfileInventoryResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -9131,6 +9137,157 @@ export const zodGetProfileNamesResponseItem = zod.object({
 	selected: zod.coerce.boolean<boolean>(),
 });
 export const zodGetProfileNamesResponse = zod.array(zodGetProfileNamesResponseItem);
+
+export const zodGetProfileNetworthParams = zod.object({
+	playerUuid: zod.string(),
+	profileUuid: zod.string(),
+});
+
+export const zodGetProfileNetworthResponse = zod.object({
+	networth: zod.number(),
+	unsoulboundNetworth: zod.number(),
+	purse: zod.number(),
+	bank: zod.number(),
+	personalBank: zod.number(),
+	categories: zod.record(
+		zod.string(),
+		zod.object({
+			total: zod.number(),
+			unsoulboundTotal: zod.number(),
+			items: zod.array(
+				zod.object({
+					item: zod
+						.object({
+							id: zod.number(),
+							count: zod.number(),
+							damage: zod.number(),
+							skyblockId: zod.string().nullish(),
+							uuid: zod.string().nullish(),
+							name: zod.string().nullish(),
+							lore: zod.array(zod.string()).nullish(),
+							enchantments: zod.record(zod.string(), zod.number()).nullish(),
+							attributes: zod
+								.object({
+									runes: zod.record(zod.string(), zod.number()).nullish(),
+									effects: zod
+										.array(
+											zod.object({
+												level: zod.number(),
+												effect: zod.string().nullish(),
+												durationTicks: zod.number(),
+											})
+										)
+										.nullish(),
+									necromancerSouls: zod
+										.array(
+											zod.object({
+												mobId: zod.string().nullish(),
+												droppedInstanceId: zod.string().nullish(),
+												droppedModeId: zod.string().nullish(),
+											})
+										)
+										.nullish(),
+									hook: zod
+										.object({
+											part: zod.string().nullish(),
+										})
+										.nullish(),
+									line: zod
+										.object({
+											part: zod.string().nullish(),
+										})
+										.nullish(),
+									sinker: zod
+										.object({
+											part: zod.string().nullish(),
+										})
+										.nullish(),
+									abilityScrolls: zod.array(zod.string()).nullish(),
+									inventory: zod.record(zod.string(), zod.unknown().nullable()).nullish(),
+									extra: zod.record(zod.string(), zod.unknown()),
+								})
+								.nullish(),
+							itemAttributes: zod.record(zod.string(), zod.string()).nullish(),
+							gems: zod.record(zod.string(), zod.string().nullable()).nullish(),
+							unlockedSlots: zod.array(zod.string()).nullish(),
+							petInfo: zod
+								.object({
+									type: zod.string(),
+									active: zod.coerce.boolean<boolean>(),
+									exp: zod.number(),
+									level: zod.number(),
+									tier: zod.string(),
+									candyUsed: zod.number(),
+									heldItem: zod.string().nullish(),
+									skin: zod.string().nullish(),
+								})
+								.nullish(),
+							textureId: zod.string().nullish(),
+							gemstoneSlots: zod
+								.array(
+									zod.object({
+										slotType: zod.string(),
+										costs: zod
+											.array(
+												zod.object({
+													type: zod.string(),
+													itemId: zod.string().nullish(),
+													amount: zod.number(),
+													coins: zod.number().nullish(),
+												})
+											)
+											.nullish(),
+									})
+								)
+								.nullish(),
+							upgradeCosts: zod
+								.array(
+									zod.array(
+										zod.object({
+											type: zod.string(),
+											itemId: zod.string().nullish(),
+											amount: zod.number(),
+										})
+									)
+								)
+								.nullish(),
+							basePrice: zod.number(),
+							price: zod.number(),
+							soulboundPortion: zod.number(),
+							isSoulbound: zod.coerce.boolean<boolean>(),
+							calculation: zod
+								.array(
+									zod.object({
+										id: zod.string(),
+										type: zod.string(),
+										value: zod.number(),
+										count: zod.number(),
+									})
+								)
+								.nullish(),
+						})
+						.nullish(),
+					basePrice: zod.number(),
+					price: zod.number(),
+					networth: zod.number(),
+					calculation: zod
+						.array(
+							zod.object({
+								id: zod.string(),
+								type: zod.string(),
+								value: zod.number(),
+								count: zod.number(),
+							})
+						)
+						.nullish(),
+					soulbound: zod.coerce.boolean<boolean>(),
+					cosmetic: zod.coerce.boolean<boolean>(),
+					unsoulboundNetworth: zod.number(),
+				})
+			),
+		})
+	),
+});
 
 /**
  * @summary Get Profile Member
@@ -9433,6 +9590,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -9521,6 +9679,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -9609,6 +9768,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -9697,6 +9857,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 								tier: zod.string(),
 								candyUsed: zod.number(),
 								heldItem: zod.string().nullish(),
+								skin: zod.string().nullish(),
 							})
 							.nullish()
 							.describe('Pet info if item is a pet'),
@@ -9956,6 +10117,7 @@ export const zodGetAuctionResponse = zod.object({
 						tier: zod.string(),
 						candyUsed: zod.number(),
 						heldItem: zod.string().nullish(),
+						skin: zod.string().nullish(),
 					})
 					.nullish()
 					.describe('Pet info if item is a pet'),
@@ -10082,6 +10244,7 @@ export const zodGetAuctionHouseOverviewResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -10202,6 +10365,7 @@ export const zodGetAuctionHouseOverviewResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -10437,6 +10601,7 @@ export const zodGetItemEndedAuctionsResponseItem = zod.object({
 					tier: zod.string(),
 					candyUsed: zod.number(),
 					heldItem: zod.string().nullish(),
+					skin: zod.string().nullish(),
 				})
 				.nullish()
 				.describe('Pet info if item is a pet'),
@@ -11107,8 +11272,11 @@ export const zodGetItemRelatedResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 	),
@@ -11204,6 +11372,7 @@ export const zodGetItemsFromBytesResponse = zod.object({
 						tier: zod.string(),
 						candyUsed: zod.number(),
 						heldItem: zod.string().nullish(),
+						skin: zod.string().nullish(),
 					})
 					.nullish()
 					.describe('Pet info if item is a pet'),
@@ -11312,8 +11481,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown(),
+						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -11421,8 +11593,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown(),
+							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -11612,8 +11787,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()
@@ -14304,6 +14482,138 @@ export const zodGetInventoryItemMetaQueryParams = zod.object({
 export const zodGetInventoryItemMetaResponse = zod.object({
 	packId: zod.string().nullish().describe('Texture Pack ID where the item texture is located'),
 	variantKey: zod.string().nullish().describe('Variant key for price lookups'),
+	networth: zod
+		.object({
+			item: zod
+				.object({
+					id: zod.number(),
+					count: zod.number(),
+					damage: zod.number(),
+					skyblockId: zod.string().nullish(),
+					uuid: zod.string().nullish(),
+					name: zod.string().nullish(),
+					lore: zod.array(zod.string()).nullish(),
+					enchantments: zod.record(zod.string(), zod.number()).nullish(),
+					attributes: zod
+						.object({
+							runes: zod.record(zod.string(), zod.number()).nullish(),
+							effects: zod
+								.array(
+									zod.object({
+										level: zod.number(),
+										effect: zod.string().nullish(),
+										durationTicks: zod.number(),
+									})
+								)
+								.nullish(),
+							necromancerSouls: zod
+								.array(
+									zod.object({
+										mobId: zod.string().nullish(),
+										droppedInstanceId: zod.string().nullish(),
+										droppedModeId: zod.string().nullish(),
+									})
+								)
+								.nullish(),
+							hook: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							line: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							sinker: zod
+								.object({
+									part: zod.string().nullish(),
+								})
+								.nullish(),
+							abilityScrolls: zod.array(zod.string()).nullish(),
+							inventory: zod.record(zod.string(), zod.unknown().nullable()).nullish(),
+							extra: zod.record(zod.string(), zod.unknown()),
+						})
+						.nullish(),
+					itemAttributes: zod.record(zod.string(), zod.string()).nullish(),
+					gems: zod.record(zod.string(), zod.string().nullable()).nullish(),
+					unlockedSlots: zod.array(zod.string()).nullish(),
+					petInfo: zod
+						.object({
+							type: zod.string(),
+							active: zod.coerce.boolean<boolean>(),
+							exp: zod.number(),
+							level: zod.number(),
+							tier: zod.string(),
+							candyUsed: zod.number(),
+							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
+						})
+						.nullish(),
+					textureId: zod.string().nullish(),
+					gemstoneSlots: zod
+						.array(
+							zod.object({
+								slotType: zod.string(),
+								costs: zod
+									.array(
+										zod.object({
+											type: zod.string(),
+											itemId: zod.string().nullish(),
+											amount: zod.number(),
+											coins: zod.number().nullish(),
+										})
+									)
+									.nullish(),
+							})
+						)
+						.nullish(),
+					upgradeCosts: zod
+						.array(
+							zod.array(
+								zod.object({
+									type: zod.string(),
+									itemId: zod.string().nullish(),
+									amount: zod.number(),
+								})
+							)
+						)
+						.nullish(),
+					basePrice: zod.number(),
+					price: zod.number(),
+					soulboundPortion: zod.number(),
+					isSoulbound: zod.coerce.boolean<boolean>(),
+					calculation: zod
+						.array(
+							zod.object({
+								id: zod.string(),
+								type: zod.string(),
+								value: zod.number(),
+								count: zod.number(),
+							})
+						)
+						.nullish(),
+				})
+				.nullish(),
+			basePrice: zod.number(),
+			price: zod.number(),
+			networth: zod.number(),
+			calculation: zod
+				.array(
+					zod.object({
+						id: zod.string(),
+						type: zod.string(),
+						value: zod.number(),
+						count: zod.number(),
+					})
+				)
+				.nullish(),
+			soulbound: zod.coerce.boolean<boolean>(),
+			cosmetic: zod.coerce.boolean<boolean>(),
+			unsoulboundNetworth: zod.number(),
+		})
+		.nullish()
+		.describe('Networth calculation result for this item'),
 });
 
 /**
@@ -14470,6 +14780,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -14555,6 +14866,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -14640,6 +14952,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -14725,6 +15038,7 @@ export const zodGetWeightForProfileResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -14849,6 +15163,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -14934,6 +15249,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -15019,6 +15335,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
@@ -15104,6 +15421,7 @@ export const zodGetWeightForSelectedResponse = zod.object({
 							tier: zod.string(),
 							candyUsed: zod.number(),
 							heldItem: zod.string().nullish(),
+							skin: zod.string().nullish(),
 						})
 						.nullish()
 						.describe('Pet info if item is a pet'),
