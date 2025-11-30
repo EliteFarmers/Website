@@ -45,7 +45,8 @@
 		itemDetails = getInventoryItemDetails({
 			inventoryUuid: inventory.id,
 			skyblockId: selectedItem?.skyblockId ?? '',
-			slotId: selectedItem ? String(selectedItem.slot) : '',
+			slotId: selectedItem ? (subSlot ?? String(selectedItem.slot)) : '',
+			sub: selectedItem ? (subSlot ? String(selectedItem.slot) : undefined) : undefined,
 			packs: gbl.packs
 				.filter((p) => p.on)
 				.map((p) => p.id)

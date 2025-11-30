@@ -60,11 +60,13 @@ export const getInventoryItemDetails = query(
 		inventoryUuid: zod.string(),
 		slotId: zod.string(),
 		packs: zod.string().optional(),
+		sub: zod.string().optional(),
 	}),
 	async (params) => {
-		const meta = await getInventoryItemMeta(params.inventoryUuid, params.slotId, { packs: params.packs }).then(
-			(res) => res.data
-		);
+		const meta = await getInventoryItemMeta(params.inventoryUuid, params.slotId, {
+			packs: params.packs,
+			sub: params.sub,
+		}).then((res) => res.data);
 
 		const bz = cache?.bazaar.products;
 		const ah = cache?.auctions.items;
