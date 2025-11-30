@@ -7,6 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { BazaarProductSummaryDtoOrders } from './BazaarProductSummaryDtoOrders';
 
 export interface BazaarProductSummaryDto {
 	/**
@@ -32,4 +33,9 @@ export interface BazaarProductSummaryDto {
 	averageSellOrder: number;
 	/** Calculated average Buy Order price that should be more resistant to price fluctuations */
 	averageBuyOrder: number;
+	/**
+	 * Current orders in the bazaar for this item if they exist.
+	 * @nullable
+	 */
+	orders?: BazaarProductSummaryDtoOrders;
 }

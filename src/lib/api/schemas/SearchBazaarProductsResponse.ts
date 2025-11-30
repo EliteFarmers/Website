@@ -7,8 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { BazaarSearchResultDto } from './BazaarSearchResultDto';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface SearchBazaarProductsResponse {
+	products: BazaarSearchResultDto[];
+}

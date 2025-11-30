@@ -7,8 +7,10 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { BazaarOrders } from './BazaarOrders';
 
 /**
- * the collection of errors for the current context
+ * Current orders in the bazaar for this item if they exist.
+ * @nullable
  */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type BazaarProductSummaryDtoOrders = BazaarOrders | null;

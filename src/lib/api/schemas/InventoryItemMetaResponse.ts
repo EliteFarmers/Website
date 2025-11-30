@@ -7,6 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { InventoryItemMetaResponseNetworth } from './InventoryItemMetaResponseNetworth';
 
 export interface InventoryItemMetaResponse {
 	/**
@@ -19,4 +20,9 @@ export interface InventoryItemMetaResponse {
 	 * @nullable
 	 */
 	variantKey?: string | null;
+	/**
+	 * Networth calculation result for this item
+	 * @nullable
+	 */
+	networth?: InventoryItemMetaResponseNetworth;
 }

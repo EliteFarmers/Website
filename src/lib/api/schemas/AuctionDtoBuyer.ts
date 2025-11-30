@@ -7,8 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { AccountMetaDto } from './AccountMetaDto';
 
 /**
- * the collection of errors for the current context
+ * @nullable
  */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type AuctionDtoBuyer = AccountMetaDto | null;

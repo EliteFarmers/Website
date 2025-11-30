@@ -15,6 +15,7 @@ import type {
 	AdminLinkAccountRequest,
 	AdminUnlinkAccountRequest,
 	AnnouncementDto,
+	AuctionDto,
 	AuctionHouseDto,
 	AuctionOverviewResponse,
 	AuthRefreshDto,
@@ -23,6 +24,7 @@ import type {
 	AuthorizedAccountDto,
 	AuthorizedGuildDto,
 	BadgeDto,
+	BazaarOverviewResponse,
 	ChangeTeamOwnerRequest,
 	ConfirmationDto,
 	ContestBracketsDetailsDto,
@@ -85,6 +87,7 @@ import type {
 	GetHypixelGuildsResponse,
 	GetInventoryItemMetaParams,
 	GetInventoryItemTextureParams,
+	GetItemEndedAuctionsParams,
 	GetItemTextureParams,
 	GetItemsFromBytesRequest,
 	GetItemsFromBytesResponse,
@@ -121,6 +124,7 @@ import type {
 	IncomingGuildDto,
 	IncomingGuildRoleDto,
 	InventoryItemMetaResponse,
+	ItemRelatedResponse,
 	JacobContestWithParticipationsDto,
 	JoinEventParams,
 	LeaderboardDto,
@@ -131,6 +135,7 @@ import type {
 	LinkedAccountsDto,
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
+	NetworthBreakdown,
 	PlayerDataDto,
 	PrivateGuildDto,
 	ProblemDetails,
@@ -145,6 +150,8 @@ import type {
 	SearchAccountsParams,
 	SearchAuctionItemsParams,
 	SearchAuctionItemsResponse,
+	SearchBazaarProductsParams,
+	SearchBazaarProductsResponse,
 	SearchHypixelGuildsParams,
 	SearchHypixelGuildsResponse,
 	SetEventApprovalParams,
@@ -7088,6 +7095,39 @@ export const getProfileNames = async (player: string, options?: RequestInit) => 
 };
 
 /**
+ * @summary Get Member Networth
+ */
+export type getProfileNetworthResponse200 = {
+	data: NetworthBreakdown;
+	status: 200;
+};
+
+export type getProfileNetworthResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getProfileNetworthResponseSuccess = getProfileNetworthResponse200 & {
+	headers: Headers;
+};
+export type getProfileNetworthResponseError = getProfileNetworthResponse400 & {
+	headers: Headers;
+};
+
+export type getProfileNetworthResponse = getProfileNetworthResponseSuccess | getProfileNetworthResponseError;
+
+export const getGetProfileNetworthUrl = (playerUuid: string, profileUuid: string) => {
+	return `${ELITE_API_URL}/profile/${playerUuid}/${profileUuid}/networth`;
+};
+
+export const getProfileNetworth = async (playerUuid: string, profileUuid: string, options?: RequestInit) => {
+	return customFetch<getProfileNetworthResponse>(getGetProfileNetworthUrl(playerUuid, profileUuid), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * @summary Get Profile Member
  */
 export type getSelectedProfileResponse200 = {
@@ -7271,6 +7311,47 @@ export const getAuctionVariants = async (skyblockId: string, options?: RequestIn
 };
 
 /**
+ * Get recently ended auctions for a specific item and optional variant. Supports bundle: format for pets and runes.
+ * @summary Get Recently Ended Auctions for Item
+ */
+export type getItemEndedAuctionsResponse200 = {
+	data: AuctionDto[];
+	status: 200;
+};
+
+export type getItemEndedAuctionsResponseSuccess = getItemEndedAuctionsResponse200 & {
+	headers: Headers;
+};
+export type getItemEndedAuctionsResponse = getItemEndedAuctionsResponseSuccess;
+
+export const getGetItemEndedAuctionsUrl = (skyblockId: string, params: GetItemEndedAuctionsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/auctions/${skyblockId}/ended?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/auctions/${skyblockId}/ended`;
+};
+
+export const getItemEndedAuctions = async (
+	skyblockId: string,
+	params: GetItemEndedAuctionsParams,
+	options?: RequestInit
+) => {
+	return customFetch<getItemEndedAuctionsResponse>(getGetItemEndedAuctionsUrl(skyblockId, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * Returns a paginated list of auction items ranked by recent trading volume.
  * @summary List Popular Auction Items
  */
@@ -7339,6 +7420,31 @@ export const getSearchAuctionItemsUrl = (params: SearchAuctionItemsParams) => {
 
 export const searchAuctionItems = async (params: SearchAuctionItemsParams, options?: RequestInit) => {
 	return customFetch<searchAuctionItemsResponse>(getSearchAuctionItemsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get overview of bazaar with top movers and most traded items.
+ * @summary Get Bazaar Overview
+ */
+export type getBazaarOverviewResponse200 = {
+	data: BazaarOverviewResponse;
+	status: 200;
+};
+
+export type getBazaarOverviewResponseSuccess = getBazaarOverviewResponse200 & {
+	headers: Headers;
+};
+export type getBazaarOverviewResponse = getBazaarOverviewResponseSuccess;
+
+export const getGetBazaarOverviewUrl = () => {
+	return `${ELITE_API_URL}/resources/bazaar/overview`;
+};
+
+export const getBazaarOverview = async (options?: RequestInit) => {
+	return customFetch<getBazaarOverviewResponse>(getGetBazaarOverviewUrl(), {
 		...options,
 		method: 'GET',
 	});
@@ -7436,6 +7542,43 @@ export const getBazaarProducts = async (options?: RequestInit) => {
 };
 
 /**
+ * Search bazaar products by name or category. Returns all products if no filters provided.
+ * @summary Search Bazaar Products
+ */
+export type searchBazaarProductsResponse200 = {
+	data: SearchBazaarProductsResponse;
+	status: 200;
+};
+
+export type searchBazaarProductsResponseSuccess = searchBazaarProductsResponse200 & {
+	headers: Headers;
+};
+export type searchBazaarProductsResponse = searchBazaarProductsResponseSuccess;
+
+export const getSearchBazaarProductsUrl = (params: SearchBazaarProductsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/resources/bazaar/search?${stringifiedParams}`
+		: `${ELITE_API_URL}/resources/bazaar/search`;
+};
+
+export const searchBazaarProducts = async (params: SearchBazaarProductsParams, options?: RequestInit) => {
+	return customFetch<searchBazaarProductsResponse>(getSearchBazaarProductsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * Get the current/upcoming Skyblock firesales.
  * @summary Get Current Skyblock Firesale
  */
@@ -7480,6 +7623,31 @@ export const getSkyblockGemShopUrl = () => {
 
 export const skyblockGemShop = async (options?: RequestInit) => {
 	return customFetch<skyblockGemShopResponse>(getSkyblockGemShopUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Get similar items and trend data for a specific item.
+ * @summary Get Related Items and Trends
+ */
+export type getItemRelatedResponse200 = {
+	data: ItemRelatedResponse;
+	status: 200;
+};
+
+export type getItemRelatedResponseSuccess = getItemRelatedResponse200 & {
+	headers: Headers;
+};
+export type getItemRelatedResponse = getItemRelatedResponseSuccess;
+
+export const getGetItemRelatedUrl = (skyblockId: string) => {
+	return `${ELITE_API_URL}/resources/items/${skyblockId}/related`;
+};
+
+export const getItemRelated = async (skyblockId: string, options?: RequestInit) => {
+	return customFetch<getItemRelatedResponse>(getGetItemRelatedUrl(skyblockId), {
 		...options,
 		method: 'GET',
 	});

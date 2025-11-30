@@ -7,8 +7,11 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { ItemResponse } from './ItemResponse';
+import type { ItemRelatedResponseTrends } from './ItemRelatedResponseTrends';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface ItemRelatedResponse {
+	similar: ItemResponse[];
+	/** @nullable */
+	trends?: ItemRelatedResponseTrends;
+}

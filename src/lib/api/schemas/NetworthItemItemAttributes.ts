@@ -9,6 +9,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  */
 
 /**
- * the collection of errors for the current context
+ * @nullable
  */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type NetworthItemItemAttributes = { [key: string]: string } | null;
