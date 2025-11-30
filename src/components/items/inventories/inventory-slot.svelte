@@ -27,26 +27,37 @@
 
 		return `/api/item/${item?.skyblockId}.webp`;
 	});
+
+	let count = $derived.by(() => {
+		let c = item?.count ?? 1;
+		if (c != 1) return c;
+
+		if (item?.attributes?.new_years_cake != undefined) {
+			return +item.attributes.new_years_cake;
+		}
+
+		return c;
+	});
 </script>
 
 {#if item}
 	{#if onSelect}
 		<button class="relative" onclick={() => onSelect?.(item)}>
 			<ItemIcon url={texture} class={highlight ? 'border-link/50' : ''} />
-			{#if item?.count && item.count > 1}
+			{#if count > 1}
 				<span
 					class="absolute right-0.5 bottom-0.5 rounded-md px-1 text-sm font-bold text-white text-shadow-lg/40"
-					>{item.count}</span
+					>{count}</span
 				>
 			{/if}
 		</button>
 	{:else}
 		<div class="relative">
 			<ItemIcon url={texture} class={highlight ? 'border-link/50' : ''} />
-			{#if item?.count && item.count > 1}
+			{#if count > 1}
 				<span
 					class="absolute right-0.5 bottom-0.5 rounded-md px-1 text-sm font-bold text-white text-shadow-lg/40"
-					>{item.count}</span
+					>{count}</span
 				>
 			{/if}
 		</div>
