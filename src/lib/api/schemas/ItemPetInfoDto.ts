@@ -17,5 +17,7 @@ export interface ItemPetInfoDto {
 	candyUsed: number;
 	/** @nullable */
 	heldItem?: string | null;
+	/** @nullable */
+	skin?: string | null;
 	[key: string]: unknown;
 }

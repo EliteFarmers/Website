@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 
 export interface SkyblockFiresaleItemDto {
 	itemId: string;
+	slotId: number;
 	amount: number;
 	/** Price in Skyblock Gems */
 	price: number;

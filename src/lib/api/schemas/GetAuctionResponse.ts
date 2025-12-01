@@ -7,8 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { EndedAuctionDto } from './EndedAuctionDto';
+import type { AuctionDto } from './AuctionDto';
 
 export interface GetAuctionResponse {
-	ended: EndedAuctionDto;
+	auction: AuctionDto;
 }
