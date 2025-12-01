@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type { ApiAccessDto } from './ApiAccessDto';
+import type { ProfileMemberNetworthDto } from './ProfileMemberNetworthDto';
 import type { ProfileMemberDtoMeta } from './ProfileMemberDtoMeta';
 import type { ProfileMemberDtoCollections } from './ProfileMemberDtoCollections';
 import type { ProfileMemberDtoCollectionTiers } from './ProfileMemberDtoCollectionTiers';
@@ -32,6 +33,8 @@ export interface ProfileMemberDto {
 	socialXp: number;
 	purse: number;
 	bankBalance: number;
+	personalBank: number;
+	networth: ProfileMemberNetworthDto;
 	/** @nullable */
 	meta?: ProfileMemberDtoMeta;
 	collections: ProfileMemberDtoCollections;

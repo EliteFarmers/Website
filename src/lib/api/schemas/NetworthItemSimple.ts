@@ -7,9 +7,16 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { NetworthItemSimple } from './NetworthItemSimple';
 
-/**
- * @nullable
- */
-export type NetworthResultItem = NetworthItemSimple | null;
+export interface NetworthItemSimple {
+	/** @nullable */
+	skyblockId?: string | null;
+	/** @nullable */
+	name?: string | null;
+	/** @nullable */
+	slot?: string | null;
+	count: number;
+	damage: number;
+	/** @nullable */
+	uuid?: string | null;
+}

@@ -11,6 +11,8 @@ import type { NetworthResult } from './NetworthResult';
 
 export interface NetworthCategory {
 	total: number;
-	unsoulboundTotal: number;
+	liquidTotal: number;
+	nonCosmeticTotal: number;
+	liquidFunctionalTotal: number;
 	items: NetworthResult[];
 }

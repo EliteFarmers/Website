@@ -7,9 +7,10 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { NetworthItemSimple } from './NetworthItemSimple';
 
-/**
- * @nullable
- */
-export type NetworthResultItem = NetworthItemSimple | null;
+export interface ProfileMemberNetworthDto {
+	normal: number;
+	liquid: number;
+	functional: number;
+	liquidFunctional: number;
+}

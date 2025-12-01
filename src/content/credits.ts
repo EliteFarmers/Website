@@ -85,6 +85,16 @@ export const CREDITS: Credit[] = [
 		],
 	},
 	{
+		name: 'SkyHelper',
+		role: 'Networth calculations and item prices',
+		links: [
+			{
+				name: 'GitHub',
+				url: 'https://github.com/Altpapier/SkyHelper-Networth',
+			},
+		],
+	},
+	{
 		name: 'MCHeads',
 		role: 'Player model images',
 		links: [

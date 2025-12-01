@@ -35,7 +35,10 @@
 <Dialog.Root bind:open>
 	<Dialog.ScrollContent class="dark bg-background border-border text-primary">
 		{#if selectedItem}
-			<ItemLore item={selectedItem}>
+			<ItemLore
+				item={selectedItem}
+				networth={itemDetails?.ready ? itemDetails.current.meta?.networth : undefined}
+			>
 				{#if selectedItem.attributes?.inventory_data}
 					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">
 						{#if subInventory}
@@ -60,19 +63,30 @@
 					</div>
 				{/if}
 				{#if itemDetails !== null}
-					<div class="text-primary bg-card mt-4 mb-4 rounded-md border p-2">
-						<p class="mb-2 text-lg font-semibold">Estimated Value</p>
+					<div class="text-primary bg-card mt-4 mb-4 flex flex-col gap-2 rounded-md border p-2">
+						<p class="text-lg font-semibold">Item Value</p>
+						{#if itemDetails?.ready && itemDetails.current.meta?.networth}
+							{@const networthValue = itemDetails.current.meta.networth.price ?? 0}
+							<span>
+								<span class="dark:text-completed">
+									{Math.round(networthValue * (selectedItem?.count ?? 1)).toLocaleString()}
+								</span>
+								<span class="text-muted-foreground">coins (networth)</span>
+							</span>
+						{/if}
 						{#if itemDetails?.ready && itemDetails?.current?.auctions && itemDetails?.current.auctions.length > 0}
 							{@const lowest = Math.min(
 								...(itemDetails?.current?.auctions.map((a) => a.lowest3Day) ?? [0])
 							)}
-							<span class="dark:text-completed">
-								{Math.round(
-									Math.max(itemDetails?.current?.item?.npc_sell_price ?? 0, lowest) *
-										(selectedItem?.count ?? 1)
-								).toLocaleString()}
+							<span>
+								<span class="dark:text-completed">
+									{Math.round(
+										Math.max(itemDetails?.current?.item?.npc_sell_price ?? 0, lowest) *
+											(selectedItem?.count ?? 1)
+									).toLocaleString()}
+								</span>
+								<span class="text-muted-foreground">coins (lowest bin)</span>
 							</span>
-							<span class="text-muted-foreground">coins</span>
 						{:else if itemDetails?.ready && itemDetails?.current?.bazaar}
 							{@const averageBuyOrder = itemDetails?.current.bazaar.averageBuyOrder}
 							<span class="dark:text-completed">

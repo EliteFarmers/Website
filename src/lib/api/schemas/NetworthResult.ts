@@ -21,8 +21,8 @@ export interface NetworthResult {
 	soulbound: boolean;
 	cosmetic: boolean;
 	liquidNetworth: number;
-	nonCosmeticNetworth: number;
+	functionalNetworth: number;
 	liquidFunctionalNetworth: number;
 	cosmeticValue: number;
-	soulboundValue: number;
+	illiquidValue: number;
 }
