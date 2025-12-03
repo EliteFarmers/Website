@@ -8,10 +8,9 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface ApiAccessDto {
-	inventories: boolean;
-	collections: boolean;
-	skills: boolean;
-	vault: boolean;
-	museum: boolean;
+export interface AccountSearchResultDto {
+	ign: string;
+	uuid: string;
+	/** @nullable */
+	discordId?: string | null;
 }
