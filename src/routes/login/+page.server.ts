@@ -9,6 +9,7 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 	const redirectTo = url.searchParams.get('redirect');
 	const attemptCount = url.searchParams.get('attempt');
 	const accept = url.searchParams.get('accept');
+	const firstLogin = url.searchParams.get('first');
 
 	if (success) {
 		if (attemptCount && +attemptCount > 3) {
@@ -19,12 +20,14 @@ export const load: PageServerLoad = async ({ cookies, url, locals }) => {
 
 		if (redirectTo) {
 			return {
+				firstLogin: firstLogin === 'true',
 				redirect: decodeURIComponent(redirectTo),
 				user: auth,
 			};
 		}
 
 		return {
+			firstLogin: firstLogin === 'true',
 			user: auth,
 		};
 	}

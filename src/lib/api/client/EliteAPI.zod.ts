@@ -1032,6 +1032,17 @@ export const zodSearchAccountsResponseItem = zod.string();
 export const zodSearchAccountsResponse = zod.array(zodSearchAccountsResponseItem);
 
 /**
+ * Authenticated endpoint that returns a list of accounts that have a specific discord username linked.
+ * @summary Search for Minecraft Account From Discord
+ */
+export const zodSearchAccountsWithDiscordResponseItem = zod.object({
+	ign: zod.string(),
+	uuid: zod.string(),
+	discordId: zod.string().nullish(),
+});
+export const zodSearchAccountsWithDiscordResponse = zod.array(zodSearchAccountsWithDiscordResponseItem);
+
+/**
  * @summary Set Primary Account
  */
 export const zodSetPrimaryAccountParams = zod.object({
@@ -1407,6 +1418,7 @@ export const zodLoginResponse = zod.object({
 		})
 		.nullish()
 		.describe('The pending confirmation for the user, if any'),
+	first_login: zod.coerce.boolean<boolean>().describe("If this is the user's first login"),
 });
 
 /**
@@ -1432,6 +1444,7 @@ export const zodRefreshAuthResponse = zod.object({
 		})
 		.nullish()
 		.describe('The pending confirmation for the user, if any'),
+	first_login: zod.coerce.boolean<boolean>().describe("If this is the user's first login"),
 });
 
 /**
@@ -8139,6 +8152,7 @@ export const zodGetProfileResponse = zod.object({
 		collections: zod.coerce.boolean<boolean>(),
 		skills: zod.coerce.boolean<boolean>(),
 		vault: zod.coerce.boolean<boolean>(),
+		museum: zod.coerce.boolean<boolean>(),
 	}),
 	skyblockXp: zod.number(),
 	socialXp: zod.number(),
@@ -9184,7 +9198,7 @@ export const zodGetProfileNetworthResponse = zod.object({
 		zod.object({
 			total: zod.number(),
 			liquidTotal: zod.number(),
-			nonCosmeticTotal: zod.number(),
+			functionalTotal: zod.number(),
 			liquidFunctionalTotal: zod.number(),
 			items: zod.array(
 				zod.object({
@@ -9246,6 +9260,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 		collections: zod.coerce.boolean<boolean>(),
 		skills: zod.coerce.boolean<boolean>(),
 		vault: zod.coerce.boolean<boolean>(),
+		museum: zod.coerce.boolean<boolean>(),
 	}),
 	skyblockXp: zod.number(),
 	socialXp: zod.number(),

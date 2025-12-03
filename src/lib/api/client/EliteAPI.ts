@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type {
+	AccountSearchResultDto,
 	AccountWithPermsDto,
 	AddProductImageParams,
 	AddStyleImageParams,
@@ -526,6 +527,42 @@ export const getSearchAccountsUrl = (params: SearchAccountsParams) => {
 
 export const searchAccounts = async (params: SearchAccountsParams, options?: RequestInit) => {
 	return customFetch<searchAccountsResponse>(getSearchAccountsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Authenticated endpoint that returns a list of accounts that have a specific discord username linked.
+ * @summary Search for Minecraft Account From Discord
+ */
+export type searchAccountsWithDiscordResponse200 = {
+	data: AccountSearchResultDto[];
+	status: 200;
+};
+
+export type searchAccountsWithDiscordResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type searchAccountsWithDiscordResponseSuccess = searchAccountsWithDiscordResponse200 & {
+	headers: Headers;
+};
+export type searchAccountsWithDiscordResponseError = searchAccountsWithDiscordResponse401 & {
+	headers: Headers;
+};
+
+export type searchAccountsWithDiscordResponse =
+	| searchAccountsWithDiscordResponseSuccess
+	| searchAccountsWithDiscordResponseError;
+
+export const getSearchAccountsWithDiscordUrl = () => {
+	return `${ELITE_API_URL}/account/discord-search`;
+};
+
+export const searchAccountsWithDiscord = async (options?: RequestInit) => {
+	return customFetch<searchAccountsWithDiscordResponse>(getSearchAccountsWithDiscordUrl(), {
 		...options,
 		method: 'GET',
 	});

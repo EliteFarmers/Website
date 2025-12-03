@@ -2,6 +2,8 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import Head from '$comp/head.svelte';
+	import LinkOptions from '$comp/settings/link-options.svelte';
+	import LinkingGuide from '$comp/settings/linking-guide.svelte';
 	import * as AlertDialog from '$ui/alert-dialog';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
@@ -126,19 +128,40 @@
 			</div>
 		</form>
 
-		{#if !user?.minecraftAccounts?.length}
-			<div class="mx-auto flex flex-col text-center">
-				<h1 class="py-2 text-lg">
-					Ensure <span class="text-progress select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
-				</h1>
-				<video autoplay loop muted playsinline class="w-full max-w-md rounded-md" src="/videos/HypixelLink.mp4">
-					<h1 class="text-md py-2">
-						(Enter <span class="text-progress select-all">{discordUsername}</span>, the video is just the
-						example)
-					</h1>
-				</video>
-			</div>
-		{/if}
+		<div class="mx-auto flex flex-col text-center">
+			<LinkOptions
+				username={discordUsername}
+				filter={(option) => !user?.minecraftAccounts?.some((mc) => mc.id !== option.uuid)}
+			>
+				{#snippet button(option)}
+					<form
+						method="POST"
+						use:enhance={() => {
+							loading = true;
+							return async ({ result, formElement }) => {
+								// Wait for a bit so the user can see the loading state
+								await new Promise((r) => setTimeout(r, 500));
+								loading = false;
+								await invalidateAll();
+								await applyAction(result);
+								if (result.status === 200) {
+									mcUsername = undefined;
+									dialogOpen = false;
+									formElement.reset();
+								}
+							};
+						}}
+					>
+						<input type="hidden" name="username" value={option.ign} />
+						<Button type="submit" class="flex-1" formaction="?/link" disabled={loading}>Link</Button>
+					</form>
+				{/snippet}
+			</LinkOptions>
+			<p class="py-2 text-lg">
+				Ensure <span class="text-progress select-all">{discordUsername}</span> is linked in Hypixel.net as follows:
+			</p>
+			<LinkingGuide username={user?.username ?? ''} />
+		</div>
 	{/snippet}
 </div>
 

@@ -29,7 +29,11 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 
 	// Fetch the user session
 	if (locals.access_token && locals.refresh_token) {
-		locals.session = await FetchUserSession(event.cookies);
+		try {
+			locals.session = await FetchUserSession(event.cookies);
+		} catch {
+			// Ignore errors fetching session
+		}
 		locals.access_token = cookies.get('access_token');
 		locals.refresh_token = cookies.get('refresh_token');
 	}

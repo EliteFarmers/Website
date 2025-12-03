@@ -12,7 +12,7 @@ import type { NetworthResult } from './NetworthResult';
 export interface NetworthCategory {
 	total: number;
 	liquidTotal: number;
-	nonCosmeticTotal: number;
+	functionalTotal: number;
 	liquidFunctionalTotal: number;
 	items: NetworthResult[];
 }

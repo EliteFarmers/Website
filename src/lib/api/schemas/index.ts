@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 
 export * from './AcceptConfirmationRequest';
 export * from './AccountMetaDto';
+export * from './AccountSearchResultDto';
 export * from './AccountWithPermsDto';
 export * from './AddCosmeticToProductRequest';
 export * from './AddProductImageParams';

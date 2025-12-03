@@ -9,6 +9,7 @@
 	import PlayerSearch from '$comp/player-search.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import { formatLeaderboardAmount } from '$lib/format';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
@@ -17,6 +18,7 @@
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
 	import Search from '@lucide/svelte/icons/search';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import SquareActivity from '@lucide/svelte/icons/square-activity';
 	import { PersistedState } from 'runed';
 	import { tick } from 'svelte';
@@ -66,6 +68,7 @@
 
 	const breadcrumb = getPageCtx();
 	const favorites = getFavoritesContext();
+	const gbl = getGlobalContext();
 
 	let startTime = $derived(Number(data.lb.startsAt ?? 0) * 1000);
 	let endTime = $derived(Number(data.lb.endsAt ?? 0) * 1000);
@@ -216,7 +219,16 @@
 		</div>
 	{:else}
 		<div class="flex flex-col items-end justify-center gap-2 rounded-lg lg:flex-row">
-			<div class="flex w-full flex-col items-center gap-2 lg:items-end"></div>
+			<div class="flex w-full flex-col items-center gap-2 lg:items-end">
+				{#if gbl.user?.settings.features?.hideShopPromotions !== true}
+					<div class="flex w-full max-w-xl flex-row items-center justify-center lg:justify-start">
+						<Button href="/shop" variant="outline" class="flex flex-row items-center gap-2 text-sm">
+							<ShoppingCart class="size-4" />
+							Buy Cosmetics!
+						</Button>
+					</div>
+				{/if}
+			</div>
 			<div class="flex w-full flex-col items-center gap-2 lg:items-start">
 				<div class="flex w-full max-w-xl justify-center md:justify-start lg:justify-end">
 					<LeaderboardPagination info={data.leaderboard} leaderboard={data.lb} />

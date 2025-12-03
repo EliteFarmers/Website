@@ -3,6 +3,7 @@ import {
 	getUserGuilds,
 	linkOwnAccount,
 	refreshPurchases,
+	searchAccountsWithDiscord,
 	setPrimaryAccount,
 	unlinkOwnAccount,
 	updateAccount,
@@ -43,6 +44,8 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 
 	const { data: publicGuilds } = await getPublicGuilds().catch(() => ({ data: undefined }));
 
+	const otherAccounts = searchAccountsWithDiscord().then((res) => res.data ?? []);
+
 	return {
 		guildsWithBot: guilds.filter((guild) => guild.hasBot && CanEditGuild(guild)),
 		guilds: guilds.filter((guild) => !guild.hasBot),
@@ -50,6 +53,7 @@ export const load: PageServerLoad = async ({ locals, parent, url }) => {
 		premium: 'none' as string,
 		mcAccount: account ?? null,
 		user: discord,
+		otherAccounts: otherAccounts,
 	};
 };
 
