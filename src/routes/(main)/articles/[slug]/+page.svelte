@@ -91,6 +91,9 @@
 		<ArticleAuthor {article}>
 			{#if article.releasedAt}
 				<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
+				{#if new Date(article.releasedAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+					<span class="text-completed text-sm font-semibold">NEW</span>
+				{/if}
 			{/if}
 		</ArticleAuthor>
 

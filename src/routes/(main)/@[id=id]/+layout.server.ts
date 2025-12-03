@@ -29,7 +29,7 @@ export const load: LayoutServerLoad = async (event) => {
 
 		const limited = await limiter.isLimited(event);
 		if (limited) {
-			throw error(429, 'Too Many Requests');
+			throw error(429, "You're opening too many profiles! Please slow down.");
 		}
 	}
 

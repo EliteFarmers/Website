@@ -20,6 +20,9 @@
 			<ArticleAuthor {article} />
 			{#if article.releasedAt}
 				<div class="flex flex-row items-center gap-2 text-sm">
+					{#if new Date(article.releasedAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+						<span class="text-completed text-sm font-semibold">NEW</span>
+					{/if}
 					<DateDisplay timestamp={new Date(article.releasedAt).getTime()} />
 				</div>
 			{/if}
