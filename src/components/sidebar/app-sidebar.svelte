@@ -1,24 +1,23 @@
 <script lang="ts" module>
 	import { SIDEBAR_NAV } from '$content/sidebar';
-	import Search from '@lucide/svelte/icons/search';
 </script>
 
 <script lang="ts">
-	import SearchMenu from '$comp/header/search-menu.svelte';
 	import NavMain from '$comp/sidebar/nav-main.svelte';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { cn } from '$lib/utils';
 	import { ScrollArea } from '$ui/scroll-area';
 	import * as Sidebar from '$ui/sidebar';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import type { Snippet } from 'svelte';
 	import NavDynamic from './nav-dynamic.svelte';
 	import SideBarFooter from './side-bar-footer.svelte';
 
-	let searchOpen = $state(false);
-
 	let { children }: { children?: Snippet } = $props();
 
 	const pageCtx = getPageCtx();
+	const gbl = getGlobalContext();
 </script>
 
 <Sidebar.Header class="mt-2">
@@ -43,14 +42,28 @@
 		</Sidebar.MenuButton>
 	</Sidebar.MenuItem>
 	<Sidebar.MenuItem class="group-data-[state=collapsed]:mt-2">
-		<Sidebar.MenuButton onclick={() => (searchOpen = true)} class="bg-card border-2 py-4">
+		<Sidebar.MenuButton>
 			{#snippet tooltipContent()}
-				Search
+				Shop
 			{/snippet}
-			<Search class="-ml-0.5" />
-			<span class="text-muted-foreground">Search...</span>
+			{#snippet child({ props })}
+				<a
+					href="/shop"
+					{...props}
+					class={cn(
+						props.class ?? '',
+						'bg-card text-primary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative mx-0 border shadow-sm transition-all duration-300 group-data-[state=collapsed]:px-1.5! group-data-[state=expanded]:px-2'
+					)}
+				>
+					{#if gbl.user?.settings.features?.hideShopPromotions !== true}
+						<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+						<div class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"></div>
+					{/if}
+					<ShoppingCart class="text-primary m-0 size-5 p-0" />
+					<span class="text-primary font-semibold">Shop</span>
+				</a>
+			{/snippet}
 		</Sidebar.MenuButton>
-		<SearchMenu bind:open={searchOpen} useButton={false} />
 	</Sidebar.MenuItem>
 </Sidebar.Header>
 <div class="flex h-full flex-col overflow-hidden">

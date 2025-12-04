@@ -24,37 +24,6 @@ export interface NavGroup {
 	auth?: boolean;
 }
 
-export const NAV_PAGES = [
-	{
-		name: 'Home',
-		href: '/',
-	},
-	{
-		name: 'Info',
-		href: '/info',
-	},
-	{
-		name: 'Browse',
-		href: '/browse',
-	},
-	{
-		name: 'Contests',
-		href: '/contests',
-	},
-	{
-		name: 'Top Players',
-		href: '/leaderboard',
-	},
-	{
-		name: 'Shop',
-		href: '/shop',
-	},
-	{
-		name: 'Gems',
-		href: '/gems',
-	},
-] as NavItem[];
-
 export const PROFILE_NAV_PAGES = [
 	{
 		icon: UserPen,
@@ -72,48 +41,6 @@ export const PROFILE_NAV_PAGES = [
 		href: '/profile/servers',
 	},
 ] as Crumb[];
-
-export const MOBILE_NAV = [
-	{
-		title: 'Main Pages',
-		items: NAV_PAGES,
-	},
-	{
-		title: 'Player Profile',
-		items: PROFILE_NAV_PAGES,
-		auth: true,
-	},
-	{
-		title: 'Player Profile',
-		items: [
-			{
-				name: 'Login',
-				href: '/login',
-			},
-		],
-		auth: false,
-	},
-] as NavGroup[];
-
-export const SHOP_NAV_PAGES = [
-	{
-		name: 'Overview',
-		href: '/shop',
-	},
-	{
-		name: 'Premium',
-		href: '/shop/premium',
-	},
-	{
-		name: 'Weight Styles',
-		href: '/shop/styles',
-	},
-	{
-		name: 'Manage Account',
-		href: '/profile/settings',
-		auth: true,
-	},
-] as NavItem[];
 
 export const ADMIN_NAV_PAGES = [
 	{
