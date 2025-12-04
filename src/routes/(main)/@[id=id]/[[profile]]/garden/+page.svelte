@@ -75,11 +75,11 @@
 							{/snippet}
 							<div class="flex flex-col gap-1">
 								<p class="font-semibold">All Crops</p>
-								<p class="max-w-xs break-words whitespace-normal">
+								<p class="max-w-xs wrap-break-word whitespace-normal">
 									<span class="font-semibold">{totalCopperSpent.toLocaleString()}</span> Total Copper
 									Spent <br />
 								</p>
-								<p class="max-w-xs break-words whitespace-normal">
+								<p class="max-w-xs wrap-break-word whitespace-normal">
 									<span class="font-semibold"
 										>{(CROP_UPGRADES_MAX_COST - totalCopperSpent).toLocaleString()}</span
 									> Total Copper Until Max
