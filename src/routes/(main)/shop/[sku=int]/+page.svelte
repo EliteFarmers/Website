@@ -151,10 +151,10 @@
 
 			{#if product.isSubscription}
 				<div class="max-w-none">
-					<h3 class="text-lg font-semibold">Subscription Item</h3>
-					<p class="text-muted-foreground leading-relaxed">
+					<h3 class="font-semibold">Subscription Item</h3>
+					<p class="text-muted-foreground text-sm leading-relaxed">
 						This item is a subscription, the perks that you receive will only be active while you have a
-						valid subscription. They can be cancelled at any time!
+						valid subscription. You can cancel your subscription at any time!
 					</p>
 				</div>
 			{/if}
