@@ -222,7 +222,15 @@
 			<div class="flex w-full flex-col items-center gap-2 lg:items-end">
 				{#if gbl.user?.settings.features?.hideShopPromotions !== true}
 					<div class="flex w-full max-w-xl flex-row items-center justify-center lg:justify-start">
-						<Button href="/shop" variant="outline" class="flex flex-row items-center gap-2 text-sm">
+						<Button
+							href="/shop"
+							variant="outline"
+							class="relative flex flex-row items-center gap-2 overflow-hidden text-sm"
+						>
+							<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+							<div
+								class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"
+							></div>
 							<ShoppingCart class="size-4" />
 							Buy Cosmetics!
 						</Button>

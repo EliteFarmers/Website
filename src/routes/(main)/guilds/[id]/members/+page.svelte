@@ -8,12 +8,14 @@
 	import LeaderboardPaginationLocal from '$comp/leaderboards/pagination-local.svelte';
 	import type { GuildMembersLeaderboard, LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { getGuildMembersLeaderboard } from '$lib/remote/guilds.remote';
 	import { Button } from '$ui/button';
 	import ComboBox from '$ui/combobox/combo-box.svelte';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import Hourglass from '@lucide/svelte/icons/hourglass';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import SquareActivity from '@lucide/svelte/icons/square-activity';
 	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
@@ -52,6 +54,7 @@
 	let mode = $state<'classic' | 'ironman' | 'island' | undefined>(data.selectedMode);
 	let removed = $state<0 | 1 | 2 | undefined>(data.selectedRemoved);
 
+	const gbl = getGlobalContext();
 	const entries = $derived.by<LeaderboardEntry[]>(() => leaderboardData?.entries ?? []);
 	const pageSize = 20;
 	let currentPage = $state(1);
@@ -286,11 +289,25 @@
 
 	{#if totalPages >= 1}
 		<div class="flex flex-col items-center gap-2 lg:flex-row lg:justify-between">
-			<div class="lg:flex-1">
+			<div class="flex flex-col items-center gap-2 sm:flex-row lg:flex-1">
 				{#if selectedInfo && totalEntries}
+					{#if gbl.user?.settings.features?.hideShopPromotions !== true}
+						<Button
+							href="/shop"
+							variant="outline"
+							class="relative flex flex-row items-center gap-2 overflow-hidden text-sm"
+						>
+							<div class="bg-primary/15 absolute -top-24 -right-24 h-32 w-32 rounded-full blur-xl"></div>
+							<div
+								class="bg-primary/10 absolute -bottom-24 -left-24 h-32 w-32 rounded-full blur-xl"
+							></div>
+							<ShoppingCart class="size-4" />
+							Buy Cosmetics!
+						</Button>
+					{/if}
 					<p class="text-muted-foreground text-sm">
 						Showing {currentOffset.toLocaleString()} - {currentEnd.toLocaleString()} of
-						{totalEntries.toLocaleString()} members.
+						{totalEntries.toLocaleString()} entries.
 					</p>
 				{/if}
 			</div>

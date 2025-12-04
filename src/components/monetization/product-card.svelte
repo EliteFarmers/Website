@@ -17,34 +17,52 @@
 </script>
 
 <a
-	class={cn('group bg-card shadow-primary inline-block max-w-48 rounded-lg border-2 hover:drop-shadow-lg', className)}
+	class={cn(
+		'group bg-card hover:bg-accent/50 border-border relative flex w-full max-w-[280px] flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+		className
+	)}
 	href="/shop/{product.id}"
+	data-sveltekit-preload-data="tap"
 >
-	<div class="flex min-w-0 flex-col justify-start">
-		<div class="relative grid min-h-32 w-full items-center justify-center rounded-md">
-			{#if image}
-				<img src={image} alt={product.name} class="size-48 rounded-t-md object-cover" />
-			{:else}
-				<Package size={64} class="m-16" />
-			{/if}
-		</div>
-		<div class="flex flex-col items-start justify-between gap-2 py-2">
-			<p class="inline-block max-w-48 flex-1 truncate px-2 text-lg">{product.name}</p>
+	<div class="bg-muted/30 relative flex aspect-video w-full items-center justify-center overflow-hidden">
+		{#if image}
+			<img
+				src={image}
+				alt={product.name}
+				class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+			/>
+		{:else}
+			<Package size={48} class="text-muted-foreground/50" />
+		{/if}
+	</div>
 
-			<div class="relative w-full px-2 text-sm font-semibold">
+	<div class="flex flex-1 flex-col p-4">
+		<h3 class="line-clamp-1 text-lg font-bold tracking-tight">{product.name}</h3>
+
+		{#if product.description}
+			<p class="text-muted-foreground mt-1 line-clamp-2 text-sm">
+				{product.description}
+			</p>
+		{/if}
+
+		<div class="mt-auto flex items-center justify-between pt-4">
+			<div class="flex flex-col">
 				{#if free}
-					<span>Free</span>
+					<span class="text-lg font-bold">Free</span>
 				{:else}
-					<span class="leading-none whitespace-nowrap"
-						>{dollars} USD
+					<div class="flex items-baseline gap-1">
+						<span class="text-lg font-bold">${dollars}</span>
 						{#if product.isSubscription}
-							<span class="leading-none whitespace-nowrap">/ Month</span>
+							<span class="text-muted-foreground text-xs">/mo</span>
 						{/if}
-					</span>
+					</div>
 				{/if}
-				<div class="text-muted-foreground group-hover:animate-bounce-horizontal absolute top-0 right-2">
-					<ArrowRight size={18} />
-				</div>
+			</div>
+
+			<div
+				class="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+			>
+				<ArrowRight size={16} />
 			</div>
 		</div>
 	</div>

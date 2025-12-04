@@ -3,7 +3,6 @@ import Handshake from '@lucide/svelte/icons/handshake';
 import Home from '@lucide/svelte/icons/home';
 import Info from '@lucide/svelte/icons/info';
 import Newspaper from '@lucide/svelte/icons/newspaper';
-import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 import TextSearch from '@lucide/svelte/icons/text-search';
 import Ticket from '@lucide/svelte/icons/ticket';
 import Trophy from '@lucide/svelte/icons/trophy';
@@ -34,11 +33,6 @@ export const SIDEBAR_NAV = [
 		title: 'Browse',
 		href: '/browse',
 		icon: TextSearch as unknown as Component,
-	},
-	{
-		title: 'Shop',
-		href: '/shop',
-		icon: ShoppingCart as unknown as Component,
 	},
 	{
 		title: 'Gems',
