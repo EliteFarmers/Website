@@ -6,7 +6,6 @@ import type { Actions, PageServerLoad } from './$types';
 export const load = (async ({ url }) => {
 	const data = url.searchParams.get('data');
 	if (!data) {
-		console.log(url.searchParams);
 		return {};
 	}
 

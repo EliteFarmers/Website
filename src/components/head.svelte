@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import HeadLdJson from './head-ld-json.svelte';
 
 	interface Props {
@@ -25,16 +26,22 @@
 		ldJson = undefined,
 	}: Props = $props();
 
+	const pageCtx = getPageCtx();
+
 	const canonicalUrl = $derived(
 		canonicalPath?.startsWith('http')
 			? canonicalPath
 			: PUBLIC_HOST_URL + (canonicalPath?.startsWith('/') ? '' : '/') + canonicalPath
 	);
+
+	$effect(() => {
+		pageCtx.title = title ?? 'Elite | Skyblock Farming Weight';
+	});
 </script>
 
 <svelte:head>
-	<title>{title ?? 'Elite | Skyblock Farming Weight'}</title>
-	<meta property="og:title" content={title ?? 'Elite | Skyblock Farming Weight'} />
+	<title>{pageCtx.title}</title>
+	<meta property="og:title" content={pageCtx.title} />
 
 	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 

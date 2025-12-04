@@ -65,7 +65,7 @@
 </script>
 
 <Head
-	title="{ctx.ignMeta} ({profile?.profileName}) | Farming Weight"
+	title="{ctx.ignMeta} ({profile?.profileName}) | Stats"
 	{description}
 	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
