@@ -182,6 +182,7 @@ import type {
 	WeightsDto,
 	YearlyContestsDto,
 	YearlyCropRecordsDto,
+	YearlyRecapDto,
 } from '../schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -7197,6 +7198,45 @@ export const getGetSelectedProfileUrl = (playerUuid: string) => {
 
 export const getSelectedProfile = async (playerUuid: string, options?: RequestInit) => {
 	return customFetch<getSelectedProfileResponse>(getGetSelectedProfileUrl(playerUuid), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Retrieves the yearly recap for a player.
+ * @summary Get Player Recap
+ */
+export type getPlayerRecapResponse200 = {
+	data: YearlyRecapDto;
+	status: 200;
+};
+
+export type getPlayerRecapResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type getPlayerRecapResponseSuccess = getPlayerRecapResponse200 & {
+	headers: Headers;
+};
+export type getPlayerRecapResponseError = getPlayerRecapResponse400 & {
+	headers: Headers;
+};
+
+export type getPlayerRecapResponse = getPlayerRecapResponseSuccess | getPlayerRecapResponseError;
+
+export const getGetPlayerRecapUrl = (year: number | string, playerUuid: string, profileUuid: string) => {
+	return `${ELITE_API_URL}/recap/${year}/player/${playerUuid}/${profileUuid}`;
+};
+
+export const getPlayerRecap = async (
+	year: number | string,
+	playerUuid: string,
+	profileUuid: string,
+	options?: RequestInit
+) => {
+	return customFetch<getPlayerRecapResponse>(getGetPlayerRecapUrl(year, playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
 	});
