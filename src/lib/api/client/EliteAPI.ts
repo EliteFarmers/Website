@@ -166,6 +166,7 @@ import type {
 	SkyblockFiresalesResponse,
 	SkyblockGemShopsResponse,
 	SkyblockItemResponse,
+	ToggleRecapVisibilityRequest,
 	UpdateBadgeRequestUpdateBadge,
 	UpdateConfirmationRequest,
 	UpdateContestPingsRequestUpdateContestPings,
@@ -7239,6 +7240,56 @@ export const getPlayerRecap = async (
 	return customFetch<getPlayerRecapResponse>(getGetPlayerRecapUrl(year, playerUuid, profileUuid), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * Toggles the public visibility of a player's yearly recap.
+ * @summary Toggle Recap Visibility
+ */
+export type toggleRecapVisibilityResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type toggleRecapVisibilityResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type toggleRecapVisibilityResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type toggleRecapVisibilityResponseSuccess = toggleRecapVisibilityResponse204 & {
+	headers: Headers;
+};
+export type toggleRecapVisibilityResponseError = (
+	| toggleRecapVisibilityResponse400
+	| toggleRecapVisibilityResponse401
+) & {
+	headers: Headers;
+};
+
+export type toggleRecapVisibilityResponse = toggleRecapVisibilityResponseSuccess | toggleRecapVisibilityResponseError;
+
+export const getToggleRecapVisibilityUrl = (year: number | string, playerUuid: string, profileUuid: string) => {
+	return `${ELITE_API_URL}/recap/${year}/player/${playerUuid}/${profileUuid}/visibility`;
+};
+
+export const toggleRecapVisibility = async (
+	year: number | string,
+	playerUuid: string,
+	profileUuid: string,
+	toggleRecapVisibilityRequest: ToggleRecapVisibilityRequest,
+	options?: RequestInit
+) => {
+	return customFetch<toggleRecapVisibilityResponse>(getToggleRecapVisibilityUrl(year, playerUuid, profileUuid), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(toggleRecapVisibilityRequest),
 	});
 };
 

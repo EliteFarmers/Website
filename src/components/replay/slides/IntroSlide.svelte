@@ -1,27 +1,46 @@
 <script lang="ts">
-	import type { PlayerRecapInfo } from '$lib/api/schemas';
+	import UserIcon from '$comp/discord/user-icon.svelte';
+	import type { YearlyRecapData, YearlyRecapDto } from '$lib/api/schemas';
+	import * as Item from '$ui/item/index.js';
 
 	interface Props {
-		data: PlayerRecapInfo;
-		year: number | string;
+		data: YearlyRecapData;
+		discord?: YearlyRecapDto['discord'];
 	}
 
-	let { data, year }: Props = $props();
+	let { data, discord }: Props = $props();
 </script>
 
-<div class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-purple-900 p-8">
-	<h1 class="animate-fade-in-up mb-8 text-6xl font-bold">Your {year} Wrapped</h1>
+<div class="flex h-full w-full flex-col items-center justify-center bg-linear-to-b from-violet-950 to-black p-8">
+	<h1 class="animate-fade-in-up mb-12 text-center text-5xl font-black text-white drop-shadow-lg md:text-7xl">
+		<span class="bg-linear-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">{data.year}</span>
+		<br />
+		<span class="text-white">Farming Recap</span>
+	</h1>
 
-	<div class="animate-scale-in relative mb-6 h-48 w-48">
-		<img src={data.skin} alt={data.ign} class="h-full w-full object-contain drop-shadow-2xl" />
+	<div class="animate-scale-in relative mb-12 h-64 w-64 drop-shadow-2xl">
+		<img
+			src="https://mc-heads.net/body/{data.player.uuid}"
+			alt={data.player.ign}
+			class="h-full w-full object-contain"
+		/>
 	</div>
 
-	<h2 class="mb-4 text-4xl font-bold text-yellow-400">{data.ign}</h2>
+	<h2 class="animate-fade-in mb-8 text-4xl font-bold text-white">{data.player.ign}</h2>
 
-	<div class="mb-8 flex items-center gap-4 rounded-xl bg-black/30 p-4 backdrop-blur-sm">
-		<img src={data.discord.avatar} alt="Discord" class="h-12 w-12 rounded-full" />
-		<span class="text-xl">{data.discord.username}</span>
-	</div>
+	{#if discord?.username}
+		<div class="animate-fade-in delay-200">
+			<Item.Root variant="outline" class="items-center border-white/10 bg-white/5 pr-6 backdrop-blur-md">
+				<Item.Media>
+					<UserIcon user={discord} class="size-12 rounded-full" />
+				</Item.Media>
+				<Item.Content>
+					<Item.Title class="text-lg font-bold text-white">{discord.username}</Item.Title>
+					<Item.Description class="text-sm text-zinc-400">Linked Discord Account</Item.Description>
+				</Item.Content>
+			</Item.Root>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -66,12 +85,8 @@
 		animation: fade-in 1s ease-out forwards;
 		opacity: 0;
 	}
-	.delay-300 {
-		animation-delay: 0.3s;
-		animation-fill-mode: forwards;
-	}
-	.delay-400 {
-		animation-delay: 0.4s;
+	.delay-200 {
+		animation-delay: 0.2s;
 		animation-fill-mode: forwards;
 	}
 </style>

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { CollectionRecap } from '$lib/api/schemas';
+	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
 	interface Props {
 		data: CollectionRecap;
@@ -32,7 +34,7 @@
 			>
 				<div class="mb-1 h-8 w-8 md:h-12 md:w-12">
 					<img
-						src={`/images/crops/${crop.toLowerCase().replace(' ', '')}.png`}
+						src={PROPER_CROP_TO_IMG[getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)]}
 						alt={crop}
 						class="pixelated h-full w-full object-contain"
 					/>

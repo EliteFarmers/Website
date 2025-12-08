@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { YearlyRecapData } from '$lib/api/schemas';
+	import { Button } from '$ui/button/index.js';
+	import * as Item from '$ui/item/index.js';
+	import Bug from '@lucide/svelte/icons/bug';
+	import Check from '@lucide/svelte/icons/check';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Globe from '@lucide/svelte/icons/globe';
+	import Lock from '@lucide/svelte/icons/lock';
+	import Scale from '@lucide/svelte/icons/scale';
+	import Share2 from '@lucide/svelte/icons/share-2';
+	import Trophy from '@lucide/svelte/icons/trophy';
+	import Wheat from '@lucide/svelte/icons/wheat';
 	import { fade, scale } from 'svelte/transition';
 
 	interface Props {
@@ -33,142 +44,183 @@
 </script>
 
 <div
-	class="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-gradient-to-br from-gray-900 to-black p-4"
+	class="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-gradient-to-b from-zinc-900 to-black p-4 text-zinc-100"
 >
 	<h2
-		class="animate-fade-in mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-center text-4xl font-bold text-transparent md:mb-8 md:text-5xl"
+		class="animate-fade-in mb-8 bg-gradient-to-r from-amber-200 to-yellow-500 bg-clip-text text-center text-4xl font-bold text-transparent md:text-5xl"
 	>
 		That's a Wrap!
 	</h2>
 
-	<div
-		class="animate-scale-in mb-6 w-full max-w-md rounded-3xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-md delay-200"
-	>
-		<div class="mb-4 flex items-center justify-center gap-4">
-			<div class="h-16 w-16 overflow-hidden rounded-full border-2 border-yellow-400">
-				<img src={data.player.skin} alt={data.player.ign} class="h-full w-full object-cover" />
-			</div>
-			<div class="text-left">
-				<h3 class="text-2xl font-bold text-white">{data.player.ign}</h3>
-				<p class="text-sm text-gray-400">{data.year} Farming Legend</p>
-			</div>
-		</div>
+	<div class="animate-scale-in w-full max-w-md space-y-6 delay-200">
+		<!-- User Profile -->
+		<Item.Root variant="outline" class="border-white/10 bg-white/5 backdrop-blur-md">
+			<Item.Media>
+				<img
+					src={data.player.skin}
+					alt={data.player.ign}
+					class="aspect-square h-full w-full rounded-md object-cover"
+				/>
+			</Item.Media>
+			<Item.Content>
+				<Item.Title class="text-xl font-bold text-white">{data.player.ign}</Item.Title>
+				<Item.Description class="text-zinc-400">{data.year} Farming Legend</Item.Description>
+			</Item.Content>
+		</Item.Root>
 
-		<div class="mb-6 grid grid-cols-2 gap-3 text-left">
-			<div class="rounded-lg bg-black/30 p-3">
-				<p class="text-[10px] text-gray-400 uppercase">Farming Weight</p>
-				<p class="text-lg font-bold text-yellow-300">+{formatCompact(data.player.farmingWeight.gained)}</p>
-			</div>
-			<div class="rounded-lg bg-black/30 p-3">
-				<p class="text-[10px] text-gray-400 uppercase">Top Crop</p>
-				<p class="truncate text-lg font-bold text-yellow-300">
-					{Object.entries(data.collections.increases).sort(([, a], [, b]) => Number(b) - Number(a))?.[0]?.[0]}
-				</p>
-			</div>
-			<div class="rounded-lg bg-black/30 p-3">
-				<p class="text-[10px] text-gray-400 uppercase">Contests</p>
-				<p class="text-lg font-bold text-yellow-300">{data.contests.total}</p>
-			</div>
-			<div class="rounded-lg bg-black/30 p-3">
-				<p class="text-[10px] text-gray-400 uppercase">Pests</p>
-				<p class="text-lg font-bold text-yellow-300">{data.pests.kills}</p>
-			</div>
+		<!-- Stats Grid -->
+		<div class="grid grid-cols-2 gap-4">
+			<Item.Root variant="muted" class="bg-white/5">
+				<Item.Media variant="icon" class="text-yellow-400">
+					<Scale class="size-5" />
+				</Item.Media>
+				<Item.Content>
+					<Item.Description>Weight Gained</Item.Description>
+					<Item.Title class="text-lg">+{formatCompact(data.player.farmingWeight.gained)}</Item.Title>
+				</Item.Content>
+			</Item.Root>
+
+			<Item.Root variant="muted" class="bg-white/5">
+				<Item.Media variant="icon" class="text-green-400">
+					<Wheat class="size-5" />
+				</Item.Media>
+				<Item.Content>
+					<Item.Description>Top Crop</Item.Description>
+					<Item.Title class="truncate text-lg">
+						{Object.entries(data.collections.increases).sort(
+							([, a], [, b]) => Number(b) - Number(a)
+						)?.[0]?.[0]}
+					</Item.Title>
+				</Item.Content>
+			</Item.Root>
+
+			<Item.Root variant="muted" class="bg-white/5">
+				<Item.Media variant="icon" class="text-amber-400">
+					<Trophy class="size-5" />
+				</Item.Media>
+				<Item.Content>
+					<Item.Description>Contests</Item.Description>
+					<Item.Title class="text-lg">{data.contests.total}</Item.Title>
+				</Item.Content>
+			</Item.Root>
+
+			<Item.Root variant="muted" class="bg-white/5">
+				<Item.Media variant="icon" class="text-red-400">
+					<Bug class="size-5" />
+				</Item.Media>
+				<Item.Content>
+					<Item.Description>Pests Kills</Item.Description>
+					<Item.Title class="text-lg">{data.pests.kills}</Item.Title>
+				</Item.Content>
+			</Item.Root>
 		</div>
 
 		<!-- All Profiles Summary -->
-		<div class="mb-4 border-t border-white/10 pt-4">
-			<p class="mb-2 text-xs tracking-wider text-gray-400 uppercase">All Profiles Stats</p>
-			<div class="flex justify-between text-sm">
-				<span
-					>Total Weight: <span class="font-bold text-white"
-						>{formatCompact(data.allProfilesSummary.totalWeightGained)}</span
-					></span
+		<Item.Root variant="outline" class="border-white/10 bg-white/5">
+			<Item.Content>
+				<Item.Title class="text-sm font-medium tracking-wider text-zinc-400 uppercase"
+					>All Profiles Stats</Item.Title
 				>
-				<span
-					>Coins: <span class="font-bold text-white"
-						>{formatCompact(data.allProfilesSummary.totalCoinsGained)}</span
-					></span
+				<div class="mt-2 flex justify-between text-sm">
+					<span
+						>Total Weight: <span class="font-bold text-white"
+							>{formatCompact(data.allProfilesSummary.totalWeightGained)}</span
+						></span
+					>
+					<span
+						>Coins: <span class="font-bold text-white"
+							>{formatCompact(data.allProfilesSummary.totalCoinsGained)}</span
+						></span
+					>
+				</div>
+				{#if data.allProfilesSummary.wipedProfiles > 0}
+					<p class="mt-2 text-xs text-red-400">
+						💀 {data.allProfilesSummary.wipedProfiles} Profile(s) Wiped
+					</p>
+				{/if}
+			</Item.Content>
+		</Item.Root>
+
+		<!-- Profile Switcher -->
+		<div class="animate-fade-in flex flex-wrap justify-center gap-2 delay-500">
+			{#each data.profiles as profile}
+				<a
+					href="/replay/{data.year}/{data.player.ign}/{profile.name}"
+					data-sveltekit-reload
+					class="rounded-full border px-3 py-1 text-xs font-bold transition-colors {profile.name ===
+					data.currentProfile
+						? 'border-yellow-500 bg-yellow-500 text-black'
+						: 'border-white/20 bg-black/40 text-zinc-300 hover:bg-white/10'}"
 				>
-			</div>
-			{#if data.allProfilesSummary.wipedProfiles > 0}
-				<p class="mt-2 text-xs text-red-400">💀 {data.allProfilesSummary.wipedProfiles} Profile(s) Wiped</p>
-			{/if}
+					{profile.cuteName}
+					{profile.wiped ? '💀' : ''}
+				</a>
+			{/each}
+		</div>
+
+		<!-- Share Button -->
+		<div class="animate-fade-in flex justify-center delay-500">
+			<Button
+				onclick={toggleShareModal}
+				size="lg"
+				class="rounded-full bg-white text-black shadow-lg shadow-white/10 hover:bg-zinc-200"
+			>
+				<Share2 class="mr-2 size-4" /> Share Your Replay
+			</Button>
 		</div>
 	</div>
 
-	<!-- Profile Switcher -->
-	<div class="animate-fade-in mb-8 flex flex-wrap justify-center gap-2 delay-500">
-		{#each data.profiles as profile}
-			<a
-				href="/replay/{data.year}/{data.player.ign}/{profile.name}"
-				data-sveltekit-reload
-				class="rounded-full border border-white/20 px-3 py-1 text-xs font-bold transition-colors
-				{profile.name === data.currentProfile
-					? 'border-yellow-500 bg-yellow-500 text-black'
-					: 'bg-black/40 text-gray-300 hover:bg-white/10'}"
-			>
-				{profile.cuteName}
-				{profile.wiped ? '💀' : ''}
-			</a>
-		{/each}
-	</div>
-
-	<button
-		onclick={toggleShareModal}
-		class="group animate-fade-in relative rounded-full bg-white px-8 py-3 text-lg font-bold text-black shadow-lg shadow-white/10 transition-transform delay-500 hover:scale-105"
-	>
-		Share Your Replay
-	</button>
-
 	{#if showShareModal}
 		<div
-			class="absolute inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+			class="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
 			transition:fade
 		>
-			<div class="w-full max-w-sm rounded-3xl border border-gray-700 bg-gray-900 p-6" transition:scale>
-				<h3 class="mb-4 text-center text-xl font-bold text-white">Share Options</h3>
+			<div class="w-full max-w-sm rounded-xl border border-white/10 bg-zinc-900 p-6 shadow-2xl" transition:scale>
+				<h3 class="mb-6 text-center text-xl font-bold text-white">Share Options</h3>
 
-				<div class="mb-4 flex items-center justify-between rounded-xl bg-black/30 p-3">
-					<div>
-						<p class="text-sm font-bold text-white">Make Public</p>
-						<p class="text-[10px] text-gray-400">Allow anyone to view with your IGN</p>
-					</div>
-					<button
-						class="relative h-5 w-10 rounded-full transition-colors {isPublic
-							? 'bg-green-500'
-							: 'bg-gray-600'}"
-						onclick={() => (isPublic = !isPublic)}
-					>
-						<div
-							class="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white transition-transform {isPublic
-								? 'translate-x-5'
-								: ''}"
-						></div>
-					</button>
-				</div>
+				<Item.Root variant="outline" class="mb-4 border-white/10 bg-black/20">
+					<Item.Media variant="icon" class={isPublic ? 'text-green-500' : 'text-zinc-500'}>
+						<Globe class="size-5" />
+					</Item.Media>
+					<Item.Content>
+						<Item.Title>Make Public</Item.Title>
+						<Item.Description>Allow anyone to view with your IGN</Item.Description>
+					</Item.Content>
+					<Item.Actions>
+						<button
+							class="relative h-6 w-11 rounded-full transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none {isPublic
+								? 'bg-green-500'
+								: 'bg-zinc-700'}"
+							onclick={() => (isPublic = !isPublic)}
+							aria-label="Toggle Public"
+						>
+							<div
+								class="absolute top-1 left-1 h-4 w-4 rounded-full bg-white transition-transform {isPublic
+									? 'translate-x-5'
+									: ''}"
+							></div>
+						</button>
+					</Item.Actions>
+				</Item.Root>
 
-				<div class="space-y-2">
-					<button
-						onclick={() => copyLink(false)}
-						class="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-sm font-bold text-black transition-colors hover:bg-gray-200"
-					>
-						{#if copied}<span>Copied!</span>{:else}<span>Copy Public Link</span>{/if}
-					</button>
+				<div class="space-y-3">
+					<Button onclick={() => copyLink(false)} variant="secondary" class="w-full justify-center font-bold">
+						{#if copied}<Check class="mr-2 size-4" /> Copied!{:else}<Copy class="mr-2 size-4" /> Copy Public
+							Link{/if}
+					</Button>
 
-					<button
+					<Button
 						onclick={() => copyLink(true)}
-						class="w-full rounded-xl border border-gray-600 bg-gray-800 py-3 text-sm font-bold text-white transition-colors hover:bg-gray-700"
+						variant="outline"
+						class="w-full justify-center border-zinc-700 font-bold text-zinc-300 hover:bg-zinc-800"
 					>
-						Copy Private Link (with Key)
-					</button>
+						<Lock class="mr-2 size-4" /> Copy Private Link
+					</Button>
 				</div>
 
-				<button
-					onclick={toggleShareModal}
-					class="mt-4 w-full text-center text-sm text-gray-400 hover:text-white"
-				>
+				<Button onclick={toggleShareModal} variant="ghost" class="mt-4 w-full text-zinc-400 hover:text-white">
 					Close
-				</button>
+				</Button>
 			</div>
 		</div>
 	{/if}
@@ -192,7 +244,7 @@
 	@keyframes scale-in {
 		from {
 			opacity: 0;
-			transform: scale(0.9);
+			transform: scale(0.95);
 		}
 		to {
 			opacity: 1;

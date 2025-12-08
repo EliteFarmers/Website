@@ -7,14 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { YearlyRecapData } from './YearlyRecapData';
-import type { GlobalRecap } from './GlobalRecap';
-import type { DiscordRecapInfoDto } from './DiscordRecapInfoDto';
 
-export interface YearlyRecapDto {
-	playerUuid: string;
-	year: number;
-	data: YearlyRecapData;
-	global: GlobalRecap;
-	discord: DiscordRecapInfoDto;
+export interface ToggleRecapVisibilityRequest {
+	public: boolean;
 }

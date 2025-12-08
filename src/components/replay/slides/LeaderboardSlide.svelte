@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { LeaderboardRecap } from '$lib/api/schemas';
+	import * as Item from '$ui/item/index.js';
+	import Trophy from '@lucide/svelte/icons/trophy';
 
 	interface Props {
 		data: LeaderboardRecap;
@@ -12,41 +14,41 @@
 </script>
 
 <div
-	class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-purple-900 to-fuchsia-900 p-8"
+	class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-fuchsia-950 to-purple-950 p-8 text-white"
 >
-	<h2 class="animate-bounce-in mb-12 text-5xl font-bold text-fuchsia-300">Leaderboard Legends</h2>
+	<h2
+		class="animate-bounce-in mb-12 bg-gradient-to-r from-fuchsia-300 to-purple-400 bg-clip-text text-center text-5xl font-bold text-transparent"
+	>
+		Leaderboard Legends
+	</h2>
 
-	<div class="w-full max-w-2xl">
-		<!-- Top 1000 -->
-		<div class="animate-slide-up rounded-3xl bg-black/20 p-8 backdrop-blur-sm delay-200">
-			<h3 class="mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-fuchsia-200">
-				<span>🏆</span> Top Placements
-			</h3>
-			{#if topPlacements.length > 0}
-				<div class="space-y-4">
-					{#each topPlacements as item}
-						<div
-							class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10"
-						>
-							<div>
-								<div class="text-lg font-medium text-white">
-									{item.shortTitle || item.title}
-								</div>
-								<div class="text-sm text-fuchsia-200/70">
-									{new Intl.NumberFormat('en-US', { notation: 'compact' }).format(item.amount)}
-								</div>
-							</div>
-							<span class="text-xl font-bold text-yellow-400">#{item.rank}</span>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<div class="py-8 text-center">
-					<p class="text-xl text-gray-400 italic">No top 1000 placements this year.</p>
-					<p class="mt-2 text-fuchsia-300">Keep grinding for next year! 💪</p>
-				</div>
-			{/if}
+	<div class="animate-slide-up w-full max-w-xl delay-200">
+		<h3 class="mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-white">
+			<Trophy class="size-6 text-yellow-400" /> Top Placements
+		</h3>
+
+		<div class="space-y-4">
+			{#each topPlacements as item (item.slug)}
+				<Item.Root variant="outline" class="border-white/10 bg-white/5 backdrop-blur-sm">
+					<Item.Content>
+						<Item.Title class="text-white">{item.shortTitle || item.title}</Item.Title>
+						<Item.Description class="text-fuchsia-200/70">
+							{new Intl.NumberFormat('en-US', { notation: 'compact' }).format(item.amount)}
+						</Item.Description>
+					</Item.Content>
+					<Item.Actions>
+						<span class="text-xl font-bold text-yellow-400">#{item.rank}</span>
+					</Item.Actions>
+				</Item.Root>
+			{/each}
 		</div>
+
+		{#if topPlacements.length === 0}
+			<div class="rounded-xl border border-white/10 bg-white/5 py-8 text-center">
+				<p class="text-xl text-zinc-400 italic">No top 1000 placements this year.</p>
+				<p class="mt-2 text-fuchsia-300">Keep grinding for next year! 💪</p>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -87,8 +89,5 @@
 	}
 	.delay-200 {
 		animation-delay: 0.2s;
-	}
-	.delay-400 {
-		animation-delay: 0.4s;
 	}
 </style>

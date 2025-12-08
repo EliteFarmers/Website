@@ -13,7 +13,6 @@ import type { GlobalRecapPests } from './GlobalRecapPests';
 
 export interface GlobalRecap {
 	totalCrops: bigint;
-	totalCoinsValue: number;
 	totalXp: number;
 	totalFarmingWeight: number;
 	trackedPlayers: number;

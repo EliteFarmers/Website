@@ -9990,11 +9990,7 @@ export const zodGetPlayerRecapResponse = zod.object({
 	data: zod.object({
 		player: zod.object({
 			ign: zod.string(),
-			skin: zod.string(),
-			discord: zod.object({
-				username: zod.string(),
-				avatar: zod.string(),
-			}),
+			uuid: zod.string(),
 			firstDataPoint: zod.string(),
 			lastDataPoint: zod.string(),
 			daysActive: zod.number(),
@@ -10072,6 +10068,13 @@ export const zodGetPlayerRecapResponse = zod.object({
 			globalTotal: zod.number(),
 			averageComparison: zod.number(),
 		}),
+		streak: zod.object({
+			longestStreakHours: zod.number(),
+			start: zod.number(),
+			end: zod.number(),
+			averageDailyDowntime: zod.number(),
+			sparkline: zod.array(zod.number()),
+		}),
 		leaderboards: zod.object({
 			top1000: zod.array(
 				zod.object({
@@ -10090,21 +10093,38 @@ export const zodGetPlayerRecapResponse = zod.object({
 				})
 			),
 		}),
-		global: zod.object({
-			totalCrops: zod.number(),
-			totalCoinsValue: zod.number(),
-			totalXp: zod.number(),
-			totalFarmingWeight: zod.number(),
-			trackedPlayers: zod.number(),
-			bannedWiped: zod.number(),
-			ironmanToNormal: zod.number(),
-			crops: zod.record(zod.string(), zod.number()),
-			skills: zod.record(zod.string(), zod.number()),
-			pests: zod.record(zod.string(), zod.number()),
-		}),
 		year: zod.string(),
 		currentProfile: zod.string(),
 	}),
+	global: zod.object({
+		totalCrops: zod.number(),
+		totalXp: zod.number(),
+		totalFarmingWeight: zod.number(),
+		trackedPlayers: zod.number(),
+		bannedWiped: zod.number(),
+		ironmanToNormal: zod.number(),
+		crops: zod.record(zod.string(), zod.number()),
+		skills: zod.record(zod.string(), zod.number()),
+		pests: zod.record(zod.string(), zod.number()),
+	}),
+	discord: zod.object({
+		username: zod.string(),
+		avatar: zod.string(),
+	}),
+});
+
+/**
+ * Toggles the public visibility of a player's yearly recap.
+ * @summary Toggle Recap Visibility
+ */
+export const zodToggleRecapVisibilityParams = zod.object({
+	year: zod.number(),
+	playerUuid: zod.string(),
+	profileUuid: zod.string(),
+});
+
+export const zodToggleRecapVisibilityBody = zod.object({
+	public: zod.coerce.boolean<boolean>(),
 });
 
 /**

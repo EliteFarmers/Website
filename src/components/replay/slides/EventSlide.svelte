@@ -1,5 +1,12 @@
 <script lang="ts">
 	import type { EventRecap } from '$lib/api/schemas';
+	import * as Item from '$ui/item/index.js';
+	import Bug from '@lucide/svelte/icons/bug';
+	import Calendar from '@lucide/svelte/icons/calendar';
+	import Medal from '@lucide/svelte/icons/medal';
+	import Package from '@lucide/svelte/icons/package';
+	import Scale from '@lucide/svelte/icons/scale';
+	import Sparkles from '@lucide/svelte/icons/sparkles';
 
 	interface Props {
 		data: EventRecap[];
@@ -13,118 +20,107 @@
 	const getTypeIcon = (type: string) => {
 		switch (type) {
 			case 'farmingWeight':
-				return '⚖️';
+				return Scale;
 			case 'pests':
-				return '🐛';
+				return Bug;
 			case 'medals':
-				return '🥇';
+				return Medal;
 			case 'collection':
-				return '📦';
+				return Package;
 			case 'experience':
-				return '✨';
+				return Sparkles;
 			default:
-				return '📅';
-		}
-	};
-
-	const getTypeColor = (type: string) => {
-		switch (type) {
-			case 'farmingWeight':
-				return 'text-yellow-400';
-			case 'pests':
-				return 'text-red-400';
-			case 'medals':
-				return 'text-orange-400';
-			case 'collection':
-				return 'text-lime-400';
-			case 'experience':
-				return 'text-cyan-400';
-			default:
-				return 'text-white';
+				return Calendar;
 		}
 	};
 </script>
 
-<div class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-purple-900 p-8">
-	<h2 class="animate-fade-in mb-8 text-4xl font-bold text-purple-300 md:text-5xl">Event Horizon</h2>
+<div
+	class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-violet-950 to-black p-8 text-white"
+>
+	<h2
+		class="animate-fade-in mb-8 bg-gradient-to-r from-violet-300 to-fuchsia-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-5xl"
+	>
+		Event Horizon
+	</h2>
 
 	<div class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
 		<!-- Participated Events -->
 		<div class="animate-slide-up flex flex-col gap-4 delay-100">
 			<h3 class="text-2xl font-bold text-white">Participated</h3>
 			<div class="custom-scrollbar flex max-h-[60vh] flex-col gap-3 overflow-y-auto pr-2">
-				{#each participatedEvents as event, i}
-					<div
-						class="relative flex items-center justify-between overflow-hidden rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-transform hover:scale-105"
-						style:animation-delay="{i * 100}ms"
+				{#each participatedEvents as event, i (event.name || i)}
+					<Item.Root
+						variant="outline"
+						class="border-white/10 bg-white/5 backdrop-blur-sm transition-transform hover:scale-105"
+						style="animation-delay: {i * 100}ms"
 					>
-						<!-- Mock Banner Background -->
-						{#if event.banner}
-							<div class="absolute inset-0 z-0 opacity-20">
-								<!-- In a real app, use the banner URL. For now, just a gradient placeholder if no image -->
-								<div class="h-full w-full bg-gradient-to-r from-purple-500 to-blue-500"></div>
-							</div>
-						{/if}
-
-						<div class="z-10 flex items-center gap-3">
-							<span class="text-2xl">{getTypeIcon(event.type)}</span>
-							<div>
-								<p class="font-bold text-white">{event.name}</p>
-								<p class="text-xs {getTypeColor(event.type)} tracking-wider uppercase opacity-80">
-									{event.type}
-								</p>
-								{#if event.score}
-									<p class="text-xs text-gray-300">Score: {event.score.toLocaleString()}</p>
-								{/if}
-							</div>
-						</div>
-
+						<Item.Media variant="icon" class="text-violet-400">
+							{@const Icon = getTypeIcon(event.type)}
+							<Icon class="size-6" />
+						</Item.Media>
+						<Item.Content>
+							<Item.Title class="text-white">{event.name}</Item.Title>
+							<Item.Description>{event.type}</Item.Description>
+							{#if event.score}
+								<p class="text-xs text-zinc-400">Score: {event.score.toLocaleString()}</p>
+							{/if}
+						</Item.Content>
 						{#if event.rank}
-							<div class="z-10 text-right">
-								<p class="text-2xl font-black text-white">#{event.rank}</p>
-								<p class="text-[10px] tracking-wider text-purple-300 uppercase">Rank</p>
-							</div>
+							<Item.Actions class="flex-col items-end justify-center gap-0">
+								<span class="text-lg font-bold text-white">#{event.rank}</span>
+								<span class="text-[10px] text-zinc-400 uppercase">Rank</span>
+							</Item.Actions>
 						{/if}
-					</div>
+					</Item.Root>
 				{/each}
 			</div>
 		</div>
 
 		<!-- Missed Events -->
 		<div class="animate-slide-up flex flex-col gap-4 delay-300">
-			<h3 class="text-2xl font-bold text-gray-400">Missed Opportunities</h3>
+			<h3 class="text-2xl font-bold text-zinc-500">Missed Opportunities</h3>
 			<div class="flex flex-wrap gap-2">
-				{#each missedEvents as event}
+				{#each missedEvents as event (event.name)}
+					{@const Icon = getTypeIcon(event.type)}
 					<div
-						class="flex items-center gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-gray-400"
+						class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-400"
 					>
-						<span>{getTypeIcon(event.type)}</span>
+						<Icon class="size-4" />
 						<span>{event.name}</span>
 					</div>
 				{/each}
 			</div>
 
 			{#if participatedEvents.length > 0}
-				<div class="mt-auto rounded-2xl border border-purple-500/20 bg-purple-500/10 p-6 text-center">
-					<p class="text-lg text-purple-200">Best Performance</p>
-					{#if participatedEvents.some((e) => e.rank)}
-						{@const best = participatedEvents
-							.filter((e) => e.rank)
-							.sort((a, b) => (a.rank || 999999) - (b.rank || 999999))[0]}
-						<p class="mt-2 text-3xl font-black text-white">{best.name}</p>
-						<div class="mt-2 flex justify-center gap-4">
-							<div>
-								<p class="text-sm text-purple-300">Rank</p>
-								<p class="text-xl font-bold text-yellow-400">#{best.rank}</p>
-							</div>
-							<div>
-								<p class="text-sm text-purple-300">Score</p>
-								<p class="text-xl font-bold text-white">{best.score?.toLocaleString()}</p>
-							</div>
-						</div>
-					{:else}
-						<p class="mt-2 text-xl font-bold text-white">Thanks for participating!</p>
-					{/if}
+				<!-- Best Performance Card using Item -->
+				<div class="mt-auto">
+					<Item.Root
+						variant="outline"
+						class="flex-col items-center justify-center border-purple-500/20 bg-purple-500/10 p-6 text-center"
+					>
+						<Item.Content class="items-center">
+							<Item.Description class="text-purple-200">Best Performance</Item.Description>
+							{#if participatedEvents.some((e) => e.rank)}
+								{@const best = participatedEvents
+									.filter((e) => e.rank)
+									.sort((a, b) => (a.rank || 999999) - (b.rank || 999999))[0]}
+								<Item.Title class="py-2 text-3xl font-black text-white">{best.name}</Item.Title>
+								<div class="flex gap-8">
+									<div class="text-center">
+										<p class="text-xs text-purple-300 uppercase">Rank</p>
+										<p class="text-xl font-bold text-yellow-400">#{best.rank}</p>
+									</div>
+									<div class="text-center">
+										<p class="text-xs text-purple-300 uppercase">Score</p>
+										<p class="text-xl font-bold text-white">{best.score?.toLocaleString()}</p>
+									</div>
+								</div>
+							{:else}
+								<Item.Title>Thanks for participating!</Item.Title>
+							{/if}
+						</Item.Content>
+					</Item.Root>
 				</div>
 			{/if}
 		</div>

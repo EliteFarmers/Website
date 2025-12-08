@@ -31,7 +31,13 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: recapDto, error: e } = await getPlayerRecap(year, account.id, selectedProfile.profileId);
+	const { data: recapDto, error: e, response } = await getPlayerRecap(year, account.id, selectedProfile.profileId);
+
+	if (response.status === 401) {
+		return {
+			authed: false,
+		};
+	}
 
 	if (!recapDto || e) {
 		console.log(e);
@@ -40,5 +46,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	return {
 		wrapped: recapDto.data,
+		discordData: recapDto.discord,
+		authed: true,
 	};
 };

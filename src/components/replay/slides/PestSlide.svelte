@@ -10,7 +10,7 @@
 	let allPests = $derived(Object.entries(data.breakdown).sort(([, a], [, b]) => b - a));
 </script>
 
-<div class="flex h-full w-full flex-col overflow-hidden bg-gradient-to-br from-red-900 to-rose-900 p-4 pt-16 md:p-8">
+<div class="flex h-full w-full flex-col overflow-hidden bg-linear-to-br from-red-900 to-rose-900 p-4 pt-16 md:p-8">
 	<div class="mb-4 flex shrink-0 items-baseline justify-between">
 		<h2 class="animate-fade-in text-3xl font-bold text-rose-300 md:text-4xl">Pest Control</h2>
 		<div class="text-right">
@@ -22,7 +22,7 @@
 	<div
 		class="custom-scrollbar mb-4 grid flex-1 grid-cols-2 content-start gap-3 overflow-y-auto md:grid-cols-4 md:gap-4"
 	>
-		{#each allPests as [pest, count], i}
+		{#each allPests as [pest, count], i (pest)}
 			<div
 				class="animate-slide-up flex flex-col items-center gap-2 rounded-xl bg-black/20 p-3 text-center transition-transform hover:scale-105"
 				style:animation-delay="{i * 50}ms"
@@ -43,7 +43,7 @@
 	<div class="animate-fade-in mt-auto shrink-0 rounded-2xl bg-black/20 p-4 delay-500">
 		<h3 class="mb-2 text-sm font-bold text-rose-200">Monthly Activity</h3>
 		<div class="flex h-16 items-end justify-between gap-1 md:h-24">
-			{#each data.monthly as month}
+			{#each data.monthly as month (month.month)}
 				<div class="group flex flex-1 flex-col items-center gap-1">
 					<div
 						class="w-full rounded-t-sm bg-rose-400/50 transition-all group-hover:bg-rose-400"

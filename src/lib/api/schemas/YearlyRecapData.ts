@@ -16,8 +16,8 @@ import type { ShopRecap } from './ShopRecap';
 import type { CollectionRecap } from './CollectionRecap';
 import type { PestRecap } from './PestRecap';
 import type { SkillRecap } from './SkillRecap';
+import type { StreakRecap } from './StreakRecap';
 import type { LeaderboardRecap } from './LeaderboardRecap';
-import type { GlobalRecap } from './GlobalRecap';
 
 export interface YearlyRecapData {
 	player: PlayerRecapInfo;
@@ -29,8 +29,8 @@ export interface YearlyRecapData {
 	collections: CollectionRecap;
 	pests: PestRecap;
 	skills: SkillRecap;
+	streak: StreakRecap;
 	leaderboards: LeaderboardRecap;
-	global: GlobalRecap;
 	year: string;
 	currentProfile: string;
 }
