@@ -8,8 +8,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface DiscordRecapInfoDto {
-	username: string;
-	id: string;
-	avatar: string;
+export interface ToggleRecapVisibilityRequestBody {
+	public: boolean;
 }

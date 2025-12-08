@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { GlobalRecap } from '$lib/api/schemas';
+	import { Crop, CROP_INFO, getCropFromName } from 'farming-weight';
 
 	interface Props {
 		data: GlobalRecap;
@@ -10,10 +11,18 @@
 	const formatCompact = (num: number | bigint) =>
 		new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(num);
 	const formatNumber = (num: number) => new Intl.NumberFormat('en-US').format(num);
+
+	let coinValue = $derived.by(() => {
+		let total = BigInt(0);
+		for (const [crop, amount] of Object.entries(data.crops)) {
+			total += BigInt(CROP_INFO[getCropFromName(crop) ?? Crop.Wheat].npc) * BigInt(amount);
+		}
+		return total;
+	});
 </script>
 
 <div
-	class="flex h-full w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 to-gray-900 p-4 pt-16 md:p-8"
+	class="flex h-full w-full flex-col items-center justify-center overflow-hidden bg-linear-to-br from-slate-900 to-gray-900 p-4 pt-16 md:p-8"
 >
 	<h2 class="animate-fade-in mb-8 shrink-0 text-center text-3xl font-bold text-slate-300 md:mb-16 md:text-5xl">
 		Community Impact
@@ -32,8 +41,8 @@
 				<div
 					class="animate-pop-in rounded-3xl border border-yellow-500/20 bg-yellow-500/10 p-6 text-center delay-200 md:p-8"
 				>
-					<p class="mb-2 text-sm text-yellow-400 md:text-lg">Total Value Generated</p>
-					<p class="text-3xl font-black text-white md:text-5xl">{formatCompact(data.totalCoinsValue)}</p>
+					<p class="mb-2 text-sm text-yellow-400 md:text-lg">Total NPC Value Generated</p>
+					<p class="text-3xl font-black text-white md:text-5xl">{formatCompact(coinValue)}</p>
 				</div>
 				<div
 					class="animate-pop-in rounded-3xl border border-purple-500/20 bg-purple-500/10 p-6 text-center delay-300 md:p-8"

@@ -10,12 +10,12 @@
 
 	interface Props {
 		data: EventRecap[];
+		year?: number | string;
 	}
 
-	let { data }: Props = $props();
+	let { data, year = new Date().getFullYear() }: Props = $props();
 
 	let participatedEvents = $derived(data.filter((e) => e.participated));
-	let missedEvents = $derived(data.filter((e) => !e.participated));
 
 	const getTypeIcon = (type: string) => {
 		switch (type) {
@@ -44,57 +44,43 @@
 		Event Horizon
 	</h2>
 
-	<div class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
-		<!-- Participated Events -->
-		<div class="animate-slide-up flex flex-col gap-4 delay-100">
-			<h3 class="text-2xl font-bold text-white">Participated</h3>
-			<div class="custom-scrollbar flex max-h-[60vh] flex-col gap-3 overflow-y-auto pr-2">
-				{#each participatedEvents as event, i (event.name || i)}
-					<Item.Root
-						variant="outline"
-						class="border-white/10 bg-white/5 backdrop-blur-sm transition-transform hover:scale-105"
-						style="animation-delay: {i * 100}ms"
-					>
-						<Item.Media variant="icon" class="text-violet-400">
-							{@const Icon = getTypeIcon(event.type)}
-							<Icon class="size-6" />
-						</Item.Media>
-						<Item.Content>
-							<Item.Title class="text-white">{event.name}</Item.Title>
-							<Item.Description>{event.type}</Item.Description>
-							{#if event.score}
-								<p class="text-xs text-zinc-400">Score: {event.score.toLocaleString()}</p>
+	{#if participatedEvents.length > 0}
+		<div class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+			<!-- Participated Events -->
+			<div class="animate-slide-up flex flex-col gap-4 delay-100">
+				<h3 class="text-2xl font-bold text-white">Participated</h3>
+				<div class="custom-scrollbar flex max-h-[60vh] flex-col gap-3 overflow-y-auto pr-2">
+					{#each participatedEvents as event, i (event.name || i)}
+						<Item.Root
+							variant="outline"
+							class="border-white/10 bg-white/5 backdrop-blur-sm transition-transform hover:scale-105"
+							style="animation-delay: {i * 100}ms"
+						>
+							<Item.Media variant="icon" class="text-violet-400">
+								{@const Icon = getTypeIcon(event.type)}
+								<Icon class="size-6" />
+							</Item.Media>
+							<Item.Content>
+								<Item.Title class="text-white">{event.name}</Item.Title>
+								<Item.Description>{event.type}</Item.Description>
+								{#if event.score}
+									<p class="text-xs text-zinc-400">Score: {event.score.toLocaleString()}</p>
+								{/if}
+							</Item.Content>
+							{#if event.rank}
+								<Item.Actions class="flex-col items-end justify-center gap-0">
+									<span class="text-lg font-bold text-white">#{event.rank}</span>
+									<span class="text-[10px] text-zinc-400 uppercase">Rank</span>
+								</Item.Actions>
 							{/if}
-						</Item.Content>
-						{#if event.rank}
-							<Item.Actions class="flex-col items-end justify-center gap-0">
-								<span class="text-lg font-bold text-white">#{event.rank}</span>
-								<span class="text-[10px] text-zinc-400 uppercase">Rank</span>
-							</Item.Actions>
-						{/if}
-					</Item.Root>
-				{/each}
-			</div>
-		</div>
-
-		<!-- Missed Events -->
-		<div class="animate-slide-up flex flex-col gap-4 delay-300">
-			<h3 class="text-2xl font-bold text-zinc-500">Missed Opportunities</h3>
-			<div class="flex flex-wrap gap-2">
-				{#each missedEvents as event (event.name)}
-					{@const Icon = getTypeIcon(event.type)}
-					<div
-						class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-400"
-					>
-						<Icon class="size-4" />
-						<span>{event.name}</span>
-					</div>
-				{/each}
+						</Item.Root>
+					{/each}
+				</div>
 			</div>
 
-			{#if participatedEvents.length > 0}
-				<!-- Best Performance Card using Item -->
-				<div class="mt-auto">
+			<!-- Best Performance -->
+			<div class="animate-slide-up flex flex-col justify-center gap-4 delay-300">
+				<div class="mt-auto mb-auto w-full">
 					<Item.Root
 						variant="outline"
 						class="flex-col items-center justify-center border-purple-500/20 bg-purple-500/10 p-6 text-center"
@@ -122,9 +108,23 @@
 						</Item.Content>
 					</Item.Root>
 				</div>
-			{/if}
+			</div>
 		</div>
-	</div>
+	{:else}
+		<div class="animate-slide-up flex flex-col items-center justify-center gap-4 delay-100">
+			<div
+				class="rounded-xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-md transition-transform hover:scale-105"
+			>
+				<div class="mb-4 flex justify-center">
+					<Calendar class="size-16 text-zinc-600" />
+				</div>
+				<p class="text-xl font-medium text-zinc-300">
+					You didn't participate in any events in {year}!
+				</p>
+				<p class="mt-2 text-sm text-zinc-500">Maybe next year?</p>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>

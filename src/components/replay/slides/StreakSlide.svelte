@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { StreakRecap } from '$lib/api/schemas';
 	import * as Item from '$ui/item/index.js';
 	import Moon from '@lucide/svelte/icons/moon';
@@ -11,8 +12,7 @@
 
 	let { data }: Props = $props();
 
-	// Sparkline logic
-	let sparklineData = $derived(data.sparkline || []);
+	let sparklineData = $derived((data.sparkline || []).map(Number));
 	let width = 300;
 	let height = 80;
 
@@ -41,19 +41,24 @@
 </script>
 
 <div
-	class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-cyan-950 to-blue-950 p-8 text-white"
+	class="flex h-full w-full flex-col items-center justify-center bg-linear-to-b from-cyan-950 to-blue-950 p-8 text-white"
 >
 	<h2
-		class="animate-fade-in mb-12 bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-center text-5xl font-bold text-transparent"
+		class="animate-fade-in h-16 bg-linear-to-r from-cyan-300 to-blue-400 bg-clip-text text-center text-5xl font-bold text-transparent"
 	>
-		Your Best Streak
+		Best Farming Streak
 	</h2>
+	<div class="animate-fade-in mb-12 flex flex-wrap gap-2">
+		<DateDisplay class="rounded bg-blue-500/20 px-2 py-1 text-cyan-200" timestamp={Number(data.start) * 1000} />
+		<span>-</span>
+		<DateDisplay class="rounded bg-blue-500/20 px-2 py-1 text-cyan-200" timestamp={Number(data.end) * 1000} />
+	</div>
 
 	<div class="flex w-full max-w-4xl flex-col items-center justify-center gap-8 md:flex-row">
 		<!-- Longest Streak -->
 		<Item.Root
 			variant="outline"
-			class="animate-slide-up border-white/10 bg-white/5 p-8 backdrop-blur-md transition-transform delay-100 hover:scale-105"
+			class="animate-slide-up border-white/10 bg-white/5 p-8 backdrop-blur-md transition-transform delay-100"
 		>
 			<Item.Media
 				variant="icon"
@@ -61,9 +66,9 @@
 			>
 				<Zap class="size-8" />
 			</Item.Media>
-			<Item.Content class="items-center text-center">
-				<Item.Title class="text-6xl font-black text-white">{data.longestStreakHours}</Item.Title>
-				<Item.Description class="mt-2 text-xl font-medium text-cyan-200">Hours Longest Streak</Item.Description>
+			<Item.Content>
+				<Item.Title class="min-w-48 text-6xl font-black text-white">{data.longestStreakHours}</Item.Title>
+				<Item.Description class="mt-2 text-xl font-medium text-cyan-200">Hours</Item.Description>
 			</Item.Content>
 		</Item.Root>
 
@@ -71,7 +76,7 @@
 		{#if data.longestStreakHours > 24}
 			<Item.Root
 				variant="outline"
-				class="animate-slide-up border-white/10 bg-white/5 p-8 backdrop-blur-md transition-transform delay-300 hover:scale-105"
+				class="animate-slide-up border-white/10 bg-white/5 p-8 backdrop-blur-md transition-transform delay-300"
 			>
 				<Item.Media
 					variant="icon"
@@ -79,12 +84,12 @@
 				>
 					<Moon class="size-8" />
 				</Item.Media>
-				<Item.Content class="items-center text-center">
+				<Item.Content>
 					<Item.Title class="text-6xl font-black text-white"
 						>{data.averageDailyDowntime.toFixed(1)}</Item.Title
 					>
 					<Item.Description class="mt-2 text-xl font-medium text-indigo-200"
-						>Avg. Hourly Downtime / Day</Item.Description
+						>Hours Downtime / Day</Item.Description
 					>
 				</Item.Content>
 			</Item.Root>

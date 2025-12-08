@@ -36,6 +36,8 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (response.status === 401) {
 		return {
 			authed: false,
+			playerUuid: account.id,
+			profileUuid: selectedProfile.profileId,
 		};
 	}
 
@@ -45,8 +47,9 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	return {
-		wrapped: recapDto.data,
-		discordData: recapDto.discord,
+		recap: recapDto,
+		playerUuid: account.id,
+		profileUuid: selectedProfile.profileId,
 		authed: true,
 	};
 };

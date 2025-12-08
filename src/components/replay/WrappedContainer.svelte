@@ -59,10 +59,7 @@
 		if (isLoading) return;
 		if (event.key === 'ArrowRight' || event.key === ' ') {
 			nextSlide();
-			autoAdvanceEnabled = false; // Manual interaction cancels auto-advance? Or just resets?
-			// User asked: "unless the user goes back a slide, in which case the auto progression should be completely canceled"
-			// Implies going forward manually might NOT cancel it, but let's stick to the specific request.
-			// Going back cancels it. Going forward manually usually just skips.
+			autoAdvanceEnabled = false;
 			startTimer();
 		} else if (event.key === 'ArrowLeft') {
 			prevSlide();
@@ -122,7 +119,7 @@
 <div class="fixed inset-0 z-50 overflow-hidden bg-black text-white">
 	<!-- Story Progress Bar -->
 	<div class="absolute top-0 left-0 z-20 flex w-full gap-1 p-2 px-4 pt-4">
-		{#each { length: slides.length } as _, i}
+		{#each { length: slides.length }, i (i)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div

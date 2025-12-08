@@ -22,11 +22,11 @@
 </script>
 
 <div
-	class="flex h-full w-full flex-col overflow-hidden bg-gradient-to-b from-indigo-950 to-blue-950 p-4 pt-16 text-white md:p-8"
+	class="flex h-full w-full flex-col overflow-hidden bg-linear-to-b from-indigo-950 to-blue-950 p-4 pt-16 text-white md:p-8"
 >
 	<div class="mb-8 flex shrink-0 items-baseline justify-between">
 		<h2
-			class="animate-fade-in bg-gradient-to-r from-indigo-300 to-blue-400 bg-clip-text text-3xl font-bold text-transparent md:text-5xl"
+			class="animate-fade-in bg-linear-to-r from-indigo-300 to-blue-400 bg-clip-text text-3xl font-bold text-transparent md:text-5xl"
 		>
 			Skill Mastery
 		</h2>
@@ -42,7 +42,7 @@
 		{#each allSkills as [skill, xp], i (skill)}
 			<Item.Root
 				variant="outline"
-				class="flex-col items-center justify-center border-white/10 bg-white/5 p-3 text-center backdrop-blur-sm transition-transform hover:scale-105"
+				class="border-white/10 bg-white/5 p-3 text-center backdrop-blur-sm transition-transform hover:scale-105"
 				style="animation-delay: {i * 50}ms"
 			>
 				<Item.Media
@@ -54,7 +54,7 @@
 				<Item.Content class="items-center p-0">
 					<Item.Title class="truncate text-xs font-bold text-indigo-200 md:text-sm">{skill}</Item.Title>
 					<Item.Description class="text-lg font-black text-white md:text-xl"
-						>{formatCompact(xp)}</Item.Description
+						>+{formatCompact(xp)}</Item.Description
 					>
 				</Item.Content>
 			</Item.Root>

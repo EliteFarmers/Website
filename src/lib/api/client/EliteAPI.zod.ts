@@ -9975,7 +9975,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 });
 
 /**
- * Retrieves the yearly recap for a player.
+ * Retrieves the yearly recap for a player. Requires authentication if the recap is not public.
  * @summary Get Player Recap
  */
 export const zodGetPlayerRecapParams = zod.object({
@@ -9987,6 +9987,7 @@ export const zodGetPlayerRecapParams = zod.object({
 export const zodGetPlayerRecapResponse = zod.object({
 	playerUuid: zod.string(),
 	year: zod.number(),
+	public: zod.coerce.boolean<boolean>(),
 	data: zod.object({
 		player: zod.object({
 			ign: zod.string(),
@@ -10109,6 +10110,7 @@ export const zodGetPlayerRecapResponse = zod.object({
 	}),
 	discord: zod.object({
 		username: zod.string(),
+		id: zod.string(),
 		avatar: zod.string(),
 	}),
 });

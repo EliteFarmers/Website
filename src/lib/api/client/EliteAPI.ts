@@ -166,7 +166,7 @@ import type {
 	SkyblockFiresalesResponse,
 	SkyblockGemShopsResponse,
 	SkyblockItemResponse,
-	ToggleRecapVisibilityRequest,
+	ToggleRecapVisibilityRequestBody,
 	UpdateBadgeRequestUpdateBadge,
 	UpdateConfirmationRequest,
 	UpdateContestPingsRequestUpdateContestPings,
@@ -7205,7 +7205,7 @@ export const getSelectedProfile = async (playerUuid: string, options?: RequestIn
 };
 
 /**
- * Retrieves the yearly recap for a player.
+ * Retrieves the yearly recap for a player. Requires authentication if the recap is not public.
  * @summary Get Player Recap
  */
 export type getPlayerRecapResponse200 = {
@@ -7282,14 +7282,14 @@ export const toggleRecapVisibility = async (
 	year: number | string,
 	playerUuid: string,
 	profileUuid: string,
-	toggleRecapVisibilityRequest: ToggleRecapVisibilityRequest,
+	toggleRecapVisibilityRequestBody: ToggleRecapVisibilityRequestBody,
 	options?: RequestInit
 ) => {
 	return customFetch<toggleRecapVisibilityResponse>(getToggleRecapVisibilityUrl(year, playerUuid, profileUuid), {
 		...options,
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
-		body: JSON.stringify(toggleRecapVisibilityRequest),
+		body: JSON.stringify(toggleRecapVisibilityRequestBody),
 	});
 };
 

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { LeaderboardRecap } from '$lib/api/schemas';
 	import * as Item from '$ui/item/index.js';
-	import Trophy from '@lucide/svelte/icons/trophy';
 
 	interface Props {
 		data: LeaderboardRecap;
@@ -14,19 +13,15 @@
 </script>
 
 <div
-	class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-fuchsia-950 to-purple-950 p-8 text-white"
+	class="flex h-full w-full flex-col items-center justify-center bg-linear-to-b from-fuchsia-950 to-purple-950 p-8 text-white"
 >
 	<h2
-		class="animate-bounce-in mb-12 bg-gradient-to-r from-fuchsia-300 to-purple-400 bg-clip-text text-center text-5xl font-bold text-transparent"
+		class="animate-bounce-in mb-12 bg-linear-to-r from-fuchsia-300 to-purple-400 bg-clip-text text-center text-5xl font-bold text-transparent"
 	>
-		Leaderboard Legends
+		Top Leaderboard Placements
 	</h2>
 
 	<div class="animate-slide-up w-full max-w-xl delay-200">
-		<h3 class="mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-white">
-			<Trophy class="size-6 text-yellow-400" /> Top Placements
-		</h3>
-
 		<div class="space-y-4">
 			{#each topPlacements as item (item.slug)}
 				<Item.Root variant="outline" class="border-white/10 bg-white/5 backdrop-blur-sm">

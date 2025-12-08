@@ -17,6 +17,8 @@
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
+	let recap = $derived(data.recap?.data);
 </script>
 
 {#if !data.authed}
@@ -35,39 +37,41 @@
 			>
 		</div>
 	</div>
-{:else if data.wrapped}
+{:else if recap}
 	<WrappedContainer>
-		{#if data.wrapped.player}
-			<IntroSlide data={data.wrapped} discord={data.discordData} />
-			<ActivitySlide data={data.wrapped.player} />
+		{#if recap.player}
+			<IntroSlide data={recap} discord={data.recap?.discord} />
+			<ActivitySlide data={recap.player} />
 		{/if}
-		{#if data.wrapped.contests}
-			<ContestSlide data={data.wrapped.contests} />
+		{#if recap.contests}
+			<ContestSlide data={recap.contests} />
 		{/if}
-		{#if data.wrapped.shop}
-			<ShopSlide hasPurchased={data.wrapped.shop.hasPurchased} />
+		{#if recap.shop}
+			<ShopSlide hasPurchased={recap.shop.hasPurchased} />
 		{/if}
-		{#if data.wrapped.events}
-			<EventSlide data={data.wrapped.events} />
+		{#if recap.events}
+			<EventSlide data={recap.events} year={recap.year} />
 		{/if}
-		{#if data.wrapped.collections}
-			<CollectionSlide data={data.wrapped.collections} />
+		{#if recap.collections}
+			<CollectionSlide data={recap.collections} />
 		{/if}
-		{#if data.wrapped.pests}
-			<PestSlide data={data.wrapped.pests} />
+		{#if recap.pests}
+			<PestSlide data={recap.pests} />
 		{/if}
-		{#if data.wrapped.skills}
-			<SkillSlide data={data.wrapped.skills} />
+		{#if recap.skills}
+			<SkillSlide data={recap.skills} />
 		{/if}
-		{#if data.wrapped.streak}
-			<StreakSlide data={data.wrapped.streak} />
+		{#if recap.streak}
+			<StreakSlide data={recap.streak} />
 		{/if}
-		{#if data.wrapped.leaderboards}
-			<LeaderboardSlide data={data.wrapped.leaderboards} />
+		{#if recap.leaderboards}
+			<LeaderboardSlide data={recap.leaderboards} />
 		{/if}
-		{#if data.wrapped.global}
-			<GlobalStatsSlide data={data.wrapped.global} />
+		{#if data.recap?.global}
+			<GlobalStatsSlide data={data.recap.global} />
 		{/if}
-		<SummarySlide data={data.wrapped} />
+		{#if data.recap}
+			<SummarySlide data={data.recap} profileUuid={data.profileUuid} />
+		{/if}
 	</WrappedContainer>
 {/if}

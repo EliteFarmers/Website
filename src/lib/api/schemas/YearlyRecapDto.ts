@@ -14,6 +14,7 @@ import type { DiscordRecapInfoDto } from './DiscordRecapInfoDto';
 export interface YearlyRecapDto {
 	playerUuid: string;
 	year: number;
+	public: boolean;
 	data: YearlyRecapData;
 	global: GlobalRecap;
 	discord: DiscordRecapInfoDto;

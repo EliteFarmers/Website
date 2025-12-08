@@ -611,6 +611,7 @@ export * from './TaylorCollection';
 export * from './TaylorCollectionItem';
 export * from './TempStatBuffResponse';
 export * from './ToggleRecapVisibilityRequest';
+export * from './ToggleRecapVisibilityRequestBody';
 export * from './UnbanMemberRequest';
 export * from './UnlockedProductFeaturesDto';
 export * from './UnparsedApiDataDto';
