@@ -2,9 +2,9 @@
 	import { page } from '$app/state';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { PUBLIC_HOST_URL } from '$env/static/public';
-	import { type YearlyRecapDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { toggleRecapVisibilityCommand } from '$lib/remote';
+	import { getRecapContext } from '$lib/stores/recap.svelte';
 	import { Button } from '$ui/button/index.js';
 	import * as Item from '$ui/item/index.js';
 	import Bug from '@lucide/svelte/icons/bug';
@@ -16,23 +16,21 @@
 	import Share2 from '@lucide/svelte/icons/share-2';
 	import Trophy from '@lucide/svelte/icons/trophy';
 	import Wheat from '@lucide/svelte/icons/wheat';
+	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { fade, scale } from 'svelte/transition';
 
-	interface Props {
-		data: YearlyRecapDto;
-		profileUuid: string;
-	}
+	const context = getRecapContext();
+	let data = $derived(context.current);
 
-	let { data, profileUuid }: Props = $props();
 	const gbl = getGlobalContext();
 
 	let showShareModal = $state(false);
-	let isPublic = $derived(data.public);
+	let isPublic = $derived(data?.public === true);
 	let isLoading = $state(false);
 	let copied = $state(false);
 
-	let recap = $derived(data.data);
-	let isOwner = $derived(gbl.session?.id === data.discord.id);
+	let recap = $derived(context.data);
+	let isOwner = $derived((data?.discord.id && gbl.session?.id === data.discord.id) || gbl.session?.perms.admin);
 
 	function toggleShareModal() {
 		if (isOwner) {
@@ -53,14 +51,14 @@
 	}
 
 	async function toggleVisibility() {
-		if (isLoading) return;
+		if (isLoading || !context.playerUuid || !context.profileUuid) return;
 		isLoading = true;
 		const newValue = !isPublic;
 		try {
 			const { problem } = await toggleRecapVisibilityCommand({
 				year: +recap.year,
-				playerUuid: data.playerUuid,
-				profileUuid,
+				playerUuid: context.playerUuid,
+				profileUuid: context.profileUuid,
 				makePublic: newValue,
 			});
 			if (!problem) {
@@ -97,84 +95,94 @@
 		}
 		return 'Farmer';
 	});
+
+	let topCrop = $derived.by(() => {
+		const topCropEntry = Object.entries(recap.collections.increases).sort(
+			([, a], [, b]) => Number(b) - Number(a)
+		)[0];
+		if (topCropEntry) {
+			return getCropDisplayName(getCropFromName(topCropEntry[0]) ?? Crop.Wheat);
+		}
+		return 'None';
+	});
 </script>
 
 <div
-	class="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-linear-to-b from-zinc-900 to-black p-4 text-zinc-100"
+	class="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-linear-to-b from-zinc-900 to-black p-4 text-zinc-100 md:p-8"
 >
-	<div class="animate-scale-in w-full max-w-md space-y-6 delay-200">
+	<div class="animate-scale-in w-full max-w-md space-y-2 delay-200 sm:space-y-4 md:space-y-6">
 		<!-- User Profile -->
-		<Item.Root variant="outline" class="relative border-white/10 bg-white/5 backdrop-blur-md">
+		<Item.Root variant="outline" class="relative border-white/10 bg-white/5 p-4 backdrop-blur-md">
 			<Item.Media>
-				<PlayerHead uuid={recap.player.uuid} class="size-16" />
+				<PlayerHead uuid={recap.player.uuid} class="size-12 md:size-16" />
 			</Item.Media>
 			<Item.Content>
-				<Item.Title class="text-xl font-bold text-white">{recap.player.ign}</Item.Title>
-				<Item.Description class="text-zinc-400">{recap.year} {title}</Item.Description>
+				<Item.Title class="text-lg font-bold text-white md:text-xl">{recap.player.ign}</Item.Title>
+				<Item.Description class="text-sm text-zinc-400 md:text-base">{recap.year} {title}</Item.Description>
 			</Item.Content>
-			<div class="absolute right-1 bottom-1">
-				<p class="text-xs text-zinc-600">
+			<div class="absolute right-2 bottom-2 md:right-4 md:bottom-4">
+				<p class="text-[10px] text-zinc-600 md:text-xs">
 					{PUBLIC_HOST_URL.replace('https://', '')}/recap
 				</p>
 			</div>
 		</Item.Root>
 
 		<!-- Stats Grid -->
-		<div class="grid grid-cols-2 gap-4">
-			<Item.Root variant="muted" class="bg-white/5">
+		<div class="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
+			<Item.Root variant="muted" class="bg-white/5 p-3 md:p-4">
 				<Item.Media variant="icon" class="text-yellow-400">
-					<Scale class="size-5" />
+					<Scale class="size-4 md:size-5" />
 				</Item.Media>
 				<Item.Content>
-					<Item.Description>Weight Gained</Item.Description>
-					<Item.Title class="text-lg">+{formatCompact(recap.player.farmingWeight.gained)}</Item.Title>
+					<Item.Description class="text-xs md:text-sm">Farming Weight</Item.Description>
+					<Item.Title class="text-base md:text-lg"
+						>+{formatCompact(recap.player.farmingWeight.gained)}</Item.Title
+					>
 				</Item.Content>
 			</Item.Root>
 
-			<Item.Root variant="muted" class="bg-white/5">
+			<Item.Root variant="muted" class="bg-white/5 p-3 md:p-4">
 				<Item.Media variant="icon" class="text-green-400">
-					<Wheat class="size-5" />
+					<Wheat class="size-4 md:size-5" />
 				</Item.Media>
 				<Item.Content>
-					<Item.Description>Top Crop</Item.Description>
-					<Item.Title class="truncate text-lg">
-						{Object.entries(recap.collections.increases).sort(
-							([, a], [, b]) => Number(b) - Number(a)
-						)?.[0]?.[0]}
+					<Item.Description class="text-xs md:text-sm">Top Crop</Item.Description>
+					<Item.Title class="truncate text-base md:text-lg">
+						{topCrop}
 					</Item.Title>
 				</Item.Content>
 			</Item.Root>
 
-			<Item.Root variant="muted" class="bg-white/5">
+			<Item.Root variant="muted" class="bg-white/5 p-3 md:p-4">
 				<Item.Media variant="icon" class="text-amber-400">
-					<Trophy class="size-5" />
+					<Trophy class="size-4 md:size-5" />
 				</Item.Media>
 				<Item.Content>
-					<Item.Description>Contests</Item.Description>
-					<Item.Title class="text-lg">{recap.contests.total.toLocaleString()}</Item.Title>
+					<Item.Description class="text-xs md:text-sm">Contests</Item.Description>
+					<Item.Title class="text-base md:text-lg">{recap.contests.total.toLocaleString()}</Item.Title>
 				</Item.Content>
 			</Item.Root>
 
-			<Item.Root variant="muted" class="bg-white/5">
+			<Item.Root variant="muted" class="bg-white/5 p-3 md:p-4">
 				<Item.Media variant="icon" class="text-red-400">
-					<Bug class="size-5" />
+					<Bug class="size-4 md:size-5" />
 				</Item.Media>
 				<Item.Content>
-					<Item.Description>Pest Kills</Item.Description>
-					<Item.Title class="text-lg">{recap.pests.kills.toLocaleString()}</Item.Title>
+					<Item.Description class="text-xs md:text-sm">Pest Kills</Item.Description>
+					<Item.Title class="text-base md:text-lg">{recap.pests.kills.toLocaleString()}</Item.Title>
 				</Item.Content>
 			</Item.Root>
 		</div>
 
 		<!-- All Profiles Summary -->
-		<Item.Root variant="outline" class="border-white/10 bg-white/5">
+		<Item.Root variant="outline" class="border-white/10 bg-white/5 p-3 md:p-4">
 			<Item.Content>
-				<Item.Title class="text-sm font-medium tracking-wider text-zinc-400 uppercase"
-					>Combined Profiles Stats</Item.Title
+				<Item.Title class="text-xs font-medium tracking-wider text-zinc-400 uppercase md:text-sm"
+					>Combined Profile Stats</Item.Title
 				>
-				<div class="mt-2 flex justify-between text-sm">
+				<div class="mt-2 flex justify-between text-xs md:text-sm">
 					<span
-						>Weight Gained: <span class="font-bold text-white"
+						>Farming Weight: <span class="font-bold text-white"
 							>{formatCompact(recap.allProfilesSummary.totalWeightGained)}</span
 						></span
 					>
@@ -193,10 +201,10 @@
 				{#each recap.profiles as profile, i (i)}
 					{#if !profile.wiped}
 						<a
-							href="/replay/{recap.year}/{recap.player.ign}/{profile.name}"
+							href="/recap/{recap.year}/{recap.player.ign}/{profile.name}"
 							data-sveltekit-reload
-							class="rounded-full border px-3 py-1 text-xs font-bold transition-colors {profile.name ===
-							recap.currentProfile
+							class="rounded-full border px-2 py-1 text-[10px] font-bold transition-colors md:px-3 md:text-xs {profile.name ===
+							context.profileName
 								? 'border-yellow-500 bg-yellow-500 text-black'
 								: 'border-white/20 bg-black/40 text-zinc-300 hover:bg-white/10'}"
 						>
@@ -212,7 +220,7 @@
 			<Button
 				onclick={toggleShareModal}
 				size="lg"
-				class="rounded-full bg-white text-black shadow-lg shadow-white/10 hover:bg-zinc-200"
+				class="h-10 rounded-full bg-white px-6 text-sm text-black shadow-lg shadow-white/10 hover:bg-zinc-200 md:h-12 md:px-8 md:text-base"
 			>
 				{#if copied}
 					<Check class="mr-2 size-4" /> Link Copied!

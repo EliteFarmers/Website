@@ -17,13 +17,13 @@
 	});
 </script>
 
-<div class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black" out:fade={{ duration: 500 }}>
+<div class="fixed inset-0 z-100 flex flex-col items-center justify-center bg-black" out:fade={{ duration: 500 }}>
 	<div class="animate-spin-slow relative mb-8 h-24 w-24">
 		<div class="absolute inset-0 rounded-full border-4 border-yellow-500/30"></div>
 		<div class="absolute inset-0 rounded-full border-4 border-t-yellow-500"></div>
 	</div>
 
-	<h2 class="mb-4 animate-pulse text-2xl font-bold text-white">Generating Your Replay...</h2>
+	<h2 class="mb-4 animate-pulse text-2xl font-bold text-white">Generating Your Recap...</h2>
 
 	<div class="h-2 w-64 overflow-hidden rounded-full bg-gray-800">
 		<div class="h-full bg-yellow-500 transition-all duration-300 ease-out" style:width="{progress}%"></div>

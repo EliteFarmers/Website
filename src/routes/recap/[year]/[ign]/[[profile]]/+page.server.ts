@@ -1,4 +1,4 @@
-import { getAccount, getPlayerRecap } from '$lib/api';
+import { getAccount, type ProfileDetailsDto } from '$lib/api';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -25,31 +25,23 @@ export const load: PageServerLoad = async ({ params }) => {
 					p.profileId === profileName.replaceAll('-', '') ||
 					p.profileName?.toUpperCase() === profileName.toUpperCase()
 			) ?? profiles[0])
-		: (profiles.find((p) => p.selected) ?? profiles[0]);
+		: (profiles.sort((a, b) => sort(a, b, account.id))?.[0] ?? profiles[0]);
 
 	if (!selectedProfile?.profileId) {
 		throw error(404, 'Profile not found');
 	}
 
-	const { data: recapDto, error: e, response } = await getPlayerRecap(year, account.id, selectedProfile.profileId);
-
-	if (response.status === 401) {
-		return {
-			authed: false,
-			playerUuid: account.id,
-			profileUuid: selectedProfile.profileId,
-		};
-	}
-
-	if (!recapDto || e) {
-		console.log(e);
-		throw error(500, e?.reason || 'Failed to load recap data');
-	}
-
 	return {
-		recap: recapDto,
 		playerUuid: account.id,
 		profileUuid: selectedProfile.profileId,
-		authed: true,
+		profileName: selectedProfile.profileName,
+		year: +year,
 	};
 };
+
+function sort(a: ProfileDetailsDto, b: ProfileDetailsDto, playerUuid: string) {
+	const memberA = a.members?.find((m) => m.uuid === playerUuid);
+	const memberB = b.members?.find((m) => m.uuid === playerUuid);
+
+	return (memberB?.farmingWeight ?? 0) - (memberA?.farmingWeight ?? 0);
+}

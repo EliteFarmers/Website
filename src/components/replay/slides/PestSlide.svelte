@@ -1,73 +1,83 @@
 <script lang="ts">
-	import type { PestRecap } from '$lib/api/schemas';
+	import { getRecapContext } from '$lib/stores/recap.svelte';
 
-	interface Props {
-		data: PestRecap;
-	}
+	const context = getRecapContext();
+	let data = $derived(context.data.pests);
+	let global = $derived(context.current?.global);
 
-	let { data }: Props = $props();
+	let topPests = $derived(
+		Object.entries(data.breakdown)
+			.sort(([, a], [, b]) => b - a)
+			.slice(0, 6)
+	);
 
-	let allPests = $derived(Object.entries(data.breakdown).sort(([, a], [, b]) => b - a));
+	const formatPercent = (num: number) => {
+		const val = num * 100;
+		return val > 0 ? `+${val.toFixed(0)}%` : `${val.toFixed(0)}%`;
+	};
+
+	const getComparison = (pest: string, count: number) => {
+		if (!global) return 0;
+
+		const globalTotal =
+			global.totalPestsBreakdown[pest] ||
+			global.totalPestsBreakdown[pest.toUpperCase()] ||
+			global.totalPestsBreakdown[pest.replace(' ', '_').toUpperCase()] ||
+			BigInt(0);
+
+		if (globalTotal === BigInt(0)) return 0;
+		const avg = Number(globalTotal) / global.trackedPlayers;
+		return (count - avg) / avg;
+	};
 </script>
 
-<div class="flex h-full w-full flex-col overflow-hidden bg-linear-to-br from-red-900 to-rose-900 p-4 pt-16 md:p-8">
-	<div class="mb-4 flex shrink-0 items-baseline justify-between">
-		<h2 class="animate-fade-in text-3xl font-bold text-rose-300 md:text-4xl">Pest Control</h2>
-		<div class="text-right">
-			<span class="text-4xl font-black text-white md:text-5xl">{data.kills}</span>
-			<p class="text-sm font-normal text-rose-200">Total Kills</p>
-		</div>
+<div
+	class="flex h-full w-full flex-col items-center justify-center overflow-hidden bg-linear-to-br from-red-900 to-rose-900 p-4 md:p-8"
+>
+	<h2 class="animate-fade-in mb-2 text-center text-3xl font-bold text-rose-300 md:text-5xl">Pest Control</h2>
+	<div class="animate-fade-in mb-4 flex flex-col items-center md:mb-8">
+		<span class="text-4xl font-black text-white md:text-6xl">{data.kills.toLocaleString()}</span>
+		<p class="text-xs font-medium tracking-widest text-rose-200 uppercase md:text-sm">Total Kills</p>
+		{#if data.averageComparison}
+			<div
+				class="mt-2 rounded-full bg-black/30 px-2 py-0.5 text-xs font-bold md:text-sm
+				{data.averageComparison > 0 ? 'text-green-400' : 'text-red-400'}"
+			>
+				{formatPercent(data.averageComparison)} vs Average
+			</div>
+		{/if}
 	</div>
 
-	<div
-		class="custom-scrollbar mb-4 grid flex-1 grid-cols-2 content-start gap-3 overflow-y-auto md:grid-cols-4 md:gap-4"
-	>
-		{#each allPests as [pest, count], i (pest)}
+	<div class="grid w-full max-w-4xl grid-cols-2 gap-2 md:grid-cols-3 md:gap-4">
+		{#each topPests as [pest, count], i (pest)}
+			{@const comparison = getComparison(pest, count)}
 			<div
-				class="animate-slide-up flex flex-col items-center gap-2 rounded-xl bg-black/20 p-3 text-center transition-transform hover:scale-105"
-				style:animation-delay="{i * 50}ms"
+				class="animate-slide-up flex flex-col items-center justify-center rounded-xl border border-white/20 bg-white/10 p-2 text-center backdrop-blur-lg transition-transform hover:scale-105 md:p-4"
+				style:animation-delay="{i * 100}ms"
 			>
-				<img
-					src={`/images/pests/${pest.toLowerCase()}.png`}
-					alt={pest}
-					class="pixelated h-10 w-10 object-contain md:h-12 md:w-12"
-				/>
-				<div class="min-w-0">
-					<p class="truncate text-xs font-bold text-rose-100 md:text-sm">{pest}</p>
-					<p class="text-lg font-black text-white md:text-xl">{count}</p>
+				<div class="mb-1 md:mb-3">
+					<img
+						src="/images/pests/{pest.toLowerCase()}.png"
+						alt={pest}
+						class="pixelated h-10 w-10 object-contain drop-shadow-md filter md:h-16 md:w-16"
+					/>
 				</div>
+				<h3 class="mb-0.5 text-sm font-bold text-rose-100 md:mb-1 md:text-xl">{pest}</h3>
+				<p class="text-base font-black text-white md:text-2xl">{count.toLocaleString()}</p>
+				{#if comparison}
+					<div
+						class="mt-1 rounded-full bg-black/30 px-1.5 py-0.5 text-[10px] font-bold md:mt-2 md:px-2 md:text-sm
+						{comparison > 0 ? 'text-green-400' : 'text-red-400'}"
+					>
+						{formatPercent(comparison)} vs Avg
+					</div>
+				{/if}
 			</div>
 		{/each}
-	</div>
-
-	<div class="animate-fade-in mt-auto shrink-0 rounded-2xl bg-black/20 p-4 delay-500">
-		<h3 class="mb-2 text-sm font-bold text-rose-200">Monthly Activity</h3>
-		<div class="flex h-16 items-end justify-between gap-1 md:h-24">
-			{#each data.monthly as month (month.month)}
-				<div class="group flex flex-1 flex-col items-center gap-1">
-					<div
-						class="w-full rounded-t-sm bg-rose-400/50 transition-all group-hover:bg-rose-400"
-						style:height="{(month.amount / Math.max(...data.monthly.map((m) => m.amount))) * 100}%"
-					></div>
-					<span class="text-[8px] text-rose-200/50 md:text-xs">{month.month[0]}</span>
-				</div>
-			{/each}
-		</div>
 	</div>
 </div>
 
 <style>
-	.custom-scrollbar::-webkit-scrollbar {
-		width: 4px;
-	}
-	.custom-scrollbar::-webkit-scrollbar-track {
-		background: rgba(0, 0, 0, 0.1);
-	}
-	.custom-scrollbar::-webkit-scrollbar-thumb {
-		background: rgba(255, 255, 255, 0.2);
-		border-radius: 2px;
-	}
-
 	@keyframes fade-in {
 		from {
 			opacity: 0;
@@ -93,10 +103,5 @@
 	.animate-slide-up {
 		animation: slide-up 0.5s ease-out forwards;
 		opacity: 0;
-	}
-	.delay-500 {
-		animation-delay: 0.5s;
-		opacity: 0;
-		animation-fill-mode: forwards;
 	}
 </style>

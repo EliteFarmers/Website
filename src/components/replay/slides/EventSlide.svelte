@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { EventRecap } from '$lib/api/schemas';
+	import { getRecapContext } from '$lib/stores/recap.svelte';
 	import * as Item from '$ui/item/index.js';
 	import Bug from '@lucide/svelte/icons/bug';
 	import Calendar from '@lucide/svelte/icons/calendar';
@@ -8,26 +8,26 @@
 	import Scale from '@lucide/svelte/icons/scale';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
 
-	interface Props {
-		data: EventRecap[];
-		year?: number | string;
-	}
+	const context = getRecapContext();
+	let data = $derived(context.data.events);
+	let year = $derived(context.year);
 
-	let { data, year = new Date().getFullYear() }: Props = $props();
-
-	let participatedEvents = $derived(data.filter((e) => e.participated));
+	let participatedEvents = $derived(
+		data.filter((e) => e.participated).sort((a, b) => (a.rank || 999999) - (b.rank || 999999))
+	);
 
 	const getTypeIcon = (type: string) => {
+		console.log(type);
 		switch (type) {
-			case 'farmingWeight':
+			case 'FarmingWeight':
 				return Scale;
-			case 'pests':
+			case 'Pests':
 				return Bug;
-			case 'medals':
+			case 'Medals':
 				return Medal;
-			case 'collection':
+			case 'Collection':
 				return Package;
-			case 'experience':
+			case 'Experience':
 				return Sparkles;
 			default:
 				return Calendar;
@@ -36,41 +36,45 @@
 </script>
 
 <div
-	class="flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-violet-950 to-black p-8 text-white"
+	class="flex h-full w-full flex-col items-center justify-center overflow-auto bg-linear-to-b from-violet-950 to-black p-4 text-white md:p-8"
 >
 	<h2
-		class="animate-fade-in mb-8 bg-gradient-to-r from-violet-300 to-fuchsia-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-5xl"
+		class="animate-fade-in mb-6 bg-linear-to-r from-violet-300 to-fuchsia-400 bg-clip-text text-center text-3xl font-bold text-transparent md:mb-8 md:text-5xl"
 	>
-		Event Horizon
+		Elite Events
 	</h2>
 
 	{#if participatedEvents.length > 0}
-		<div class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+		<div class="grid w-full max-w-5xl grid-cols-1 gap-6 px-1 lg:grid-cols-2">
 			<!-- Participated Events -->
-			<div class="animate-slide-up flex flex-col gap-4 delay-100">
-				<h3 class="text-2xl font-bold text-white">Participated</h3>
-				<div class="custom-scrollbar flex max-h-[60vh] flex-col gap-3 overflow-y-auto pr-2">
-					{#each participatedEvents as event, i (event.name || i)}
+			<div class="animate-slide-up flex w-full flex-col items-center justify-center gap-3 delay-100 md:gap-4">
+				<h3 class="text-xl font-bold text-white md:text-2xl">Best Participations</h3>
+				<div
+					class="flex max-h-[40vh] w-full flex-col items-center justify-center gap-2 overflow-y-auto pr-1 md:max-h-[60vh] md:gap-3 md:pr-2"
+				>
+					{#each participatedEvents.slice(0, 3) as event, i (event.name || i)}
 						<Item.Root
 							variant="outline"
-							class="border-white/10 bg-white/5 backdrop-blur-sm transition-transform hover:scale-105"
+							class="w-full border-white/10 bg-white/5 p-3 backdrop-blur-sm transition-transform md:p-4"
 							style="animation-delay: {i * 100}ms"
 						>
 							<Item.Media variant="icon" class="text-violet-400">
 								{@const Icon = getTypeIcon(event.type)}
-								<Icon class="size-6" />
+								<Icon class="size-5 md:size-6" />
 							</Item.Media>
 							<Item.Content>
-								<Item.Title class="text-white">{event.name}</Item.Title>
-								<Item.Description>{event.type}</Item.Description>
+								<Item.Title class="text-sm text-white md:text-base">{event.name}</Item.Title>
+								<Item.Description class="text-xs md:text-sm">{event.type}</Item.Description>
 								{#if event.score}
-									<p class="text-xs text-zinc-400">Score: {event.score.toLocaleString()}</p>
+									<p class="text-[10px] text-zinc-400 md:text-xs">
+										Score: {event.score.toLocaleString()}
+									</p>
 								{/if}
 							</Item.Content>
 							{#if event.rank}
 								<Item.Actions class="flex-col items-end justify-center gap-0">
-									<span class="text-lg font-bold text-white">#{event.rank}</span>
-									<span class="text-[10px] text-zinc-400 uppercase">Rank</span>
+									<span class="text-base font-bold text-white md:text-lg">#{event.rank}</span>
+									<span class="text-[8px] text-zinc-400 uppercase md:text-[10px]">Rank</span>
 								</Item.Actions>
 							{/if}
 						</Item.Root>
@@ -83,27 +87,33 @@
 				<div class="mt-auto mb-auto w-full">
 					<Item.Root
 						variant="outline"
-						class="flex-col items-center justify-center border-purple-500/20 bg-purple-500/10 p-6 text-center"
+						class="flex-col items-center justify-center border-purple-500/20 bg-purple-500/10 p-4 text-center md:p-6"
 					>
 						<Item.Content class="items-center">
-							<Item.Description class="text-purple-200">Best Performance</Item.Description>
+							<Item.Description class="text-sm text-purple-200 md:text-base"
+								>Best Performance</Item.Description
+							>
 							{#if participatedEvents.some((e) => e.rank)}
 								{@const best = participatedEvents
 									.filter((e) => e.rank)
 									.sort((a, b) => (a.rank || 999999) - (b.rank || 999999))[0]}
-								<Item.Title class="py-2 text-3xl font-black text-white">{best.name}</Item.Title>
-								<div class="flex gap-8">
+								<Item.Title class="py-2 text-2xl font-black text-white md:text-3xl"
+									>{best.name}</Item.Title
+								>
+								<div class="flex gap-4 md:gap-8">
 									<div class="text-center">
-										<p class="text-xs text-purple-300 uppercase">Rank</p>
-										<p class="text-xl font-bold text-yellow-400">#{best.rank}</p>
+										<p class="text-[10px] text-purple-300 uppercase md:text-xs">Rank</p>
+										<p class="text-lg font-bold text-yellow-400 md:text-xl">#{best.rank}</p>
 									</div>
 									<div class="text-center">
-										<p class="text-xs text-purple-300 uppercase">Score</p>
-										<p class="text-xl font-bold text-white">{best.score?.toLocaleString()}</p>
+										<p class="text-[10px] text-purple-300 uppercase md:text-xs">Score</p>
+										<p class="text-lg font-bold text-white md:text-xl">
+											{best.score?.toLocaleString()}
+										</p>
 									</div>
 								</div>
 							{:else}
-								<Item.Title>Thanks for participating!</Item.Title>
+								<Item.Title class="text-lg text-white md:text-xl">Thanks for participating!</Item.Title>
 							{/if}
 						</Item.Content>
 					</Item.Root>
@@ -113,7 +123,7 @@
 	{:else}
 		<div class="animate-slide-up flex flex-col items-center justify-center gap-4 delay-100">
 			<div
-				class="rounded-xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-md transition-transform hover:scale-105"
+				class="rounded-xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-md transition-transform"
 			>
 				<div class="mb-4 flex justify-center">
 					<Calendar class="size-16 text-zinc-600" />
@@ -128,17 +138,6 @@
 </div>
 
 <style>
-	.custom-scrollbar::-webkit-scrollbar {
-		width: 4px;
-	}
-	.custom-scrollbar::-webkit-scrollbar-track {
-		background: rgba(0, 0, 0, 0.1);
-	}
-	.custom-scrollbar::-webkit-scrollbar-thumb {
-		background: rgba(255, 255, 255, 0.2);
-		border-radius: 2px;
-	}
-
 	@keyframes fade-in {
 		from {
 			opacity: 0;

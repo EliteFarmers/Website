@@ -8,17 +8,24 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type { GlobalRecapCrops } from './GlobalRecapCrops';
+import type { GlobalRecapTotalCropsBreakdown } from './GlobalRecapTotalCropsBreakdown';
 import type { GlobalRecapSkills } from './GlobalRecapSkills';
+import type { GlobalRecapTotalSkillsBreakdown } from './GlobalRecapTotalSkillsBreakdown';
 import type { GlobalRecapPests } from './GlobalRecapPests';
+import type { GlobalRecapTotalPestsBreakdown } from './GlobalRecapTotalPestsBreakdown';
 
 export interface GlobalRecap {
 	totalCrops: bigint;
 	totalXp: number;
+	totalPests: bigint;
 	totalFarmingWeight: number;
 	trackedPlayers: number;
 	bannedWiped: number;
 	ironmanToNormal: number;
 	crops: GlobalRecapCrops;
+	totalCropsBreakdown: GlobalRecapTotalCropsBreakdown;
 	skills: GlobalRecapSkills;
+	totalSkillsBreakdown: GlobalRecapTotalSkillsBreakdown;
 	pests: GlobalRecapPests;
+	totalPestsBreakdown: GlobalRecapTotalPestsBreakdown;
 }

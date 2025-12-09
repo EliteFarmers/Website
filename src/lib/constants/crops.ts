@@ -76,6 +76,7 @@ export const PROPER_CROP_TO_IMG: Partial<Record<string, string>> = {
 	Pumpkin: '/images/crops/pumpkin.png',
 	'Sugar Cane': '/images/crops/sugarcane.png',
 	Wheat: '/images/crops/wheat.png',
+	Seeds: '/api/item/SEEDS',
 };
 
 export const ELITE_CROP_TO_CROP: Record<string, Crop> = {

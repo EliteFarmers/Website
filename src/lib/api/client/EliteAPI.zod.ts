@@ -10100,13 +10100,17 @@ export const zodGetPlayerRecapResponse = zod.object({
 	global: zod.object({
 		totalCrops: zod.number(),
 		totalXp: zod.number(),
+		totalPests: zod.number(),
 		totalFarmingWeight: zod.number(),
 		trackedPlayers: zod.number(),
 		bannedWiped: zod.number(),
 		ironmanToNormal: zod.number(),
 		crops: zod.record(zod.string(), zod.number()),
+		totalCropsBreakdown: zod.record(zod.string(), zod.number()),
 		skills: zod.record(zod.string(), zod.number()),
+		totalSkillsBreakdown: zod.record(zod.string(), zod.number()),
 		pests: zod.record(zod.string(), zod.number()),
+		totalPestsBreakdown: zod.record(zod.string(), zod.number()),
 	}),
 	discord: zod.object({
 		username: zod.string(),
