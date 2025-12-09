@@ -85,7 +85,11 @@
 			}
 
 			children.forEach((child, index) => {
-				child.style.transform = `translateX(${(index - currentSlideIndex) * 100}%)`;
+				if (index === currentSlideIndex) {
+					child.style.transform = 'none';
+				} else {
+					child.style.transform = `translateX(${(index - currentSlideIndex) * 100}%)`;
+				}
 				child.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
 				child.style.position = 'absolute';
 				child.style.top = '0';

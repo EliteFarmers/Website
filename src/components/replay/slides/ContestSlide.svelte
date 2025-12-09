@@ -65,13 +65,16 @@
 		</Item.Root>
 
 		<div
-			class="animate-fade-in grid max-h-[40vh] grid-cols-2 gap-2 overflow-y-auto delay-500 md:max-h-none md:grid-cols-1 md:gap-4 md:overflow-visible"
+			class="animate-fade-in flex max-h-[40vh] grid-cols-2 flex-wrap gap-2 overflow-y-auto delay-500 md:max-h-none md:overflow-visible"
 		>
 			<h3 class="col-span-2 mb-1 w-full text-center text-sm font-bold text-white md:mb-6 md:text-2xl">
 				Best Placements
 			</h3>
-			{#each data.highestPlacements.sort((a, b) => a.rank - b.rank).slice(0, 6) as placement (placement.crop)}
-				<Item.Root variant="outline" class="border-white/10 bg-white/5 p-2 backdrop-blur-sm md:p-4">
+			{#each data.highestPlacements.sort((a, b) => a.rank - b.rank).slice(0, 6) as placement, i (i)}
+				<Item.Root
+					variant="outline"
+					class="w-full max-w-[calc(50%-0.5rem)] border-white/10 bg-white/5 p-2 backdrop-blur-sm md:p-4"
+				>
 					<Item.Media class="hidden md:block">
 						<ItemIcon
 							url={getCropUrl(placement.crop)}

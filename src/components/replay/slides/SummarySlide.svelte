@@ -110,7 +110,9 @@
 <div
 	class="relative flex h-full w-full flex-col items-center justify-center overflow-y-auto bg-linear-to-b from-zinc-900 to-black p-4 text-zinc-100 md:p-8"
 >
-	<div class="animate-scale-in w-full max-w-md space-y-2 delay-200 sm:space-y-4 md:space-y-6">
+	<div
+		class="animate-scale-in pointer-events-none relative z-20 w-full max-w-md space-y-2 delay-200 sm:space-y-4 md:space-y-6"
+	>
 		<!-- User Profile -->
 		<Item.Root variant="outline" class="relative border-white/10 bg-white/5 p-4 backdrop-blur-md">
 			<Item.Media>
@@ -197,7 +199,9 @@
 
 		<!-- Profile Switcher -->
 		{#if isOwner}
-			<div class="animate-fade-in flex flex-wrap justify-center gap-2 delay-500">
+			<div
+				class="animate-fade-in pointer-events-auto relative z-20 flex flex-wrap justify-center gap-2 delay-500"
+			>
 				{#each recap.profiles as profile, i (i)}
 					{#if !profile.wiped}
 						<a
@@ -216,7 +220,7 @@
 		{/if}
 
 		<!-- Share Button -->
-		<div class="animate-fade-in flex justify-center delay-500">
+		<div class="animate-fade-in pointer-events-auto flex justify-center delay-500">
 			<Button
 				onclick={toggleShareModal}
 				size="lg"
@@ -233,7 +237,7 @@
 
 	{#if showShareModal}
 		<div
-			class="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+			class="absolute inset-0 z-400 flex items-center justify-center bg-black/80 backdrop-blur-sm"
 			transition:fade
 		>
 			<div class="w-full max-w-sm rounded-xl border border-white/10 bg-zinc-900 p-6 shadow-2xl" transition:scale>
