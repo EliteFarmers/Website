@@ -16,7 +16,7 @@
 	import Share2 from '@lucide/svelte/icons/share-2';
 	import Trophy from '@lucide/svelte/icons/trophy';
 	import Wheat from '@lucide/svelte/icons/wheat';
-	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
+	import { calcWeightForCrop, Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { fade, scale } from 'svelte/transition';
 
 	const context = getRecapContext();
@@ -97,12 +97,18 @@
 	});
 
 	let topCrop = $derived.by(() => {
-		const topCropEntry = Object.entries(recap.collections.increases).sort(
-			([, a], [, b]) => Number(b) - Number(a)
-		)[0];
+		const topCropEntry = Object.entries(recap.collections.increases)
+			.filter(([crop]) => getCropFromName(crop) !== Crop.Seeds)
+			.map(([crop, amount]) => [
+				crop,
+				getCropFromName(crop) ? calcWeightForCrop(getCropFromName(crop) ?? Crop.Wheat, Number(amount)) : 0,
+			])
+			.sort(([, a], [, b]) => Number(b) - Number(a))[0] as [string, number] | undefined;
+
 		if (topCropEntry) {
 			return getCropDisplayName(getCropFromName(topCropEntry[0]) ?? Crop.Wheat);
 		}
+
 		return 'None';
 	});
 </script>
