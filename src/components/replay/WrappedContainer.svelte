@@ -34,7 +34,7 @@
 </script>
 
 {#if !context.authed}
-	{#if context.loading || !context.data}
+	{#if context.loading || !context.recap.current}
 		<LoadingScreen />
 	{:else}
 		{@render noperms?.()}

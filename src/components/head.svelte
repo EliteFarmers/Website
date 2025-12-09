@@ -40,8 +40,8 @@
 </script>
 
 <svelte:head>
-	<title>{pageCtx.title}</title>
-	<meta property="og:title" content={pageCtx.title} />
+	<title>{pageCtx.title || title}</title>
+	<meta property="og:title" content={pageCtx.title || title} />
 
 	<meta property="twitter:card" content={twitterCardType ?? 'summary'} />
 

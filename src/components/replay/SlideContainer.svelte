@@ -22,7 +22,7 @@
 
 		if (!autoAdvanceEnabled || currentSlideIndex >= slides.length - 1) return;
 
-		const duration = 5000;
+		const duration = 8000;
 		const step = 50;
 
 		timer = setTimeout(() => {
