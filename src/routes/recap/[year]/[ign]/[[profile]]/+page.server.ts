@@ -35,6 +35,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		playerUuid: account.id,
 		profileUuid: selectedProfile.profileId,
 		profileName: selectedProfile.profileName,
+		ign: account.formattedName,
 		year: +year,
 	};
 };

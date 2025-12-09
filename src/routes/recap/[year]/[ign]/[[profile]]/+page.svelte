@@ -20,10 +20,7 @@
 	let { data }: { data: PageData } = $props();
 </script>
 
-<Head
-	title="{data.year} Recap ({data.profileName})"
-	description="View the {data.year} highlights for {data.profileName} on Elite."
-/>
+<Head title="{data.ign}'s {data.year} Recap" description="View {data.ign}'s {data.year} highlights on Elite." />
 
 <WrappedContainer
 	profileName={data.profileName}
