@@ -54,7 +54,7 @@
 					? 'border-transparent'
 					: 'border-completed'} data-highlighted:bg-background"
 			>
-				<div class="flex flex-col gap-1">
+				<div class="flex w-full flex-col gap-1">
 					<span class="text-sm font-semibold">
 						<AnnouncementIcon {announcement} class="text-primary mr-1 mb-0.5 inline size-4" />
 						{announcement.title}
@@ -77,7 +77,7 @@
 						{/if}
 						{#if announcement.targetUrl !== '/'}
 							<Button
-								class="group mx-0 !px-0 text-sm"
+								class="group mx-0 px-0! text-sm"
 								size="sm"
 								variant="link"
 								href={announcement.targetUrl}
