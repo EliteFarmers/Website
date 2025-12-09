@@ -72,6 +72,18 @@
 						<span class="mt-1 text-xs tracking-widest text-white/40 uppercase">View Stats</span>
 					</div>
 				</a>
+			{:else}
+				<a
+					href="/profile"
+					class="group relative flex flex-row items-center justify-center gap-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md transition-all hover:scale-105 hover:bg-white/10 hover:shadow-xl hover:shadow-yellow-500/20 sm:min-w-64 md:flex-col"
+				>
+					<div class="flex flex-col items-center justify-center">
+						<span class="text-xl font-bold text-white group-hover:text-yellow-200 md:text-2xl"
+							>No Linked Accounts!</span
+						>
+						<span class="mt-1 text-sm text-white/40">Click here to link one</span>
+					</div>
+				</a>
 			{/each}
 		</div>
 	</div>
