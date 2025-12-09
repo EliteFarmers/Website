@@ -9975,6 +9975,165 @@ export const zodGetSelectedProfileResponse = zod.object({
 });
 
 /**
+ * Retrieves the yearly recap for a player. Requires authentication if the recap is not public.
+ * @summary Get Player Recap
+ */
+export const zodGetPlayerRecapParams = zod.object({
+	year: zod.number(),
+	playerUuid: zod.string(),
+	profileUuid: zod.string(),
+});
+
+export const zodGetPlayerRecapResponse = zod.object({
+	playerUuid: zod.string(),
+	year: zod.number(),
+	public: zod.coerce.boolean<boolean>(),
+	data: zod.object({
+		player: zod.object({
+			ign: zod.string(),
+			uuid: zod.string(),
+			firstDataPoint: zod.string(),
+			lastDataPoint: zod.string(),
+			daysActive: zod.number(),
+			mostActiveMonth: zod.string(),
+			farmingWeight: zod.object({
+				gained: zod.number(),
+				total: zod.number(),
+				averageComparison: zod.number(),
+			}),
+		}),
+		profiles: zod.array(
+			zod.object({
+				name: zod.string(),
+				cuteName: zod.string(),
+				isMain: zod.coerce.boolean<boolean>(),
+				wiped: zod.coerce.boolean<boolean>().nullish(),
+			})
+		),
+		allProfilesSummary: zod.object({
+			totalWeightGained: zod.number(),
+			totalCoinsGained: zod.number(),
+			wipedProfiles: zod.number(),
+		}),
+		contests: zod.object({
+			total: zod.number(),
+			perCrop: zod.record(zod.string(), zod.number()),
+			highestPlacements: zod.array(
+				zod.object({
+					crop: zod.string(),
+					rank: zod.number(),
+					medal: zod.string(),
+				})
+			),
+		}),
+		events: zod.array(
+			zod.object({
+				name: zod.string(),
+				type: zod.string(),
+				participated: zod.coerce.boolean<boolean>(),
+				rank: zod.number().nullish(),
+				score: zod.number().nullish(),
+				banner: zod.string().nullish(),
+				typeLabel: zod.string().nullish(),
+			})
+		),
+		shop: zod.object({
+			hasPurchased: zod.coerce.boolean<boolean>(),
+		}),
+		collections: zod.object({
+			increases: zod.record(zod.string(), zod.number()),
+			globalTotals: zod.record(zod.string(), zod.number()),
+			averageComparison: zod.record(zod.string(), zod.number()),
+			monthly: zod.array(
+				zod.object({
+					month: zod.string(),
+					amount: zod.number(),
+				})
+			),
+		}),
+		pests: zod.object({
+			kills: zod.number(),
+			breakdown: zod.record(zod.string(), zod.number()),
+			globalTotal: zod.number(),
+			averageComparison: zod.number(),
+			monthly: zod.array(
+				zod.object({
+					month: zod.string(),
+					amount: zod.number(),
+				})
+			),
+		}),
+		skills: zod.object({
+			farmingXp: zod.number(),
+			breakdown: zod.record(zod.string(), zod.number()),
+			globalTotal: zod.number(),
+			averageComparison: zod.number(),
+		}),
+		streak: zod.object({
+			longestStreakHours: zod.number(),
+			start: zod.number(),
+			end: zod.number(),
+			averageDailyDowntime: zod.number(),
+			sparkline: zod.array(zod.number()),
+		}),
+		leaderboards: zod.object({
+			top1000: zod.array(
+				zod.object({
+					title: zod.string(),
+					slug: zod.string(),
+					rank: zod.number(),
+					amount: zod.number(),
+					shortTitle: zod.string().nullish(),
+				})
+			),
+			monthlyHighs: zod.array(
+				zod.object({
+					month: zod.string(),
+					name: zod.string(),
+					rank: zod.number(),
+				})
+			),
+		}),
+		year: zod.string(),
+		currentProfile: zod.string(),
+	}),
+	global: zod.object({
+		totalCrops: zod.number(),
+		totalXp: zod.number(),
+		totalPests: zod.number(),
+		totalFarmingWeight: zod.number(),
+		trackedPlayers: zod.number(),
+		bannedWiped: zod.number(),
+		ironmanToNormal: zod.number(),
+		crops: zod.record(zod.string(), zod.number()),
+		totalCropsBreakdown: zod.record(zod.string(), zod.number()),
+		skills: zod.record(zod.string(), zod.number()),
+		totalSkillsBreakdown: zod.record(zod.string(), zod.number()),
+		pests: zod.record(zod.string(), zod.number()),
+		totalPestsBreakdown: zod.record(zod.string(), zod.number()),
+	}),
+	discord: zod.object({
+		username: zod.string(),
+		id: zod.string(),
+		avatar: zod.string(),
+	}),
+});
+
+/**
+ * Toggles the public visibility of a player's yearly recap.
+ * @summary Toggle Recap Visibility
+ */
+export const zodToggleRecapVisibilityParams = zod.object({
+	year: zod.number(),
+	playerUuid: zod.string(),
+	profileUuid: zod.string(),
+});
+
+export const zodToggleRecapVisibilityBody = zod.object({
+	public: zod.coerce.boolean<boolean>(),
+});
+
+/**
  * Get a specific auction by id. Will not fetch auction from Hypixel, only returns auctions that exist locally.
  * @summary Get Auction
  */
