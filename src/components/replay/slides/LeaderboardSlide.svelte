@@ -6,6 +6,12 @@
 	let data = $derived(context.data.leaderboards);
 
 	let topPlacements = $derived([...data.top1000].sort((a, b) => a.rank - b.rank).slice(0, 5));
+
+	function lbSuffix(slug: string): string {
+		if (slug.endsWith('-weekly')) return ' (Weekly)';
+		if (slug.endsWith('-monthly')) return ' (Monthly)';
+		return '';
+	}
 </script>
 
 <div
@@ -22,7 +28,9 @@
 			{#each topPlacements as item (item.slug)}
 				<Item.Root variant="outline" class="border-white/10 bg-white/5 p-3 backdrop-blur-sm md:p-4">
 					<Item.Content>
-						<Item.Title class="text-sm text-white md:text-base">{item.shortTitle || item.title}</Item.Title>
+						<Item.Title class="text-sm text-white md:text-base"
+							>{item.shortTitle || item.title}{lbSuffix(item.slug)}</Item.Title
+						>
 						<Item.Description class="text-xs text-fuchsia-200/70 md:text-sm">
 							{new Intl.NumberFormat('en-US', { notation: 'compact' }).format(item.amount)}
 						</Item.Description>

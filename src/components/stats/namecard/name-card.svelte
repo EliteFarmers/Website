@@ -40,15 +40,15 @@
 				: ''}"
 		>
 			<img
-				class="hidden h-full flex-1 self-center object-contain @md:ml-8 @md:inline-block @md:flex-none"
+				class="hidden h-full flex-1 self-center object-contain @lg:ml-8 @lg:inline-block @lg:flex-none"
 				src="https://mc-heads.net/body/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
-			<div class="block @md:hidden">
+			<div class="block @lg:hidden">
 				<PlayerHead uuid={ctx.uuid} size="2xl" />
 			</div>
 			<div class="flex h-full flex-col items-start justify-center gap-1">
-				<div class="hidden flex-row items-center gap-2 pt-2 @md:flex">
+				<div class="hidden flex-row items-center gap-2 pt-2 @lg:flex">
 					<div class={!style ? 'rounded-md border' : ''}>
 						<PlayerName
 							bgStyle="background-color: {bg}; border-color: transparent; color: {style?.elements?.name
