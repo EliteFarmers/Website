@@ -7,14 +7,25 @@
 	interface Props {
 		upgrades: FortuneUpgrade[];
 		items?: RatesItemPriceData;
+		version?: number;
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
+		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 	}
 
-	let { upgrades, items, costFn }: Props = $props();
+	let { upgrades, items, version, costFn, applyUpgrade }: Props = $props();
 
-	const columns = $derived(getColumns(items, costFn));
+	const columns = $derived(
+		version ? getColumns(items, costFn, applyUpgrade) : getColumns(items, costFn, applyUpgrade)
+	);
+
+	const tableData = $derived.by(() => {
+		if (version) {
+			return [...upgrades];
+		}
+		return upgrades;
+	});
 </script>
 
 <div class="w-full max-w-6xl py-2">
-	<UpgradesTable data={upgrades} {columns} initialSorting={[{ id: 'costper', desc: false }]} />
+	<UpgradesTable data={tableData} {columns} initialSorting={[{ id: 'costper', desc: false }]} />
 </div>

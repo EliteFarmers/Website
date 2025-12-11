@@ -4,7 +4,7 @@
 	import UpgradeList from '$comp/rates/upgrades/upgrade-list.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
-	import { getItems } from '$lib/remote/items.remote';
+	import { getItem, getItems } from '$lib/remote/items.remote';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
@@ -14,6 +14,12 @@
 	const ctx = getStatsContext();
 	const mode = $derived(ctx.selectedProfile?.gameMode);
 
+	async function getBazaarData(items: string[]) {
+		if (!browser) return undefined;
+		if (items.length === 0) return {} as RatesItemPriceData;
+		return await getItems(items);
+	}
+
 	type FetchedItems = Awaited<ReturnType<typeof getBazaarData> | undefined>;
 	interface Props {
 		player: RatesPlayerStore;
@@ -21,12 +27,6 @@
 	}
 
 	let { player, crop }: Props = $props();
-
-	async function getBazaarData(items: string[]) {
-		if (!browser) return undefined;
-		if (items.length === 0) return {} as RatesItemPriceData;
-		return await getItems(items);
-	}
 
 	let upgrades = $state([...$player.getUpgrades(), ...$player.getCropUpgrades(crop)]);
 
@@ -42,7 +42,37 @@
 
 	const debouncedItems = new Debounced(() => neededItems, 500);
 
-	let itemsPromise = $derived<Promise<FetchedItems | undefined>>(getBazaarData(debouncedItems.current));
+	let itemsData = $state<RatesItemPriceData>({});
+	let itemsVersion = $state(0);
+	let isInitialLoad = $state(true);
+
+	let itemsPromise = $derived<Promise<FetchedItems | undefined>>(
+		(async () => {
+			if (!isInitialLoad) return undefined;
+			const data = await getBazaarData(debouncedItems.current);
+			if (data) {
+				Object.assign(itemsData, data);
+				itemsVersion++;
+				isInitialLoad = false;
+			}
+			return data;
+		})()
+	);
+
+	$effect(() => {
+		if (isInitialLoad) return;
+		const needed = debouncedItems.current;
+		const missing = needed.filter((id) => !itemsData[id]);
+
+		if (missing.length > 0) {
+			Promise.all(missing.map((id) => getItem(id))).then((results) => {
+				results.forEach((res, i) => {
+					itemsData[missing[i]] = res;
+				});
+				itemsVersion++;
+			});
+		}
+	});
 </script>
 
 <div class="flex w-full flex-col gap-2">
@@ -65,8 +95,18 @@
 	{/if}
 	{#await itemsPromise}
 		<p class="text-muted-foreground text-sm">Loading item prices...</p>
-	{:then loadedItems}
-		<UpgradeList {upgrades} items={loadedItems} costFn={getUpgradeCost} />
+	{:then}
+		<UpgradeList
+			{upgrades}
+			items={itemsData}
+			version={itemsVersion}
+			costFn={getUpgradeCost}
+			applyUpgrade={(u) => {
+				$player.applyUpgrade(u);
+				player.refresh();
+				getUpgrades();
+			}}
+		/>
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>
 	{/await}

@@ -60,7 +60,9 @@
 				return pagination;
 			},
 		},
-		columns,
+		get columns() {
+			return columns;
+		},
 		enableRowSelection: true,
 		onRowSelectionChange: (updater) => {
 			if (typeof updater === 'function') {
