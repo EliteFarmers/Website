@@ -106,6 +106,7 @@
 				player.refresh();
 				getUpgrades();
 			}}
+			expandUpgrade={(u) => $player.expandUpgrade(u)}
 		/>
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>

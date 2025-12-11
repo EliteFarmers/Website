@@ -2,19 +2,23 @@
 	import { createSvelteTable, FlexRender } from '$ui/data-table/index.js';
 	import * as Table from '$ui/table/index.js';
 	import {
-		type ColumnDef,
-		type ColumnFiltersState,
-		type PaginationState,
-		type RowSelectionState,
-		type SortingState,
-		type VisibilityState,
 		getCoreRowModel,
+		getExpandedRowModel,
 		getFacetedRowModel,
 		getFacetedUniqueValues,
 		getFilteredRowModel,
 		getPaginationRowModel,
 		getSortedRowModel,
+		type ColumnDef,
+		type ColumnFiltersState,
+		type ExpandedState,
+		type PaginationState,
+		type Row,
+		type RowSelectionState,
+		type SortingState,
+		type VisibilityState,
 	} from '@tanstack/table-core';
+	import type { Snippet } from 'svelte';
 	import DataTablePagination from './data-table-pagination.svelte';
 
 	type DataTableProps<TData, TValue> = {
@@ -23,6 +27,8 @@
 		initialSorting?: SortingState;
 		initialFilters?: ColumnFiltersState;
 		initialVisibility?: VisibilityState;
+		renderSubComponent?: Snippet<[{ row: Row<TData> }]>;
+		expanded?: ExpandedState;
 	};
 
 	let {
@@ -31,6 +37,8 @@
 		initialFilters = [],
 		initialSorting = [],
 		initialVisibility = {},
+		renderSubComponent,
+		expanded = $bindable({}),
 	}: DataTableProps<TData, TValue> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
@@ -59,11 +67,15 @@
 			get pagination() {
 				return pagination;
 			},
+			get expanded() {
+				return expanded;
+			},
 		},
 		get columns() {
 			return columns;
 		},
 		enableRowSelection: true,
+		enableExpanding: true,
 		onRowSelectionChange: (updater) => {
 			if (typeof updater === 'function') {
 				rowSelection = updater(rowSelection);
@@ -99,12 +111,20 @@
 				pagination = updater;
 			}
 		},
+		onExpandedChange: (updater) => {
+			if (typeof updater === 'function') {
+				expanded = updater(expanded);
+			} else {
+				expanded = updater;
+			}
+		},
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
+		getExpandedRowModel: getExpandedRowModel(),
 	});
 </script>
 
@@ -136,6 +156,13 @@
 							</Table.Cell>
 						{/each}
 					</Table.Row>
+					{#if row.getIsExpanded() && renderSubComponent}
+						<Table.Row>
+							<Table.Cell colspan={row.getVisibleCells().length}>
+								{@render renderSubComponent({ row })}
+							</Table.Cell>
+						</Table.Row>
+					{/if}
 				{:else}
 					<Table.Row>
 						<Table.Cell colspan={columns.length} class="h-24 text-center">No upgrades found!</Table.Cell>

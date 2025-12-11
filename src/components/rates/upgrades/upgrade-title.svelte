@@ -2,23 +2,31 @@
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRequirements from '$comp/items/item-requirements.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
+	import Button from '$ui/button/button.svelte';
 	import * as Popover from '$ui/popover';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Info from '@lucide/svelte/icons/info';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { UpgradeAction, UpgradeCategory, type FortuneUpgrade } from 'farming-weight';
+	import { UpgradeAction, UpgradeCategory, type FortuneUpgrade, type UpgradeTreeNode } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
 		items?: RatesItemPriceData;
+		expanded?: boolean;
+		toggleExpanded?: () => void;
+		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
 	}
 
-	let { upgrade, items }: Props = $props();
+	let { upgrade, items, expanded, toggleExpanded, expandUpgrade }: Props = $props();
 
 	const itemData = $derived.by(() => {
 		const item = upgrade.purchase;
 		if (!item) return undefined;
 		return items?.[item]?.item ?? undefined;
 	});
+
+	const hasNextUpgrades = $derived((expandUpgrade?.(upgrade).children.length ?? 0) > 0);
 </script>
 
 <div class="flex min-w-80 flex-1 flex-col items-start justify-center gap-1">
@@ -74,5 +82,14 @@
 	{/if}
 	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0}
 		<p class="text-muted-foreground text-xs">Gives no fortune right away, but has later upgrades.</p>
+	{/if}
+	{#if hasNextUpgrades && toggleExpanded}
+		<Button variant="link" size="sm" class="text-muted-foreground h-auto p-0" onclick={() => toggleExpanded()}>
+			{#if expanded}
+				<ChevronDown class="mr-1 h-3 w-3" /> Hide next upgrades
+			{:else}
+				<ChevronRight class="mr-1 h-3 w-3" /> Show next upgrades...
+			{/if}
+		</Button>
 	{/if}
 </div>
