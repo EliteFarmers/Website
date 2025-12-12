@@ -3,9 +3,23 @@
 	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import { MOBILE_BREAKPOINT } from '$lib/hooks/is-mobile.svelte';
 	import * as Sidebar from '$ui/sidebar';
+	import { onMount } from 'svelte';
 
 	const sidebar = Sidebar.useSidebar();
 	const adCtx = getAdCtx();
+
+	let bottomAnchor = $state<HTMLElement | null>(null);
+	onMount(() => {
+		const timeouts = [
+			setTimeout(() => {
+				adCtx.bottomAnchor = bottomAnchor ?? document.getElementById('anchor-bottom');
+			}, 2000),
+			setTimeout(() => {
+				adCtx.bottomAnchor = bottomAnchor ?? document.getElementById('anchor-bottom');
+			}, 5000),
+		];
+		return () => timeouts.forEach(clearTimeout);
+	});
 </script>
 
 <div class="flex h-[280px] w-full justify-center overflow-clip">
@@ -37,12 +51,13 @@
 	{/key}
 </div>
 
-{#if sidebar.isMobile}
+{#if sidebar.size.mobile}
 	<NitroAdSlot
 		createDiv={false}
 		slotId="anchor-bottom"
 		onCreated={(element) => {
 			adCtx.bottomAnchor = element;
+			bottomAnchor = element;
 		}}
 		config={{
 			format: 'anchor-v2',
