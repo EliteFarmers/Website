@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FloatingVideo from '$comp/ads/floating-video.svelte';
 	import FooterAd from '$comp/ads/footer-ad.svelte';
 	import Footer from '$comp/footer/footer.svelte';
 	import Announcements from '$comp/header/announcements.svelte';
@@ -47,4 +48,5 @@
 			<Footer />
 		</Sidebar.Inset>
 	</div>
+	<FloatingVideo />
 </Sidebar.Provider>

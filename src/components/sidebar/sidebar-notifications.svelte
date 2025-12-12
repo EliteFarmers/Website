@@ -5,6 +5,7 @@
 <script lang="ts">
 	import AnnouncementIcon from '$comp/header/announcement-icon.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
+	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import Button from '$ui/button/button.svelte';
 	import * as DropdownMenu from '$ui/dropdown-menu';
@@ -16,9 +17,19 @@
 
 	const announcements = $derived(ctx.announcements);
 	const allAnnouncements = $derived(ctx.allAnnouncements);
+
+	const adCtx = getAdCtx();
 </script>
 
-<DropdownMenu.Root>
+<DropdownMenu.Root
+	onOpenChange={(open) => {
+		if (open) {
+			adCtx.floatingVideoLeftMargin = 19.5;
+		} else {
+			adCtx.floatingVideoLeftMargin = 0;
+		}
+	}}
+>
 	<DropdownMenu.Trigger>
 		{#snippet child({ props })}
 			<Sidebar.MenuButton

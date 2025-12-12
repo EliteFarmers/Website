@@ -12,6 +12,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import UserIcon from '$comp/discord/user-icon.svelte';
+	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import * as Avatar from '$ui/avatar';
 	import * as DropdownMenu from '$ui/dropdown-menu';
@@ -19,11 +20,20 @@
 
 	const ctx = getGlobalContext();
 	const session = $derived(ctx.initialized ? ctx.session : null);
+	const adCtx = getAdCtx();
 
 	const sidebar = Sidebar.useSidebar();
 </script>
 
-<DropdownMenu.Root>
+<DropdownMenu.Root
+	onOpenChange={(open) => {
+		if (open) {
+			adCtx.floatingVideoLeftMargin = 12;
+		} else {
+			adCtx.floatingVideoLeftMargin = 0;
+		}
+	}}
+>
 	<DropdownMenu.Trigger>
 		{#snippet child({ props })}
 			<Sidebar.MenuButton
@@ -53,7 +63,7 @@
 		{/snippet}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content
-		class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg"
+		class="w-(--bits-dropdown-menu-anchor-width) min-w-50 rounded-lg"
 		align="end"
 		sideOffset={4}
 		side={sidebar.isMobile ? 'top' : 'right'}

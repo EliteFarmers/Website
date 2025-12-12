@@ -901,4 +901,16 @@
 	.markdown-alert > p {
 		@apply not-first:mt-2!;
 	}
+
+	#floating-video {
+		right: auto;
+		left: 0.5rem;
+		bottom: 0.5rem !important;
+	}
+
+	#floating-video.mobile {
+		right: 0.5rem;
+		left: auto;
+		bottom: 0.5rem !important;
+	}
 }
