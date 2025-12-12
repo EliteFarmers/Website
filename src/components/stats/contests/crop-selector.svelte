@@ -27,7 +27,11 @@
 		}
 	}
 
-	let crops = $derived(Object.entries(PROPER_CROP_TO_IMG).sort(([a], [b]) => a.localeCompare(b)));
+	let crops = $derived(
+		Object.entries(PROPER_CROP_TO_IMG)
+			.filter(([crop]) => crop !== 'Seeds')
+			.sort(([a], [b]) => a.localeCompare(b))
+	);
 
 	selectedCrops.subscribe((crops) => {
 		if (!radio || !scrollContainer) return;

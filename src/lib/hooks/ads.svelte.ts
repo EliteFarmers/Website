@@ -8,20 +8,7 @@ export class AdsContext {
 	#footerBottomSize = $derived(
 		new ElementRect(() => (this.#footerBottom?.children[0] as HTMLElement | null) ?? this.#footerBottom)
 	);
-
-	constructor() {
-		$effect.pre(() => {
-			document.addEventListener('nitroAds.rendered', this.handleAdRendered);
-		});
-	}
-
-	handleAdRendered = (event: Event) => {
-		console.error(JSON.stringify(event, undefined, 2));
-		// const nitroEvent = event as RenderedEvent;
-		// if (nitroEvent.slotId === 'footer-bottom' && this.#footerBottom) {
-		//     this.#footerBottomSize.refresh();
-		// }
-	};
+	#floatingVideoLeftMargin = $state<number>(0);
 
 	get footerBottom() {
 		return this.#footerBottom;
@@ -45,6 +32,14 @@ export class AdsContext {
 
 	set bottomAnchor(el: HTMLElement | null) {
 		this.#bottomAnchor = el;
+	}
+
+	get floatingVideoLeftMargin() {
+		return this.#floatingVideoLeftMargin;
+	}
+
+	set floatingVideoLeftMargin(value: number) {
+		this.#floatingVideoLeftMargin = value;
 	}
 }
 
