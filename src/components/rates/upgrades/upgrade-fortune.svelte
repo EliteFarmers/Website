@@ -4,9 +4,10 @@
 
 	interface Props {
 		upgrade: FortuneUpgrade;
+		class?: string;
 	}
 
-	let { upgrade }: Props = $props();
+	let { upgrade, class: className }: Props = $props();
 </script>
 
 {#if upgrade.increase > 0}
@@ -16,6 +17,7 @@
 			acc[curr.name] = curr.fortune;
 			return acc;
 		}, {})}
+		class={className}
 	/>
 {:else if upgrade.increase < 0}
 	<FortuneBreakdown
@@ -24,6 +26,7 @@
 			acc[curr.name] = curr.fortune;
 			return acc;
 		}, {})}
+		class={className}
 	>
 		{#snippet child()}
 			<p class="max-w-sm text-sm">
@@ -32,7 +35,7 @@
 		{/snippet}
 	</FortuneBreakdown>
 {:else if upgrade.max && upgrade.max > 0}
-	<FortuneBreakdown total={upgrade.max} enabled={false}>
+	<FortuneBreakdown total={upgrade.max} enabled={false} class={className}>
 		{#snippet child()}
 			<p class="max-w-sm text-sm">
 				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune

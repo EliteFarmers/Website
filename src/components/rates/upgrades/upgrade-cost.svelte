@@ -2,22 +2,24 @@
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import type { RatesItemPriceData } from '$lib/api/elite';
+	import { cn } from '$lib/utils';
 	import type { FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
 		items?: RatesItemPriceData;
 		totalCost: number;
+		class?: string;
 	}
 
-	let { upgrade, items, totalCost }: Props = $props();
+	let { upgrade, items, totalCost, class: className }: Props = $props();
 
 	const copper = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
 	const bits = $derived((upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0));
 	const goldMedal = $derived(upgrade.cost?.medals?.gold ?? 0);
 </script>
 
-<div class="flex min-w-72 flex-col items-end justify-center">
+<div class={cn('flex min-w-72 flex-col items-end justify-center', className)}>
 	{#each Object.entries(upgrade.cost?.items ?? {}) as [item, amount] (item)}
 		{@render itemCost(item, amount)}
 	{/each}

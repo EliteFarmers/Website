@@ -157,7 +157,7 @@
 						{/each}
 					</Table.Row>
 					{#if row.getIsExpanded() && renderSubComponent}
-						<Table.Row>
+						<Table.Row class="hover:bg-transparent">
 							<Table.Cell colspan={row.getVisibleCells().length}>
 								{@render renderSubComponent({ row })}
 							</Table.Cell>

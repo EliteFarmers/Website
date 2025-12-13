@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { InventoryItemMetaResponseNetworth, ItemDto } from '$lib/api';
+	import type { ItemDto } from '$lib/api';
 	import Bug from '@lucide/svelte/icons/bug';
 	import type { EliteItemDto } from 'farming-weight';
 	import FormattedText from './formatted-text.svelte';
@@ -8,11 +8,11 @@
 	interface Props {
 		item: ItemDto | EliteItemDto;
 		title?: boolean;
-		networth?: InventoryItemMetaResponseNetworth | null;
+		otherDebugData?: unknown | null;
 		children?: import('svelte').Snippet;
 	}
 
-	let { item, title = true, networth = null, children }: Props = $props();
+	let { item, title = true, otherDebugData = null, children }: Props = $props();
 
 	let showDebugInfo = $state(false);
 </script>
@@ -57,9 +57,9 @@
 		<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
 			<pre class="break-all whitespace-pre-wrap">{JSON.stringify(item, null, 2)}</pre>
 		</div>
-		{#if networth}
+		{#if otherDebugData}
 			<div class="bg-card text-primary mt-2 rounded-md p-2 text-sm">
-				<pre class="break-all whitespace-pre-wrap">{JSON.stringify(networth, null, 2)}</pre>
+				<pre class="break-all whitespace-pre-wrap">{JSON.stringify(otherDebugData, null, 2)}</pre>
 			</div>
 		{/if}
 	{/if}

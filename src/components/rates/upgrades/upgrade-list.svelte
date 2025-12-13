@@ -29,7 +29,7 @@
 	<UpgradesTable data={tableData} {columns} initialSorting={[{ id: 'costper', desc: false }]}>
 		{#snippet renderSubComponent({ row })}
 			{#if expandUpgrade}
-				<UpgradeTreeWrapper upgrade={row.original} {items} {expandUpgrade} {costFn} {row} />
+				<UpgradeTreeWrapper upgrade={row.original} {items} {expandUpgrade} {costFn} {applyUpgrade} {row} />
 			{/if}
 		{/snippet}
 	</UpgradesTable>

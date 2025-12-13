@@ -8,7 +8,7 @@
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Crop } from 'farming-weight';
+	import { Crop, Stat } from 'farming-weight';
 	import { Debounced, useDebounce, watch } from 'runed';
 
 	const ctx = getStatsContext();
@@ -28,10 +28,10 @@
 
 	let { player, crop }: Props = $props();
 
-	let upgrades = $state([...$player.getUpgrades(), ...$player.getCropUpgrades(crop)]);
+	let upgrades = $state([...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)]);
 
 	const getUpgrades = useDebounce(() => {
-		upgrades = [...$player.getUpgrades(), ...$player.getCropUpgrades(crop)];
+		upgrades = [...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)];
 	}, 750);
 
 	watch([() => $player, () => crop], () => {
@@ -106,7 +106,11 @@
 				player.refresh();
 				getUpgrades();
 			}}
-			expandUpgrade={(u) => $player.expandUpgrade(u)}
+			expandUpgrade={(u) =>
+				$player.expandUpgrade(u, {
+					includeAllTierUpgradeChildren: true,
+					stats: [Stat.FarmingFortune, Stat.BonusPestChance],
+				})}
 		/>
 	{:catch error}
 		<p class="text-sm text-red-500">Error fetching item prices: {error.message}</p>

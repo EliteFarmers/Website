@@ -37,7 +37,7 @@
 		{#if selectedItem}
 			<ItemLore
 				item={selectedItem}
-				networth={itemDetails?.ready ? itemDetails.current.meta?.networth : undefined}
+				otherDebugData={itemDetails?.ready ? itemDetails.current.meta?.networth : undefined}
 			>
 				{#if selectedItem.attributes?.inventory_data}
 					<div class="my-4 grid w-fit grid-cols-9 items-center justify-center gap-1">

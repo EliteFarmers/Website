@@ -3,7 +3,7 @@
 	import { getItemsFromUpgrades } from '$lib/items';
 	import { getItem } from '$lib/remote/items.remote';
 	import type { Row } from '@tanstack/table-core';
-	import type { FortuneUpgrade, UpgradeInfo, UpgradeTreeNode } from 'farming-weight';
+	import { type FortuneUpgrade, type UpgradeInfo, type UpgradeTreeNode } from 'farming-weight';
 	import UpgradeTree from './upgrade-tree.svelte';
 
 	interface Props {
@@ -11,12 +11,24 @@
 		items?: RatesItemPriceData;
 		expandUpgrade: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
+		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		row?: Row<FortuneUpgrade>;
 	}
 
-	let { upgrade, items, expandUpgrade, costFn, row }: Props = $props();
+	let { upgrade, items, expandUpgrade, costFn, applyUpgrade, row }: Props = $props();
 
 	let tree = $derived(expandUpgrade(upgrade));
+
+	// Flatten tree to find needed items
+	const flattenedUpgrades = $derived.by(() => {
+		const upgrades: FortuneUpgrade[] = [];
+		const traverse = (node: UpgradeTreeNode) => {
+			upgrades.push(node.upgrade);
+			node.children.forEach(traverse);
+		};
+		tree.children.forEach(traverse);
+		return upgrades;
+	});
 
 	$effect(() => {
 		if (tree.children.length === 0 && row?.getIsExpanded()) {
@@ -27,14 +39,7 @@
 	$effect(() => {
 		if (!items) return;
 
-		const upgrades: FortuneUpgrade[] = [];
-		const traverse = (node: UpgradeTreeNode) => {
-			upgrades.push(node.upgrade);
-			node.children.forEach(traverse);
-		};
-		tree.children.forEach(traverse);
-
-		const needed = getItemsFromUpgrades(upgrades);
+		const needed = getItemsFromUpgrades(flattenedUpgrades);
 		const missing = needed.filter((id) => !items![id]);
 
 		if (missing.length > 0) {
@@ -45,13 +50,19 @@
 			});
 		}
 	});
+
+	function getUpgradeKey(upgrade: FortuneUpgrade, index: number): string {
+		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
+		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}|${index}`;
+	}
 </script>
 
-{#if tree.children.length > 0}
-	<div class="p-4">
-		<h4 class="mb-2 font-semibold">Future Upgrades</h4>
-		{#each tree.children as child, i (i)}
-			<UpgradeTree node={child} {items} {costFn} />
+<div class="flex flex-col gap-2 p-2">
+	{#if tree.children.length > 0}
+		{#each tree.children as child, i (getUpgradeKey(child.upgrade, i))}
+			<UpgradeTree node={child} {items} {costFn} {applyUpgrade} defaultOpen={tree.children.length === 1} />
 		{/each}
-	</div>
-{/if}
+	{:else}
+		<p class="text-muted-foreground py-2 text-center text-sm italic">No further upgrades available in this path.</p>
+	{/if}
+</div>

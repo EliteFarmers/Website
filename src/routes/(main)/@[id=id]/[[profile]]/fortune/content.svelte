@@ -1,5 +1,4 @@
 <script lang="ts">
-	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
 	import Head from '$comp/head.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
@@ -10,9 +9,12 @@
 	import PetSelector from '$comp/rates/pet-selector.svelte';
 	import ToolSelector from '$comp/rates/tool-selector.svelte';
 	import Cropselector from '$comp/stats/contests/crop-selector.svelte';
+	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { PROPER_CROP_NAME, PROPER_CROP_TO_API_CROP, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
+	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
+	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
@@ -40,10 +42,15 @@
 		getCropUpgrades,
 		getGardenLevel,
 		LotusGear,
+		Stat,
 		type EliteItemDto,
+		type FortuneUpgrade,
 		type PlayerOptions,
+		type UpgradeTreeNode,
 	} from 'farming-weight';
+	import { Debounced } from 'runed';
 	import { onMount, untrack } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import BazaarRates from './bazaar-rates.svelte';
 	import CheapestUpgrades from './cheapest-upgrades.svelte';
 	import RatesSettings from './rates-settings.svelte';
@@ -157,6 +164,59 @@
 	// svelte-ignore state_referenced_locally
 	let player = $state(getRatesPlayer(options));
 
+	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
+	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
+	const selectedCropKey = $derived(cropKey(selectedCrop));
+
+	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune, Stat.BonusPestChance]));
+	const gearProgress = $derived($player.armorSet.getProgress(undefined, [Stat.FarmingFortune, Stat.BonusPestChance]));
+	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
+
+	const allProgress = $derived([...generalProgress, ...gearProgress, ...cropProgress]);
+
+	function getUpgradeKey(upgrade: FortuneUpgrade): string {
+		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
+		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}`;
+	}
+
+	const allTreeUpgrades = $derived.by(() => {
+		const result: FortuneUpgrade[] = [];
+		const seen = new SvelteSet<string>();
+
+		const traverse = (node: UpgradeTreeNode) => {
+			const key = getUpgradeKey(node.upgrade);
+			if (!seen.has(key)) {
+				seen.add(key);
+				result.push(node.upgrade);
+			}
+			node.children.forEach(traverse);
+		};
+
+		for (const p of allProgress) {
+			if (p.upgrades) {
+				for (const u of p.upgrades) {
+					const tree = $player.expandUpgrade(u);
+					traverse(tree);
+				}
+			}
+		}
+		return result;
+	});
+
+	const neededItems = $derived(getItemsFromUpgrades(allTreeUpgrades));
+	const debouncedItems = new Debounced(() => neededItems, 1000);
+
+	let itemsData = $state<RatesItemPriceData>({});
+
+	$effect(() => {
+		const items = debouncedItems.current;
+		if (items.length > 0) {
+			getItems(items).then((data) => {
+				itemsData = { ...itemsData, ...data };
+			});
+		}
+	});
+
 	$effect(() => {
 		if (!ctx.member.ready) return;
 
@@ -182,10 +242,6 @@
 			player.update(() => createFarmingPlayer(options));
 		});
 	});
-
-	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
-	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
-	const selectedCropKey = $derived(cropKey(selectedCrop));
 
 	const calculatorOptions = $derived.by(() => {
 		return {
@@ -479,8 +535,22 @@
 			</div>
 			{#key $player.fortune}
 				<div class="flex w-full flex-wrap justify-start gap-4 md:flex-row">
-					<CategoryProgress name="General Fortune" progress={$player.getProgress()} />
-					<CategoryProgress name="Gear Fortune" progress={$player.armorSet.getProgress()} />
+					<CategoryProgress
+						name="General Fortune"
+						progress={$player.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])}
+						expandUpgrade={(u) =>
+							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+						costFn={getUpgradeCost}
+						items={itemsData}
+					/>
+					<CategoryProgress
+						name="Gear Fortune"
+						progress={$player.armorSet.getProgress(undefined, [Stat.FarmingFortune, Stat.BonusPestChance])}
+						expandUpgrade={(u) =>
+							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+						costFn={getUpgradeCost}
+						items={itemsData}
+					/>
 					{#key $player.selectedTool}
 						{#if !selectedCrop}
 							<div class="flex-1 basis-64 items-center text-center">
@@ -491,7 +561,14 @@
 						{:else}
 							<CategoryProgress
 								name="{selectedCrop || 'Wheat'} Fortune"
-								progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat)}
+								progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat, [
+									Stat.FarmingFortune,
+									Stat.BonusPestChance,
+								])}
+								expandUpgrade={(u) =>
+									$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+								costFn={getUpgradeCost}
+								items={itemsData}
 							>
 								<img
 									src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
@@ -509,9 +586,9 @@
 	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
-		<svelte:boundary>
-			<CheapestUpgrades {player} crop={selectedCropKey} />
-			{#snippet failed(error, reset)}
+		<!-- <svelte:boundary> -->
+		<CheapestUpgrades {player} crop={selectedCropKey} />
+		<!-- {#snippet failed(error, reset)}
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
 					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
@@ -522,8 +599,8 @@
 					</p>
 					<Button variant="outline" onclick={reset}>Retry</Button>
 				</div>
-			{/snippet}
-		</svelte:boundary>
+			{/snippet} -->
+		<!-- </svelte:boundary> -->
 	</section>
 </div>
 

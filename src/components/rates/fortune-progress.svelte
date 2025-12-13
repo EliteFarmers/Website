@@ -28,23 +28,23 @@
 		};
 	});
 
-	let maxed = $derived(progress.ratio >= 1);
-	let readable = $derived(
-		(maxed
-			? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString()
-			: (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() + ' / ' + progress.maxFortune) +
-			' ' +
-			STAT_ICONS[Stat.FarmingFortune]
-	);
-	let expanded = $derived(
-		maxed
-			? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() +
-					' / ' +
-					progress.maxFortune +
-					' ' +
-					STAT_ICONS[Stat.FarmingFortune]
-			: undefined
-	);
+	// let maxed = $derived(progress.ratio >= 1);
+	// let readable = $derived(
+	// 	(maxed
+	// 		? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString()
+	// 		: (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() + ' / ' + progress.maxFortune) +
+	// 		' ' +
+	// 		STAT_ICONS[Stat.FarmingFortune]
+	// );
+	// let expanded = $derived(
+	// 	maxed
+	// 		? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() +
+	// 				' / ' +
+	// 				progress.maxFortune +
+	// 				' ' +
+	// 				STAT_ICONS[Stat.FarmingFortune]
+	// 		: undefined
+	// );
 </script>
 
 <div class="flex w-full flex-col items-start">
@@ -90,12 +90,34 @@
 			</div>
 		{/if}
 	</div>
-	<ProgressBar
+	<!-- <ProgressBar
 		percent={progress.ratio * 100}
 		{readable}
 		{expanded}
 		{maxed}
 		{barBg}
 		disabled={progress.active?.active === false}
-	/>
+	/> -->
+	<!-- let statProgress: {
+    current: number;
+    max: number;
+    ratio: number;
+} -->
+	{#each Object.entries(progress.stats ?? {}) as [stat, statProgress] (stat)}
+		<ProgressBar
+			{barBg}
+			percent={statProgress.ratio * 100}
+			readable={(statProgress.current || 0).toLocaleString() +
+				' / ' +
+				statProgress.max.toLocaleString() +
+				' ' +
+				STAT_ICONS[stat as Stat]}
+			expanded={(statProgress.current || 0).toLocaleString() +
+				' / ' +
+				statProgress.max.toLocaleString() +
+				' ' +
+				STAT_ICONS[stat as Stat]}
+			disabled={progress.active?.active === false}
+		/>
+	{/each}
 </div>
