@@ -12,9 +12,10 @@
 	interface Props {
 		progress: FortuneSourceProgress;
 		barBg?: string;
+		useItemName?: boolean;
 	}
 
-	let { progress: p, barBg = 'bg-background' }: Props = $props();
+	let { progress: p, barBg = 'bg-background', useItemName = true }: Props = $props();
 
 	let progress = $derived.by(() => {
 		if (p.active?.active !== false) return p;
@@ -50,7 +51,7 @@
 <div class="flex w-full flex-col items-start">
 	<div class="flex w-full items-center justify-between">
 		<div class="flex h-10 flex-row items-center gap-1">
-			{#if progress.item?.name}
+			{#if progress.item?.name && useItemName}
 				{#if progress.item?.skyblockId}
 					<ItemRender skyblockId={progress.item.skyblockId} class="size-10" />
 				{/if}

@@ -7,6 +7,8 @@
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
+	import * as DropdownMenu from '$ui/dropdown-menu';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
 	import Info from '@lucide/svelte/icons/info';
 	import {
 		RARITY_COLORS,
@@ -28,19 +30,34 @@
 		costFn?: (upgrade: FortuneUpgrade | UpgradeInfo, items?: RatesItemPriceData) => number;
 		applyUpgrade?: (upgrade: FortuneUpgrade) => void;
 		expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode;
+		equipOptions?: { value: string; label: string }[];
+		equipValue?: string;
+		equipPlaceholder?: string;
+		onEquipValueChange?: (value: string) => void;
 	}
 
-	let { open = $bindable(false), progress, items, costFn, applyUpgrade, expandUpgrade }: Props = $props();
+	let {
+		open = $bindable(false),
+		progress,
+		items,
+		costFn,
+		applyUpgrade,
+		expandUpgrade,
+		equipOptions,
+		equipValue,
+		equipPlaceholder,
+		onEquipValueChange,
+	}: Props = $props();
+
+	let selectedEquipValue = $derived(equipValue ?? '');
 
 	const baseUpgrades = $derived(progress?.upgrades ?? []);
 
-	// Generate a unique key for an upgrade to detect duplicates
 	function getUpgradeKey(upgrade: FortuneUpgrade): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';
 		return `${upgrade.category}|${upgrade.title}|${metaKey}|${upgrade.conflictKey ?? ''}`;
 	}
 
-	// Expand all base upgrades and flatten into a single list, deduplicating
 	const allUpgrades = $derived.by(() => {
 		if (!expandUpgrade) return baseUpgrades;
 
@@ -93,22 +110,54 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.ScrollContent parentClass="max-w-4xl" class="p-0">
-		<div class="bg-card/80 flex items-start justify-between gap-4 border-b p-6">
-			<div class="flex items-center gap-4">
+	<Dialog.ScrollContent parentClass="w-[calc(100vw-1rem)] max-w-4xl sm:w-full" class="p-0">
+		<div class="bg-card/80 flex flex-col gap-4 border-b p-4 sm:flex-row sm:items-start sm:justify-between sm:p-6">
+			<div class="flex min-w-0 items-center gap-4">
 				{#if progress?.item?.skyblockId}
 					<div class="bg-background rounded-lg border p-2">
 						<ItemRender skyblockId={progress.item.skyblockId} class="size-12" />
 					</div>
 				{/if}
-				<div class="flex flex-col gap-1">
-					<h2 class="text-xl font-bold">
+				<div class="flex min-w-0 flex-col items-start gap-1">
+					<h2 class="min-w-0 text-xl font-bold wrap-break-word">
 						{#if progress?.item?.name}
 							<ItemName name={progress.item.name} />
 						{:else}
 							{progress?.name ?? 'Details'}
 						{/if}
 					</h2>
+					{#if equipOptions && equipOptions.length > 1 && onEquipValueChange}
+						<DropdownMenu.Root>
+							<DropdownMenu.Trigger>
+								<Button
+									variant="ghost"
+									size="icon"
+									class="size-8 p-0"
+									aria-label={equipPlaceholder ?? 'Equip'}
+								>
+									<span class="sr-only">{equipPlaceholder ?? 'Equip'}</span>
+									<ArrowLeftRight size={16} />
+								</Button>
+							</DropdownMenu.Trigger>
+							<DropdownMenu.Content class="max-h-96 max-w-xl overflow-y-auto overscroll-y-contain">
+								<DropdownMenu.Label>{equipPlaceholder ?? 'Equip'}</DropdownMenu.Label>
+								<DropdownMenu.Separator />
+								<DropdownMenu.RadioGroup
+									value={selectedEquipValue}
+									onValueChange={(value) => {
+										selectedEquipValue = value;
+										onEquipValueChange?.(value);
+									}}
+								>
+									{#each equipOptions as option (option.value)}
+										<DropdownMenu.RadioItem value={option.value.toString()}>
+											<ItemName name={option.label} />
+										</DropdownMenu.RadioItem>
+									{/each}
+								</DropdownMenu.RadioGroup>
+							</DropdownMenu.Content>
+						</DropdownMenu.Root>
+					{/if}
 					{#if progress?.item?.attributes?.rarity}
 						<Badge variant="outline" class="w-fit capitalize">
 							{progress.item.attributes.rarity}
@@ -118,7 +167,7 @@
 			</div>
 
 			{#if hasUpgrades && totalCost > 0}
-				<div class="text-right">
+				<div class="text-left sm:text-right">
 					<p class="text-muted-foreground text-sm tracking-wider uppercase">Completion Cost</p>
 					<p class="text-completed text-2xl font-bold">
 						{Math.round(totalCost).toLocaleString()}
@@ -129,15 +178,11 @@
 				</div>
 			{/if}
 		</div>
-		<div class="space-y-6 p-6">
+		<div class="space-y-6 p-4 sm:p-6">
 			<!-- Details Section (Primary) -->
 			{#if progress}
-				<!-- Main progress bar -->
-				<!-- {#if progress.maxFortune > 0} -->
-				<FortuneProgress {progress} barBg="bg-card" />
-				<!-- {/if} -->
+				<FortuneProgress {progress} barBg="bg-card" useItemName={false} />
 
-				<!-- Sub-progress bars -->
 				{#if progress.progress?.length}
 					<div class="grid gap-2 md:grid-cols-2">
 						{#each progress.progress as p, i (i)}
@@ -146,9 +191,6 @@
 					</div>
 				{/if}
 
-				<pre>{JSON.stringify(progress, null, 2)}</pre>
-
-				<!-- Next/Max item info -->
 				{#if progress.nextInfo?.skyblockId !== undefined || progress.maxInfo?.skyblockId !== undefined}
 					<div class="dark flex flex-col gap-4 sm:flex-row">
 						{#if progress.nextInfo?.skyblockId !== undefined}
@@ -227,7 +269,6 @@
 				{/if}
 			{/if}
 
-			<!-- Upgrades Section (Below Details) -->
 			{#if hasUpgrades}
 				<hr class="border-muted" />
 				<div>

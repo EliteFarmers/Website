@@ -906,6 +906,7 @@
 		right: auto;
 		left: 0.5rem;
 		bottom: 0.5rem !important;
+		top: auto !important;
 	}
 
 	#floating-video.mobile {

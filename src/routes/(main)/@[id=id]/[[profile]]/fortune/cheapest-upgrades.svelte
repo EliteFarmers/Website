@@ -109,7 +109,7 @@
 			expandUpgrade={(u) =>
 				$player.expandUpgrade(u, {
 					includeAllTierUpgradeChildren: true,
-					stats: [Stat.FarmingFortune, Stat.BonusPestChance],
+					stats: [Stat.FarmingFortune],
 				})}
 		/>
 	{:catch error}

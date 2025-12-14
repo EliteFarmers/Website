@@ -19,7 +19,7 @@
 	const goldMedal = $derived(upgrade.cost?.medals?.gold ?? 0);
 </script>
 
-<div class={cn('flex min-w-72 flex-col items-end justify-center', className)}>
+<div class={cn('flex w-full min-w-0 flex-col items-start justify-center sm:min-w-72 sm:items-end', className)}>
 	{#each Object.entries(upgrade.cost?.items ?? {}) as [item, amount] (item)}
 		{@render itemCost(item, amount)}
 	{/each}
@@ -70,13 +70,15 @@
 
 {#snippet itemCost(item: string, amount: number)}
 	{@const sbItem = items?.[item]}
-	<div class="flex flex-row items-center gap-1">
+	<div class="flex min-w-0 flex-row flex-wrap items-center gap-x-1 gap-y-1">
 		<span class="text-sm font-semibold">{amount}x</span>
-		<span class="bg-background rounded-sm border px-1">
+		<div class="bg-background max-w-full min-w-0 rounded-sm border px-1">
 			{#if sbItem?.item?.name}
-				<div class="flex flex-row items-center">
+				<div class="flex min-w-0 flex-row items-center gap-1">
 					<ItemRender skyblockId={item} class="size-6" />
-					<span class="text-sm"><ItemName name={sbItem.item.name} /></span>
+					<span class="min-w-0 text-sm wrap-break-word whitespace-normal"
+						><ItemName name={sbItem.item.name} /></span
+					>
 				</div>
 			{:else}
 				<!-- Replace underscores with spaces and capitalize first letter of each word -->
@@ -88,22 +90,22 @@
 					.join(' ')
 					.replace('Enchantment ', '')}
 
-				<span class="text-sm">{itemName}</span>
+				<span class="text-sm wrap-break-word whitespace-normal">{itemName}</span>
 			{/if}
-		</span>
+		</div>
 
 		{#if sbItem?.auctions && sbItem.auctions.length > 0}
 			{@const lowest = Math.min(...sbItem.auctions.map((a) => a.lowest3Day))}
-			<span class="dark:text-completed ml-1 text-sm">
+			<span class="dark:text-completed ml-1 text-sm whitespace-nowrap">
 				{Math.round(lowest * amount).toLocaleString()}
 			</span>
-			<span class="text-muted-foreground">coins</span>
+			<span class="text-muted-foreground whitespace-nowrap">coins</span>
 		{:else if sbItem?.bazaar}
 			{@const averageBuyOrder = sbItem.bazaar.averageBuyOrder}
-			<span class="dark:text-completed ml-1 text-sm">
+			<span class="dark:text-completed ml-1 text-sm whitespace-nowrap">
 				{Math.round(averageBuyOrder * amount).toLocaleString()}
 			</span>
-			<span class="text-muted-foreground">coins</span>
+			<span class="text-muted-foreground whitespace-nowrap">coins</span>
 		{/if}
 	</div>
 {/snippet}

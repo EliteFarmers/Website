@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CopyToClipboard from '$comp/copy-to-clipboard.svelte';
 	import FloatingButton from '$comp/floating-button.svelte';
 	import Head from '$comp/head.svelte';
 	import Fortunebreakdown from '$comp/items/tools/fortune-breakdown.svelte';
@@ -44,7 +45,9 @@
 		LotusGear,
 		Stat,
 		type EliteItemDto,
+		type FortuneSourceProgress,
 		type FortuneUpgrade,
+		type GearSlot,
 		type PlayerOptions,
 		type UpgradeTreeNode,
 	} from 'farming-weight';
@@ -168,9 +171,74 @@
 	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
 	const selectedCropKey = $derived(cropKey(selectedCrop));
 
-	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune, Stat.BonusPestChance]));
-	const gearProgress = $derived($player.armorSet.getProgress(undefined, [Stat.FarmingFortune, Stat.BonusPestChance]));
+	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
+	const gearProgress = $derived($player.armorSet.getProgress(undefined, [Stat.FarmingFortune]));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
+
+	const cropToolSwitchOptions = $derived.by(() => {
+		const list = selectedCropKey ? tools.filter((t) => t.crop === selectedCropKey) : tools;
+		return list.filter((t) => !!t.item.uuid).map((t) => ({ value: t.item.uuid ?? '', label: t.name }));
+	});
+
+	const allToolOptions = $derived.by(() =>
+		tools.filter((t) => !!t.item.uuid).map((t) => ({ value: t.item.uuid ?? '', label: t.name }))
+	);
+
+	function getToolEquipConfig(
+		p: FortuneSourceProgress,
+		options: { value: string; label: string }[]
+	): {
+		options: { value: string; label: string }[];
+		value?: string;
+		placeholder?: string;
+		onChange: (value: string) => void;
+	} | null {
+		const uuid = p.item?.uuid;
+		if (!uuid) return null;
+		if (!$player.tools.some((t) => t.item.uuid === uuid)) return null;
+		return {
+			options,
+			value: selectedToolId,
+			placeholder: 'Equip tool',
+			onChange: (value) => {
+				selectedToolId = value;
+			},
+		};
+	}
+
+	function getGearEquipConfig(p: FortuneSourceProgress): {
+		options: { value: string; label: string }[];
+		value?: string;
+		placeholder?: string;
+		onChange: (value: string) => void;
+	} | null {
+		const uuid = p.item?.uuid;
+		if (!uuid) return null;
+
+		const set = $player.armorSet;
+		const slot = (Object.entries(set.slots) as [GearSlot, (typeof set.slots)[GearSlot]][])?.find(
+			([, piece]) => piece?.item.uuid === uuid
+		)?.[0];
+		if (!slot) return null;
+
+		const options = (set.slotOptions[slot] ?? [])
+			.filter((piece) => !!piece.item.uuid)
+			.map((piece) => ({ value: piece.item.uuid ?? '', label: piece.item.name ?? slot }));
+
+		return {
+			options,
+			value: set.getPiece(slot)?.item.uuid ?? uuid,
+			placeholder: `Swap ${slot}`,
+			onChange: (value) => {
+				const piece =
+					set.pieces.find((a) => a.item.uuid === value) ??
+					set.equipmentPieces.find((e) => e.item.uuid === value);
+				if (!piece) return;
+				set.setPiece(piece);
+				player.refresh();
+			},
+		};
+	}
 
 	const allProgress = $derived([...generalProgress, ...gearProgress, ...cropProgress]);
 
@@ -390,9 +458,11 @@
 			{/if}
 
 			<PetSelector {player} bind:selected={selectedPet} />
-			<ToolSelector {tools} {player} bind:selectedToolId {selectedCropKey} />
+			<div id="rates-tool-selector" class="w-full">
+				<ToolSelector {tools} {player} bind:selectedToolId {selectedCropKey} />
+			</div>
 
-			<div class="flex w-full flex-col gap-2">
+			<div id="rates-gear-selector" class="flex w-full flex-col gap-2">
 				<FarmingGear {player} />
 			</div>
 		</section>
@@ -537,47 +607,44 @@
 				<div class="flex w-full flex-wrap justify-start gap-4 md:flex-row">
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])}
-						expandUpgrade={(u) =>
-							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+						progress={$player.getProgress([Stat.FarmingFortune])}
+						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
+						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}
 					/>
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress(undefined, [Stat.FarmingFortune, Stat.BonusPestChance])}
-						expandUpgrade={(u) =>
-							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+						progress={$player.armorSet.getProgress(undefined, [Stat.FarmingFortune])}
+						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
+						equip={(p) => getGearEquipConfig(p)}
 					/>
-					{#key $player.selectedTool}
-						{#if !selectedCrop}
-							<div class="flex-1 basis-64 items-center text-center">
-								<p class="my-4 max-w-sm text-center font-semibold">
-									Select a crop above to see its fortune!
-								</p>
-							</div>
-						{:else}
-							<CategoryProgress
-								name="{selectedCrop || 'Wheat'} Fortune"
-								progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat, [
-									Stat.FarmingFortune,
-									Stat.BonusPestChance,
-								])}
-								expandUpgrade={(u) =>
-									$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
-								costFn={getUpgradeCost}
-								items={itemsData}
-							>
-								<img
-									src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
-									alt={selectedCrop}
-									class="pixelated ml-1 h-8 w-8"
-								/>
-							</CategoryProgress>
-						{/if}
-					{/key}
+					{#if !selectedCrop}
+						<div class="flex-1 basis-64 items-center text-center">
+							<p class="my-4 max-w-sm text-center font-semibold">
+								Select a crop above to see its fortune!
+							</p>
+						</div>
+					{:else}
+						<CategoryProgress
+							name="{selectedCrop || 'Wheat'} Fortune"
+							progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat, [
+								Stat.FarmingFortune,
+							])}
+							expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+							costFn={getUpgradeCost}
+							items={itemsData}
+							equip={(p) => getToolEquipConfig(p, cropToolSwitchOptions)}
+						>
+							<img
+								src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}
+								alt={selectedCrop}
+								class="pixelated ml-1 h-8 w-8"
+							/>
+						</CategoryProgress>
+					{/if}
 				</div>
 			{/key}
 		</section>
@@ -586,9 +653,9 @@
 	<Cropselector radio={true} href="#upgrades" id="upgrades" />
 
 	<section class="bg-card flex w-full max-w-6xl flex-col items-center gap-4 rounded-lg border-2 p-4">
-		<!-- <svelte:boundary> -->
-		<CheapestUpgrades {player} crop={selectedCropKey} />
-		<!-- {#snippet failed(error, reset)}
+		<svelte:boundary>
+			<CheapestUpgrades {player} crop={selectedCropKey} />
+			{#snippet failed(error, reset)}
 				<div class="flex w-full flex-col items-center justify-center gap-4">
 					<p class="text-lg font-semibold">Failed to load upgrades!</p>
 					<CopyToClipboard text={JSON.stringify(error, null, 2)} class="text-sm">Copy Error</CopyToClipboard>
@@ -599,8 +666,8 @@
 					</p>
 					<Button variant="outline" onclick={reset}>Retry</Button>
 				</div>
-			{/snippet} -->
-		<!-- </svelte:boundary> -->
+			{/snippet}
+		</svelte:boundary>
 	</section>
 </div>
 

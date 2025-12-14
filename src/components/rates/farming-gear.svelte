@@ -7,7 +7,7 @@
 	import { buttonVariants } from '$ui/button';
 	import * as DropdownMenu from '$ui/dropdown-menu';
 	import * as Popover from '$ui/popover';
-	import Menu from '@lucide/svelte/icons/menu';
+	import ArrowLeftRight from '@lucide/svelte/icons/arrow-left-right';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import type { GearSlot } from 'farming-weight';
 
@@ -52,7 +52,7 @@
 					<div class="flex flex-row items-center">
 						<DropdownMenu.Root>
 							<DropdownMenu.Trigger class={buttonVariants({ variant: 'ghost' })}>
-								<Menu size={20} />
+								<ArrowLeftRight size={20} />
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content class="max-w-xl">
 								<DropdownMenu.Label>Swap {slot}</DropdownMenu.Label>
