@@ -1,8 +1,9 @@
 <script lang="ts">
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
-	import { PROPER_CROP_NAME } from '$lib/constants/crops';
+	import { PROPER_CROP_NAME, PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
-	import { getSelectedCrops } from '$lib/stores/selectedCrops';
+	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
+	import * as Select from '$ui/select';
 	import type { FarmingTool } from 'farming-weight';
 	import Toolconfig from './toolconfig.svelte';
 
@@ -28,6 +29,18 @@
 	let show = $state(2);
 	let tools = $derived(toolList ?? $player.tools);
 
+	const cropOptions = $derived.by(() =>
+		Object.keys(DEFAULT_SELECTED_CROPS)
+			.sort((a, b) => a.localeCompare(b))
+			.map((crop) => ({ value: crop, label: crop, img: PROPER_CROP_TO_IMG[crop] }))
+	);
+
+	const selectedCrop = $derived(
+		Object.entries($selectedCrops)
+			.find(([, value]) => value)?.[0]
+			?.toString() ?? ''
+	);
+
 	let filtered = $derived(
 		tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).slice(0, show)
 	);
@@ -35,7 +48,38 @@
 
 <div class="flex w-full flex-col items-center gap-4 rounded-md border p-4">
 	<div class="flex w-full items-center justify-between">
-		<p class="text-lg font-semibold">Farming Tool</p>
+		<div class="flex flex-row items-center gap-2">
+			<p class="text-lg font-semibold">Farming Tool</p>
+			<Select.Simple
+				size="sm"
+				class="h-8"
+				options={cropOptions}
+				value={selectedCrop || undefined}
+				placeholder="Crop"
+				change={(crop?: string) => {
+					if (!crop) return;
+					selectedCrops.set({ ...DEFAULT_SELECTED_CROPS, [crop]: true });
+				}}
+			>
+				{#snippet trigger(option)}
+					<div class="flex flex-row items-center gap-1">
+						{#if option?.img}
+							<img src={option.img} alt={option.label} class="h-5 w-5 rounded-sm" />
+						{:else}
+							<span>{option?.label ?? 'Crop'}</span>
+						{/if}
+					</div>
+				{/snippet}
+				{#snippet option(option)}
+					<div class="flex flex-row items-center gap-1">
+						{#if option?.img}
+							<img src={option.img} alt={option.label} class="h-5 w-5 rounded-sm" />
+						{/if}
+						<span>{option?.label ?? 'Crop'}</span>
+					</div>
+				{/snippet}
+			</Select.Simple>
+		</div>
 		{#if $player.selectedTool && $player.selectedTool.crop === selectedCropKey}
 			<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
 		{:else}

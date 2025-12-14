@@ -24,6 +24,7 @@
 		name?: string | undefined;
 		options: Option<T, Extra>[];
 		option?: Snippet<[Option<T, Extra>]>;
+		trigger?: Snippet<[Option<T, Extra> | undefined]>;
 		value?: T | null | undefined;
 		placeholder?: string;
 		change?: (value?: T) => void;
@@ -41,6 +42,7 @@
 		placeholder = 'Select option',
 		change = () => undefined,
 		option,
+		trigger,
 		...rest
 	}: Props = $props();
 
@@ -57,7 +59,9 @@
 	bind:value={value as string | undefined}
 >
 	<Select.Trigger {id} {...rest}>
-		{#if selected}
+		{#if trigger}
+			{@render trigger(selected)}
+		{:else if selected}
 			{@render item(selected)}
 		{:else}
 			<span>{placeholder}</span>
