@@ -36,4 +36,4 @@ jobs:
       - name: build
         run: pnpm build
 
-      - run: npm publish --access public
+      - run: npm publish
