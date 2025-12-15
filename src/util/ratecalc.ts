@@ -28,6 +28,9 @@ const crops = [
 	Crop.SugarCane,
 	Crop.Wheat,
 	Crop.Seeds,
+	Crop.Sunflower,
+	Crop.Moonflower,
+	Crop.WildRose,
 ] as const;
 
 type CropFortuneOption = { cropFortune?: Partial<Record<Crop, number>> };
@@ -131,6 +134,9 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 		case Crop.Wheat:
 		case Crop.Mushroom:
 		case Crop.SugarCane:
+		case Crop.Moonflower:
+		case Crop.Sunflower:
+		case Crop.WildRose:
 			return Math.round(baseDrops);
 		case Crop.Carrot:
 		case Crop.CocoaBeans:
