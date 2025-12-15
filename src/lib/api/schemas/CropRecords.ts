@@ -20,4 +20,7 @@ export interface CropRecords {
 	cocoaBeans: GuildJacobLeaderboardEntry[];
 	sugarCane: GuildJacobLeaderboardEntry[];
 	netherWart: GuildJacobLeaderboardEntry[];
+	sunflower: GuildJacobLeaderboardEntry[];
+	moonflower: GuildJacobLeaderboardEntry[];
+	wildRose: GuildJacobLeaderboardEntry[];
 }

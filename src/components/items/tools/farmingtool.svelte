@@ -3,6 +3,7 @@
 	import { PROPER_CROP_TO_IMG } from '$lib/constants/crops';
 	import { FarmingToolType, getCropDisplayName, type FarmingTool as FT } from 'farming-weight';
 	import FormattedText from '../formatted-text.svelte';
+	import ItemRender from '../item-render.svelte';
 	import Lorebtn from '../lorebtn.svelte';
 	import FortuneBreakdown from './fortune-breakdown.svelte';
 
@@ -17,11 +18,7 @@
 
 <div class="bg-card flex max-h-30 w-full basis-20 flex-row justify-between gap-2 rounded-md p-1">
 	<div class="flex flex-row items-center gap-2">
-		<img
-			class="pixelated aspect-square w-14 p-1 md:h-20 md:w-20"
-			src="/packs/hypixelplus/tools/farming/{tool.item.skyblockId?.toLowerCase()}.png"
-			alt="Tool"
-		/>
+		<ItemRender skyblockId={tool.item.skyblockId ?? 'DIAMOND_HOE'} class="pixelated h-16 w-16 md:m-2" />
 		<div class="flex flex-col items-start">
 			<div class="text-md font-semibold md:text-lg">
 				<FormattedText text={tool.item.name ?? 'Unknown Tool'} />

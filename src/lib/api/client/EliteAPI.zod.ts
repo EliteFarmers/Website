@@ -1631,6 +1631,9 @@ export const zodGetContestPingsResponseItem = zod.object({
 			cocoaBeans: zod.string().nullish(),
 			sugarCane: zod.string().nullish(),
 			netherWart: zod.string().nullish(),
+			sunflower: zod.string().nullish(),
+			moonflower: zod.string().nullish(),
+			wildRose: zod.string().nullish(),
 		})
 		.nullish(),
 	delaySeconds: zod.number(),
@@ -1877,6 +1880,57 @@ export const zodGetBotGuildResponse = zod.object({
 									}),
 								})
 							),
+							sunflower: zod.array(
+								zod.object({
+									uuid: zod.string(),
+									ign: zod.string(),
+									discordId: zod.string(),
+									record: zod.object({
+										crop: zod.string(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
+										collected: zod.number(),
+										position: zod.number(),
+										participants: zod.number(),
+										medal: zod.string().nullish(),
+									}),
+								})
+							),
+							moonflower: zod.array(
+								zod.object({
+									uuid: zod.string(),
+									ign: zod.string(),
+									discordId: zod.string(),
+									record: zod.object({
+										crop: zod.string(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
+										collected: zod.number(),
+										position: zod.number(),
+										participants: zod.number(),
+										medal: zod.string().nullish(),
+									}),
+								})
+							),
+							wildRose: zod.array(
+								zod.object({
+									uuid: zod.string(),
+									ign: zod.string(),
+									discordId: zod.string(),
+									record: zod.object({
+										crop: zod.string(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
+										collected: zod.number(),
+										position: zod.number(),
+										participants: zod.number(),
+										medal: zod.string().nullish(),
+									}),
+								})
+							),
 						}),
 					})
 				),
@@ -1925,6 +1979,9 @@ export const zodGetBotGuildResponse = zod.object({
 						cocoaBeans: zod.string().nullish(),
 						sugarCane: zod.string().nullish(),
 						netherWart: zod.string().nullish(),
+						sunflower: zod.string().nullish(),
+						moonflower: zod.string().nullish(),
+						wildRose: zod.string().nullish(),
 					})
 					.nullish(),
 				delaySeconds: zod.number(),
@@ -2206,6 +2263,51 @@ export const zodGetJacobFeatureResponse = zod.object({
 						}),
 					})
 				),
+				sunflower: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				moonflower: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				wildRose: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
 			}),
 		})
 	),
@@ -2445,6 +2547,57 @@ export const zodUpdateJacobFeatureBody = zod.object({
 							}),
 						})
 					),
+					sunflower: zod.array(
+						zod.object({
+							uuid: zod.string(),
+							ign: zod.string(),
+							discordId: zod.string(),
+							record: zod.object({
+								crop: zod.string(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
+								collected: zod.number(),
+								position: zod.number(),
+								participants: zod.number(),
+								medal: zod.string().nullish(),
+							}),
+						})
+					),
+					moonflower: zod.array(
+						zod.object({
+							uuid: zod.string(),
+							ign: zod.string(),
+							discordId: zod.string(),
+							record: zod.object({
+								crop: zod.string(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
+								collected: zod.number(),
+								position: zod.number(),
+								participants: zod.number(),
+								medal: zod.string().nullish(),
+							}),
+						})
+					),
+					wildRose: zod.array(
+						zod.object({
+							uuid: zod.string(),
+							ign: zod.string(),
+							discordId: zod.string(),
+							record: zod.object({
+								crop: zod.string(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
+								collected: zod.number(),
+								position: zod.number(),
+								participants: zod.number(),
+								medal: zod.string().nullish(),
+							}),
+						})
+					),
 				}),
 			})
 		)
@@ -2630,6 +2783,51 @@ export const zodUpdateJacobFeatureResponse = zod.object({
 					})
 				),
 				netherWart: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				sunflower: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				moonflower: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				wildRose: zod.array(
 					zod.object({
 						uuid: zod.string(),
 						ign: zod.string(),
@@ -4607,6 +4805,9 @@ export const zodGetGardenResponse = zod.object({
 			cocoaBeans: zod.string().nullish(),
 			sugarCane: zod.string().nullish(),
 			netherWart: zod.string().nullish(),
+			sunflower: zod.string().nullish(),
+			moonflower: zod.string().nullish(),
+			wildRose: zod.string().nullish(),
 		})
 		.describe('Crops counted towards milestones'),
 	cropUpgrades: zod
@@ -4621,6 +4822,9 @@ export const zodGetGardenResponse = zod.object({
 			cocoaBeans: zod.number(),
 			sugarCane: zod.number(),
 			netherWart: zod.number(),
+			sunflower: zod.number(),
+			moonflower: zod.number(),
+			wildRose: zod.number(),
 		})
 		.describe('Crop upgrades'),
 	plots: zod.array(zod.string()).describe('List of unlocked plots'),
@@ -4679,6 +4883,9 @@ export const zodGetSelectedGardenResponse = zod.object({
 			cocoaBeans: zod.string().nullish(),
 			sugarCane: zod.string().nullish(),
 			netherWart: zod.string().nullish(),
+			sunflower: zod.string().nullish(),
+			moonflower: zod.string().nullish(),
+			wildRose: zod.string().nullish(),
 		})
 		.describe('Crops counted towards milestones'),
 	cropUpgrades: zod
@@ -4693,6 +4900,9 @@ export const zodGetSelectedGardenResponse = zod.object({
 			cocoaBeans: zod.number(),
 			sugarCane: zod.number(),
 			netherWart: zod.number(),
+			sunflower: zod.number(),
+			moonflower: zod.number(),
+			wildRose: zod.number(),
 		})
 		.describe('Crop upgrades'),
 	plots: zod.array(zod.string()).describe('List of unlocked plots'),
@@ -5332,6 +5542,57 @@ export const zodGetPublicGuildResponse = zod.object({
 									}),
 								})
 							),
+							sunflower: zod.array(
+								zod.object({
+									uuid: zod.string(),
+									ign: zod.string(),
+									discordId: zod.string(),
+									record: zod.object({
+										crop: zod.string(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
+										collected: zod.number(),
+										position: zod.number(),
+										participants: zod.number(),
+										medal: zod.string().nullish(),
+									}),
+								})
+							),
+							moonflower: zod.array(
+								zod.object({
+									uuid: zod.string(),
+									ign: zod.string(),
+									discordId: zod.string(),
+									record: zod.object({
+										crop: zod.string(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
+										collected: zod.number(),
+										position: zod.number(),
+										participants: zod.number(),
+										medal: zod.string().nullish(),
+									}),
+								})
+							),
+							wildRose: zod.array(
+								zod.object({
+									uuid: zod.string(),
+									ign: zod.string(),
+									discordId: zod.string(),
+									record: zod.object({
+										crop: zod.string(),
+										timestamp: zod
+											.number()
+											.describe('Timestamp of the contest in seconds since unix epoch.'),
+										collected: zod.number(),
+										position: zod.number(),
+										participants: zod.number(),
+										medal: zod.string().nullish(),
+									}),
+								})
+							),
 						}),
 					})
 				),
@@ -5369,6 +5630,9 @@ export const zodGetPublicGuildResponse = zod.object({
 						cocoaBeans: zod.string().nullish(),
 						sugarCane: zod.string().nullish(),
 						netherWart: zod.string().nullish(),
+						sunflower: zod.string().nullish(),
+						moonflower: zod.string().nullish(),
+						wildRose: zod.string().nullish(),
 					})
 					.nullish(),
 				delaySeconds: zod.number(),
@@ -5486,6 +5750,9 @@ export const zodUpdateContestPingsBody = zod.object({
 			cocoaBeans: zod.string().nullish(),
 			sugarCane: zod.string().nullish(),
 			netherWart: zod.string().nullish(),
+			sunflower: zod.string().nullish(),
+			moonflower: zod.string().nullish(),
+			wildRose: zod.string().nullish(),
 		})
 		.nullish()
 		.describe('Individual roles to ping when a contest for a specific crop starts.'),
@@ -5787,6 +6054,57 @@ export const zodGetUserGuildResponse = zod.object({
 											}),
 										})
 									),
+									sunflower: zod.array(
+										zod.object({
+											uuid: zod.string(),
+											ign: zod.string(),
+											discordId: zod.string(),
+											record: zod.object({
+												crop: zod.string(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
+												collected: zod.number(),
+												position: zod.number(),
+												participants: zod.number(),
+												medal: zod.string().nullish(),
+											}),
+										})
+									),
+									moonflower: zod.array(
+										zod.object({
+											uuid: zod.string(),
+											ign: zod.string(),
+											discordId: zod.string(),
+											record: zod.object({
+												crop: zod.string(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
+												collected: zod.number(),
+												position: zod.number(),
+												participants: zod.number(),
+												medal: zod.string().nullish(),
+											}),
+										})
+									),
+									wildRose: zod.array(
+										zod.object({
+											uuid: zod.string(),
+											ign: zod.string(),
+											discordId: zod.string(),
+											record: zod.object({
+												crop: zod.string(),
+												timestamp: zod
+													.number()
+													.describe('Timestamp of the contest in seconds since unix epoch.'),
+												collected: zod.number(),
+												position: zod.number(),
+												participants: zod.number(),
+												medal: zod.string().nullish(),
+											}),
+										})
+									),
 								}),
 							})
 						),
@@ -5835,6 +6153,9 @@ export const zodGetUserGuildResponse = zod.object({
 								cocoaBeans: zod.string().nullish(),
 								sugarCane: zod.string().nullish(),
 								netherWart: zod.string().nullish(),
+								sunflower: zod.string().nullish(),
+								moonflower: zod.string().nullish(),
+								wildRose: zod.string().nullish(),
 							})
 							.nullish(),
 						delaySeconds: zod.number(),
@@ -6215,6 +6536,51 @@ export const zodGetGuildJacobResponse = zod.object({
 						}),
 					})
 				),
+				sunflower: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				moonflower: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
+				wildRose: zod.array(
+					zod.object({
+						uuid: zod.string(),
+						ign: zod.string(),
+						discordId: zod.string(),
+						record: zod.object({
+							crop: zod.string(),
+							timestamp: zod.number().describe('Timestamp of the contest in seconds since unix epoch.'),
+							collected: zod.number(),
+							position: zod.number(),
+							participants: zod.number(),
+							medal: zod.string().nullish(),
+						}),
+					})
+				),
 			}),
 		})
 	),
@@ -6438,6 +6804,57 @@ export const zodUpdateGuildJacobFeatureBody = zod.object({
 						})
 					),
 					netherWart: zod.array(
+						zod.object({
+							uuid: zod.string(),
+							ign: zod.string(),
+							discordId: zod.string(),
+							record: zod.object({
+								crop: zod.string(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
+								collected: zod.number(),
+								position: zod.number(),
+								participants: zod.number(),
+								medal: zod.string().nullish(),
+							}),
+						})
+					),
+					sunflower: zod.array(
+						zod.object({
+							uuid: zod.string(),
+							ign: zod.string(),
+							discordId: zod.string(),
+							record: zod.object({
+								crop: zod.string(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
+								collected: zod.number(),
+								position: zod.number(),
+								participants: zod.number(),
+								medal: zod.string().nullish(),
+							}),
+						})
+					),
+					moonflower: zod.array(
+						zod.object({
+							uuid: zod.string(),
+							ign: zod.string(),
+							discordId: zod.string(),
+							record: zod.object({
+								crop: zod.string(),
+								timestamp: zod
+									.number()
+									.describe('Timestamp of the contest in seconds since unix epoch.'),
+								collected: zod.number(),
+								position: zod.number(),
+								participants: zod.number(),
+								medal: zod.string().nullish(),
+							}),
+						})
+					),
+					wildRose: zod.array(
 						zod.object({
 							uuid: zod.string(),
 							ign: zod.string(),
@@ -8755,6 +9172,9 @@ export const zodGetProfileResponse = zod.object({
 					cocoaBeans: zod.string().nullish(),
 					sugarCane: zod.string().nullish(),
 					netherWart: zod.string().nullish(),
+					sunflower: zod.string().nullish(),
+					moonflower: zod.string().nullish(),
+					wildRose: zod.string().nullish(),
 				})
 				.describe('Crops counted towards milestones'),
 			cropUpgrades: zod
@@ -8769,6 +9189,9 @@ export const zodGetProfileResponse = zod.object({
 					cocoaBeans: zod.number(),
 					sugarCane: zod.number(),
 					netherWart: zod.number(),
+					sunflower: zod.number(),
+					moonflower: zod.number(),
+					wildRose: zod.number(),
 				})
 				.describe('Crop upgrades'),
 			plots: zod.array(zod.string()).describe('List of unlocked plots'),
@@ -9863,6 +10286,9 @@ export const zodGetSelectedProfileResponse = zod.object({
 					cocoaBeans: zod.string().nullish(),
 					sugarCane: zod.string().nullish(),
 					netherWart: zod.string().nullish(),
+					sunflower: zod.string().nullish(),
+					moonflower: zod.string().nullish(),
+					wildRose: zod.string().nullish(),
 				})
 				.describe('Crops counted towards milestones'),
 			cropUpgrades: zod
@@ -9877,6 +10303,9 @@ export const zodGetSelectedProfileResponse = zod.object({
 					cocoaBeans: zod.number(),
 					sugarCane: zod.number(),
 					netherWart: zod.number(),
+					sunflower: zod.number(),
+					moonflower: zod.number(),
+					wildRose: zod.number(),
 				})
 				.describe('Crop upgrades'),
 			plots: zod.array(zod.string()).describe('List of unlocked plots'),

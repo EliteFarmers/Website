@@ -51,6 +51,9 @@
 		wart: 'var(--color-netherwart)',
 		mushroom: 'var(--color-mushroom)',
 		cocoa: 'var(--color-cocoa)',
+		sunflower: 'var(--color-sunflower)',
+		moonflower: 'var(--color-moonflower)',
+		wildrose: 'var(--color-wildrose)',
 	};
 </script>
 

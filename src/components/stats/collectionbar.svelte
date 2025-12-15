@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import * as Popover from '$comp/ui/popover';
-	import { PROPER_CROP_NAMES } from '$lib/constants/crops';
 	import * as Sidebar from '$ui/sidebar';
+	import { getCropFromName } from 'farming-weight';
 	import Minion from './minion.svelte';
 
 	interface Props {
@@ -31,10 +31,8 @@
 		rank = -1,
 	}: Props = $props();
 
-	const cropArray = PROPER_CROP_NAMES.sort((a, b) => a?.localeCompare(b ?? '') ?? 0);
-
 	let crop = $derived(name ? name : undefined);
-	let index = $derived(name && crop ? cropArray.indexOf(name) : -1);
+	let cropEnum = $derived(crop ? getCropFromName(crop) : undefined);
 
 	function getFrameStyle(rank: number) {
 		if (rank <= 0) return '';
@@ -124,7 +122,9 @@
 			<p class="pr-1 text-right font-semibold sm:text-lg md:ml-2 md:text-xl lg:text-2xl">
 				{Math.floor(weight).toLocaleString()}
 			</p>
-			<Minion name={name ?? ''} {index} tierField={minionTierField} size="sm" />
+			{#if cropEnum}
+				<Minion name={name ?? ''} crop={cropEnum} tierField={minionTierField} size="sm" />
+			{/if}
 		</div>
 	</div>
 {:else}
@@ -201,7 +201,9 @@
 				</div>
 			</div>
 		</div>
-		<Minion name={name ?? ''} {index} tierField={minionTierField} />
+		{#if cropEnum}
+			<Minion name={name ?? ''} crop={cropEnum} tierField={minionTierField} />
+		{/if}
 	</div>
 {/if}
 

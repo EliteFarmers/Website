@@ -69,9 +69,7 @@
 	{description}
 	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
->
-	<link rel="preload" href="/images/cropatlas.webp" as="image" />
-</Head>
+/>
 
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">
 	<div class="flex w-full max-w-7xl flex-1">

@@ -23,4 +23,7 @@ export const Crop = {
 	SugarCane: 8,
 	Wheat: 9,
 	Seeds: 10,
+	Sunflower: 11,
+	Moonflower: 12,
+	WildRose: 13,
 } as const;

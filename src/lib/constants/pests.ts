@@ -12,4 +12,7 @@ export const CROP_TO_PEST: Record<Crop, string> = {
 	[Crop.SugarCane]: 'mosquito',
 	[Crop.Wheat]: 'fly',
 	[Crop.Seeds]: 'fly',
+	[Crop.Sunflower]: 'dragonfly',
+	[Crop.Moonflower]: 'firefly',
+	[Crop.WildRose]: 'mantis',
 };
