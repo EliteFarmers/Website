@@ -14,6 +14,7 @@ export const getColumns = (
 	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number,
 	applyUpgrade?: (upgrade: FortuneUpgrade) => void,
 	expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	_version?: number
 ) =>
 	[
