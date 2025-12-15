@@ -19,4 +19,7 @@ export interface CropSettingsOfInt32 {
 	cocoaBeans: number;
 	sugarCane: number;
 	netherWart: number;
+	sunflower: number;
+	moonflower: number;
+	wildRose: number;
 }

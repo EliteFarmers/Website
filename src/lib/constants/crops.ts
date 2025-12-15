@@ -1,4 +1,4 @@
-import { Crop, SpecialCrop } from 'farming-weight';
+import { Crop } from 'farming-weight';
 
 export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	CACTUS: 'Cactus',
@@ -11,6 +11,10 @@ export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	PUMPKIN: 'Pumpkin',
 	SUGAR_CANE: 'Sugar Cane',
 	WHEAT: 'Wheat',
+	DOUBLE_PLANT: 'Sunflower',
+	SUNFLOWER: 'Sunflower',
+	MOONFLOWER: 'Moonflower',
+	WILD_ROSE: 'Wild Rose',
 	cactus: 'Cactus',
 	carrot: 'Carrot',
 	cocoa: 'Cocoa Beans',
@@ -23,6 +27,9 @@ export const PROPER_CROP_NAME: Partial<Record<string, string>> = {
 	sugarcane: 'Sugar Cane',
 	cane: 'Sugar Cane',
 	wheat: 'Wheat',
+	sunflower: 'Sunflower',
+	moonflower: 'Moonflower',
+	wildrose: 'Wild Rose',
 };
 
 export const API_CROP_TO_CROP: Record<string, string> = {
@@ -37,6 +44,10 @@ export const API_CROP_TO_CROP: Record<string, string> = {
 	'INK_SACK:3': 'cocoa',
 	MUSHROOM_COLLECTION: 'mushroom',
 	NETHER_STALK: 'netherwart',
+	SUNFLOWER: 'sunflower',
+	DOUBLE_PLANT: 'sunflower',
+	MOONFLOWER: 'moonflower',
+	WILD_ROSE: 'wildrose',
 };
 
 export const PROPER_CROP_TO_API_CROP: Record<string, string> = {
@@ -50,6 +61,9 @@ export const PROPER_CROP_TO_API_CROP: Record<string, string> = {
 	Pumpkin: 'PUMPKIN',
 	'Sugar Cane': 'SUGAR_CANE',
 	Wheat: 'WHEAT',
+	Sunflower: 'DOUBLE_PLANT',
+	Moonflower: 'MOONFLOWER',
+	'Wild Rose': 'WILD_ROSE',
 };
 
 export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
@@ -63,6 +77,9 @@ export const PROPER_CROP_TO_MINION: Partial<Record<string, string>> = {
 	Pumpkin: 'PUMPKIN',
 	'Sugar Cane': 'SUGAR_CANE',
 	Wheat: 'WHEAT',
+	Sunflower: 'SUNFLOWER',
+	Moonflower: 'SUNFLOWER',
+	'Wild Rose': 'FLOWER',
 };
 
 export const PROPER_CROP_TO_IMG: Partial<Record<string, string>> = {
@@ -77,6 +94,9 @@ export const PROPER_CROP_TO_IMG: Partial<Record<string, string>> = {
 	'Sugar Cane': '/images/crops/sugarcane.png',
 	Wheat: '/images/crops/wheat.png',
 	Seeds: '/api/item/SEEDS',
+	Sunflower: '/images/crops/sunflower.png',
+	Moonflower: '/images/crops/moonflower.png',
+	'Wild Rose': '/images/crops/wildrose.png',
 };
 
 export const ELITE_CROP_TO_CROP: Record<string, Crop> = {
@@ -91,6 +111,9 @@ export const ELITE_CROP_TO_CROP: Record<string, Crop> = {
 	SugarCane: Crop.SugarCane,
 	Wheat: Crop.Wheat,
 	Seeds: Crop.Seeds,
+	Sunflower: Crop.Sunflower,
+	Moonflower: Crop.Moonflower,
+	WildRose: Crop.WildRose,
 };
 
 export const CROP_TO_ELITE_CROP: Record<Crop, string> = {
@@ -105,6 +128,9 @@ export const CROP_TO_ELITE_CROP: Record<Crop, string> = {
 	[Crop.SugarCane]: 'SugarCane',
 	[Crop.Wheat]: 'Wheat',
 	[Crop.Seeds]: 'Seeds',
+	[Crop.Sunflower]: 'Sunflower',
+	[Crop.Moonflower]: 'Moonflower',
+	[Crop.WildRose]: 'WildRose',
 };
 
 export const CROP_TO_HEX: Partial<Record<string, string>> = {
@@ -120,6 +146,9 @@ export const CROP_TO_HEX: Partial<Record<string, string>> = {
 	netherwart: '#5c151a',
 	mushroom: '#725643',
 	cocoa: '#61381d',
+	sunflower: '#ffea00',
+	moonflower: '#b19cd9',
+	wildrose: '#ff4d6d',
 	Cactus: '#3b5b1d',
 	Carrot: '#ff8e09',
 	'Cocoa Beans': '#61381d',
@@ -130,6 +159,9 @@ export const CROP_TO_HEX: Partial<Record<string, string>> = {
 	Pumpkin: '#a0560b',
 	'Sugar Cane': '#82a859',
 	Wheat: '#d5da45',
+	Sunflower: '#ffea00',
+	Moonflower: '#b19cd9',
+	'Wild Rose': '#ff4d6d',
 };
 
 export const CROP_UNICODE_EMOJIS: Record<Crop, string> = {
@@ -142,8 +174,11 @@ export const CROP_UNICODE_EMOJIS: Record<Crop, string> = {
 	[Crop.CocoaBeans]: '🍫',
 	[Crop.Cactus]: '🌵',
 	[Crop.SugarCane]: '🎋',
-	[Crop.NetherWart]: '🌹',
+	[Crop.NetherWart]: '🧱',
 	[Crop.Seeds]: '🌱',
+	[Crop.Sunflower]: '🌻',
+	[Crop.Moonflower]: '🌙',
+	[Crop.WildRose]: '🌹',
 } as const;
 
 export const PROPER_CROP_NAMES = Object.keys(PROPER_CROP_TO_MINION);
@@ -162,10 +197,3 @@ export const CROP_UPGRADE_COSTS: Record<number, number> = {
 };
 
 export const CROP_UPGRADES_MAX_COST = 10 * Object.values(CROP_UPGRADE_COSTS).reduce((a, b) => a + b, 0);
-
-export const SPECIAL_CROP_TO_IMG: Record<SpecialCrop, string> = {
-	[SpecialCrop.Cropie]: '/images/specialcrops/cropie.png',
-	[SpecialCrop.Squash]: '/images/specialcrops/squash.png',
-	[SpecialCrop.Fermento]: '/images/specialcrops/fermento.png',
-	[SpecialCrop.CondensedFermento]: '/images/specialcrops/condensedfermento.png',
-};

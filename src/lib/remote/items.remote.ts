@@ -25,6 +25,25 @@ export const getItems = query(z.array(z.string()), async (items) => {
 	return result;
 });
 
+export const getItem = query.batch(z.string(), async (itemIds) => {
+	const bz = cache?.bazaar.products;
+	const ah = cache?.auctions.items;
+	const sbItems = cache?.items;
+
+	const lookup = new Map(
+		itemIds.map((id) => [
+			id,
+			{
+				auctions: ah?.[id],
+				bazaar: bz?.[id],
+				item: sbItems?.[id] ?? undefined,
+			},
+		])
+	);
+
+	return (itemId: string) => lookup.get(itemId) ?? { auctions: undefined, bazaar: undefined, item: undefined };
+});
+
 export const getItemValue = query.batch(z.string(), async (itemIds) => {
 	const lookup = new Map(itemIds.map((id) => [id, getSingleItemValue(id)]));
 	return (itemId) => lookup.get(itemId) ?? { ah: 0, bazaar: 0, npc: 0, lowest: 0 };

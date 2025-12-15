@@ -9,6 +9,7 @@ export function getItemsFromUpgrades(upgrades: (FortuneUpgrade | UpgradeInfo)[])
 					Object.keys(up.cost?.items ?? {}),
 					Object.keys(up.cost?.applyCost?.items ?? {}),
 					up.purchase,
+					up.onto?.newSkyblockId,
 				])
 				.flat(2)
 				.filter(Boolean)

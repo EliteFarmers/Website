@@ -1,8 +1,9 @@
 import type { RatesItemPriceData } from '$lib/api/elite';
 import { renderComponent } from '$ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
-import type { FortuneUpgrade } from 'farming-weight';
+import type { FortuneUpgrade, UpgradeTreeNode } from 'farming-weight';
 import DataTableColumnHeader from './data-table-column-header.svelte';
+import UpgradeCompleteButton from './upgrade-complete-button.svelte';
 import UpgradeCostPer from './upgrade-cost-per.svelte';
 import UpgradeCost from './upgrade-cost.svelte';
 import UpgradeFortune from './upgrade-fortune.svelte';
@@ -10,7 +11,11 @@ import UpgradeTitle from './upgrade-title.svelte';
 
 export const getColumns = (
 	itemsLookup?: RatesItemPriceData,
-	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number
+	costFn?: (upgrade: FortuneUpgrade, items?: RatesItemPriceData) => number,
+	applyUpgrade?: (upgrade: FortuneUpgrade) => void,
+	expandUpgrade?: (upgrade: FortuneUpgrade) => UpgradeTreeNode,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	_version?: number
 ) =>
 	[
 		{
@@ -18,7 +23,13 @@ export const getColumns = (
 			accessorKey: 'title',
 			header: 'Upgrade',
 			cell: ({ row }) => {
-				return renderComponent(UpgradeTitle, { upgrade: row.original, items: itemsLookup });
+				return renderComponent(UpgradeTitle, {
+					upgrade: row.original,
+					items: itemsLookup,
+					expanded: row.getIsExpanded(),
+					toggleExpanded: row.toggleExpanded,
+					expandUpgrade,
+				});
 			},
 		},
 		{
@@ -77,5 +88,14 @@ export const getColumns = (
 				}
 				return 0;
 			},
+		},
+		{
+			id: 'completed',
+			header: '',
+			cell: ({ row }) => {
+				return renderComponent(UpgradeCompleteButton, { upgrade: row.original, applyUpgrade });
+			},
+			enableSorting: false,
+			enableHiding: false,
 		},
 	] as ColumnDef<FortuneUpgrade>[];

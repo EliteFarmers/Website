@@ -57,6 +57,9 @@
 		--netherwart: hsl(356 63% 22%);
 		--mushroom: hsl(24 26% 35%);
 		--cocoa: hsl(24 54% 25%);
+		--sunflower: hsl(48 100% 50%);
+		--moonflower: hsl(240, 20%, 70%);
+		--wildrose: hsl(340 65% 60%);
 
 		--sidebar-background: hsl(0 0% 98%);
 		--sidebar-foreground: hsl(240 5.3% 26.1%);
@@ -309,6 +312,9 @@
 	--color-netherwart: var(--netherwart);
 	--color-mushroom: var(--mushroom);
 	--color-cocoa: var(--cocoa);
+	--color-sunflower: var(--sunflower);
+	--color-moonflower: var(--moonflower);
+	--color-wildrose: var(--wildrose);
 
 	--color-progress: var(--progress);
 	--color-completed: var(--completed);
@@ -906,6 +912,7 @@
 		right: auto;
 		left: 0.5rem;
 		bottom: 0.5rem !important;
+		top: auto !important;
 	}
 
 	#floating-video.mobile {

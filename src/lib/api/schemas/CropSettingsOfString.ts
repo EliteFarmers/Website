@@ -29,4 +29,10 @@ export interface CropSettingsOfString {
 	sugarCane?: string | null;
 	/** @nullable */
 	netherWart?: string | null;
+	/** @nullable */
+	sunflower?: string | null;
+	/** @nullable */
+	moonflower?: string | null;
+	/** @nullable */
+	wildRose?: string | null;
 }

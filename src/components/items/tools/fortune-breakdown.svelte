@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
 	import { STAT_ICONS, Stat } from 'farming-weight';
 	import FormattedText from '../formatted-text.svelte';
@@ -12,6 +13,7 @@
 		max?: number;
 		child?: import('svelte').Snippet | undefined;
 		children?: import('svelte').Snippet;
+		class?: string;
 	}
 
 	let {
@@ -21,6 +23,7 @@
 		enabled = true,
 		small = false,
 		max = undefined,
+		class: className,
 		child,
 		children,
 	}: Props = $props();
@@ -45,7 +48,13 @@
 </script>
 
 {#if list.length <= 0 && !child}
-	<div class="relative flex max-h-fit min-h-4 max-w-fit flex-row items-center rounded-md {background} gap-1.5 px-1">
+	<div
+		class={cn(
+			'relative flex max-h-fit min-h-4 max-w-fit flex-row items-center gap-1.5 rounded-md px-1',
+			background,
+			className
+		)}
+	>
 		<span>{STAT_ICONS[Stat.FarmingFortune]}</span>
 		<span class="relative {small ? 'md:text-md text-sm' : 'text-md md:text-lg'} z-10 pr-1 font-mono leading-none">
 			{(+sum.toFixed(2)).toLocaleString()}
@@ -54,7 +63,13 @@
 {:else}
 	<Popover.Mobile>
 		{#snippet trigger()}
-			<div class="relative flex h-full min-h-4 flex-row items-center rounded-md {background} gap-1.5 px-1">
+			<div
+				class={cn(
+					'relative flex h-full min-h-4 flex-row items-center gap-1.5 rounded-md px-1',
+					background,
+					className
+				)}
+			>
 				<span>{STAT_ICONS[Stat.FarmingFortune]}</span>
 				<span
 					class="relative {small
@@ -92,7 +107,7 @@
 					<p>Total</p>
 					<p>{(+sum.toFixed(2)).toLocaleString()}</p>
 				</div>
-				<div class="break-words">
+				<div class="wrap-break-word">
 					{@render children?.()}
 				</div>
 			</div>

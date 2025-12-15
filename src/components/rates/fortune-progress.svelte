@@ -12,9 +12,10 @@
 	interface Props {
 		progress: FortuneSourceProgress;
 		barBg?: string;
+		useItemName?: boolean;
 	}
 
-	let { progress: p, barBg = 'bg-background' }: Props = $props();
+	let { progress: p, barBg = 'bg-background', useItemName = true }: Props = $props();
 
 	let progress = $derived.by(() => {
 		if (p.active?.active !== false) return p;
@@ -28,29 +29,29 @@
 		};
 	});
 
-	let maxed = $derived(progress.ratio >= 1);
-	let readable = $derived(
-		(maxed
-			? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString()
-			: (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() + ' / ' + progress.maxFortune) +
-			' ' +
-			STAT_ICONS[Stat.FarmingFortune]
-	);
-	let expanded = $derived(
-		maxed
-			? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() +
-					' / ' +
-					progress.maxFortune +
-					' ' +
-					STAT_ICONS[Stat.FarmingFortune]
-			: undefined
-	);
+	// let maxed = $derived(progress.ratio >= 1);
+	// let readable = $derived(
+	// 	(maxed
+	// 		? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString()
+	// 		: (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() + ' / ' + progress.maxFortune) +
+	// 		' ' +
+	// 		STAT_ICONS[Stat.FarmingFortune]
+	// );
+	// let expanded = $derived(
+	// 	maxed
+	// 		? (+progress.fortune || progress?.active?.fortune || 0).toLocaleString() +
+	// 				' / ' +
+	// 				progress.maxFortune +
+	// 				' ' +
+	// 				STAT_ICONS[Stat.FarmingFortune]
+	// 		: undefined
+	// );
 </script>
 
 <div class="flex w-full flex-col items-start">
 	<div class="flex w-full items-center justify-between">
 		<div class="flex h-10 flex-row items-center gap-1">
-			{#if progress.item?.name}
+			{#if progress.item?.name && useItemName}
 				{#if progress.item?.skyblockId}
 					<ItemRender skyblockId={progress.item.skyblockId} class="size-10" />
 				{/if}
@@ -90,12 +91,34 @@
 			</div>
 		{/if}
 	</div>
-	<ProgressBar
+	<!-- <ProgressBar
 		percent={progress.ratio * 100}
 		{readable}
 		{expanded}
 		{maxed}
 		{barBg}
 		disabled={progress.active?.active === false}
-	/>
+	/> -->
+	<!-- let statProgress: {
+    current: number;
+    max: number;
+    ratio: number;
+} -->
+	{#each Object.entries(progress.stats ?? {}) as [stat, statProgress] (stat)}
+		<ProgressBar
+			{barBg}
+			percent={statProgress.ratio * 100}
+			readable={(statProgress.current || 0).toLocaleString() +
+				' / ' +
+				statProgress.max.toLocaleString() +
+				' ' +
+				STAT_ICONS[stat as Stat]}
+			expanded={(statProgress.current || 0).toLocaleString() +
+				' / ' +
+				statProgress.max.toLocaleString() +
+				' ' +
+				STAT_ICONS[stat as Stat]}
+			disabled={progress.active?.active === false}
+		/>
+	{/each}
 </div>
