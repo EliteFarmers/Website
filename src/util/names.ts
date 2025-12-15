@@ -64,6 +64,9 @@ const cropDisplayNames: Record<Crop, string> = {
 	[Crop.SugarCane]: 'Sugar Cane',
 	[Crop.Wheat]: 'Wheat',
 	[Crop.Seeds]: 'Seeds',
+	[Crop.Sunflower]: 'Sunflower',
+	[Crop.Moonflower]: 'Moonflower',
+	[Crop.WildRose]: 'Wild Rose',
 };
 
 const displayNamesToCrop: Record<string, Crop> = {
@@ -78,6 +81,9 @@ const displayNamesToCrop: Record<string, Crop> = {
 	'Sugar Cane': Crop.SugarCane,
 	Wheat: Crop.Wheat,
 	Seeds: Crop.Seeds,
+	Sunflower: Crop.Sunflower,
+	Moonflower: Crop.Moonflower,
+	'Wild Rose': Crop.WildRose,
 };
 
 const shortNamesToCrop: Record<string, Crop> = {
@@ -92,6 +98,9 @@ const shortNamesToCrop: Record<string, Crop> = {
 	cane: Crop.SugarCane,
 	wheat: Crop.Wheat,
 	seeds: Crop.Seeds,
+	sunflower: Crop.Sunflower,
+	moonflower: Crop.Moonflower,
+	wildrose: Crop.WildRose,
 };
 
 const fullNamesToCrop: Record<string, Crop> = {
@@ -108,6 +117,9 @@ const fullNamesToCrop: Record<string, Crop> = {
 	sugarcane: Crop.SugarCane,
 	wheat: Crop.Wheat,
 	seeds: Crop.Seeds,
+	sunflower: Crop.Sunflower,
+	moonflower: Crop.Moonflower,
+	wildrose: Crop.WildRose,
 };
 
 export const cropToFullName: Record<Crop, string> = {
@@ -122,6 +134,9 @@ export const cropToFullName: Record<Crop, string> = {
 	[Crop.SugarCane]: 'sugarcane',
 	[Crop.Wheat]: 'wheat',
 	[Crop.Seeds]: 'seeds',
+	[Crop.Sunflower]: 'sunflower',
+	[Crop.Moonflower]: 'moonflower',
+	[Crop.WildRose]: 'wildrose',
 };
 
 const cropItemIds: Record<string, Crop> = {
@@ -138,6 +153,9 @@ const cropItemIds: Record<string, Crop> = {
 	SUGAR_CANE: Crop.SugarCane,
 	WHEAT: Crop.Wheat,
 	SEEDS: Crop.Seeds,
+	DOUBLE_PLANT: Crop.Sunflower,
+	MOONFLOWER: Crop.Moonflower,
+	WILD_ROSE: Crop.WildRose,
 };
 
 const itemIdsToCrop: Record<Crop, string> = {
@@ -152,6 +170,9 @@ const itemIdsToCrop: Record<Crop, string> = {
 	[Crop.SugarCane]: 'SUGAR_CANE',
 	[Crop.Wheat]: 'WHEAT',
 	[Crop.Seeds]: 'SEEDS',
+	[Crop.Sunflower]: 'DOUBLE_PLANT',
+	[Crop.Moonflower]: 'MOONFLOWER',
+	[Crop.WildRose]: 'WILD_ROSE',
 };
 
 const specialCropToName: Record<SpecialCrop, string> = {
@@ -159,6 +180,8 @@ const specialCropToName: Record<SpecialCrop, string> = {
 	[SpecialCrop.Squash]: 'Squash',
 	[SpecialCrop.Fermento]: 'Fermento',
 	[SpecialCrop.CondensedFermento]: 'Condensed Fermento',
+	[SpecialCrop.Helianthus]: 'Helianthus',
+	[SpecialCrop.CondensedHelianthus]: 'Condensed Helianthus',
 };
 
 const upgradeTypeToName: Record<ComposterUpgrade, string> = {

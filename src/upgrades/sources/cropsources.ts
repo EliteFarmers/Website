@@ -10,7 +10,10 @@ import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
 import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
-export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer; crop: Crop }>[] = [
+export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
+	player: FarmingPlayer;
+	crop: Crop;
+}>[] = [
 	{
 		name: 'Farming Tool',
 		exists: () => true,
@@ -29,12 +32,28 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
 		},
-		progress: ({ player, crop }) => {
+		maxStat: ({ crop }, stat) => {
+			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
+			const progress = fake?.getProgress(true, [stat]) ?? [];
+			return progress.reduce(
+				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+				0
+			);
+		},
+		currentStat: ({ player, crop }, stat) => {
 			const tool = player.getSelectedCropTool(crop);
-			if (tool) return tool.getProgress();
+			const progress = tool?.getProgress(false, [stat]) ?? [];
+			return progress.reduce(
+				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.fortune : 0)),
+				0
+			);
+		},
+		progress: ({ player, crop }, stats) => {
+			const tool = player.getSelectedCropTool(crop);
+			if (tool) return tool.getProgress(false, stats);
 
 			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
-			return fake?.getProgress(true) ?? [];
+			return fake?.getProgress(true, stats) ?? [];
 		},
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop ? player.selectedTool : player.getSelectedCropTool(crop);
@@ -65,6 +84,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 				{
 					title: 'Exportable Crop',
 					increase: EXPORTABLE_CROP_FORTUNE,
+					stats: {
+						[Stat.FarmingFortune]: EXPORTABLE_CROP_FORTUNE,
+					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
 					api: false,
@@ -90,10 +112,18 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 				{
 					title: GARDEN_CROP_UPGRADES.name,
 					increase: GARDEN_CROP_UPGRADES.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: GARDEN_CROP_UPGRADES.fortunePerLevel,
+					},
 					action: UpgradeAction.Upgrade,
 					wiki: GARDEN_CROP_UPGRADES.wiki,
 					category: UpgradeCategory.Misc,
 					cost: GARDEN_CROP_UPGRADES.upgradeCosts?.[level + 1],
+					meta: {
+						type: 'crop_upgrade',
+						key: crop,
+						value: level + 1,
+					},
 				},
 			];
 		},
@@ -114,10 +144,18 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 				{
 					title: COCOA_FORTUNE_UPGRADE.name,
 					increase: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+					},
 					action: UpgradeAction.Upgrade,
 					repeatable: COCOA_FORTUNE_UPGRADE.maxLevel - level,
 					wiki: COCOA_FORTUNE_UPGRADE.wiki,
 					category: UpgradeCategory.Misc,
+					meta: {
+						type: 'setting',
+						key: 'cocoaFortuneUpgrade',
+						value: level + 1,
+					},
 				},
 			];
 		},
@@ -193,6 +231,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 				{
 					title: 'Personal Best Fortune',
 					increase: increase,
+					stats: {
+						[Stat.FarmingFortune]: increase,
+					},
 					action: UpgradeAction.Unlock,
 					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',
 					category: UpgradeCategory.Anita,
@@ -203,6 +244,10 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 						medals: {
 							gold: 2,
 						},
+					},
+					meta: {
+						type: 'unlock',
+						id: 'personal_best',
 					},
 				},
 			];

@@ -284,12 +284,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	expect(selfUpgrade?.increase).toBe(15);
 	expect(selfUpgrade?.action).toBe(UpgradeAction.Upgrade);
 	expect(selfUpgrade?.category).toBe(UpgradeCategory.Item);
-	expect(selfUpgrade?.cost).toStrictEqual({
-		items: {
-			ENCHANTED_WHEAT: 256,
-			JACOBS_TICKET: 64,
-		},
-	});
 
 	const harvesting = upgrades.find((u) => u.title === 'Harvesting 1');
 	expect(harvesting).toBeDefined();

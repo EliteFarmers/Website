@@ -47,7 +47,12 @@ const maxHelmet = {
 		'',
 		'§d§l§ka§r §d§l§d§lMYTHIC HELMET §d§l§ka',
 	],
-	enchantments: { rejuvenate: 5, respiration: 3, aqua_affinity: 1, pesterminator: 6 },
+	enchantments: {
+		rejuvenate: 5,
+		respiration: 3,
+		aqua_affinity: 1,
+		pesterminator: 6,
+	},
 	attributes: {
 		skin: 'FERMENTO_ULTIMATE',
 		modifier: 'mossy',
@@ -103,7 +108,12 @@ const almostMaxHelmet = {
 		'',
 		'§d§l§ka§r §d§l§d§lLEGENDARY HELMET §d§l§ka',
 	],
-	enchantments: { rejuvenate: 5, respiration: 3, aqua_affinity: 1, pesterminator: 3 },
+	enchantments: {
+		rejuvenate: 5,
+		respiration: 3,
+		aqua_affinity: 1,
+		pesterminator: 3,
+	},
 	attributes: {
 		skin: 'FERMENTO_ULTIMATE',
 		modifier: 'mossy',
@@ -153,7 +163,11 @@ const lotusNecklace = {
 	name: '§5Rooted Lotus Necklace',
 	lore: ['§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka'],
 	enchantments: { green_thumb: 4 },
-	attributes: { modifier: 'rooted', timestamp: '1676441040000', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'rooted',
+		timestamp: '1676441040000',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Enchantment Upgrades Test', () => {
@@ -198,4 +212,46 @@ test('Enchantment Upgrades Test', () => {
 		enchantments: { green_thumb: 5 },
 	});
 	expect(green5.getUpgrades()).toHaveLength(0);
+});
+
+test('Conflicting Reforges Test', () => {
+	const item = new FarmingEquipment({
+		...lotusNecklace,
+		enchantments: { green_thumb: 5 },
+		attributes: { modifier: 'blooming' },
+	});
+
+	// It has Blooming reforge (Common/Uncommon/Rare/Epic)
+	// Upgrades should include Rooted (Epic) and Squeaky (Epic)
+	// And they should have a conflictKey
+	const upgrades = item.getUpgrades();
+	const reforges = upgrades.filter((u) => u.category === 'reforge');
+
+	expect(reforges.length).toBeGreaterThan(0);
+	for (const reforge of reforges) {
+		expect(reforge.conflictKey).toBe('reforge');
+	}
+
+	const rooted = reforges.find((u) => u.title === 'Reforge to Rooted');
+	expect(rooted).toBeDefined();
+
+	const squeaky = reforges.find((u) => u.title === 'Reforge to Squeaky');
+	expect(squeaky).toBeDefined();
+});
+
+test('Upgrade objects have stats field populated', () => {
+	const item = new FarmingArmor(almostMaxHelmet);
+
+	const upgrades = item.getUpgrades();
+	expect(upgrades.length).toBeGreaterThan(0);
+
+	// All upgrades should have a stats field
+	for (const upgrade of upgrades) {
+		expect(upgrade.stats).toBeDefined();
+
+		// If there's an increase in fortune, stats should include FarmingFortune
+		if (upgrade.increase > 0) {
+			expect(upgrade.stats?.['farming_fortune']).toBeDefined();
+		}
+	}
 });

@@ -5,7 +5,7 @@ import { Stat } from '../../constants/stats.js';
 import type { FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import { GemRarity } from '../../fortune/item.js';
-import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from '../../util/enchants.js';
+import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
 import { getUpgradeableGems, getUpgradeableReforges } from '../upgrades.js';
@@ -15,13 +15,19 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 	{
 		name: 'Base Stats',
 		exists: (gear) => {
-			return (gear.getLastItemUpgrade() ?? gear)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined;
+			return Object.keys((gear.getLastItemUpgrade() ?? gear)?.info?.baseStats ?? {}).length > 0;
 		},
 		max: (gear) => {
 			return (gear.getLastItemUpgrade() ?? gear)?.info?.baseStats?.[Stat.FarmingFortune] ?? 0;
 		},
 		current: (gear) => {
 			return gear.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		},
+		maxStat: (gear, stat) => {
+			return (gear.getLastItemUpgrade() ?? gear)?.info?.baseStats?.[stat] ?? 0;
+		},
+		currentStat: (gear, stat) => {
+			return gear.info.baseStats?.[stat] ?? 0;
 		},
 	},
 	{
@@ -38,6 +44,25 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		},
 		current: (gear) => {
 			return gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+		},
+		maxStat: (gear, stat) => {
+			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
+			const current = gear.reforgeStats?.stats?.[stat] ?? 0;
+
+			let best = 0;
+			for (const reforge of Object.values(REFORGES)) {
+				if (!reforge || !reforge.appliesTo.includes(gear.type)) continue;
+				// Keep "max" aligned with what we can suggest/cost (stone-based).
+				if (!reforge.stone?.id) continue;
+				const tier = reforge.tiers?.[maxRarity];
+				const val = tier?.stats?.[stat] ?? 0;
+				if (val > best) best = val;
+			}
+
+			return Math.max(best, current);
+		},
+		currentStat: (gear, stat) => {
+			return gear.reforgeStats?.stats?.[stat] ?? 0;
 		},
 		upgrades: getUpgradeableReforges,
 	},
@@ -58,6 +83,17 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		current: (upgradeable) => {
 			return getPeridotFortune(upgradeable.rarity, upgradeable.item);
 		},
+		maxStat: (upgradeable, stat) => {
+			if (stat !== Stat.FarmingFortune) return 0;
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			return (
+				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
+				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
+			);
+		},
+		currentStat: (upgradeable, stat) => {
+			return stat === Stat.FarmingFortune ? getPeridotFortune(upgradeable.rarity, upgradeable.item) : 0;
+		},
 		upgrades: getUpgradeableGems,
 	},
 	{
@@ -68,6 +104,8 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		current: (gear) => {
 			return (gear as FarmingEquipment).getPieceBonus();
 		},
+		maxStat: (_gear, stat) => (stat === Stat.FarmingFortune ? 15 : 0),
+		currentStat: (gear, stat) => (stat === Stat.FarmingFortune ? (gear as FarmingEquipment).getPieceBonus() : 0),
 	},
 	{
 		name: 'Farming Level',
@@ -82,6 +120,14 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		current: (gear) => {
 			return (gear.info.perLevelStats?.stats[Stat.FarmingFortune] ?? 0) * (gear.options?.farmingLevel ?? 0);
 		},
+		maxStat: (gear, stat) => {
+			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
+			if (!('perLevelStats' in last) || last.perLevelStats?.skill !== Skill.Farming) return 0;
+			return (last.perLevelStats?.stats?.[stat] ?? 0) * 60;
+		},
+		currentStat: (gear, stat) => {
+			return (gear.info.perLevelStats?.stats?.[stat] ?? 0) * (gear.options?.farmingLevel ?? 0);
+		},
 	},
 	...Object.entries(FARMING_ENCHANTS ?? {})
 		.filter(
@@ -94,9 +140,18 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 					name: enchant.name,
 					wiki: () => enchant.wiki,
 					exists: (gear) => enchant.appliesTo.includes(gear.type),
-					max: (gear) => getMaxFortuneFromEnchant(enchant, gear.options),
-					current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options),
-					upgrades: (gear) => getUpgradeableEnchant(gear, id),
+					max: (gear) => getMaxStatFromEnchant(enchant, Stat.FarmingFortune, gear.options),
+					current: (gear) =>
+						getStatFromEnchant(
+							gear.item.enchantments?.[id] ?? 0,
+							enchant,
+							Stat.FarmingFortune,
+							gear.options
+						),
+					maxStat: (gear, stat) => getMaxStatFromEnchant(enchant, stat, gear.options),
+					currentStat: (gear, stat) =>
+						getStatFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, stat, gear.options),
+					upgrades: (gear, stats) => getUpgradeableEnchant(gear, id, stats?.[0] ?? Stat.FarmingFortune),
 				}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>
 		),
 ];

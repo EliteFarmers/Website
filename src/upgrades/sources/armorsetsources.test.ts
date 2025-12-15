@@ -134,7 +134,11 @@ const pesthunterCloak = {
 	name: "§dSqueaky Pesthunter's Cloak",
 	lore: ['§d§l§ka§r §d§l§d§lEPIC CLOAK §d§l§ka'],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'squeaky',
+		timestamp: '1717854193084',
+		rarity_upgrades: '1',
+	},
 };
 
 const pesthunterGloves = {
@@ -145,7 +149,11 @@ const pesthunterGloves = {
 	name: "§dSqueaky Pesthunter's Gloves",
 	lore: ['§d§l§ka§r §d§l§d§lEPIC GLOVES §d§l§ka'],
 	enchantments: { green_thumb: 5 },
-	attributes: { modifier: 'squeaky', timestamp: '1717854193084', rarity_upgrades: '1' },
+	attributes: {
+		modifier: 'squeaky',
+		timestamp: '1717854193084',
+		rarity_upgrades: '1',
+	},
 };
 
 test('Equipment set bonus', () => {
@@ -302,4 +310,31 @@ test('Bustling Fermento Leggings Upgrades', () => {
 	const upgrades = item.getUpgrades();
 
 	expect(upgrades).toHaveLength(5);
+});
+
+test('Armor purchase upgrades have stats populated', () => {
+	// Create a player with no armor to trigger purchase upgrades
+	const player = new FarmingPlayer({});
+
+	const progress = player.armorSet.getProgress();
+
+	// Find a slot with upgrades (should recommend purchasing starting armor)
+	const helmetProgress = progress.find((p) => p.name === 'Helmet');
+	expect(helmetProgress).toBeDefined();
+	expect(helmetProgress?.upgrades).toBeDefined();
+
+	if (helmetProgress?.upgrades && helmetProgress.upgrades.length > 0) {
+		const purchaseUpgrade = helmetProgress.upgrades[0];
+		expect(purchaseUpgrade).toBeDefined();
+		expect(purchaseUpgrade.stats).toBeDefined();
+
+		// Purchase upgrades should have stats from the fake item's getStats()
+		// This verifies the stats field is populated, not hardcoded to just FarmingFortune
+		expect(typeof purchaseUpgrade.stats).toBe('object');
+
+		// If there's an increase, FarmingFortune should be present
+		if (purchaseUpgrade.increase > 0) {
+			expect(purchaseUpgrade.stats?.['farming_fortune']).toBeDefined();
+		}
+	}
 });

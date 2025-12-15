@@ -3,20 +3,11 @@ import { Rarity, ReforgeTarget } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
 import type { UpgradeableInfo } from '../fortune/upgradeable.js';
+import { FarmingToolType, type ItemDefinition } from './definitions.js';
 
-export enum FarmingToolType {
-	Other = 'Other',
-	Dicer = 'Dicer',
-	MathematicalHoe = 'Mathematical Hoe',
-	None = 'None',
-}
+export { FarmingToolType, type ItemDefinition as FarmingToolInfo };
 
-export interface FarmingToolInfo extends UpgradeableInfo {
-	crop?: Crop;
-	name: string;
-	type: FarmingToolType | ReforgeTarget;
-	reforgeType: ReforgeTarget;
-}
+type FarmingToolInfo = ItemDefinition;
 
 const t1hoeStats = {
 	[Rarity.Common]: {
@@ -176,8 +167,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'CACTUS_KNIFE',
 		crop: Crop.Cactus,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
-		type: FarmingToolType.Other,
+		type: ReforgeTarget.Hoe,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -215,8 +205,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'COCO_CHOPPER',
 		crop: Crop.CocoaBeans,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Axe,
-		type: FarmingToolType.Other,
+		type: ReforgeTarget.Axe,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -257,8 +246,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'FUNGI_CUTTER',
 		crop: Crop.Mushroom,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
-		type: FarmingToolType.Other,
+		type: ReforgeTarget.Hoe,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -300,7 +288,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'MELON_DICER',
 		crop: Crop.Melon,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
 		upgrade: {
 			id: 'MELON_DICER_2',
@@ -334,7 +321,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'MELON_DICER_2',
 		crop: Crop.Melon,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
 		upgrade: {
 			id: 'MELON_DICER_3',
@@ -382,7 +368,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'MELON_DICER_3',
 		crop: Crop.Melon,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
 		gemSlots: [
 			{
@@ -436,7 +421,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'PUMPKIN_DICER',
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
 		upgrade: {
 			id: 'PUMPKIN_DICER_2',
@@ -470,7 +454,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'PUMPKIN_DICER_2',
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
 		gemSlots: [
 			{
@@ -518,7 +501,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'PUMPKIN_DICER_3',
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
 		gemSlots: [
 			{
@@ -572,7 +554,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_CARROT_1',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_CARROT_2',
@@ -608,7 +589,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_CARROT_2',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_CARROT_3',
@@ -658,7 +638,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_CARROT_3',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		gemSlots: [
 			{
@@ -713,7 +692,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_WARTS_1',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_WARTS_2',
@@ -749,7 +727,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_WARTS_2',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_WARTS_3',
@@ -799,7 +776,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_WARTS_3',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		gemSlots: [
 			{
@@ -854,7 +830,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_POTATO_1',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_POTATO_2',
@@ -890,7 +865,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_POTATO_2',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_POTATO_3',
@@ -940,7 +914,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_POTATO_3',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		gemSlots: [
 			{
@@ -995,7 +968,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_CANE_1',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_CANE_2',
@@ -1031,7 +1003,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_CANE_2',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_CANE_3',
@@ -1081,7 +1052,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_CANE_3',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		gemSlots: [
 			{
@@ -1136,7 +1106,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Epic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_WHEAT_2',
@@ -1172,7 +1141,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_WHEAT_2',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Legendary,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: {
 			id: 'THEORETICAL_HOE_WHEAT_3',
@@ -1222,7 +1190,6 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		skyblockId: 'THEORETICAL_HOE_WHEAT_3',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Mythic,
-		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
 		gemSlots: [
 			{
@@ -1275,8 +1242,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	HOE_OF_NO_TILLING: {
 		skyblockId: 'HOE_OF_NO_TILLING',
 		maxRarity: Rarity.Rare,
-		reforgeType: ReforgeTarget.Hoe,
-		type: FarmingToolType.Other,
+		type: ReforgeTarget.Hoe,
 		name: 'Hoe of No Tilling',
 		wiki: 'https://wiki.hypixel.net/Hoe_of_No_Tilling',
 	},

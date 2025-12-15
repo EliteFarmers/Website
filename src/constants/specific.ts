@@ -1,3 +1,4 @@
+import { Stat } from './stats.js';
 import type { FortuneSource } from './upgrades.js';
 
 export const GARDEN_CROP_UPGRADES: FortuneSource = {
@@ -275,6 +276,16 @@ export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	fortunePerLevel: 1,
 	maxLevel: 5,
 	wiki: 'https://wiki.hypixel.net/Refined_Dark_Cacao_Truffle',
+};
+
+export const WRIGGLING_LARVA_SOURCE: FortuneSource = {
+	name: 'Wriggling Larva',
+	fortunePerLevel: 0,
+	statsPerLevel: {
+		[Stat.BonusPestChance]: 2,
+	},
+	maxLevel: 5,
+	wiki: 'https://wiki.hypixel.net/Wriggling_Larva',
 };
 
 export const COCOA_FORTUNE_UPGRADE: FortuneSource = {

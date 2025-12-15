@@ -2,9 +2,9 @@ import { Rarity } from '../constants/reforges.js';
 import { Skill } from '../constants/skills.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
-import { type FarmingArmorInfo, GearSlot } from './armor.js';
+import { GearSlot, type ItemDefinition } from './definitions.js';
 
-export const FARMING_EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
+export const FARMING_EQUIPMENT_INFO: Partial<Record<string, ItemDefinition>> = {
 	LOTUS_BRACELET: {
 		skyblockId: 'LOTUS_BRACELET',
 		name: 'Lotus Bracelet',

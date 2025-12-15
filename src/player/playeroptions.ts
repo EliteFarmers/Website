@@ -19,6 +19,7 @@ export interface FortuneMissingFromAPI {
 	milestones?: Partial<Record<Crop, number>>;
 	exportableCrops?: Partial<Record<Crop, boolean>>;
 	refinedTruffles?: number;
+	wrigglingLarva?: number;
 	cocoaFortuneUpgrade?: number;
 
 	sprayedPlot?: boolean;

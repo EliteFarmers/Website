@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
 import { FarmingTool } from './farmingtool.js';
 
 const netherwartHoe = {
@@ -168,4 +169,29 @@ test('Pumpkin Dicer Test', () => {
 
 	expect(axed).toBeDefined();
 	expect(axed?.fortune).toBe(5.18);
+});
+
+test('FarmingTool getStats returns multiple stats', () => {
+	const tool = new FarmingTool(netherwartHoe);
+	const stats = tool.getStats();
+
+	// Should have FarmingFortune
+	expect(stats[Stat.FarmingFortune]).toBeDefined();
+	expect(stats[Stat.FarmingFortune]).toBe(tool.getFortune());
+
+	// Bountiful reforge gives Speed
+	expect(stats[Stat.Speed]).toBeDefined();
+	expect(stats[Stat.Speed]).toBeGreaterThan(0);
+
+	// Verify getStat works for individual stats
+	expect(tool.getStat(Stat.Speed)).toBe(stats[Stat.Speed]);
+	expect(tool.getStat(Stat.FarmingFortune)).toBe(stats[Stat.FarmingFortune]);
+
+	// Blessed reforge for pumpkin dicer also gives Speed and FarmingWisdom
+	const dicer = new FarmingTool(pumpkinDicer);
+	const dicerStats = dicer.getStats();
+
+	expect(dicerStats[Stat.FarmingFortune]).toBeDefined();
+	expect(dicerStats[Stat.Speed]).toBeDefined();
+	expect(dicerStats[Stat.FarmingWisdom]).toBeDefined();
 });

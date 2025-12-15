@@ -32,6 +32,20 @@ export interface FortuneSourceProgress {
 	name: string;
 	fortune: number;
 	ratio: number;
+	/**
+	 * Optional per-stat progress. When present, consumers should prefer this
+	 * over the legacy `fortune/maxFortune/ratio` fields.
+	 */
+	stats?: Partial<
+		Record<
+			Stat,
+			{
+				current: number;
+				max: number;
+				ratio: number;
+			}
+		>
+	>;
 	maxLevel?: number;
 	fortunePerLevel?: number;
 	maxFortune: number;
@@ -47,6 +61,7 @@ export interface FortuneSourceProgress {
 		active: boolean;
 		reason?: string;
 		fortune?: number;
+		stats?: Partial<Record<Stat, number>>;
 	};
 }
 
@@ -139,6 +154,7 @@ export interface UpgradeInfo<T = number> {
 	onto?: {
 		name?: string | null;
 		skyblockId?: string | null;
+		newSkyblockId?: string | null;
 		slot?: GearSlot;
 	};
 	max?: T;
@@ -153,7 +169,30 @@ export interface UpgradeInfo<T = number> {
 	deadEnd?: boolean;
 	cost?: UpgradeCost;
 	wiki?: string;
+	conflictKey?: string;
 	improvements?: UpgradeInfoImprovement<T>[];
+}
+
+export interface UpgradeMeta {
+	id?: string;
+	itemUuid?: string;
+	type?:
+		| 'enchant'
+		| 'item'
+		| 'reforge'
+		| 'gem'
+		| 'skill'
+		| 'accessory'
+		| 'plot'
+		| 'attribute'
+		| 'crop_upgrade'
+		| 'setting'
+		| 'unlock'
+		| 'buy_item';
+	key?: string; // For enchants/stats keys
+	value?: number | string; // New value/level
+	slotIndex?: number; // For gems
+	slot?: string; // For gems
 }
 
 export interface FortuneUpgrade {
@@ -161,10 +200,21 @@ export interface FortuneUpgrade {
 	onto?: {
 		name?: string | null;
 		skyblockId?: string | null;
+		newSkyblockId?: string | null;
 		slot?: GearSlot;
 	};
 	max?: number;
+	/**
+	 * The primary stat increase amount. For backwards compatibility.
+	 * This is typically the FarmingFortune increase.
+	 */
 	increase: number;
+	/**
+	 * All stat increases this upgrade provides.
+	 * If not specified, the upgrade is assumed to only affect FarmingFortune
+	 * with the value from the `increase` field.
+	 */
+	stats?: Partial<Record<Stat, number>>;
 	action: UpgradeAction;
 	purchase?: string;
 	category: UpgradeCategory;
@@ -174,8 +224,19 @@ export interface FortuneUpgrade {
 	deadEnd?: boolean;
 	cost?: UpgradeCost;
 	wiki?: string;
+	conflictKey?: string;
 	improvements?: FortuneUpgradeImprovement[];
-	// upgrade: Upgrade;
+	meta?: UpgradeMeta;
+	skillReq?: Partial<Record<string, number>> | undefined;
+}
+
+export interface UpgradeTreeNode {
+	upgrade: FortuneUpgrade;
+	statsBefore: Partial<Record<Stat, number>>;
+	statsAfter: Partial<Record<Stat, number>>;
+	statsGained: Partial<Record<Stat, number>>;
+	totalCost?: UpgradeCost;
+	children: UpgradeTreeNode[];
 }
 
 export interface Upgrade {

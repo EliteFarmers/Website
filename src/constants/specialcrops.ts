@@ -5,6 +5,8 @@ export enum SpecialCrop {
 	Squash = 'Squash',
 	Fermento = 'Fermento',
 	CondensedFermento = 'CondensedFermento',
+	Helianthus = 'Helianthus',
+	CondensedHelianthus = 'CondensedHelianthus',
 }
 
 export const SPECIAL_CROP_INFO = {
@@ -32,6 +34,18 @@ export const SPECIAL_CROP_INFO = {
 		npc: 2_250_000,
 		rates: [0, 0, 0, 0],
 	},
+	[SpecialCrop.Helianthus]: {
+		id: 'HELIANTHUS',
+		name: 'Helianthus',
+		npc: 275_000,
+		rates: [0.00002, 0.00002, 0.00003, 0.00004],
+	},
+	[SpecialCrop.CondensedHelianthus]: {
+		id: 'CONDENSED_HELIANTHUS',
+		name: 'Condensed Helianthus',
+		npc: 2_475_000,
+		rates: [0, 0, 0, 0],
+	},
 };
 
 export const MATCHING_SPECIAL_CROP: Record<Crop, SpecialCrop> = {
@@ -48,4 +62,8 @@ export const MATCHING_SPECIAL_CROP: Record<Crop, SpecialCrop> = {
 	[Crop.NetherWart]: SpecialCrop.Fermento,
 	[Crop.SugarCane]: SpecialCrop.Fermento,
 	[Crop.Seeds]: SpecialCrop.Fermento,
+
+	[Crop.Sunflower]: SpecialCrop.Helianthus,
+	[Crop.Moonflower]: SpecialCrop.Helianthus,
+	[Crop.WildRose]: SpecialCrop.Helianthus,
 };

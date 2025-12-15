@@ -18,6 +18,7 @@ export interface UpgradeableInfo {
 	baseStats?: Partial<Record<Stat, number>>;
 	cost?: UpgradeCost;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
+	skillReq?: Partial<Record<string, number>>;
 }
 
 export interface Upgradeable {
@@ -35,8 +36,10 @@ export interface Upgradeable {
 	fortune: number;
 
 	getFortune(): number;
-	getUpgrades(): FortuneUpgrade[];
+	getStat(stat: Stat): number;
+	getStats(): Partial<Record<Stat, number>>;
+	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[];
 	getItemUpgrade(): Upgrade | undefined;
 	getLastItemUpgrade(): { upgrade: Upgrade; info: UpgradeableInfo } | undefined;
-	getProgress(zeroed: boolean): FortuneSourceProgress[];
+	getProgress(zeroed?: boolean, stats?: Stat[]): FortuneSourceProgress[];
 }

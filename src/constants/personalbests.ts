@@ -19,5 +19,8 @@ export const PERSONAL_BESTS_CROPS_PER_TIER: Record<Crop, number> = {
 	[Crop.SugarCane]: 200,
 	[Crop.NetherWart]: 300,
 	[Crop.CocoaBeans]: 300,
-	[Crop.Seeds]: 0, // Just for type safety
+	[Crop.Seeds]: 0,
+	[Crop.Sunflower]: 200,
+	[Crop.Moonflower]: 200,
+	[Crop.WildRose]: 200,
 };

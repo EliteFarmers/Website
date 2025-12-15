@@ -13,18 +13,12 @@ import { GemRarity } from '../fortune/item.js';
 import type { Upgradeable, UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../items/tools.js';
-import {
-	getGemRarityName,
-	getNextGemRarity,
-	getPeridotFortune,
-	getPeridotGemFortune,
-	getPeridotGems,
-} from '../util/gems.js';
+import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune } from '../util/gems.js';
 import { nextRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
 import { getFakeItem } from './itemregistry.js';
 
-export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
+export function getItemUpgrades(upgradeable: Upgradeable, options?: { stat?: Stat }): FortuneUpgrade[] {
 	const { deadEnd, upgrade } = getSelfFortuneUpgrade(upgradeable) ?? {};
 	if (deadEnd) return [upgrade] as FortuneUpgrade[];
 
@@ -32,9 +26,9 @@ export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 
 	upgrades.push(upgrade);
 	upgrades.push(getUpgradeableRarityUpgrade(upgradeable));
-	upgrades.push(...getUpgradeableEnchants(upgradeable));
+	upgrades.push(...getUpgradeableEnchants(upgradeable, options?.stat ?? Stat.FarmingFortune));
 	upgrades.push(...getUpgradeableGems(upgradeable));
-	upgrades.push(...getUpgradeableReforges(upgradeable));
+	upgrades.push(...getUpgradeableReforges(upgradeable, options?.stat ? [options.stat] : undefined));
 
 	return upgrades.filter((u) => u) as FortuneUpgrade[];
 }
@@ -53,19 +47,29 @@ export function getSelfFortuneUpgrade(
 			upgrade: {
 				title: nextInfo.name,
 				increase: nextFake?.getFortune() ?? 0,
+				stats: nextFake?.getStats() ?? {},
 				wiki: nextInfo.wiki,
 				action: UpgradeAction.Purchase,
 				purchase: nextInfo.skyblockId,
 				category: UpgradeCategory.Item,
-				cost: nextItem.cost ?? {
-					items: {
-						[nextInfo.skyblockId]: 1,
-					},
+				cost: {
+					...(nextItem.cost ?? {
+						items: {
+							[nextInfo.skyblockId]: 1,
+						},
+					}),
 				},
+				skillReq: nextInfo.skillReq,
 				onto: {
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
+					newSkyblockId: nextInfo.skyblockId,
 				},
+				meta: {
+					type: 'buy_item',
+					id: nextInfo.skyblockId,
+				},
+				conflictKey: `item_tier:${nextInfo.skyblockId}`,
 			} satisfies FortuneUpgrade,
 		};
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
@@ -75,19 +79,33 @@ export function getSelfFortuneUpgrade(
 			upgrade: {
 				title: nextInfo.name,
 				increase: increase < 0 ? 0 : increase,
+				stats: nextFake?.getStats() ?? {},
 				wiki: nextInfo.wiki,
 				action: nextItem.reason === UpgradeReason.Situational ? UpgradeAction.Purchase : UpgradeAction.Upgrade,
 				purchase: nextItem.reason === UpgradeReason.Situational ? nextItem.id : undefined,
 				category: UpgradeCategory.Item,
-				cost: nextItem.cost ?? {
-					items: {
-						[nextItem.id]: 1,
-					},
+				cost: {
+					...(nextItem.cost ?? {
+						items: {
+							[nextItem.id]: 1,
+						},
+					}),
 				},
+				skillReq: nextInfo.skillReq,
 				onto: {
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
+					newSkyblockId: nextInfo.skyblockId,
 				},
+				meta: {
+					type: 'buy_item',
+					id: nextItem.id,
+					itemUuid:
+						nextItem.reason === UpgradeReason.Situational
+							? undefined
+							: (upgradeable.item.uuid ?? undefined),
+				},
+				conflictKey: `item_tier:${nextItem.id}`,
 			} satisfies FortuneUpgrade,
 		};
 	}
@@ -111,7 +129,10 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 	return item;
 }
 
-export function getUpgradeableInfo(skyblockId?: string): { info?: UpgradeableInfo; fake?: UpgradeableBase } {
+export function getUpgradeableInfo(skyblockId?: string): {
+	info?: UpgradeableInfo;
+	fake?: UpgradeableBase;
+} {
 	if (!skyblockId) return { info: undefined, fake: undefined };
 
 	const fake = getFakeItem(skyblockId);
@@ -170,6 +191,9 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 	const result = {
 		title: 'Recombobulate ' + upgradeable.item.name,
 		increase: 0,
+		stats: {
+			[Stat.FarmingFortune]: 0,
+		},
 		action: UpgradeAction.Recombobulate,
 		category: UpgradeCategory.Rarity,
 		improvements: [] as FortuneUpgradeImprovement[],
@@ -182,6 +206,13 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 			name: upgradeable.item.name,
 			skyblockId: upgradeable.item.skyblockId,
 		},
+		meta: {
+			itemUuid: upgradeable.item.uuid ?? undefined,
+			type: 'item',
+			id: 'rarity_upgrades',
+			value: 1,
+		},
+		conflictKey: 'recombobulate',
 	} satisfies FortuneUpgrade;
 
 	// Gemstone fortune increases with rarity
@@ -222,8 +253,10 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 	return result;
 }
 
-export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade[] {
-	const currentFortune = upgradeable.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+export function getUpgradeableReforges(upgradeable: Upgradeable, stats?: Stat[]): FortuneUpgrade[] {
+	const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
+	const currentPrimary = upgradeable.reforgeStats?.stats?.[primaryStat] ?? 0;
+	const currentStats = upgradeable.reforgeStats?.stats ?? {};
 	const result: FortuneUpgrade[] = [];
 
 	for (const reforge of Object.values(REFORGES)) {
@@ -236,18 +269,31 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 		) {
 			continue;
 		}
+		// Only suggest reforges with an explicit reforge stone (keeps output consistent and costable)
+		if (!reforge.stone?.id) continue;
 		const tier = reforge.tiers[upgradeable.rarity];
-		if (!tier || !tier.stats?.[Stat.FarmingFortune]) continue;
+		if (!tier || !tier.stats) continue;
 
-		const reforgeFortune = tier.stats[Stat.FarmingFortune];
-		// Skip if the reforge doesn't increase farming fortune
-		if (reforgeFortune <= currentFortune) continue;
+		const nextPrimary = tier.stats?.[primaryStat] ?? 0;
+		// Skip if the reforge doesn't improve the selected stat
+		if (nextPrimary <= currentPrimary) continue;
+
+		const deltaStats: Partial<Record<Stat, number>> = {};
+		for (const stat of Object.values(Stat)) {
+			const before = currentStats?.[stat] ?? 0;
+			const after = tier.stats?.[stat] ?? 0;
+			const diff = after - before;
+			if (diff !== 0) deltaStats[stat] = diff;
+		}
+		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
 		result.push({
 			title: 'Reforge to ' + reforge.name,
-			increase: reforgeFortune - currentFortune,
+			increase,
+			stats: deltaStats,
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Reforge,
+			conflictKey: 'reforge',
 			wiki: reforge.wiki,
 			onto: {
 				name: upgradeable.item.name,
@@ -265,6 +311,11 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 							: undefined,
 					}
 				: undefined,
+			meta: {
+				type: 'reforge',
+				id: reforge.name.toLowerCase().replaceAll(' ', '_'),
+				itemUuid: upgradeable.item.uuid ?? undefined,
+			},
 		});
 	}
 
@@ -274,8 +325,6 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 	const peridotSlots = upgradeable.info.gemSlots?.filter((s) => s.slot_type === 'PERIDOT');
 	if (!peridotSlots || peridotSlots.length < 1) return [];
-
-	const unlockedSlots = getPeridotGems(upgradeable.item);
 
 	const result = [] as FortuneUpgrade[];
 
@@ -311,6 +360,9 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 		result.push({
 			title: 'Fine Peridot Gemstone',
 			increase: getPeridotGemFortune(upgradeable.rarity, GemRarity.Fine),
+			stats: {
+				[Stat.FarmingFortune]: getPeridotGemFortune(upgradeable.rarity, GemRarity.Fine),
+			},
 			cost: cost,
 			onto: {
 				name: upgradeable.item.name,
@@ -318,17 +370,43 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Gem,
+			conflictKey: `gem:${slotId}:${GemRarity.Fine}`,
+			meta: {
+				type: 'gem',
+				slot: slotId,
+				value: GemRarity.Fine,
+				itemUuid: upgradeable.item.uuid ?? undefined,
+			},
 		});
 	}
 
 	// Add entries for upgrading existing gems
-	for (const gem of unlockedSlots) {
-		if (gem === GemRarity.Perfect) continue;
+	// unlockedSlots is array of GemRarity | null.
+	// The previous loop handled "applying missing gems" which usually means slot unlocking AND gem placement?
+	// Wait, getPeridotGems returns the rarities of gems in slots.
+	// The previous loop checks `upgradeable.item?.gems?.[slotId] !== undefined`.
+	// If gems are missing, it suggests "Fine Peridot".
+
+	// The second loop iterates `unlockedSlots`.
+	// But we need the SLOT ID for the second loop upgrades too.
+	// getPeridotGems returns array of values, logic relies on index implicitly mapping to slots?
+	// getPeridotGems implementation in `src/util/gems.ts` iterates slots PERIDOT_0, PERIDOT_1...
+	// So `unlockedSlots[i]` corresponds to `PERIDOT_i`.
+
+	// Add entries for upgrading existing gems
+	const gems = upgradeable.item.gems ?? {};
+	for (const [slotId, gem] of Object.entries(gems)) {
+		if (!slotId.startsWith('PERIDOT')) continue;
+
+		const gemRarity = gem as GemRarity | null;
+
+		if (gemRarity === undefined) continue;
+		if (gemRarity === GemRarity.Perfect) continue;
 
 		// Start at Fine if the gem is null (not applied)
 		// Flawed and Rough gems are not really worth applying
-		const nextGem = gem === null ? GemRarity.Fine : getNextGemRarity(gem);
-		const currentFortune = getPeridotGemFortune(upgradeable.rarity, gem);
+		const nextGem = gemRarity === null ? GemRarity.Fine : getNextGemRarity(gemRarity);
+		const currentFortune = getPeridotGemFortune(upgradeable.rarity, gemRarity);
 		const nextFortune = getPeridotGemFortune(upgradeable.rarity, nextGem);
 
 		if (nextFortune > currentFortune) {
@@ -344,8 +422,18 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 					skyblockId: upgradeable.item.skyblockId,
 				},
 				increase: nextFortune - currentFortune,
+				stats: {
+					[Stat.FarmingFortune]: nextFortune - currentFortune,
+				},
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
+				conflictKey: `gem:${slotId}:${nextGem}`,
+				meta: {
+					type: 'gem',
+					slot: slotId,
+					value: nextGem,
+					itemUuid: upgradeable.item.uuid ?? undefined,
+				},
 			});
 		}
 	}

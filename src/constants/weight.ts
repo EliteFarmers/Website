@@ -11,8 +11,11 @@ export const CROP_WEIGHT: Record<Crop, number> = {
 	[Crop.Potato]: 298328.17,
 	[Crop.Pumpkin]: 99236.12,
 	[Crop.SugarCane]: 198885.45,
-	[Crop.Wheat]: 100_000,
-	[Crop.Seeds]: 0, // Byproduct of wheat farming, not counted
+	[Crop.Wheat]: 100000,
+	[Crop.Seeds]: 0,
+	[Crop.Sunflower]: 200000,
+	[Crop.Moonflower]: 200000,
+	[Crop.WildRose]: 200000,
 };
 
 export const TIER_12_MINIONS: readonly string[] = [

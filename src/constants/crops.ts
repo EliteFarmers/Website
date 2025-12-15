@@ -14,6 +14,9 @@ export enum Crop {
 	SugarCane = 'SUGAR_CANE',
 	Wheat = 'WHEAT',
 	Seeds = 'WHEAT_SEEDS',
+	Sunflower = 'DOUBLE_PLANT',
+	Moonflower = 'MOONFLOWER',
+	WildRose = 'WILD_ROSE',
 }
 
 export interface CropCraft {
@@ -171,7 +174,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		],
 		rng: [
 			{
-				chance: 1 / 250_000,
+				chance: 1 / 250000,
 				drops: {
 					BURROWING_SPORES: 1,
 				},
@@ -302,6 +305,57 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 			},
 		],
 	},
+	[Crop.Sunflower]: {
+		name: 'Sunflower',
+		npc: 4,
+		drops: 2,
+		fortuneType: Stat.SunflowerFortune,
+		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1',
+		crafts: [
+			{
+				item: 'ENCHANTED_SUNFLOWER',
+				takes: 160,
+			},
+			{
+				item: 'COMPACTED_SUNFLOWER',
+				takes: 160 * 160,
+			},
+		],
+	},
+	[Crop.Moonflower]: {
+		name: 'Moonflower',
+		npc: 4,
+		drops: 2,
+		fortuneType: Stat.MoonflowerFortune,
+		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1', // Same as sunflower
+		crafts: [
+			{
+				item: 'ENCHANTED_MOONFLOWER',
+				takes: 160,
+			},
+			{
+				item: 'COMPACTED_MOONFLOWER',
+				takes: 160 * 160,
+			},
+		],
+	},
+	[Crop.WildRose]: {
+		name: 'Wild Rose',
+		npc: 4,
+		drops: 2,
+		fortuneType: Stat.WildRoseFortune,
+		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1', // Same as sunflower
+		crafts: [
+			{
+				item: 'ENCHANTED_WILD_ROSE',
+				takes: 160,
+			},
+			{
+				item: 'COMPACTED_WILD_ROSE',
+				takes: 160 * 160,
+			},
+		],
+	},
 };
 
 // TODO: Calculate this from a list of sources
@@ -317,7 +371,10 @@ export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.Pumpkin]: 1866,
 	[Crop.SugarCane]: 2041,
 	[Crop.Wheat]: 2053,
-	[Crop.Seeds]: 2053, // Not a crop, same as wheat
+	[Crop.Seeds]: 2053,
+	[Crop.Sunflower]: 2053,
+	[Crop.Moonflower]: 2053,
+	[Crop.WildRose]: 2053,
 };
 
 export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
@@ -331,6 +388,9 @@ export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
 	Crop.Pumpkin,
 	Crop.SugarCane,
 	Crop.Wheat,
+	Crop.Sunflower,
+	Crop.Moonflower,
+	Crop.WildRose,
 ];
 
 export const LIST_OF_CROPS_WITH_SEEDS: Crop[] = [...LIST_OF_CROPS, Crop.Seeds];

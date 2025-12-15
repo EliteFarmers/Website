@@ -174,7 +174,10 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 					fortune: 3 * getShardLevel(Rarity.Uncommon, options.attributes?.SHARD_TERMITE),
 				};
 			}
-			return { active: true, reason: 'This shard is only active on infested plots!' };
+			return {
+				active: true,
+				reason: 'This shard is only active on infested plots!',
+			};
 		},
 		perLevelStats: {
 			[Stat.FarmingFortune]: {
@@ -279,6 +282,15 @@ export function getShardFortune(
 	player: FarmingPlayer | CalculateCropDetailedDropsOptions,
 	level?: number
 ): number {
+	return getShardStat(shard, player, Stat.FarmingFortune, level);
+}
+
+export function getShardStat(
+	shard: FarmingAttributeShard,
+	player: FarmingPlayer | CalculateCropDetailedDropsOptions,
+	stat: Stat,
+	level?: number
+): number {
 	level ??= getShardLevel(shard.rarity, player.attributes?.[shard.skyblockId] ?? 0);
 	if (level <= 0) return 0;
 
@@ -287,12 +299,9 @@ export function getShardFortune(
 		return 0;
 	}
 
-	const stats = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(
-		shard.stats?.[Stat.FarmingFortune],
-		player
-	);
+	const stats = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(shard.stats?.[stat], player);
 	const perLevel = getStatValue<unknown, FarmingPlayer | CalculateCropDetailedDropsOptions>(
-		shard.perLevelStats?.[Stat.FarmingFortune],
+		shard.perLevelStats?.[stat],
 		player
 	);
 

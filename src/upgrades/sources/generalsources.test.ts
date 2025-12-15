@@ -81,5 +81,15 @@ test('General fortune sources', () => {
 			maxFortune: 5,
 			ratio: 0,
 		},
+		{
+			name: 'Magic 8 Ball',
+			fortune: 0,
+			maxFortune: 25,
+			ratio: 0,
+			active: {
+				active: true,
+				reason: 'Magic 8 Ball only has a 20% chance to be active each season.',
+			},
+		},
 	]);
 });

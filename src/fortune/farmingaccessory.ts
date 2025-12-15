@@ -6,7 +6,7 @@ import type { PlayerOptions } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { registerItem } from '../upgrades/itemregistry.js';
 import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources.js';
-import { getPeridotFortune } from '../util/gems.js';
+import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import type { EliteItemDto } from './item.js';
 import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
@@ -28,8 +28,23 @@ export class FarmingAccessory extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(zereod = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zereod);
+	getProgress(zereod = false, stats?: Stat[]): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zereod, stats);
+	}
+
+	getStat(stat: Stat): number {
+		let sum = 0;
+
+		// Base fortune
+		sum += this.info.baseStats?.[stat] ?? 0;
+
+		// Gems
+		const gemStat = getGemStat(this.item, stat, this.rarity);
+		if (gemStat > 0) {
+			sum += +(gemStat / 2).toFixed(2);
+		}
+
+		return sum;
 	}
 
 	getFortune() {
@@ -69,9 +84,10 @@ export class FarmingAccessory extends UpgradeableBase {
 
 	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingAccessory | undefined {
 		const fake: EliteItemDto = {
-			name: 'Fake Item',
+			name: info.name,
 			skyblockId: info.skyblockId,
-			lore: [],
+			uuid: crypto.randomUUID(),
+			lore: ['This is a fake item used for upgrade calculations!'],
 			attributes: {},
 			enchantments: {},
 		};

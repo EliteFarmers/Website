@@ -1,9 +1,11 @@
 import type { Crop } from '../constants/crops.js';
 import { Rarity, REFORGES, type Reforge, type ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
-import type { Stat } from '../constants/stats.js';
+import { Stat } from '../constants/stats.js';
 import type { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
+import { getItemProgress } from '../upgrades/progress.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
+import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
 import type { Upgradeable, UpgradeableInfo } from './upgradeable.js';
@@ -64,17 +66,31 @@ export class UpgradeableBase implements Upgradeable {
 		return this.fortune;
 	}
 
+	getStat(stat: Stat): number {
+		return stat === Stat.FarmingFortune ? this.getFortune() : 0;
+	}
+
+	getStats(): Partial<Record<Stat, number>> {
+		const result: Partial<Record<Stat, number>> = {};
+		for (const key of Object.values(Stat)) {
+			const val = this.getStat(key);
+			if (val > 0) result[key] = val;
+		}
+		return result;
+	}
+
 	getCalculatedStats(): Partial<Record<Stat, number>> {
 		if (!this.info.computedStats || !this.options) return {};
 		return this.info.computedStats?.(this.options) ?? {};
 	}
 
-	getUpgrades(): FortuneUpgrade[] {
-		return getItemUpgrades(this);
+	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {
+		const upgrades = getItemUpgrades(this, options);
+		return filterAndSortUpgrades(upgrades, options);
 	}
 
-	getProgress(): FortuneSourceProgress[] {
-		return [];
+	getProgress(_zeroed?: boolean, _stats?: Stat[]): FortuneSourceProgress[] {
+		return [getItemProgress(this)];
 	}
 
 	getItemUpgrade(): Upgrade | undefined {

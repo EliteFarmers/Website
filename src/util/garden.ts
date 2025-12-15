@@ -167,7 +167,9 @@ export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>
 export function getNextPlotCost(plots: string[]) {
 	const unlocked = plots.reduce<Partial<Record<PlotType, number>>>((acc, plot) => {
 		const plotData = GARDEN_PLOTS[plot as keyof typeof GARDEN_PLOTS];
-		acc[plotData.type] = (acc[plotData.type] ?? 0) + 1;
+		if (plotData) {
+			acc[plotData.type] = (acc[plotData.type] ?? 0) + 1;
+		}
 		return acc;
 	}, {});
 
@@ -177,7 +179,11 @@ export function getNextPlotCost(plots: string[]) {
 			const nextPlot = Object.entries(GARDEN_PLOTS)
 				.filter(([id, plot]) => plot.type === plotType && !plots.includes(id))
 				.sort((a, b) => a[1].name.localeCompare(b[1].name))[0];
-			return { cost: count[unlocked?.[plotType] ?? 0], plot: nextPlot ? nextPlot[1] : undefined };
+			return {
+				cost: count[unlocked?.[plotType] ?? 0],
+				plot: nextPlot ? nextPlot[1] : undefined,
+				plotId: nextPlot ? nextPlot[0] : undefined,
+			};
 		}
 	}
 

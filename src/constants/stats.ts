@@ -28,6 +28,9 @@ export enum Stat {
 	PumpkinFortune = 'pumpkin_fortune',
 	SugarCaneFortune = 'sugar_cane_fortune',
 	WheatFortune = 'wheat_fortune',
+	SunflowerFortune = 'sunflower_fortune',
+	MoonflowerFortune = 'moonflower_fortune',
+	WildRoseFortune = 'wild_rose_fortune',
 	PestKillFortune = 'pest_kill_fortune',
 	ForagingFortune = 'foraging_fortune',
 	MiningWisdom = 'Mining Wisdom',
@@ -36,6 +39,7 @@ export enum Stat {
 	Pristine = 'Pristine',
 	BonusPestChance = 'Bonus Pest Chance',
 	PestCooldownReduction = 'Pest Cooldown Reduction',
+	FishingSpeed = 'Fishing Speed',
 }
 
 export function getStatValue<T = unknown, C = PlayerOptions>(stat?: StatValue<T, C>, option?: C) {

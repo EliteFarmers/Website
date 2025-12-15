@@ -1,4 +1,5 @@
 import type { Crop } from '../../constants/crops.js';
+import type { Stat } from '../../constants/stats.js';
 import type { FortuneSourceProgress, FortuneUpgrade, UpgradeInfo } from '../../constants/upgrades.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
@@ -11,16 +12,19 @@ export interface DynamicFortuneSource<T> {
 	wiki?: (source: T) => string | undefined;
 	exists: (source: T) => boolean;
 	active?: (source: T) => { active: boolean; reason?: string; fortune?: number };
+	activeStat?: (source: T, stat: Stat) => { active: boolean; reason?: string; value?: number };
 	max: (source: T) => number;
 	current: (source: T) => number;
-	progress?: (source: T) => FortuneSourceProgress[];
+	maxStat?: (source: T, stat: Stat) => number;
+	currentStat?: (source: T, stat: Stat) => number;
+	progress?: (source: T, stats?: Stat[]) => FortuneSourceProgress[];
 	info?: (source: T) => {
 		item?: EliteItemDto;
 		info?: UpgradeableInfo;
 		nextInfo?: UpgradeableInfo;
 		maxInfo?: UpgradeableInfo;
 	};
-	upgrades?: (source: T) => FortuneUpgrade[];
+	upgrades?: (source: T, stats?: Stat[]) => FortuneUpgrade[];
 }
 
 export interface DynamicUpgradeSource<T, Output = unknown> {

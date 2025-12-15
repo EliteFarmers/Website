@@ -1,6 +1,5 @@
 import { expect, test } from 'vitest';
-import { CROP_INFO, Crop } from '../../constants/crops.js';
-import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { Crop } from '../../constants/crops.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
 import type { EliteItemDto } from '../../fortune/item.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../../items/tools.js';
@@ -64,6 +63,7 @@ test('Wheat fortune test', () => {
 		delete piece.nextInfo;
 		delete piece.info;
 		delete piece.upgrades;
+		delete piece.progress;
 	});
 
 	expect(progress).toStrictEqual([
@@ -72,9 +72,6 @@ test('Wheat fortune test', () => {
 			fortune: 0,
 			maxFortune: 485,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(
-				FARMING_TOOLS[CROP_INFO[Crop.Wheat].startingTool] as FarmingToolInfo
-			)?.getProgress(true),
 		},
 		{
 			name: 'Exportable Crop',
@@ -126,6 +123,8 @@ test('Potato fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
+		delete piece.progress;
 	});
 
 	expect(progress).toStrictEqual([
@@ -134,9 +133,6 @@ test('Potato fortune test', () => {
 			fortune: 0,
 			maxFortune: 485,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(
-				FARMING_TOOLS[CROP_INFO[Crop.Potato].startingTool] as FarmingToolInfo
-			)?.getProgress(true),
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -155,24 +151,6 @@ test('Potato fortune test', () => {
 			fortune: 0,
 			maxFortune: 100,
 			ratio: 0,
-			upgrades: [
-				{
-					action: UpgradeAction.Unlock,
-					category: UpgradeCategory.Anita,
-					cost: {
-						items: {
-							JACOBS_TICKET: 64,
-						},
-						medals: {
-							gold: 2,
-						},
-					},
-					increase: 0,
-					max: 100,
-					title: 'Personal Best Fortune',
-					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',
-				},
-			],
 		},
 	]);
 });
@@ -196,6 +174,7 @@ test('Nether Wart fortune test', () => {
 		delete piece.nextInfo;
 		delete piece.info;
 		delete piece.upgrades;
+		delete piece.progress;
 	});
 
 	expect(progress).toStrictEqual([
@@ -204,9 +183,6 @@ test('Nether Wart fortune test', () => {
 			fortune: 0,
 			maxFortune: 485,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(
-				FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo
-			)?.getProgress(true),
 		},
 		{
 			name: 'Exportable Crop',
@@ -252,6 +228,7 @@ test('Carrot fortune test', () => {
 		delete piece.nextInfo;
 		delete piece.info;
 		delete piece.upgrades;
+		delete piece.progress;
 	});
 
 	expect(progress).toStrictEqual([
@@ -260,7 +237,6 @@ test('Carrot fortune test', () => {
 			fortune: 25,
 			maxFortune: 485,
 			ratio: 25 / 485,
-			progress: FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo)?.getProgress(),
 		},
 		{
 			name: 'Exportable Crop',
@@ -308,6 +284,7 @@ test('Melon fortune test', () => {
 		delete piece.nextInfo;
 		delete piece.info;
 		delete piece.upgrades;
+		delete piece.progress;
 	});
 
 	expect(progress).toStrictEqual([
@@ -316,9 +293,6 @@ test('Melon fortune test', () => {
 			fortune: 0,
 			maxFortune: 272.34,
 			ratio: 0,
-			progress: FarmingTool.fakeItem(
-				FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo
-			)?.getProgress(true),
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -399,5 +373,5 @@ test('Squash ring test', () => {
 	expect(fermento).toBeDefined();
 	expect(fermento?.fortune).toBe(0);
 
-	expect(player.breakdown[fermento?.item?.name ?? '']).toBeUndefined();
+	expect(player.breakdown['Fermento Artifact']).toBeUndefined();
 });

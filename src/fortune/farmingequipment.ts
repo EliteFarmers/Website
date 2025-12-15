@@ -8,7 +8,8 @@ import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { registerItem } from '../upgrades/itemregistry.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
-import { getFortuneFromEnchant } from '../util/enchants.js';
+import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+import { getGemStat } from '../util/gems.js';
 import { extractNumberFromLine } from '../util/lore.js';
 import type { FarmingArmor } from './farmingarmor.js';
 import type { EliteItemDto } from './item.js';
@@ -41,13 +42,40 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(zereod = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zereod);
+	getProgress(zereod = false, stats?: Stat[]): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zereod, stats);
 	}
 
 	setOptions(options: PlayerOptions) {
 		this.options = options;
 		this.getFortune();
+	}
+
+	getStat(stat: Stat): number {
+		if (stat === Stat.FarmingFortune) {
+			return this.getFortune();
+		}
+
+		let sum = 0;
+
+		// Base fortune
+		sum += this.info.baseStats?.[stat] ?? 0;
+
+		// Reforge
+		sum += this.reforgeStats?.stats?.[stat] ?? 0;
+
+		// Gems
+		sum += getGemStat(this.item, stat, this.rarity);
+
+		// Enchantments
+		for (const [key, level] of Object.entries(this.item.enchantments ?? {})) {
+			const enchant = FARMING_ENCHANTS[key];
+			if (!enchant || !level || enchant.cropSpecific) continue;
+
+			sum += getStatFromEnchant(level, enchant, stat, this.options);
+		}
+
+		return sum;
 	}
 
 	getFortune() {
@@ -187,9 +215,10 @@ export class FarmingEquipment extends UpgradeableBase {
 
 	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingEquipment | undefined {
 		const fake: EliteItemDto = {
-			name: 'Fake Item',
+			name: info.name,
 			skyblockId: info.skyblockId,
-			lore: [],
+			uuid: crypto.randomUUID(),
+			lore: ['This is a fake item used for upgrade calculations!'],
 			attributes: {},
 			enchantments: {},
 		};
