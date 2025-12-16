@@ -135,6 +135,8 @@
 		bestiaryKills: (ctx.member.current?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
 		uniqueVisitors: ctx.member.current?.garden?.uniqueVisitors ?? 0,
 
+		perks: ctx.member.current?.unparsed?.perks,
+
 		farmingLevel: getLevelProgress(
 			'farming',
 			ctx.member.current?.skills?.farming ?? 0,
@@ -172,7 +174,7 @@
 	const selectedCropKey = $derived(cropKey(selectedCrop));
 
 	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
-	const gearProgress = $derived($player.armorSet.getProgress(undefined, [Stat.FarmingFortune]));
+	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune]));
 	const cropProgress = $derived($player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat));
 
 	const cropToolSwitchOptions = $derived.by(() => {
@@ -240,6 +242,19 @@
 		};
 	}
 
+	function getProgressUpgrades(p: FortuneSourceProgress): FortuneUpgrade[] {
+		const uuid = p.item?.uuid;
+		if (uuid) {
+			// Check if this is a tool and call getUpgrades() directly on the tool
+			const tool = $player.tools.find((t) => t.item.uuid === uuid);
+			if (tool) {
+				return tool.getUpgrades({ stat: Stat.FarmingFortune });
+			}
+		}
+		// Fall back to the progress upgrades
+		return p.upgrades ?? [];
+	}
+
 	const allProgress = $derived([...generalProgress, ...gearProgress, ...cropProgress]);
 
 	function getUpgradeKey(upgrade: FortuneUpgrade): string {
@@ -261,11 +276,11 @@
 		};
 
 		for (const p of allProgress) {
-			if (p.upgrades) {
-				for (const u of p.upgrades) {
-					const tree = $player.expandUpgrade(u);
-					traverse(tree);
-				}
+			// Use getProgressUpgrades to get tool upgrades correctly
+			const upgrades = getProgressUpgrades(p);
+			for (const u of upgrades) {
+				const tree = $player.expandUpgrade(u);
+				traverse(tree);
 			}
 		}
 		return result;
@@ -321,6 +336,7 @@
 			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
 			attributes: $ratesData.attributes,
+			maxTool: $player.selectedTool?.level === 50,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
@@ -612,10 +628,11 @@
 						costFn={getUpgradeCost}
 						items={itemsData}
 						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}
+						getUpgrades={getProgressUpgrades}
 					/>
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress(undefined, [Stat.FarmingFortune])}
+						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
 						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
@@ -637,6 +654,7 @@
 							costFn={getUpgradeCost}
 							items={itemsData}
 							equip={(p) => getToolEquipConfig(p, cropToolSwitchOptions)}
+							getUpgrades={getProgressUpgrades}
 						>
 							<img
 								src={PROPER_CROP_TO_IMG[selectedCrop ?? '']}

@@ -22,9 +22,9 @@
 
 		return {
 			...p,
-			ratio: p.active?.fortune ? p.active.fortune / p.maxFortune : 0,
+			ratio: p.active?.fortune ? p.active.fortune / p.max : 0,
 			fortune: p.active?.fortune ?? 0,
-			maxFortune: p.maxFortune,
+			maxFortune: p.max,
 			active: p.active,
 		};
 	});
@@ -120,5 +120,15 @@
 				STAT_ICONS[stat as Stat]}
 			disabled={progress.active?.active === false}
 		/>
+	{:else}
+		{#each Object.entries(progress.progress ?? {}) as [stat, statProgress] (stat)}
+			<ProgressBar
+				{barBg}
+				percent={statProgress.ratio * 100}
+				readable={(statProgress.current || 0).toLocaleString() + ' / ' + statProgress.max.toLocaleString()}
+				expanded={(statProgress.current || 0).toLocaleString() + ' / ' + statProgress.max.toLocaleString()}
+				disabled={progress.active?.active === false}
+			/>
+		{/each}
 	{/each}
 </div>
