@@ -326,8 +326,6 @@
 		});
 	});
 
-	$inspect($player.selectedTool);
-
 	const calculatorOptions = $derived.by(() => {
 		return {
 			farmingFortune: $player.fortune + cropFortune.fortune,
