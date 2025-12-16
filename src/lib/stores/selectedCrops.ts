@@ -12,6 +12,9 @@ export const DEFAULT_SELECTED_CROPS = {
 	Pumpkin: false,
 	'Sugar Cane': false,
 	Wheat: false,
+	Sunflower: false,
+	Moonflower: false,
+	'Wild Rose': false,
 };
 
 export function initAnyCropSelected() {

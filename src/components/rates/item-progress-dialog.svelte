@@ -34,6 +34,7 @@
 		equipValue?: string;
 		equipPlaceholder?: string;
 		onEquipValueChange?: (value: string) => void;
+		getUpgrades?: (progress: FortuneSourceProgress) => FortuneUpgrade[];
 	}
 
 	let {
@@ -47,11 +48,16 @@
 		equipValue,
 		equipPlaceholder,
 		onEquipValueChange,
+		getUpgrades,
 	}: Props = $props();
 
 	let selectedEquipValue = $derived(equipValue ?? '');
 
-	const baseUpgrades = $derived(progress?.upgrades ?? []);
+	const baseUpgrades = $derived.by(() => {
+		if (!progress) return [];
+		if (getUpgrades) return getUpgrades(progress);
+		return progress.upgrades ?? [];
+	});
 
 	function getUpgradeKey(upgrade: FortuneUpgrade): string {
 		const metaKey = upgrade.meta?.id ?? upgrade.meta?.key ?? '';

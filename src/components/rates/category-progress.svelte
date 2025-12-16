@@ -17,10 +17,11 @@
 			placeholder?: string;
 			onChange: (value: string) => void;
 		} | null;
+		getUpgrades?: (progress: FortuneSourceProgress) => FortuneUpgrade[];
 		children?: import('svelte').Snippet;
 	}
 
-	let { name, progress, items, costFn, applyUpgrade, expandUpgrade, equip, children }: Props = $props();
+	let { name, progress, items, costFn, applyUpgrade, expandUpgrade, equip, getUpgrades, children }: Props = $props();
 
 	let progressModal = $state(false);
 	let shownProgressIndex = $state<number | null>(null);
@@ -35,7 +36,7 @@
 			<h2 class="pl-1 text-xl">{name}</h2>
 		</div>
 		<div class="flex w-full max-w-lg flex-1 flex-col gap-1.5">
-			{#each progress as p, i (p.name + p.fortune + (p.item?.uuid ?? ''))}
+			{#each progress as p, i (p.name + p.current + (p.item?.uuid ?? ''))}
 				{#if p.nextInfo || p.maxInfo || p.progress?.length || p.item || p.upgrades?.length}
 					<button
 						class="bg-card hover:bg-card/40 cursor-pointer rounded-md border px-1"
@@ -63,6 +64,7 @@
 	{costFn}
 	{applyUpgrade}
 	{expandUpgrade}
+	{getUpgrades}
 	equipOptions={equipConfig?.options}
 	equipValue={equipConfig?.value}
 	equipPlaceholder={equipConfig?.placeholder}

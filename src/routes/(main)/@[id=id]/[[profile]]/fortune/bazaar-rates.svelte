@@ -54,7 +54,7 @@
 	<div class="my-2 rounded-md border p-2">
 		<div class="mb-2 flex flex-row items-center justify-between">
 			<div class="flex flex-row items-center gap-2">
-				<span class="text-xl font-semibold">RNG Drops</span>
+				<span class="text-xl font-semibold">Other Drops</span>
 			</div>
 		</div>
 
@@ -77,17 +77,17 @@
 				{@const rngItems = Object.fromEntries(
 					Object.entries(result.rngItems ?? {}).map(([item, amount], i) => {
 						const name = bz?.[item]?.item?.name;
-						return [name ?? 'RNG Item ' + i, { coins: price(bz, item, amount), amount }];
+						return [name ?? 'Other Drop ' + i, { coins: price(bz, item, amount), amount }];
 					})
 				)}
 				{#each Object.entries(rngItems) as [name, { coins, amount }], i (i)}
 					<div class="flex h-8 w-full items-center justify-between py-1">
-						<span class="text-lg">{amount.toFixed(2)} {name}</span>
+						<span class="text-lg">x{amount.toFixed(2)} {name}</span>
 						<CoinsBreakdown {coins} />
 					</div>
 				{/each}
 				<div class="mt-4 flex h-8 w-full items-center justify-between py-1">
-					<span class="text-lg font-semibold">RNG + NPC Coins</span>
+					<span class="text-lg font-semibold">Other Drops + NPC Coins</span>
 					<CoinsBreakdown
 						coins={result.npcCoins + Object.values(rngItems).reduce((a, b) => a + b.coins, 0)}
 						breakdown={{
@@ -127,7 +127,7 @@
 		</div>
 		{#if result.rngItems}
 			<div class="flex flex-row items-center gap-2">
-				<span>Include RNG</span>
+				<span>Include Other Drops</span>
 				<Switch bind:checked={includeRng} />
 			</div>
 		{/if}
