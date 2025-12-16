@@ -398,9 +398,10 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Rare,
+		maxRarity: Rarity.Uncommon,
 		baseStats: {
 			[Stat.FarmingFortune]: 15,
+			[Stat.BonusPestChance]: 10,
 		},
 		skillReq: {
 			[Skill.Farming]: 25,
@@ -425,9 +426,10 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Rare,
+		maxRarity: Rarity.Uncommon,
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
+			[Stat.BonusPestChance]: 10,
 		},
 		skillReq: {
 			[Skill.Farming]: 25,
@@ -452,9 +454,10 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Rare,
+		maxRarity: Rarity.Uncommon,
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
+			[Stat.BonusPestChance]: 10,
 		},
 		skillReq: {
 			[Skill.Farming]: 25,
@@ -477,9 +480,10 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Rare,
+		maxRarity: Rarity.Uncommon,
 		baseStats: {
 			[Stat.FarmingFortune]: 15,
+			[Stat.BonusPestChance]: 10,
 		},
 		skillReq: {
 			[Skill.Farming]: 25,
@@ -503,7 +507,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Uncommon,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -522,6 +526,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
+			[Stat.BonusPestChance]: 12.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 30,
@@ -546,7 +551,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Uncommon,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -565,6 +570,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
+			[Stat.BonusPestChance]: 12.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 30,
@@ -589,7 +595,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Uncommon,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -608,6 +614,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
+			[Stat.BonusPestChance]: 12.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 30,
@@ -630,7 +637,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Uncommon,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -649,6 +656,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
+			[Stat.BonusPestChance]: 12.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 30,
@@ -673,7 +681,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Rare,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -692,6 +700,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
+			[Stat.BonusPestChance]: 15,
 		},
 		skillReq: {
 			[Skill.Farming]: 35,
@@ -718,7 +727,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Rare,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -737,6 +746,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
+			[Stat.BonusPestChance]: 15,
 		},
 		skillReq: {
 			[Skill.Farming]: 35,
@@ -762,7 +772,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Rare,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -781,6 +791,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
+			[Stat.BonusPestChance]: 15,
 		},
 		skillReq: {
 			[Skill.Farming]: 35,
@@ -804,7 +815,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Rare,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -823,6 +834,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 25,
+			[Stat.BonusPestChance]: 15,
 		},
 		skillReq: {
 			[Skill.Farming]: 35,
@@ -833,9 +845,21 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		name: 'Fermento Helmet',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
 		family: 'FERMENTO',
-		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
+		upgrade: {
+			id: 'HELIANTHUS_HELMET',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					COMPACTED_WILD_ROSE: 64,
+					COMPACTED_MOONFLOWER: 64,
+					COMPACTED_SUNFLOWER: 64,
+					CONDENSED_HELIANTHUS: 2,
+				},
+			},
+		},
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Mythic,
+		maxRarity: Rarity.Epic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -868,6 +892,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
+			[Stat.BonusPestChance]: 17.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 40,
@@ -877,10 +902,22 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		skyblockId: 'FERMENTO_CHESTPLATE',
 		name: 'Fermento Chestplate',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
+		upgrade: {
+			id: 'HELIANTHUS_CHESTPLATE',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					COMPACTED_WILD_ROSE: 64,
+					COMPACTED_MOONFLOWER: 64,
+					COMPACTED_SUNFLOWER: 64,
+					CONDENSED_HELIANTHUS: 2,
+				},
+			},
+		},
 		family: 'FERMENTO',
-		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Mythic,
+		maxRarity: Rarity.Epic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -913,6 +950,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 35,
+			[Stat.BonusPestChance]: 17.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 40,
@@ -922,10 +960,22 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		skyblockId: 'FERMENTO_LEGGINGS',
 		name: 'Fermento Leggings',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
+		upgrade: {
+			id: 'HELIANTHUS_LEGGINGS',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					COMPACTED_WILD_ROSE: 64,
+					COMPACTED_MOONFLOWER: 64,
+					COMPACTED_SUNFLOWER: 64,
+					CONDENSED_HELIANTHUS: 2,
+				},
+			},
+		},
 		family: 'FERMENTO',
-		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Mythic,
+		maxRarity: Rarity.Epic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -958,6 +1008,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 35,
+			[Stat.BonusPestChance]: 17.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 40,
@@ -968,14 +1019,20 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		name: 'Fermento Boots',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
 		upgrade: {
-			id: 'RANCHERS_BOOTS',
-			reason: UpgradeReason.Situational,
-			why: "Rancher's Boots provide less farming fortune, but allow you to control your speed for tricky farms.",
+			id: 'HELIANTHUS_BOOTS',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					COMPACTED_MOONFLOWER: 64,
+					COMPACTED_SUNFLOWER: 64,
+					CONDENSED_HELIANTHUS: 2,
+				},
+			},
 		},
 		family: 'FERMENTO',
-		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Mythic,
+		maxRarity: Rarity.Epic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -1008,9 +1065,190 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
+			[Stat.BonusPestChance]: 17.5,
 		},
 		skillReq: {
 			[Skill.Farming]: 40,
+		},
+	},
+	HELIANTHUS_HELMET: {
+		skyblockId: 'HELIANTHUS_HELMET',
+		name: 'Helianthus Helmet',
+		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
+		family: 'HELIANTHUS',
+		slot: GearSlot.Helmet,
+		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
+		baseStats: {
+			[Stat.FarmingFortune]: 35,
+			[Stat.BonusPestChance]: 20,
+		},
+		skillReq: {
+			[Skill.Farming]: 45,
+		},
+	},
+	HELIANTHUS_CHESTPLATE: {
+		skyblockId: 'HELIANTHUS_CHESTPLATE',
+		name: 'Helianthus Chestplate',
+		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
+		family: 'HELIANTHUS',
+		slot: GearSlot.Chestplate,
+		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
+		baseStats: {
+			[Stat.FarmingFortune]: 40,
+			[Stat.BonusPestChance]: 20,
+		},
+		skillReq: {
+			[Skill.Farming]: 45,
+		},
+	},
+	HELIANTHUS_LEGGINGS: {
+		skyblockId: 'HELIANTHUS_LEGGINGS',
+		name: 'Helianthus Leggings',
+		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
+		family: 'HELIANTHUS',
+		slot: GearSlot.Leggings,
+		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
+		baseStats: {
+			[Stat.FarmingFortune]: 40,
+			[Stat.BonusPestChance]: 20,
+		},
+		skillReq: {
+			[Skill.Farming]: 45,
+		},
+	},
+	HELIANTHUS_BOOTS: {
+		skyblockId: 'HELIANTHUS_BOOTS',
+		name: 'Helianthus Boots',
+		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
+		family: 'HELIANTHUS',
+		slot: GearSlot.Boots,
+		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
+		baseStats: {
+			[Stat.FarmingFortune]: 35,
+			[Stat.BonusPestChance]: 20,
+		},
+		skillReq: {
+			[Skill.Farming]: 45,
 		},
 	},
 	MUSHROOM_HELMET: {
@@ -1235,7 +1473,25 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 				[Stat.FarmingFortune]: 75,
 			},
 		},
-		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
+	},
+	HELIANTHUS: {
+		name: 'Feast',
+		piecePotential: {
+			[Stat.FarmingFortune]: 25,
+		},
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 25,
+			},
+			3: {
+				[Stat.FarmingFortune]: 50,
+			},
+			4: {
+				[Stat.FarmingFortune]: 75,
+			},
+		},
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 	},
 	PESTHUNTERS: {
 		name: 'Eradicator',

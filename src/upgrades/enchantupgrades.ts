@@ -19,7 +19,8 @@ export function getUpgradeableEnchants(upgradeable: Upgradeable, stat: Stat = St
 export function getUpgradeableEnchant(
 	upgradeable: Upgradeable,
 	enchantId: string,
-	stat: Stat = Stat.FarmingFortune
+	stat: Stat = Stat.FarmingFortune,
+	options?: { includeWhenNoStatImpact?: boolean }
 ): FortuneUpgrade[] {
 	const enchant = FARMING_ENCHANTS[enchantId];
 	if (!upgradeable.type || !enchant) return [];
@@ -33,13 +34,15 @@ export function getUpgradeableEnchant(
 
 	const applied = upgradeable.item.enchantments?.[enchantId];
 
-	// If this enchant can never affect the selected stat, skip it entirely.
+	// If this enchant can never affect the selected stat, skip it entirely
+	// unless explicitly requested (used for progress-only enchants).
 	const maxForStat = getMaxStatFromEnchant(enchant, stat, upgradeable.options, upgradeable.crop);
-	if (maxForStat <= 0) return result;
+	const includeWhenNoStatImpact = options?.includeWhenNoStatImpact === true;
+	if (maxForStat <= 0 && !includeWhenNoStatImpact) return result;
 	const currentForStat = applied
 		? getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop)
 		: 0;
-	if (maxForStat <= currentForStat) return result;
+	if (maxForStat > 0 && maxForStat <= currentForStat && !includeWhenNoStatImpact) return result;
 
 	// If the enchantment is not applied, add an entry for applying it
 	if (!applied) {
@@ -48,6 +51,12 @@ export function getUpgradeableEnchant(
 		for (const stat of Object.values(Stat)) {
 			const val = getStatFromEnchant(enchant.minLevel, enchant, stat, upgradeable.options, upgradeable.crop);
 			if (val !== 0) deltaStats[stat] = val;
+		}
+		// Some enchants (e.g. Dedication) are crop-computed and can evaluate to 0
+		// without player context. Preserve a FarmingFortune stat key so stat-filtered
+		// views can still include these upgrades.
+		if (maxForStat > 0 && deltaStats[Stat.FarmingFortune] === undefined) {
+			deltaStats[Stat.FarmingFortune] = 0;
 		}
 		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
@@ -92,6 +101,9 @@ export function getUpgradeableEnchant(
 		const after = getStatFromEnchant(applied + 1, enchant, stat, upgradeable.options, upgradeable.crop);
 		const diff = after - before;
 		if (diff !== 0) deltaStats[stat] = diff;
+	}
+	if (maxForStat > 0 && deltaStats[Stat.FarmingFortune] === undefined) {
+		deltaStats[Stat.FarmingFortune] = 0;
 	}
 	const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
@@ -152,6 +164,7 @@ export function getUpgradeableEnchant(
 
 	return result;
 }
+
 function enchantNameToId(enchant: FarmingEnchant): string {
 	if (enchant.id) return enchant.id;
 	return 'ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_').replaceAll('-', '_');

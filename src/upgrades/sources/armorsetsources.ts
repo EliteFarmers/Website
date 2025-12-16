@@ -68,12 +68,12 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 			const item = getFakeItem(info.startingItem);
 
 			const progress = item?.getProgress();
-			const maxed = progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+			const maxed = progress?.reduce((acc, p) => acc + p.max, 0) ?? 0;
 
 			const currentItem = set.getPiece(slot as GearSlot);
 			if (currentItem) {
 				const currentProgress = currentItem.getProgress();
-				const currentMaxed = currentProgress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+				const currentMaxed = currentProgress?.reduce((acc, p) => acc + p.max, 0) ?? 0;
 				if (currentMaxed > maxed) return currentMaxed;
 			}
 
@@ -81,17 +81,17 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 		},
 		maxStat: (set, stat) => {
 			const fake = getFakeItem(info.startingItem);
-			const fakeProgress = fake?.getProgress(true, [stat]) ?? [];
+			const fakeProgress = fake?.getProgress([stat], true) ?? [];
 			const fakeMax = fakeProgress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
 				0
 			);
 
 			const currentItem = set.getPiece(slot as GearSlot);
 			if (currentItem) {
-				const currentProgress = currentItem.getProgress(false, [stat]);
+				const currentProgress = currentItem.getProgress([stat], false);
 				const currentMax = currentProgress.reduce(
-					(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+					(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
 					0
 				);
 				if (currentMax > fakeMax) return currentMax;
@@ -102,26 +102,26 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 		current: (set) => {
 			const item = set.getPiece(slot as GearSlot);
 			const progress = item?.getProgress();
-			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
+			return progress?.reduce((acc, p) => acc + p.current, 0) ?? 0;
 		},
 		currentStat: (set, stat) => {
 			const item = set.getPiece(slot as GearSlot);
-			const progress = item?.getProgress(false, [stat]) ?? [];
+			const progress = item?.getProgress([stat], false) ?? [];
 			return progress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.fortune : 0)),
+				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.current : 0)),
 				0
 			);
 		},
 		progress: (set, stats) => {
 			const item = set.getPiece(slot as GearSlot);
-			if (item) return item.getProgress(false, stats);
+			if (item) return item.getProgress(stats, false);
 
 			const fake =
 				info.target === ReforgeTarget.Armor
 					? getFakeItem<FarmingArmor>(info.startingItem)
 					: getFakeItem<FarmingEquipment>(info.startingItem);
 
-			return fake?.getProgress(true, stats) ?? [];
+			return fake?.getProgress(stats, true) ?? [];
 		},
 		info: (set) => {
 			const piece = set.getPiece(slot as GearSlot);

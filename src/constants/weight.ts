@@ -29,6 +29,8 @@ export const TIER_12_MINIONS: readonly string[] = [
 	'CACTUS_12',
 	'SUGAR_CANE_12',
 	'NETHER_WARTS_12',
+	'FLOWER_12',
+	'SUNFLOWER_12',
 ] as const;
 
 export const BONUS_WEIGHT = {

@@ -19,18 +19,18 @@ test('Crop Milestones', () => {
 	const expected = {
 		[Crop.Cactus]: 19,
 		[Crop.Carrot]: 25,
-		[Crop.Potato]: 29,
-		[Crop.Wheat]: 33,
+		[Crop.Potato]: 37,
+		[Crop.Wheat]: 46,
 		[Crop.Melon]: 19,
 		[Crop.Pumpkin]: 21,
-		[Crop.Mushroom]: 25,
+		[Crop.Mushroom]: 28,
 		[Crop.CocoaBeans]: 17,
 		[Crop.SugarCane]: 21,
-		[Crop.NetherWart]: 34,
+		[Crop.NetherWart]: 46,
 	};
 
 	expect(getCropMilestoneLevels(fromElite)).toEqual(expected);
-	expect(getCropMilestoneLevels(fromElite, true)).toEqual(expected);
+	expect(getCropMilestoneLevels(fromElite, true)).toEqual({ ...expected, [Crop.Wheat]: 53, [Crop.NetherWart]: 57 });
 });
 
 test('Overflow Crop Milestones', () => {
@@ -50,25 +50,25 @@ test('Overflow Crop Milestones', () => {
 	expect(getCropMilestoneLevels(fromElite, true)).toEqual({
 		[Crop.Cactus]: 19,
 		[Crop.Carrot]: 25,
-		[Crop.Potato]: 29,
-		[Crop.Wheat]: 110,
-		[Crop.Melon]: 1225,
+		[Crop.Potato]: 37,
+		[Crop.Wheat]: 341,
+		[Crop.Melon]: 4522,
 		[Crop.Pumpkin]: 21,
-		[Crop.Mushroom]: 102,
+		[Crop.Mushroom]: 312,
 		[Crop.CocoaBeans]: 17,
 		[Crop.SugarCane]: 21,
-		[Crop.NetherWart]: 34,
+		[Crop.NetherWart]: 57,
 	});
 
 	const milestones = getCropMilestones(fromElite, true);
 	expect(milestones[Crop.Wheat].maxed).toBe(true);
-	expect(milestones[Crop.Wheat].next).toBe(111);
+	expect(milestones[Crop.Wheat].next).toBe(342);
 
 	expect(milestones[Crop.Melon].maxed).toBe(true);
-	expect(milestones[Crop.Melon].next).toBe(1226);
-	expect(milestones[Crop.Melon].goal).toBe(15_000_000);
-	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.155);
-	expect(milestones[Crop.Melon].progress).toBe(2331654);
+	expect(milestones[Crop.Melon].next).toBe(4523);
+	expect(milestones[Crop.Melon].goal).toBe(4000000);
+	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.738851);
+	expect(milestones[Crop.Melon].progress).toBe(2955404);
 
 	expect(milestones[Crop.Mushroom].maxed).toBe(true);
 

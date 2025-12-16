@@ -9,6 +9,7 @@ export interface DynamicFortuneSource<T> {
 	crop?: Crop;
 	api?: boolean;
 	conditional?: boolean;
+	alwaysInclude?: true;
 	wiki?: (source: T) => string | undefined;
 	exists: (source: T) => boolean;
 	active?: (source: T) => { active: boolean; reason?: string; fortune?: number };

@@ -400,7 +400,7 @@ export class ArmorSet {
 		return count;
 	}
 
-	getProgress(zeroed = false, stats?: Stat[]) {
+	getProgress(stats?: Stat[], zeroed = false) {
 		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed, stats);
 	}
 
@@ -419,7 +419,7 @@ export class ArmorSet {
 				GEAR_SLOTS[slot].target === ReforgeTarget.Armor
 					? getFakeItem<FarmingArmor>(GEAR_SLOTS[slot].startingItem)
 					: getFakeItem<FarmingEquipment>(GEAR_SLOTS[slot].startingItem);
-			return piece?.getProgress(true) ?? [];
+			return piece?.getProgress(undefined, true) ?? [];
 		}
 
 		return piece.getProgress() ?? [];
@@ -612,7 +612,7 @@ export class FarmingArmor extends UpgradeableBase {
 		return getLastItemUpgradeableTo(this, FARMING_ARMOR_INFO);
 	}
 
-	getProgress(zeroed = false, stats?: Stat[]): FortuneSourceProgress[] {
+	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
 		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, stats);
 	}
 

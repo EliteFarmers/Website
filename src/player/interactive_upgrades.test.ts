@@ -587,7 +587,7 @@ test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () 
 		stats: [Stat.FarmingFortune],
 	});
 
-	expect(tree.children.length).toBe(1);
+	expect(tree.children.length).toBe(2);
 
 	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
 	expect(hasRecomb).toBe(false);

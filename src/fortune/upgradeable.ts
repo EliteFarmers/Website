@@ -5,14 +5,17 @@ import type { FortuneSourceProgress, FortuneUpgrade, Upgrade, UpgradeCost } from
 import type { PlayerOptions } from '../player/playeroptions.js';
 import type { EliteItemDto } from './item.js';
 
-export type GemSlotCost = { type: 'ITEM'; item_id: string; amount: number } | { type: 'COINS'; coins: number };
+export type GemSlotCost =
+	| { type: 'ITEM' | 'COINS'; item_id: string; amount: number; coins?: number }
+	| { type: 'COINS'; coins: number };
+export type GemSlotRequirement = { type: string; data_key: string; value: string; operator: string };
 
 export interface UpgradeableInfo {
 	name: string;
 	skyblockId: string;
 	upgrade?: Upgrade;
 	wiki?: string;
-	gemSlots?: { slot_type: string; costs: GemSlotCost[] }[];
+	gemSlots?: { slot_type: string; costs: GemSlotCost[]; requirements?: GemSlotRequirement[] }[];
 	maxRarity: Rarity;
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;
@@ -41,5 +44,5 @@ export interface Upgradeable {
 	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[];
 	getItemUpgrade(): Upgrade | undefined;
 	getLastItemUpgrade(): { upgrade: Upgrade; info: UpgradeableInfo } | undefined;
-	getProgress(zeroed?: boolean, stats?: Stat[]): FortuneSourceProgress[];
+	getProgress(stats?: Stat[], zeroed?: boolean): FortuneSourceProgress[];
 }

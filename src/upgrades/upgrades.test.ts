@@ -127,7 +127,11 @@ test('Maxed Helmet Upgrades Test', () => {
 	const item = new FarmingArmor(maxHelmet);
 	expect(item.fortune).toBe(92);
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(20);
-	expect(item.getUpgrades()).toStrictEqual([]);
+	const upgrades = item.getUpgrades();
+	expect(upgrades).toHaveLength(1);
+	expect(upgrades[0].title).toBe('Helianthus Helmet');
+	expect(upgrades[0].action).toBe('upgrade');
+	expect(upgrades[0].category).toBe('item');
 });
 
 test('Almost Maxed Helmet Upgrades Test', () => {
@@ -136,23 +140,31 @@ test('Almost Maxed Helmet Upgrades Test', () => {
 	expect(item.fortuneBreakdown['Peridot Gems']).toBe(11);
 
 	const upgrades = item.getUpgrades();
-	expect(upgrades).toHaveLength(4);
+	expect(upgrades).toHaveLength(5);
 
-	expect(upgrades[0]['action']).toBe('recombobulate');
-	expect(upgrades[0]['increase']).toBe(8);
+	const recomb = upgrades.find((u) => u.action === 'recombobulate');
+	expect(recomb).toBeDefined();
+	expect(recomb?.increase).toBe(8);
 
-	expect(upgrades[1]['action']).toBe('apply');
-	expect(upgrades[1]['increase']).toBe(2);
-	expect(upgrades[1]['title']).toBe('Perfect Peridot Gemstone');
+	const perfectPeridot = upgrades.find((u) => u.title === 'Perfect Peridot Gemstone');
+	expect(perfectPeridot).toBeDefined();
+	expect(perfectPeridot?.action).toBe('apply');
+	expect(perfectPeridot?.increase).toBe(2);
 
-	expect(upgrades[2]['action']).toBe('apply');
-	expect(upgrades[2]['increase']).toBe(2);
-	expect(upgrades[2]['title']).toBe('Pesterminator 4');
-	expect(upgrades[2].cost?.items?.['ENCHANTMENT_PESTERMINATOR_1']).toBe(4);
+	const pest4 = upgrades.find((u) => u.title === 'Pesterminator 4');
+	expect(pest4).toBeDefined();
+	expect(pest4?.action).toBe('apply');
+	expect(pest4?.increase).toBe(2);
+	expect(pest4?.cost?.items?.['ENCHANTMENT_PESTERMINATOR_1']).toBe(4);
 
-	expect(upgrades[3]['action']).toBe('apply');
-	expect(upgrades[3]['increase']).toBe(1);
-	expect(upgrades[3]['title']).toBe('Flawless Peridot Gemstone');
+	const flawlessPeridot = upgrades.find((u) => u.title === 'Flawless Peridot Gemstone');
+	expect(flawlessPeridot).toBeDefined();
+	expect(flawlessPeridot?.action).toBe('apply');
+	expect(flawlessPeridot?.increase).toBe(1);
+
+	const helianthus = upgrades.find((u) => u.title === 'Helianthus Helmet');
+	expect(helianthus).toBeDefined();
+	expect(helianthus?.action).toBe('upgrade');
 });
 
 const lotusNecklace = {
@@ -174,44 +186,49 @@ test('Enchantment Upgrades Test', () => {
 	const item = new FarmingEquipment(lotusNecklace);
 
 	const upgrades = item.getUpgrades();
-	expect(upgrades).toHaveLength(1);
+	expect(upgrades).toHaveLength(2);
 
-	const green = upgrades[0];
-	expect(green.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(8);
+	const green = upgrades.find((u) => u.title.startsWith('Green Thumb'));
+	expect(green).toBeDefined();
+	expect(green!.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(8);
 
 	const green3 = new FarmingEquipment({
 		...lotusNecklace,
 		enchantments: { green_thumb: 3 },
 	});
-	expect(green3.getUpgrades()).toHaveLength(1);
-	expect(green3.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(4);
+	expect(
+		green3.getUpgrades().find((u) => u.title.startsWith('Green Thumb'))?.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']
+	).toBe(4);
 
 	const green2 = new FarmingEquipment({
 		...lotusNecklace,
 		enchantments: { green_thumb: 2 },
 	});
-	expect(green2.getUpgrades()).toHaveLength(1);
-	expect(green2.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(2);
+	expect(
+		green2.getUpgrades().find((u) => u.title.startsWith('Green Thumb'))?.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']
+	).toBe(2);
 
 	const green1 = new FarmingEquipment({
 		...lotusNecklace,
 		enchantments: { green_thumb: 1 },
 	});
-	expect(green1.getUpgrades()).toHaveLength(1);
-	expect(green1.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(1);
+	expect(
+		green1.getUpgrades().find((u) => u.title.startsWith('Green Thumb'))?.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']
+	).toBe(1);
 
 	const green0 = new FarmingEquipment({
 		...lotusNecklace,
 		enchantments: { green_thumb: 0 },
 	});
-	expect(green0.getUpgrades()).toHaveLength(1);
-	expect(green0.getUpgrades()[0].cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']).toBe(1);
+	expect(
+		green0.getUpgrades().find((u) => u.title.startsWith('Green Thumb'))?.cost?.items?.['ENCHANTMENT_GREEN_THUMB_1']
+	).toBe(1);
 
 	const green5 = new FarmingEquipment({
 		...lotusNecklace,
 		enchantments: { green_thumb: 5 },
 	});
-	expect(green5.getUpgrades()).toHaveLength(0);
+	expect(green5.getUpgrades().some((u) => u.title.startsWith('Green Thumb'))).toBe(false);
 });
 
 test('Conflicting Reforges Test', () => {

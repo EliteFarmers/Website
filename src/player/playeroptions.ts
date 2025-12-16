@@ -26,6 +26,8 @@ export interface FortuneMissingFromAPI {
 	infestedPlotProbability?: number;
 
 	attributes?: Record<string, number>;
+	chips?: Record<string, number>;
+	perks?: Record<string, string | null>;
 
 	temporaryFortune?: TemporaryFarmingFortune;
 }

@@ -10,6 +10,13 @@ export const FARMING_EQUIPMENT_INFO: Partial<Record<string, ItemDefinition>> = {
 		name: 'Lotus Bracelet',
 		wiki: 'https://wiki.hypixel.net/Lotus_Bracelet',
 		family: 'LOTUS',
+		upgrade: {
+			id: 'BLOSSOM_BRACELET',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				copper: 2500,
+			},
+		},
 		slot: GearSlot.Gloves,
 		maxRarity: Rarity.Epic,
 		baseStats: {
@@ -25,6 +32,13 @@ export const FARMING_EQUIPMENT_INFO: Partial<Record<string, ItemDefinition>> = {
 		name: 'Lotus Belt',
 		wiki: 'https://wiki.hypixel.net/Lotus_Belt',
 		family: 'LOTUS',
+		upgrade: {
+			id: 'BLOSSOM_BELT',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				copper: 5000,
+			},
+		},
 		slot: GearSlot.Belt,
 		maxRarity: Rarity.Epic,
 		baseStats: {
@@ -40,6 +54,13 @@ export const FARMING_EQUIPMENT_INFO: Partial<Record<string, ItemDefinition>> = {
 		name: 'Lotus Necklace',
 		wiki: 'https://wiki.hypixel.net/Lotus_Necklace',
 		family: 'LOTUS',
+		upgrade: {
+			id: 'BLOSSOM_NECKLACE',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				copper: 7500,
+			},
+		},
 		slot: GearSlot.Necklace,
 		maxRarity: Rarity.Epic,
 		baseStats: {
@@ -55,15 +76,82 @@ export const FARMING_EQUIPMENT_INFO: Partial<Record<string, ItemDefinition>> = {
 		name: 'Lotus Cloak',
 		wiki: 'https://wiki.hypixel.net/Lotus_Cloak',
 		upgrade: {
-			id: 'ZORROS_CAPE',
-			reason: UpgradeReason.Situational,
-			why: "A maxed Zorro's Cape provides significantly more fortune during a Jacob's contest, but slightly less outside of one.",
+			id: 'BLOSSOM_CLOAK',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				copper: 10000,
+			},
 		},
 		family: 'LOTUS',
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Epic,
 		baseStats: {
 			[Stat.FarmingFortune]: 5,
+		},
+		skillReq: {
+			[Skill.Farming]: 10,
+			[Skill.Garden]: 5,
+		},
+	},
+	BLOSSOM_BRACELET: {
+		skyblockId: 'BLOSSOM_BRACELET',
+		name: 'Blossom Bracelet',
+		wiki: 'https://wiki.hypixel.net/Blossom_Bracelet',
+		family: 'LOTUS',
+		slot: GearSlot.Gloves,
+		maxRarity: Rarity.Legendary,
+		baseStats: {
+			[Stat.FarmingFortune]: 7,
+		},
+		skillReq: {
+			[Skill.Farming]: 20,
+			[Skill.Garden]: 6,
+		},
+	},
+	BLOSSOM_BELT: {
+		skyblockId: 'BLOSSOM_BELT',
+		name: 'Blossom Belt',
+		wiki: 'https://wiki.hypixel.net/Blossom_Belt',
+		family: 'LOTUS',
+		slot: GearSlot.Belt,
+		maxRarity: Rarity.Legendary,
+		baseStats: {
+			[Stat.FarmingFortune]: 7,
+		},
+		skillReq: {
+			[Skill.Farming]: 20,
+			[Skill.Garden]: 6,
+		},
+	},
+	BLOSSOM_NECKLACE: {
+		skyblockId: 'BLOSSOM_NECKLACE',
+		name: 'Blossom Necklace',
+		wiki: 'https://wiki.hypixel.net/Blossom_Necklace',
+		family: 'LOTUS',
+		slot: GearSlot.Necklace,
+		maxRarity: Rarity.Legendary,
+		baseStats: {
+			[Stat.FarmingFortune]: 7,
+		},
+		skillReq: {
+			[Skill.Farming]: 20,
+			[Skill.Garden]: 6,
+		},
+	},
+	BLOSSOM_CLOAK: {
+		skyblockId: 'BLOSSOM_CLOAK',
+		name: 'Blossom Cloak',
+		wiki: 'https://wiki.hypixel.net/Blossom_Cloak',
+		upgrade: {
+			id: 'ZORROS_CAPE',
+			reason: UpgradeReason.Situational,
+			why: "A maxed Zorro's Cape provides significantly more fortune during a Jacob's contest, but slightly less outside of one.",
+		},
+		family: 'LOTUS',
+		slot: GearSlot.Cloak,
+		maxRarity: Rarity.Legendary,
+		baseStats: {
+			[Stat.FarmingFortune]: 7,
 		},
 		skillReq: {
 			[Skill.Farming]: 10,

@@ -69,27 +69,33 @@ test('Wheat fortune test', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
-			fortune: 0,
-			maxFortune: 485,
+			current: 0,
+			max: 465,
 			ratio: 0,
 		},
 		{
 			name: 'Exportable Crop',
 			api: false,
-			fortune: 12,
-			maxFortune: 12,
+			current: 12,
+			max: 12,
 			ratio: 1,
 		},
 		{
 			name: 'Garden Crop Upgrade',
-			fortune: 5,
-			maxFortune: 45,
+			current: 5,
+			max: 45,
 			ratio: 5 / 45,
 		},
 		{
+			name: 'Fermento Artifact Family',
+			current: 30,
+			max: 30,
+			ratio: 1,
+		},
+		{
 			name: 'Personal Best',
-			fortune: 1,
-			maxFortune: 100,
+			current: 1,
+			max: 100,
 			ratio: 1 / 100,
 		},
 	]);
@@ -97,10 +103,10 @@ test('Wheat fortune test', () => {
 	const generalSources = player.getProgress();
 	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact');
 	expect(fermento).toBeDefined();
-	expect(fermento?.fortune).toBe(30);
+	expect(fermento?.current).toBe(0);
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
-	expect(cropFortune.fortune).toBe(progress.reduce((acc, piece) => acc + piece.fortune, 0));
+	expect(cropFortune.fortune).toBe(progress.reduce((acc, piece) => acc + piece.current, 0));
 });
 
 test('Potato fortune test', () => {
@@ -130,26 +136,26 @@ test('Potato fortune test', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
-			fortune: 0,
-			maxFortune: 485,
+			current: 0,
+			max: 465,
 			ratio: 0,
 		},
 		{
 			name: 'Garden Crop Upgrade',
-			fortune: 45,
-			maxFortune: 45,
+			current: 45,
+			max: 45,
 			ratio: 1,
 		},
 		{
 			name: 'Fermento Artifact Family',
-			fortune: 20,
-			maxFortune: 30,
+			current: 20,
+			max: 30,
 			ratio: 20 / 30,
 		},
 		{
 			name: 'Personal Best',
-			fortune: 0,
-			maxFortune: 100,
+			current: 0,
+			max: 100,
 			ratio: 0,
 		},
 	]);
@@ -180,27 +186,27 @@ test('Nether Wart fortune test', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
-			fortune: 0,
-			maxFortune: 485,
+			current: 0,
+			max: 465,
 			ratio: 0,
 		},
 		{
 			name: 'Exportable Crop',
-			fortune: 0,
-			maxFortune: 12,
+			current: 0,
+			max: 12,
 			ratio: 0,
 			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',
-			fortune: 0,
-			maxFortune: 45,
+			current: 0,
+			max: 45,
 			ratio: 0,
 		},
 		{
 			name: 'Personal Best',
-			fortune: 1,
-			maxFortune: 100,
+			current: 1,
+			max: 100,
 			ratio: 1 / 100,
 		},
 	]);
@@ -234,33 +240,33 @@ test('Carrot fortune test', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
-			fortune: 25,
-			maxFortune: 485,
-			ratio: 25 / 485,
+			current: 4,
+			max: 465,
+			ratio: 4 / 465,
 		},
 		{
 			name: 'Exportable Crop',
-			fortune: 12,
-			maxFortune: 12,
+			current: 12,
+			max: 12,
 			ratio: 1,
 			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',
-			fortune: 0,
-			maxFortune: 45,
+			current: 0,
+			max: 45,
 			ratio: 0,
 		},
 		{
 			name: 'Fermento Artifact Family',
-			fortune: 10,
-			maxFortune: 30,
+			current: 10,
+			max: 30,
 			ratio: 10 / 30,
 		},
 		{
 			name: 'Personal Best',
-			fortune: 0,
-			maxFortune: 100,
+			current: 0,
+			max: 100,
 			ratio: 0,
 		},
 	]);
@@ -290,20 +296,20 @@ test('Melon fortune test', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
-			fortune: 0,
-			maxFortune: 272.34,
+			current: 0,
+			max: 474.3,
 			ratio: 0,
 		},
 		{
 			name: 'Garden Crop Upgrade',
-			fortune: 15,
-			maxFortune: 45,
+			current: 15,
+			max: 45,
 			ratio: 15 / 45,
 		},
 		{
 			name: 'Personal Best',
-			fortune: 0,
-			maxFortune: 100,
+			current: 0,
+			max: 100,
 			ratio: 0,
 		},
 	]);
@@ -333,8 +339,8 @@ test('Cropie talisman test', () => {
 
 	expect(cropie).toStrictEqual({
 		name: 'Fermento Artifact Family',
-		fortune: 10,
-		maxFortune: 30,
+		current: 10,
+		max: 30,
 		ratio: 10 / 30,
 	});
 });
@@ -363,15 +369,15 @@ test('Squash ring test', () => {
 
 	expect(squash).toStrictEqual({
 		name: 'Fermento Artifact Family',
-		fortune: 20,
-		maxFortune: 30,
+		current: 20,
+		max: 30,
 		ratio: 20 / 30,
 	});
 
 	const generalSources = player.getProgress();
 	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact');
 	expect(fermento).toBeDefined();
-	expect(fermento?.fortune).toBe(0);
+	expect(fermento?.current).toBe(0);
 
 	expect(player.breakdown['Fermento Artifact']).toBeUndefined();
 });

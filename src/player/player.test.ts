@@ -40,7 +40,7 @@ test('Fortune progress test', () => {
 	const progress = player.getProgress();
 
 	const plots = progress.find((p) => p.name === 'Unlocked Plots');
-	expect(plots?.fortune).toBe(3);
+	expect(plots?.current).toBe(3);
 });
 
 test('Max attribute shard fortune test', () => {

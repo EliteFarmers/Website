@@ -1,5 +1,5 @@
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
-import { Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
+import { compareRarity, Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
 import { Skill } from '../../constants/skills.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingArmor } from '../../fortune/farmingarmor.js';
@@ -38,9 +38,13 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		},
 		max: (gear) => {
 			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
-			return gear.type === ReforgeTarget.Equipment
-				? (REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0)
-				: (REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0);
+			const current = gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+			const max =
+				gear.type === ReforgeTarget.Equipment
+					? (REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0)
+					: (REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0);
+			// If an item is recombobulated beyond its base max rarity, keep max >= current.
+			return Math.max(max, current);
 		},
 		current: (gear) => {
 			return gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
@@ -70,26 +74,42 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		name: 'Gemstone Slots',
 		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
 		exists: (upgradeable) => {
-			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
+			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			const currentInfo = upgradeable.info;
+			return (
+				lastInfo?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') === true ||
+				currentInfo?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') === true
+			);
 		},
 		max: (upgradeable) => {
-			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			return (
-				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
-				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
+			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			const currentInfo = upgradeable.info;
+			const maxRarity = (lastInfo?.maxRarity ?? currentInfo?.maxRarity ?? Rarity.Common) as Rarity;
+			const rarity = (
+				compareRarity(upgradeable.rarity, maxRarity) > 0 ? upgradeable.rarity : maxRarity
+			) as Rarity;
+			const peridotSlots = Math.max(
+				lastInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0,
+				currentInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0
 			);
+			return peridotSlots * getPeridotGemFortune(rarity, GemRarity.Perfect);
 		},
 		current: (upgradeable) => {
 			return getPeridotFortune(upgradeable.rarity, upgradeable.item);
 		},
 		maxStat: (upgradeable, stat) => {
 			if (stat !== Stat.FarmingFortune) return 0;
-			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			return (
-				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
-				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
+			const lastInfo = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			const currentInfo = upgradeable.info;
+			const maxRarity = (lastInfo?.maxRarity ?? currentInfo?.maxRarity ?? Rarity.Common) as Rarity;
+			const rarity = (
+				compareRarity(upgradeable.rarity, maxRarity) > 0 ? upgradeable.rarity : maxRarity
+			) as Rarity;
+			const peridotSlots = Math.max(
+				lastInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0,
+				currentInfo?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0
 			);
+			return peridotSlots * getPeridotGemFortune(rarity, GemRarity.Perfect);
 		},
 		currentStat: (upgradeable, stat) => {
 			return stat === Stat.FarmingFortune ? getPeridotFortune(upgradeable.rarity, upgradeable.item) : 0;

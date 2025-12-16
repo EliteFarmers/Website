@@ -332,6 +332,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 	for (let i = 0; i < peridotSlots.length; i++) {
 		const slot = peridotSlots[i];
 		if (!slot) continue;
+		if (!meetsGemSlotRequirements(upgradeable, slot)) continue;
 		const slotId = slot.slot_type + '_' + i;
 
 		// Check that the slot is not unlocked
@@ -352,7 +353,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 					cost.items ??= {};
 					cost.items[costItem.item_id] = costItem.amount + (cost.items[costItem.item_id] ?? 0);
 				} else if (costItem.type === 'COINS') {
-					cost.coins = costItem.coins;
+					cost.coins = (cost.coins ?? 0) + (costItem.coins ?? 0);
 				}
 			}
 		}
@@ -439,4 +440,50 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 	}
 
 	return result;
+}
+
+function meetsGemSlotRequirements(
+	upgradeable: Upgradeable,
+	slot: Exclude<UpgradeableInfo['gemSlots'], undefined>[number] | undefined
+): boolean {
+	if (!slot) return true;
+	const requirements = slot.requirements;
+	if (!requirements || requirements.length === 0) return true;
+
+	for (const req of requirements) {
+		if (req.type !== 'ITEM_DATA') continue;
+
+		const key = req.data_key;
+		const raw = upgradeable.item.attributes?.[key];
+		const current = toNumberOrDefault(raw, key === 'levelable_lvl' ? 1 : 0);
+		const target = toNumberOrDefault(req.value, 0);
+
+		switch (req.operator) {
+			case 'GREATER_THAN_OR_EQUALS':
+				if (!(current >= target)) return false;
+				break;
+			case 'GREATER_THAN':
+				if (!(current > target)) return false;
+				break;
+			case 'EQUALS':
+				if (!(current === target)) return false;
+				break;
+			case 'LESS_THAN_OR_EQUALS':
+				if (!(current <= target)) return false;
+				break;
+			case 'LESS_THAN':
+				if (!(current < target)) return false;
+				break;
+			default:
+				// Unknown operator: don't block suggestions.
+				break;
+		}
+	}
+
+	return true;
+}
+
+function toNumberOrDefault(value: unknown, defaultValue: number): number {
+	const n = typeof value === 'number' ? value : typeof value === 'string' ? +value : NaN;
+	return Number.isFinite(n) ? n : defaultValue;
 }

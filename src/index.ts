@@ -13,8 +13,6 @@ export * from './constants/stats.js';
 export * from './constants/tempfortune.js';
 export * from './constants/upgrades.js';
 export * from './constants/weight.js';
-export * from './crops/melon.js';
-export * from './crops/pumpkin.js';
 export * from './crops/special.js';
 export * from './features/index.js';
 export * from './fortune/farmingaccessory.js';

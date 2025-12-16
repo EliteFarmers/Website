@@ -14,6 +14,7 @@ export enum FarmingPets {
 	Hedgehog = 'HEDGEHOG',
 	Chicken = 'CHICKEN',
 	Mosquito = 'MOSQUITO',
+	RoseDragon = 'ROSE_DRAGON',
 }
 
 export interface FarmingPetType {
@@ -301,6 +302,18 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				},
 			},
 		],
+	},
+	[FarmingPets.RoseDragon]: {
+		name: 'Rose Dragon',
+		wiki: 'https://wiki.hypixel.net/Rose_Dragon_Pet',
+		perLevelStats: {
+			[Stat.FarmingFortune]: {
+				name: 'Farming Fortune',
+				value: 0.2,
+				type: FarmingPetStatType.Base,
+			},
+			// TODO: Other abilities
+		},
 	},
 };
 

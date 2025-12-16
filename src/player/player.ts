@@ -228,7 +228,7 @@ export class FarmingPlayer {
 					purchase: purchaseId,
 					increase: fakeItem?.getFortune() ?? 0,
 					wiki: startingInfo.wiki,
-					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0,
+					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.max, 0) ?? 0,
 					category: UpgradeCategory.Item,
 					cost: {
 						items: {
@@ -558,11 +558,11 @@ export class FarmingPlayer {
 	}
 
 	getBestTool(crop: Crop) {
-		return this.tools.find((t) => t.crop === crop);
+		return this.tools.find((t) => t.crops.includes(crop));
 	}
 
 	getSelectedCropTool(crop: Crop) {
-		return this.selectedTool?.crop === crop ? this.selectedTool : this.getBestTool(crop);
+		return this.selectedTool?.crops.includes(crop) ? this.selectedTool : this.getBestTool(crop);
 	}
 
 	applyUpgrade(upgrade: FortuneUpgrade) {

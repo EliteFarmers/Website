@@ -1,7 +1,7 @@
 import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { Crop } from './crops.js';
-import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
+import { CROP_MILESTONES } from './garden.js';
 import { ReforgeTarget } from './reforges.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
@@ -25,6 +25,7 @@ export interface FarmingEnchantTier {
 export interface FarmingEnchant {
 	name: string;
 	id?: string;
+	alwaysInclude?: true;
 	appliesTo: readonly ReforgeTarget[];
 	wiki: string;
 	minLevel: number;
@@ -373,7 +374,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 		maxStats: {
-			[Stat.FarmingFortune]: 0.25 * Object.keys(GARDEN_VISITORS).length,
+			[Stat.FarmingFortune]: 0.25 * 137, //Object.keys(GARDEN_VISITORS).length,
 		},
 	},
 	turbo_cactus: {
@@ -436,6 +437,39 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
 		cropSpecific: Crop.Wheat,
 		...turboEnchant,
+	},
+	turbo_rose: {
+		name: 'Turbo-Rose',
+		wiki: 'https://wiki.hypixel.net/Turbo-Rose_Enchantment',
+		cropSpecific: Crop.WildRose,
+		...turboEnchant,
+	},
+	turbo_moonflower: {
+		name: 'Turbo-Moonflower',
+		wiki: 'https://wiki.hypixel.net/Turbo-Moonflower_Enchantment',
+		cropSpecific: Crop.Moonflower,
+		...turboEnchant,
+	},
+	turbo_sunflower: {
+		name: 'Turbo-Sunflower',
+		wiki: 'https://wiki.hypixel.net/Turbo-Sunflower_Enchantment',
+		cropSpecific: Crop.Sunflower,
+		...turboEnchant,
+	},
+	ultimate_crop_fever: {
+		name: 'Crop Fever',
+		alwaysInclude: true,
+		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		wiki: 'https://wiki.hypixel.net/Ultimate_Crop_Fever_Enchantment',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {},
+			2: {},
+			3: {},
+			4: {},
+			5: {},
+		},
 	},
 } as const;
 

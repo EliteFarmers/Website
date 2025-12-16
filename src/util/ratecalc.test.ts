@@ -25,7 +25,7 @@ test('Rate calc test', () => {
 	});
 
 	expect(drops[Crop.Melon].items).toStrictEqual({
-		[Crop.Melon]: 426237,
+		[Crop.Melon]: 240000,
 		SQUASH: 7.2,
 		MUSHROOM_COLLECTION: 24000,
 	});
@@ -73,8 +73,8 @@ test('Possible results - Carrot', () => {
 
 	expect(result['ENCHANTED_CARROT'].fractionalItems).toBe(162.5);
 	expect(result['ENCHANTED_CARROT'].fractionalCost).toBe(0);
-	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalItems).toBe(1.26953125);
-	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalCost).toBe(609.375);
+	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalItems).toBe(1.015625);
+	expect(result['ENCHANTED_GOLDEN_CARROT'].fractionalCost).toBe(0);
 });
 
 test('Max fortune results', () => {

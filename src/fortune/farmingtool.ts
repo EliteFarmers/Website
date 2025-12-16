@@ -1,7 +1,7 @@
 import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
-import { getStatValue, Stat } from '../constants/stats.js';
+import { Stat } from '../constants/stats.js';
 import type { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
 import { FARMING_TOOLS, type FarmingToolInfo, FarmingToolType } from '../items/tools.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
@@ -12,15 +12,14 @@ import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
 import { getGemStat, getPeridotFortune } from '../util/gems.js';
-import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
-import { extractNumberFromLine, getNumberFromMatchingLine } from '../util/lore.js';
+import { getRarityFromLore } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
 import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
-	public declare crop?: Crop;
+	public declare crops: Crop[];
 	public declare info: FarmingToolInfo;
 
 	public override get type(): ReforgeTarget {
@@ -60,6 +59,10 @@ export class FarmingTool extends UpgradeableBase {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
+	public declare level: number;
+	public declare xp: number;
+	public declare overclocks: number;
+
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
@@ -67,7 +70,7 @@ export class FarmingTool extends UpgradeableBase {
 		this.rebuildTool(item, options);
 	}
 
-	getProgress(zeroed = false, stats?: Stat[]): FortuneSourceProgress[] {
+	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
 		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed, stats);
 	}
 
@@ -109,7 +112,9 @@ export class FarmingTool extends UpgradeableBase {
 		}
 
 		this.info = tool;
-		this.crop = tool.crop;
+		this.crops = tool.crops ?? (tool.crop ? [tool.crop] : []);
+		// Set the base class crop property for backwards compatibility with Upgradeable interface
+		this.crop = this.crops[0];
 
 		if (item.lore) {
 			this.rarity = getRarityFromLore(item.lore);
@@ -117,11 +122,17 @@ export class FarmingTool extends UpgradeableBase {
 
 		this.counter = this.getCounter();
 		this.cultivating = this.getCultivating() ?? 0;
+		this.logCounter = 0;
+		this.collAnalysis = 0;
 
 		this.setReforge(item.attributes?.modifier ?? '');
 
 		this.farmingForDummies = +(this.item.attributes?.farming_for_dummies_count ?? 0);
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
+
+		this.overclocks = this.getOverclocks();
+		this.level = this.getToolLevel();
+		this.xp = this.getXp();
 
 		this.fortune = this.getFortune();
 
@@ -168,18 +179,13 @@ export class FarmingTool extends UpgradeableBase {
 
 		let sum = 0;
 
-		// Base fortune
-		sum += this.tool.baseStats?.[stat] ?? 0;
-
-		// Computed stats
-		sum += this.getCalculatedStats()?.[stat] ?? 0;
+		// Tools now have a flat +1 Farming Wisdom baseline.
+		if (stat === Stat.FarmingWisdom) {
+			sum += 1;
+		}
 
 		// Gems
 		sum += getGemStat(this.item, stat, this.rarity);
-
-		// Tool rarity stats
-		const baseRarity = this.recombobulated ? previousRarity(this.rarity) : this.rarity;
-		sum += getStatValue(this.tool.stats?.[baseRarity]?.[stat]);
 
 		// Reforge stats
 		sum += this.reforgeStats?.stats?.[stat] ?? 0;
@@ -191,9 +197,11 @@ export class FarmingTool extends UpgradeableBase {
 
 			const enchantment = FARMING_ENCHANTS[enchant];
 			if (!enchantment || !level) continue;
-			if (enchantment.cropSpecific && enchantment.cropSpecific !== this.crop) continue;
+			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
-			sum += getStatFromEnchant(level, enchantment, stat, this.options, this.crop);
+			for (const crop of this.crops) {
+				sum += getStatFromEnchant(level, enchantment, stat, this.options, crop);
+			}
 		}
 
 		return sum;
@@ -203,28 +211,10 @@ export class FarmingTool extends UpgradeableBase {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 
-		// Base fortune
-		const base = this.tool.baseStats?.[Stat.FarmingFortune] ?? 0;
-		if (base > 0) {
-			this.fortuneBreakdown['Tool Bonus'] = base;
-			sum += base;
-		}
-
-		// Computed stats
-		const computed = this.getCalculatedStats()?.[Stat.FarmingFortune] ?? 0;
-		if (computed > 0) {
-			this.fortuneBreakdown['Item Ability'] = computed;
-			sum += computed;
-		}
-
-		// Tool rarity stats
-		const baseRarity = this.recombobulated ? previousRarity(this.rarity) : this.rarity;
-		const rarityStats = getStatValue(this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune]);
-
-		if (rarityStats > 0) {
-			this.fortuneBreakdown['Tool Stats'] = rarityStats;
-			sum += rarityStats;
-		}
+		// Tool level (4 Farming Fortune per tool level)
+		const levelFortune = this.level * 4;
+		this.fortuneBreakdown['Tool Level'] = levelFortune;
+		sum += levelFortune;
 
 		// Reforge stats
 		const reforge = this.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
@@ -237,21 +227,6 @@ export class FarmingTool extends UpgradeableBase {
 		if (this.farmingForDummies > 0) {
 			this.fortuneBreakdown['Farming for Dummies'] = this.farmingForDummies;
 			sum += this.farmingForDummies;
-		}
-
-		// Collection analysis and digit bonuses
-		if (this.tool.type === FarmingToolType.MathematicalHoe) {
-			this.getFarmingAbilityFortune();
-
-			if (this.logCounter > 0) {
-				this.fortuneBreakdown['Logarithmic Counter'] = this.logCounter;
-				sum += this.logCounter;
-			}
-
-			if (this.collAnalysis > 0) {
-				this.fortuneBreakdown['Collection Analysis'] = this.collAnalysis;
-				sum += this.collAnalysis;
-			}
 		}
 
 		// Gems
@@ -268,16 +243,18 @@ export class FarmingTool extends UpgradeableBase {
 
 			const enchantment = FARMING_ENCHANTS[enchant];
 			if (!enchantment || !level) continue;
-			if (enchantment.cropSpecific && enchantment.cropSpecific !== this.crop) continue;
+			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
-			const fortune = getFortuneFromEnchant(level, enchantment, this.options, this.crop);
-			if (fortune > 0) {
-				this.fortuneBreakdown[enchantment.name] = fortune;
-				sum += fortune;
+			for (const crop of this.crops) {
+				const fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
+				if (fortune > 0) {
+					this.fortuneBreakdown[enchantment.name] = fortune;
+					sum += fortune;
+				}
 			}
 		}
 
-		// Axed Perk
+		// Axed Perk (2% bonus)
 		if (this.hasAxedPerk()) {
 			const axed = sum * 0.02;
 			this.fortuneBreakdown['Axed Perk'] = axed;
@@ -296,6 +273,21 @@ export class FarmingTool extends UpgradeableBase {
 	private getCultivating(): number | undefined {
 		const cultivating = +(this.item?.attributes?.farmed_cultivating ?? 0);
 		return cultivating && !isNaN(cultivating) ? cultivating : undefined;
+	}
+
+	private getToolLevel(): number {
+		const level = +(this.item?.attributes?.levelable_lvl ?? 1);
+		return level && !isNaN(level) ? level : 1;
+	}
+
+	private getXp(): number {
+		const xp = +(this.item?.attributes?.levelable_exp ?? 0);
+		return xp && !isNaN(xp) ? xp : 0;
+	}
+
+	private getOverclocks(): number {
+		const overclocks = +(this.item?.attributes?.levelable_overclocks ?? 0);
+		return overclocks && !isNaN(overclocks) ? overclocks : 0;
 	}
 
 	getCultivatingLevel(): number {
@@ -317,44 +309,20 @@ export class FarmingTool extends UpgradeableBase {
 	}
 
 	isMissingDedication() {
-		if (!this.crop) return false;
-		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
+		if (this.crops.length === 0) return false;
+		return (
+			this.item?.enchantments?.dedication &&
+			this.crops.some((crop) => (this.options?.milestones?.[crop] ?? 0) <= 0)
+		);
 	}
 
 	// Check if the tool has the Axed Perk by seeing if the stats in the lore have an additional 2% bonus
 	hasAxedPerk(): boolean {
-		if (this.tool.type !== FarmingToolType.Dicer) return false;
+		if (this.type !== ReforgeTarget.Axe) return false;
 		if (this.fortuneBreakdown['Axed Perk']) return true;
 
-		const regex = /§7Farming Fortune: §.\+(\d+\.\d+)/g;
-		const found = getNumberFromMatchingLine(this.item.lore ?? [], regex);
-		if (!found) return false;
-
-		const cropRegex = /§7[^F].*? Fortune: §.\+(\d+\.\d+)/g;
-		const cropFound = getNumberFromMatchingLine(this.item.lore ?? [], cropRegex) ?? 0;
-		if (!cropFound) return false;
-
-		const total = found + cropFound;
-		return total >= this.fortune * 1.02;
-	}
-
-	private getFarmingAbilityFortune() {
-		const regex = /§7You have §.\+(\d+)☘/g;
-		let foundCounter = false;
-
-		for (const line of this.item.lore ?? []) {
-			const found = extractNumberFromLine(line, regex) ?? 0;
-			if (!found) continue;
-
-			if (!foundCounter) {
-				this.logCounter = found;
-				foundCounter = true;
-			} else {
-				this.collAnalysis = found;
-			}
-		}
-
-		return this.logCounter + this.collAnalysis;
+		const value = this.options?.perks?.['axed'];
+		return value === '1';
 	}
 
 	static isValid(item: EliteItemDto | FarmingTool): boolean {

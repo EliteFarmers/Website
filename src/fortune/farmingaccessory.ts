@@ -28,8 +28,8 @@ export class FarmingAccessory extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(zereod = false, stats?: Stat[]): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zereod, stats);
+	getProgress(stats?: Stat[], zeroed = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zeroed, stats);
 	}
 
 	getStat(stat: Stat): number {

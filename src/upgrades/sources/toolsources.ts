@@ -1,62 +1,32 @@
+import { CROP_INFO } from '../../constants/crops.js';
 import { FARMING_ENCHANTS } from '../../constants/enchants.js';
 import { Rarity, REFORGES, ReforgeTarget } from '../../constants/reforges.js';
-import { getStatValue, Stat } from '../../constants/stats.js';
+import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import type { FarmingTool } from '../../fortune/farmingtool.js';
 import { GemRarity } from '../../fortune/item.js';
-import { FarmingToolType } from '../../items/tools.js';
 import { getMaxStatFromEnchant, getStatFromEnchant } from '../../util/enchants.js';
 import { getPeridotFortune, getPeridotGemFortune } from '../../util/gems.js';
 import { getUpgradeableEnchant } from '../enchantupgrades.js';
 import { getUpgradeableGems } from '../upgrades.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
+const CROP_FORTUNE_STATS = new Set(Object.values(CROP_INFO).map((c) => c.fortuneType));
+
 export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
-		name: 'Base Stats',
-		exists: (tool) => {
-			return Object.keys((tool.getLastItemUpgrade() ?? tool)?.info?.baseStats ?? {}).length > 0;
-		},
-		max: (tool) => {
-			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] ?? 0;
-		},
-		current: (tool) => {
-			return tool.info.baseStats?.[Stat.FarmingFortune] ?? 0;
-		},
-		maxStat: (tool, stat) => (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[stat] ?? 0,
-		currentStat: (tool, stat) => tool.info.baseStats?.[stat] ?? 0,
-	},
-	{
-		name: 'Base Stats',
-		exists: (tool) => {
-			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return last?.stats !== undefined;
-		},
-		max: (tool) => {
-			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return getStatValue(last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune], tool.options);
-		},
-		current: (tool) => {
-			return getStatValue(tool.info.stats?.[tool.rarity]?.[Stat.FarmingFortune], tool.options);
-		},
-		maxStat: (tool, stat) => {
-			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return getStatValue(last?.stats?.[last.maxRarity]?.[stat], tool.options);
-		},
-		currentStat: (tool, stat) => {
-			return getStatValue(tool.info.stats?.[tool.rarity]?.[stat], tool.options);
-		},
-	},
-	{
-		name: 'Item Ability',
-		exists: (tool) => tool.info.computedStats !== undefined,
-		// Temporary set to max of 170 for deadaalus axe
-		max: () => 170,
-		current: (tool) => {
-			return tool.getCalculatedStats()[Stat.FarmingFortune] ?? 0;
-		},
-		maxStat: (_tool, stat) => (stat === Stat.FarmingFortune ? 170 : 0),
-		currentStat: (tool, stat) => tool.getCalculatedStats()[stat] ?? 0,
+		name: 'Tool Level',
+		exists: () => true,
+		max: () => 50 * 4,
+		current: (tool) => tool.level * 4,
+		maxStat: (_tool, stat) => (stat === Stat.FarmingFortune ? 50 * 4 : 0),
+		currentStat: (tool, stat) => (stat === Stat.FarmingFortune ? tool.level * 4 : 0),
+		info: (tool) => ({
+			item: tool.item,
+			info: tool.info,
+			nextInfo: tool.getNextItemUpgrade()?.info,
+			maxInfo: tool.getLastItemUpgrade()?.info,
+		}),
 	},
 	{
 		name: 'Reforge Stats',
@@ -220,47 +190,19 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 	},
 	{
-		name: 'Logarithmic Counter',
-		wiki: (tool) => tool.info.wiki,
-		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
-		max: () => 16 * 7, // 10 billion counter
-		current: (tool) => {
-			const numberOfDigits = Math.max(Math.floor(Math.log10(Math.abs(tool.counter ?? 0))), 0) + 1;
-			return Math.max((numberOfDigits - 4) * 16, 0);
-		},
-		maxStat: (_tool, stat) => (stat === Stat.FarmingFortune ? 16 * 7 : 0),
-		currentStat: (tool, stat) => {
-			if (stat !== Stat.FarmingFortune) return 0;
-			const numberOfDigits = Math.max(Math.floor(Math.log10(Math.abs(tool.counter ?? 0))), 0) + 1;
-			return Math.max((numberOfDigits - 4) * 16, 0);
-		},
-	},
-	{
-		name: 'Collection Analysis',
-		wiki: (tool) => tool.info.wiki,
-		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
-		max: () => 8 * 7, // 10 billion collection
-		current: (tool) => tool.collAnalysis ?? 0,
-		maxStat: (_tool, stat) => (stat === Stat.FarmingFortune ? 8 * 7 : 0),
-		currentStat: (tool, stat) => (stat === Stat.FarmingFortune ? (tool.collAnalysis ?? 0) : 0),
-	},
-	...Object.entries(FARMING_ENCHANTS).map(([id, enchant]) => enchantSourceBuilder(id, enchant)),
-	{
 		name: 'Axed Perk',
 		wiki: () => 'https://wiki.hypixel.net/Essence#Forest_Essence_',
-		exists: (tool) => tool.info.type === ReforgeTarget.Axe || tool.info.type === FarmingToolType.Dicer,
+		exists: (tool) => tool.type === ReforgeTarget.Axe,
 		max: (tool) => {
 			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-
 			const maxFortune = otherSources.reduce((acc, source) => acc + source.max(tool), 0);
-			return Math.max(0, maxFortune * 0.02); // 2% of the other sources
+			return Math.max(0, maxFortune * 0.02);
 		},
 		current: (tool) => {
 			if (!tool.hasAxedPerk()) return 0;
 			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-
 			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
-			return Math.max(0, fortune * 0.02); // 2% of the other sources
+			return Math.max(0, fortune * 0.02);
 		},
 		maxStat: (tool, stat) => {
 			if (stat !== Stat.FarmingFortune) return 0;
@@ -277,13 +219,12 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		upgrades: (tool) => {
 			if (tool.hasAxedPerk()) return [];
-
 			return [
 				{
 					title: 'Axed Perk',
-					increase: tool.getFortune() * 0.02,
+					increase: tool.fortune * 0.02,
 					stats: {
-						[Stat.FarmingFortune]: tool.getFortune() * 0.02,
+						[Stat.FarmingFortune]: tool.fortune * 0.02,
 					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
@@ -294,35 +235,118 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 							ESSENCE_FOREST: 10_000,
 						},
 					},
+					onto: {
+						name: tool.item.name,
+						skyblockId: tool.item.skyblockId,
+					},
 				},
 			] as FortuneUpgrade[];
 		},
 	},
+	...Object.entries(FARMING_ENCHANTS).map(([id, enchant]) => enchantSourceBuilder(id, enchant)),
 ];
 
 function enchantSourceBuilder(
 	id: string,
 	enchant: (typeof FARMING_ENCHANTS)[keyof typeof FARMING_ENCHANTS]
 ): DynamicFortuneSource<FarmingTool> {
+	// Progress-only enchants (declared in the enchant definition)
+	if (enchant.alwaysInclude) {
+		return {
+			name: enchant.name,
+			wiki: () => enchant.wiki,
+			alwaysInclude: true,
+			exists: (tool) =>
+				tool.type !== undefined &&
+				enchant.appliesTo.includes(tool.type) &&
+				(!enchant.cropSpecific || tool.crops.includes(enchant.cropSpecific)),
+			max: () => 0,
+			current: () => 0,
+			maxStat: () => 0,
+			currentStat: () => 0,
+			progress: (tool) => {
+				const level = tool.item.enchantments?.[id] ?? 0;
+				return [
+					{
+						name: 'Level',
+						current: level,
+						max: enchant.maxLevel,
+						ratio: Math.min(isNaN(level / enchant.maxLevel) ? 0 : level / enchant.maxLevel, 1),
+					},
+				];
+			},
+			upgrades: (tool) => getUpgradeableEnchant(tool, id, Stat.FarmingFortune, { includeWhenNoStatImpact: true }),
+		};
+	}
+
 	return {
 		name: enchant.name,
 		wiki: () => enchant.wiki,
 		exists: (tool) =>
 			tool.type !== undefined &&
 			enchant.appliesTo.includes(tool.type) &&
-			(!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
-		max: (tool) => getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crop),
-		current: (tool) =>
-			getStatFromEnchant(
-				tool.item.enchantments?.[id] ?? 0,
-				enchant,
-				Stat.FarmingFortune,
-				tool.options,
-				tool.crop
-			),
-		maxStat: (tool, stat) => getMaxStatFromEnchant(enchant, stat, tool.options, tool.crop),
-		currentStat: (tool, stat) =>
-			getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, tool.crop),
-		upgrades: (tool, stats) => getUpgradeableEnchant(tool, id, stats?.[0] ?? Stat.FarmingFortune),
+			(!enchant.cropSpecific || tool.crops.includes(enchant.cropSpecific)),
+		max: (tool) => {
+			let sum = 0;
+			for (const crop of tool.crops) {
+				sum += getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, crop);
+			}
+			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, undefined);
+		},
+		current: (tool) => {
+			let sum = 0;
+			for (const crop of tool.crops) {
+				sum += getStatFromEnchant(
+					tool.item.enchantments?.[id] ?? 0,
+					enchant,
+					Stat.FarmingFortune,
+					tool.options,
+					crop
+				);
+			}
+			return (
+				sum ||
+				getStatFromEnchant(
+					tool.item.enchantments?.[id] ?? 0,
+					enchant,
+					Stat.FarmingFortune,
+					tool.options,
+					undefined
+				)
+			);
+		},
+		maxStat: (tool, stat) => {
+			let sum = 0;
+			for (const crop of tool.crops) {
+				sum += getMaxStatFromEnchant(enchant, stat, tool.options, crop);
+			}
+			return sum || getMaxStatFromEnchant(enchant, stat, tool.options, undefined);
+		},
+		currentStat: (tool, stat) => {
+			let sum = 0;
+			for (const crop of tool.crops) {
+				sum += getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop);
+			}
+			return sum || getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, undefined);
+		},
+		upgrades: (tool, stats) => {
+			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
+			if (!CROP_FORTUNE_STATS.has(primaryStat)) {
+				return getUpgradeableEnchant(tool, id, primaryStat);
+			}
+
+			const upgrades = [
+				...getUpgradeableEnchant(tool, id, primaryStat),
+				...getUpgradeableEnchant(tool, id, Stat.FarmingFortune),
+			];
+
+			const seen = new Set<string>();
+			return upgrades.filter((u) => {
+				const key = u.conflictKey ?? `${u.title}:${u.action}`;
+				if (seen.has(key)) return false;
+				seen.add(key);
+				return true;
+			});
+		},
 	};
 }

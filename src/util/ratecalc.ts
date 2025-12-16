@@ -2,8 +2,6 @@ import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes } from '../constants/a
 import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import { calculateMelonPerkBonus } from '../crops/melon.js';
-import { calculatePumpkinPerkBonus } from '../crops/pumpkin.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
 import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
@@ -53,6 +51,7 @@ export function calculateAverageDrops(options: CalculateDropsOptions & CropFortu
 interface CalculateDetailedDropsOptions extends CalculateDropsOptions {
 	bountiful: boolean;
 	mooshroom: boolean;
+	maxTool?: boolean;
 }
 
 export interface DetailedDropsResult {
@@ -125,32 +124,16 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 
 	if (fortune <= 0 || blocksBroken < 0) return 0;
 
-	const { drops } = getCropInfo(crop);
+	const { drops, replenish = false } = getCropInfo(crop);
 	if (!drops) return 0;
 
 	const baseDrops = blocksBroken * drops * ((fortune + 100) * 0.01);
-	switch (crop) {
-		case Crop.Cactus:
-		case Crop.Wheat:
-		case Crop.Mushroom:
-		case Crop.SugarCane:
-		case Crop.Moonflower:
-		case Crop.Sunflower:
-		case Crop.WildRose:
-			return Math.round(baseDrops);
-		case Crop.Carrot:
-		case Crop.CocoaBeans:
-		case Crop.NetherWart:
-		case Crop.Potato:
-		case Crop.Seeds:
-			return Math.round(baseDrops - blocksBroken); // Replenish takes away one drop per block broken
-		case Crop.Pumpkin:
-			return Math.round(baseDrops + calculatePumpkinPerkBonus(blocksBroken, options.dicerLevel));
-		case Crop.Melon:
-			return Math.round(baseDrops + calculateMelonPerkBonus(blocksBroken, options.dicerLevel));
-		default:
-			return 0;
+	if (replenish) {
+		// Replenish takes away one drop per block broken
+		return Math.round(baseDrops - blocksBroken);
 	}
+
+	return Math.round(baseDrops);
 }
 
 export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDropsResult {
@@ -207,24 +190,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	result.items[specialCrops.id] = +specialCrops.amount.toFixed(2);
 	result.coinSources[specialCrops.type] = Math.round(specialCrops.npc);
 
-	let extraDrops = 0;
 	switch (crop) {
-		case Crop.Pumpkin:
-			extraDrops = Math.round(calculatePumpkinPerkBonus(blocksBroken, options.dicerLevel));
-			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
-			result.coinSources['Collection'] = Math.round(baseDrops * npc);
-			result.otherCollection['RNG Pumpkin'] = Math.round(extraDrops);
-			result.collection = Math.round(baseDrops + extraDrops);
-			result.items[Crop.Pumpkin] = Math.round(baseDrops + extraDrops);
-			break;
-		case Crop.Melon:
-			extraDrops = Math.round(calculateMelonPerkBonus(blocksBroken, options.dicerLevel));
-			result.coinSources['Dicer RNG'] = Math.round(extraDrops * npc);
-			result.coinSources['Collection'] = Math.round(baseDrops * npc);
-			result.otherCollection['RNG Melon'] = Math.round(extraDrops);
-			result.collection = Math.round(baseDrops + extraDrops);
-			result.items[Crop.Melon] = Math.round(baseDrops + extraDrops);
-			break;
 		default:
 			if (replenish) {
 				// Replenish takes away one drop per block broken
@@ -239,6 +205,14 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			result.collection = Math.round(baseDrops);
 			result.items[crop] = Math.round(baseDrops);
 			break;
+	}
+
+	if (options.maxTool) {
+		const capsules = Math.floor(result.collection / 200_000);
+		if (capsules > 0) {
+			result.items['TOOL_EXP_CAPSULE'] = capsules;
+			result.coinSources['Tool Exp Capsule'] = capsules * 100_000;
+		}
 	}
 
 	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
@@ -273,20 +247,20 @@ export interface FortuneRequiredCalculatorOptions {
 }
 
 export function getFortuneRequiredForCollection(options: FortuneRequiredCalculatorOptions): number {
-	const { blocksBroken, crop, useDicers, useMooshroom } = options;
+	const { blocksBroken, crop, useMooshroom } = options;
 	let { collection } = options;
 
 	const { drops } = getCropInfo(options.crop);
 
-	if (useDicers)
-		switch (crop) {
-			case Crop.Pumpkin:
-				collection -= calculatePumpkinPerkBonus(blocksBroken);
-				break;
-			case Crop.Melon:
-				collection -= calculateMelonPerkBonus(blocksBroken);
-				break;
-		}
+	// if (useDicers)
+	// 	switch (crop) {
+	// 		case Crop.Pumpkin:
+	// 			collection -= calculatePumpkinPerkBonus(blocksBroken);
+	// 			break;
+	// 		case Crop.Melon:
+	// 			collection -= calculateMelonPerkBonus(blocksBroken);
+	// 			break;
+	// 	}
 
 	if (useMooshroom && crop === Crop.Mushroom) {
 		collection -= blocksBroken; // "* breaks" not needed because it's always 1 for mushroom

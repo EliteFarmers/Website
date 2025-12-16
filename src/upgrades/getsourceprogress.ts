@@ -22,15 +22,18 @@ export function getSourceProgress<T extends object>(
 	for (const source of sources) {
 		if (!source.exists(upgradeable)) continue;
 
+		const alwaysInclude = source.alwaysInclude === true;
+
 		const max = source.max(upgradeable);
 		const current = zeroed ? 0 : source.current(upgradeable);
 
-		const progress = {
+		const progress: FortuneSourceProgress = {
 			name: source.name,
-			fortune: current,
-			maxFortune: max,
+			current: current,
+			max,
 			ratio: Math.min(isNaN(current / max) ? 0 : current / max, 1),
-		} as FortuneSourceProgress;
+		};
+		if (alwaysInclude) progress.alwaysInclude = true;
 
 		// Per-stat progress (optional; only when explicitly requested)
 		if (stats && stats.length > 0) {
@@ -114,8 +117,9 @@ export function getSourceProgress<T extends object>(
 		// Keep legacy progress output clean: skip sources that contribute nothing
 		// (but preserve stat-aware or upgrade-bearing sources).
 		if (
-			progress.maxFortune === 0 &&
-			progress.fortune === 0 &&
+			progress.max === 0 &&
+			progress.current === 0 &&
+			!progress.alwaysInclude &&
 			!progress.stats &&
 			!progress.upgrades &&
 			!progress.progress

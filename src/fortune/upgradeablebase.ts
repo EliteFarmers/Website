@@ -89,7 +89,7 @@ export class UpgradeableBase implements Upgradeable {
 		return filterAndSortUpgrades(upgrades, options);
 	}
 
-	getProgress(_zeroed?: boolean, _stats?: Stat[]): FortuneSourceProgress[] {
+	getProgress(_stats?: Stat[], _zeroed?: boolean): FortuneSourceProgress[] {
 		return [getItemProgress(this)];
 	}
 

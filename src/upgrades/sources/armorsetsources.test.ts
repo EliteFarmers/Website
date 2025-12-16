@@ -1,5 +1,7 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../../constants/stats.js';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
+import type { EliteItemDto } from '../../fortune/item.js';
 import { FARMING_ARMOR_INFO } from '../../items/armor.js';
 import { FarmingPlayer } from '../../player/player.js';
 
@@ -71,56 +73,56 @@ test('Armor set bonus', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Helmet',
-			fortune: 92,
-			maxFortune: 92,
+			current: 92,
+			max: 92,
 			ratio: 1,
 		},
 		{
 			name: 'Chestplate',
-			fortune: 0,
-			maxFortune: 97,
+			current: 0,
+			max: 93,
 			ratio: 0,
 		},
 		{
 			name: 'Leggings',
-			fortune: 0,
-			maxFortune: 97,
+			current: 0,
+			max: 93,
 			ratio: 0,
 		},
 		{
 			name: 'Boots',
-			fortune: 0,
-			maxFortune: 92,
+			current: 0,
+			max: 88,
 			ratio: 0,
 		},
 		{
 			name: 'Armor Set Bonus',
-			fortune: 0,
-			maxFortune: 75,
+			current: 0,
+			max: 75,
 			ratio: 0,
 		},
 		{
 			name: 'Necklace',
-			fortune: 0,
-			maxFortune: 56,
+			current: 0,
+			max: 69.25,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
-			fortune: 0,
-			maxFortune: 56,
+			current: 0,
+			max: 69.25,
 			ratio: 0,
 		},
 		{
 			name: 'Belt',
-			fortune: 0,
-			maxFortune: 56,
+			current: 0,
+			max: 69.25,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
-			fortune: 0,
-			maxFortune: 56,
+			current: 0,
+			max: 69.25,
 			ratio: 0,
 		},
 	]);
@@ -197,57 +199,57 @@ test('Equipment set bonus', () => {
 	expect(progress).toStrictEqual([
 		{
 			name: 'Helmet',
-			fortune: 92,
-			maxFortune: 92,
+			current: 92,
+			max: 92,
 			ratio: 1,
 		},
 		{
 			name: 'Chestplate',
-			fortune: 0,
-			maxFortune: 97,
+			current: 0,
+			max: 93,
 			ratio: 0,
 		},
 		{
 			name: 'Leggings',
-			fortune: 0,
-			maxFortune: 97,
+			current: 0,
+			max: 93,
 			ratio: 0,
 		},
 		{
 			name: 'Boots',
-			fortune: 0,
-			maxFortune: 92,
+			current: 0,
+			max: 88,
 			ratio: 0,
 		},
 		{
 			name: 'Armor Set Bonus',
-			fortune: 0,
-			maxFortune: 75,
+			current: 0,
+			max: 75,
 			ratio: 0,
 		},
 		{
 			name: 'Necklace',
-			fortune: 0,
-			maxFortune: 56,
+			current: 0,
+			max: 69.25,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
-			fortune: 29,
-			maxFortune: 56,
-			ratio: 29 / 56,
+			current: 29,
+			max: 69.25,
+			ratio: 29 / 69.25,
 		},
 		{
 			name: 'Belt',
-			fortune: 0,
-			maxFortune: 56,
+			current: 0,
+			max: 69.25,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
-			fortune: 29,
-			maxFortune: 56,
-			ratio: 29 / 56,
+			current: 29,
+			max: 69.25,
+			ratio: 29 / 69.25,
 		},
 	]);
 });
@@ -265,7 +267,7 @@ test('Rancher boots preferred upgrade test', () => {
 	const bootProgress = progress.find((p) => p.name === 'Boots');
 	expect(bootProgress).toBeDefined();
 	expect(bootProgress!.item?.skyblockId).toBe('RANCHERS_BOOTS');
-	expect(bootProgress!.maxFortune).toBe(113);
+	expect(bootProgress!.max).toBe(148);
 });
 
 const bustlingLeggings = {
@@ -309,7 +311,7 @@ test('Bustling Fermento Leggings Upgrades', () => {
 	const item = new FarmingArmor(bustlingLeggings);
 	const upgrades = item.getUpgrades();
 
-	expect(upgrades).toHaveLength(5);
+	expect(upgrades).toHaveLength(7);
 });
 
 test('Armor purchase upgrades have stats populated', () => {
@@ -337,4 +339,84 @@ test('Armor purchase upgrades have stats populated', () => {
 			expect(purchaseUpgrade.stats?.['farming_fortune']).toBeDefined();
 		}
 	}
+});
+
+test('Helianthus helmet upgrades', () => {
+	const player = new FarmingPlayer({
+		armor: [
+			{
+				id: 397,
+				count: 1,
+				damage: 3,
+				skyblockId: 'HELIANTHUS_HELMET',
+				uuid: '3c71fa65-225e-48dc-80d5-cfa604b758a6',
+				name: '§dMossy Helianthus Helmet §4✦',
+				lore: [
+					'§7§8Harvester Helmet Skin',
+					'',
+					'§7Health: §c+140',
+					'§7Defense: §a+50',
+					'§7Bonus Pest Chance: §2+26%',
+					'§7Farming Fortune: §6+97 §9(+30) §d(+20)',
+					'§7Speed: §f+13 §9(+7)',
+					' §6[§2☘§6] §6[§2☘§6]',
+					'',
+					'§9§d§lWisdom V',
+					'§7Gain §b5 §7Intelligence for every §b5',
+					'§b§7levels of exp you have on you.',
+					'§7Capped at §b100 §7Intelligence.',
+					'§9Aqua Affinity I',
+					'§7Increases your underwater mining',
+					'§7rate.',
+					'§9Pesterminator VI',
+					'§7Grants §6+12☘ Farming Fortune §7and',
+					'§7§2+6ൠ Bonus Pest Chance§7, which',
+					'§7increases your chance to spawn',
+					'§7bonus §2ൠ Pests §7on §aThe Garden§7.',
+					'',
+					'§6Tiered Bonus: Feast (4/4)',
+					'§7Combines the Tiered Bonuses of',
+					'§7wearing §a4 pieces §7of the Melon Armor,',
+					'§7Cropie Armor, Squash Armor, and',
+					'§7Fermento Armor. §7Grants §675☘ Farming',
+					'§6Fortune§7.',
+					'',
+					'§6Ability: Color Swapper  §e§lLEFT CLICK',
+					"§7Swap this helmet's skin through 117",
+					'§7unlockable skins!',
+					'',
+					'§7Selected: §5Purple Melon',
+					'',
+					'§8§l* §8Co-op Soulbound §8§l*',
+					'§d§l§ka§r §d§lMYTHIC HELMET §d§l§ka',
+				],
+				enchantments: {
+					aqua_affinity: 1,
+					pesterminator: 6,
+					ultimate_wisdom: 5,
+				},
+				attributes: {
+					skin: 'FERMENTO_ULTIMATE',
+					modifier: 'mossy',
+					timestamp: '1676601600000',
+					skin_texture:
+						'ewogICJ0aW1lc3RhbXAiIDogMTcwOTgxMjIyNzIwMiwKICAicHJvZmlsZUlkIiA6ICJjYjYxY2U5ODc4ZWI0NDljODA5MzliNWYxNTkwMzE1MiIsCiAgInByb2ZpbGVOYW1lIiA6ICJWb2lkZWRUcmFzaDUxODUiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTgzNjE1NDAyY2JlNzZjMDkwMzhkNThmYzllNGUwN2NjYjUyYjI4NGM3ZjM0MGU1ZDgwOTM0ZmUyZjQ3MDliMCIKICAgIH0KICB9Cn0=',
+					favorite_crop: '77',
+					donated_museum: '1',
+					rarity_upgrades: '1',
+				},
+				gems: {
+					PERIDOT_0: 'PERFECT',
+					PERIDOT_1: 'PERFECT',
+				},
+			} as EliteItemDto,
+		],
+	});
+
+	const progress = player.armorSet.getProgress([Stat.FarmingFortune], false);
+	const helmetProgress = progress.find((p) => p.name === 'Helmet');
+	expect(helmetProgress).toBeDefined();
+	expect(helmetProgress!.item?.skyblockId).toBe('HELIANTHUS_HELMET');
+
+	expect(helmetProgress!.current).toBe(helmetProgress!.max);
 });

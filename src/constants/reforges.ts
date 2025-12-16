@@ -604,6 +604,24 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 			},
 		},
 	},
+	mantid: {
+		name: 'Mantid',
+		wiki: 'https://wiki.hypixel.net/Mantid_Claw',
+		appliesTo: [ReforgeTarget.Armor],
+		stone: {
+			name: 'Mantid Claw',
+			id: 'MANTID_CLAW',
+		},
+		tiers: {
+			[Rarity.Legendary]: {
+				stats: {
+					[Stat.FarmingFortune]: 10,
+					[Stat.BonusPestChance]: 2,
+				},
+				cost: 150_000, // TODO: Check cost and add other perk
+			},
+		},
+	},
 };
 
 export const STAT_ICONS: Record<Stat, string> = {

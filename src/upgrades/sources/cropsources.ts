@@ -25,35 +25,35 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		},
 		max: ({ crop }) => {
 			const progress = getFakeItem(CROP_INFO[crop].startingTool)?.getProgress();
-			return progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+			return progress?.reduce((acc, p) => acc + p.max, 0) ?? 0;
 		},
 		current: ({ player, crop }) => {
 			const tool = player.getSelectedCropTool(crop);
 			const progress = tool?.getProgress();
-			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
+			return progress?.reduce((acc, p) => acc + p.current, 0) ?? 0;
 		},
 		maxStat: ({ crop }, stat) => {
 			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
-			const progress = fake?.getProgress(true, [stat]) ?? [];
+			const progress = fake?.getProgress([stat], false) ?? [];
 			return progress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
 				0
 			);
 		},
 		currentStat: ({ player, crop }, stat) => {
 			const tool = player.getSelectedCropTool(crop);
-			const progress = tool?.getProgress(false, [stat]) ?? [];
+			const progress = tool?.getProgress([stat], false) ?? [];
 			return progress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.fortune : 0)),
+				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.current : 0)),
 				0
 			);
 		},
 		progress: ({ player, crop }, stats) => {
 			const tool = player.getSelectedCropTool(crop);
-			if (tool) return tool.getProgress(false, stats);
+			if (tool) return tool.getProgress(stats, false);
 
 			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
-			return fake?.getProgress(true, stats) ?? [];
+			return fake?.getProgress(stats, true) ?? [];
 		},
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop ? player.selectedTool : player.getSelectedCropTool(crop);

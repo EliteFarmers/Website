@@ -30,11 +30,16 @@ export interface FortuneSource {
 
 export interface FortuneSourceProgress {
 	name: string;
-	fortune: number;
+	/**
+	 * When present and true, this entry should be included in `getProgress()` output
+	 * even if it contributes 0/0 and has no upgrades/sub-progress.
+	 */
+	alwaysInclude?: true;
+	current: number;
 	ratio: number;
 	/**
 	 * Optional per-stat progress. When present, consumers should prefer this
-	 * over the legacy `fortune/maxFortune/ratio` fields.
+	 * over the legacy `min/max/ratio` fields.
 	 */
 	stats?: Partial<
 		Record<
@@ -48,7 +53,7 @@ export interface FortuneSourceProgress {
 	>;
 	maxLevel?: number;
 	fortunePerLevel?: number;
-	maxFortune: number;
+	max: number;
 	wiki?: string;
 	upgrades?: FortuneUpgrade[];
 	progress?: FortuneSourceProgress[];

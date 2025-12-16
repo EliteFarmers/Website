@@ -83,14 +83,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 			},
 			{
 				item: 'ENCHANTED_GOLDEN_CARROT',
-				takes: 128 * 160,
-				and: [
-					{
-						item: 'GOLDEN_CARROT',
-						amount: 32,
-						cost: 15,
-					},
-				],
+				takes: 160 * 160,
 			},
 		],
 	},
@@ -114,14 +107,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 			},
 			{
 				item: 'ENCHANTED_COOKIE',
-				takes: 128 * 160,
-				and: [
-					{
-						item: Crop.Wheat,
-						cost: 6,
-						amount: 32,
-					},
-				],
+				takes: 160 * 160,
 			},
 		],
 	},
@@ -161,7 +147,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 			},
 			{
 				item: ITEM_IDS.EnchantedBrownMushroomBlock,
-				takes: 160 * 32,
+				takes: 160 * 160,
 			},
 			{
 				item: ITEM_IDS.EnchantedRedMushroom,
@@ -169,7 +155,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 			},
 			{
 				item: ITEM_IDS.EnchantedRedMushroomBlock,
-				takes: 160 * 32,
+				takes: 160 * 160,
 			},
 		],
 		rng: [
@@ -310,6 +296,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		fortuneType: Stat.SunflowerFortune,
+		replenish: true,
 		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1',
 		crafts: [
 			{
@@ -327,6 +314,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		fortuneType: Stat.MoonflowerFortune,
+		replenish: true,
 		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1', // Same as sunflower
 		crafts: [
 			{
@@ -344,7 +332,14 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		fortuneType: Stat.WildRoseFortune,
-		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1', // Same as sunflower
+		replenish: true,
+		exportable: true,
+		exportableCost: {
+			items: {
+				PRICKLY_KISS: 3000,
+			},
+		},
+		startingTool: 'THEORETICAL_HOE_WILD_ROSE_1',
 		crafts: [
 			{
 				item: 'ENCHANTED_WILD_ROSE',

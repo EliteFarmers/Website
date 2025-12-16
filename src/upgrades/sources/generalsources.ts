@@ -375,7 +375,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		wiki: () => FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
 		max: () => {
 			const accessory = FarmingAccessory.fakeItem(FARMING_ACCESSORIES_INFO.POWER_RELIC as FarmingAccessoryInfo);
-			return accessory?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+			return accessory?.getProgress()?.reduce((acc, p) => acc + p.max, 0) ?? 0;
 		},
 		current: (player) => {
 			const accessory = player.accessories.find((a) => a.info.skyblockId === 'POWER_RELIC');

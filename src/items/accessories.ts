@@ -7,13 +7,45 @@ import type { ItemDefinition } from './definitions.js';
 export type { ItemDefinition as FarmingAccessoryInfo };
 
 export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> = {
+	HELIANTHUS_RELIC: {
+		skyblockId: 'HELIANTHUS_RELIC',
+		name: 'Helianthus Relic',
+		wiki: 'https://wiki.hypixel.net/Helianthus_Relic',
+		family: 'Fermento',
+		familyOrder: 4,
+		maxRarity: Rarity.Rare,
+		baseStats: {
+			[Stat.FarmingFortune]: 40,
+		},
+	},
 	FERMENTO_ARTIFACT: {
 		skyblockId: 'FERMENTO_ARTIFACT',
 		name: 'Fermento Artifact',
 		wiki: 'https://wiki.hypixel.net/Fermento_Artifact',
 		family: 'Fermento',
 		familyOrder: 3,
-		maxRarity: Rarity.Epic,
+		upgrade: {
+			id: 'HELIANTHUS_RELIC',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_HELIANTHUS: 8,
+				},
+			},
+		},
+		maxRarity: Rarity.Rare,
+		crops: [
+			Crop.Wheat,
+			Crop.Carrot,
+			Crop.Potato,
+			Crop.Pumpkin,
+			Crop.Melon,
+			Crop.Mushroom,
+			Crop.CocoaBeans,
+			Crop.NetherWart,
+			Crop.Cactus,
+			Crop.SugarCane,
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -33,7 +65,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 				},
 			},
 		},
-		maxRarity: Rarity.Rare,
+		maxRarity: Rarity.Uncommon,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
 		baseStats: {
 			[Stat.FarmingFortune]: 20,
@@ -54,7 +86,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 				},
 			},
 		},
-		maxRarity: Rarity.Uncommon,
+		maxRarity: Rarity.Common,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],
 		baseStats: {
 			[Stat.FarmingFortune]: 10,
