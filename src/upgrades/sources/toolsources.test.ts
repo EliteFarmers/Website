@@ -316,7 +316,7 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	// Gem slots now respect tool-level unlock requirements (this item has no tool level data,
 	// so its effective level is 1 and gemstone slot upgrades are not yet available).
 	// Upgrades come from individual sources, plus self and rarity upgrades added in getUpgrades().
-	expect(upgrades).toHaveLength(9);
+	expect(upgrades).toHaveLength(8);
 
 	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe Mk. II");
 	expect(selfUpgrade).toBeDefined();
@@ -331,15 +331,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	expect(harvesting?.category).toBe(UpgradeCategory.Enchant);
 	expect(harvesting?.cost?.items).toStrictEqual({
 		ENCHANTMENT_HARVESTING_1: 1,
-	});
-
-	const blessed = upgrades.find((u) => u.title === 'Reforge to Blessed');
-	expect(blessed).toBeDefined();
-	expect(blessed?.increase).toBe(5);
-	expect(blessed?.action).toBe(UpgradeAction.Apply);
-	expect(blessed?.category).toBe(UpgradeCategory.Reforge);
-	expect(blessed?.cost?.items).toStrictEqual({
-		BLESSED_FRUIT: 1,
 	});
 
 	const bountiful = upgrades.find((u) => u.title === 'Reforge to Bountiful');
@@ -391,6 +382,23 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	expect(farmingForDummies?.cost?.items).toStrictEqual({
 		FARMING_FOR_DUMMIES: 1,
 	});
+});
+
+test('Blessed hoe still recommends Bountiful', () => {
+	const blessedHoe = {
+		...t1WheatHoe,
+		attributes: { ...t1WheatHoe.attributes, modifier: 'blessed' },
+	};
+
+	const tool = new FarmingTool(blessedHoe);
+	const reforges = tool.getUpgrades().filter((u) => u.category === 'reforge');
+
+	const bountiful = reforges.find((u) => u.title === 'Reforge to Bountiful');
+	const blessed = reforges.find((u) => u.title === 'Reforge to Blessed');
+
+	expect(bountiful).toBeDefined();
+	expect(bountiful?.increase).toBe(-4);
+	expect(blessed).toBeUndefined();
 });
 
 test('Tier 3 Cane Hoe Upgrades (crop stat includes Farming Fortune upgrades)', () => {
@@ -459,4 +467,78 @@ test('Wild Rose Hoe Upgrades', () => {
 
 	const selfUpgrade = upgrades.find((u) => u.title === 'Wild Rose Hoe Mk. II');
 	expect(selfUpgrade).toBeDefined();
+});
+
+const maxedBountifulAxe = {
+	id: 258,
+	count: 1,
+	skyblockId: 'COCO_CHOPPER_3',
+	uuid: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+	name: '§6Bountiful Cocoa Chopper Mk. III',
+	lore: [
+		'§7Farming Fortune: §a+210 §2(+5) §9(+10) §d(+20)',
+		'§7Speed: §a+13',
+		' §9[§2☘§9] §9[§2☘§9] §9[§2☘§9] §9[§2☘§9]',
+		'',
+		'§9Cultivating X',
+		'§9Harvesting VI',
+		'§9Replenish I',
+		'§9Turbo-Cocoa V',
+		'',
+		'§9Bountiful Bonus',
+		'§7Grants §a+10 §6☘ Farming Fortune§7, which',
+		'§7increases your chance for multiple',
+		'§7crops.',
+		'§7Grants §6+0.2 coins §7per crop.',
+		'',
+		'§6§lLEGENDARY AXE',
+	],
+	enchantments: {
+		replenish: 1,
+		harvesting: 6,
+		cultivating: 10,
+		turbo_cocoa: 5,
+	},
+	attributes: {
+		modifier: 'bountiful',
+		timestamp: '1631561580000',
+		rarity_upgrades: '1',
+		farming_for_dummies_count: '5',
+	},
+	gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT', PERIDOT_2: 'PERFECT', PERIDOT_3: 'PERFECT' },
+};
+
+test('Maxed Bountiful Axe should not suggest Earthy reforge', () => {
+	const tool = new FarmingTool(maxedBountifulAxe);
+
+	const reforges = tool.getUpgrades().filter((u) => u.category === 'reforge');
+
+	const earthy = reforges.find((u) => u.title === 'Reforge to Earthy');
+	const blessed = reforges.find((u) => u.title === 'Reforge to Blessed');
+
+	// Earthy has less fortune than Bountiful at Legendary (10 vs 7), so shouldn't be suggested
+	expect(earthy).toBeUndefined();
+	// Blessed should also not be suggested due to Bountiful preference
+	expect(blessed).toBeUndefined();
+	// Should have no reforge upgrades since Bountiful is already the best
+	expect(reforges).toHaveLength(0);
+});
+
+test('Earthy Axe should recommend switching to Bountiful', () => {
+	const earthyAxe = {
+		...maxedBountifulAxe,
+		attributes: { ...maxedBountifulAxe.attributes, modifier: 'earthy' },
+	};
+
+	const tool = new FarmingTool(earthyAxe);
+	const reforges = tool.getUpgrades().filter((u) => u.category === 'reforge');
+
+	const bountiful = reforges.find((u) => u.title === 'Reforge to Bountiful');
+	const blessed = reforges.find((u) => u.title === 'Reforge to Blessed');
+
+	// Should recommend Bountiful despite it having less fortune (7 vs 10)
+	expect(bountiful).toBeDefined();
+	expect(bountiful?.increase).toBe(-3); // Shows the fortune decrease
+	// Blessed should not be suggested
+	expect(blessed).toBeUndefined();
 });

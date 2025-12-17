@@ -74,8 +74,8 @@ test('Armor set bonus', () => {
 		{
 			name: 'Helmet',
 			current: 92,
-			max: 92,
-			ratio: 1,
+			max: 97,
+			ratio: 92 / 97,
 		},
 		{
 			name: 'Chestplate',
@@ -104,25 +104,25 @@ test('Armor set bonus', () => {
 		{
 			name: 'Necklace',
 			current: 0,
-			max: 69.25,
+			max: 74.25,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			current: 0,
-			max: 69.25,
+			max: 74.25,
 			ratio: 0,
 		},
 		{
 			name: 'Belt',
 			current: 0,
-			max: 69.25,
+			max: 74.25,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			current: 0,
-			max: 69.25,
+			max: 74.25,
 			ratio: 0,
 		},
 	]);
@@ -200,8 +200,8 @@ test('Equipment set bonus', () => {
 		{
 			name: 'Helmet',
 			current: 92,
-			max: 92,
-			ratio: 1,
+			max: 97,
+			ratio: 92 / 97,
 		},
 		{
 			name: 'Chestplate',
@@ -230,26 +230,26 @@ test('Equipment set bonus', () => {
 		{
 			name: 'Necklace',
 			current: 0,
-			max: 69.25,
+			max: 74.25,
 			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			current: 29,
-			max: 69.25,
-			ratio: 29 / 69.25,
+			max: 74.25,
+			ratio: 29 / 74.25,
 		},
 		{
 			name: 'Belt',
 			current: 0,
-			max: 69.25,
+			max: 74.25,
 			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			current: 29,
-			max: 69.25,
-			ratio: 29 / 69.25,
+			max: 74.25,
+			ratio: 29 / 74.25,
 		},
 	]);
 });

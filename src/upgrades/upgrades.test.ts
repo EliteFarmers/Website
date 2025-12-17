@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
 
@@ -271,4 +272,39 @@ test('Upgrade objects have stats field populated', () => {
 			expect(upgrade.stats?.['farming_fortune']).toBeDefined();
 		}
 	}
+});
+
+test('Lotus to Blossom Necklace upgrade shows correct fortune delta', () => {
+	const maxedLotusNecklace = {
+		id: 397,
+		count: 1,
+		damage: 3,
+		skyblockId: 'LOTUS_NECKLACE',
+		uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
+		name: '§5Rooted Lotus Necklace',
+		lore: ['§5§l§ka§r §5§lEPIC NECKLACE §5§l§ka'],
+		enchantments: { green_thumb: 5 },
+		attributes: {
+			modifier: 'rooted',
+			timestamp: '1676577900000',
+			rarity_upgrades: '1',
+		},
+	};
+
+	const item = new FarmingEquipment(maxedLotusNecklace);
+
+	// Lotus has 5 base fortune, Blossom has 7 base fortune
+	// So increase should be 2
+	const upgrades = item.getUpgrades();
+	const blossomUpgrade = upgrades.find((u) => u.title === 'Blossom Necklace');
+
+	expect(blossomUpgrade).toBeDefined();
+	expect(blossomUpgrade?.increase).toBe(2); // Should show the delta (7 - 5 = 2)
+	expect(blossomUpgrade?.stats?.['farming_fortune']).toBe(2); // Stats should also show delta
+
+	const progress = item.getProgress([Stat.FarmingFortune]);
+	const base = progress.find((p) => p.name === 'Base Stats');
+	expect(base).toBeDefined();
+	expect(base?.current).toBe(5);
+	expect(base?.max).toBe(7);
 });

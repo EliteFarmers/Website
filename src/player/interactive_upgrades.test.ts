@@ -89,17 +89,17 @@ test('Interactive Upgrade: Reforge', () => {
 	});
 
 	const upgrades = player.getCropUpgrades(Crop.Cactus);
-	const blessedUpgrade = upgrades.find((u) => u.meta?.type === 'reforge' && u.meta?.id === 'blessed');
+	const bountifulUpgrade = upgrades.find((u) => u.meta?.type === 'reforge' && u.meta?.id === 'bountiful');
 
-	expect(blessedUpgrade).toBeDefined();
+	expect(bountifulUpgrade).toBeDefined();
 
-	if (blessedUpgrade) {
-		player.applyUpgrade(blessedUpgrade);
+	if (bountifulUpgrade) {
+		player.applyUpgrade(bountifulUpgrade);
 
 		const tool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
-		expect(tool?.item.attributes?.modifier).toBe('blessed');
+		expect(tool?.item.attributes?.modifier).toBe('bountiful');
 
-		expect(tool?.reforge?.name).toBe('Blessed');
+		expect(tool?.reforge?.name).toBe('Bountiful');
 	}
 });
 

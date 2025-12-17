@@ -52,6 +52,10 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
 			const currentStats = tool.reforgeStats?.stats ?? {};
 			const currentPrimary = currentStats?.[primaryStat] ?? 0;
+			// Find if there's a priority reforge that applies to this tool
+			const priorityReforge = Object.values(REFORGES).find(
+				(r) => r?.priority && tool.type && r.appliesTo.includes(tool.type)
+			);
 			const result: FortuneUpgrade[] = [];
 
 			for (const reforge of Object.values(REFORGES)) {
@@ -59,13 +63,18 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 				if (!reforge || !tool.type || !reforge.appliesTo.includes(tool.type) || reforge === tool.reforge) {
 					continue;
 				}
-				// Only suggest reforges with an explicit reforge stone (keeps output consistent and costable)
+
+				// Skip non-priority reforges if there's a priority reforge available for this tool
+				if (priorityReforge && reforge !== priorityReforge && !reforge.priority) continue;
+				// Only suggest reforges with an explicit reforge stone
 				if (!reforge.stone?.id) continue;
 
 				const tier = reforge.tiers[tool.rarity];
 				if (!tier || !tier.stats) continue;
 				const nextPrimary = tier.stats?.[primaryStat] ?? 0;
-				if (nextPrimary <= currentPrimary) continue;
+
+				// Allow priority reforges even if they have less fortune
+				if (!reforge.priority && nextPrimary <= currentPrimary) continue;
 
 				const deltaStats: Partial<Record<Stat, number>> = {};
 				for (const s of Object.values(Stat)) {
@@ -83,10 +92,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Reforge,
 					conflictKey: 'reforge',
-					optional:
-						(reforge === REFORGES.bountiful && tool.reforge === REFORGES.blessed) ||
-						(reforge === REFORGES.blessed && tool.reforge === REFORGES.bountiful),
 					wiki: reforge.wiki,
+					// Optional if this is a priority reforge, and previous reforge is more fortune
+					optional: reforge.priority && nextPrimary < currentPrimary,
 					onto: {
 						name: tool.item.name,
 						skyblockId: tool.item.skyblockId,

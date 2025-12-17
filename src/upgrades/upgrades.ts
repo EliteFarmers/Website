@@ -42,12 +42,19 @@ export function getSelfFortuneUpgrade(
 	const { info: nextInfo, fake: nextFake } = getUpgradeableInfo(nextItem?.id);
 
 	if (deadEnd && nextInfo) {
+		const nextStats = nextFake?.getStats() ?? {};
+		const currentStats = upgradeable.getStats();
+		const deltaStats: Partial<Record<Stat, number>> = {};
+		for (const stat of Object.values(Stat)) {
+			const delta = (nextStats[stat] ?? 0) - (currentStats[stat] ?? 0);
+			if (delta !== 0) deltaStats[stat] = delta;
+		}
 		return {
 			deadEnd: true,
 			upgrade: {
 				title: nextInfo.name,
 				increase: nextFake?.getFortune() ?? 0,
-				stats: nextFake?.getStats() ?? {},
+				stats: deltaStats,
 				wiki: nextInfo.wiki,
 				action: UpgradeAction.Purchase,
 				purchase: nextInfo.skyblockId,
@@ -73,13 +80,24 @@ export function getSelfFortuneUpgrade(
 			} satisfies FortuneUpgrade,
 		};
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
-		const increase = (nextFake?.getFortune() ?? 0) - upgradeable.fortune;
+		// For item upgrades, compare base stats only (not total fortune which includes reforge/enchants)
+		// This ensures the delta accurately represents what changes when upgrading the item itself
+		const currentBaseStats = upgradeable.info.baseStats ?? {};
+		const nextBaseStats = nextInfo.baseStats ?? {};
+
+		const deltaStats: Partial<Record<Stat, number>> = {};
+		for (const stat of Object.values(Stat)) {
+			const delta = (nextBaseStats[stat] ?? 0) - (currentBaseStats[stat] ?? 0);
+			if (delta !== 0) deltaStats[stat] = delta;
+		}
+		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
 		return {
 			deadEnd: false,
 			upgrade: {
 				title: nextInfo.name,
-				increase: increase < 0 ? 0 : increase,
-				stats: nextFake?.getStats() ?? {},
+				increase,
+				stats: deltaStats,
 				wiki: nextInfo.wiki,
 				action: nextItem.reason === UpgradeReason.Situational ? UpgradeAction.Purchase : UpgradeAction.Upgrade,
 				purchase: nextItem.reason === UpgradeReason.Situational ? nextItem.id : undefined,
@@ -176,7 +194,7 @@ export function getLastItemUpgradeableTo(
 		item = options[item.upgrade.id];
 	}
 
-	if (!item || last === upgrade) return undefined;
+	if (!item) return undefined;
 
 	return { upgrade: last, info: item };
 }

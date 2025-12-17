@@ -242,7 +242,6 @@ export interface FortuneRequiredCalculatorOptions {
 	blocksBroken: number;
 	crop: Crop;
 	collection: number;
-	useDicers?: boolean;
 	useMooshroom?: boolean;
 }
 
@@ -251,16 +250,6 @@ export function getFortuneRequiredForCollection(options: FortuneRequiredCalculat
 	let { collection } = options;
 
 	const { drops } = getCropInfo(options.crop);
-
-	// if (useDicers)
-	// 	switch (crop) {
-	// 		case Crop.Pumpkin:
-	// 			collection -= calculatePumpkinPerkBonus(blocksBroken);
-	// 			break;
-	// 		case Crop.Melon:
-	// 			collection -= calculateMelonPerkBonus(blocksBroken);
-	// 			break;
-	// 	}
 
 	if (useMooshroom && crop === Crop.Mushroom) {
 		collection -= blocksBroken; // "* breaks" not needed because it's always 1 for mushroom

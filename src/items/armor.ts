@@ -1113,7 +1113,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			[Stat.BonusPestChance]: 20,
 		},
 		skillReq: {
-			[Skill.Farming]: 45,
+			[Skill.Farming]: 50,
 		},
 	},
 	HELIANTHUS_CHESTPLATE: {
@@ -1158,7 +1158,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			[Stat.BonusPestChance]: 20,
 		},
 		skillReq: {
-			[Skill.Farming]: 45,
+			[Skill.Farming]: 50,
 		},
 	},
 	HELIANTHUS_LEGGINGS: {
@@ -1203,7 +1203,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			[Stat.BonusPestChance]: 20,
 		},
 		skillReq: {
-			[Skill.Farming]: 45,
+			[Skill.Farming]: 50,
 		},
 	},
 	HELIANTHUS_BOOTS: {
@@ -1248,7 +1248,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			[Stat.BonusPestChance]: 20,
 		},
 		skillReq: {
-			[Skill.Farming]: 45,
+			[Skill.Farming]: 50,
 		},
 	},
 	MUSHROOM_HELMET: {

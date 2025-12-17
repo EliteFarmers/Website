@@ -60,6 +60,8 @@ export interface Reforge {
 	};
 	appliesTo: ReforgeTarget[];
 	tiers: Partial<ReforgeTiers>;
+	/** If true, this reforge should be prioritized over others even if it provides less fortune */
+	priority?: boolean;
 }
 
 export const REFORGES: Partial<Record<string, Reforge>> = {
@@ -67,6 +69,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 		name: 'Bountiful',
 		wiki: 'https://wiki.hypixel.net/Golden_Ball',
 		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		priority: true,
 		stone: {
 			name: 'Golden Ball',
 			id: 'GOLDEN_BALL',

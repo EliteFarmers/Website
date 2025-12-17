@@ -79,8 +79,8 @@ test('Almost maxed fermento fortune sources', () => {
 		{
 			name: 'Base Stats',
 			current: 30,
-			max: 30,
-			ratio: 1,
+			max: 35,
+			ratio: 30 / 35,
 		},
 		{
 			name: 'Reforge Stats',
@@ -244,14 +244,14 @@ test('Lotus necklace fortune sources', () => {
 		{
 			name: 'Base Stats',
 			current: 5,
-			max: 5,
-			ratio: 1,
+			max: 7,
+			ratio: 5 / 7,
 		},
 		{
 			name: 'Reforge Stats',
 			current: 15,
-			max: 15,
-			ratio: 1,
+			max: 18,
+			ratio: 15 / 18,
 		},
 		{
 			name: 'Salesperson Ability',
@@ -320,14 +320,14 @@ test('Maxed lotus bracelet fortune sources', () => {
 		{
 			name: 'Base Stats',
 			current: 5,
-			max: 5,
-			ratio: 1,
+			max: 7,
+			ratio: 5 / 7,
 		},
 		{
 			name: 'Reforge Stats',
 			current: 15,
-			max: 15,
-			ratio: 1,
+			max: 18,
+			ratio: 15 / 18,
 		},
 		{
 			name: 'Salesperson Ability',
