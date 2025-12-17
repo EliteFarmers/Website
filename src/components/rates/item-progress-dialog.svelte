@@ -197,7 +197,13 @@
 					</div>
 				{/if}
 
+				<p class="text-muted-foreground text-sm">
+					These progress bars represent your progress towards the max! If it's an item, the bars will show
+					your item compared to the max possible version/upgrade from this item.
+				</p>
+
 				{#if progress.nextInfo?.skyblockId !== undefined || progress.maxInfo?.skyblockId !== undefined}
+					<hr class="border-muted" />
 					<div class="dark flex flex-col gap-4 sm:flex-row">
 						{#if progress.nextInfo?.skyblockId !== undefined}
 							<div class="flex flex-1 flex-col gap-1">
