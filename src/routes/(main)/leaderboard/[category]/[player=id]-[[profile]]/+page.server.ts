@@ -12,14 +12,18 @@ export const load = (async ({ params, parent, url }) => {
 	const fallbackStr = url.searchParams.get('fallback')?.toString() ?? undefined;
 	const fallback = isNaN(Number(fallbackStr)) ? undefined : Math.max(Number(fallbackStr) - 10, 1);
 
+	const newSearchParams = new URLSearchParams(url.searchParams);
+	newSearchParams.delete('fallback');
+	const newSearch = newSearchParams.toString() ? `?${newSearchParams.toString()}` : '';
+
 	if (!ign) {
-		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${url.search}`);
+		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${newSearch}`);
 		throw error(400, 'Search query is required!');
 	}
 
 	const { data: account } = await getAccount(ign).catch(() => ({ data: undefined }));
 	if (!account) {
-		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${url.search}`);
+		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${newSearch}`);
 		throw error(400, 'User not found!');
 	}
 
@@ -29,7 +33,7 @@ export const load = (async ({ params, parent, url }) => {
 		account.profiles?.find((p) => p.members?.some((m) => m.active && m.uuid === account.id));
 
 	if (!profile) {
-		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${url.search}`);
+		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${newSearch}`);
 		throw error(400, 'No active profile found!');
 	}
 
@@ -44,9 +48,9 @@ export const load = (async ({ params, parent, url }) => {
 		: await getPlayerRank2(category, account.id, profile.profileId, query);
 
 	if (!rank?.rank || rank.rank === -1) {
-		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${url.search}`);
+		if (fallback) throw redirect(303, `/leaderboard/${category}/${fallback}${newSearch}`);
 		throw error(400, 'Player not found in leaderboard!');
 	}
 
-	redirect(303, `/leaderboard/${category}/${Math.max(rank.rank - 10, 1)}${url.search}`);
+	redirect(303, `/leaderboard/${category}/${Math.max(rank.rank - 10, 1)}${newSearch}`);
 }) satisfies PageServerLoad;
