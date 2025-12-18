@@ -34,13 +34,19 @@
 			</p>
 		{/snippet}
 	</FortuneBreakdown>
-{:else if upgrade.max && upgrade.max > 0}
+{:else if upgrade.max && upgrade.max > 0 && upgrade.stats}
 	<FortuneBreakdown total={upgrade.max} enabled={false} class={className}>
 		{#snippet child()}
 			<p class="max-w-sm text-sm">
 				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune
 				as you upgrade it later.
 			</p>
+		{/snippet}
+	</FortuneBreakdown>
+{:else}
+	<FortuneBreakdown total={0} enabled={false} class={className}>
+		{#snippet child()}
+			<p class="max-w-sm text-sm">This upgrade is shown for completion!</p>
 		{/snippet}
 	</FortuneBreakdown>
 {/if}
