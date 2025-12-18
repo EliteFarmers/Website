@@ -7,12 +7,8 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { ItemGemstoneSlotCosts } from './ItemGemstoneSlotCosts';
-import type { ItemRequirement } from './ItemRequirement';
 
-export interface ItemGemstoneSlot {
-	/** @nullable */
-	slot_type?: string | null;
-	costs: ItemGemstoneSlotCosts[];
-	requirements: ItemRequirement[];
-}
+/**
+ * Garden chips
+ */
+export type MemberFortuneSettingsDtoChips = { [key: string]: number };

@@ -26,7 +26,9 @@
 				: undefined
 	);
 
-	let items = $derived(itemList?.sort(([, a], [, b]) => b.cost - a.cost) ?? []);
+	let items = $derived(
+		itemList?.sort(([, a], [, b]) => b.cost - a.cost).filter(([, value]) => value.cost !== 0) ?? []
+	);
 </script>
 
 {#if items.length <= 0}
@@ -84,7 +86,7 @@
 				<p>Total</p>
 				<p>{Math.round(coins).toLocaleString()}</p>
 			</div>
-			<div class="break-words">
+			<div class="wrap-break-word">
 				{@render children?.()}
 			</div>
 		</div>

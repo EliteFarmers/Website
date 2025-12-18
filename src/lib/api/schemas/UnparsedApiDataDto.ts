@@ -8,6 +8,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 import type { UnparsedApiDataDtoConsumed } from './UnparsedApiDataDtoConsumed';
+import type { UnparsedApiDataDtoExportedCrops } from './UnparsedApiDataDtoExportedCrops';
 import type { UnparsedApiDataDtoLevelCaps } from './UnparsedApiDataDtoLevelCaps';
 import type { UnparsedApiDataDtoPerks } from './UnparsedApiDataDtoPerks';
 import type { TempStatBuffResponse } from './TempStatBuffResponse';
@@ -18,6 +19,8 @@ import type { UnparsedApiDataDtoDungeons } from './UnparsedApiDataDtoDungeons';
 export interface UnparsedApiDataDto {
 	copper: number;
 	consumed: UnparsedApiDataDtoConsumed;
+	/** @nullable */
+	exportedCrops?: UnparsedApiDataDtoExportedCrops;
 	levelCaps: UnparsedApiDataDtoLevelCaps;
 	/** @nullable */
 	perks?: UnparsedApiDataDtoPerks;

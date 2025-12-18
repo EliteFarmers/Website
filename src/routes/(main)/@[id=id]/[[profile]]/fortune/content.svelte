@@ -24,7 +24,6 @@
 	import * as Dialog from '$ui/dialog';
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
-	import { Switch } from '$ui/switch';
 	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import {
@@ -38,7 +37,6 @@
 		FarmingPets,
 		FarmingTool,
 		getCropFromName,
-		getCropInfo,
 		getCropMilestoneLevels,
 		getCropUpgrades,
 		getGardenLevel,
@@ -67,10 +65,18 @@
 	const selectedCrops = getSelectedCrops();
 
 	function updateSelectedTool(c: string) {
-		const crop = cropKey(c);
-		if (selectedTool?.crop === crop) return;
+		const crop = getCropFromName(c);
+		if (!crop) return;
 
-		selectedTool = $player.tools.find((tool) => tool.crop === crop);
+		const newTool = $player.getBestTool(crop);
+		console.log({ newTool, crop, c });
+		if (newTool === selectedTool) {
+			console.log('No change in tool');
+			player.refresh();
+			return;
+		}
+
+		selectedTool = newTool;
 		selectedToolId = selectedTool?.item.uuid ?? '';
 
 		if (selectedTool) {
@@ -134,6 +140,7 @@
 		farmingXp: ctx.member.current?.skills?.farming,
 		bestiaryKills: (ctx.member.current?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
 		uniqueVisitors: ctx.member.current?.garden?.uniqueVisitors ?? 0,
+		exportableCrops: ctx.member.current?.unparsed.exportedCrops ?? {},
 
 		perks: ctx.member.current?.unparsed?.perks,
 
@@ -150,10 +157,10 @@
 		),
 		gardenLevel: getGardenLevel(ctx.member.current?.garden?.experience ?? 0).level,
 
-		exportableCrops: $ratesData.exported,
 		communityCenter: $ratesData.communityCenter,
 		strength: $ratesData.strength,
 		attributes: $ratesData.attributes,
+		chips: $ratesData.chips,
 
 		cocoaFortuneUpgrade: ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
@@ -309,7 +316,7 @@
 			selectedTool: untrack(() => $player.selectedTool),
 			armor: untrack(() => $player.armorSet),
 			attributes: $ratesData.attributes,
-			exportableCrops: $ratesData.exported,
+			chips: $ratesData.chips,
 			communityCenter: $ratesData.communityCenter,
 			strength: $ratesData.strength,
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
@@ -331,7 +338,6 @@
 			farmingFortune: $player.fortune + cropFortune.fortune,
 			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
 			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
-			dicerLevel: +(selectedTool?.item.skyblockId?.match(/DICER_(\d+)/)?.[1] ?? 3) as 1 | 2 | 3,
 			blocksBroken: blocksActuallyBroken,
 			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
@@ -459,14 +465,6 @@
 								</p>
 							</div>
 						</div>
-						{#if selectedCropKey && getCropInfo(selectedCropKey).exportable}
-							<div class="flex flex-row items-center justify-center gap-2">
-								<p class="text-md mb-1 leading-none">Carrolyn Fortune (+12)</p>
-								{#if $ratesData.exported[selectedCropKey] !== undefined}
-									<Switch bind:checked={$ratesData.exported[selectedCropKey]} />
-								{/if}
-							</div>
-						{/if}
 					</div>
 				</div>
 			{:else}

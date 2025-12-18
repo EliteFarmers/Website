@@ -102,7 +102,7 @@
 {#snippet rankLink(small = false)}
 	<a
 		class="hover:bg-muted flex h-full max-w-fit flex-col items-center justify-center rounded-md p-0.5 lg:p-1"
-		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}"
+		href="/leaderboard/farmingweight/{ctx.ign}-{ctx.selectedProfile?.profileName}?fallback={rank}"
 		style="background-color: {small
 			? 'inherit'
 			: bg}; border-color: transparent; background-opacity: 0.8; color: {(!small

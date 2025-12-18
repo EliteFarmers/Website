@@ -42,7 +42,9 @@
 	);
 
 	let filtered = $derived(
-		tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).slice(0, show)
+		tools
+			.filter((tool) => tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? '']))
+			.slice(0, show)
 	);
 </script>
 
@@ -80,7 +82,7 @@
 				{/snippet}
 			</Select.Simple>
 		</div>
-		{#if $player.selectedTool && $player.selectedTool.crop === selectedCropKey}
+		{#if $player.selectedTool && $player.selectedTool.crops.some((crop) => PROPER_CROP_NAME[crop] === selectedCropKey)}
 			<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
 		{:else}
 			<FortuneBreakdown total={0} />
@@ -90,7 +92,7 @@
 	<div class="-mx-2 mb-2 flex w-full flex-col gap-2">
 		{#each filtered as tool (tool.item.uuid)}
 			{@const selected = selectedToolId === tool.item.uuid}
-			{#if tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']}
+			{#if tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? ''])}
 				<button
 					onclick={() => {
 						selectedToolId = tool.item.uuid ?? undefined;
@@ -107,7 +109,7 @@
 		{:else}
 			<p class="text-muted-foreground text-sm">No matching tools found!</p>
 		{/each}
-		{#if $player.tools.filter((tool) => tool.crop && $selectedCrops[PROPER_CROP_NAME[tool.crop] ?? '']).length > 2}
+		{#if $player.tools.filter((tool) => tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? ''])).length > 2}
 			<button
 				onclick={toggleShow}
 				class="hover:bg-card/50 flex w-fit cursor-pointer items-center justify-center rounded-lg border-[3px] border-solid border-transparent px-1 py-0.5 text-sm"

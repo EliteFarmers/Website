@@ -8,6 +8,7 @@
 		compact?: boolean;
 		barBg?: string;
 		class?: string;
+		fillClass?: string;
 		disabled?: boolean;
 	}
 
@@ -20,11 +21,20 @@
 		compact = false,
 		barBg = 'bg-background',
 		disabled = false,
+		fillClass = undefined,
 		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold',
 	}: Props = $props();
 
 	let background = $derived(
-		!disabled ? (maxed ? 'bg-completed' : 'bg-progress') : maxed ? 'bg-completed/40' : 'bg-progress/40'
+		fillClass
+			? fillClass
+			: !disabled
+				? maxed
+					? 'bg-completed'
+					: 'bg-progress'
+				: maxed
+					? 'bg-completed/40'
+					: 'bg-progress/40'
 	);
 </script>
 

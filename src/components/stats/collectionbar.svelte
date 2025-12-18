@@ -69,7 +69,7 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
-							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
+							href="/leaderboard/{key}/{page.params.id}-{page.params.profile}?fallback={rank}"
 							class="bg-card hover:bg-muted rounded-md px-1.5"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span
@@ -86,7 +86,7 @@
 			<div class="flex flex-row items-center gap-2">
 				{#if pestRank > 0}
 					<a
-						href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
+						href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}?fallback={pestRank}"
 						class="bg-card hover:bg-muted rounded-md px-1"
 					>
 						<span class="xs:text-md text-sm sm:text-lg">#</span><span class="text-md xs:text-lg sm:text-xl"
@@ -137,7 +137,7 @@
 						{@render cropIcon('flex sm:hidden')}
 						{#if rank > 0}
 							<a
-								href="/leaderboard/{key}/{page.params.id}-{page.params.profile}"
+								href="/leaderboard/{key}/{page.params.id}-{page.params.profile}?fallback={rank}"
 								class="bg-card hover:bg-muted rounded-md px-1.5"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span
@@ -162,7 +162,7 @@
 					<div class="flex flex-row items-center gap-2">
 						{#if pestRank > 0}
 							<a
-								href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}"
+								href="/leaderboard/{pest}/{page.params.id}-{page.params.profile}?fallback={pestRank}"
 								class="bg-card hover:bg-muted rounded-md px-1"
 							>
 								<span class="xs:text-md text-sm sm:text-lg">#</span><span

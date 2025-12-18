@@ -33,8 +33,13 @@
 			</h2>
 		</div>
 		<Accordion.Root type="single">
-			{#each sorted as participant, i (participant.playerName ?? '' + participant.collected)}
+			{#each sorted as participant, i ((participant.playerName ?? '') + participant.profileUuid + participant.collected)}
 				<Recordparticipation entry={participant} rank={i} />
+			{:else}
+				<div class="mb-8 flex flex-col items-center justify-center space-y-2 p-4">
+					<h2 class="text-center text-lg font-semibold">No Records Found</h2>
+					<p>Data will be loaded once a player has participated in this contest!</p>
+				</div>
 			{/each}
 		</Accordion.Root>
 		<div class="my-2 flex flex-col items-center justify-center gap-4 md:flex-row">

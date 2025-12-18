@@ -49,7 +49,7 @@
 				<div class="flex flex-row items-center gap-1">
 					{#if rank > 0}
 						<a
-							href="/leaderboard/{key}-milestone/{page.params.id}-{page.params.profile}"
+							href="/leaderboard/{key}-milestone/{page.params.id}-{page.params.profile}?fallback={rank}"
 							class="bg-card hover:bg-muted rounded-md px-1.5"
 						>
 							<span class="xs:text-md text-sm sm:text-lg">#</span><span

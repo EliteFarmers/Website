@@ -17,12 +17,8 @@
 
 	let { tool, player }: Props = $props();
 
-	const counterOptions = [10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000];
-
 	let expanded = $state(false);
 	let reforge = $state(tool.reforge?.name.toLowerCase() ?? 'bountiful');
-
-	let counter = $state((counterOptions.findLast((c) => c < tool.farmed) ?? 10_000).toString());
 </script>
 
 <div class="flex w-full flex-col gap-2 rounded-md">
@@ -61,21 +57,6 @@
 				change={(v) => {
 					if (!v) return;
 					tool.changeReforgeTo(reforge);
-					$player.selectTool(tool);
-					player.refresh();
-				}}
-			/>
-			<Label>Farmed Crops</Label>
-			<Select.Simple
-				bind:value={counter}
-				placeholder="Farmed Crops"
-				options={counterOptions.map((c) => ({
-					value: c.toString(),
-					label: c.toLocaleString(),
-				}))}
-				change={(v) => {
-					if (!v) return;
-					tool.changeFarmedCropsTo(+counter);
 					$player.selectTool(tool);
 					player.refresh();
 				}}

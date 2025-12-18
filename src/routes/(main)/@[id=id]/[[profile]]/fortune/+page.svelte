@@ -3,7 +3,6 @@
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Skeleton } from '$ui/skeleton';
-	import type { Crop } from 'farming-weight';
 	import { onMount, tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
@@ -20,12 +19,7 @@
 				$ratesData.communityCenter = data.importedSettings.communityCenter ?? $ratesData.communityCenter;
 				$ratesData.strength = data.importedSettings.strength ?? $ratesData.strength;
 				$ratesData.attributes = data.importedSettings.attributes ?? $ratesData.attributes;
-
-				if (data.importedSettings.exported) {
-					for (const [crop, value] of Object.entries(data.importedSettings.exported)) {
-						$ratesData.exported[crop as Crop] = value ?? $ratesData.exported[crop as Crop];
-					}
-				}
+				$ratesData.chips = data.importedSettings.chips ?? $ratesData.chips;
 
 				const from = data.importedSettings.from;
 				toast.success(`Successfully imported settings ${from ? 'from ' + from : ''}!`, {

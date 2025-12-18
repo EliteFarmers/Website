@@ -109,10 +109,6 @@
 		if (!costFn) return 0;
 		return allUpgrades.reduce((sum, u) => sum + costFn(u, items), 0);
 	});
-
-	const totalFortune = $derived(
-		allUpgrades.reduce((sum, u) => sum + (u.increase > 0 ? u.increase : (u.max ?? 0)), 0)
-	);
 </script>
 
 <Dialog.Root bind:open>
@@ -173,13 +169,10 @@
 			</div>
 
 			{#if hasUpgrades && totalCost > 0}
-				<div class="text-left sm:text-right">
+				<div class="flex flex-col items-center justify-center text-left sm:text-right">
 					<p class="text-muted-foreground text-sm tracking-wider uppercase">Completion Cost</p>
 					<p class="text-completed text-2xl font-bold">
 						{Math.round(totalCost).toLocaleString()}
-					</p>
-					<p class="text-muted-foreground text-sm">
-						+{totalFortune.toLocaleString()} Fortune
 					</p>
 				</div>
 			{/if}
@@ -302,7 +295,7 @@
 					<p class="text-muted-foreground text-lg">No information available</p>
 				</div>
 			{:else if progress.item}
-				<ItemLore item={progress.item} otherDebugData={sortedUpgrades} />
+				<ItemLore item={progress.item} otherDebugData={{ progress, sortedUpgrades }} />
 			{/if}
 		</div>
 		<div class="bg-card/80 flex items-center justify-end gap-2 border-t p-4">
