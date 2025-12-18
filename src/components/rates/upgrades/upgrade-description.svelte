@@ -49,6 +49,10 @@
 		<p class="text-muted-foreground text-xs">Recommended for more profit despite lower fortune.</p>
 	{/if}
 	{#if upgrade.increase === 0 && upgrade.max && upgrade.max > 0}
-		<p class="text-muted-foreground text-xs">Gives no fortune right away, but has later upgrades.</p>
+		{#if upgrade.stats}
+			<p class="text-muted-foreground text-xs">Gives no fortune right away, but has later upgrades.</p>
+		{:else}
+			<p class="text-muted-foreground text-xs">Shown for completion!</p>
+		{/if}
 	{/if}
 </div>

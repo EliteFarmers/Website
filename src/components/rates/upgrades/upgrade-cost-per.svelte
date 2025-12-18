@@ -8,11 +8,11 @@
 
 	let { upgrade, totalCost }: Props = $props();
 
-	const increase = upgrade.increase || upgrade.max || 0;
+	const increase = upgrade.increase || (upgrade.stats ? upgrade.max : 0) || 0;
 	const costPer = $derived.by(() => {
 		const cost = increase > 0 ? Math.round(totalCost / increase) : 0;
 
-		if (cost === 0) {
+		if (cost === 0 && upgrade.stats) {
 			return (upgrade.max ?? increase) > 0 ? Math.round(totalCost / (upgrade.max ?? increase)) : 0;
 		}
 		return cost;

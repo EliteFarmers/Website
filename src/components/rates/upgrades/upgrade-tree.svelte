@@ -28,7 +28,9 @@
 	let isOpen = $derived(defaultOpen);
 	const upgrade = $derived(node.upgrade);
 	const cost = $derived(costFn ? costFn(upgrade, items) : 0);
-	const fortuneForCost = $derived((upgrade.increase > 0 ? upgrade.increase : (upgrade.max ?? 0)) || 0);
+	const fortuneForCost = $derived(
+		(upgrade.increase > 0 ? upgrade.increase : ((upgrade.stats ? upgrade.max : 0) ?? 0)) || 0
+	);
 
 	// Calculate copper and bits costs
 	const copperTotal = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
