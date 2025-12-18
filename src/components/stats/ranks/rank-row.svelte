@@ -35,7 +35,7 @@
 		</div>
 		<a
 			class="group relative flex h-full flex-1 flex-row items-center justify-end gap-2 pr-2 sm:pr-8"
-			href="/leaderboard/{rank.id}/{ctx.ign}-{ctx.selectedProfile?.profileName ?? ''}"
+			href="/leaderboard/{rank.id}/{ctx.ign}-{ctx.selectedProfile?.profileName ?? ''}?fallback={rank.rank}"
 		>
 			<span>
 				<span class="text-muted-foreground mr-0.5">#</span><span class="font-mono text-2xl">{rank.rank}</span>

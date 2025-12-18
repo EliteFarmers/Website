@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
 import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
+import type { GardenChipId } from 'farming-weight/dist/constants/chips';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
@@ -19,6 +20,7 @@ interface RatesData {
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
 	attributes: Record<string, number>;
+	chips: Record<GardenChipId, number>;
 }
 
 export const MissingRatesDataSchema = z.object({
@@ -56,6 +58,18 @@ const defaultData = {
 			.filter((a) => a[1].effect === 'rates' || a[1].effect === 'fortune')
 			.map((a) => [a[0], 0])
 	),
+	chips: {
+		CROPSHOT_GARDEN_CHIP: 0,
+		VERMIN_VAPORIZER_GARDEN_CHIP: 0,
+		SYNTHESIS_GARDEN_CHIP: 0,
+		SOWLEDGE_GARDEN_CHIP: 0,
+		MECHAMIND_GARDEN_CHIP: 0,
+		HYPERCHARGE_GARDEN_CHIP: 0,
+		EVERGREEN_GARDEN_CHIP: 0,
+		OVERDRIVE_GARDEN_CHIP: 0,
+		QUICKDRAW_GARDEN_CHIP: 0,
+		RAREFINDER_GARDEN_CHIP: 0,
+	} as Record<GardenChipId, number>,
 } as RatesData;
 
 export function initRatesData(data = defaultData) {

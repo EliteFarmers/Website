@@ -41,7 +41,7 @@
 	<div class="flex flex-row items-center gap-2">
 		{#if rank >= 0}
 			<a
-				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}"
+				href="/leaderboard/{name.toLowerCase()}/{page.params.id}-{page.params.profile}?fallback={rank}"
 				class="bg-card text-completed hover:bg-muted rounded-md px-1.5 py-0.5 font-semibold"
 			>
 				<span class="xs:text-md text-sm leading-none sm:text-lg">#</span><span

@@ -109,7 +109,8 @@
 						<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 							{#if ranks['visitors-accepted']?.rank > 0}
 								<a
-									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params.profile}"
+									href="/leaderboard/visitors-accepted/{page.params.id}-{page.params
+										.profile}?fallback={ranks['visitors-accepted']?.rank}"
 									class="bg-card hover:bg-muted rounded-md px-1.5"
 								>
 									<span class="text-sm">#</span><span class="text-md"

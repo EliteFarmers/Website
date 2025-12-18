@@ -464,6 +464,7 @@ export * from './MemberDetailsDto';
 export * from './MemberDetailsDtoMeta';
 export * from './MemberFortuneSettingsDto';
 export * from './MemberFortuneSettingsDtoAttributes';
+export * from './MemberFortuneSettingsDtoChips';
 export * from './MemberFortuneSettingsDtoExported';
 export * from './MemberLeaderboardCosmeticsDto';
 export * from './MinecraftAccountDetailsDto';

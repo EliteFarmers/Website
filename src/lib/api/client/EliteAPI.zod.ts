@@ -106,9 +106,7 @@ export const zodGetAccountResponse = zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-								exported: zod
-									.record(zod.string(), zod.coerce.boolean<boolean>())
-									.describe('Exported crops'),
+								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
 						)
 					)
@@ -414,9 +412,7 @@ export const zodGetAccountFromDiscordResponse = zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-								exported: zod
-									.record(zod.string(), zod.coerce.boolean<boolean>())
-									.describe('Exported crops'),
+								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
 						)
 					)
@@ -680,9 +676,7 @@ export const zodGetAccountSettingsResponse = zod.object({
 							strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 							communityCenter: zod.number().describe('Community center farming fortune level'),
 							attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-							exported: zod
-								.record(zod.string(), zod.coerce.boolean<boolean>())
-								.describe('Exported crops'),
+							chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 						})
 					)
 				)
@@ -790,9 +784,7 @@ export const zodGetAuthAccountResponse = zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-								exported: zod
-									.record(zod.string(), zod.coerce.boolean<boolean>())
-									.describe('Exported crops'),
+								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
 						)
 					)
@@ -1075,7 +1067,7 @@ export const zodUpdateFortuneSettingsBody = zod.object({
 	strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 	communityCenter: zod.number().describe('Community center farming fortune level'),
 	attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-	exported: zod.record(zod.string(), zod.coerce.boolean<boolean>()).describe('Exported crops'),
+	chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 });
 
 /**
@@ -3040,9 +3032,7 @@ export const zodUpdateDiscordAccountResponse = zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
-								exported: zod
-									.record(zod.string(), zod.coerce.boolean<boolean>())
-									.describe('Exported crops'),
+								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
 						)
 					)
@@ -11864,8 +11854,11 @@ export const zodGetItemRelatedResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 	),
@@ -12086,8 +12079,11 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown(),
+						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 					})
+					.describe(
+						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+					)
 					.nullish(),
 			})
 			.nullable()
@@ -12208,8 +12204,11 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown(),
+							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 						})
+						.describe(
+							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+						)
 						.nullish(),
 				})
 				.nullish()
@@ -12412,8 +12411,11 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown(),
+					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
 				})
+				.describe(
+					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
+				)
 				.nullish(),
 		})
 		.nullish()

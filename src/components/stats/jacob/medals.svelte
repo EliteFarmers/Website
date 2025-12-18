@@ -28,7 +28,8 @@
 			<div class="flex-1 basis-48">
 				{#if ranks[medal + 'medals']?.rank > -1}
 					<a
-						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
+						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile
+							?.profileName}?fallback={ranks[medal + 'medals']?.rank}"
 						class="xs:justify-center bg-card hover:bg-muted flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
@@ -60,7 +61,8 @@
 			<div class="flex-1 basis-48">
 				{#if ranks[medal + 'medals']?.rank > -1}
 					<a
-						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile?.profileName}"
+						href="/leaderboard/{medal}medals/{page.params.id}-{ctx.selectedProfile
+							?.profileName}?fallback={ranks[medal + 'medals']?.rank}"
 						class="xs:justify-center bg-card hover:bg-muted flex flex-1 basis-48 flex-row items-center justify-center gap-3 rounded-md p-2"
 					>
 						<img src="/images/medals/{medal}.webp" alt="Medal" class="pixelated h-12 w-12 p-1" />
