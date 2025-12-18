@@ -63,7 +63,6 @@ export class PlayerStats {
 				data.communityCenter = this.fortuneSettings?.communityCenter ?? data.communityCenter;
 				data.strength = this.fortuneSettings?.strength ?? data.strength;
 				data.attributes = this.fortuneSettings?.attributes ?? data.attributes;
-				data.exported = (this.fortuneSettings?.exported as Record<Crop, boolean>) ?? data.exported;
 				return data;
 			});
 		}

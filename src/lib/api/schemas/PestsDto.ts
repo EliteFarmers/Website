@@ -19,6 +19,8 @@ export interface PestsDto {
 	rat: number;
 	slug: number;
 	earthworm: number;
-	/** @nullable */
-	mouse?: number | null;
+	mouse: number;
+	dragonfly: number;
+	firefly: number;
+	mantis: number;
 }

@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { Crop, ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
+import { ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
 import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
@@ -12,7 +12,6 @@ interface RatesData {
 	communityCenter: number;
 	selectedPet?: string;
 	strength: number;
-	exported: Record<Crop, boolean>;
 	useTemp: boolean;
 	temp: Required<TemporaryFarmingFortune>;
 	sprayedPlot: boolean;
@@ -25,30 +24,18 @@ interface RatesData {
 export const MissingRatesDataSchema = z.object({
 	communityCenter: z.number().optional(),
 	strength: z.number().optional(),
-	exported: z.record(z.enum(Object.values(Crop)), z.boolean().optional()).optional(),
 	attributes: z.record(z.string(), z.number()).optional(),
+	chips: z.record(z.string(), z.number()).optional(),
 	from: z.string().optional(),
 });
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 6,
+	v: 7,
 	settings: false,
 	communityCenter: 0,
 	strength: 0,
 	bzMode: 'order',
-	exported: {
-		[Crop.Cactus]: false,
-		[Crop.Carrot]: false,
-		[Crop.CocoaBeans]: false,
-		[Crop.Melon]: false,
-		[Crop.Mushroom]: false,
-		[Crop.NetherWart]: false,
-		[Crop.Potato]: false,
-		[Crop.Pumpkin]: false,
-		[Crop.SugarCane]: false,
-		[Crop.Wheat]: false,
-	} as Record<Crop, boolean>,
 	useTemp: true,
 	temp: {
 		pestTurnIn: 0,

@@ -8619,6 +8619,7 @@ export const zodGetProfileResponse = zod.object({
 	unparsed: zod.object({
 		copper: zod.number(),
 		consumed: zod.record(zod.string(), zod.number()),
+		exportedCrops: zod.record(zod.string(), zod.coerce.boolean<boolean>()).nullish(),
 		levelCaps: zod.record(zod.string(), zod.number()),
 		perks: zod.record(zod.string(), zod.number()).nullish(),
 		tempStatBuffs: zod
@@ -8778,7 +8779,10 @@ export const zodGetProfileResponse = zod.object({
 			rat: zod.number(),
 			slug: zod.number(),
 			earthworm: zod.number(),
-			mouse: zod.number().nullish(),
+			mouse: zod.number(),
+			dragonfly: zod.number(),
+			firefly: zod.number(),
+			mantis: zod.number(),
 		}),
 		inventory: zod
 			.object({
@@ -9733,6 +9737,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 	unparsed: zod.object({
 		copper: zod.number(),
 		consumed: zod.record(zod.string(), zod.number()),
+		exportedCrops: zod.record(zod.string(), zod.coerce.boolean<boolean>()).nullish(),
 		levelCaps: zod.record(zod.string(), zod.number()),
 		perks: zod.record(zod.string(), zod.number()).nullish(),
 		tempStatBuffs: zod
@@ -9892,7 +9897,10 @@ export const zodGetSelectedProfileResponse = zod.object({
 			rat: zod.number(),
 			slug: zod.number(),
 			earthworm: zod.number(),
-			mouse: zod.number().nullish(),
+			mouse: zod.number(),
+			dragonfly: zod.number(),
+			firefly: zod.number(),
+			mantis: zod.number(),
 		}),
 		inventory: zod
 			.object({
@@ -11788,6 +11796,16 @@ export const zodGetItemRelatedResponse = zod.object({
 								coins: zod.number(),
 							})
 						),
+						requirements: zod.array(
+							zod.object({
+								type: zod.string(),
+								skill: zod.string().nullish(),
+								data_key: zod.string().nullish(),
+								value: zod.string().nullish(),
+								operator: zod.string().nullish(),
+								level: zod.number(),
+							})
+						),
 					})
 				)
 				.nullish(),
@@ -11796,6 +11814,9 @@ export const zodGetItemRelatedResponse = zod.object({
 					zod.object({
 						type: zod.string(),
 						skill: zod.string().nullish(),
+						data_key: zod.string().nullish(),
+						value: zod.string().nullish(),
+						operator: zod.string().nullish(),
 						level: zod.number(),
 					})
 				)
@@ -11843,11 +11864,8 @@ export const zodGetItemRelatedResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 	),
@@ -12000,6 +12018,16 @@ export const zodGetSkyblockItemsResponse = zod.object({
 									coins: zod.number(),
 								})
 							),
+							requirements: zod.array(
+								zod.object({
+									type: zod.string(),
+									skill: zod.string().nullish(),
+									data_key: zod.string().nullish(),
+									value: zod.string().nullish(),
+									operator: zod.string().nullish(),
+									level: zod.number(),
+								})
+							),
 						})
 					)
 					.nullish(),
@@ -12008,6 +12036,9 @@ export const zodGetSkyblockItemsResponse = zod.object({
 						zod.object({
 							type: zod.string(),
 							skill: zod.string().nullish(),
+							data_key: zod.string().nullish(),
+							value: zod.string().nullish(),
+							operator: zod.string().nullish(),
 							level: zod.number(),
 						})
 					)
@@ -12055,11 +12086,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.unknown(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -12112,6 +12140,16 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 										coins: zod.number(),
 									})
 								),
+								requirements: zod.array(
+									zod.object({
+										type: zod.string(),
+										skill: zod.string().nullish(),
+										data_key: zod.string().nullish(),
+										value: zod.string().nullish(),
+										operator: zod.string().nullish(),
+										level: zod.number(),
+									})
+								),
 							})
 						)
 						.nullish(),
@@ -12120,6 +12158,9 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 							zod.object({
 								type: zod.string(),
 								skill: zod.string().nullish(),
+								data_key: zod.string().nullish(),
+								value: zod.string().nullish(),
+								operator: zod.string().nullish(),
 								level: zod.number(),
 							})
 						)
@@ -12167,11 +12208,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.unknown(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -12306,6 +12344,16 @@ export const zodSkyblockProductResponse = zod.object({
 								coins: zod.number(),
 							})
 						),
+						requirements: zod.array(
+							zod.object({
+								type: zod.string(),
+								skill: zod.string().nullish(),
+								data_key: zod.string().nullish(),
+								value: zod.string().nullish(),
+								operator: zod.string().nullish(),
+								level: zod.number(),
+							})
+						),
 					})
 				)
 				.nullish(),
@@ -12314,6 +12362,9 @@ export const zodSkyblockProductResponse = zod.object({
 					zod.object({
 						type: zod.string(),
 						skill: zod.string().nullish(),
+						data_key: zod.string().nullish(),
+						value: zod.string().nullish(),
+						operator: zod.string().nullish(),
 						level: zod.number(),
 					})
 				)
@@ -12361,11 +12412,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()
@@ -15179,7 +15227,10 @@ export const zodGetWeightForProfileResponse = zod.object({
 		rat: zod.number(),
 		slug: zod.number(),
 		earthworm: zod.number(),
-		mouse: zod.number().nullish(),
+		mouse: zod.number(),
+		dragonfly: zod.number(),
+		firefly: zod.number(),
+		mantis: zod.number(),
 	}),
 	inventory: zod
 		.object({
@@ -15574,7 +15625,10 @@ export const zodGetWeightForSelectedResponse = zod.object({
 		rat: zod.number(),
 		slug: zod.number(),
 		earthworm: zod.number(),
-		mouse: zod.number().nullish(),
+		mouse: zod.number(),
+		dragonfly: zod.number(),
+		firefly: zod.number(),
+		mantis: zod.number(),
 	}),
 	inventory: zod
 		.object({
@@ -15975,7 +16029,10 @@ export const zodGetWeightForProfilesResponse = zod.object({
 				rat: zod.number(),
 				slug: zod.number(),
 				earthworm: zod.number(),
-				mouse: zod.number().nullish(),
+				mouse: zod.number(),
+				dragonfly: zod.number(),
+				firefly: zod.number(),
+				mantis: zod.number(),
 			}),
 			lastUpdated: zod.number(),
 		})

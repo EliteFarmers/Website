@@ -622,6 +622,7 @@ export * from './UnparsedApiDataDtoAccessoryBagSettings';
 export * from './UnparsedApiDataDtoBestiary';
 export * from './UnparsedApiDataDtoConsumed';
 export * from './UnparsedApiDataDtoDungeons';
+export * from './UnparsedApiDataDtoExportedCrops';
 export * from './UnparsedApiDataDtoLevelCaps';
 export * from './UnparsedApiDataDtoPerks';
 export * from './UpdateBadgeRequestUpdateBadge';
