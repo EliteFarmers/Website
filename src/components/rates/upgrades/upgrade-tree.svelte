@@ -29,7 +29,35 @@
 	const upgrade = $derived(node.upgrade);
 	const cost = $derived(costFn ? costFn(upgrade, items) : 0);
 	const fortuneForCost = $derived((upgrade.increase > 0 ? upgrade.increase : (upgrade.max ?? 0)) || 0);
-	const costPerFF = $derived.by(() => (fortuneForCost > 0 && cost > 0 ? Math.round(cost / fortuneForCost) : 0));
+
+	// Calculate copper and bits costs
+	const copperTotal = $derived((upgrade.cost?.copper ?? 0) + (upgrade.cost?.applyCost?.copper ?? 0));
+	const bitsTotal = $derived((upgrade.cost?.bits ?? 0) + (upgrade.cost?.applyCost?.bits ?? 0));
+	const copperPerFF = $derived(fortuneForCost > 0 && copperTotal > 0 ? Math.round(copperTotal / fortuneForCost) : 0);
+	const bitsPerFF = $derived(fortuneForCost > 0 && bitsTotal > 0 ? Math.round(bitsTotal / fortuneForCost) : 0);
+
+	// Use copper/bits if no coin cost, otherwise use coins
+	const displayTotal = $derived.by(() => {
+		if (cost > 0) return cost;
+		if (copperTotal > 0) return copperTotal;
+		if (bitsTotal > 0) return bitsTotal;
+		return 0;
+	});
+
+	const displayPerFF = $derived.by(() => {
+		if (cost > 0 && fortuneForCost > 0) return Math.round(cost / fortuneForCost);
+		if (copperPerFF > 0) return copperPerFF;
+		if (bitsPerFF > 0) return bitsPerFF;
+		return 0;
+	});
+
+	const displayUnit = $derived.by(() => {
+		if (cost > 0) return 'coins';
+		if (copperTotal > 0) return ' copper';
+		if (bitsTotal > 0) return ' bits';
+		return '';
+	});
+
 	const formatCompact = (num: number) =>
 		new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(num);
 	const hasChildren = $derived(node.children.length > 0);
@@ -128,39 +156,39 @@
 		</div>
 
 		<div class="col-start-3 row-start-2 text-right tabular-nums sm:hidden">
-			{#if costPerFF > 0}
+			{#if displayPerFF > 0}
 				<div>
-					<span class="dark:text-completed font-semibold">{formatCompact(costPerFF)}</span>
-					<span class="text-muted-foreground text-sm"> per</span>
+					<span class="dark:text-completed font-semibold">{formatCompact(displayPerFF)}</span>
+					<span class="text-muted-foreground text-sm">{displayUnit} per</span>
 				</div>
 			{:else}
-				<div class="text-muted-foreground text-sm">Not Available</div>
+				<div class="text-muted-foreground text-sm">N/A</div>
 			{/if}
-			{#if cost > 0}
+			{#if displayTotal > 0}
 				<div>
-					<span class="dark:text-completed font-semibold">{formatCompact(cost)}</span>
-					<span class="text-muted-foreground text-sm"> total</span>
+					<span class="dark:text-completed font-semibold">{formatCompact(displayTotal)}</span>
+					<span class="text-muted-foreground text-sm">{displayUnit}</span>
 				</div>
 			{:else}
-				<div class="text-muted-foreground text-sm">—</div>
+				<div class="text-muted-foreground text-sm">N/A</div>
 			{/if}
 		</div>
 
 		<div class="hidden text-right tabular-nums sm:block">
-			{#if costPerFF > 0}
-				<span class="dark:text-completed font-semibold">{formatCompact(costPerFF)}</span>
-				<span class="text-muted-foreground text-sm"> per</span>
+			{#if displayPerFF > 0}
+				<span class="dark:text-completed font-semibold">{formatCompact(displayPerFF)}</span>
+				<span class="text-muted-foreground text-sm">{displayUnit} per</span>
 			{:else}
-				<span class="text-muted-foreground text-sm">Not Available</span>
+				<span class="text-muted-foreground text-sm">N/A</span>
 			{/if}
 		</div>
 
 		<div class="hidden text-right tabular-nums sm:block">
-			{#if cost > 0}
-				<span class="dark:text-completed font-semibold">{formatCompact(cost)}</span>
-				<span class="text-muted-foreground text-sm"> total</span>
+			{#if displayTotal > 0}
+				<span class="dark:text-completed font-semibold">{formatCompact(displayTotal)}</span>
+				<span class="text-muted-foreground text-sm">{displayUnit}</span>
 			{:else}
-				<span class="text-muted-foreground text-sm">—</span>
+				<span class="text-muted-foreground text-sm">N/A</span>
 			{/if}
 		</div>
 	</div>
