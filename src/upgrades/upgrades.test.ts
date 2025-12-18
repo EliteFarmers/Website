@@ -294,17 +294,143 @@ test('Lotus to Blossom Necklace upgrade shows correct fortune delta', () => {
 	const item = new FarmingEquipment(maxedLotusNecklace);
 
 	// Lotus has 5 base fortune, Blossom has 7 base fortune
-	// So increase should be 2
+	// Lotus is Epic (recombobulated from Rare), so Rooted gives 15 fortune
+	// Blossom will be Legendary (recombobulated from Epic), so Rooted gives 18 fortune
+	// Base increase: 7 - 5 = 2, Reforge increase: 18 - 15 = 3, Total: 5
 	const upgrades = item.getUpgrades();
 	const blossomUpgrade = upgrades.find((u) => u.title === 'Blossom Necklace');
 
 	expect(blossomUpgrade).toBeDefined();
-	expect(blossomUpgrade?.increase).toBe(2); // Should show the delta (7 - 5 = 2)
-	expect(blossomUpgrade?.stats?.['farming_fortune']).toBe(2); // Stats should also show delta
+	expect(blossomUpgrade?.increase).toBe(5); // Base (2) + Reforge (3)
+	expect(blossomUpgrade?.stats?.['farming_fortune']).toBe(5); // Stats should also show total delta
 
 	const progress = item.getProgress([Stat.FarmingFortune]);
 	const base = progress.find((p) => p.name === 'Base Stats');
 	expect(base).toBeDefined();
 	expect(base?.current).toBe(5);
 	expect(base?.max).toBe(7);
+});
+
+test('Epic Fermento Helmet with 2 Perfect Peridots upgrading to Helianthus should include gem rarity increase', () => {
+	const epicFermentoHelmet = {
+		id: 397,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
+		name: '§5Mossy Fermento Helmet',
+		lore: ['§5§l§ka§r §5§l§d§lEPIC HELMET §5§l§ka'],
+		enchantments: {},
+		attributes: {
+			modifier: 'mossy',
+			timestamp: '1676403240000',
+		},
+		gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+	};
+
+	const item = new FarmingArmor(epicFermentoHelmet);
+	// Epic with 2 Perfect Peridots = 6 + 6 = 12
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(12);
+
+	const upgrades = item.getUpgrades();
+	const helianthusUpgrade = upgrades.find((u) => u.title === 'Helianthus Helmet');
+
+	expect(helianthusUpgrade).toBeDefined();
+	// Base fortune increase: 35 - 30 = 5
+	// Gem rarity increase (Legendary Perfect = 8 each): 16 - 12 = 4
+	// Reforge stat increase (Mossy on Legendary = 25, on Epic = 20): 25 - 20 = 5
+	// Total: 14
+	expect(helianthusUpgrade?.increase).toBe(14);
+});
+
+test('Recombobulated Legendary Fermento Helmet upgrading to Helianthus (Mythic) should include gem rarity increase', () => {
+	const recombLegendaryFermentoHelmet = {
+		id: 397,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
+		name: '§cRecombobulated Mossy Fermento Helmet',
+		lore: ['§c§l§ka§r §c§l§c§lLEGENDARY HELMET §c§l§ka'],
+		enchantments: {},
+		attributes: {
+			modifier: 'mossy',
+			timestamp: '1676403240000',
+			rarity_upgrades: '1',
+		},
+		gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+	};
+
+	const item = new FarmingArmor(recombLegendaryFermentoHelmet);
+	// Legendary with 2 Perfect Peridots = 8 + 8 = 16
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(16);
+
+	const upgrades = item.getUpgrades();
+	const helianthusUpgrade = upgrades.find((u) => u.title === 'Helianthus Helmet');
+
+	expect(helianthusUpgrade).toBeDefined();
+	// Base fortune increase: 35 - 30 = 5
+	// Gem rarity increase (Mythic Perfect = 10 each): 20 - 16 = 4
+	// Reforge stat increase (Mossy on Mythic = 30, on Legendary = 25): 30 - 25 = 5
+	// Total: 14
+	expect(helianthusUpgrade?.increase).toBe(14);
+});
+
+test('Epic Fermento Helmet with Bustling reforge upgrading to Helianthus should include reforge stat increase', () => {
+	const epicBustlingFermentoHelmet = {
+		id: 397,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
+		name: '§5Bustling Fermento Helmet',
+		lore: ['§5§l§ka§r §5§l§d§lEPIC HELMET §5§l§ka'],
+		enchantments: {},
+		attributes: {
+			modifier: 'bustling',
+			timestamp: '1676403240000',
+		},
+	};
+
+	const item = new FarmingArmor(epicBustlingFermentoHelmet);
+	// Epic Fermento has 30 base, Bustling on Epic gives +6
+	expect(item.fortune).toBe(36);
+
+	const upgrades = item.getUpgrades();
+	const helianthusUpgrade = upgrades.find((u) => u.title === 'Helianthus Helmet');
+
+	expect(helianthusUpgrade).toBeDefined();
+	// Base fortune increase: 35 - 30 = 5
+	// Reforge stat increase (Bustling on Legendary = 8, on Epic = 6): 8 - 6 = 2
+	// Total: 7
+	expect(helianthusUpgrade?.increase).toBe(7);
+});
+
+test('Recombobulated Epic Fermento with Bustling reforge and gems upgrading to Mythic Helianthus', () => {
+	const recombEpicFermentoHelmet = {
+		id: 397,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
+		name: '§6Bustling Fermento Helmet',
+		lore: ['§6§l§ka§r §6§l§6§lLEGENDARY HELMET §6§l§ka'],
+		enchantments: {},
+		attributes: {
+			modifier: 'bustling',
+			timestamp: '1676403240000',
+			rarity_upgrades: '1',
+		},
+		gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+	};
+
+	const item = new FarmingArmor(recombEpicFermentoHelmet);
+	// Legendary Fermento: 30 base + 8 reforge (Bustling on Legendary) + 16 gems (Legendary Perfect Peridot = 8 each)
+	expect(item.fortune).toBe(54);
+
+	const upgrades = item.getUpgrades();
+	const helianthusUpgrade = upgrades.find((u) => u.title === 'Helianthus Helmet');
+
+	expect(helianthusUpgrade).toBeDefined();
+	// Base fortune increase: 35 - 30 = 5
+	// Gem rarity increase (Mythic Perfect = 10 each): 20 - 16 = 4
+	// Reforge stat increase (Bustling on Mythic = 10, on Legendary = 8): 10 - 8 = 2
+	// Total: 11
+	expect(helianthusUpgrade?.increase).toBe(11);
 });

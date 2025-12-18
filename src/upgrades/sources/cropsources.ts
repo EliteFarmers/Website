@@ -23,8 +23,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				ITEM_REGISTRY.get(CROP_INFO[crop].startingTool)?.info.wiki
 			);
 		},
-		max: ({ crop }) => {
-			const progress = getFakeItem(CROP_INFO[crop].startingTool)?.getProgress();
+		max: ({ player, crop }) => {
+			const tool = player.getSelectedCropTool(crop) ?? getFakeItem(CROP_INFO[crop].startingTool);
+			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.max, 0) ?? 0;
 		},
 		current: ({ player, crop }) => {
@@ -32,9 +33,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.current, 0) ?? 0;
 		},
-		maxStat: ({ crop }, stat) => {
-			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
-			const progress = fake?.getProgress([stat], false) ?? [];
+		maxStat: ({ player, crop }, stat) => {
+			const tool = player.getSelectedCropTool(crop) ?? getFakeItem(CROP_INFO[crop].startingTool);
+			const progress = tool?.getProgress([stat], false) ?? [];
 			return progress.reduce(
 				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
 				0
@@ -70,7 +71,6 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Exportable Crop',
-		api: false,
 		wiki: () => 'https://wiki.hypixel.net/Carrolyn',
 		exists: ({ crop }) => CROP_INFO[crop].exportable === true,
 		max: () => EXPORTABLE_CROP_FORTUNE,

@@ -5,7 +5,15 @@ import {
 	getShardsForLevel,
 	getShardsForNextLevel,
 } from '../../constants/attributes.js';
+import {
+	GARDEN_CHIP_MAX_LEVEL,
+	GARDEN_CHIPS,
+	type GardenChipInfo,
+	getChipLevel,
+	getChipRarity,
+} from '../../constants/chips.js';
 import type { Crop } from '../../constants/crops.js';
+import { Rarity } from '../../constants/reforges.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,
@@ -26,6 +34,10 @@ import type { CalculateCropDetailedDropsOptions } from '../../util/ratecalc.js';
 import { getFortune } from '../getfortune.js';
 import { getSourceProgress } from '../getsourceprogress.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
+
+export const GARDEN_CHIP_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = Object.values(GARDEN_CHIPS).map((chip) =>
+	mapChipSource(chip)
+);
 
 function getLevelDeltaStats(
 	currentLevel: number,
@@ -105,6 +117,38 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 		progress: (player, stats) => {
 			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_FORTUNE_SOURCES, false, stats);
+		},
+	},
+	{
+		name: 'Garden Chips',
+		api: false,
+		alwaysInclude: true,
+		active: () => ({
+			active: true,
+			reason: 'Garden Chips should be upgraded, but are hard to give fortune numbers for.',
+		}),
+		exists: () => true,
+		max: () => {
+			// Only chips with farming fortune increases
+			const maxFortune = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
+				const fortunePerLevel = chip.statsPerRarity?.[Rarity.Legendary]?.[Stat.FarmingFortune] ?? 0;
+				return acc + fortunePerLevel * GARDEN_CHIP_MAX_LEVEL;
+			}, 0);
+			return maxFortune;
+		},
+		current: (player) => {
+			const totalCurrent = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
+				return acc + getChipLevel(player.options.chips?.[chip.skyblockId]);
+			}, 0);
+			return totalCurrent;
+		},
+		progress: (player, stats) => {
+			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, stats);
+		},
+		upgrades: (player, stats) => {
+			return GARDEN_CHIP_SOURCES.flatMap((source) => source.upgrades?.(player, stats)).filter(
+				Boolean
+			) as FortuneUpgrade[];
 		},
 	},
 	{
@@ -549,4 +593,85 @@ function mapShardSource(
 	} as DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>;
 
 	return result;
+}
+
+function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer> {
+	return {
+		name: chip.name,
+		api: false,
+		alwaysInclude: true,
+		wiki: () => chip.wiki,
+		exists: () => true,
+		// Progress-only display (avoid default Farming Fortune icon): show level in nested progress.
+		max: () => 0,
+		current: () => 0,
+		maxStat: (player, stat) => {
+			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
+			return per * GARDEN_CHIP_MAX_LEVEL;
+		},
+		currentStat: (player, stat) => {
+			const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
+			return per * level;
+		},
+		active: (player) => {
+			if (chip.skyblockId !== 'OVERDRIVE_GARDEN_CHIP') return { active: true };
+			if (!player.options.jacobContest?.enabled) {
+				return { active: false, reason: "Overdrive only applies during Jacob's Contest." };
+			}
+			if (!player.options.jacobContest.crop) {
+				return { active: false, reason: "Select an active Jacob's Contest crop to apply Overdrive." };
+			}
+			return { active: true, reason: `Applies to ${player.options.jacobContest.crop} during contest.` };
+		},
+		progress: (player) => {
+			const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			return [
+				{
+					name: 'Level',
+					current: level,
+					max: GARDEN_CHIP_MAX_LEVEL,
+					ratio: Math.min(isNaN(level / GARDEN_CHIP_MAX_LEVEL) ? 0 : level / GARDEN_CHIP_MAX_LEVEL, 1),
+				},
+			];
+		},
+		upgrades: (player, stats) => {
+			const currentLevel = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			if (currentLevel >= GARDEN_CHIP_MAX_LEVEL) return [];
+
+			// If a specific stat is requested, only offer upgrades that affect it.
+			if (stats && stats.length > 0 && chip.statsPerRarity) {
+				const affectsRequested = stats.some((s) => (chip.statsPerRarity?.[Rarity.Legendary]?.[s] ?? 0) !== 0);
+				if (!affectsRequested) return [];
+			}
+
+			const nextLevel = currentLevel + 1;
+			const deltaStats: Partial<Record<Stat, number>> = {};
+			const nextRarity = getChipRarity(nextLevel);
+			for (const [k, v] of Object.entries(chip.statsPerRarity?.[nextRarity] ?? {})) {
+				const stat = k as Stat;
+				if (v && v !== 0) deltaStats[stat] = v;
+			}
+
+			return [
+				{
+					title: `${chip.name} ${nextLevel}`,
+					increase: deltaStats[Stat.FarmingFortune] ?? 0,
+					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
+					action: UpgradeAction.LevelUp,
+					category: UpgradeCategory.Misc,
+					cost: {
+						items: {
+							[chip.skyblockId]: 1,
+						},
+					},
+					meta: {
+						type: 'chip',
+						id: chip.skyblockId,
+						value: nextLevel,
+					},
+				},
+			];
+		},
+	};
 }

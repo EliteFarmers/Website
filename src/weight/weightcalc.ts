@@ -18,6 +18,9 @@ const crops = [
 	Crop.Pumpkin,
 	Crop.SugarCane,
 	Crop.Wheat,
+	Crop.Sunflower,
+	Crop.Moonflower,
+	Crop.WildRose,
 ];
 
 export interface FarmingWeightInfo {
@@ -67,7 +70,7 @@ class FarmingWeight {
 	}
 
 	/**
-	 * Expectes a dictionary of collections and amounts with the default Hypixel SkyBlock IDs
+	 * Expects a dictionary of collections and amounts with the default Hypixel SkyBlock IDs
 	 * @param {Record<string, number>} collections
 	 * @returns {FarmingWeight}
 	 */

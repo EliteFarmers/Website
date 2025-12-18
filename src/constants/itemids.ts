@@ -19,4 +19,16 @@ export const ITEM_IDS = {
 	EnchantedBrownMushroomBlock: 'ENCHANTED_HUGE_MUSHROOM_1',
 	EnchantedNetherWart: 'ENCHANTED_NETHER_STALK',
 	MutantNetherWart: 'MUTANT_NETHER_STALK',
+
+	// Garden Chips
+	CropshotChip: 'CROPSHOT_GARDEN_CHIP',
+	VerminVaporizerChip: 'VERMIN_VAPORIZER_GARDEN_CHIP',
+	SynthesisChip: 'SYNTHESIS_GARDEN_CHIP',
+	SowledgeChip: 'SOWLEDGE_GARDEN_CHIP',
+	MechamindChip: 'MECHAMIND_GARDEN_CHIP',
+	HyperchargeChip: 'HYPERCHARGE_GARDEN_CHIP',
+	EvergreenChip: 'EVERGREEN_GARDEN_CHIP',
+	OverdriveChip: 'OVERDRIVE_GARDEN_CHIP',
+	QuickdrawChip: 'QUICKDRAW_GARDEN_CHIP',
+	RarefinderChip: 'RAREFINDER_GARDEN_CHIP',
 } as const;

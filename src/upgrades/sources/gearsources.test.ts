@@ -85,14 +85,14 @@ test('Almost maxed fermento fortune sources', () => {
 		{
 			name: 'Reforge Stats',
 			current: 25,
-			max: 25,
-			ratio: 1,
+			max: 30,
+			ratio: 25 / 30,
 		},
 		{
 			name: 'Gemstone Slots',
 			current: 11,
-			max: 16,
-			ratio: 11 / 16,
+			max: 20,
+			ratio: 11 / 20,
 		},
 		{
 			name: 'Pesterminator',
@@ -155,13 +155,13 @@ test('Melon boots fortune sources', () => {
 		{
 			name: 'Reforge Stats',
 			current: 0,
-			max: 25,
+			max: 30,
 			ratio: 0,
 		},
 		{
 			name: 'Gemstone Slots',
 			current: 0,
-			max: 16,
+			max: 20,
 			ratio: 0,
 		},
 		{

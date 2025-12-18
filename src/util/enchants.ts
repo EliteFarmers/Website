@@ -72,6 +72,10 @@ function getStatFromTier(
 	crop: Crop | undefined,
 	enchant: FarmingEnchant
 ) {
+	if (crop && enchant.cropSpecific && enchant.cropSpecific !== crop) {
+		return 0;
+	}
+
 	let value = tier.stats?.[stat] ?? 0;
 
 	if (options) {

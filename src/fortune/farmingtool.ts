@@ -321,8 +321,8 @@ export class FarmingTool extends UpgradeableBase {
 		if (this.type !== ReforgeTarget.Axe) return false;
 		if (this.fortuneBreakdown['Axed Perk']) return true;
 
-		const value = this.options?.perks?.['axed'];
-		return value === '1';
+		const value = this.options?.perks?.['axed'] as string | number | undefined;
+		return value === '1' || value === 1;
 	}
 
 	static isValid(item: EliteItemDto | FarmingTool): boolean {

@@ -75,7 +75,6 @@ test('Wheat fortune test', () => {
 		},
 		{
 			name: 'Exportable Crop',
-			api: false,
 			current: 12,
 			max: 12,
 			ratio: 1,
@@ -195,7 +194,6 @@ test('Nether Wart fortune test', () => {
 			current: 0,
 			max: 12,
 			ratio: 0,
-			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -249,7 +247,6 @@ test('Carrot fortune test', () => {
 			current: 12,
 			max: 12,
 			ratio: 1,
-			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',

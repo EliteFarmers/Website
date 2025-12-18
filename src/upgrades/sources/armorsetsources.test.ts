@@ -80,19 +80,19 @@ test('Armor set bonus', () => {
 		{
 			name: 'Chestplate',
 			current: 0,
-			max: 93,
+			max: 102,
 			ratio: 0,
 		},
 		{
 			name: 'Leggings',
 			current: 0,
-			max: 93,
+			max: 102,
 			ratio: 0,
 		},
 		{
 			name: 'Boots',
 			current: 0,
-			max: 88,
+			max: 97,
 			ratio: 0,
 		},
 		{
@@ -206,19 +206,19 @@ test('Equipment set bonus', () => {
 		{
 			name: 'Chestplate',
 			current: 0,
-			max: 93,
+			max: 102,
 			ratio: 0,
 		},
 		{
 			name: 'Leggings',
 			current: 0,
-			max: 93,
+			max: 102,
 			ratio: 0,
 		},
 		{
 			name: 'Boots',
 			current: 0,
-			max: 88,
+			max: 97,
 			ratio: 0,
 		},
 		{
@@ -267,7 +267,7 @@ test('Rancher boots preferred upgrade test', () => {
 	const bootProgress = progress.find((p) => p.name === 'Boots');
 	expect(bootProgress).toBeDefined();
 	expect(bootProgress!.item?.skyblockId).toBe('RANCHERS_BOOTS');
-	expect(bootProgress!.max).toBe(148);
+	expect(bootProgress!.max).toBe(157);
 });
 
 const bustlingLeggings = {

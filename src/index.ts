@@ -1,4 +1,5 @@
 export * from './constants/attributes.js';
+export * from './constants/chips.js';
 export * from './constants/crops.js';
 export * from './constants/enchants.js';
 export * from './constants/garden.js';

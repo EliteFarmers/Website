@@ -859,7 +859,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Legendary,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -917,7 +917,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Legendary,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -975,7 +975,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Legendary,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -1032,7 +1032,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Epic,
+		maxRarity: Rarity.Legendary,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -1077,7 +1077,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
 		family: 'HELIANTHUS',
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -1122,7 +1122,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
 		family: 'HELIANTHUS',
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -1167,7 +1167,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
 		family: 'HELIANTHUS',
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',
@@ -1212,7 +1212,7 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Helianthus_Armor',
 		family: 'HELIANTHUS',
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: [
 			{
 				slot_type: 'PERIDOT',

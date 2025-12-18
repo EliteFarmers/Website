@@ -1,4 +1,4 @@
-import { REFORGES } from '../constants/reforges.js';
+import { compareRarity, REFORGES } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import {
 	type FortuneUpgrade,
@@ -14,7 +14,7 @@ import type { Upgradeable, UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../items/tools.js';
 import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune } from '../util/gems.js';
-import { nextRarity } from '../util/itemstats.js';
+import { nextRarity, previousRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
 import { getFakeItem } from './itemregistry.js';
 
@@ -90,7 +90,55 @@ export function getSelfFortuneUpgrade(
 			const delta = (nextBaseStats[stat] ?? 0) - (currentBaseStats[stat] ?? 0);
 			if (delta !== 0) deltaStats[stat] = delta;
 		}
-		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+		let increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+		// Account for gem rarity changes when the item's base rarity increases
+		// This applies to any item with gems (armor, equipment, etc.)
+		if (upgradeable.item.gems) {
+			const currentRarity = upgradeable.rarity;
+			const currentBaseRarity = previousRarity(upgradeable.info.maxRarity) ?? upgradeable.info.maxRarity;
+			const nextBaseRarity = previousRarity(nextInfo.maxRarity) ?? nextInfo.maxRarity;
+
+			// Determine what rarity the upgraded item will be
+			const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
+			let nextItemRarity = nextBaseRarity;
+			if (rarityIncrease > 0) {
+				// Current item is recombobulated, so next item will also be recombobulated
+				nextItemRarity = nextRarity(nextBaseRarity);
+			}
+
+			if (compareRarity(nextItemRarity, currentRarity) > 0) {
+				const currentGemFortune = getPeridotFortune(currentRarity, upgradeable.item);
+				const nextGemFortune = getPeridotFortune(nextItemRarity, upgradeable.item);
+				increase += nextGemFortune - currentGemFortune;
+				deltaStats[Stat.FarmingFortune] = increase;
+			}
+		}
+
+		// Account for reforge stat changes when the item's base rarity increases
+		// Reforge stats scale with item rarity (e.g., Bustling gives more fortune on Legendary vs Epic)
+		if (upgradeable.reforge) {
+			const currentRarity = upgradeable.rarity;
+			const currentBaseRarity = previousRarity(upgradeable.info.maxRarity) ?? upgradeable.info.maxRarity;
+			const nextBaseRarity = previousRarity(nextInfo.maxRarity) ?? nextInfo.maxRarity;
+
+			// Determine what rarity the upgraded item will be
+			const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
+			let nextItemRarity = nextBaseRarity;
+			if (rarityIncrease > 0) {
+				// Current item is recombobulated, so next item will also be recombobulated
+				nextItemRarity = nextRarity(nextBaseRarity);
+			}
+
+			if (compareRarity(nextItemRarity, currentRarity) > 0) {
+				const currentReforgeFortune =
+					upgradeable.reforge.tiers?.[currentRarity]?.stats?.[Stat.FarmingFortune] ?? 0;
+				const nextReforgeFortune =
+					upgradeable.reforge.tiers?.[nextItemRarity]?.stats?.[Stat.FarmingFortune] ?? 0;
+				increase += nextReforgeFortune - currentReforgeFortune;
+				deltaStats[Stat.FarmingFortune] = increase;
+			}
+		}
 
 		return {
 			deadEnd: false,

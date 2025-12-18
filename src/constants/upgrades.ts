@@ -191,6 +191,7 @@ export interface UpgradeMeta {
 		| 'plot'
 		| 'attribute'
 		| 'crop_upgrade'
+		| 'chip'
 		| 'setting'
 		| 'unlock'
 		| 'buy_item';

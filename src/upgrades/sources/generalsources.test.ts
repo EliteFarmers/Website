@@ -22,6 +22,7 @@ test('General fortune sources', () => {
 		delete piece.maxInfo;
 		delete piece.upgrades;
 		delete piece.progress;
+		delete piece.active;
 	});
 
 	expect(progress).toStrictEqual([
@@ -37,6 +38,14 @@ test('General fortune sources', () => {
 			max: 90,
 			ratio: 0,
 			api: false,
+		},
+		{
+			name: 'Garden Chips',
+			current: 0,
+			max: 100,
+			ratio: 0,
+			api: false,
+			alwaysInclude: true,
 		},
 		{
 			name: 'Pest Bestiary',
@@ -86,10 +95,6 @@ test('General fortune sources', () => {
 			current: 0,
 			max: 25,
 			ratio: 0,
-			active: {
-				active: true,
-				reason: 'Magic 8 Ball only has a 20% chance to be active each season.',
-			},
 		},
 	]);
 });

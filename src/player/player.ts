@@ -1,4 +1,11 @@
 import { FARMING_ATTRIBUTE_SHARDS, getShardStat } from '../constants/attributes.js';
+import {
+	type GardenChipId,
+	getChipLevel,
+	getChipStats,
+	getChipTempMultiplierPerLevel,
+	normalizeChipId,
+} from '../constants/chips.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
@@ -68,6 +75,18 @@ export class FarmingPlayer {
 
 	setOptions(options: PlayerOptions) {
 		this.options = options;
+
+		// Normalize chip IDs to support both full and short names
+		if (this.options.chips) {
+			const normalizedChips: Partial<Record<GardenChipId, number>> = {};
+			for (const [key, value] of Object.entries(this.options.chips)) {
+				const normalizedId = normalizeChipId(key);
+				if (normalizedId) {
+					normalizedChips[normalizedId] = value;
+				}
+			}
+			this.options.chips = normalizedChips;
+		}
 
 		this.populatePets();
 		this.populateTools();
@@ -389,6 +408,39 @@ export class FarmingPlayer {
 			}
 		}
 
+		// Garden Chips
+		if (stat === Stat.FarmingFortune) {
+			const fortune =
+				getChipStats('CROPSHOT_GARDEN_CHIP', this.options.chips?.CROPSHOT_GARDEN_CHIP)?.[Stat.FarmingFortune] ??
+				0;
+			const val = fortune * getChipLevel(this.options.chips?.CROPSHOT_GARDEN_CHIP);
+			if (val > 0) {
+				breakdown['Cropshot Chip'] = val;
+				sum += val;
+			}
+		}
+		if (stat === Stat.BonusPestChance) {
+			const bpc =
+				getChipStats('VERMIN_VAPORIZER_GARDEN_CHIP', this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP)?.[
+					Stat.BonusPestChance
+				] ?? 0;
+			const val = bpc * getChipLevel(this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP);
+			if (val > 0) {
+				breakdown['Vermin Vaporizer Chip'] = val;
+				sum += val;
+			}
+		}
+		if (stat === Stat.FarmingWisdom) {
+			const wisdom =
+				getChipStats('SOWLEDGE_GARDEN_CHIP', this.options.chips?.SOWLEDGE_GARDEN_CHIP)?.[Stat.FarmingWisdom] ??
+				0;
+			const val = wisdom * getChipLevel(this.options.chips?.SOWLEDGE_GARDEN_CHIP);
+			if (val > 0) {
+				breakdown['Sowledge Chip'] = val;
+				sum += val;
+			}
+		}
+
 		// Attribute Shards
 		for (const [shardId, value] of Object.entries(this.attributes)) {
 			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
@@ -423,6 +475,14 @@ export class FarmingPlayer {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
 
+		// Hypercharge multiplier scales by chip rarity tiers:
+		// Rare (<=10): 1 + 0.03 * level
+		// Epic (<=15): 1 + 0.03 * level
+		// Legendary (>15): 2x boost to temporary fortune sources
+		const hyperLevel = getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP);
+		const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel);
+		const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
+
 		if (!this.options.temporaryFortune) {
 			this.tempFortuneBreakdown = breakdown;
 			return sum;
@@ -434,8 +494,9 @@ export class FarmingPlayer {
 
 			const fortune = source.fortune(this.options.temporaryFortune);
 			if (fortune) {
-				breakdown[source.name] = fortune;
-				sum += fortune;
+				const boosted = fortune * hyperchargeMultiplier;
+				breakdown[source.name] = boosted;
+				sum += boosted;
 			}
 		}
 
@@ -515,6 +576,17 @@ export class FarmingPlayer {
 			if (upgrade > 0) {
 				breakdown['Cocoa Fortune Upgrade'] = upgrade;
 				sum += upgrade;
+			}
+		}
+
+		// Garden Chips
+		// Overdrive: +5 crop fortune for the active contest crop per chip level.
+		if (this.options.jacobContest?.enabled && this.options.jacobContest.crop === crop) {
+			const level = getChipLevel(this.options.chips?.OVERDRIVE_GARDEN_CHIP);
+			const val = 5 * level;
+			if (val > 0) {
+				breakdown['Overdrive Chip'] = val;
+				sum += val;
 			}
 		}
 
@@ -772,6 +844,12 @@ export class FarmingPlayer {
 			this.options.attributes ??= {};
 			this.options.attributes[key] = Number(value);
 			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'chip' && id && value) {
+			this.options.chips ??= {};
+			// @ts-ignore - `id` is a GardenChipId string
+			this.options.chips[id] = Number(value);
+			this.permFortune = this.getGeneralFortune();
+			this.tempFortune = this.getTempFortune();
 		} else if (type === 'crop_upgrade' && key && value) {
 			this.options.cropUpgrades ??= {};
 			// @ts-ignore
