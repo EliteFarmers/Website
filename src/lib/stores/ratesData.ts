@@ -20,7 +20,7 @@ interface RatesData {
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
 	attributes: Record<string, number>;
-	chips: Record<GardenChipId, number>;
+	chips: Record<string, number>;
 }
 
 export const MissingRatesDataSchema = z.object({
@@ -33,7 +33,7 @@ export const MissingRatesDataSchema = z.object({
 
 // Initialize the store with the data from localStorage if it exists
 const defaultData = {
-	v: 7,
+	v: 8,
 	settings: false,
 	communityCenter: 0,
 	strength: 0,
@@ -51,7 +51,6 @@ const defaultData = {
 	},
 	sprayedPlot: true,
 	infestedPlotProbability: 0.2,
-	axed: false,
 	zorroMode: ZorroMode.Normal,
 	attributes: Object.fromEntries(
 		Object.entries(FARMING_ATTRIBUTE_SHARDS)

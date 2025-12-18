@@ -10,10 +10,11 @@
 		wiki?: string;
 		children?: Snippet;
 		child?: Snippet;
+		icon?: Snippet;
 		class?: string;
 	}
 
-	let { title, description = undefined, wiki, children, subtitle, child, class: className }: Props = $props();
+	let { title, description = undefined, wiki, children, subtitle, child, icon, class: className }: Props = $props();
 </script>
 
 <div
@@ -23,14 +24,15 @@
 	)}
 >
 	<div class="flex w-full flex-1 flex-col justify-center">
-		<p class="md:text-lg">
-			{title}
+		<div class="flex flex-row items-center gap-1 md:text-lg">
+			{@render icon?.()}
+			<p>{title}</p>
 			{#if wiki}
 				<a href={wiki} target="_blank" rel="noopener noreferrer" class="text-link inline-block">
 					<Info class="size-4 pt-0.5" />
 				</a>
 			{/if}
-		</p>
+		</div>
 		{#if subtitle}
 			<p class="mb-1">
 				{@render subtitle?.()}

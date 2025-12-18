@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import ItemRender from '$comp/items/item-render.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import SettingBigSeperator from '$comp/settings/setting-big-seperator.svelte';
 	import SettingHeader from '$comp/settings/setting-header.svelte';
@@ -14,8 +15,9 @@
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { Crop, CROP_INFO, getCropDisplayName, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+	import { TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
 	import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
+	import { GARDEN_CHIPS } from 'farming-weight/dist/constants/chips';
 	import ShardSetting from './shard-setting.svelte';
 
 	const ratesData = getRatesData();
@@ -255,9 +257,44 @@
 		<SettingSeperator />
 	{/each}
 
+	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
+	<p class="text-muted-foreground px-1 text-sm">
+		Set the level of each garden chip you have! This is unfortunately necessary since Hypixel hasn't added them to
+		the API yet.
+	</p>
+	<SettingBigSeperator />
+
+	{#each Object.values(GARDEN_CHIPS) as chip (chip.skyblockId)}
+		<SettingListItem title={chip.name} wiki={chip.wiki}>
+			{#snippet icon()}
+				<ItemRender skyblockId={chip.skyblockId} class="size-10" />
+			{/snippet}
+			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<div class="flex flex-1 flex-row items-center gap-1">
+					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.chips[chip.skyblockId]}</p>
+					{#if $ratesData.chips[chip.skyblockId] !== undefined}
+						<Select.Simple
+							options={Array.from({ length: 21 }, (_, i) => ({
+								value: i,
+								label: i == 0 ? 'None' : `Level ${i}`,
+							}))}
+							value={$ratesData.chips[chip.skyblockId]}
+							change={(value) => {
+								$ratesData.chips[chip.skyblockId] = value ?? $ratesData.chips[chip.skyblockId];
+							}}
+							class="w-24"
+							placeholder="Level"
+						/>
+					{/if}
+				</div>
+			</div>
+		</SettingListItem>
+		<SettingSeperator />
+	{/each}
+
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
 	<span class="text-muted-foreground px-1 text-sm"
-		>Check each crop that you've brought items to <a
+		>Crop that you've brought items to <a
 			href="https://wiki.hypixel.net/Carrolyn"
 			target="_blank"
 			class="text-link underline">Carrolyn</a
@@ -265,20 +302,11 @@
 	>
 	<SettingBigSeperator />
 
-	{#each Object.entries(CROP_INFO) as [c, info] (c)}
-		{@const crop = c as Crop}
-		{#if info.exportable}
-			<SettingListItem title={getCropDisplayName(crop)}>
-				<div class="flex flex-row items-center justify-center gap-2">
-					<FortuneBreakdown total={12} />
-					{#if $ratesData.exported[crop] !== undefined}
-						<Switch bind:checked={$ratesData.exported[crop]} />
-					{/if}
-				</div>
-			</SettingListItem>
-			<SettingSeperator />
-		{/if}
-	{/each}
+	<p class="border-completed rounded-md border p-2 text-sm">
+		These toggles have been removed! Exported crops are now automatically detected from your profile data!
+	</p>
+
+	<SettingBigSeperator />
 
 	{#if owned || ctx.fortuneSettings}
 		<div class="h-16"></div>
@@ -306,7 +334,7 @@
 						}}
 					>
 						<p class="text-muted-foreground max-w-sm text-sm">
-							Strength, garden fortune, exported crops, and attribute shards can be saved to your profile!
+							Strength, garden fortune, garden chips, and attribute shards can be saved to your profile!
 						</p>
 						<input type="hidden" name="player" value={ctx.uuid} />
 						<input type="hidden" name="profile" value={ctx.selectedProfile?.profileId} />
@@ -317,17 +345,13 @@
 								value={$ratesData.attributes[shard.skyblockId] ?? 0}
 							/>
 						{/each}
-						{#each Object.entries(CROP_INFO) as [c, info] (c)}
-							{@const crop = c as Crop}
-							{#if info.exportable}
-								<input
-									type="hidden"
-									name="exported.{crop}"
-									value={$ratesData.exported[crop] ? 'true' : 'false'}
-								/>
-							{/if}
-						{/each}
-						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
+						{#each Object.values(GARDEN_CHIPS) as chip (chip.skyblockId)}
+							<input
+								type="hidden"
+								name={chip.skyblockId}
+								value={$ratesData.chips[chip.skyblockId] ?? 0}
+							/>
+						{/each} <input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
 						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />
 						<Button type="submit" disabled={loading}>Save</Button>
 					</form>

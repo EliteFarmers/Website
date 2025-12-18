@@ -119,6 +119,8 @@
 				' ' +
 				STAT_ICONS[stat as Stat]}
 			disabled={progress.active?.active === false}
+			maxed={statProgress.ratio >= 1}
+			fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : undefined}
 		/>
 	{:else}
 		{#each Object.entries(progress.progress ?? {}) as [stat, statProgress] (stat)}
@@ -128,6 +130,8 @@
 				readable={(statProgress.current || 0).toLocaleString() + ' / ' + statProgress.max.toLocaleString()}
 				expanded={(statProgress.current || 0).toLocaleString() + ' / ' + statProgress.max.toLocaleString()}
 				disabled={progress.active?.active === false}
+				maxed={statProgress.ratio >= 1}
+				fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : undefined}
 			/>
 		{/each}
 	{/each}

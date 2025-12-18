@@ -295,7 +295,7 @@
 					<p class="text-muted-foreground text-lg">No information available</p>
 				</div>
 			{:else if progress.item}
-				<ItemLore item={progress.item} otherDebugData={sortedUpgrades} />
+				<ItemLore item={progress.item} otherDebugData={{ progress, sortedUpgrades }} />
 			{/if}
 		</div>
 		<div class="bg-card/80 flex items-center justify-end gap-2 border-t p-4">
