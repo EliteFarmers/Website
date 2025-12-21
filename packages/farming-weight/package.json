@@ -8,6 +8,7 @@
 	"module": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
+		"build:watch": "tsc --watch",
 		"format": "pnpm biome check --write",
 		"lint": "pnpm biome check",
 		"test": "vitest run",
