@@ -20,7 +20,7 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
-		
+
       - name: Run tests
         run: pnpm -C packages/farming-weight test
   lint:
