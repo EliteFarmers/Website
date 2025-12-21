@@ -20,9 +20,5 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
- 
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Run tests
-        run: pnpm test
+        run: pnpm -C packages/farming-weight test

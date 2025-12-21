@@ -20,12 +20,8 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Run tests
-        run: pnpm test
+        run: pnpm -C packages/farming-weight test
   lint:
     name: Linting
     runs-on: ubuntu-latest 
@@ -35,12 +31,8 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Lint
-        run: pnpm run lint
+        run: pnpm -C packages/farming-weight run lint
   build:
     name: Build
     runs-on: ubuntu-latest 
@@ -50,9 +42,5 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Build
-        run: pnpm run build
+        run: pnpm -C packages/farming-weight run build

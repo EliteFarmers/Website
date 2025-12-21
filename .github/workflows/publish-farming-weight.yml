@@ -15,9 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
@@ -40,6 +37,8 @@ jobs:
         run: pnpm install
 
       - name: build
-        run: pnpm build
+        run: pnpm -C packages/farming-weight build
 
-      - run: npm publish
+      - name: Publish
+        working-directory: packages/farming-weight
+        run: npm publish
