@@ -1,4 +1,5 @@
 # Farming Weight
+
 NPM package for Farming Weight and fortune calculations in Hypixel SkyBlock.
 
 Created specifically for the [EliteWebsite](https://github.com/EliteFarmers/Website) and [EliteBot](https://github.com/EliteFarmers/Bot) projects, but can be used for any project, as long as some credit is given per the license.
@@ -6,6 +7,7 @@ Created specifically for the [EliteWebsite](https://github.com/EliteFarmers/Webs
 **This is a new package that's changing rapidly, there aren't any comprehensive docs at this time**
 
 ## Installation
+
 ```bash
 npm install farming-weight
 ```
@@ -46,7 +48,7 @@ calculator.setEarnedMedals({
 
 const weight = calculator.getWeightInfo();
 
-console.log(weight.totalWeight); 
+console.log(weight.totalWeight);
 // 10000.53 (or whatever the total weight is)
 
 console.log(weight.bonusSources);
@@ -66,10 +68,10 @@ const drops = calculateDetailedAverageDrops({
 	bountiful: true,
 	mooshroom: true,
 	dicerLevel: 3,
-	blocksBroken: 24000 // 100% efficiency for 20 minutes
+	blocksBroken: 24000, // 100% efficiency for 20 minutes
 });
 
-console.log(drops[Crop.Wheat].collection) // 123000 (or whatever the collection is)
+console.log(drops[Crop.Wheat].collection); // 123000 (or whatever the collection is)
 ```
 
 ### FarmingPlayer Calculator
@@ -78,7 +80,7 @@ The `createFarmingPlayer` function is used to create a `FarmingPlayer` object, w
 
 ```ts
 const options = {
-	tools: farmingTools // Array of FarmingTool objects, or EliteItemFto objects (not raw NBT data) 
+	tools: farmingTools // Array of FarmingTool objects, or EliteItemFto objects (not raw NBT data)
 	armor: armorSet // Array of FarmingArmor objects, an ArmorSet object, or EliteItemDto objects
 	equipment: equipment // Array of FarmingEquipment objects, or EliteItemDto objects
 	accessories: accessories // Array of FarmingAccessory objects, or EliteItemDto objects

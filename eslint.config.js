@@ -43,6 +43,7 @@ export default ts.config(
 			'node_modules',
 			'static',
 			'.velite',
+			'packages/',
 		],
 	},
 	{
