@@ -2,6 +2,7 @@ name: Check Farming Weight
 
 on:
   push:
+    branches: [main]
     paths:
       - 'packages/farming-weight/**'
   pull_request:
@@ -17,11 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Change to farming-weight directory
+        run: cd packages/farming-weight
 
       - name: Run tests
         run: pnpm test
@@ -32,11 +33,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Change to farming-weight directory
+        run: cd packages/farming-weight
 
       - name: Lint
         run: pnpm run lint
@@ -47,11 +48,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Change to farming-weight directory
-        run: cd packages/farming-weight
-
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Change to farming-weight directory
+        run: cd packages/farming-weight
 
       - name: Build
         run: pnpm run build
