@@ -26,19 +26,19 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/EliteFarmers/FarmingWeight.git"
+		"url": "git+https://github.com/EliteFarmers/Website.git"
 	},
 	"files": [
 		"dist/**/*"
 	],
 	"bugs": {
-		"url": "https://github.com/EliteFarmers/FarmingWeight/issues"
+		"url": "https://github.com/EliteFarmers/Website/issues"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",
 		"access": "public"
 	},
-	"homepage": "https://github.com/EliteFarmers/FarmingWeight#readme",
+	"homepage": "https://github.com/EliteFarmers/Website#readme",
 	"author": "Kaeso",
 	"license": "MIT",
 	"devDependencies": {
