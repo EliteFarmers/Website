@@ -28,7 +28,7 @@ export default defineConfig({
 	server: {
 		allowedHosts: ['.elitebot.dev', '.kaeso.dev'],
 		fs: {
-			allow: [veliteDirPath],
+			allow: [veliteDirPath, path.resolve(__dirname, 'packages')],
 		},
 	},
 	resolve: {
