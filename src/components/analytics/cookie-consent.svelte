@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { PUBLIC_GTAG_MEASUREMENT_ID } from '$env/static/public';
 	import { onMount } from 'svelte';
 	import * as CookieConsent from 'vanilla-cookieconsent';
 	import 'vanilla-cookieconsent/dist/cookieconsent.css';
@@ -20,7 +21,7 @@
 	const SERVICE_SECURITY_STORAGE = 'security_storage';
 
 	function updateGtagConsent() {
-		if (!browser || !window.gtag) return;
+		if (!browser || !window.gtag || !PUBLIC_GTAG_MEASUREMENT_ID) return;
 		window.gtag('consent', 'update', {
 			[SERVICE_ANALYTICS_STORAGE]: CookieConsent.acceptedService(SERVICE_ANALYTICS_STORAGE, CAT_ANALYTICS)
 				? 'granted'

@@ -27,3 +27,4 @@ node_modules/.pnpm/svelte-ux*
 
 static
 .velite
+packages/
