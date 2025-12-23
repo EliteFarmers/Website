@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    if: contains(github.event.release.tag_name, 'farming-weight')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.release.tag_name, 'farming-weight')
     runs-on: ubuntu-latest
     permissions:
       contents: read
