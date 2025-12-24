@@ -137,8 +137,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			return maxFortune;
 		},
 		current: (player) => {
+			// Only return current fortune from chips with farming fortune increases
 			const totalCurrent = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
-				return acc + getChipLevel(player.options.chips?.[chip.skyblockId]);
+				const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+				const fortunePerLevel = chip.statsPerRarity?.[Rarity.Legendary]?.[Stat.FarmingFortune] ?? 0;
+				return acc + fortunePerLevel * level;
 			}, 0);
 			return totalCurrent;
 		},
