@@ -311,6 +311,44 @@ test('Lotus to Blossom Necklace upgrade shows correct fortune delta', () => {
 	expect(base?.max).toBe(7);
 });
 
+test('Lotus to Blossom Necklace upgrade includes piece bonus delta', () => {
+	const lotusNecklaceWithBonus = {
+		id: 397,
+		count: 1,
+		damage: 3,
+		skyblockId: 'LOTUS_NECKLACE',
+		uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
+		name: '§5Rooted Lotus Necklace',
+		lore: [
+			'§7Farming Fortune: §a+40.5 §9(+15)',
+			'',
+			'§6Piece Bonus: Salesperson',
+			'',
+			'§7Piece Bonus: §6+15☘',
+			'',
+			'§5§l§ka§r §5§lEPIC NECKLACE §5§l§ka',
+		],
+		enchantments: { green_thumb: 5 },
+		attributes: {
+			modifier: 'rooted',
+			timestamp: '1676577900000',
+			rarity_upgrades: '1',
+		},
+	};
+
+	const item = new FarmingEquipment(lotusNecklaceWithBonus);
+	const upgrades = item.getUpgrades();
+	const blossomUpgrade = upgrades.find((u) => u.title === 'Blossom Necklace');
+
+	// Base increase: 7 - 5 = 2
+	// Reforge increase (Rooted): 18 - 15 = 3
+	// Piece bonus increase (Lotus -> Blossom): 15 -> 22.5 = +7.5
+	// Total: 12.5
+	expect(blossomUpgrade).toBeDefined();
+	expect(blossomUpgrade?.increase).toBeCloseTo(12.5);
+	expect(blossomUpgrade?.stats?.['farming_fortune']).toBeCloseTo(12.5);
+});
+
 test('Epic Fermento Helmet with 2 Perfect Peridots upgrading to Helianthus should include gem rarity increase', () => {
 	const epicFermentoHelmet = {
 		id: 397,

@@ -117,14 +117,14 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		upgrades: getUpgradeableGems,
 	},
 	{
-		name: 'Salesperson Ability',
+		name: 'Visitors Served Bonus',
 		wiki: (gear) => gear.info.wiki,
 		exists: (gear) => gear.type === ReforgeTarget.Equipment && gear.info.family === 'LOTUS',
-		max: () => 15,
+		max: (_gear) => 22.5,
 		current: (gear) => {
 			return (gear as FarmingEquipment).getPieceBonus();
 		},
-		maxStat: (_gear, stat) => (stat === Stat.FarmingFortune ? 15 : 0),
+		maxStat: (_gear, stat) => (stat === Stat.FarmingFortune ? 22.5 : 0),
 		currentStat: (gear, stat) => (stat === Stat.FarmingFortune ? (gear as FarmingEquipment).getPieceBonus() : 0),
 	},
 	{

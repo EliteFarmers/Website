@@ -86,7 +86,7 @@ test('Wheat fortune test', () => {
 			ratio: 5 / 45,
 		},
 		{
-			name: 'Fermento Artifact Family',
+			name: 'Helianthus Relic Family',
 			current: 30,
 			max: 30,
 			ratio: 1,
@@ -100,7 +100,7 @@ test('Wheat fortune test', () => {
 	]);
 
 	const generalSources = player.getProgress();
-	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact');
+	const fermento = generalSources.find((source) => source.name === 'Helianthus Relic');
 	expect(fermento).toBeDefined();
 	expect(fermento?.current).toBe(0);
 
@@ -146,7 +146,7 @@ test('Potato fortune test', () => {
 			ratio: 1,
 		},
 		{
-			name: 'Fermento Artifact Family',
+			name: 'Helianthus Relic Family',
 			current: 20,
 			max: 30,
 			ratio: 20 / 30,
@@ -255,7 +255,7 @@ test('Carrot fortune test', () => {
 			ratio: 0,
 		},
 		{
-			name: 'Fermento Artifact Family',
+			name: 'Helianthus Relic Family',
 			current: 10,
 			max: 30,
 			ratio: 10 / 30,
@@ -331,11 +331,11 @@ test('Cropie talisman test', () => {
 		delete piece.info;
 	});
 
-	const cropie = progress.find((p) => p.name === 'Fermento Artifact Family');
+	const cropie = progress.find((p) => p.name === 'Helianthus Relic Family');
 	expect(cropie).toBeDefined();
 
 	expect(cropie).toStrictEqual({
-		name: 'Fermento Artifact Family',
+		name: 'Helianthus Relic Family',
 		current: 10,
 		max: 30,
 		ratio: 10 / 30,
@@ -361,20 +361,20 @@ test('Squash ring test', () => {
 		delete piece.info;
 	});
 
-	const squash = progress.find((p) => p.name === 'Fermento Artifact Family');
+	const squash = progress.find((p) => p.name === 'Helianthus Relic Family');
 	expect(squash).toBeDefined();
 
 	expect(squash).toStrictEqual({
-		name: 'Fermento Artifact Family',
+		name: 'Helianthus Relic Family',
 		current: 20,
 		max: 30,
 		ratio: 20 / 30,
 	});
 
 	const generalSources = player.getProgress();
-	const fermento = generalSources.find((source) => source.name === 'Fermento Artifact');
+	const fermento = generalSources.find((source) => source.name === 'Helianthus Relic');
 	expect(fermento).toBeDefined();
 	expect(fermento?.current).toBe(0);
 
-	expect(player.breakdown['Fermento Artifact']).toBeUndefined();
+	expect(player.breakdown['Helianthus Relic']).toBeUndefined();
 });

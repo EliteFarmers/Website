@@ -17,7 +17,12 @@ import type {
 } from 'svelte/elements';
 import type { TransitionConfig } from 'svelte/transition';
 import { twMerge } from 'tailwind-merge';
-import type { AuthorizedGuildDto, CropCollectionsDataPointDto, EventType as EventTypeType } from './api';
+import type {
+	AuthorizedGuildDto,
+	CropCollectionsDataPointDto,
+	EventType as EventTypeType,
+	SkillsDataPointDto,
+} from './api';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -127,6 +132,9 @@ const CROP_TO_PEST: Partial<Record<string, string>> = {
 	pumpkin: 'rat',
 	cane: 'mosquito',
 	wheat: 'fly',
+	sunflower: 'firefly',
+	moonflower: 'moonflower',
+	wildrose: 'mantis',
 };
 
 const cropToPest = (crop: string) => {
@@ -155,12 +163,51 @@ export function preprocessCropCharts(crops: CropCollectionsDataPointDto[]) {
 	);
 }
 
+export function preprocessSkillCharts(points: SkillsDataPointDto[]) {
+	return (
+		points
+			.sort((a, b) => Number((a.timestamp ?? 0) - (b.timestamp ?? 0)))
+			.reduce<Record<string, { date: string; value: number }[]>>((acc, curr) => {
+				for (const [skill, value = 0] of Object.entries(curr.skills ?? {})) {
+					acc[skill] ??= [];
+
+					const last = acc[skill].at(-1);
+					if (
+						(last && last.value > (value as unknown as number)) ||
+						+(last?.date ?? 0) > (curr.timestamp ?? 0)
+					) {
+						continue;
+					}
+
+					acc[skill].push({
+						date: (curr.timestamp ?? 0) + '',
+						value: (value as unknown as number) ?? 0,
+					});
+				}
+				return acc;
+			}, {}) ?? {}
+	);
+}
+
 export function preprocessWeightChart(data: CropCollectionsDataPointDto[]) {
 	return data
 		.sort((a, b) => Number((a.timestamp ?? 0) - (b.timestamp ?? 0)))
 		.map((point) => ({
 			date: point.timestamp ?? 0,
 			value: point.cropWeight ?? 0,
+		}));
+}
+
+export function preprocessWeightSeries(data: CropCollectionsDataPointDto[]) {
+	return data
+		.slice()
+		.sort((a, b) => {
+			if ((a.timestamp ?? 0n) === (b.timestamp ?? 0n)) return 0;
+			return (a.timestamp ?? 0n) < (b.timestamp ?? 0n) ? -1 : 1;
+		})
+		.map((point) => ({
+			date: (point.timestamp ?? 0n) + '',
+			value: Number(point.cropWeight ?? 0),
 		}));
 }
 

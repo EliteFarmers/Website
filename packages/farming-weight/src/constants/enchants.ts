@@ -458,6 +458,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	ultimate_crop_fever: {
 		name: 'Crop Fever',
+		id: 'ENCHANTMENT_ULTIMATE_CROP_FEVER',
 		alwaysInclude: true,
 		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
 		wiki: 'https://wiki.hypixel.net/Ultimate_Crop_Fever_Enchantment',

@@ -169,8 +169,8 @@
 			</div>
 
 			{#if hasUpgrades && totalCost > 0}
-				<div class="flex flex-col items-center justify-center text-left sm:text-right">
-					<p class="text-muted-foreground text-sm tracking-wider uppercase">Completion Cost</p>
+				<div class="flex flex-col items-end justify-center text-left sm:text-right">
+					<p class="text-muted-foreground text-sm">Completion Cost</p>
 					<p class="text-completed text-2xl font-bold">
 						{Math.round(totalCost).toLocaleString()}
 					</p>
