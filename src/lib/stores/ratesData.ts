@@ -77,6 +77,9 @@ export function initRatesData(data = defaultData) {
 
 		if (savedRatesData) {
 			data = JSON.parse(savedRatesData) as RatesData;
+
+			// Add in any missing fields from defaultData
+			data = { ...defaultData, ...data, v: defaultData.v };
 		}
 	}
 
@@ -99,7 +102,10 @@ export function getRatesData() {
 			rates = defaultData;
 		}
 
-		return rates;
+		rates.attributes = { ...defaultData.attributes, ...rates.attributes };
+		rates.chips = { ...defaultData.chips, ...rates.chips };
+
+		return { ...defaultData, ...rates, v: defaultData.v };
 	});
 
 	if (store) return store;

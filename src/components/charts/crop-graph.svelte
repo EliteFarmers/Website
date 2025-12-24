@@ -122,12 +122,12 @@
 					<div>
 						<p>{getCropDisplayName(getCropFromName(crop) ?? Crop.Wheat)} Collection</p>
 						<p class="font-mono">{(+data.value).toLocaleString()}</p>
-						{#if pests}
-							<p class="first-letter:capitalize">
-								{CROP_TO_PEST[getCropFromName(crop) ?? Crop.Wheat]} Kills
-							</p>
-							<p class="font-mono">{(+data.pests).toLocaleString()}</p>
-						{/if}
+						<!-- {#if pests} -->
+						<p class="first-letter:capitalize">
+							{CROP_TO_PEST[getCropFromName(crop) ?? Crop.Wheat]} Kills
+						</p>
+						<p class="font-mono">{(+data.pests).toLocaleString()}</p>
+						<!-- {/if} -->
 					</div>
 				{/snippet}
 			</Tooltip.Root>
