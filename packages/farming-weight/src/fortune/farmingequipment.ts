@@ -188,10 +188,14 @@ export class FarmingEquipment extends UpgradeableBase {
 	 * @returns {number} Fortune from the Salesperson lotus piece
 	 */
 	getPieceBonus(): number {
-		const regex = /§7Piece Bonus: §6\+(\d+)☘/g;
+		if (!this.item.lore) return 0;
+		const regex = /Piece Bonus: §6\+(\d+.?\d*)☘/g;
 		let found = 0;
 
-		for (const line of (this.item.lore ?? []).reverse()) {
+		for (let i = (this.item.lore ?? []).length - 1; i >= 0; i--) {
+			const line = this.item.lore?.[i];
+			if (!line) continue;
+
 			const number = extractNumberFromLine(line, regex) ?? 0;
 			if (!number) continue;
 

@@ -269,7 +269,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 	},
 	{
-		name: 'Fermento Artifact',
+		name: 'Helianthus Relic',
 		exists: () => true,
 		wiki: (player) => {
 			const highest = player.activeAccessories.find(

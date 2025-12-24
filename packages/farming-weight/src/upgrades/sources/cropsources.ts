@@ -161,7 +161,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		},
 	},
 	{
-		name: 'Fermento Artifact Family',
+		name: 'Helianthus Relic Family',
 		exists: ({ player, crop }) => {
 			const active = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family

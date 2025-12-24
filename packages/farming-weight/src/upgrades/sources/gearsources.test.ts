@@ -254,10 +254,10 @@ test('Lotus necklace fortune sources', () => {
 			ratio: 15 / 18,
 		},
 		{
-			name: 'Salesperson Ability',
+			name: 'Visitors Served Bonus',
 			current: 12,
-			max: 15,
-			ratio: 0.8,
+			max: 22.5,
+			ratio: 12 / 22.5,
 		},
 		{
 			name: 'Green Thumb',
@@ -330,10 +330,10 @@ test('Maxed lotus bracelet fortune sources', () => {
 			ratio: 15 / 18,
 		},
 		{
-			name: 'Salesperson Ability',
+			name: 'Visitors Served Bonus',
 			current: 15,
-			max: 15,
-			ratio: 1,
+			max: 22.5,
+			ratio: 15 / 22.5,
 		},
 		{
 			name: 'Green Thumb',

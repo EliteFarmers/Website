@@ -73,7 +73,7 @@ test('General fortune sources', () => {
 			api: false,
 		},
 		{
-			name: 'Fermento Artifact',
+			name: 'Helianthus Relic',
 			current: 0,
 			max: 30,
 			ratio: 0,
