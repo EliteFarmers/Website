@@ -6,9 +6,16 @@
 	import * as Accordion from '$ui/accordion';
 	import * as AlertDialog from '$ui/alert-dialog';
 	import { Button, buttonVariants } from '$ui/button';
+	import { Checkbox } from '$ui/checkbox';
+	import * as Dialog from '$ui/dialog';
+	import { Input } from '$ui/input';
+	import { Label } from '$ui/label';
 	import * as Popover from '$ui/popover';
+	import * as Select from '$ui/select';
 	import * as Tooltip from '$ui/tooltip';
+	import Copy from '@lucide/svelte/icons/copy';
 	import Mail from '@lucide/svelte/icons/mail';
+	import Pencil from '@lucide/svelte/icons/pencil';
 	import RefreshCcw from '@lucide/svelte/icons/refresh-ccw';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
@@ -24,18 +31,59 @@
 	let crops = $derived(Object.entries(lb.crops ?? {}).filter(([, v]) => v.length > 0));
 
 	let confirmModal = $state(false);
+	let editModal = $state(false);
+
+	let editSendUpdates = $state(!!(lb.updateChannelId || lb.updateRoleId));
+	let editTinyUpdatesPing = $state(!!lb.pingForSmallImprovements);
+
+	function toDatetimeLocal(seconds?: bigint | number | null): string {
+		if (seconds === null || seconds === undefined) return '';
+		if (typeof seconds === 'bigint') {
+			if (seconds === -1n) return '';
+			seconds = Number(seconds);
+		}
+		if (!seconds || seconds <= 0) return '';
+		const date = new Date(seconds * 1000);
+		const tzOffsetMs = date.getTimezoneOffset() * 60_000;
+		return new Date(date.getTime() - tzOffsetMs).toISOString().slice(0, 16);
+	}
+
+	function openEdit() {
+		editSendUpdates = !!(lb.updateChannelId || lb.updateRoleId);
+		editTinyUpdatesPing = !!lb.pingForSmallImprovements;
+		editModal = true;
+	}
 </script>
 
 <div class="rounded-lgs bg-card flex w-full flex-col justify-between gap-4 rounded-md border-2 p-4">
 	<div class="flex w-full flex-col justify-between gap-4 md:flex-row">
 		<h3 class="text-2xl">{lb.title}</h3>
 		<div class="flex flex-row gap-2">
-			<!-- <Button class="edit" href="?/edit/{lb.id}" color="green">
-						<GearSolid />
-						<Popover triggeredBy=".edit" placement="left">
-							<p>Edit Leaderboard</p>
-						</Popover>
-					</Button> -->
+			<Popover.Mobile>
+				{#snippet child({ props })}
+					<Button {...props} onclick={openEdit} color="alternative">
+						<Pencil />
+					</Button>
+				{/snippet}
+				<div>
+					<p>Edit Leaderboard</p>
+				</div>
+			</Popover.Mobile>
+			<form method="post" action="{page.url.pathname}?/duplicate" use:enhance>
+				<input type="hidden" name="id" value={lb.id} />
+				<Popover.Mobile>
+					{#snippet child({ props })}
+						<div>
+							<Button {...props} type="submit" color="alternative">
+								<Copy />
+							</Button>
+						</div>
+					{/snippet}
+					<div>
+						<p>Duplicate Leaderboard</p>
+					</div>
+				</Popover.Mobile>
+			</form>
 			<form method="post" action="{page.url.pathname}?/send" use:enhance>
 				<input type="hidden" name="id" value={lb.id} />
 				<Popover.Mobile>
@@ -165,6 +213,106 @@
 		<p class="text-center">No scores submitted yet</p>
 	{/if}
 </div>
+
+<Dialog.Root bind:open={editModal}>
+	<Dialog.ScrollContent>
+		<Dialog.Header>
+			<h3 class="text-xl">Edit Jacob Leaderboard</h3>
+		</Dialog.Header>
+		<form
+			method="post"
+			action="{page.url.pathname}?/edit"
+			class="mx-1 mt-4 flex flex-col gap-4"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result?.type === 'success') editModal = false;
+					update();
+				};
+			}}
+		>
+			<input type="hidden" name="id" value={lb.id} />
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="title">Leaderboard Name</Label>
+				<Input name="title" placeholder="Title" maxlength={64} value={lb.title ?? ''} />
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="sendToChannelId">Channel to display leaderboard in</Label>
+				<Select.Simple
+					options={channels}
+					value={lb.channelId ?? ''}
+					placeholder="Select a channel"
+					name="sendToChannelId"
+				/>
+			</div>
+
+			<div class="flex items-center gap-2">
+				<Checkbox name="enableUpdates" bind:checked={editSendUpdates} />
+				<Label for="enableUpdates">Send update messages</Label>
+			</div>
+
+			{#if editSendUpdates}
+				<div class="flex flex-col items-start gap-1">
+					<Label for="mentionRoleId">Role to mention when leaderboard updates</Label>
+					<Select.Simple
+						options={roles}
+						value={lb.updateRoleId ?? ''}
+						placeholder="Select a role"
+						name="mentionRoleId"
+					/>
+				</div>
+
+				<div class="flex flex-col items-start gap-1">
+					<Label for="updatesChannelId">Channel to send leaderboard updates in</Label>
+					<Select.Simple
+						options={channels}
+						value={lb.updateChannelId ?? ''}
+						placeholder="Select a channel"
+						name="updatesChannelId"
+					/>
+				</div>
+
+				<div class="flex items-center gap-2">
+					<Checkbox name="tinyUpdatesPing" bind:checked={editTinyUpdatesPing} />
+					<Label for="tinyUpdatesPing">Ping for updates with tiny improvements</Label>
+				</div>
+			{/if}
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="requiredRoleId">Role required to submit scores</Label>
+				<Select.Simple
+					options={roles}
+					value={lb.requiredRole ?? ''}
+					placeholder="Select a role"
+					name="requiredRoleId"
+				/>
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="blockedRoleId">Role blacklisted from this leaderboard</Label>
+				<Select.Simple
+					options={roles}
+					value={lb.blockedRole ?? ''}
+					placeholder="Select a role"
+					name="blockedRoleId"
+				/>
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="startDate">Allow scores only after</Label>
+				<Input name="startDate" type="datetime-local" value={toDatetimeLocal(lb.startCutoff)} />
+			</div>
+
+			<div class="flex flex-col items-start gap-1">
+				<Label for="endDate">Allow scores until</Label>
+				<Input name="endDate" type="datetime-local" value={toDatetimeLocal(lb.endCutoff)} />
+			</div>
+
+			<Button type="submit">Save</Button>
+		</form>
+	</Dialog.ScrollContent>
+</Dialog.Root>
 
 <AlertDialog.Root bind:open={confirmModal}>
 	<AlertDialog.Content>
