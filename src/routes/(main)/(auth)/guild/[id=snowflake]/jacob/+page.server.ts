@@ -40,25 +40,32 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 
-		const title = data.get('title') as string;
-		const sendToChannelId = data.get('sendToChannelId') as string;
-		const mentionRoleId = data.get('mentionRoleId') as string;
-		const updatesChannelId = data.get('updatesChannelId') as string;
+		const title = (data.get('title') as string | null) ?? '';
+		const sendToChannelId = (data.get('sendToChannelId') as string | null) ?? '';
+		const enableUpdates = data.get('enableUpdates') === 'on';
+		const mentionRoleId = enableUpdates ? (((data.get('mentionRoleId') as string | null) ?? '') as string) : '';
+		const updatesChannelId = enableUpdates
+			? (((data.get('updatesChannelId') as string | null) ?? '') as string)
+			: '';
 		const tinyUpdatesPing = data.get('tinyUpdatesPing') === 'on';
-		const requiredRoleId = data.get('requiredRoleId') as string;
-		const blockedRoleId = data.get('blockedRoleId') as string;
-		const startDate = data.get('startDate') as string;
-		const endDate = data.get('endDate') as string;
+		const requiredRoleId = (data.get('requiredRoleId') as string | null) ?? '';
+		const blockedRoleId = (data.get('blockedRoleId') as string | null) ?? '';
+		const startDate = (data.get('startDate') as string | null) ?? '';
+		const endDate = (data.get('endDate') as string | null) ?? '';
+
+		const startCutoff = startDate ? Math.floor(new Date(startDate).getTime() / 1000) : null;
+		const endCutoff = endDate ? Math.floor(new Date(endDate).getTime() / 1000) : null;
 
 		const body = {
 			id: (parseInt(guildId) + Math.floor(Math.random() * 1000000)).toString(),
 			title,
 			channelId: sendToChannelId,
-			updateChannelId: updatesChannelId,
-			updateRoleId: mentionRoleId,
-			pingForSmallImprovements: tinyUpdatesPing,
-			startCutoff: startDate ? BigInt(new Date(startDate).getTime() / 1000) : undefined,
-			endCutoff: endDate ? BigInt(new Date(endDate).getTime() / 1000) : undefined,
+			updateChannelId: enableUpdates ? updatesChannelId : undefined,
+			updateRoleId: enableUpdates ? mentionRoleId : undefined,
+			pingForSmallImprovements: enableUpdates ? tinyUpdatesPing : false,
+			// API schema uses bigint, but JSON must use number/string.
+			startCutoff: startCutoff as unknown as bigint | null,
+			endCutoff: endCutoff as unknown as bigint | null,
 			requiredRole: requiredRoleId,
 			blockedRole: blockedRoleId,
 		};
@@ -70,6 +77,131 @@ export const actions: Actions = {
 
 		if (!response.ok || e) {
 			return fail(response.status, { error: e ?? 'Failed to create leaderboard!' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	edit: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const guild = await getGuild(guildId, locals.session);
+		const data = await request.formData();
+
+		const lbId = (data.get('id') as string | null) ?? '';
+		if (!lbId) return fail(400, { error: 'Missing required field: id' });
+
+		const feature = guild.guild?.features?.jacobLeaderboard;
+		if (!feature) throw error(404, 'Jacob Leaderboard feature not found');
+
+		const existing = feature.leaderboards?.find((lb) => lb.id === lbId);
+		if (!existing) return fail(404, { error: 'Leaderboard not found' });
+
+		const title = (data.get('title') as string | null) ?? existing.title ?? '';
+		const sendToChannelId = (data.get('sendToChannelId') as string | null) ?? existing.channelId ?? '';
+		const enableUpdates = data.get('enableUpdates') === 'on';
+		const mentionRoleId = enableUpdates
+			? (((data.get('mentionRoleId') as string | null) ?? existing.updateRoleId ?? '') as string)
+			: '';
+		const updatesChannelId = enableUpdates
+			? (((data.get('updatesChannelId') as string | null) ?? existing.updateChannelId ?? '') as string)
+			: '';
+		const tinyUpdatesPing = data.get('tinyUpdatesPing') === 'on';
+		const requiredRoleId = (data.get('requiredRoleId') as string | null) ?? existing.requiredRole ?? '';
+		const blockedRoleId = (data.get('blockedRoleId') as string | null) ?? existing.blockedRole ?? '';
+		const startDate = (data.get('startDate') as string | null) ?? '';
+		const endDate = (data.get('endDate') as string | null) ?? '';
+
+		const startCutoff = startDate ? Math.floor(new Date(startDate).getTime() / 1000) : null;
+		const endCutoff = endDate ? Math.floor(new Date(endDate).getTime() / 1000) : null;
+
+		const updated = {
+			title,
+			channelId: sendToChannelId,
+			updateChannelId: enableUpdates ? updatesChannelId : null,
+			updateRoleId: enableUpdates ? mentionRoleId : null,
+			pingForSmallImprovements: enableUpdates ? tinyUpdatesPing : false,
+			startCutoff: startCutoff as unknown as bigint | null,
+			endCutoff: endCutoff as unknown as bigint | null,
+			requiredRole: requiredRoleId,
+			blockedRole: blockedRoleId,
+		};
+
+		const { response, error: e } = await updateGuildJacobLeaderboard(guildId, lbId, updated).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e ?? 'Failed to update leaderboard!' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	duplicate: async ({ locals, params, request }) => {
+		const guildId = params.id;
+		const { access_token: token } = locals;
+
+		if (!locals.session || !guildId || !token) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const guild = await getGuild(guildId, locals.session);
+		const data = await request.formData();
+		const lbId = (data.get('id') as string | null) ?? '';
+		if (!lbId) return fail(400, { error: 'Missing required field: id' });
+
+		const feature = guild.guild?.features?.jacobLeaderboard;
+		if (!feature) throw error(404, 'Jacob Leaderboard feature not found');
+
+		const existing = feature.leaderboards?.find((lb) => lb.id === lbId);
+		if (!existing) return fail(404, { error: 'Leaderboard not found' });
+
+		const newId = (parseInt(guildId) + Math.floor(Math.random() * 1000000)).toString();
+		const title = `${existing.title ?? 'Leaderboard'} (Copy)`;
+		const safeTitle = title.length > 64 ? title.slice(0, 64) : title;
+
+		const startCutoff =
+			existing.startCutoff === undefined || existing.startCutoff === null
+				? null
+				: existing.startCutoff === -1n
+					? null
+					: Number(existing.startCutoff);
+		const endCutoff =
+			existing.endCutoff === undefined || existing.endCutoff === null
+				? null
+				: existing.endCutoff === -1n
+					? null
+					: Number(existing.endCutoff);
+
+		const body = {
+			id: newId,
+			title: safeTitle,
+			channelId: existing.channelId,
+			updateChannelId: existing.updateChannelId,
+			updateRoleId: existing.updateRoleId,
+			pingForSmallImprovements: existing.pingForSmallImprovements ?? false,
+			startCutoff: startCutoff as unknown as bigint | null,
+			endCutoff: endCutoff as unknown as bigint | null,
+			requiredRole: existing.requiredRole,
+			blockedRole: existing.blockedRole,
+		};
+
+		const { response, error: e } = await createGuildJacobLeaderboard(guildId, body).catch((e) => {
+			console.log(e);
+			throw error(500, 'Internal Server Error');
+		});
+
+		if (!response.ok || e) {
+			return fail(response.status, { error: e ?? 'Failed to duplicate leaderboard!' });
 		}
 
 		return {
