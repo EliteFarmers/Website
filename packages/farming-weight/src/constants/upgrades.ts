@@ -128,6 +128,7 @@ export enum UpgradeCategory {
 	Plot = 'plot',
 	Skill = 'skill',
 	CommunityCenter = 'community_center',
+	Milestone = 'milestone',
 	Anita = 'anita',
 	Misc = 'misc',
 	Attribute = 'attribute',

@@ -408,6 +408,15 @@ export class FarmingPlayer {
 			}
 		}
 
+		// DNA Analysis Milestone
+		if (stat === Stat.FarmingFortune) {
+			const fortune = Math.min(5, this.options.dnaMilestone ?? 0) * 5;
+			if (fortune > 0) {
+				breakdown['DNA Analysis Milestone'] = fortune;
+				sum += fortune;
+			}
+		}
+
 		// Garden Chips
 		if (stat === Stat.FarmingFortune) {
 			const fortune =

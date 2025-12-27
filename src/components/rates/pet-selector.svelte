@@ -36,6 +36,7 @@
 	);
 
 	let activeId = $state({
+		[FarmingPets.RoseDragon]: grouped[FarmingPets.RoseDragon]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.MooshroomCow]: grouped[FarmingPets.MooshroomCow]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Elephant]: grouped[FarmingPets.Elephant]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,

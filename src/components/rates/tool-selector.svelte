@@ -46,6 +46,17 @@
 			.filter((tool) => tool.crops && tool.crops.some((crop) => $selectedCrops[PROPER_CROP_NAME[crop] ?? '']))
 			.slice(0, show)
 	);
+
+	let breakdown = $derived.by(() => {
+		const targetCrop = selectedCropKey ?? selectedCrop;
+		if (
+			$player.selectedTool &&
+			$player.selectedTool.crops.some((crop) => crop === targetCrop || PROPER_CROP_NAME[crop] === targetCrop)
+		) {
+			return $player.selectedTool.fortuneBreakdown;
+		}
+		return undefined;
+	});
 </script>
 
 <div class="flex w-full flex-col items-center gap-4 rounded-md border p-4">
@@ -82,11 +93,7 @@
 				{/snippet}
 			</Select.Simple>
 		</div>
-		{#if $player.selectedTool && $player.selectedTool.crops.some((crop) => PROPER_CROP_NAME[crop] === selectedCropKey)}
-			<FortuneBreakdown breakdown={$player.selectedTool?.fortuneBreakdown} />
-		{:else}
-			<FortuneBreakdown total={0} />
-		{/if}
+		<FortuneBreakdown {breakdown} />
 	</div>
 	<hr class="w-full" />
 	<div class="-mx-2 mb-2 flex w-full flex-col gap-2">

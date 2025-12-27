@@ -66,6 +66,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	bestiaryKills?: Record<string, number>;
 	anitaBonus?: number;
 	uniqueVisitors?: number;
+	dnaMilestone?: number;
 
 	extraFortune?: ExtraFarmingFortune[];
 	/**

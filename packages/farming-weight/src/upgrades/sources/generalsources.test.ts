@@ -10,6 +10,7 @@ test('General fortune sources', () => {
 		anitaBonus: 10,
 		plotsUnlocked: 10,
 		communityCenter: 10,
+		dnaMilestone: 3,
 	});
 
 	const progress = player.getProgress();
@@ -77,6 +78,12 @@ test('General fortune sources', () => {
 			current: 0,
 			max: 30,
 			ratio: 0,
+		},
+		{
+			name: 'DNA Analysis Milestone',
+			current: 3 * 5,
+			max: 30,
+			ratio: 3 / 6,
 		},
 		{
 			name: 'Refined Dark Cacao Truffle',

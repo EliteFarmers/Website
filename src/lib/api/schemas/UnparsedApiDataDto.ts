@@ -21,6 +21,7 @@ export interface UnparsedApiDataDto {
 	consumed: UnparsedApiDataDtoConsumed;
 	/** @nullable */
 	exportedCrops?: UnparsedApiDataDtoExportedCrops;
+	dnaMilestone: number;
 	levelCaps: UnparsedApiDataDtoLevelCaps;
 	/** @nullable */
 	perks?: UnparsedApiDataDtoPerks;

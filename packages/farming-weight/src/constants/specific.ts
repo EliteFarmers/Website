@@ -278,6 +278,13 @@ export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	wiki: 'https://wiki.hypixel.net/Refined_Dark_Cacao_Truffle',
 };
 
+export const DNA_MILESTONE_SOURCE: FortuneSource = {
+	name: 'DNA Analysis Milestone',
+	fortunePerLevel: 5,
+	maxLevel: 6,
+	wiki: 'https://wiki.hypixel.net/DNA_Analysis',
+};
+
 export const WRIGGLING_LARVA_SOURCE: FortuneSource = {
 	name: 'Wriggling Larva',
 	fortunePerLevel: 0,
