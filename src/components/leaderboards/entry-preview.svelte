@@ -36,11 +36,11 @@
 	leaderboard={{
 		title: 'Farming Weight',
 		id: 'farmingweight',
-		scoreDataType: 0,
+		scoreDataType: 'Decimal',
 		category: 'General',
 		profile: false,
 		minimumScore: 1000,
-		intervalType: 0,
+		intervalType: 'Current',
 		suffix: '',
 	}}
 	{showLeaderboardName}

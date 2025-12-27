@@ -1,4 +1,5 @@
 import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes } from '../constants/attributes.js';
+import { getChipLevel, getChipRarity } from '../constants/chips.js';
 import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
@@ -12,6 +13,7 @@ interface CalculateDropsOptions {
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
 	attributes?: FarmingAttributes | Record<string, number>;
+	chips?: Record<string, number>;
 }
 
 const crops = [
@@ -208,10 +210,26 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	}
 
 	if (options.maxTool) {
-		const capsules = Math.floor(result.collection / 200_000);
+		let multiplier = 1;
+		if (options.chips) {
+			const level = getChipLevel(options.chips['MECHAMIND_GARDEN_CHIP']);
+			if (level > 0) {
+				const rarity = getChipRarity(level);
+				let perLevel = 0.015;
+				if (rarity === Rarity.Epic) perLevel = 0.02;
+				else if (rarity === Rarity.Legendary) perLevel = 0.025;
+
+				multiplier = 1 + level * perLevel;
+			}
+		}
+
+		const capsules = Math.floor(
+			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / 200_000
+		);
 		if (capsules > 0) {
 			result.items['TOOL_EXP_CAPSULE'] = capsules;
 			result.coinSources['Tool Exp Capsule'] = capsules * 100_000;
+			result.otherCollection['Tool Exp Capsule'] = capsules;
 		}
 	}
 

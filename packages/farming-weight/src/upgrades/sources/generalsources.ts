@@ -17,6 +17,7 @@ import { Rarity } from '../../constants/reforges.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,
+	DNA_MILESTONE_SOURCE,
 	FARMING_LEVEL,
 	PEST_BESTIARY_SOURCE,
 	REFINED_TRUFFLE_SOURCE,
@@ -337,6 +338,39 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			}
 
 			return highest.getUpgrades();
+		},
+	},
+	{
+		name: DNA_MILESTONE_SOURCE.name,
+		wiki: () => DNA_MILESTONE_SOURCE.wiki,
+		exists: () => true,
+		max: () => DNA_MILESTONE_SOURCE.maxLevel * DNA_MILESTONE_SOURCE.fortunePerLevel,
+		current: (player) => {
+			return (player.options.dnaMilestone ?? 0) * DNA_MILESTONE_SOURCE.fortunePerLevel;
+		},
+		maxStat: (_player, stat) => getFortune(DNA_MILESTONE_SOURCE.maxLevel, DNA_MILESTONE_SOURCE, stat),
+		currentStat: (player, stat) => getFortune(player.options.dnaMilestone ?? 0, DNA_MILESTONE_SOURCE, stat),
+		upgrades: (player) => {
+			const level = player.options.dnaMilestone ?? 0;
+			if (level >= DNA_MILESTONE_SOURCE.maxLevel) return [];
+
+			return [
+				{
+					title: 'DNA Analysis Milestone ' + (level + 1),
+					increase: DNA_MILESTONE_SOURCE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: DNA_MILESTONE_SOURCE.fortunePerLevel,
+					},
+					action: UpgradeAction.LevelUp,
+					wiki: DNA_MILESTONE_SOURCE.wiki,
+					category: UpgradeCategory.Milestone,
+					meta: {
+						type: 'setting',
+						key: 'dnaMilestone',
+						value: level + 1,
+					},
+				},
+			];
 		},
 	},
 	{

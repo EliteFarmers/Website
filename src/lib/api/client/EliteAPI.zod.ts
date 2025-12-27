@@ -7321,12 +7321,8 @@ export const zodGetLeaderboardsResponse = zod.object({
 			category: zod.string().describe('Leaderboard category'),
 			profile: zod.coerce.boolean<boolean>().describe('If true, the leaderboard is profile based'),
 			minimumScore: zod.number().describe('Minimum score required to be on the leaderboard'),
-			intervalType: zod
-				.union([zod.literal(0), zod.literal(1), zod.literal(2)])
-				.describe('Interval type of the leaderboard'),
-			scoreDataType: zod
-				.union([zod.literal(0), zod.literal(1), zod.literal(2)])
-				.describe('Score data type of the leaderboard'),
+			intervalType: zod.enum(['Current', 'Weekly', 'Monthly']).describe('Interval type of the leaderboard'),
+			scoreDataType: zod.enum(['Double', 'Long', 'Decimal']).describe('Score data type of the leaderboard'),
 		})
 	),
 });
@@ -7519,7 +7515,7 @@ export const zodGetPlayerLeaderboardRanksResponse = zod.object({
 			intervalIdentifier: zod.string().nullish(),
 			amount: zod.number(),
 			initialAmount: zod.number(),
-			type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+			type: zod.enum(['Double', 'Long', 'Decimal']),
 		})
 	),
 });
@@ -8610,6 +8606,7 @@ export const zodGetProfileResponse = zod.object({
 		copper: zod.number(),
 		consumed: zod.record(zod.string(), zod.number()),
 		exportedCrops: zod.record(zod.string(), zod.coerce.boolean<boolean>()).nullish(),
+		dnaMilestone: zod.number(),
 		levelCaps: zod.record(zod.string(), zod.number()),
 		perks: zod.record(zod.string(), zod.number()).nullish(),
 		tempStatBuffs: zod
@@ -9728,6 +9725,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 		copper: zod.number(),
 		consumed: zod.record(zod.string(), zod.number()),
 		exportedCrops: zod.record(zod.string(), zod.coerce.boolean<boolean>()).nullish(),
+		dnaMilestone: zod.number(),
 		levelCaps: zod.record(zod.string(), zod.number()),
 		perks: zod.record(zod.string(), zod.number()).nullish(),
 		tempStatBuffs: zod
@@ -11854,11 +11852,8 @@ export const zodGetItemRelatedResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 	),
@@ -12079,11 +12074,8 @@ export const zodGetSkyblockItemsResponse = zod.object({
 				salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 				item_specific: zod
 					.object({
-						rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+						rootElement: zod.unknown(),
 					})
-					.describe(
-						'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-					)
 					.nullish(),
 			})
 			.nullable()
@@ -12204,11 +12196,8 @@ export const zodGetSpecifiedSkyblockItemsResponse = zod.object({
 					salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 					item_specific: zod
 						.object({
-							rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+							rootElement: zod.unknown(),
 						})
-						.describe(
-							'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-						)
 						.nullish(),
 				})
 				.nullish()
@@ -12411,11 +12400,8 @@ export const zodSkyblockProductResponse = zod.object({
 			salvagable_from_recipe: zod.coerce.boolean<boolean>(),
 			item_specific: zod
 				.object({
-					rootElement: zod.unknown().describe('Gets the root element of this JSON document.'),
+					rootElement: zod.unknown(),
 				})
-				.describe(
-					'Provides a mechanism for examining the structural content of a JSON value without automatically instantiating data values.'
-				)
 				.nullish(),
 		})
 		.nullish()

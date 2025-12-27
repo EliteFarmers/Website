@@ -90,9 +90,14 @@
 					</div>
 				</div>
 
-				<div class="flex flex-col gap-2 text-lg">
+				<div class="flex flex-wrap gap-2 text-lg">
 					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
 						Copper • <span class="font-semibold">{copper.toLocaleString()}</span>
+					</div>
+					<div class="bg-card flex flex-row items-center gap-1 rounded-md p-1 px-2">
+						DNA Analysis Milestone • <span class="font-semibold"
+							>{ctx.member.current?.unparsed?.dnaMilestone ?? 0} / 6</span
+						>
 					</div>
 				</div>
 

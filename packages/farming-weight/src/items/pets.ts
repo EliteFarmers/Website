@@ -306,14 +306,75 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.RoseDragon]: {
 		name: 'Rose Dragon',
 		wiki: 'https://wiki.hypixel.net/Rose_Dragon_Pet',
-		perLevelStats: {
+		maxLevel: 200,
+		stats: {
 			[Stat.FarmingFortune]: {
-				name: 'Farming Fortune',
-				value: 0.2,
+				name: 'Base Stats',
 				type: FarmingPetStatType.Base,
+				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.2),
 			},
-			// TODO: Other abilities
 		},
+		abilities: [
+			{
+				name: 'Garden Power',
+				exists: (_, pet) => pet.level >= 101,
+				computed: (player) => {
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Garden Power',
+							value: (player.farmingLevel ?? 0) * 3,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			},
+			{
+				name: 'Rosy Scales',
+				exists: (_, pet) => pet.level >= 101,
+				computed: (player) => {
+					const milestoneLevels = Object.values(player.milestones ?? {}).reduce((a, b) => a + b, 0);
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Rosy Scales',
+							value: milestoneLevels * 0.15,
+							type: FarmingPetStatType.Ability,
+						},
+						[Stat.Speed]: {
+							name: 'Rosy Scales',
+							value: milestoneLevels * 0.1,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			},
+			{
+				name: 'Symbiosis',
+				exists: (_, pet) => pet.level >= 200,
+				computed: (player) => {
+					const maxedPets: Record<string, number> = {};
+					for (const pet of player.pets ?? []) {
+						if (pet.type === FarmingPets.RoseDragon) {
+							continue;
+						}
+
+						if ('level' in pet) {
+							if (pet.level >= 100) {
+								maxedPets[pet.type] = 1;
+							}
+						}
+					}
+					const maxedPetCount = Object.values(maxedPets).length;
+
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Symbiosis',
+							value: maxedPetCount * 3,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			},
+		],
 	},
 };
 

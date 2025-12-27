@@ -141,6 +141,7 @@
 		bestiaryKills: (ctx.member.current?.unparsed?.bestiary as { kills: Record<string, number> })?.kills ?? {},
 		uniqueVisitors: ctx.member.current?.garden?.uniqueVisitors ?? 0,
 		exportableCrops: ctx.member.current?.unparsed.exportedCrops ?? {},
+		dnaMilestone: ctx.member.current?.unparsed?.dnaMilestone ?? 0,
 
 		perks: ctx.member.current?.unparsed?.perks,
 
@@ -343,6 +344,7 @@
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
 			attributes: $ratesData.attributes,
 			maxTool: $player.selectedTool?.level === 50,
+			chips: $ratesData.chips,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
@@ -618,29 +620,10 @@
 				</div>
 			</div>
 			{#key $player.fortune}
-				<div class="flex w-full flex-wrap justify-start gap-4 md:flex-row">
-					<CategoryProgress
-						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune])}
-						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
-						costFn={getUpgradeCost}
-						items={itemsData}
-						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}
-						getUpgrades={getProgressUpgrades}
-					/>
-					<CategoryProgress
-						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
-						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
-						costFn={getUpgradeCost}
-						items={itemsData}
-						equip={(p) => getGearEquipConfig(p)}
-					/>
+				<div class="flex w-full flex-col justify-start gap-4">
 					{#if !selectedCrop}
-						<div class="flex-1 basis-64 items-center text-center">
-							<p class="my-4 max-w-sm text-center font-semibold">
-								Select a crop above to see its fortune!
-							</p>
+						<div class="flex w-full items-center justify-center">
+							<p class="font-semibold">Select a crop above to see its fortune!</p>
 						</div>
 					{:else}
 						<CategoryProgress
@@ -661,6 +644,23 @@
 							/>
 						</CategoryProgress>
 					{/if}
+					<CategoryProgress
+						name="Gear Fortune"
+						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
+						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+						costFn={getUpgradeCost}
+						items={itemsData}
+						equip={(p) => getGearEquipConfig(p)}
+					/>
+					<CategoryProgress
+						name="General Fortune"
+						progress={$player.getProgress([Stat.FarmingFortune])}
+						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+						costFn={getUpgradeCost}
+						items={itemsData}
+						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}
+						getUpgrades={getProgressUpgrades}
+					/>
 				</div>
 			{/key}
 		</section>
