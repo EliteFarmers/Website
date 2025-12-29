@@ -13,6 +13,7 @@ export enum FarmingPets {
 	Slug = 'SLUG',
 	Hedgehog = 'HEDGEHOG',
 	Chicken = 'CHICKEN',
+	Pig = 'PIG',
 	Mosquito = 'MOSQUITO',
 	RoseDragon = 'ROSE_DRAGON',
 }
@@ -43,6 +44,7 @@ export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
 	maxLevel?: number;
+	maxRarity?: Rarity;
 	stats?: StatsRecord<FarmingPetStatType, FarmingPet>;
 	perLevelStats?: StatsRecord<FarmingPetStatType, FarmingPet>;
 	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType, FarmingPet>>;
@@ -129,6 +131,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.Rabbit]: {
 		name: 'Rabbit',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Pet',
+		maxRarity: Rarity.Mythic,
 		perLevelStats: {
 			[Stat.Speed]: {
 				name: 'Rabbit Speed',
@@ -311,7 +314,12 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			[Stat.FarmingFortune]: {
 				name: 'Base Stats',
 				type: FarmingPetStatType.Base,
-				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.2),
+				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.2) + 20,
+			},
+			[Stat.Speed]: {
+				name: 'Base Stats',
+				type: FarmingPetStatType.Base,
+				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.5) + 50,
 			},
 		},
 		abilities: [
@@ -358,7 +366,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 						}
 
 						if ('level' in pet) {
-							if (pet.level >= 100) {
+							if (pet.level >= 100 && (pet.info.maxRarity ?? Rarity.Legendary) === pet.rarity) {
 								maxedPets[pet.type] = 1;
 							}
 						}
@@ -375,6 +383,17 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				},
 			},
 		],
+	},
+	[FarmingPets.Pig]: {
+		name: 'Pig',
+		wiki: 'https://wiki.hypixel.net/Pig_Pet',
+		perLevelStats: {
+			[Stat.Speed]: {
+				name: 'Speed',
+				value: 0.25,
+				type: FarmingPetStatType.Base,
+			},
+		},
 	},
 };
 
