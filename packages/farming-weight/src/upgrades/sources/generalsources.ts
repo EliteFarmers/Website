@@ -19,6 +19,7 @@ import {
 	COMMUNITY_CENTER_UPGRADE,
 	DNA_MILESTONE_SOURCE,
 	FARMING_LEVEL,
+	FILLED_ROSEWATER_FLASK_SOURCE,
 	PEST_BESTIARY_SOURCE,
 	REFINED_TRUFFLE_SOURCE,
 	UNLOCKED_PLOTS,
@@ -278,7 +279,12 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			);
 			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN?.wiki;
 		},
-		max: () => FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[Stat.FarmingFortune] ?? 0,
+		max: () => {
+			const accessory = FarmingAccessory.fakeItem(
+				FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN as FarmingAccessoryInfo
+			);
+			return accessory?.getLastItemUpgrade()?.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		},
 		current: (player) => {
 			const highest = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
@@ -300,12 +306,12 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				item: highest?.item,
 				info: highest?.info,
 				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
-				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC,
 			};
 		},
 		upgrades: (player) => {
 			const highest = player.activeAccessories.find(
-				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
 			);
 
 			if (!highest) {
@@ -368,83 +374,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						type: 'setting',
 						key: 'dnaMilestone',
 						value: level + 1,
-					},
-				},
-			];
-		},
-	},
-	{
-		name: REFINED_TRUFFLE_SOURCE.name,
-		wiki: () => REFINED_TRUFFLE_SOURCE.wiki,
-		exists: () => true,
-		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
-		current: (player) => {
-			return (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel;
-		},
-		maxStat: (_player, stat) => getFortune(REFINED_TRUFFLE_SOURCE.maxLevel, REFINED_TRUFFLE_SOURCE, stat),
-		currentStat: (player, stat) => getFortune(player.options.refinedTruffles ?? 0, REFINED_TRUFFLE_SOURCE, stat),
-		upgrades: (player) => {
-			const consumed = player.options.refinedTruffles ?? 0;
-			if (consumed >= 5) return [];
-
-			return [
-				{
-					title: 'Refined Dark Cacao Truffle',
-					increase: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
-					stats: {
-						[Stat.FarmingFortune]: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
-					},
-					action: UpgradeAction.Consume,
-					repeatable: 5 - consumed,
-					wiki: REFINED_TRUFFLE_SOURCE.wiki,
-					category: UpgradeCategory.Item,
-					cost: {
-						items: {
-							REFINED_DARK_CACAO_TRUFFLE: 1,
-						},
-					},
-					meta: {
-						type: 'setting',
-						key: 'refinedTruffles',
-						value: consumed + 1,
-					},
-				},
-			];
-		},
-	},
-	{
-		name: WRIGGLING_LARVA_SOURCE.name,
-		wiki: () => WRIGGLING_LARVA_SOURCE.wiki,
-		exists: () => true,
-		max: () => 0,
-		current: () => 0,
-		maxStat: (_player, stat) => getFortune(WRIGGLING_LARVA_SOURCE.maxLevel, WRIGGLING_LARVA_SOURCE, stat),
-		currentStat: (player, stat) => getFortune(player.options.wrigglingLarva ?? 0, WRIGGLING_LARVA_SOURCE, stat),
-		upgrades: (player, stats) => {
-			if (!stats?.includes(Stat.BonusPestChance)) return [];
-			const consumed = player.options.wrigglingLarva ?? 0;
-			if (consumed >= 5) return [];
-
-			return [
-				{
-					title: 'Wriggling Larva',
-					increase: 0,
-					stats: {
-						[Stat.BonusPestChance]: WRIGGLING_LARVA_SOURCE.statsPerLevel?.[Stat.BonusPestChance] ?? 0,
-					},
-					action: UpgradeAction.Consume,
-					repeatable: 5 - consumed,
-					wiki: WRIGGLING_LARVA_SOURCE.wiki,
-					category: UpgradeCategory.Item,
-					cost: {
-						items: {
-							WRIGGLING_LARVA: 1,
-						},
-					},
-					meta: {
-						type: 'setting',
-						key: 'wrigglingLarva',
-						value: consumed + 1,
 					},
 				},
 			];
@@ -546,6 +475,168 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				];
 
 			return [];
+		},
+	},
+	{
+		name: 'Atmospheric Filter',
+		exists: () => true,
+		wiki: () => 'https://wiki.hypixel.net/Atmospheric_Filter',
+		max: () => 25,
+		active: () => {
+			return {
+				active: true,
+				reason: 'Atmospheric Filter only gives fortune during the Spring season.',
+			};
+		},
+		current: (player) => {
+			const accessory = player.accessories.find((a) => a.info.skyblockId === 'ATMOSPHERIC_FILTER');
+			return accessory ? 25 : 0;
+		},
+		upgrades: (player) => {
+			const accessory = player.accessories.find((a) => a.info.skyblockId === 'ATMOSPHERIC_FILTER');
+			if (accessory) return [];
+
+			return [
+				{
+					title: 'Atmospheric Filter',
+					increase: 25 * 0.25,
+					stats: {
+						[Stat.FarmingFortune]: 25 * 0.25,
+					},
+					action: UpgradeAction.Purchase,
+					purchase: 'ATMOSPHERIC_FILTER',
+					category: UpgradeCategory.Item,
+					wiki: 'https://wiki.hypixel.net/Atmospheric_Filter',
+					cost: {
+						items: {
+							ATMOSPHERIC_FILTER: 1,
+						},
+					},
+					meta: {
+						type: 'buy_item',
+						id: 'ATMOSPHERIC_FILTER',
+					},
+					conflictKey: 'accessory:ATMOSPHERIC_FILTER',
+				},
+			];
+		},
+	},
+	{
+		name: REFINED_TRUFFLE_SOURCE.name,
+		wiki: () => REFINED_TRUFFLE_SOURCE.wiki,
+		exists: () => true,
+		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+		current: (player) => {
+			return (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel;
+		},
+		maxStat: (_player, stat) => getFortune(REFINED_TRUFFLE_SOURCE.maxLevel, REFINED_TRUFFLE_SOURCE, stat),
+		currentStat: (player, stat) => getFortune(player.options.refinedTruffles ?? 0, REFINED_TRUFFLE_SOURCE, stat),
+		upgrades: (player) => {
+			const consumed = player.options.refinedTruffles ?? 0;
+			if (consumed >= 5) return [];
+
+			return [
+				{
+					title: 'Refined Dark Cacao Truffle',
+					increase: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+					},
+					action: UpgradeAction.Consume,
+					repeatable: 5 - consumed,
+					wiki: REFINED_TRUFFLE_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							REFINED_DARK_CACAO_TRUFFLE: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'refinedTruffles',
+						value: consumed + 1,
+					},
+				},
+			];
+		},
+	},
+	{
+		name: FILLED_ROSEWATER_FLASK_SOURCE.name,
+		wiki: () => FILLED_ROSEWATER_FLASK_SOURCE.wiki,
+		exists: () => true,
+		max: () => FILLED_ROSEWATER_FLASK_SOURCE.maxLevel * FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
+		current: (player) => {
+			return (player.options.filledRosewaterFlask ?? 0) * FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel;
+		},
+		maxStat: (_player, stat) =>
+			getFortune(FILLED_ROSEWATER_FLASK_SOURCE.maxLevel, FILLED_ROSEWATER_FLASK_SOURCE, stat),
+		currentStat: (player, stat) =>
+			getFortune(player.options.filledRosewaterFlask ?? 0, FILLED_ROSEWATER_FLASK_SOURCE, stat),
+		upgrades: (player) => {
+			const consumed = player.options.filledRosewaterFlask ?? 0;
+			if (consumed >= 5) return [];
+
+			return [
+				{
+					title: 'Filled Rosewater Flask',
+					increase: FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
+					},
+					action: UpgradeAction.Consume,
+					repeatable: 5 - consumed,
+					wiki: FILLED_ROSEWATER_FLASK_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							FILLED_ROSEWATER_FLASK: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'filledRosewaterFlasks',
+						value: consumed + 1,
+					},
+				},
+			];
+		},
+	},
+	{
+		name: WRIGGLING_LARVA_SOURCE.name,
+		wiki: () => WRIGGLING_LARVA_SOURCE.wiki,
+		exists: () => true,
+		max: () => 0,
+		current: () => 0,
+		maxStat: (_player, stat) => getFortune(WRIGGLING_LARVA_SOURCE.maxLevel, WRIGGLING_LARVA_SOURCE, stat),
+		currentStat: (player, stat) => getFortune(player.options.wrigglingLarva ?? 0, WRIGGLING_LARVA_SOURCE, stat),
+		upgrades: (player, stats) => {
+			if (!stats?.includes(Stat.BonusPestChance)) return [];
+			const consumed = player.options.wrigglingLarva ?? 0;
+			if (consumed >= 5) return [];
+
+			return [
+				{
+					title: 'Wriggling Larva',
+					increase: 0,
+					stats: {
+						[Stat.BonusPestChance]: WRIGGLING_LARVA_SOURCE.statsPerLevel?.[Stat.BonusPestChance] ?? 0,
+					},
+					action: UpgradeAction.Consume,
+					repeatable: 5 - consumed,
+					wiki: WRIGGLING_LARVA_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							WRIGGLING_LARVA: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'wrigglingLarva',
+						value: consumed + 1,
+					},
+				},
+			];
 		},
 	},
 ];

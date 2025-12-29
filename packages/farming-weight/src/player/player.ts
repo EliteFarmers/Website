@@ -13,6 +13,7 @@ import {
 	COCOA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,
 	FARMING_LEVEL,
+	FILLED_ROSEWATER_FLASK_SOURCE,
 	GARDEN_CROP_UPGRADES,
 	UNLOCKED_PLOTS,
 	WRIGGLING_LARVA_SOURCE,
@@ -413,6 +414,16 @@ export class FarmingPlayer {
 			const fortune = Math.min(5, this.options.dnaMilestone ?? 0) * 5;
 			if (fortune > 0) {
 				breakdown['DNA Analysis Milestone'] = fortune;
+				sum += fortune;
+			}
+		}
+
+		// Filled Rosewater Flask
+		if (stat === Stat.FarmingFortune) {
+			const fortune =
+				Math.min(5, this.options.filledRosewaterFlask ?? 0) * FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel;
+			if (fortune > 0) {
+				breakdown['Filled Rosewater Flask'] = fortune;
 				sum += fortune;
 			}
 		}
