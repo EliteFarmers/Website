@@ -39,12 +39,13 @@
 		[FarmingPets.RoseDragon]: grouped[FarmingPets.RoseDragon]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.MooshroomCow]: grouped[FarmingPets.MooshroomCow]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Elephant]: grouped[FarmingPets.Elephant]?.at(0)?.pet.uuid ?? undefined,
-		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Mosquito]: grouped[FarmingPets.Mosquito]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Rabbit]: grouped[FarmingPets.Rabbit]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Slug]: grouped[FarmingPets.Slug]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Hedgehog]: grouped[FarmingPets.Hedgehog]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Bee]: grouped[FarmingPets.Bee]?.at(0)?.pet.uuid ?? undefined,
 		[FarmingPets.Chicken]: grouped[FarmingPets.Chicken]?.at(0)?.pet.uuid ?? undefined,
-		[FarmingPets.Mosquito]: grouped[FarmingPets.Mosquito]?.at(0)?.pet.uuid ?? undefined,
+		[FarmingPets.Pig]: grouped[FarmingPets.Pig]?.at(0)?.pet.uuid ?? undefined,
 	} as Record<string, string | undefined>);
 
 	const groups = $derived(

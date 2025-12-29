@@ -2,6 +2,7 @@ import { Rarity, type RarityRecord } from '../constants/reforges.js';
 import type { Skill } from '../constants/skills.js';
 import { Stat, type StatsRecord } from '../constants/stats.js';
 import type { FarmingPet } from '../fortune/farmingpet.js';
+import { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { unlockedPestBestiaryTiers } from '../util/pests.js';
 
@@ -366,7 +367,8 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 						}
 
 						if ('level' in pet) {
-							if (pet.level >= 100 && (pet.info.maxRarity ?? Rarity.Legendary) === pet.rarity) {
+							const info = FARMING_PETS[pet.type as FarmingPets];
+							if (pet.level >= 100 && (info?.maxRarity ?? Rarity.Legendary) === pet.rarity) {
 								maxedPets[pet.type] = 1;
 							}
 						}
@@ -394,6 +396,24 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				type: FarmingPetStatType.Base,
 			},
 		},
+		abilities: [
+			{
+				name: 'Trample',
+				exists: (_, pet) => pet.rarity === Rarity.Legendary,
+				computed: (options, pet) => {
+					// Trample reduces fortune by 75%
+					const player = new FarmingPlayer({ ...options, selectedPet: undefined, pets: [] });
+					const fortune = player.getGeneralFortune() + player.getTempFortune();
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Trample (75% Reduction)',
+							value: -fortune * 0.75,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			},
+		],
 	},
 };
 
