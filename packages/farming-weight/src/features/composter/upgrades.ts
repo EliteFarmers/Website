@@ -76,7 +76,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 9
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 16,
+					[ITEM_IDS.EnchantedHayBale]: 12,
 					[ITEM_IDS.Cropie]: 6,
 				},
 				copper: 600,
@@ -92,31 +92,31 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 11
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 24,
-					[ITEM_IDS.Cropie]: 32,
+					[ITEM_IDS.EnchantedHayBale]: 16,
+					[ITEM_IDS.Cropie]: 24,
 				},
 				copper: 800,
 			},
 			{
 				// Level 12
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 48,
-					[ITEM_IDS.Cropie]: 64,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 40,
+					[ITEM_IDS.Cropie]: 48,
 				},
 				copper: 900,
 			},
 			{
 				// Level 13
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 32,
-					[ITEM_IDS.Cropie]: 128,
+					[ITEM_IDS.EnchantedHayBale]: 24,
+					[ITEM_IDS.Cropie]: 96,
 				},
 				copper: 1000,
 			},
 			{
 				// Level 14
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 64,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 48,
 					[ITEM_IDS.Squash]: 3,
 				},
 				copper: 1200,
@@ -124,7 +124,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 15
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 48,
+					[ITEM_IDS.EnchantedHayBale]: 32,
 					[ITEM_IDS.Squash]: 6,
 				},
 				copper: 1400,
@@ -132,7 +132,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 16
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 96,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 64,
 					[ITEM_IDS.Squash]: 12,
 				},
 				copper: 1600,
@@ -140,31 +140,31 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 17
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 64,
-					[ITEM_IDS.Squash]: 32,
+					[ITEM_IDS.EnchantedHayBale]: 40,
+					[ITEM_IDS.Squash]: 24,
 				},
 				copper: 1800,
 			},
 			{
 				// Level 18
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 128,
-					[ITEM_IDS.Squash]: 64,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 96,
+					[ITEM_IDS.Squash]: 48,
 				},
 				copper: 2000,
 			},
 			{
 				// Level 19
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 80,
-					[ITEM_IDS.Squash]: 128,
+					[ITEM_IDS.EnchantedHayBale]: 48,
+					[ITEM_IDS.Squash]: 96,
 				},
 				copper: 2250,
 			},
 			{
 				// Level 20
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 192,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 128,
 					[ITEM_IDS.Fermento]: 3,
 				},
 				copper: 2500,
@@ -172,7 +172,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 21
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 104,
+					[ITEM_IDS.EnchantedHayBale]: 64,
 					[ITEM_IDS.Fermento]: 6,
 				},
 				copper: 2750,
@@ -180,7 +180,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 22
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 256,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 192,
 					[ITEM_IDS.Fermento]: 12,
 				},
 				copper: 3000,
@@ -188,24 +188,24 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 23
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 128,
-					[ITEM_IDS.CondensedFermento]: 4,
+					[ITEM_IDS.EnchantedHayBale]: 96,
+					[ITEM_IDS.CondensedFermento]: 2,
 				},
 				copper: 3300,
 			},
 			{
 				// Level 24
 				items: {
-					[ITEM_IDS.EnchantedGoldenCarrot]: 320,
-					[ITEM_IDS.CondensedFermento]: 7,
+					[ITEM_IDS.EnchantedGoldenCarrot]: 256,
+					[ITEM_IDS.CondensedFermento]: 4,
 				},
 				copper: 3600,
 			},
 			{
 				// Level 25
 				items: {
-					[ITEM_IDS.EnchantedHayBale]: 160,
-					[ITEM_IDS.CondensedFermento]: 14,
+					[ITEM_IDS.EnchantedHayBale]: 128,
+					[ITEM_IDS.CondensedFermento]: 8,
 				},
 				copper: 4000,
 			},
@@ -294,7 +294,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 11
 				items: {
 					[ITEM_IDS.EnchantedBakedPotato]: 32,
-					[ITEM_IDS.Cropie]: 32,
+					[ITEM_IDS.Cropie]: 24,
 				},
 				copper: 800,
 			},
@@ -302,7 +302,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 12
 				items: {
 					[ITEM_IDS.PolishedPumpkin]: 16,
-					[ITEM_IDS.Cropie]: 64,
+					[ITEM_IDS.Cropie]: 48,
 				},
 				copper: 900,
 			},
@@ -310,14 +310,14 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 13
 				items: {
 					[ITEM_IDS.EnchantedBakedPotato]: 48,
-					[ITEM_IDS.Cropie]: 128,
+					[ITEM_IDS.Cropie]: 96,
 				},
 				copper: 1000,
 			},
 			{
 				// Level 14
 				items: {
-					[ITEM_IDS.PolishedPumpkin]: 32,
+					[ITEM_IDS.PolishedPumpkin]: 24,
 					[ITEM_IDS.Squash]: 3,
 				},
 				copper: 1200,
@@ -333,7 +333,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 16
 				items: {
-					[ITEM_IDS.PolishedPumpkin]: 48,
+					[ITEM_IDS.PolishedPumpkin]: 32,
 					[ITEM_IDS.Squash]: 12,
 				},
 				copper: 1600,
@@ -341,31 +341,31 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 17
 				items: {
-					[ITEM_IDS.EnchantedBakedPotato]: 96,
-					[ITEM_IDS.Squash]: 32,
+					[ITEM_IDS.EnchantedBakedPotato]: 80,
+					[ITEM_IDS.Squash]: 24,
 				},
 				copper: 1800,
 			},
 			{
 				// Level 18
 				items: {
-					[ITEM_IDS.PolishedPumpkin]: 64,
-					[ITEM_IDS.Squash]: 64,
+					[ITEM_IDS.PolishedPumpkin]: 48,
+					[ITEM_IDS.Squash]: 48,
 				},
 				copper: 2000,
 			},
 			{
 				// Level 19
 				items: {
-					[ITEM_IDS.EnchantedBakedPotato]: 128,
-					[ITEM_IDS.Squash]: 128,
+					[ITEM_IDS.EnchantedBakedPotato]: 112,
+					[ITEM_IDS.Squash]: 96,
 				},
 				copper: 2250,
 			},
 			{
 				// Level 20
 				items: {
-					[ITEM_IDS.PolishedPumpkin]: 96,
+					[ITEM_IDS.PolishedPumpkin]: 64,
 					[ITEM_IDS.Fermento]: 3,
 				},
 				copper: 2500,
@@ -373,7 +373,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 21
 				items: {
-					[ITEM_IDS.EnchantedBakedPotato]: 192,
+					[ITEM_IDS.EnchantedBakedPotato]: 144,
 					[ITEM_IDS.Fermento]: 6,
 				},
 				copper: 2750,
@@ -381,7 +381,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 22
 				items: {
-					[ITEM_IDS.PolishedPumpkin]: 128,
+					[ITEM_IDS.PolishedPumpkin]: 96,
 					[ITEM_IDS.Fermento]: 12,
 				},
 				copper: 3000,
@@ -389,24 +389,24 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 23
 				items: {
-					[ITEM_IDS.EnchantedBakedPotato]: 256,
-					[ITEM_IDS.CondensedFermento]: 4,
+					[ITEM_IDS.EnchantedBakedPotato]: 176,
+					[ITEM_IDS.CondensedFermento]: 2,
 				},
 				copper: 3300,
 			},
 			{
 				// Level 24
 				items: {
-					[ITEM_IDS.PolishedPumpkin]: 192,
-					[ITEM_IDS.CondensedFermento]: 7,
+					[ITEM_IDS.PolishedPumpkin]: 128,
+					[ITEM_IDS.CondensedFermento]: 4,
 				},
 				copper: 3600,
 			},
 			{
 				// Level 25
 				items: {
-					[ITEM_IDS.EnchantedBakedPotato]: 320,
-					[ITEM_IDS.CondensedFermento]: 14,
+					[ITEM_IDS.EnchantedBakedPotato]: 224,
+					[ITEM_IDS.CondensedFermento]: 8,
 				},
 				copper: 4000,
 			},
@@ -486,7 +486,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 10
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 48,
+					[ITEM_IDS.EnchantedMelonBlock]: 40,
 					[ITEM_IDS.Cropie]: 12,
 				},
 				copper: 700,
@@ -495,30 +495,30 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 11
 				items: {
 					[ITEM_IDS.EnchantedSugarCane]: 32,
-					[ITEM_IDS.Cropie]: 32,
+					[ITEM_IDS.Cropie]: 24,
 				},
 				copper: 800,
 			},
 			{
 				// Level 12
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 64,
-					[ITEM_IDS.Cropie]: 64,
+					[ITEM_IDS.EnchantedMelonBlock]: 48,
+					[ITEM_IDS.Cropie]: 48,
 				},
 				copper: 900,
 			},
 			{
 				// Level 13
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 48,
-					[ITEM_IDS.Cropie]: 128,
+					[ITEM_IDS.EnchantedSugarCane]: 40,
+					[ITEM_IDS.Cropie]: 96,
 				},
 				copper: 1000,
 			},
 			{
 				// Level 14
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 96,
+					[ITEM_IDS.EnchantedMelonBlock]: 64,
 					[ITEM_IDS.Squash]: 3,
 				},
 				copper: 1200,
@@ -526,7 +526,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 15
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 64,
+					[ITEM_IDS.EnchantedSugarCane]: 48,
 					[ITEM_IDS.Squash]: 6,
 				},
 				copper: 1400,
@@ -534,7 +534,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 16
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 128,
+					[ITEM_IDS.EnchantedMelonBlock]: 96,
 					[ITEM_IDS.Squash]: 12,
 				},
 				copper: 1600,
@@ -542,31 +542,31 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 17
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 96,
-					[ITEM_IDS.Squash]: 32,
+					[ITEM_IDS.EnchantedSugarCane]: 64,
+					[ITEM_IDS.Squash]: 24,
 				},
 				copper: 1800,
 			},
 			{
 				// Level 18
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 192,
-					[ITEM_IDS.Squash]: 64,
+					[ITEM_IDS.EnchantedMelonBlock]: 128,
+					[ITEM_IDS.Squash]: 48,
 				},
 				copper: 2000,
 			},
 			{
 				// Level 19
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 128,
-					[ITEM_IDS.Squash]: 128,
+					[ITEM_IDS.EnchantedSugarCane]: 96,
+					[ITEM_IDS.Squash]: 96,
 				},
 				copper: 2250,
 			},
 			{
 				// Level 20
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 256,
+					[ITEM_IDS.EnchantedMelonBlock]: 192,
 					[ITEM_IDS.Fermento]: 3,
 				},
 				copper: 2500,
@@ -574,7 +574,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 21
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 192,
+					[ITEM_IDS.EnchantedSugarCane]: 144,
 					[ITEM_IDS.Fermento]: 6,
 				},
 				copper: 2750,
@@ -582,7 +582,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 22
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 384,
+					[ITEM_IDS.EnchantedMelonBlock]: 288,
 					[ITEM_IDS.Fermento]: 12,
 				},
 				copper: 3000,
@@ -590,24 +590,24 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 23
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 256,
-					[ITEM_IDS.CondensedFermento]: 4,
+					[ITEM_IDS.EnchantedSugarCane]: 192,
+					[ITEM_IDS.CondensedFermento]: 2,
 				},
 				copper: 3300,
 			},
 			{
 				// Level 24
 				items: {
-					[ITEM_IDS.EnchantedMelonBlock]: 512,
-					[ITEM_IDS.CondensedFermento]: 7,
+					[ITEM_IDS.EnchantedMelonBlock]: 384,
+					[ITEM_IDS.CondensedFermento]: 4,
 				},
 				copper: 3600,
 			},
 			{
 				// Level 25
 				items: {
-					[ITEM_IDS.EnchantedSugarCane]: 320,
-					[ITEM_IDS.CondensedFermento]: 14,
+					[ITEM_IDS.EnchantedSugarCane]: 256,
+					[ITEM_IDS.CondensedFermento]: 8,
 				},
 				copper: 4000,
 			},
@@ -617,7 +617,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 	[ComposterUpgrade.OrganicMatterCap]: {
 		name: 'Organic Matter Cap',
 		wiki: 'https://wiki.hypixel.net/Composter#Organic_Matter_Cap_',
-		current: (level) => 20_000 * level + 40_000,
+		current: (level) => 30_000 * level + 40_000,
 		levels: [
 			{
 				// Level 1
@@ -696,15 +696,15 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 11
 				items: {
 					[ITEM_IDS.EnchantedCactus]: 16,
-					[ITEM_IDS.Cropie]: 32,
+					[ITEM_IDS.Cropie]: 24,
 				},
 				copper: 800,
 			},
 			{
 				// Level 12
 				items: {
-					[ITEM_IDS.EnchantedCookie]: 72,
-					[ITEM_IDS.Cropie]: 64,
+					[ITEM_IDS.EnchantedCookie]: 64,
+					[ITEM_IDS.Cropie]: 48,
 				},
 				copper: 900,
 			},
@@ -712,7 +712,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 13
 				items: {
 					[ITEM_IDS.EnchantedCactus]: 24,
-					[ITEM_IDS.Cropie]: 128,
+					[ITEM_IDS.Cropie]: 96,
 				},
 				copper: 1000,
 			},
@@ -735,7 +735,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 16
 				items: {
-					[ITEM_IDS.EnchantedCookie]: 244,
+					[ITEM_IDS.EnchantedCookie]: 128,
 					[ITEM_IDS.Squash]: 12,
 				},
 				copper: 1600,
@@ -743,31 +743,31 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 17
 				items: {
-					[ITEM_IDS.EnchantedCactus]: 48,
-					[ITEM_IDS.Squash]: 32,
+					[ITEM_IDS.EnchantedCactus]: 40,
+					[ITEM_IDS.Squash]: 24,
 				},
 				copper: 1800,
 			},
 			{
 				// Level 18
 				items: {
-					[ITEM_IDS.EnchantedCookie]: 192,
-					[ITEM_IDS.Squash]: 64,
+					[ITEM_IDS.EnchantedCookie]: 160,
+					[ITEM_IDS.Squash]: 48,
 				},
 				copper: 2000,
 			},
 			{
 				// Level 19
 				items: {
-					[ITEM_IDS.EnchantedCactus]: 64,
-					[ITEM_IDS.Squash]: 128,
+					[ITEM_IDS.EnchantedCactus]: 48,
+					[ITEM_IDS.Squash]: 96,
 				},
 				copper: 2250,
 			},
 			{
 				// Level 20
 				items: {
-					[ITEM_IDS.EnchantedCookie]: 256,
+					[ITEM_IDS.EnchantedCookie]: 208,
 					[ITEM_IDS.Fermento]: 3,
 				},
 				copper: 2500,
@@ -775,7 +775,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 21
 				items: {
-					[ITEM_IDS.EnchantedCactus]: 96,
+					[ITEM_IDS.EnchantedCactus]: 64,
 					[ITEM_IDS.Fermento]: 6,
 				},
 				copper: 2750,
@@ -783,7 +783,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 22
 				items: {
-					[ITEM_IDS.EnchantedCookie]: 352,
+					[ITEM_IDS.EnchantedCookie]: 256,
 					[ITEM_IDS.Fermento]: 12,
 				},
 				copper: 3000,
@@ -791,24 +791,24 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 23
 				items: {
-					[ITEM_IDS.EnchantedCactus]: 128,
-					[ITEM_IDS.CondensedFermento]: 4,
+					[ITEM_IDS.EnchantedCactus]: 96,
+					[ITEM_IDS.CondensedFermento]: 2,
 				},
 				copper: 3300,
 			},
 			{
 				// Level 24
 				items: {
-					[ITEM_IDS.EnchantedCookie]: 448,
-					[ITEM_IDS.CondensedFermento]: 7,
+					[ITEM_IDS.EnchantedCookie]: 320,
+					[ITEM_IDS.CondensedFermento]: 4,
 				},
 				copper: 3600,
 			},
 			{
 				// Level 25
 				items: {
-					[ITEM_IDS.EnchantedCactus]: 160,
-					[ITEM_IDS.CondensedFermento]: 14,
+					[ITEM_IDS.EnchantedCactus]: 128,
+					[ITEM_IDS.CondensedFermento]: 8,
 				},
 				copper: 4000,
 			},
@@ -865,7 +865,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 7
 				items: {
-					[ITEM_IDS.EnchantedRedMushroomBlock]: 16,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 8,
 				},
 				copper: 400,
 			},
@@ -880,7 +880,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 9
 				items: {
-					[ITEM_IDS.EnchantedBrownMushroomBlock]: 32,
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 16,
 					[ITEM_IDS.Cropie]: 6,
 				},
 				copper: 600,
@@ -896,8 +896,8 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 11
 				items: {
-					[ITEM_IDS.EnchantedRedMushroomBlock]: 64,
-					[ITEM_IDS.Cropie]: 32,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 24,
+					[ITEM_IDS.Cropie]: 24,
 				},
 				copper: 800,
 			},
@@ -905,15 +905,15 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 				// Level 12
 				items: {
 					[ITEM_IDS.MutantNetherWart]: 32,
-					[ITEM_IDS.Cropie]: 64,
+					[ITEM_IDS.Cropie]: 48,
 				},
 				copper: 900,
 			},
 			{
 				// Level 13
 				items: {
-					[ITEM_IDS.EnchantedBrownMushroomBlock]: 128,
-					[ITEM_IDS.Cropie]: 128,
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 32,
+					[ITEM_IDS.Cropie]: 96,
 				},
 				copper: 1000,
 			},
@@ -928,7 +928,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 15
 				items: {
-					[ITEM_IDS.EnchantedRedMushroomBlock]: 256,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 48,
 					[ITEM_IDS.Squash]: 6,
 				},
 				copper: 1400,
@@ -944,31 +944,31 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 17
 				items: {
-					[ITEM_IDS.EnchantedBrownMushroomBlock]: 448,
-					[ITEM_IDS.Squash]: 32,
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 64,
+					[ITEM_IDS.Squash]: 24,
 				},
 				copper: 1800,
 			},
 			{
 				// Level 18
 				items: {
-					[ITEM_IDS.MutantNetherWart]: 96,
-					[ITEM_IDS.Squash]: 64,
+					[ITEM_IDS.MutantNetherWart]: 80,
+					[ITEM_IDS.Squash]: 48,
 				},
 				copper: 2000,
 			},
 			{
 				// Level 19
 				items: {
-					[ITEM_IDS.EnchantedRedMushroomBlock]: 640,
-					[ITEM_IDS.Squash]: 128,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 96,
+					[ITEM_IDS.Squash]: 96,
 				},
 				copper: 2250,
 			},
 			{
 				// Level 20
 				items: {
-					[ITEM_IDS.MutantNetherWart]: 160,
+					[ITEM_IDS.MutantNetherWart]: 112,
 					[ITEM_IDS.Fermento]: 3,
 				},
 				copper: 2500,
@@ -976,7 +976,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 21
 				items: {
-					[ITEM_IDS.EnchantedBrownMushroomBlock]: 832,
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 128,
 					[ITEM_IDS.Fermento]: 6,
 				},
 				copper: 2750,
@@ -984,7 +984,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 22
 				items: {
-					[ITEM_IDS.MutantNetherWart]: 224,
+					[ITEM_IDS.MutantNetherWart]: 160,
 					[ITEM_IDS.Fermento]: 12,
 				},
 				copper: 3000,
@@ -992,24 +992,24 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 23
 				items: {
-					[ITEM_IDS.EnchantedRedMushroomBlock]: 1024,
-					[ITEM_IDS.CondensedFermento]: 4,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 160,
+					[ITEM_IDS.CondensedFermento]: 2,
 				},
 				copper: 3300,
 			},
 			{
 				// Level 24
 				items: {
-					[ITEM_IDS.MutantNetherWart]: 228,
-					[ITEM_IDS.CondensedFermento]: 7,
+					[ITEM_IDS.MutantNetherWart]: 224,
+					[ITEM_IDS.CondensedFermento]: 4,
 				},
 				copper: 3600,
 			},
 			{
 				// Level 25
 				items: {
-					[ITEM_IDS.EnchantedBrownMushroomBlock]: 1216,
-					[ITEM_IDS.CondensedFermento]: 14,
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 192,
+					[ITEM_IDS.CondensedFermento]: 8,
 				},
 				copper: 4000,
 			},

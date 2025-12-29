@@ -20,7 +20,7 @@ test('Composter Progress', () => {
 		[ComposterUpgrade.Speed]: 2,
 		[ComposterUpgrade.FuelCap]: 550000,
 		[ComposterUpgrade.MultiDrop]: 0.06,
-		[ComposterUpgrade.OrganicMatterCap]: 60000,
+		[ComposterUpgrade.OrganicMatterCap]: 70000,
 	});
 
 	const costReductionProgress = progress.find((p) => p.name.startsWith('Cost Reduction'));
@@ -48,8 +48,8 @@ test('Composter Progress', () => {
 	expect(speedUpgrade?.title).toBe('Composter Speed 11');
 	expect(speedUpgrade?.cost).toStrictEqual({
 		items: {
-			[ITEM_IDS.EnchantedHayBale]: 24,
-			[ITEM_IDS.Cropie]: 32,
+			[ITEM_IDS.EnchantedHayBale]: 16,
+			[ITEM_IDS.Cropie]: 24,
 		},
 		copper: 800,
 	});
@@ -65,7 +65,7 @@ test('Composter Progress', () => {
 	expect(fuelCapUpgrade?.title).toBe('Fuel Cap 16');
 	expect(fuelCapUpgrade?.cost).toStrictEqual({
 		items: {
-			[ITEM_IDS.EnchantedMelonBlock]: 128,
+			[ITEM_IDS.EnchantedMelonBlock]: 96,
 			[ITEM_IDS.Squash]: 12,
 		},
 		copper: 1600,
@@ -104,11 +104,11 @@ test('Composter Progress', () => {
 	const fuelCapToMax = costToMax[ComposterUpgrade.FuelCap];
 	expect(fuelCapToMax).toStrictEqual({
 		items: {
-			[ITEM_IDS.EnchantedSugarCane]: 992,
-			[ITEM_IDS.EnchantedMelonBlock]: 1472,
-			[ITEM_IDS.CondensedFermento]: 25,
+			[ITEM_IDS.EnchantedSugarCane]: 752,
+			[ITEM_IDS.EnchantedMelonBlock]: 1088,
+			[ITEM_IDS.CondensedFermento]: 14,
 			[ITEM_IDS.Fermento]: 21,
-			[ITEM_IDS.Squash]: 236,
+			[ITEM_IDS.Squash]: 180,
 		},
 		copper: 26800,
 	});
