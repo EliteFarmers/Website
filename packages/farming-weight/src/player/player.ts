@@ -6,7 +6,7 @@ import {
 	getChipTempMultiplierPerLevel,
 	normalizeChipId,
 } from '../constants/chips.js';
-import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
+import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
 	ANITA_FORTUNE_UPGRADE,

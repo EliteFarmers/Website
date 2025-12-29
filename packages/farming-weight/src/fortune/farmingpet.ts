@@ -1,12 +1,12 @@
-import { Rarity, RARITY_COLORS } from '../constants/reforges.js';
+import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat } from '../constants/stats.js';
 import {
 	FARMING_PET_ITEMS,
 	FARMING_PETS,
 	type FarmingPetInfo,
 	type FarmingPetItemInfo,
-	type FarmingPets,
 	FarmingPetStatType,
+	type FarmingPets,
 	type FarmingPetType,
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,

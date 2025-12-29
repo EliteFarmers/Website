@@ -37,8 +37,8 @@ export enum FarmingPetStatType {
 
 export interface FarmingPetAbility {
 	name: string;
-	exists?: (player: { player?: FarmingPlayer, options: PlayerOptions} , pet: FarmingPet ) => boolean;
-	computed: (player: { player?: FarmingPlayer, options: PlayerOptions}, pet: FarmingPet ) => StatsRecord;
+	exists?: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => boolean;
+	computed: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => StatsRecord;
 }
 
 export interface FarmingPetInfo {
@@ -361,7 +361,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				exists: (_, pet) => pet.level >= 200,
 				computed: ({ player }) => {
 					const maxedPets: Record<string, number> = {};
-					for (const pet of (player?.pets ?? player?.options?.pets ?? [])) {
+					for (const pet of player?.pets ?? player?.options?.pets ?? []) {
 						if (pet.type === FarmingPets.RoseDragon) {
 							continue;
 						}
