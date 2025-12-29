@@ -21,6 +21,7 @@ interface RatesData {
 	bzMode: 'order' | 'insta';
 	attributes: Record<string, number>;
 	chips: Record<string, number>;
+	rosewaterFlasks: number;
 }
 
 export const MissingRatesDataSchema = z.object({
@@ -28,6 +29,7 @@ export const MissingRatesDataSchema = z.object({
 	strength: z.number().optional(),
 	attributes: z.record(z.string(), z.number()).optional(),
 	chips: z.record(z.string(), z.number()).optional(),
+	flasks: z.number().optional(),
 	from: z.string().optional(),
 });
 
@@ -39,6 +41,7 @@ const defaultData = {
 	strength: 0,
 	bzMode: 'order',
 	useTemp: true,
+	rosewaterFlasks: 0,
 	temp: {
 		pestTurnIn: 0,
 		harvestPotion: false,

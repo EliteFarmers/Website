@@ -583,6 +583,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					stats: {
 						[Stat.FarmingFortune]: FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
 					},
+					api: false,
 					action: UpgradeAction.Consume,
 					repeatable: 5 - consumed,
 					wiki: FILLED_ROSEWATER_FLASK_SOURCE.wiki,

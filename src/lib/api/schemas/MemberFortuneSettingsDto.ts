@@ -15,6 +15,8 @@ export interface MemberFortuneSettingsDto {
 	strength: number;
 	/** Community center farming fortune level */
 	communityCenter: number;
+	/** Consumed Filled Rosewater Flasks */
+	rosewaterFlasks: number;
 	/** Attribute shards */
 	attributes: MemberFortuneSettingsDtoAttributes;
 	/** Garden chips */

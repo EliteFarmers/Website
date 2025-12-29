@@ -76,6 +76,29 @@
 		/>
 	</SettingListItem>
 	<SettingSeperator />
+	<SettingListItem
+		title="Filled Rosewater Flasks"
+		description="Amount of Filled Rosewater Flasks you've consumed."
+		wiki="https://wiki.hypixel.net/Rosewater_Flask"
+	>
+		{#snippet child()}
+			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
+				<div class="flex flex-1 flex-row items-center gap-1">
+					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.rosewaterFlasks}</p>
+					{#if $ratesData.rosewaterFlasks !== undefined}
+						<SliderSimple
+							class="h-12 flex-1"
+							min={0}
+							max={5}
+							bind:value={$ratesData.rosewaterFlasks}
+							step={1}
+						/>
+					{/if}
+				</div>
+			</div>
+		{/snippet}
+	</SettingListItem>
+	<SettingSeperator />
 
 	<SettingHeader class="mt-8 font-normal">
 		<span class="text-xl font-semibold">Temporary Fortune</span>
@@ -351,7 +374,9 @@
 								name={chip.skyblockId}
 								value={$ratesData.chips[chip.skyblockId] ?? 0}
 							/>
-						{/each} <input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
+						{/each}
+						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
+						<input type="hidden" name="flasks" value={$ratesData.rosewaterFlasks ?? 0} />
 						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />
 						<Button type="submit" disabled={loading}>Save</Button>
 					</form>

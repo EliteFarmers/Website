@@ -64,6 +64,7 @@ export class PlayerStats {
 				data.strength = this.fortuneSettings?.strength ?? data.strength;
 				data.attributes = this.fortuneSettings?.attributes ?? data.attributes;
 				data.chips = this.fortuneSettings?.chips ?? data.chips;
+				data.rosewaterFlasks = this.fortuneSettings?.rosewaterFlasks ?? data.rosewaterFlasks;
 				return data;
 			});
 		}

@@ -40,6 +40,7 @@ export const actions: Actions = {
 
 		const strength = +(data.get('strength') ?? 0);
 		const communityCenter = +(data.get('community') ?? 0);
+		const rosewaterFlasks = +(data.get('flasks') ?? 0);
 
 		const shards = {} as Record<string, number>;
 		const chips = {} as Record<string, number>;
@@ -61,6 +62,7 @@ export const actions: Actions = {
 			communityCenter: communityCenter,
 			attributes: shards,
 			chips: chips,
+			rosewaterFlasks: rosewaterFlasks,
 		});
 
 		if (e) {
