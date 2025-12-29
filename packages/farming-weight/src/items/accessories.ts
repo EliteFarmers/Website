@@ -127,4 +127,13 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			[Stat.FarmingFortune]: 0, // Effect is special
 		},
 	},
+	ATMOSPHERIC_FILTER: {
+		skyblockId: 'ATMOSPHERIC_FILTER',
+		name: 'Atmospheric Filter',
+		wiki: 'https://wiki.hypixel.net/Atmospheric_Filter',
+		maxRarity: Rarity.Rare,
+		baseStats: {
+			[Stat.FarmingFortune]: 0, // Effect is special
+		},
+	},
 };

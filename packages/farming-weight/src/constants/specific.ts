@@ -278,6 +278,13 @@ export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	wiki: 'https://wiki.hypixel.net/Refined_Dark_Cacao_Truffle',
 };
 
+export const FILLED_ROSEWATER_FLASK_SOURCE: FortuneSource = {
+	name: 'Filled Rosewater Flask',
+	fortunePerLevel: 1,
+	maxLevel: 5,
+	wiki: 'https://wiki.hypixel.net/Filled_Rosewater_Flask',
+};
+
 export const DNA_MILESTONE_SOURCE: FortuneSource = {
 	name: 'DNA Analysis Milestone',
 	fortunePerLevel: 5,

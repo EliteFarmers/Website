@@ -143,7 +143,7 @@
 		exportableCrops: ctx.member.current?.unparsed.exportedCrops ?? {},
 		dnaMilestone: ctx.member.current?.unparsed?.dnaMilestone ?? 0,
 
-		perks: ctx.member.current?.unparsed?.perks,
+		perks: ctx.member.current?.unparsed?.perks ?? undefined,
 
 		farmingLevel: getLevelProgress(
 			'farming',
@@ -159,9 +159,12 @@
 		gardenLevel: getGardenLevel(ctx.member.current?.garden?.experience ?? 0).level,
 
 		communityCenter: $ratesData.communityCenter,
+		filledRosewaterFlask: $ratesData.rosewaterFlasks,
 		strength: $ratesData.strength,
 		attributes: $ratesData.attributes,
 		chips: $ratesData.chips,
+		sprayedPlot: $ratesData.sprayedPlot,
+		infestedPlotProbability: $ratesData.infestedPlotProbability,
 
 		cocoaFortuneUpgrade: ctx.member.current?.chocolateFactory?.cocoaFortuneUpgrades,
 		temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
@@ -319,6 +322,7 @@
 			attributes: $ratesData.attributes,
 			chips: $ratesData.chips,
 			communityCenter: $ratesData.communityCenter,
+			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
 			temporaryFortune: $ratesData.useTemp ? $ratesData.temp : undefined,
 			sprayedPlot: $ratesData.sprayedPlot,

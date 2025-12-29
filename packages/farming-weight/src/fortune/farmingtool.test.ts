@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../constants/stats.js';
+import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
 import { FarmingTool } from './farmingtool.js';
 
 const netherwartHoe = {
@@ -92,6 +93,173 @@ test('Farming Tool Test', () => {
 
 	expect(tool.collAnalysis).toBe(0);
 	expect(tool.logCounter).toBe(0);
+});
+
+test('Farming tool current level progress', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		attributes: {
+			...netherwartHoe.attributes,
+			levelable_lvl: '1',
+			levelable_exp: '250',
+		},
+	});
+
+	const progress = tool.getCurrentLevelProgress();
+
+	expect(progress.level).toBe(1);
+	expect(progress.next).toBe(2);
+	expect(progress.goal).toBe(TOOL_EXP_LEVELS[0]);
+	expect(progress.progress).toBe(250);
+	expect(progress.ratio).toBe(0.25);
+	expect(progress.maxed).toBe(false);
+	expect(progress.total).toBe(250);
+});
+
+test('Mk 1 cap: stays at level 14 with 100% progress to 15', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+		name: '§aWheat Hoe Mk. I',
+		attributes: {
+			...netherwartHoe.attributes,
+			levelable_lvl: '14',
+			levelable_exp: '1351146',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(14);
+	expect(p.next).toBe(15);
+	expect(p.goal).toBe(TOOL_EXP_LEVELS[13]);
+	expect(p.ratio).toBe(1);
+	expect(p.maxed).toBe(true);
+	expect(p.progress).toBe(TOOL_EXP_LEVELS[13]);
+});
+
+test('Mk 2 cap: stays at level 29 with 100% progress to 30', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		skyblockId: 'THEORETICAL_HOE_WHEAT_2',
+		name: '§bWheat Hoe Mk. II',
+		attributes: {
+			...netherwartHoe.attributes,
+			levelable_lvl: '29',
+			levelable_exp: '1004745.55',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(29);
+	expect(p.next).toBe(30);
+	expect(p.goal).toBe(TOOL_EXP_LEVELS[28]);
+	expect(p.ratio).toBe(1);
+	expect(p.maxed).toBe(true);
+	expect(p.progress).toBe(TOOL_EXP_LEVELS[28]);
+});
+
+test('Mk 3 cap: stays at level 40 with 100% progress to 41', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		attributes: {
+			...netherwartHoe.attributes,
+			levelable_lvl: '40',
+			levelable_exp: '262735760',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(40);
+	expect(p.next).toBe(41);
+	expect(p.goal).toBe(TOOL_EXP_LEVELS[39]);
+	expect(p.ratio).toBe(1);
+	expect(p.maxed).toBe(true);
+	expect(p.progress).toBe(TOOL_EXP_LEVELS[39]);
+});
+
+test('Level 50 is always maxed', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		attributes: {
+			...netherwartHoe.attributes,
+			levelable_lvl: '50',
+			levelable_exp: '0',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(50);
+	expect(p.maxed).toBe(true);
+	expect(p.ratio).toBe(1);
+	expect(p.goal).toBeUndefined();
+	expect(p.next).toBeUndefined();
+});
+
+test('Lore match: Level 10 -> 11 (2.6k/40k) = 6.47%', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		attributes: {
+			...netherwartHoe.attributes,
+			timestamp: '1765930312420',
+			levelable_lvl: '10',
+			levelable_exp: '2588.65',
+			donated_museum: '1',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(10);
+	expect(p.next).toBe(11);
+	expect(p.goal).toBe(TOOL_EXP_LEVELS[9]);
+	expect(p.progress).toBeCloseTo(2588.65, 6);
+	expect(p.ratio).toBeCloseTo(2588.65 / 40000, 6);
+	expect(p.maxed).toBe(false);
+});
+
+test('Lore match: Level 26 -> 27 (109.5k/600k) = 18.26%', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		attributes: {
+			...netherwartHoe.attributes,
+			levelable_lvl: '26',
+			levelable_exp: '109549',
+			levelable_overclocks: '1',
+			farming_for_dummies_count: '5',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(26);
+	expect(p.next).toBe(27);
+	expect(p.goal).toBe(TOOL_EXP_LEVELS[25]);
+	expect(p.progress).toBe(109549);
+	expect(p.ratio).toBeCloseTo(109549 / 600000, 6);
+	expect(p.maxed).toBe(false);
+});
+
+test('Lore match: Level 46 -> 47 (2.8M/4M) = 70.32%', () => {
+	const tool = new FarmingTool({
+		...netherwartHoe,
+		attributes: {
+			...netherwartHoe.attributes,
+			modifier: 'blessed',
+			timestamp: '1688830800000',
+			levelable_lvl: '46',
+			levelable_exp: '2812878.7',
+			levelable_overclocks: '10',
+			farming_for_dummies_count: '5',
+			rarity_upgrades: '1',
+			donated_museum: '1',
+		},
+	});
+
+	const p = tool.getCurrentLevelProgress();
+	expect(p.level).toBe(46);
+	expect(p.next).toBe(47);
+	expect(p.goal).toBe(TOOL_EXP_LEVELS[45]);
+	expect(p.progress).toBeCloseTo(2812878.7, 3);
+	expect(p.ratio).toBeCloseTo(2812878.7 / 4000000, 6);
+	expect(p.maxed).toBe(false);
 });
 
 const pumpkinDicer = {

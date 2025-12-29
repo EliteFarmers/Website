@@ -7,13 +7,13 @@ test('Composter Upgrades', () => {
 	expect(COMPOSTER_UPGRADES[ComposterUpgrade.CostReduction].totalCost).toStrictEqual({
 		items: {
 			[ITEM_IDS.EnchantedBrownMushroom]: 32,
-			[ITEM_IDS.MutantNetherWart]: 883,
-			[ITEM_IDS.EnchantedRedMushroomBlock]: 2002,
-			[ITEM_IDS.EnchantedBrownMushroomBlock]: 2660,
-			[ITEM_IDS.Cropie]: 245,
-			[ITEM_IDS.Squash]: 245,
+			[ITEM_IDS.MutantNetherWart]: 751,
+			[ITEM_IDS.EnchantedRedMushroomBlock]: 338,
+			[ITEM_IDS.EnchantedBrownMushroomBlock]: 436,
+			[ITEM_IDS.Cropie]: 189,
+			[ITEM_IDS.Squash]: 189,
 			[ITEM_IDS.Fermento]: 21,
-			[ITEM_IDS.CondensedFermento]: 25,
+			[ITEM_IDS.CondensedFermento]: 14,
 		},
 		copper: 35650,
 	});

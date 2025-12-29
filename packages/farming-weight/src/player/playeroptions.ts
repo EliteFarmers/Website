@@ -22,6 +22,7 @@ export interface FortuneMissingFromAPI {
 	refinedTruffles?: number;
 	wrigglingLarva?: number;
 	cocoaFortuneUpgrade?: number;
+	filledRosewaterFlask?: number;
 
 	sprayedPlot?: boolean;
 	infestedPlotProbability?: number;

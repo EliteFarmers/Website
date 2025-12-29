@@ -105,6 +105,7 @@ export const zodGetAccountResponse = zod.object({
 							zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
+								rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
 								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
@@ -411,6 +412,7 @@ export const zodGetAccountFromDiscordResponse = zod.object({
 							zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
+								rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
 								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
@@ -675,6 +677,7 @@ export const zodGetAccountSettingsResponse = zod.object({
 						zod.object({
 							strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 							communityCenter: zod.number().describe('Community center farming fortune level'),
+							rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 							attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
 							chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 						})
@@ -783,6 +786,7 @@ export const zodGetAuthAccountResponse = zod.object({
 							zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
+								rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
 								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})
@@ -1066,6 +1070,7 @@ export const zodUpdateFortuneSettingsParams = zod.object({
 export const zodUpdateFortuneSettingsBody = zod.object({
 	strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 	communityCenter: zod.number().describe('Community center farming fortune level'),
+	rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 	attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
 	chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 });
@@ -3031,6 +3036,7 @@ export const zodUpdateDiscordAccountResponse = zod.object({
 							zod.object({
 								strength: zod.number().describe('Amount of strength used for mooshroom fortune'),
 								communityCenter: zod.number().describe('Community center farming fortune level'),
+								rosewaterFlasks: zod.number().describe('Consumed Filled Rosewater Flasks'),
 								attributes: zod.record(zod.string(), zod.number()).describe('Attribute shards'),
 								chips: zod.record(zod.string(), zod.number()).describe('Garden chips'),
 							})

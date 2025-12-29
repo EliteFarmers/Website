@@ -76,7 +76,7 @@ test('General fortune sources', () => {
 		{
 			name: 'Helianthus Relic',
 			current: 0,
-			max: 30,
+			max: 40,
 			ratio: 0,
 		},
 		{
@@ -84,12 +84,6 @@ test('General fortune sources', () => {
 			current: 3 * 5,
 			max: 30,
 			ratio: 3 / 6,
-		},
-		{
-			name: 'Refined Dark Cacao Truffle',
-			current: 0,
-			max: 5,
-			ratio: 0,
 		},
 		{
 			name: 'Relic of Power',
@@ -101,6 +95,24 @@ test('General fortune sources', () => {
 			name: 'Magic 8 Ball',
 			current: 0,
 			max: 25,
+			ratio: 0,
+		},
+		{
+			name: 'Atmospheric Filter',
+			current: 0,
+			max: 25,
+			ratio: 0,
+		},
+		{
+			name: 'Refined Dark Cacao Truffle',
+			current: 0,
+			max: 5,
+			ratio: 0,
+		},
+		{
+			name: 'Filled Rosewater Flask',
+			current: 0,
+			max: 5,
 			ratio: 0,
 		},
 	]);

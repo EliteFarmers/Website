@@ -42,7 +42,7 @@
 
 	let description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
-			`${weightRank > 0 ? ` (#${weightRank})` : ''}\n` +
+			`${weightRank > 0 ? ` (#${weightRank.toLocaleString()})` : ''}\n` +
 			`📜 Farming Level - ${farmingXp.level}` +
 			`${(ctx.ranks?.farming?.rank ?? -1) > 0 ? ` (#${ctx.ranks?.farming?.rank?.toLocaleString()})` : ''}\n` +
 			`⠀⤷ ${(member?.skills?.farming ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 })} Total XP\n` +
