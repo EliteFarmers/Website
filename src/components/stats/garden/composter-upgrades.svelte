@@ -6,7 +6,7 @@
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Info from '@lucide/svelte/icons/info';
-	import { ComposterUpgrade, getComposterStats, type UpgradeInfo } from 'farming-weight';
+	import { ComposterUpgrade, getComposterStats, mergeCost, type UpgradeInfo } from 'farming-weight';
 
 	const ctx = getStatsContext();
 	const garden = $derived(ctx.garden);
@@ -34,6 +34,8 @@
 
 	const itemList = $derived(getItemsFromCosts(Object.values(progress.costToMax)));
 	const fetchedItems = $derived(itemList.length > 0 ? getItems(itemList) : undefined);
+
+	const costToMaxEverything = $derived(mergeCost(...Object.values(progress.costToMax)));
 </script>
 
 <div class="w-full max-w-7xl">
@@ -45,6 +47,14 @@
 			{@render upgrade(ComposterUpgrade.FuelCap)}
 			{@render upgrade(ComposterUpgrade.OrganicMatterCap)}
 			{@render upgrade(ComposterUpgrade.CostReduction)}
+
+			{#if !allMaxed}
+				{@const maxAllCost = getUpgradeCostBreakdown(costToMaxEverything, fetchedItems?.current)}
+				<div class="mt-2 flex w-full flex-row items-center justify-between gap-1 rounded-md border p-2">
+					<h3 class="text-lg font-semibold">Cost to Max All Upgrades</h3>
+					<CoinsBreakdown coins={maxAllCost.total} list={maxAllCost.breakdown} title="All Upgrades" />
+				</div>
+			{/if}
 		</div>
 		{#if !allMaxed}
 			<div class="flex flex-1 flex-col gap-2 rounded-md">
@@ -88,7 +98,7 @@
 		disabled={allMaxed}
 	>
 		<Icon class="mr-2" />
-		<div class="flex flex-1 flex-row gap-[2px] md:gap-1">
+		<div class="flex flex-1 flex-row gap-0.5 md:gap-1">
 			{#each { length: maxLevel }, i (i)}
 				<div
 					class="h-5 w-full rounded-xs sm:rounded-sm md:block md:h-6 {i < level
@@ -122,7 +132,7 @@
 			<CoinsBreakdown coins={toMax} list={maxBreakdown} title="All Remaining Levels" />
 		</div>
 		<div class="mt-4 flex w-full flex-row items-center justify-evenly gap-2">
-			<div class="flex flex-col items-center gap-4 rounded-md border-1 p-4 px-8">
+			<div class="flex flex-col items-center gap-4 rounded-md border p-4 px-8">
 				<Icon class="size-16" />
 				{#if isPercent}
 					<span class="font-semibold">+ {Math.round(upgrade.current * 1000) / 10}%</span>
@@ -131,7 +141,7 @@
 				{/if}
 			</div>
 			<ArrowRight class="size-12" />
-			<div class="flex flex-col items-center gap-4 rounded-md border-1 p-4 px-8">
+			<div class="flex flex-col items-center gap-4 rounded-md border p-4 px-8">
 				<Icon class="size-16" />
 				{#if isPercent}
 					<span class="font-semibold">+ {Math.round((upgrade.current + upgrade.increase) * 1000) / 10}%</span>
