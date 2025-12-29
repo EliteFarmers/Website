@@ -1,16 +1,17 @@
-import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
+import { Rarity, RARITY_COLORS } from '../constants/reforges.js';
 import { getStatValue, Stat } from '../constants/stats.js';
 import {
 	FARMING_PET_ITEMS,
 	FARMING_PETS,
 	type FarmingPetInfo,
 	type FarmingPetItemInfo,
-	FarmingPetStatType,
 	type FarmingPets,
+	FarmingPetStatType,
 	type FarmingPetType,
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,
 } from '../items/pets.js';
+import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getRarityFromLore } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
@@ -61,7 +62,7 @@ export class FarmingPet {
 		this.fortune = this.getFortune();
 	}
 
-	getFortune(stat = Stat.FarmingFortune): number {
+	getFortune(stat = Stat.FarmingFortune, player?: FarmingPlayer): number {
 		let fortune = 0;
 		const breakdown: Record<string, number> = {};
 
@@ -92,11 +93,11 @@ export class FarmingPet {
 		// Pet abilities
 		if (this.info.abilities) {
 			for (const ability of this.info.abilities) {
-				if (ability.exists && !ability.exists(this.options ?? {}, this)) {
+				if (ability.exists && !ability.exists({ player, options: this.options ?? {} }, this)) {
 					continue;
 				}
 
-				const stats = ability.computed(this.options ?? {}, this);
+				const stats = ability.computed({ player, options: this.options ?? {} }, this);
 				const fortuneStat = stats[stat];
 
 				const value = getStatValue(fortuneStat, this.options);

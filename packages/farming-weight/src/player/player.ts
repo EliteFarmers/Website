@@ -6,7 +6,7 @@ import {
 	getChipTempMultiplierPerLevel,
 	normalizeChipId,
 } from '../constants/chips.js';
-import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
+import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
@@ -354,16 +354,6 @@ export class FarmingPlayer {
 			sum += communityCenter;
 		}
 
-		// Selected Pet
-		const pet = this.selectedPet;
-		if (pet) {
-			const val = pet.getFortune(stat);
-			if (val > 0) {
-				breakdown[pet.info.name ?? 'Selected Pet'] = val;
-				sum += val;
-			}
-		}
-
 		// Accessories
 		const families = new Map<string, FarmingAccessory>();
 		const activeAccessories = [];
@@ -485,6 +475,16 @@ export class FarmingPlayer {
 			const temp = this.getTempFortune();
 			if (temp > 0) {
 				breakdown['Temporary Fortune'] = temp;
+			}
+		}
+
+		// Selected Pet
+		const pet = this.selectedPet;
+		if (pet) {
+			const val = pet.getFortune(stat);
+			if (val > 0) {
+				breakdown[pet.info.name ?? 'Selected Pet'] = val;
+				sum += val;
 			}
 		}
 

@@ -2,7 +2,7 @@ import { Rarity, type RarityRecord } from '../constants/reforges.js';
 import type { Skill } from '../constants/skills.js';
 import { Stat, type StatsRecord } from '../constants/stats.js';
 import type { FarmingPet } from '../fortune/farmingpet.js';
-import { FarmingPlayer } from '../player/player.js';
+import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { unlockedPestBestiaryTiers } from '../util/pests.js';
 
@@ -37,8 +37,8 @@ export enum FarmingPetStatType {
 
 export interface FarmingPetAbility {
 	name: string;
-	exists?: (player: PlayerOptions, pet: FarmingPet) => boolean;
-	computed: (player: PlayerOptions, pet: FarmingPet) => StatsRecord;
+	exists?: (player: { player?: FarmingPlayer, options: PlayerOptions} , pet: FarmingPet ) => boolean;
+	computed: (player: { player?: FarmingPlayer, options: PlayerOptions}, pet: FarmingPet ) => StatsRecord;
 }
 
 export interface FarmingPetInfo {
@@ -81,7 +81,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				exists: (_, pet) => pet.rarity === Rarity.Legendary,
 				computed: (player, pet) => {
 					const strengthPer = 40 - pet.level * 0.2;
-					const strength = player.strength ?? 0;
+					const strength = player.options.strength ?? 0;
 
 					const amount = Math.floor((strength / strengthPer) * 0.7);
 					return {
@@ -211,7 +211,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Repugnant Aroma',
 				// No good option to check if player is in a sprayed plot yet
-				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.sprayedPlot ?? false),
+				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.options.sprayedPlot ?? false),
 				computed: (_, pet) => {
 					return {
 						[Stat.FarmingFortune]: {
@@ -299,7 +299,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					return {
 						[Stat.SugarCaneFortune]: {
 							name: "Buzzin' Barterer",
-							value: pet.level * 0.02 * (player.uniqueVisitors ?? 0),
+							value: pet.level * 0.02 * (player.options.uniqueVisitors ?? 0),
 							type: FarmingPetStatType.Ability,
 						},
 					};
@@ -331,7 +331,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Garden Power',
-							value: (player.farmingLevel ?? 0) * 3,
+							value: (player.options.farmingLevel ?? 0) * 3,
 							type: FarmingPetStatType.Ability,
 						},
 					};
@@ -341,7 +341,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				name: 'Rosy Scales',
 				exists: (_, pet) => pet.level >= 101,
 				computed: (player) => {
-					const milestoneLevels = Object.values(player.milestones ?? {}).reduce((a, b) => a + b, 0);
+					const milestoneLevels = Object.values(player.options.milestones ?? {}).reduce((a, b) => a + b, 0);
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Rosy Scales',
@@ -359,9 +359,9 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Symbiosis',
 				exists: (_, pet) => pet.level >= 200,
-				computed: (player) => {
+				computed: ({ player }) => {
 					const maxedPets: Record<string, number> = {};
-					for (const pet of player.pets ?? []) {
+					for (const pet of (player?.pets ?? player?.options?.pets ?? [])) {
 						if (pet.type === FarmingPets.RoseDragon) {
 							continue;
 						}
@@ -400,10 +400,9 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Trample',
 				exists: (_, pet) => pet.rarity === Rarity.Legendary,
-				computed: (options, pet) => {
+				computed: ({ player }) => {
 					// Trample reduces fortune by 75%
-					const player = new FarmingPlayer({ ...options, selectedPet: undefined, pets: [] });
-					const fortune = player.getGeneralFortune() + player.getTempFortune();
+					const fortune = (player?.fortune ?? 0) + (player?.tempFortune ?? 0);
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Trample (75% Reduction)',
