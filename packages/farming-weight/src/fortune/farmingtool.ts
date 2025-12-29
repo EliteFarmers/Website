@@ -2,6 +2,7 @@ import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
+import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
 import type { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
 import { FARMING_TOOLS, type FarmingToolInfo, FarmingToolType } from '../items/tools.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
@@ -11,11 +12,32 @@ import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
 import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+import { getLevel, type LevelingStats } from '../util/garden.js';
 import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
 import type { UpgradeableInfo } from './upgradeable.js';
 import { UpgradeableBase } from './upgradeablebase.js';
+
+export interface ToolCurrentLevelProgress {
+	/** Current displayed tool level (1-based). */
+	level: number;
+	/** Next level number (1-based). Present when we know the requirement. */
+	next?: number;
+	/** Raw XP value from the API for this level. */
+	total: number;
+	/** XP progress within this level (clamped to the current level goal). */
+	progress: number;
+	/** XP required to reach the next level from the current level. */
+	goal?: number;
+	/** Progress ratio within this level (0..1). */
+	ratio: number;
+	/**
+	 * True when the tool is effectively capped (shows 100% but does not advance).
+	 * This is inferred when XP meets/exceeds the current goal, or when the tool is already level 50.
+	 */
+	maxed: boolean;
+}
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
@@ -62,6 +84,54 @@ export class FarmingTool extends UpgradeableBase {
 	public declare level: number;
 	public declare xp: number;
 	public declare overclocks: number;
+
+	/**
+	 * Tool XP (`levelable_exp`) is XP within the current level and resets on level-up.
+	 * When a tool is capped it can show >= 100% progress but not advance.
+	 */
+	getCurrentLevelProgress(): ToolCurrentLevelProgress {
+		const currentLevel = Math.max(1, Math.floor(this.level || 1));
+		const rawXp = this.xp || 0;
+
+		if (currentLevel >= 50) {
+			return {
+				level: 50,
+				next: undefined,
+				total: rawXp,
+				progress: 0,
+				goal: undefined,
+				ratio: 1,
+				maxed: true,
+			};
+		}
+
+		const goal = (TOOL_EXP_LEVELS as unknown as number[])[currentLevel - 1] ?? 0;
+		if (!goal) {
+			return {
+				level: currentLevel,
+				next: undefined,
+				total: rawXp,
+				progress: Math.max(0, rawXp),
+				goal: undefined,
+				ratio: 0,
+				maxed: false,
+			};
+		}
+
+		const clamped = Math.max(0, Math.min(rawXp, goal));
+		const stats: LevelingStats = getLevel(clamped, [goal], 1, false);
+		const cappedAtThisLevel = rawXp >= goal;
+
+		return {
+			level: currentLevel,
+			next: currentLevel + 1,
+			total: rawXp,
+			progress: stats.progress,
+			goal,
+			ratio: cappedAtThisLevel ? 1 : stats.ratio,
+			maxed: cappedAtThisLevel,
+		};
+	}
 
 	public declare options?: PlayerOptions;
 
