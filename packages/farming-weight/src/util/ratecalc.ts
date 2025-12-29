@@ -82,19 +82,6 @@ export function calculateDetailedAverageDrops(
 		});
 	}
 
-	const wheat = result[Crop.Wheat];
-	const seeds = result[Crop.Seeds];
-
-	// Combine seeds into wheat
-	const seedCollection = seeds.collection - options.blocksBroken;
-	wheat.otherCollection['Seeds'] = seedCollection;
-	wheat.coinSources['Seeds'] = seedCollection * CROP_INFO[Crop.Seeds].npc;
-	if (options.bountiful) {
-		wheat.coinSources['Bountiful (Seeds)'] = seeds.coinSources['Bountiful'] ?? 0;
-	}
-	wheat.npcCoins = Object.values(wheat.coinSources).reduce((a, b) => a + b, 0);
-	wheat.items[Crop.Seeds] = seedCollection;
-
 	// Count mooshroom mushrooms as normal mushroom collection
 	if (options.mooshroom) {
 		const mushroom = result[Crop.Mushroom];
@@ -207,6 +194,25 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			result.collection = Math.round(baseDrops);
 			result.items[crop] = Math.round(baseDrops);
 			break;
+	}
+
+	// When farming wheat, also count seeds
+	if (crop === Crop.Wheat) {
+		const seedsResult = calculateDetailedDrops({
+			...options,
+			crop: Crop.Seeds,
+			maxTool: false,
+			mooshroom: false,
+		});
+
+		const seedCollection = seedsResult.collection - blocksBroken;
+		result.otherCollection['Seeds'] = seedCollection;
+		result.items[Crop.Seeds] = seedCollection;
+		result.coinSources['Seeds'] = seedCollection * seedsResult.npcPrice;
+
+		if (bountiful) {
+			result.coinSources['Bountiful (Seeds)'] = seedsResult.coinSources['Bountiful'] ?? 0;
+		}
 	}
 
 	if (options.maxTool) {

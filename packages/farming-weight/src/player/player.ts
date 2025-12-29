@@ -354,16 +354,6 @@ export class FarmingPlayer {
 			sum += communityCenter;
 		}
 
-		// Selected Pet
-		const pet = this.selectedPet;
-		if (pet) {
-			const val = pet.getFortune(stat);
-			if (val > 0) {
-				breakdown[pet.info.name ?? 'Selected Pet'] = val;
-				sum += val;
-			}
-		}
-
 		// Accessories
 		const families = new Map<string, FarmingAccessory>();
 		const activeAccessories = [];
@@ -485,6 +475,16 @@ export class FarmingPlayer {
 			const temp = this.getTempFortune();
 			if (temp > 0) {
 				breakdown['Temporary Fortune'] = temp;
+			}
+		}
+
+		// Selected Pet
+		const pet = this.selectedPet;
+		if (pet) {
+			const val = pet.getFortune(stat);
+			if (val > 0) {
+				breakdown[pet.info.name ?? 'Selected Pet'] = val;
+				sum += val;
 			}
 		}
 

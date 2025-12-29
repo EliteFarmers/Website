@@ -98,6 +98,39 @@ test('Max fortune results', () => {
 	expect(result2.fortune).toBe(173);
 });
 
+test('Tool Exp Capsules include seeds for wheat', () => {
+	const result = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 50_000,
+		farmingFortune: 100,
+		bountiful: true,
+		mooshroom: false,
+		maxTool: true,
+	});
+
+	// With 100 farming fortune: wheat collection = 100k, seeds (merged) = 100k
+	// Capsules are based on (wheat collection + seeds) / 200k => 1 capsule
+	expect(result.otherCollection['Seeds']).toBe(100_000);
+	expect(result.items[Crop.Seeds]).toBe(100_000);
+
+	expect(result.items['TOOL_EXP_CAPSULE']).toBe(1);
+	expect(result.otherCollection['Tool Exp Capsule']).toBe(1);
+	expect(result.coinSources['Tool Exp Capsule']).toBe(100_000);
+});
+
+test('Tool Exp Capsules include seeds for wheat (average drops)', () => {
+	const drops = calculateDetailedAverageDrops({
+		blocksBroken: 50_000,
+		farmingFortune: 100,
+		bountiful: true,
+		mooshroom: false,
+		maxTool: true,
+	});
+
+	expect(drops[Crop.Wheat].otherCollection['Seeds']).toBe(100_000);
+	expect(drops[Crop.Wheat].items['TOOL_EXP_CAPSULE']).toBe(1);
+});
+
 test('Warty RNG Drops', () => {
 	const result = calculateDetailedDrops({
 		crop: Crop.NetherWart,

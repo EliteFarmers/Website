@@ -2,6 +2,7 @@ import { Rarity, type RarityRecord } from '../constants/reforges.js';
 import type { Skill } from '../constants/skills.js';
 import { Stat, type StatsRecord } from '../constants/stats.js';
 import type { FarmingPet } from '../fortune/farmingpet.js';
+import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { unlockedPestBestiaryTiers } from '../util/pests.js';
 
@@ -13,6 +14,7 @@ export enum FarmingPets {
 	Slug = 'SLUG',
 	Hedgehog = 'HEDGEHOG',
 	Chicken = 'CHICKEN',
+	Pig = 'PIG',
 	Mosquito = 'MOSQUITO',
 	RoseDragon = 'ROSE_DRAGON',
 }
@@ -35,14 +37,15 @@ export enum FarmingPetStatType {
 
 export interface FarmingPetAbility {
 	name: string;
-	exists?: (player: PlayerOptions, pet: FarmingPet) => boolean;
-	computed: (player: PlayerOptions, pet: FarmingPet) => StatsRecord;
+	exists?: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => boolean;
+	computed: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => StatsRecord;
 }
 
 export interface FarmingPetInfo {
 	name: string;
 	wiki: string;
 	maxLevel?: number;
+	maxRarity?: Rarity;
 	stats?: StatsRecord<FarmingPetStatType, FarmingPet>;
 	perLevelStats?: StatsRecord<FarmingPetStatType, FarmingPet>;
 	perRarityLevelStats?: RarityRecord<StatsRecord<FarmingPetStatType, FarmingPet>>;
@@ -78,7 +81,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				exists: (_, pet) => pet.rarity === Rarity.Legendary,
 				computed: (player, pet) => {
 					const strengthPer = 40 - pet.level * 0.2;
-					const strength = player.strength ?? 0;
+					const strength = player.options.strength ?? 0;
 
 					const amount = Math.floor((strength / strengthPer) * 0.7);
 					return {
@@ -129,6 +132,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.Rabbit]: {
 		name: 'Rabbit',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Pet',
+		maxRarity: Rarity.Mythic,
 		perLevelStats: {
 			[Stat.Speed]: {
 				name: 'Rabbit Speed',
@@ -207,7 +211,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Repugnant Aroma',
 				// No good option to check if player is in a sprayed plot yet
-				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.sprayedPlot ?? false),
+				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.options.sprayedPlot ?? false),
 				computed: (_, pet) => {
 					return {
 						[Stat.FarmingFortune]: {
@@ -295,7 +299,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					return {
 						[Stat.SugarCaneFortune]: {
 							name: "Buzzin' Barterer",
-							value: pet.level * 0.02 * (player.uniqueVisitors ?? 0),
+							value: pet.level * 0.02 * (player.options.uniqueVisitors ?? 0),
 							type: FarmingPetStatType.Ability,
 						},
 					};
@@ -311,7 +315,12 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			[Stat.FarmingFortune]: {
 				name: 'Base Stats',
 				type: FarmingPetStatType.Base,
-				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.2),
+				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.2) + 20,
+			},
+			[Stat.Speed]: {
+				name: 'Base Stats',
+				type: FarmingPetStatType.Base,
+				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.5) + 50,
 			},
 		},
 		abilities: [
@@ -322,7 +331,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Garden Power',
-							value: (player.farmingLevel ?? 0) * 3,
+							value: (player.options.farmingLevel ?? 0) * 3,
 							type: FarmingPetStatType.Ability,
 						},
 					};
@@ -332,7 +341,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				name: 'Rosy Scales',
 				exists: (_, pet) => pet.level >= 101,
 				computed: (player) => {
-					const milestoneLevels = Object.values(player.milestones ?? {}).reduce((a, b) => a + b, 0);
+					const milestoneLevels = Object.values(player.options.milestones ?? {}).reduce((a, b) => a + b, 0);
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Rosy Scales',
@@ -350,15 +359,16 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Symbiosis',
 				exists: (_, pet) => pet.level >= 200,
-				computed: (player) => {
+				computed: ({ player }) => {
 					const maxedPets: Record<string, number> = {};
-					for (const pet of player.pets ?? []) {
+					for (const pet of player?.pets ?? player?.options?.pets ?? []) {
 						if (pet.type === FarmingPets.RoseDragon) {
 							continue;
 						}
 
 						if ('level' in pet) {
-							if (pet.level >= 100) {
+							const info = FARMING_PETS[pet.type as FarmingPets];
+							if (pet.level >= 100 && (info?.maxRarity ?? Rarity.Legendary) === pet.rarity) {
 								maxedPets[pet.type] = 1;
 							}
 						}
@@ -369,6 +379,34 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 						[Stat.FarmingFortune]: {
 							name: 'Symbiosis',
 							value: maxedPetCount * 3,
+							type: FarmingPetStatType.Ability,
+						},
+					};
+				},
+			},
+		],
+	},
+	[FarmingPets.Pig]: {
+		name: 'Pig',
+		wiki: 'https://wiki.hypixel.net/Pig_Pet',
+		perLevelStats: {
+			[Stat.Speed]: {
+				name: 'Speed',
+				value: 0.25,
+				type: FarmingPetStatType.Base,
+			},
+		},
+		abilities: [
+			{
+				name: 'Trample',
+				exists: (_, pet) => pet.rarity === Rarity.Legendary,
+				computed: ({ player }) => {
+					// Trample reduces fortune by 75%
+					const fortune = (player?.fortune ?? 0) + (player?.tempFortune ?? 0);
+					return {
+						[Stat.FarmingFortune]: {
+							name: 'Trample (75% Reduction)',
+							value: -fortune * 0.75,
 							type: FarmingPetStatType.Ability,
 						},
 					};
