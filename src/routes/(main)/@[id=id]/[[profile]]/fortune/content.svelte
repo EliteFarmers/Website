@@ -20,6 +20,7 @@
 	import { getRatesPlayer } from '$lib/stores/ratesPlayer.svelte';
 	import { getSelectedCrops } from '$lib/stores/selectedCrops';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import * as Accordion from '$ui/accordion';
 	import { Button } from '$ui/button';
 	import * as Dialog from '$ui/dialog';
 	import * as Select from '$ui/select';
@@ -540,77 +541,30 @@
 
 					<hr class="mt-2" />
 
-					<h3 class="mt-2 mb-1 text-xl font-semibold">Results</h3>
-					<div class="flex flex-col text-lg">
-						<div class="flex w-full items-center justify-between py-2">
-							<span class="text-xl">NPC Coins</span>
-							<CoinsBreakdown coins={info.npcCoins} breakdown={info.coinSources} />
-						</div>
-						<div class="flex w-full items-center justify-between py-2">
-							<span class="text-xl">Collection</span>
-							<span>{info.collection.toLocaleString()}</span>
-						</div>
-						<div class="flex w-full items-center justify-between py-2">
-							<span class="text-xl">Farming Weight</span>
-							<span>{weightGain.toLocaleString()}</span>
-						</div>
-					</div>
-
-					<h3 class="mt-2 mb-1 text-xl font-semibold">Coin Breakdown</h3>
-					<div class="flex flex-col">
-						{#each coinBreakdown as [name, value] (name)}
-							<div class="flex w-full items-center justify-between py-2">
-								<span class="text-lg">{name === 'Collection' ? selectedCrop : name}</span>
-								<CoinsBreakdown coins={value} />
-							</div>
-						{/each}
-					</div>
-
-					<h3 class="my-2 text-xl font-semibold">Collection Breakdown</h3>
-					<div class="flex flex-col">
-						{#each otherBreakdown as [name, value] (name)}
-							<div class="flex w-full items-center justify-between py-2">
-								<span class="text-lg">{name === 'Normal' ? selectedCrop : name}</span>
-								<span class="text-lg">{value.toLocaleString()}</span>
-							</div>
-						{/each}
-					</div>
-
-					{#if info.specialCropBonus > 0 || info.rareItemBonus > 0}
-						<h3 class="my-2 text-xl font-semibold">Rate Modifiers</h3>
-						<div class="flex flex-col">
-							{#if info.specialCropBonus > 0}
-								<div class="flex w-full items-center justify-between py-2">
-									<span class="text-lg">Special Crop Bonus</span>
-									<span class="text-lg font-semibold text-green-400"
-										>+{(info.specialCropBonus * 100).toFixed(1)}%</span
-									>
-								</div>
-								{#each Object.entries(info.specialCropBonusBreakdown) as [name, value] (name)}
-									<div class="flex w-full items-center justify-between py-1 pl-4">
-										<span class="text-muted-foreground text-sm">{name}</span>
-										<span class="text-muted-foreground text-sm">+{(value * 100).toFixed(1)}%</span>
+					<h3 class="mt-2 mb-2 text-xl font-semibold">Results</h3>
+					<div class="flex flex-col gap-3">
+						<Accordion.Root type="single" class="w-full" value="npc">
+							<Accordion.Item value="npc" class="outline-border w-full rounded-md px-2 outline">
+								<Accordion.Trigger class="py-2 hover:no-underline">
+									<div class="flex w-full items-center justify-between gap-2 pr-2">
+										<span class="text-xl font-semibold">NPC Profit</span>
+										<CoinsBreakdown coins={info.npcCoins} />
 									</div>
-								{/each}
-							{/if}
-							{#if info.rareItemBonus > 0}
-								<div class="flex w-full items-center justify-between py-2">
-									<span class="text-lg">Rare Drop Bonus</span>
-									<span class="text-lg font-semibold text-purple-400"
-										>+{(info.rareItemBonus * 100).toFixed(1)}%</span
-									>
-								</div>
-								{#each Object.entries(info.rareItemBonusBreakdown).filter(([, v]) => v > 0) as [name, value] (name)}
-									<div class="flex w-full items-center justify-between py-1 pl-4">
-										<span class="text-muted-foreground text-sm">{name}</span>
-										<span class="text-muted-foreground text-sm">+{(value * 100).toFixed(1)}%</span>
+								</Accordion.Trigger>
+								<Accordion.Content class="pb-2">
+									<div class="flex flex-col">
+										{#each coinBreakdown as [name, value] (name)}
+											<div class="flex w-full items-center justify-between py-1">
+												<span class="text-lg"
+													>{name === 'Collection' ? selectedCrop : name}</span
+												>
+												<CoinsBreakdown coins={value} />
+											</div>
+										{/each}
 									</div>
-								{/each}
-							{/if}
-						</div>
-					{/if}
-
-					<div class="-mx-2">
+								</Accordion.Content>
+							</Accordion.Item>
+						</Accordion.Root>
 						<BazaarRates
 							result={info}
 							crop={selectedCropKey}
@@ -618,6 +572,82 @@
 							otherCoins={info.npcCoins -
 								(info.items[selectedCropKey] ?? info.collection) * info.npcPrice}
 						/>
+						<Accordion.Root type="single" class="w-full">
+							<Accordion.Item value="collection" class="outline-border w-full rounded-md px-2 outline">
+								<Accordion.Trigger class="py-2 hover:no-underline">
+									<div class="flex w-full items-center justify-between gap-2 pr-2">
+										<span class="text-xl font-semibold">Collection Gain</span>
+										<span class="text-lg font-semibold">{info.collection.toLocaleString()}</span>
+									</div>
+								</Accordion.Trigger>
+								<Accordion.Content class="pb-2">
+									<div class="flex flex-col">
+										{#each otherBreakdown as [name, value] (name)}
+											<div class="flex w-full items-center justify-between py-1">
+												<span class="text-lg">{name === 'Normal' ? selectedCrop : name}</span>
+												<span class="text-lg">{value.toLocaleString()}</span>
+											</div>
+										{/each}
+									</div>
+								</Accordion.Content>
+							</Accordion.Item>
+						</Accordion.Root>
+						<div
+							class="outline-border flex w-full items-center justify-between rounded-md px-2 py-2 outline"
+						>
+							<span class="text-xl font-semibold">Farming Weight Gain</span>
+							<span class="text-xl font-semibold">{weightGain.toLocaleString()}</span>
+						</div>
+						{#if info.specialCropBonus > 0 || info.rareItemBonus > 0}
+							<Accordion.Root type="single" class="w-full">
+								<Accordion.Item value="modifiers" class="outline-border w-full rounded-md px-2 outline">
+									<Accordion.Trigger class="py-2 hover:no-underline">
+										<div class="flex w-full items-center justify-between gap-2 pr-2">
+											<span class="text-muted-foreground text-lg font-semibold"
+												>Rate Modifiers</span
+											>
+											<span class="text-muted-foreground text-sm">Active</span>
+										</div>
+									</Accordion.Trigger>
+									<Accordion.Content class="pb-2">
+										<div class="flex flex-col">
+											{#if info.specialCropBonus > 0}
+												<div class="flex w-full items-center justify-between py-1">
+													<span class="text-lg">Special Crop Bonus</span>
+													<span class="text-progress text-lg font-semibold"
+														>+{(info.specialCropBonus * 100).toFixed(1)}%</span
+													>
+												</div>
+												{#each Object.entries(info.specialCropBonusBreakdown) as [name, value] (name)}
+													<div class="flex w-full items-center justify-between py-1 pl-4">
+														<span class="text-muted-foreground text-sm">{name}</span>
+														<span class="text-muted-foreground text-sm"
+															>+{(value * 100).toFixed(1)}%</span
+														>
+													</div>
+												{/each}
+											{/if}
+											{#if info.rareItemBonus > 0}
+												<div class="flex w-full items-center justify-between py-1">
+													<span class="text-lg">Rare Drop Bonus</span>
+													<span class="text-link text-lg font-semibold"
+														>+{(info.rareItemBonus * 100).toFixed(1)}%</span
+													>
+												</div>
+												{#each Object.entries(info.rareItemBonusBreakdown).filter(([, v]) => v > 0) as [name, value] (name)}
+													<div class="flex w-full items-center justify-between py-1 pl-4">
+														<span class="text-muted-foreground text-sm">{name}</span>
+														<span class="text-muted-foreground text-sm"
+															>+{(value * 100).toFixed(1)}%</span
+														>
+													</div>
+												{/each}
+											{/if}
+										</div>
+									</Accordion.Content>
+								</Accordion.Item>
+							</Accordion.Root>
+						{/if}
 					</div>
 
 					{#if $ratesData.useTemp && $player.tempFortune > 0 && blocksBroken > 24_000}
