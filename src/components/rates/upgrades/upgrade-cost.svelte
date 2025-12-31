@@ -95,7 +95,7 @@
 		</div>
 
 		{#if sbItem?.auctions && sbItem.auctions.length > 0}
-			{@const lowest = Math.min(...sbItem.auctions.map((a) => a.lowest3Day))}
+			{@const lowest = Math.min(...sbItem.auctions.map((a) => a.lowest))}
 			<span class="dark:text-completed ml-1 text-sm whitespace-nowrap">
 				{Math.round(lowest * amount).toLocaleString()}
 			</span>

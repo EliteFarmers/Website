@@ -349,6 +349,7 @@
 			attributes: $ratesData.attributes,
 			maxTool: $player.selectedTool?.level === 50,
 			chips: $ratesData.chips,
+			pet: $player.selectedPet,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
 	const calculator = $derived(calculateDetailedAverageDrops(calculatorOptions));
@@ -574,6 +575,40 @@
 							</div>
 						{/each}
 					</div>
+
+					{#if info.specialCropBonus > 0 || info.rareItemBonus > 0}
+						<h3 class="my-2 text-xl font-semibold">Rate Modifiers</h3>
+						<div class="flex flex-col">
+							{#if info.specialCropBonus > 0}
+								<div class="flex w-full items-center justify-between py-2">
+									<span class="text-lg">Special Crop Bonus</span>
+									<span class="text-lg font-semibold text-green-400"
+										>+{(info.specialCropBonus * 100).toFixed(1)}%</span
+									>
+								</div>
+								{#each Object.entries(info.specialCropBonusBreakdown) as [name, value] (name)}
+									<div class="flex w-full items-center justify-between py-1 pl-4">
+										<span class="text-muted-foreground text-sm">{name}</span>
+										<span class="text-muted-foreground text-sm">+{(value * 100).toFixed(1)}%</span>
+									</div>
+								{/each}
+							{/if}
+							{#if info.rareItemBonus > 0}
+								<div class="flex w-full items-center justify-between py-2">
+									<span class="text-lg">Rare Drop Bonus</span>
+									<span class="text-lg font-semibold text-purple-400"
+										>+{(info.rareItemBonus * 100).toFixed(1)}%</span
+									>
+								</div>
+								{#each Object.entries(info.rareItemBonusBreakdown).filter(([, v]) => v > 0) as [name, value] (name)}
+									<div class="flex w-full items-center justify-between py-1 pl-4">
+										<span class="text-muted-foreground text-sm">{name}</span>
+										<span class="text-muted-foreground text-sm">+{(value * 100).toFixed(1)}%</span>
+									</div>
+								{/each}
+							{/if}
+						</div>
+					{/if}
 
 					<div class="-mx-2">
 						<BazaarRates

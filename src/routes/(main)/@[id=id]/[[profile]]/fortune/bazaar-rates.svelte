@@ -43,8 +43,8 @@
 	function price(items: RatesItemPriceData | undefined, item: string, amount: number) {
 		const itemCost = items?.[item];
 		if (!itemCost) return 0;
-		const lowestPrice = itemCost.auctions?.filter((a) => a.lowest3Day > 0)?.length
-			? Math.min(...itemCost.auctions.filter((a) => a.lowest3Day > 0).map((a) => a.lowest3Day))
+		const lowestPrice = itemCost.auctions?.filter((a) => a.lowest > 0)?.length
+			? Math.min(...itemCost.auctions.filter((a) => a.lowest > 0).map((a) => a.lowest))
 			: (($ratesData.bzMode === 'insta' ? itemCost.bazaar?.averageSell : itemCost.bazaar?.averageSellOrder) ?? 0);
 		return Math.round(lowestPrice * amount);
 	}
