@@ -1,7 +1,7 @@
 import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { Crop } from './crops.js';
-import { CROP_MILESTONES } from './garden.js';
+import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
 import { ReforgeTarget } from './reforges.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
@@ -374,7 +374,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 		maxStats: {
-			[Stat.FarmingFortune]: 0.25 * 137, //Object.keys(GARDEN_VISITORS).length,
+			[Stat.FarmingFortune]: 0.25 * Object.keys(GARDEN_VISITORS).length,
 		},
 	},
 	turbo_cactus: {
