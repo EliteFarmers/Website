@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop, MAX_CROP_FORTUNE } from '../constants/crops';
+import { FarmingPet } from '../fortune/farmingpet.js';
 import { calculateDetailedAverageDrops, calculateDetailedDrops, getPossibleResultsFromCrops } from './ratecalc.js';
 
 test('Rate calc test', () => {
@@ -155,4 +156,175 @@ test('Burrowing RNG Drops', () => {
 	});
 
 	expect(result.rngItems?.['BURROWING_SPORES']).toBe(1);
+});
+
+test('Cropeetle shard increases special crop bonus', () => {
+	const resultWithShard = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		attributes: {
+			SHARD_CROPEETLE: 100, // Max level (10)
+		},
+	});
+
+	const resultWithoutShard = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+	});
+
+	// Max level (10) gives 20% bonus => 1.2x multiplier on special crops
+	expect(resultWithShard.specialCropBonus).toBe(0.2);
+	expect(resultWithShard.specialCropBonusBreakdown).toStrictEqual({ 'Cropeetle Shard': 0.2 });
+	expect(resultWithoutShard.specialCropBonus).toBe(0);
+
+	// Cropie values should be 20% higher with max shard
+	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE'] * 1.2, 1);
+});
+
+test('Rarefinder chip increases both special crop and rare item bonus', () => {
+	// Level 5 (Rare tier) = 2% per level = 10% bonus
+	const resultLevel5 = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		chips: {
+			RAREFINDER_GARDEN_CHIP: 5,
+		},
+		attributes: {
+			SHARD_WARTYBUG: 500, // Include warty to see the effect
+		},
+	});
+
+	// Level 15 (Epic tier) = 2.5% per level = 37.5% bonus
+	const resultLevel15 = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		chips: {
+			RAREFINDER_GARDEN_CHIP: 15,
+		},
+		attributes: {
+			SHARD_WARTYBUG: 500,
+		},
+	});
+
+	// Level 20 (Legendary tier) = 3% per level = 60% bonus
+	const resultLevel20 = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		chips: {
+			RAREFINDER_GARDEN_CHIP: 20,
+		},
+		attributes: {
+			SHARD_WARTYBUG: 500,
+		},
+	});
+
+	// Special crop bonus
+	expect(resultLevel5.specialCropBonus).toBeCloseTo(0.1, 4);
+	expect(resultLevel5.specialCropBonusBreakdown).toStrictEqual({ 'Rarefinder Chip': 0.1 });
+	expect(resultLevel15.specialCropBonus).toBeCloseTo(0.375, 4);
+	expect(resultLevel20.specialCropBonus).toBeCloseTo(0.6, 4);
+
+	// Rare item bonus
+	expect(resultLevel5.rareItemBonus).toBeCloseTo(0.1, 4);
+	expect(resultLevel5.rareItemBonusBreakdown).toStrictEqual({ 'Rarefinder Chip': 0.1, 'Warty Bug Shard (Base)': 0 });
+	expect(resultLevel15.rareItemBonus).toBeCloseTo(0.375, 4);
+	expect(resultLevel20.rareItemBonus).toBeCloseTo(0.6, 4);
+
+	// Warty drops should scale accordingly
+	// Base warty is 50 (0.05% * 100k blocks)
+	expect(resultLevel5.rngItems?.['WARTY']).toBeCloseTo(50 * 1.1, 1);
+	expect(resultLevel15.rngItems?.['WARTY']).toBeCloseTo(50 * 1.375, 1);
+	expect(resultLevel20.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 1);
+});
+
+test("Rose Dragon Dragon's Gluttony affects both special crops and rare items", () => {
+	// Mock a level 200 Rose Dragon pet
+	const mockPet = new FarmingPet({
+		type: 'ROSE_DRAGON',
+		exp: 10 ** 20,
+		tier: 'LEGENDARY',
+	});
+
+	const result = calculateDetailedDrops({
+		crop: Crop.Mushroom,
+		blocksBroken: 250_000,
+		bountiful: true,
+		mooshroom: false,
+		pet: mockPet,
+	});
+
+	// Level 200 * 0.002 = 0.4 (40% bonus)
+	expect(result.specialCropBonus).toBe(0.4);
+	expect(result.rareItemBonus).toBe(0.4);
+
+	// Burrowing spores base is 1 (4e-6 * 250k)
+	expect(result.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
+});
+
+test('Multiple rate modifiers stack additively', () => {
+	const mockPet = new FarmingPet({
+		type: 'ROSE_DRAGON',
+		exp: 10 ** 20,
+		tier: 'LEGENDARY',
+	});
+
+	const result = calculateDetailedDrops({
+		crop: Crop.NetherWart,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		attributes: {
+			SHARD_CROPEETLE: 100, // Max level 10 = 20% special crop bonus
+			SHARD_WARTYBUG: 500,
+		},
+		chips: {
+			RAREFINDER_GARDEN_CHIP: 15, // Epic tier = 37.5% rare item bonus
+		},
+		pet: mockPet,
+	});
+
+	// Special crop bonus: Cropeetle 20% + Rarefinder 37.5% + Dragon's Gluttony 40% = 97.5%
+	expect(result.specialCropBonus).toBeCloseTo(0.975, 4);
+
+	// Rare item bonus: Rarefinder 37.5% + Dragon's Gluttony 40% = 77.5%
+	expect(result.rareItemBonus).toBeCloseTo(0.775, 4);
+
+	// Base warty is 50, with 77.5% bonus should be 88.75
+	expect(result.rngItems?.['WARTY']).toBeCloseTo(50 * 1.775, 1);
+});
+
+test('Rate modifiers do not affect results when level is 0', () => {
+	const resultWithZeroLevels = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+		attributes: {
+			SHARD_CROPEETLE: 0,
+		},
+		chips: {
+			RAREFINDER_GARDEN_CHIP: 0,
+		},
+	});
+
+	const resultWithoutModifiers = calculateDetailedDrops({
+		crop: Crop.Wheat,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: false,
+	});
+
+	expect(resultWithZeroLevels.specialCropBonus).toBe(0);
+	expect(resultWithZeroLevels.rareItemBonus).toBe(0);
+	expect(resultWithZeroLevels.items['CROPIE']).toBe(resultWithoutModifiers.items['CROPIE']);
 });

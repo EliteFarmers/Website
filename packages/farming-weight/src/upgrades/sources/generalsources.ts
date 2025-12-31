@@ -31,7 +31,7 @@ import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../../items/accessories.js';
 import type { FarmingPlayer } from '../../player/player.js';
 import { getNextPlotCost } from '../../util/garden.js';
-import { fortuneFromPestBestiary } from '../../util/pests.js';
+import { fortuneFromPestBestiary, getGardenBestiaryProgress } from '../../util/pests.js';
 import type { CalculateCropDetailedDropsOptions } from '../../util/ratecalc.js';
 import { getFortune } from '../getfortune.js';
 import { getSourceProgress } from '../getsourceprogress.js';
@@ -163,6 +163,22 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		max: () => PEST_BESTIARY_SOURCE.maxLevel * PEST_BESTIARY_SOURCE.fortunePerLevel,
 		current: (player) => {
 			return fortuneFromPestBestiary(player.options.bestiaryKills ?? {});
+		},
+		progress: (player, stats) => {
+			const list = getGardenBestiaryProgress(player.options.bestiaryKills ?? {});
+			return Object.values(list).map((pest) => ({
+				name: pest.name,
+				current: pest.bracketsUnlocked * 0.4,
+				stats: {
+					[Stat.FarmingFortune]: {
+						current: pest.bracketsUnlocked * 0.4,
+						max: 6,
+						ratio: (pest.bracketsUnlocked * 0.4) / 6,
+					},
+				},
+				max: PEST_BESTIARY_SOURCE.maxLevel * 0.4,
+				ratio: pest.bracketsUnlocked / PEST_BESTIARY_SOURCE.maxLevel,
+			}));
 		},
 	},
 	{
@@ -757,6 +773,7 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
 			return [
 				{
+					api: false,
 					name: 'Level',
 					current: level,
 					max: GARDEN_CHIP_MAX_LEVEL,

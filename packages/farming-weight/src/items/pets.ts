@@ -5,6 +5,7 @@ import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { unlockedPestBestiaryTiers } from '../util/pests.js';
+import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 
 export enum FarmingPets {
 	Elephant = 'ELEPHANT',
@@ -39,6 +40,13 @@ export interface FarmingPetAbility {
 	name: string;
 	exists?: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => boolean;
 	computed: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => StatsRecord;
+	ratesModifier?: (
+		current: DetailedDropsResult,
+		options: CalculateCropDetailedDropsOptions,
+		pet: FarmingPet
+	) => DetailedDropsResult;
+	/** If true, this ability is considered a temporary fortune source and can be multiplied by Hypercharge chip */
+	temporary?: boolean;
 }
 
 export interface FarmingPetInfo {
@@ -210,12 +218,12 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 		abilities: [
 			{
 				name: 'Repugnant Aroma',
-				// No good option to check if player is in a sprayed plot yet
 				exists: (player, pet) => pet.rarity === Rarity.Legendary && (player.options.sprayedPlot ?? false),
+				temporary: true,
 				computed: (_, pet) => {
 					return {
 						[Stat.FarmingFortune]: {
-							name: 'Repungent Aroma',
+							name: 'Repugnant Aroma',
 							value: pet.level,
 							type: FarmingPetStatType.Ability,
 						},
@@ -245,14 +253,13 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 		},
 		abilities: [
 			{
-				name: 'Nocturnal',
-				exists: () => true,
-				computed: (_, pet) => {
-					// Add option for time of day later
+				name: "Hunter's Insight",
+				exists: (_, pet) => pet.rarity === Rarity.Legendary,
+				computed: (player, pet) => {
 					return {
 						[Stat.FarmingFortune]: {
-							name: 'Nocturnal',
-							value: pet.level * 0.45 * 3,
+							name: "Hunter's Insight",
+							value: unlockedPestBestiaryTiers(player.options.bestiaryKills ?? {}) * 0.7,
 							type: FarmingPetStatType.Ability,
 						},
 					};
@@ -354,6 +361,22 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 							type: FarmingPetStatType.Ability,
 						},
 					};
+				},
+			},
+			{
+				name: "Dragon's Gluttony",
+				exists: (_, pet) => pet.level >= 101,
+				computed: () => ({}),
+				ratesModifier: (current, _, pet) => {
+					const chanceIncrease = pet.level * 0.002;
+					if (chanceIncrease <= 0) return current;
+
+					current.specialCropBonus += chanceIncrease;
+					current.specialCropBonusBreakdown["Dragon's Gluttony"] = chanceIncrease;
+					current.rareItemBonus += chanceIncrease;
+					current.rareItemBonusBreakdown["Dragon's Gluttony"] = chanceIncrease;
+
+					return current;
 				},
 			},
 			{

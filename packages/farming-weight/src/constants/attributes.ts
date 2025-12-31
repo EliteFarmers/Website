@@ -1,4 +1,3 @@
-import { calculateAverageSpecialCrops } from '../crops/special.js';
 import type { FarmingPlayer } from '../player/player.js';
 import type { DynamicFortuneSource } from '../upgrades/sources/dynamicfortunesources.js';
 import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
@@ -41,8 +40,9 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			const wartyChance = 0.00005 * level;
 			const wartyDrops = current.blocksBroken * wartyChance;
 
-			current.rngItems ??= {};
-			current.rngItems['WARTY'] = wartyDrops;
+			current.pendingRngItems ??= {};
+			current.pendingRngItems['WARTY'] = (current.pendingRngItems['WARTY'] ?? 0) + wartyDrops;
+			current.rareItemBonusBreakdown['Warty Bug Shard (Base)'] = 0;
 			return current;
 		},
 	},
@@ -135,19 +135,9 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			const specialCrop = MATCHING_SPECIAL_CROP[options.crop];
 			if (!specialCrop) return current;
 
-			const bonus = 0.02 * level + 1;
-
-			const newAmount = calculateAverageSpecialCrops(
-				current.blocksBroken,
-				options.crop,
-				options.armorPieces ?? 4,
-				bonus
-			);
-
-			current.otherCollection[specialCrop] = Math.round(newAmount.amount);
-			current.items[specialCrop] = +newAmount.amount.toFixed(2);
-			current.coinSources[specialCrop] = Math.round(newAmount.npc);
-
+			const bonus = 0.02 * level;
+			current.specialCropBonus += bonus;
+			current.specialCropBonusBreakdown['Cropeetle Shard'] = bonus;
 			return current;
 		},
 	},

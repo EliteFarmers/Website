@@ -40,6 +40,7 @@ export interface CropInfo {
 	exportable?: boolean;
 	exportableCost?: UpgradeCost;
 	startingTool: string;
+	toolXpFactor: number;
 	crafts: CropCraft[];
 	rng?: { chance: number; drops: Record<string, number> }[];
 }
@@ -50,6 +51,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		toolXpFactor: 1.5,
 		fortuneType: Stat.CactusFortune,
 		startingTool: 'CACTUS_KNIFE',
 		crafts: [
@@ -67,6 +69,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Carrot',
 		npc: 3,
 		drops: 3,
+		toolXpFactor: 3.5,
 		fortuneType: Stat.CarrotFortune,
 		replenish: true,
 		exportable: true,
@@ -91,6 +94,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Cocoa Beans',
 		npc: 3,
 		drops: 3,
+		toolXpFactor: 1.5,
 		fortuneType: Stat.CocoaBeanFortune,
 		replenish: true,
 		exportable: true,
@@ -115,6 +119,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Melon',
 		npc: 2,
 		drops: 5,
+		toolXpFactor: 4,
 		fortuneType: Stat.MelonFortune,
 		startingTool: 'MELON_DICER',
 		crafts: [
@@ -132,6 +137,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Mushroom',
 		npc: 10,
 		drops: 1,
+		toolXpFactor: 0.95,
 		exportable: true,
 		fortuneType: Stat.MushroomFortune,
 		exportableCost: {
@@ -171,6 +177,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Nether Wart',
 		npc: 4,
 		drops: 2.5,
+		toolXpFactor: 3,
 		replenish: true,
 		exportable: true,
 		fortuneType: Stat.NetherWartFortune,
@@ -195,6 +202,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Potato',
 		npc: 3,
 		drops: 3,
+		toolXpFactor: 3,
 		replenish: true,
 		fortuneType: Stat.PotatoFortune,
 		startingTool: 'THEORETICAL_HOE_POTATO_1',
@@ -213,6 +221,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Pumpkin',
 		npc: 10,
 		drops: 1,
+		toolXpFactor: 0.85,
 		exportable: true,
 		fortuneType: Stat.PumpkinFortune,
 		exportableCost: {
@@ -237,6 +246,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		toolXpFactor: 2,
 		fortuneType: Stat.SugarCaneFortune,
 		startingTool: 'THEORETICAL_HOE_CANE_1',
 		crafts: [
@@ -254,6 +264,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Wheat',
 		npc: 6,
 		drops: 1,
+		toolXpFactor: 1,
 		exportable: true,
 		fortuneType: Stat.WheatFortune,
 		exportableCost: {
@@ -277,6 +288,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Seeds',
 		npc: 3,
 		drops: 1.5,
+		toolXpFactor: 1,
 		replenish: true,
 		fortuneType: Stat.WheatFortune,
 		startingTool: 'THEORETICAL_HOE_WHEAT_1',
@@ -295,6 +307,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Sunflower',
 		npc: 4,
 		drops: 2,
+		toolXpFactor: 2,
 		fortuneType: Stat.SunflowerFortune,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1',
@@ -313,6 +326,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Moonflower',
 		npc: 4,
 		drops: 2,
+		toolXpFactor: 2,
 		fortuneType: Stat.MoonflowerFortune,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1', // Same as sunflower
@@ -331,6 +345,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Wild Rose',
 		npc: 4,
 		drops: 2,
+		toolXpFactor: 1.5,
 		fortuneType: Stat.WildRoseFortune,
 		replenish: true,
 		exportable: true,
