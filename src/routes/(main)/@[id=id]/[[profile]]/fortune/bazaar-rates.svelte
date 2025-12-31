@@ -4,10 +4,11 @@
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getItems } from '$lib/remote/items.remote';
 	import { getRatesData } from '$lib/stores/ratesData';
+	import * as Accordion from '$ui/accordion';
 	import * as Select from '$ui/select';
 	import { Skeleton } from '$ui/skeleton';
 	import Switch from '$ui/switch/switch.svelte';
-	import { getPossibleResultsFromCrops, type Crop, type DetailedDropsResult } from 'farming-weight';
+	import { Crop, getPossibleResultsFromCrops, type DetailedDropsResult } from 'farming-weight';
 	import { watch } from 'runed';
 
 	interface Props {
@@ -24,6 +25,11 @@
 	const results = $derived(getPossibleResultsFromCrops(crop, amount));
 	let includeRng = $state(false);
 
+	function getSellPrice(bzData: RatesItemPriceData[string]['bazaar'] | undefined) {
+		if (!bzData) return 0;
+		return $ratesData.bzMode === 'insta' ? (bzData.averageSell ?? 0) : (bzData.averageSellOrder ?? 0);
+	}
+
 	async function getBazaarData(items: string[]) {
 		if (!browser) return undefined;
 		if (items.length === 0) return undefined;
@@ -35,160 +41,232 @@
 	watch(
 		() => crop,
 		() => {
-			const items = Object.keys(getPossibleResultsFromCrops(crop, 1));
-			bzPromise = getBazaarData([...items, ...Object.keys(result.rngItems ?? {})]);
+			const craftItems = Object.keys(getPossibleResultsFromCrops(crop, 1));
+			const dropItems = Object.keys(result.items ?? {});
+			const rngItems = Object.keys(result.rngItems ?? {});
+			bzPromise = getBazaarData([...new Set([...craftItems, ...dropItems, ...rngItems])]);
 		}
 	);
 
 	function price(items: RatesItemPriceData | undefined, item: string, amount: number) {
 		const itemCost = items?.[item];
 		if (!itemCost) return 0;
-		const lowestPrice = itemCost.auctions?.filter((a) => a.lowest3Day > 0)?.length
-			? Math.min(...itemCost.auctions.filter((a) => a.lowest3Day > 0).map((a) => a.lowest3Day))
+		const lowestPrice = itemCost.auctions?.filter((a) => a.lowest > 0)?.length
+			? Math.min(...itemCost.auctions.filter((a) => a.lowest > 0).map((a) => a.lowest))
 			: (($ratesData.bzMode === 'insta' ? itemCost.bazaar?.averageSell : itemCost.bazaar?.averageSellOrder) ?? 0);
 		return Math.round(lowestPrice * amount);
 	}
 </script>
 
-{#if result.rngItems}
-	<div class="my-2 rounded-md border p-2">
-		<div class="mb-2 flex flex-row items-center justify-between">
-			<div class="flex flex-row items-center gap-2">
-				<span class="text-xl font-semibold">Other Drops</span>
+{#if bzPromise}
+	{#await bzPromise}
+		<div class="rounded-md border p-2">
+			<div class="flex w-full flex-col gap-2">
+				<Skeleton class="my-1.5 h-5 w-40" />
+				<Skeleton class="my-1.5 h-4 w-full" />
+				<Skeleton class="my-1.5 h-4 w-full" />
 			</div>
 		</div>
+	{:then bz}
+		{@const otherCoinsNpc = otherCoins}
+		{@const otherItems = Object.entries(result.items ?? {}).filter(
+			([id, count]) => id !== crop && id !== Crop.Seeds && (count ?? 0) > 0
+		)}
 
-		<hr class="my-1" />
-		{#if bzPromise}
-			{#await bzPromise}
-				{#each Object.entries(result.rngItems) as [id] (id)}
-					{#if id !== crop}
-						<div class="flex w-full items-center justify-between gap-4 py-1">
-							<Skeleton class="my-1.5 h-4 w-full" />
-							<Skeleton class="h-4 w-20" />
-						</div>
-						<div class="mt-4 flex w-full items-center justify-between gap-4 py-1">
-							<Skeleton class="my-1.5 h-4 w-full" />
-							<Skeleton class="h-4 w-20" />
-						</div>
-					{/if}
-				{/each}
-			{:then bz}
-				{@const rngItems = Object.fromEntries(
-					Object.entries(result.rngItems ?? {}).map(([item, amount], i) => {
-						const name = bz?.[item]?.item?.name;
-						return [name ?? 'Other Drop ' + i, { coins: price(bz, item, amount), amount }];
-					})
-				)}
-				{#each Object.entries(rngItems) as [name, { coins, amount }], i (i)}
-					<div class="flex h-8 w-full items-center justify-between py-1">
-						<span class="text-lg">x{amount.toFixed(2)} {name}</span>
-						<CoinsBreakdown {coins} />
+		{@const sellToBazaar = otherItems
+			.map(([itemId, items]) => {
+				const bzData = bz?.[itemId]?.bazaar;
+				if (!bzData) return null;
+				const npc = bzData.npc ?? 0;
+				const per = getSellPrice(bzData);
+				if (per <= npc || per <= 0) return null;
+				const gain = items * (per - npc);
+				return {
+					itemId,
+					name: bz?.[itemId]?.item?.name ?? bzData.name ?? itemId,
+					items,
+					npc,
+					per,
+					gain,
+				};
+			})
+			.filter((x): x is NonNullable<typeof x> => !!x)
+			.sort((a, b) => b.gain - a.gain)}
+
+		{@const sellToBazaarCoins = sellToBazaar.reduce((sum, x) => sum + x.items * x.per, 0)}
+		{@const sellToBazaarDelta = sellToBazaar.reduce((sum, x) => sum + x.gain, 0)}
+		{@const otherCoinsTotal = otherCoinsNpc + sellToBazaarDelta}
+		{@const otherCoinsNpcRemaining = Math.max(0, otherCoinsTotal - sellToBazaarCoins)}
+
+		{@const craftList = Object.entries(results)
+			.map(([id, craft]) => {
+				const bzData = bz?.[id]?.bazaar;
+				if (!bzData || id === crop) return null;
+				const per = getSellPrice(bzData);
+				const profit = per * craft.fractionalItems - craft.fractionalCost;
+				return {
+					id,
+					name: bzData.name ?? id,
+					per,
+					items: craft.fractionalItems,
+					cost: craft.fractionalCost,
+					profit,
+					total: profit + otherCoinsTotal,
+				};
+			})
+			.filter((x): x is NonNullable<typeof x> => !!x)
+			.sort((a, b) => b.total - a.total)}
+
+		{@const best = craftList[0]}
+
+		<Accordion.Root type="single" class="w-full" value="bazaar">
+			<Accordion.Item value="bazaar" class="outline-border w-full rounded-md px-2 outline">
+				<Accordion.Trigger class="py-2 hover:no-underline">
+					<div class="flex w-full items-center justify-between gap-2 pr-2">
+						<span class="text-xl font-semibold">Bazaar Profit</span>
+						<CoinsBreakdown coins={Math.floor(best?.total ?? otherCoinsTotal)} />
 					</div>
-				{/each}
-				<div class="mt-4 flex h-8 w-full items-center justify-between py-1">
-					<span class="text-lg font-semibold">Other Drops + NPC Coins</span>
-					<CoinsBreakdown
-						coins={result.npcCoins + Object.values(rngItems).reduce((a, b) => a + b.coins, 0)}
-						breakdown={{
-							...Object.fromEntries(
-								Object.entries(rngItems).map(([name, { coins }]) => [name, Math.floor(coins)])
-							),
-							...result.coinSources,
-						}}
-					/>
-				</div>
-			{/await}
-		{/if}
-	</div>
+				</Accordion.Trigger>
+				<Accordion.Content class="pb-2">
+					<div class="mt-2 flex flex-col gap-3">
+						<div class="flex flex-row items-center justify-between gap-2">
+							<div class="flex flex-row items-center gap-2">
+								<Select.Simple
+									class="mt-1 h-8 md:w-32"
+									value={$ratesData.bzMode}
+									change={(value) => {
+										$ratesData.bzMode = value ?? $ratesData.bzMode;
+									}}
+									options={[
+										{ value: 'insta', label: 'Instant Sell' },
+										{ value: 'order', label: 'Sell Order' },
+									]}
+								/>
+							</div>
+							{#if result.rngItems}
+								<div class="flex flex-row items-center gap-2">
+									<span class="text-muted-foreground text-sm">Include RNG</span>
+									<Switch bind:checked={includeRng} />
+								</div>
+							{/if}
+						</div>
+
+						<div class="flex flex-col gap-2">
+							{#if craftList.length === 0}
+								<p class="text-muted-foreground text-sm">No bazaar conversions available.</p>
+							{:else}
+								{#each craftList as craft, i (craft.id)}
+									{@const isBest = i === 0}
+									<div class="flex flex-col gap-1 rounded-md border p-2">
+										<div class="flex items-center justify-between gap-2">
+											<span class="text-lg font-semibold"
+												>{isBest ? 'Best: ' : ''}{craft.name}</span
+											>
+											{#if includeRng}
+												{@const rng = Object.fromEntries(
+													Object.entries(result.rngItems ?? {}).map(([item, amount], idx) => {
+														const name =
+															bz?.[item]?.bazaar?.name ??
+															bz?.[item]?.item?.name ??
+															`RNG Item ${idx}`;
+														return [name, price(bz, item, amount)];
+													})
+												)}
+												<CoinsBreakdown
+													coins={Math.floor(
+														craft.total + Object.values(rng).reduce((a, b) => a + b, 0)
+													)}
+													breakdown={{
+														[craft.name]: Math.floor(craft.per * craft.items),
+														'Craft Cost': Math.floor(-craft.cost),
+														'Other items (NPC/BZ)': Math.floor(otherCoinsTotal),
+														...rng,
+													}}
+												>
+													<p class="text-muted-foreground text-xs">
+														Includes RNG item value using lowest AH/BZ price when available.
+													</p>
+												</CoinsBreakdown>
+											{:else}
+												<CoinsBreakdown
+													coins={Math.floor(craft.total)}
+													breakdown={{
+														[craft.name]: Math.floor(craft.per * craft.items),
+														'Craft Cost': Math.floor(-craft.cost),
+														'Other items (NPC/BZ)': Math.floor(otherCoinsTotal),
+													}}
+												/>
+											{/if}
+										</div>
+										<div class="text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 text-sm">
+											<span>
+												Items: <span class="text-foreground font-medium"
+													>{Math.floor(craft.items).toLocaleString()}</span
+												>
+											</span>
+											<span>
+												Each: <span class="text-foreground font-medium"
+													>{Math.floor(craft.per).toLocaleString()}</span
+												>
+											</span>
+											<span>
+												Profit: <span class="text-foreground font-medium"
+													>{Math.floor(craft.profit).toLocaleString()}</span
+												>
+											</span>
+										</div>
+									</div>
+								{/each}
+							{/if}
+						</div>
+
+						{#if sellToBazaar.length > 0}
+							<div class="rounded-md border p-2">
+								<p class="text-lg font-semibold">Other Items</p>
+								<div class="mt-2 flex flex-col gap-2">
+									{#each sellToBazaar as x (x.itemId)}
+										{@const itemsText =
+											x.items % 1 === 0
+												? Math.floor(x.items).toLocaleString()
+												: x.items.toFixed(2)}
+										{@const bzCoins = Math.floor(x.items * x.per)}
+										<div class="flex items-start justify-between gap-4">
+											<div class="min-w-0">
+												<p class="truncate text-sm font-semibold">{x.name}</p>
+												<p class="text-muted-foreground text-xs">
+													{itemsText} @ {Math.floor(x.per).toLocaleString()} (NPC {Math.floor(
+														x.npc
+													).toLocaleString()})
+												</p>
+											</div>
+											<div class="shrink-0 text-right">
+												<p class="text-sm font-semibold">{bzCoins.toLocaleString()}</p>
+												<p class="text-muted-foreground text-xs">
+													+{Math.floor(x.gain).toLocaleString()} over NPC
+												</p>
+											</div>
+										</div>
+									{/each}
+									<p class="text-muted-foreground mt-2 text-xs">
+										Included in totals: Other items = {Math.floor(otherCoinsTotal).toLocaleString()}
+										({Math.floor(otherCoinsNpcRemaining).toLocaleString()} to NPC, {Math.floor(
+											sellToBazaarCoins
+										).toLocaleString()} to BZ)
+									</p>
+								</div>
+							</div>
+						{:else}
+							<p class="text-muted-foreground text-xs">
+								Other drops have no profitable bazaar price over NPC.
+							</p>
+						{/if}
+
+						<p class="text-muted-foreground text-xs">
+							Prices used are averaged {$ratesData.bzMode === 'order' ? 'sell order' : 'instant sell'} prices.
+						</p>
+					</div>
+				</Accordion.Content>
+			</Accordion.Item>
+		</Accordion.Root>
+	{/await}
 {/if}
-
-<div class="my-2 rounded-md border p-2">
-	<div class="mb-2 flex flex-row items-center justify-between">
-		<div class="flex flex-row items-center gap-2">
-			<span class="text-xl font-semibold">Bazaar</span>
-			<Select.Simple
-				class="mt-1 h-8 md:w-32"
-				value={$ratesData.bzMode}
-				change={(value) => {
-					$ratesData.bzMode = value ?? $ratesData.bzMode;
-				}}
-				options={[
-					{
-						value: 'insta',
-						label: 'Instant Sell',
-					},
-					{
-						value: 'order',
-						label: 'Sell Order',
-					},
-				]}
-			/>
-		</div>
-		{#if result.rngItems}
-			<div class="flex flex-row items-center gap-2">
-				<span>Include Other Drops</span>
-				<Switch bind:checked={includeRng} />
-			</div>
-		{/if}
-	</div>
-
-	<hr class="my-1" />
-	{#if bzPromise}
-		{#await bzPromise}
-			{#each Object.entries(results) as [id] (id)}
-				{#if id !== crop}
-					<div class="flex w-full items-center justify-between gap-4 py-1">
-						<Skeleton class="my-1.5 h-4 w-full" />
-						<Skeleton class="h-4 w-20" />
-					</div>
-				{/if}
-			{/each}
-		{:then bz}
-			{#each Object.entries(results) as [id, result], i (i)}
-				{@const bzData = bz?.[id]?.bazaar}
-				{#if bzData && id !== crop}
-					{@render bzItem(bzData, result)}
-				{/if}
-			{/each}
-		{/await}
-	{/if}
-</div>
-
-{#snippet bzItem(bzData: NonNullable<RatesItemPriceData[string]['bazaar']>, profits: (typeof results)[string])}
-	{@const sell = $ratesData.bzMode === 'insta' ? bzData?.averageSell : bzData?.averageSellOrder}
-	{@const profit = sell * profits.fractionalItems - profits.fractionalCost + otherCoins}
-	<div class="flex w-full items-center justify-between py-1">
-		<span class="text-lg">{bzData.name}</span>
-		{#if includeRng}
-			{#await bzPromise then allItems}
-				{@const rngItems = Object.fromEntries(
-					Object.entries(result.rngItems ?? {}).map(([item, amount], i) => {
-						const bzItem = allItems?.[item]?.bazaar;
-						return [bzItem?.name ?? 'RNG Item ' + i, price(allItems, item, amount)];
-					})
-				)}
-				<CoinsBreakdown
-					coins={profit + Object.values(rngItems).reduce((a, b) => a + b, 0)}
-					breakdown={{
-						[bzData.name ?? 'Selling Items']: Math.floor(sell * profits.fractionalItems),
-						'Craft Cost': Math.floor(-profits.fractionalCost),
-						'NPC selling other items': Math.floor(otherCoins),
-						...rngItems,
-					}}
-				/>
-			{:catch}
-				<CoinsBreakdown coins={profit} />
-			{/await}
-		{:else}
-			<CoinsBreakdown
-				coins={profit}
-				breakdown={{
-					[bzData.name ?? 'Selling Items']: Math.floor(sell * profits.fractionalItems),
-					'Craft Cost': Math.floor(-profits.fractionalCost),
-					'NPC selling other items': Math.floor(otherCoins),
-				}}
-			/>
-		{/if}
-	</div>
-{/snippet}

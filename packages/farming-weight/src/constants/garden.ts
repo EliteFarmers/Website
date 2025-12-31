@@ -91,15 +91,30 @@ export interface GardenVisitor {
 }
 
 export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
+	mayor_aatrox: {
+		name: 'Aatrox',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Aatrox',
+	},
 	adventurer: {
 		name: 'Adventurer',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Adventurer',
 	},
+	mage_alchemist: {
+		name: 'Alchemage',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Alchemage',
+	},
 	alchemist: {
 		name: 'Alchemist',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Alchemist',
+	},
+	an: {
+		name: 'An',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/An',
 	},
 	andrew: {
 		name: 'Andrew',
@@ -110,6 +125,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Anita',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Anita',
+	},
+	archaeologist: {
+		name: 'Archaeologist',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Archaeologist',
 	},
 	arthur: {
 		name: 'Arthur',
@@ -131,30 +151,100 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Bartender',
 	},
+	bednom: {
+		name: 'Bednom',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Bednom',
+	},
 	beth: {
 		name: 'Beth',
 		rarity: Rarity.Legendary,
 		wiki: 'https://wiki.hypixel.net/Beth',
+	},
+	bruuh: {
+		name: 'Bruuh',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Bruuh',
+	},
+	carpenter: {
+		name: 'Carpenter',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Carpenter',
+	},
+	chantelle: {
+		name: 'Chantelle',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Chantelle',
+	},
+	chief_scorn: {
+		name: 'Chief Scorn',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Chief_Scorn',
+	},
+	chunk: {
+		name: 'Chunk',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Chunk',
 	},
 	seraphine: {
 		name: 'Clerk Seraphine',
 		rarity: Rarity.Legendary,
 		wiki: 'https://wiki.hypixel.net/Clerk_Seraphine',
 	},
+	cold_enjoyer: {
+		name: 'Cold Enjoyer',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Cold_Enjoyer',
+	},
+	mayor_cole: {
+		name: 'Cole',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Cole',
+	},
 	dalbrek: {
 		name: 'Dalbrek',
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Dalbrek',
+	},
+	dante_goon: {
+		name: 'Dante Goon',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Dante_Goon',
+	},
+	mayor_diana: {
+		name: 'Diana',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Diana',
+	},
+	mayor_diaz: {
+		name: 'Diaz',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Diaz',
 	},
 	duke: {
 		name: 'Duke',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Duke',
 	},
+	dulin_tunnels: {
+		name: 'Dulin',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Dulin',
+	},
+	duncan: {
+		name: 'Duncan',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Duncan',
+	},
 	dusk: {
 		name: 'Dusk',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Dusk',
+	},
+	elle: {
+		name: 'Elle',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Elle',
 	},
 	emissary_carlton: {
 		name: 'Emissary Carlton',
@@ -181,6 +271,21 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Emissary_Wilson',
 	},
+	erihann: {
+		name: 'Erihann',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Erihann',
+	},
+	pet_trainer: {
+		name: 'Fann',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Fann',
+	},
+	farm_merchant: {
+		name: 'Farm Merchant',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Farm_Merchant',
+	},
 	farmer_jon: {
 		name: 'Farmer Jon',
 		rarity: Rarity.Uncommon,
@@ -201,10 +306,20 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Felix',
 	},
+	mayor_finnegan: {
+		name: 'Finnegan',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Finnegan',
+	},
 	fisherman: {
-		name: 'Fisherman',
+		name: 'Fisherman Gerald',
 		rarity: Rarity.Uncommon,
-		wiki: 'https://wiki.hypixel.net/Fisherman',
+		wiki: 'https://wiki.hypixel.net/Fisherman_Gerald',
+	},
+	mayor_foxy: {
+		name: 'Foxy',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Foxy',
 	},
 	fragilis: {
 		name: 'Fragilis',
@@ -215,6 +330,21 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Friendly Hiker',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Friendly_Hiker',
+	},
+	frozen_alex: {
+		name: 'Frozen Alex',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Frozen_Alex',
+	},
+	snowmaker: {
+		name: 'Gary',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Gary',
+	},
+	gemma: {
+		name: 'Gemma',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Gemma',
 	},
 	geonathan_greatforge: {
 		name: 'Geonathan Greatforge',
@@ -246,6 +376,16 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Gwendolyn',
 	},
+	hendrik: {
+		name: 'Hendrik',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Hendrik',
+	},
+	hoppity: {
+		name: 'Hoppity',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Hoppity',
+	},
 	hornum: {
 		name: 'Hornum',
 		rarity: Rarity.Uncommon,
@@ -270,6 +410,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Jacob',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Jacob',
+	},
+	jacobus: {
+		name: 'Jacobus',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Jacobus',
 	},
 	jamie: {
 		name: 'Jamie',
@@ -306,6 +451,16 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Librarian',
 	},
+	lift_operator: {
+		name: 'Lift Operator',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Lift_Operator',
+	},
+	ludleth: {
+		name: 'Ludleth',
+		rarity: Rarity.Mythic,
+		wiki: 'https://wiki.hypixel.net/Ludleth',
+	},
 	lumberjack: {
 		name: 'Lumber Jack',
 		rarity: Rarity.Uncommon,
@@ -332,10 +487,35 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Mythic,
 		wiki: 'https://wiki.hypixel.net/Maeve',
 	},
+	artist: {
+		name: 'Marco',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Marco',
+	},
+	marigold: {
+		name: 'Marigold',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Marigold',
+	},
+	mayor_marina: {
+		name: 'Marina',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Marina',
+	},
 	mason: {
 		name: 'Mason',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Mason',
+	},
+	master_tactician: {
+		name: 'Master Tactician Funk',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Master_Tactician_Funk',
+	},
+	moby: {
+		name: 'Moby',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Moby',
 	},
 	odawa: {
 		name: 'Odawa',
@@ -347,10 +527,30 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Old_Man_Garry',
 	},
+	wolf_shaman: {
+		name: 'Old Shaman Nyko',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Old_Shaman_Nyko',
+	},
+	ophelia: {
+		name: 'Ophelia',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Ophelia',
+	},
 	oringo: {
 		name: 'Oringo',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Oringo',
+	},
+	mayor_paul: {
+		name: 'Paul',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Paul',
+	},
+	end_dealer: {
+		name: 'Pearl Dealer',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Pearl_Dealer',
 	},
 	pest_wrangler: {
 		name: 'Pest Wrangler',
@@ -382,6 +582,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Queen_Mismyla',
 	},
+	queen_nyx: {
+		name: 'Queen Nyx',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Queen_Nyx',
+	},
 	ravenous_rhino: {
 		name: 'Ravenous Rhino',
 		rarity: Rarity.Mythic,
@@ -392,16 +597,15 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Rhys',
 	},
+	romero: {
+		name: 'Romero',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Romero',
+	},
 	royal_resident_reward: {
 		name: 'Royal Resident',
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Royal_Resident',
-	},
-	royal_resident_peasant: {
-		name: 'Royal Resident (Snooty)',
-		short: 'Royal Res. (Snooty)',
-		rarity: Rarity.Uncommon,
-		wiki: 'https://wiki.hypixel.net/Royal_Residents',
 	},
 	royal_resident_neighbour: {
 		name: 'Royal Resident (Neighbor)',
@@ -409,10 +613,21 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Royal_Residents',
 	},
+	royal_resident_peasant: {
+		name: 'Royal Resident (Snooty)',
+		short: 'Royal Res. (Snooty)',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Royal_Residents',
+	},
 	rusty: {
 		name: 'Rusty',
 		rarity: Rarity.Rare,
 		wiki: 'https://wiki.hypixel.net/Rusty',
+	},
+	fire_guy: {
+		name: 'Ryan',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Ryan',
 	},
 	ryu: {
 		name: 'Ryu',
@@ -424,6 +639,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Sargwyn',
 	},
+	scardius: {
+		name: 'Scout Scardius',
+		rarity: Rarity.Uncommon,
+		wiki: 'https://wiki.hypixel.net/Scout_Scardius',
+	},
 	seymour: {
 		name: 'Seymour',
 		rarity: Rarity.Rare,
@@ -433,6 +653,11 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Shaggy',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Shaggy',
+	},
+	sherry: {
+		name: 'Sherry',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Sherry',
 	},
 	shifty: {
 		name: 'Shifty',
@@ -448,6 +673,16 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		name: 'Spaceman',
 		rarity: Rarity.Special,
 		wiki: 'https://wiki.hypixel.net/Spaceman',
+	},
+	spider_tamer: {
+		name: 'Spider Tamer',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Spider_Tamer',
+	},
+	st_jerry: {
+		name: 'St. Jerry',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/St._Jerry',
 	},
 	stella: {
 		name: 'Stella',
@@ -479,15 +714,45 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Tom',
 	},
+	tomioka: {
+		name: 'Tomioka',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Tomioka',
+	},
 	trevor: {
 		name: 'Trevor',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Trevor',
 	},
+	trinity: {
+		name: 'Trinity',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Trinity',
+	},
+	tyashoi: {
+		name: 'Tyashoi Alchemist',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Tyashoi_Alchemist',
+	},
+	dragon_ritualist: {
+		name: 'Tyzzo',
+		rarity: Rarity.Rare,
+		wiki: 'https://wiki.hypixel.net/Tyzzo',
+	},
+	vargul_garden: {
+		name: 'Vargul',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Vargul',
+	},
 	vex: {
 		name: 'Vex',
 		rarity: Rarity.Uncommon,
 		wiki: 'https://wiki.hypixel.net/Vex',
+	},
+	vincent: {
+		name: 'Vincent',
+		rarity: Rarity.Legendary,
+		wiki: 'https://wiki.hypixel.net/Vincent',
 	},
 	vinyl_collector: {
 		name: 'Vinyl Collector',

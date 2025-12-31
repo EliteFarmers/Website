@@ -54,7 +54,7 @@ function getSingleItemValue(itemId: string) {
 	const ah = cache?.auctions.items;
 
 	const npcPrice = bz?.[itemId]?.npc ?? 0;
-	const ahPrices = ah?.[itemId]?.filter((a) => a.lowest3Day > 0).map((a) => a.lowest3Day) ?? [];
+	const ahPrices = ah?.[itemId]?.filter((a) => a.lowest > 0).map((a) => a.lowest) ?? [];
 	const ahPrice = ahPrices.length > 0 ? Math.min(...ahPrices) : 0;
 	const bazaarPrice = bz?.[itemId]?.averageSellOrder ?? 0;
 

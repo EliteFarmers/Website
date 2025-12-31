@@ -1,29 +1,34 @@
 import type { Crop } from '../constants/crops.js';
 import {
 	BESTIARY_PEST_BRACKETS,
+	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	FORTUNE_PER_PEST_BRACKET,
+	GARDEN_BESTIARY_NAMES,
 	PEST_BESTIARY_IDS,
 	PEST_COLLECTION_ADJUSTMENTS,
 	PEST_COLLECTION_BRACKETS,
 	PEST_EXCHANGE_RATES,
 	PEST_TO_CROP,
-	Pest,
+	type Pest,
 } from '../constants/pests.js';
 
 export function fortuneFromPests(pests: number): number {
 	return PEST_EXCHANGE_RATES[pests as keyof typeof PEST_EXCHANGE_RATES] ?? 0;
 }
 
-export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>): number {
+export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>, onlyPests = true): number {
 	let reachedBrackets = 0;
 
 	const brackets = BESTIARY_PEST_BRACKETS;
 
-	for (const [pestId, bestiaryId] of Object.entries(PEST_BESTIARY_IDS) as [Pest, string][]) {
-		const kills = bestiaryKills[`pest_${bestiaryId}_1`];
+	for (const [bestiaryId, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
+		if (onlyPests && !pestId) continue;
+		const kills = bestiaryKills[bestiaryId];
 		if (!kills) continue;
 
-		const bracket = Object.entries(brackets[pestId]).sort((a, b) => b[1] - a[1]);
+		const bracket = Object.entries(pestId ? brackets[pestId] : DEFAULT_GARDEN_BESTIARY_PEST_BRACKET).sort(
+			(a, b) => b[1] - a[1]
+		);
 
 		// Find the highest reached bracket for this pest
 		const unlocked = bracket.find((b) => +kills >= b[1]);
@@ -35,18 +40,52 @@ export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>)
 }
 
 export function fortuneFromPestBestiary(bestiaryKills: Record<string, number>): number {
-	return unlockedPestBestiaryTiers(bestiaryKills) * FORTUNE_PER_PEST_BRACKET;
+	return unlockedPestBestiaryTiers(bestiaryKills, false) * FORTUNE_PER_PEST_BRACKET;
+}
+
+export function getGardenBestiaryProgress(
+	bestiaryKills: Record<string, number>
+): Record<string, { kills: number; nextBracketKills: number | null; bracketsUnlocked: number; name: string }> {
+	const progress: Record<
+		string,
+		{ kills: number; nextBracketKills: number | null; bracketsUnlocked: number; name: string }
+	> = {};
+	const brackets = BESTIARY_PEST_BRACKETS;
+
+	for (const [bestiaryId, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
+		const kills = bestiaryKills[bestiaryId] || 0;
+		const pestName = GARDEN_BESTIARY_NAMES[bestiaryId] || 'Unknown Pest';
+		const bracket = pestId ? brackets[pestId] : DEFAULT_GARDEN_BESTIARY_PEST_BRACKET;
+
+		const sortedBrackets = Object.entries(bracket).sort((a, b) => +a[1] - +b[1]);
+		let bracketsUnlocked = 0;
+		let nextBracketKills: number | null = null;
+		for (const [bracketLevel, bracketKills] of sortedBrackets) {
+			if (kills >= bracketKills) {
+				bracketsUnlocked = +bracketLevel;
+			} else {
+				nextBracketKills = bracketKills;
+				break;
+			}
+		}
+
+		progress[bestiaryId] = {
+			kills,
+			nextBracketKills,
+			bracketsUnlocked,
+			name: pestName,
+		};
+	}
+	return progress;
 }
 
 export function uncountedCropsFromPests(pestKills: Record<string, number>): Partial<Record<Crop, number>> {
 	const crops = {} as Partial<Record<Crop, number>>;
 	const brackets = PEST_COLLECTION_BRACKETS;
 
-	for (const [pestId, bestiaryKey] of Object.entries(PEST_BESTIARY_IDS) as [Pest, string][]) {
-		if (pestId === Pest.Mouse) continue;
-
-		let kills = pestKills[`pest_${bestiaryKey}_1`];
-		if (!kills) continue;
+	for (const [bestiaryKey, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
+		let kills = pestKills[bestiaryKey];
+		if (!kills || !pestId) continue;
 
 		const crop = PEST_TO_CROP[pestId];
 		if (!crop) continue;
@@ -58,7 +97,8 @@ export function uncountedCropsFromPests(pestKills: Record<string, number>): Part
 			// Exit if there are no more pests to calculate
 			if (kills <= 0) break;
 
-			const bracketCrops = PEST_COLLECTION_ADJUSTMENTS[pestId][bracket] ?? 0;
+			const bracketCrops =
+				PEST_COLLECTION_ADJUSTMENTS[pestId as keyof typeof PEST_COLLECTION_ADJUSTMENTS][bracket] ?? 0;
 
 			// Use the last bracket for all remaining pests
 			if (i === brackets.length - 1) {

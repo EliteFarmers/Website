@@ -75,9 +75,7 @@
 							</span>
 						{/if}
 						{#if itemDetails?.ready && itemDetails?.current?.auctions && itemDetails?.current.auctions.length > 0}
-							{@const lowest = Math.min(
-								...(itemDetails?.current?.auctions.map((a) => a.lowest3Day) ?? [0])
-							)}
+							{@const lowest = Math.min(...(itemDetails?.current?.auctions.map((a) => a.lowest) ?? [0]))}
 							<span>
 								<span class="dark:text-completed">
 									{Math.round(

@@ -19,7 +19,7 @@ export enum Pest {
 
 export const FORTUNE_PER_PEST_BRACKET = 0.4;
 
-const killsPerPestBracket: Record<number, number> = {
+export const DEFAULT_GARDEN_BESTIARY_PEST_BRACKET: Record<number, number> = {
 	1: 1,
 	2: 2,
 	3: 3,
@@ -38,16 +38,16 @@ const killsPerPestBracket: Record<number, number> = {
 };
 
 export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
-	[Pest.Beetle]: killsPerPestBracket,
-	[Pest.Cricket]: killsPerPestBracket,
-	[Pest.Worm]: killsPerPestBracket,
-	[Pest.Fly]: killsPerPestBracket,
-	[Pest.Locust]: killsPerPestBracket,
-	[Pest.Mite]: killsPerPestBracket,
-	[Pest.Mosquito]: killsPerPestBracket,
-	[Pest.Moth]: killsPerPestBracket,
-	[Pest.Rat]: killsPerPestBracket,
-	[Pest.Slug]: killsPerPestBracket,
+	[Pest.Beetle]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Cricket]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Worm]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Fly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Locust]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Mite]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Mosquito]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Moth]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Rat]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Slug]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Mouse]: {
 		1: 1,
 		2: 2,
@@ -65,9 +65,9 @@ export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
 		14: 75,
 		15: 100,
 	},
-	[Pest.Dragonfly]: killsPerPestBracket,
-	[Pest.Firefly]: killsPerPestBracket,
-	[Pest.Mantis]: killsPerPestBracket,
+	[Pest.Dragonfly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Firefly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	[Pest.Mantis]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 };
 
 export const PEST_EXCHANGE_RATES = {
@@ -131,21 +131,42 @@ export const PEST_IDS: Pest[] = [
 	Pest.Mantis,
 ];
 
-export const PEST_BESTIARY_IDS: Record<Pest, string> = {
-	[Pest.Beetle]: Pest.Beetle,
-	[Pest.Cricket]: Pest.Cricket,
-	[Pest.Worm]: Pest.Worm,
-	[Pest.Fly]: Pest.Fly,
-	[Pest.Locust]: Pest.Locust,
-	[Pest.Mite]: Pest.Mite,
-	[Pest.Mosquito]: Pest.Mosquito,
-	[Pest.Moth]: Pest.Moth,
-	[Pest.Rat]: Pest.Rat,
-	[Pest.Slug]: Pest.Slug,
-	[Pest.Mouse]: Pest.Mouse,
-	[Pest.Dragonfly]: Pest.Dragonfly,
-	[Pest.Firefly]: Pest.Firefly,
-	[Pest.Mantis]: 'praying_mantis', // oops
+export const PEST_BESTIARY_IDS: Record<string, Pest | null> = {
+	[`pest_${Pest.Beetle}_1`]: Pest.Beetle,
+	[`pest_${Pest.Cricket}_1`]: Pest.Cricket,
+	[`pest_${Pest.Worm}_1`]: Pest.Worm,
+	[`pest_${Pest.Fly}_1`]: Pest.Fly,
+	[`pest_${Pest.Locust}_1`]: Pest.Locust,
+	[`pest_${Pest.Mite}_1`]: Pest.Mite,
+	[`pest_${Pest.Mosquito}_1`]: Pest.Mosquito,
+	[`pest_${Pest.Moth}_1`]: Pest.Moth,
+	[`pest_${Pest.Rat}_1`]: Pest.Rat,
+	[`pest_${Pest.Slug}_1`]: Pest.Slug,
+	[`pest_${Pest.Mouse}_1`]: Pest.Mouse,
+	[`pest_${Pest.Dragonfly}_1`]: Pest.Dragonfly,
+	[`pest_${Pest.Firefly}_1`]: Pest.Firefly,
+	pest_praying_mantis_1: Pest.Mantis, // oops
+	zombuddy_1: null,
+	timestalk_clone_100: null,
+};
+
+export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
+	[`pest_${Pest.Beetle}_1`]: 'Beetle',
+	[`pest_${Pest.Cricket}_1`]: 'Cricket',
+	[`pest_${Pest.Worm}_1`]: 'Earthworm',
+	[`pest_${Pest.Fly}_1`]: 'Fly',
+	[`pest_${Pest.Locust}_1`]: 'Locust',
+	[`pest_${Pest.Mite}_1`]: 'Mite',
+	[`pest_${Pest.Mosquito}_1`]: 'Mosquito',
+	[`pest_${Pest.Moth}_1`]: 'Moth',
+	[`pest_${Pest.Rat}_1`]: 'Rat',
+	[`pest_${Pest.Slug}_1`]: 'Slug',
+	[`pest_${Pest.Mouse}_1`]: 'Field Mouse',
+	[`pest_${Pest.Dragonfly}_1`]: 'Dragonfly',
+	[`pest_${Pest.Firefly}_1`]: 'Firefly',
+	pest_praying_mantis_1: 'Mantis',
+	zombuddy_1: 'Zombuddy',
+	timestalk_clone_100: 'Timestalk Clone',
 };
 
 export const PEST_TO_CROP: Partial<Record<Pest, Crop>> = {

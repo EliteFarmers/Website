@@ -1,3 +1,4 @@
+import { PEST_BESTIARY_IDS } from './pests.js';
 import { Stat } from './stats.js';
 import type { FortuneSource } from './upgrades.js';
 
@@ -267,7 +268,7 @@ export const COMMUNITY_CENTER_UPGRADE: FortuneSource = {
 export const PEST_BESTIARY_SOURCE: FortuneSource = {
 	name: 'Pest Bestiary',
 	fortunePerLevel: 0.4,
-	maxLevel: 84 / 0.4,
+	maxLevel: (Object.keys(PEST_BESTIARY_IDS).length * 6) / 0.4,
 	wiki: 'https://wiki.hypixel.net/Bestiary#Garden_',
 };
 

@@ -1,3 +1,4 @@
+import { getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat } from '../constants/stats.js';
 import {
@@ -92,6 +93,10 @@ export class FarmingPet {
 
 		// Pet abilities
 		if (this.info.abilities) {
+			const hyperLevel = getChipLevel(this.options?.chips?.HYPERCHARGE_GARDEN_CHIP);
+			const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel);
+			const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
+
 			for (const ability of this.info.abilities) {
 				if (ability.exists && !ability.exists({ player, options: this.options ?? {} }, this)) {
 					continue;
@@ -100,8 +105,12 @@ export class FarmingPet {
 				const stats = ability.computed({ player, options: this.options ?? {} }, this);
 				const fortuneStat = stats[stat];
 
-				const value = getStatValue(fortuneStat, this.options);
+				let value = getStatValue(fortuneStat, this.options);
 				if (!value || !fortuneStat) continue;
+
+				if (ability.temporary) {
+					value *= hyperchargeMultiplier;
+				}
 
 				fortune += value;
 				breakdown[fortuneStat.name ?? ability.name] = value;

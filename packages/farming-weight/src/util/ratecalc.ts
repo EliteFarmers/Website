@@ -1,9 +1,11 @@
 import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes } from '../constants/attributes.js';
-import { getChipLevel, getChipRarity } from '../constants/chips.js';
+import { GARDEN_CHIPS, getChipLevel, getChipRarity } from '../constants/chips.js';
 import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
+import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
+import type { FarmingPet } from '../fortune/farmingpet.js';
 import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
 interface CalculateDropsOptions {
@@ -14,6 +16,7 @@ interface CalculateDropsOptions {
 	armorPieces?: 1 | 2 | 3 | 4;
 	attributes?: FarmingAttributes | Record<string, number>;
 	chips?: Record<string, number>;
+	pet?: FarmingPet;
 }
 
 const crops = [
@@ -66,6 +69,11 @@ export interface DetailedDropsResult {
 	otherCollection: Record<string, number>;
 	items: Record<string, number>;
 	rngItems?: Record<string, number>;
+	specialCropBonus: number;
+	specialCropBonusBreakdown: Record<string, number>;
+	rareItemBonus: number;
+	rareItemBonusBreakdown: Record<string, number>;
+	pendingRngItems?: Record<string, number>;
 }
 
 export function calculateDetailedAverageDrops(
@@ -135,6 +143,10 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		coinSources: {} as Record<string, number>,
 		otherCollection: {} as Record<string, number>,
 		items: {} as Record<string, number>,
+		specialCropBonus: 0,
+		specialCropBonusBreakdown: {} as Record<string, number>,
+		rareItemBonus: 0,
+		rareItemBonusBreakdown: {} as Record<string, number>,
 	};
 
 	const { farmingFortune, blocksBroken, crop, bountiful, armorPieces = 4 } = options;
@@ -173,7 +185,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		result.items[Crop.Mushroom] = mushroomDrops;
 	}
 
-	const specialCrops = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces);
+	const specialCrops = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces, 1);
 
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
 	result.items[specialCrops.id] = +specialCrops.amount.toFixed(2);
@@ -229,8 +241,9 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			}
 		}
 
+		const toolXpFactor = getCropInfo(crop).toolXpFactor ?? 1;
 		const capsules = Math.floor(
-			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / 200_000
+			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / toolXpFactor / 200_000
 		);
 		if (capsules > 0) {
 			result.items['TOOL_EXP_CAPSULE'] = capsules;
@@ -249,13 +262,53 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		}
 	}
 
+	if (options.chips) {
+		for (const chip of Object.values(GARDEN_CHIPS)) {
+			if (chip.ratesModifier) {
+				chip.ratesModifier(result, options);
+			}
+		}
+	}
+
+	if (options.pet) {
+		const pet = options.pet;
+		for (const modifier of pet.info.abilities ?? []) {
+			if (modifier.exists?.({ options }, pet) === false) continue;
+			if (modifier.ratesModifier) {
+				modifier.ratesModifier(result, options, pet);
+			}
+		}
+	}
+
 	if (rng) {
+		const rareMultiplier = 1 + result.rareItemBonus;
 		for (const rngDrop of rng) {
-			const drops = rngDrop.chance * blocksBroken;
+			const drops = rngDrop.chance * blocksBroken * rareMultiplier;
 			for (const [item, count] of Object.entries(rngDrop.drops)) {
 				result.rngItems ??= {};
 				result.rngItems[item] = count * drops + (result.rngItems[item] ?? 0);
 			}
+		}
+	}
+
+	if (result.pendingRngItems) {
+		const rareMultiplier = 1 + result.rareItemBonus;
+		for (const [item, baseAmount] of Object.entries(result.pendingRngItems)) {
+			result.rngItems ??= {};
+			result.rngItems[item] = (result.rngItems[item] ?? 0) + baseAmount * rareMultiplier;
+		}
+		delete result.pendingRngItems;
+	}
+
+	if (result.specialCropBonus > 0) {
+		const specialCrop = MATCHING_SPECIAL_CROP[crop];
+		if (specialCrop) {
+			const bonusMultiplier = 1 + result.specialCropBonus;
+			const newAmount = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces, bonusMultiplier);
+
+			result.otherCollection[specialCrop] = Math.round(newAmount.amount);
+			result.items[SPECIAL_CROP_INFO[specialCrop].id] = +newAmount.amount.toFixed(2);
+			result.coinSources[specialCrop] = Math.round(newAmount.npc);
 		}
 	}
 

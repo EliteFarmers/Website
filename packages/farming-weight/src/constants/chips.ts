@@ -1,3 +1,4 @@
+import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../util/ratecalc.js';
 import { Rarity, type RarityRecord } from './reforges.js';
 import { Stat } from './stats.js';
 
@@ -29,6 +30,10 @@ export interface GardenChipInfo {
 	 * Used by Hypercharge Chip.
 	 */
 	tempMultiplierPerLevel?: RarityRecord<number>;
+	/**
+	 * Modifier for drop rates. Applied during rate calculations.
+	 */
+	ratesModifier?: (current: DetailedDropsResult, options: CalculateCropDetailedDropsOptions) => DetailedDropsResult;
 }
 
 export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
@@ -119,6 +124,22 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		skyblockId: 'RAREFINDER_GARDEN_CHIP',
 		name: 'Rarefinder Chip',
 		wiki: GARDEN_CHIP_WIKI,
+		ratesModifier: (current, options) => {
+			const level = getChipLevel(options.chips?.RAREFINDER_GARDEN_CHIP);
+			if (level <= 0) return current;
+
+			const rarity = getChipRarity(level);
+			let perLevel = 0.02;
+			if (rarity === Rarity.Epic) perLevel = 0.025;
+			else if (rarity === Rarity.Legendary) perLevel = 0.03;
+
+			const bonus = level * perLevel;
+			current.specialCropBonus += bonus;
+			current.specialCropBonusBreakdown['Rarefinder Chip'] = bonus;
+			current.rareItemBonus += bonus;
+			current.rareItemBonusBreakdown['Rarefinder Chip'] = bonus;
+			return current;
+		},
 	},
 };
 
