@@ -70,9 +70,7 @@
 		if (!crop) return;
 
 		const newTool = $player.getBestTool(crop);
-		console.log({ newTool, crop, c });
 		if (newTool === selectedTool) {
-			console.log('No change in tool');
 			player.refresh();
 			return;
 		}
@@ -177,6 +175,21 @@
 				}
 			: undefined,
 	} as PlayerOptions);
+
+	$effect(() => {
+		const seen = [] as unknown[];
+		console.log(
+			JSON.stringify(options, function (key, val) {
+				if (val != null && typeof val == 'object') {
+					if (seen.indexOf(val) >= 0) {
+						return;
+					}
+					seen.push(val);
+				}
+				return val;
+			})
+		);
+	});
 
 	// svelte-ignore state_referenced_locally
 	let player = $state(getRatesPlayer(options));

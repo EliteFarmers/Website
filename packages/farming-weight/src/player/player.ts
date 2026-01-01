@@ -1,22 +1,22 @@
 import { FARMING_ATTRIBUTE_SHARDS, getShardStat } from '../constants/attributes.js';
 import {
-	type GardenChipId,
-	getChipLevel,
-	getChipStats,
-	getChipTempMultiplierPerLevel,
-	normalizeChipId,
+    type GardenChipId,
+    getChipLevel,
+    getChipStats,
+    getChipTempMultiplierPerLevel,
+    normalizeChipId,
 } from '../constants/chips.js';
-import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
+import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
-	ANITA_FORTUNE_UPGRADE,
-	COCOA_FORTUNE_UPGRADE,
-	COMMUNITY_CENTER_UPGRADE,
-	FARMING_LEVEL,
-	FILLED_ROSEWATER_FLASK_SOURCE,
-	GARDEN_CROP_UPGRADES,
-	UNLOCKED_PLOTS,
-	WRIGGLING_LARVA_SOURCE,
+    ANITA_FORTUNE_UPGRADE,
+    COCOA_FORTUNE_UPGRADE,
+    COMMUNITY_CENTER_UPGRADE,
+    FARMING_LEVEL,
+    FILLED_ROSEWATER_FLASK_SOURCE,
+    GARDEN_CROP_UPGRADES,
+    UNLOCKED_PLOTS,
+    WRIGGLING_LARVA_SOURCE,
 } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
@@ -370,6 +370,9 @@ export class FarmingPlayer {
 			if (!existing) {
 				families.set(acc.info.family, acc);
 				activeAccessories.push(acc);
+
+				// Skip crop-specific accessories here
+				if (acc.info.crops && acc.info.crops.length > 0) continue;
 
 				breakdown[acc.item.name ?? acc.item.skyblockId ?? 'Accessory'] = val;
 				sum += val;
