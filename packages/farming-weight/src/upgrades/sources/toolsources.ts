@@ -297,9 +297,9 @@ function enchantSourceBuilder(
 		max: (tool) => {
 			let sum = 0;
 			for (const crop of tool.crops) {
-				sum += getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, crop);
+				sum += getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop);
 			}
-			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, undefined);
+			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
 		},
 		current: (tool) => {
 			let sum = 0;
@@ -307,7 +307,7 @@ function enchantSourceBuilder(
 				sum += getStatFromEnchant(
 					tool.item.enchantments?.[id] ?? 0,
 					enchant,
-					Stat.FarmingFortune,
+					CROP_INFO[crop].fortuneType,
 					tool.options,
 					crop
 				);
@@ -319,7 +319,7 @@ function enchantSourceBuilder(
 					enchant,
 					Stat.FarmingFortune,
 					tool.options,
-					undefined
+					tool.crops[0]
 				)
 			);
 		},
@@ -328,14 +328,16 @@ function enchantSourceBuilder(
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, stat, tool.options, crop);
 			}
-			return sum || getMaxStatFromEnchant(enchant, stat, tool.options, undefined);
+			return sum || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
 		},
 		currentStat: (tool, stat) => {
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop);
 			}
-			return sum || getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, undefined);
+			return (
+				sum || getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, tool.crops[0])
+			);
 		},
 		upgrades: (tool, stats) => {
 			const primaryStat = stats?.[0] ?? Stat.FarmingFortune;

@@ -19,6 +19,12 @@ export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[]
 		current: (accessory) => {
 			return accessory.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		},
+		maxStat: (accessory, stat) => {
+			return (accessory.getLastItemUpgrade() ?? accessory)?.info?.baseStats?.[stat] ?? 0;
+		},
+		currentStat: (accessory, stat) => {
+			return accessory.info.baseStats?.[stat] ?? 0;
+		},
 	},
 	{
 		name: 'Gemstone Slots',

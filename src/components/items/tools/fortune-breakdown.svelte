@@ -7,7 +7,7 @@
 	interface Props {
 		title?: string;
 		total?: number | undefined;
-		breakdown?: Record<string, number> | undefined;
+		breakdown?: Record<string, number | { value: number; stat: Stat }> | undefined;
 		enabled?: boolean;
 		small?: boolean;
 		max?: number;
@@ -28,7 +28,14 @@
 		children,
 	}: Props = $props();
 
-	let list = $derived(Object.entries(breakdown ?? {}).sort(([, a], [, b]) => b - a));
+	let list = $derived(
+		Object.entries(breakdown ?? {})
+			.map(([k, v]) => {
+				if (typeof v === 'number') return [k, v] as const;
+				return [k, v.value] as const;
+			})
+			.sort(([, a], [, b]) => b - a)
+	);
 	let sum = $derived(total ?? list.reduce((acc, [, value]) => acc + value, 0));
 	let maxed = $derived(max !== undefined && sum >= max);
 

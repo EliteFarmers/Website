@@ -243,11 +243,17 @@ export class FarmingTool extends UpgradeableBase {
 	}
 
 	getStat(stat: Stat): number {
-		if (stat === Stat.FarmingFortune) {
-			return this.getFortune();
-		}
-
 		let sum = 0;
+
+		if (stat === Stat.FarmingFortune) {
+			sum += this.level * 4;
+			sum += this.farmingForDummies;
+
+			// Axed Perk gives +2% of Total Fortune as Farming Fortune
+			// We calculate this by running getFortune (which updates breakdown) and reading the value
+			this.getFortune();
+			sum += this.fortuneBreakdown['Axed Perk'] ?? 0;
+		}
 
 		// Tools now have a flat +1 Farming Wisdom baseline.
 		if (stat === Stat.FarmingWisdom) {
@@ -270,7 +276,9 @@ export class FarmingTool extends UpgradeableBase {
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
 			for (const crop of this.crops) {
-				sum += getStatFromEnchant(level, enchantment, stat, this.options, crop);
+				const val = getStatFromEnchant(level, enchantment, stat, this.options, crop);
+
+				sum += val;
 			}
 		}
 

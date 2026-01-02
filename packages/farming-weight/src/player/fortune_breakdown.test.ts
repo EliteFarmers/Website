@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
+import fullBreakdownExample from './full_breakdown_example.json';
 import { FarmingPlayer } from './player.js';
+import type { PlayerOptions } from './playeroptions.js';
 
 describe('Fortune breakdown totals should match calculated fortune', () => {
 	test('breakdown sum should equal fortune with temporary fortune', () => {
@@ -11,7 +13,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			},
 		});
 
-		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val, 0);
+		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
 		expect(breakdownSum).toBe(player.fortune);
 	});
 
@@ -28,7 +30,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			},
 		});
 
-		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val, 0);
+		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
 		expect(breakdownSum).toBe(player.fortune);
 	});
 
@@ -45,6 +47,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			lore: ['§7Melon Slice Fortune: §6+30'],
 			enchantments: null,
 			attributes: {},
+			active: true,
 		};
 
 		const melonTool = {
@@ -66,16 +69,13 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 
 		const cropFortune = player.getCropFortune(Crop.Melon);
 
-		// The Fermento Artifact should ONLY appear in crop breakdown, not general breakdown
-		expect(player.breakdown['§9Fermento Artifact']).toBeUndefined();
-		expect(cropFortune.breakdown['§9Fermento Artifact']).toBe(30);
+		// The Fermento Artifact should only appear in crop breakdown, not general breakdown
+		expect(player.breakdown['Fermento Artifact']).toBeUndefined();
+		expect(cropFortune.breakdown['Fermento Artifact'].value).toBe(30);
 
-		// Combined breakdown should match combined fortune total
-		const combinedBreakdown = { ...player.breakdown, ...cropFortune.breakdown };
-		const combinedBreakdownSum = Object.values(combinedBreakdown).reduce((sum, val) => sum + val, 0);
-		const combinedTotalFortune = player.fortune + cropFortune.fortune;
-
-		expect(combinedBreakdownSum).toBe(combinedTotalFortune);
+		// Combined breakdown sum logic is outdated. We now check that cropFortune (Total) matches its breakdown sum.
+		const breakdownSum = Object.values(cropFortune.breakdown).reduce((sum, val) => sum + val.value, 0);
+		expect(breakdownSum).toBeCloseTo(cropFortune.fortune, 2);
 	});
 
 	test('non-crop-specific accessories should still appear in general breakdown', () => {
@@ -88,6 +88,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			lore: [],
 			enchantments: null,
 			attributes: {},
+			active: true,
 		};
 
 		const player = new FarmingPlayer({
@@ -95,9 +96,9 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		});
 
 		// General accessory should appear in breakdown
-		expect(player.breakdown['§9Helianthus Relic']).toBe(40);
+		expect(player.breakdown['Helianthus Relic'].value).toBe(40);
 
-		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val, 0);
+		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
 		expect(breakdownSum).toBe(player.fortune);
 	});
 
@@ -231,6 +232,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			lore: ['§7Melon Slice Fortune: §6+30'],
 			enchantments: null,
 			attributes: {},
+			active: true,
 		};
 
 		const options = {
@@ -253,6 +255,7 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			},
 			temporaryFortune: {
 				pestTurnIn: 200,
+				harvestPotion: true,
 			},
 			strength: 1100,
 		};
@@ -261,20 +264,86 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 		const cropFortune = player.getCropFortune(Crop.Melon);
 
 		// Player breakdown should not include Fermento Artifact
-		expect(player.breakdown['§9Fermento Artifact']).toBeUndefined();
+		expect(player.breakdown['Fermento Artifact']).toBeUndefined();
 
 		// Crop breakdown should include Fermento Artifact
-		expect(cropFortune.breakdown['§9Fermento Artifact']).toBe(30);
+		expect(cropFortune.breakdown['Fermento Artifact'].value).toBe(30);
 
 		// General breakdown sum should match
-		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val, 0);
-		expect(breakdownSum).toBe(player.fortune);
+		const breakdownSum = Object.values(player.breakdown).reduce((sum, val) => sum + val.value, 0);
+		expect(breakdownSum).toBeCloseTo(player.fortune, 2);
 
-		// Combined breakdown sum should also match the combined total
-		const combinedBreakdown = { ...player.breakdown, ...cropFortune.breakdown };
-		const combinedBreakdownSum = Object.values(combinedBreakdown).reduce((sum, val) => sum + val, 0);
-		const combinedTotalFortune = player.fortune + cropFortune.fortune;
+		// Verify Crop Fortune is Total
+		const cropBreakdownSum = Object.values(cropFortune.breakdown).reduce((sum, val) => sum + val.value, 0);
+		expect(cropBreakdownSum).toBeCloseTo(cropFortune.fortune, 2);
 
-		expect(combinedBreakdownSum).toBe(combinedTotalFortune);
+		// Verify General Sources are present in Crop Breakdown
+		const keys = Object.keys(cropFortune.breakdown);
+		// Using ToContain to reveal actual keys on failure if this fails
+		expect(keys).toContain('Mooshroom Cow');
+
+		if (keys.includes('Mooshroom Cow')) {
+			expect(cropFortune.breakdown['Mooshroom Cow'].value).toBeGreaterThanOrEqual(
+				player.breakdown['Mooshroom Cow']?.value ?? 0
+			);
+		}
+
+		// Crop breakdown should include Fermento Artifact
+		expect(cropFortune.breakdown['Fermento Artifact']).toBeDefined();
+	});
+
+	test('getCropFortune(undefined) should return only General Fortune sources', () => {
+		// Construct a player with sources that are typically crop-specific (Fermento Artifact)
+		// and general sources (Helianthus, Pets).
+		const fermentoArtifact = {
+			id: 397,
+			skyblockId: 'FERMENTO_ARTIFACT',
+			uuid: 'c0ada2dd-92eb-400b-b63c-1fd04d41996c',
+			name: '§9Fermento Artifact',
+			lore: ['§7Melon Slice Fortune: §6+30'],
+			enchantments: null,
+			attributes: {},
+			active: true,
+		};
+		const mooshroomPet = {
+			uuid: '89e8c216-27e4-4676-8bb8-45cef53ffac6',
+			type: 'MOOSHROOM_COW',
+			exp: 62379651.709864475,
+			active: true,
+			tier: 'LEGENDARY',
+			heldItem: 'GREEN_BANDANA',
+			candyUsed: 0,
+			skin: null,
+		};
+		const player = new FarmingPlayer({
+			accessories: [fermentoArtifact],
+			pets: [mooshroomPet],
+			farmingLevel: 50,
+		});
+
+		// Calling without a crop should trigger General Fortune Only mode
+		const generalFortune = player.getCropFortune(undefined);
+
+		// Fermento Artifact is crop-specific (has crops list), so it should NOT be in General Fortune
+		expect(generalFortune.breakdown['§9Fermento Artifact']).toBeUndefined();
+
+		// Mooshroom Cow provides general stats, so it SHOULD be in General Fortune
+		expect(generalFortune.breakdown['Mooshroom Cow']).toBeDefined();
+
+		// Farming Level should be there
+		expect(generalFortune.breakdown['Farming Level']).toBeDefined();
+
+		// Ensure total matches breakdown sum
+		const sum = Object.values(generalFortune.breakdown).reduce((acc, val) => acc + val.value, 0);
+		expect(generalFortune.fortune).toBeCloseTo(sum, 2);
+	});
+
+	test('Full breakdown example', () => {
+		const raw: PlayerOptions = JSON.parse(JSON.stringify(fullBreakdownExample));
+		const player = new FarmingPlayer(raw);
+
+		const totalFortune = player.getCropFortune(Crop.Melon).fortune;
+
+		expect(totalFortune).toBeCloseTo(1746.9, 1);
 	});
 });

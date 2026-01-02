@@ -37,38 +37,38 @@ export interface FarmingEnchant {
 	levelRequirement?: number;
 }
 
-const turboEnchant = {
-	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+const createTurboEnchant = (stat: Stat) => ({
+	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe] as const,
 	minLevel: 1,
 	maxLevel: 5,
 	levels: {
 		1: {
 			stats: {
-				[Stat.FarmingFortune]: 5,
+				[stat]: 5,
 			},
 		},
 		2: {
 			stats: {
-				[Stat.FarmingFortune]: 10,
+				[stat]: 10,
 			},
 		},
 		3: {
 			stats: {
-				[Stat.FarmingFortune]: 15,
+				[stat]: 15,
 			},
 		},
 		4: {
 			stats: {
-				[Stat.FarmingFortune]: 20,
+				[stat]: 20,
 			},
 		},
 		5: {
 			stats: {
-				[Stat.FarmingFortune]: 25,
+				[stat]: 25,
 			},
 		},
 	},
-};
+});
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	harvesting: {
@@ -381,80 +381,80 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		name: 'Turbo-Cacti',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',
 		cropSpecific: Crop.Cactus,
-		...turboEnchant,
+		...createTurboEnchant(Stat.CactusFortune),
 	},
 	turbo_cane: {
 		name: 'Turbo-Cane',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cane_Enchantment',
 		cropSpecific: Crop.SugarCane,
-		...turboEnchant,
+		...createTurboEnchant(Stat.SugarCaneFortune),
 	},
 	turbo_carrot: {
 		name: 'Turbo-Carrot',
 		wiki: 'https://wiki.hypixel.net/Turbo-Carrot_Enchantment',
 		cropSpecific: Crop.Carrot,
-		...turboEnchant,
+		...createTurboEnchant(Stat.CarrotFortune),
 	},
 	turbo_coco: {
 		name: 'Turbo-Cocoa',
 		id: 'ENCHANTMENT_TURBO_COCO',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
 		cropSpecific: Crop.CocoaBeans,
-		...turboEnchant,
+		...createTurboEnchant(Stat.CocoaBeanFortune),
 	},
 	turbo_melon: {
 		name: 'Turbo-Melon',
 		wiki: 'https://wiki.hypixel.net/Turbo-Melon_Enchantment',
 		cropSpecific: Crop.Melon,
-		...turboEnchant,
+		...createTurboEnchant(Stat.MelonFortune),
 	},
 	turbo_mushrooms: {
 		name: 'Turbo-Mushrooms',
 		wiki: 'https://wiki.hypixel.net/Turbo-Mushrooms_Enchantment',
 		cropSpecific: Crop.Mushroom,
-		...turboEnchant,
+		...createTurboEnchant(Stat.MushroomFortune),
 	},
 	turbo_potato: {
 		name: 'Turbo-Potato',
 		wiki: 'https://wiki.hypixel.net/Turbo-Potato_Enchantment',
 		cropSpecific: Crop.Potato,
-		...turboEnchant,
+		...createTurboEnchant(Stat.PotatoFortune),
 	},
 	turbo_pumpkin: {
 		name: 'Turbo-Pumpkin',
 		wiki: 'https://wiki.hypixel.net/Turbo-Pumpkin_Enchantment',
 		cropSpecific: Crop.Pumpkin,
-		...turboEnchant,
+		...createTurboEnchant(Stat.PumpkinFortune),
 	},
 	turbo_warts: {
 		name: 'Turbo-Warts',
 		wiki: 'https://wiki.hypixel.net/Turbo-Warts_Enchantment',
 		cropSpecific: Crop.NetherWart,
-		...turboEnchant,
+		...createTurboEnchant(Stat.NetherWartFortune),
 	},
 	turbo_wheat: {
 		name: 'Turbo-Wheat',
 		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
 		cropSpecific: Crop.Wheat,
-		...turboEnchant,
+		...createTurboEnchant(Stat.WheatFortune),
 	},
 	turbo_rose: {
 		name: 'Turbo-Rose',
 		wiki: 'https://wiki.hypixel.net/Turbo-Rose_Enchantment',
 		cropSpecific: Crop.WildRose,
-		...turboEnchant,
+		...createTurboEnchant(Stat.WildRoseFortune),
 	},
 	turbo_moonflower: {
 		name: 'Turbo-Moonflower',
 		wiki: 'https://wiki.hypixel.net/Turbo-Moonflower_Enchantment',
 		cropSpecific: Crop.Moonflower,
-		...turboEnchant,
+		...createTurboEnchant(Stat.MoonflowerFortune),
 	},
 	turbo_sunflower: {
 		name: 'Turbo-Sunflower',
 		wiki: 'https://wiki.hypixel.net/Turbo-Sunflower_Enchantment',
 		cropSpecific: Crop.Sunflower,
-		...turboEnchant,
+		...createTurboEnchant(Stat.SunflowerFortune),
 	},
 	ultimate_crop_fever: {
 		name: 'Crop Fever',

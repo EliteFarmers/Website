@@ -176,26 +176,11 @@
 			: undefined,
 	} as PlayerOptions);
 
-	$effect(() => {
-		const seen = [] as unknown[];
-		console.log(
-			JSON.stringify(options, function (key, val) {
-				if (val != null && typeof val == 'object') {
-					if (seen.indexOf(val) >= 0) {
-						return;
-					}
-					seen.push(val);
-				}
-				return val;
-			})
-		);
-	});
-
 	// svelte-ignore state_referenced_locally
 	let player = $state(getRatesPlayer(options));
 
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
-	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
+	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? undefined));
 	const selectedCropKey = $derived(cropKey(selectedCrop));
 
 	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
@@ -354,7 +339,7 @@
 
 	const calculatorOptions = $derived.by(() => {
 		return {
-			farmingFortune: $player.fortune + cropFortune.fortune,
+			farmingFortune: cropFortune.fortune,
 			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
 			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
 			blocksBroken: blocksActuallyBroken,
@@ -382,8 +367,8 @@
 		}).getWeightInfo().cropWeight;
 	});
 
-	const totalFortune = $derived($player.fortune + cropFortune.fortune);
-	const fortuneBreakdown = $derived({ ...$player.breakdown, ...cropFortune.breakdown });
+	const totalFortune = $derived(cropFortune.fortune);
+	const fortuneBreakdown = $derived(cropFortune.breakdown);
 
 	$effect(() => {
 		if (selectedToolId !== untrack(() => selectedTool?.item.uuid)) {

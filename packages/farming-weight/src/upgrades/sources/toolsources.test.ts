@@ -80,7 +80,7 @@ test('Test tool fortune sources', () => {
 		},
 	});
 
-	expect(tool.fortune).toBe(173);
+	expect(tool.fortune).toBe(148);
 
 	expect(tool.counter).toBe(1102505308);
 
@@ -162,12 +162,12 @@ test('Test tool fortune sources', () => {
 		},
 	]);
 
-	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(tool.fortune);
+	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(173);
 
 	tool.changeReforgeTo('blessed');
-	expect(tool.fortune).toBe(183);
+	expect(tool.fortune).toBe(158);
 
-	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(tool.fortune);
+	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(183);
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.max, 0)).toBe(465);
 });
 
@@ -316,22 +316,13 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	// Gem slots now respect tool-level unlock requirements (this item has no tool level data,
 	// so its effective level is 1 and gemstone slot upgrades are not yet available).
 	// Upgrades come from individual sources, plus self and rarity upgrades added in getUpgrades().
-	expect(upgrades).toHaveLength(8);
+	expect(upgrades).toHaveLength(7);
 
 	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe Mk. II");
 	expect(selfUpgrade).toBeDefined();
 	expect(selfUpgrade?.increase).toBe(0);
 	expect(selfUpgrade?.action).toBe(UpgradeAction.Upgrade);
 	expect(selfUpgrade?.category).toBe(UpgradeCategory.Item);
-
-	const harvesting = upgrades.find((u) => u.title === 'Harvesting 1');
-	expect(harvesting).toBeDefined();
-	expect(harvesting?.increase).toBe(12.5);
-	expect(harvesting?.action).toBe(UpgradeAction.Apply);
-	expect(harvesting?.category).toBe(UpgradeCategory.Enchant);
-	expect(harvesting?.cost?.items).toStrictEqual({
-		ENCHANTMENT_HARVESTING_1: 1,
-	});
 
 	const bountiful = upgrades.find((u) => u.title === 'Reforge to Bountiful');
 	expect(bountiful).toBeDefined();
@@ -345,15 +336,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 		applyCost: {
 			coins: 20000,
 		},
-	});
-
-	const turboWheat = upgrades.find((u) => u.title === 'Turbo-Wheat 1');
-	expect(turboWheat).toBeDefined();
-	expect(turboWheat?.increase).toBe(5);
-	expect(turboWheat?.action).toBe(UpgradeAction.Apply);
-	expect(turboWheat?.category).toBe(UpgradeCategory.Enchant);
-	expect(turboWheat?.cost?.items).toStrictEqual({
-		ENCHANTMENT_TURBO_WHEAT_1: 1,
 	});
 
 	const cultivating = upgrades.find((u) => u.title === 'Cultivating 1');

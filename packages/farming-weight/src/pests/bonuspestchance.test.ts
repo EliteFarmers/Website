@@ -10,8 +10,9 @@ test('Wriggling Larva contributes Bonus Pest Chance', () => {
 	});
 
 	const breakdown = player.getStatBreakdown(Stat.BonusPestChance);
-	expect(breakdown.value).toBe(6);
-	expect(breakdown.breakdown['Wriggling Larva']).toBe(6);
+	const total = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
+	expect(total).toBe(6);
+	expect(breakdown['Wriggling Larva'].value).toBe(6);
 
 	const progress = player.getProgress([Stat.BonusPestChance]);
 	const larva = progress.find((p) => p.name === 'Wriggling Larva');
@@ -41,5 +42,6 @@ test('Biohazard armor pieces provide Bonus Pest Chance', () => {
 	});
 
 	const bpc = player.getStatBreakdown(Stat.BonusPestChance);
-	expect(bpc.value).toBe(66);
+	const total = Object.values(bpc).reduce((acc, val) => acc + val.value, 0);
+	expect(total).toBe(66);
 });

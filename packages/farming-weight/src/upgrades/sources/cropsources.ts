@@ -1,4 +1,5 @@
-import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
+import { getChipLevel } from '../../constants/chips.js';
+import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
@@ -36,18 +37,12 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		maxStat: ({ player, crop }, stat) => {
 			const tool = player.getSelectedCropTool(crop) ?? getFakeItem(CROP_INFO[crop].startingTool);
 			const progress = tool?.getProgress([stat], false) ?? [];
-			return progress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.max : 0)),
-				0
-			);
+			return progress.reduce((acc, p) => acc + (p.stats?.[stat]?.max ?? 0), 0);
 		},
 		currentStat: ({ player, crop }, stat) => {
 			const tool = player.getSelectedCropTool(crop);
 			const progress = tool?.getProgress([stat], false) ?? [];
-			return progress.reduce(
-				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.current : 0)),
-				0
-			);
+			return progress.reduce((acc, p) => acc + (p.stats?.[stat]?.current ?? 0), 0);
 		},
 		progress: ({ player, crop }, stats) => {
 			const tool = player.getSelectedCropTool(crop);
@@ -100,9 +95,25 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		name: GARDEN_CROP_UPGRADES.name,
 		exists: () => true,
 		wiki: () => GARDEN_CROP_UPGRADES.wiki,
-		max: () => GARDEN_CROP_UPGRADES.fortunePerLevel * GARDEN_CROP_UPGRADES.maxLevel,
 		current: ({ player, crop }) => {
 			return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
+		},
+		max: ({ crop }) => {
+			return GARDEN_CROP_UPGRADES.fortunePerLevel * GARDEN_CROP_UPGRADES.maxLevel;
+		},
+		maxStat: ({ crop }, stat) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			if (fortuneType === stat) {
+				return GARDEN_CROP_UPGRADES.fortunePerLevel * GARDEN_CROP_UPGRADES.maxLevel;
+			}
+			return 0;
+		},
+		currentStat: ({ player, crop }, stat) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			if (fortuneType === stat) {
+				return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
+			}
+			return 0;
 		},
 		upgrades: ({ player, crop }) => {
 			const level = player.options.cropUpgrades?.[crop] ?? 0;
@@ -113,7 +124,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					title: GARDEN_CROP_UPGRADES.name,
 					increase: GARDEN_CROP_UPGRADES.fortunePerLevel,
 					stats: {
-						[Stat.FarmingFortune]: GARDEN_CROP_UPGRADES.fortunePerLevel,
+						[CROP_INFO[crop].fortuneType]: GARDEN_CROP_UPGRADES.fortunePerLevel,
 					},
 					action: UpgradeAction.Upgrade,
 					wiki: GARDEN_CROP_UPGRADES.wiki,
@@ -132,9 +143,23 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		name: COCOA_FORTUNE_UPGRADE.name,
 		exists: ({ crop }) => crop === Crop.CocoaBeans,
 		wiki: () => COCOA_FORTUNE_UPGRADE.wiki,
-		max: () => COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel,
 		current: ({ player }) => {
 			return (player.options.cocoaFortuneUpgrade ?? 0) * COCOA_FORTUNE_UPGRADE.fortunePerLevel;
+		},
+		max: () => {
+			return COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel;
+		},
+		maxStat: ({ crop }, stat) => {
+			if (stat === Stat.CocoaBeanFortune) {
+				return COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel;
+			}
+			return 0;
+		},
+		currentStat: ({ player, crop }, stat) => {
+			if (stat === Stat.CocoaBeanFortune) {
+				return (player.options.cocoaFortuneUpgrade ?? 0) * COCOA_FORTUNE_UPGRADE.fortunePerLevel;
+			}
+			return 0;
 		},
 		upgrades: ({ player }) => {
 			const level = player.options.cocoaFortuneUpgrade ?? 0;
@@ -145,7 +170,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					title: COCOA_FORTUNE_UPGRADE.name,
 					increase: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
 					stats: {
-						[Stat.FarmingFortune]: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+						[Stat.CocoaBeanFortune]: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
 					},
 					action: UpgradeAction.Upgrade,
 					repeatable: COCOA_FORTUNE_UPGRADE.maxLevel - level,
@@ -166,6 +191,10 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 			const active = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
 			);
+
+			// If we have the highest tier, it's a general source, so we don't list it as a crop source
+			if (active?.info.skyblockId === 'HELIANTHUS_RELIC') return false;
+
 			if (!active) return true;
 
 			if (active.info.crops && active.info.crops.includes(crop)) {
@@ -180,18 +209,42 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 			);
 			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN?.wiki;
 		},
-		max: () => FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[Stat.FarmingFortune] ?? 0,
+		max: ({ crop }) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			return Math.max(
+				FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0,
+				FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.baseStats?.[Stat.FarmingFortune] ?? 0
+			);
+		},
 		current: ({ player, crop }) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+			);
+			if (!highest) return 0;
+			return highest.getStat(fortuneType) || highest.getStat(Stat.FarmingFortune);
+		},
+		maxStat: ({ crop }, stat) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			if (fortuneType === stat) {
+				return Math.max(
+					FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0,
+					FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.baseStats?.[Stat.FarmingFortune] ?? 0
+				);
+			}
+			return 0;
+		},
+		currentStat: ({ player, crop }, stat) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
 			const highest = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
 			);
 			if (!highest) return 0;
 
-			if (highest.info.crops && !highest.info.crops.includes(crop)) {
-				return 0;
+			if (fortuneType === stat) {
+				return highest.getStat(fortuneType) || highest.getStat(Stat.FarmingFortune);
 			}
-
-			return highest.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+			return 0;
 		},
 		info: ({ player }) => {
 			const highest = player.activeAccessories.find(
@@ -251,6 +304,28 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					},
 				},
 			];
+		},
+	},
+	{
+		name: 'Overdrive Chip',
+		exists: ({ player, crop }) => {
+			return !!(player.options.jacobContest?.enabled && player.options.jacobContest.crop === crop);
+		},
+		wiki: () => 'https://wiki.hypixel.net/Overdrive_Chip',
+		max: () => 25,
+		current: ({ player, crop }) => {
+			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
+			const level = getChipLevel(player.options.chips?.OVERDRIVE_GARDEN_CHIP);
+			return 5 * level;
+		},
+		currentStat: ({ player, crop }, stat) => {
+			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			if (fortuneType === stat) {
+				const level = getChipLevel(player.options.chips?.OVERDRIVE_GARDEN_CHIP);
+				return 5 * level;
+			}
+			return 0;
 		},
 	},
 ];

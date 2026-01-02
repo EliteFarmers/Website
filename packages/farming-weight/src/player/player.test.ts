@@ -24,12 +24,12 @@ test('Temp fortune test', () => {
 	});
 
 	expect(player.tempFortuneBreakdown).toStrictEqual({
-		'Century Cake': 5,
-		'Refined Dark Cacao Truffle': 30,
-		'Pest Turn-In': 200,
-		'Harvest Harbinger Potion': 50,
-		'Magic 8 Ball': 25,
-		'Spring Filter': 25,
+		'Century Cake': { value: 5, stat: Stat.FarmingFortune },
+		'Refined Dark Cacao Truffle': { value: 30, stat: Stat.FarmingFortune },
+		'Pest Turn-In': { value: 200, stat: Stat.FarmingFortune },
+		'Harvest Harbinger Potion': { value: 50, stat: Stat.FarmingFortune },
+		'Magic 8 Ball': { value: 25, stat: Stat.FarmingFortune },
+		'Spring Filter': { value: 25, stat: Stat.FarmingFortune },
 	});
 });
 
@@ -44,7 +44,7 @@ test('Hypercharge chip temp fortune scaling test', () => {
 	});
 
 	// Doubled
-	expect(player.tempFortuneBreakdown['Century Cake']).toBe(10);
+	expect(player.tempFortuneBreakdown['Century Cake'].value).toBe(10);
 });
 
 test('Garden chips stat contribution test', () => {
@@ -100,7 +100,7 @@ test('Overdrive chip contest crop fortune test', () => {
 	});
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
-	expect(cropFortune.breakdown['Overdrive Chip']).toBe(100);
+	expect(cropFortune.breakdown['Overdrive Chip'].value).toBe(100);
 
 	const other = player.getCropFortune(Crop.Carrot);
 	expect(other.breakdown['Overdrive Chip']).toBeUndefined();
@@ -136,9 +136,7 @@ test('Max attribute shard fortune test', () => {
 	const fortune = player.breakdown;
 
 	expect(fortune).toStrictEqual({
-		'Lunar Moth Shard': 50,
-		'Galaxy Fish Shard': 10,
-		'Termite Shard': 30,
+		'Attribute Shards': { value: 90, stat: Stat.FarmingFortune },
 	});
 });
 
@@ -182,7 +180,7 @@ test('Crop specific pet fortune test', () => {
 	expect(cropFortune).toBeDefined();
 
 	expect(cropFortune.breakdown).toStrictEqual({
-		Mosquito: 86.62,
+		Mosquito: { value: 86.62, stat: Stat.SugarCaneFortune },
 	});
 });
 

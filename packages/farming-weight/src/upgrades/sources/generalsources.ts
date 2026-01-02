@@ -1,29 +1,29 @@
 import {
-	FARMING_ATTRIBUTE_SHARDS,
-	getShardFortune,
-	getShardLevel,
-	getShardsForLevel,
-	getShardsForNextLevel,
+    FARMING_ATTRIBUTE_SHARDS,
+    getShardFortune,
+    getShardLevel,
+    getShardsForLevel,
+    getShardsForNextLevel,
 } from '../../constants/attributes.js';
 import {
-	GARDEN_CHIP_MAX_LEVEL,
-	GARDEN_CHIPS,
-	type GardenChipInfo,
-	getChipLevel,
-	getChipRarity,
+    GARDEN_CHIP_MAX_LEVEL,
+    GARDEN_CHIPS,
+    type GardenChipInfo,
+    getChipLevel,
+    getChipRarity,
 } from '../../constants/chips.js';
 import type { Crop } from '../../constants/crops.js';
 import { Rarity } from '../../constants/reforges.js';
 import {
-	ANITA_FORTUNE_UPGRADE,
-	COMMUNITY_CENTER_UPGRADE,
-	DNA_MILESTONE_SOURCE,
-	FARMING_LEVEL,
-	FILLED_ROSEWATER_FLASK_SOURCE,
-	PEST_BESTIARY_SOURCE,
-	REFINED_TRUFFLE_SOURCE,
-	UNLOCKED_PLOTS,
-	WRIGGLING_LARVA_SOURCE,
+    ANITA_FORTUNE_UPGRADE,
+    COMMUNITY_CENTER_UPGRADE,
+    DNA_MILESTONE_SOURCE,
+    FARMING_LEVEL,
+    FILLED_ROSEWATER_FLASK_SOURCE,
+    PEST_BESTIARY_SOURCE,
+    REFINED_TRUFFLE_SOURCE,
+    UNLOCKED_PLOTS,
+    WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
@@ -146,6 +146,20 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				return acc + fortunePerLevel * level;
 			}, 0);
 			return totalCurrent;
+		},
+		maxStat: (player, stat) => {
+			return Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
+				const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
+				return acc + per * GARDEN_CHIP_MAX_LEVEL;
+			}, 0);
+		},
+		currentStat: (player, stat) => {
+			return Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
+				const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+				const rarity = getChipRarity(level);
+				const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
+				return acc + per * level;
+			}, 0);
 		},
 		progress: (player, stats) => {
 			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, stats);
