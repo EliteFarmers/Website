@@ -1,4 +1,3 @@
-import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
@@ -34,20 +33,17 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Rare,
-		crops: [
-			Crop.Wheat,
-			Crop.Carrot,
-			Crop.Potato,
-			Crop.Pumpkin,
-			Crop.Melon,
-			Crop.Mushroom,
-			Crop.CocoaBeans,
-			Crop.NetherWart,
-			Crop.Cactus,
-			Crop.SugarCane,
-		],
 		baseStats: {
-			[Stat.FarmingFortune]: 30,
+			[Stat.WheatFortune]: 30,
+			[Stat.CarrotFortune]: 30,
+			[Stat.PotatoFortune]: 30,
+			[Stat.PumpkinFortune]: 30,
+			[Stat.MelonFortune]: 30,
+			[Stat.MushroomFortune]: 30,
+			[Stat.CocoaBeanFortune]: 30,
+			[Stat.NetherWartFortune]: 30,
+			[Stat.CactusFortune]: 30,
+			[Stat.SugarCaneFortune]: 30,
 		},
 	},
 	SQUASH_RING: {
@@ -66,9 +62,14 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Uncommon,
-		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
 		baseStats: {
-			[Stat.FarmingFortune]: 20,
+			[Stat.WheatFortune]: 20,
+			[Stat.CarrotFortune]: 20,
+			[Stat.PotatoFortune]: 20,
+			[Stat.PumpkinFortune]: 20,
+			[Stat.MelonFortune]: 20,
+			[Stat.MushroomFortune]: 20,
+			[Stat.CocoaBeanFortune]: 20,
 		},
 	},
 	CROPIE_TALISMAN: {
@@ -87,9 +88,10 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 			},
 		},
 		maxRarity: Rarity.Common,
-		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],
 		baseStats: {
-			[Stat.FarmingFortune]: 10,
+			[Stat.WheatFortune]: 10,
+			[Stat.CarrotFortune]: 10,
+			[Stat.PotatoFortune]: 10,
 		},
 	},
 	POWER_RELIC: {

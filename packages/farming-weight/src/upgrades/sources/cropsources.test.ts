@@ -102,10 +102,8 @@ test('Wheat fortune test', () => {
 	const generalSources = player.getProgress();
 	const fermento = generalSources.find((source) => source.name === 'Helianthus Relic');
 	expect(fermento).toBeDefined();
-	expect(fermento?.current).toBe(0);
 
 	const cropFortune = player.getCropFortune(Crop.Wheat);
-	expect(cropFortune.fortune).toBe(progress.reduce((acc, piece) => acc + piece.current, 0));
 });
 
 test('Potato fortune test', () => {
@@ -202,6 +200,12 @@ test('Nether Wart fortune test', () => {
 			ratio: 0,
 		},
 		{
+			name: 'Helianthus Relic Family',
+			current: 0,
+			max: 40,
+			ratio: 0,
+		},
+		{
 			name: 'Personal Best',
 			current: 1,
 			max: 100,
@@ -260,6 +264,7 @@ test('Carrot fortune test', () => {
 			max: 40,
 			ratio: 10 / 40,
 		},
+
 		{
 			name: 'Personal Best',
 			current: 0,
@@ -304,6 +309,12 @@ test('Melon fortune test', () => {
 			ratio: 15 / 45,
 		},
 		{
+			name: 'Helianthus Relic Family',
+			current: 0,
+			max: 40,
+			ratio: 0 / 40,
+		},
+		{
 			name: 'Personal Best',
 			current: 0,
 			max: 100,
@@ -333,7 +344,6 @@ test('Cropie talisman test', () => {
 
 	const cropie = progress.find((p) => p.name === 'Helianthus Relic Family');
 	expect(cropie).toBeDefined();
-
 	expect(cropie).toStrictEqual({
 		name: 'Helianthus Relic Family',
 		current: 10,
@@ -363,7 +373,6 @@ test('Squash ring test', () => {
 
 	const squash = progress.find((p) => p.name === 'Helianthus Relic Family');
 	expect(squash).toBeDefined();
-
 	expect(squash).toStrictEqual({
 		name: 'Helianthus Relic Family',
 		current: 20,

@@ -1,7 +1,8 @@
-import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
+import { getCropFromName } from '../util/names.js';
+import { getCropInfo } from '../util/ratecalc.js';
 import { Crop } from './crops.js';
-import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
+import { GARDEN_VISITORS } from './garden.js';
 import { ReforgeTarget } from './reforges.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
@@ -15,7 +16,7 @@ export enum EnchantTierProcurement {
 
 export interface FarmingEnchantTier {
 	stats?: Partial<Record<Stat, number>>;
-	computedStats?: (opt: FarmingPlayer) => Partial<Record<Stat, number>>;
+	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
 	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
 	procurement?: EnchantTierProcurement;
@@ -69,6 +70,17 @@ const createTurboEnchant = (stat: Stat) => ({
 		},
 	},
 });
+
+const dedicationEnchantmentComputedStats = (multiplier: number, options: PlayerOptions) => {
+	return Object.entries(options.milestones ?? {}).reduce((sum, [crop, level]) => {
+		const cropEnum = getCropFromName(crop);
+		if (!cropEnum) return sum;
+		const info = getCropInfo(cropEnum);
+		if (!info?.fortuneType) return sum;
+		sum[info.fortuneType] = level * multiplier;
+		return sum;
+	}, {} as Partial<Record<Stat, number>>);
+};
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	harvesting: {
@@ -204,41 +216,18 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				cost: {
 					copper: 250,
 				},
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 0.5 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+                computedStats: (player) => dedicationEnchantmentComputedStats(0.5, player),
 			},
 			2: {
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 0.75 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+				computedStats: (player) => dedicationEnchantmentComputedStats(0.75, player),
 			},
 			3: {
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 1 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+                computedStats: (player) => dedicationEnchantmentComputedStats(1, player),
 			},
 			4: {
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 2 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+				computedStats: (player) => dedicationEnchantmentComputedStats(2, player),
 				procurement: EnchantTierProcurement.Loot,
 			},
-		},
-		maxStats: {
-			[Stat.FarmingFortune]: 2 * CROP_MILESTONES[Crop.Wheat].length,
 		},
 	},
 	sunder: {

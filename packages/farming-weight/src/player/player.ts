@@ -1,5 +1,5 @@
 import { type GardenChipId, getChipLevel, getChipTempMultiplierPerLevel, normalizeChipId } from '../constants/chips.js';
-import { type Crop, CROP_INFO } from '../constants/crops.js';
+import { CROP_INFO, type Crop } from '../constants/crops.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';

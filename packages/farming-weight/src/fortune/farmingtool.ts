@@ -1,6 +1,6 @@
-import type { Crop } from '../constants/crops.js';
+import { type Crop, CROP_INFO } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
+import { type Rarity, type Reforge, REFORGES, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { TOOL_EXP_LEVELS } from '../constants/toollevels.js';
 import type { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
@@ -324,7 +324,13 @@ export class FarmingTool extends UpgradeableBase {
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
 			for (const crop of this.crops) {
-				const fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
+				let fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
+				const cropStat = CROP_INFO[crop]?.fortuneType;
+
+				if (cropStat) {
+					fortune += getStatFromEnchant(level, enchantment, cropStat, this.options, crop);
+				}
+
 				if (fortune > 0) {
 					this.fortuneBreakdown[enchantment.name] = fortune;
 					sum += fortune;

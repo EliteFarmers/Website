@@ -33,6 +33,7 @@
 		createFarmingPlayer,
 		createFarmingWeightCalculator,
 		Crop,
+		CROP_INFO,
 		FarmingArmor,
 		FarmingPet,
 		FarmingPets,
@@ -692,13 +693,24 @@
 						<div class="flex w-full items-center justify-center">
 							<p class="font-semibold">Select a crop above to see its fortune!</p>
 						</div>
-					{:else}
+					{:else if CROP_INFO[selectedCropKey]}
 						<CategoryProgress
 							name="{selectedCrop || 'Wheat'} Fortune"
-							progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat, [
+							progress={$player.getCropProgress(selectedCropKey, [
 								Stat.FarmingFortune,
+								CROP_INFO[selectedCropKey].fortuneType,
+								Stat.BonusPestChance,
+								...(selectedTool?.crops.map((c) => CROP_INFO[c]?.fortuneType) ?? []),
 							])}
-							expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+							expandUpgrade={(u) =>
+								$player.expandUpgrade(u, {
+									stats: [
+										Stat.FarmingFortune,
+										CROP_INFO[selectedCropKey].fortuneType,
+										Stat.BonusPestChance,
+										...(selectedTool?.crops.map((c) => CROP_INFO[c]?.fortuneType) ?? []),
+									],
+								})}
 							costFn={getUpgradeCost}
 							items={itemsData}
 							equip={(p) => getToolEquipConfig(p, cropToolSwitchOptions)}
@@ -713,16 +725,18 @@
 					{/if}
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
-						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+						progress={$player.armorSet.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])}
+						expandUpgrade={(u) =>
+							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
 						equip={(p) => getGearEquipConfig(p)}
 					/>
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune])}
-						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+						progress={$player.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])}
+						expandUpgrade={(u) =>
+							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
 						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}

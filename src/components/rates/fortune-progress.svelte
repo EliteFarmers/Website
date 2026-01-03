@@ -29,6 +29,39 @@
 		};
 	});
 
+	function getStatColor(stat: Stat, ratio: number): string | null {
+		switch (stat) {
+			case Stat.MelonFortune:
+				return ratio < 1 ? 'bg-melon/70' : 'bg-melon';
+			case Stat.PumpkinFortune:
+				return ratio < 1 ? 'bg-pumpkin/70' : 'bg-pumpkin';
+			case Stat.CactusFortune:
+				return ratio < 1 ? 'bg-cactus/70' : 'bg-cactus';
+			case Stat.SugarCaneFortune:
+				return ratio < 1 ? 'bg-sugarcane/70' : 'bg-sugarcane';
+			case Stat.CarrotFortune:
+				return ratio < 1 ? 'bg-carrot/70' : 'bg-carrot';
+			case Stat.PotatoFortune:
+				return ratio < 1 ? 'bg-potato/70' : 'bg-potato';
+			case Stat.WheatFortune:
+				return ratio < 1 ? 'bg-wheat/70' : 'bg-wheat';
+			case Stat.MushroomFortune:
+				return ratio < 1 ? 'bg-mushroom/70' : 'bg-mushroom';
+			case Stat.CocoaBeanFortune:
+				return ratio < 1 ? 'bg-cocoa/70' : 'bg-cocoa';
+			case Stat.MoonflowerFortune:
+				return ratio < 1 ? 'bg-moonflower/70' : 'bg-moonflower';
+			case Stat.NetherWartFortune:
+				return ratio < 1 ? 'bg-netherwart/70' : 'bg-netherwart';
+			case Stat.SunflowerFortune:
+				return ratio < 1 ? 'bg-sunflower/70' : 'bg-sunflower';
+			case Stat.WildRoseFortune:
+				return ratio < 1 ? 'bg-wildrose/70' : 'bg-wildrose';
+			default:
+				return null;
+		}
+	}
+
 	// let maxed = $derived(progress.ratio >= 1);
 	// let readable = $derived(
 	// 	(maxed
@@ -105,6 +138,8 @@
     ratio: number;
 } -->
 	{#each Object.entries(progress.stats ?? {}) as [stat, statProgress] (stat)}
+		{@const color = getStatColor(stat as Stat, statProgress.ratio)}
+
 		<ProgressBar
 			{barBg}
 			percent={statProgress.ratio * 100}
@@ -120,7 +155,7 @@
 				STAT_ICONS[stat as Stat]}
 			disabled={progress.active?.active === false}
 			maxed={statProgress.ratio >= 1}
-			fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : undefined}
+			fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : color ? color : undefined}
 		/>
 	{:else}
 		{#each Object.entries(progress.progress ?? {}) as [stat, statProgress] (stat)}

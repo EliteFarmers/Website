@@ -83,6 +83,11 @@ function getStatFromTier(
 
 	if (options) {
 		value += tier.computed?.[s]?.(options) ?? 0;
+
+		const computedStats = tier.computedStats?.(options);
+		if (computedStats) {
+			value += computedStats[s] ?? 0;
+		}
 	}
 
 	if (crop && (!enchant.cropSpecific || enchant.cropSpecific === crop)) {

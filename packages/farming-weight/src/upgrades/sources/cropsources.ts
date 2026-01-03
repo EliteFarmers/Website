@@ -1,5 +1,5 @@
 import { getChipLevel } from '../../constants/chips.js';
-import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
+import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
@@ -192,16 +192,15 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
 			);
 
-			// If we have the highest tier, it's a general source, so we don't list it as a crop source
-			if (active?.info.skyblockId === 'HELIANTHUS_RELIC') return false;
+			// If we have the highest tier but it doesn't give crop specific fortune, it's a general source
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			if (active) return true;
 
-			if (!active) return true;
-
-			if (active.info.crops && active.info.crops.includes(crop)) {
-				return true;
-			}
-
-			return false;
+			// If we don't have it, check if the max tier gives fortune for this crop
+			return (
+				(FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0) > 0 ||
+				(FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.baseStats?.[fortuneType] ?? 0) > 0
+			);
 		},
 		wiki: ({ player }) => {
 			const highest = player.activeAccessories.find(

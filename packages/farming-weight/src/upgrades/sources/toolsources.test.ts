@@ -80,7 +80,7 @@ test('Test tool fortune sources', () => {
 		},
 	});
 
-	expect(tool.fortune).toBe(148);
+	expect(tool.fortune).toBe(173);
 
 	expect(tool.counter).toBe(1102505308);
 
@@ -165,7 +165,7 @@ test('Test tool fortune sources', () => {
 	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(173);
 
 	tool.changeReforgeTo('blessed');
-	expect(tool.fortune).toBe(158);
+	expect(tool.fortune).toBe(183);
 
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(183);
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.max, 0)).toBe(465);

@@ -1,69 +1,88 @@
+
 import { describe, expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
 import { Stat } from '../constants/stats.js';
+import { FARMING_TOOLS } from '../items/tools.js';
 import { FarmingPlayer } from '../player/player.js';
+import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
+import { FarmingTool } from './farmingtool.js';
 
-describe('Tool Fortune Discrepancy', () => {
-	test('Tool value in breakdown should match tool stats', () => {
-		const rawTool = {
-			id: 279,
-			count: 1,
-			damage: 0,
-			skyblockId: 'MELON_DICER_3',
-			uuid: 'd1feb274-900e-4809-9721-20079ad54af7',
-			name: '§6Bountiful Melon Dicer Mk. III',
-			lore: ['§7Farming Fortune: §6+133.62 §2(+5) §9(+7) §d(+24)', '§7Melon Slice Fortune: §6+323.34'],
-			enchantments: {
-				sunder: 6,
-				delicate: 5,
-				dedication: 4,
-				efficiency: 5,
-				cultivating: 10,
-				turbo_melon: 5,
-				ultimate_crop_fever: 5,
-			},
-			attributes: {
-				modifier: 'bountiful',
-				timestamp: '1765393163935',
-				levelable_exp: '156051.23374950708',
-				levelable_lvl: '50',
-				rarity_upgrades: '1',
-				farmed_cultivating: '327447047',
-				levelable_overclocks: '10',
-				farming_for_dummies_count: '5',
-			},
-			gems: {
-				PERIDOT_0: 'FLAWLESS',
-				PERIDOT_1: 'FLAWLESS',
-				PERIDOT_2: 'FLAWLESS',
-				PERIDOT_3: 'FLAWLESS',
-			},
-			slot: '0',
-		};
-
-		// Mock player options/context if needed for Dedication/Turbo
-		const options = {
-			farmingLevel: 50,
-			uniqueVisitors: 100, // guess
-			milestones: { MELON: 46 }, // matches sample
-			medals: { gold: 10 }, // ensure turbo works
-			tools: [rawTool],
-		};
-
-		const player = new FarmingPlayer(options);
-		const tool = player.tools[0];
-
-		// Direct Tool Stats
-		const farmFortune = tool.getStat(Stat.FarmingFortune);
-		const melonFortune = tool.getStat(Stat.MelonFortune);
-		console.log('Tool FarmingFortune:', farmFortune);
-		console.log('Tool MelonFortune:', melonFortune);
-		console.log('Tool Total (Sum):', farmFortune + melonFortune);
-
-		// Player Breakdown
-		const breakdown = player.getCropFortune(Crop.Melon).breakdown;
-		const toolContribution = breakdown['Farming Tool']?.value;
-
-		expect(toolContribution).toBeCloseTo(farmFortune + melonFortune, 2);
+describe('Dedication Display Discrepancy', () => {
+	const netherwartHoe = FARMING_TOOLS.THEORETICAL_HOE_WARTS_3;
+	const player = new FarmingPlayer({
+		milestones: {
+			[Crop.NetherWart]: 46, // Dedication 4 multiplier 2 = 92
+		},
 	});
+
+	const tool = new FarmingTool(
+		{
+			...netherwartHoe,
+			enchantments: {
+				dedication: 4,
+                turbo_warts: 5,
+			},
+            attributes: {
+                farming_for_dummies_count: '0',
+            }
+		},
+		player.options
+	);
+
+	test('Dedication should have correct max and current for Nether Wart Fortune', () => {
+		// Find Dedication source
+		const dedicationSource = TOOL_FORTUNE_SOURCES.find((s) => s.name === 'Dedication');
+		expect(dedicationSource).toBeDefined();
+
+		if (!dedicationSource) return;
+
+		// Calculate values for NetherWartFortune
+		const current = dedicationSource.currentStat(tool, Stat.NetherWartFortune);
+		const max = dedicationSource.maxStat(tool, Stat.NetherWartFortune);
+
+		// Current should be 92 (46 * 2)
+		expect(current).toBe(92);
+		// Max should represent the potential (which with current milestones is also 92)
+        // Previously it was 0 because of the maxStats bug.
+		expect(max).toBe(92);
+	});
+
+    test('Dedication should NOT appear for Farming Fortune', () => {
+        const dedicationSource = TOOL_FORTUNE_SOURCES.find((s) => s.name === 'Dedication');
+        expect(dedicationSource).toBeDefined();
+        if (!dedicationSource) return;
+
+        // Dedication only provides crop fortune now.
+        // So for FarmingFortune it should be 0.
+        const current = dedicationSource.currentStat(tool, Stat.FarmingFortune);
+        const max = dedicationSource.maxStat(tool, Stat.FarmingFortune);
+
+        expect(current).toBe(0);
+        expect(max).toBe(0); // If max is 0, it won't show in the UI list for FarmingFortune
+    });
+
+    test('Tool Header (Sum of Maxes) should be consistent', () => {
+        // Imitate how UI sums up maxes for a category
+        // Category: Farming Tool
+        // Stat: NetherWartFortune
+        let totalCurrent = 0;
+        let totalMax = 0;
+
+        for (const source of TOOL_FORTUNE_SOURCES) {
+            if (source.exists(tool)) {
+                totalCurrent += source.currentStat(tool, Stat.NetherWartFortune);
+                totalMax += source.maxStat(tool, Stat.NetherWartFortune);
+            }
+        }
+
+        // Contributors:
+        // Dedication: 92 / 92
+        // Turbo-Warts: 25 / 25
+        // Tool Level: 0 / 0 (provides FF)
+        // Reforge: 0 / 0 (provides FF)
+        
+        // Total should be 117 / 117
+        expect(totalCurrent).toBe(117);
+        expect(totalMax).toBe(117);
+    });
 });
