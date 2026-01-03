@@ -1,5 +1,5 @@
 import { getChipLevel } from '../../constants/chips.js';
-import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
+import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
@@ -72,6 +72,18 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		current: ({ player, crop }) => {
 			return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
 		},
+        maxStat: ({ crop }, stat) => {
+            if (stat === CROP_INFO[crop].fortuneType) {
+                return EXPORTABLE_CROP_FORTUNE;
+            }
+            return 0;
+        },
+        currentStat: ({ player, crop }, stat) => {
+            if (stat === CROP_INFO[crop].fortuneType) {
+                return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
+            }
+            return 0;
+        },
 		upgrades: ({ player, crop }) => {
 			if (player.options.exportableCrops?.[crop]) return [];
 
@@ -80,11 +92,10 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					title: 'Exportable Crop',
 					increase: EXPORTABLE_CROP_FORTUNE,
 					stats: {
-						[Stat.FarmingFortune]: EXPORTABLE_CROP_FORTUNE,
+						[CROP_INFO[crop].fortuneType]: EXPORTABLE_CROP_FORTUNE,
 					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
-					api: false,
 					wiki: 'https://wiki.hypixel.net/Carrolyn',
 					cost: CROP_INFO[crop].exportableCost,
 				},
@@ -271,6 +282,19 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				player.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
 			return fortuneFromPersonalBestContest(crop, personalBest ?? 0);
 		},
+		maxStat: ({ crop }, stat) => {
+			if (stat === CROP_INFO[crop].fortuneType) return 100;
+			return 0;
+		},
+		currentStat: ({ player, crop }, stat) => {
+			if (stat === CROP_INFO[crop].fortuneType) {
+				const personalBest =
+					player.options.personalBests?.[getItemIdFromCrop(crop)] ??
+					player.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
+				return fortuneFromPersonalBestContest(crop, personalBest ?? 0);
+			}
+			return 0;
+		},
 		upgrades: ({ player, crop }) => {
 			if (player.options.personalBestsUnlocked) return [];
 
@@ -284,7 +308,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 					title: 'Personal Best Fortune',
 					increase: increase,
 					stats: {
-						[Stat.FarmingFortune]: increase,
+						[CROP_INFO[crop].fortuneType]: increase,
 					},
 					action: UpgradeAction.Unlock,
 					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',

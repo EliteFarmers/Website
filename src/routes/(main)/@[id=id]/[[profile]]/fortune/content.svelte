@@ -699,16 +699,14 @@
 							progress={$player.getCropProgress(selectedCropKey, [
 								Stat.FarmingFortune,
 								CROP_INFO[selectedCropKey].fortuneType,
-								Stat.BonusPestChance,
-								...(selectedTool?.crops.map((c) => CROP_INFO[c]?.fortuneType) ?? []),
+								// Stat.BonusPestChance,
 							])}
 							expandUpgrade={(u) =>
 								$player.expandUpgrade(u, {
 									stats: [
 										Stat.FarmingFortune,
 										CROP_INFO[selectedCropKey].fortuneType,
-										Stat.BonusPestChance,
-										...(selectedTool?.crops.map((c) => CROP_INFO[c]?.fortuneType) ?? []),
+										// Stat.BonusPestChance,
 									],
 								})}
 							costFn={getUpgradeCost}
@@ -725,18 +723,16 @@
 					{/if}
 					<CategoryProgress
 						name="Gear Fortune"
-						progress={$player.armorSet.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])}
-						expandUpgrade={(u) =>
-							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+						progress={$player.armorSet.getProgress([Stat.FarmingFortune])}
+						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
 						equip={(p) => getGearEquipConfig(p)}
 					/>
 					<CategoryProgress
 						name="General Fortune"
-						progress={$player.getProgress([Stat.FarmingFortune, Stat.BonusPestChance])}
-						expandUpgrade={(u) =>
-							$player.expandUpgrade(u, { stats: [Stat.FarmingFortune, Stat.BonusPestChance] })}
+						progress={$player.getProgress([Stat.FarmingFortune])}
+						expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
 						costFn={getUpgradeCost}
 						items={itemsData}
 						equip={(p) => getToolEquipConfig(p, allToolOptions) ?? getGearEquipConfig(p)}

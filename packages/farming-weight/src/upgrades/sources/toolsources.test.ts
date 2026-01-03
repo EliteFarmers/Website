@@ -316,7 +316,7 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	// Gem slots now respect tool-level unlock requirements (this item has no tool level data,
 	// so its effective level is 1 and gemstone slot upgrades are not yet available).
 	// Upgrades come from individual sources, plus self and rarity upgrades added in getUpgrades().
-	expect(upgrades).toHaveLength(7);
+	expect(upgrades).toHaveLength(6);
 
 	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe Mk. II");
 	expect(selfUpgrade).toBeDefined();
@@ -345,15 +345,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	expect(cultivating?.category).toBe(UpgradeCategory.Enchant);
 	expect(cultivating?.cost?.items).toStrictEqual({
 		ENCHANTMENT_CULTIVATING_1: 1,
-	});
-
-	const dedication = upgrades.find((u) => u.title === 'Dedication 1');
-	expect(dedication).toBeDefined();
-	expect(dedication?.increase).toBe(0);
-	expect(dedication?.action).toBe(UpgradeAction.Apply);
-	expect(dedication?.category).toBe(UpgradeCategory.Enchant);
-	expect(dedication?.cost?.items).toStrictEqual({
-		ENCHANTMENT_DEDICATION_1: 1,
 	});
 
 	const farmingForDummies = upgrades.find((u) => u.title === 'Farming For Dummies');
@@ -392,9 +383,6 @@ test('Tier 3 Cane Hoe Upgrades (crop stat includes Farming Fortune upgrades)', (
 
 	const peridot2 = upgrades.find((u) => u.meta?.type === 'gem' && u.meta?.slot === 'PERIDOT_2');
 	expect(peridot2).toBeDefined();
-
-	const dedication = upgrades.find((u) => u.title === 'Dedication 1');
-	expect(dedication).toBeDefined();
 });
 
 const wildRoseHoe = {

@@ -17,10 +17,24 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Tool Level',
 		exists: () => true,
-		max: () => 50 * 4,
-		current: (tool) => tool.level * 4,
-		maxStat: (_tool, stat) => (stat === Stat.FarmingFortune ? 50 * 4 : 0),
-		currentStat: (tool, stat) => (stat === Stat.FarmingFortune ? tool.level * 4 : 0),
+		max: (tool) => 50 * 4 * tool.crops.length,
+		current: (tool) => tool.level * 4 * tool.crops.length,
+		maxStat: (tool, stat) => {
+			for (const crop of tool.crops) {
+				if (stat === CROP_INFO[crop]?.fortuneType) {
+					return 50 * 4;
+				}
+			}
+			return 0;
+		},
+		currentStat: (tool, stat) => {
+			for (const crop of tool.crops) {
+				if (stat === CROP_INFO[crop]?.fortuneType) {
+					return tool.level * 4;
+				}
+			}
+			return 0;
+		},
 		info: (tool) => ({
 			item: tool.item,
 			info: tool.info,

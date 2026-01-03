@@ -76,13 +76,13 @@ describe('Dedication Display Discrepancy', () => {
         }
 
         // Contributors:
+        // Tool Level: 4 / 200 (now provides crop-specific fortune)
         // Dedication: 92 / 92
         // Turbo-Warts: 25 / 25
-        // Tool Level: 0 / 0 (provides FF)
         // Reforge: 0 / 0 (provides FF)
         
-        // Total should be 117 / 117
-        expect(totalCurrent).toBe(117);
-        expect(totalMax).toBe(117);
+        // Total should be 121 / 317
+        expect(totalCurrent).toBe(121);
+        expect(totalMax).toBe(317);
     });
 });

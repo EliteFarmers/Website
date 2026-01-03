@@ -245,12 +245,18 @@ export class FarmingTool extends UpgradeableBase {
 	getStat(stat: Stat): number {
 		let sum = 0;
 
+		// Tool level gives 4 crop-specific fortune per level
+		for (const crop of this.crops) {
+			if (stat === CROP_INFO[crop]?.fortuneType) {
+				sum += this.level * 4;
+				break;
+			}
+		}
+
 		if (stat === Stat.FarmingFortune) {
-			sum += this.level * 4;
 			sum += this.farmingForDummies;
 
 			// Axed Perk gives +2% of Total Fortune as Farming Fortune
-			// We calculate this by running getFortune (which updates breakdown) and reading the value
 			this.getFortune();
 			sum += this.fortuneBreakdown['Axed Perk'] ?? 0;
 		}
