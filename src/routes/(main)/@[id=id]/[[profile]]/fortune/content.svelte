@@ -259,7 +259,9 @@
 			// Check if this is a tool and call getUpgrades() directly on the tool
 			const tool = $player.tools.find((t) => t.item.uuid === uuid);
 			if (tool) {
-				return tool.getUpgrades({ stat: Stat.FarmingFortune });
+				// Use crop-specific fortune type if available
+				const stat = tool.crops[0] ? CROP_INFO[tool.crops[0]]?.fortuneType : Stat.FarmingFortune;
+				return tool.getUpgrades({ stat: stat ?? Stat.FarmingFortune });
 			}
 		}
 		// Fall back to the progress upgrades

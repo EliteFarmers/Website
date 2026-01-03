@@ -1,5 +1,5 @@
 import { getChipLevel } from '../../constants/chips.js';
-import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
+import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
@@ -72,18 +72,18 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		current: ({ player, crop }) => {
 			return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
 		},
-        maxStat: ({ crop }, stat) => {
-            if (stat === CROP_INFO[crop].fortuneType) {
-                return EXPORTABLE_CROP_FORTUNE;
-            }
-            return 0;
-        },
-        currentStat: ({ player, crop }, stat) => {
-            if (stat === CROP_INFO[crop].fortuneType) {
-                return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
-            }
-            return 0;
-        },
+		maxStat: ({ crop }, stat) => {
+			if (stat === CROP_INFO[crop].fortuneType) {
+				return EXPORTABLE_CROP_FORTUNE;
+			}
+			return 0;
+		},
+		currentStat: ({ player, crop }, stat) => {
+			if (stat === CROP_INFO[crop].fortuneType) {
+				return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
+			}
+			return 0;
+		},
 		upgrades: ({ player, crop }) => {
 			if (player.options.exportableCrops?.[crop]) return [];
 

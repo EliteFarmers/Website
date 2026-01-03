@@ -103,7 +103,12 @@ test('Wheat fortune test', () => {
 	const fermento = generalSources.find((source) => source.name === 'Helianthus Relic');
 	expect(fermento).toBeDefined();
 
-	const cropFortune = player.getCropFortune(Crop.Wheat);
+	// const cropFortune = player.getCropFortune(Crop.Wheat);
+	// expect(cropFortune).toStrictEqual({
+	// 	current: 12,
+	// 	max: 12,
+	// 	ratio: 1,
+	// });
 });
 
 test('Potato fortune test', () => {

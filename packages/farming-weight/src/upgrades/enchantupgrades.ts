@@ -53,10 +53,14 @@ export function getUpgradeableEnchant(
 			if (val !== 0) deltaStats[stat] = val;
 		}
 		// Some enchants (e.g. Dedication) are crop-computed and can evaluate to 0
-		// without player context. Preserve a FarmingFortune stat key so stat-filtered
-		// views can still include these upgrades.
-		if (maxForStat > 0 && deltaStats[Stat.FarmingFortune] === undefined) {
-			deltaStats[Stat.FarmingFortune] = 0;
+		// without player context. Preserve stat keys so stat-filtered views include them.
+		if (maxForStat > 0) {
+			if (stat !== Stat.FarmingFortune && deltaStats[stat] === undefined) {
+				deltaStats[stat] = 0;
+			}
+			if (deltaStats[Stat.FarmingFortune] === undefined) {
+				deltaStats[Stat.FarmingFortune] = 0;
+			}
 		}
 		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
@@ -102,8 +106,13 @@ export function getUpgradeableEnchant(
 		const diff = after - before;
 		if (diff !== 0) deltaStats[stat] = diff;
 	}
-	if (maxForStat > 0 && deltaStats[Stat.FarmingFortune] === undefined) {
-		deltaStats[Stat.FarmingFortune] = 0;
+	if (maxForStat > 0) {
+		if (stat !== Stat.FarmingFortune && deltaStats[stat] === undefined) {
+			deltaStats[stat] = 0;
+		}
+		if (deltaStats[Stat.FarmingFortune] === undefined) {
+			deltaStats[Stat.FarmingFortune] = 0;
+		}
 	}
 	const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 

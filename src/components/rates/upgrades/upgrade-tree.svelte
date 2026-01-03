@@ -106,7 +106,7 @@
 			</div>
 
 			<div class="min-w-0">
-				<div class="text-sm leading-tight font-semibold wrap-break-word sm:truncate sm:leading-none">
+				<div class="text-sm leading-tight font-semibold wrap-break-word sm:truncate">
 					<ItemName name={upgrade.title} />
 				</div>
 			</div>

@@ -72,14 +72,17 @@ const createTurboEnchant = (stat: Stat) => ({
 });
 
 const dedicationEnchantmentComputedStats = (multiplier: number, options: PlayerOptions) => {
-	return Object.entries(options.milestones ?? {}).reduce((sum, [crop, level]) => {
-		const cropEnum = getCropFromName(crop);
-		if (!cropEnum) return sum;
-		const info = getCropInfo(cropEnum);
-		if (!info?.fortuneType) return sum;
-		sum[info.fortuneType] = level * multiplier;
-		return sum;
-	}, {} as Partial<Record<Stat, number>>);
+	return Object.entries(options.milestones ?? {}).reduce(
+		(sum, [crop, level]) => {
+			const cropEnum = getCropFromName(crop);
+			if (!cropEnum) return sum;
+			const info = getCropInfo(cropEnum);
+			if (!info?.fortuneType) return sum;
+			sum[info.fortuneType] = level * multiplier;
+			return sum;
+		},
+		{} as Partial<Record<Stat, number>>
+	);
 };
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
@@ -216,13 +219,13 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				cost: {
 					copper: 250,
 				},
-                computedStats: (player) => dedicationEnchantmentComputedStats(0.5, player),
+				computedStats: (player) => dedicationEnchantmentComputedStats(0.5, player),
 			},
 			2: {
 				computedStats: (player) => dedicationEnchantmentComputedStats(0.75, player),
 			},
 			3: {
-                computedStats: (player) => dedicationEnchantmentComputedStats(1, player),
+				computedStats: (player) => dedicationEnchantmentComputedStats(1, player),
 			},
 			4: {
 				computedStats: (player) => dedicationEnchantmentComputedStats(2, player),
