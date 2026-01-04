@@ -1,6 +1,4 @@
-import { dev } from '$app/environment';
 import { command, getRequestEvent, query } from '$app/server';
-import { RATE_LIMIT_IP, RATE_LIMIT_IPUA, RATE_LIMIT_PROFILE, RATE_LIMIT_SECRET } from '$env/static/private';
 import {
 	getAccount,
 	getPlayerRecap,
@@ -11,7 +9,6 @@ import {
 } from '$lib/api';
 import type { ProfileDetails, ProfileGameMode } from '$lib/api/elite';
 import { IsIGNOrUUID } from '$params/id';
-import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import * as z from 'zod';
 
 export const GetAccount = query(zodGetAccountParams, async (params) => {
@@ -65,17 +62,6 @@ export const toggleRecapVisibilityCommand = command(
 	}
 );
 
-const limiter = new RateLimiter({
-	IP: [+RATE_LIMIT_IP, '10m'],
-	IPUA: [+RATE_LIMIT_IPUA, '10m'],
-	cookie: {
-		name: 'profile_rate_limit',
-		secret: RATE_LIMIT_SECRET,
-		rate: [+RATE_LIMIT_PROFILE, '10s'],
-		preflight: true,
-	},
-});
-
 export const getProfilesAccount = query(
 	z.object({
 		id: z.string(),
@@ -87,16 +73,11 @@ export const getProfilesAccount = query(
 		}
 		const event = getRequestEvent();
 
-		if (!dev) {
-			await limiter.cookieLimiter?.preflight(event);
+		const { data: account, response } = await getAccount(id.replaceAll('-', ''));
 
-			const limited = await limiter.isLimited(event);
-			if (limited) {
-				return { code: 429, error: "You're opening too many profiles! Please slow down." };
-			}
+		if (response.status === 429) {
+			return { code: 429, error: "You're opening too many profiles! Please slow down." };
 		}
-
-		const { data: account } = await getAccount(id.replaceAll('-', ''));
 
 		if (!account?.id || !account.name) {
 			return { code: 404, error: 'Player not found' };
