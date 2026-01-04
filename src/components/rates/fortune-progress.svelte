@@ -2,12 +2,13 @@
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
+	import { getStatColor } from '$lib/format';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import Info from '@lucide/svelte/icons/info';
 	import OctagonAlert from '@lucide/svelte/icons/octagon-alert';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Stat, STAT_ICONS, type FortuneSourceProgress } from 'farming-weight';
+	import { Stat, STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
 
 	interface Props {
 		progress: FortuneSourceProgress;
@@ -28,39 +29,6 @@
 			active: p.active,
 		};
 	});
-
-	function getStatColor(stat: Stat, ratio: number): string | null {
-		switch (stat) {
-			case Stat.MelonFortune:
-				return ratio < 1 ? 'bg-melon/70' : 'bg-melon';
-			case Stat.PumpkinFortune:
-				return ratio < 1 ? 'bg-pumpkin/70' : 'bg-pumpkin';
-			case Stat.CactusFortune:
-				return ratio < 1 ? 'bg-cactus/70' : 'bg-cactus';
-			case Stat.SugarCaneFortune:
-				return ratio < 1 ? 'bg-sugarcane/70' : 'bg-sugarcane';
-			case Stat.CarrotFortune:
-				return ratio < 1 ? 'bg-carrot/70' : 'bg-carrot';
-			case Stat.PotatoFortune:
-				return ratio < 1 ? 'bg-potato/70' : 'bg-potato';
-			case Stat.WheatFortune:
-				return ratio < 1 ? 'bg-wheat/70' : 'bg-wheat';
-			case Stat.MushroomFortune:
-				return ratio < 1 ? 'bg-mushroom/70' : 'bg-mushroom';
-			case Stat.CocoaBeanFortune:
-				return ratio < 1 ? 'bg-cocoa/70' : 'bg-cocoa';
-			case Stat.MoonflowerFortune:
-				return ratio < 1 ? 'bg-moonflower/70' : 'bg-moonflower';
-			case Stat.NetherWartFortune:
-				return ratio < 1 ? 'bg-netherwart/70' : 'bg-netherwart';
-			case Stat.SunflowerFortune:
-				return ratio < 1 ? 'bg-sunflower/70' : 'bg-sunflower';
-			case Stat.WildRoseFortune:
-				return ratio < 1 ? 'bg-wildrose/70' : 'bg-wildrose';
-			default:
-				return null;
-		}
-	}
 
 	// let maxed = $derived(progress.ratio >= 1);
 	// let readable = $derived(
@@ -157,11 +125,7 @@
 						statProgress.max.toLocaleString() +
 						' ' +
 						STAT_ICONS[stat as Stat]}
-					expanded={(statProgress.current || 0).toLocaleString() +
-						' / ' +
-						statProgress.max.toLocaleString() +
-						' ' +
-						STAT_ICONS[stat as Stat]}
+					expanded={STAT_ICONS[stat as Stat] + ' ' + STAT_NAMES[stat as Stat]}
 					disabled={progress.active?.active === false}
 					maxed={statProgress.ratio >= 1}
 					fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : color ? color : undefined}

@@ -17,8 +17,8 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Tool Level',
 		exists: () => true,
-		max: (tool) => 50 * 4 * tool.crops.length,
-		current: (tool) => tool.level * 4 * tool.crops.length,
+		max: () => 50 * 4,
+		current: (tool) => tool.level * 4,
 		maxStat: (tool, stat) => {
 			for (const crop of tool.crops) {
 				if (stat === CROP_INFO[crop]?.fortuneType) {
@@ -145,10 +145,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		max: (upgradeable) => {
 			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			return (
-				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
-				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
-			);
+			const peridotSlots = last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
+			const maxRarity = last?.maxRarity ?? Rarity.Common;
+			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		current: (upgradeable) => {
 			return getPeridotFortune(upgradeable.rarity, upgradeable.item);
@@ -156,10 +155,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		maxStat: (upgradeable, stat) => {
 			if (stat !== Stat.FarmingFortune) return 0;
 			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
-			return (
-				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
-				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
-			);
+			const peridotSlots = last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0;
+			const maxRarity = last?.maxRarity ?? Rarity.Common;
+			return peridotSlots * getPeridotGemFortune(maxRarity, GemRarity.Perfect);
 		},
 		currentStat: (upgradeable, stat) =>
 			stat === Stat.FarmingFortune ? getPeridotFortune(upgradeable.rarity, upgradeable.item) : 0,
@@ -309,6 +307,18 @@ function enchantSourceBuilder(
 			enchant.appliesTo.includes(tool.type) &&
 			(!enchant.cropSpecific || tool.crops.includes(enchant.cropSpecific)),
 		max: (tool) => {
+			// For multi-crop tools (e.g., Eclipse Hoe), take the best single-crop value to avoid double counting
+			if (tool.crops.length > 1) {
+				let best = 0;
+				for (const crop of tool.crops) {
+					best = Math.max(
+						best,
+						getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop)
+					);
+				}
+				return best || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, CROP_INFO[crop].fortuneType, tool.options, crop);
@@ -316,6 +326,32 @@ function enchantSourceBuilder(
 			return sum || getMaxStatFromEnchant(enchant, Stat.FarmingFortune, tool.options, tool.crops[0]);
 		},
 		current: (tool) => {
+			if (tool.crops.length > 1) {
+				let best = 0;
+				for (const crop of tool.crops) {
+					best = Math.max(
+						best,
+						getStatFromEnchant(
+							tool.item.enchantments?.[id] ?? 0,
+							enchant,
+							CROP_INFO[crop].fortuneType,
+							tool.options,
+							crop
+						)
+					);
+				}
+				return (
+					best ||
+					getStatFromEnchant(
+						tool.item.enchantments?.[id] ?? 0,
+						enchant,
+						Stat.FarmingFortune,
+						tool.options,
+						tool.crops[0]
+					)
+				);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getStatFromEnchant(
@@ -338,6 +374,23 @@ function enchantSourceBuilder(
 			);
 		},
 		maxStat: (tool, stat) => {
+			if (stat === Stat.FarmingFortune && tool.crops.length > 1) {
+				let best = 0;
+				for (const crop of tool.crops) {
+					best = Math.max(best, getMaxStatFromEnchant(enchant, stat, tool.options, crop));
+				}
+				return best || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
+			}
+
+			if (stat !== Stat.FarmingFortune && CROP_FORTUNE_STATS.has(stat)) {
+				let best = 0;
+				for (const crop of tool.crops) {
+					if (CROP_INFO[crop]?.fortuneType !== stat) continue;
+					best = Math.max(best, getMaxStatFromEnchant(enchant, stat, tool.options, crop));
+				}
+				return best || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getMaxStatFromEnchant(enchant, stat, tool.options, crop);
@@ -345,6 +398,35 @@ function enchantSourceBuilder(
 			return sum || getMaxStatFromEnchant(enchant, stat, tool.options, tool.crops[0]);
 		},
 		currentStat: (tool, stat) => {
+			if (stat === Stat.FarmingFortune && tool.crops.length > 1) {
+				let best = 0;
+				for (const crop of tool.crops) {
+					best = Math.max(
+						best,
+						getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop)
+					);
+				}
+				return (
+					best ||
+					getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, tool.crops[0])
+				);
+			}
+
+			if (stat !== Stat.FarmingFortune && CROP_FORTUNE_STATS.has(stat)) {
+				let best = 0;
+				for (const crop of tool.crops) {
+					if (CROP_INFO[crop]?.fortuneType !== stat) continue;
+					best = Math.max(
+						best,
+						getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop)
+					);
+				}
+				return (
+					best ||
+					getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, tool.crops[0])
+				);
+			}
+
 			let sum = 0;
 			for (const crop of tool.crops) {
 				sum += getStatFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, stat, tool.options, crop);

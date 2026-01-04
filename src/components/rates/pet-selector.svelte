@@ -54,6 +54,10 @@
 			.slice(0, show)
 	);
 
+	const selectedPetBreakdown = $derived(
+		$player.selectedPet ? $player.selectedPet.getFullBreakdown($player) : undefined
+	);
+
 	function onSelectedChange(type: string, pet: FarmingPet) {
 		const petId = pet.pet.uuid ?? '';
 		activeId = { ...activeId, [type]: petId };
@@ -70,7 +74,7 @@
 	<div class="flex w-full items-center justify-between px-1 pt-2">
 		<p class="text-lg font-semibold">Farming Pet</p>
 		{#if $player.selectedPet}
-			<FortuneBreakdown breakdown={$player.selectedPet.breakdown} />
+			<FortuneBreakdown breakdown={selectedPetBreakdown} />
 		{:else}
 			<FortuneBreakdown total={0} />
 		{/if}
@@ -140,7 +144,7 @@
 							</Popover.Mobile>
 						{/if}
 						{#key $player}
-							<FortuneBreakdown breakdown={pet.breakdown} />
+							<FortuneBreakdown breakdown={pet.getFullBreakdown($player)} />
 						{/key}
 					</div>
 				</div>

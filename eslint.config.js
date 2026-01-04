@@ -50,6 +50,12 @@ export default ts.config(
 		files: ['**/*.ts', '**/*.svelte'],
 		rules: {
 			'no-undef': 'off', // TypeScript checks for this already
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: ['farming-weight/dist/*'],
+				},
+			],
 		},
 	}
 );

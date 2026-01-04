@@ -62,12 +62,15 @@ export function getUpgradeableEnchant(
 				deltaStats[Stat.FarmingFortune] = 0;
 			}
 		}
-		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+		const hasStats = Object.keys(deltaStats).length > 0;
+		const stats = hasStats ? deltaStats : undefined;
+		const increase = stats?.[Stat.FarmingFortune] ?? 0;
 
 		result.push({
 			title: enchant.name + ' 1',
 			increase,
-			stats: deltaStats,
+			stats,
 			wiki: enchant.wiki,
 			action:
 				!procurement || procurement === EnchantTierProcurement.Normal
@@ -114,7 +117,10 @@ export function getUpgradeableEnchant(
 			deltaStats[Stat.FarmingFortune] = 0;
 		}
 	}
-	const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+	const hasStats = Object.keys(deltaStats).length > 0;
+	const stats = hasStats ? deltaStats : undefined;
+	const increase = stats?.[Stat.FarmingFortune] ?? 0;
 
 	const nextEnchant = enchant.levels[applied + 1];
 	if (!nextEnchant) return result;
@@ -153,7 +159,7 @@ export function getUpgradeableEnchant(
 	result.push({
 		title: enchant.name + ' ' + (applied + 1),
 		increase,
-		stats: deltaStats,
+		stats,
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
 		conflictKey: `enchant:${enchantId}:${applied + 1}`,

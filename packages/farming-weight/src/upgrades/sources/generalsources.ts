@@ -816,6 +816,7 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			return [
 				{
 					title: `${chip.name} ${nextLevel}`,
+					api: false,
 					increase: deltaStats[Stat.FarmingFortune] ?? 0,
 					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
 					action: UpgradeAction.LevelUp,

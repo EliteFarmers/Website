@@ -199,19 +199,20 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	{
 		name: 'Helianthus Relic Family',
 		exists: ({ player, crop }) => {
+			const fortuneType = CROP_INFO[crop].fortuneType;
+			const artifactFortune = FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0;
+
+			// Crop is unsupported if Fermento Artifact lacks this fortune stat
+			if (artifactFortune <= 0) return false;
+
 			const active = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
 			);
 
-			// If we have the highest tier but it doesn't give crop specific fortune, it's a general source
-			const fortuneType = CROP_INFO[crop].fortuneType;
-			if (active) return true;
+			// Helianthus Relic provides general fortune only; treat as non-existent for crop sources
+			if (active?.info.skyblockId === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.skyblockId) return false;
 
-			// If we don't have it, check if the max tier gives fortune for this crop
-			return (
-				(FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0) > 0 ||
-				(FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.baseStats?.[fortuneType] ?? 0) > 0
-			);
+			return true;
 		},
 		wiki: ({ player }) => {
 			const highest = player.activeAccessories.find(
@@ -221,10 +222,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		},
 		max: ({ crop }) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
-			return Math.max(
-				FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0,
-				FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.baseStats?.[Stat.FarmingFortune] ?? 0
-			);
+			return Math.max(FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0);
 		},
 		current: ({ player, crop }) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
@@ -237,10 +235,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		maxStat: ({ crop }, stat) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
 			if (fortuneType === stat) {
-				return Math.max(
-					FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0,
-					FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.baseStats?.[Stat.FarmingFortune] ?? 0
-				);
+				return Math.max(FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0);
 			}
 			return 0;
 		},

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import * as Popover from '$ui/popover';
-	import { STAT_ICONS, Stat, type FortuneUpgrade } from 'farming-weight';
+	import { STAT_ICONS, STAT_NAMES, Stat, type FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
@@ -58,7 +58,7 @@
 	// const hasContent = $derived(primaryStat.value !== 0 || otherStats.length > 0 || upgrade.max);
 	const isNegative = $derived(primaryStat.value < 0);
 	const maxOnly = $derived(primaryStat.value === 0 && upgrade.max && upgrade.max > 0);
-	const forCompletion = $derived(primaryStat.value === 0 && !upgrade.max);
+	const forCompletion = $derived(upgrade.stats === undefined && primaryStat.value === 0);
 
 	const background = $derived(
 		maxOnly || forCompletion ? 'bg-progress/40' : isNegative ? 'bg-destructive/60' : 'bg-progress'
@@ -76,12 +76,12 @@
 		>
 			<span>{STAT_ICONS[primaryStat.stat] ?? '☘'}</span>
 			<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
-				{primaryStat.value !== 0 ? (+primaryStat.value.toFixed(2)).toLocaleString() : maxOnly ? '0' : '—'}
+				{primaryStat.value !== 0 ? (+primaryStat.value.toFixed(2)).toLocaleString() : '0'}
 			</span>
 		</div>
 	{/snippet}
 	<div class="flex max-w-xs flex-col gap-2">
-		<p class="text-lg font-semibold">Upgrade Stats</p>
+		<p class="font-semibold">Upgrade Stats</p>
 
 		<div class="flex flex-col gap-1">
 			{#if primaryStat.value !== 0}
@@ -90,7 +90,7 @@
 				>
 					<p class="flex items-center gap-1">
 						<span>{STAT_ICONS[primaryStat.stat] ?? '☘'}</span>
-						{primaryStat.stat}
+						{STAT_NAMES[primaryStat.stat] ?? primaryStat.stat}
 					</p>
 					<p class={primaryStat.value < 0 ? 'text-destructive' : ''}>
 						{primaryStat.value > 0 ? '+' : ''}{(+primaryStat.value.toFixed(2)).toLocaleString()}
@@ -103,7 +103,7 @@
 				>
 					<p class="flex items-center gap-1">
 						<span>{STAT_ICONS[stat] ?? ''}</span>
-						{stat}
+						{STAT_NAMES[stat] ?? stat}
 					</p>
 					<p class={value < 0 ? 'text-destructive' : ''}>
 						{value > 0 ? '+' : ''}{(+value.toFixed(2)).toLocaleString()}
@@ -114,15 +114,15 @@
 
 		{#if isNegative}
 			<p class="text-muted-foreground max-w-sm text-sm">
-				This upgrade is suggested despite lower fortune because it increases profit per hour.
+				This upgrade is suggested despite lower stats because it increases profit per hour.
 			</p>
+		{:else if forCompletion}
+			<p class="text-muted-foreground max-w-sm text-sm">This upgrade is shown for completion!</p>
 		{:else if maxOnly}
 			<p class="text-muted-foreground max-w-sm text-sm">
 				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune
 				as you upgrade it later.
 			</p>
-		{:else if forCompletion}
-			<p class="text-muted-foreground max-w-sm text-sm">This upgrade is shown for completion!</p>
 		{/if}
 	</div>
 </Popover.Mobile>

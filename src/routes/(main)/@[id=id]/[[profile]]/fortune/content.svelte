@@ -183,6 +183,25 @@
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? undefined));
 	const selectedCropKey = $derived(cropKey(selectedCrop));
+	const selectedCropFortuneType = $derived(selectedCropKey ? CROP_INFO[selectedCropKey]?.fortuneType : undefined);
+
+	const cropOnlyFortune = $derived.by(() => {
+		if (!selectedCropKey || !selectedCropFortuneType) return 0;
+		return Object.values(cropFortune.breakdown ?? {})
+			.filter((entry) => entry.stat === selectedCropFortuneType)
+			.reduce((sum, entry) => sum + entry.value, 0);
+	});
+
+	const cropOnlyBreakdown = $derived.by(() => {
+		if (!selectedCropKey || !selectedCropFortuneType) return {};
+		const filtered: typeof cropFortune.breakdown = {};
+		for (const [key, entry] of Object.entries(cropFortune.breakdown ?? {})) {
+			if (entry.stat === selectedCropFortuneType) {
+				filtered[key] = entry;
+			}
+		}
+		return filtered;
+	});
 
 	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
 	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune]));
@@ -428,14 +447,12 @@
 
 					<Fortunebreakdown
 						title="{selectedCrop} Fortune"
-						total={$player.getCropFortune(selectedCropKey).fortune}
-						breakdown={$player.getCropFortune(selectedCropKey).breakdown}
+						total={cropOnlyFortune}
+						breakdown={cropOnlyBreakdown}
 					>
 						<p class="text-xs">
-							This fortune is not representative of the actual "{selectedCrop} Fortune" stat seen in-game.
-							Currently, it includes all crop-related options on this page instead of breaking up the fortune
-							into its components. For example, farming tools also have general fortune, but it's included
-							here instead.
+							This shows only {selectedCrop} Fortune sources. Total farming fortune (including crop fortune)
+							is shown above.
 						</p>
 					</Fortunebreakdown>
 				</div>

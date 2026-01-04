@@ -321,16 +321,11 @@ describe('Fortune breakdown totals should match calculated fortune', () => {
 			farmingLevel: 50,
 		});
 
-		// Calling without a crop should trigger General Fortune Only mode
+		// Calling without a crop should trigger General Fortune only mode
 		const generalFortune = player.getCropFortune(undefined);
 
-		// Fermento Artifact is crop-specific (has crops list), so it should NOT be in General Fortune
 		expect(generalFortune.breakdown['§9Fermento Artifact']).toBeUndefined();
-
-		// Mooshroom Cow provides general stats, so it SHOULD be in General Fortune
 		expect(generalFortune.breakdown['Mooshroom Cow']).toBeDefined();
-
-		// Farming Level should be there
 		expect(generalFortune.breakdown['Farming Level']).toBeDefined();
 
 		// Ensure total matches breakdown sum

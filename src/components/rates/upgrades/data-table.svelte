@@ -45,7 +45,7 @@
 	let columnVisibility = $state<VisibilityState>(initialVisibility);
 	let columnFilters = $state<ColumnFiltersState>(initialFilters);
 	let sorting = $state<SortingState>(initialSorting);
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 20 });
 
 	const table = createSvelteTable({
 		get data() {

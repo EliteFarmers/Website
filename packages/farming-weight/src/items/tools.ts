@@ -1,4 +1,5 @@
 import { Crop } from '../constants/crops.js';
+import { ITEM_IDS } from '../constants/itemids.js';
 import { Rarity, ReforgeTarget } from '../constants/reforges.js';
 import { UpgradeReason } from '../constants/upgrades.js';
 import { FarmingToolType, type ItemDefinition } from './definitions.js';
@@ -223,6 +224,16 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: t1Gems,
 		name: 'Cactus Knife Mk. I',
 		wiki: 'https://wiki.hypixel.net/Cactus_Knife',
+		upgrade: {
+			id: 'CACTUS_KNIFE_2',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_CACTUS: 32,
+					JACOBS_TICKET: 64,
+				},
+			},
+		},
 	},
 	CACTUS_KNIFE_2: {
 		skyblockId: 'CACTUS_KNIFE_2',
@@ -232,6 +243,16 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: t2Gems,
 		name: 'Cactus Knife Mk. II',
 		wiki: 'https://wiki.hypixel.net/Cactus_Knife',
+		upgrade: {
+			id: 'CACTUS_KNIFE_3',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_CACTUS: 128,
+					JACOBS_TICKET: 256,
+				},
+			},
+		},
 	},
 	CACTUS_KNIFE_3: {
 		skyblockId: 'CACTUS_KNIFE_3',
@@ -250,6 +271,16 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: t1Gems,
 		name: 'Cocoa Chopper Mk. I',
 		wiki: 'https://wiki.hypixel.net/Cocoa_Chopper',
+		upgrade: {
+			id: 'COCO_CHOPPER_2',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_COOKIE: 40,
+					JACOBS_TICKET: 64,
+				},
+			},
+		},
 	},
 	COCO_CHOPPER_2: {
 		skyblockId: 'COCO_CHOPPER_2',
@@ -259,6 +290,16 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: t2Gems,
 		name: 'Cocoa Chopper Mk. II',
 		wiki: 'https://wiki.hypixel.net/Cocoa_Chopper',
+		upgrade: {
+			id: 'COCO_CHOPPER_3',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_COOKIE: 160,
+					JACOBS_TICKET: 256,
+				},
+			},
+		},
 	},
 	COCO_CHOPPER_3: {
 		skyblockId: 'COCO_CHOPPER_3',
@@ -277,6 +318,17 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: t1Gems,
 		name: 'Fungi Cutter Mk. I',
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
+		upgrade: {
+			id: 'FUNGI_CUTTER_2',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 10,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 10,
+					JACOBS_TICKET: 64,
+				},
+			},
+		},
 	},
 	FUNGI_CUTTER_2: {
 		skyblockId: 'FUNGI_CUTTER_2',
@@ -286,6 +338,17 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		gemSlots: t2Gems,
 		name: 'Fungi Cutter Mk. II',
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
+		upgrade: {
+			id: 'FUNGI_CUTTER_3',
+			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					[ITEM_IDS.EnchantedBrownMushroomBlock]: 40,
+					[ITEM_IDS.EnchantedRedMushroomBlock]: 40,
+					JACOBS_TICKET: 256,
+				},
+			},
+		},
 	},
 	FUNGI_CUTTER_3: {
 		skyblockId: 'FUNGI_CUTTER_3',
@@ -307,7 +370,8 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			reason: UpgradeReason.NextTier,
 			cost: {
 				items: {
-					ENCHANTED_MELON_BLOCK: 64,
+					[ITEM_IDS.EnchantedMelonBlock]: 64,
+					[ITEM_IDS.JacobsTicket]: 64,
 				},
 			},
 		},
@@ -325,7 +389,8 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			reason: UpgradeReason.NextTier,
 			cost: {
 				items: {
-					ENCHANTED_MELON_BLOCK: 128,
+					[ITEM_IDS.EnchantedMelonBlock]: 256,
+					[ITEM_IDS.JacobsTicket]: 256,
 				},
 			},
 		},
@@ -353,7 +418,8 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			reason: UpgradeReason.NextTier,
 			cost: {
 				items: {
-					POLISHED_PUMPKIN: 16,
+					[ITEM_IDS.PolishedPumpkin]: 20,
+					[ITEM_IDS.JacobsTicket]: 64,
 				},
 			},
 		},
@@ -372,7 +438,8 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			reason: UpgradeReason.NextTier,
 			cost: {
 				items: {
-					POLISHED_PUMPKIN: 32,
+					[ITEM_IDS.PolishedPumpkin]: 80,
+					[ITEM_IDS.JacobsTicket]: 256,
 				},
 			},
 		},

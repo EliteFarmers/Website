@@ -244,20 +244,16 @@ export class FarmingPlayer {
 			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
 			if (startingInfo) {
 				const fakeItem = getFakeItem(startingInfo.skyblockId, this.options);
-				const purchaseId = fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool;
 
 				upgrades.push({
 					title: startingInfo.name,
 					action: UpgradeAction.Purchase,
-					purchase: purchaseId,
 					increase: fakeItem?.getFortune() ?? 0,
 					wiki: startingInfo.wiki,
 					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.max, 0) ?? 0,
 					category: UpgradeCategory.Item,
 					cost: {
-						items: {
-							[purchaseId]: 1,
-						},
+						copper: 250,
 					},
 				});
 			}
@@ -292,7 +288,7 @@ export class FarmingPlayer {
 		const breakdown: StatBreakdown = {};
 
 		const add = (name: string, value: number, stat: Stat) => {
-			if (value > 0) {
+			if (value !== 0) {
 				if (!breakdown[name]) {
 					breakdown[name] = { value: 0, stat };
 				}
@@ -350,7 +346,8 @@ export class FarmingPlayer {
 		const pet = this.selectedPet;
 		if (pet) {
 			for (const targetStat of contributingStats) {
-				const val = pet.getFortune(targetStat);
+				// Pass the player for abilities that depend on player context (e.g., Mosquito sugar cane fortune)
+				const val = pet.getFortune(targetStat, this);
 				add(pet.info.name ?? 'Selected Pet', val, targetStat);
 			}
 		}

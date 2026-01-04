@@ -15,9 +15,7 @@
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
-	import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
-	import { GARDEN_CHIPS } from 'farming-weight/dist/constants/chips';
+	import { FARMING_ATTRIBUTE_SHARDS, GARDEN_CHIPS, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
 	import ShardSetting from './shard-setting.svelte';
 
 	const ratesData = getRatesData();
