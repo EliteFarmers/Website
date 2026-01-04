@@ -185,13 +185,6 @@
 	const selectedCropKey = $derived(cropKey(selectedCrop));
 	const selectedCropFortuneType = $derived(selectedCropKey ? CROP_INFO[selectedCropKey]?.fortuneType : undefined);
 
-	const cropOnlyFortune = $derived.by(() => {
-		if (!selectedCropKey || !selectedCropFortuneType) return 0;
-		return Object.values(cropFortune.breakdown ?? {})
-			.filter((entry) => entry.stat === selectedCropFortuneType)
-			.reduce((sum, entry) => sum + entry.value, 0);
-	});
-
 	const cropOnlyBreakdown = $derived.by(() => {
 		if (!selectedCropKey || !selectedCropFortuneType) return {};
 		const filtered: typeof cropFortune.breakdown = {};
@@ -445,11 +438,7 @@
 				<div class="mb-2 flex flex-row items-center gap-2">
 					<h3 class="text-xl">{selectedCrop} Fortune</h3>
 
-					<Fortunebreakdown
-						title="{selectedCrop} Fortune"
-						total={cropOnlyFortune}
-						breakdown={cropOnlyBreakdown}
-					>
+					<Fortunebreakdown title="{selectedCrop} Fortune" breakdown={cropOnlyBreakdown}>
 						<p class="text-xs">
 							This shows only {selectedCrop} Fortune sources. Total farming fortune (including crop fortune)
 							is shown above.

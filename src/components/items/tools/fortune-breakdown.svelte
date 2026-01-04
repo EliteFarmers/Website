@@ -40,6 +40,10 @@
 	);
 
 	let primaryStatAndTotal = $derived.by(() => {
+		if (total !== undefined && Number.isFinite(total)) {
+			return { stat: Stat.FarmingFortune, total };
+		}
+
 		const hasStatInfo = list.some((entry) => entry.stat !== undefined);
 
 		if (hasStatInfo) {
