@@ -88,8 +88,8 @@ test('Wheat fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 30,
-			max: 40,
-			ratio: 30 / 40,
+			max: 30,
+			ratio: 30 / 30,
 		},
 		{
 			name: 'Personal Best',
@@ -151,8 +151,8 @@ test('Potato fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 20,
-			max: 40,
-			ratio: 20 / 40,
+			max: 30,
+			ratio: 20 / 30,
 		},
 		{
 			name: 'Personal Best',
@@ -207,7 +207,7 @@ test('Nether Wart fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 0,
-			max: 40,
+			max: 30,
 			ratio: 0,
 		},
 		{
@@ -266,8 +266,8 @@ test('Carrot fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 10,
-			max: 40,
-			ratio: 10 / 40,
+			max: 30,
+			ratio: 10 / 30,
 		},
 
 		{
@@ -316,8 +316,8 @@ test('Melon fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 0,
-			max: 40,
-			ratio: 0 / 40,
+			max: 30,
+			ratio: 0 / 30,
 		},
 		{
 			name: 'Personal Best',
@@ -352,8 +352,8 @@ test('Cropie talisman test', () => {
 	expect(cropie).toStrictEqual({
 		name: 'Helianthus Relic Family',
 		current: 10,
-		max: 40,
-		ratio: 10 / 40,
+		max: 30,
+		ratio: 10 / 30,
 	});
 });
 
@@ -381,8 +381,8 @@ test('Squash ring test', () => {
 	expect(squash).toStrictEqual({
 		name: 'Helianthus Relic Family',
 		current: 20,
-		max: 40,
-		ratio: 20 / 40,
+		max: 30,
+		ratio: 20 / 30,
 	});
 
 	const generalSources = player.getProgress();
