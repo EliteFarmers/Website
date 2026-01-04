@@ -331,7 +331,6 @@ export class FarmingPlayer {
 				for (const targetStat of contributingStats) {
 					let val = 0;
 					// For Crop Sources, strictly match the crop's fortune type.
-					// Do not rely on 'statMatchesQuery' which might fuzzy match FarmingFortune.
 					if (source.currentStat) {
 						val = source.currentStat(ctx, targetStat) ?? 0;
 					} else if (source.current && targetStat === CROP_INFO[targetCrop].fortuneType) {
@@ -358,9 +357,6 @@ export class FarmingPlayer {
 				const val = this.selectedTool.getStat(targetStat);
 				add(this.selectedTool.info.name, val, targetStat);
 			}
-		} else if (targetCrop) {
-			// If targetCrop is defined, "Farming Tool" in CROP_FORTUNE_SOURCES handles it?
-			// Use CROP_FORTUNE_SOURCES "Farming Tool" logic validation.
 		}
 
 		// Equipment
@@ -395,19 +391,18 @@ export class FarmingPlayer {
 			if (count < 2 || count > 4) continue;
 			for (const targetStat of contributingStats) {
 				const val = bonus.stats?.[count]?.[targetStat] ?? 0;
-				add(bonus.name, val, targetStat); // Use info.name instead of item.name
+				add(bonus.name, val, targetStat);
 			}
 		}
 
 		// Accessories
 		for (const acc of this.activeAccessories) {
 			// If the accessory is restricted to specific crops, check validity
-			// If targetCrop is undefined (General mode), SKIP crop-specific accessories
 			if (acc.info.crops && (!targetCrop || !acc.info.crops.includes(targetCrop))) continue;
 
 			for (const targetStat of contributingStats) {
 				const val = acc.getStat(targetStat);
-				add(acc.info.name, val, targetStat); // Use info.name instead of item.name
+				add(acc.info.name, val, targetStat);
 			}
 		}
 
@@ -519,9 +514,6 @@ export class FarmingPlayer {
 		if (this.selectedTool && this.selectedTool.crops.includes(crop)) {
 			return this.selectedTool;
 		}
-		// Otherwise return the best one (highest fortune? or first?)
-		// Original getBestTool just returned find -> first match.
-		// Sort by fortune?
 		return matches.sort((a, b) => b.fortune - a.fortune)[0];
 	}
 
@@ -974,9 +966,6 @@ export class FarmingPlayer {
 		}
 
 		// For buy_item (tier) upgrades, also add conflict keys from the original item's available upgrades.
-		// This prevents duplicate suggestions - if Squash has Pesterminator 1 available,
-		// Fermento's children shouldn't also suggest Pesterminator 1 (do it on Squash instead, it carries over).
-		// When includeAllTierUpgradeChildren is true and depth is 0, skip this filtering to show ALL upgrades.
 		const skipTierFiltering = includeAllTierUpgradeChildren && depth === 0;
 		if (!skipTierFiltering && upgrade.meta?.type === 'buy_item' && upgrade.meta?.itemUuid) {
 			const originalItem =
@@ -1081,8 +1070,6 @@ export class FarmingPlayer {
 		const upgrades: FortuneUpgrade[] = [];
 
 		// Handle buy_item specially - these are item tier upgrades
-		// After applying, we want ALL upgrades for the new item, not filtered by type
-		// The new item preserves the old UUID, but we search by skyblockId to find the upgraded tier
 		if (meta.type === 'buy_item' && meta.id) {
 			const newItemId = meta.id;
 			const target =

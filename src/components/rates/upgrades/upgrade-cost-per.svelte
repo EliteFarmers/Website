@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FortuneUpgrade } from 'farming-weight';
+	import { CROP_FORTUNE_STATS, Stat, type FortuneUpgrade } from 'farming-weight';
 
 	interface Props {
 		upgrade: FortuneUpgrade;
@@ -8,7 +8,21 @@
 
 	let { upgrade, totalCost }: Props = $props();
 
-	const increase = upgrade.increase || (upgrade.stats ? upgrade.max : 0) || 0;
+	const primaryStat = $derived.by(() => {
+		if (!upgrade.stats) return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
+		const ff = upgrade.stats[Stat.FarmingFortune];
+		if (ff !== undefined && ff !== 0) return { stat: Stat.FarmingFortune, value: ff };
+		// Check for crop fortune
+		for (const [statKey, value] of Object.entries(upgrade.stats)) {
+			const stat = statKey as Stat;
+			if (CROP_FORTUNE_STATS.has(stat) && value !== 0) {
+				return { stat, value: value as number };
+			}
+		}
+		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
+	});
+
+	const increase = $derived(upgrade.increase || primaryStat.value || upgrade.max || 0);
 	const costPer = $derived.by(() => {
 		const cost = increase > 0 ? Math.round(totalCost / increase) : 0;
 

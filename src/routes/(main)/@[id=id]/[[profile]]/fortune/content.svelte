@@ -123,6 +123,9 @@
 
 	let armorSet = $derived(new ArmorSet(armor, equipment));
 
+	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
+	const selectedCropKey = $derived(cropKey(selectedCrop));
+
 	let options = $derived({
 		tools: tools,
 		armor: armorSet,
@@ -175,22 +178,15 @@
 					mode: $ratesData.zorroMode,
 				}
 			: undefined,
+
+		selectedCrop: selectedCropKey,
 	} as PlayerOptions);
 
 	// svelte-ignore state_referenced_locally
 	let player = $state(getRatesPlayer(options));
 
-	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? undefined));
-	const selectedCropKey = $derived(cropKey(selectedCrop));
 	const selectedCropFortuneType = $derived(selectedCropKey ? CROP_INFO[selectedCropKey]?.fortuneType : undefined);
-
-	const cropOnlyFortune = $derived.by(() => {
-		if (!selectedCropKey || !selectedCropFortuneType) return 0;
-		return Object.values(cropFortune.breakdown ?? {})
-			.filter((entry) => entry.stat === selectedCropFortuneType)
-			.reduce((sum, entry) => sum + entry.value, 0);
-	});
 
 	const cropOnlyBreakdown = $derived.by(() => {
 		if (!selectedCropKey || !selectedCropFortuneType) return {};
@@ -352,6 +348,7 @@
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 				mode: $ratesData.zorroMode,
 			},
+			selectedCrop: selectedCropKey,
 		};
 
 		untrack(() => {
@@ -445,11 +442,7 @@
 				<div class="mb-2 flex flex-row items-center gap-2">
 					<h3 class="text-xl">{selectedCrop} Fortune</h3>
 
-					<Fortunebreakdown
-						title="{selectedCrop} Fortune"
-						total={cropOnlyFortune}
-						breakdown={cropOnlyBreakdown}
-					>
+					<Fortunebreakdown title="{selectedCrop} Fortune" breakdown={cropOnlyBreakdown}>
 						<p class="text-xs">
 							This shows only {selectedCrop} Fortune sources. Total farming fortune (including crop fortune)
 							is shown above.
