@@ -1,7 +1,11 @@
 import { browser } from '$app/environment';
-import { ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
-import { FARMING_ATTRIBUTE_SHARDS } from 'farming-weight/dist/constants/attributes';
-import type { GardenChipId } from 'farming-weight/dist/constants/chips';
+import {
+	FARMING_ATTRIBUTE_SHARDS,
+	ZorroMode,
+	type FarmingTool,
+	type GardenChipId,
+	type TemporaryFarmingFortune,
+} from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';

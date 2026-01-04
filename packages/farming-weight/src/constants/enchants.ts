@@ -1,7 +1,8 @@
-import type { FarmingPlayer } from '../player/player.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
+import { getCropFromName } from '../util/names.js';
+import { getCropInfo } from '../util/ratecalc.js';
 import { Crop } from './crops.js';
-import { CROP_MILESTONES, GARDEN_VISITORS } from './garden.js';
+import { GARDEN_VISITORS } from './garden.js';
 import { ReforgeTarget } from './reforges.js';
 import { Stat } from './stats.js';
 import type { UpgradeCost } from './upgrades.js';
@@ -15,7 +16,7 @@ export enum EnchantTierProcurement {
 
 export interface FarmingEnchantTier {
 	stats?: Partial<Record<Stat, number>>;
-	computedStats?: (opt: FarmingPlayer) => Partial<Record<Stat, number>>;
+	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
 	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
 	procurement?: EnchantTierProcurement;
@@ -37,37 +38,51 @@ export interface FarmingEnchant {
 	levelRequirement?: number;
 }
 
-const turboEnchant = {
-	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+const createTurboEnchant = (stat: Stat) => ({
+	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe] as const,
 	minLevel: 1,
 	maxLevel: 5,
 	levels: {
 		1: {
 			stats: {
-				[Stat.FarmingFortune]: 5,
+				[stat]: 5,
 			},
 		},
 		2: {
 			stats: {
-				[Stat.FarmingFortune]: 10,
+				[stat]: 10,
 			},
 		},
 		3: {
 			stats: {
-				[Stat.FarmingFortune]: 15,
+				[stat]: 15,
 			},
 		},
 		4: {
 			stats: {
-				[Stat.FarmingFortune]: 20,
+				[stat]: 20,
 			},
 		},
 		5: {
 			stats: {
-				[Stat.FarmingFortune]: 25,
+				[stat]: 25,
 			},
 		},
 	},
+});
+
+const dedicationEnchantmentComputedStats = (multiplier: number, options: PlayerOptions) => {
+	return Object.entries(options.milestones ?? {}).reduce(
+		(sum, [crop, level]) => {
+			const cropEnum = getCropFromName(crop);
+			if (!cropEnum) return sum;
+			const info = getCropInfo(cropEnum);
+			if (!info?.fortuneType) return sum;
+			sum[info.fortuneType] = level * multiplier;
+			return sum;
+		},
+		{} as Partial<Record<Stat, number>>
+	);
 };
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
@@ -204,41 +219,33 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				cost: {
 					copper: 250,
 				},
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 0.5 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+				computedStats: (player) => dedicationEnchantmentComputedStats(0.5, player),
 			},
 			2: {
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 0.75 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+				computedStats: (player) => dedicationEnchantmentComputedStats(0.75, player),
 			},
 			3: {
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 1 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+				computedStats: (player) => dedicationEnchantmentComputedStats(1, player),
 			},
 			4: {
-				cropComputed: {
-					[Stat.FarmingFortune]: (crop, opt) => {
-						if (!crop) return 0;
-						return 2 * (opt?.milestones?.[crop] ?? 0);
-					},
-				},
+				computedStats: (player) => dedicationEnchantmentComputedStats(2, player),
 				procurement: EnchantTierProcurement.Loot,
 			},
 		},
 		maxStats: {
-			[Stat.FarmingFortune]: 2 * CROP_MILESTONES[Crop.Wheat].length,
+			[Stat.CactusFortune]: 92,
+			[Stat.CarrotFortune]: 92,
+			[Stat.CocoaBeanFortune]: 92,
+			[Stat.MelonFortune]: 92,
+			[Stat.MushroomFortune]: 92,
+			[Stat.NetherWartFortune]: 92,
+			[Stat.PotatoFortune]: 92,
+			[Stat.PumpkinFortune]: 92,
+			[Stat.SugarCaneFortune]: 92,
+			[Stat.WheatFortune]: 92,
+			[Stat.SunflowerFortune]: 92,
+			[Stat.MoonflowerFortune]: 92,
+			[Stat.WildRoseFortune]: 92,
 		},
 	},
 	sunder: {
@@ -381,80 +388,80 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		name: 'Turbo-Cacti',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',
 		cropSpecific: Crop.Cactus,
-		...turboEnchant,
+		...createTurboEnchant(Stat.CactusFortune),
 	},
 	turbo_cane: {
 		name: 'Turbo-Cane',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cane_Enchantment',
 		cropSpecific: Crop.SugarCane,
-		...turboEnchant,
+		...createTurboEnchant(Stat.SugarCaneFortune),
 	},
 	turbo_carrot: {
 		name: 'Turbo-Carrot',
 		wiki: 'https://wiki.hypixel.net/Turbo-Carrot_Enchantment',
 		cropSpecific: Crop.Carrot,
-		...turboEnchant,
+		...createTurboEnchant(Stat.CarrotFortune),
 	},
 	turbo_coco: {
 		name: 'Turbo-Cocoa',
 		id: 'ENCHANTMENT_TURBO_COCO',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
 		cropSpecific: Crop.CocoaBeans,
-		...turboEnchant,
+		...createTurboEnchant(Stat.CocoaBeanFortune),
 	},
 	turbo_melon: {
 		name: 'Turbo-Melon',
 		wiki: 'https://wiki.hypixel.net/Turbo-Melon_Enchantment',
 		cropSpecific: Crop.Melon,
-		...turboEnchant,
+		...createTurboEnchant(Stat.MelonFortune),
 	},
 	turbo_mushrooms: {
 		name: 'Turbo-Mushrooms',
 		wiki: 'https://wiki.hypixel.net/Turbo-Mushrooms_Enchantment',
 		cropSpecific: Crop.Mushroom,
-		...turboEnchant,
+		...createTurboEnchant(Stat.MushroomFortune),
 	},
 	turbo_potato: {
 		name: 'Turbo-Potato',
 		wiki: 'https://wiki.hypixel.net/Turbo-Potato_Enchantment',
 		cropSpecific: Crop.Potato,
-		...turboEnchant,
+		...createTurboEnchant(Stat.PotatoFortune),
 	},
 	turbo_pumpkin: {
 		name: 'Turbo-Pumpkin',
 		wiki: 'https://wiki.hypixel.net/Turbo-Pumpkin_Enchantment',
 		cropSpecific: Crop.Pumpkin,
-		...turboEnchant,
+		...createTurboEnchant(Stat.PumpkinFortune),
 	},
 	turbo_warts: {
 		name: 'Turbo-Warts',
 		wiki: 'https://wiki.hypixel.net/Turbo-Warts_Enchantment',
 		cropSpecific: Crop.NetherWart,
-		...turboEnchant,
+		...createTurboEnchant(Stat.NetherWartFortune),
 	},
 	turbo_wheat: {
 		name: 'Turbo-Wheat',
 		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
 		cropSpecific: Crop.Wheat,
-		...turboEnchant,
+		...createTurboEnchant(Stat.WheatFortune),
 	},
 	turbo_rose: {
 		name: 'Turbo-Rose',
 		wiki: 'https://wiki.hypixel.net/Turbo-Rose_Enchantment',
 		cropSpecific: Crop.WildRose,
-		...turboEnchant,
+		...createTurboEnchant(Stat.WildRoseFortune),
 	},
 	turbo_moonflower: {
 		name: 'Turbo-Moonflower',
 		wiki: 'https://wiki.hypixel.net/Turbo-Moonflower_Enchantment',
 		cropSpecific: Crop.Moonflower,
-		...turboEnchant,
+		...createTurboEnchant(Stat.MoonflowerFortune),
 	},
 	turbo_sunflower: {
 		name: 'Turbo-Sunflower',
 		wiki: 'https://wiki.hypixel.net/Turbo-Sunflower_Enchantment',
 		cropSpecific: Crop.Sunflower,
-		...turboEnchant,
+		...createTurboEnchant(Stat.SunflowerFortune),
 	},
 	ultimate_crop_fever: {
 		name: 'Crop Fever',

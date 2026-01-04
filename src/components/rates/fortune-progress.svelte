@@ -2,12 +2,13 @@
 	import ItemName from '$comp/items/item-name.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
+	import { getStatColor } from '$lib/format';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import Info from '@lucide/svelte/icons/info';
 	import OctagonAlert from '@lucide/svelte/icons/octagon-alert';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
-	import { Stat, STAT_ICONS, type FortuneSourceProgress } from 'farming-weight';
+	import { Stat, STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
 
 	interface Props {
 		progress: FortuneSourceProgress;
@@ -46,52 +47,60 @@
 	// 				STAT_ICONS[Stat.FarmingFortune]
 	// 		: undefined
 	// );
+
+	const hasBars = $derived.by(() => {
+		return (
+			(progress.stats && Object.keys(progress.stats).length > 0) ||
+			(progress.progress && Object.keys(progress.progress).length > 0)
+		);
+	});
 </script>
 
-<div class="flex w-full flex-col items-start">
-	<div class="flex w-full items-center justify-between">
-		<div class="flex h-10 flex-row items-center gap-1">
-			{#if progress.item?.name && useItemName}
-				{#if progress.item?.skyblockId}
-					<ItemRender skyblockId={progress.item.skyblockId} class="size-10" />
+{#if hasBars}
+	<div class="flex w-full flex-col items-start">
+		<div class="flex w-full items-center justify-between">
+			<div class="flex h-10 flex-row items-center gap-1">
+				{#if progress.item?.name && useItemName}
+					{#if progress.item?.skyblockId}
+						<ItemRender skyblockId={progress.item.skyblockId} class="size-10" />
+					{/if}
+					<ItemName name={progress.item.name} />
+				{:else}
+					<span>{progress.name}</span>
 				{/if}
-				<ItemName name={progress.item.name} />
-			{:else}
-				<span>{progress.name}</span>
-			{/if}
-			{#if progress.wiki}
-				<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="text-link">
-					<Info size={16} />
-				</a>
-			{/if}
-			{#if progress.api === false}
-				<TooltipSimple side="bottom">
-					{#snippet trigger()}
-						<TriangleAlert size={16} class="text-completed" />
-					{/snippet}
-					<p class=" max-w-64 text-sm">
-						This fortune source is not available in the Hypixel API. Configure settings on this page to mark
-						it as complete.
-					</p>
-				</TooltipSimple>
+				{#if progress.wiki}
+					<a href={progress.wiki} target="_blank" rel="noopener noreferrer" class="text-link">
+						<Info size={16} />
+					</a>
+				{/if}
+				{#if progress.api === false}
+					<TooltipSimple side="bottom">
+						{#snippet trigger()}
+							<TriangleAlert size={16} class="text-completed" />
+						{/snippet}
+						<p class=" max-w-64 text-sm">
+							This fortune source is not available in the Hypixel API. Configure settings on this page to
+							mark it as complete.
+						</p>
+					</TooltipSimple>
+				{/if}
+			</div>
+			{#if progress.active}
+				<div class="flex flex-row items-center gap-1">
+					<TooltipSimple side="left">
+						{#snippet trigger()}
+							{#if !progress.active?.active}
+								<OctagonAlert size={16} class="text-completed" />
+							{:else}
+								<FileText size={16} class="text-muted-foreground" />
+							{/if}
+						{/snippet}
+						<p class="max-w-32 text-sm">{progress.active.reason}</p>
+					</TooltipSimple>
+				</div>
 			{/if}
 		</div>
-		{#if progress.active}
-			<div class="flex flex-row items-center gap-1">
-				<TooltipSimple side="left">
-					{#snippet trigger()}
-						{#if !progress.active?.active}
-							<OctagonAlert size={16} class="text-completed" />
-						{:else}
-							<FileText size={16} class="text-muted-foreground" />
-						{/if}
-					{/snippet}
-					<p class="max-w-32 text-sm">{progress.active.reason}</p>
-				</TooltipSimple>
-			</div>
-		{/if}
-	</div>
-	<!-- <ProgressBar
+		<!-- <ProgressBar
 		percent={progress.ratio * 100}
 		{readable}
 		{expanded}
@@ -99,40 +108,45 @@
 		{barBg}
 		disabled={progress.active?.active === false}
 	/> -->
-	<!-- let statProgress: {
+		<!-- let statProgress: {
     current: number;
     max: number;
     ratio: number;
 } -->
-	{#each Object.entries(progress.stats ?? {}) as [stat, statProgress] (stat)}
-		<ProgressBar
-			{barBg}
-			percent={statProgress.ratio * 100}
-			readable={(statProgress.current || 0).toLocaleString() +
-				' / ' +
-				statProgress.max.toLocaleString() +
-				' ' +
-				STAT_ICONS[stat as Stat]}
-			expanded={(statProgress.current || 0).toLocaleString() +
-				' / ' +
-				statProgress.max.toLocaleString() +
-				' ' +
-				STAT_ICONS[stat as Stat]}
-			disabled={progress.active?.active === false}
-			maxed={statProgress.ratio >= 1}
-			fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : undefined}
-		/>
-	{:else}
-		{#each Object.entries(progress.progress ?? {}) as [stat, statProgress] (stat)}
-			<ProgressBar
-				{barBg}
-				percent={statProgress.ratio * 100}
-				readable={(statProgress.current || 0).toLocaleString() + ' / ' + statProgress.max.toLocaleString()}
-				expanded={(statProgress.current || 0).toLocaleString() + ' / ' + statProgress.max.toLocaleString()}
-				disabled={progress.active?.active === false}
-				maxed={statProgress.ratio >= 1}
-				fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : undefined}
-			/>
-		{/each}
-	{/each}
-</div>
+		<div class="flex w-full flex-row items-center gap-1">
+			{#each Object.entries(progress.stats ?? {}) as [stat, statProgress] (stat)}
+				{@const color = getStatColor(stat as Stat, statProgress.ratio)}
+
+				<ProgressBar
+					{barBg}
+					percent={statProgress.ratio * 100}
+					readable={(statProgress.current || 0).toLocaleString() +
+						' / ' +
+						statProgress.max.toLocaleString() +
+						' ' +
+						STAT_ICONS[stat as Stat]}
+					expanded={STAT_ICONS[stat as Stat] + ' ' + STAT_NAMES[stat as Stat]}
+					disabled={progress.active?.active === false}
+					maxed={statProgress.ratio >= 1}
+					fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : color ? color : undefined}
+				/>
+			{:else}
+				{#each Object.entries(progress.progress ?? {}) as [stat, statProgress] (stat)}
+					<ProgressBar
+						{barBg}
+						percent={statProgress.ratio * 100}
+						readable={(statProgress.current || 0).toLocaleString() +
+							' / ' +
+							statProgress.max.toLocaleString()}
+						expanded={(statProgress.current || 0).toLocaleString() +
+							' / ' +
+							statProgress.max.toLocaleString()}
+						disabled={progress.active?.active === false}
+						maxed={statProgress.ratio >= 1}
+						fillClass={progress.stats === undefined ? 'bg-muted-foreground/30' : undefined}
+					/>
+				{/each}
+			{/each}
+		</div>
+	</div>
+{/if}

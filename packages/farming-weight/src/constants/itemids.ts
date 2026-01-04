@@ -20,6 +20,8 @@ export const ITEM_IDS = {
 	EnchantedNetherWart: 'ENCHANTED_NETHER_STALK',
 	MutantNetherWart: 'MUTANT_NETHER_STALK',
 
+	JacobsTicket: 'JACOBS_TICKET',
+
 	// Garden Chips
 	CropshotChip: 'CROPSHOT_GARDEN_CHIP',
 	VerminVaporizerChip: 'VERMIN_VAPORIZER_GARDEN_CHIP',

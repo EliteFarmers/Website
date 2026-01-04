@@ -33,6 +33,7 @@
 		createFarmingPlayer,
 		createFarmingWeightCalculator,
 		Crop,
+		CROP_INFO,
 		FarmingArmor,
 		FarmingPet,
 		FarmingPets,
@@ -70,9 +71,7 @@
 		if (!crop) return;
 
 		const newTool = $player.getBestTool(crop);
-		console.log({ newTool, crop, c });
 		if (newTool === selectedTool) {
-			console.log('No change in tool');
 			player.refresh();
 			return;
 		}
@@ -182,8 +181,27 @@
 	let player = $state(getRatesPlayer(options));
 
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
-	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? Crop.Wheat));
+	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? undefined));
 	const selectedCropKey = $derived(cropKey(selectedCrop));
+	const selectedCropFortuneType = $derived(selectedCropKey ? CROP_INFO[selectedCropKey]?.fortuneType : undefined);
+
+	const cropOnlyFortune = $derived.by(() => {
+		if (!selectedCropKey || !selectedCropFortuneType) return 0;
+		return Object.values(cropFortune.breakdown ?? {})
+			.filter((entry) => entry.stat === selectedCropFortuneType)
+			.reduce((sum, entry) => sum + entry.value, 0);
+	});
+
+	const cropOnlyBreakdown = $derived.by(() => {
+		if (!selectedCropKey || !selectedCropFortuneType) return {};
+		const filtered: typeof cropFortune.breakdown = {};
+		for (const [key, entry] of Object.entries(cropFortune.breakdown ?? {})) {
+			if (entry.stat === selectedCropFortuneType) {
+				filtered[key] = entry;
+			}
+		}
+		return filtered;
+	});
 
 	const generalProgress = $derived($player.getProgress([Stat.FarmingFortune]));
 	const gearProgress = $derived($player.armorSet.getProgress([Stat.FarmingFortune]));
@@ -260,7 +278,9 @@
 			// Check if this is a tool and call getUpgrades() directly on the tool
 			const tool = $player.tools.find((t) => t.item.uuid === uuid);
 			if (tool) {
-				return tool.getUpgrades({ stat: Stat.FarmingFortune });
+				// Use crop-specific fortune type if available
+				const stat = tool.crops[0] ? CROP_INFO[tool.crops[0]]?.fortuneType : Stat.FarmingFortune;
+				return tool.getUpgrades({ stat: stat ?? Stat.FarmingFortune });
 			}
 		}
 		// Fall back to the progress upgrades
@@ -341,7 +361,7 @@
 
 	const calculatorOptions = $derived.by(() => {
 		return {
-			farmingFortune: $player.fortune + cropFortune.fortune,
+			farmingFortune: cropFortune.fortune,
 			bountiful: $player.selectedTool?.reforge?.name === 'Bountiful',
 			mooshroom: $player.selectedPet?.type === FarmingPets.MooshroomCow,
 			blocksBroken: blocksActuallyBroken,
@@ -369,8 +389,8 @@
 		}).getWeightInfo().cropWeight;
 	});
 
-	const totalFortune = $derived($player.fortune + cropFortune.fortune);
-	const fortuneBreakdown = $derived({ ...$player.breakdown, ...cropFortune.breakdown });
+	const totalFortune = $derived(cropFortune.fortune);
+	const fortuneBreakdown = $derived(cropFortune.breakdown);
 
 	$effect(() => {
 		if (selectedToolId !== untrack(() => selectedTool?.item.uuid)) {
@@ -427,14 +447,12 @@
 
 					<Fortunebreakdown
 						title="{selectedCrop} Fortune"
-						total={$player.getCropFortune(selectedCropKey).fortune}
-						breakdown={$player.getCropFortune(selectedCropKey).breakdown}
+						total={cropOnlyFortune}
+						breakdown={cropOnlyBreakdown}
 					>
 						<p class="text-xs">
-							This fortune is not representative of the actual "{selectedCrop} Fortune" stat seen in-game.
-							Currently, it includes all crop-related options on this page instead of breaking up the fortune
-							into its components. For example, farming tools also have general fortune, but it's included
-							here instead.
+							This shows only {selectedCrop} Fortune sources. Total farming fortune (including crop fortune)
+							is shown above.
 						</p>
 					</Fortunebreakdown>
 				</div>
@@ -694,13 +712,22 @@
 						<div class="flex w-full items-center justify-center">
 							<p class="font-semibold">Select a crop above to see its fortune!</p>
 						</div>
-					{:else}
+					{:else if CROP_INFO[selectedCropKey]}
 						<CategoryProgress
 							name="{selectedCrop || 'Wheat'} Fortune"
-							progress={$player.getCropProgress(getCropFromName(selectedCrop) ?? Crop.Wheat, [
+							progress={$player.getCropProgress(selectedCropKey, [
 								Stat.FarmingFortune,
+								CROP_INFO[selectedCropKey].fortuneType,
+								// Stat.BonusPestChance,
 							])}
-							expandUpgrade={(u) => $player.expandUpgrade(u, { stats: [Stat.FarmingFortune] })}
+							expandUpgrade={(u) =>
+								$player.expandUpgrade(u, {
+									stats: [
+										Stat.FarmingFortune,
+										CROP_INFO[selectedCropKey].fortuneType,
+										// Stat.BonusPestChance,
+									],
+								})}
 							costFn={getUpgradeCost}
 							items={itemsData}
 							equip={(p) => getToolEquipConfig(p, cropToolSwitchOptions)}

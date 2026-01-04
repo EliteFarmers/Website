@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 
 const netherwartHoe = {
@@ -64,6 +65,7 @@ test('Tool item upgrade', () => {
 	const tool = new FarmingTool(netherwartHoe);
 
 	expect(tool.fortune).toBe(145);
+	expect(tool.getStat(Stat.NetherWartFortune)).toBe(29);
 
 	expect(tool.getItemUpgrade()?.id).toBe('THEORETICAL_HOE_WARTS_2');
 	expect(tool.getLastItemUpgrade()?.upgrade.id).toBe('THEORETICAL_HOE_WARTS_3');

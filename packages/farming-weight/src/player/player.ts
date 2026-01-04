@@ -1,24 +1,6 @@
-import { FARMING_ATTRIBUTE_SHARDS, getShardStat } from '../constants/attributes.js';
-import {
-	type GardenChipId,
-	getChipLevel,
-	getChipStats,
-	getChipTempMultiplierPerLevel,
-	normalizeChipId,
-} from '../constants/chips.js';
-import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
-import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
-import {
-	ANITA_FORTUNE_UPGRADE,
-	COCOA_FORTUNE_UPGRADE,
-	COMMUNITY_CENTER_UPGRADE,
-	FARMING_LEVEL,
-	FILLED_ROSEWATER_FLASK_SOURCE,
-	GARDEN_CROP_UPGRADES,
-	UNLOCKED_PLOTS,
-	WRIGGLING_LARVA_SOURCE,
-} from '../constants/specific.js';
-import { Stat } from '../constants/stats.js';
+import { type GardenChipId, getChipLevel, getChipTempMultiplierPerLevel, normalizeChipId } from '../constants/chips.js';
+import { CROP_INFO, type Crop } from '../constants/crops.js';
+import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
@@ -29,14 +11,11 @@ import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPets } from '../items/pets.js';
 import { FARMING_TOOLS } from '../items/tools.js';
-import { getFortune } from '../upgrades/getfortune.js';
 import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { getFakeItem } from '../upgrades/itemregistry.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
 import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
-import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
-import { fortuneFromPestBestiary } from '../util/pests.js';
 import { calculateDetailedDrops } from '../util/ratecalc.js';
 import { createFarmingWeightCalculator, type FarmingWeightInfo } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
@@ -52,8 +31,8 @@ export class FarmingPlayer {
 	get fortune() {
 		return this.permFortune + this.tempFortune;
 	}
-	declare breakdown: Record<string, number>;
-	declare tempFortuneBreakdown: Record<string, number>;
+	declare breakdown: StatBreakdown;
+	declare tempFortuneBreakdown: StatBreakdown;
 
 	declare tools: FarmingTool[];
 	declare armor: FarmingArmor[];
@@ -76,7 +55,7 @@ export class FarmingPlayer {
 
 	setOptions(options: PlayerOptions) {
 		this.options = options;
-
+		this.activeAccessories = [];
 		// Normalize chip IDs to support both full and short names
 		if (this.options.chips) {
 			const normalizedChips: Partial<Record<GardenChipId, number>> = {};
@@ -108,7 +87,7 @@ export class FarmingPlayer {
 			this.pets = FarmingPet.fromArray(this.options.pets as EliteItemDto[], this.options);
 		}
 
-		this.selectedPet = this.options.selectedPet;
+		this.selectedPet = this.options.selectedPet ?? this.pets.find((p) => p.pet.active) ?? this.pets[0];
 	}
 
 	populateTools() {
@@ -121,7 +100,12 @@ export class FarmingPlayer {
 			this.tools = FarmingTool.fromArray(this.options.tools as EliteItemDto[], this.options);
 		}
 
-		this.selectedTool = this.options.selectedTool ?? this.tools[0];
+		if (this.options.selectedTool) {
+			const uuid = this.options.selectedTool.item.uuid;
+			this.selectedTool = this.tools.find((t) => t.item.uuid === uuid) ?? this.tools[0];
+		} else {
+			this.selectedTool = this.tools[0];
+		}
 	}
 
 	populateArmor() {
@@ -175,11 +159,31 @@ export class FarmingPlayer {
 		this.options.accessories ??= [];
 		this.activeAccessories = [];
 
+		let pool: FarmingAccessory[] = [];
 		if (this.options.accessories[0] instanceof FarmingAccessory) {
-			this.accessories = (this.options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
+			pool = (this.options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.accessories = FarmingAccessory.fromArray(this.options.accessories as EliteItemDto[]);
+			pool = FarmingAccessory.fromArray(this.options.accessories as EliteItemDto[]);
 		}
+
+		// Filter by unique family (keep highest rarity/fortune)
+		const familyMap = new Map<string, FarmingAccessory>();
+		const others: FarmingAccessory[] = [];
+
+		for (const acc of pool) {
+			const family = acc.info.family;
+			if (family) {
+				const existing = familyMap.get(family);
+				if (!existing || (acc.info.familyOrder ?? 0) > (existing.info.familyOrder ?? 0)) {
+					familyMap.set(family, acc);
+				}
+			} else {
+				others.push(acc);
+			}
+		}
+
+		this.activeAccessories = [...familyMap.values(), ...others].sort((a, b) => b.fortune - a.fortune);
+		this.accessories = pool;
 	}
 
 	changeArmor(armor: FarmingArmor[]) {
@@ -240,20 +244,16 @@ export class FarmingPlayer {
 			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
 			if (startingInfo) {
 				const fakeItem = getFakeItem(startingInfo.skyblockId, this.options);
-				const purchaseId = fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool;
 
 				upgrades.push({
 					title: startingInfo.name,
 					action: UpgradeAction.Purchase,
-					purchase: purchaseId,
 					increase: fakeItem?.getFortune() ?? 0,
 					wiki: startingInfo.wiki,
 					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.max, 0) ?? 0,
 					category: UpgradeCategory.Item,
 					cost: {
-						items: {
-							[purchaseId]: 1,
-						},
+						copper: 250,
 					},
 				});
 			}
@@ -264,243 +264,176 @@ export class FarmingPlayer {
 	}
 
 	getGeneralFortune() {
-		const { value, breakdown } = this.getStatBreakdown(Stat.FarmingFortune);
+		const breakdown = this.getStatBreakdown(Stat.FarmingFortune);
 		this.breakdown = breakdown;
-		return value;
+		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
+	}
+
+	getToolStat(tool: FarmingTool, stat: Stat, crop?: Crop): number {
+		let val = 0;
+		if (stat === Stat.FarmingFortune) {
+			val += tool.getFortune();
+		} else {
+			val += tool.getStat(stat);
+		}
+		return val;
 	}
 
 	getStat(stat: Stat) {
-		return this.getStatBreakdown(stat).value;
+		const breakdown = this.getStatBreakdown(stat);
+		return Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 	}
 
-	getStatBreakdown(stat: Stat) {
-		let sum = 0;
-		const breakdown: Record<string, number> = {};
+	getStatBreakdown(stat: Stat, targetCrop?: Crop): StatBreakdown {
+		const breakdown: StatBreakdown = {};
 
-		// Plots
-		const plots = getFortune(this.options.plots?.length ?? this.options.plotsUnlocked, UNLOCKED_PLOTS, stat);
-		if (plots > 0) {
-			breakdown['Unlocked Plots'] = plots;
-			sum += plots;
-		}
+		const add = (name: string, value: number, stat: Stat) => {
+			if (value !== 0) {
+				if (!breakdown[name]) {
+					breakdown[name] = { value: 0, stat };
+				}
+				breakdown[name].value += value;
+			}
+		};
 
-		// Farming Level
-		const level = getFortune(this.options.farmingLevel, FARMING_LEVEL, stat);
-		if (level > 0) {
-			breakdown['Farming Level'] = level;
-			sum += level;
-		}
+		// Identify all stats that contribute to the requested stat
+		const contributingStats = getContributoryStats(stat);
 
-		// Bestiary
-		if (stat === Stat.FarmingFortune && this.options.bestiaryKills) {
-			const bestiary = fortuneFromPestBestiary(this.options.bestiaryKills);
-			if (bestiary > 0) {
-				breakdown['Pest Bestiary'] = bestiary;
-				sum += bestiary;
+		// General Sources
+		// Always run general sources (they apply to everything)
+		for (const source of GENERAL_FORTUNE_SOURCES) {
+			// If this source is handled by an active accessory, skip it here to avoid double counting
+			if (this.activeAccessories.some((a) => a.info.name === source.name)) continue;
+
+			if (source.exists && !source.exists(this)) continue;
+
+			for (const targetStat of contributingStats) {
+				let val = 0;
+				if (source.currentStat) {
+					val = source.currentStat(this, targetStat) ?? 0;
+				} else if (source.current && targetStat === Stat.FarmingFortune) {
+					val = source.current(this) ?? 0;
+				}
+				add(source.name, val, targetStat);
 			}
 		}
 
-		// Armor pieces
+		// Crop Sources
+		// Only run if we have a target crop
+		if (targetCrop) {
+			for (const source of CROP_FORTUNE_SOURCES) {
+				// Helianthus Relic Family is handled by activeAccessories
+				if (source.name === 'Helianthus Relic Family') continue;
+
+				const ctx = { player: this, crop: targetCrop };
+				if (source.exists && !source.exists(ctx)) continue;
+
+				for (const targetStat of contributingStats) {
+					let val = 0;
+					// For Crop Sources, strictly match the crop's fortune type.
+					// Do not rely on 'statMatchesQuery' which might fuzzy match FarmingFortune.
+					if (source.currentStat) {
+						val = source.currentStat(ctx, targetStat) ?? 0;
+					} else if (source.current && targetStat === CROP_INFO[targetCrop].fortuneType) {
+						val = source.current(ctx) ?? 0;
+					}
+					add(source.name, val, targetStat);
+				}
+			}
+		}
+
+		// Pets
+		const pet = this.selectedPet;
+		if (pet) {
+			for (const targetStat of contributingStats) {
+				// Pass the player for abilities that depend on player context (e.g., Mosquito sugar cane fortune)
+				const val = pet.getFortune(targetStat, this);
+				add(pet.info.name ?? 'Selected Pet', val, targetStat);
+			}
+		}
+
+		// Tools
+		if (!targetCrop && this.selectedTool) {
+			for (const targetStat of contributingStats) {
+				const val = this.selectedTool.getStat(targetStat);
+				add(this.selectedTool.info.name, val, targetStat);
+			}
+		} else if (targetCrop) {
+			// If targetCrop is defined, "Farming Tool" in CROP_FORTUNE_SOURCES handles it?
+			// Use CROP_FORTUNE_SOURCES "Farming Tool" logic validation.
+		}
+
+		// Equipment
+		for (const piece of this.armorSet.equipment) {
+			if (!piece) continue;
+			for (const targetStat of contributingStats) {
+				const val = piece.getStat(targetStat);
+				add(piece.info.name, val, targetStat);
+			}
+		}
+
+		// Armor
 		for (const piece of this.armorSet.armor) {
 			if (!piece) continue;
-			const val = piece.getStat(stat);
-			if (val > 0) {
-				breakdown[piece.item.name ?? 'Armor Piece'] = val;
-				sum += val;
+			for (const targetStat of contributingStats) {
+				const val = piece.getStat(targetStat);
+				add(piece.info.name, val, targetStat);
 			}
 		}
 
 		// Armor Set Bonuses
 		for (const { bonus, count } of this.armorSet.setBonuses) {
 			if (count < 2 || count > 4) continue;
-			const val = bonus.stats?.[count]?.[stat] ?? 0;
-			if (val > 0) {
-				breakdown[bonus.name] = val;
-				sum += val;
-			}
-		}
-
-		// Equipment pieces
-		for (const piece of this.armorSet.equipment) {
-			if (!piece) continue;
-			const val = piece.getStat(stat);
-			if (val > 0) {
-				breakdown[piece.item.name ?? 'Equipment Piece'] = val;
-				sum += val;
+			for (const targetStat of contributingStats) {
+				const val = bonus.stats?.[count]?.[targetStat] ?? 0;
+				add(bonus.name, val, targetStat);
 			}
 		}
 
 		// Equipment Set Bonuses
 		for (const { bonus, count } of this.armorSet.equipmentSetBonuses) {
 			if (count < 2 || count > 4) continue;
-			const val = bonus.stats?.[count]?.[stat] ?? 0;
-			if (val > 0) {
-				breakdown[bonus.name] = val;
-				sum += val;
+			for (const targetStat of contributingStats) {
+				const val = bonus.stats?.[count]?.[targetStat] ?? 0;
+				add(bonus.name, val, targetStat); // Use info.name instead of item.name
 			}
-		}
-
-		// Anita Bonus
-		const anitaBonus = getFortune(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE, stat);
-		if (anitaBonus > 0) {
-			breakdown['Anita Bonus Drops'] = anitaBonus;
-			sum += anitaBonus;
-		}
-
-		// Community Center
-		const communityCenter = getFortune(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE, stat);
-		if (communityCenter > 0) {
-			breakdown['Community Center'] = communityCenter;
-			sum += communityCenter;
 		}
 
 		// Accessories
-		const families = new Map<string, FarmingAccessory>();
-		const activeAccessories = [];
+		for (const acc of this.activeAccessories) {
+			// If the accessory is restricted to specific crops, check validity
+			// If targetCrop is undefined (General mode), SKIP crop-specific accessories
+			if (acc.info.crops && (!targetCrop || !acc.info.crops.includes(targetCrop))) continue;
 
-		const sortedAccessories = [...this.accessories]
-			.map((a) => ({ acc: a, val: a.getStat(stat) }))
-			.filter((item) => item.val > 0)
-			.sort((a, b) => b.val - a.val);
-
-		for (const { acc, val } of sortedAccessories) {
-			if (!acc.info.family) continue;
-
-			const existing = families.get(acc.info.family);
-			if (!existing) {
-				families.set(acc.info.family, acc);
-				activeAccessories.push(acc);
-
-				breakdown[acc.item.name ?? acc.item.skyblockId ?? 'Accessory'] = val;
-				sum += val;
+			for (const targetStat of contributingStats) {
+				const val = acc.getStat(targetStat);
+				add(acc.info.name, val, targetStat); // Use info.name instead of item.name
 			}
 		}
 
-		if (stat === Stat.FarmingFortune) {
-			this.activeAccessories = activeAccessories;
-		}
-
-		// Refined Truffles
-		if (stat === Stat.FarmingFortune) {
-			const truffles = Math.min(5, this.options.refinedTruffles ?? 0);
-			if (truffles > 0) {
-				breakdown['Refined Truffles'] = truffles;
-				sum += truffles;
+		// Temporary Fortune
+		if (this.tempFortuneBreakdown) {
+			for (const [name, entry] of Object.entries(this.tempFortuneBreakdown)) {
+				// Temporary fortune is always FarmingFortune
+				if (contributingStats.includes(entry.stat)) {
+					add(name, entry.value, entry.stat);
+				}
 			}
 		}
 
-		// Wriggling Larva
-		if (stat === Stat.BonusPestChance) {
-			const used = Math.min(5, this.options.wrigglingLarva ?? 0);
-			const val = getFortune(used, WRIGGLING_LARVA_SOURCE, stat);
-			if (val > 0) {
-				breakdown['Wriggling Larva'] = val;
-				sum += val;
-			}
-		}
-
-		// DNA Analysis Milestone
-		if (stat === Stat.FarmingFortune) {
-			const fortune = Math.min(5, this.options.dnaMilestone ?? 0) * 5;
-			if (fortune > 0) {
-				breakdown['DNA Analysis Milestone'] = fortune;
-				sum += fortune;
-			}
-		}
-
-		// Filled Rosewater Flask
-		if (stat === Stat.FarmingFortune) {
-			const fortune =
-				Math.min(5, this.options.filledRosewaterFlask ?? 0) * FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel;
-			if (fortune > 0) {
-				breakdown['Filled Rosewater Flask'] = fortune;
-				sum += fortune;
-			}
-		}
-
-		// Garden Chips
-		if (stat === Stat.FarmingFortune) {
-			const fortune =
-				getChipStats('CROPSHOT_GARDEN_CHIP', this.options.chips?.CROPSHOT_GARDEN_CHIP)?.[Stat.FarmingFortune] ??
-				0;
-			const val = fortune * getChipLevel(this.options.chips?.CROPSHOT_GARDEN_CHIP);
-			if (val > 0) {
-				breakdown['Cropshot Chip'] = val;
-				sum += val;
-			}
-		}
-		if (stat === Stat.BonusPestChance) {
-			const bpc =
-				getChipStats('VERMIN_VAPORIZER_GARDEN_CHIP', this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP)?.[
-					Stat.BonusPestChance
-				] ?? 0;
-			const val = bpc * getChipLevel(this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP);
-			if (val > 0) {
-				breakdown['Vermin Vaporizer Chip'] = val;
-				sum += val;
-			}
-		}
-		if (stat === Stat.FarmingWisdom) {
-			const wisdom =
-				getChipStats('SOWLEDGE_GARDEN_CHIP', this.options.chips?.SOWLEDGE_GARDEN_CHIP)?.[Stat.FarmingWisdom] ??
-				0;
-			const val = wisdom * getChipLevel(this.options.chips?.SOWLEDGE_GARDEN_CHIP);
-			if (val > 0) {
-				breakdown['Sowledge Chip'] = val;
-				sum += val;
-			}
-		}
-
-		// Attribute Shards
-		for (const [shardId, value] of Object.entries(this.attributes)) {
-			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
-			if (!shard || value <= 0) continue;
-
-			const val = getShardStat(shard, this, stat);
-			if (val <= 0) continue;
-
-			breakdown[shard.name] = val;
-			sum += val;
-		}
-
-		// Extra Fortune
-		if (stat === Stat.FarmingFortune) {
-			for (const extra of this.options.extraFortune ?? []) {
-				if (extra.crop) continue;
-
-				breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
-				sum += extra.fortune;
-			}
-
-			const temp = this.getTempFortune();
-			if (temp > 0) {
-				breakdown['Temporary Fortune'] = temp;
-			}
-		}
-
-		// Selected Pet
-		const pet = this.selectedPet;
-		if (pet) {
-			const val = pet.getFortune(stat);
-			if (val > 0) {
-				breakdown[pet.info.name ?? 'Selected Pet'] = val;
-				sum += val;
-			}
-		}
-
-		return { value: sum, breakdown };
+		return breakdown;
 	}
 
 	getTempFortune() {
 		let sum = 0;
-		const breakdown = {} as Record<string, number>;
+		const breakdown: StatBreakdown = {};
 
 		// Hypercharge multiplier scales by chip rarity tiers:
 		// Rare (<=10): 1 + 0.03 * level
 		// Epic (<=15): 1 + 0.03 * level
 		// Legendary (>15): 2x boost to temporary fortune sources
-		const hyperLevel = getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP);
-		const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel);
+		const hyperLevel = getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP) ?? 0;
+		const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel) ?? 0;
 		const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
 
 		if (!this.options.temporaryFortune) {
@@ -515,104 +448,31 @@ export class FarmingPlayer {
 			const fortune = source.fortune(this.options.temporaryFortune);
 			if (fortune) {
 				const boosted = fortune * hyperchargeMultiplier;
-				breakdown[source.name] = boosted;
+				breakdown[source.name] = { value: boosted, stat: Stat.FarmingFortune };
 				sum += boosted;
 			}
 		}
 
 		this.tempFortuneBreakdown = breakdown;
+		// Merge temp breakdown into main breakdown
+		if (this.breakdown) {
+			Object.assign(this.breakdown, breakdown);
+		} else {
+			this.breakdown = breakdown;
+		}
+
 		return sum;
 	}
 
-	getCropFortune(crop: Crop, tool = this.selectedTool) {
-		if (tool) {
-			this.selectTool(tool);
-		}
-
-		const { fortuneType } = CROP_INFO[crop];
-
-		let sum = 0;
-		const breakdown = {} as Record<string, number>;
-
-		// Selected Pet
-		const petFortune = this.selectedPet?.getFortune(fortuneType);
-		if (petFortune && petFortune > 0) {
-			breakdown[this.selectedPet?.info.name ?? 'Selected Pet'] = petFortune;
-			sum += petFortune;
-		}
-
-		// Crop upgrades
-		const upgrade = getFortune(this.options.cropUpgrades?.[crop], GARDEN_CROP_UPGRADES);
-		if (upgrade > 0) {
-			breakdown['Crop Upgrade'] = upgrade;
-			sum += upgrade;
-		}
-
-		// Personal bests
-		const personalBest =
-			this.options.personalBests?.[getItemIdFromCrop(crop)] ??
-			this.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
-		if (this.options.personalBestsUnlocked && personalBest) {
-			const fortune = fortuneFromPersonalBestContest(crop, personalBest);
-			if (fortune > 0) {
-				breakdown['Personal Best'] = fortune;
-				sum += fortune;
-			}
-		}
-
-		// Tool
-		const toolFortune = this.selectedTool?.fortune ?? 0;
-		if (toolFortune > 0) {
-			breakdown['Selected Tool'] = toolFortune;
-			sum += toolFortune;
-		}
-
-		// Accessories with crop specific fortune
-		const accessory = this.activeAccessories.find((a) => a.info.crops && a.info.crops.includes(crop));
-		if (accessory && accessory.fortune > 0) {
-			breakdown[accessory.item.name ?? 'Accessories'] = accessory.fortune ?? 0;
-			sum += accessory.fortune ?? 0;
-		}
-
-		// Exportable Crops
-		if (this.options.exportableCrops?.[crop]) {
-			const exportable = this.options.exportableCrops[crop];
-			if (exportable) {
-				breakdown['Exportable Crop'] = EXPORTABLE_CROP_FORTUNE;
-				sum += EXPORTABLE_CROP_FORTUNE;
-			}
-		}
-
-		// Extra Fortune
-		for (const extra of this.options.extraFortune ?? []) {
-			if (extra.crop !== crop) continue;
-
-			breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
-			sum += extra.fortune;
-		}
-
-		if (crop === Crop.CocoaBeans) {
-			const upgrade = getFortune(this.options.cocoaFortuneUpgrade, COCOA_FORTUNE_UPGRADE);
-			if (upgrade > 0) {
-				breakdown['Cocoa Fortune Upgrade'] = upgrade;
-				sum += upgrade;
-			}
-		}
-
-		// Garden Chips
-		// Overdrive: +5 crop fortune for the active contest crop per chip level.
-		if (this.options.jacobContest?.enabled && this.options.jacobContest.crop === crop) {
-			const level = getChipLevel(this.options.chips?.OVERDRIVE_GARDEN_CHIP);
-			const val = 5 * level;
-			if (val > 0) {
-				breakdown['Overdrive Chip'] = val;
-				sum += val;
-			}
-		}
+	getCropFortune(crop?: Crop, tool = this.selectedTool): { fortune: number; breakdown: StatBreakdown } {
+		// If no crop, we return general farming fortune
+		const fortuneType = crop ? CROP_INFO[crop].fortuneType : Stat.FarmingFortune;
+		const breakdown = this.getStatBreakdown(fortuneType, crop);
+		const fortune = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
 
 		return {
-			fortune: sum,
-			breakdown: breakdown,
+			fortune,
+			breakdown,
 		};
 	}
 
@@ -654,7 +514,15 @@ export class FarmingPlayer {
 	}
 
 	getSelectedCropTool(crop: Crop) {
-		return this.selectedTool?.crops.includes(crop) ? this.selectedTool : this.getBestTool(crop);
+		const matches = this.tools.filter((t) => t.crops.includes(crop));
+		// If specific tool is selected, use it
+		if (this.selectedTool && this.selectedTool.crops.includes(crop)) {
+			return this.selectedTool;
+		}
+		// Otherwise return the best one (highest fortune? or first?)
+		// Original getBestTool just returned find -> first match.
+		// Sort by fortune?
+		return matches.sort((a, b) => b.fortune - a.fortune)[0];
 	}
 
 	applyUpgrade(upgrade: FortuneUpgrade) {
@@ -738,10 +606,15 @@ export class FarmingPlayer {
 					target.item.gems ??= {};
 					target.item.gems[upgrade.meta.slot] = String(value);
 					// Re-instantiate so getUpgrades reflects the updated gem
+					// Re-instantiate so getUpgrades reflects the updated gem
 					if (target instanceof FarmingTool) {
 						const idx = this.tools.indexOf(target);
 						if (idx >= 0) {
-							this.tools[idx] = new FarmingTool(target.item, this.options);
+							const newTool = new FarmingTool(target.item, this.options);
+							this.tools[idx] = newTool;
+							if (this.selectedTool === target) {
+								this.selectedTool = newTool;
+							}
 						}
 					} else if (target instanceof FarmingArmor) {
 						const idx = this.armor.indexOf(target);
@@ -815,7 +688,13 @@ export class FarmingPlayer {
 						if (target instanceof FarmingTool && newItem instanceof FarmingTool) {
 							const idx = this.tools.indexOf(target);
 							if (idx >= 0) {
-								this.tools[idx] = new FarmingTool(newItem.item, this.options);
+								const newTool = new FarmingTool(newItem.item, this.options);
+								this.tools[idx] = newTool;
+								// console.log('DEBUG applyUpgrade check:', { target: target.item.skyblockId, selected: this.selectedTool?.item.skyblockId, equal: this.selectedTool === target });
+								if (this.selectedTool === target) {
+									this.selectedTool = newTool;
+									// console.log('DEBUG applyUpgrade updated selectedTool to', newTool.item.skyblockId);
+								}
 							}
 						} else if (target instanceof FarmingArmor && newItem instanceof FarmingArmor) {
 							const idx = this.armor.indexOf(target);

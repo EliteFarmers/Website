@@ -28,6 +28,10 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 			set.setBonuses.reduce((acc, bonus) => {
 				return acc + (bonus.bonus.stats[bonus.count]?.[Stat.FarmingFortune] ?? 0);
 			}, 0),
+		currentStat: (set, stat) =>
+			set.setBonuses.reduce((acc, bonus) => {
+				return acc + (bonus.bonus.stats[bonus.count]?.[stat] ?? 0);
+			}, 0),
 	},
 	...Object.entries(GEAR_SLOTS)
 		.filter(([, info]) => info.target === ReforgeTarget.Equipment)

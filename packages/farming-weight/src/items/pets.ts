@@ -322,23 +322,23 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			[Stat.FarmingFortune]: {
 				name: 'Base Stats',
 				type: FarmingPetStatType.Base,
-				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.2) + 20,
+				calculated: (pet) => (pet.level < 101 ? 0 : pet.level * 0.2),
 			},
 			[Stat.Speed]: {
 				name: 'Base Stats',
 				type: FarmingPetStatType.Base,
-				calculated: (pet) => (pet.level < 101 ? 0 : (pet.level - 100) * 0.5) + 50,
+				calculated: (pet) => (pet.level < 101 ? 0 : pet.level * 0.5),
 			},
 		},
 		abilities: [
 			{
 				name: 'Garden Power',
 				exists: (_, pet) => pet.level >= 101,
-				computed: (player) => {
+				computed: (player, pet) => {
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Garden Power',
-							value: (player.options.farmingLevel ?? 0) * 3,
+							value: (player.options.farmingLevel ?? 0) * ((3 * pet.level) / 200),
 							type: FarmingPetStatType.Ability,
 						},
 					};
@@ -347,17 +347,17 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 			{
 				name: 'Rosy Scales',
 				exists: (_, pet) => pet.level >= 101,
-				computed: (player) => {
+				computed: (player, pet) => {
 					const milestoneLevels = Object.values(player.options.milestones ?? {}).reduce((a, b) => a + b, 0);
 					return {
 						[Stat.FarmingFortune]: {
 							name: 'Rosy Scales',
-							value: milestoneLevels * 0.15,
+							value: milestoneLevels * ((0.15 * pet.level) / 200),
 							type: FarmingPetStatType.Ability,
 						},
 						[Stat.Speed]: {
 							name: 'Rosy Scales',
-							value: milestoneLevels * 0.1,
+							value: milestoneLevels * ((0.1 * pet.level) / 200),
 							type: FarmingPetStatType.Ability,
 						},
 					};

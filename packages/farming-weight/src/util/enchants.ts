@@ -76,14 +76,22 @@ function getStatFromTier(
 		return 0;
 	}
 
-	let value = tier.stats?.[stat] ?? 0;
+	let value = 0;
+	const s = stat;
+
+	value += tier.stats?.[s] ?? 0;
 
 	if (options) {
-		value += tier.computed?.[stat]?.(options) ?? 0;
+		value += tier.computed?.[s]?.(options) ?? 0;
+
+		const computedStats = tier.computedStats?.(options);
+		if (computedStats) {
+			value += computedStats[s] ?? 0;
+		}
 	}
 
 	if (crop && (!enchant.cropSpecific || enchant.cropSpecific === crop)) {
-		value += tier.cropComputed?.[stat]?.(crop, options) ?? 0;
+		value += tier.cropComputed?.[s]?.(crop, options) ?? 0;
 	}
 
 	return value;

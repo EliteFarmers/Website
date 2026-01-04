@@ -1,4 +1,4 @@
-import type { Crop } from '../constants/crops.js';
+import { CROP_INFO, type Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { type Rarity, REFORGES, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
@@ -243,11 +243,23 @@ export class FarmingTool extends UpgradeableBase {
 	}
 
 	getStat(stat: Stat): number {
-		if (stat === Stat.FarmingFortune) {
-			return this.getFortune();
+		let sum = 0;
+
+		// Tool level gives 4 crop-specific fortune per level
+		for (const crop of this.crops) {
+			if (stat === CROP_INFO[crop]?.fortuneType) {
+				sum += this.level * 4;
+				break;
+			}
 		}
 
-		let sum = 0;
+		if (stat === Stat.FarmingFortune) {
+			sum += this.farmingForDummies;
+
+			// Axed Perk gives +2% of Total Fortune as Farming Fortune
+			this.getFortune();
+			sum += this.fortuneBreakdown['Axed Perk'] ?? 0;
+		}
 
 		// Tools now have a flat +1 Farming Wisdom baseline.
 		if (stat === Stat.FarmingWisdom) {
@@ -270,7 +282,9 @@ export class FarmingTool extends UpgradeableBase {
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
 			for (const crop of this.crops) {
-				sum += getStatFromEnchant(level, enchantment, stat, this.options, crop);
+				const val = getStatFromEnchant(level, enchantment, stat, this.options, crop);
+
+				sum += val;
 			}
 		}
 
@@ -316,7 +330,13 @@ export class FarmingTool extends UpgradeableBase {
 			if (enchantment.cropSpecific && !this.crops.includes(enchantment.cropSpecific)) continue;
 
 			for (const crop of this.crops) {
-				const fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
+				let fortune = getFortuneFromEnchant(level, enchantment, this.options, crop);
+				const cropStat = CROP_INFO[crop]?.fortuneType;
+
+				if (cropStat) {
+					fortune += getStatFromEnchant(level, enchantment, cropStat, this.options, crop);
+				}
+
 				if (fortune > 0) {
 					this.fortuneBreakdown[enchantment.name] = fortune;
 					sum += fortune;

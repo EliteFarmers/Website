@@ -147,6 +147,20 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			}, 0);
 			return totalCurrent;
 		},
+		maxStat: (player, stat) => {
+			return Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
+				const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
+				return acc + per * GARDEN_CHIP_MAX_LEVEL;
+			}, 0);
+		},
+		currentStat: (player, stat) => {
+			return Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
+				const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+				const rarity = getChipRarity(level);
+				const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
+				return acc + per * level;
+			}, 0);
+		},
 		progress: (player, stats) => {
 			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, stats);
 		},
@@ -802,6 +816,7 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			return [
 				{
 					title: `${chip.name} ${nextLevel}`,
+					api: false,
 					increase: deltaStats[Stat.FarmingFortune] ?? 0,
 					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
 					action: UpgradeAction.LevelUp,

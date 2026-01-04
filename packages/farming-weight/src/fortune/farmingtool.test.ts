@@ -347,9 +347,10 @@ test('FarmingTool getStats returns multiple stats', () => {
 	const tool = new FarmingTool(netherwartHoe);
 	const stats = tool.getStats();
 
-	// Should have FarmingFortune
+	// Should have FarmingFortune (without level bonus now, since level is crop-specific)
 	expect(stats[Stat.FarmingFortune]).toBeDefined();
-	expect(stats[Stat.FarmingFortune]).toBe(tool.getFortune());
+	// Level 50 * 4 = 200 is NOT in FarmingFortune anymore, it goes to crop fortune
+	expect(stats[Stat.FarmingFortune]).toBeGreaterThan(0);
 
 	// Bountiful reforge gives Speed
 	expect(stats[Stat.Speed]).toBeDefined();

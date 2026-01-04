@@ -1,7 +1,7 @@
-import { Crop, getCropFromName } from 'farming-weight';
+import { Crop, getCropFromName, Stat } from 'farming-weight';
 import type { MemberCosmeticsDto, PlayerDataDto, UserSettingsDto } from './api';
 import { MINECRAFT_COLORS, MINECRAFT_FORMATTING_STYLE, type FormattingCode } from './constants/colors';
-import { RANKS, RANK_PLUS_COLORS, SKYBLOCK_MONTHS } from './constants/data';
+import { RANK_PLUS_COLORS, RANKS, SKYBLOCK_MONTHS } from './constants/data';
 import type { LeaderboardInfo } from './constants/leaderboards';
 import { DEFAULT_SKILL_CAPS, LEVEL_XP, RUNE_LEVELS, SOCIAL_XP } from './constants/levels';
 import type { PlusColor, RankName, Skill } from './skyblock';
@@ -357,4 +357,39 @@ export function getLeaderboardFormatOptions(leaderboard?: LeaderboardInfo): Intl
 	}
 
 	return {};
+}
+
+export function getStatColor(stat: Stat, ratio: number): string | null {
+	switch (stat) {
+		case Stat.MelonFortune:
+			return ratio < 1 ? 'bg-melon/70' : 'bg-melon';
+		case Stat.PumpkinFortune:
+			return ratio < 1 ? 'bg-pumpkin/70' : 'bg-pumpkin';
+		case Stat.CactusFortune:
+			return ratio < 1 ? 'bg-cactus/70' : 'bg-cactus';
+		case Stat.SugarCaneFortune:
+			return ratio < 1 ? 'bg-sugarcane/70' : 'bg-sugarcane';
+		case Stat.CarrotFortune:
+			return ratio < 1 ? 'bg-carrot/70' : 'bg-carrot';
+		case Stat.PotatoFortune:
+			return ratio < 1 ? 'bg-potato/70' : 'bg-potato';
+		case Stat.WheatFortune:
+			return ratio < 1 ? 'bg-wheat/70' : 'bg-wheat';
+		case Stat.MushroomFortune:
+			return ratio < 1 ? 'bg-mushroom/70' : 'bg-mushroom';
+		case Stat.CocoaBeanFortune:
+			return ratio < 1 ? 'bg-cocoa/70' : 'bg-cocoa';
+		case Stat.MoonflowerFortune:
+			return ratio < 1 ? 'bg-moonflower/70' : 'bg-moonflower';
+		case Stat.NetherWartFortune:
+			return ratio < 1 ? 'bg-netherwart/70' : 'bg-netherwart';
+		case Stat.SunflowerFortune:
+			return ratio < 1 ? 'bg-sunflower/70' : 'bg-sunflower';
+		case Stat.WildRoseFortune:
+			return ratio < 1 ? 'bg-wildrose/70' : 'bg-wildrose';
+		case Stat.FarmingFortune:
+			return ratio < 1 ? 'bg-progress' : 'bg-completed';
+		default:
+			return 'bg-muted';
+	}
 }

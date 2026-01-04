@@ -1,6 +1,6 @@
 import { getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
-import { getStatValue, Stat } from '../constants/stats.js';
+import { getStatValue, Stat, type StatBreakdown } from '../constants/stats.js';
 import {
 	FARMING_PET_ITEMS,
 	FARMING_PETS,
@@ -63,7 +63,10 @@ export class FarmingPet {
 		this.fortune = this.getFortune();
 	}
 
-	getFortune(stat = Stat.FarmingFortune, player?: FarmingPlayer): number {
+	private computeFortune(
+		stat: Stat = Stat.FarmingFortune,
+		player?: FarmingPlayer
+	): { fortune: number; breakdown: Record<string, number> } {
 		let fortune = 0;
 		const breakdown: Record<string, number> = {};
 
@@ -128,11 +131,34 @@ export class FarmingPet {
 			}
 		}
 
+		return { fortune, breakdown };
+	}
+
+	getFortune(stat = Stat.FarmingFortune, player?: FarmingPlayer): number {
+		const { fortune, breakdown } = this.computeFortune(stat, player);
 		if (stat === Stat.FarmingFortune) {
 			this.breakdown = breakdown;
 			this.fortune = fortune;
 		}
 		return fortune;
+	}
+
+	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {
+		const full: StatBreakdown = {};
+		for (const stat of Object.values(Stat)) {
+			const { fortune, breakdown } = this.computeFortune(stat, player);
+			if (!fortune) continue;
+			for (const [name, value] of Object.entries(breakdown)) {
+				if (value === 0) continue;
+				const existing = full[name];
+				if (existing && existing.stat === stat) {
+					existing.value += value;
+				} else {
+					full[name] = { value, stat };
+				}
+			}
+		}
+		return full;
 	}
 
 	getFormattedName() {

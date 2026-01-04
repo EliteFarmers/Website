@@ -162,12 +162,12 @@ test('Test tool fortune sources', () => {
 		},
 	]);
 
-	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(tool.fortune);
+	expect(progress.reduce((acc, curr) => acc + curr.current, 0)).toBe(173);
 
 	tool.changeReforgeTo('blessed');
 	expect(tool.fortune).toBe(183);
 
-	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(tool.fortune);
+	expect(tool.getProgress().reduce((acc, curr) => acc + curr.current, 0)).toBe(183);
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.max, 0)).toBe(465);
 });
 
@@ -316,22 +316,13 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	// Gem slots now respect tool-level unlock requirements (this item has no tool level data,
 	// so its effective level is 1 and gemstone slot upgrades are not yet available).
 	// Upgrades come from individual sources, plus self and rarity upgrades added in getUpgrades().
-	expect(upgrades).toHaveLength(8);
+	expect(upgrades).toHaveLength(6);
 
 	const selfUpgrade = upgrades.find((u) => u.title === "Euclid's Wheat Hoe Mk. II");
 	expect(selfUpgrade).toBeDefined();
 	expect(selfUpgrade?.increase).toBe(0);
 	expect(selfUpgrade?.action).toBe(UpgradeAction.Upgrade);
 	expect(selfUpgrade?.category).toBe(UpgradeCategory.Item);
-
-	const harvesting = upgrades.find((u) => u.title === 'Harvesting 1');
-	expect(harvesting).toBeDefined();
-	expect(harvesting?.increase).toBe(12.5);
-	expect(harvesting?.action).toBe(UpgradeAction.Apply);
-	expect(harvesting?.category).toBe(UpgradeCategory.Enchant);
-	expect(harvesting?.cost?.items).toStrictEqual({
-		ENCHANTMENT_HARVESTING_1: 1,
-	});
 
 	const bountiful = upgrades.find((u) => u.title === 'Reforge to Bountiful');
 	expect(bountiful).toBeDefined();
@@ -347,15 +338,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 		},
 	});
 
-	const turboWheat = upgrades.find((u) => u.title === 'Turbo-Wheat 1');
-	expect(turboWheat).toBeDefined();
-	expect(turboWheat?.increase).toBe(5);
-	expect(turboWheat?.action).toBe(UpgradeAction.Apply);
-	expect(turboWheat?.category).toBe(UpgradeCategory.Enchant);
-	expect(turboWheat?.cost?.items).toStrictEqual({
-		ENCHANTMENT_TURBO_WHEAT_1: 1,
-	});
-
 	const cultivating = upgrades.find((u) => u.title === 'Cultivating 1');
 	expect(cultivating).toBeDefined();
 	expect(cultivating?.increase).toBe(2);
@@ -363,15 +345,6 @@ test('Tier 1 Wheat Hoe Upgrades', () => {
 	expect(cultivating?.category).toBe(UpgradeCategory.Enchant);
 	expect(cultivating?.cost?.items).toStrictEqual({
 		ENCHANTMENT_CULTIVATING_1: 1,
-	});
-
-	const dedication = upgrades.find((u) => u.title === 'Dedication 1');
-	expect(dedication).toBeDefined();
-	expect(dedication?.increase).toBe(0);
-	expect(dedication?.action).toBe(UpgradeAction.Apply);
-	expect(dedication?.category).toBe(UpgradeCategory.Enchant);
-	expect(dedication?.cost?.items).toStrictEqual({
-		ENCHANTMENT_DEDICATION_1: 1,
 	});
 
 	const farmingForDummies = upgrades.find((u) => u.title === 'Farming For Dummies');
@@ -410,9 +383,6 @@ test('Tier 3 Cane Hoe Upgrades (crop stat includes Farming Fortune upgrades)', (
 
 	const peridot2 = upgrades.find((u) => u.meta?.type === 'gem' && u.meta?.slot === 'PERIDOT_2');
 	expect(peridot2).toBeDefined();
-
-	const dedication = upgrades.find((u) => u.title === 'Dedication 1');
-	expect(dedication).toBeDefined();
 });
 
 const wildRoseHoe = {

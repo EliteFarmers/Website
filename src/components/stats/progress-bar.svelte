@@ -40,13 +40,13 @@
 
 <div class="flex w-full flex-1 flex-row items-center">
 	<div
-		class="relative block w-full {compact ? 'h-5 rounded-sm' : 'h-6 rounded-md md:my-1'} {barBg}"
+		class="relative block w-full {compact ? 'h-5 rounded-xs' : 'h-6 rounded-sm md:my-1'} {barBg}"
 		onmouseenter={() => (hovering = true)}
 		onmouseleave={() => (hovering = false)}
 		role="none"
 	>
 		<div
-			class="absolute {compact ? 'h-5 rounded-sm' : 'h-6 rounded-md'} {background}"
+			class="absolute {compact ? 'h-5 rounded-xs' : 'h-6 rounded-sm'} {background}"
 			style={`width: ${Math.min(percent, 100)}%`}
 		></div>
 		<div class="absolute flex h-full w-full items-center justify-center">

@@ -53,17 +53,24 @@ export function getUpgradeableEnchant(
 			if (val !== 0) deltaStats[stat] = val;
 		}
 		// Some enchants (e.g. Dedication) are crop-computed and can evaluate to 0
-		// without player context. Preserve a FarmingFortune stat key so stat-filtered
-		// views can still include these upgrades.
-		if (maxForStat > 0 && deltaStats[Stat.FarmingFortune] === undefined) {
-			deltaStats[Stat.FarmingFortune] = 0;
+		// without player context. Preserve stat keys so stat-filtered views include them.
+		if (maxForStat > 0) {
+			if (stat !== Stat.FarmingFortune && deltaStats[stat] === undefined) {
+				deltaStats[stat] = 0;
+			}
+			if (deltaStats[Stat.FarmingFortune] === undefined) {
+				deltaStats[Stat.FarmingFortune] = 0;
+			}
 		}
-		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+		const hasStats = Object.keys(deltaStats).length > 0;
+		const stats = hasStats ? deltaStats : undefined;
+		const increase = stats?.[Stat.FarmingFortune] ?? 0;
 
 		result.push({
 			title: enchant.name + ' 1',
 			increase,
-			stats: deltaStats,
+			stats,
 			wiki: enchant.wiki,
 			action:
 				!procurement || procurement === EnchantTierProcurement.Normal
@@ -102,10 +109,18 @@ export function getUpgradeableEnchant(
 		const diff = after - before;
 		if (diff !== 0) deltaStats[stat] = diff;
 	}
-	if (maxForStat > 0 && deltaStats[Stat.FarmingFortune] === undefined) {
-		deltaStats[Stat.FarmingFortune] = 0;
+	if (maxForStat > 0) {
+		if (stat !== Stat.FarmingFortune && deltaStats[stat] === undefined) {
+			deltaStats[stat] = 0;
+		}
+		if (deltaStats[Stat.FarmingFortune] === undefined) {
+			deltaStats[Stat.FarmingFortune] = 0;
+		}
 	}
-	const increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+	const hasStats = Object.keys(deltaStats).length > 0;
+	const stats = hasStats ? deltaStats : undefined;
+	const increase = stats?.[Stat.FarmingFortune] ?? 0;
 
 	const nextEnchant = enchant.levels[applied + 1];
 	if (!nextEnchant) return result;
@@ -144,7 +159,7 @@ export function getUpgradeableEnchant(
 	result.push({
 		title: enchant.name + ' ' + (applied + 1),
 		increase,
-		stats: deltaStats,
+		stats,
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
 		conflictKey: `enchant:${enchantId}:${applied + 1}`,
