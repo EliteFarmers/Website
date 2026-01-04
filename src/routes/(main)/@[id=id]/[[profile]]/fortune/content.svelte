@@ -123,6 +123,9 @@
 
 	let armorSet = $derived(new ArmorSet(armor, equipment));
 
+	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
+	const selectedCropKey = $derived(cropKey(selectedCrop));
+
 	let options = $derived({
 		tools: tools,
 		armor: armorSet,
@@ -175,14 +178,14 @@
 					mode: $ratesData.zorroMode,
 				}
 			: undefined,
+
+		selectedCrop: selectedCropKey,
 	} as PlayerOptions);
 
 	// svelte-ignore state_referenced_locally
 	let player = $state(getRatesPlayer(options));
 
-	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? '');
 	const cropFortune = $derived($player.getCropFortune(getCropFromName(selectedCrop) ?? undefined));
-	const selectedCropKey = $derived(cropKey(selectedCrop));
 	const selectedCropFortuneType = $derived(selectedCropKey ? CROP_INFO[selectedCropKey]?.fortuneType : undefined);
 
 	const cropOnlyBreakdown = $derived.by(() => {
@@ -345,6 +348,7 @@
 				enabled: ctx.member.current?.chocolateFactory?.unlockedZorro ?? false,
 				mode: $ratesData.zorroMode,
 			},
+			selectedCrop: selectedCropKey,
 		};
 
 		untrack(() => {

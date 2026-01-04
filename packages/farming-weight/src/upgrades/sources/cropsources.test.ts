@@ -88,8 +88,8 @@ test('Wheat fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 30,
-			max: 30,
-			ratio: 30 / 30,
+			max: 40,
+			ratio: 30 / 40,
 		},
 		{
 			name: 'Personal Best',
@@ -151,8 +151,8 @@ test('Potato fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 20,
-			max: 30,
-			ratio: 20 / 30,
+			max: 40,
+			ratio: 20 / 40,
 		},
 		{
 			name: 'Personal Best',
@@ -207,7 +207,7 @@ test('Nether Wart fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 0,
-			max: 30,
+			max: 40,
 			ratio: 0,
 		},
 		{
@@ -266,8 +266,8 @@ test('Carrot fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 10,
-			max: 30,
-			ratio: 10 / 30,
+			max: 40,
+			ratio: 10 / 40,
 		},
 
 		{
@@ -316,8 +316,8 @@ test('Melon fortune test', () => {
 		{
 			name: 'Helianthus Relic Family',
 			current: 0,
-			max: 30,
-			ratio: 0 / 30,
+			max: 40,
+			ratio: 0 / 40,
 		},
 		{
 			name: 'Personal Best',
@@ -345,6 +345,7 @@ test('Cropie talisman test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	const cropie = progress.find((p) => p.name === 'Helianthus Relic Family');
@@ -352,8 +353,8 @@ test('Cropie talisman test', () => {
 	expect(cropie).toStrictEqual({
 		name: 'Helianthus Relic Family',
 		current: 10,
-		max: 30,
-		ratio: 10 / 30,
+		max: 40,
+		ratio: 10 / 40,
 	});
 });
 
@@ -374,6 +375,7 @@ test('Squash ring test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	const squash = progress.find((p) => p.name === 'Helianthus Relic Family');
@@ -381,8 +383,8 @@ test('Squash ring test', () => {
 	expect(squash).toStrictEqual({
 		name: 'Helianthus Relic Family',
 		current: 20,
-		max: 30,
-		ratio: 20 / 30,
+		max: 40,
+		ratio: 20 / 40,
 	});
 
 	const generalSources = player.getProgress();

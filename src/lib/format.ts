@@ -388,7 +388,7 @@ export function getStatColor(stat: Stat, ratio: number): string | null {
 		case Stat.WildRoseFortune:
 			return ratio < 1 ? 'bg-wildrose/70' : 'bg-wildrose';
 		case Stat.FarmingFortune:
-			return ratio < 1 ? 'bg-progress' : 'bg-completed';
+			return ratio < 1 ? 'bg-progress/70' : 'bg-progress';
 		default:
 			return 'bg-muted';
 	}

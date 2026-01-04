@@ -4,6 +4,7 @@ import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import type { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import type { FarmingTool } from '../../fortune/farmingtool.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
 import type { FarmingPlayer } from '../../player/player.js';
@@ -209,40 +210,42 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
 			);
 
-			// Helianthus Relic provides general fortune only; treat as non-existent for crop sources
+			// Helianthus Relic provides general fortune only
 			if (active?.info.skyblockId === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.skyblockId) return false;
 
 			return true;
 		},
 		wiki: ({ player }) => {
 			const highest = player.activeAccessories.find(
-				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
 			);
 			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN?.wiki;
 		},
 		max: ({ crop }) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
-			return Math.max(FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0);
+			const item = getFakeItem<FarmingAccessory>('HELIANTHUS_RELIC');
+			return Math.max(item?.getStat(fortuneType) ?? 0, item?.getStat(Stat.FarmingFortune) ?? 0);
 		},
 		current: ({ player, crop }) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
 			const highest = player.activeAccessories.find(
-				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
 			);
 			if (!highest) return 0;
 			return highest.getStat(fortuneType) || highest.getStat(Stat.FarmingFortune);
 		},
 		maxStat: ({ crop }, stat) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
+			const item = getFakeItem<FarmingAccessory>('HELIANTHUS_RELIC');
 			if (fortuneType === stat) {
-				return Math.max(FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[fortuneType] ?? 0);
+				return Math.max(item?.getStat(fortuneType) ?? 0, item?.getStat(Stat.FarmingFortune) ?? 0);
 			}
 			return 0;
 		},
 		currentStat: ({ player, crop }, stat) => {
 			const fortuneType = CROP_INFO[crop].fortuneType;
 			const highest = player.activeAccessories.find(
-				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
 			);
 			if (!highest) return 0;
 
@@ -253,15 +256,51 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		},
 		info: ({ player }) => {
 			const highest = player.activeAccessories.find(
-				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
 			);
 			const first = !highest ? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN : undefined;
 			return {
 				item: highest?.item,
 				info: highest?.info,
 				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
-				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC,
 			};
+		},
+		upgrades: ({ player }) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
+			);
+
+			if (!highest) {
+				const cropie = FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN;
+				if (!cropie) return [];
+
+				return [
+					{
+						title: cropie.name,
+						increase: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
+						stats: {
+							[Stat.FarmingFortune]: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
+						},
+						action: UpgradeAction.Purchase,
+						item: 'CROPIE_TALISMAN',
+						category: UpgradeCategory.Item,
+						wiki: cropie.wiki,
+						cost: {
+							items: {
+								CROPIE_TALISMAN: 1,
+							},
+						},
+						meta: {
+							type: 'buy_item',
+							id: 'CROPIE_TALISMAN',
+						},
+						conflictKey: 'accessory:CROPIE_TALISMAN',
+					},
+				];
+			}
+
+			return highest.getUpgrades();
 		},
 	},
 	{

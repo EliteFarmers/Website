@@ -12,7 +12,7 @@ import {
 	getChipLevel,
 	getChipRarity,
 } from '../../constants/chips.js';
-import type { Crop } from '../../constants/crops.js';
+import { CROP_INFO, type Crop } from '../../constants/crops.js';
 import { Rarity } from '../../constants/reforges.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
@@ -302,7 +302,23 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Helianthus Relic',
-		exists: () => true,
+		exists: (player) => {
+			if (!player.options.selectedCrop) return true;
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+			);
+			if (!highest) return true;
+
+			// If player has Helianthus Relic, always show this
+			if (highest.info.skyblockId === 'HELIANTHUS_RELIC') return true;
+
+			const cropFortuneType = CROP_INFO[player.options.selectedCrop]?.fortuneType;
+			if (cropFortuneType && highest.info.baseStats?.[cropFortuneType]) {
+				return false;
+			}
+
+			return true;
+		},
 		wiki: (player) => {
 			const highest = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
@@ -328,9 +344,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			return highest.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		},
 		info: (player) => {
-			const highest = player.activeAccessories.find(
-				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
-			);
+			const highest = player.activeAccessories.find((a) => a.info === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC);
 			const first = !highest ? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN : undefined;
 			return {
 				item: highest?.item,
