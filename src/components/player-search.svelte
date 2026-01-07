@@ -10,6 +10,7 @@
 	import { ScrollArea } from '$ui/scroll-area';
 	import cn from 'classnames';
 	import { Debounced, watch } from 'runed';
+	import PlayerHead from './sidebar/player-head.svelte';
 
 	let {
 		open = $bindable(false),
@@ -102,7 +103,7 @@
 									command(player);
 								})}
 						>
-							{player}
+							{@render listItem(player)}
 						</Command.Item>
 					{:else}
 						{#if searchStr == ''}
@@ -114,3 +115,10 @@
 		</ScrollArea>
 	</Command.Root>
 </Command.Dialog>
+
+{#snippet listItem(ign: string)}
+	<div class="flex flex-row items-center gap-2">
+		<PlayerHead class="size-6 rounded-sm" uuid={ign} />
+		{ign}
+	</div>
+{/snippet}
