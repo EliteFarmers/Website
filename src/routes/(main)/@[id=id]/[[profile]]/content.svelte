@@ -7,11 +7,13 @@
 	import BadgeList from '$comp/stats/namecard/badge-list.svelte';
 	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
+	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { getProfilesAccount } from '$lib/remote';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
 	import { tick, type Snippet } from 'svelte';
+	import Time from 'svelte-time/Time.svelte';
 	import NavCrumbs from './nav-crumbs.svelte';
 
 	let {
@@ -98,17 +100,28 @@
 			{/if}
 			{#if ctx.member.current}
 				<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
-					<span class="text-muted-foreground select-none">Profile Last Updated</span>
-					<span class="select-all"
-						>{new Date(Number(ctx.member.current?.lastUpdated ?? 0) * 1000).toLocaleString()}</span
+					<span class="text-muted-foreground select-none">Profile Last Fetched</span>
+					<DateDisplay
+						timestamp={Number(ctx.member.current?.lastUpdated ?? 0) * 1000}
+						format="MMMM D, YYYY h:mm A"
 					>
+						<div class="text-muted-foreground flex flex-1 flex-col items-center gap-0.5 text-sm">
+							<span class="select-none">Profile Last Changed</span>
+							<Time
+								timestamp={Number(ctx.member.current?.lastDataChanged ?? 0) * 1000}
+								format="dddd, MMMM D, YYYY h:mm A"
+							/>
+						</div>
+					</DateDisplay>
 				</div>
+
 				{#if page.url.pathname.includes('/garden')}
 					<div class="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
 						<span class="text-muted-foreground select-none">Garden Last Updated</span>
-						<span class="select-all"
-							>{new Date(+(ctx.member.current?.garden?.lastSave ?? 0) * 1000).toLocaleString()}</span
-						>
+						<DateDisplay
+							timestamp={Number(ctx.member.current?.garden?.lastSave ?? 0) * 1000}
+							format="MMMM D, YYYY h:mm A"
+						/>
 					</div>
 				{/if}
 			{/if}

@@ -45,7 +45,8 @@
 		entries
 			.slice(0, 10)
 			.map(
-				(entry, i) => `${i + offset}. ${entry.ign} - ${formatLeaderboardAmount(data.leaderboard, entry.amount)}`
+				(entry, i) =>
+					`${i + offset}. ${entry.ign ?? entry.members?.at(0)?.ign ?? 'N/A'} - ${formatLeaderboardAmount(data.leaderboard, entry.amount)}`
 			)
 			.join('\n')
 	);

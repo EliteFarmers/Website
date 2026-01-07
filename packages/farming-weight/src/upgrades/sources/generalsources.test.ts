@@ -49,7 +49,7 @@ test('General fortune sources', () => {
 			alwaysInclude: true,
 		},
 		{
-			name: 'Pest Bestiary',
+			name: 'Garden Bestiary',
 			current: 6 * 0.4,
 			max: 96,
 			ratio: (6 * 0.4) / 96,
@@ -111,6 +111,7 @@ test('General fortune sources', () => {
 		},
 		{
 			name: 'Filled Rosewater Flask',
+			api: false,
 			current: 0,
 			max: 5,
 			ratio: 0,
