@@ -9,7 +9,9 @@
 	import * as Card from '$ui/card';
 	import ScrollArea from '$ui/scroll-area/scroll-area.svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import CircleDollarSign from '@lucide/svelte/icons/circle-dollar-sign';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
 	import type { PageData } from './$types';
 	import ArticlePill from './articles/article-pill.svelte';
 	import ArticleSkeleton from './articles/article-skeleton.svelte';
@@ -44,6 +46,51 @@
 				<Serverbar guild={data.eliteGuild} lazy={false} />
 			</div>
 		{/if}
+
+		<a class="flex max-w-4xl flex-col gap-4 md:flex-row" href="/fortune">
+			<div
+				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+			>
+				<div class="bg-progress/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
+				<div class="bg-progress/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
+
+				<div class="relative z-10 flex flex-col gap-6">
+					<div class="flex flex-col gap-2">
+						<div class="text-primary flex items-center gap-2">
+							<CircleDollarSign class="h-5 w-5" />
+							<span class="font-bold tracking-wider uppercase">Cheapest Fortune</span>
+						</div>
+						<span class="text-foreground"
+							>View your cheapest fortune upgrades and farming fortune progress!</span
+						>
+					</div>
+				</div>
+
+				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
+					<ArrowRight class="size-6" />
+				</div>
+			</div>
+			<div
+				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+			>
+				<div class="bg-primary/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
+				<div class="bg-primary/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
+
+				<div class="relative z-10 flex flex-col gap-6">
+					<div class="flex flex-col gap-2">
+						<div class="text-primary flex items-center gap-2">
+							<ShoppingCart class="h-5 w-5" />
+							<span class="font-bold tracking-wider uppercase">Shop</span>
+						</div>
+						<span class="text-foreground">Check out the cosmetics shop to support the website!</span>
+					</div>
+				</div>
+
+				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
+					<ArrowRight class="size-6" />
+				</div>
+			</div>
+		</a>
 
 		<div class="flex max-w-full flex-col gap-4">
 			<h2 class="text-3xl">Recent Articles</h2>
