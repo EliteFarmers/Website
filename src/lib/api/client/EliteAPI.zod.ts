@@ -9284,6 +9284,7 @@ export const zodGetProfileResponse = zod.object({
 	isSelected: zod.coerce.boolean<boolean>(),
 	wasRemoved: zod.coerce.boolean<boolean>(),
 	lastUpdated: zod.number(),
+	lastDataChanged: zod.number(),
 });
 
 /**
@@ -10403,6 +10404,7 @@ export const zodGetSelectedProfileResponse = zod.object({
 	isSelected: zod.coerce.boolean<boolean>(),
 	wasRemoved: zod.coerce.boolean<boolean>(),
 	lastUpdated: zod.number(),
+	lastDataChanged: zod.number(),
 });
 
 /**

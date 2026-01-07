@@ -54,4 +54,5 @@ export interface ProfileMemberDto {
 	isSelected: boolean;
 	wasRemoved: boolean;
 	lastUpdated: bigint;
+	lastDataChanged: bigint;
 }
