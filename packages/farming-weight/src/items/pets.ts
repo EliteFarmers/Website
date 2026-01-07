@@ -306,7 +306,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					return {
 						[Stat.SugarCaneFortune]: {
 							name: "Buzzin' Barterer",
-							value: pet.level * 0.02 * (player.options.uniqueVisitors ?? 0),
+							value: Math.min(pet.level * 0.02 * (player.options.uniqueVisitors ?? 0), 175),
 							type: FarmingPetStatType.Ability,
 						},
 					};

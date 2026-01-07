@@ -606,6 +606,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: FILLED_ROSEWATER_FLASK_SOURCE.name,
+		api: false,
 		wiki: () => FILLED_ROSEWATER_FLASK_SOURCE.wiki,
 		exists: () => true,
 		max: () => FILLED_ROSEWATER_FLASK_SOURCE.maxLevel * FILLED_ROSEWATER_FLASK_SOURCE.fortunePerLevel,
