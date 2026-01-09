@@ -5135,6 +5135,380 @@ export const zodGetMedalBracketsGraphResponseItem = zod.object({
 export const zodGetMedalBracketsGraphResponse = zod.array(zodGetMedalBracketsGraphResponseItem);
 
 /**
+ * Retrieves a list of guides waiting for approval.
+ * @summary Get pending guides
+ */
+export const zodAdminPendingGuidesResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	status: zod.string(),
+});
+export const zodAdminPendingGuidesResponse = zod.array(zodAdminPendingGuidesResponseItem);
+
+/**
+ * Approves a pending comment, making it visible to all users.
+ * @summary Approve a comment
+ */
+export const zodApproveCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+/**
+ * Approve a pending guide and publish it.
+ * @summary Approve and publish a guide
+ */
+export const zodApproveGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Add a guide to user's bookmarks/favorites.
+ * @summary Bookmark a guide
+ */
+export const zodBookmarkGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Remove a guide from user's bookmarks.
+ * @summary Remove bookmark
+ */
+export const zodUnbookmarkGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Create a new comment on a guide.
+ * @summary Post a comment
+ */
+export const zodCreateCommentParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodCreateCommentBodyContentMin = 0;
+export const zodCreateCommentBodyContentMax = 2048;
+
+export const zodCreateCommentBodyLiftedElementIdMin = 0;
+export const zodCreateCommentBodyLiftedElementIdMax = 128;
+
+export const zodCreateCommentBody = zod.object({
+	parentId: zod.number().nullish(),
+	content: zod.string().min(zodCreateCommentBodyContentMin).max(zodCreateCommentBodyContentMax),
+	liftedElementId: zod
+		.string()
+		.min(zodCreateCommentBodyLiftedElementIdMin)
+		.max(zodCreateCommentBodyLiftedElementIdMax)
+		.nullish(),
+});
+
+/**
+ * Initializes a new empty guide draft for the user.
+ * @summary Create a new guide draft
+ */
+export const zodCreateGuideBody = zod.object({
+	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]),
+});
+
+/**
+ * Search and list published guides with optional filtering and sorting.
+ * @summary List guides
+ */
+export const zodListGuidesQueryParams = zod.object({
+	query: zod.string().nullish(),
+	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]).nullish(),
+	tags: zod.array(zod.number()).nullish(),
+	sort: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+	page: zod.number(),
+	pageSize: zod.number(),
+});
+
+export const zodListGuidesResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	status: zod.string(),
+});
+export const zodListGuidesResponse = zod.array(zodListGuidesResponseItem);
+
+/**
+ * Create a new guide tag. Moderator only.
+ * @summary Create a tag
+ */
+export const zodCreateTagBodyNameMin = 0;
+export const zodCreateTagBodyNameMax = 64;
+
+export const zodCreateTagBodyCategoryMin = 0;
+export const zodCreateTagBodyCategoryMax = 32;
+
+export const zodCreateTagBodyHexColorMin = 0;
+export const zodCreateTagBodyHexColorMax = 7;
+
+export const zodCreateTagBody = zod.object({
+	name: zod.string().min(zodCreateTagBodyNameMin).max(zodCreateTagBodyNameMax),
+	category: zod.string().min(zodCreateTagBodyCategoryMin).max(zodCreateTagBodyCategoryMax),
+	hexColor: zod.string().min(zodCreateTagBodyHexColorMin).max(zodCreateTagBodyHexColorMax).nullish(),
+});
+
+export const zodCreateTagResponse = zod.object({
+	id: zod.number(),
+	name: zod.string(),
+	category: zod.string(),
+	hexColor: zod.string(),
+});
+
+/**
+ * Soft-deletes a comment.
+ * @summary Delete a comment
+ */
+export const zodDeleteCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+/**
+ * Soft delete a guide. Only the author or an admin can delete.
+ * @summary Delete a guide
+ */
+export const zodDeleteGuideParams = zod.object({
+	id: zod.number(),
+});
+
+/**
+ * Update the draft version of a guide. Only the author can update their own guide.
+ * @summary Update a guide draft
+ */
+export const zodUpdateGuideParams = zod.object({
+	id: zod.number(),
+});
+
+export const zodUpdateGuideBody = zod.object({
+	title: zod.string(),
+	description: zod.string(),
+	markdownContent: zod.string(),
+	richBlocks: zod
+		.object({
+			greenhouseLayout: zod
+				.object({
+					layoutId: zod.number(),
+					slots: zod.array(
+						zod.object({
+							index: zod.number(),
+							itemId: zod.string(),
+							backgroundTexture: zod.string().nullish(),
+						})
+					),
+				})
+				.nullish(),
+		})
+		.nullish(),
+});
+
+/**
+ * Delete a guide tag. Moderator only.
+ * @summary Delete a tag
+ */
+export const zodDeleteTagParams = zod.object({
+	id: zod.number(),
+});
+
+/**
+ * Update an existing guide tag. Moderator only.
+ * @summary Update a tag
+ */
+export const zodUpdateTagParams = zod.object({
+	id: zod.number(),
+});
+
+export const zodUpdateTagBody = zod.object({
+	name: zod.string().nullish(),
+	category: zod.string().nullish(),
+	hexColor: zod.string().nullish(),
+});
+
+export const zodUpdateTagResponse = zod.object({
+	id: zod.number(),
+	name: zod.string(),
+	category: zod.string(),
+	hexColor: zod.string(),
+});
+
+/**
+ * Edit comment content. Authors can edit their own comments, admins can edit any.
+ * @summary Edit a comment
+ */
+export const zodEditCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+export const zodEditCommentBodyContentMin = 0;
+export const zodEditCommentBodyContentMax = 2048;
+
+export const zodEditCommentBody = zod.object({
+	content: zod.string().min(zodEditCommentBodyContentMin).max(zodEditCommentBodyContentMax),
+});
+
+/**
+ * Retrieve a guide by its slug. Use ?draft=true to view draft version (requires author/mod permission).
+ * @summary Get a guide
+ */
+export const zodGetGuideParams = zod.object({
+	slug: zod.string(),
+});
+
+export const zodGetGuideQueryParams = zod.object({
+	draft: zod.coerce.boolean<boolean>(),
+});
+
+export const zodGetGuideResponse = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	description: zod.string(),
+	content: zod.string(),
+	authorName: zod.string(),
+	authorId: zod.number(),
+	authorUuid: zod.string().nullish(),
+	createdAt: zod.iso.datetime({}),
+	score: zod.number(),
+	viewCount: zod.number(),
+	tags: zod.array(zod.string()),
+	isDraft: zod.coerce.boolean<boolean>(),
+	userVote: zod.number().nullish().describe("Current user's vote on this guide (+1, -1, or null if not voted)."),
+	isBookmarked: zod.coerce
+		.boolean<boolean>()
+		.nullish()
+		.describe('Whether the current user has bookmarked this guide.'),
+	rejectionReason: zod
+		.string()
+		.nullish()
+		.describe('Reason for rejection (only present for rejected guides visible to author).'),
+});
+
+/**
+ * Returns all guides bookmarked by the user. Only the owner can see their bookmarks.
+ * @summary Get user's bookmarked guides
+ */
+export const zodGetUserBookmarksParams = zod.object({
+	accountId: zod.number(),
+});
+
+export const zodGetUserBookmarksResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	description: zod.string(),
+	type: zod.string(),
+	status: zod.string(),
+	score: zod.number(),
+	viewCount: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	updatedAt: zod.iso.datetime({}).nullish(),
+});
+export const zodGetUserBookmarksResponse = zod.array(zodGetUserBookmarksResponseItem);
+
+/**
+ * Returns all guides by a specific user. Shows only published guides for anonymous users. Author sees all their own guides.
+ * @summary Get guides by user
+ */
+export const zodGetUserGuidesParams = zod.object({
+	accountId: zod.number(),
+});
+
+export const zodGetUserGuidesResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	description: zod.string(),
+	type: zod.string(),
+	status: zod.string(),
+	score: zod.number(),
+	viewCount: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	updatedAt: zod.iso.datetime({}).nullish(),
+});
+export const zodGetUserGuidesResponse = zod.array(zodGetUserGuidesResponseItem);
+
+export const zodListCommentsParams = zod.object({
+	slug: zod.string(),
+});
+
+export const zodListCommentsResponseItem = zod.object({
+	id: zod.number(),
+	sqid: zod.string(),
+	parentId: zod.number().nullish(),
+	content: zod.string(),
+	authorName: zod.string(),
+	createdAt: zod.iso.datetime({}),
+	score: zod.number(),
+	liftedElementId: zod.string().nullish(),
+});
+export const zodListCommentsResponse = zod.array(zodListCommentsResponseItem);
+
+/**
+ * Returns all available guide tags.
+ * @summary List all tags
+ */
+export const zodListTagsResponseItem = zod.object({
+	id: zod.number(),
+	name: zod.string(),
+	category: zod.string(),
+	hexColor: zod.string(),
+});
+export const zodListTagsResponse = zod.array(zodListTagsResponseItem);
+
+/**
+ * Reject a pending guide submission with an optional reason.
+ * @summary Reject a guide
+ */
+export const zodRejectGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodRejectGuideBody = zod.object({
+	reason: zod.string().nullish().describe('Optional reason for rejection to provide feedback to the author.'),
+});
+
+/**
+ * Submit a draft guide for admin review.
+ * @summary Submit guide for approval
+ */
+export const zodSubmitGuideForApprovalParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Revert a published guide back to draft status. Only author or admin can unpublish.
+ * @summary Unpublish a guide
+ */
+export const zodUnpublishGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Cast an upvote (+1) or downvote (-1) on a comment.
+ * @summary Vote on a comment
+ */
+export const zodVoteCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+export const zodVoteCommentBody = zod.object({
+	value: zod.number(),
+});
+
+/**
+ * Cast an upvote (+1) or downvote (-1) on a guide.
+ * @summary Vote on a guide
+ */
+export const zodVoteGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodVoteGuideBody = zod.object({
+	value: zod.number(),
+});
+
+/**
  * @summary Modify guild event permissions
  */
 export const zodSetEventFeatureParams = zod.object({

@@ -8,7 +8,18 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface CreateCommentRequest {
+	/** @nullable */
+	parentId?: number | null;
+	/**
+	 * @minLength 0
+	 * @maxLength 2048
+	 */
+	content: string;
+	/**
+	 * @minLength 0
+	 * @maxLength 128
+	 * @nullable
+	 */
+	liftedElementId?: string | null;
+}

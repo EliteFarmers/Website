@@ -8,7 +8,11 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type GuideSort = (typeof GuideSort)[keyof typeof GuideSort];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GuideSort = {
+	Newest: 0,
+	TopRated: 1,
+	Trending: 2,
+} as const;

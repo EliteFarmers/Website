@@ -7,8 +7,23 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { GuideType } from './GuideType';
+import type { GuideSort } from './GuideSort';
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type ListGuidesParams = {
+	/**
+	 * @nullable
+	 */
+	query?: string | null;
+	/**
+	 * @nullable
+	 */
+	type?: GuideType | null;
+	/**
+	 * @nullable
+	 */
+	tags?: number[] | null;
+	sort: GuideSort;
+	page: number;
+	pageSize: number;
+};

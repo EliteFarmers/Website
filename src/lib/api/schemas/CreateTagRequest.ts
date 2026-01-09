@@ -8,7 +8,21 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface CreateTagRequest {
+	/**
+	 * @minLength 0
+	 * @maxLength 64
+	 */
+	name: string;
+	/**
+	 * @minLength 0
+	 * @maxLength 32
+	 */
+	category: string;
+	/**
+	 * @minLength 0
+	 * @maxLength 7
+	 * @nullable
+	 */
+	hexColor?: string | null;
+}

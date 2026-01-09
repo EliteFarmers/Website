@@ -8,7 +8,10 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export interface RejectGuideRequest {
+	/**
+	 * Optional reason for rejection to provide feedback to the author.
+	 * @nullable
+	 */
+	reason?: string | null;
+}

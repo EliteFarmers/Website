@@ -8,7 +8,12 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-/**
- * the collection of errors for the current context
- */
-export type ErrorResponseErrors = { [key: string]: string[] };
+export type GuideType = (typeof GuideType)[keyof typeof GuideType];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GuideType = {
+	General: 0,
+	Farm: 1,
+	Greenhouse: 2,
+	Contest: 3,
+} as const;
