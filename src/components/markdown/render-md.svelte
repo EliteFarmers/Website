@@ -9,7 +9,7 @@
 
 	let { content }: Props = $props();
 
-	const sanitized = getHtmlFromMarkdown(content ?? '');
+	const sanitized = $derived(getHtmlFromMarkdown(content ?? ''));
 </script>
 
 <div class="markdown contents">

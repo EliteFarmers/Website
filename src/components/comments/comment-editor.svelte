@@ -20,7 +20,7 @@
 		isEditing = false,
 	}: Props = $props();
 
-	let content = $state(value);
+	let content = $derived(value);
 
 	function handleSubmit() {
 		if (content.trim() && onSubmit) {

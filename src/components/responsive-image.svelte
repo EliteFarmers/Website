@@ -9,7 +9,7 @@
 	} & HTMLImgAttributes;
 
 	let { image, loading = 'lazy', alt, ...rest }: Props = $props();
-	let { width, height, url, sources } = image;
+	let { width, height, url, sources } = $derived(image);
 
 	const srcset = $derived(
 		Object.values(sources)
