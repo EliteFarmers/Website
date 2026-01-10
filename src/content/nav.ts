@@ -1,7 +1,9 @@
 import type { Crumb } from '$lib/hooks/page.svelte';
 import Badge from '@lucide/svelte/icons/badge';
+import BookOpen from '@lucide/svelte/icons/book-open';
 import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 import Command from '@lucide/svelte/icons/command';
+import FileText from '@lucide/svelte/icons/file-text';
 import Layers from '@lucide/svelte/icons/layers';
 import Megaphone from '@lucide/svelte/icons/megaphone';
 import Package from '@lucide/svelte/icons/package';
@@ -31,6 +33,16 @@ export const PROFILE_NAV_PAGES = [
 		href: '/profile',
 	},
 	{
+		icon: FileText,
+		name: 'My Guides',
+		href: '/profile/guides',
+	},
+	{
+		icon: BookOpen,
+		name: 'Bookmarks',
+		href: '/profile/bookmarks',
+	},
+	{
 		icon: Settings,
 		name: 'Settings',
 		href: '/profile/settings',
@@ -52,6 +64,11 @@ export const ADMIN_NAV_PAGES = [
 		icon: Megaphone,
 		name: 'Announce',
 		href: '/admin/announcements',
+	},
+	{
+		icon: FileText,
+		name: 'Guides',
+		href: '/admin/guides',
 	},
 	{
 		icon: Badge,

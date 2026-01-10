@@ -8,6 +8,14 @@ export function isLinkNode(n: InlineNode): n is LinkNode {
 	return n?.type === 'link';
 }
 
+export function isSkyblockItemNode(n: InlineNode): n is SkyblockItemBlockNode {
+	return n?.type === 'skyblock-item';
+}
+
+export function isItemPriceNode(n: InlineNode): n is ItemPriceBlockNode {
+	return n?.type === 'item-price';
+}
+
 export function getActiveModifiers(n: TextNode): Array<'bold' | 'italic' | 'underline' | 'strikethrough' | 'code'> {
 	const m: Array<'bold' | 'italic' | 'underline' | 'strikethrough' | 'code'> = [];
 	if (n.bold) m.push('bold');
@@ -45,7 +53,7 @@ export interface LinkNode {
 	children: (TextNode | LinkNode)[];
 }
 
-export type InlineNode = TextNode | LinkNode;
+export type InlineNode = TextNode | LinkNode | SkyblockItemBlockNode | ItemPriceBlockNode;
 
 export interface ParagraphBlockNode {
 	type: 'paragraph';
@@ -89,6 +97,39 @@ export interface ImageBlockNode {
 	};
 }
 
+export interface SkyblockItemBlockNode {
+	type: 'skyblock-item';
+	skyblockId: string;
+	size?: 'sm' | 'md' | 'lg';
+	inline?: boolean;
+}
+
+export interface ItemPriceBlockNode {
+	type: 'item-price';
+	skyblockId: string;
+	multiplier?: number;
+}
+
+export interface TwoColumnBlockNode {
+	type: 'two-column';
+	variant?: 'plain' | 'bordered';
+	left: BlockNode[];
+	right: BlockNode[];
+}
+
+export interface YouTubeBlockNode {
+	type: 'youtube';
+	videoId: string;
+}
+
+export type CalloutVariant = 'note' | 'tip' | 'warning' | 'danger' | 'success' | 'question' | 'example' | 'quote';
+
+export interface CalloutBlockNode {
+	type: 'callout';
+	variant: CalloutVariant;
+	children: BlockNode[];
+}
+
 export interface ListItemBlockNode {
 	type: 'list-item';
 	children: InlineNode[];
@@ -108,7 +149,12 @@ export type BlockNode =
 	| CodeBlockNode
 	| ImageBlockNode
 	| ListBlockNode
-	| ListItemBlockNode;
+	| ListItemBlockNode
+	| SkyblockItemBlockNode
+	| ItemPriceBlockNode
+	| TwoColumnBlockNode
+	| YouTubeBlockNode
+	| CalloutBlockNode;
 
 export type RootNode = BlockNode[];
 
@@ -120,6 +166,31 @@ export interface BlockComponents {
 	image: Component<ImageProps>;
 	list: Component<ListProps>;
 	'list-item': Component<ListItemProps>;
+	'skyblock-item': Component<SkyblockItemProps>;
+	'item-price': Component<ItemPriceProps>;
+	'two-column': Component<TwoColumnProps>;
+	youtube: Component<YouTubeProps>;
+	callout: Component<CalloutProps>;
+}
+
+export interface SkyblockItemProps extends BlockComponentProps {
+	node: SkyblockItemBlockNode;
+}
+
+export interface ItemPriceProps {
+	node: ItemPriceBlockNode;
+}
+
+export interface TwoColumnProps {
+	node: TwoColumnBlockNode;
+}
+
+export interface YouTubeProps {
+	node: YouTubeBlockNode;
+}
+
+export interface CalloutProps {
+	node: CalloutBlockNode;
 }
 
 export interface ModifierProps {

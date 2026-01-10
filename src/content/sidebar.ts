@@ -1,3 +1,4 @@
+import BookOpen from '@lucide/svelte/icons/book-open';
 import Gem from '@lucide/svelte/icons/gem';
 import Handshake from '@lucide/svelte/icons/handshake';
 import Home from '@lucide/svelte/icons/home';
@@ -43,6 +44,11 @@ export const SIDEBAR_NAV = [
 		title: 'Articles',
 		href: '/articles',
 		icon: Newspaper as unknown as Component,
+	},
+	{
+		title: 'Guides',
+		href: '/guides',
+		icon: BookOpen as unknown as Component,
 	},
 	{
 		title: 'Info',

@@ -14,9 +14,23 @@ export interface CommentResponse {
 	/** @nullable */
 	parentId?: number | null;
 	content: string;
+	/** @nullable */
+	draftContent?: string | null;
+	authorId: string;
 	authorName: string;
+	/** @nullable */
+	authorAvatar?: string | null;
 	createdAt: string;
+	/** @nullable */
+	editedAt?: string | null;
 	score: number;
 	/** @nullable */
 	liftedElementId?: string | null;
+	/** @nullable */
+	userVote?: number | null;
+	isPending: boolean;
+	isDeleted: boolean;
+	isEdited: boolean;
+	isEditedByAdmin: boolean;
+	hasPendingEdit: boolean;
 }

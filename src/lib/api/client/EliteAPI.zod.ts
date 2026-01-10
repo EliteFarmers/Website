@@ -5437,12 +5437,48 @@ export const zodListCommentsResponseItem = zod.object({
 	sqid: zod.string(),
 	parentId: zod.number().nullish(),
 	content: zod.string(),
+	draftContent: zod.string().nullish(),
+	authorId: zod.string(),
 	authorName: zod.string(),
+	authorAvatar: zod.string().nullish(),
 	createdAt: zod.iso.datetime({}),
+	editedAt: zod.iso.datetime({}).nullish(),
 	score: zod.number(),
 	liftedElementId: zod.string().nullish(),
+	userVote: zod.number().nullish(),
+	isPending: zod.coerce.boolean<boolean>(),
+	isDeleted: zod.coerce.boolean<boolean>(),
+	isEdited: zod.coerce.boolean<boolean>(),
+	isEditedByAdmin: zod.coerce.boolean<boolean>(),
+	hasPendingEdit: zod.coerce.boolean<boolean>(),
 });
 export const zodListCommentsResponse = zod.array(zodListCommentsResponseItem);
+
+/**
+ * Returns a list of all comments pending approval.
+ * @summary List all pending comments
+ */
+export const zodListPendingCommentsResponseItem = zod.object({
+	id: zod.number(),
+	sqid: zod.string(),
+	parentId: zod.number().nullish(),
+	content: zod.string(),
+	draftContent: zod.string().nullish(),
+	authorId: zod.string(),
+	authorName: zod.string(),
+	authorAvatar: zod.string().nullish(),
+	createdAt: zod.iso.datetime({}),
+	editedAt: zod.iso.datetime({}).nullish(),
+	score: zod.number(),
+	liftedElementId: zod.string().nullish(),
+	userVote: zod.number().nullish(),
+	isPending: zod.coerce.boolean<boolean>(),
+	isDeleted: zod.coerce.boolean<boolean>(),
+	isEdited: zod.coerce.boolean<boolean>(),
+	isEditedByAdmin: zod.coerce.boolean<boolean>(),
+	hasPendingEdit: zod.coerce.boolean<boolean>(),
+});
+export const zodListPendingCommentsResponse = zod.array(zodListPendingCommentsResponseItem);
 
 /**
  * Returns all available guide tags.

@@ -5769,6 +5769,45 @@ export const listComments = async (slug: string, options?: RequestInit) => {
 };
 
 /**
+ * Returns a list of all comments pending approval.
+ * @summary List all pending comments
+ */
+export type listPendingCommentsResponse200 = {
+	data: CommentResponse[];
+	status: 200;
+};
+
+export type listPendingCommentsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type listPendingCommentsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type listPendingCommentsResponseSuccess = listPendingCommentsResponse200 & {
+	headers: Headers;
+};
+export type listPendingCommentsResponseError = (listPendingCommentsResponse401 | listPendingCommentsResponse403) & {
+	headers: Headers;
+};
+
+export type listPendingCommentsResponse = listPendingCommentsResponseSuccess | listPendingCommentsResponseError;
+
+export const getListPendingCommentsUrl = () => {
+	return `${ELITE_API_URL}/admin/comments/pending`;
+};
+
+export const listPendingComments = async (options?: RequestInit) => {
+	return customFetch<listPendingCommentsResponse>(getListPendingCommentsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
  * Returns all available guide tags.
  * @summary List all tags
  */
