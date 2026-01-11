@@ -57,7 +57,7 @@
 				{:else}
 					<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 						{#each filterByStatus(guideList, selectedStatus) as guide (guide.id)}
-							<a href="/guides/{guide.slug}{guide.status === '1' ? '/edit' : ''}" class="group">
+							<a href="/guides/{guide.slug}{guide.status !== 'Published' ? '/edit' : ''}" class="group">
 								<Card class="h-full cursor-pointer transition-shadow hover:shadow-lg">
 									<CardHeader class="pb-3">
 										<CardTitle class="line-clamp-2 text-base">{guide.title}</CardTitle>

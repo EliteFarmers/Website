@@ -37,7 +37,7 @@
 <div class="flex flex-col gap-2">
 	<Textarea bind:value={content} {placeholder} disabled={isLoading} class="min-h-24 resize-none" />
 
-	<div class="flex flex-row justify-start gap-2">
+	<div class="flex flex-row items-center justify-start gap-2">
 		<Button onclick={handleSubmit} disabled={isLoading || !content.trim() || content === value} size="sm">
 			{isEditing ? 'Save' : 'Post'}
 		</Button>
@@ -45,5 +45,10 @@
 		{#if onCancel}
 			<Button variant="outline" onclick={handleCancel} disabled={isLoading} size="sm">Cancel</Button>
 		{/if}
+
+		<span class="text-muted-foreground text-sm">
+			By submitting, you agree to our <a href="/terms" class="underline hover:text-white/75">Terms of Service</a>
+			and <a href="/privacy" class="underline hover:text-white/75">Privacy Policy</a>.
+		</span>
 	</div>
 </div>

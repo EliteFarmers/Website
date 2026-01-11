@@ -5416,6 +5416,7 @@ export const zodGetGuideResponse = zod.object({
 	viewCount: zod.number(),
 	tags: zod.array(zod.string()),
 	isDraft: zod.coerce.boolean<boolean>(),
+	status: zod.string(),
 	userVote: zod.number().nullish(),
 	isBookmarked: zod.coerce.boolean<boolean>().nullish(),
 	rejectionReason: zod.string().nullish(),

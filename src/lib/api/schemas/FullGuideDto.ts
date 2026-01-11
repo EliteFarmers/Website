@@ -23,6 +23,7 @@ export interface FullGuideDto {
 	viewCount: number;
 	tags: string[];
 	isDraft: boolean;
+	status: string;
 	/** @nullable */
 	userVote?: number | null;
 	/** @nullable */

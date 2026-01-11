@@ -406,7 +406,10 @@
 					</Button>
 					<Button
 						onclick={handleSubmitForApproval}
-						disabled={isSubmitting || !title.trim() || !description.trim()}
+						disabled={isSubmitting ||
+							!title.trim() ||
+							!description.trim() ||
+							guide.current?.status === 'PendingApproval'}
 					>
 						Submit for Approval
 					</Button>
