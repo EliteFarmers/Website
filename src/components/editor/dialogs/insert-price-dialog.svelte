@@ -70,7 +70,7 @@
 			<Dialog.Title>{isEditing ? 'Edit' : 'Insert'} Item Price</Dialog.Title>
 			<Dialog.Description>Display the current price of a Skyblock item.</Dialog.Description>
 		</Dialog.Header>
-		<div class="grid gap-4 py-4">
+		<div class="flex flex-col gap-4 py-4">
 			<div class="grid grid-cols-4 items-center gap-4">
 				<Label for="price-item-id" class="text-right">Item ID</Label>
 				<Input

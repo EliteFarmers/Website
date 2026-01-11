@@ -68,7 +68,7 @@
 			description = g.description;
 			markdownContent = g.content;
 			tags = g.tags || [];
-			skyblockIconId = g.skyblockIconId || '';
+			skyblockIconId = g.iconSkyblockId || '';
 
 			// Try to detect if content is JSON blocks format
 			if (g.content && g.content.trim().startsWith('[')) {

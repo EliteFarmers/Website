@@ -15,6 +15,8 @@ export interface GetGuideResponse {
 	description: string;
 	content: string;
 	authorName: string;
+	/** @nullable */
+	authorAvatar?: string | null;
 	authorId: bigint;
 	/** @nullable */
 	authorUuid?: string | null;

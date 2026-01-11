@@ -5366,6 +5366,7 @@ export const zodGetGuideResponse = zod.object({
 	description: zod.string(),
 	content: zod.string(),
 	authorName: zod.string(),
+	authorAvatar: zod.string().nullish(),
 	authorId: zod.number(),
 	authorUuid: zod.string().nullish(),
 	createdAt: zod.iso.datetime({}),

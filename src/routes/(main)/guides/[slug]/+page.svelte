@@ -1,9 +1,14 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
+	import type { BlockNode, InlineNode } from '$comp/blocks/blocks';
 	import { CommentSectionContainer } from '$comp/comments';
+	import UserIcon from '$comp/discord/user-icon.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
+	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { GetGuideResponse } from '$lib/api/schemas';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { GetGuideComments } from '$lib/remote/comments.remote';
 	import {
 		GetGuide,
@@ -23,10 +28,9 @@
 		AlertDialogHeader,
 		AlertDialogTitle,
 	} from '$ui/alert-dialog';
-	import { Avatar, AvatarFallback } from '$ui/avatar';
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
-	import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '$ui/dropdown-menu';
+	import * as DropdownMenu from '$ui/dropdown-menu';
 	import { Separator } from '$ui/separator';
 	import Ellipsis from '@lucide/svelte/icons/ellipsis';
 	import Eye from '@lucide/svelte/icons/eye';
@@ -51,6 +55,9 @@
 	// Load guide and comments
 	const guidePromise = GetGuide({ slug, draft });
 	const commentsPromise = GetGuideComments(slug);
+
+	const gbl = getGlobalContext();
+	let isOwner = $derived(guidePromise.current?.authorId === gbl.session?.id);
 
 	// Component state
 	let userVote = $state<number | null>(null);
@@ -99,6 +106,31 @@
 			toc.push({ level, text, id });
 		});
 
+		return toc;
+	}
+
+	function getTextFromInlineNodes(nodes: InlineNode[]): string {
+		return nodes
+			.map((node) => {
+				if (node.type === 'text') return node.text;
+				if (node.type === 'link') return getTextFromInlineNodes(node.children);
+				return '';
+			})
+			.join('');
+	}
+
+	function buildTableOfContentsFromBlocks(blocks: BlockNode[]): Array<{ level: number; text: string; id: string }> {
+		const toc: Array<{ level: number; text: string; id: string }> = [];
+		blocks.forEach((block, index) => {
+			if (block.type === 'heading') {
+				const text = getTextFromInlineNodes(block.children);
+				toc.push({
+					level: block.level,
+					text,
+					id: `heading-${index}`,
+				});
+			}
+		});
 		return toc;
 	}
 
@@ -196,14 +228,12 @@
 		}
 	}
 
-	function getInitials(name: string): string {
-		return name
-			.split(' ')
-			.map((n) => n[0])
-			.join('')
-			.toUpperCase()
-			.slice(0, 2);
-	}
+	let ign = $derived.by(() => {
+		const guide = guidePromise.current as GetGuideResponse | undefined;
+		if (!guide) return '';
+		const split = guide.authorName.split(' ');
+		return split.length === 1 ? split[0] : split.sort((a, b) => b.length - a.length)[0];
+	});
 </script>
 
 {#await guidePromise then guide}
@@ -218,14 +248,14 @@
 	{:else}
 		<div class="flex flex-col gap-6">
 			{#if guide.isDraft && guide.rejectionReason}
-				<div class="bg-destructive/10 border-destructive rounded-lg border p-4">
+				<div class="bg-destructive/10 border-destructive my-4 rounded-lg border p-4">
 					<p class="text-destructive font-semibold">Rejection Notice</p>
 					<p class="mt-1 text-sm">{guide.rejectionReason}</p>
 				</div>
 			{/if}
 
 			{#if guide.isDraft}
-				<div class="bg-muted/50 border-border rounded-lg border p-4">
+				<div class="bg-muted/50 border-border my-4 rounded-lg border p-4">
 					<p class="font-semibold">You are viewing a draft version</p>
 					<p class="text-muted-foreground mt-1 text-sm">This guide is not visible to the public.</p>
 					{#if page.data.session?.perms.admin}
@@ -238,60 +268,61 @@
 				</div>
 			{/if}
 
-			<div class="flex flex-col gap-4">
-				<div class="flex items-start justify-between gap-4">
-					<div class="flex-1">
-						<h1 class="mb-2 text-4xl font-bold">{guide.title}</h1>
-						<p class="text-muted-foreground text-lg">{guide.description}</p>
+			<div class="flex flex-col items-center gap-6 py-10 text-center">
+				<div class="flex max-w-3xl flex-col gap-4">
+					<div class="relative flex items-start justify-center gap-4">
+						<h1 class="text-4xl font-bold">{guide.title}</h1>
 					</div>
-					{#if page.data.session?.perms.admin && guide.isDraft === false}
-						<DropdownMenu>
-							<DropdownMenuTrigger>
-								<Button variant="outline" size="icon" aria-label="Open menu">
-									<Ellipsis class="h-4 w-4" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem onclick={() => (showUnpublishDialog = true)}>
-									Unpublish
-								</DropdownMenuItem>
-								<DropdownMenuItem onclick={() => (showDeleteDialog = true)} class="text-destructive">
-									Delete
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					{/if}
+					<p class="text-muted-foreground text-lg">{guide.description}</p>
 				</div>
 
-				<div class="flex items-center justify-between">
-					<div class="flex items-center gap-3">
-						<Avatar>
-							<AvatarFallback>{getInitials(guide.authorName)}</AvatarFallback>
-						</Avatar>
-						<div>
-							<p class="font-semibold">{guide.authorName}</p>
-							<p class="text-muted-foreground text-sm">
-								{formatDistanceToNow(new Date(guide.createdAt), { addSuffix: true })}
-							</p>
+				<div class="flex flex-col items-center gap-4">
+					<div class="text-muted-foreground flex items-center gap-3 text-sm">
+						<div class="text-foreground flex items-center gap-2 font-medium">
+							{#if guide.authorAvatar}
+								<UserIcon
+									user={{ id: guide.authorId.toString(), avatar: guide.authorAvatar }}
+									class="size-6 rounded-full"
+								/>
+							{:else}
+								<PlayerHead uuid={ign} class="size-6" />
+							{/if}
+							<span>{guide.authorName}</span>
 						</div>
+						<span>•</span>
+						<span>{formatDistanceToNow(new Date(guide.createdAt), { addSuffix: true })}</span>
+						<span>•</span>
+						<span class="flex items-center gap-1">
+							<Eye class="h-3 w-3" />
+							{guide.viewCount}
+						</span>
 					</div>
 
-					<div class="flex items-center gap-2">
-						<div class="flex items-center rounded-lg border">
+					<div class="flex flex-wrap items-center justify-center gap-2">
+						{#each guide.tags as tag (tag)}
+							<Badge variant="secondary">{tag}</Badge>
+						{/each}
+					</div>
+
+					<div class="mt-2 flex items-center gap-2">
+						<div class="bg-card flex items-center rounded-lg border">
 							<Button
 								variant={userVote === 1 ? 'default' : 'ghost'}
 								size="sm"
 								onclick={() => handleVote(guide.id, 1)}
-								class="rounded-none border-r"
+								class="rounded-none rounded-l-md border-r px-3"
 							>
-								<ThumbsUp class="h-4 w-4" />
+								<ThumbsUp class="mr-2 h-4 w-4" />
+								Like
 							</Button>
-							<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold">{guide.score}</span>
+							<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold"
+								>{guide.score.toLocaleString()}</span
+							>
 							<Button
 								variant={userVote === -1 ? 'default' : 'ghost'}
 								size="sm"
 								onclick={() => handleVote(guide.id, -1)}
-								class="rounded-none"
+								class="rounded-none rounded-r-md border-l px-3"
 							>
 								<ThumbsDown class="h-4 w-4" />
 							</Button>
@@ -302,7 +333,8 @@
 							size="sm"
 							onclick={() => handleBookmark(guide.id)}
 						>
-							<Star class="h-4 w-4" />
+							<Star class="mr-2 h-4 w-4" />
+							Bookmark
 						</Button>
 
 						<Button
@@ -310,22 +342,35 @@
 							size="sm"
 							onclick={() => navigator.clipboard.writeText(window.location.href)}
 						>
-							<Link class="h-4 w-4" />
+							<Link class="mr-2 h-4 w-4" />
+							Share
 						</Button>
-					</div>
-				</div>
 
-				<div class="flex flex-wrap items-center justify-between gap-2">
-					<div class="flex flex-wrap gap-2">
-						{#each guide.tags as tag (tag)}
-							<Badge variant="secondary">{tag}</Badge>
-						{/each}
-					</div>
-					<div class="text-muted-foreground flex items-center gap-4 text-sm">
-						<span class="inline-flex items-center gap-1">
-							<Eye class="h-4 w-4" />
-							{guide.viewCount} views
-						</span>
+						{#if gbl.session?.perms.admin || isOwner}
+							<DropdownMenu.Root>
+								<DropdownMenu.Trigger>
+									<Button variant="outline" size="sm" aria-label="Open menu">
+										<Ellipsis class="h-4 w-4" />
+									</Button>
+								</DropdownMenu.Trigger>
+								<DropdownMenu.Content align="end">
+									{#if gbl.session?.perms.admin}
+										<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)}>
+											Unpublish
+										</DropdownMenu.Item>
+									{/if}
+									<DropdownMenu.Item onclick={() => goto(`/guides/${guide.slug}/edit`)}>
+										Edit
+									</DropdownMenu.Item>
+									<DropdownMenu.Item
+										onclick={() => (showDeleteDialog = true)}
+										class="text-destructive"
+									>
+										Delete
+									</DropdownMenu.Item>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -376,25 +421,77 @@
 				</div>
 
 				<div class="hidden lg:block">
-					{#await getHtmlFromMarkdown(guide.content) then html}
-						{@const toc = buildTableOfContents(html)}
-						{#if toc.length > 0}
-							<div class="sticky top-4">
-								<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
-								<nav class="flex flex-col gap-1 text-sm">
-									{#each toc as item (item.id)}
-										<a
-											href="#{item.id}"
-											class="text-muted-foreground hover:text-foreground transition-colors"
-											style="padding-left: {(item.level - 1) * 1}rem"
-										>
-											{item.text}
-										</a>
-									{/each}
-								</nav>
-							</div>
-						{/if}
-					{/await}
+					{#if guide.content.trim().startsWith('[') || guide.content.trim().startsWith('{')}
+						{#key guide.content}
+							{@const parsed = (() => {
+								try {
+									const p = JSON.parse(guide.content);
+									return Array.isArray(p) ? p : null;
+								} catch {
+									return null;
+								}
+							})()}
+							{#if parsed}
+								{@const toc = buildTableOfContentsFromBlocks(parsed)}
+								{#if toc.length > 0}
+									<div class="sticky top-4">
+										<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
+										<nav class="flex flex-col gap-1 text-sm">
+											{#each toc as item (item.id)}
+												<a
+													href="#{item.id}"
+													class="text-muted-foreground hover:text-foreground transition-colors"
+													style="padding-left: {(item.level - 1) * 1}rem"
+												>
+													{item.text}
+												</a>
+											{/each}
+										</nav>
+									</div>
+								{/if}
+							{:else}
+								{#await getHtmlFromMarkdown(guide.content) then html}
+									{@const toc = buildTableOfContents(html)}
+									{#if toc.length > 0}
+										<div class="sticky top-4">
+											<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
+											<nav class="flex flex-col gap-1 text-sm">
+												{#each toc as item (item.id)}
+													<a
+														href="#{item.id}"
+														class="text-muted-foreground hover:text-foreground transition-colors"
+														style="padding-left: {(item.level - 1) * 1}rem"
+													>
+														{item.text}
+													</a>
+												{/each}
+											</nav>
+										</div>
+									{/if}
+								{/await}
+							{/if}
+						{/key}
+					{:else}
+						{#await getHtmlFromMarkdown(guide.content) then html}
+							{@const toc = buildTableOfContents(html)}
+							{#if toc.length > 0}
+								<div class="sticky top-4">
+									<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
+									<nav class="flex flex-col gap-1 text-sm">
+										{#each toc as item (item.id)}
+											<a
+												href="#{item.id}"
+												class="text-muted-foreground hover:text-foreground transition-colors"
+												style="padding-left: {(item.level - 1) * 1}rem"
+											>
+												{item.text}
+											</a>
+										{/each}
+									</nav>
+								</div>
+							{/if}
+						{/await}
+					{/if}
 				</div>
 			</div>
 		</div>
