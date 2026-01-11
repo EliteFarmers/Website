@@ -5,8 +5,8 @@
 
 	let { data }: PageProps = $props();
 
-	const profile = data.profile;
-	const ranks = data.ranks;
+	const profile = $derived(data.profile);
+	const ranks = $derived(data.ranks);
 
 	function formatAmount(entry: PlayerLeaderboardEntryWithRankDto) {
 		let amount = entry.amount;

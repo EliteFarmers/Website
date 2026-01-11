@@ -71,14 +71,6 @@
 			showInsertPriceDialog = true;
 		});
 
-		// Initialize editor content
-		// If content is string (Markdown), we treat it as initial text (Tiptap handles HTML/Text).
-		// But user said "No need to support legacy", so we focus on Blocks.
-		// However, for new guides, it starts empty.
-		// If it's a string that looks like JSON, we might want to parse it?
-		// The plan says: "parse guide.content. If it's JSON, pass it to Editor."
-		// Here we receive `content`.
-
 		let initialContent: string | unknown = '';
 		if (typeof content === 'string') {
 			try {
@@ -86,19 +78,12 @@
 				if (content.trim().startsWith('[') || content.trim().startsWith('{')) {
 					const parsed = JSON.parse(content);
 					if (Array.isArray(parsed)) {
-						// It's likely our RootNode
 						initialContent = strapiToTiptap(parsed as RootNode);
 					} else {
-						// Maybe Tiptap JSON directly?
 						initialContent = parsed;
 					}
 				} else {
-					// Plain text / Markdown
-					initialContent = content; // StarterKit supports some markdown shortcuts but expects HTML/JSON content usually.
-					// We might need a markdown parser if we WANTED to support legacy, but we don't.
-					// So just load as text or HTML?
-					// If it's markdown, `content` prop from Tiptap handles HTML. Markdown support requires `tiptap-markdown` extension usually.
-					// For now, if string, assume HTML or plain text.
+					initialContent = content;
 				}
 			} catch {
 				initialContent = content;

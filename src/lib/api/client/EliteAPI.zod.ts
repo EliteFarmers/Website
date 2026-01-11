@@ -5143,6 +5143,13 @@ export const zodAdminPendingGuidesResponseItem = zod.object({
 	slug: zod.string(),
 	title: zod.string(),
 	status: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
 });
 export const zodAdminPendingGuidesResponse = zod.array(zodAdminPendingGuidesResponseItem);
 
@@ -5202,6 +5209,30 @@ export const zodCreateCommentBody = zod.object({
 		.nullish(),
 });
 
+export const zodCreateCommentResponse = zod.object({
+	id: zod.number(),
+	sqid: zod.string(),
+	parentId: zod.number().nullish(),
+	content: zod.string(),
+	draftContent: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	createdAt: zod.iso.datetime({}),
+	editedAt: zod.iso.datetime({}).nullish(),
+	score: zod.number(),
+	liftedElementId: zod.string().nullish(),
+	userVote: zod.number().nullish(),
+	isPending: zod.coerce.boolean<boolean>(),
+	isDeleted: zod.coerce.boolean<boolean>(),
+	isEdited: zod.coerce.boolean<boolean>(),
+	isEditedByAdmin: zod.coerce.boolean<boolean>(),
+	hasPendingEdit: zod.coerce.boolean<boolean>(),
+});
+
 /**
  * Initializes a new empty guide draft for the user.
  * @summary Create a new guide draft
@@ -5218,7 +5249,7 @@ export const zodListGuidesQueryParams = zod.object({
 	query: zod.string().nullish(),
 	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]).nullish(),
 	tags: zod.array(zod.number()).nullish(),
-	sort: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]),
+	sort: zod.enum(['newest', 'topRated', 'trending']),
 	page: zod.number(),
 	pageSize: zod.number(),
 });
@@ -5228,6 +5259,13 @@ export const zodListGuidesResponseItem = zod.object({
 	slug: zod.string(),
 	title: zod.string(),
 	status: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
 });
 export const zodListGuidesResponse = zod.array(zodListGuidesResponseItem);
 
@@ -5283,6 +5321,7 @@ export const zodUpdateGuideParams = zod.object({
 
 export const zodUpdateGuideBody = zod.object({
 	title: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
 	description: zod.string(),
 	markdownContent: zod.string(),
 	richBlocks: zod
@@ -5363,26 +5402,23 @@ export const zodGetGuideResponse = zod.object({
 	id: zod.number(),
 	slug: zod.string(),
 	title: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
 	description: zod.string(),
 	content: zod.string(),
-	authorName: zod.string(),
-	authorAvatar: zod.string().nullish(),
-	authorId: zod.number(),
-	authorUuid: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
 	createdAt: zod.iso.datetime({}),
 	score: zod.number(),
 	viewCount: zod.number(),
 	tags: zod.array(zod.string()),
 	isDraft: zod.coerce.boolean<boolean>(),
-	userVote: zod.number().nullish().describe("Current user's vote on this guide (+1, -1, or null if not voted)."),
-	isBookmarked: zod.coerce
-		.boolean<boolean>()
-		.nullish()
-		.describe('Whether the current user has bookmarked this guide.'),
-	rejectionReason: zod
-		.string()
-		.nullish()
-		.describe('Reason for rejection (only present for rejected guides visible to author).'),
+	userVote: zod.number().nullish(),
+	isBookmarked: zod.coerce.boolean<boolean>().nullish(),
+	rejectionReason: zod.string().nullish(),
 });
 
 /**
@@ -5439,9 +5475,12 @@ export const zodListCommentsResponseItem = zod.object({
 	parentId: zod.number().nullish(),
 	content: zod.string(),
 	draftContent: zod.string().nullish(),
-	authorId: zod.string(),
-	authorName: zod.string(),
-	authorAvatar: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
 	createdAt: zod.iso.datetime({}),
 	editedAt: zod.iso.datetime({}).nullish(),
 	score: zod.number(),
@@ -5465,9 +5504,12 @@ export const zodListPendingCommentsResponseItem = zod.object({
 	parentId: zod.number().nullish(),
 	content: zod.string(),
 	draftContent: zod.string().nullish(),
-	authorId: zod.string(),
-	authorName: zod.string(),
-	authorAvatar: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
 	createdAt: zod.iso.datetime({}),
 	editedAt: zod.iso.datetime({}).nullish(),
 	score: zod.number(),

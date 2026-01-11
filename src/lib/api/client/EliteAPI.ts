@@ -27,7 +27,7 @@ import type {
 	BadgeDto,
 	BazaarOverviewResponse,
 	ChangeTeamOwnerRequest,
-	CommentResponse,
+	CommentDto,
 	ConfirmationDto,
 	ContestBracketsDetailsDto,
 	ContestParticipationDto,
@@ -67,6 +67,7 @@ import type {
 	FarmingWeightAllProfilesDto,
 	FarmingWeightDto,
 	ForceAddMemberAdminParams,
+	FullGuideDto,
 	GardenDto,
 	GetAdminCropGraphsParams,
 	GetAdminSkillGraphsParams,
@@ -86,7 +87,6 @@ import type {
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
 	GetGuideParams,
-	GetGuideResponse,
 	GetHypixelGuildMembersLeaderboardParams,
 	GetHypixelGuildRankParams,
 	GetHypixelGuildRankResponse,
@@ -122,7 +122,7 @@ import type {
 	GetWeightForProfilesParams,
 	GetWeightForSelectedParams,
 	GrantTestEntitlementParams,
-	GuideResponse,
+	GuideDto,
 	GuildDetailsDto,
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
@@ -191,7 +191,7 @@ import type {
 	UpdateUserSettingsDto,
 	UploadCurrentContestsBody,
 	UploadImageDto,
-	UserGuideResponse,
+	UserGuideDto,
 	UserSettingsDto,
 	VoteCommentRequest,
 	VoteGuideRequest,
@@ -5027,7 +5027,7 @@ export const getMedalBracketsGraph = async (
  * @summary Get pending guides
  */
 export type adminPendingGuidesResponse200 = {
-	data: GuideResponse[];
+	data: GuideDto[];
 	status: 200;
 };
 
@@ -5221,9 +5221,9 @@ export const unbookmarkGuide = async (guideId: number | string, options?: Reques
  * Create a new comment on a guide.
  * @summary Post a comment
  */
-export type createCommentResponse204 = {
-	data: void;
-	status: 204;
+export type createCommentResponse200 = {
+	data: CommentDto;
+	status: 200;
 };
 
 export type createCommentResponse400 = {
@@ -5236,7 +5236,7 @@ export type createCommentResponse401 = {
 	status: 401;
 };
 
-export type createCommentResponseSuccess = createCommentResponse204 & {
+export type createCommentResponseSuccess = createCommentResponse200 & {
 	headers: Headers;
 };
 export type createCommentResponseError = (createCommentResponse400 | createCommentResponse401) & {
@@ -5267,7 +5267,7 @@ export const createComment = async (
  * @summary Create a new guide draft
  */
 export type createGuideResponse201 = {
-	data: GuideResponse;
+	data: GuideDto;
 	status: 201;
 };
 
@@ -5313,7 +5313,7 @@ export const createGuide = async (createGuideRequest: CreateGuideRequest, option
  * @summary List guides
  */
 export type listGuidesResponse200 = {
-	data: GuideResponse[];
+	data: GuideDto[];
 	status: 200;
 };
 
@@ -5656,7 +5656,7 @@ export const editComment = async (
  * @summary Get a guide
  */
 export type getGuideResponse200 = {
-	data: GetGuideResponse;
+	data: FullGuideDto;
 	status: 200;
 };
 
@@ -5693,7 +5693,7 @@ export const getGuide = async (slug: string, params: GetGuideParams, options?: R
  * @summary Get user's bookmarked guides
  */
 export type getUserBookmarksResponse200 = {
-	data: UserGuideResponse[];
+	data: UserGuideDto[];
 	status: 200;
 };
 
@@ -5727,7 +5727,7 @@ export const getUserBookmarks = async (accountId: bigint | number | string, opti
  * @summary Get guides by user
  */
 export type getUserGuidesResponse200 = {
-	data: UserGuideResponse[];
+	data: UserGuideDto[];
 	status: 200;
 };
 
@@ -5748,7 +5748,7 @@ export const getUserGuides = async (accountId: bigint | number | string, options
 };
 
 export type listCommentsResponse200 = {
-	data: CommentResponse[];
+	data: CommentDto[];
 	status: 200;
 };
 
@@ -5773,7 +5773,7 @@ export const listComments = async (slug: string, options?: RequestInit) => {
  * @summary List all pending comments
  */
 export type listPendingCommentsResponse200 = {
-	data: CommentResponse[];
+	data: CommentDto[];
 	status: 200;
 };
 

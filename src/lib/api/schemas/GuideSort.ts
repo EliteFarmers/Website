@@ -12,7 +12,7 @@ export type GuideSort = (typeof GuideSort)[keyof typeof GuideSort];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GuideSort = {
-	Newest: 0,
-	TopRated: 1,
-	Trending: 2,
+	newest: 'newest',
+	topRated: 'topRated',
+	trending: 'trending',
 } as const;

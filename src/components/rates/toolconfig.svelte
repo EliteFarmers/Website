@@ -18,7 +18,7 @@
 	let { tool, player }: Props = $props();
 
 	let expanded = $state(false);
-	let reforge = $state(tool.reforge?.name.toLowerCase() ?? 'bountiful');
+	let reforge = $derived(tool.reforge?.name.toLowerCase() ?? 'bountiful');
 </script>
 
 <div class="flex w-full flex-col gap-2 rounded-md">

@@ -1,17 +1,18 @@
 <script lang="ts">
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import type { CommentResponse } from '$lib/api';
+	import type { CommentDto } from '$lib/api';
 	import * as Tooltip from '$ui/tooltip';
 	import { formatDistanceToNow } from 'date-fns';
 
 	interface Props {
-		comment: CommentResponse;
+		comment: CommentDto;
 	}
 
 	let { comment }: Props = $props();
 
-	let { authorName, authorId, authorAvatar, createdAt, isEdited = false, isPending = false } = $derived(comment);
+	let { author, createdAt, isEdited = false, isPending = false } = $derived(comment);
+	let { id: authorId, name: authorName, avatar: authorAvatar } = $derived(author);
 
 	let date = $derived(new Date(createdAt));
 	let timeAgo = $derived(formatDistanceToNow(date, { addSuffix: true }));

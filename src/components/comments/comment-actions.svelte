@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CommentResponse } from '$lib/api';
+	import type { CommentDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { approveCommentCommand } from '$lib/remote/admin-guides.remote';
 	import { Button } from '$ui/button';
@@ -10,7 +10,7 @@
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 
 	interface Props {
-		comment: CommentResponse;
+		comment: CommentDto;
 		onEdit?: () => void;
 		onDelete?: () => void;
 	}
@@ -19,7 +19,7 @@
 
 	const gbl = getGlobalContext();
 
-	let isOwner = $derived(gbl.session?.id === comment.authorId);
+	let isOwner = $derived(gbl.session?.id === comment.author.id);
 	let isModerator = $derived(gbl.session?.perms.moderator);
 </script>
 

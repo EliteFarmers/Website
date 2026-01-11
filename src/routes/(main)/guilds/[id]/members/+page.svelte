@@ -24,35 +24,40 @@
 
 	let { data }: PageProps = $props();
 
-	const leaderboardLookup = (data.leaderboards?.leaderboards ?? {}) as Record<string, LeaderboardInfo>;
-	const leaderboardOptions = Object.values(leaderboardLookup)
-		.sort((a, b) => {
-			if (a.category !== b.category) {
-				return (a.category ?? '').localeCompare(b.category ?? '');
-			}
-			if (a.order !== undefined && b.order !== undefined && a.order !== b.order) {
-				return a.order - b.order;
-			}
-			return a.title.localeCompare(b.title);
-		})
-		.map((info) => ({
-			value: info.id,
-			label: `${info.category ?? 'Leaderboards'} • ${info.title}${info.suffix ?? ''}`,
-		}));
+	const leaderboardLookup = $derived(data.leaderboards?.leaderboards ?? {}) as Record<string, LeaderboardInfo>;
+	const leaderboardOptions = $derived(
+		Object.values(leaderboardLookup)
+			.sort((a, b) => {
+				if (a.category !== b.category) {
+					return (a.category ?? '').localeCompare(b.category ?? '');
+				}
+				if (a.order !== undefined && b.order !== undefined && a.order !== b.order) {
+					return a.order - b.order;
+				}
+				return a.title.localeCompare(b.title);
+			})
+			.map((info) => ({
+				value: info.id,
+				label: `${info.category ?? 'Leaderboards'} • ${info.title}${info.suffix ?? ''}`,
+			}))
+	);
 
-	const defaultSelected =
+	const defaultSelected = $derived(
 		(data.selectedLeaderboardId && leaderboardLookup[data.selectedLeaderboardId]
 			? data.selectedLeaderboardId
 			: leaderboardLookup[DEFAULT_LEADERBOARD_ID]
 				? DEFAULT_LEADERBOARD_ID
-				: leaderboardOptions[0]?.value) ?? '';
+				: leaderboardOptions[0]?.value) ?? ''
+	);
 
-	let selected = $state(defaultSelected);
-	let leaderboardData = $state<GuildMembersLeaderboard | null>(data.initialLeaderboard ?? null);
+	let selected = $derived(defaultSelected);
+	let leaderboardData = $derived<GuildMembersLeaderboard | null>(data.initialLeaderboard ?? null);
 	let loading = $state(false);
-	let interval = $state<string | undefined>(data.selectedInterval ?? data.initialLeaderboard?.interval ?? undefined);
-	let mode = $state<'classic' | 'ironman' | 'island' | undefined>(data.selectedMode);
-	let removed = $state<0 | 1 | 2 | undefined>(data.selectedRemoved);
+	let interval = $derived<string | undefined>(
+		data.selectedInterval ?? data.initialLeaderboard?.interval ?? undefined
+	);
+	let mode = $derived<'classic' | 'ironman' | 'island' | undefined>(data.selectedMode);
+	let removed = $derived<0 | 1 | 2 | undefined>(data.selectedRemoved);
 
 	const gbl = getGlobalContext();
 	const entries = $derived.by<LeaderboardEntry[]>(() => leaderboardData?.entries ?? []);

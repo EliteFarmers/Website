@@ -7,8 +7,9 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { AuthorDto } from './AuthorDto';
 
-export interface CommentResponse {
+export interface CommentDto {
 	id: number;
 	sqid: string;
 	/** @nullable */
@@ -16,10 +17,7 @@ export interface CommentResponse {
 	content: string;
 	/** @nullable */
 	draftContent?: string | null;
-	authorId: string;
-	authorName: string;
-	/** @nullable */
-	authorAvatar?: string | null;
+	author: AuthorDto;
 	createdAt: string;
 	/** @nullable */
 	editedAt?: string | null;

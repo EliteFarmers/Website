@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
 	import Editor from '$comp/editor/Editor.svelte';
@@ -35,7 +35,7 @@
 		console.info(message);
 	}
 
-	const slug = $page.params.slug as string;
+	const slug = page.params.slug as string;
 	const guide = GetGuide({ slug, draft: true });
 
 	// Form state
@@ -45,7 +45,6 @@
 	let editorContent = $state<RootNode | null>(null);
 	let skyblockIconId = $state('');
 	let tags = $state<string[]>([]);
-	let tagInput = $state('');
 	let guideId = $state<number | null>(null);
 
 	// UI state
@@ -96,17 +95,17 @@
 		}
 	});
 
-	function addTag() {
-		const newTag = tagInput.trim().toLowerCase();
-		if (newTag && !tags.includes(newTag)) {
-			tags = [...tags, newTag];
-			tagInput = '';
-		}
-	}
+	// function addTag() {
+	// 	const newTag = tagInput.trim().toLowerCase();
+	// 	if (newTag && !tags.includes(newTag)) {
+	// 		tags = [...tags, newTag];
+	// 		tagInput = '';
+	// 	}
+	// }
 
-	function removeTag(tag: string) {
-		tags = tags.filter((t) => t !== tag);
-	}
+	// function removeTag(tag: string) {
+	// 	tags = tags.filter((t) => t !== tag);
+	// }
 
 	async function handleSave() {
 		if (!title.trim() || !description.trim()) {
@@ -137,7 +136,6 @@
 				return;
 			}
 
-			// Update markdownContent with saved value so reloads work
 			markdownContent = contentToSave;
 
 			saveStatus = 'saved';
@@ -195,17 +193,11 @@
 			notifySuccess('Guide submitted for approval!');
 
 			// Refresh the guide data
-			if ($page.params.slug) {
+			if (page.params.slug) {
 				guide.refresh();
 			}
 
-			// Redirect to user's guides page to see the updated status
-			const userIgn = $page.data.session?.ign;
-			if (userIgn) {
-				await goto(`/@${userIgn}/guides`);
-			} else {
-				await goto('/profile/guides');
-			}
+			await goto('/profile/guides');
 		} catch (err) {
 			console.log(err);
 
@@ -318,7 +310,7 @@
 								>
 								<Input
 									id="skyblock-icon"
-									placeholder="e.g., FARMING_HOE, SEEDS, etc."
+									placeholder="ex: WHEAT, SEEDS, DIAMOND_BLOCK, etc."
 									value={skyblockIconId}
 									onchange={(e) => (skyblockIconId = e.currentTarget.value.toUpperCase())}
 									class="mt-1"
@@ -328,7 +320,7 @@
 								</p>
 							</div>
 
-							<div>
+							<!-- <div>
 								<label for="tags" class="text-sm font-semibold">Tags</label>
 								<div class="mt-1 flex gap-2">
 									<Input
@@ -360,25 +352,17 @@
 										{/each}
 									</div>
 								{/if}
-							</div>
+							</div> -->
 						</CardContent>
 					</Card>
 
-					<!-- <Card>
-						<CardHeader>
-							<CardTitle>Content</CardTitle>
-							<CardDescription>Write your guide using the rich text editor</CardDescription>
-						</CardHeader>
-						<CardContent class="p-0 sm:p-6"> -->
-					{#key markdownContent}
+					{#if markdownContent}
 						<Editor
 							content={markdownContent}
 							onChange={(blocks) => (editorContent = blocks)}
 							class="min-h-[500px]"
 						/>
-					{/key}
-					<!-- </CardContent>
-					</Card> -->
+					{/if}
 				</TabsContent>
 
 				<TabsContent value="preview" class="space-y-6">

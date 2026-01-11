@@ -7,9 +7,17 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { NetworthItemAttributes } from './NetworthItemAttributes';
 
-/**
- * @nullable
- */
-export type NetworthItemAttributesProperty = NetworthItemAttributes | null;
+export interface UserGuideDto {
+	id: number;
+	slug: string;
+	title: string;
+	description: string;
+	type: string;
+	status: string;
+	score: number;
+	viewCount: number;
+	createdAt: string;
+	/** @nullable */
+	updatedAt?: string | null;
+}

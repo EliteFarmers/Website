@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {
-		GetPendingGuides,
 		GetPendingComments,
+		GetPendingGuides,
 		ListAdminTags,
 		approveCommentCommand,
 		approveGuideCommand,
@@ -10,7 +10,6 @@
 		rejectGuideCommand,
 		updateTagCommand,
 	} from '$lib/remote/admin-guides.remote';
-	import Check from '@lucide/svelte/icons/check';
 	import {
 		AlertDialog,
 		AlertDialogAction,
@@ -28,6 +27,7 @@
 	import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '$ui/table';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$ui/tabs';
 	import { Textarea } from '$ui/textarea';
+	import Check from '@lucide/svelte/icons/check';
 	// import { formatDistanceToNow } from 'date-fns';
 
 	const pendingGuides = GetPendingGuides();
@@ -334,7 +334,7 @@
 								<CardHeader>
 									<div class="flex items-start justify-between gap-4">
 										<div class="min-w-0">
-											<CardTitle class="text-base">{comment.authorName}</CardTitle>
+											<CardTitle class="text-base">{comment.author.name}</CardTitle>
 											<p class="text-muted-foreground mt-1 text-xs">
 												{new Date(comment.createdAt).toLocaleString()}
 											</p>

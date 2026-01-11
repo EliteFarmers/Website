@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { UserGuideResponse } from '$lib/api/schemas';
+	import type { UserGuideDto } from '$lib/api/schemas';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { GetUserGuides } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
@@ -9,30 +9,34 @@
 
 	const gbl = getGlobalContext();
 
-	const guides = GetUserGuides(gbl.authorized ? gbl.session!.id : 0);
+	const guides = $derived(GetUserGuides(gbl.authorized ? gbl.session!.id : 0));
 	let selectedStatus = $state<string>('all');
 
-	function filterByStatus(list: UserGuideResponse[] | undefined, status: string): UserGuideResponse[] {
+	function filterByStatus(list: UserGuideDto[] | undefined, status: string): UserGuideDto[] {
 		if (!list) return [];
 		if (status === 'all') return list;
 		return list.filter((g) => g.status === status);
 	}
 </script>
 
-<div class="flex flex-col gap-6">
-	<div class="flex flex-col gap-2">
+<div class="flex w-full flex-col gap-6">
+	<div class="mt-16 flex flex-col gap-2">
 		<h1 class="text-3xl font-bold">My Guides</h1>
 		<p class="text-muted-foreground">View and manage your created guides</p>
 	</div>
 
 	<Tabs bind:value={selectedStatus}>
-		<TabsList>
-			<TabsTrigger value="all">All</TabsTrigger>
-			<TabsTrigger value="draft">Draft</TabsTrigger>
-			<TabsTrigger value="pending">Pending</TabsTrigger>
-			<TabsTrigger value="published">Published</TabsTrigger>
-			<TabsTrigger value="rejected">Rejected</TabsTrigger>
-		</TabsList>
+		<div class="flex flex-row items-center justify-start gap-2">
+			<TabsList>
+				<TabsTrigger value="all">All</TabsTrigger>
+				<TabsTrigger value="draft">Draft</TabsTrigger>
+				<TabsTrigger value="pending">Pending</TabsTrigger>
+				<TabsTrigger value="published">Published</TabsTrigger>
+				<TabsTrigger value="rejected">Rejected</TabsTrigger>
+			</TabsList>
+
+			<Button href="/guides/new" size="sm">Create Guide</Button>
+		</div>
 
 		<TabsContent value="all" class="space-y-4">
 			{#await guides}

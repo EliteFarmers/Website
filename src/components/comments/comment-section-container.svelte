@@ -1,12 +1,14 @@
 <script lang="ts">
-	import CommentSection from './comment-section.svelte';
+	import type { CommentDto } from '$lib/api';
 	import {
 		createCommentCommand,
 		deleteCommentCommand,
 		editCommentCommand,
+		GetGuideComments,
 		voteCommentCommand,
 	} from '$lib/remote/comments.remote';
 	import { useDebounce } from 'runed';
+	import CommentSection from './comment-section.svelte';
 
 	type Session =
 		| {
@@ -16,27 +18,9 @@
 		| null
 		| undefined;
 
-	type CommentShape = {
-		id: number;
-		score: number;
-		userVote?: number | null;
-		createdAt: string;
-		authorName: string;
-		content: string;
-		parentId?: number | null;
-		isPending?: boolean;
-	};
-
-	type CommentsQuery = {
-		current: CommentShape[] | undefined;
-		refresh: () => void;
-		withOverride: (fn: (current: CommentShape[] | undefined) => CommentShape[] | undefined) => void;
-		updates?: unknown;
-	};
-
 	type Props = {
 		guideId: number;
-		commentsPromise: CommentsQuery;
+		commentsPromise: ReturnType<typeof GetGuideComments>;
 		session: Session;
 		notifyError?: (message: string) => void;
 		notifySuccess?: (message: string) => void;
@@ -54,7 +38,7 @@
 	let commentVotes = $state<Record<number, 1 | -1 | 0>>({});
 	let pendingCommentVoteRequests = $state<Record<number, 1 | -1 | 0>>({});
 
-	function applyOptimisticCommentVotes(comments: CommentShape[]) {
+	function applyOptimisticCommentVotes(comments: CommentDto[]) {
 		return comments.map((c) => {
 			const overrideVote = commentVotes[c.id];
 			if (overrideVote === undefined) return c;

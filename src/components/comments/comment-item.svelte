@@ -1,6 +1,6 @@
 <script lang="ts">
 	import RenderMd from '$comp/markdown/render-md.svelte';
-	import type { CommentResponse } from '$lib/api';
+	import type { CommentDto } from '$lib/api';
 	import { Button } from '$ui/button';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
@@ -11,7 +11,7 @@
 	import CommentVote from './comment-vote.svelte';
 
 	interface Props {
-		comment: CommentResponse;
+		comment: CommentDto;
 		childCount?: number;
 		isExpanded?: boolean;
 		onReply?: () => void;

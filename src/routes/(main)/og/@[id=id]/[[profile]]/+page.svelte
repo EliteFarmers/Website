@@ -4,8 +4,8 @@
 
 	let { data }: PageProps = $props();
 
-	const description = data.description;
-	const profile = data.profile;
+	const description = $derived(data.description);
+	const profile = $derived(data.profile);
 </script>
 
 <Head

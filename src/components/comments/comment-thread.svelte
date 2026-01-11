@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { CommentResponse } from '$lib/api';
+	import type { CommentDto } from '$lib/api';
 	import CommentEditor from './comment-editor.svelte';
 	import CommentItem from './comment-item.svelte';
 	import CommentThread from './comment-thread.svelte';
 
 	interface Props {
-		comments: CommentResponse[];
+		comments: CommentDto[];
 		parentId?: number | null;
 		userId?: string;
 		isModerator?: boolean;

@@ -7,37 +7,26 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { AuthorDto } from './AuthorDto';
 
-export interface GetGuideResponse {
+export interface FullGuideDto {
 	id: number;
 	slug: string;
 	title: string;
+	/** @nullable */
+	iconSkyblockId?: string | null;
 	description: string;
 	content: string;
-	authorName: string;
-	/** @nullable */
-	authorAvatar?: string | null;
-	authorId: bigint;
-	/** @nullable */
-	authorUuid?: string | null;
+	author: AuthorDto;
 	createdAt: string;
 	score: number;
 	viewCount: number;
 	tags: string[];
 	isDraft: boolean;
-	/**
-	 * Current user's vote on this guide (+1, -1, or null if not voted).
-	 * @nullable
-	 */
+	/** @nullable */
 	userVote?: number | null;
-	/**
-	 * Whether the current user has bookmarked this guide.
-	 * @nullable
-	 */
+	/** @nullable */
 	isBookmarked?: boolean | null;
-	/**
-	 * Reason for rejection (only present for rejected guides visible to author).
-	 * @nullable
-	 */
+	/** @nullable */
 	rejectionReason?: string | null;
 }

@@ -13,7 +13,7 @@
 		...restProps
 	}: WithElementRef<CarouselProps> = $props();
 
-	let carouselState = $state<EmblaContext>({
+	let carouselState = $derived<EmblaContext>({
 		api: undefined,
 		scrollPrev,
 		scrollNext,
@@ -29,7 +29,9 @@
 		scrollTo,
 	});
 
-	setEmblaContext(carouselState);
+	$effect.pre(() => {
+		setEmblaContext(carouselState);
+	});
 
 	function scrollPrev() {
 		carouselState.api?.scrollPrev();

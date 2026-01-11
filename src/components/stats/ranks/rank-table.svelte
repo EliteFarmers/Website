@@ -40,9 +40,9 @@
 	}: DataTableProps<TData, TValue> = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
-	let columnVisibility = $state<VisibilityState>(initialVisibility);
-	let columnFilters = $state<ColumnFiltersState>(initialFilters);
-	let sorting = $state<SortingState>(initialSorting);
+	let columnVisibility = $derived<VisibilityState>(initialVisibility);
+	let columnFilters = $derived<ColumnFiltersState>(initialFilters);
+	let sorting = $derived<SortingState>(initialSorting);
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
 
 	const table = createSvelteTable({
@@ -66,7 +66,7 @@
 				return pagination;
 			},
 		},
-		columns,
+		columns: (() => columns)(),
 		enableRowSelection: true,
 		onRowSelectionChange: (updater) => {
 			if (typeof updater === 'function') {

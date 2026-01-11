@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { CommentResponse } from '$lib/api';
+	import type { CommentDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Separator } from '$ui/separator';
 	import CommentEditor from './comment-editor.svelte';
 	import CommentThread from './comment-thread.svelte';
 
 	interface Props {
-		comments?: CommentResponse[];
+		comments?: CommentDto[];
 		userId?: string;
 		isModerator?: boolean;
 		isLoading?: boolean;

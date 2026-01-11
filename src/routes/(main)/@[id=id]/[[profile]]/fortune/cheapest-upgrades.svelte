@@ -28,7 +28,9 @@
 
 	let { player, crop }: Props = $props();
 
-	let upgrades = $state([...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)]);
+	let upgrades = $state(
+		(() => [...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)])()
+	);
 
 	const getUpgrades = useDebounce(() => {
 		upgrades = [...$player.getUpgrades({ stat: Stat.FarmingFortune }), ...$player.getCropUpgrades(crop)];

@@ -39,7 +39,7 @@
 </script>
 
 <div class="flex min-h-screen items-center justify-center">
-	<Card class="w-full max-w-md">
+	<Card class="-mt-16 w-full max-w-md">
 		<CardHeader>
 			<CardTitle>Create a New Guide</CardTitle>
 			<CardDescription>Choose a guide type to get started</CardDescription>

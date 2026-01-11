@@ -7,7 +7,7 @@
 	import UserIcon from '$comp/discord/user-icon.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import type { GetGuideResponse } from '$lib/api/schemas';
+	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { GetGuideComments } from '$lib/remote/comments.remote';
 	import {
@@ -57,7 +57,7 @@
 	const commentsPromise = GetGuideComments(slug);
 
 	const gbl = getGlobalContext();
-	let isOwner = $derived(guidePromise.current?.authorId === gbl.session?.id);
+	let isOwner = $derived(guidePromise.current?.author?.id === gbl.session?.id);
 
 	// Component state
 	let userVote = $state<number | null>(null);
@@ -85,7 +85,7 @@
 	}, 400);
 
 	$effect(() => {
-		const guide = guidePromise.current as GetGuideResponse | undefined;
+		const guide = guidePromise.current as FullGuideDto | undefined;
 		if (!guide) return;
 		userVote = guide.userVote ?? null;
 		isBookmarked = !!guide.isBookmarked;
@@ -229,9 +229,9 @@
 	}
 
 	let ign = $derived.by(() => {
-		const guide = guidePromise.current as GetGuideResponse | undefined;
+		const guide = guidePromise.current as GuideDto | undefined;
 		if (!guide) return '';
-		const split = guide.authorName.split(' ');
+		const split = guide.author.name.split(' ');
 		return split.length === 1 ? split[0] : split.sort((a, b) => b.length - a.length)[0];
 	});
 </script>
@@ -279,15 +279,15 @@
 				<div class="flex flex-col items-center gap-4">
 					<div class="text-muted-foreground flex items-center gap-3 text-sm">
 						<div class="text-foreground flex items-center gap-2 font-medium">
-							{#if guide.authorAvatar}
+							{#if guide.author.avatar}
 								<UserIcon
-									user={{ id: guide.authorId.toString(), avatar: guide.authorAvatar }}
+									user={{ id: guide.author.id.toString(), avatar: guide.author.avatar }}
 									class="size-6 rounded-full"
 								/>
 							{:else}
 								<PlayerHead uuid={ign} class="size-6" />
 							{/if}
-							<span>{guide.authorName}</span>
+							<span>{guide.author.name}</span>
 						</div>
 						<span>•</span>
 						<span>{formatDistanceToNow(new Date(guide.createdAt), { addSuffix: true })}</span>

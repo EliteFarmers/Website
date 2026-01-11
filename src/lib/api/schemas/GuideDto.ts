@@ -7,9 +7,14 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
-import type { LeaderboardEntryDto } from './LeaderboardEntryDto';
+import type { AuthorDto } from './AuthorDto';
 
-export interface GetHypixelGuildMembersLeaderboardResponse {
-	guildId: string;
-	entries: LeaderboardEntryDto[];
+export interface GuideDto {
+	id: number;
+	slug: string;
+	title: string;
+	status: string;
+	/** @nullable */
+	iconSkyblockId?: string | null;
+	author: AuthorDto;
 }

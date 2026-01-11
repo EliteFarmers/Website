@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
-	import type { GuideResponse } from '$lib/api/schemas';
+	import type { GuideDto } from '$lib/api/schemas';
 	import { ListGuides, ListTags } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
@@ -9,7 +9,7 @@
 	import { SelectSimple } from '$ui/select';
 	import { Separator } from '$ui/separator';
 
-	interface GuideItem extends GuideResponse {
+	interface GuideItem extends GuideDto {
 		description?: string;
 		skyblockIconId?: string;
 		tags?: string[];
@@ -20,12 +20,12 @@
 	let searchQuery = $state('');
 	let selectedTags = $state<number[]>([]);
 	let selectedType = $state<string>('');
-	let sortBy = $state('0');
+	let sortBy = $state('topRated');
 	let currentPage = $state(0);
 
 	const listParams = $derived.by(() => {
-		const params: any = {
-			sort: parseInt(sortBy) || 0,
+		const params: Parameters<typeof ListGuides>[0] = {
+			sort: sortBy,
 			page: currentPage,
 			pageSize: 20,
 		};
@@ -47,9 +47,9 @@
 	];
 
 	const sortOptions = [
-		{ label: 'Newest', value: '0' },
-		{ label: 'Top Rated', value: '1' },
-		{ label: 'Trending', value: '2' },
+		{ label: 'Newest', value: 'newest' },
+		{ label: 'Top Rated', value: 'topRated' },
+		{ label: 'Trending', value: 'trending' },
 	];
 
 	function toggleTag(tagId: number) {

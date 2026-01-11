@@ -77,7 +77,7 @@
 			}));
 	}
 
-	let changedSettings = $state({
+	let changedSettings = $derived({
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
 		leaderboardStyle: (data.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
 		nameStyle: (data.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
@@ -108,7 +108,7 @@
 	}, 1000);
 
 	let user = $derived(data.user || undefined);
-	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
+	let badges = $derived(mapBadges(data.user?.minecraftAccounts ?? []));
 
 	let unlockedSettings = $derived({
 		styles: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,

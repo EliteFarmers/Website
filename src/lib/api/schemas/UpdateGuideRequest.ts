@@ -11,6 +11,8 @@ import type { UpdateGuideRequestRichBlocks } from './UpdateGuideRequestRichBlock
 
 export interface UpdateGuideRequest {
 	title: string;
+	/** @nullable */
+	iconSkyblockId?: string | null;
 	description: string;
 	markdownContent: string;
 	/** @nullable */

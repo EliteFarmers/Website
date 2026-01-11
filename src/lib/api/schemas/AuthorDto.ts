@@ -8,9 +8,11 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface NetworthItemUpgradeCost {
-	type: string;
+export interface AuthorDto {
+	id: string;
+	name: string;
 	/** @nullable */
-	itemId?: string | null;
-	amount: number;
+	avatar?: string | null;
+	/** @nullable */
+	uuid?: string | null;
 }

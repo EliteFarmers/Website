@@ -33,8 +33,8 @@
 	let confirmModal = $state(false);
 	let editModal = $state(false);
 
-	let editSendUpdates = $state(!!(lb.updateChannelId || lb.updateRoleId));
-	let editTinyUpdatesPing = $state(!!lb.pingForSmallImprovements);
+	let editSendUpdates = $derived(!!(lb.updateChannelId || lb.updateRoleId));
+	let editTinyUpdatesPing = $derived(!!lb.pingForSmallImprovements);
 
 	function toDatetimeLocal(seconds?: bigint | number | null): string {
 		if (seconds === null || seconds === undefined) return '';

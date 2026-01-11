@@ -69,7 +69,7 @@ export const ListGuides = query(
 		query: z.string().optional(),
 		tags: z.array(z.coerce.number().int()).optional(),
 		type: z.coerce.number().int().optional(),
-		sort: z.coerce.number().int().optional().default(0),
+		sort: z.string().optional().default('topRated'),
 		page: z.coerce.number().int().optional().default(0),
 		pageSize: z.coerce.number().int().optional().default(20),
 	}),
