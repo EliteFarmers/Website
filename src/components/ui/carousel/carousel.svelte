@@ -13,15 +13,18 @@
 		...restProps
 	}: WithElementRef<CarouselProps> = $props();
 
-	let carouselState = $derived<EmblaContext>({
+	let carouselState = $state<EmblaContext>({
 		api: undefined,
 		scrollPrev,
 		scrollNext,
+		// svelte-ignore state_referenced_locally
 		orientation,
 		canScrollNext: false,
 		canScrollPrev: false,
 		handleKeyDown,
+		// svelte-ignore state_referenced_locally
 		options: opts,
+		// svelte-ignore state_referenced_locally
 		plugins,
 		onInit,
 		scrollSnaps: [],
@@ -29,9 +32,7 @@
 		scrollTo,
 	});
 
-	$effect.pre(() => {
-		setEmblaContext(carouselState);
-	});
+	setEmblaContext(carouselState);
 
 	function scrollPrev() {
 		carouselState.api?.scrollPrev();

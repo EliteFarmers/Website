@@ -1,24 +1,17 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
-	import type { GuideDto } from '$lib/api/schemas';
 	import { ListGuides, ListTags } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
 	import { Input } from '$ui/input';
+	import MultiSelect from '$ui/multi-select/multi-select.svelte';
 	import { SelectSimple } from '$ui/select';
 	import { Separator } from '$ui/separator';
-
-	interface GuideItem extends GuideDto {
-		description?: string;
-		skyblockIconId?: string;
-		tags?: string[];
-		viewCount?: number;
-		score?: number;
-	}
+	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
 
 	let searchQuery = $state('');
-	let selectedTags = $state<number[]>([]);
+	let selectedTagIds = $state<string[]>([]);
 	let selectedType = $state<string>('');
 	let sortBy = $state('topRated');
 	let currentPage = $state(0);
@@ -30,7 +23,7 @@
 			pageSize: 20,
 		};
 		if (searchQuery) params.query = searchQuery;
-		if (selectedTags.length) params.tags = selectedTags;
+		if (selectedTagIds.length) params.tags = selectedTagIds.map(Number);
 		if (selectedType && selectedType !== '') params.type = parseInt(selectedType);
 		return params;
 	});
@@ -52,22 +45,13 @@
 		{ label: 'Trending', value: 'trending' },
 	];
 
-	function toggleTag(tagId: number) {
-		if (selectedTags.includes(tagId)) {
-			selectedTags = selectedTags.filter((id) => id !== tagId);
-		} else {
-			selectedTags = [...selectedTags, tagId];
-		}
-		currentPage = 0;
-	}
-
 	function handleSearch(value: string) {
 		searchQuery = value;
 		currentPage = 0;
 	}
 </script>
 
-<Head title="Guides" description="Discover community guides." />
+<Head title="Guides" description="Discover community guides!" />
 
 <main class="@container flex flex-col items-center">
 	<div class="my-16 text-center">
@@ -100,6 +84,14 @@
 			class="w-full @6xl:w-40"
 		/>
 
+		{#await tags then tagList}
+			{#if tagList?.length}
+				{@const options = tagList.map((t) => ({ label: t.name, value: t.id.toString() }))}
+
+				<MultiSelect {options} bind:value={selectedTagIds} placeholder="Filter Tags" class="w-full" />
+			{/if}
+		{/await}
+
 		<SelectSimple
 			bind:value={sortBy}
 			options={sortOptions}
@@ -108,23 +100,6 @@
 			class="w-full @6xl:w-40"
 		/>
 	</div>
-
-	{#await tags then tagList}
-		{#if tagList?.length}
-			<div class="mb-6 w-full max-w-96 px-4 @sm:max-w-lg @2xl:max-w-2xl @6xl:max-w-4xl">
-				<div class="mb-2 text-sm font-semibold">Tags</div>
-				<div class="flex flex-wrap gap-2">
-					{#each tagList as tag (tag.id)}
-						<button onclick={() => toggleTag(tag.id)} class="cursor-pointer">
-							<Badge variant={selectedTags.includes(tag.id) ? 'default' : 'outline'}>
-								{tag.name}
-							</Badge>
-						</button>
-					{/each}
-				</div>
-			</div>
-		{/if}
-	{/await}
 
 	<Separator class="my-8 w-full" />
 
@@ -148,10 +123,9 @@
 				class="mb-8 grid w-full max-w-96 grid-cols-1 gap-4 px-4 @sm:max-w-lg @2xl:max-w-2xl @6xl:max-w-4xl @6xl:grid-cols-2"
 			>
 				{#each guideList as guide (guide.id)}
-					{@const g = guide as unknown as GuideItem}
 					<a href="/guides/{guide.slug}" class="group">
 						<div
-							class="bg-card hover:border-primary flex h-full flex-col gap-3 rounded-lg border p-4 transition-all hover:shadow-md"
+							class="bg-card hover:border-link/50 flex h-full flex-col gap-3 rounded-lg border p-4 transition-all hover:shadow-md"
 						>
 							<div class="flex items-start justify-between gap-3">
 								<div class="min-w-0 flex-1">
@@ -160,22 +134,22 @@
 									>
 										{guide.title}
 									</h3>
-									{#if g.description}
+									{#if guide.description}
 										<p class="text-muted-foreground mt-1 line-clamp-2 text-sm wrap-break-word">
-											{g.description}
+											{guide.description}
 										</p>
 									{/if}
 								</div>
-								{#if g.skyblockIconId}
+								{#if guide.iconSkyblockId}
 									<div class="shrink-0">
-										<ItemRender skyblockId={g.skyblockIconId} class="size-12" />
+										<ItemRender skyblockId={guide.iconSkyblockId} class="size-12" />
 									</div>
 								{/if}
 							</div>
 
 							<div class="mt-auto flex flex-wrap gap-2">
-								{#if g.tags?.length}
-									{#each g.tags as tag (tag)}
+								{#if guide.tags?.length}
+									{#each guide.tags as tag (tag)}
 										<Badge variant="secondary" class="text-xs">{tag}</Badge>
 									{/each}
 								{:else}
@@ -184,8 +158,11 @@
 							</div>
 
 							<div class="text-muted-foreground flex items-center justify-between border-t pt-2 text-xs">
-								<span>{g.viewCount ?? 0} views</span>
-								<span>⭐ {g.score ?? 0}</span>
+								<div class="flex items-center gap-2">
+									<ThumbsUp class="my-0 inline size-3.5 py-0" />
+									<span> {(guide.score ?? 0).toLocaleString()}</span>
+								</div>
+								<span>{(guide.views ?? 0).toLocaleString()} views</span>
 							</div>
 						</div>
 					</a>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import type { CommentDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { Separator } from '$ui/separator';
@@ -61,7 +62,11 @@
 		/>
 		<Separator />
 	{:else}
-		<p class="text-muted-foreground text-sm italic">Sign in to post a comment</p>
+		<p class="text-muted-foreground text-sm italic">
+			<a href="/login?redirect={encodeURIComponent(page.url.pathname)}" class="hover:text-primary/70 underline"
+				>Sign in</a
+			> to post a comment
+		</p>
 		<Separator />
 	{/if}
 

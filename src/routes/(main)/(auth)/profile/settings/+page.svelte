@@ -77,14 +77,22 @@
 			}));
 	}
 
-	let changedSettings = $derived({
+	let changedSettings = $state({
+		// svelte-ignore state_referenced_locally
 		weightStyle: (data.user.settings?.weightStyle?.id ?? '-1') as string | undefined,
+		// svelte-ignore state_referenced_locally
 		leaderboardStyle: (data.user.settings?.leaderboardStyle?.id ?? '-1') as string | undefined,
+		// svelte-ignore state_referenced_locally
 		nameStyle: (data.user.settings?.nameStyle?.id ?? '-1') as string | undefined,
+		// svelte-ignore state_referenced_locally
 		embedColor: data.user.settings?.features?.embedColor ?? '',
+		// svelte-ignore state_referenced_locally
 		shopPromotions: data.user.settings?.features?.hideShopPromotions ?? false,
+		// svelte-ignore state_referenced_locally
 		styleOverride: data.user.settings?.features?.weightStyleOverride ?? false,
+		// svelte-ignore state_referenced_locally
 		moreInfo: data.user.settings?.features?.moreInfoDefault ?? false,
+		// svelte-ignore state_referenced_locally
 		emoji: data.user.settings?.suffix ?? '',
 	});
 
@@ -108,7 +116,8 @@
 	}, 1000);
 
 	let user = $derived(data.user || undefined);
-	let badges = $derived(mapBadges(data.user?.minecraftAccounts ?? []));
+	// svelte-ignore state_referenced_locally
+	let badges = $state(mapBadges(data.user?.minecraftAccounts ?? []));
 
 	let unlockedSettings = $derived({
 		styles: data.user.entitlements?.some((e) => (e.product?.weightStyles?.length ?? 0) > 0) ?? false,

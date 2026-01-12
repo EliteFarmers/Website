@@ -16,5 +16,7 @@ export interface UpdateGuideRequest {
 	description: string;
 	markdownContent: string;
 	/** @nullable */
+	tags?: string[] | null;
+	/** @nullable */
 	richBlocks?: UpdateGuideRequestRichBlocks;
 }

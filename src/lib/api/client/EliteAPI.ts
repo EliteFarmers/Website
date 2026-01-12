@@ -5843,6 +5843,10 @@ export const getUserGuides = async (accountId: bigint | number | string, options
 	});
 };
 
+/**
+ * Returns all comments for a specific guide.
+ * @summary List comments for a guide
+ */
 export type listCommentsResponse200 = {
 	data: CommentDto[];
 	status: 200;

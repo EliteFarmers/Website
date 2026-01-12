@@ -4,10 +4,12 @@
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
 	import Editor from '$comp/editor/Editor.svelte';
+	import ItemRender from '$comp/items/item-render.svelte';
 	import RenderMd from '$comp/markdown/render-md.svelte';
 	import {
 		deleteGuideCommand,
 		GetGuide,
+		ListTags,
 		submitGuideForApprovalCommand,
 		updateGuideCommand,
 	} from '$lib/remote/guides.remote';
@@ -23,6 +25,7 @@
 	import { Button } from '$ui/button';
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$ui/card';
 	import { Input } from '$ui/input';
+	import MultiSelect from '$ui/multi-select/multi-select.svelte';
 	import { Separator } from '$ui/separator';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$ui/tabs';
 	import { Textarea } from '$ui/textarea';
@@ -37,6 +40,7 @@
 
 	const slug = page.params.slug as string;
 	const guide = GetGuide({ slug, draft: true });
+	const availableTagsQuery = ListTags();
 
 	// Form state
 	let title = $state('');
@@ -127,7 +131,7 @@
 				title,
 				description,
 				markdownContent: contentToSave,
-				skyblockIconId: skyblockIconId || undefined,
+				iconSkyblockId: skyblockIconId || undefined,
 				tags: tags.length > 0 ? tags : undefined,
 			});
 
@@ -308,51 +312,41 @@
 								<label for="skyblock-icon" class="text-sm font-semibold"
 									>Skyblock Icon ID (Optional)</label
 								>
-								<Input
-									id="skyblock-icon"
-									placeholder="ex: WHEAT, SEEDS, DIAMOND_BLOCK, etc."
-									value={skyblockIconId}
-									onchange={(e) => (skyblockIconId = e.currentTarget.value.toUpperCase())}
-									class="mt-1"
-								/>
+								<div class="flex flex-row items-center gap-1">
+									<ItemRender skyblockId={skyblockIconId || 'STONE'} class="size-8" />
+									<Input
+										id="skyblock-icon"
+										placeholder="ex: WHEAT, SEEDS, DIAMOND_BLOCK, etc."
+										bind:value={skyblockIconId}
+										onchange={(e) => (skyblockIconId = e.currentTarget.value.toUpperCase())}
+										class="mt-1"
+									/>
+								</div>
+
 								<p class="text-muted-foreground mt-1 text-xs">
 									The Skyblock item ID to display as the guide icon
 								</p>
 							</div>
 
-							<!-- <div>
+							<div class="flex flex-col gap-1">
 								<label for="tags" class="text-sm font-semibold">Tags</label>
-								<div class="mt-1 flex gap-2">
-									<Input
-										id="tags"
-										placeholder="Add a tag..."
-										value={tagInput}
-										onchange={(e) => (tagInput = e.currentTarget.value)}
-										onkeydown={(e) => {
-											if (e.key === 'Enter') {
-												e.preventDefault();
-												addTag();
-											}
-										}}
-										class="flex-1"
+								{#await availableTagsQuery}
+									<div class="bg-muted h-10 w-full animate-pulse rounded-md"></div>
+								{:then availableTags}
+									{@const options = availableTags.map((t) => ({
+										label: t.name,
+										value: t.id.toString(),
+									}))}
+									<MultiSelect
+										{options}
+										bind:value={tags}
+										placeholder="Select tags..."
+										class="mt-1"
 									/>
-									<Button type="button" variant="outline" onclick={addTag}>Add</Button>
-								</div>
-								{#if tags.length > 0}
-									<div class="mt-3 flex flex-wrap gap-2">
-										{#each tags as tag (tag)}
-											<button
-												type="button"
-												onclick={() => removeTag(tag)}
-												class="bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm transition-colors"
-											>
-												{tag}
-												<span class="text-xs font-bold">×</span>
-											</button>
-										{/each}
-									</div>
-								{/if}
-							</div> -->
+								{:catch}
+									<p class="text-destructive text-xs">Failed to load tags</p>
+								{/await}
+							</div>
 						</CardContent>
 					</Card>
 

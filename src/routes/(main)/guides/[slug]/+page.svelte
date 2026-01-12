@@ -5,6 +5,7 @@
 	import type { BlockNode, InlineNode } from '$comp/blocks/blocks';
 	import { CommentSectionContainer } from '$comp/comments';
 	import UserIcon from '$comp/discord/user-icon.svelte';
+	import Head from '$comp/head.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
@@ -250,6 +251,21 @@
 		</a>
 	</div>
 {:else}
+	<Head
+		title={guideData.title}
+		description={guideData.description}
+		ldJson={{
+			'@context': 'https://schema.org',
+			'@type': 'Article',
+			headline: guideData.title,
+			description: guideData.description,
+			author: {
+				'@type': 'Person',
+				name: guideData.author.name,
+			},
+			datePublished: guideData.createdAt,
+		}}
+	/>
 	<div class="flex flex-col gap-6">
 		{#if guideData.isDraft && guideData.rejectionReason}
 			<div class="bg-destructive/10 border-destructive my-4 rounded-lg border p-4">

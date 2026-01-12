@@ -5190,6 +5190,11 @@ export const zodAdminPendingGuidesResponseItem = zod.object({
 		avatar: zod.string().nullish(),
 		uuid: zod.string().nullish(),
 	}),
+	score: zod.number(),
+	views: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	description: zod.string(),
+	tags: zod.array(zod.string()),
 });
 export const zodAdminPendingGuidesResponse = zod.array(zodAdminPendingGuidesResponseItem);
 
@@ -5306,6 +5311,11 @@ export const zodListGuidesResponseItem = zod.object({
 		avatar: zod.string().nullish(),
 		uuid: zod.string().nullish(),
 	}),
+	score: zod.number(),
+	views: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	description: zod.string(),
+	tags: zod.array(zod.string()),
 });
 export const zodListGuidesResponse = zod.array(zodListGuidesResponseItem);
 
@@ -5364,6 +5374,7 @@ export const zodUpdateGuideBody = zod.object({
 	iconSkyblockId: zod.string().nullish(),
 	description: zod.string(),
 	markdownContent: zod.string(),
+	tags: zod.array(zod.string()).nullish(),
 	richBlocks: zod
 		.object({
 			greenhouseLayout: zod
@@ -5506,6 +5517,10 @@ export const zodGetUserGuidesResponseItem = zod.object({
 });
 export const zodGetUserGuidesResponse = zod.array(zodGetUserGuidesResponseItem);
 
+/**
+ * Returns all comments for a specific guide.
+ * @summary List comments for a guide
+ */
 export const zodListCommentsParams = zod.object({
 	slug: zod.string(),
 });

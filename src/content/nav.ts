@@ -33,6 +33,11 @@ export const PROFILE_NAV_PAGES = [
 		href: '/profile',
 	},
 	{
+		icon: Settings,
+		name: 'Settings',
+		href: '/profile/settings',
+	},
+	{
 		icon: FileText,
 		name: 'My Guides',
 		href: '/profile/guides',
@@ -41,11 +46,6 @@ export const PROFILE_NAV_PAGES = [
 		icon: BookOpen,
 		name: 'Bookmarks',
 		href: '/profile/bookmarks',
-	},
-	{
-		icon: Settings,
-		name: 'Settings',
-		href: '/profile/settings',
 	},
 	{
 		icon: ServerCog,

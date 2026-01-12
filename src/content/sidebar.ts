@@ -26,6 +26,12 @@ export const SIDEBAR_NAV = [
 		icon: Trophy as unknown as Component,
 	},
 	{
+		title: 'Guides',
+		href: '/guides',
+		icon: BookOpen as unknown as Component,
+		new: 1,
+	},
+	{
 		title: 'Guilds',
 		href: '/guilds',
 		icon: Handshake as unknown as Component,
@@ -44,11 +50,6 @@ export const SIDEBAR_NAV = [
 		title: 'Articles',
 		href: '/articles',
 		icon: Newspaper as unknown as Component,
-	},
-	{
-		title: 'Guides',
-		href: '/guides',
-		icon: BookOpen as unknown as Component,
 	},
 	{
 		title: 'Info',

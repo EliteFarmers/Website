@@ -17,4 +17,9 @@ export interface GuideDto {
 	/** @nullable */
 	iconSkyblockId?: string | null;
 	author: AuthorDto;
+	score: number;
+	views: number;
+	createdAt: string;
+	description: string;
+	tags: string[];
 }

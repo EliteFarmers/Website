@@ -16,6 +16,7 @@ type PersistedData = {
 	settings: AuthorizedAccountDto['settings'];
 	minecraftAccounts?: string[];
 	packs?: { id: string; on: boolean; order: number }[];
+	newSidebar?: Record<string, number>;
 };
 
 export class GlobalContext {
@@ -26,6 +27,7 @@ export class GlobalContext {
 		dismissedAnnouncements: [],
 		settings: {},
 		packs: [],
+		newSidebar: {},
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
 	#notifications = $state<NotificationDto[]>([]);
@@ -95,6 +97,7 @@ export class GlobalContext {
 			settings: user?.settings ?? this.data.settings,
 			minecraftAccounts: user?.minecraftAccounts?.map((a) => a.id) ?? this.data.minecraftAccounts,
 			packs: this.data.packs ?? [],
+			newSidebar: this.data.newSidebar ?? {},
 		};
 
 		this.updatePacksParam();
@@ -190,6 +193,20 @@ export class GlobalContext {
 
 	ownsAccount(uuid: string) {
 		return this.data?.minecraftAccounts?.some((a) => a === uuid);
+	}
+
+	seenSidebarItem(key: string, version: number) {
+		return (this.data?.newSidebar?.[key] || 0) >= version;
+	}
+
+	markSidebarItemSeen(key: string, version: number) {
+		this.#data.current = {
+			...this.#data.current,
+			newSidebar: {
+				...this.#data.current.newSidebar,
+				[key]: version,
+			},
+		};
 	}
 }
 

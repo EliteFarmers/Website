@@ -154,10 +154,10 @@ export const updateGuideCommand = command(
 		description: z.string().min(1),
 		markdownContent: z.string(),
 		richBlocks: z.any().optional(),
-		skyblockIconId: z.string().optional(),
+		iconSkyblockId: z.string().optional(),
 		tags: z.array(z.string()).optional(),
 	}),
-	async ({ id, title, description, markdownContent, richBlocks, skyblockIconId, tags }) => {
+	async ({ id, title, description, markdownContent, iconSkyblockId, tags }) => {
 		const event = getRequestEvent();
 		if (!event.locals.access_token) {
 			return { error: 'Unauthorized' };
@@ -167,10 +167,15 @@ export const updateGuideCommand = command(
 			title,
 			description,
 			markdownContent,
-			...(richBlocks && { richBlocks }),
-			...(skyblockIconId && { skyblockIconId }),
-			...(tags && { tags }),
 		};
+
+		if (iconSkyblockId) {
+			request.iconSkyblockId = iconSkyblockId;
+		}
+
+		if (tags) {
+			request.tags = tags;
+		}
 
 		const result = await updateGuide(id, request);
 

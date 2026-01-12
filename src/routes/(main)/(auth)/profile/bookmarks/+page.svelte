@@ -13,8 +13,8 @@
 	const bookmarks = GetUserBookmarks(gbl.authorized ? gbl.session!.id : 0);
 </script>
 
-<div class="flex flex-col gap-6">
-	<div class="flex items-center justify-between">
+<div class="flex w-full flex-col gap-6">
+	<div class="mt-16 flex flex-col gap-2">
 		<h1 class="text-3xl font-bold">Bookmarks</h1>
 	</div>
 
@@ -37,7 +37,7 @@
 		{:else}
 			<div class="grid gap-4">
 				{#each bookmarkList as guide (guide.id)}
-					<a href="/guides/{guide.slug}" class="group">
+					<a href="/guides/{guide.slug}" class="group max-w-64">
 						<Card class="cursor-pointer transition-shadow hover:shadow-lg">
 							<CardHeader class="pb-3">
 								<div class="flex items-start justify-between gap-2">
