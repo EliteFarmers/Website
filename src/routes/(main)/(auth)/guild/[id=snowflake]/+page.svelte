@@ -24,7 +24,7 @@
 	let { data, form }: Props = $props();
 
 	let features = $derived(data.guild?.features);
-	let visibility = $state(data.guild?.public !== true);
+	let visibility = $derived(data.guild?.public !== true);
 	let currentLeaderboardCount = $derived(features?.jacobLeaderboard?.maxLeaderboards ?? 0);
 	let currentEventCount = $derived(features?.eventSettings?.maxMonthlyEvents ?? 0);
 	let leaderboardCount = $state(3);

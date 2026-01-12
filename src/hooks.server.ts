@@ -39,7 +39,6 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 	}
 
 	if (locals.session?.pending_confirmation && event.url.pathname !== '/login/confirm') {
-		console.log('Redirecting to confirmation page for ID:', locals.session.pending_confirmation.id);
 		redirect(
 			307,
 			`/login/confirm?id=${locals.session.pending_confirmation.id}&redirect=${encodeURIComponent(event.url.pathname)}`

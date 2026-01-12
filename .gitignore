@@ -14,8 +14,6 @@ static/oss.txt
 .idea
 .velite
 /cache
-.vscode/mcp.json
-/AGENTS.md
 
 # Admin routes
 src/routes/(auth)/**/graphs/+l*

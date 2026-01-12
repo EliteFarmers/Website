@@ -35,9 +35,9 @@
 		namePrefix,
 	}: Props = $props();
 
-	let ign = $state(entry.ign);
+	let ign = $derived(entry.ign);
 	let amount = $derived(entry.amount);
-	let profile = $state(entry.profile);
+	let profile = $derived(entry.profile);
 	let pageLink = $derived(entry.members ? entry.members[0].ign : ign);
 	let profileLink = $derived(leaderboard?.profile ? entry.uuid : profile);
 

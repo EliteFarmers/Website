@@ -9,12 +9,17 @@
 
 	import Link from './elements/a.svelte';
 	import Quote from './elements/blockquote.svelte';
+	import CalloutComponent from './elements/callout.svelte';
 	import Heading from './elements/heading.svelte';
 	import Image from './elements/img.svelte';
+	import ItemPriceComponent from './elements/item-price.svelte';
 	import ListItem from './elements/li.svelte';
 	import List from './elements/list.svelte';
 	import Paragraph from './elements/p.svelte';
 	import Code from './elements/pre.svelte';
+	import SkyblockItem from './elements/skyblock-item.svelte';
+	import TwoColumn from './elements/two-column.svelte';
+	import YouTubeComponent from './elements/youtube.svelte';
 
 	import Bold from './inline/bold.svelte';
 	import InlineCode from './inline/code.svelte';
@@ -32,6 +37,11 @@
 		image: Image,
 		list: List,
 		'list-item': ListItem,
+		'skyblock-item': SkyblockItem,
+		'item-price': ItemPriceComponent,
+		'two-column': TwoColumn,
+		youtube: YouTubeComponent,
+		callout: CalloutComponent,
 	};
 
 	const defaultModifiers: ModifierComponents = {

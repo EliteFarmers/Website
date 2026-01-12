@@ -54,10 +54,10 @@
 		return entries;
 	});
 
-	const navLinks = [
+	const navLinks = $derived([
 		{ label: 'Overview', href: `/guilds/${data.guild.id}`, match: 'exact' as const },
 		{ label: 'Member Leaderboards', href: `/guilds/${data.guild.id}/members`, match: 'startsWith' as const },
-	];
+	]);
 
 	const pathname = $derived(page.url.pathname);
 

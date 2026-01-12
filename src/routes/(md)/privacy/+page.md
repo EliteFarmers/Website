@@ -1,13 +1,13 @@
 ---
 title: Privacy Policy
 description: The Privacy Policy for Our Application
-lastUpdated: 2025-11-12
+lastUpdated: 2026-01-11
 blueprint: page
 ---
 
 # Privacy Policy
 
-<sub>Last updated: <strong>November 12, 2025</strong></sub>
+<sub>Last updated: <strong>January 11, 2026</strong></sub>
 
 This Privacy Policy explains how we collect, use, and protect your information when you use our Service. By using the Service, you agree to the practices described in this policy.
 
@@ -32,6 +32,7 @@ When you log in to our Service using Discord, we receive and store limited infor
 ### 2. Information You Provide Directly
 
 - **Linked Minecraft Account(s)**: You can optionally link your Minecraft account(s) to the Service. We store this link to provide game-related features.
+- **User Generated Content**: When you create guides or post comments, we collect and store the text, images, and other content you provide. This content is associated with your account.
 - **Configuration Settings**: We save any settings you configure on the website to customize your experience.
 
 ### 3. Information from Third-Party Services
@@ -66,6 +67,7 @@ We use the information we collect to:
 
 - **Provide and maintain the Service**.
 - **Manage your account** and provide access to features.
+- **Review and moderate content** you submit (like guides and comments) to ensure it complies with our standards before publication.
 - **Provide customer support** and manage your requests.
 - **Contact you** with important updates about the Service, if necessary.
 - **Analyze usage** to improve our products and user experience.

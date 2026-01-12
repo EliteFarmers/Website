@@ -31,6 +31,7 @@ export default ts.config(
 		},
 		rules: {
 			'svelte/no-navigation-without-resolve': 'off', // To be fixed later
+			'svelte/no-unused-svelte-ignore': 'off',
 		},
 	},
 	{

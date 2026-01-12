@@ -22,7 +22,7 @@
 		noperms: Snippet;
 	} = $props();
 
-	const context = initRecapContext({ playerUuid, profileName, profileUuid, year });
+	const context = initRecapContext((() => ({ playerUuid, profileName, profileUuid, year }))());
 
 	$effect(() => {
 		if (playerUuid != context.playerUuid || profileUuid != context.profileUuid || year != context.year) {

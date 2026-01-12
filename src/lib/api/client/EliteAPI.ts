@@ -19,6 +19,7 @@ import type {
 	AuctionDto,
 	AuctionHouseDto,
 	AuctionOverviewResponse,
+	AuditLogFiltersResponse,
 	AuthRefreshDto,
 	AuthResponseDto,
 	AuthSessionDto,
@@ -27,6 +28,7 @@ import type {
 	BadgeDto,
 	BazaarOverviewResponse,
 	ChangeTeamOwnerRequest,
+	CommentDto,
 	ConfirmationDto,
 	ContestBracketsDetailsDto,
 	ContestParticipationDto,
@@ -34,11 +36,14 @@ import type {
 	CreateAnnouncementDto,
 	CreateBadgeRequestCreateBadge,
 	CreateCategoryDto,
+	CreateCommentRequest,
 	CreateConfirmationDto,
 	CreateEventDto,
 	CreateEventTeamDto,
+	CreateGuideRequest,
 	CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	CreateStyleRequest,
+	CreateTagRequest,
 	CreateTeamAdminParams,
 	CropCollectionsDataPointDto,
 	DeleteContestPingsParams,
@@ -47,6 +52,7 @@ import type {
 	DiscordIdRequest,
 	DiscordLoginDto,
 	EditCategoryDto,
+	EditCommentRequest,
 	EditEventBannerDto,
 	EditEventDto,
 	EditProductDto,
@@ -62,6 +68,7 @@ import type {
 	FarmingWeightAllProfilesDto,
 	FarmingWeightDto,
 	ForceAddMemberAdminParams,
+	FullGuideDto,
 	GardenDto,
 	GetAdminCropGraphsParams,
 	GetAdminSkillGraphsParams,
@@ -69,10 +76,13 @@ import type {
 	GetAuctionPriceHistoryResponse,
 	GetAuctionResponse,
 	GetAuctionVariantsResponse,
+	GetAuditLogsParams,
+	GetAuditLogsResponse,
 	GetBazaarProductHistoryParams,
 	GetBazaarProductHistoryResponse,
 	GetBazaarProductResponse,
 	GetBazaarProductsResponse,
+	GetBlockTextureParams,
 	GetCategoriesParams,
 	GetContestsAtTimestampParams,
 	GetContestsInMonth200,
@@ -80,6 +90,7 @@ import type {
 	GetCropGraphsParams,
 	GetCurrentMedalBracketsParams,
 	GetEntitlementsParams,
+	GetGuideParams,
 	GetHypixelGuildMembersLeaderboardParams,
 	GetHypixelGuildRankParams,
 	GetHypixelGuildRankResponse,
@@ -97,6 +108,8 @@ import type {
 	GetMedalBracketsParams,
 	GetMultiplePlayerRanks200,
 	GetMultiplePlayerRanksParams,
+	GetNotificationsParams,
+	GetNotificationsResponse,
 	GetPetTextureParams,
 	GetPlayerLeaderboardRanksParams,
 	GetPlayerRank1Params,
@@ -115,6 +128,7 @@ import type {
 	GetWeightForProfilesParams,
 	GetWeightForSelectedParams,
 	GrantTestEntitlementParams,
+	GuideDto,
 	GuildDetailsDto,
 	GuildJacobLeaderboardFeature,
 	GuildMemberDto,
@@ -134,6 +148,7 @@ import type {
 	LeaderboardRanksResponse,
 	LeaderboardsResponse,
 	LinkedAccountsDto,
+	ListGuidesParams,
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
 	NetworthBreakdown,
@@ -145,6 +160,7 @@ import type {
 	ProfileMemberDto,
 	ProfileNamesDto,
 	PublicGuildDto,
+	RejectGuideRequest,
 	RemoveTestEntitlementParams,
 	ReorderCategoryProductsRequest,
 	ReorderIntRequest,
@@ -166,19 +182,25 @@ import type {
 	SkyblockFiresalesResponse,
 	SkyblockGemShopsResponse,
 	SkyblockItemResponse,
+	TagResponse,
 	ToggleRecapVisibilityRequestBody,
 	UpdateBadgeRequestUpdateBadge,
 	UpdateConfirmationRequest,
 	UpdateContestPingsRequestUpdateContestPings,
 	UpdateEventTeamDto,
+	UpdateGuideRequest,
 	UpdateGuildJacobFeatureParams,
 	UpdateJacobFeatureParams,
 	UpdateJacobFeatureRequestUpdateJacobFeature,
 	UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
+	UpdateTagRequest,
 	UpdateUserSettingsDto,
 	UploadCurrentContestsBody,
 	UploadImageDto,
+	UserGuideDto,
 	UserSettingsDto,
+	VoteCommentRequest,
+	VoteGuideRequest,
 	WeightStyleWithDataDto,
 	WeightsDto,
 	YearlyContestsDto,
@@ -1383,6 +1405,96 @@ export const getGetAnnouncementUrl = () => {
 
 export const getAnnouncement = async (options?: RequestInit) => {
 	return customFetch<getAnnouncementResponse>(getGetAnnouncementUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns distinct actions and target types for filter dropdowns.
+ * @summary Get available audit log filters
+ */
+export type getAuditLogFiltersResponse200 = {
+	data: AuditLogFiltersResponse;
+	status: 200;
+};
+
+export type getAuditLogFiltersResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getAuditLogFiltersResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getAuditLogFiltersResponseSuccess = getAuditLogFiltersResponse200 & {
+	headers: Headers;
+};
+export type getAuditLogFiltersResponseError = (getAuditLogFiltersResponse401 | getAuditLogFiltersResponse403) & {
+	headers: Headers;
+};
+
+export type getAuditLogFiltersResponse = getAuditLogFiltersResponseSuccess | getAuditLogFiltersResponseError;
+
+export const getGetAuditLogFiltersUrl = () => {
+	return `${ELITE_API_URL}/admin/audit-logs/filters`;
+};
+
+export const getAuditLogFilters = async (options?: RequestInit) => {
+	return customFetch<getAuditLogFiltersResponse>(getGetAuditLogFiltersUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Retrieve paginated and filterable audit logs for administrative actions.
+ * @summary Get admin audit logs
+ */
+export type getAuditLogsResponse200 = {
+	data: GetAuditLogsResponse;
+	status: 200;
+};
+
+export type getAuditLogsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getAuditLogsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getAuditLogsResponseSuccess = getAuditLogsResponse200 & {
+	headers: Headers;
+};
+export type getAuditLogsResponseError = (getAuditLogsResponse401 | getAuditLogsResponse403) & {
+	headers: Headers;
+};
+
+export type getAuditLogsResponse = getAuditLogsResponseSuccess | getAuditLogsResponseError;
+
+export const getGetAuditLogsUrl = (params: GetAuditLogsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/admin/audit-logs?${stringifiedParams}`
+		: `${ELITE_API_URL}/admin/audit-logs`;
+};
+
+export const getAuditLogs = async (params: GetAuditLogsParams, options?: RequestInit) => {
+	return customFetch<getAuditLogsResponse>(getGetAuditLogsUrl(params), {
 		...options,
 		method: 'GET',
 	});
@@ -5007,6 +5119,1039 @@ export const getMedalBracketsGraph = async (
 };
 
 /**
+ * Retrieves a list of guides waiting for approval.
+ * @summary Get pending guides
+ */
+export type adminPendingGuidesResponse200 = {
+	data: GuideDto[];
+	status: 200;
+};
+
+export type adminPendingGuidesResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type adminPendingGuidesResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type adminPendingGuidesResponseSuccess = adminPendingGuidesResponse200 & {
+	headers: Headers;
+};
+export type adminPendingGuidesResponseError = (adminPendingGuidesResponse401 | adminPendingGuidesResponse403) & {
+	headers: Headers;
+};
+
+export type adminPendingGuidesResponse = adminPendingGuidesResponseSuccess | adminPendingGuidesResponseError;
+
+export const getAdminPendingGuidesUrl = () => {
+	return `${ELITE_API_URL}/admin/guides/pending`;
+};
+
+export const adminPendingGuides = async (options?: RequestInit) => {
+	return customFetch<adminPendingGuidesResponse>(getAdminPendingGuidesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Approves a pending comment, making it visible to all users.
+ * @summary Approve a comment
+ */
+export type approveCommentResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type approveCommentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type approveCommentResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type approveCommentResponseSuccess = approveCommentResponse204 & {
+	headers: Headers;
+};
+export type approveCommentResponseError = (approveCommentResponse401 | approveCommentResponse403) & {
+	headers: Headers;
+};
+
+export type approveCommentResponse = approveCommentResponseSuccess | approveCommentResponseError;
+
+export const getApproveCommentUrl = (commentId: number | string) => {
+	return `${ELITE_API_URL}/admin/comments/${commentId}/approve`;
+};
+
+export const approveComment = async (commentId: number | string, options?: RequestInit) => {
+	return customFetch<approveCommentResponse>(getApproveCommentUrl(commentId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * Approve a pending guide and publish it.
+ * @summary Approve and publish a guide
+ */
+export type approveGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type approveGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type approveGuideResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type approveGuideResponseSuccess = approveGuideResponse204 & {
+	headers: Headers;
+};
+export type approveGuideResponseError = (approveGuideResponse401 | approveGuideResponse403) & {
+	headers: Headers;
+};
+
+export type approveGuideResponse = approveGuideResponseSuccess | approveGuideResponseError;
+
+export const getApproveGuideUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/admin/guides/${guideId}/approve`;
+};
+
+export const approveGuide = async (guideId: number | string, options?: RequestInit) => {
+	return customFetch<approveGuideResponse>(getApproveGuideUrl(guideId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * Add a guide to user's bookmarks/favorites.
+ * @summary Bookmark a guide
+ */
+export type bookmarkGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type bookmarkGuideResponse400 = {
+	data: void;
+	status: 400;
+};
+
+export type bookmarkGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type bookmarkGuideResponseSuccess = bookmarkGuideResponse204 & {
+	headers: Headers;
+};
+export type bookmarkGuideResponseError = (bookmarkGuideResponse400 | bookmarkGuideResponse401) & {
+	headers: Headers;
+};
+
+export type bookmarkGuideResponse = bookmarkGuideResponseSuccess | bookmarkGuideResponseError;
+
+export const getBookmarkGuideUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/bookmark`;
+};
+
+export const bookmarkGuide = async (guideId: number | string, options?: RequestInit) => {
+	return customFetch<bookmarkGuideResponse>(getBookmarkGuideUrl(guideId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * Remove a guide from user's bookmarks.
+ * @summary Remove bookmark
+ */
+export type unbookmarkGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type unbookmarkGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type unbookmarkGuideResponse404 = {
+	data: void;
+	status: 404;
+};
+
+export type unbookmarkGuideResponseSuccess = unbookmarkGuideResponse204 & {
+	headers: Headers;
+};
+export type unbookmarkGuideResponseError = (unbookmarkGuideResponse401 | unbookmarkGuideResponse404) & {
+	headers: Headers;
+};
+
+export type unbookmarkGuideResponse = unbookmarkGuideResponseSuccess | unbookmarkGuideResponseError;
+
+export const getUnbookmarkGuideUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/bookmark`;
+};
+
+export const unbookmarkGuide = async (guideId: number | string, options?: RequestInit) => {
+	return customFetch<unbookmarkGuideResponse>(getUnbookmarkGuideUrl(guideId), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Create a new comment on a guide.
+ * @summary Post a comment
+ */
+export type createCommentResponse200 = {
+	data: CommentDto;
+	status: 200;
+};
+
+export type createCommentResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type createCommentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createCommentResponseSuccess = createCommentResponse200 & {
+	headers: Headers;
+};
+export type createCommentResponseError = (createCommentResponse400 | createCommentResponse401) & {
+	headers: Headers;
+};
+
+export type createCommentResponse = createCommentResponseSuccess | createCommentResponseError;
+
+export const getCreateCommentUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/comments`;
+};
+
+export const createComment = async (
+	guideId: number | string,
+	createCommentRequest: CreateCommentRequest,
+	options?: RequestInit
+) => {
+	return customFetch<createCommentResponse>(getCreateCommentUrl(guideId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createCommentRequest),
+	});
+};
+
+/**
+ * Initializes a new empty guide draft for the user.
+ * @summary Create a new guide draft
+ */
+export type createGuideResponse201 = {
+	data: GuideDto;
+	status: 201;
+};
+
+export type createGuideResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type createGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createGuideResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type createGuideResponseSuccess = createGuideResponse201 & {
+	headers: Headers;
+};
+export type createGuideResponseError = (createGuideResponse400 | createGuideResponse401 | createGuideResponse403) & {
+	headers: Headers;
+};
+
+export type createGuideResponse = createGuideResponseSuccess | createGuideResponseError;
+
+export const getCreateGuideUrl = () => {
+	return `${ELITE_API_URL}/guides`;
+};
+
+export const createGuide = async (createGuideRequest: CreateGuideRequest, options?: RequestInit) => {
+	return customFetch<createGuideResponse>(getCreateGuideUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createGuideRequest),
+	});
+};
+
+/**
+ * Search and list published guides with optional filtering and sorting.
+ * @summary List guides
+ */
+export type listGuidesResponse200 = {
+	data: GuideDto[];
+	status: 200;
+};
+
+export type listGuidesResponseSuccess = listGuidesResponse200 & {
+	headers: Headers;
+};
+export type listGuidesResponse = listGuidesResponseSuccess;
+
+export const getListGuidesUrl = (params: ListGuidesParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		const explodeParameters = ['tags'];
+
+		if (Array.isArray(value) && explodeParameters.includes(key)) {
+			value.forEach((v) => {
+				normalizedParams.append(key, v === null ? 'null' : v.toString());
+			});
+			return;
+		}
+
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0 ? `${ELITE_API_URL}/guides?${stringifiedParams}` : `${ELITE_API_URL}/guides`;
+};
+
+export const listGuides = async (params: ListGuidesParams, options?: RequestInit) => {
+	return customFetch<listGuidesResponse>(getListGuidesUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Create a new guide tag. Moderator only.
+ * @summary Create a tag
+ */
+export type createTagResponse200 = {
+	data: TagResponse;
+	status: 200;
+};
+
+export type createTagResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type createTagResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createTagResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type createTagResponseSuccess = createTagResponse200 & {
+	headers: Headers;
+};
+export type createTagResponseError = (createTagResponse400 | createTagResponse401 | createTagResponse403) & {
+	headers: Headers;
+};
+
+export type createTagResponse = createTagResponseSuccess | createTagResponseError;
+
+export const getCreateTagUrl = () => {
+	return `${ELITE_API_URL}/admin/tags`;
+};
+
+export const createTag = async (createTagRequest: CreateTagRequest, options?: RequestInit) => {
+	return customFetch<createTagResponse>(getCreateTagUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createTagRequest),
+	});
+};
+
+/**
+ * Deletes a comment.
+ * @summary Delete a comment
+ */
+export type deleteCommentResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteCommentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteCommentResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type deleteCommentResponseSuccess = deleteCommentResponse204 & {
+	headers: Headers;
+};
+export type deleteCommentResponseError = (deleteCommentResponse401 | deleteCommentResponse403) & {
+	headers: Headers;
+};
+
+export type deleteCommentResponse = deleteCommentResponseSuccess | deleteCommentResponseError;
+
+export const getDeleteCommentUrl = (commentId: number | string) => {
+	return `${ELITE_API_URL}/admin/comments/${commentId}`;
+};
+
+export const deleteComment = async (commentId: number | string, options?: RequestInit) => {
+	return customFetch<deleteCommentResponse>(getDeleteCommentUrl(commentId), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Soft delete a guide. Only the author or an admin can delete.
+ * @summary Delete a guide
+ */
+export type deleteGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteGuideResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type deleteGuideResponse404 = {
+	data: void;
+	status: 404;
+};
+
+export type deleteGuideResponseSuccess = deleteGuideResponse204 & {
+	headers: Headers;
+};
+export type deleteGuideResponseError = (deleteGuideResponse401 | deleteGuideResponse403 | deleteGuideResponse404) & {
+	headers: Headers;
+};
+
+export type deleteGuideResponse = deleteGuideResponseSuccess | deleteGuideResponseError;
+
+export const getDeleteGuideUrl = (id: number | string) => {
+	return `${ELITE_API_URL}/guides/${id}`;
+};
+
+export const deleteGuide = async (id: number | string, options?: RequestInit) => {
+	return customFetch<deleteGuideResponse>(getDeleteGuideUrl(id), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Update the draft version of a guide. Only the author can update their own guide.
+ * @summary Update a guide draft
+ */
+export type updateGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type updateGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateGuideResponseSuccess = updateGuideResponse204 & {
+	headers: Headers;
+};
+export type updateGuideResponseError = updateGuideResponse401 & {
+	headers: Headers;
+};
+
+export type updateGuideResponse = updateGuideResponseSuccess | updateGuideResponseError;
+
+export const getUpdateGuideUrl = (id: number | string) => {
+	return `${ELITE_API_URL}/guides/${id}`;
+};
+
+export const updateGuide = async (
+	id: number | string,
+	updateGuideRequest: UpdateGuideRequest,
+	options?: RequestInit
+) => {
+	return customFetch<updateGuideResponse>(getUpdateGuideUrl(id), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateGuideRequest),
+	});
+};
+
+/**
+ * Delete a guide tag. Moderator only.
+ * @summary Delete a tag
+ */
+export type deleteTagResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteTagResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteTagResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type deleteTagResponse404 = {
+	data: void;
+	status: 404;
+};
+
+export type deleteTagResponseSuccess = deleteTagResponse204 & {
+	headers: Headers;
+};
+export type deleteTagResponseError = (deleteTagResponse401 | deleteTagResponse403 | deleteTagResponse404) & {
+	headers: Headers;
+};
+
+export type deleteTagResponse = deleteTagResponseSuccess | deleteTagResponseError;
+
+export const getDeleteTagUrl = (id: number | string) => {
+	return `${ELITE_API_URL}/admin/tags/${id}`;
+};
+
+export const deleteTag = async (id: number | string, options?: RequestInit) => {
+	return customFetch<deleteTagResponse>(getDeleteTagUrl(id), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Update an existing guide tag. Moderator only.
+ * @summary Update a tag
+ */
+export type updateTagResponse200 = {
+	data: TagResponse;
+	status: 200;
+};
+
+export type updateTagResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateTagResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type updateTagResponseSuccess = updateTagResponse200 & {
+	headers: Headers;
+};
+export type updateTagResponseError = (updateTagResponse401 | updateTagResponse403) & {
+	headers: Headers;
+};
+
+export type updateTagResponse = updateTagResponseSuccess | updateTagResponseError;
+
+export const getUpdateTagUrl = (id: number | string) => {
+	return `${ELITE_API_URL}/admin/tags/${id}`;
+};
+
+export const updateTag = async (id: number | string, updateTagRequest: UpdateTagRequest, options?: RequestInit) => {
+	return customFetch<updateTagResponse>(getUpdateTagUrl(id), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateTagRequest),
+	});
+};
+
+/**
+ * Edit comment content. Authors can edit their own comments, admins can edit any.
+ * @summary Edit a comment
+ */
+export type editCommentResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type editCommentResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type editCommentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type editCommentResponseSuccess = editCommentResponse204 & {
+	headers: Headers;
+};
+export type editCommentResponseError = (editCommentResponse400 | editCommentResponse401) & {
+	headers: Headers;
+};
+
+export type editCommentResponse = editCommentResponseSuccess | editCommentResponseError;
+
+export const getEditCommentUrl = (commentId: number | string) => {
+	return `${ELITE_API_URL}/comments/${commentId}`;
+};
+
+export const editComment = async (
+	commentId: number | string,
+	editCommentRequest: EditCommentRequest,
+	options?: RequestInit
+) => {
+	return customFetch<editCommentResponse>(getEditCommentUrl(commentId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(editCommentRequest),
+	});
+};
+
+/**
+ * Retrieve a guide by its slug. Use ?draft=true to view draft version (requires author/mod permission).
+ * @summary Get a guide
+ */
+export type getGuideResponse200 = {
+	data: FullGuideDto;
+	status: 200;
+};
+
+export type getGuideResponseSuccess = getGuideResponse200 & {
+	headers: Headers;
+};
+export type getGuideResponse = getGuideResponseSuccess;
+
+export const getGetGuideUrl = (slug: string, params: GetGuideParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/guides/${slug}?${stringifiedParams}`
+		: `${ELITE_API_URL}/guides/${slug}`;
+};
+
+export const getGuide = async (slug: string, params: GetGuideParams, options?: RequestInit) => {
+	return customFetch<getGuideResponse>(getGetGuideUrl(slug, params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns all guides bookmarked by the user. Only the owner can see their bookmarks.
+ * @summary Get user's bookmarked guides
+ */
+export type getUserBookmarksResponse200 = {
+	data: UserGuideDto[];
+	status: 200;
+};
+
+export type getUserBookmarksResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getUserBookmarksResponseSuccess = getUserBookmarksResponse200 & {
+	headers: Headers;
+};
+export type getUserBookmarksResponseError = getUserBookmarksResponse401 & {
+	headers: Headers;
+};
+
+export type getUserBookmarksResponse = getUserBookmarksResponseSuccess | getUserBookmarksResponseError;
+
+export const getGetUserBookmarksUrl = (accountId: bigint | number | string) => {
+	return `${ELITE_API_URL}/users/${accountId}/bookmarks`;
+};
+
+export const getUserBookmarks = async (accountId: bigint | number | string, options?: RequestInit) => {
+	return customFetch<getUserBookmarksResponse>(getGetUserBookmarksUrl(accountId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns all guides by a specific user. Shows only published guides for anonymous users. Author sees all their own guides.
+ * @summary Get guides by user
+ */
+export type getUserGuidesResponse200 = {
+	data: UserGuideDto[];
+	status: 200;
+};
+
+export type getUserGuidesResponseSuccess = getUserGuidesResponse200 & {
+	headers: Headers;
+};
+export type getUserGuidesResponse = getUserGuidesResponseSuccess;
+
+export const getGetUserGuidesUrl = (accountId: bigint | number | string) => {
+	return `${ELITE_API_URL}/users/${accountId}/guides`;
+};
+
+export const getUserGuides = async (accountId: bigint | number | string, options?: RequestInit) => {
+	return customFetch<getUserGuidesResponse>(getGetUserGuidesUrl(accountId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns all comments for a specific guide.
+ * @summary List comments for a guide
+ */
+export type listCommentsResponse200 = {
+	data: CommentDto[];
+	status: 200;
+};
+
+export type listCommentsResponseSuccess = listCommentsResponse200 & {
+	headers: Headers;
+};
+export type listCommentsResponse = listCommentsResponseSuccess;
+
+export const getListCommentsUrl = (slug: string) => {
+	return `${ELITE_API_URL}/guides/${slug}/comments`;
+};
+
+export const listComments = async (slug: string, options?: RequestInit) => {
+	return customFetch<listCommentsResponse>(getListCommentsUrl(slug), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns a list of all comments pending approval.
+ * @summary List all pending comments
+ */
+export type listPendingCommentsResponse200 = {
+	data: CommentDto[];
+	status: 200;
+};
+
+export type listPendingCommentsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type listPendingCommentsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type listPendingCommentsResponseSuccess = listPendingCommentsResponse200 & {
+	headers: Headers;
+};
+export type listPendingCommentsResponseError = (listPendingCommentsResponse401 | listPendingCommentsResponse403) & {
+	headers: Headers;
+};
+
+export type listPendingCommentsResponse = listPendingCommentsResponseSuccess | listPendingCommentsResponseError;
+
+export const getListPendingCommentsUrl = () => {
+	return `${ELITE_API_URL}/admin/comments/pending`;
+};
+
+export const listPendingComments = async (options?: RequestInit) => {
+	return customFetch<listPendingCommentsResponse>(getListPendingCommentsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns all available guide tags.
+ * @summary List all tags
+ */
+export type listTagsResponse200 = {
+	data: TagResponse[];
+	status: 200;
+};
+
+export type listTagsResponseSuccess = listTagsResponse200 & {
+	headers: Headers;
+};
+export type listTagsResponse = listTagsResponseSuccess;
+
+export const getListTagsUrl = () => {
+	return `${ELITE_API_URL}/tags`;
+};
+
+export const listTags = async (options?: RequestInit) => {
+	return customFetch<listTagsResponse>(getListTagsUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Reject a pending guide submission with an optional reason.
+ * @summary Reject a guide
+ */
+export type rejectGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type rejectGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type rejectGuideResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type rejectGuideResponseSuccess = rejectGuideResponse204 & {
+	headers: Headers;
+};
+export type rejectGuideResponseError = (rejectGuideResponse401 | rejectGuideResponse403) & {
+	headers: Headers;
+};
+
+export type rejectGuideResponse = rejectGuideResponseSuccess | rejectGuideResponseError;
+
+export const getRejectGuideUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/admin/guides/${guideId}/reject`;
+};
+
+export const rejectGuide = async (
+	guideId: number | string,
+	rejectGuideRequest: RejectGuideRequest,
+	options?: RequestInit
+) => {
+	return customFetch<rejectGuideResponse>(getRejectGuideUrl(guideId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(rejectGuideRequest),
+	});
+};
+
+/**
+ * Submit a draft guide for admin review.
+ * @summary Submit guide for approval
+ */
+export type submitGuideForApprovalResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type submitGuideForApprovalResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type submitGuideForApprovalResponseSuccess = submitGuideForApprovalResponse204 & {
+	headers: Headers;
+};
+export type submitGuideForApprovalResponseError = submitGuideForApprovalResponse401 & {
+	headers: Headers;
+};
+
+export type submitGuideForApprovalResponse =
+	| submitGuideForApprovalResponseSuccess
+	| submitGuideForApprovalResponseError;
+
+export const getSubmitGuideForApprovalUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/submit`;
+};
+
+export const submitGuideForApproval = async (guideId: number | string, options?: RequestInit) => {
+	return customFetch<submitGuideForApprovalResponse>(getSubmitGuideForApprovalUrl(guideId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * Revert a published guide back to draft status. Only author or admin can unpublish.
+ * @summary Unpublish a guide
+ */
+export type unpublishGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type unpublishGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type unpublishGuideResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type unpublishGuideResponse404 = {
+	data: void;
+	status: 404;
+};
+
+export type unpublishGuideResponseSuccess = unpublishGuideResponse204 & {
+	headers: Headers;
+};
+export type unpublishGuideResponseError = (
+	| unpublishGuideResponse401
+	| unpublishGuideResponse403
+	| unpublishGuideResponse404
+) & {
+	headers: Headers;
+};
+
+export type unpublishGuideResponse = unpublishGuideResponseSuccess | unpublishGuideResponseError;
+
+export const getUnpublishGuideUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/unpublish`;
+};
+
+export const unpublishGuide = async (guideId: number | string, options?: RequestInit) => {
+	return customFetch<unpublishGuideResponse>(getUnpublishGuideUrl(guideId), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * Cast an upvote (+1) or downvote (-1) on a comment.
+ * @summary Vote on a comment
+ */
+export type voteCommentResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type voteCommentResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type voteCommentResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type voteCommentResponseSuccess = voteCommentResponse204 & {
+	headers: Headers;
+};
+export type voteCommentResponseError = (voteCommentResponse400 | voteCommentResponse401) & {
+	headers: Headers;
+};
+
+export type voteCommentResponse = voteCommentResponseSuccess | voteCommentResponseError;
+
+export const getVoteCommentUrl = (commentId: number | string) => {
+	return `${ELITE_API_URL}/comments/${commentId}/vote`;
+};
+
+export const voteComment = async (
+	commentId: number | string,
+	voteCommentRequest: VoteCommentRequest,
+	options?: RequestInit
+) => {
+	return customFetch<voteCommentResponse>(getVoteCommentUrl(commentId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(voteCommentRequest),
+	});
+};
+
+/**
+ * Cast an upvote (+1) or downvote (-1) on a guide.
+ * @summary Vote on a guide
+ */
+export type voteGuideResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type voteGuideResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type voteGuideResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type voteGuideResponseSuccess = voteGuideResponse204 & {
+	headers: Headers;
+};
+export type voteGuideResponseError = (voteGuideResponse400 | voteGuideResponse401) & {
+	headers: Headers;
+};
+
+export type voteGuideResponse = voteGuideResponseSuccess | voteGuideResponseError;
+
+export const getVoteGuideUrl = (guideId: number | string) => {
+	return `${ELITE_API_URL}/guides/${guideId}/vote`;
+};
+
+export const voteGuide = async (
+	guideId: number | string,
+	voteGuideRequest: VoteGuideRequest,
+	options?: RequestInit
+) => {
+	return customFetch<voteGuideResponse>(getVoteGuideUrl(guideId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(voteGuideRequest),
+	});
+};
+
+/**
  * @summary Modify guild event permissions
  */
 export type setEventFeatureResponse204 = {
@@ -6841,6 +7986,153 @@ export const removeTestEntitlement = async (
 	return customFetch<removeTestEntitlementResponse>(getRemoveTestEntitlementUrl(discordId, productId, params), {
 		...options,
 		method: 'DELETE',
+	});
+};
+
+/**
+ * @summary Delete a notification
+ */
+export type deleteNotificationResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteNotificationResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteNotificationResponseSuccess = deleteNotificationResponse204 & {
+	headers: Headers;
+};
+export type deleteNotificationResponseError = deleteNotificationResponse401 & {
+	headers: Headers;
+};
+
+export type deleteNotificationResponse = deleteNotificationResponseSuccess | deleteNotificationResponseError;
+
+export const getDeleteNotificationUrl = (id: string) => {
+	return `${ELITE_API_URL}/notifications/${id}`;
+};
+
+export const deleteNotification = async (id: string, options?: RequestInit) => {
+	return customFetch<deleteNotificationResponse>(getDeleteNotificationUrl(id), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Retrieve paginated notifications for the authenticated user.
+ * @summary Get user notifications
+ */
+export type getNotificationsResponse200 = {
+	data: GetNotificationsResponse;
+	status: 200;
+};
+
+export type getNotificationsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getNotificationsResponseSuccess = getNotificationsResponse200 & {
+	headers: Headers;
+};
+export type getNotificationsResponseError = getNotificationsResponse401 & {
+	headers: Headers;
+};
+
+export type getNotificationsResponse = getNotificationsResponseSuccess | getNotificationsResponseError;
+
+export const getGetNotificationsUrl = (params: GetNotificationsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/notifications?${stringifiedParams}`
+		: `${ELITE_API_URL}/notifications`;
+};
+
+export const getNotifications = async (params: GetNotificationsParams, options?: RequestInit) => {
+	return customFetch<getNotificationsResponse>(getGetNotificationsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Mark all notifications as read
+ */
+export type markAllNotificationsReadResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type markAllNotificationsReadResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type markAllNotificationsReadResponseSuccess = markAllNotificationsReadResponse204 & {
+	headers: Headers;
+};
+export type markAllNotificationsReadResponseError = markAllNotificationsReadResponse401 & {
+	headers: Headers;
+};
+
+export type markAllNotificationsReadResponse =
+	| markAllNotificationsReadResponseSuccess
+	| markAllNotificationsReadResponseError;
+
+export const getMarkAllNotificationsReadUrl = () => {
+	return `${ELITE_API_URL}/notifications/read-all`;
+};
+
+export const markAllNotificationsRead = async (options?: RequestInit) => {
+	return customFetch<markAllNotificationsReadResponse>(getMarkAllNotificationsReadUrl(), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Mark notification as read
+ */
+export type markNotificationReadResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type markNotificationReadResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type markNotificationReadResponseSuccess = markNotificationReadResponse204 & {
+	headers: Headers;
+};
+export type markNotificationReadResponseError = markNotificationReadResponse401 & {
+	headers: Headers;
+};
+
+export type markNotificationReadResponse = markNotificationReadResponseSuccess | markNotificationReadResponseError;
+
+export const getMarkNotificationReadUrl = (id: string) => {
+	return `${ELITE_API_URL}/notifications/${id}/read`;
+};
+
+export const markNotificationRead = async (id: string, options?: RequestInit) => {
+	return customFetch<markNotificationReadResponse>(getMarkNotificationReadUrl(id), {
+		...options,
+		method: 'POST',
 	});
 };
 
@@ -8990,6 +10282,42 @@ export const getGetStylesUrl = () => {
 
 export const getStyles = async (options?: RequestInit) => {
 	return customFetch<getStylesResponse>(getGetStylesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Minecraft Block Texture
+ */
+export type getBlockTextureResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getBlockTextureResponseSuccess = getBlockTextureResponse204 & {
+	headers: Headers;
+};
+export type getBlockTextureResponse = getBlockTextureResponseSuccess;
+
+export const getGetBlockTextureUrl = (blockId: string, params?: GetBlockTextureParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/blocks/${blockId}?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/blocks/${blockId}`;
+};
+
+export const getBlockTexture = async (blockId: string, params?: GetBlockTextureParams, options?: RequestInit) => {
+	return customFetch<getBlockTextureResponse>(getGetBlockTextureUrl(blockId, params), {
 		...options,
 		method: 'GET',
 	});

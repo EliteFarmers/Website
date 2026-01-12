@@ -24,12 +24,14 @@
 		children: Snippet;
 	} = $props();
 
-	const ctx = initStatsContext({
-		account: data.account,
-		selectedProfile: data.profile,
-		profiles: data.profiles,
-		style: data.style,
-	});
+	const ctx = initStatsContext(
+		(() => ({
+			account: data.account,
+			selectedProfile: data.profile,
+			profiles: data.profiles,
+			style: data.style,
+		}))()
+	);
 
 	let path = $derived(`/@${data.account?.name}/${data.profile?.profileName}`);
 

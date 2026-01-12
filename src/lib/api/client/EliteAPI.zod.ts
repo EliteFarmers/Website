@@ -1336,6 +1336,46 @@ export const zodGetAnnouncementResponseItem = zod.object({
 export const zodGetAnnouncementResponse = zod.array(zodGetAnnouncementResponseItem);
 
 /**
+ * Returns distinct actions and target types for filter dropdowns.
+ * @summary Get available audit log filters
+ */
+export const zodGetAuditLogFiltersResponse = zod.object({
+	actions: zod.array(zod.string()),
+	targetTypes: zod.array(zod.string()),
+});
+
+/**
+ * Retrieve paginated and filterable audit logs for administrative actions.
+ * @summary Get admin audit logs
+ */
+export const zodGetAuditLogsQueryParams = zod.object({
+	offset: zod.number(),
+	limit: zod.number(),
+	action: zod.string().nullish(),
+	targetType: zod.string().nullish(),
+	adminUserId: zod.string().nullish(),
+	fromDate: zod.iso.datetime({}).nullish(),
+	toDate: zod.iso.datetime({}).nullish(),
+});
+
+export const zodGetAuditLogsResponse = zod.object({
+	logs: zod.array(
+		zod.object({
+			id: zod.number(),
+			adminUserId: zod.string(),
+			adminUserName: zod.string(),
+			action: zod.string(),
+			targetType: zod.string(),
+			targetId: zod.string().nullish(),
+			details: zod.string().nullish(),
+			createdAt: zod.iso.datetime({}),
+			data: zod.record(zod.string(), zod.unknown()).nullish(),
+		})
+	),
+	totalCount: zod.number(),
+});
+
+/**
  * Accepts a login confirmation that users will need to accept to proceed.
  * @summary Accept a confirmation
  */
@@ -5135,6 +5175,475 @@ export const zodGetMedalBracketsGraphResponseItem = zod.object({
 export const zodGetMedalBracketsGraphResponse = zod.array(zodGetMedalBracketsGraphResponseItem);
 
 /**
+ * Retrieves a list of guides waiting for approval.
+ * @summary Get pending guides
+ */
+export const zodAdminPendingGuidesResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	status: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	score: zod.number(),
+	views: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	description: zod.string(),
+	tags: zod.array(zod.string()),
+});
+export const zodAdminPendingGuidesResponse = zod.array(zodAdminPendingGuidesResponseItem);
+
+/**
+ * Approves a pending comment, making it visible to all users.
+ * @summary Approve a comment
+ */
+export const zodApproveCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+/**
+ * Approve a pending guide and publish it.
+ * @summary Approve and publish a guide
+ */
+export const zodApproveGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Add a guide to user's bookmarks/favorites.
+ * @summary Bookmark a guide
+ */
+export const zodBookmarkGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Remove a guide from user's bookmarks.
+ * @summary Remove bookmark
+ */
+export const zodUnbookmarkGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Create a new comment on a guide.
+ * @summary Post a comment
+ */
+export const zodCreateCommentParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodCreateCommentBodyContentMin = 0;
+export const zodCreateCommentBodyContentMax = 2048;
+
+export const zodCreateCommentBodyLiftedElementIdMin = 0;
+export const zodCreateCommentBodyLiftedElementIdMax = 128;
+
+export const zodCreateCommentBody = zod.object({
+	parentId: zod.number().nullish(),
+	content: zod.string().min(zodCreateCommentBodyContentMin).max(zodCreateCommentBodyContentMax),
+	liftedElementId: zod
+		.string()
+		.min(zodCreateCommentBodyLiftedElementIdMin)
+		.max(zodCreateCommentBodyLiftedElementIdMax)
+		.nullish(),
+});
+
+export const zodCreateCommentResponse = zod.object({
+	id: zod.number(),
+	sqid: zod.string(),
+	parentId: zod.number().nullish(),
+	content: zod.string(),
+	draftContent: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	createdAt: zod.iso.datetime({}),
+	editedAt: zod.iso.datetime({}).nullish(),
+	score: zod.number(),
+	liftedElementId: zod.string().nullish(),
+	userVote: zod.number().nullish(),
+	isPending: zod.coerce.boolean<boolean>(),
+	isDeleted: zod.coerce.boolean<boolean>(),
+	isEdited: zod.coerce.boolean<boolean>(),
+	isEditedByAdmin: zod.coerce.boolean<boolean>(),
+	hasPendingEdit: zod.coerce.boolean<boolean>(),
+});
+
+/**
+ * Initializes a new empty guide draft for the user.
+ * @summary Create a new guide draft
+ */
+export const zodCreateGuideBody = zod.object({
+	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]),
+});
+
+/**
+ * Search and list published guides with optional filtering and sorting.
+ * @summary List guides
+ */
+export const zodListGuidesQueryParams = zod.object({
+	query: zod.string().nullish(),
+	type: zod.union([zod.literal(0), zod.literal(1), zod.literal(2), zod.literal(3)]).nullish(),
+	tags: zod.array(zod.number()).nullish(),
+	sort: zod.enum(['newest', 'topRated', 'trending']),
+	page: zod.number(),
+	pageSize: zod.number(),
+});
+
+export const zodListGuidesResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	status: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	score: zod.number(),
+	views: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	description: zod.string(),
+	tags: zod.array(zod.string()),
+});
+export const zodListGuidesResponse = zod.array(zodListGuidesResponseItem);
+
+/**
+ * Create a new guide tag. Moderator only.
+ * @summary Create a tag
+ */
+export const zodCreateTagBodyNameMin = 0;
+export const zodCreateTagBodyNameMax = 64;
+
+export const zodCreateTagBodyCategoryMin = 0;
+export const zodCreateTagBodyCategoryMax = 32;
+
+export const zodCreateTagBodyHexColorMin = 0;
+export const zodCreateTagBodyHexColorMax = 7;
+
+export const zodCreateTagBody = zod.object({
+	name: zod.string().min(zodCreateTagBodyNameMin).max(zodCreateTagBodyNameMax),
+	category: zod.string().min(zodCreateTagBodyCategoryMin).max(zodCreateTagBodyCategoryMax),
+	hexColor: zod.string().min(zodCreateTagBodyHexColorMin).max(zodCreateTagBodyHexColorMax).nullish(),
+});
+
+export const zodCreateTagResponse = zod.object({
+	id: zod.number(),
+	name: zod.string(),
+	category: zod.string(),
+	hexColor: zod.string(),
+});
+
+/**
+ * Deletes a comment.
+ * @summary Delete a comment
+ */
+export const zodDeleteCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+/**
+ * Soft delete a guide. Only the author or an admin can delete.
+ * @summary Delete a guide
+ */
+export const zodDeleteGuideParams = zod.object({
+	id: zod.number(),
+});
+
+/**
+ * Update the draft version of a guide. Only the author can update their own guide.
+ * @summary Update a guide draft
+ */
+export const zodUpdateGuideParams = zod.object({
+	id: zod.number(),
+});
+
+export const zodUpdateGuideBody = zod.object({
+	title: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
+	description: zod.string(),
+	markdownContent: zod.string(),
+	tags: zod.array(zod.string()).nullish(),
+	richBlocks: zod
+		.object({
+			greenhouseLayout: zod
+				.object({
+					layoutId: zod.number(),
+					slots: zod.array(
+						zod.object({
+							index: zod.number(),
+							itemId: zod.string(),
+							backgroundTexture: zod.string().nullish(),
+						})
+					),
+				})
+				.nullish(),
+		})
+		.nullish(),
+});
+
+/**
+ * Delete a guide tag. Moderator only.
+ * @summary Delete a tag
+ */
+export const zodDeleteTagParams = zod.object({
+	id: zod.number(),
+});
+
+/**
+ * Update an existing guide tag. Moderator only.
+ * @summary Update a tag
+ */
+export const zodUpdateTagParams = zod.object({
+	id: zod.number(),
+});
+
+export const zodUpdateTagBody = zod.object({
+	name: zod.string().nullish(),
+	category: zod.string().nullish(),
+	hexColor: zod.string().nullish(),
+});
+
+export const zodUpdateTagResponse = zod.object({
+	id: zod.number(),
+	name: zod.string(),
+	category: zod.string(),
+	hexColor: zod.string(),
+});
+
+/**
+ * Edit comment content. Authors can edit their own comments, admins can edit any.
+ * @summary Edit a comment
+ */
+export const zodEditCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+export const zodEditCommentBodyContentMin = 0;
+export const zodEditCommentBodyContentMax = 2048;
+
+export const zodEditCommentBody = zod.object({
+	content: zod.string().min(zodEditCommentBodyContentMin).max(zodEditCommentBodyContentMax),
+});
+
+/**
+ * Retrieve a guide by its slug. Use ?draft=true to view draft version (requires author/mod permission).
+ * @summary Get a guide
+ */
+export const zodGetGuideParams = zod.object({
+	slug: zod.string(),
+});
+
+export const zodGetGuideQueryParams = zod.object({
+	draft: zod.coerce.boolean<boolean>(),
+});
+
+export const zodGetGuideResponse = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	iconSkyblockId: zod.string().nullish(),
+	description: zod.string(),
+	content: zod.string(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	createdAt: zod.iso.datetime({}),
+	score: zod.number(),
+	viewCount: zod.number(),
+	tags: zod.array(zod.string()),
+	isDraft: zod.coerce.boolean<boolean>(),
+	status: zod.string(),
+	userVote: zod.number().nullish(),
+	isBookmarked: zod.coerce.boolean<boolean>().nullish(),
+	rejectionReason: zod.string().nullish(),
+});
+
+/**
+ * Returns all guides bookmarked by the user. Only the owner can see their bookmarks.
+ * @summary Get user's bookmarked guides
+ */
+export const zodGetUserBookmarksParams = zod.object({
+	accountId: zod.number(),
+});
+
+export const zodGetUserBookmarksResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	description: zod.string(),
+	type: zod.string(),
+	status: zod.string(),
+	score: zod.number(),
+	viewCount: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	updatedAt: zod.iso.datetime({}).nullish(),
+});
+export const zodGetUserBookmarksResponse = zod.array(zodGetUserBookmarksResponseItem);
+
+/**
+ * Returns all guides by a specific user. Shows only published guides for anonymous users. Author sees all their own guides.
+ * @summary Get guides by user
+ */
+export const zodGetUserGuidesParams = zod.object({
+	accountId: zod.number(),
+});
+
+export const zodGetUserGuidesResponseItem = zod.object({
+	id: zod.number(),
+	slug: zod.string(),
+	title: zod.string(),
+	description: zod.string(),
+	type: zod.string(),
+	status: zod.string(),
+	score: zod.number(),
+	viewCount: zod.number(),
+	createdAt: zod.iso.datetime({}),
+	updatedAt: zod.iso.datetime({}).nullish(),
+});
+export const zodGetUserGuidesResponse = zod.array(zodGetUserGuidesResponseItem);
+
+/**
+ * Returns all comments for a specific guide.
+ * @summary List comments for a guide
+ */
+export const zodListCommentsParams = zod.object({
+	slug: zod.string(),
+});
+
+export const zodListCommentsResponseItem = zod.object({
+	id: zod.number(),
+	sqid: zod.string(),
+	parentId: zod.number().nullish(),
+	content: zod.string(),
+	draftContent: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	createdAt: zod.iso.datetime({}),
+	editedAt: zod.iso.datetime({}).nullish(),
+	score: zod.number(),
+	liftedElementId: zod.string().nullish(),
+	userVote: zod.number().nullish(),
+	isPending: zod.coerce.boolean<boolean>(),
+	isDeleted: zod.coerce.boolean<boolean>(),
+	isEdited: zod.coerce.boolean<boolean>(),
+	isEditedByAdmin: zod.coerce.boolean<boolean>(),
+	hasPendingEdit: zod.coerce.boolean<boolean>(),
+});
+export const zodListCommentsResponse = zod.array(zodListCommentsResponseItem);
+
+/**
+ * Returns a list of all comments pending approval.
+ * @summary List all pending comments
+ */
+export const zodListPendingCommentsResponseItem = zod.object({
+	id: zod.number(),
+	sqid: zod.string(),
+	parentId: zod.number().nullish(),
+	content: zod.string(),
+	draftContent: zod.string().nullish(),
+	author: zod.object({
+		id: zod.string(),
+		name: zod.string(),
+		avatar: zod.string().nullish(),
+		uuid: zod.string().nullish(),
+	}),
+	createdAt: zod.iso.datetime({}),
+	editedAt: zod.iso.datetime({}).nullish(),
+	score: zod.number(),
+	liftedElementId: zod.string().nullish(),
+	userVote: zod.number().nullish(),
+	isPending: zod.coerce.boolean<boolean>(),
+	isDeleted: zod.coerce.boolean<boolean>(),
+	isEdited: zod.coerce.boolean<boolean>(),
+	isEditedByAdmin: zod.coerce.boolean<boolean>(),
+	hasPendingEdit: zod.coerce.boolean<boolean>(),
+});
+export const zodListPendingCommentsResponse = zod.array(zodListPendingCommentsResponseItem);
+
+/**
+ * Returns all available guide tags.
+ * @summary List all tags
+ */
+export const zodListTagsResponseItem = zod.object({
+	id: zod.number(),
+	name: zod.string(),
+	category: zod.string(),
+	hexColor: zod.string(),
+});
+export const zodListTagsResponse = zod.array(zodListTagsResponseItem);
+
+/**
+ * Reject a pending guide submission with an optional reason.
+ * @summary Reject a guide
+ */
+export const zodRejectGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodRejectGuideBody = zod.object({
+	reason: zod.string().nullish().describe('Optional reason for rejection to provide feedback to the author.'),
+});
+
+/**
+ * Submit a draft guide for admin review.
+ * @summary Submit guide for approval
+ */
+export const zodSubmitGuideForApprovalParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Revert a published guide back to draft status. Only author or admin can unpublish.
+ * @summary Unpublish a guide
+ */
+export const zodUnpublishGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+/**
+ * Cast an upvote (+1) or downvote (-1) on a comment.
+ * @summary Vote on a comment
+ */
+export const zodVoteCommentParams = zod.object({
+	commentId: zod.number(),
+});
+
+export const zodVoteCommentBody = zod.object({
+	value: zod.number(),
+});
+
+/**
+ * Cast an upvote (+1) or downvote (-1) on a guide.
+ * @summary Vote on a guide
+ */
+export const zodVoteGuideParams = zod.object({
+	guideId: zod.number(),
+});
+
+export const zodVoteGuideBody = zod.object({
+	value: zod.number(),
+});
+
+/**
  * @summary Modify guild event permissions
  */
 export const zodSetEventFeatureParams = zod.object({
@@ -8298,6 +8807,58 @@ export const zodRemoveTestEntitlementParams = zod.object({
 
 export const zodRemoveTestEntitlementQueryParams = zod.object({
 	target: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
+});
+
+/**
+ * @summary Delete a notification
+ */
+export const zodDeleteNotificationParams = zod.object({
+	id: zod.string(),
+});
+
+/**
+ * Retrieve paginated notifications for the authenticated user.
+ * @summary Get user notifications
+ */
+export const zodGetNotificationsQueryParams = zod.object({
+	offset: zod.number(),
+	limit: zod.number(),
+	unreadOnly: zod.coerce.boolean<boolean>(),
+});
+
+export const zodGetNotificationsResponse = zod.object({
+	notifications: zod.array(
+		zod.object({
+			id: zod.number(),
+			type: zod.enum([
+				'system',
+				'guideApproved',
+				'guideEditApproved',
+				'guideRejected',
+				'guideDeleted',
+				'commentApproved',
+				'commentEditApproved',
+				'commentRejected',
+				'newComment',
+				'newReply',
+				'shopPurchase',
+			]),
+			title: zod.string(),
+			message: zod.string().nullish(),
+			link: zod.string().nullish(),
+			isRead: zod.coerce.boolean<boolean>(),
+			createdAt: zod.iso.datetime({}),
+			data: zod.record(zod.string(), zod.unknown()).nullish(),
+		})
+	),
+	unreadCount: zod.number(),
+});
+
+/**
+ * @summary Mark notification as read
+ */
+export const zodMarkNotificationReadParams = zod.object({
+	id: zod.string(),
 });
 
 /**
@@ -15083,6 +15644,18 @@ export const zodGetStylesResponseItem = zod.object({
 		.nullish(),
 });
 export const zodGetStylesResponse = zod.array(zodGetStylesResponseItem);
+
+/**
+ * @summary Get Minecraft Block Texture
+ */
+export const zodGetBlockTextureParams = zod.object({
+	blockId: zod.string(),
+});
+
+export const zodGetBlockTextureQueryParams = zod.object({
+	packs: zod.string().nullish(),
+	face: zod.string().nullish(),
+});
 
 /**
  * @summary Get Inventory Item Texture Metadata

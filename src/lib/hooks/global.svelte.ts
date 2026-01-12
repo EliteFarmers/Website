@@ -1,6 +1,7 @@
 import { page } from '$app/state';
-import type { AnnouncementDto, AuthorizedAccountDto } from '$lib/api';
+import type { AnnouncementDto, AuthorizedAccountDto, NotificationDto } from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
+import { GetNotifications, MarkNotificationRead } from '$lib/remote/notifications.remote';
 import { PersistedState } from 'runed';
 import { getContext, setContext, tick } from 'svelte';
 
@@ -15,6 +16,7 @@ type PersistedData = {
 	settings: AuthorizedAccountDto['settings'];
 	minecraftAccounts?: string[];
 	packs?: { id: string; on: boolean; order: number }[];
+	newSidebar?: Record<string, number>;
 };
 
 export class GlobalContext {
@@ -25,8 +27,10 @@ export class GlobalContext {
 		dismissedAnnouncements: [],
 		settings: {},
 		packs: [],
+		newSidebar: {},
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
+	#notifications = $state<NotificationDto[]>([]);
 	#initialized = $state(false);
 	#packsParam = $state('');
 
@@ -39,6 +43,10 @@ export class GlobalContext {
 					this.session = page.data.session as AuthSession | undefined;
 				}
 				this.#initialized = true;
+
+				if (this.authorized) {
+					this.loadNotifications();
+				}
 			});
 		});
 	}
@@ -76,6 +84,9 @@ export class GlobalContext {
 		}
 
 		let dismissed = user?.dismissedAnnouncements ?? this.data.dismissedAnnouncements;
+		if (user) {
+			this.loadNotifications();
+		}
 		if (this.#announcements?.length) {
 			// Filter out dismissed announcements that no longer exist
 			dismissed = dismissed.filter((id) => this.#announcements.some((a) => a.id === id));
@@ -86,6 +97,7 @@ export class GlobalContext {
 			settings: user?.settings ?? this.data.settings,
 			minecraftAccounts: user?.minecraftAccounts?.map((a) => a.id) ?? this.data.minecraftAccounts,
 			packs: this.data.packs ?? [],
+			newSidebar: this.data.newSidebar ?? {},
 		};
 
 		this.updatePacksParam();
@@ -146,8 +158,55 @@ export class GlobalContext {
 		}
 	}
 
+	get notifications() {
+		return this.#notifications;
+	}
+
+	get unreadNotificationsCount() {
+		return this.#notifications.filter((n) => !n.isRead).length;
+	}
+
+	async loadNotifications() {
+		if (!this.authorized) return;
+		try {
+			const data = await GetNotifications({ offset: 0, limit: 100, unreadOnly: false });
+			if (data) {
+				this.#notifications = data.notifications;
+			}
+		} catch (e) {
+			console.error('Failed to load notifications', e);
+		}
+	}
+
+	async markNotificationRead(id: bigint | string) {
+		const notification = this.#notifications.find((n) => n.id == id);
+		if (notification && !notification.isRead) {
+			notification.isRead = true;
+			try {
+				await MarkNotificationRead(id.toString());
+			} catch (e) {
+				console.error('Failed to mark notification as read', e);
+				notification.isRead = false;
+			}
+		}
+	}
+
 	ownsAccount(uuid: string) {
 		return this.data?.minecraftAccounts?.some((a) => a === uuid);
+	}
+
+	seenSidebarItem(key: string, version: number) {
+		return (this.data?.newSidebar?.[key] || 0) >= version;
+	}
+
+	markSidebarItemSeen(key: string, version: number) {
+		this.#data.current = {
+			...this.#data.current,
+			newSidebar: {
+				...this.#data.current.newSidebar,
+				[key]: version,
+			},
+		};
 	}
 }
 
