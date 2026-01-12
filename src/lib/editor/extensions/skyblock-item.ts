@@ -3,7 +3,7 @@ import { mergeAttributes, Node } from '@tiptap/core';
 import { SvelteNodeViewRenderer } from '../svelte-node-view-renderer';
 
 export interface SkyblockItemOptions {
-	HTMLAttributes: Record<string, any>;
+	HTMLAttributes: Record<string, unknown>;
 }
 
 declare module '@tiptap/core' {

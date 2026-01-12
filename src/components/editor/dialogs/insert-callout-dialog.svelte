@@ -50,7 +50,7 @@
 							{variants.find((v) => v.value === selectedVariant)?.label || 'Select type'}
 						</Select.Trigger>
 						<Select.Content>
-							{#each variants as v}
+							{#each variants as v, i (i)}
 								<Select.Item value={v.value}>
 									<span class="flex items-center gap-2">
 										<span class="size-3 rounded-full {v.color}"></span>
