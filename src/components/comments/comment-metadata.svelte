@@ -22,15 +22,17 @@
 	});
 </script>
 
-<div class="flex flex-row items-center gap-2">
+<div class="flex scroll-mt-20 flex-row items-center gap-2" id="comment-{comment.sqid}">
 	{#if authorName !== '[deleted]'}
 		{#if authorAvatar}
 			<UserIcon user={{ id: authorId, avatar: authorAvatar }} class="size-5 rounded-full" />
 		{:else}
 			<PlayerHead uuid={ign} class="size-5" />
 		{/if}
+		<a class="text-sm font-medium hover:underline" href="/@{authorId}">{authorName}</a>
+	{:else}
+		<p class="text-sm font-medium">{authorName}</p>
 	{/if}
-	<p class="text-sm font-medium">{authorName}</p>
 
 	<Tooltip.Root>
 		<Tooltip.Trigger>

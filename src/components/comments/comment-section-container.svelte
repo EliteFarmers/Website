@@ -155,8 +155,6 @@
 	}
 
 	let isModerator = $derived(session?.perms?.moderator ?? false);
-
-	// Use reactive .current instead of {#await} to prevent full remounts on vote
 	let baseComments = $derived(commentsPromise.current ?? []);
 	let displayComments = $derived(applyOptimisticCommentVotes(baseComments));
 </script>

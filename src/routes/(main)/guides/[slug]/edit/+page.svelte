@@ -242,7 +242,7 @@
 			</a>
 		</div>
 	{:else}
-		<div class="flex flex-col gap-6">
+		<div class="mt-16 flex flex-col gap-6">
 			<div class="flex items-center justify-between">
 				<div>
 					<h1 class="text-3xl font-bold">Edit Guide</h1>
@@ -404,15 +404,19 @@
 							Save Draft
 						{/if}
 					</Button>
-					<Button
-						onclick={handleSubmitForApproval}
-						disabled={isSubmitting ||
-							!title.trim() ||
-							!description.trim() ||
-							guide.current?.status === 'PendingApproval'}
-					>
-						Submit for Approval
-					</Button>
+					{#if guide.current?.status === 'PendingApproval'}
+						<div class="flex items-center justify-center gap-2 rounded-md border">Pending Approval</div>
+					{:else}
+						<Button
+							onclick={handleSubmitForApproval}
+							disabled={isSubmitting ||
+								!title.trim() ||
+								!description.trim() ||
+								guide.current?.status === 'PendingApproval'}
+						>
+							Submit for Approval
+						</Button>
+					{/if}
 				</div>
 			</div>
 		</div>

@@ -1,6 +1,7 @@
 import { page } from '$app/state';
-import type { AnnouncementDto, AuthorizedAccountDto } from '$lib/api';
+import type { AnnouncementDto, AuthorizedAccountDto, NotificationDto } from '$lib/api';
 import type { AuthSession } from '$lib/api/auth';
+import { GetNotifications, MarkNotificationRead } from '$lib/remote/notifications.remote';
 import { PersistedState } from 'runed';
 import { getContext, setContext, tick } from 'svelte';
 
@@ -27,6 +28,7 @@ export class GlobalContext {
 		packs: [],
 	});
 	#announcements = $state<AnnouncementDto[]>([]);
+	#notifications = $state<NotificationDto[]>([]);
 	#initialized = $state(false);
 	#packsParam = $state('');
 
@@ -39,6 +41,10 @@ export class GlobalContext {
 					this.session = page.data.session as AuthSession | undefined;
 				}
 				this.#initialized = true;
+
+				if (this.authorized) {
+					this.loadNotifications();
+				}
 			});
 		});
 	}
@@ -76,6 +82,9 @@ export class GlobalContext {
 		}
 
 		let dismissed = user?.dismissedAnnouncements ?? this.data.dismissedAnnouncements;
+		if (user) {
+			this.loadNotifications();
+		}
 		if (this.#announcements?.length) {
 			// Filter out dismissed announcements that no longer exist
 			dismissed = dismissed.filter((id) => this.#announcements.some((a) => a.id === id));
@@ -143,6 +152,39 @@ export class GlobalContext {
 			};
 
 			fetch('/api/dismiss/' + id);
+		}
+	}
+
+	get notifications() {
+		return this.#notifications;
+	}
+
+	get unreadNotificationsCount() {
+		return this.#notifications.filter((n) => !n.isRead).length;
+	}
+
+	async loadNotifications() {
+		if (!this.authorized) return;
+		try {
+			const data = await GetNotifications({ offset: 0, limit: 100, unreadOnly: false });
+			if (data) {
+				this.#notifications = data.notifications;
+			}
+		} catch (e) {
+			console.error('Failed to load notifications', e);
+		}
+	}
+
+	async markNotificationRead(id: bigint | string) {
+		const notification = this.#notifications.find((n) => n.id == id);
+		if (notification && !notification.isRead) {
+			notification.isRead = true;
+			try {
+				await MarkNotificationRead(id.toString());
+			} catch (e) {
+				console.error('Failed to mark notification as read', e);
+				notification.isRead = false;
+			}
 		}
 	}
 

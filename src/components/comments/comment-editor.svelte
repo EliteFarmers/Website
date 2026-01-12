@@ -46,9 +46,9 @@
 			<Button variant="outline" onclick={handleCancel} disabled={isLoading} size="sm">Cancel</Button>
 		{/if}
 
-		<span class="text-muted-foreground text-sm">
-			By submitting, you agree to our <a href="/terms" class="underline hover:text-white/75">Terms of Service</a>
-			and <a href="/privacy" class="underline hover:text-white/75">Privacy Policy</a>.
+		<span class="text-muted-foreground text-xs">
+			By posting, you agree to our <a href="/terms" class="hover:text-primary/75 underline">Terms of Service</a>
+			and <a href="/privacy" class="hover:text-primary/75 underline">Privacy Policy</a>.
 		</span>
 	</div>
 </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { dev } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
 	import { updated } from '$app/state';
 	import GTag from '$comp/analytics/g-tag.svelte';
@@ -57,13 +56,6 @@
 
 	<link rel="dns-prefetch" href="https://assets.elitebot.dev/" />
 	<link rel="dns-prefetch" href="https://cdn.discordapp.com/" />
-
-	{#if dev}
-		<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-		<script>
-			eruda.init();
-		</script>
-	{/if}
 </svelte:head>
 
 {@render children?.()}

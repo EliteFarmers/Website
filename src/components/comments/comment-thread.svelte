@@ -40,12 +40,12 @@
 		replyingMap[commentId] = !(replyingMap[commentId] ?? false);
 	}
 
-	let threadComments = $derived(comments.filter((c) => c.parentId === parentId));
+	let threadComments = $derived(comments.filter((c) => (c.parentId ?? null) === parentId));
 
 	let childCountMap = $derived.by(() => {
 		const map: Record<number, number> = {};
 		for (const c of threadComments) {
-			map[c.id] = comments.filter((child) => child.parentId === c.id).length;
+			map[c.id] = comments.filter((child) => (child.parentId ?? null) === c.id).length;
 		}
 		return map;
 	});

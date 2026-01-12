@@ -19,6 +19,7 @@ import type {
 	AuctionDto,
 	AuctionHouseDto,
 	AuctionOverviewResponse,
+	AuditLogFiltersResponse,
 	AuthRefreshDto,
 	AuthResponseDto,
 	AuthSessionDto,
@@ -75,10 +76,13 @@ import type {
 	GetAuctionPriceHistoryResponse,
 	GetAuctionResponse,
 	GetAuctionVariantsResponse,
+	GetAuditLogsParams,
+	GetAuditLogsResponse,
 	GetBazaarProductHistoryParams,
 	GetBazaarProductHistoryResponse,
 	GetBazaarProductResponse,
 	GetBazaarProductsResponse,
+	GetBlockTextureParams,
 	GetCategoriesParams,
 	GetContestsAtTimestampParams,
 	GetContestsInMonth200,
@@ -104,6 +108,8 @@ import type {
 	GetMedalBracketsParams,
 	GetMultiplePlayerRanks200,
 	GetMultiplePlayerRanksParams,
+	GetNotificationsParams,
+	GetNotificationsResponse,
 	GetPetTextureParams,
 	GetPlayerLeaderboardRanksParams,
 	GetPlayerRank1Params,
@@ -1399,6 +1405,96 @@ export const getGetAnnouncementUrl = () => {
 
 export const getAnnouncement = async (options?: RequestInit) => {
 	return customFetch<getAnnouncementResponse>(getGetAnnouncementUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Returns distinct actions and target types for filter dropdowns.
+ * @summary Get available audit log filters
+ */
+export type getAuditLogFiltersResponse200 = {
+	data: AuditLogFiltersResponse;
+	status: 200;
+};
+
+export type getAuditLogFiltersResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getAuditLogFiltersResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getAuditLogFiltersResponseSuccess = getAuditLogFiltersResponse200 & {
+	headers: Headers;
+};
+export type getAuditLogFiltersResponseError = (getAuditLogFiltersResponse401 | getAuditLogFiltersResponse403) & {
+	headers: Headers;
+};
+
+export type getAuditLogFiltersResponse = getAuditLogFiltersResponseSuccess | getAuditLogFiltersResponseError;
+
+export const getGetAuditLogFiltersUrl = () => {
+	return `${ELITE_API_URL}/admin/audit-logs/filters`;
+};
+
+export const getAuditLogFilters = async (options?: RequestInit) => {
+	return customFetch<getAuditLogFiltersResponse>(getGetAuditLogFiltersUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Retrieve paginated and filterable audit logs for administrative actions.
+ * @summary Get admin audit logs
+ */
+export type getAuditLogsResponse200 = {
+	data: GetAuditLogsResponse;
+	status: 200;
+};
+
+export type getAuditLogsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getAuditLogsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type getAuditLogsResponseSuccess = getAuditLogsResponse200 & {
+	headers: Headers;
+};
+export type getAuditLogsResponseError = (getAuditLogsResponse401 | getAuditLogsResponse403) & {
+	headers: Headers;
+};
+
+export type getAuditLogsResponse = getAuditLogsResponseSuccess | getAuditLogsResponseError;
+
+export const getGetAuditLogsUrl = (params: GetAuditLogsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/admin/audit-logs?${stringifiedParams}`
+		: `${ELITE_API_URL}/admin/audit-logs`;
+};
+
+export const getAuditLogs = async (params: GetAuditLogsParams, options?: RequestInit) => {
+	return customFetch<getAuditLogsResponse>(getGetAuditLogsUrl(params), {
 		...options,
 		method: 'GET',
 	});
@@ -5399,7 +5495,7 @@ export const createTag = async (createTagRequest: CreateTagRequest, options?: Re
 };
 
 /**
- * Soft-deletes a comment.
+ * Deletes a comment.
  * @summary Delete a comment
  */
 export type deleteCommentResponse204 = {
@@ -7890,6 +7986,153 @@ export const removeTestEntitlement = async (
 };
 
 /**
+ * @summary Delete a notification
+ */
+export type deleteNotificationResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteNotificationResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteNotificationResponseSuccess = deleteNotificationResponse204 & {
+	headers: Headers;
+};
+export type deleteNotificationResponseError = deleteNotificationResponse401 & {
+	headers: Headers;
+};
+
+export type deleteNotificationResponse = deleteNotificationResponseSuccess | deleteNotificationResponseError;
+
+export const getDeleteNotificationUrl = (id: string) => {
+	return `${ELITE_API_URL}/notifications/${id}`;
+};
+
+export const deleteNotification = async (id: string, options?: RequestInit) => {
+	return customFetch<deleteNotificationResponse>(getDeleteNotificationUrl(id), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Retrieve paginated notifications for the authenticated user.
+ * @summary Get user notifications
+ */
+export type getNotificationsResponse200 = {
+	data: GetNotificationsResponse;
+	status: 200;
+};
+
+export type getNotificationsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getNotificationsResponseSuccess = getNotificationsResponse200 & {
+	headers: Headers;
+};
+export type getNotificationsResponseError = getNotificationsResponse401 & {
+	headers: Headers;
+};
+
+export type getNotificationsResponse = getNotificationsResponseSuccess | getNotificationsResponseError;
+
+export const getGetNotificationsUrl = (params: GetNotificationsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/notifications?${stringifiedParams}`
+		: `${ELITE_API_URL}/notifications`;
+};
+
+export const getNotifications = async (params: GetNotificationsParams, options?: RequestInit) => {
+	return customFetch<getNotificationsResponse>(getGetNotificationsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Mark all notifications as read
+ */
+export type markAllNotificationsReadResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type markAllNotificationsReadResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type markAllNotificationsReadResponseSuccess = markAllNotificationsReadResponse204 & {
+	headers: Headers;
+};
+export type markAllNotificationsReadResponseError = markAllNotificationsReadResponse401 & {
+	headers: Headers;
+};
+
+export type markAllNotificationsReadResponse =
+	| markAllNotificationsReadResponseSuccess
+	| markAllNotificationsReadResponseError;
+
+export const getMarkAllNotificationsReadUrl = () => {
+	return `${ELITE_API_URL}/notifications/read-all`;
+};
+
+export const markAllNotificationsRead = async (options?: RequestInit) => {
+	return customFetch<markAllNotificationsReadResponse>(getMarkAllNotificationsReadUrl(), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
+ * @summary Mark notification as read
+ */
+export type markNotificationReadResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type markNotificationReadResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type markNotificationReadResponseSuccess = markNotificationReadResponse204 & {
+	headers: Headers;
+};
+export type markNotificationReadResponseError = markNotificationReadResponse401 & {
+	headers: Headers;
+};
+
+export type markNotificationReadResponse = markNotificationReadResponseSuccess | markNotificationReadResponseError;
+
+export const getMarkNotificationReadUrl = (id: string) => {
+	return `${ELITE_API_URL}/notifications/${id}/read`;
+};
+
+export const markNotificationRead = async (id: string, options?: RequestInit) => {
+	return customFetch<markNotificationReadResponse>(getMarkNotificationReadUrl(id), {
+		...options,
+		method: 'POST',
+	});
+};
+
+/**
  * @summary Get Linked Accounts
  */
 export type getLinkedAccountsResponse200 = {
@@ -10035,6 +10278,42 @@ export const getGetStylesUrl = () => {
 
 export const getStyles = async (options?: RequestInit) => {
 	return customFetch<getStylesResponse>(getGetStylesUrl(), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * @summary Get Minecraft Block Texture
+ */
+export type getBlockTextureResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type getBlockTextureResponseSuccess = getBlockTextureResponse204 & {
+	headers: Headers;
+};
+export type getBlockTextureResponse = getBlockTextureResponseSuccess;
+
+export const getGetBlockTextureUrl = (blockId: string, params?: GetBlockTextureParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/textures/blocks/${blockId}?${stringifiedParams}`
+		: `${ELITE_API_URL}/textures/blocks/${blockId}`;
+};
+
+export const getBlockTexture = async (blockId: string, params?: GetBlockTextureParams, options?: RequestInit) => {
+	return customFetch<getBlockTextureResponse>(getGetBlockTextureUrl(blockId, params), {
 		...options,
 		method: 'GET',
 	});

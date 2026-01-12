@@ -1336,6 +1336,46 @@ export const zodGetAnnouncementResponseItem = zod.object({
 export const zodGetAnnouncementResponse = zod.array(zodGetAnnouncementResponseItem);
 
 /**
+ * Returns distinct actions and target types for filter dropdowns.
+ * @summary Get available audit log filters
+ */
+export const zodGetAuditLogFiltersResponse = zod.object({
+	actions: zod.array(zod.string()),
+	targetTypes: zod.array(zod.string()),
+});
+
+/**
+ * Retrieve paginated and filterable audit logs for administrative actions.
+ * @summary Get admin audit logs
+ */
+export const zodGetAuditLogsQueryParams = zod.object({
+	offset: zod.number(),
+	limit: zod.number(),
+	action: zod.string().nullish(),
+	targetType: zod.string().nullish(),
+	adminUserId: zod.string().nullish(),
+	fromDate: zod.iso.datetime({}).nullish(),
+	toDate: zod.iso.datetime({}).nullish(),
+});
+
+export const zodGetAuditLogsResponse = zod.object({
+	logs: zod.array(
+		zod.object({
+			id: zod.number(),
+			adminUserId: zod.string(),
+			adminUserName: zod.string(),
+			action: zod.string(),
+			targetType: zod.string(),
+			targetId: zod.string().nullish(),
+			details: zod.string().nullish(),
+			createdAt: zod.iso.datetime({}),
+			data: zod.record(zod.string(), zod.unknown()).nullish(),
+		})
+	),
+	totalCount: zod.number(),
+});
+
+/**
  * Accepts a login confirmation that users will need to accept to proceed.
  * @summary Accept a confirmation
  */
@@ -5296,7 +5336,7 @@ export const zodCreateTagResponse = zod.object({
 });
 
 /**
- * Soft-deletes a comment.
+ * Deletes a comment.
  * @summary Delete a comment
  */
 export const zodDeleteCommentParams = zod.object({
@@ -8752,6 +8792,58 @@ export const zodRemoveTestEntitlementParams = zod.object({
 
 export const zodRemoveTestEntitlementQueryParams = zod.object({
 	target: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),
+});
+
+/**
+ * @summary Delete a notification
+ */
+export const zodDeleteNotificationParams = zod.object({
+	id: zod.string(),
+});
+
+/**
+ * Retrieve paginated notifications for the authenticated user.
+ * @summary Get user notifications
+ */
+export const zodGetNotificationsQueryParams = zod.object({
+	offset: zod.number(),
+	limit: zod.number(),
+	unreadOnly: zod.coerce.boolean<boolean>(),
+});
+
+export const zodGetNotificationsResponse = zod.object({
+	notifications: zod.array(
+		zod.object({
+			id: zod.number(),
+			type: zod.enum([
+				'system',
+				'guideApproved',
+				'guideEditApproved',
+				'guideRejected',
+				'guideDeleted',
+				'commentApproved',
+				'commentEditApproved',
+				'commentRejected',
+				'newComment',
+				'newReply',
+				'shopPurchase',
+			]),
+			title: zod.string(),
+			message: zod.string().nullish(),
+			link: zod.string().nullish(),
+			isRead: zod.coerce.boolean<boolean>(),
+			createdAt: zod.iso.datetime({}),
+			data: zod.record(zod.string(), zod.unknown()).nullish(),
+		})
+	),
+	unreadCount: zod.number(),
+});
+
+/**
+ * @summary Mark notification as read
+ */
+export const zodMarkNotificationReadParams = zod.object({
+	id: zod.string(),
 });
 
 /**
@@ -15537,6 +15629,18 @@ export const zodGetStylesResponseItem = zod.object({
 		.nullish(),
 });
 export const zodGetStylesResponse = zod.array(zodGetStylesResponseItem);
+
+/**
+ * @summary Get Minecraft Block Texture
+ */
+export const zodGetBlockTextureParams = zod.object({
+	blockId: zod.string(),
+});
+
+export const zodGetBlockTextureQueryParams = zod.object({
+	packs: zod.string().nullish(),
+	face: zod.string().nullish(),
+});
 
 /**
  * @summary Get Inventory Item Texture Metadata

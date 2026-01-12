@@ -47,9 +47,10 @@
 			</div>
 		{/if}
 
-		<a class="flex max-w-4xl flex-col gap-4 md:flex-row" href="/fortune">
-			<div
+		<div class="flex max-w-4xl flex-col gap-4 md:flex-row">
+			<a
 				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+				href="/fortune"
 			>
 				<div class="bg-progress/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
 				<div class="bg-progress/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
@@ -69,9 +70,10 @@
 				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
 					<ArrowRight class="size-6" />
 				</div>
-			</div>
-			<div
+			</a>
+			<a
 				class="group bg-card relative flex w-full max-w-lg flex-row items-center justify-between gap-4 overflow-hidden rounded-2xl border p-6 shadow-xl"
+				href="/shop"
 			>
 				<div class="bg-primary/10 absolute -top-24 -right-24 h-64 w-64 rounded-full blur-3xl"></div>
 				<div class="bg-primary/5 absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl"></div>
@@ -89,8 +91,8 @@
 				<div class="group-hover:animate-bounce-horizontal relative z-10 flex flex-col items-center gap-4">
 					<ArrowRight class="size-6" />
 				</div>
-			</div>
-		</a>
+			</a>
+		</div>
 
 		<div class="flex max-w-full flex-col gap-4">
 			<h2 class="text-3xl">Recent Articles</h2>

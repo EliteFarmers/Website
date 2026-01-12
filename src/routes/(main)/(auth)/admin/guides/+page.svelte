@@ -360,7 +360,7 @@
 									</div>
 								</CardHeader>
 								<CardContent>
-									<p class="text-sm whitespace-pre-wrap">{comment.content}</p>
+									<p class="text-sm whitespace-pre-wrap">{comment.draftContent || comment.content}</p>
 								</CardContent>
 							</Card>
 						{/each}
