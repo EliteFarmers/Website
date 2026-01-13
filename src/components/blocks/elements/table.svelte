@@ -12,9 +12,9 @@
 <div class="my-4 overflow-x-auto">
 	<table class="w-full border-collapse rounded-lg border">
 		<tbody>
-			{#each { length: node.rows } as _, rowIdx (rowIdx)}
+			{#each { length: node.rows }, rowIdx (rowIdx)}
 				<tr>
-					{#each { length: node.cols } as _, colIdx (colIdx)}
+					{#each { length: node.cols }, colIdx (colIdx)}
 						{@const cell = node.cells[rowIdx]?.[colIdx] ?? []}
 						<td class="border p-2 text-sm">
 							<BlockRenderer content={cell} />

@@ -31,7 +31,6 @@
 	import Code from '@lucide/svelte/icons/code';
 	import Coins from '@lucide/svelte/icons/coins';
 	import Columns from '@lucide/svelte/icons/columns-2';
-	import FunctionSquare from '@lucide/svelte/icons/function-square';
 	import Grid3x3 from '@lucide/svelte/icons/grid-3x3';
 	import Heading1 from '@lucide/svelte/icons/heading-1';
 	import Heading2 from '@lucide/svelte/icons/heading-2';
@@ -47,7 +46,6 @@
 	import Quote from '@lucide/svelte/icons/quote';
 	import Redo from '@lucide/svelte/icons/redo';
 	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
-	import Sigma from '@lucide/svelte/icons/sigma';
 	import SquareChevronDown from '@lucide/svelte/icons/square-chevron-down';
 	import Strikethrough from '@lucide/svelte/icons/strikethrough';
 	import TableIcon from '@lucide/svelte/icons/table-2';
@@ -57,13 +55,11 @@
 	import { Editor, type Content } from '@tiptap/core';
 	import Image from '@tiptap/extension-image';
 	import Link from '@tiptap/extension-link';
-	import Mathematics from '@tiptap/extension-mathematics';
 	import { Table } from '@tiptap/extension-table';
 	import { TableCell } from '@tiptap/extension-table-cell';
 	import { TableHeader } from '@tiptap/extension-table-header';
 	import { TableRow } from '@tiptap/extension-table-row';
 	import StarterKit from '@tiptap/starter-kit';
-	import 'katex/dist/katex.min.css';
 	import { onMount } from 'svelte';
 	import InsertAccordionDialog from './dialogs/insert-accordion-dialog.svelte';
 	import InsertBlockGridDialog from './dialogs/insert-block-grid-dialog.svelte';
@@ -167,34 +163,7 @@
 				TableRow,
 				TableCell,
 				TableHeader,
-				Mathematics.configure({
-					blockOptions: {
-						onClick: (node, pos) => {
-							const newCalculation = prompt('Enter new calculation:', node.attrs.latex);
-							if (newCalculation) {
-								editor
-									?.chain()
-									.focus()
-									.setNodeSelection(pos)
-									.updateBlockMath({ latex: newCalculation })
-									.run();
-							}
-						},
-					},
-					inlineOptions: {
-						onClick: (node, pos) => {
-							const newCalculation = prompt('Enter new calculation:', node.attrs.latex);
-							if (newCalculation) {
-								editor
-									?.chain()
-									.focus()
-									.setNodeSelection(pos)
-									.updateInlineMath({ latex: newCalculation })
-									.run();
-							}
-						},
-					},
-				}),
+				TableHeader,
 				BlockGrid,
 			],
 			content: initialContent as Content,
@@ -597,29 +566,6 @@
 			</div>
 
 			<div class="bg-border mx-1 w-px"></div>
-
-			<Button
-				variant="ghost"
-				size="icon"
-				onclick={() => {
-					const latex = prompt('Enter inline math expression:', '');
-					if (latex) editor?.chain().focus().insertInlineMath({ latex }).run();
-				}}
-				title="Insert Inline Math"
-			>
-				<Sigma class="h-4 w-4" />
-			</Button>
-			<Button
-				variant="ghost"
-				size="icon"
-				onclick={() => {
-					const latex = prompt('Enter block math expression:', '');
-					if (latex) editor?.chain().focus().insertBlockMath({ latex }).run();
-				}}
-				title="Insert Block Math"
-			>
-				<FunctionSquare class="h-4 w-4" />
-			</Button>
 
 			<Button
 				variant="ghost"

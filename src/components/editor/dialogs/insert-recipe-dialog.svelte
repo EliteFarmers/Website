@@ -60,7 +60,7 @@
 			<div class="flex flex-col gap-2">
 				<Label>Crafting Grid (3×3)</Label>
 				<div class="grid grid-cols-3 gap-2">
-					{#each { length: 9 } as _, i (i)}
+					{#each { length: 9 }, i (i)}
 						<div class="flex flex-col gap-1">
 							<div class="flex items-center gap-1">
 								{#if grid[i]?.skyblockId}

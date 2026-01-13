@@ -12,7 +12,7 @@
 
 <div class="bg-card my-4 inline-flex items-center gap-4 rounded-lg border p-4 shadow-sm">
 	<div class="grid grid-cols-3 gap-1">
-		{#each { length: 9 } as _, i (i)}
+		{#each { length: 9 }, i (i)}
 			{@const slot = node.grid[i]}
 			<div class="bg-muted relative flex size-12 items-center justify-center rounded border">
 				{#if slot?.skyblockId}
