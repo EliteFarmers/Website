@@ -11,6 +11,7 @@
 		skyblockId: string;
 		size: 'sm' | 'md' | 'lg';
 		inline: boolean;
+		pet: boolean;
 		pos: number;
 	}
 
@@ -26,6 +27,7 @@
 	let skyblockId = $state('');
 	let size = $state<'sm' | 'md' | 'lg'>('md');
 	let inline = $state(true);
+	let pet = $state(false);
 
 	// When editNode changes, populate the form
 	$effect(() => {
@@ -33,6 +35,7 @@
 			skyblockId = editNode.skyblockId || '';
 			size = editNode.size || 'md';
 			inline = editNode.inline ?? true;
+			pet = editNode.pet ?? false;
 		}
 	});
 
@@ -46,6 +49,7 @@
 					skyblockId: skyblockId.toUpperCase(),
 					size,
 					inline,
+					pet,
 				});
 				return true;
 			});
@@ -58,6 +62,7 @@
 					skyblockId: skyblockId.toUpperCase(),
 					size,
 					inline,
+					pet,
 				})
 				.run();
 		}
@@ -70,6 +75,7 @@
 		skyblockId = '';
 		size = 'md';
 		inline = true;
+		pet = false;
 	}
 
 	let isEditing = $derived(!!editNode);
@@ -117,6 +123,13 @@
 				<div class="col-span-3 flex items-center space-x-2">
 					<Switch id="inline" bind:checked={inline} />
 					<Label for="inline">Display inline with text</Label>
+				</div>
+			</div>
+			<div class="grid grid-cols-4 items-center gap-4">
+				<Label for="pet" class="text-right">Pet</Label>
+				<div class="col-span-3 flex items-center space-x-2">
+					<Switch id="pet" bind:checked={pet} />
+					<Label for="pet">Render as pet item</Label>
 				</div>
 			</div>
 		</div>

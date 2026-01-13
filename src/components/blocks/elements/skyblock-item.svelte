@@ -12,5 +12,5 @@
 </script>
 
 <span class="mx-1 inline-flex align-middle">
-	<ItemRender skyblockId={node.skyblockId} class={`bg-card rounded-md border shadow-sm ${sizeClass}`} />
+	<ItemRender skyblockId={node.skyblockId} pet={node.pet} class="bg-card rounded-md border shadow-sm {sizeClass}" />
 </span>

@@ -1,4 +1,6 @@
 import type {
+	AccordionBlockNode,
+	BlockGridBlockNode,
 	BlockNode,
 	CalloutBlockNode,
 	CalloutVariant,
@@ -6,13 +8,16 @@ import type {
 	HeadingBlockNode,
 	ImageBlockNode,
 	InlineNode,
+	ItemListBlockNode,
 	ItemPriceBlockNode,
 	ListBlockNode,
 	ListItemBlockNode,
 	ParagraphBlockNode,
 	QuoteBlockNode,
+	RecipeBlockNode,
 	RootNode,
 	SkyblockItemBlockNode,
+	TableBlockNode,
 	TextNode,
 	TwoColumnBlockNode,
 	YouTubeBlockNode,
@@ -50,6 +55,16 @@ function convertNode(node: JSONContent): BlockNode | null {
 			return convertYouTube(node);
 		case 'callout':
 			return convertCallout(node);
+		case 'accordion':
+			return convertAccordion(node);
+		case 'recipe':
+			return convertRecipe(node);
+		case 'itemList':
+			return convertItemList(node);
+		case 'table':
+			return convertTable(node);
+		case 'blockGrid':
+			return convertBlockGrid(node);
 		default:
 			console.warn(`Unknown Tiptap node type: ${node.type}`);
 			return null;
@@ -226,6 +241,7 @@ function convertSkyblockItem(node: JSONContent): SkyblockItemBlockNode {
 		skyblockId: node.attrs?.skyblockId || '',
 		size: node.attrs?.size || 'md',
 		inline: node.attrs?.inline !== false,
+		pet: node.attrs?.pet === true,
 	};
 }
 
@@ -261,6 +277,71 @@ function convertCallout(node: JSONContent): CalloutBlockNode {
 		type: 'callout',
 		variant: (node.attrs?.variant as CalloutVariant) || 'note',
 		children: node.content?.map((n) => convertNode(n)).filter((n): n is BlockNode => n !== null) ?? [],
+	};
+}
+
+function convertAccordion(node: JSONContent): AccordionBlockNode {
+	return {
+		type: 'accordion',
+		title: (node.attrs?.title as string) || 'Click to expand',
+		children: node.content?.map((n) => convertNode(n)).filter((n): n is BlockNode => n !== null) ?? [],
+	};
+}
+
+function convertRecipe(node: JSONContent): RecipeBlockNode {
+	return {
+		type: 'recipe',
+		grid: (node.attrs?.grid as RecipeBlockNode['grid']) || [],
+		output: (node.attrs?.output as RecipeBlockNode['output']) || {},
+	};
+}
+
+function convertItemList(node: JSONContent): ItemListBlockNode {
+	return {
+		type: 'item-list',
+		items: (node.attrs?.items as ItemListBlockNode['items']) || [],
+	};
+}
+
+function convertTable(node: JSONContent): TableBlockNode {
+	if (!node.content) return { type: 'table', rows: 0, cols: 0, cells: [] };
+
+	const cells: RootNode[][] = []; // Changed to RootNode[][]
+	let cols = 0;
+
+	// Wrapper for cell content to match tiptap structure expected by tiptapToStrapi (doc/root)
+	// or manually map if tiptapToStrapi expects full doc
+	node.content.forEach((row) => {
+		if (row.type === 'tableRow' && row.content) {
+			const rowData: RootNode[] = [];
+			row.content.forEach((cell) => {
+				// cell.content is BlockNode[] (JSONContent[])
+				if (cell.content) {
+					// tiptapToStrapi expects a JSONContent node like { content: [...] }
+					rowData.push(tiptapToStrapi({ content: cell.content }));
+				} else {
+					rowData.push([]);
+				}
+			});
+			cells.push(rowData);
+			cols = Math.max(cols, rowData.length);
+		}
+	});
+
+	return {
+		type: 'table',
+		rows: cells.length,
+		cols,
+		cells,
+	};
+}
+
+function convertBlockGrid(node: JSONContent): BlockGridBlockNode {
+	return {
+		type: 'block-grid',
+		rows: (node.attrs?.rows as number) || 3,
+		cols: (node.attrs?.cols as number) || 3,
+		cells: (node.attrs?.cells as BlockGridBlockNode['cells']) || [],
 	};
 }
 
@@ -350,6 +431,44 @@ function convertBlockToTiptap(node: BlockNode): JSONContent | null {
 				attrs: { variant: node.variant },
 				content: node.children.map((n) => convertBlockToTiptap(n)).filter((n): n is JSONContent => n !== null),
 			};
+		case 'accordion':
+			return {
+				type: 'accordion',
+				attrs: { title: node.title },
+				content: node.children.map((n) => convertBlockToTiptap(n)).filter((n): n is JSONContent => n !== null),
+			};
+		case 'recipe':
+			return {
+				type: 'recipe',
+				attrs: { grid: node.grid, output: node.output },
+			};
+		case 'item-list':
+			return {
+				type: 'itemList',
+				attrs: { items: node.items },
+			};
+		case 'table':
+			return {
+				type: 'table',
+				content: node.cells.map((row) => ({
+					type: 'tableRow',
+					content: row.map((cellContent) => {
+						// cellContent is RootNode (BlockNode[])
+						// strapiToTiptap returns { type: 'doc', content: [...] }
+						// We need the content array for the tableCell
+						const tiptapContent = strapiToTiptap(cellContent);
+						return {
+							type: 'tableCell',
+							content: tiptapContent.content || [{ type: 'paragraph' }], // Ensure valid content
+						};
+					}),
+				})),
+			};
+		case 'block-grid':
+			return {
+				type: 'blockGrid',
+				attrs: { rows: node.rows, cols: node.cols, cells: node.cells },
+			};
 		default:
 			return null;
 	}
@@ -385,6 +504,7 @@ function convertSkyblockItemToTiptap(node: SkyblockItemBlockNode): JSONContent {
 			skyblockId: node.skyblockId,
 			size: node.size,
 			inline: node.inline,
+			pet: node.pet,
 		},
 	};
 }

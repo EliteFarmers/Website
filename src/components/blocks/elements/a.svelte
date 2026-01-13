@@ -15,7 +15,7 @@
 		{@render children?.()}
 	</a>
 {:else}
-	<ExternalLinkButton href={url ?? ''} {target} {rel} class="font-medium underline underline-offset-4">
+	<ExternalLinkButton href={url ?? ''} {target} {rel} class="font-medium break-all underline underline-offset-4">
 		{@render children?.()}
 	</ExternalLinkButton>
 {/if}
