@@ -99,18 +99,6 @@
 		}
 	});
 
-	// function addTag() {
-	// 	const newTag = tagInput.trim().toLowerCase();
-	// 	if (newTag && !tags.includes(newTag)) {
-	// 		tags = [...tags, newTag];
-	// 		tagInput = '';
-	// 	}
-	// }
-
-	// function removeTag(tag: string) {
-	// 	tags = tags.filter((t) => t !== tag);
-	// }
-
 	async function handleSave() {
 		if (!title.trim() || !description.trim()) {
 			notifyError('Title and description are required');
@@ -171,20 +159,20 @@
 		isSubmitting = true;
 
 		try {
-			// // Save first if there are unsaved changes
-			// if (saveStatus !== 'saved') {
-			// 	const saveResult = await updateGuideCommand({
-			// 		id: guideId,
-			// 		title,
-			// 		description,
-			// 		markdownContent,
-			// 	});
+			// Save first if there are unsaved changes
+			if (saveStatus !== 'saved') {
+				const saveResult = await updateGuideCommand({
+					id: guideId,
+					title,
+					description,
+					markdownContent,
+				});
 
-			// 	if (saveResult.error) {
-			// 		notifyError('Failed to save guide before submitting: ' + saveResult.error);
-			// 		return;
-			// 	}
-			// }
+				if (saveResult.error) {
+					notifyError('Failed to save guide before submitting: ' + saveResult.error);
+					return;
+				}
+			}
 
 			const result = await submitGuideForApprovalCommand(guideId);
 

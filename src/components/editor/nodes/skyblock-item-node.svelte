@@ -8,13 +8,14 @@
 	let skyblockId = $derived(node.attrs.skyblockId as string);
 	let size = $derived((node.attrs.size as 'sm' | 'md' | 'lg') || 'md');
 	let inline = $derived((node.attrs.inline as boolean) ?? true);
+	let pet = $derived((node.attrs.pet as boolean) ?? false);
 
 	let sizeClass = $derived(size === 'sm' ? 'size-6' : size === 'md' ? 'size-9' : 'size-12');
 
 	function handleClick() {
 		const pos = getPos();
 		if (pos !== undefined) {
-			dispatchEditSkyblockItem({ skyblockId, size, inline, pos });
+			dispatchEditSkyblockItem({ skyblockId, size, inline, pet, pos });
 		}
 	}
 </script>

@@ -34,6 +34,10 @@
 			: PUBLIC_HOST_URL + (canonicalPath?.startsWith('/') ? '' : '/') + canonicalPath
 	);
 
+	const imgUrl = $derived(
+		imageUrl?.startsWith('http') ? imageUrl : PUBLIC_HOST_URL + (imageUrl?.startsWith('/') ? '' : '/') + imageUrl
+	);
+
 	$effect(() => {
 		pageCtx.title = title ?? 'Elite | Skyblock Farming Weight';
 	});
@@ -53,9 +57,9 @@
 
 	<meta name="keywords" content={keywords} />
 
-	{#if imageUrl}
-		<meta property="twitter:image" content={imageUrl} />
-		<meta property="og:image" content={imageUrl} />
+	{#if imgUrl}
+		<meta property="twitter:image" content={imgUrl} />
+		<meta property="og:image" content={imgUrl} />
 	{/if}
 
 	{#if canonicalPath}

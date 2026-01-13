@@ -1,13 +1,25 @@
 <script lang="ts">
 	import type { RootNode } from '$comp/blocks/blocks';
 	import {
+		onEditAccordion,
+		onEditBlockGrid,
+		onEditItemList,
 		onEditItemPrice,
+		onEditRecipe,
 		onEditSkyblockItem,
+		type EditAccordionEvent,
+		type EditBlockGridEvent,
+		type EditItemListEvent,
 		type EditItemPriceEvent,
+		type EditRecipeEvent,
 		type EditSkyblockItemEvent,
 	} from '$lib/editor/editor-events';
+	import { Accordion } from '$lib/editor/extensions/accordion';
+	import { BlockGrid } from '$lib/editor/extensions/block-grid';
 	import { Callout } from '$lib/editor/extensions/callout';
+	import { ItemList } from '$lib/editor/extensions/item-list';
 	import { ItemPrice } from '$lib/editor/extensions/item-price';
+	import { Recipe } from '$lib/editor/extensions/recipe';
 	import { SkyblockItem } from '$lib/editor/extensions/skyblock-item';
 	import { ColumnLeft, ColumnRight, TwoColumn } from '$lib/editor/extensions/two-column';
 	import { YouTube } from '$lib/editor/extensions/youtube';
@@ -19,11 +31,13 @@
 	import Code from '@lucide/svelte/icons/code';
 	import Coins from '@lucide/svelte/icons/coins';
 	import Columns from '@lucide/svelte/icons/columns-2';
+	import Grid3x3 from '@lucide/svelte/icons/grid-3x3';
 	import Heading1 from '@lucide/svelte/icons/heading-1';
 	import Heading2 from '@lucide/svelte/icons/heading-2';
 	import Heading3 from '@lucide/svelte/icons/heading-3';
 	import ImageIcon from '@lucide/svelte/icons/image';
 	import Italic from '@lucide/svelte/icons/italic';
+	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import LinkIcon from '@lucide/svelte/icons/link';
 	import List from '@lucide/svelte/icons/list';
 	import ListOrdered from '@lucide/svelte/icons/list-ordered';
@@ -31,18 +45,29 @@
 	import Plus from '@lucide/svelte/icons/plus';
 	import Quote from '@lucide/svelte/icons/quote';
 	import Redo from '@lucide/svelte/icons/redo';
+	import ShoppingCart from '@lucide/svelte/icons/shopping-cart';
+	import SquareChevronDown from '@lucide/svelte/icons/square-chevron-down';
 	import Strikethrough from '@lucide/svelte/icons/strikethrough';
+	import TableIcon from '@lucide/svelte/icons/table-2';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Unlink from '@lucide/svelte/icons/unlink';
 	import YoutubeIcon from '@lucide/svelte/icons/youtube';
 	import { Editor, type Content } from '@tiptap/core';
 	import Image from '@tiptap/extension-image';
 	import Link from '@tiptap/extension-link';
+	import { Table } from '@tiptap/extension-table';
+	import { TableCell } from '@tiptap/extension-table-cell';
+	import { TableHeader } from '@tiptap/extension-table-header';
+	import { TableRow } from '@tiptap/extension-table-row';
 	import StarterKit from '@tiptap/starter-kit';
 	import { onMount } from 'svelte';
+	import InsertAccordionDialog from './dialogs/insert-accordion-dialog.svelte';
+	import InsertBlockGridDialog from './dialogs/insert-block-grid-dialog.svelte';
 	import InsertCalloutDialog from './dialogs/insert-callout-dialog.svelte';
 	import InsertItemDialog from './dialogs/insert-item-dialog.svelte';
+	import InsertItemListDialog from './dialogs/insert-item-list-dialog.svelte';
 	import InsertPriceDialog from './dialogs/insert-price-dialog.svelte';
+	import InsertRecipeDialog from './dialogs/insert-recipe-dialog.svelte';
 	import InsertYouTubeDialog from './dialogs/insert-youtube-dialog.svelte';
 
 	let {
@@ -57,8 +82,16 @@
 	let showInsertPriceDialog = $state(false);
 	let showYouTubeDialog = $state(false);
 	let showCalloutDialog = $state(false);
+	let showRecipeDialog = $state(false);
+	let showItemListDialog = $state(false);
+	let showBlockGridDialog = $state(false);
+	let showAccordionDialog = $state(false);
 	let editSkyblockItem = $state<EditSkyblockItemEvent | null>(null);
 	let editItemPrice = $state<EditItemPriceEvent | null>(null);
+	let editRecipe = $state<EditRecipeEvent | null>(null);
+	let editItemList = $state<EditItemListEvent | null>(null);
+	let editBlockGrid = $state<EditBlockGridEvent | null>(null);
+	let editAccordion = $state<EditAccordionEvent | null>(null);
 
 	onMount(() => {
 		// Subscribe to edit events from node views
@@ -69,6 +102,22 @@
 		const unsubscribePrice = onEditItemPrice((data) => {
 			editItemPrice = data;
 			showInsertPriceDialog = true;
+		});
+		const unsubscribeRecipe = onEditRecipe((data) => {
+			editRecipe = data;
+			showRecipeDialog = true;
+		});
+		const unsubscribeItemList = onEditItemList((data) => {
+			editItemList = data;
+			showItemListDialog = true;
+		});
+		const unsubscribeBlockGrid = onEditBlockGrid((data) => {
+			editBlockGrid = data;
+			showBlockGridDialog = true;
+		});
+		const unsubscribeAccordion = onEditAccordion((data) => {
+			editAccordion = data;
+			showAccordionDialog = true;
 		});
 
 		let initialContent: string | unknown = '';
@@ -107,6 +156,15 @@
 				ColumnRight,
 				YouTube,
 				Callout,
+				Accordion,
+				Recipe,
+				ItemList,
+				Table.configure({ resizable: true }),
+				TableRow,
+				TableCell,
+				TableHeader,
+				TableHeader,
+				BlockGrid,
 			],
 			content: initialContent as Content,
 			onTransaction: () => {
@@ -130,6 +188,10 @@
 		return () => {
 			unsubscribeSkyblock();
 			unsubscribePrice();
+			unsubscribeRecipe();
+			unsubscribeItemList();
+			unsubscribeBlockGrid();
+			unsubscribeAccordion();
 			editor?.destroy();
 		};
 	});
@@ -324,7 +386,7 @@
 					onclick={() => editor?.chain().focus().setTwoColumn().run()}
 					title="Insert Two Column (Plain)"
 				>
-					<Columns class="h-4 w-4" />
+					<Columns class="stroke-muted-foreground h-4 w-4" />
 				</Button>
 				<Button
 					variant="ghost"
@@ -334,7 +396,6 @@
 					class="relative"
 				>
 					<Columns class="h-4 w-4" />
-					<span class="absolute -right-0.5 -bottom-0.5 text-[8px]">▣</span>
 				</Button>
 				<Button
 					variant="ghost"
@@ -346,6 +407,94 @@
 				</Button>
 				<Button variant="ghost" size="icon" onclick={() => (showCalloutDialog = true)} title="Insert Callout">
 					<AlertCircle class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="ghost"
+					size="icon"
+					onclick={() => editor?.chain().focus().setAccordion({ title: 'Click to expand' }).run()}
+					title="Insert Accordion"
+				>
+					<SquareChevronDown class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="ghost"
+					size="icon"
+					onclick={() => editor?.chain().focus().setRecipe().run()}
+					title="Insert Recipe"
+				>
+					<Grid3x3 class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="ghost"
+					size="icon"
+					onclick={() => editor?.chain().focus().setItemList().run()}
+					title="Insert Item List"
+				>
+					<ShoppingCart class="h-4 w-4" />
+				</Button>
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger>
+						<Button variant="ghost" size="icon" title="Table Options">
+							<TableIcon class="h-4 w-4" />
+						</Button>
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Content>
+						<DropdownMenu.Item
+							onclick={() =>
+								editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+						>
+							Insert Table
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().addColumnBefore().run()}>
+							Add Column Before
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().addColumnAfter().run()}>
+							Add Column After
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().deleteColumn().run()}>
+							Delete Column
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().addRowBefore().run()}>
+							Add Row Before
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().addRowAfter().run()}>
+							Add Row After
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().deleteRow().run()}>
+							Delete Row
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().mergeCells().run()}>
+							Merge Cells
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().splitCell().run()}>
+							Split Cell
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().toggleHeaderRow().run()}>
+							Toggle Header Row
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().toggleHeaderColumn().run()}>
+							Toggle Header Column
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item
+							onclick={() => editor?.chain().focus().deleteTable().run()}
+							class="text-destructive"
+						>
+							Delete Table
+						</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
+				<Button
+					variant="ghost"
+					size="icon"
+					onclick={() => editor?.chain().focus().setBlockGrid().run()}
+					title="Insert Block Grid"
+				>
+					<LayoutGrid class="h-4 w-4" />
 				</Button>
 			</div>
 
@@ -385,6 +534,32 @@
 						<DropdownMenu.Item onclick={() => (showCalloutDialog = true)}>
 							<AlertCircle class="mr-2 h-4 w-4" />
 							Callout
+						</DropdownMenu.Item>
+						<DropdownMenu.Item
+							onclick={() => editor?.chain().focus().setAccordion({ title: 'Click to expand' }).run()}
+						>
+							<SquareChevronDown class="mr-2 h-4 w-4" />
+							Accordion
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().setRecipe().run()}>
+							<Grid3x3 class="mr-2 h-4 w-4" />
+							Recipe
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().setItemList().run()}>
+							<ShoppingCart class="mr-2 h-4 w-4" />
+							Item List
+						</DropdownMenu.Item>
+						<DropdownMenu.Item
+							onclick={() =>
+								editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+						>
+							<TableIcon class="mr-2 h-4 w-4" />
+							Table
+						</DropdownMenu.Item>
+						<DropdownMenu.Item onclick={() => editor?.chain().focus().setBlockGrid().run()}>
+							<LayoutGrid class="mr-2 h-4 w-4" />
+							Block Grid
 						</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
@@ -439,6 +614,46 @@
 <InsertYouTubeDialog open={showYouTubeDialog} onOpenChange={(v) => (showYouTubeDialog = v)} {editor} />
 
 <InsertCalloutDialog open={showCalloutDialog} onOpenChange={(v) => (showCalloutDialog = v)} {editor} />
+
+<InsertRecipeDialog
+	open={showRecipeDialog}
+	onOpenChange={(v) => {
+		showRecipeDialog = v;
+		if (!v) editRecipe = null;
+	}}
+	{editor}
+	editNode={editRecipe}
+/>
+
+<InsertItemListDialog
+	open={showItemListDialog}
+	onOpenChange={(v) => {
+		showItemListDialog = v;
+		if (!v) editItemList = null;
+	}}
+	{editor}
+	editNode={editItemList}
+/>
+
+<InsertBlockGridDialog
+	open={showBlockGridDialog}
+	onOpenChange={(v) => {
+		showBlockGridDialog = v;
+		if (!v) editBlockGrid = null;
+	}}
+	{editor}
+	editNode={editBlockGrid}
+/>
+
+<InsertAccordionDialog
+	open={showAccordionDialog}
+	onOpenChange={(v) => {
+		showAccordionDialog = v;
+		if (!v) editAccordion = null;
+	}}
+	{editor}
+	editNode={editAccordion}
+/>
 
 <style>
 	.editor-content :global(.ProseMirror) {
@@ -517,6 +732,43 @@
 	.editor-content :global(.ProseMirror img) {
 		max-width: 100%;
 		height: auto;
+	}
+
+	/* Tables */
+	.editor-content :global(table) {
+		border-collapse: collapse;
+		table-layout: fixed;
+		width: 100%;
+		margin: 0;
+		overflow: hidden;
+	}
+
+	.editor-content :global(td),
+	.editor-content :global(th) {
+		min-width: 1em;
+		border: 1px solid var(--border);
+		padding: 3px 5px;
+		vertical-align: top;
+		box-sizing: border-box;
+		position: relative;
+	}
+
+	.editor-content :global(th) {
+		font-weight: bold;
+		text-align: left;
+		background-color: var(--muted);
+	}
+
+	.editor-content :global(.selectedCell:after) {
+		z-index: 2;
+		position: absolute;
+		content: '';
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: color-mix(in srgb, var(--primary) 20%, transparent);
+		pointer-events: none;
 	}
 
 	/* Two-Column Grid */

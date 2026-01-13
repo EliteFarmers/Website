@@ -43,8 +43,12 @@ export function SvelteNodeViewRenderer(component: Component<SvelteNodeViewCompon
 			},
 		});
 
+		// Find contentDOM element for nodes with content
+		const contentDOM = dom.querySelector('[data-node-view-content]') as HTMLElement | null;
+
 		return {
 			dom,
+			contentDOM: contentDOM || undefined,
 			update: (updatedNode) => {
 				if (updatedNode.type !== node.type) {
 					return false;

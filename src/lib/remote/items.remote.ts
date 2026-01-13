@@ -46,7 +46,7 @@ export const getItem = query.batch(z.string(), async (itemIds) => {
 
 export const getItemValue = query.batch(z.string(), async (itemIds) => {
 	const lookup = new Map(itemIds.map((id) => [id, getSingleItemValue(id)]));
-	return (itemId) => lookup.get(itemId) ?? { ah: 0, bazaar: 0, npc: 0, lowest: 0 };
+	return (itemId) => lookup.get(itemId) ?? { ah: 0, bazaar: 0, npc: 0, lowest: 0, name: undefined };
 });
 
 function getSingleItemValue(itemId: string) {
@@ -62,6 +62,7 @@ function getSingleItemValue(itemId: string) {
 	const lowestValue = Math.max(npcPrice, values.length > 0 ? Math.min(...values) : 0);
 
 	return {
+		name: cache?.items?.[itemId]?.name ?? bz?.[itemId]?.name,
 		ah: ahPrice,
 		bazaar: bazaarPrice,
 		npc: npcPrice,

@@ -32,7 +32,7 @@ export function mergeComponents<T>(def: T, over?: Partial<T>): T {
 
 export function generateBlockKey(node: BlockNode, idx: number): string {
 	if (node.type === 'image' && node.image.hash) {
-		return `img-${node.image.hash}`;
+		return `img-${node.image.hash}-${idx}`;
 	}
 	return `${node.type}-${idx}`;
 }
@@ -102,6 +102,7 @@ export interface SkyblockItemBlockNode {
 	skyblockId: string;
 	size?: 'sm' | 'md' | 'lg';
 	inline?: boolean;
+	pet?: boolean;
 }
 
 export interface ItemPriceBlockNode {
@@ -130,6 +131,12 @@ export interface CalloutBlockNode {
 	children: BlockNode[];
 }
 
+export interface AccordionBlockNode {
+	type: 'accordion';
+	title: string;
+	children: BlockNode[];
+}
+
 export interface ListItemBlockNode {
 	type: 'list-item';
 	children: InlineNode[];
@@ -140,6 +147,46 @@ export interface ListBlockNode {
 	format: 'ordered' | 'unordered';
 	children: (ListItemBlockNode | ListBlockNode)[];
 	indentLevel?: number;
+}
+
+export interface RecipeSlot {
+	skyblockId?: string;
+	count?: number;
+}
+
+export interface RecipeBlockNode {
+	type: 'recipe';
+	grid: RecipeSlot[];
+	output: RecipeSlot;
+}
+
+export interface ItemListItem {
+	skyblockId: string;
+	quantity: number;
+}
+
+export interface ItemListBlockNode {
+	type: 'item-list';
+	items: ItemListItem[];
+}
+
+export interface TableBlockNode {
+	type: 'table';
+	rows: number;
+	cols: number;
+	cells: RootNode[][];
+}
+
+export interface BlockGridCell {
+	blockName?: string;
+	overlayItem?: string;
+}
+
+export interface BlockGridBlockNode {
+	type: 'block-grid';
+	rows: number;
+	cols: number;
+	cells: BlockGridCell[][];
 }
 
 export type BlockNode =
@@ -154,7 +201,12 @@ export type BlockNode =
 	| ItemPriceBlockNode
 	| TwoColumnBlockNode
 	| YouTubeBlockNode
-	| CalloutBlockNode;
+	| CalloutBlockNode
+	| AccordionBlockNode
+	| RecipeBlockNode
+	| ItemListBlockNode
+	| TableBlockNode
+	| BlockGridBlockNode;
 
 export type RootNode = BlockNode[];
 
@@ -171,6 +223,11 @@ export interface BlockComponents {
 	'two-column': Component<TwoColumnProps>;
 	youtube: Component<YouTubeProps>;
 	callout: Component<CalloutProps>;
+	accordion: Component<AccordionProps>;
+	recipe: Component<RecipeProps>;
+	'item-list': Component<ItemListProps>;
+	table: Component<TableProps>;
+	'block-grid': Component<BlockGridProps>;
 }
 
 export interface SkyblockItemProps extends BlockComponentProps {
@@ -191,6 +248,26 @@ export interface YouTubeProps {
 
 export interface CalloutProps {
 	node: CalloutBlockNode;
+}
+
+export interface AccordionProps {
+	node: AccordionBlockNode;
+}
+
+export interface RecipeProps {
+	node: RecipeBlockNode;
+}
+
+export interface ItemListProps {
+	node: ItemListBlockNode;
+}
+
+export interface TableProps {
+	node: TableBlockNode;
+}
+
+export interface BlockGridProps {
+	node: BlockGridBlockNode;
 }
 
 export interface ModifierProps {

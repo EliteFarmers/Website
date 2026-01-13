@@ -13,6 +13,7 @@ declare module '@tiptap/core' {
 				skyblockId: string;
 				size?: 'sm' | 'md' | 'lg';
 				inline?: boolean;
+				pet?: boolean;
 			}) => ReturnType;
 		};
 	}
@@ -54,11 +55,20 @@ export const SkyblockItem = Node.create<SkyblockItemOptions>({
 				},
 			},
 			inline: {
-				default: true, // Default to inline? User requested "Inline" option.
+				default: true,
 				parseHTML: (element) => element.getAttribute('data-inline') === 'true',
 				renderHTML: (attributes) => {
 					return {
 						'data-inline': attributes.inline,
+					};
+				},
+			},
+			pet: {
+				default: false,
+				parseHTML: (element) => element.getAttribute('data-pet') === 'true',
+				renderHTML: (attributes) => {
+					return {
+						'data-pet': attributes.pet,
 					};
 				},
 			},

@@ -493,6 +493,8 @@
 
 	.markdown a {
 		@apply text-link font-medium underline underline-offset-4;
+		word-break: break-word;
+		overflow-wrap: anywhere;
 	}
 
 	.markdown h1 {

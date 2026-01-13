@@ -8,6 +8,7 @@
 	import Head from '$comp/head.svelte';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
+	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { GetGuideComments } from '$lib/remote/comments.remote';
@@ -39,7 +40,6 @@
 	import Star from '@lucide/svelte/icons/star';
 	import ThumbsDown from '@lucide/svelte/icons/thumbs-down';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
-	import { formatDistanceToNow } from 'date-fns';
 	import { useDebounce } from 'runed';
 	import type { PageProps } from './$types';
 
@@ -254,6 +254,7 @@
 	<Head
 		title={guideData.title}
 		description={guideData.description}
+		imageUrl="/api/item/{guideData.iconSkyblockId}.webp"
 		ldJson={{
 			'@context': 'https://schema.org',
 			'@type': 'Article',
@@ -297,7 +298,7 @@
 			</div>
 
 			<div class="flex flex-col items-center gap-4">
-				<div class="text-muted-foreground flex items-center gap-3 text-sm">
+				<div class="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
 					<div class="text-foreground flex items-center gap-2 font-medium">
 						{#if guideData.author.avatar}
 							<UserIcon
@@ -309,9 +310,7 @@
 						{/if}
 						<span>{guideData.author.name}</span>
 					</div>
-					<span>•</span>
-					<span>{formatDistanceToNow(new Date(guideData.createdAt), { addSuffix: true })}</span>
-					<span>•</span>
+					<DateDisplay timestamp={new Date(guideData.createdAt).getTime()} />
 					<span class="flex items-center gap-1">
 						<Eye class="h-3 w-3" />
 						{guideData.viewCount}
@@ -324,7 +323,7 @@
 					{/each}
 				</div>
 
-				<div class="mt-2 flex items-center gap-2">
+				<div class="mt-2 flex flex-wrap items-center justify-center gap-2">
 					<div class="bg-card flex items-center rounded-lg border">
 						<Button
 							variant={userVote === 1 ? 'default' : 'ghost'}
@@ -451,7 +450,7 @@
 						{#if parsed}
 							{@const toc = buildTableOfContentsFromBlocks(parsed)}
 							{#if toc.length > 0}
-								<div class="sticky top-4">
+								<div class="sticky top-20">
 									<h3 class="mb-3 text-sm font-semibold">Table of Contents</h3>
 									<nav class="flex flex-col gap-1 text-sm">
 										{#each toc as item (item.id)}

@@ -8,16 +8,21 @@
 	} from './blocks';
 
 	import Link from './elements/a.svelte';
+	import AccordionComponent from './elements/accordion.svelte';
+	import BlockGridComponent from './elements/block-grid.svelte';
 	import Quote from './elements/blockquote.svelte';
 	import CalloutComponent from './elements/callout.svelte';
 	import Heading from './elements/heading.svelte';
 	import Image from './elements/img.svelte';
+	import ItemListComponent from './elements/item-list.svelte';
 	import ItemPriceComponent from './elements/item-price.svelte';
 	import ListItem from './elements/li.svelte';
 	import List from './elements/list.svelte';
 	import Paragraph from './elements/p.svelte';
 	import Code from './elements/pre.svelte';
+	import RecipeComponent from './elements/recipe.svelte';
 	import SkyblockItem from './elements/skyblock-item.svelte';
+	import TableComponent from './elements/table.svelte';
 	import TwoColumn from './elements/two-column.svelte';
 	import YouTubeComponent from './elements/youtube.svelte';
 
@@ -42,6 +47,11 @@
 		'two-column': TwoColumn,
 		youtube: YouTubeComponent,
 		callout: CalloutComponent,
+		accordion: AccordionComponent,
+		recipe: RecipeComponent,
+		'item-list': ItemListComponent,
+		table: TableComponent,
+		'block-grid': BlockGridComponent,
 	};
 
 	const defaultModifiers: ModifierComponents = {
