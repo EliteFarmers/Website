@@ -233,7 +233,7 @@
 	role="textbox"
 >
 	{#if editor}
-		<div class="bg-muted/50 sticky top-0 z-10 flex flex-wrap gap-1 border-b p-2 backdrop-blur-sm">
+		<div class="bg-muted/50 sticky top-16 z-10 flex flex-wrap gap-1 border-b p-2 backdrop-blur-sm">
 			<Button
 				variant="ghost"
 				size="icon"
