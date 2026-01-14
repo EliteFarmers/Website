@@ -114,10 +114,14 @@
 									selectedCol = colIdx;
 								}}
 								class={`relative flex size-10 items-center justify-center overflow-hidden border ${selectedRow === rowIdx && selectedCol === colIdx ? 'ring-primary ring-2' : ''}`}
-								style={cell.blockName
-									? `background-image: url('/api/block/${cell.blockName}.webp'); background-size: cover;`
-									: ''}
 							>
+								{#if cell.blockName}
+									<img
+										src="/api/block/{cell.blockName}.webp"
+										alt={cell?.blockName}
+										class="pixelated absolute inset-0 h-full w-full object-cover"
+									/>
+								{/if}
 								{#if cell.overlayItem}
 									<EditorItemRender skyblockId={cell.overlayItem} class="size-8" />
 								{/if}
