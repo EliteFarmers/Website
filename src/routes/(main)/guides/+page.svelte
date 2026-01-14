@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Head from '$comp/head.svelte';
 	import ItemRender from '$comp/items/item-render.svelte';
+	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { ListGuides, ListTags } from '$lib/remote/guides.remote';
 	import { Badge } from '$ui/badge';
 	import { Button } from '$ui/button';
@@ -9,6 +10,8 @@
 	import { SelectSimple } from '$ui/select';
 	import { Separator } from '$ui/separator';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
+
+	const gbl = getGlobalContext();
 
 	let searchQuery = $state('');
 	let selectedTagIds = $state<string[]>([]);
@@ -61,6 +64,11 @@
 			<a href="/guides/new">
 				<Button>Create Guide</Button>
 			</a>
+			{#if gbl.authorized}
+				<a href="/profile/guides">
+					<Button variant="outline">My Guides</Button>
+				</a>
+			{/if}
 		</div>
 	</div>
 
