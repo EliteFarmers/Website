@@ -283,8 +283,7 @@
 
 				<div class="space-y-3">
 					<Button onclick={copyLink} variant="secondary" class="w-full justify-center font-bold">
-						{#if copied}<Check class="mr-2 size-4" /> Copied!{:else}<Copy class="mr-2 size-4" /> Copy Public
-							Link{/if}
+						{#if copied}<Check class="mr-2 size-4" /> Copied!{:else}<Copy class="mr-2 size-4" /> Copy Public Link{/if}
 					</Button>
 				</div>
 

@@ -114,8 +114,8 @@
 				<input type="hidden" name="uuid" bind:value={selectedMember.playerUuid} />
 
 				<p class="text-muted-foreground mt-2 text-sm">
-					This will remove {selectedMember.playerName} from the event and ban them from rejoining. This action
-					is reversible. Ban reasons are visible to the player.
+					This will remove {selectedMember.playerName} from the event and ban them from rejoining. This action is
+					reversible. Ban reasons are visible to the player.
 				</p>
 
 				<div class="space-y-2">

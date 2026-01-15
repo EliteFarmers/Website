@@ -120,8 +120,8 @@
 			<p class="text-muted-foreground max-w-sm text-sm">This upgrade is shown for completion!</p>
 		{:else if maxOnly}
 			<p class="text-muted-foreground max-w-sm text-sm">
-				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune
-				as you upgrade it later.
+				This upgrade gives no fortune right away, but maxes out at {(upgrade.max ?? 0).toLocaleString()} fortune as
+				you upgrade it later.
 			</p>
 		{/if}
 	</div>
