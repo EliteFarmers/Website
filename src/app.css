@@ -265,6 +265,112 @@
 		--sidebar-border: hsl(0 0% 15%);
 		--sidebar-ring: hsl(300 50% 60%);
 	}
+
+	.retro-light {
+		--background: hsl(0 0% 92%);
+		--foreground: hsl(0 0% 12%);
+
+		--muted: hsl(0 0% 85%);
+		--muted-variant: hsl(0 0% 78%);
+		--muted-foreground: hsl(0 0% 40%);
+
+		--popover: hsl(0 0% 96%);
+		--popover-foreground: hsl(0 0% 12%);
+
+		--card: hsl(0 0% 88%);
+		--card-foreground: hsl(0 0% 12%);
+
+		--border: hsl(0 0% 70%);
+		--input: hsl(0 0% 82%);
+
+		--primary: hsl(120 35% 40%);
+		--primary-foreground: hsl(0 0% 100%);
+
+		--secondary: hsl(0 0% 78%);
+		--secondary-foreground: hsl(0 0% 12%);
+
+		--accent: hsl(200 50% 50%);
+		--accent-foreground: hsl(0 0% 100%);
+
+		--destructive: hsl(0 60% 50%);
+		--destructive-foreground: hsl(0 0% 100%);
+
+		--progress: hsl(120 35% 45%);
+		--completed: hsl(45 80% 55%);
+
+		--link: hsl(210 70% 50%);
+		--active: hsl(45 90% 65%);
+
+		--ring: hsl(0 0% 50%);
+		--radius: 0px;
+
+		--bevel-highlight: hsl(0 0% 100% / 0.5);
+		--bevel-shadow: hsl(0 0% 0% / 0.25);
+		--bevel-size: 2px;
+		--button-depth: hsl(0 0% 45%);
+
+		--sidebar-background: hsl(0 0% 82%);
+		--sidebar-foreground: hsl(0 0% 12%);
+		--sidebar-primary: hsl(120 35% 40%);
+		--sidebar-primary-foreground: hsl(0 0% 100%);
+		--sidebar-accent: hsl(0 0% 74%);
+		--sidebar-accent-foreground: hsl(0 0% 12%);
+		--sidebar-border: hsl(0 0% 68%);
+		--sidebar-ring: hsl(120 35% 45%);
+	}
+
+	.retro-dark {
+		--background: hsl(220 10% 10%);
+		--foreground: hsl(0 0% 90%);
+
+		--muted: hsl(220 8% 18%);
+		--muted-variant: hsl(220 8% 26%);
+		--muted-foreground: hsl(0 0% 55%);
+
+		--popover: hsl(220 8% 14%);
+		--popover-foreground: hsl(0 0% 90%);
+
+		--card: hsl(220 8% 14%);
+		--card-foreground: hsl(0 0% 90%);
+
+		--border: hsl(220 6% 30%);
+		--input: hsl(220 6% 22%);
+
+		--primary: hsl(120 30% 45%);
+		--primary-foreground: hsl(0 0% 100%);
+
+		--secondary: hsl(220 6% 30%);
+		--secondary-foreground: hsl(0 0% 88%);
+
+		--accent: hsl(200 45% 50%);
+		--accent-foreground: hsl(0 0% 100%);
+
+		--destructive: hsl(0 55% 55%);
+		--destructive-foreground: hsl(0 0% 100%);
+
+		--progress: hsl(120 30% 40%);
+		--completed: hsl(45 75% 50%);
+
+		--link: hsl(210 65% 60%);
+		--active: hsl(30 70% 40%);
+
+		--ring: hsl(220 6% 48%);
+		--radius: 0px;
+
+		--bevel-highlight: hsl(0 0% 100% / 0.15);
+		--bevel-shadow: hsl(0 0% 0% / 0.35);
+		--bevel-size: 2px;
+		--button-depth: hsl(220 8% 6%);
+
+		--sidebar-background: hsl(220 8% 16%);
+		--sidebar-foreground: hsl(0 0% 90%);
+		--sidebar-primary: hsl(120 30% 45%);
+		--sidebar-primary-foreground: hsl(0 0% 100%);
+		--sidebar-accent: hsl(220 6% 22%);
+		--sidebar-accent-foreground: hsl(0 0% 90%);
+		--sidebar-border: hsl(220 8% 10%);
+		--sidebar-ring: hsl(120 30% 50%);
+	}
 }
 
 @theme inline {
@@ -924,5 +1030,195 @@
 		right: 0.5rem;
 		left: auto;
 		bottom: 0.5rem !important;
+	}
+
+	/* Retro Theme Styles - Minecraft wiki inspired */
+	:is(.retro-light, .retro-dark) {
+		/* Remove rounding, except Discord avatars */
+		*:not([data-discord-avatar]),
+		*:not([data-discord-avatar])::before,
+		*:not([data-discord-avatar])::after {
+			border-radius: 0 !important;
+		}
+
+		/* Add bevels to buttons with a bottom shadow to look 3D */
+		/* Excludes link, ghost, selectable (inline), and buttons without backgrounds */
+		[data-slot='button']:not([data-variant='link']):not([data-variant='ghost']),
+		.btn:not(.btn-link):not(.btn-ghost) {
+			border: none;
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-highlight),
+				inset -1px -1px 0 var(--bevel-shadow),
+				0 3px 0 0 var(--button-depth);
+			transition:
+				box-shadow 0.05s,
+				transform 0.05s;
+			position: relative;
+
+			&:hover:not(:disabled):not([aria-disabled='true']) {
+				filter: brightness(1.05);
+			}
+
+			&:active:not(:disabled):not([aria-disabled='true']),
+			&[data-state='open'] {
+				box-shadow:
+					inset -1px -1px 0 var(--bevel-highlight),
+					inset 1px 1px 0 var(--bevel-shadow),
+					0 1px 0 0 var(--button-depth);
+				transform: translateY(2px);
+			}
+		}
+
+		/* Keep these button variants simple without 3D effects */
+		[data-slot='button'][data-variant='link'],
+		[data-slot='button'][data-variant='ghost'],
+		button[data-variant='link'],
+		button[data-variant='ghost'] {
+			border: none !important;
+			box-shadow: none !important;
+			transform: none !important;
+		}
+
+		[data-slot='card'],
+		[data-slot='dialog-content'],
+		[data-slot='popover-content'],
+		[data-slot='dropdown-menu-content'],
+		.card,
+		.panel {
+			border: none;
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-shadow),
+				inset -1px -1px 0 var(--bevel-highlight);
+		}
+
+		/* Sidebar */
+		[data-sidebar='sidebar'] {
+			border: none;
+			box-shadow:
+				inset -1px 0 0 var(--bevel-shadow),
+				inset 1px 0 0 var(--bevel-highlight);
+		}
+
+		[data-slot='sidebar-inner'] {
+			border: none;
+			box-shadow: none;
+		}
+
+		/* Sidebar collapsible/accordion styling */
+		[data-sidebar='sidebar'] [data-slot='sidebar-menu-button'] {
+			border: none;
+			box-shadow: none;
+			position: relative;
+		}
+		[data-sidebar='sidebar'] [data-slot='sidebar-group'] {
+			background: transparent;
+			margin: 0.25rem 0;
+			padding: 0;
+			box-shadow: none;
+		}
+
+		/* Collapsible trigger */
+		[data-sidebar='sidebar'] .group\/collapsible [data-collapsible-trigger][data-sidebar='menu-button'] {
+			background: var(--sidebar-accent);
+			margin: 0;
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-highlight),
+				inset -1px -1px 0 var(--bevel-shadow),
+				0 3px 0 0 var(--button-depth);
+			font-weight: 600;
+			transition:
+				box-shadow 0.05s,
+				transform 0.05s;
+		}
+		[data-sidebar='sidebar']
+			.group\/collapsible[data-state='open']
+			[data-collapsible-trigger][data-sidebar='menu-button'] {
+			box-shadow:
+				inset -1px -1px 0 var(--bevel-highlight),
+				inset 1px 1px 0 var(--bevel-shadow),
+				0 1px 0 0 var(--button-depth);
+			transform: translateY(2px);
+		}
+
+		/* Collapsed sidebar */
+		[data-sidebar='sidebar'][data-collapsible='icon'] [data-collapsible-trigger][data-sidebar='menu-button'] {
+			box-shadow: none;
+			background: transparent;
+		}
+
+		/* Nested headers */
+		[data-sidebar='sidebar'] .group\/subcollapsible [data-collapsible-trigger][data-sidebar='menu-button'] {
+			background: var(--sidebar-accent);
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-highlight),
+				inset -1px -1px 0 var(--bevel-shadow),
+				0 2px 0 0 var(--button-depth);
+			font-weight: 500;
+			transition:
+				box-shadow 0.05s,
+				transform 0.05s;
+		}
+
+		[data-sidebar='sidebar']
+			.group\/subcollapsible[data-state='open']
+			[data-collapsible-trigger][data-sidebar='menu-button'] {
+			box-shadow:
+				inset -1px -1px 0 var(--bevel-highlight),
+				inset 1px 1px 0 var(--bevel-shadow),
+				0 0 0 0 var(--button-depth);
+			transform: translateY(2px);
+		}
+
+		/* Content area inside collapsible */
+		[data-sidebar='sidebar'] [data-slot='collapsible-content'] {
+			background: rgba(0, 0, 0, 0.15);
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-shadow),
+				inset -1px -1px 0 var(--bevel-highlight);
+		}
+
+		/* Submenu items */
+		[data-sidebar='sidebar'] [data-slot='sidebar-menu-sub'] {
+			border-left: 2px solid var(--sidebar-border);
+			margin-left: 0.75rem;
+			padding-left: 0.5rem;
+		}
+
+		/* Active/hovered sidebar items */
+		[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button']:hover,
+		[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button'][data-active='true'],
+		[data-sidebar='sidebar'] [data-slot='collapsible-content'] [data-sidebar='menu-button']:active {
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-shadow),
+				inset -1px -1px 0 var(--bevel-highlight);
+		}
+
+		/* Scrollbar styling */
+		::-webkit-scrollbar {
+			width: 14px;
+			height: 14px;
+		}
+
+		::-webkit-scrollbar-track {
+			background: var(--muted);
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-shadow),
+				inset -1px -1px 0 var(--bevel-highlight);
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: var(--secondary);
+			box-shadow:
+				inset 1px 1px 0 var(--bevel-highlight),
+				inset -1px -1px 0 var(--bevel-shadow);
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: var(--muted-variant);
+		}
+
+		::-webkit-scrollbar-corner {
+			background: var(--muted);
+		}
 	}
 }

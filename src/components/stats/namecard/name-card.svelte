@@ -22,7 +22,7 @@
 </script>
 
 <div
-	class="bg-background relative mx-auto mt-4 w-full max-w-5xl overflow-clip rounded-xl border-2 bg-no-repeat lg:mt-16 @md:mt-8 @md:aspect-[4.8/1]"
+	class="bg-background dark text-primary relative mx-auto mt-4 w-full max-w-5xl overflow-clip rounded-xl border-2 bg-no-repeat lg:mt-16 @md:mt-8 @md:aspect-[4.8/1]"
 >
 	<canvas
 		{@attach (element) => {

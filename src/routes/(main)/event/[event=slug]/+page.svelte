@@ -410,8 +410,8 @@
 				>
 				<Accordion.Content>
 					You might be wondering if you and your team need to share the same Skyblock Co-op, and the answer is
-					<strong>no!</strong> You can be in different co-ops and still be on the same team. You can be in the
-					same co-op if you want to, but it does not matter for the event.
+					<strong>no!</strong> You can be in different co-ops and still be on the same team. You can be in the same
+					co-op if you want to, but it does not matter for the event.
 				</Accordion.Content>
 			</Accordion.Item>
 			<Accordion.Item value="item-3">
