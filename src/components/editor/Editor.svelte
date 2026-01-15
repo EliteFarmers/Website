@@ -123,7 +123,7 @@
 		let initialContent: string | unknown = '';
 		if (typeof content === 'string') {
 			try {
-				// Try to detect if it's our JSON format (starts with [ maybe?)
+				// Detect if it's in JSON
 				if (content.trim().startsWith('[') || content.trim().startsWith('{')) {
 					const parsed = JSON.parse(content);
 					if (Array.isArray(parsed)) {

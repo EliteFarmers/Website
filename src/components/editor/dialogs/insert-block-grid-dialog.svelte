@@ -27,8 +27,57 @@
 	let rows = $state(3);
 	let cols = $state(3);
 	let cells = $state<BlockGridCell[][]>([]);
-	let selectedRow = $state<number | null>(null);
-	let selectedCol = $state<number | null>(null);
+
+	// Region selection state
+	let selectionStart = $state<{ row: number; col: number } | null>(null);
+	let selectionEnd = $state<{ row: number; col: number } | null>(null);
+	let isDragging = $state(false);
+
+	// Computed selection bounds (normalized so start <= end)
+	let selectionBounds = $derived.by(() => {
+		if (!selectionStart || !selectionEnd) return null;
+		return {
+			minRow: Math.min(selectionStart.row, selectionEnd.row),
+			maxRow: Math.max(selectionStart.row, selectionEnd.row),
+			minCol: Math.min(selectionStart.col, selectionEnd.col),
+			maxCol: Math.max(selectionStart.col, selectionEnd.col),
+		};
+	});
+
+	function isCellSelected(rowIdx: number, colIdx: number): boolean {
+		if (!selectionBounds) return false;
+		return (
+			rowIdx >= selectionBounds.minRow &&
+			rowIdx <= selectionBounds.maxRow &&
+			colIdx >= selectionBounds.minCol &&
+			colIdx <= selectionBounds.maxCol
+		);
+	}
+
+	function getSelectedCellCount(): number {
+		if (!selectionBounds) return 0;
+		return (
+			(selectionBounds.maxRow - selectionBounds.minRow + 1) *
+			(selectionBounds.maxCol - selectionBounds.minCol + 1)
+		);
+	}
+
+	// Get common value across all selected cells, or empty if they differ
+	function getCommonValue(field: 'blockName' | 'overlayItem'): string {
+		if (!selectionBounds) return '';
+		let commonValue: string | undefined = undefined;
+		for (let r = selectionBounds.minRow; r <= selectionBounds.maxRow; r++) {
+			for (let c = selectionBounds.minCol; c <= selectionBounds.maxCol; c++) {
+				const cellValue = cells[r]?.[c]?.[field] || '';
+				if (commonValue === undefined) {
+					commonValue = cellValue;
+				} else if (commonValue !== cellValue) {
+					return ''; // Values differ
+				}
+			}
+		}
+		return commonValue ?? '';
+	}
 
 	$effect(() => {
 		if (editNode && open) {
@@ -37,8 +86,9 @@
 				cols = editNode.cols || 3;
 				cells = editNode.cells?.map((row) => [...row]) || [];
 				ensureCellsSize();
-				selectedRow = null;
-				selectedCol = null;
+				selectionStart = null;
+				selectionEnd = null;
+				isDragging = false;
 			});
 		}
 	});
@@ -60,12 +110,31 @@
 		ensureCellsSize();
 	}
 
-	function updateCell(field: 'blockName' | 'overlayItem', value: string) {
-		if (selectedRow !== null && selectedCol !== null) {
-			cells[selectedRow][selectedCol] = {
-				...cells[selectedRow][selectedCol],
-				[field]: value || undefined,
-			};
+	function handleMouseDown(rowIdx: number, colIdx: number) {
+		selectionStart = { row: rowIdx, col: colIdx };
+		selectionEnd = { row: rowIdx, col: colIdx };
+		isDragging = true;
+	}
+
+	function handleMouseEnter(rowIdx: number, colIdx: number) {
+		if (isDragging) {
+			selectionEnd = { row: rowIdx, col: colIdx };
+		}
+	}
+
+	function handleMouseUp() {
+		isDragging = false;
+	}
+
+	function updateSelectedCells(field: 'blockName' | 'overlayItem', value: string) {
+		if (!selectionBounds) return;
+		for (let r = selectionBounds.minRow; r <= selectionBounds.maxRow; r++) {
+			for (let c = selectionBounds.minCol; c <= selectionBounds.maxCol; c++) {
+				cells[r][c] = {
+					...cells[r][c],
+					[field]: value || undefined,
+				};
+			}
 		}
 	}
 
@@ -81,12 +150,14 @@
 	}
 </script>
 
+<svelte:window onmouseup={handleMouseUp} />
+
 <Dialog.Root {open} {onOpenChange}>
-	<Dialog.Content class="max-h-[90vh] overflow-y-auto sm:max-w-[700px]">
+	<Dialog.Content class="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
 		<Dialog.Header>
 			<Dialog.Title>Edit Block Grid</Dialog.Title>
 			<Dialog.Description>
-				Configure grid dimensions and block/item content. Click a cell to edit it.
+				Configure grid dimensions and block/item content. Click or drag to select cells.
 			</Dialog.Description>
 		</Dialog.Header>
 
@@ -103,52 +174,70 @@
 			</div>
 
 			<div class="flex gap-4">
-				<div class="grid gap-1" style="grid-template-columns: repeat({cols}, 1fr);">
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div
+					class="grid gap-1 select-none"
+					style="grid-template-columns: repeat({cols}, 1fr);"
+					onmouseup={handleMouseUp}
+				>
 					{#each { length: rows }, rowIdx (rowIdx)}
 						{#each { length: cols }, colIdx (colIdx)}
 							{@const cell = cells[rowIdx]?.[colIdx] || {}}
-							<button
-								type="button"
-								onclick={() => {
-									selectedRow = rowIdx;
-									selectedCol = colIdx;
-								}}
-								class={`relative flex size-10 items-center justify-center overflow-hidden border ${selectedRow === rowIdx && selectedCol === colIdx ? 'ring-primary ring-2' : ''}`}
+							{@const isSelected = isCellSelected(rowIdx, colIdx)}
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
+							<div
+								role="gridcell"
+								tabindex="0"
+								onmousedown={() => handleMouseDown(rowIdx, colIdx)}
+								onmouseenter={() => handleMouseEnter(rowIdx, colIdx)}
+								class={`relative flex size-10 cursor-pointer items-center justify-center overflow-hidden border ${isSelected ? 'ring-primary ring-2' : ''}`}
 							>
 								{#if cell.blockName}
 									<img
 										src="/api/block/{cell.blockName}.webp"
 										alt={cell?.blockName}
-										class="pixelated absolute inset-0 h-full w-full object-cover"
+										class="pixelated pointer-events-none absolute inset-0 h-full w-full object-cover"
 									/>
 								{/if}
 								{#if cell.overlayItem}
-									<EditorItemRender skyblockId={cell.overlayItem} class="size-8" />
+									<EditorItemRender
+										skyblockId={cell.overlayItem}
+										class="pointer-events-none size-8"
+									/>
 								{/if}
-							</button>
+							</div>
 						{/each}
 					{/each}
 				</div>
 
-				{#if selectedRow !== null && selectedCol !== null}
-					<div class="bg-muted flex flex-col gap-3 rounded-lg border p-4">
-						<h4 class="font-medium">Cell ({selectedRow + 1}, {selectedCol + 1})</h4>
+				{#if selectionBounds}
+					<div class="bg-muted flex min-w-48 flex-col gap-3 rounded-lg border p-4">
+						<h4 class="font-medium">
+							{#if getSelectedCellCount() === 1}
+								Cell ({selectionBounds.minRow + 1}, {selectionBounds.minCol + 1})
+							{:else}
+								{getSelectedCellCount()} cells selected
+							{/if}
+						</h4>
 						<div class="flex flex-col gap-2">
 							<Label class="text-sm">Block Name</Label>
 							<Input
-								value={cells[selectedRow]?.[selectedCol]?.blockName || ''}
-								onchange={(e) => updateCell('blockName', (e.target as HTMLInputElement).value)}
-								placeholder="e.g., stone, dirt, grass_block"
+								value={getCommonValue('blockName')}
+								onchange={(e) => updateSelectedCells('blockName', (e.target as HTMLInputElement).value)}
+								placeholder={getSelectedCellCount() > 1 ? 'Set for all...' : 'e.g., stone, dirt'}
 								class="w-40"
 							/>
 						</div>
 						<div class="flex flex-col gap-2">
 							<Label class="text-sm">Overlay Item</Label>
 							<Input
-								value={cells[selectedRow]?.[selectedCol]?.overlayItem || ''}
+								value={getCommonValue('overlayItem')}
 								onchange={(e) =>
-									updateCell('overlayItem', (e.target as HTMLInputElement).value.toUpperCase())}
-								placeholder="e.g., WHEAT"
+									updateSelectedCells(
+										'overlayItem',
+										(e.target as HTMLInputElement).value.toUpperCase()
+									)}
+								placeholder={getSelectedCellCount() > 1 ? 'Set for all...' : 'e.g., WHEAT'}
 								class="w-40 uppercase"
 							/>
 						</div>

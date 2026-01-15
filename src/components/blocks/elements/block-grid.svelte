@@ -12,12 +12,14 @@
 	const gbl = getGlobalContext();
 </script>
 
-<div class="my-4 inline-block">
-	<div class="grid gap-0.5" style="grid-template-columns: repeat({node.cols}, 1fr);">
+<div class="my-4 inline-block w-full">
+	<div class="grid w-fit gap-[0.5px] md:gap-0.5" style="grid-template-columns: repeat({node.cols}, 1fr);">
 		{#each { length: node.rows }, rowIdx (rowIdx)}
 			{#each { length: node.cols }, colIdx (colIdx)}
 				{@const cell = node.cells[rowIdx]?.[colIdx]}
-				<div class="relative flex size-12 items-center justify-center overflow-hidden border">
+				<div
+					class="relative flex aspect-square w-full max-w-8 items-center justify-center overflow-hidden border sm:size-8 md:size-12 md:max-w-12"
+				>
 					{#if cell?.blockName}
 						<img
 							src="/api/block/{cell.blockName}.webp{gbl.packsParam}"
@@ -26,7 +28,7 @@
 						/>
 					{/if}
 					{#if cell?.overlayItem}
-						<ItemRender skyblockId={cell.overlayItem} class="size-10" />
+						<ItemRender skyblockId={cell.overlayItem} class="w-full drop-shadow-md sm:size-6 md:size-10" />
 					{/if}
 				</div>
 			{/each}

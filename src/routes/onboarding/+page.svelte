@@ -197,7 +197,7 @@
 				{#if hasLinkedAccount}
 					<Button onclick={nextStep}>Continue</Button>
 				{:else}
-					<Button variant="ghost" onclick={nextStep}>Skip for now</Button>
+					<Button variant="ghost" href="/">Skip for now</Button>
 				{/if}
 			{:else}
 				<div class="w-full">
