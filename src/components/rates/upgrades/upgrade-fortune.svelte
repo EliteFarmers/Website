@@ -56,9 +56,11 @@
 	});
 
 	// const hasContent = $derived(primaryStat.value !== 0 || otherStats.length > 0 || upgrade.max);
-	const isNegative = $derived(primaryStat.value < 0);
-	const maxOnly = $derived(primaryStat.value === 0 && upgrade.max && upgrade.max > 0);
-	const forCompletion = $derived(upgrade.stats === undefined && primaryStat.value === 0);
+	const headerValue = $derived(upgrade.increase ?? primaryStat.value);
+
+	const isNegative = $derived(headerValue < 0);
+	const maxOnly = $derived(headerValue === 0 && upgrade.max && upgrade.max > 0);
+	const forCompletion = $derived(upgrade.stats === undefined && headerValue === 0);
 
 	const background = $derived(
 		maxOnly || forCompletion ? 'bg-progress/40' : isNegative ? 'bg-destructive/60' : 'bg-progress'
@@ -76,7 +78,7 @@
 		>
 			<span>{STAT_ICONS[primaryStat.stat] ?? '☘'}</span>
 			<span class="text-md relative z-10 pr-1 font-mono leading-none md:text-lg">
-				{primaryStat.value !== 0 ? (+primaryStat.value.toFixed(2)).toLocaleString() : '0'}
+				{headerValue !== 0 ? (+headerValue.toFixed(2)).toLocaleString() : '0'}
 			</span>
 		</div>
 	{/snippet}

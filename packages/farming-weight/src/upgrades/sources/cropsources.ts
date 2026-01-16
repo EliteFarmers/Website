@@ -266,7 +266,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC,
 			};
 		},
-		upgrades: ({ player }) => {
+		upgrades: ({ player, crop }) => {
 			const highest = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.HELIANTHUS_RELIC?.family
 			);
@@ -300,7 +300,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				];
 			}
 
-			return highest.getUpgrades();
+			return highest.getUpgrades({
+				stat: CROP_INFO[crop].fortuneType,
+			});
 		},
 	},
 	{
