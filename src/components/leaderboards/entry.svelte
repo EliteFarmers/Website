@@ -74,7 +74,9 @@
 </script>
 
 <div
-	class="bg-background group dark text-primary relative flex h-14 w-full max-w-xl flex-col items-center justify-center overflow-clip rounded-md border bg-no-repeat sm:h-16"
+	class="bg-background group {style
+		? 'dark text-primary'
+		: ''} relative flex h-14 w-full max-w-xl flex-col items-center justify-center overflow-clip rounded-md border bg-no-repeat sm:h-16"
 	style="justify-content: {style?.background?.align ?? 'center'};"
 	data-sveltekit-preload-data="tap"
 >
