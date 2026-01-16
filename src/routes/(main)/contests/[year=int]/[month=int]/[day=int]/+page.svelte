@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Head from '$comp/head.svelte';
 	import Singlecontest from '$comp/stats/contests/singlecontest.svelte';
 	import { appendOrdinalSuffix, getReadableSkyblockDate } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
 	import { SkyBlockTime } from 'farming-weight';
 	import type { PageData } from './$types';
@@ -36,8 +38,13 @@
 	]);
 
 	const breadcrumb = getPageCtx();
+	const favorites = getFavoritesContext();
 	$effect.pre(() => {
 		breadcrumb.setBreadcrumbs(crumbs);
+		favorites.setPage({
+			name: getReadableSkyblockDate(timestamp ?? 0),
+			href: page.url.pathname,
+		});
 	});
 </script>
 

@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { page } from '$app/state';
 import Home from '@lucide/svelte/icons/home';
 import { getContext, setContext, untrack, type Component, type Snippet } from 'svelte';
@@ -72,7 +73,10 @@ export class Breadcrumb {
 	}
 
 	get title() {
-		return this.#title;
+		if (browser) {
+			return this.#title || document.title || 'Untitled';
+		}
+		return this.#title || 'Untitled';
 	}
 
 	set title(title: string) {

@@ -17,11 +17,10 @@
 	let searchOpen = $state(false);
 
 	const favorites = getFavoritesContext();
-	const currentPage = $derived(favorites.currentPage);
 
 	function toggleFavorite() {
 		if (!favorites.removeFavorite(page.url.pathname)) {
-			favorites.addFavorite(currentPage);
+			favorites.addFavorite(favorites.currentPage);
 		}
 	}
 </script>

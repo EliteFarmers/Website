@@ -22,8 +22,12 @@
 		barBg = 'bg-background',
 		disabled = false,
 		fillClass = undefined,
-		class: className = (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold',
+		class: classNameProp = undefined,
 	}: Props = $props();
+
+	let className = $derived(
+		classNameProp ?? (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold'
+	);
 
 	let background = $derived(
 		fillClass
