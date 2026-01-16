@@ -57,7 +57,7 @@
 	};
 </script>
 
-<div class="m-2 h-[200px] rounded dark:scheme-dark">
+<div class="m-2 h-50 rounded dark:scheme-dark">
 	<Chart
 		{data}
 		x="date"

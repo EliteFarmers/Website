@@ -16,7 +16,9 @@
 
 <div class="mb-16 flex flex-col items-center gap-8">
 	<h1 class="mt-4 max-w-2xl self-center text-center text-4xl">Leaderboard Ranks</h1>
-	{#await leaderboards then loaded}
+	{#await leaderboards}
+		<p>Loading leaderboards...</p>
+	{:then loaded}
 		<RanksList leaderboards={loaded} />
 	{/await}
 	<p class="text-muted-foreground max-w-lg text-center">
