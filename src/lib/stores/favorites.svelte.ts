@@ -18,6 +18,8 @@ export class Favorites {
 	#pageCtx = getPageCtx();
 	currentPage = $derived.by(() => {
 		if (this.#override && this.#override.href === page.url.pathname) {
+			this.#override.name ||= this.#pageCtx.title;
+
 			return this.#override;
 		}
 

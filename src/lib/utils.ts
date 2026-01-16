@@ -132,8 +132,8 @@ const CROP_TO_PEST: Partial<Record<string, string>> = {
 	pumpkin: 'rat',
 	cane: 'mosquito',
 	wheat: 'fly',
-	sunflower: 'firefly',
-	moonflower: 'moonflower',
+	sunflower: 'dragonfly',
+	moonflower: 'firefly',
 	wildrose: 'mantis',
 };
 

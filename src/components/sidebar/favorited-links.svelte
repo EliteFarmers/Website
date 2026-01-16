@@ -50,7 +50,7 @@
 	}
 </script>
 
-{#if favorites.current?.length}
+{#if favorites.current?.length && Array.isArray(favorites.current)}
 	<Sidebar.Group data-sveltekit-preload-data="tap">
 		<Collapsible.Root bind:open={menuOpen} class="group/collapsible" onOpenChange={openChanged}>
 			{#snippet child({ props })}

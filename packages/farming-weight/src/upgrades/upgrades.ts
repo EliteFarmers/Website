@@ -24,7 +24,7 @@ function getPieceBonus(upgradeable: Upgradeable): number {
 }
 
 export function getItemUpgrades(upgradeable: Upgradeable, options?: { stat?: Stat }): FortuneUpgrade[] {
-	const { deadEnd, upgrade } = getSelfFortuneUpgrade(upgradeable) ?? {};
+	const { deadEnd, upgrade } = getSelfFortuneUpgrade(upgradeable, options) ?? {};
 	if (deadEnd) return [upgrade] as FortuneUpgrade[];
 
 	const upgrades = [] as (FortuneUpgrade | undefined)[];
@@ -39,7 +39,8 @@ export function getItemUpgrades(upgradeable: Upgradeable, options?: { stat?: Sta
 }
 
 export function getSelfFortuneUpgrade(
-	upgradeable: Upgradeable
+	upgradeable: Upgradeable,
+	options?: { stat?: Stat }
 ): { upgrade: FortuneUpgrade; deadEnd: boolean } | undefined {
 	const nextItem = upgradeable.getItemUpgrade();
 	const deadEnd = nextItem && nextItem.reason == UpgradeReason.DeadEnd;
@@ -96,6 +97,10 @@ export function getSelfFortuneUpgrade(
 			if (delta !== 0) deltaStats[stat] = delta;
 		}
 		let increase = deltaStats[Stat.FarmingFortune] ?? 0;
+
+		if (options?.stat && options.stat !== Stat.FarmingFortune) {
+			increase += deltaStats[options.stat] ?? 0;
+		}
 
 		// Lotus -> Blossom equipment upgrades also increase the "Piece Bonus" fortune.
 		// This bonus is encoded in the item lore (e.g. "Piece Bonus: +15☘") and scales up on Blossom gear.
