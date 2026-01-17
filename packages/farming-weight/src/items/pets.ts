@@ -371,8 +371,6 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					const chanceIncrease = pet.level * 0.002;
 					if (chanceIncrease <= 0) return current;
 
-					current.specialCropBonus += chanceIncrease;
-					current.specialCropBonusBreakdown["Dragon's Gluttony"] = chanceIncrease;
 					current.rareItemBonus += chanceIncrease;
 					current.rareItemBonusBreakdown["Dragon's Gluttony"] = chanceIncrease;
 

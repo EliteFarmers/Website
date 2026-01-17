@@ -134,8 +134,6 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 			else if (rarity === Rarity.Legendary) perLevel = 0.03;
 
 			const bonus = level * perLevel;
-			current.specialCropBonus += bonus;
-			current.specialCropBonusBreakdown['Rarefinder Chip'] = bonus;
 			current.rareItemBonus += bonus;
 			current.rareItemBonusBreakdown['Rarefinder Chip'] = bonus;
 			return current;

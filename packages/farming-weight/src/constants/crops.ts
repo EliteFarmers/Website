@@ -368,23 +368,24 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 	},
 };
 
-// TODO: Calculate this from a list of sources
-// Base plus pb fortune
+// TODO: Calculate this from the list of sources
+// Base plus crop specific fortune
+// Does not include temporary fortune sources
 export const MAX_CROP_FORTUNE: Record<Crop, number> = {
-	[Crop.Cactus]: 1824,
-	[Crop.Carrot]: 2053,
-	[Crop.CocoaBeans]: 1886,
-	[Crop.Melon]: 1854,
-	[Crop.Mushroom]: 1870,
-	[Crop.NetherWart]: 2053,
-	[Crop.Potato]: 2041,
-	[Crop.Pumpkin]: 1866,
-	[Crop.SugarCane]: 2041,
-	[Crop.Wheat]: 2053,
-	[Crop.Seeds]: 2053,
-	[Crop.Sunflower]: 2053,
-	[Crop.Moonflower]: 2053,
-	[Crop.WildRose]: 2053,
+	[Crop.Cactus]: 2629.28,
+	[Crop.Carrot]: 2629.28 + 12,
+	[Crop.CocoaBeans]: 2629.28 + 37,
+	[Crop.Melon]: 2629.28,
+	[Crop.Mushroom]: 2629.28 + 12,
+	[Crop.NetherWart]: 2629.28 + 12,
+	[Crop.Potato]: 2629.28,
+	[Crop.Pumpkin]: 2629.28 + 12,
+	[Crop.SugarCane]: 2629.28,
+	[Crop.Wheat]: 2629.28 + 12,
+	[Crop.Seeds]: 2629.28 - 520.67,
+	[Crop.Sunflower]: 2629.28,
+	[Crop.Moonflower]: 2629.28,
+	[Crop.WildRose]: 2629.28 + 12,
 };
 
 export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [

@@ -185,7 +185,7 @@ test('Cropeetle shard increases special crop bonus', () => {
 	expect(resultWithShard.items['CROPIE']).toBeCloseTo(resultWithoutShard.items['CROPIE'] * 1.2, 1);
 });
 
-test('Rarefinder chip increases both special crop and rare item bonus', () => {
+test('Rarefinder chip increases rare item bonus', () => {
 	// Level 5 (Rare tier) = 2% per level = 10% bonus
 	const resultLevel5 = calculateDetailedDrops({
 		crop: Crop.NetherWart,
@@ -228,11 +228,10 @@ test('Rarefinder chip increases both special crop and rare item bonus', () => {
 		},
 	});
 
-	// Special crop bonus
-	expect(resultLevel5.specialCropBonus).toBeCloseTo(0.1, 4);
-	expect(resultLevel5.specialCropBonusBreakdown).toStrictEqual({ 'Rarefinder Chip': 0.1 });
-	expect(resultLevel15.specialCropBonus).toBeCloseTo(0.375, 4);
-	expect(resultLevel20.specialCropBonus).toBeCloseTo(0.6, 4);
+	// Special crop bonus should be 0 (Rarefinder only affects rare items now)
+	expect(resultLevel5.specialCropBonus).toBe(0);
+	expect(resultLevel15.specialCropBonus).toBe(0);
+	expect(resultLevel20.specialCropBonus).toBe(0);
 
 	// Rare item bonus
 	expect(resultLevel5.rareItemBonus).toBeCloseTo(0.1, 4);
@@ -247,7 +246,7 @@ test('Rarefinder chip increases both special crop and rare item bonus', () => {
 	expect(resultLevel20.rngItems?.['WARTY']).toBeCloseTo(50 * 1.6, 1);
 });
 
-test("Rose Dragon Dragon's Gluttony affects both special crops and rare items", () => {
+test("Rose Dragon Dragon's Gluttony affects rare items only", () => {
 	// Mock a level 200 Rose Dragon pet
 	const mockPet = new FarmingPet({
 		type: 'ROSE_DRAGON',
@@ -263,15 +262,15 @@ test("Rose Dragon Dragon's Gluttony affects both special crops and rare items", 
 		pet: mockPet,
 	});
 
-	// Level 200 * 0.002 = 0.4 (40% bonus)
-	expect(result.specialCropBonus).toBe(0.4);
+	// Level 200 * 0.002 = 0.4 (40% bonus) - only affects rareItemBonus now
+	expect(result.specialCropBonus).toBe(0);
 	expect(result.rareItemBonus).toBe(0.4);
 
 	// Burrowing spores base is 1 (4e-6 * 250k)
 	expect(result.rngItems?.['BURROWING_SPORES']).toBeCloseTo(1 * 1.4, 2);
 });
 
-test('Multiple rate modifiers stack additively', () => {
+test('Multiple rate modifiers stack correctly with multiplicative formula', () => {
 	const mockPet = new FarmingPet({
 		type: 'ROSE_DRAGON',
 		exp: 10 ** 20,
@@ -293,8 +292,8 @@ test('Multiple rate modifiers stack additively', () => {
 		pet: mockPet,
 	});
 
-	// Special crop bonus: Cropeetle 20% + Rarefinder 37.5% + Dragon's Gluttony 40% = 97.5%
-	expect(result.specialCropBonus).toBeCloseTo(0.975, 4);
+	// Special crop bonus: Only Cropeetle 20%
+	expect(result.specialCropBonus).toBeCloseTo(0.2, 4);
 
 	// Rare item bonus: Rarefinder 37.5% + Dragon's Gluttony 40% = 77.5%
 	expect(result.rareItemBonus).toBeCloseTo(0.775, 4);
