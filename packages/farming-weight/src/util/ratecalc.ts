@@ -300,10 +300,10 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		delete result.pendingRngItems;
 	}
 
-	if (result.specialCropBonus > 0) {
+	if (result.specialCropBonus > 0 || result.rareItemBonus > 0) {
 		const specialCrop = MATCHING_SPECIAL_CROP[crop];
 		if (specialCrop) {
-			const bonusMultiplier = 1 + result.specialCropBonus;
+			const bonusMultiplier = (1 + result.specialCropBonus) * (1 + result.rareItemBonus);
 			const newAmount = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces, bonusMultiplier);
 
 			result.otherCollection[specialCrop] = Math.round(newAmount.amount);
