@@ -76,7 +76,7 @@ export class Breadcrumb {
 		if (browser) {
 			return this.#title || document.title || 'Untitled';
 		}
-		return this.#title || 'Untitled';
+		return this.#title;
 	}
 
 	set title(title: string) {
