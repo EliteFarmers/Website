@@ -12,7 +12,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 		wiki: 'https://wiki.hypixel.net/Helianthus_Relic',
 		family: 'Fermento',
 		familyOrder: 4,
-		maxRarity: Rarity.Rare,
+		maxRarity: Rarity.Legendary,
 		baseStats: {
 			[Stat.FarmingFortune]: 40,
 		},
