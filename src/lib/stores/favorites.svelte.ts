@@ -28,6 +28,7 @@ export class Favorites {
 			name: this.#pageCtx.title,
 		};
 	});
+	key = $state(0);
 
 	constructor() {
 		$effect.pre(() => {
@@ -55,18 +56,22 @@ export class Favorites {
 		}
 		this.removeFavorite(favorite.href);
 		this.#favorites.current = [...this.current, favorite];
+		this.key = this.key + 1;
 	}
 
 	removeFavorite(href: string) {
 		if (this.current.some((favorite) => favorite.href === href)) {
 			this.#favorites.current = this.current.filter((favorite) => favorite.href !== href);
+			this.key = this.key + 1;
 			return true;
 		}
+		this.key = this.key + 1;
 		return false;
 	}
 
 	setFavorites(favorites: FavoritedLink[]) {
 		this.#favorites.current = favorites;
+		this.key = this.key + 1;
 	}
 }
 

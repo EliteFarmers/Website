@@ -15,7 +15,7 @@ export interface UpdateJacobFeatureRequestUpdateJacobFeature {
 	/** Blocked roles from participating in the guild's Jacob Leaderboards */
 	blockedRoles: DiscordRole[];
 	/** Blocked users from participating in the guild's Jacob Leaderboards */
-	blockedUsers: bigint[];
+	blockedUsers: number | string | bigint[];
 	/** Required roles to participate in the guild's Jacob Leaderboards */
 	requiredRoles: DiscordRole[];
 	/** Excluded participations from the guild's Jacob Leaderboards */

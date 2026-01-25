@@ -23,4 +23,5 @@ export const NotificationType = {
 	newComment: 'newComment',
 	newReply: 'newReply',
 	shopPurchase: 'shopPurchase',
+	guideSubmitted: 'guideSubmitted',
 } as const;

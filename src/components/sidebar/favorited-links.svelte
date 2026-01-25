@@ -107,9 +107,11 @@
 									{/each}
 								</div>
 							{:else}
-								{#each favorites.current as favorite, i (i)}
-									{@render favoriteLink(favorite)}
-								{/each}
+								{#key favorites.key}
+									{#each favorites.current as favorite, i (i)}
+										{@render favoriteLink(favorite)}
+									{/each}
+								{/key}
 							{/if}
 						</Sidebar.Menu>
 					</Collapsible.Content>

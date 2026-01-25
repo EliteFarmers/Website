@@ -16,6 +16,7 @@
 	import { formatIgn } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { tick } from 'svelte';
 
 	interface Props {
 		account: MinecraftAccountDto;
@@ -169,10 +170,12 @@
 	$effect.pre(() => {
 		pageCtx.setBreadcrumbs(crumbs);
 		pageCtx.setSidebar('Stats', sidebarCrumbs);
-		favorites.setPage({
-			icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
-			name: document.title,
-			href: page.url.pathname,
+		tick().then(() => {
+			favorites.setPage({
+				icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
+				name: document.title,
+				href: page.url.pathname,
+			});
 		});
 	});
 </script>

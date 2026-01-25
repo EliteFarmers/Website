@@ -11,6 +11,7 @@
 	import DateDisplay from '$comp/time/date-display.svelte';
 	import type { FullGuideDto, GuideDto } from '$lib/api/schemas';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
+	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import { GetGuideComments } from '$lib/remote/comments.remote';
 	import {
 		GetGuide,
@@ -240,6 +241,21 @@
 		const split = guide.author.name.split(' ');
 		return split.length === 1 ? split[0] : split.sort((a, b) => b.length - a.length)[0];
 	});
+
+	const pageCtx = getPageCtx();
+
+	$effect.pre(() => {
+		pageCtx.setBreadcrumbs([
+			{
+				name: 'Guides',
+				href: '/guides',
+			},
+			{
+				name: guideData?.title || '...',
+				href: `/guides/${guideData?.slug || ''}`,
+			},
+		]);
+	});
 </script>
 
 {#if !guideData}
@@ -324,69 +340,7 @@
 				</div>
 
 				<div class="mt-2 flex flex-wrap items-center justify-center gap-2">
-					<div class="bg-card flex items-center rounded-lg border">
-						<Button
-							variant={userVote === 1 ? 'default' : 'ghost'}
-							size="sm"
-							onclick={() => handleVote(guideData.id, 1)}
-							class="rounded-none rounded-l-md border-r px-3"
-						>
-							<ThumbsUp class="mr-2 h-4 w-4" />
-							Like
-						</Button>
-						<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold"
-							>{guideData.score.toLocaleString()}</span
-						>
-						<Button
-							variant={userVote === -1 ? 'default' : 'ghost'}
-							size="sm"
-							onclick={() => handleVote(guideData.id, -1)}
-							class="rounded-none rounded-r-md border-l px-3"
-						>
-							<ThumbsDown class="h-4 w-4" />
-						</Button>
-					</div>
-
-					<Button
-						variant={isBookmarked ? 'default' : 'outline'}
-						size="sm"
-						onclick={() => handleBookmark(guideData.id)}
-					>
-						<Star class="mr-2 h-4 w-4" />
-						Bookmark
-					</Button>
-
-					<Button
-						variant="outline"
-						size="sm"
-						onclick={() => navigator.clipboard.writeText(window.location.href)}
-					>
-						<Link class="mr-2 h-4 w-4" />
-						Share
-					</Button>
-
-					{#if gbl.session?.perms.admin || isOwner}
-						<DropdownMenu.Root>
-							<DropdownMenu.Trigger>
-								<Button variant="outline" size="sm" aria-label="Open menu">
-									<Ellipsis class="h-4 w-4" />
-								</Button>
-							</DropdownMenu.Trigger>
-							<DropdownMenu.Content align="end">
-								{#if gbl.session?.perms.admin}
-									<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)}>
-										Unpublish
-									</DropdownMenu.Item>
-								{/if}
-								<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}>
-									Edit
-								</DropdownMenu.Item>
-								<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
-									Delete
-								</DropdownMenu.Item>
-							</DropdownMenu.Content>
-						</DropdownMenu.Root>
-					{/if}
+					{@render guideActions()}
 				</div>
 			</div>
 		</div>
@@ -426,6 +380,10 @@
 				{/if}
 
 				<Separator class="my-8" />
+
+				<div class="mt-2 mb-4 flex flex-wrap items-center justify-start gap-2">
+					{@render guideActions()}
+				</div>
 
 				<CommentSectionContainer
 					guideId={guideData.id}
@@ -561,4 +519,56 @@
 			</div>
 		</AlertDialogContent>
 	</AlertDialog>
+
+	{#snippet guideActions()}
+		<div class="bg-card flex items-center rounded-lg border">
+			<Button
+				variant={userVote === 1 ? 'default' : 'ghost'}
+				size="sm"
+				onclick={() => handleVote(guideData.id, 1)}
+				class="rounded-none rounded-l-md border-r px-3"
+			>
+				<ThumbsUp class="mr-2 h-4 w-4" />
+				Like
+			</Button>
+			<span class="min-w-8 px-3 py-1 text-center text-sm font-semibold">{guideData.score.toLocaleString()}</span>
+			<Button
+				variant={userVote === -1 ? 'default' : 'ghost'}
+				size="sm"
+				onclick={() => handleVote(guideData.id, -1)}
+				class="rounded-none rounded-r-md border-l px-3"
+			>
+				<ThumbsDown class="h-4 w-4" />
+			</Button>
+		</div>
+
+		<Button variant={isBookmarked ? 'default' : 'outline'} size="sm" onclick={() => handleBookmark(guideData.id)}>
+			<Star class="mr-2 h-4 w-4" />
+			Bookmark
+		</Button>
+
+		<Button variant="outline" size="sm" onclick={() => navigator.clipboard.writeText(window.location.href)}>
+			<Link class="mr-2 h-4 w-4" />
+			Share
+		</Button>
+
+		{#if gbl.session?.perms.admin || isOwner}
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					<Button variant="outline" size="sm" aria-label="Open menu">
+						<Ellipsis class="h-4 w-4" />
+					</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content align="end">
+					{#if gbl.session?.perms.admin}
+						<DropdownMenu.Item onclick={() => (showUnpublishDialog = true)}>Unpublish</DropdownMenu.Item>
+					{/if}
+					<DropdownMenu.Item onclick={() => goto(`/guides/${guideData.slug}/edit`)}>Edit</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => (showDeleteDialog = true)} class="text-destructive">
+						Delete
+					</DropdownMenu.Item>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		{/if}
+	{/snippet}
 {/if}

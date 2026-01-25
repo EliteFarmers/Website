@@ -10,6 +10,7 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
 import type {
 	AccountSearchResultDto,
 	AccountWithPermsDto,
+	AddExcludedTimespanRequestAddExcludedTimespanRequestBody,
 	AddProductImageParams,
 	AddStyleImageParams,
 	AdminEventMemberDto,
@@ -26,6 +27,8 @@ import type {
 	AuthorizedAccountDto,
 	AuthorizedGuildDto,
 	BadgeDto,
+	BanParticipationRequestBanParticipationRequestBody,
+	BanPlayerRequestBanPlayerRequestBody,
 	BazaarOverviewResponse,
 	ChangeTeamOwnerRequest,
 	CommentDto,
@@ -182,6 +185,8 @@ import type {
 	SkyblockFiresalesResponse,
 	SkyblockGemShopsResponse,
 	SkyblockItemResponse,
+	SubmitScoreParams,
+	SubmitScoreResponse,
 	TagResponse,
 	ToggleRecapVisibilityRequestBody,
 	UpdateBadgeRequestUpdateBadge,
@@ -6918,6 +6923,271 @@ export const updateGuildJacobFeature = async (
 };
 
 /**
+ * @summary Add an excluded timespan
+ */
+export type addJacobLeaderboardExcludedTimespanResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type addJacobLeaderboardExcludedTimespanResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type addJacobLeaderboardExcludedTimespanResponseSuccess = addJacobLeaderboardExcludedTimespanResponse204 & {
+	headers: Headers;
+};
+export type addJacobLeaderboardExcludedTimespanResponseError = addJacobLeaderboardExcludedTimespanResponse401 & {
+	headers: Headers;
+};
+
+export type addJacobLeaderboardExcludedTimespanResponse =
+	| addJacobLeaderboardExcludedTimespanResponseSuccess
+	| addJacobLeaderboardExcludedTimespanResponseError;
+
+export const getAddJacobLeaderboardExcludedTimespanUrl = (discordId: bigint | number | string) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans`;
+};
+
+export const addJacobLeaderboardExcludedTimespan = async (
+	discordId: bigint | number | string,
+	addExcludedTimespanRequestAddExcludedTimespanRequestBody: AddExcludedTimespanRequestAddExcludedTimespanRequestBody,
+	options?: RequestInit
+) => {
+	return customFetch<addJacobLeaderboardExcludedTimespanResponse>(
+		getAddJacobLeaderboardExcludedTimespanUrl(discordId),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(addExcludedTimespanRequestAddExcludedTimespanRequestBody),
+		}
+	);
+};
+
+/**
+ * @summary Ban a specific participation from the leaderboard
+ */
+export type banParticipationFromJacobLeaderboardResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type banParticipationFromJacobLeaderboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type banParticipationFromJacobLeaderboardResponseSuccess = banParticipationFromJacobLeaderboardResponse204 & {
+	headers: Headers;
+};
+export type banParticipationFromJacobLeaderboardResponseError = banParticipationFromJacobLeaderboardResponse401 & {
+	headers: Headers;
+};
+
+export type banParticipationFromJacobLeaderboardResponse =
+	| banParticipationFromJacobLeaderboardResponseSuccess
+	| banParticipationFromJacobLeaderboardResponseError;
+
+export const getBanParticipationFromJacobLeaderboardUrl = (discordId: bigint | number | string) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/participations`;
+};
+
+export const banParticipationFromJacobLeaderboard = async (
+	discordId: bigint | number | string,
+	banParticipationRequestBanParticipationRequestBody: BanParticipationRequestBanParticipationRequestBody,
+	options?: RequestInit
+) => {
+	return customFetch<banParticipationFromJacobLeaderboardResponse>(
+		getBanParticipationFromJacobLeaderboardUrl(discordId),
+		{
+			...options,
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', ...options?.headers },
+			body: JSON.stringify(banParticipationRequestBanParticipationRequestBody),
+		}
+	);
+};
+
+/**
+ * @summary Ban a player from all Jacob leaderboards
+ */
+export type banPlayerFromJacobLeaderboardResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type banPlayerFromJacobLeaderboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type banPlayerFromJacobLeaderboardResponseSuccess = banPlayerFromJacobLeaderboardResponse204 & {
+	headers: Headers;
+};
+export type banPlayerFromJacobLeaderboardResponseError = banPlayerFromJacobLeaderboardResponse401 & {
+	headers: Headers;
+};
+
+export type banPlayerFromJacobLeaderboardResponse =
+	| banPlayerFromJacobLeaderboardResponseSuccess
+	| banPlayerFromJacobLeaderboardResponseError;
+
+export const getBanPlayerFromJacobLeaderboardUrl = (discordId: bigint | number | string) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/players`;
+};
+
+export const banPlayerFromJacobLeaderboard = async (
+	discordId: bigint | number | string,
+	banPlayerRequestBanPlayerRequestBody: BanPlayerRequestBanPlayerRequestBody,
+	options?: RequestInit
+) => {
+	return customFetch<banPlayerFromJacobLeaderboardResponse>(getBanPlayerFromJacobLeaderboardUrl(discordId), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(banPlayerRequestBanPlayerRequestBody),
+	});
+};
+
+/**
+ * @summary Remove an excluded timespan
+ */
+export type removeJacobLeaderboardExcludedTimespanResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type removeJacobLeaderboardExcludedTimespanResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type removeJacobLeaderboardExcludedTimespanResponseSuccess =
+	removeJacobLeaderboardExcludedTimespanResponse204 & {
+		headers: Headers;
+	};
+export type removeJacobLeaderboardExcludedTimespanResponseError = removeJacobLeaderboardExcludedTimespanResponse401 & {
+	headers: Headers;
+};
+
+export type removeJacobLeaderboardExcludedTimespanResponse =
+	| removeJacobLeaderboardExcludedTimespanResponseSuccess
+	| removeJacobLeaderboardExcludedTimespanResponseError;
+
+export const getRemoveJacobLeaderboardExcludedTimespanUrl = (
+	discordId: bigint | number | string,
+	start: bigint | number | string,
+	end: bigint | number | string
+) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans/${start}/${end}`;
+};
+
+export const removeJacobLeaderboardExcludedTimespan = async (
+	discordId: bigint | number | string,
+	start: bigint | number | string,
+	end: bigint | number | string,
+	options?: RequestInit
+) => {
+	return customFetch<removeJacobLeaderboardExcludedTimespanResponse>(
+		getRemoveJacobLeaderboardExcludedTimespanUrl(discordId, start, end),
+		{
+			...options,
+			method: 'DELETE',
+		}
+	);
+};
+
+/**
+ * @summary Unban a specific participation
+ */
+export type unbanParticipationFromJacobLeaderboardResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type unbanParticipationFromJacobLeaderboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type unbanParticipationFromJacobLeaderboardResponseSuccess =
+	unbanParticipationFromJacobLeaderboardResponse204 & {
+		headers: Headers;
+	};
+export type unbanParticipationFromJacobLeaderboardResponseError = unbanParticipationFromJacobLeaderboardResponse401 & {
+	headers: Headers;
+};
+
+export type unbanParticipationFromJacobLeaderboardResponse =
+	| unbanParticipationFromJacobLeaderboardResponseSuccess
+	| unbanParticipationFromJacobLeaderboardResponseError;
+
+export const getUnbanParticipationFromJacobLeaderboardUrl = (
+	discordId: bigint | number | string,
+	participationId: string
+) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/participations/${participationId}`;
+};
+
+export const unbanParticipationFromJacobLeaderboard = async (
+	discordId: bigint | number | string,
+	participationId: string,
+	options?: RequestInit
+) => {
+	return customFetch<unbanParticipationFromJacobLeaderboardResponse>(
+		getUnbanParticipationFromJacobLeaderboardUrl(discordId, participationId),
+		{
+			...options,
+			method: 'DELETE',
+		}
+	);
+};
+
+/**
+ * @summary Unban a player from Jacob leaderboards
+ */
+export type unbanPlayerFromJacobLeaderboardResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type unbanPlayerFromJacobLeaderboardResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type unbanPlayerFromJacobLeaderboardResponseSuccess = unbanPlayerFromJacobLeaderboardResponse204 & {
+	headers: Headers;
+};
+export type unbanPlayerFromJacobLeaderboardResponseError = unbanPlayerFromJacobLeaderboardResponse401 & {
+	headers: Headers;
+};
+
+export type unbanPlayerFromJacobLeaderboardResponse =
+	| unbanPlayerFromJacobLeaderboardResponseSuccess
+	| unbanPlayerFromJacobLeaderboardResponseError;
+
+export const getUnbanPlayerFromJacobLeaderboardUrl = (discordId: bigint | number | string, playerUuid: string) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/players/${playerUuid}`;
+};
+
+export const unbanPlayerFromJacobLeaderboard = async (
+	discordId: bigint | number | string,
+	playerUuid: string,
+	options?: RequestInit
+) => {
+	return customFetch<unbanPlayerFromJacobLeaderboardResponse>(
+		getUnbanPlayerFromJacobLeaderboardUrl(discordId, playerUuid),
+		{
+			...options,
+			method: 'DELETE',
+		}
+	);
+};
+
+/**
  * @summary Send a Jacob leaderboard to Discord
  */
 export type sendGuildJacobFeatureResponse204 = {
@@ -6959,6 +7229,63 @@ export const sendGuildJacobFeature = async (
 	return customFetch<sendGuildJacobFeatureResponse>(getSendGuildJacobFeatureUrl(discordId, leaderboardId), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * @summary Submit scores to a Jacob leaderboard
+ */
+export type submitScoreResponse200 = {
+	data: SubmitScoreResponse;
+	status: 200;
+};
+
+export type submitScoreResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type submitScoreResponseSuccess = submitScoreResponse200 & {
+	headers: Headers;
+};
+export type submitScoreResponseError = submitScoreResponse400 & {
+	headers: Headers;
+};
+
+export type submitScoreResponse = submitScoreResponseSuccess | submitScoreResponseError;
+
+export const getSubmitScoreUrl = (
+	discordId: bigint | number | string,
+	leaderboardId: string,
+	params?: SubmitScoreParams
+) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/user/guild/${discordId}/jacob/${leaderboardId}/submit?${stringifiedParams}`
+		: `${ELITE_API_URL}/user/guild/${discordId}/jacob/${leaderboardId}/submit`;
+};
+
+export const submitScore = async (
+	discordId: bigint | number | string,
+	leaderboardId: string,
+	submitScoreBody: string[],
+	params?: SubmitScoreParams,
+	options?: RequestInit
+) => {
+	return customFetch<submitScoreResponse>(getSubmitScoreUrl(discordId, leaderboardId, params), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(submitScoreBody),
 	});
 };
 
