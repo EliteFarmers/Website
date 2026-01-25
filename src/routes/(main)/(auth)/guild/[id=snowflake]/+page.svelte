@@ -14,6 +14,7 @@
 	import * as Card from '$ui/card';
 	import { Input } from '$ui/input';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import RotateCw from '@lucide/svelte/icons/rotate-cw';
 	import type { ActionData, PageData } from './$types';
 
 	interface Props {
@@ -69,17 +70,6 @@
 			</Button>
 		{/if}
 	</div>
-
-	<Alert.Root class="border-link/30 w-full max-w-4xl border-2">
-		<Alert.Title class="text-lg">Want to unlock a feature?</Alert.Title>
-		<Alert.Description class="text-base">
-			<p>
-				Subscribe to the appropriate package in the
-				<ExternalLinkButton href="/support">support server's</ExternalLinkButton> built-in Discord Shop and/or open
-				a ticket in the support server to discuss options!
-			</p>
-		</Alert.Description>
-	</Alert.Root>
 
 	{#if form?.error}
 		<p class="text-destructive">{form.error}</p>
@@ -139,6 +129,17 @@
 		</Card.Root>
 	</section>
 
+	<Alert.Root class="border-link/30 w-full max-w-4xl border-2">
+		<Alert.Title class="text-lg">Want to unlock a feature?</Alert.Title>
+		<Alert.Description class="text-base">
+			<p>
+				Subscribe to the appropriate package in the
+				<ExternalLinkButton href="/support">support server's</ExternalLinkButton> built-in Discord Shop and/or open
+				a ticket in the support server to discuss options!
+			</p>
+		</Alert.Description>
+	</Alert.Root>
+
 	<section class="bg-card flex w-full max-w-4xl flex-col rounded-lg border-2 p-4">
 		<SettingListItem
 			title="Upcoming Contest Pings"
@@ -173,6 +174,19 @@
 			{/snippet}
 
 			<Button href="/guild/{data.guildId}/events" class="px-8" disabled={!features?.eventsEnabled}>Manage</Button>
+		</SettingListItem>
+	</section>
+
+	<section class="bg-card flex w-full max-w-4xl flex-col rounded-lg border-2 p-4">
+		<SettingListItem title="Request Data Refresh">
+			{#snippet subtitle()}
+				<span class="text-muted-foreground text-sm"
+					>Something out of date? You can get your guild data refreshed here.</span
+				>
+			{/snippet}
+			<form action="?/updateServer" method="POST" class="flex flex-row gap-4" use:enhance>
+				<Button type="submit" class="px-8"><RotateCw size={16} />Refresh</Button>
+			</form>
 		</SettingListItem>
 	</section>
 
