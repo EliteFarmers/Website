@@ -9,6 +9,6 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  */
 
 export interface RemoveExcludedTimespanRequestRemoveExcludedTimespanRequestBody {
-	start: number | string | number | string | bigint;
-	end: number | string | number | string | bigint;
+	start: number | string | number | string | number | string | bigint;
+	end: number | string | number | string | number | string | bigint;
 }

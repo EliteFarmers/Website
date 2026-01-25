@@ -28,5 +28,7 @@ export interface BanParticipationRequest {
 		| string
 		| number
 		| string
+		| number
+		| string
 		| bigint;
 }

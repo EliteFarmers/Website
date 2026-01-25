@@ -2348,18 +2348,6 @@ export const zodAddJacobLeaderboardExcludedTimespanBody = zod.object({
 });
 
 /**
- * @summary Remove an excluded timespan
- */
-export const zodRemoveJacobLeaderboardExcludedTimespanParams = zod.object({
-	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
-});
-
-export const zodRemoveJacobLeaderboardExcludedTimespanQueryParams = zod.object({
-	start: zod.number(),
-	end: zod.number(),
-});
-
-/**
  * @summary Ban a specific participation from the leaderboard
  */
 export const zodBanParticipationFromJacobLeaderboardParams = zod.object({
@@ -2381,6 +2369,15 @@ export const zodBanPlayerFromJacobLeaderboardParams = zod.object({
 
 export const zodBanPlayerFromJacobLeaderboardBody = zod.object({
 	playerUuid: zod.string(),
+});
+
+/**
+ * @summary Remove an excluded timespan
+ */
+export const zodRemoveJacobLeaderboardExcludedTimespanParams = zod.object({
+	discordId: zod.number().describe('Discord Snowflake ID of the requested resource (guild, user, etc.)'),
+	start: zod.number(),
+	end: zod.number(),
 });
 
 /**

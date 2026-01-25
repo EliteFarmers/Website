@@ -26,8 +26,12 @@ export interface AddExcludedTimespanRequest {
 		| string
 		| number
 		| string
+		| number
+		| string
 		| bigint;
 	end:
+		| number
+		| string
 		| number
 		| string
 		| number

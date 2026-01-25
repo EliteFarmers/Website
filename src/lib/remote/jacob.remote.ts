@@ -6,10 +6,10 @@ import {
 	createGuildJacobLeaderboard,
 	deleteGuildJacobLeaderboard,
 	getUserGuild,
+	removeJacobLeaderboardExcludedTimespan,
 	sendGuildJacobFeature,
 	unbanParticipationFromJacobLeaderboard,
 	unbanPlayerFromJacobLeaderboard,
-	updateGuildJacobFeature,
 	updateGuildJacobLeaderboard,
 	type CropRecords,
 } from '$lib/api';
@@ -373,24 +373,11 @@ export const unbanJacobTimespan = form(
 			throw error(401, 'Unauthorized');
 		}
 
-		const guild = await getGuild(guildId, locals.session);
-		const feature = guild.guild?.features?.jacobLeaderboard;
-		if (!feature) throw error(404, 'Jacob Leaderboard feature not found');
-
-		feature.excludedTimespans ??= [];
-
-		if (
-			!feature.excludedTimespans.some(
-				(t) => t.start.toString() === data.startTime && t.end.toString() === data.endTime
-			)
-		)
-			return { error: 'Timespan not found in excluded list' };
-
-		feature.excludedTimespans = feature.excludedTimespans.filter(
-			(t) => t.start.toString() !== data.startTime || t.end.toString() !== data.endTime
-		);
-
-		const { response, error: e } = await updateGuildJacobFeature(guildId, feature).catch((e) => {
+		const { response, error: e } = await removeJacobLeaderboardExcludedTimespan(
+			guildId,
+			data.startTime,
+			data.endTime
+		).catch((e) => {
 			console.log(e);
 			throw error(500, 'Internal Server Error');
 		});

@@ -164,7 +164,6 @@ import type {
 	ProfileNamesDto,
 	PublicGuildDto,
 	RejectGuideRequest,
-	RemoveJacobLeaderboardExcludedTimespanParams,
 	RemoveTestEntitlementParams,
 	ReorderCategoryProductsRequest,
 	ReorderIntRequest,
@@ -6968,64 +6967,6 @@ export const addJacobLeaderboardExcludedTimespan = async (
 };
 
 /**
- * @summary Remove an excluded timespan
- */
-export type removeJacobLeaderboardExcludedTimespanResponse204 = {
-	data: void;
-	status: 204;
-};
-
-export type removeJacobLeaderboardExcludedTimespanResponse401 = {
-	data: void;
-	status: 401;
-};
-
-export type removeJacobLeaderboardExcludedTimespanResponseSuccess =
-	removeJacobLeaderboardExcludedTimespanResponse204 & {
-		headers: Headers;
-	};
-export type removeJacobLeaderboardExcludedTimespanResponseError = removeJacobLeaderboardExcludedTimespanResponse401 & {
-	headers: Headers;
-};
-
-export type removeJacobLeaderboardExcludedTimespanResponse =
-	| removeJacobLeaderboardExcludedTimespanResponseSuccess
-	| removeJacobLeaderboardExcludedTimespanResponseError;
-
-export const getRemoveJacobLeaderboardExcludedTimespanUrl = (
-	discordId: bigint | number | string,
-	params: RemoveJacobLeaderboardExcludedTimespanParams
-) => {
-	const normalizedParams = new URLSearchParams();
-
-	Object.entries(params || {}).forEach(([key, value]) => {
-		if (value !== undefined) {
-			normalizedParams.append(key, value === null ? 'null' : value.toString());
-		}
-	});
-
-	const stringifiedParams = normalizedParams.toString();
-
-	return stringifiedParams.length > 0
-		? `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans?${stringifiedParams}`
-		: `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans`;
-};
-
-export const removeJacobLeaderboardExcludedTimespan = async (
-	discordId: bigint | number | string,
-	params: RemoveJacobLeaderboardExcludedTimespanParams,
-	options?: RequestInit
-) => {
-	return customFetch<removeJacobLeaderboardExcludedTimespanResponse>(
-		getRemoveJacobLeaderboardExcludedTimespanUrl(discordId, params),
-		{
-			...options,
-			method: 'DELETE',
-		}
-	);
-};
-
-/**
  * @summary Ban a specific participation from the leaderboard
  */
 export type banParticipationFromJacobLeaderboardResponse204 = {
@@ -7108,6 +7049,54 @@ export const banPlayerFromJacobLeaderboard = async (
 		headers: { 'Content-Type': 'application/json', ...options?.headers },
 		body: JSON.stringify(banPlayerRequestBanPlayerRequestBody),
 	});
+};
+
+/**
+ * @summary Remove an excluded timespan
+ */
+export type removeJacobLeaderboardExcludedTimespanResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type removeJacobLeaderboardExcludedTimespanResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type removeJacobLeaderboardExcludedTimespanResponseSuccess =
+	removeJacobLeaderboardExcludedTimespanResponse204 & {
+		headers: Headers;
+	};
+export type removeJacobLeaderboardExcludedTimespanResponseError = removeJacobLeaderboardExcludedTimespanResponse401 & {
+	headers: Headers;
+};
+
+export type removeJacobLeaderboardExcludedTimespanResponse =
+	| removeJacobLeaderboardExcludedTimespanResponseSuccess
+	| removeJacobLeaderboardExcludedTimespanResponseError;
+
+export const getRemoveJacobLeaderboardExcludedTimespanUrl = (
+	discordId: bigint | number | string,
+	start: bigint | number | string,
+	end: bigint | number | string
+) => {
+	return `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans/${start}/${end}`;
+};
+
+export const removeJacobLeaderboardExcludedTimespan = async (
+	discordId: bigint | number | string,
+	start: bigint | number | string,
+	end: bigint | number | string,
+	options?: RequestInit
+) => {
+	return customFetch<removeJacobLeaderboardExcludedTimespanResponse>(
+		getRemoveJacobLeaderboardExcludedTimespanUrl(discordId, start, end),
+		{
+			...options,
+			method: 'DELETE',
+		}
+	);
 };
 
 /**
