@@ -31,7 +31,6 @@
 	}: Props = $props();
 
 	const commentCount = $derived(comments.length);
-	const rootCommentCount = $derived(comments.filter((c) => !c.parentId).length);
 
 	const gbl = getGlobalContext();
 </script>
@@ -40,18 +39,9 @@
 	<!-- Header -->
 	<div class="flex flex-col gap-1">
 		<h2 class="text-xl font-semibold">
-			{commentCount === 0
-				? 'No comments yet'
-				: `${rootCommentCount} ${rootCommentCount === 1 ? 'comment' : 'comments'}`}
+			{commentCount === 0 ? 'No comments yet' : `${commentCount} ${commentCount === 1 ? 'comment' : 'comments'}`}
 		</h2>
-		<p class="text-muted-foreground text-sm">
-			{commentCount > rootCommentCount
-				? `${commentCount - rootCommentCount} ${commentCount - rootCommentCount === 1 ? 'reply' : 'replies'}`
-				: 'Be the first to comment'}
-		</p>
 	</div>
-
-	<Separator />
 
 	<!-- Root comment composer -->
 	{#if gbl.authorized}
