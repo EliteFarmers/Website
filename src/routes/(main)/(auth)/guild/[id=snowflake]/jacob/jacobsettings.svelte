@@ -206,12 +206,12 @@
 						</p>
 					</Accordion.Trigger>
 					<Accordion.Content>
-						{#each entries as entry (entry)}
+						{#each entries as entry, i (entry)}
 							{@const ban = banParticipationForm.for(
-								`${lb.id}-${entry.uuid}-${entry.record?.timestamp}-${entry.record?.crop}`
+								`${lb.id}-${entry.uuid}-${entry.record?.timestamp}-${entry.record?.crop}-${i}`
 							)}
 							{@const banPlayer = banPlayerForm.for(
-								`${lb.id}-${entry.uuid}-player-${entry.record?.crop}`
+								`${lb.id}-${entry.uuid}-player-${entry.record?.crop}-${i}`
 							)}
 							<div class="my-2 flex flex-row items-center gap-8">
 								<form {...ban}>
