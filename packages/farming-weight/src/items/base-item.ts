@@ -6,7 +6,7 @@ import type { Stat, StatsRecord } from '../constants/stats.js';
 import type { Upgrade, UpgradeCost } from '../constants/upgrades.js';
 import type { GemSlotCost, GemSlotRequirement } from '../fortune/upgradeable.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
-import { type FarmingToolType, type GearSlot, type ItemDefinition } from './definitions.js';
+import type { FarmingToolType, GearSlot, ItemDefinition } from './definitions.js';
 
 export abstract class BaseItem implements ItemDefinition {
 	abstract get skyblockId(): string;
@@ -29,7 +29,5 @@ export abstract class BaseItem implements ItemDefinition {
 	family?: string;
 	familyOrder?: number;
 	contestStatsMultiplier?: number;
-	perLevelStats?: { skill: Skill; appliesTo?: ReforgeTarget[]; stats: Partial<Record<Stat, number>>; };
-
-	constructor() {}
+	perLevelStats?: { skill: Skill; appliesTo?: ReforgeTarget[]; stats: Partial<Record<Stat, number>> };
 }

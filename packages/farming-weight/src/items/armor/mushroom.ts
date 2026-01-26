@@ -6,10 +6,18 @@ import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
 export class MushroomHelmet extends BaseItem {
-	get skyblockId() { return 'MUSHROOM_HELMET'; }
-	get name() { return 'Mushroom Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Mushroom_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'MUSHROOM_HELMET';
+	}
+	get name() {
+		return 'Mushroom Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Mushroom_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'MUSHROOM_ARMOR';
 	override slot = GearSlot.Helmet;
@@ -29,10 +37,18 @@ export class MushroomHelmet extends BaseItem {
 }
 
 export class MushroomChestplate extends BaseItem {
-	get skyblockId() { return 'MUSHROOM_CHESTPLATE'; }
-	get name() { return 'Mushroom Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Mushroom_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'MUSHROOM_CHESTPLATE';
+	}
+	get name() {
+		return 'Mushroom Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Mushroom_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'MUSHROOM_ARMOR';
 	override slot = GearSlot.Chestplate;
@@ -52,10 +68,18 @@ export class MushroomChestplate extends BaseItem {
 }
 
 export class MushroomLeggings extends BaseItem {
-	get skyblockId() { return 'MUSHROOM_LEGGINGS'; }
-	get name() { return 'Mushroom Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Mushroom_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'MUSHROOM_LEGGINGS';
+	}
+	get name() {
+		return 'Mushroom Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Mushroom_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'MUSHROOM_ARMOR';
 	override slot = GearSlot.Leggings;
@@ -75,10 +99,18 @@ export class MushroomLeggings extends BaseItem {
 }
 
 export class MushroomBoots extends BaseItem {
-	get skyblockId() { return 'MUSHROOM_BOOTS'; }
-	get name() { return 'Mushroom Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Mushroom_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'MUSHROOM_BOOTS';
+	}
+	get name() {
+		return 'Mushroom Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Mushroom_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'MUSHROOM_ARMOR';
 	override slot = GearSlot.Boots;

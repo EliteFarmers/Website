@@ -1,4 +1,5 @@
 import { getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
+import type { LateCalculationContext, LateCalculationResult } from '../constants/latecalc.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat, type StatBreakdown } from '../constants/stats.js';
 import {
@@ -159,6 +160,49 @@ export class FarmingPet {
 			}
 		}
 		return full;
+	}
+
+	/**
+	 * Get late-phase stats for abilities that depend on total fortune.
+	 * Called after all base stats have been computed.
+	 */
+	getLateStats(ctx: LateCalculationContext): LateCalculationResult {
+		const result: LateCalculationResult = {};
+
+		if (!this.info.abilities) {
+			return result;
+		}
+
+		for (const ability of this.info.abilities) {
+			if (!ability.lateComputed) continue;
+
+			// Check if ability exists for this pet
+			if (ability.exists) {
+				const player = ctx.player as FarmingPlayer | undefined;
+				if (!ability.exists({ player, options: this.options ?? {} }, this)) {
+					continue;
+				}
+			}
+
+			const lateResult = ability.lateComputed(ctx, this);
+
+			// Merge additive values
+			if (lateResult.additive !== undefined) {
+				result.additive = (result.additive ?? 0) + lateResult.additive;
+			}
+
+			// Combine multipliers (multiplicative stacking)
+			if (lateResult.multiplier !== undefined) {
+				result.multiplier = (result.multiplier ?? 1) * lateResult.multiplier;
+			}
+
+			// Merge breakdown entries
+			if (lateResult.breakdown) {
+				result.breakdown = { ...result.breakdown, ...lateResult.breakdown };
+			}
+		}
+
+		return result;
 	}
 
 	getFormattedName() {

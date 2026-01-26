@@ -1,5 +1,6 @@
 import { type GardenChipId, getChipLevel, getChipTempMultiplierPerLevel, normalizeChipId } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
+import type { LateCalculationContext } from '../constants/latecalc.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
@@ -412,6 +413,30 @@ export class FarmingPlayer {
 				// Temporary fortune is always FarmingFortune
 				if (contributingStats.includes(entry.stat)) {
 					add(name, entry.value, entry.stat);
+				}
+			}
+		}
+
+		// ===== PHASE 2: Late Calculations =====
+		// Calculate base fortune total before late-phase modifiers
+		const baseFortune = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
+
+		// Create context for late calculations
+		const lateCtx: LateCalculationContext = {
+			player: this,
+			baseFortune,
+			stat,
+			crop: targetCrop,
+		};
+
+		// Pet late calculations (e.g., Pig Pet's Trample)
+		if (this.selectedPet) {
+			const lateResult = this.selectedPet.getLateStats(lateCtx);
+
+			// Apply late result to breakdown
+			if (lateResult.breakdown) {
+				for (const [name, entry] of Object.entries(lateResult.breakdown)) {
+					breakdown[name] = entry;
 				}
 			}
 		}

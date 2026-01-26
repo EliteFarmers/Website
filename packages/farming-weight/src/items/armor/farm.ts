@@ -2,13 +2,14 @@ import { Rarity } from '../../constants/reforges.js';
 import { Skill } from '../../constants/skills.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
+import type { GemSlotCost } from '../../fortune/upgradeable.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
-const FARM_ARMOR_GEM_SLOTS = [
+const FARM_ARMOR_GEM_SLOTS: { slot_type: string; costs: GemSlotCost[] }[] = [
 	{
 		slot_type: 'PERIDOT',
-		costs: [] as { type: 'ITEM' | 'COINS'; item_id?: string; amount?: number; coins?: number }[],
+		costs: [],
 	},
 	{
 		slot_type: 'PERIDOT',
@@ -20,10 +21,18 @@ const FARM_ARMOR_GEM_SLOTS = [
 ];
 
 export class FarmArmorHelmet extends BaseItem {
-	get skyblockId() { return 'FARM_ARMOR_HELMET'; }
-	get name() { return 'Farm Armor Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Farm_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'FARM_ARMOR_HELMET';
+	}
+	get name() {
+		return 'Farm Armor Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Farm_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'FARM_ARMOR';
 	override slot = GearSlot.Helmet;
@@ -44,10 +53,18 @@ export class FarmArmorHelmet extends BaseItem {
 }
 
 export class FarmArmorChestplate extends BaseItem {
-	get skyblockId() { return 'FARM_ARMOR_CHESTPLATE'; }
-	get name() { return 'Farm Armor Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Farm_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'FARM_ARMOR_CHESTPLATE';
+	}
+	get name() {
+		return 'Farm Armor Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Farm_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'FARM_ARMOR';
 	override slot = GearSlot.Chestplate;
@@ -68,10 +85,18 @@ export class FarmArmorChestplate extends BaseItem {
 }
 
 export class FarmArmorLeggings extends BaseItem {
-	get skyblockId() { return 'FARM_ARMOR_LEGGINGS'; }
-	get name() { return 'Farm Armor Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Farm_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'FARM_ARMOR_LEGGINGS';
+	}
+	get name() {
+		return 'Farm Armor Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Farm_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'FARM_ARMOR';
 	override slot = GearSlot.Leggings;
@@ -92,10 +117,18 @@ export class FarmArmorLeggings extends BaseItem {
 }
 
 export class FarmArmorBoots extends BaseItem {
-	get skyblockId() { return 'FARM_ARMOR_BOOTS'; }
-	get name() { return 'Farm Armor Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Farm_Armor'; }
-	get maxRarity() { return Rarity.Epic; }
+	get skyblockId() {
+		return 'FARM_ARMOR_BOOTS';
+	}
+	get name() {
+		return 'Farm Armor Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Farm_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Epic;
+	}
 
 	override family = 'FARM_ARMOR';
 	override slot = GearSlot.Boots;

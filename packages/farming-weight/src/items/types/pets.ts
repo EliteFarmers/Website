@@ -1,5 +1,6 @@
-import { FarmingPetStatType } from '../../constants/pets.js';
-import { Rarity, type RarityRecord } from '../../constants/reforges.js';
+import type { LateCalculationContext, LateCalculationResult } from '../../constants/latecalc.js';
+import type { FarmingPetStatType } from '../../constants/pets.js';
+import type { Rarity, RarityRecord } from '../../constants/reforges.js';
 import type { Skill } from '../../constants/skills.js';
 import type { StatsRecord } from '../../constants/stats.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';
@@ -21,7 +22,13 @@ export interface FarmingPetType {
 export interface FarmingPetAbility {
 	name: string;
 	exists?: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => boolean;
+	/** Computed stats during base phase calculation */
 	computed: (player: { player?: FarmingPlayer; options: PlayerOptions }, pet: FarmingPet) => StatsRecord;
+	/**
+	 * Late-phase calculation that runs after all base stats are computed.
+	 * Use this for abilities that depend on total fortune (e.g., Pig Pet's Trample).
+	 */
+	lateComputed?: (ctx: LateCalculationContext, pet: FarmingPet) => LateCalculationResult;
 	ratesModifier?: (
 		current: DetailedDropsResult,
 		options: CalculateCropDetailedDropsOptions,

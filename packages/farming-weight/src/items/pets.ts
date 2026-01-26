@@ -1,4 +1,4 @@
-import { FarmingPets, FarmingPetStatType } from '../constants/pets.js';
+import { FarmingPetStatType, FarmingPets } from '../constants/pets.js';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { unlockedPestBestiaryTiers } from '../util/pests.js';
@@ -10,7 +10,7 @@ import { MooshroomCowPet } from './pets/mooshroom-cow.js';
 import { MosquitoPet } from './pets/mosquito.js';
 import { PigPet } from './pets/pig.js';
 import { RabbitPet } from './pets/rabbit.js';
-import { RoseDragonPet, setFarmingPetsRef } from './pets/rose-dragon.js';
+import { RoseDragonPet } from './pets/rose-dragon.js';
 import { SlugPet } from './pets/slug.js';
 import type { FarmingPetAbility, FarmingPetInfo, FarmingPetItemInfo, FarmingPetType } from './types/pets.js';
 
@@ -29,9 +29,6 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 	[FarmingPets.RoseDragon]: new RoseDragonPet(),
 	[FarmingPets.Pig]: new PigPet(),
 };
-
-// Set the reference for Rose Dragon's Symbiosis ability
-setFarmingPetsRef(FARMING_PETS);
 
 export const FARMING_PET_ITEMS: Record<string, FarmingPetItemInfo> = {
 	YELLOW_BANDANA: {

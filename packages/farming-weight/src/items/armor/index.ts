@@ -8,4 +8,3 @@ export { MushroomBoots, MushroomChestplate, MushroomHelmet, MushroomLeggings } f
 export { RabbitBoots, RabbitChestplate, RabbitHelmet, RabbitLeggings } from './rabbit.js';
 export { FarmerBoots, LanternHelmet, RanchersBoots } from './special.js';
 export { SquashBoots, SquashChestplate, SquashHelmet, SquashLeggings } from './squash.js';
-

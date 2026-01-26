@@ -1,4 +1,4 @@
-import { FarmingPets, FarmingPetStatType } from '../../constants/pets.js';
+import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import { FarmingPetDefinition } from '../base-pet.js';
@@ -29,13 +29,18 @@ export class PigPet extends FarmingPetDefinition {
 		{
 			name: 'Trample',
 			exists: (_, pet) => pet.rarity === Rarity.Legendary,
-			computed: ({ player }) => {
-				const fortune = (player?.fortune ?? 0) + (player?.tempFortune ?? 0);
+			computed: () => ({}), // No base stats, uses lateComputed
+			lateComputed: (ctx) => {
+				// Apply 0.25x multiplier (75% reduction) to total fortune
+				const reduction = -ctx.baseFortune * 0.75;
 				return {
-					[Stat.FarmingFortune]: {
-						name: 'Trample (75% Reduction)',
-						value: -fortune * 0.75,
-						type: FarmingPetStatType.Ability,
+					multiplier: 0.25,
+					breakdown: {
+						'Trample (75% Reduction)': {
+							value: reduction,
+							stat: Stat.FarmingFortune,
+							factor: 0.25,
+						},
 					},
 				};
 			},

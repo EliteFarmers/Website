@@ -75,7 +75,12 @@ describe('Armor Definitions Integrity', () => {
 			expect(armor.name).toContain('Fermento');
 			expect(armor.family).toBe('FERMENTO');
 			expect(armor.maxRarity).toBe(Rarity.Legendary);
-			expect(armor.special).toEqual([SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus]);
+			expect(armor.special).toEqual([
+				SpecialCrop.Cropie,
+				SpecialCrop.Squash,
+				SpecialCrop.Fermento,
+				SpecialCrop.Helianthus,
+			]);
 			expect(armor.skillReq?.[Skill.Farming]).toBe(40);
 			expect(armor.gemSlots).toHaveLength(2);
 		}

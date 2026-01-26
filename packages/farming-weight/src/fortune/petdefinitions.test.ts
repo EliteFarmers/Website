@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPets, FarmingPetStatType } from '../items/pets.js';
+import { FARMING_PET_ITEMS, FARMING_PETS, FarmingPetStatType, FarmingPets } from '../items/pets.js';
 import { FarmingPet } from './farmingpet.js';
 
 describe('Pet Definitions Integrity', () => {
@@ -166,28 +166,45 @@ describe('Pet Fortune Calculations', () => {
 	});
 
 	test('Mosquito pet gives SugarCane fortune', () => {
-		const pet = new FarmingPet({
-			type: 'MOSQUITO',
-			exp: 30000000000,
-			tier: 'LEGENDARY',
-			heldItem: null,
-		}, { uniqueVisitors: 84 });
+		const pet = new FarmingPet(
+			{
+				type: 'MOSQUITO',
+				exp: 30000000000,
+				tier: 'LEGENDARY',
+				heldItem: null,
+			},
+			{ uniqueVisitors: 84 }
+		);
 		expect(pet.level).toBe(100);
 		// SugarCane Fortune: min(level * 0.02 * visitors, 175) = min(100 * 0.02 * 84, 175) = min(168, 175) = 168
 		expect(pet.getFortune(Stat.SugarCaneFortune)).toBe(168);
 	});
 
 	test('Rose Dragon level 200 fortune', () => {
-		const pet = new FarmingPet({
-			type: 'ROSE_DRAGON',
-			exp: 210000000000, // Very high to ensure level 200
-			tier: 'LEGENDARY',
-			heldItem: null,
-		}, { 
-			farmingLevel: 60,
-			milestones: { WHEAT: 46, CARROT: 46, POTATO: 46, MELON: 46, PUMPKIN: 46, CACTUS: 46, SUGAR_CANE: 46, COCOA_BEANS: 46, MUSHROOM: 46, NETHER_WART: 46 },
-			pets: [],
-		});
+		const pet = new FarmingPet(
+			{
+				type: 'ROSE_DRAGON',
+				exp: 210000000000, // Very high to ensure level 200
+				tier: 'LEGENDARY',
+				heldItem: null,
+			},
+			{
+				farmingLevel: 60,
+				milestones: {
+					WHEAT: 46,
+					CARROT: 46,
+					POTATO: 46,
+					MELON: 46,
+					PUMPKIN: 46,
+					CACTUS: 46,
+					SUGAR_CANE: 46,
+					COCOA_BEANS: 46,
+					MUSHROOM: 46,
+					NETHER_WART: 46,
+				},
+				pets: [],
+			}
+		);
 		expect(pet.level).toBe(200);
 		// Base Stats (level >= 101): 200 * 0.2 = 40
 		// Garden Power (level >= 101): 60 * (3 * 200 / 200) = 60 * 3 = 180
@@ -198,25 +215,28 @@ describe('Pet Fortune Calculations', () => {
 	});
 
 	test('Hedgehog Hunter Insight fortune', () => {
-		const pet = new FarmingPet({
-			type: 'HEDGEHOG',
-			exp: 30000000000,
-			tier: 'LEGENDARY',
-			heldItem: null,
-		}, {
-			bestiaryKills: {
-				pest_mite_1: 50000,
-				pest_cricket_1: 50000,
-				pest_moth_1: 50000,
-				pest_worm_1: 50000,
-				pest_slug_1: 50000,
-				pest_beetle_1: 50000,
-				pest_locust_1: 50000,
-				pest_rat_1: 50000,
-				pest_mosquito_1: 50000,
-				pest_fly_1: 50000,
+		const pet = new FarmingPet(
+			{
+				type: 'HEDGEHOG',
+				exp: 30000000000,
+				tier: 'LEGENDARY',
+				heldItem: null,
+			},
+			{
+				bestiaryKills: {
+					pest_mite_1: 50000,
+					pest_cricket_1: 50000,
+					pest_moth_1: 50000,
+					pest_worm_1: 50000,
+					pest_slug_1: 50000,
+					pest_beetle_1: 50000,
+					pest_locust_1: 50000,
+					pest_rat_1: 50000,
+					pest_mosquito_1: 50000,
+					pest_fly_1: 50000,
+				},
 			}
-		});
+		);
 		expect(pet.level).toBe(100);
 		// 10 pests with all 15 tiers unlocked each = 150 tiers * 0.7 = 105 fortune
 		expect(pet.fortune).toBe(105);

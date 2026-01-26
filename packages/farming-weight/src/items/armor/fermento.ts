@@ -26,10 +26,18 @@ const FERMENTO_GEM_SLOTS = [
 ];
 
 export class FermentoHelmet extends BaseItem {
-	get skyblockId() { return 'FERMENTO_HELMET'; }
-	get name() { return 'Fermento Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Fermento_Armor'; }
-	get maxRarity() { return Rarity.Legendary; }
+	get skyblockId() {
+		return 'FERMENTO_HELMET';
+	}
+	get name() {
+		return 'Fermento Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Fermento_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Legendary;
+	}
 
 	override family = 'FERMENTO';
 	override slot = GearSlot.Helmet;
@@ -61,10 +69,18 @@ export class FermentoHelmet extends BaseItem {
 }
 
 export class FermentoChestplate extends BaseItem {
-	get skyblockId() { return 'FERMENTO_CHESTPLATE'; }
-	get name() { return 'Fermento Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Fermento_Armor'; }
-	get maxRarity() { return Rarity.Legendary; }
+	get skyblockId() {
+		return 'FERMENTO_CHESTPLATE';
+	}
+	get name() {
+		return 'Fermento Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Fermento_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Legendary;
+	}
 
 	override family = 'FERMENTO';
 	override slot = GearSlot.Chestplate;
@@ -96,10 +112,18 @@ export class FermentoChestplate extends BaseItem {
 }
 
 export class FermentoLeggings extends BaseItem {
-	get skyblockId() { return 'FERMENTO_LEGGINGS'; }
-	get name() { return 'Fermento Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Fermento_Armor'; }
-	get maxRarity() { return Rarity.Legendary; }
+	get skyblockId() {
+		return 'FERMENTO_LEGGINGS';
+	}
+	get name() {
+		return 'Fermento Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Fermento_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Legendary;
+	}
 
 	override family = 'FERMENTO';
 	override slot = GearSlot.Leggings;
@@ -131,10 +155,18 @@ export class FermentoLeggings extends BaseItem {
 }
 
 export class FermentoBoots extends BaseItem {
-	get skyblockId() { return 'FERMENTO_BOOTS'; }
-	get name() { return 'Fermento Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Fermento_Armor'; }
-	get maxRarity() { return Rarity.Legendary; }
+	get skyblockId() {
+		return 'FERMENTO_BOOTS';
+	}
+	get name() {
+		return 'Fermento Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Fermento_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Legendary;
+	}
 
 	override family = 'FERMENTO';
 	override slot = GearSlot.Boots;

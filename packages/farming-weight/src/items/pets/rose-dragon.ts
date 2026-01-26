@@ -1,17 +1,11 @@
-import { FarmingPets, FarmingPetStatType } from '../../constants/pets.js';
+import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';
+import type { FarmingPlayer } from '../../player/player.js';
 import type { CalculateCropDetailedDropsOptions, DetailedDropsResult } from '../../util/ratecalc.js';
 import { FarmingPetDefinition } from '../base-pet.js';
-import type { FarmingPetAbility, FarmingPetInfo } from '../types/pets.js';
-
-// This will be set by pets.ts after FARMING_PETS is created
-let FARMING_PETS_REF: Record<FarmingPets, FarmingPetInfo> | null = null;
-
-export function setFarmingPetsRef(ref: Record<FarmingPets, FarmingPetInfo>) {
-	FARMING_PETS_REF = ref;
-}
+import type { FarmingPetAbility } from '../types/pets.js';
 
 export class RoseDragonPet extends FarmingPetDefinition {
 	get id() {
@@ -91,27 +85,33 @@ export class RoseDragonPet extends FarmingPetDefinition {
 		{
 			name: 'Symbiosis',
 			exists: (_, pet) => pet.level >= 200,
-			computed: ({ player }) => {
+			computed: () => ({}), // No base stats, uses lateComputed
+			lateComputed: (ctx) => {
+				const player = ctx.player as FarmingPlayer | undefined;
+				const pets = player?.pets ?? [];
+
 				const maxedPets: Record<string, number> = {};
-				for (const pet of player?.pets ?? player?.options?.pets ?? []) {
+				for (const pet of pets) {
 					if (pet.type === FarmingPets.RoseDragon) {
 						continue;
 					}
 
-					if ('level' in pet) {
-						const info = FARMING_PETS_REF?.[pet.type as FarmingPets];
-						if (pet.level >= 100 && (info?.maxRarity ?? Rarity.Legendary) === pet.rarity) {
-							maxedPets[pet.type] = 1;
-						}
+					// FarmingPet instances have level and info with maxRarity
+					const maxRarity = pet.info?.maxRarity ?? Rarity.Legendary;
+					if (pet.level >= 100 && maxRarity === pet.rarity) {
+						maxedPets[pet.type] = 1;
 					}
 				}
-				const maxedPetCount = Object.values(maxedPets).length;
+				const maxedPetCount = Object.keys(maxedPets).length;
+				const fortune = maxedPetCount * 3;
 
 				return {
-					[Stat.FarmingFortune]: {
-						name: 'Symbiosis',
-						value: maxedPetCount * 3,
-						type: FarmingPetStatType.Ability,
+					additive: fortune,
+					breakdown: {
+						Symbiosis: {
+							value: fortune,
+							stat: Stat.FarmingFortune,
+						},
 					},
 				};
 			},

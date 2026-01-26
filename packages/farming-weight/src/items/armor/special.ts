@@ -2,14 +2,23 @@ import { Rarity, ReforgeTarget } from '../../constants/reforges.js';
 import { Skill } from '../../constants/skills.js';
 import { Stat } from '../../constants/stats.js';
 import { UpgradeReason } from '../../constants/upgrades.js';
+import type { GemSlotCost } from '../../fortune/upgradeable.js';
 import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
 export class FarmerBoots extends BaseItem {
-	get skyblockId() { return 'FARMER_BOOTS'; }
-	get name() { return 'Farmer Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Farmer_Boots'; }
-	get maxRarity() { return Rarity.Rare; }
+	get skyblockId() {
+		return 'FARMER_BOOTS';
+	}
+	get name() {
+		return 'Farmer Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Farmer_Boots';
+	}
+	get maxRarity() {
+		return Rarity.Rare;
+	}
 
 	override slot = GearSlot.Boots;
 
@@ -42,10 +51,18 @@ export class FarmerBoots extends BaseItem {
 }
 
 export class RanchersBoots extends BaseItem {
-	get skyblockId() { return 'RANCHERS_BOOTS'; }
-	get name() { return "Rancher's Boots"; }
-	get wiki() { return 'https://wiki.hypixel.net/Rancher%27s_Boots'; }
-	get maxRarity() { return Rarity.Legendary; }
+	get skyblockId() {
+		return 'RANCHERS_BOOTS';
+	}
+	get name() {
+		return "Rancher's Boots";
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Rancher%27s_Boots';
+	}
+	get maxRarity() {
+		return Rarity.Legendary;
+	}
 
 	override slot = GearSlot.Boots;
 
@@ -84,11 +101,33 @@ export class RanchersBoots extends BaseItem {
 	};
 }
 
+const LANTERN_GEM_SLOTS: { slot_type: string; costs: GemSlotCost[] }[] = [
+	{
+		slot_type: 'PERIDOT',
+		costs: [],
+	},
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{ type: 'ITEM' as const, item_id: 'FINE_PERIDOT_GEM', amount: 20 },
+			{ type: 'COINS' as const, coins: 50000 },
+		],
+	},
+];
+
 export class LanternHelmet extends BaseItem {
-	get skyblockId() { return 'ENCHANTED_JACK_O_LANTERN'; }
-	get name() { return 'Lantern Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Lantern_Helmet'; }
-	get maxRarity() { return Rarity.Rare; }
+	get skyblockId() {
+		return 'ENCHANTED_JACK_O_LANTERN';
+	}
+	get name() {
+		return 'Lantern Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Lantern_Helmet';
+	}
+	get maxRarity() {
+		return Rarity.Rare;
+	}
 
 	override slot = GearSlot.Helmet;
 
@@ -97,19 +136,7 @@ export class LanternHelmet extends BaseItem {
 		reason: UpgradeReason.DeadEnd,
 	};
 
-	override gemSlots = [
-		{
-			slot_type: 'PERIDOT',
-			costs: [] as { type: 'ITEM' | 'COINS'; item_id?: string; amount?: number; coins?: number }[],
-		},
-		{
-			slot_type: 'PERIDOT',
-			costs: [
-				{ type: 'ITEM' as const, item_id: 'FINE_PERIDOT_GEM', amount: 20 },
-				{ type: 'COINS' as const, coins: 50000 },
-			],
-		},
-	];
+	override gemSlots = LANTERN_GEM_SLOTS;
 
 	override skillReq = {
 		[Skill.Farming]: 15,

@@ -1,4 +1,4 @@
-import { FarmingPets, FarmingPetStatType } from '../../constants/pets.js';
+import { FarmingPetStatType, FarmingPets } from '../../constants/pets.js';
 import { Rarity } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
 import type { FarmingPet } from '../../fortune/farmingpet.js';

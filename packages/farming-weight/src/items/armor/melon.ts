@@ -7,10 +7,18 @@ import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
 export class MelonHelmet extends BaseItem {
-	get skyblockId() { return 'MELON_HELMET'; }
-	get name() { return 'Melon Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Melon_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'MELON_HELMET';
+	}
+	get name() {
+		return 'Melon Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Melon_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'MELON';
 	override slot = GearSlot.Helmet;
@@ -39,10 +47,18 @@ export class MelonHelmet extends BaseItem {
 }
 
 export class MelonChestplate extends BaseItem {
-	get skyblockId() { return 'MELON_CHESTPLATE'; }
-	get name() { return 'Melon Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Melon_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'MELON_CHESTPLATE';
+	}
+	get name() {
+		return 'Melon Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Melon_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'MELON';
 	override slot = GearSlot.Chestplate;
@@ -72,10 +88,18 @@ export class MelonChestplate extends BaseItem {
 }
 
 export class MelonLeggings extends BaseItem {
-	get skyblockId() { return 'MELON_LEGGINGS'; }
-	get name() { return 'Melon Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Melon_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'MELON_LEGGINGS';
+	}
+	get name() {
+		return 'Melon Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Melon_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'MELON';
 	override slot = GearSlot.Leggings;
@@ -105,10 +129,18 @@ export class MelonLeggings extends BaseItem {
 }
 
 export class MelonBoots extends BaseItem {
-	get skyblockId() { return 'MELON_BOOTS'; }
-	get name() { return 'Melon Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Melon_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'MELON_BOOTS';
+	}
+	get name() {
+		return 'Melon Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Melon_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'MELON';
 	override slot = GearSlot.Boots;

@@ -22,10 +22,18 @@ const HELIANTHUS_GEM_SLOTS = [
 ];
 
 export class HelianthusHelmet extends BaseItem {
-	get skyblockId() { return 'HELIANTHUS_HELMET'; }
-	get name() { return 'Helianthus Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Helianthus_Armor'; }
-	get maxRarity() { return Rarity.Mythic; }
+	get skyblockId() {
+		return 'HELIANTHUS_HELMET';
+	}
+	get name() {
+		return 'Helianthus Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Helianthus_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Mythic;
+	}
 
 	override family = 'HELIANTHUS';
 	override slot = GearSlot.Helmet;
@@ -43,10 +51,18 @@ export class HelianthusHelmet extends BaseItem {
 }
 
 export class HelianthusChestplate extends BaseItem {
-	get skyblockId() { return 'HELIANTHUS_CHESTPLATE'; }
-	get name() { return 'Helianthus Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Helianthus_Armor'; }
-	get maxRarity() { return Rarity.Mythic; }
+	get skyblockId() {
+		return 'HELIANTHUS_CHESTPLATE';
+	}
+	get name() {
+		return 'Helianthus Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Helianthus_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Mythic;
+	}
 
 	override family = 'HELIANTHUS';
 	override slot = GearSlot.Chestplate;
@@ -64,10 +80,18 @@ export class HelianthusChestplate extends BaseItem {
 }
 
 export class HelianthusLeggings extends BaseItem {
-	get skyblockId() { return 'HELIANTHUS_LEGGINGS'; }
-	get name() { return 'Helianthus Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Helianthus_Armor'; }
-	get maxRarity() { return Rarity.Mythic; }
+	get skyblockId() {
+		return 'HELIANTHUS_LEGGINGS';
+	}
+	get name() {
+		return 'Helianthus Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Helianthus_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Mythic;
+	}
 
 	override family = 'HELIANTHUS';
 	override slot = GearSlot.Leggings;
@@ -85,10 +109,18 @@ export class HelianthusLeggings extends BaseItem {
 }
 
 export class HelianthusBoots extends BaseItem {
-	get skyblockId() { return 'HELIANTHUS_BOOTS'; }
-	get name() { return 'Helianthus Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Helianthus_Armor'; }
-	get maxRarity() { return Rarity.Mythic; }
+	get skyblockId() {
+		return 'HELIANTHUS_BOOTS';
+	}
+	get name() {
+		return 'Helianthus Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Helianthus_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Mythic;
+	}
 
 	override family = 'HELIANTHUS';
 	override slot = GearSlot.Boots;

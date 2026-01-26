@@ -7,10 +7,18 @@ import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
 export class SquashHelmet extends BaseItem {
-	get skyblockId() { return 'SQUASH_HELMET'; }
-	get name() { return 'Squash Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Squash_Armor'; }
-	get maxRarity() { return Rarity.Rare; }
+	get skyblockId() {
+		return 'SQUASH_HELMET';
+	}
+	get name() {
+		return 'Squash Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Squash_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Rare;
+	}
 
 	override family = 'SQUASH';
 	override slot = GearSlot.Helmet;
@@ -50,10 +58,18 @@ export class SquashHelmet extends BaseItem {
 }
 
 export class SquashChestplate extends BaseItem {
-	get skyblockId() { return 'SQUASH_CHESTPLATE'; }
-	get name() { return 'Squash Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Squash_Armor'; }
-	get maxRarity() { return Rarity.Rare; }
+	get skyblockId() {
+		return 'SQUASH_CHESTPLATE';
+	}
+	get name() {
+		return 'Squash Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Squash_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Rare;
+	}
 
 	override family = 'SQUASH';
 	override slot = GearSlot.Chestplate;
@@ -95,10 +111,18 @@ export class SquashChestplate extends BaseItem {
 }
 
 export class SquashLeggings extends BaseItem {
-	get skyblockId() { return 'SQUASH_LEGGINGS'; }
-	get name() { return 'Squash Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Squash_Armor'; }
-	get maxRarity() { return Rarity.Rare; }
+	get skyblockId() {
+		return 'SQUASH_LEGGINGS';
+	}
+	get name() {
+		return 'Squash Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Squash_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Rare;
+	}
 
 	override family = 'SQUASH';
 	override slot = GearSlot.Leggings;
@@ -139,10 +163,18 @@ export class SquashLeggings extends BaseItem {
 }
 
 export class SquashBoots extends BaseItem {
-	get skyblockId() { return 'SQUASH_BOOTS'; }
-	get name() { return 'Squash Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Squash_Armor'; }
-	get maxRarity() { return Rarity.Rare; }
+	get skyblockId() {
+		return 'SQUASH_BOOTS';
+	}
+	get name() {
+		return 'Squash Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Squash_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Rare;
+	}
 
 	override family = 'SQUASH';
 	override slot = GearSlot.Boots;

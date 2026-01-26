@@ -7,10 +7,18 @@ import { BaseItem } from '../base-item.js';
 import { GearSlot } from '../definitions.js';
 
 export class CropieHelmet extends BaseItem {
-	get skyblockId() { return 'CROPIE_HELMET'; }
-	get name() { return 'Cropie Helmet'; }
-	get wiki() { return 'https://wiki.hypixel.net/Cropie_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'CROPIE_HELMET';
+	}
+	get name() {
+		return 'Cropie Helmet';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Cropie_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'CROPIE';
 	override slot = GearSlot.Helmet;
@@ -49,10 +57,18 @@ export class CropieHelmet extends BaseItem {
 }
 
 export class CropieChestplate extends BaseItem {
-	get skyblockId() { return 'CROPIE_CHESTPLATE'; }
-	get name() { return 'Cropie Chestplate'; }
-	get wiki() { return 'https://wiki.hypixel.net/Cropie_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'CROPIE_CHESTPLATE';
+	}
+	get name() {
+		return 'Cropie Chestplate';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Cropie_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'CROPIE';
 	override slot = GearSlot.Chestplate;
@@ -92,10 +108,18 @@ export class CropieChestplate extends BaseItem {
 }
 
 export class CropieLeggings extends BaseItem {
-	get skyblockId() { return 'CROPIE_LEGGINGS'; }
-	get name() { return 'Cropie Leggings'; }
-	get wiki() { return 'https://wiki.hypixel.net/Cropie_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'CROPIE_LEGGINGS';
+	}
+	get name() {
+		return 'Cropie Leggings';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Cropie_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'CROPIE';
 	override slot = GearSlot.Leggings;
@@ -135,10 +159,18 @@ export class CropieLeggings extends BaseItem {
 }
 
 export class CropieBoots extends BaseItem {
-	get skyblockId() { return 'CROPIE_BOOTS'; }
-	get name() { return 'Cropie Boots'; }
-	get wiki() { return 'https://wiki.hypixel.net/Cropie_Armor'; }
-	get maxRarity() { return Rarity.Uncommon; }
+	get skyblockId() {
+		return 'CROPIE_BOOTS';
+	}
+	get name() {
+		return 'Cropie Boots';
+	}
+	get wiki() {
+		return 'https://wiki.hypixel.net/Cropie_Armor';
+	}
+	get maxRarity() {
+		return Rarity.Uncommon;
+	}
 
 	override family = 'CROPIE';
 	override slot = GearSlot.Boots;
