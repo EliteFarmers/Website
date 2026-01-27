@@ -1,4 +1,6 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
+import { FarmingPlayer } from '../player/player.js';
 import { FarmingPet } from './farmingpet.js';
 
 test('Elephant fortune test', () => {
@@ -105,4 +107,96 @@ test('Slug Repugnant Aroma with Hypercharge chip', () => {
 		chips: { HYPERCHARGE_GARDEN_CHIP: 20 },
 	});
 	expect(petNotSprayed.fortune).toBe(0);
+});
+
+test('Rose Dragon Symbiosis appears in player breakdown', () => {
+	// Level 200 Legendary Rose Dragon - Symbiosis activates at level 200
+	const roseDragon = {
+		uuid: 'test-rose-dragon-uuid',
+		type: 'ROSE_DRAGON',
+		exp: 60000000000, // Very high exp for level 200
+		active: true,
+		tier: 'LEGENDARY',
+		heldItem: null,
+		candyUsed: 0,
+		skin: null,
+	};
+
+	// Level 100 Legendary Elephant - should count as maxed pet for Symbiosis
+	const elephant = {
+		uuid: 'test-elephant-uuid',
+		type: 'ELEPHANT',
+		exp: 30000000000, // Level 100
+		active: false,
+		tier: 'LEGENDARY',
+		heldItem: null,
+		candyUsed: 0,
+		skin: null,
+	};
+
+	// Level 100 Legendary Mooshroom - should also count
+	const mooshroom = {
+		uuid: 'test-mooshroom-uuid',
+		type: 'MOOSHROOM_COW',
+		exp: 30000000000, // Level 100
+		active: false,
+		tier: 'LEGENDARY',
+		heldItem: null,
+		candyUsed: 0,
+		skin: null,
+	};
+
+	const player = new FarmingPlayer({
+		pets: [roseDragon, elephant, mooshroom],
+		farmingLevel: 60,
+	});
+
+	// The player should have selected the Rose Dragon (active)
+	expect(player.selectedPet?.type).toBe('ROSE_DRAGON');
+
+	// Get the breakdown which includes late calculations
+	const breakdown = player.selectedPet?.getFullBreakdown(player);
+
+	// Symbiosis: 3 fortune per maxed farming pet (2 maxed pets = 6 fortune)
+	expect(breakdown?.['Symbiosis']).toBeDefined();
+	expect(breakdown?.['Symbiosis'].value).toBe(6);
+	expect(breakdown?.['Symbiosis'].stat).toBe(Stat.FarmingFortune);
+
+	expect(breakdown?.['Base Stats']).toBeDefined();
+});
+
+test('Pig Pet Trample shows reduction in pet breakdown', () => {
+	// Level 100 Legendary Pig Pet - Trample reduces total fortune by 75%
+	const pig = {
+		uuid: 'test-pig-uuid',
+		type: 'PIG',
+		exp: 30000000000, // Level 100
+		active: true,
+		tier: 'LEGENDARY',
+		heldItem: null,
+		candyUsed: 0,
+		skin: null,
+	};
+
+	const player = new FarmingPlayer({
+		pets: [pig],
+		farmingLevel: 60, // 240 fortune from farming level
+	});
+
+	expect(player.selectedPet?.type).toBe('PIG');
+
+	// Player's base fortune should be stored
+	expect(player.baseFortune).toBeGreaterThan(0);
+
+	// Get the pig's breakdown - should show Trample reduction
+	const breakdown = player.selectedPet?.getFullBreakdown(player);
+
+	// Trample should be defined with negative value (75% reduction of total fortune)
+	expect(breakdown?.['Trample (75% Reduction)']).toBeDefined();
+	expect(breakdown?.['Trample (75% Reduction)'].value).toBeLessThan(0);
+	expect(breakdown?.['Trample (75% Reduction)'].stat).toBe(Stat.FarmingFortune);
+
+	// Verify the reduction value is -75% of player base fortune
+	const expectedReduction = -player.baseFortune * 0.75;
+	expect(breakdown?.['Trample (75% Reduction)'].value).toBeCloseTo(expectedReduction, 2);
 });

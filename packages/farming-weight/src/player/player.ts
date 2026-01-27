@@ -34,6 +34,7 @@ export class FarmingPlayer {
 	}
 	declare breakdown: StatBreakdown;
 	declare tempFortuneBreakdown: StatBreakdown;
+	declare baseFortune: number;
 
 	declare tools: FarmingTool[];
 	declare armor: FarmingArmor[];
@@ -417,9 +418,9 @@ export class FarmingPlayer {
 			}
 		}
 
-		// ===== PHASE 2: Late Calculations =====
 		// Calculate base fortune total before late-phase modifiers
 		const baseFortune = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
+		this.baseFortune = baseFortune;
 
 		// Create context for late calculations
 		const lateCtx: LateCalculationContext = {
@@ -429,14 +430,32 @@ export class FarmingPlayer {
 			crop: targetCrop,
 		};
 
-		// Pet late calculations (e.g., Pig Pet's Trample)
+		// Pet late calculations (ex: Pig Pet's Trample, Rose Dragon's Symbiosis)
+		// Late effects are included in the pet's breakdown entry, not as separate entries
 		if (this.selectedPet) {
 			const lateResult = this.selectedPet.getLateStats(lateCtx);
+			const petName = this.selectedPet.info.name ?? 'Selected Pet';
 
-			// Apply late result to breakdown
-			if (lateResult.breakdown) {
-				for (const [name, entry] of Object.entries(lateResult.breakdown)) {
-					breakdown[name] = entry;
+			// Get the stat type from the late breakdown entries (they specify their stat)
+			const lateBreakdownEntries = lateResult.breakdown ? Object.values(lateResult.breakdown) : [];
+			const lateStat = lateBreakdownEntries[0]?.stat ?? Stat.FarmingFortune;
+
+			// Add late additive effects to the pet's entry
+			if (lateResult.additive) {
+				if (breakdown[petName]) {
+					breakdown[petName].value += lateResult.additive;
+				} else {
+					breakdown[petName] = { value: lateResult.additive, stat: lateStat };
+				}
+			}
+
+			// Apply multiplier to total fortune (add as reduction to pet's entry)
+			if (lateResult.multiplier !== undefined && lateResult.multiplier !== 1) {
+				const reduction = baseFortune * (lateResult.multiplier - 1);
+				if (breakdown[petName]) {
+					breakdown[petName].value += reduction;
+				} else {
+					breakdown[petName] = { value: reduction, stat: lateStat };
 				}
 			}
 		}

@@ -146,9 +146,17 @@ export class FarmingPet {
 
 	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {
 		const full: StatBreakdown = {};
+		let baseFortune = 0;
+
 		for (const stat of Object.values(Stat)) {
 			const { fortune, breakdown } = this.computeFortune(stat, player);
 			if (!fortune) continue;
+
+			// Track base farming fortune for late context
+			if (stat === Stat.FarmingFortune) {
+				baseFortune = fortune;
+			}
+
 			for (const [name, value] of Object.entries(breakdown)) {
 				if (value === 0) continue;
 				const existing = full[name];
@@ -159,6 +167,24 @@ export class FarmingPet {
 				}
 			}
 		}
+
+		// Include late-phase stats when player is available
+		// Use player's baseFortune for late calcs that depend on total fortune (e.g., Trample)
+		if (player) {
+			const lateContext: LateCalculationContext = {
+				player,
+				baseFortune: player.baseFortune ?? baseFortune,
+				stat: Stat.FarmingFortune,
+			};
+
+			const lateResult = this.getLateStats(lateContext);
+			if (lateResult.breakdown) {
+				for (const [name, entry] of Object.entries(lateResult.breakdown)) {
+					full[name] = entry;
+				}
+			}
+		}
+
 		return full;
 	}
 

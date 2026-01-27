@@ -33,6 +33,7 @@ export class PigPet extends FarmingPetDefinition {
 			lateComputed: (ctx) => {
 				// Apply 0.25x multiplier (75% reduction) to total fortune
 				const reduction = -ctx.baseFortune * 0.75;
+
 				return {
 					multiplier: 0.25,
 					breakdown: {
