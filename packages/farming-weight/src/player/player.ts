@@ -1,5 +1,6 @@
 import { type GardenChipId, getChipLevel, getChipTempMultiplierPerLevel, normalizeChipId } from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
+import type { LateCalculationContext } from '../constants/latecalc.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
@@ -33,6 +34,7 @@ export class FarmingPlayer {
 	}
 	declare breakdown: StatBreakdown;
 	declare tempFortuneBreakdown: StatBreakdown;
+	declare baseFortune: number;
 
 	declare tools: FarmingTool[];
 	declare armor: FarmingArmor[];
@@ -412,6 +414,48 @@ export class FarmingPlayer {
 				// Temporary fortune is always FarmingFortune
 				if (contributingStats.includes(entry.stat)) {
 					add(name, entry.value, entry.stat);
+				}
+			}
+		}
+
+		// Calculate base fortune total before late-phase modifiers
+		const baseFortune = Object.values(breakdown).reduce((acc, val) => acc + val.value, 0);
+		this.baseFortune = baseFortune;
+
+		// Create context for late calculations
+		const lateCtx: LateCalculationContext = {
+			player: this,
+			baseFortune,
+			stat,
+			crop: targetCrop,
+		};
+
+		// Pet late calculations (ex: Pig Pet's Trample, Rose Dragon's Symbiosis)
+		// Late effects are included in the pet's breakdown entry, not as separate entries
+		if (this.selectedPet) {
+			const lateResult = this.selectedPet.getLateStats(lateCtx);
+			const petName = this.selectedPet.info.name ?? 'Selected Pet';
+
+			// Get the stat type from the late breakdown entries (they specify their stat)
+			const lateBreakdownEntries = lateResult.breakdown ? Object.values(lateResult.breakdown) : [];
+			const lateStat = lateBreakdownEntries[0]?.stat ?? Stat.FarmingFortune;
+
+			// Add late additive effects to the pet's entry
+			if (lateResult.additive) {
+				if (breakdown[petName]) {
+					breakdown[petName].value += lateResult.additive;
+				} else {
+					breakdown[petName] = { value: lateResult.additive, stat: lateStat };
+				}
+			}
+
+			// Apply multiplier to total fortune (add as reduction to pet's entry)
+			if (lateResult.multiplier !== undefined && lateResult.multiplier !== 1) {
+				const reduction = baseFortune * (lateResult.multiplier - 1);
+				if (breakdown[petName]) {
+					breakdown[petName].value += reduction;
+				} else {
+					breakdown[petName] = { value: reduction, stat: lateStat };
 				}
 			}
 		}

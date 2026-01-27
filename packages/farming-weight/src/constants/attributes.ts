@@ -68,13 +68,32 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			const a = options.attributes ?? {};
 			const firefly = a.SHARD_FIREFLY ?? 0;
 			const lunarMoth = a.SHARD_LUNAR_MOTH ?? 0;
+			const forceFirefly = 'options' in options && options.options.selectedCrop === Crop.Sunflower;
+			const forceLunarMoth = 'options' in options && options.options.selectedCrop === Crop.Moonflower;
+
+			if (forceFirefly) {
+				return {
+					active: true,
+					reason: 'Firefly Shard is active because you have selected Sunflower!',
+				};
+			}
+
+			if (forceLunarMoth) {
+				return {
+					active: false,
+					reason: 'Firefly Shard is disabled because you have selected Moonflower!',
+					fortune: 5 * getShardLevel(Rarity.Epic, lunarMoth),
+				};
+			}
+
 			if (lunarMoth >= firefly) {
 				return {
 					active: false,
 					reason: 'Lunar Moth shard is at a higher or equal level, using it instead.',
-					fortune: 5 * getShardLevel(Rarity.Epic, firefly),
+					fortune: 5 * getShardLevel(Rarity.Epic, lunarMoth),
 				};
 			}
+
 			return {
 				active: true,
 				reason: 'This shard is only active during the day! Set your garden to day time to use it.',
@@ -96,13 +115,32 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			const a = options.attributes ?? {};
 			const firefly = a.SHARD_FIREFLY ?? 0;
 			const lunarMoth = a.SHARD_LUNAR_MOTH ?? 0;
+			const forceFirefly = 'options' in options && options.options.selectedCrop === Crop.Sunflower;
+			const forceLunarMoth = 'options' in options && options.options.selectedCrop === Crop.Moonflower;
+
+			if (forceLunarMoth) {
+				return {
+					active: true,
+					reason: 'Lunar Moth Shard is active because you have selected Moonflower!',
+				};
+			}
+
+			if (forceFirefly) {
+				return {
+					active: false,
+					reason: 'Lunar Moth Shard is disabled because you have selected Sunflower!',
+					fortune: 5 * getShardLevel(Rarity.Epic, firefly),
+				};
+			}
+
 			if (firefly > lunarMoth) {
 				return {
 					active: false,
 					reason: 'Firefly shard is at a higher level, using it instead.',
-					fortune: 5 * getShardLevel(Rarity.Epic, lunarMoth),
+					fortune: 5 * getShardLevel(Rarity.Epic, firefly),
 				};
 			}
+
 			return {
 				active: true,
 				reason: 'This shard is only active during the night! Set your garden to night time to use it.',

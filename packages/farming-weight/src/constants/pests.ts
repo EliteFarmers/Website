@@ -37,6 +37,24 @@ export const DEFAULT_GARDEN_BESTIARY_PEST_BRACKET: Record<number, number> = {
 	15: 250,
 };
 
+export const FIELD_MOUSE_BESTIARY_PEST_BRACKET: Record<number, number> = {
+	1: 1,
+	2: 2,
+	3: 3,
+	4: 5,
+	5: 7,
+	6: 9,
+	7: 11,
+	8: 14,
+	9: 17,
+	10: 20,
+	11: 30,
+	12: 40,
+	13: 55,
+	14: 75,
+	15: 100,
+};
+
 export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
 	[Pest.Beetle]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Cricket]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
@@ -48,23 +66,7 @@ export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
 	[Pest.Moth]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Rat]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Slug]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	[Pest.Mouse]: {
-		1: 1,
-		2: 2,
-		3: 3,
-		4: 5,
-		5: 7,
-		6: 9,
-		7: 11,
-		8: 14,
-		9: 17,
-		10: 20,
-		11: 30,
-		12: 40,
-		13: 55,
-		14: 75,
-		15: 100,
-	},
+	[Pest.Mouse]: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
 	[Pest.Dragonfly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Firefly]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Mantis]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
@@ -167,6 +169,11 @@ export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
 	pest_praying_mantis_1: 'Mantis',
 	zombuddy_1: 'Zombuddy',
 	timestalk_clone_100: 'Timestalk Clone',
+};
+
+export const GARDEN_BESTIARY_BRACKETS: Record<string, Record<number, number>> = {
+	zombuddy_1: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	timestalk_clone_100: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
 };
 
 export const PEST_TO_CROP: Partial<Record<Pest, Crop>> = {

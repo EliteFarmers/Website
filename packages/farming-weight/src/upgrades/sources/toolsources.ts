@@ -225,27 +225,34 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 			return Math.max(0, fortune * 0.02);
 		},
 		maxStat: (tool, stat) => {
-			if (stat !== Stat.FarmingFortune) return 0;
 			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const maxFortune = otherSources.reduce((acc, source) => acc + source.max(tool), 0);
+			const maxFortune = otherSources.reduce((acc, source) => acc + (source.maxStat?.(tool, stat) ?? 0), 0);
 			return Math.max(0, maxFortune * 0.02);
 		},
 		currentStat: (tool, stat) => {
-			if (stat !== Stat.FarmingFortune) return 0;
 			if (!tool.hasAxedPerk()) return 0;
 			const otherSources = TOOL_FORTUNE_SOURCES.filter((s) => s.name !== 'Axed Perk' && s.exists(tool));
-			const fortune = otherSources.reduce((acc, source) => acc + source.current(tool), 0);
+			const fortune = otherSources.reduce((acc, source) => acc + (source.currentStat?.(tool, stat) ?? 0), 0);
 			return Math.max(0, fortune * 0.02);
 		},
 		upgrades: (tool) => {
 			if (tool.hasAxedPerk()) return [];
+			const stats: Record<Stat, number> = {
+				[Stat.FarmingFortune]: tool.getStat(Stat.FarmingFortune) * 0.02,
+			} as Record<Stat, number>;
+
+			for (const crop of tool.crops) {
+				const cropStat = CROP_INFO[crop]?.fortuneType;
+				if (cropStat) {
+					stats[cropStat] = tool.getStat(cropStat) * 0.02;
+				}
+			}
+
 			return [
 				{
 					title: 'Axed Perk',
 					increase: tool.fortune * 0.02,
-					stats: {
-						[Stat.FarmingFortune]: tool.fortune * 0.02,
-					},
+					stats,
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
 					conflictKey: 'axed_perk',

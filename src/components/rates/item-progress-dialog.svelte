@@ -107,7 +107,10 @@
 
 	const totalCost = $derived.by(() => {
 		if (!costFn) return 0;
-		return allUpgrades.reduce((sum, u) => sum + costFn(u, items), 0);
+		return allUpgrades.reduce((sum, u) => {
+			const c = costFn(u, items);
+			return sum + (u.repeatable ?? 1) * c;
+		}, 0);
 	});
 </script>
 

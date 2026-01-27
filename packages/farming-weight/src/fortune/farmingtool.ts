@@ -255,10 +255,6 @@ export class FarmingTool extends UpgradeableBase {
 
 		if (stat === Stat.FarmingFortune) {
 			sum += this.farmingForDummies;
-
-			// Axed Perk gives +2% of Total Fortune as Farming Fortune
-			this.getFortune();
-			sum += this.fortuneBreakdown['Axed Perk'] ?? 0;
 		}
 
 		// Tools now have a flat +1 Farming Wisdom baseline.
@@ -286,6 +282,11 @@ export class FarmingTool extends UpgradeableBase {
 
 				sum += val;
 			}
+		}
+
+		// Axed Perk (2% bonus) - Applies to all fortune stats
+		if (this.hasAxedPerk()) {
+			sum *= 1.02;
 		}
 
 		return sum;

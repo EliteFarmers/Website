@@ -3,6 +3,7 @@ import {
 	BESTIARY_PEST_BRACKETS,
 	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	FORTUNE_PER_PEST_BRACKET,
+	GARDEN_BESTIARY_BRACKETS,
 	GARDEN_BESTIARY_NAMES,
 	PEST_BESTIARY_IDS,
 	PEST_COLLECTION_ADJUSTMENTS,
@@ -26,9 +27,9 @@ export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>,
 		const kills = bestiaryKills[bestiaryId];
 		if (!kills) continue;
 
-		const bracket = Object.entries(pestId ? brackets[pestId] : DEFAULT_GARDEN_BESTIARY_PEST_BRACKET).sort(
-			(a, b) => b[1] - a[1]
-		);
+		const bracket = Object.entries(
+			(pestId ? brackets[pestId] : GARDEN_BESTIARY_BRACKETS[bestiaryId]) ?? DEFAULT_GARDEN_BESTIARY_PEST_BRACKET
+		).sort((a, b) => b[1] - a[1]);
 
 		// Find the highest reached bracket for this pest
 		const unlocked = bracket.find((b) => +kills >= b[1]);
@@ -55,7 +56,8 @@ export function getGardenBestiaryProgress(
 	for (const [bestiaryId, pestId] of Object.entries(PEST_BESTIARY_IDS) as [string, Pest | null][]) {
 		const kills = bestiaryKills[bestiaryId] || 0;
 		const pestName = GARDEN_BESTIARY_NAMES[bestiaryId] || 'Unknown Pest';
-		const bracket = pestId ? brackets[pestId] : DEFAULT_GARDEN_BESTIARY_PEST_BRACKET;
+		const bracket =
+			(pestId ? brackets[pestId] : GARDEN_BESTIARY_BRACKETS[bestiaryId]) ?? DEFAULT_GARDEN_BESTIARY_PEST_BRACKET;
 
 		const sortedBrackets = Object.entries(bracket).sort((a, b) => +a[1] - +b[1]);
 		let bracketsUnlocked = 0;

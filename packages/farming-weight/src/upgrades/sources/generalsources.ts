@@ -313,7 +313,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			if (highest.info.skyblockId === 'HELIANTHUS_RELIC') return true;
 
 			const cropFortuneType = CROP_INFO[player.options.selectedCrop]?.fortuneType;
-			if (cropFortuneType && highest.info.baseStats?.[cropFortuneType]) {
+			const accessory = FarmingAccessory.fakeItem(
+				FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN as FarmingAccessoryInfo
+			);
+
+			if (cropFortuneType && accessory?.getLastItemUpgrade()?.info.baseStats?.[cropFortuneType]) {
 				return false;
 			}
 

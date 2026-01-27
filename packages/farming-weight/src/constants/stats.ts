@@ -146,7 +146,9 @@ export interface StatValueCalculated<T, C = PlayerOptions> extends StatValueBase
 	calculated: (opt: C) => number;
 }
 export type BreakDownEntry = { value: number; stat: Stat };
-export type StatBreakdown = Record<string, BreakDownEntry>;
+/** Extended breakdown entry for late-calculated stats that may have a multiplier factor */
+export type LateBreakdownEntry = BreakDownEntry & { factor?: number };
+export type StatBreakdown = Record<string, BreakDownEntry | LateBreakdownEntry>;
 export interface StatValueCalculated<T, C = PlayerOptions> extends StatValueBase<T, C> {
 	calculated: (opt: C) => number;
 }

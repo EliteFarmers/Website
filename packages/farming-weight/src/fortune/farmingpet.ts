@@ -1,4 +1,5 @@
 import { getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
+import type { LateCalculationContext, LateCalculationResult } from '../constants/latecalc.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat, type StatBreakdown } from '../constants/stats.js';
 import {
@@ -145,9 +146,17 @@ export class FarmingPet {
 
 	getFullBreakdown(player?: FarmingPlayer): StatBreakdown {
 		const full: StatBreakdown = {};
+		let baseFortune = 0;
+
 		for (const stat of Object.values(Stat)) {
 			const { fortune, breakdown } = this.computeFortune(stat, player);
 			if (!fortune) continue;
+
+			// Track base farming fortune for late context
+			if (stat === Stat.FarmingFortune) {
+				baseFortune = fortune;
+			}
+
 			for (const [name, value] of Object.entries(breakdown)) {
 				if (value === 0) continue;
 				const existing = full[name];
@@ -158,7 +167,68 @@ export class FarmingPet {
 				}
 			}
 		}
+
+		// Include late-phase stats when player is available
+		// Use player's baseFortune for late calcs that depend on total fortune (e.g., Trample)
+		if (player) {
+			const lateContext: LateCalculationContext = {
+				player,
+				baseFortune: player.baseFortune ?? baseFortune,
+				stat: Stat.FarmingFortune,
+			};
+
+			const lateResult = this.getLateStats(lateContext);
+			if (lateResult.breakdown) {
+				for (const [name, entry] of Object.entries(lateResult.breakdown)) {
+					full[name] = entry;
+				}
+			}
+		}
+
 		return full;
+	}
+
+	/**
+	 * Get late-phase stats for abilities that depend on total fortune.
+	 * Called after all base stats have been computed.
+	 */
+	getLateStats(ctx: LateCalculationContext): LateCalculationResult {
+		const result: LateCalculationResult = {};
+
+		if (!this.info.abilities) {
+			return result;
+		}
+
+		for (const ability of this.info.abilities) {
+			if (!ability.lateComputed) continue;
+
+			// Check if ability exists for this pet
+			if (ability.exists) {
+				const player = ctx.player as FarmingPlayer | undefined;
+				if (!ability.exists({ player, options: this.options ?? {} }, this)) {
+					continue;
+				}
+			}
+
+			const lateResult = ability.lateComputed(ctx, this);
+
+			// Merge additive values
+			if (lateResult.additive !== undefined) {
+				result.additive = (result.additive ?? 0) + lateResult.additive;
+			}
+
+			// Combine multipliers (multiplicative stacking)
+			if (lateResult.multiplier !== undefined) {
+				result.multiplier = (result.multiplier ?? 1) * lateResult.multiplier;
+			}
+
+			// Merge breakdown entries
+			if (lateResult.breakdown) {
+				result.breakdown = { ...result.breakdown, ...lateResult.breakdown };
+			}
+		}
+
+		return result;
 	}
 
 	getFormattedName() {
