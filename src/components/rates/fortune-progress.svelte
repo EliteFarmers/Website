@@ -4,11 +4,10 @@
 	import ProgressBar from '$comp/stats/progress-bar.svelte';
 	import { getStatColor } from '$lib/format';
 	import TooltipSimple from '$ui/tooltip/tooltip-simple.svelte';
-	import FileText from '@lucide/svelte/icons/file-text';
 	import Info from '@lucide/svelte/icons/info';
-	import OctagonAlert from '@lucide/svelte/icons/octagon-alert';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { Stat, STAT_ICONS, STAT_NAMES, type FortuneSourceProgress } from 'farming-weight';
+	import FortuneActiveNote from './fortune-active-note.svelte';
 
 	interface Props {
 		progress: FortuneSourceProgress;
@@ -21,12 +20,24 @@
 	let progress = $derived.by(() => {
 		if (p.active?.active !== false) return p;
 
+		// When inactive, use active.fortune for display instead of the 0 returned by the backend
+		const inactiveFortune = p.active?.fortune ?? 0;
+		const newStats: typeof p.stats = {};
+
+		for (const [stat, statProgress] of Object.entries(p.stats ?? {})) {
+			newStats[stat as keyof typeof newStats] = {
+				...statProgress,
+				current: inactiveFortune,
+				ratio: inactiveFortune > 0 ? Math.min(inactiveFortune / statProgress.max, 1) : 0,
+			};
+		}
+
 		return {
 			...p,
-			ratio: p.active?.fortune ? p.active.fortune / p.max : 0,
-			fortune: p.active?.fortune ?? 0,
+			ratio: inactiveFortune ? inactiveFortune / p.max : 0,
+			fortune: inactiveFortune,
 			maxFortune: p.max,
-			active: p.active,
+			stats: Object.keys(newStats).length > 0 ? newStats : p.stats,
 		};
 	});
 
@@ -85,20 +96,7 @@
 					</TooltipSimple>
 				{/if}
 			</div>
-			{#if progress.active}
-				<div class="flex flex-row items-center gap-1">
-					<TooltipSimple side="left">
-						{#snippet trigger()}
-							{#if !progress.active?.active}
-								<OctagonAlert size={16} class="text-completed" />
-							{:else}
-								<FileText size={16} class="text-muted-foreground" />
-							{/if}
-						{/snippet}
-						<p class="max-w-32 text-sm">{progress.active.reason}</p>
-					</TooltipSimple>
-				</div>
-			{/if}
+			<FortuneActiveNote {progress} />
 		</div>
 		<!-- <ProgressBar
 		percent={progress.ratio * 100}

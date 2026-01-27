@@ -29,17 +29,7 @@
 		classNameProp ?? (compact ? 'text-sm sm:text-md' : 'sm:text-lg') + 'leading-none font-semibold'
 	);
 
-	let background = $derived(
-		fillClass
-			? fillClass
-			: !disabled
-				? maxed
-					? 'bg-completed'
-					: 'bg-progress'
-				: maxed
-					? 'bg-completed/40'
-					: 'bg-progress/40'
-	);
+	let background = $derived(fillClass ? fillClass : maxed ? 'bg-completed' : 'bg-progress');
 </script>
 
 <div class="flex w-full flex-1 flex-row items-center">
@@ -51,9 +41,9 @@
 	>
 		<div
 			class="absolute {compact ? 'h-5 rounded-xs' : 'h-6 rounded-sm'} {background}"
-			style={`width: ${Math.min(percent, 100)}%`}
+			style="width: {Math.min(percent, 100)}%; opacity: {disabled ? 0.4 : 1};"
 		></div>
-		<div class="absolute flex h-full w-full items-center justify-center">
+		<div class="absolute flex h-full w-full items-center justify-center {disabled ? 'opacity-70' : ''}">
 			<p class={className}>{hovering && expanded ? expanded : readable}</p>
 		</div>
 	</div>
