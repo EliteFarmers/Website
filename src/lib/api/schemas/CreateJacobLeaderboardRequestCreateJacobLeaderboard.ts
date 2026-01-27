@@ -17,9 +17,9 @@ export interface CreateJacobLeaderboardRequestCreateJacobLeaderboard {
 	/** @nullable */
 	channelId?: string | null;
 	/** @nullable */
-	startCutoff?: bigint | null;
+	startCutoff?: number | string | bigint | null;
 	/** @nullable */
-	endCutoff?: bigint | null;
+	endCutoff?: number | string | bigint | null;
 	/** @nullable */
 	active?: boolean | null;
 	/** @nullable */

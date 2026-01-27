@@ -10,21 +10,26 @@ async function removeReturnTypesFromFile(filePath: string) {
 	console.log(`Analyzing ${path.basename(filePath)}...`);
 
 	const project = new Project();
+	const isZodProject = filePath.includes('.zod.');
 
-	// Run a regex replacement on filePath.replace('.ts', '.zod.ts') to change all zod.boolean() to zod.coerce.boolean<boolean>()
-	if (filePath.includes('.zod.')) {
+	if (isZodProject) {
 		if (filePath.includes('Cms')) {
 			const zodFileContent = await project.getFileSystem().readFile(filePath);
 			const updatedZodFileContent = zodFileContent.replace(/\.optional\(\)/g, '.optional().nullable()');
 			await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
 			console.log(`Updated .optional() to .optional().nullable() in ${path.basename(filePath)}.`);
 		} else {
+			// Remote functions don't like zod.coerce.boolean() without the type specified
+			// zod.coerce.boolean() -> zod.coerce.boolean<boolean>()
+			// Ensuring it works if there's a line breaks (ex: zod\n.coerce\n.boolean)
 			const zodFileContent = await project.getFileSystem().readFile(filePath);
-			const updatedZodFileContent = zodFileContent.replace(/zod\.boolean\(\)/g, 'zod.coerce.boolean<boolean>()');
+			const updatedZodFileContent = zodFileContent.replace(
+				/\.coerce\s*\.\s*boolean\s*\(\s*\)/g,
+				'.coerce.boolean<boolean>()'
+			);
 			await project.getFileSystem().writeFile(filePath, updatedZodFileContent);
 			console.log(`Updated zod.boolean() to zod.coerce.boolean<boolean>() in ${path.basename(filePath)}.`);
 		}
-
 		return;
 	}
 
@@ -62,6 +67,27 @@ async function removeReturnTypesFromFile(filePath: string) {
 	console.log(`Added import for api URL.`);
 
 	await sourceFile.save();
+
+	try {
+		// Find and replace text in all files in src/lib/api/client/schemas directory
+		const schemasProject = new Project();
+		const schemasDir = path.join(path.dirname(filePath), '..', 'schemas');
+		const schemaFiles = schemasProject.getFileSystem().readDirSync(schemasDir);
+		for (const schemaFile of schemaFiles) {
+			const schemaFilePath = schemaFile.name;
+
+			const schemaName = path.basename(schemaFilePath);
+			if (!schemaName.includes('Request')) {
+				continue;
+			}
+
+			const schemaFileContent = await schemasProject.getFileSystem().readFile(schemaFilePath);
+			const updatedSchemaFileContent = schemaFileContent.replace(/bigint/g, 'number | string | bigint');
+			await schemasProject.getFileSystem().writeFile(schemaFilePath, updatedSchemaFileContent);
+		}
+	} catch (err) {
+		console.error('Error processing schema files:', err);
+	}
 
 	if (changesMade > 0) {
 		console.log(`✅ Successfully removed ${changesMade} return types and saved the file.`);
