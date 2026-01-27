@@ -67,8 +67,8 @@ test('Overflow Crop Milestones', () => {
 	expect(milestones[Crop.Melon].maxed).toBe(true);
 	expect(milestones[Crop.Melon].next).toBe(4523);
 	expect(milestones[Crop.Melon].goal).toBe(4000000);
-	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.738851);
-	expect(milestones[Crop.Melon].progress).toBe(2955404);
+	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.770101);
+	expect(milestones[Crop.Melon].progress).toBe(3080404);
 
 	expect(milestones[Crop.Mushroom].maxed).toBe(true);
 
