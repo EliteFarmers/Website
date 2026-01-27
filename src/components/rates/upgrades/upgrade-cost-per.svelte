@@ -22,7 +22,7 @@
 		return { stat: Stat.FarmingFortune, value: upgrade.increase ?? 0 };
 	});
 
-	const increase = $derived(upgrade.increase || primaryStat.value || upgrade.max || 0);
+	const increase = $derived(upgrade.increase || primaryStat.value || 0);
 	const costPer = $derived.by(() => {
 		const cost = increase > 0 ? Math.round(totalCost / increase) : 0;
 
