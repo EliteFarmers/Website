@@ -71,7 +71,7 @@
 		"@types/d3-scale": "^4.0.9",
 		"@types/d3-time-format": "^4.0.3",
 		"@types/eslint": "^9.6.1",
-		"@types/node": "^24.10.0",
+		"@types/node": "^25.0.0",
 		"@types/qs": "^6.14.0",
 		"@typeschema/class-validator": "^0.2.0",
 		"@vinejs/vine": "^1.8.0",
