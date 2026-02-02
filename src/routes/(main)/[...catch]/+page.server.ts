@@ -6,7 +6,7 @@ const urls: Partial<Record<string, string>> = {
 	donate: PUBLIC_DONATION_URL,
 	discord: PUBLIC_COMMUNITY_INVITE,
 	support: PUBLIC_SUPPORT_SERVER_INVITE,
-	stickers: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
+	stickers: '/info/badges',
 	leaderboards: '/leaderboard',
 	oss: '/oss.txt',
 	store: '/shop',

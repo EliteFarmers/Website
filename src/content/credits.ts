@@ -31,10 +31,6 @@ export const CREDITS: Credit[] = [
 		role: 'Custom art for the website (crop icons, medals, etc)',
 		links: [
 			{
-				name: 'Etsy (Crop Stickers)',
-				url: 'https://www.etsy.com/listing/1499421785/pixelated-crop-stickers',
-			},
-			{
 				name: 'Ko-Fi',
 				url: 'https://ko-fi.com/shoppelumini',
 			},
@@ -95,8 +91,18 @@ export const CREDITS: Credit[] = [
 		],
 	},
 	{
+		name: 'mcstats',
+		role: 'Some player model images',
+		links: [
+			{
+				name: 'Website',
+				url: 'https://skins.mcstats.com/',
+			},
+		],
+	},
+	{
 		name: 'MCHeads',
-		role: 'Player model images',
+		role: 'Some player model images',
 		links: [
 			{
 				name: 'Website',

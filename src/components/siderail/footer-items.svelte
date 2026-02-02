@@ -35,14 +35,6 @@
 			<p class="font-semibold">Unlock Badges</p>
 			<a href="/info/badges" class="-mb-0.5 inline-block"><Question class="text-muted-foreground size-4" /> </a>
 		</div>
-
-		<RailItem img="/images/LuminiBanner.webp" name="Buy Stickers!" href="/stickers" target="_blank">
-			{#snippet absolute()}
-				<div class="absolute top-2 right-4 size-8 overflow-visible rounded-md">
-					<div class="sticker-sprite relative size-full"></div>
-				</div>
-			{/snippet}
-		</RailItem>
 		<RailItem
 			img="/images/kofi_logo.webp"
 			name="Donate!"
@@ -70,25 +62,3 @@
 		<Separator class="my-4 max-w-1/2" />
 	</div>
 </div>
-
-<style lang="css">
-	.sticker-sprite {
-		background-image: url(/images/allstickers.webp);
-		background-size: 1000% 100%;
-
-		animation-name: sprite-sheet-animation;
-		animation-duration: 20s;
-		animation-timing-function: steps(10, end);
-		animation-iteration-count: infinite;
-		background-position: 0% 100%;
-	}
-
-	@keyframes sprite-sheet-animation {
-		from {
-			background-position: 0% 100%;
-		}
-		to {
-			background-position: -1000% 100%;
-		}
-	}
-</style>

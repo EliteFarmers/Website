@@ -205,22 +205,16 @@
 				</Card.Root>
 				<Card.Root class="max-w-md">
 					<Card.Header>
-						<Card.Title class="text-xl">Purchase Crop Stickers!</Card.Title>
+						<Card.Title class="text-xl">Get Profile Badges!</Card.Title>
 					</Card.Header>
 					<Card.Content>
 						<p class="mb-6 w-full text-lg">
-							Directly support the art on Elite by purchasing crop stickers! All proceeds go to the
-							artist, and you get a cool sticker!
+							Check out and collect the different badges available on the website! These show up on your
+							stats page!
 						</p>
 						<div class="flex justify-center">
-							<Button
-								href="https://www.etsy.com/listing/1499421785/pixelated-crop-stickers"
-								class="w-fit font-semibold"
-								target="_blank"
-								variant="secondary"
-								rel="noopener nofollow"
-							>
-								Open Lumini's Shop
+							<Button href="/info/badges" class="w-fit font-semibold" variant="secondary">
+								View Badges
 								<ExternalLink class="ml-2" size={20} />
 							</Button>
 						</div>
