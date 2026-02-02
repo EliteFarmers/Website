@@ -22,7 +22,7 @@
 	});
 </script>
 
-<div class="flex h-[280px] w-full justify-center overflow-clip">
+<div class="flex h-70 w-full justify-center overflow-clip">
 	{#key sidebar.isMobile}
 		<NitroAdSlot
 			class="mt-8 block h-fit w-full"
