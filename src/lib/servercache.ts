@@ -5,6 +5,7 @@ import {
 	getAnnouncement,
 	getAuctionHouseProducts,
 	getBazaarProducts,
+	getHypixelGuilds,
 	getLeaderboards,
 	getProducts,
 	getSkyblockItems,
@@ -12,12 +13,14 @@ import {
 	getTeamWordList,
 	getUpcomingEvents,
 	skyblockGemShop,
+	SortHypixelGuildsBy,
 	type AnnouncementDto,
 	type AuctionHouseDto,
 	type EventDetailsDto,
 	type EventTeamsWordListDto,
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
+	type HypixelGuildDetailsDto,
 	type ProductDto,
 	type SkyblockGemShopsResponse,
 	type WeightStyleWithDataDto,
@@ -129,6 +132,20 @@ const cacheEntries = {
 			return await fetchAllArticleCategories();
 		},
 	},
+	topguilds: {
+		data: { guilds: [], total: 0 } as {
+			guilds: HypixelGuildDetailsDto[];
+			total: number | null;
+		},
+		update: async () => {
+			const { data } = await getHypixelGuilds({
+				sortBy: SortHypixelGuildsBy.skyblockExperienceAverage,
+				page: 1,
+				pageSize: 10,
+			}).catch(() => ({ data: undefined }));
+			return { guilds: data?.guilds ?? [], total: data?.totalGuilds ?? null };
+		},
+	},
 };
 
 export const cache = {
@@ -170,6 +187,9 @@ export const cache = {
 	},
 	get categories() {
 		return cacheEntries.categories.data;
+	},
+	get topguilds() {
+		return cacheEntries.topguilds.data;
 	},
 };
 
