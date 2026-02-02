@@ -196,4 +196,4 @@ export const CROP_UPGRADE_COSTS: Record<number, number> = {
 	9: 4_000,
 };
 
-export const CROP_UPGRADES_MAX_COST = 10 * Object.values(CROP_UPGRADE_COSTS).reduce((a, b) => a + b, 0);
+export const CROP_UPGRADES_MAX_COST = 13 * Object.values(CROP_UPGRADE_COSTS).reduce((a, b) => a + b, 0);

@@ -307,17 +307,12 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			const highest = player.activeAccessories.find(
 				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
 			);
-			if (!highest) return true;
 
 			// If player has Helianthus Relic, always show this
-			if (highest.info.skyblockId === 'HELIANTHUS_RELIC') return true;
+			if (highest?.info.skyblockId === 'HELIANTHUS_RELIC') return true;
 
 			const cropFortuneType = CROP_INFO[player.options.selectedCrop]?.fortuneType;
-			const accessory = FarmingAccessory.fakeItem(
-				FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN as FarmingAccessoryInfo
-			);
-
-			if (cropFortuneType && accessory?.getLastItemUpgrade()?.info.baseStats?.[cropFortuneType]) {
+			if (!highest || (cropFortuneType && highest.info.baseStats?.[cropFortuneType])) {
 				return false;
 			}
 
