@@ -56,7 +56,7 @@
 			<Button variant="link" rel="nofollow noreferrer noopener" class="h-8 p-0" href={PUBLIC_DONATION_URL}
 				>Donate on Ko-Fi</Button
 			>
-			<Button variant="link" rel="noopener" class="h-8 p-0" href="/stickers">Purchase Stickers</Button>
+			<Button variant="link" class="h-8 p-0" href="/info/badges">Unlock Badges</Button>
 		</div>
 		<div class="flex flex-1 basis-32 flex-col items-start gap-2 py-4">
 			<h5 class="text-lg font-semibold">Made by Kaeso</h5>
