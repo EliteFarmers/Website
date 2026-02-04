@@ -82,7 +82,10 @@ async function removeReturnTypesFromFile(filePath: string) {
 			}
 
 			const schemaFileContent = await schemasProject.getFileSystem().readFile(schemaFilePath);
-			const updatedSchemaFileContent = schemaFileContent.replace(/bigint/g, 'number | string | bigint');
+			const updatedSchemaFileContent = schemaFileContent.replace(
+				/\bbigint\b(?!\s*\|)/g,
+				'number | string | bigint'
+			);
 			await schemasProject.getFileSystem().writeFile(schemaFilePath, updatedSchemaFileContent);
 		}
 	} catch (err) {
