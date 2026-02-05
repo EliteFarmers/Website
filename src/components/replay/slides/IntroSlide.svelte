@@ -19,7 +19,7 @@
 
 	<div class="animate-scale-in relative mb-8 h-48 w-48 drop-shadow-2xl md:mb-12 md:h-64 md:w-64">
 		<img
-			src="https://mc-heads.net/body/{data.player.uuid}"
+			src="https://skins.mcstats.com/body/front/{data.player.uuid}"
 			alt={data.player.ign}
 			class="h-full w-full object-contain"
 		/>
