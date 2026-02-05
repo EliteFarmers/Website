@@ -55,6 +55,19 @@ export const FIELD_MOUSE_BESTIARY_PEST_BRACKET: Record<number, number> = {
 	15: 100,
 };
 
+export const TIMESTALK_CLONE_BESTIARY_BRACKET: Record<number, number> = {
+	1: 1,
+	2: 2,
+	3: 3,
+	4: 5,
+	5: 7,
+	6: 9,
+	7: 11,
+	8: 14,
+	9: 17,
+	10: 20,
+};
+
 export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
 	[Pest.Beetle]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
 	[Pest.Cricket]: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
@@ -173,7 +186,7 @@ export const GARDEN_BESTIARY_NAMES: Record<string, string> = {
 
 export const GARDEN_BESTIARY_BRACKETS: Record<string, Record<number, number>> = {
 	zombuddy_1: DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
-	timestalk_clone_100: FIELD_MOUSE_BESTIARY_PEST_BRACKET,
+	timestalk_clone_100: TIMESTALK_CLONE_BESTIARY_BRACKET,
 };
 
 export const PEST_TO_CROP: Partial<Record<Pest, Crop>> = {
