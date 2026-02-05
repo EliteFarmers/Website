@@ -7,6 +7,7 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { LeaderboardEntryWithRankDto } from './LeaderboardEntryWithRankDto';
 import type { LeaderboardEntryDto } from './LeaderboardEntryDto';
 
 export interface LeaderboardPositionDto {
@@ -26,10 +27,15 @@ time based leaderboard */
 	 * List of upcoming players
 	 * @nullable
 	 */
-	upcomingPlayers?: LeaderboardEntryDto[] | null;
+	upcomingPlayers?: LeaderboardEntryWithRankDto[] | null;
 	/**
 	 * List of previous players
 	 * @nullable
 	 */
 	previous?: LeaderboardEntryDto[] | null;
+	/**
+	 * True if endpoint was disabled for this request
+	 * @nullable
+	 */
+	disabled?: boolean | null;
 }

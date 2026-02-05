@@ -43,7 +43,7 @@
 		>
 			<img
 				class="hidden h-full flex-1 self-center object-contain @lg:ml-8 @lg:inline-block @lg:flex-none"
-				src="https://mc-heads.net/body/{ctx.uuid}"
+				src="https://skins.mcstats.com/body/front/{ctx.uuid}"
 				alt="User's Minecraft appearance"
 			/>
 			<div class="block @lg:hidden">

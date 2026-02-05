@@ -6,6 +6,7 @@ import {
 	refreshDiscordGuild,
 	refreshHypixelGuild,
 	removeTestEntitlement,
+	syncLeaderboards,
 	unlinkUserAccount,
 } from '$lib/api';
 import { reloadCachedItems } from '$lib/servercache';
@@ -206,6 +207,23 @@ export const actions: Actions = {
 
 		if (!response.ok) {
 			return fail(500, { error: e || 'Failed to revoke entitlement' });
+		}
+
+		return {
+			success: true,
+		};
+	},
+	syncRedisLbs: async ({ locals }) => {
+		const { access_token: token } = locals;
+
+		if (!token || !locals.session?.perms.admin) {
+			return fail(401, { error: 'Unauthorized' });
+		}
+
+		const { response, error: e } = await syncLeaderboards();
+
+		if (!response.ok) {
+			return fail(500, { error: e || 'Failed to sync Redis leaderboards' });
 		}
 
 		return {

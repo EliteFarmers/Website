@@ -2652,7 +2652,16 @@ export const zodGetPlayerRank1QueryParams = zod.object({
 		.nullish()
 		.describe('Amount of upcoming players to include (max 100). Only works with new leaderboard backend'),
 	previous: zod.number().nullish().describe('Amount of passed players to include (max 3).'),
-	atRank: zod.number().nullish().describe('Start at a specified rank for upcoming players'),
+	atRank: zod
+		.number()
+		.nullish()
+		.describe('Start at a specified rank for upcoming players.\nUse AtAmount instead for better lookups.'),
+	atAmount: zod
+		.number()
+		.nullish()
+		.describe(
+			'Start at a specified score threshold for upcoming players.\nPass your locally tracked score to get upcoming players\nwithout needing to calculate the correct rank.'
+		),
 	interval: zod.string().nullish().describe('Time interval key of a monthly leaderboard. Format: yyyy-MM'),
 	mode: zod
 		.string()
@@ -2687,6 +2696,7 @@ export const zodGetPlayerRank2QueryParams = zod.object({
 	upcoming: zod.number().nullish(),
 	previous: zod.number().nullish(),
 	atRank: zod.number().nullish(),
+	atAmount: zod.number().nullish(),
 	interval: zod.string().nullish(),
 	mode: zod.string().nullish(),
 	removed: zod.union([zod.literal(0), zod.literal(1), zod.literal(2)]).nullish(),

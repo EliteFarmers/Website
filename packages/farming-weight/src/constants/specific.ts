@@ -1,4 +1,4 @@
-import { PEST_BESTIARY_IDS } from './pests.js';
+import { BESTIARY_PEST_BRACKETS, GARDEN_BESTIARY_BRACKETS } from './pests.js';
 import { Stat } from './stats.js';
 import type { FortuneSource } from './upgrades.js';
 
@@ -268,7 +268,10 @@ export const COMMUNITY_CENTER_UPGRADE: FortuneSource = {
 export const PEST_BESTIARY_SOURCE: FortuneSource = {
 	name: 'Garden Bestiary',
 	fortunePerLevel: 0.4,
-	maxLevel: (Object.keys(PEST_BESTIARY_IDS).length * 6) / 0.4,
+	maxLevel: Object.values({ ...BESTIARY_PEST_BRACKETS, ...GARDEN_BESTIARY_BRACKETS }).reduce(
+		(acc, bracket) => acc + Object.keys(bracket).length,
+		0
+	),
 	wiki: 'https://wiki.hypixel.net/Bestiary#Garden_',
 };
 

@@ -406,11 +406,11 @@ export type getAccountFromDiscordResponseError = getAccountFromDiscordResponse40
 
 export type getAccountFromDiscordResponse = getAccountFromDiscordResponseSuccess | getAccountFromDiscordResponseError;
 
-export const getGetAccountFromDiscordUrl = (discordId: bigint | number | string) => {
+export const getGetAccountFromDiscordUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/account/${discordId}`;
 };
 
-export const getAccountFromDiscord = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getAccountFromDiscord = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getAccountFromDiscordResponse>(getGetAccountFromDiscordUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -439,11 +439,11 @@ export type getAccountSettingsResponseError = getAccountSettingsResponse400 & {
 
 export type getAccountSettingsResponse = getAccountSettingsResponseSuccess | getAccountSettingsResponseError;
 
-export const getGetAccountSettingsUrl = (discordId: bigint | number | string) => {
+export const getGetAccountSettingsUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/account/${discordId}/settings`;
 };
 
-export const getAccountSettings = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getAccountSettings = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getAccountSettingsResponse>(getGetAccountSettingsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -781,11 +781,11 @@ export type addRoleToUserResponseError = (
 
 export type addRoleToUserResponse = addRoleToUserResponseSuccess | addRoleToUserResponseError;
 
-export const getAddRoleToUserUrl = (discordId: bigint | number | string, role: string) => {
+export const getAddRoleToUserUrl = (discordId: string | bigint | number, role: string) => {
 	return `${ELITE_API_URL}/admin/user/${discordId}/roles/${role}`;
 };
 
-export const addRoleToUser = async (discordId: bigint | number | string, role: string, options?: RequestInit) => {
+export const addRoleToUser = async (discordId: string | bigint | number, role: string, options?: RequestInit) => {
 	return customFetch<addRoleToUserResponse>(getAddRoleToUserUrl(discordId, role), {
 		...options,
 		method: 'POST',
@@ -828,11 +828,11 @@ export type removeRoleFromUserResponseError = (
 
 export type removeRoleFromUserResponse = removeRoleFromUserResponseSuccess | removeRoleFromUserResponseError;
 
-export const getRemoveRoleFromUserUrl = (discordId: bigint | number | string, role: string) => {
+export const getRemoveRoleFromUserUrl = (discordId: string | bigint | number, role: string) => {
 	return `${ELITE_API_URL}/admin/user/${discordId}/roles/${role}`;
 };
 
-export const removeRoleFromUser = async (discordId: bigint | number | string, role: string, options?: RequestInit) => {
+export const removeRoleFromUser = async (discordId: string | bigint | number, role: string, options?: RequestInit) => {
 	return customFetch<removeRoleFromUserResponse>(getRemoveRoleFromUserUrl(discordId, role), {
 		...options,
 		method: 'DELETE',
@@ -1043,11 +1043,11 @@ export type deleteEventApprovalResponseError = (
 
 export type deleteEventApprovalResponse = deleteEventApprovalResponseSuccess | deleteEventApprovalResponseError;
 
-export const getDeleteEventApprovalUrl = (eventId: bigint | number | string) => {
+export const getDeleteEventApprovalUrl = (eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/admin/events/${eventId}`;
 };
 
-export const deleteEventApproval = async (eventId: bigint | number | string, options?: RequestInit) => {
+export const deleteEventApproval = async (eventId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<deleteEventApprovalResponse>(getDeleteEventApprovalUrl(eventId), {
 		...options,
 		method: 'DELETE',
@@ -1128,7 +1128,7 @@ export type setEventApprovalResponseError = (
 
 export type setEventApprovalResponse = setEventApprovalResponseSuccess | setEventApprovalResponseError;
 
-export const getSetEventApprovalUrl = (eventId: bigint | number | string, params?: SetEventApprovalParams) => {
+export const getSetEventApprovalUrl = (eventId: string | bigint | number, params?: SetEventApprovalParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -1145,7 +1145,7 @@ export const getSetEventApprovalUrl = (eventId: bigint | number | string, params
 };
 
 export const setEventApproval = async (
-	eventId: bigint | number | string,
+	eventId: string | bigint | number,
 	params?: SetEventApprovalParams,
 	options?: RequestInit
 ) => {
@@ -1227,11 +1227,11 @@ export type refreshDiscordGuildResponseError = (
 
 export type refreshDiscordGuildResponse = refreshDiscordGuildResponseSuccess | refreshDiscordGuildResponseError;
 
-export const getRefreshDiscordGuildUrl = (guildId: bigint | number | string) => {
+export const getRefreshDiscordGuildUrl = (guildId: string | bigint | number) => {
 	return `${ELITE_API_URL}/admin/guild/${guildId}/refresh`;
 };
 
-export const refreshDiscordGuild = async (guildId: bigint | number | string, options?: RequestInit) => {
+export const refreshDiscordGuild = async (guildId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<refreshDiscordGuildResponse>(getRefreshDiscordGuildUrl(guildId), {
 		...options,
 		method: 'POST',
@@ -1274,6 +1274,45 @@ export const refreshHypixelGuild = async (guildId: string, options?: RequestInit
 	return customFetch<refreshHypixelGuildResponse>(getRefreshHypixelGuildUrl(guildId), {
 		...options,
 		method: 'POST',
+	});
+};
+
+/**
+ * Sync leaderboards in case of wrong data
+ * @summary Sync leaderboards
+ */
+export type syncLeaderboardsResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type syncLeaderboardsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type syncLeaderboardsResponse403 = {
+	data: void;
+	status: 403;
+};
+
+export type syncLeaderboardsResponseSuccess = syncLeaderboardsResponse204 & {
+	headers: Headers;
+};
+export type syncLeaderboardsResponseError = (syncLeaderboardsResponse401 | syncLeaderboardsResponse403) & {
+	headers: Headers;
+};
+
+export type syncLeaderboardsResponse = syncLeaderboardsResponseSuccess | syncLeaderboardsResponseError;
+
+export const getSyncLeaderboardsUrl = () => {
+	return `${ELITE_API_URL}/admin/leaderboards/sync`;
+};
+
+export const syncLeaderboards = async (options?: RequestInit) => {
+	return customFetch<syncLeaderboardsResponse>(getSyncLeaderboardsUrl(), {
+		...options,
+		method: 'GET',
 	});
 };
 
@@ -1528,11 +1567,11 @@ export type acceptConfirmationResponseError = acceptConfirmationResponse401 & {
 
 export type acceptConfirmationResponse = acceptConfirmationResponseSuccess | acceptConfirmationResponseError;
 
-export const getAcceptConfirmationUrl = (id: number | string) => {
+export const getAcceptConfirmationUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/auth/confirmations/${id}/accept`;
 };
 
-export const acceptConfirmation = async (id: number | string, options?: RequestInit) => {
+export const acceptConfirmation = async (id: string | number, options?: RequestInit) => {
 	return customFetch<acceptConfirmationResponse>(getAcceptConfirmationUrl(id), {
 		...options,
 		method: 'POST',
@@ -1553,11 +1592,11 @@ export type getConfirmationResponseSuccess = getConfirmationResponse200 & {
 };
 export type getConfirmationResponse = getConfirmationResponseSuccess;
 
-export const getGetConfirmationUrl = (id: number | string) => {
+export const getGetConfirmationUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/auth/confirmations/${id}`;
 };
 
-export const getConfirmation = async (id: number | string, options?: RequestInit) => {
+export const getConfirmation = async (id: string | number, options?: RequestInit) => {
 	return customFetch<getConfirmationResponse>(getGetConfirmationUrl(id), {
 		...options,
 		method: 'GET',
@@ -1688,11 +1727,11 @@ export type addBadgeToUserBadgeResponseError = (
 
 export type addBadgeToUserBadgeResponse = addBadgeToUserBadgeResponseSuccess | addBadgeToUserBadgeResponseError;
 
-export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: number | string) => {
+export const getAddBadgeToUserBadgeUrl = (player: string, badgeId: string | number) => {
 	return `${ELITE_API_URL}/badge/user/${player}/${badgeId}`;
 };
 
-export const addBadgeToUserBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const addBadgeToUserBadge = async (player: string, badgeId: string | number, options?: RequestInit) => {
 	return customFetch<addBadgeToUserBadgeResponse>(getAddBadgeToUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -1737,11 +1776,11 @@ export type deleteBadgeFromUserBadgeResponse =
 	| deleteBadgeFromUserBadgeResponseSuccess
 	| deleteBadgeFromUserBadgeResponseError;
 
-export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: number | string) => {
+export const getDeleteBadgeFromUserBadgeUrl = (player: string, badgeId: string | number) => {
 	return `${ELITE_API_URL}/badge/user/${player}/${badgeId}`;
 };
 
-export const deleteBadgeFromUserBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const deleteBadgeFromUserBadge = async (player: string, badgeId: string | number, options?: RequestInit) => {
 	return customFetch<deleteBadgeFromUserBadgeResponse>(getDeleteBadgeFromUserBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1860,11 +1899,11 @@ export type deleteBadgeResponseError = (deleteBadgeResponse400 | deleteBadgeResp
 
 export type deleteBadgeResponse = deleteBadgeResponseSuccess | deleteBadgeResponseError;
 
-export const getDeleteBadgeUrl = (badgeId: number | string) => {
+export const getDeleteBadgeUrl = (badgeId: string | number) => {
 	return `${ELITE_API_URL}/badge/${badgeId}`;
 };
 
-export const deleteBadge = async (badgeId: number | string, options?: RequestInit) => {
+export const deleteBadge = async (badgeId: string | number, options?: RequestInit) => {
 	return customFetch<deleteBadgeResponse>(getDeleteBadgeUrl(badgeId), {
 		...options,
 		method: 'DELETE',
@@ -1903,12 +1942,12 @@ export type updateBadgeResponseError = (updateBadgeResponse400 | updateBadgeResp
 
 export type updateBadgeResponse = updateBadgeResponseSuccess | updateBadgeResponseError;
 
-export const getUpdateBadgeUrl = (badgeId: number | string) => {
+export const getUpdateBadgeUrl = (badgeId: string | number) => {
 	return `${ELITE_API_URL}/badge/${badgeId}`;
 };
 
 export const updateBadge = async (
-	badgeId: number | string,
+	badgeId: string | number,
 	updateBadgeRequestUpdateBadge: UpdateBadgeRequestUpdateBadge,
 	options?: RequestInit
 ) => {
@@ -1958,11 +1997,11 @@ export type linkAccountBotResponseError = linkAccountBotResponse400 & {
 
 export type linkAccountBotResponse = linkAccountBotResponseSuccess | linkAccountBotResponseError;
 
-export const getLinkAccountBotUrl = (discordId: bigint | number | string, player: string) => {
+export const getLinkAccountBotUrl = (discordId: string | bigint | number, player: string) => {
 	return `${ELITE_API_URL}/bot/account/${discordId}/${player}`;
 };
 
-export const linkAccountBot = async (discordId: bigint | number | string, player: string, options?: RequestInit) => {
+export const linkAccountBot = async (discordId: string | bigint | number, player: string, options?: RequestInit) => {
 	return customFetch<linkAccountBotResponse>(getLinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'POST',
@@ -1991,11 +2030,11 @@ export type unlinkAccountBotResponseError = unlinkAccountBotResponse400 & {
 
 export type unlinkAccountBotResponse = unlinkAccountBotResponseSuccess | unlinkAccountBotResponseError;
 
-export const getUnlinkAccountBotUrl = (discordId: bigint | number | string, player: string) => {
+export const getUnlinkAccountBotUrl = (discordId: string | bigint | number, player: string) => {
 	return `${ELITE_API_URL}/bot/account/${discordId}/${player}`;
 };
 
-export const unlinkAccountBot = async (discordId: bigint | number | string, player: string, options?: RequestInit) => {
+export const unlinkAccountBot = async (discordId: string | bigint | number, player: string, options?: RequestInit) => {
 	return customFetch<unlinkAccountBotResponse>(getUnlinkAccountBotUrl(discordId, player), {
 		...options,
 		method: 'DELETE',
@@ -2024,12 +2063,12 @@ export type makePrimaryAccountResponseError = makePrimaryAccountResponse400 & {
 
 export type makePrimaryAccountResponse = makePrimaryAccountResponseSuccess | makePrimaryAccountResponseError;
 
-export const getMakePrimaryAccountUrl = (discordId: bigint | number | string, player: string) => {
+export const getMakePrimaryAccountUrl = (discordId: string | bigint | number, player: string) => {
 	return `${ELITE_API_URL}/bot/account/${discordId}/${player}/primary`;
 };
 
 export const makePrimaryAccount = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	player: string,
 	options?: RequestInit
 ) => {
@@ -2061,11 +2100,11 @@ export type refreshUserPurchasesResponseError = refreshUserPurchasesResponse400 
 
 export type refreshUserPurchasesResponse = refreshUserPurchasesResponseSuccess | refreshUserPurchasesResponseError;
 
-export const getRefreshUserPurchasesUrl = (discordId: bigint | number | string) => {
+export const getRefreshUserPurchasesUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/account/${discordId}/purchases`;
 };
 
-export const refreshUserPurchases = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const refreshUserPurchases = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<refreshUserPurchasesResponse>(getRefreshUserPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2094,11 +2133,11 @@ export type grantBadgeResponseError = grantBadgeResponse400 & {
 
 export type grantBadgeResponse = grantBadgeResponseSuccess | grantBadgeResponseError;
 
-export const getGrantBadgeUrl = (player: string, badgeId: number | string) => {
+export const getGrantBadgeUrl = (player: string, badgeId: string | number) => {
 	return `${ELITE_API_URL}/bot/badges/${player}/${badgeId}`;
 };
 
-export const grantBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const grantBadge = async (player: string, badgeId: string | number, options?: RequestInit) => {
 	return customFetch<grantBadgeResponse>(getGrantBadgeUrl(player, badgeId), {
 		...options,
 		method: 'POST',
@@ -2127,11 +2166,11 @@ export type removeBadgeResponseError = removeBadgeResponse400 & {
 
 export type removeBadgeResponse = removeBadgeResponseSuccess | removeBadgeResponseError;
 
-export const getRemoveBadgeUrl = (player: string, badgeId: number | string) => {
+export const getRemoveBadgeUrl = (player: string, badgeId: string | number) => {
 	return `${ELITE_API_URL}/bot/badges/${player}/${badgeId}`;
 };
 
-export const removeBadge = async (player: string, badgeId: number | string, options?: RequestInit) => {
+export const removeBadge = async (player: string, badgeId: string | number, options?: RequestInit) => {
 	return customFetch<removeBadgeResponse>(getRemoveBadgeUrl(player, badgeId), {
 		...options,
 		method: 'DELETE',
@@ -2163,7 +2202,7 @@ export type disableContestPingsPingsResponse =
 	| disableContestPingsPingsResponseError;
 
 export const getDisableContestPingsPingsUrl = (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: DisableContestPingsPingsParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -2182,7 +2221,7 @@ export const getDisableContestPingsPingsUrl = (
 };
 
 export const disableContestPingsPings = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: DisableContestPingsPingsParams,
 	options?: RequestInit
 ) => {
@@ -2238,11 +2277,11 @@ export type getBotGuildResponseError = getBotGuildResponse400 & {
 
 export type getBotGuildResponse = getBotGuildResponseSuccess | getBotGuildResponseError;
 
-export const getGetBotGuildUrl = (discordId: bigint | number | string) => {
+export const getGetBotGuildUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/${discordId}`;
 };
 
-export const getBotGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getBotGuild = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getBotGuildResponse>(getGetBotGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -2271,11 +2310,11 @@ export type getJacobFeatureResponseError = getJacobFeatureResponse400 & {
 
 export type getJacobFeatureResponse = getJacobFeatureResponseSuccess | getJacobFeatureResponseError;
 
-export const getGetJacobFeatureUrl = (discordId: bigint | number | string) => {
+export const getGetJacobFeatureUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/${discordId}/jacob`;
 };
 
-export const getJacobFeature = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getJacobFeature = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getJacobFeatureResponse>(getGetJacobFeatureUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -2304,7 +2343,7 @@ export type updateJacobFeatureResponseError = updateJacobFeatureResponse400 & {
 
 export type updateJacobFeatureResponse = updateJacobFeatureResponseSuccess | updateJacobFeatureResponseError;
 
-export const getUpdateJacobFeatureUrl = (discordId: bigint | number | string, params?: UpdateJacobFeatureParams) => {
+export const getUpdateJacobFeatureUrl = (discordId: string | bigint | number, params?: UpdateJacobFeatureParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -2321,7 +2360,7 @@ export const getUpdateJacobFeatureUrl = (discordId: bigint | number | string, pa
 };
 
 export const updateJacobFeature = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateJacobFeatureParams,
 	options?: RequestInit
@@ -2356,11 +2395,11 @@ export type refreshGuildResponseError = refreshGuildResponse400 & {
 
 export type refreshGuildResponse = refreshGuildResponseSuccess | refreshGuildResponseError;
 
-export const getRefreshGuildUrl = (discordId: bigint | number | string) => {
+export const getRefreshGuildUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/guild/${discordId}`;
 };
 
-export const refreshGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const refreshGuild = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<refreshGuildResponse>(getRefreshGuildUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -2389,12 +2428,12 @@ export type updateGuildResponseError = updateGuildResponse400 & {
 
 export type updateGuildResponse = updateGuildResponseSuccess | updateGuildResponseError;
 
-export const getUpdateGuildUrl = (discordId: bigint | number | string) => {
+export const getUpdateGuildUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/guild/${discordId}`;
 };
 
 export const updateGuild = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	incomingGuildDto: IncomingGuildDto,
 	options?: RequestInit
 ) => {
@@ -2428,12 +2467,12 @@ export type updateGuildChannelResponseError = updateGuildChannelResponse400 & {
 
 export type updateGuildChannelResponse = updateGuildChannelResponseSuccess | updateGuildChannelResponseError;
 
-export const getUpdateGuildChannelUrl = (discordId: bigint | number | string) => {
+export const getUpdateGuildChannelUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/guild/${discordId}/channels`;
 };
 
 export const updateGuildChannel = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	incomingGuildChannelDto: IncomingGuildChannelDto,
 	options?: RequestInit
 ) => {
@@ -2469,12 +2508,12 @@ export type updateGuildMemberRolesResponse =
 	| updateGuildMemberRolesResponseSuccess
 	| updateGuildMemberRolesResponseError;
 
-export const getUpdateGuildMemberRolesUrl = (discordId: bigint | number | string, userId: string) => {
+export const getUpdateGuildMemberRolesUrl = (discordId: string | bigint | number, userId: string) => {
 	return `${ELITE_API_URL}/bot/guild/${discordId}/members/${userId}/roles`;
 };
 
 export const updateGuildMemberRoles = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	userId: string,
 	updateGuildMemberRolesBody: string[],
 	options?: RequestInit
@@ -2509,12 +2548,12 @@ export type updateGuildRoleResponseError = updateGuildRoleResponse400 & {
 
 export type updateGuildRoleResponse = updateGuildRoleResponseSuccess | updateGuildRoleResponseError;
 
-export const getUpdateGuildRoleUrl = (discordId: bigint | number | string) => {
+export const getUpdateGuildRoleUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/bot/guild/${discordId}/roles`;
 };
 
 export const updateGuildRole = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	incomingGuildRoleDto: IncomingGuildRoleDto,
 	options?: RequestInit
 ) => {
@@ -2659,11 +2698,11 @@ export type deleteConfirmationResponseError = (deleteConfirmationResponse401 | d
 
 export type deleteConfirmationResponse = deleteConfirmationResponseSuccess | deleteConfirmationResponseError;
 
-export const getDeleteConfirmationUrl = (id: number | string) => {
+export const getDeleteConfirmationUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/admin/confirmations/${id}`;
 };
 
-export const deleteConfirmation = async (id: number | string, options?: RequestInit) => {
+export const deleteConfirmation = async (id: string | number, options?: RequestInit) => {
 	return customFetch<deleteConfirmationResponse>(getDeleteConfirmationUrl(id), {
 		...options,
 		method: 'DELETE',
@@ -2698,12 +2737,12 @@ export type updateConfirmationResponseError = (updateConfirmationResponse401 | u
 
 export type updateConfirmationResponse = updateConfirmationResponseSuccess | updateConfirmationResponseError;
 
-export const getUpdateConfirmationUrl = (id: number | string) => {
+export const getUpdateConfirmationUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/admin/confirmations/${id}`;
 };
 
 export const updateConfirmation = async (
-	id: number | string,
+	id: string | number,
 	updateConfirmationRequest: UpdateConfirmationRequest,
 	options?: RequestInit
 ) => {
@@ -2753,7 +2792,7 @@ export type getContestsAtTimestampResponseSuccess = getContestsAtTimestampRespon
 export type getContestsAtTimestampResponse = getContestsAtTimestampResponseSuccess;
 
 export const getGetContestsAtTimestampUrl = (
-	timestamp: bigint | number | string,
+	timestamp: string | bigint | number,
 	params: GetContestsAtTimestampParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -2772,7 +2811,7 @@ export const getGetContestsAtTimestampUrl = (
 };
 
 export const getContestsAtTimestamp = async (
-	timestamp: bigint | number | string,
+	timestamp: string | bigint | number,
 	params: GetContestsAtTimestampParams,
 	options?: RequestInit
 ) => {
@@ -2804,14 +2843,14 @@ export type getContestsInDayResponseError = getContestsInDayResponse400 & {
 
 export type getContestsInDayResponse = getContestsInDayResponseSuccess | getContestsInDayResponseError;
 
-export const getGetContestsInDayUrl = (year: number | string, month: number | string, day: number | string) => {
+export const getGetContestsInDayUrl = (year: string | number, month: string | number, day: string | number) => {
 	return `${ELITE_API_URL}/contests/at/${year}/${month}/${day}`;
 };
 
 export const getContestsInDay = async (
-	year: number | string,
-	month: number | string,
-	day: number | string,
+	year: string | number,
+	month: string | number,
+	day: string | number,
 	options?: RequestInit
 ) => {
 	return customFetch<getContestsInDayResponse>(getGetContestsInDayUrl(year, month, day), {
@@ -2842,11 +2881,11 @@ export type getContestsInMonthResponseError = getContestsInMonthResponse400 & {
 
 export type getContestsInMonthResponse = getContestsInMonthResponseSuccess | getContestsInMonthResponseError;
 
-export const getGetContestsInMonthUrl = (year: number | string, month: number | string) => {
+export const getGetContestsInMonthUrl = (year: string | number, month: string | number) => {
 	return `${ELITE_API_URL}/contests/at/${year}/${month}`;
 };
 
-export const getContestsInMonth = async (year: number | string, month: number | string, options?: RequestInit) => {
+export const getContestsInMonth = async (year: string | number, month: string | number, options?: RequestInit) => {
 	return customFetch<getContestsInMonthResponse>(getGetContestsInMonthUrl(year, month), {
 		...options,
 		method: 'GET',
@@ -2866,7 +2905,7 @@ export type getContestsInYearResponseSuccess = getContestsInYearResponse200 & {
 };
 export type getContestsInYearResponse = getContestsInYearResponseSuccess;
 
-export const getGetContestsInYearUrl = (year: number | string, params?: GetContestsInYearParams) => {
+export const getGetContestsInYearUrl = (year: string | number, params?: GetContestsInYearParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -2883,7 +2922,7 @@ export const getGetContestsInYearUrl = (year: number | string, params?: GetConte
 };
 
 export const getContestsInYear = async (
-	year: number | string,
+	year: string | number,
 	params?: GetContestsInYearParams,
 	options?: RequestInit
 ) => {
@@ -3048,11 +3087,11 @@ export type getRecordsInYearResponseError = getRecordsInYearResponse400 & {
 
 export type getRecordsInYearResponse = getRecordsInYearResponseSuccess | getRecordsInYearResponseError;
 
-export const getGetRecordsInYearUrl = (year: number | string) => {
+export const getGetRecordsInYearUrl = (year: string | number) => {
 	return `${ELITE_API_URL}/contests/records/${year}`;
 };
 
-export const getRecordsInYear = async (year: number | string, options?: RequestInit) => {
+export const getRecordsInYear = async (year: string | number, options?: RequestInit) => {
 	return customFetch<getRecordsInYearResponse>(getGetRecordsInYearUrl(year), {
 		...options,
 		method: 'GET',
@@ -3122,18 +3161,18 @@ export type addTeamMemberAdminResponseError = (addTeamMemberAdminResponse400 | a
 export type addTeamMemberAdminResponse = addTeamMemberAdminResponseSuccess | addTeamMemberAdminResponseError;
 
 export const getAddTeamMemberAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	player: string
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
 };
 
 export const addTeamMemberAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	player: string,
 	options?: RequestInit
 ) => {
@@ -3171,18 +3210,18 @@ export type kickTeamMemberAdminResponseError = (kickTeamMemberAdminResponse400 |
 export type kickTeamMemberAdminResponse = kickTeamMemberAdminResponseSuccess | kickTeamMemberAdminResponseError;
 
 export const getKickTeamMemberAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	player: string
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/teams/${teamId}/members/${player}`;
 };
 
 export const kickTeamMemberAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	player: string,
 	options?: RequestInit
 ) => {
@@ -3220,16 +3259,16 @@ export type banMemberAdminResponseError = (banMemberAdminResponse400 | banMember
 export type banMemberAdminResponse = banMemberAdminResponseSuccess | banMemberAdminResponseError;
 
 export const getBanMemberAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
 export const banMemberAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string,
 	banMemberAdminBody: string,
 	options?: RequestInit
@@ -3270,16 +3309,16 @@ export type unbanMemberAdminResponseError = (unbanMemberAdminResponse400 | unban
 export type unbanMemberAdminResponse = unbanMemberAdminResponseSuccess | unbanMemberAdminResponseError;
 
 export const getUnbanMemberAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/bans/${playerUuid}`;
 };
 
 export const unbanMemberAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string,
 	options?: RequestInit
 ) => {
@@ -3316,12 +3355,12 @@ export type createEventAdminResponseError = (createEventAdminResponse400 | creat
 
 export type createEventAdminResponse = createEventAdminResponseSuccess | createEventAdminResponseError;
 
-export const getCreateEventAdminUrl = (discordId: bigint | number | string) => {
+export const getCreateEventAdminUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/weight`;
 };
 
 export const createEventAdmin = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	createEventDto: CreateEventDto,
 	options?: RequestInit
 ) => {
@@ -3362,8 +3401,8 @@ export type createTeamAdminResponseError = (createTeamAdminResponse400 | createT
 export type createTeamAdminResponse = createTeamAdminResponseSuccess | createTeamAdminResponseError;
 
 export const getCreateTeamAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	params?: CreateTeamAdminParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -3382,8 +3421,8 @@ export const getCreateTeamAdminUrl = (
 };
 
 export const createTeamAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	createEventTeamDto: CreateEventTeamDto,
 	params?: CreateTeamAdminParams,
 	options?: RequestInit
@@ -3424,13 +3463,13 @@ export type deleteEventAdminResponseError = (deleteEventAdminResponse400 | delet
 
 export type deleteEventAdminResponse = deleteEventAdminResponseSuccess | deleteEventAdminResponseError;
 
-export const getDeleteEventAdminUrl = (discordId: bigint | number | string, eventId: bigint | number | string) => {
+export const getDeleteEventAdminUrl = (discordId: string | bigint | number, eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}`;
 };
 
 export const deleteEventAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<deleteEventAdminResponse>(getDeleteEventAdminUrl(discordId, eventId), {
@@ -3466,13 +3505,13 @@ export type updateEventAdminResponseError = (updateEventAdminResponse400 | updat
 
 export type updateEventAdminResponse = updateEventAdminResponseSuccess | updateEventAdminResponseError;
 
-export const getUpdateEventAdminUrl = (discordId: bigint | number | string, eventId: bigint | number | string) => {
+export const getUpdateEventAdminUrl = (discordId: string | bigint | number, eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}`;
 };
 
 export const updateEventAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	editEventDto: EditEventDto,
 	options?: RequestInit
 ) => {
@@ -3517,15 +3556,15 @@ export type deleteEventBannerAdminResponse =
 	| deleteEventBannerAdminResponseError;
 
 export const getDeleteEventBannerAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string
+	discordId: string | bigint | number,
+	eventId: string | bigint | number
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/banner`;
 };
 
 export const deleteEventBannerAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<deleteEventBannerAdminResponse>(getDeleteEventBannerAdminUrl(discordId, eventId), {
@@ -3561,13 +3600,13 @@ export type setEventBannerAdminResponseError = (setEventBannerAdminResponse400 |
 
 export type setEventBannerAdminResponse = setEventBannerAdminResponseSuccess | setEventBannerAdminResponseError;
 
-export const getSetEventBannerAdminUrl = (discordId: bigint | number | string, eventId: bigint | number | string) => {
+export const getSetEventBannerAdminUrl = (discordId: string | bigint | number, eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/banner`;
 };
 
 export const setEventBannerAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	editEventBannerDto: EditEventBannerDto,
 	options?: RequestInit
 ) => {
@@ -3611,8 +3650,8 @@ export type deleteMemberAdminResponseError = (deleteMemberAdminResponse400 | del
 export type deleteMemberAdminResponse = deleteMemberAdminResponseSuccess | deleteMemberAdminResponseError;
 
 export const getDeleteMemberAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string,
 	params?: DeleteMemberAdminParams
 ) => {
@@ -3632,8 +3671,8 @@ export const getDeleteMemberAdminUrl = (
 };
 
 export const deleteMemberAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string,
 	params?: DeleteMemberAdminParams,
 	options?: RequestInit
@@ -3672,8 +3711,8 @@ export type forceAddMemberAdminResponseError = (forceAddMemberAdminResponse400 |
 export type forceAddMemberAdminResponse = forceAddMemberAdminResponseSuccess | forceAddMemberAdminResponseError;
 
 export const getForceAddMemberAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string,
 	params: ForceAddMemberAdminParams
 ) => {
@@ -3693,8 +3732,8 @@ export const getForceAddMemberAdminUrl = (
 };
 
 export const forceAddMemberAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	playerUuid: string,
 	params: ForceAddMemberAdminParams,
 	options?: RequestInit
@@ -3733,17 +3772,17 @@ export type deleteTeamAdminResponseError = (deleteTeamAdminResponse400 | deleteT
 export type deleteTeamAdminResponse = deleteTeamAdminResponseSuccess | deleteTeamAdminResponseError;
 
 export const getDeleteTeamAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const deleteTeamAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	options?: RequestInit
 ) => {
 	return customFetch<deleteTeamAdminResponse>(getDeleteTeamAdminUrl(discordId, eventId, teamId), {
@@ -3780,17 +3819,17 @@ export type updateTeamAdminResponseError = (updateTeamAdminResponse400 | updateT
 export type updateTeamAdminResponse = updateTeamAdminResponseSuccess | updateTeamAdminResponseError;
 
 export const getUpdateTeamAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/teams/${teamId}`;
 };
 
 export const updateTeamAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
 ) => {
@@ -3832,13 +3871,13 @@ export type getBannedMembersAdminResponseError = (
 
 export type getBannedMembersAdminResponse = getBannedMembersAdminResponseSuccess | getBannedMembersAdminResponseError;
 
-export const getGetBannedMembersAdminUrl = (discordId: bigint | number | string, eventId: bigint | number | string) => {
+export const getGetBannedMembersAdminUrl = (discordId: string | bigint | number, eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/event/${eventId}/bans`;
 };
 
 export const getBannedMembersAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<getBannedMembersAdminResponse>(getGetBannedMembersAdminUrl(discordId, eventId), {
@@ -3880,15 +3919,15 @@ export type getGuildEventMembersAdminResponse =
 	| getGuildEventMembersAdminResponseError;
 
 export const getGetGuildEventMembersAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string
+	discordId: string | bigint | number,
+	eventId: string | bigint | number
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/event/${eventId}/members`;
 };
 
 export const getGuildEventMembersAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<getGuildEventMembersAdminResponse>(getGetGuildEventMembersAdminUrl(discordId, eventId), {
@@ -3924,13 +3963,13 @@ export type getGuildEventAdminResponseError = (getGuildEventAdminResponse400 | g
 
 export type getGuildEventAdminResponse = getGuildEventAdminResponseSuccess | getGuildEventAdminResponseError;
 
-export const getGetGuildEventAdminUrl = (discordId: bigint | number | string, eventId: bigint | number | string) => {
+export const getGetGuildEventAdminUrl = (discordId: string | bigint | number, eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/event/${eventId}/admin`;
 };
 
 export const getGuildEventAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<getGuildEventAdminResponse>(getGetGuildEventAdminUrl(discordId, eventId), {
@@ -3966,11 +4005,11 @@ export type getGuildEventsAdminResponseError = (getGuildEventsAdminResponse400 |
 
 export type getGuildEventsAdminResponse = getGuildEventsAdminResponseSuccess | getGuildEventsAdminResponseError;
 
-export const getGetGuildEventsAdminUrl = (discordId: bigint | number | string) => {
+export const getGetGuildEventsAdminUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/admin`;
 };
 
-export const getGuildEventsAdmin = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getGuildEventsAdmin = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getGuildEventsAdminResponse>(getGetGuildEventsAdminUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -4004,13 +4043,13 @@ export type getTeamsAdminResponseError = (getTeamsAdminResponse400 | getTeamsAdm
 
 export type getTeamsAdminResponse = getTeamsAdminResponseSuccess | getTeamsAdminResponseError;
 
-export const getGetTeamsAdminUrl = (discordId: bigint | number | string, eventId: bigint | number | string) => {
+export const getGetTeamsAdminUrl = (discordId: string | bigint | number, eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/event/${eventId}/teams`;
 };
 
 export const getTeamsAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<getTeamsAdminResponse>(getGetTeamsAdminUrl(discordId, eventId), {
@@ -4042,17 +4081,17 @@ export type setTeamOwnerAdminResponseError = setTeamOwnerAdminResponse401 & {
 export type setTeamOwnerAdminResponse = setTeamOwnerAdminResponseSuccess | setTeamOwnerAdminResponseError;
 
 export const getSetTeamOwnerAdminUrl = (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number
 ) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events/${eventId}/teams/${teamId}/owner`;
 };
 
 export const setTeamOwnerAdmin = async (
-	discordId: bigint | number | string,
-	eventId: bigint | number | string,
-	teamId: number | string,
+	discordId: string | bigint | number,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	setTeamOwnerRequest: SetTeamOwnerRequest,
 	options?: RequestInit
 ) => {
@@ -4077,11 +4116,11 @@ export type getEventResponseSuccess = getEventResponse200 & {
 };
 export type getEventResponse = getEventResponseSuccess;
 
-export const getGetEventUrl = (eventId: bigint | number | string) => {
+export const getGetEventUrl = (eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/event/${eventId}`;
 };
 
-export const getEvent = async (eventId: bigint | number | string, options?: RequestInit) => {
+export const getEvent = async (eventId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getEventResponse>(getGetEventUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -4135,11 +4174,11 @@ export type getEventMemberResponseError = getEventMemberResponse400 & {
 
 export type getEventMemberResponse = getEventMemberResponseSuccess | getEventMemberResponseError;
 
-export const getGetEventMemberUrl = (eventId: bigint | number | string, playerUuid: string) => {
+export const getGetEventMemberUrl = (eventId: string | bigint | number, playerUuid: string) => {
 	return `${ELITE_API_URL}/event/${eventId}/member/${playerUuid}`;
 };
 
-export const getEventMember = async (eventId: bigint | number | string, playerUuid: string, options?: RequestInit) => {
+export const getEventMember = async (eventId: string | bigint | number, playerUuid: string, options?: RequestInit) => {
 	return customFetch<getEventMemberResponse>(getGetEventMemberUrl(eventId, playerUuid), {
 		...options,
 		method: 'GET',
@@ -4159,11 +4198,11 @@ export type getEventMembersResponseSuccess = getEventMembersResponse200 & {
 };
 export type getEventMembersResponse = getEventMembersResponseSuccess;
 
-export const getGetEventMembersUrl = (eventId: bigint | number | string) => {
+export const getGetEventMembersUrl = (eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/members`;
 };
 
-export const getEventMembers = async (eventId: bigint | number | string, options?: RequestInit) => {
+export const getEventMembers = async (eventId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getEventMembersResponse>(getGetEventMembersUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -4183,13 +4222,13 @@ export type getEventTeamResponseSuccess = getEventTeamResponse200 & {
 };
 export type getEventTeamResponse = getEventTeamResponseSuccess;
 
-export const getGetEventTeamUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getGetEventTeamUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}`;
 };
 
 export const getEventTeam = async (
-	eventId: bigint | number | string,
-	teamId: number | string,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	options?: RequestInit
 ) => {
 	return customFetch<getEventTeamResponse>(getGetEventTeamUrl(eventId, teamId), {
@@ -4220,11 +4259,11 @@ export type deleteTeamResponseError = deleteTeamResponse401 & {
 
 export type deleteTeamResponse = deleteTeamResponseSuccess | deleteTeamResponseError;
 
-export const getDeleteTeamUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getDeleteTeamUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}`;
 };
 
-export const deleteTeam = async (eventId: bigint | number | string, teamId: number | string, options?: RequestInit) => {
+export const deleteTeam = async (eventId: string | bigint | number, teamId: string | number, options?: RequestInit) => {
 	return customFetch<deleteTeamResponse>(getDeleteTeamUrl(eventId, teamId), {
 		...options,
 		method: 'DELETE',
@@ -4253,13 +4292,13 @@ export type updateTeamResponseError = updateTeamResponse401 & {
 
 export type updateTeamResponse = updateTeamResponseSuccess | updateTeamResponseError;
 
-export const getUpdateTeamUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getUpdateTeamUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}`;
 };
 
 export const updateTeam = async (
-	eventId: bigint | number | string,
-	teamId: number | string,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	updateEventTeamDto: UpdateEventTeamDto,
 	options?: RequestInit
 ) => {
@@ -4284,11 +4323,11 @@ export type getEventTeamsResponseSuccess = getEventTeamsResponse200 & {
 };
 export type getEventTeamsResponse = getEventTeamsResponseSuccess;
 
-export const getGetEventTeamsUrl = (eventId: bigint | number | string) => {
+export const getGetEventTeamsUrl = (eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/teams`;
 };
 
-export const getEventTeams = async (eventId: bigint | number | string, options?: RequestInit) => {
+export const getEventTeams = async (eventId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getEventTeamsResponse>(getGetEventTeamsUrl(eventId), {
 		...options,
 		method: 'GET',
@@ -4317,12 +4356,12 @@ export type createTeamResponseError = createTeamResponse401 & {
 
 export type createTeamResponse = createTeamResponseSuccess | createTeamResponseError;
 
-export const getCreateTeamUrl = (eventId: bigint | number | string) => {
+export const getCreateTeamUrl = (eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/teams`;
 };
 
 export const createTeam = async (
-	eventId: bigint | number | string,
+	eventId: string | bigint | number,
 	createEventTeamDto: CreateEventTeamDto,
 	options?: RequestInit
 ) => {
@@ -4420,7 +4459,7 @@ export type joinEventResponseError = (joinEventResponse400 | joinEventResponse40
 
 export type joinEventResponse = joinEventResponseSuccess | joinEventResponseError;
 
-export const getJoinEventUrl = (eventId: bigint | number | string, params?: JoinEventParams) => {
+export const getJoinEventUrl = (eventId: string | bigint | number, params?: JoinEventParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -4436,7 +4475,7 @@ export const getJoinEventUrl = (eventId: bigint | number | string, params?: Join
 		: `${ELITE_API_URL}/event/${eventId}/join`;
 };
 
-export const joinEvent = async (eventId: bigint | number | string, params?: JoinEventParams, options?: RequestInit) => {
+export const joinEvent = async (eventId: string | bigint | number, params?: JoinEventParams, options?: RequestInit) => {
 	return customFetch<joinEventResponse>(getJoinEventUrl(eventId, params), {
 		...options,
 		method: 'POST',
@@ -4465,13 +4504,13 @@ export type joinTeamResponseError = joinTeamResponse401 & {
 
 export type joinTeamResponse = joinTeamResponseSuccess | joinTeamResponseError;
 
-export const getJoinTeamUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getJoinTeamUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/join`;
 };
 
 export const joinTeam = async (
-	eventId: bigint | number | string,
-	teamId: number | string,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	joinTeamBody: string,
 	options?: RequestInit
 ) => {
@@ -4511,13 +4550,13 @@ export type kickTeamMemberResponseError = (kickTeamMemberResponse400 | kickTeamM
 
 export type kickTeamMemberResponse = kickTeamMemberResponseSuccess | kickTeamMemberResponseError;
 
-export const getKickTeamMemberUrl = (eventId: bigint | number | string, teamId: number | string, player: string) => {
+export const getKickTeamMemberUrl = (eventId: string | bigint | number, teamId: string | number, player: string) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/member/${player}`;
 };
 
 export const kickTeamMember = async (
-	eventId: bigint | number | string,
-	teamId: number | string,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	player: string,
 	options?: RequestInit
 ) => {
@@ -4549,11 +4588,11 @@ export type leaveEventResponseError = leaveEventResponse401 & {
 
 export type leaveEventResponse = leaveEventResponseSuccess | leaveEventResponseError;
 
-export const getLeaveEventUrl = (eventId: bigint | number | string) => {
+export const getLeaveEventUrl = (eventId: string | bigint | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/leave`;
 };
 
-export const leaveEvent = async (eventId: bigint | number | string, options?: RequestInit) => {
+export const leaveEvent = async (eventId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<leaveEventResponse>(getLeaveEventUrl(eventId), {
 		...options,
 		method: 'POST',
@@ -4582,11 +4621,11 @@ export type leaveTeamResponseError = leaveTeamResponse401 & {
 
 export type leaveTeamResponse = leaveTeamResponseSuccess | leaveTeamResponseError;
 
-export const getLeaveTeamUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getLeaveTeamUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/leave`;
 };
 
-export const leaveTeam = async (eventId: bigint | number | string, teamId: number | string, options?: RequestInit) => {
+export const leaveTeam = async (eventId: string | bigint | number, teamId: string | number, options?: RequestInit) => {
 	return customFetch<leaveTeamResponse>(getLeaveTeamUrl(eventId, teamId), {
 		...options,
 		method: 'POST',
@@ -4615,13 +4654,13 @@ export type setTeamOwnerResponseError = setTeamOwnerResponse401 & {
 
 export type setTeamOwnerResponse = setTeamOwnerResponseSuccess | setTeamOwnerResponseError;
 
-export const getSetTeamOwnerUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getSetTeamOwnerUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/owner`;
 };
 
 export const setTeamOwner = async (
-	eventId: bigint | number | string,
-	teamId: number | string,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	changeTeamOwnerRequest: ChangeTeamOwnerRequest,
 	options?: RequestInit
 ) => {
@@ -4655,13 +4694,13 @@ export type updateTeamJoinCodeResponseError = updateTeamJoinCodeResponse401 & {
 
 export type updateTeamJoinCodeResponse = updateTeamJoinCodeResponseSuccess | updateTeamJoinCodeResponseError;
 
-export const getUpdateTeamJoinCodeUrl = (eventId: bigint | number | string, teamId: number | string) => {
+export const getUpdateTeamJoinCodeUrl = (eventId: string | bigint | number, teamId: string | number) => {
 	return `${ELITE_API_URL}/event/${eventId}/team/${teamId}/code`;
 };
 
 export const updateTeamJoinCode = async (
-	eventId: bigint | number | string,
-	teamId: number | string,
+	eventId: string | bigint | number,
+	teamId: string | number,
 	options?: RequestInit
 ) => {
 	return customFetch<updateTeamJoinCodeResponse>(getUpdateTeamJoinCodeUrl(eventId, teamId), {
@@ -5043,8 +5082,8 @@ export type getMedalBracketsResponseError = getMedalBracketsResponse400 & {
 export type getMedalBracketsResponse = getMedalBracketsResponseSuccess | getMedalBracketsResponseError;
 
 export const getGetMedalBracketsUrl = (
-	year: number | string,
-	month: number | string,
+	year: string | number,
+	month: string | number,
 	params?: GetMedalBracketsParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -5063,8 +5102,8 @@ export const getGetMedalBracketsUrl = (
 };
 
 export const getMedalBrackets = async (
-	year: number | string,
-	month: number | string,
+	year: string | number,
+	month: string | number,
 	params?: GetMedalBracketsParams,
 	options?: RequestInit
 ) => {
@@ -5096,7 +5135,7 @@ export type getMedalBracketsGraphResponseError = getMedalBracketsGraphResponse40
 
 export type getMedalBracketsGraphResponse = getMedalBracketsGraphResponseSuccess | getMedalBracketsGraphResponseError;
 
-export const getGetMedalBracketsGraphUrl = (year: number | string, params?: GetMedalBracketsGraphParams) => {
+export const getGetMedalBracketsGraphUrl = (year: string | number, params?: GetMedalBracketsGraphParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -5113,7 +5152,7 @@ export const getGetMedalBracketsGraphUrl = (year: number | string, params?: GetM
 };
 
 export const getMedalBracketsGraph = async (
-	year: number | string,
+	year: string | number,
 	params?: GetMedalBracketsGraphParams,
 	options?: RequestInit
 ) => {
@@ -5190,11 +5229,11 @@ export type approveCommentResponseError = (approveCommentResponse401 | approveCo
 
 export type approveCommentResponse = approveCommentResponseSuccess | approveCommentResponseError;
 
-export const getApproveCommentUrl = (commentId: number | string) => {
+export const getApproveCommentUrl = (commentId: string | number) => {
 	return `${ELITE_API_URL}/admin/comments/${commentId}/approve`;
 };
 
-export const approveComment = async (commentId: number | string, options?: RequestInit) => {
+export const approveComment = async (commentId: string | number, options?: RequestInit) => {
 	return customFetch<approveCommentResponse>(getApproveCommentUrl(commentId), {
 		...options,
 		method: 'POST',
@@ -5229,11 +5268,11 @@ export type approveGuideResponseError = (approveGuideResponse401 | approveGuideR
 
 export type approveGuideResponse = approveGuideResponseSuccess | approveGuideResponseError;
 
-export const getApproveGuideUrl = (guideId: number | string) => {
+export const getApproveGuideUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/admin/guides/${guideId}/approve`;
 };
 
-export const approveGuide = async (guideId: number | string, options?: RequestInit) => {
+export const approveGuide = async (guideId: string | number, options?: RequestInit) => {
 	return customFetch<approveGuideResponse>(getApproveGuideUrl(guideId), {
 		...options,
 		method: 'POST',
@@ -5268,11 +5307,11 @@ export type bookmarkGuideResponseError = (bookmarkGuideResponse400 | bookmarkGui
 
 export type bookmarkGuideResponse = bookmarkGuideResponseSuccess | bookmarkGuideResponseError;
 
-export const getBookmarkGuideUrl = (guideId: number | string) => {
+export const getBookmarkGuideUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/guides/${guideId}/bookmark`;
 };
 
-export const bookmarkGuide = async (guideId: number | string, options?: RequestInit) => {
+export const bookmarkGuide = async (guideId: string | number, options?: RequestInit) => {
 	return customFetch<bookmarkGuideResponse>(getBookmarkGuideUrl(guideId), {
 		...options,
 		method: 'POST',
@@ -5307,11 +5346,11 @@ export type unbookmarkGuideResponseError = (unbookmarkGuideResponse401 | unbookm
 
 export type unbookmarkGuideResponse = unbookmarkGuideResponseSuccess | unbookmarkGuideResponseError;
 
-export const getUnbookmarkGuideUrl = (guideId: number | string) => {
+export const getUnbookmarkGuideUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/guides/${guideId}/bookmark`;
 };
 
-export const unbookmarkGuide = async (guideId: number | string, options?: RequestInit) => {
+export const unbookmarkGuide = async (guideId: string | number, options?: RequestInit) => {
 	return customFetch<unbookmarkGuideResponse>(getUnbookmarkGuideUrl(guideId), {
 		...options,
 		method: 'DELETE',
@@ -5346,12 +5385,12 @@ export type createCommentResponseError = (createCommentResponse400 | createComme
 
 export type createCommentResponse = createCommentResponseSuccess | createCommentResponseError;
 
-export const getCreateCommentUrl = (guideId: number | string) => {
+export const getCreateCommentUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/guides/${guideId}/comments`;
 };
 
 export const createComment = async (
-	guideId: number | string,
+	guideId: string | number,
 	createCommentRequest: CreateCommentRequest,
 	options?: RequestInit
 ) => {
@@ -5527,11 +5566,11 @@ export type deleteCommentResponseError = (deleteCommentResponse401 | deleteComme
 
 export type deleteCommentResponse = deleteCommentResponseSuccess | deleteCommentResponseError;
 
-export const getDeleteCommentUrl = (commentId: number | string) => {
+export const getDeleteCommentUrl = (commentId: string | number) => {
 	return `${ELITE_API_URL}/admin/comments/${commentId}`;
 };
 
-export const deleteComment = async (commentId: number | string, options?: RequestInit) => {
+export const deleteComment = async (commentId: string | number, options?: RequestInit) => {
 	return customFetch<deleteCommentResponse>(getDeleteCommentUrl(commentId), {
 		...options,
 		method: 'DELETE',
@@ -5571,11 +5610,11 @@ export type deleteGuideResponseError = (deleteGuideResponse401 | deleteGuideResp
 
 export type deleteGuideResponse = deleteGuideResponseSuccess | deleteGuideResponseError;
 
-export const getDeleteGuideUrl = (id: number | string) => {
+export const getDeleteGuideUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/guides/${id}`;
 };
 
-export const deleteGuide = async (id: number | string, options?: RequestInit) => {
+export const deleteGuide = async (id: string | number, options?: RequestInit) => {
 	return customFetch<deleteGuideResponse>(getDeleteGuideUrl(id), {
 		...options,
 		method: 'DELETE',
@@ -5605,12 +5644,12 @@ export type updateGuideResponseError = updateGuideResponse401 & {
 
 export type updateGuideResponse = updateGuideResponseSuccess | updateGuideResponseError;
 
-export const getUpdateGuideUrl = (id: number | string) => {
+export const getUpdateGuideUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/guides/${id}`;
 };
 
 export const updateGuide = async (
-	id: number | string,
+	id: string | number,
 	updateGuideRequest: UpdateGuideRequest,
 	options?: RequestInit
 ) => {
@@ -5655,11 +5694,11 @@ export type deleteTagResponseError = (deleteTagResponse401 | deleteTagResponse40
 
 export type deleteTagResponse = deleteTagResponseSuccess | deleteTagResponseError;
 
-export const getDeleteTagUrl = (id: number | string) => {
+export const getDeleteTagUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/admin/tags/${id}`;
 };
 
-export const deleteTag = async (id: number | string, options?: RequestInit) => {
+export const deleteTag = async (id: string | number, options?: RequestInit) => {
 	return customFetch<deleteTagResponse>(getDeleteTagUrl(id), {
 		...options,
 		method: 'DELETE',
@@ -5694,11 +5733,11 @@ export type updateTagResponseError = (updateTagResponse401 | updateTagResponse40
 
 export type updateTagResponse = updateTagResponseSuccess | updateTagResponseError;
 
-export const getUpdateTagUrl = (id: number | string) => {
+export const getUpdateTagUrl = (id: string | number) => {
 	return `${ELITE_API_URL}/admin/tags/${id}`;
 };
 
-export const updateTag = async (id: number | string, updateTagRequest: UpdateTagRequest, options?: RequestInit) => {
+export const updateTag = async (id: string | number, updateTagRequest: UpdateTagRequest, options?: RequestInit) => {
 	return customFetch<updateTagResponse>(getUpdateTagUrl(id), {
 		...options,
 		method: 'PUT',
@@ -5735,12 +5774,12 @@ export type editCommentResponseError = (editCommentResponse400 | editCommentResp
 
 export type editCommentResponse = editCommentResponseSuccess | editCommentResponseError;
 
-export const getEditCommentUrl = (commentId: number | string) => {
+export const getEditCommentUrl = (commentId: string | number) => {
 	return `${ELITE_API_URL}/comments/${commentId}`;
 };
 
 export const editComment = async (
-	commentId: number | string,
+	commentId: string | number,
 	editCommentRequest: EditCommentRequest,
 	options?: RequestInit
 ) => {
@@ -5812,11 +5851,11 @@ export type getUserBookmarksResponseError = getUserBookmarksResponse401 & {
 
 export type getUserBookmarksResponse = getUserBookmarksResponseSuccess | getUserBookmarksResponseError;
 
-export const getGetUserBookmarksUrl = (accountId: bigint | number | string) => {
+export const getGetUserBookmarksUrl = (accountId: string | bigint | number) => {
 	return `${ELITE_API_URL}/users/${accountId}/bookmarks`;
 };
 
-export const getUserBookmarks = async (accountId: bigint | number | string, options?: RequestInit) => {
+export const getUserBookmarks = async (accountId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getUserBookmarksResponse>(getGetUserBookmarksUrl(accountId), {
 		...options,
 		method: 'GET',
@@ -5837,11 +5876,11 @@ export type getUserGuidesResponseSuccess = getUserGuidesResponse200 & {
 };
 export type getUserGuidesResponse = getUserGuidesResponseSuccess;
 
-export const getGetUserGuidesUrl = (accountId: bigint | number | string) => {
+export const getGetUserGuidesUrl = (accountId: string | bigint | number) => {
 	return `${ELITE_API_URL}/users/${accountId}/guides`;
 };
 
-export const getUserGuides = async (accountId: bigint | number | string, options?: RequestInit) => {
+export const getUserGuides = async (accountId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getUserGuidesResponse>(getGetUserGuidesUrl(accountId), {
 		...options,
 		method: 'GET',
@@ -5965,12 +6004,12 @@ export type rejectGuideResponseError = (rejectGuideResponse401 | rejectGuideResp
 
 export type rejectGuideResponse = rejectGuideResponseSuccess | rejectGuideResponseError;
 
-export const getRejectGuideUrl = (guideId: number | string) => {
+export const getRejectGuideUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/admin/guides/${guideId}/reject`;
 };
 
 export const rejectGuide = async (
-	guideId: number | string,
+	guideId: string | number,
 	rejectGuideRequest: RejectGuideRequest,
 	options?: RequestInit
 ) => {
@@ -6007,11 +6046,11 @@ export type submitGuideForApprovalResponse =
 	| submitGuideForApprovalResponseSuccess
 	| submitGuideForApprovalResponseError;
 
-export const getSubmitGuideForApprovalUrl = (guideId: number | string) => {
+export const getSubmitGuideForApprovalUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/guides/${guideId}/submit`;
 };
 
-export const submitGuideForApproval = async (guideId: number | string, options?: RequestInit) => {
+export const submitGuideForApproval = async (guideId: string | number, options?: RequestInit) => {
 	return customFetch<submitGuideForApprovalResponse>(getSubmitGuideForApprovalUrl(guideId), {
 		...options,
 		method: 'POST',
@@ -6055,11 +6094,11 @@ export type unpublishGuideResponseError = (
 
 export type unpublishGuideResponse = unpublishGuideResponseSuccess | unpublishGuideResponseError;
 
-export const getUnpublishGuideUrl = (guideId: number | string) => {
+export const getUnpublishGuideUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/guides/${guideId}/unpublish`;
 };
 
-export const unpublishGuide = async (guideId: number | string, options?: RequestInit) => {
+export const unpublishGuide = async (guideId: string | number, options?: RequestInit) => {
 	return customFetch<unpublishGuideResponse>(getUnpublishGuideUrl(guideId), {
 		...options,
 		method: 'POST',
@@ -6094,12 +6133,12 @@ export type voteCommentResponseError = (voteCommentResponse400 | voteCommentResp
 
 export type voteCommentResponse = voteCommentResponseSuccess | voteCommentResponseError;
 
-export const getVoteCommentUrl = (commentId: number | string) => {
+export const getVoteCommentUrl = (commentId: string | number) => {
 	return `${ELITE_API_URL}/comments/${commentId}/vote`;
 };
 
 export const voteComment = async (
-	commentId: number | string,
+	commentId: string | number,
 	voteCommentRequest: VoteCommentRequest,
 	options?: RequestInit
 ) => {
@@ -6139,12 +6178,12 @@ export type voteGuideResponseError = (voteGuideResponse400 | voteGuideResponse40
 
 export type voteGuideResponse = voteGuideResponseSuccess | voteGuideResponseError;
 
-export const getVoteGuideUrl = (guideId: number | string) => {
+export const getVoteGuideUrl = (guideId: string | number) => {
 	return `${ELITE_API_URL}/guides/${guideId}/vote`;
 };
 
 export const voteGuide = async (
-	guideId: number | string,
+	guideId: string | number,
 	voteGuideRequest: VoteGuideRequest,
 	options?: RequestInit
 ) => {
@@ -6192,7 +6231,7 @@ export type setEventFeatureResponseError = (
 
 export type setEventFeatureResponse = setEventFeatureResponseSuccess | setEventFeatureResponseError;
 
-export const getSetEventFeatureUrl = (discordId: bigint | number | string, params?: SetEventFeatureParams) => {
+export const getSetEventFeatureUrl = (discordId: string | bigint | number, params?: SetEventFeatureParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -6209,7 +6248,7 @@ export const getSetEventFeatureUrl = (discordId: bigint | number | string, param
 };
 
 export const setEventFeature = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: SetEventFeatureParams,
 	options?: RequestInit
 ) => {
@@ -6241,11 +6280,11 @@ export type getPublicGuildEventsResponseError = getPublicGuildEventsResponse400 
 
 export type getPublicGuildEventsResponse = getPublicGuildEventsResponseSuccess | getPublicGuildEventsResponseError;
 
-export const getGetPublicGuildEventsUrl = (discordId: bigint | number | string) => {
+export const getGetPublicGuildEventsUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}/events`;
 };
 
-export const getPublicGuildEvents = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getPublicGuildEvents = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getPublicGuildEventsResponse>(getGetPublicGuildEventsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6288,7 +6327,7 @@ export type setJacobFeatureResponseError = (
 
 export type setJacobFeatureResponse = setJacobFeatureResponseSuccess | setJacobFeatureResponseError;
 
-export const getSetJacobFeatureUrl = (discordId: bigint | number | string, params?: SetJacobFeatureParams) => {
+export const getSetJacobFeatureUrl = (discordId: string | bigint | number, params?: SetJacobFeatureParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -6305,7 +6344,7 @@ export const getSetJacobFeatureUrl = (discordId: bigint | number | string, param
 };
 
 export const setJacobFeature = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: SetJacobFeatureParams,
 	options?: RequestInit
 ) => {
@@ -6351,7 +6390,7 @@ export type setGuildLockedResponseError = (
 
 export type setGuildLockedResponse = setGuildLockedResponseSuccess | setGuildLockedResponseError;
 
-export const getSetGuildLockedUrl = (discordId: bigint | number | string, params?: SetGuildLockedParams) => {
+export const getSetGuildLockedUrl = (discordId: string | bigint | number, params?: SetGuildLockedParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -6368,7 +6407,7 @@ export const getSetGuildLockedUrl = (discordId: bigint | number | string, params
 };
 
 export const setGuildLocked = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: SetGuildLockedParams,
 	options?: RequestInit
 ) => {
@@ -6414,7 +6453,7 @@ export type setGuildPublicResponseError = (
 
 export type setGuildPublicResponse = setGuildPublicResponseSuccess | setGuildPublicResponseError;
 
-export const getSetGuildPublicUrl = (discordId: bigint | number | string, params?: SetGuildPublicParams) => {
+export const getSetGuildPublicUrl = (discordId: string | bigint | number, params?: SetGuildPublicParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -6431,7 +6470,7 @@ export const getSetGuildPublicUrl = (discordId: bigint | number | string, params
 };
 
 export const setGuildPublic = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: SetGuildPublicParams,
 	options?: RequestInit
 ) => {
@@ -6463,11 +6502,11 @@ export type getPublicGuildResponseError = getPublicGuildResponse400 & {
 
 export type getPublicGuildResponse = getPublicGuildResponseSuccess | getPublicGuildResponseError;
 
-export const getGetPublicGuildUrl = (discordId: bigint | number | string) => {
+export const getGetPublicGuildUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guild/${discordId}`;
 };
 
-export const getPublicGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getPublicGuild = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getPublicGuildResponse>(getGetPublicGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6525,7 +6564,7 @@ export type deleteContestPingsResponseError = (deleteContestPingsResponse400 | d
 
 export type deleteContestPingsResponse = deleteContestPingsResponseSuccess | deleteContestPingsResponseError;
 
-export const getDeleteContestPingsUrl = (discordId: bigint | number | string, params?: DeleteContestPingsParams) => {
+export const getDeleteContestPingsUrl = (discordId: string | bigint | number, params?: DeleteContestPingsParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -6542,7 +6581,7 @@ export const getDeleteContestPingsUrl = (discordId: bigint | number | string, pa
 };
 
 export const deleteContestPings = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: DeleteContestPingsParams,
 	options?: RequestInit
 ) => {
@@ -6579,12 +6618,12 @@ export type updateContestPingsResponseError = (updateContestPingsResponse400 | u
 
 export type updateContestPingsResponse = updateContestPingsResponseSuccess | updateContestPingsResponseError;
 
-export const getUpdateContestPingsUrl = (discordId: bigint | number | string) => {
+export const getUpdateContestPingsUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/contestpings`;
 };
 
 export const updateContestPings = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	updateContestPingsRequestUpdateContestPings: UpdateContestPingsRequestUpdateContestPings,
 	options?: RequestInit
 ) => {
@@ -6656,11 +6695,11 @@ export type getUserGuildResponseError = (getUserGuildResponse400 | getUserGuildR
 
 export type getUserGuildResponse = getUserGuildResponseSuccess | getUserGuildResponseError;
 
-export const getGetUserGuildUrl = (discordId: bigint | number | string) => {
+export const getGetUserGuildUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}`;
 };
 
-export const getUserGuild = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getUserGuild = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getUserGuildResponse>(getGetUserGuildUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6699,12 +6738,12 @@ export type createGuildJacobLeaderboardResponse =
 	| createGuildJacobLeaderboardResponseSuccess
 	| createGuildJacobLeaderboardResponseError;
 
-export const getCreateGuildJacobLeaderboardUrl = (discordId: bigint | number | string) => {
+export const getCreateGuildJacobLeaderboardUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/jacob/leaderboard`;
 };
 
 export const createGuildJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	createJacobLeaderboardRequestCreateJacobLeaderboard: CreateJacobLeaderboardRequestCreateJacobLeaderboard,
 	options?: RequestInit
 ) => {
@@ -6748,12 +6787,12 @@ export type deleteGuildJacobLeaderboardResponse =
 	| deleteGuildJacobLeaderboardResponseSuccess
 	| deleteGuildJacobLeaderboardResponseError;
 
-export const getDeleteGuildJacobLeaderboardUrl = (discordId: bigint | number | string, leaderboardId: string) => {
+export const getDeleteGuildJacobLeaderboardUrl = (discordId: string | bigint | number, leaderboardId: string) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
 export const deleteGuildJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	leaderboardId: string,
 	options?: RequestInit
 ) => {
@@ -6798,12 +6837,12 @@ export type updateGuildJacobLeaderboardResponse =
 	| updateGuildJacobLeaderboardResponseSuccess
 	| updateGuildJacobLeaderboardResponseError;
 
-export const getUpdateGuildJacobLeaderboardUrl = (discordId: bigint | number | string, leaderboardId: string) => {
+export const getUpdateGuildJacobLeaderboardUrl = (discordId: string | bigint | number, leaderboardId: string) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/jacob/${leaderboardId}`;
 };
 
 export const updateGuildJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	leaderboardId: string,
 	updateJacobLeaderboardRequestUpdateJacobLeaderboard: UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
 	options?: RequestInit
@@ -6846,11 +6885,11 @@ export type getGuildJacobResponseError = (getGuildJacobResponse400 | getGuildJac
 
 export type getGuildJacobResponse = getGuildJacobResponseSuccess | getGuildJacobResponseError;
 
-export const getGetGuildJacobUrl = (discordId: bigint | number | string) => {
+export const getGetGuildJacobUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/jacob`;
 };
 
-export const getGuildJacob = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getGuildJacob = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getGuildJacobResponse>(getGetGuildJacobUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -6890,7 +6929,7 @@ export type updateGuildJacobFeatureResponse =
 	| updateGuildJacobFeatureResponseError;
 
 export const getUpdateGuildJacobFeatureUrl = (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: UpdateGuildJacobFeatureParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -6909,7 +6948,7 @@ export const getUpdateGuildJacobFeatureUrl = (
 };
 
 export const updateGuildJacobFeature = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	updateJacobFeatureRequestUpdateJacobFeature: UpdateJacobFeatureRequestUpdateJacobFeature,
 	params?: UpdateGuildJacobFeatureParams,
 	options?: RequestInit
@@ -6946,12 +6985,12 @@ export type addJacobLeaderboardExcludedTimespanResponse =
 	| addJacobLeaderboardExcludedTimespanResponseSuccess
 	| addJacobLeaderboardExcludedTimespanResponseError;
 
-export const getAddJacobLeaderboardExcludedTimespanUrl = (discordId: bigint | number | string) => {
+export const getAddJacobLeaderboardExcludedTimespanUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans`;
 };
 
 export const addJacobLeaderboardExcludedTimespan = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	addExcludedTimespanRequestAddExcludedTimespanRequestBody: AddExcludedTimespanRequestAddExcludedTimespanRequestBody,
 	options?: RequestInit
 ) => {
@@ -6990,12 +7029,12 @@ export type banParticipationFromJacobLeaderboardResponse =
 	| banParticipationFromJacobLeaderboardResponseSuccess
 	| banParticipationFromJacobLeaderboardResponseError;
 
-export const getBanParticipationFromJacobLeaderboardUrl = (discordId: bigint | number | string) => {
+export const getBanParticipationFromJacobLeaderboardUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/participations`;
 };
 
 export const banParticipationFromJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	banParticipationRequestBanParticipationRequestBody: BanParticipationRequestBanParticipationRequestBody,
 	options?: RequestInit
 ) => {
@@ -7034,12 +7073,12 @@ export type banPlayerFromJacobLeaderboardResponse =
 	| banPlayerFromJacobLeaderboardResponseSuccess
 	| banPlayerFromJacobLeaderboardResponseError;
 
-export const getBanPlayerFromJacobLeaderboardUrl = (discordId: bigint | number | string) => {
+export const getBanPlayerFromJacobLeaderboardUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/players`;
 };
 
 export const banPlayerFromJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	banPlayerRequestBanPlayerRequestBody: BanPlayerRequestBanPlayerRequestBody,
 	options?: RequestInit
 ) => {
@@ -7077,17 +7116,17 @@ export type removeJacobLeaderboardExcludedTimespanResponse =
 	| removeJacobLeaderboardExcludedTimespanResponseError;
 
 export const getRemoveJacobLeaderboardExcludedTimespanUrl = (
-	discordId: bigint | number | string,
-	start: bigint | number | string,
-	end: bigint | number | string
+	discordId: string | bigint | number,
+	start: string | bigint | number,
+	end: string | bigint | number
 ) => {
 	return `${ELITE_API_URL}/guilds/${discordId}/jacob/exclusions/timespans/${start}/${end}`;
 };
 
 export const removeJacobLeaderboardExcludedTimespan = async (
-	discordId: bigint | number | string,
-	start: bigint | number | string,
-	end: bigint | number | string,
+	discordId: string | bigint | number,
+	start: string | bigint | number,
+	end: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<removeJacobLeaderboardExcludedTimespanResponse>(
@@ -7125,14 +7164,14 @@ export type unbanParticipationFromJacobLeaderboardResponse =
 	| unbanParticipationFromJacobLeaderboardResponseError;
 
 export const getUnbanParticipationFromJacobLeaderboardUrl = (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	participationId: string
 ) => {
 	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/participations/${participationId}`;
 };
 
 export const unbanParticipationFromJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	participationId: string,
 	options?: RequestInit
 ) => {
@@ -7169,12 +7208,12 @@ export type unbanPlayerFromJacobLeaderboardResponse =
 	| unbanPlayerFromJacobLeaderboardResponseSuccess
 	| unbanPlayerFromJacobLeaderboardResponseError;
 
-export const getUnbanPlayerFromJacobLeaderboardUrl = (discordId: bigint | number | string, playerUuid: string) => {
+export const getUnbanPlayerFromJacobLeaderboardUrl = (discordId: string | bigint | number, playerUuid: string) => {
 	return `${ELITE_API_URL}/guilds/${discordId}/jacob/bans/players/${playerUuid}`;
 };
 
 export const unbanPlayerFromJacobLeaderboard = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	playerUuid: string,
 	options?: RequestInit
 ) => {
@@ -7217,12 +7256,12 @@ export type sendGuildJacobFeatureResponseError = (
 
 export type sendGuildJacobFeatureResponse = sendGuildJacobFeatureResponseSuccess | sendGuildJacobFeatureResponseError;
 
-export const getSendGuildJacobFeatureUrl = (discordId: bigint | number | string, leaderboardId: string) => {
+export const getSendGuildJacobFeatureUrl = (discordId: string | bigint | number, leaderboardId: string) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/jacob/${leaderboardId}/send`;
 };
 
 export const sendGuildJacobFeature = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	leaderboardId: string,
 	options?: RequestInit
 ) => {
@@ -7255,7 +7294,7 @@ export type submitScoreResponseError = submitScoreResponse400 & {
 export type submitScoreResponse = submitScoreResponseSuccess | submitScoreResponseError;
 
 export const getSubmitScoreUrl = (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	leaderboardId: string,
 	params?: SubmitScoreParams
 ) => {
@@ -7275,7 +7314,7 @@ export const getSubmitScoreUrl = (
 };
 
 export const submitScore = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	leaderboardId: string,
 	submitScoreBody: string[],
 	params?: SubmitScoreParams,
@@ -7352,11 +7391,11 @@ export type requestGuildRefreshResponseError = (requestGuildRefreshResponse400 |
 
 export type requestGuildRefreshResponse = requestGuildRefreshResponseSuccess | requestGuildRefreshResponseError;
 
-export const getRequestGuildRefreshUrl = (discordId: bigint | number | string) => {
+export const getRequestGuildRefreshUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/refresh`;
 };
 
-export const requestGuildRefresh = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const requestGuildRefresh = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<requestGuildRefreshResponse>(getRequestGuildRefreshUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -7390,12 +7429,12 @@ export type setAdminRoleResponseError = (setAdminRoleResponse400 | setAdminRoleR
 
 export type setAdminRoleResponse = setAdminRoleResponseSuccess | setAdminRoleResponseError;
 
-export const getSetAdminRoleUrl = (discordId: bigint | number | string) => {
+export const getSetAdminRoleUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/adminrole`;
 };
 
 export const setAdminRole = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	setAdminRoleBody: string,
 	options?: RequestInit
 ) => {
@@ -7434,11 +7473,11 @@ export type setInviteResponseError = (setInviteResponse400 | setInviteResponse40
 
 export type setInviteResponse = setInviteResponseSuccess | setInviteResponseError;
 
-export const getSetInviteUrl = (discordId: bigint | number | string) => {
+export const getSetInviteUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/invite`;
 };
 
-export const setInvite = async (discordId: bigint | number | string, setInviteBody: string, options?: RequestInit) => {
+export const setInvite = async (discordId: string | bigint | number, setInviteBody: string, options?: RequestInit) => {
 	return customFetch<setInviteResponse>(getSetInviteUrl(discordId), {
 		...options,
 		method: 'PUT',
@@ -7474,11 +7513,11 @@ export type updateGuildPurchasesResponseError = (updateGuildPurchasesResponse400
 
 export type updateGuildPurchasesResponse = updateGuildPurchasesResponseSuccess | updateGuildPurchasesResponseError;
 
-export const getUpdateGuildPurchasesUrl = (discordId: bigint | number | string) => {
+export const getUpdateGuildPurchasesUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/user/guild/${discordId}/purchases`;
 };
 
-export const updateGuildPurchases = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const updateGuildPurchases = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<updateGuildPurchasesResponse>(getUpdateGuildPurchasesUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -8151,7 +8190,7 @@ export type getEntitlementsResponseError = (
 
 export type getEntitlementsResponse = getEntitlementsResponseSuccess | getEntitlementsResponseError;
 
-export const getGetEntitlementsUrl = (discordId: bigint | number | string, params?: GetEntitlementsParams) => {
+export const getGetEntitlementsUrl = (discordId: string | bigint | number, params?: GetEntitlementsParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -8168,7 +8207,7 @@ export const getGetEntitlementsUrl = (discordId: bigint | number | string, param
 };
 
 export const getEntitlements = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	params?: GetEntitlementsParams,
 	options?: RequestInit
 ) => {
@@ -8216,8 +8255,8 @@ export type grantTestEntitlementResponseError = (
 export type grantTestEntitlementResponse = grantTestEntitlementResponseSuccess | grantTestEntitlementResponseError;
 
 export const getGrantTestEntitlementUrl = (
-	discordId: bigint | number | string,
-	productId: bigint | number | string,
+	discordId: string | bigint | number,
+	productId: string | bigint | number,
 	params?: GrantTestEntitlementParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -8236,8 +8275,8 @@ export const getGrantTestEntitlementUrl = (
 };
 
 export const grantTestEntitlement = async (
-	discordId: bigint | number | string,
-	productId: bigint | number | string,
+	discordId: string | bigint | number,
+	productId: string | bigint | number,
 	params?: GrantTestEntitlementParams,
 	options?: RequestInit
 ) => {
@@ -8285,8 +8324,8 @@ export type removeTestEntitlementResponseError = (
 export type removeTestEntitlementResponse = removeTestEntitlementResponseSuccess | removeTestEntitlementResponseError;
 
 export const getRemoveTestEntitlementUrl = (
-	discordId: bigint | number | string,
-	productId: bigint | number | string,
+	discordId: string | bigint | number,
+	productId: string | bigint | number,
 	params?: RemoveTestEntitlementParams
 ) => {
 	const normalizedParams = new URLSearchParams();
@@ -8305,8 +8344,8 @@ export const getRemoveTestEntitlementUrl = (
 };
 
 export const removeTestEntitlement = async (
-	discordId: bigint | number | string,
-	productId: bigint | number | string,
+	discordId: string | bigint | number,
+	productId: string | bigint | number,
 	params?: RemoveTestEntitlementParams,
 	options?: RequestInit
 ) => {
@@ -8490,11 +8529,11 @@ export type getLinkedAccountsResponseError = (getLinkedAccountsResponse400 | get
 
 export type getLinkedAccountsResponse = getLinkedAccountsResponseSuccess | getLinkedAccountsResponseError;
 
-export const getGetLinkedAccountsUrl = (discordId: bigint | number | string) => {
+export const getGetLinkedAccountsUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/player/${discordId}`;
 };
 
-export const getLinkedAccounts = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getLinkedAccounts = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getLinkedAccountsResponse>(getGetLinkedAccountsUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -8846,12 +8885,12 @@ export type getPlayerRecapResponseError = getPlayerRecapResponse400 & {
 
 export type getPlayerRecapResponse = getPlayerRecapResponseSuccess | getPlayerRecapResponseError;
 
-export const getGetPlayerRecapUrl = (year: number | string, playerUuid: string, profileUuid: string) => {
+export const getGetPlayerRecapUrl = (year: string | number, playerUuid: string, profileUuid: string) => {
 	return `${ELITE_API_URL}/recap/${year}/player/${playerUuid}/${profileUuid}`;
 };
 
 export const getPlayerRecap = async (
-	year: number | string,
+	year: string | number,
 	playerUuid: string,
 	profileUuid: string,
 	options?: RequestInit
@@ -8893,12 +8932,12 @@ export type toggleRecapVisibilityResponseError = (
 
 export type toggleRecapVisibilityResponse = toggleRecapVisibilityResponseSuccess | toggleRecapVisibilityResponseError;
 
-export const getToggleRecapVisibilityUrl = (year: number | string, playerUuid: string, profileUuid: string) => {
+export const getToggleRecapVisibilityUrl = (year: string | number, playerUuid: string, profileUuid: string) => {
 	return `${ELITE_API_URL}/recap/${year}/player/${playerUuid}/${profileUuid}/visibility`;
 };
 
 export const toggleRecapVisibility = async (
-	year: number | string,
+	year: string | number,
 	playerUuid: string,
 	profileUuid: string,
 	toggleRecapVisibilityRequestBody: ToggleRecapVisibilityRequestBody,
@@ -9545,13 +9584,13 @@ export type addProductToCategoryResponseError = (addProductToCategoryResponse401
 
 export type addProductToCategoryResponse = addProductToCategoryResponseSuccess | addProductToCategoryResponseError;
 
-export const getAddProductToCategoryUrl = (categoryId: number | string, productId: bigint | number | string) => {
+export const getAddProductToCategoryUrl = (categoryId: string | number, productId: string | bigint | number) => {
 	return `${ELITE_API_URL}/shop/category/${categoryId}/product/${productId}`;
 };
 
 export const addProductToCategory = async (
-	categoryId: number | string,
-	productId: bigint | number | string,
+	categoryId: string | number,
+	productId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<addProductToCategoryResponse>(getAddProductToCategoryUrl(categoryId, productId), {
@@ -9592,13 +9631,13 @@ export type removeProductToCategoryResponse =
 	| removeProductToCategoryResponseSuccess
 	| removeProductToCategoryResponseError;
 
-export const getRemoveProductToCategoryUrl = (categoryId: number | string, productId: bigint | number | string) => {
+export const getRemoveProductToCategoryUrl = (categoryId: string | number, productId: string | bigint | number) => {
 	return `${ELITE_API_URL}/shop/category/${categoryId}/product/${productId}`;
 };
 
 export const removeProductToCategory = async (
-	categoryId: number | string,
-	productId: bigint | number | string,
+	categoryId: string | number,
+	productId: string | bigint | number,
 	options?: RequestInit
 ) => {
 	return customFetch<removeProductToCategoryResponse>(getRemoveProductToCategoryUrl(categoryId, productId), {
@@ -9674,11 +9713,11 @@ export type deleteCategoryResponseError = (deleteCategoryResponse401 | deleteCat
 
 export type deleteCategoryResponse = deleteCategoryResponseSuccess | deleteCategoryResponseError;
 
-export const getDeleteCategoryUrl = (categoryId: number | string) => {
+export const getDeleteCategoryUrl = (categoryId: string | number) => {
 	return `${ELITE_API_URL}/shop/category/${categoryId}`;
 };
 
-export const deleteCategory = async (categoryId: number | string, options?: RequestInit) => {
+export const deleteCategory = async (categoryId: string | number, options?: RequestInit) => {
 	return customFetch<deleteCategoryResponse>(getDeleteCategoryUrl(categoryId), {
 		...options,
 		method: 'DELETE',
@@ -9712,12 +9751,12 @@ export type updateCategoryResponseError = (updateCategoryResponse401 | updateCat
 
 export type updateCategoryResponse = updateCategoryResponseSuccess | updateCategoryResponseError;
 
-export const getUpdateCategoryUrl = (categoryId: number | string) => {
+export const getUpdateCategoryUrl = (categoryId: string | number) => {
 	return `${ELITE_API_URL}/shop/category/${categoryId}`;
 };
 
 export const updateCategory = async (
-	categoryId: number | string,
+	categoryId: string | number,
 	editCategoryDto: EditCategoryDto,
 	options?: RequestInit
 ) => {
@@ -9876,12 +9915,12 @@ export type reorderCategoryProductsResponse =
 	| reorderCategoryProductsResponseSuccess
 	| reorderCategoryProductsResponseError;
 
-export const getReorderCategoryProductsUrl = (categoryId: number | string) => {
+export const getReorderCategoryProductsUrl = (categoryId: string | number) => {
 	return `${ELITE_API_URL}/shop/category/${categoryId}/reorder`;
 };
 
 export const reorderCategoryProducts = async (
-	categoryId: number | string,
+	categoryId: string | number,
 	reorderCategoryProductsRequest: ReorderCategoryProductsRequest,
 	options?: RequestInit
 ) => {
@@ -9920,13 +9959,13 @@ export type addCosmeticToProductResponseError = (addCosmeticToProductResponse401
 
 export type addCosmeticToProductResponse = addCosmeticToProductResponseSuccess | addCosmeticToProductResponseError;
 
-export const getAddCosmeticToProductUrl = (productId: bigint | number | string, cosmeticId: number | string) => {
+export const getAddCosmeticToProductUrl = (productId: string | bigint | number, cosmeticId: string | number) => {
 	return `${ELITE_API_URL}/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
 export const addCosmeticToProduct = async (
-	productId: bigint | number | string,
-	cosmeticId: number | string,
+	productId: string | bigint | number,
+	cosmeticId: string | number,
 	options?: RequestInit
 ) => {
 	return customFetch<addCosmeticToProductResponse>(getAddCosmeticToProductUrl(productId, cosmeticId), {
@@ -9967,13 +10006,13 @@ export type removeCosmeticToProductResponse =
 	| removeCosmeticToProductResponseSuccess
 	| removeCosmeticToProductResponseError;
 
-export const getRemoveCosmeticToProductUrl = (productId: bigint | number | string, cosmeticId: number | string) => {
+export const getRemoveCosmeticToProductUrl = (productId: string | bigint | number, cosmeticId: string | number) => {
 	return `${ELITE_API_URL}/product/${productId}/cosmetics/${cosmeticId}`;
 };
 
 export const removeCosmeticToProduct = async (
-	productId: bigint | number | string,
-	cosmeticId: number | string,
+	productId: string | bigint | number,
+	cosmeticId: string | number,
 	options?: RequestInit
 ) => {
 	return customFetch<removeCosmeticToProductResponse>(getRemoveCosmeticToProductUrl(productId, cosmeticId), {
@@ -10018,7 +10057,7 @@ export type addProductImageResponseError = (
 
 export type addProductImageResponse = addProductImageResponseSuccess | addProductImageResponseError;
 
-export const getAddProductImageUrl = (discordId: bigint | number | string, params?: AddProductImageParams) => {
+export const getAddProductImageUrl = (discordId: string | bigint | number, params?: AddProductImageParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -10035,7 +10074,7 @@ export const getAddProductImageUrl = (discordId: bigint | number | string, param
 };
 
 export const addProductImage = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	uploadImageDto: UploadImageDto,
 	params?: AddProductImageParams,
 	options?: RequestInit
@@ -10092,12 +10131,12 @@ export type deleteProductImageResponseError = (
 
 export type deleteProductImageResponse = deleteProductImageResponseSuccess | deleteProductImageResponseError;
 
-export const getDeleteProductImageUrl = (discordId: bigint | number | string, imagePath: string) => {
+export const getDeleteProductImageUrl = (discordId: string | bigint | number, imagePath: string) => {
 	return `${ELITE_API_URL}/product/${discordId}/images/${imagePath}`;
 };
 
 export const deleteProductImage = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	imagePath: string,
 	options?: RequestInit
 ) => {
@@ -10219,12 +10258,12 @@ export type updateProductResponseError = (
 
 export type updateProductResponse = updateProductResponseSuccess | updateProductResponseError;
 
-export const getUpdateProductUrl = (discordId: bigint | number | string) => {
+export const getUpdateProductUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/product/${discordId}`;
 };
 
 export const updateProduct = async (
-	discordId: bigint | number | string,
+	discordId: string | bigint | number,
 	editProductDto: EditProductDto,
 	options?: RequestInit
 ) => {
@@ -10258,11 +10297,11 @@ export type getProductResponseError = getProductResponse400 & {
 
 export type getProductResponse = getProductResponseSuccess | getProductResponseError;
 
-export const getGetProductUrl = (discordId: bigint | number | string) => {
+export const getGetProductUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/product/${discordId}`;
 };
 
-export const getProduct = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const getProduct = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<getProductResponse>(getGetProductUrl(discordId), {
 		...options,
 		method: 'GET',
@@ -10296,11 +10335,11 @@ export type claimProductResponseError = (claimProductResponse400 | claimProductR
 
 export type claimProductResponse = claimProductResponseSuccess | claimProductResponseError;
 
-export const getClaimProductUrl = (discordId: bigint | number | string) => {
+export const getClaimProductUrl = (discordId: string | bigint | number) => {
 	return `${ELITE_API_URL}/product/${discordId}/claim`;
 };
 
-export const claimProduct = async (discordId: bigint | number | string, options?: RequestInit) => {
+export const claimProduct = async (discordId: string | bigint | number, options?: RequestInit) => {
 	return customFetch<claimProductResponse>(getClaimProductUrl(discordId), {
 		...options,
 		method: 'POST',
@@ -10358,7 +10397,7 @@ export type addStyleImageResponseError = (addStyleImageResponse401 | addStyleIma
 
 export type addStyleImageResponse = addStyleImageResponseSuccess | addStyleImageResponseError;
 
-export const getAddStyleImageUrl = (styleId: number | string, params?: AddStyleImageParams) => {
+export const getAddStyleImageUrl = (styleId: string | number, params?: AddStyleImageParams) => {
 	const normalizedParams = new URLSearchParams();
 
 	Object.entries(params || {}).forEach(([key, value]) => {
@@ -10375,7 +10414,7 @@ export const getAddStyleImageUrl = (styleId: number | string, params?: AddStyleI
 };
 
 export const addStyleImage = async (
-	styleId: number | string,
+	styleId: string | number,
 	uploadImageDto: UploadImageDto,
 	params?: AddStyleImageParams,
 	options?: RequestInit
@@ -10468,11 +10507,11 @@ export type deleteStyleResponseError = (deleteStyleResponse401 | deleteStyleResp
 
 export type deleteStyleResponse = deleteStyleResponseSuccess | deleteStyleResponseError;
 
-export const getDeleteStyleUrl = (styleId: number | string) => {
+export const getDeleteStyleUrl = (styleId: string | number) => {
 	return `${ELITE_API_URL}/product/style/${styleId}`;
 };
 
-export const deleteStyle = async (styleId: number | string, options?: RequestInit) => {
+export const deleteStyle = async (styleId: string | number, options?: RequestInit) => {
 	return customFetch<deleteStyleResponse>(getDeleteStyleUrl(styleId), {
 		...options,
 		method: 'DELETE',
@@ -10492,11 +10531,11 @@ export type getStyleResponseSuccess = getStyleResponse200 & {
 };
 export type getStyleResponse = getStyleResponseSuccess;
 
-export const getGetStyleUrl = (styleId: number | string) => {
+export const getGetStyleUrl = (styleId: string | number) => {
 	return `${ELITE_API_URL}/product/style/${styleId}`;
 };
 
-export const getStyle = async (styleId: number | string, options?: RequestInit) => {
+export const getStyle = async (styleId: string | number, options?: RequestInit) => {
 	return customFetch<getStyleResponse>(getGetStyleUrl(styleId), {
 		...options,
 		method: 'GET',
@@ -10535,12 +10574,12 @@ export type updateStyleResponseError = (updateStyleResponse400 | updateStyleResp
 
 export type updateStyleResponse = updateStyleResponseSuccess | updateStyleResponseError;
 
-export const getUpdateStyleUrl = (styleId: number | string) => {
+export const getUpdateStyleUrl = (styleId: string | number) => {
 	return `${ELITE_API_URL}/product/style/${styleId}`;
 };
 
 export const updateStyle = async (
-	styleId: number | string,
+	styleId: string | number,
 	weightStyleWithDataDto: WeightStyleWithDataDto,
 	options?: RequestInit
 ) => {
@@ -10579,11 +10618,11 @@ export type deleteStyleImageResponseError = (deleteStyleImageResponse401 | delet
 
 export type deleteStyleImageResponse = deleteStyleImageResponseSuccess | deleteStyleImageResponseError;
 
-export const getDeleteStyleImageUrl = (styleId: number | string, imagePath: string) => {
+export const getDeleteStyleImageUrl = (styleId: string | number, imagePath: string) => {
 	return `${ELITE_API_URL}/product/style/${styleId}/images/${imagePath}`;
 };
 
-export const deleteStyleImage = async (styleId: number | string, imagePath: string, options?: RequestInit) => {
+export const deleteStyleImage = async (styleId: string | number, imagePath: string, options?: RequestInit) => {
 	return customFetch<deleteStyleImageResponse>(getDeleteStyleImageUrl(styleId, imagePath), {
 		...options,
 		method: 'DELETE',

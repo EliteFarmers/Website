@@ -8,12 +8,12 @@ import type { GeneratorVerbOptions } from 'orval';
 export default function fetchTransformer(options: GeneratorVerbOptions): GeneratorVerbOptions {
 	for (const param of options.props) {
 		if (param.definition.endsWith(': number')) {
-			param.definition = param.definition.replace(': number', ': number | string');
+			param.definition = param.definition.replace(': number', ': string | number');
 			param.implementation = param.definition;
 		}
 
 		if (param.definition.endsWith(': bigint')) {
-			param.definition = param.definition.replace(': bigint', ': bigint | number | string');
+			param.definition = param.definition.replace(': bigint', ': string | bigint | number');
 			param.implementation = param.definition;
 		}
 	}
