@@ -13,6 +13,12 @@ import {
 	getChipRarity,
 } from '../../constants/chips.js';
 import { CROP_INFO, type Crop } from '../../constants/crops.js';
+import {
+	BESTIARY_PEST_BRACKETS,
+	DEFAULT_GARDEN_BESTIARY_PEST_BRACKET,
+	GARDEN_BESTIARY_BRACKETS,
+	PEST_BESTIARY_IDS,
+} from '../../constants/pests.js';
 import { Rarity } from '../../constants/reforges.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
@@ -180,19 +186,31 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 		progress: (player, stats) => {
 			const list = getGardenBestiaryProgress(player.options.bestiaryKills ?? {});
-			return Object.values(list).map((pest) => ({
-				name: pest.name,
-				current: pest.bracketsUnlocked * 0.4,
-				stats: {
-					[Stat.FarmingFortune]: {
-						current: pest.bracketsUnlocked * 0.4,
-						max: 6,
-						ratio: (pest.bracketsUnlocked * 0.4) / 6,
+			return Object.entries(list).map(([bestiaryId, pest]) => {
+				const pestId = PEST_BESTIARY_IDS[bestiaryId] ?? null;
+				const bracket =
+					(pestId ? BESTIARY_PEST_BRACKETS[pestId] : GARDEN_BESTIARY_BRACKETS[bestiaryId]) ??
+					DEFAULT_GARDEN_BESTIARY_PEST_BRACKET;
+				const totalBrackets = Object.keys(bracket).length;
+				const maxFortune = totalBrackets * PEST_BESTIARY_SOURCE.fortunePerLevel;
+
+				return {
+					name: pest.name,
+					current: pest.bracketsUnlocked * PEST_BESTIARY_SOURCE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: {
+							current: pest.bracketsUnlocked * PEST_BESTIARY_SOURCE.fortunePerLevel,
+							max: maxFortune,
+							ratio:
+								maxFortune === 0
+									? 0
+									: (pest.bracketsUnlocked * PEST_BESTIARY_SOURCE.fortunePerLevel) / maxFortune,
+						},
 					},
-				},
-				max: PEST_BESTIARY_SOURCE.maxLevel * 0.4,
-				ratio: pest.bracketsUnlocked / PEST_BESTIARY_SOURCE.maxLevel,
-			}));
+					max: maxFortune,
+					ratio: totalBrackets === 0 ? 0 : pest.bracketsUnlocked / totalBrackets,
+				};
+			});
 		},
 	},
 	{
