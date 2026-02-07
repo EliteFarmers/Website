@@ -29,7 +29,7 @@ export default defineConfig({
 		noExternal: ['farming-weight'],
 	},
 	server: {
-		allowedHosts: ['.elitebot.dev', '.kaeso.dev'],
+		allowedHosts: ['.elitebot.dev', '.kaeso.dev', '.eliteskyblock.com'],
 		fs: {
 			allow: [veliteDirPath, path.resolve(__dirname, 'packages')],
 		},

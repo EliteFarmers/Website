@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import BlockRenderer from '$comp/blocks/block-renderer.svelte';
 	import type { RootNode } from '$comp/blocks/blocks';
 	import Head from '$comp/head.svelte';
@@ -12,14 +13,14 @@
 
 	const article = $derived(data.article);
 
-	const page = getPageCtx();
+	const pageCtx = getPageCtx();
 	const crumbs = $derived([
 		{ name: 'Articles', href: '/articles' },
 		{ name: article.title ?? 'Untitled Article', href: `/articles/${article.slug}` },
 	]);
 
 	$effect(() => {
-		page.setBreadcrumbs(crumbs);
+		pageCtx.setBreadcrumbs(crumbs);
 	});
 
 	const fullCoverUrl = $derived(
@@ -45,11 +46,11 @@
 		},
 		author: {
 			'@type': 'Person',
-			name: article.author?.name || 'elitebot.dev Team',
+			name: article.author?.name || `${page.url.hostname} Team`,
 		},
 		publisher: {
 			'@type': 'Organization',
-			name: 'elitebot.dev',
+			name: page.url.hostname,
 			logo: {
 				'@type': 'ImageObject',
 				url: `${PUBLIC_HOST_URL}/favicon.webp`, // Replace with your actual logo URL
@@ -62,7 +63,7 @@
 
 <Head
 	title={article.metaTitle ?? article.title ?? 'Elite | Skyblock Farming Weight'}
-	description={article.metaDescription ?? article.summary ?? 'Read this article on elitebot.dev!'}
+	description={article.metaDescription ?? article.summary ?? `Read this article on ${page.url.hostname}!`}
 	imageUrl={fullCoverUrl}
 	canonicalPath="/articles/{article.slug}"
 	twitterCardType="summary_large_image"
