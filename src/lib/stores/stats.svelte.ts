@@ -47,11 +47,20 @@ export class PlayerStats {
 		selectedProfile: ProfileDetailsDto;
 		profiles: ProfileDetails[];
 		style?: WeightStyleWithDataDto;
+		initialMember?: ProfileMemberDto;
+		initialRanks?: LeaderboardRanksResponse;
 	}) {
 		this.setValues(data);
 	}
 
-	async setValues({ account, selectedProfile, profiles, style }: ConstructorParameters<typeof PlayerStats>[0]) {
+	async setValues({
+		account,
+		selectedProfile,
+		profiles,
+		style,
+		initialMember,
+		initialRanks,
+	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
 		this.#profiles = profiles;
@@ -69,18 +78,31 @@ export class PlayerStats {
 			});
 		}
 
-		const memberData = getProfileMember({
-			playerUuid: account.id,
-			profileUuid: selectedProfile?.profileId ?? '',
-		});
+		if (initialMember) {
+			this.#member = {
+				current: initialMember,
+				loading: false,
+				error: null,
+			} as RemoteQuery<ProfileMemberDto>;
+		} else {
+			this.#member = getProfileMember({
+				playerUuid: account.id,
+				profileUuid: selectedProfile?.profileId ?? '',
+			});
+		}
 
-		const memberRanks = getMemberRanks({
-			playerUuid: account.id,
-			profileUuid: selectedProfile?.profileId ?? '',
-		});
-
-		this.#ranks = memberRanks;
-		this.member = memberData;
+		if (initialRanks) {
+			this.#ranks = {
+				current: initialRanks,
+				loading: false,
+				error: null,
+			} as RemoteQuery<LeaderboardRanksResponse>;
+		} else {
+			this.#ranks = getMemberRanks({
+				playerUuid: account.id,
+				profileUuid: selectedProfile?.profileId ?? '',
+			});
+		}
 
 		$effect(() => {
 			this.#tools = this.#member.current?.farmingWeight.inventory?.tools ?? [];
