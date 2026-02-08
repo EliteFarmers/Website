@@ -34,6 +34,9 @@ export default defineConfig({
 			allow: [veliteDirPath, path.resolve(__dirname, 'packages')],
 		},
 	},
+	preview: {
+		port: 5173,
+	},
 	resolve: {
 		alias: {
 			$ui: path.resolve('./src/components/ui'),

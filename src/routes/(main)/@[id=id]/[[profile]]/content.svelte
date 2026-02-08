@@ -37,6 +37,7 @@
 			style: data.style,
 			initialMember: ssrMemberData ?? undefined,
 			initialRanks: ssrRanksData ?? undefined,
+			bot: page.data.bot ?? false,
 		}))()
 	);
 
@@ -52,6 +53,7 @@
 				style: data.style,
 				initialMember: ssrMemberData ?? undefined,
 				initialRanks: ssrRanksData ?? undefined,
+				bot: page.data.bot ?? false,
 			});
 
 			if (!browser) return;
@@ -72,7 +74,7 @@
 <NavCrumbs account={data.account} profile={data.profile} profiles={data.profiles} />
 <JoinElitePopup />
 
-<main class="m-0 w-full p-0">
+<div class="m-0 w-full p-0">
 	<NameCard />
 	<BadgeList />
 
@@ -138,7 +140,7 @@
 			{/if}
 		</div>
 	</div>
-</main>
+</div>
 
 {#snippet pagenav()}
 	<div class="flex flex-row justify-center">

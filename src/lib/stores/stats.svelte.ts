@@ -49,6 +49,7 @@ export class PlayerStats {
 		style?: WeightStyleWithDataDto;
 		initialMember?: ProfileMemberDto;
 		initialRanks?: LeaderboardRanksResponse;
+		bot?: boolean;
 	}) {
 		this.setValues(data);
 	}
@@ -60,6 +61,7 @@ export class PlayerStats {
 		style,
 		initialMember,
 		initialRanks,
+		bot,
 	}: ConstructorParameters<typeof PlayerStats>[0]) {
 		this.#account = account;
 		this.#selectedProfile = selectedProfile;
@@ -78,7 +80,7 @@ export class PlayerStats {
 			});
 		}
 
-		if (initialMember) {
+		if (initialMember || bot) {
 			this.#member = {
 				current: initialMember,
 				loading: false,
@@ -91,7 +93,7 @@ export class PlayerStats {
 			});
 		}
 
-		if (initialRanks) {
+		if (initialRanks || bot) {
 			this.#ranks = {
 				current: initialRanks,
 				loading: false,

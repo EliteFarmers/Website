@@ -1,5 +1,5 @@
-import { getPlayerLeaderboardRanks, getProfile } from '$lib/api';
-import { getProfilesAccount } from '$lib/remote';
+import { getPlayerLeaderboardRanks, getWithTimeout } from '$lib/api';
+import { getProfileMember, getProfilesAccount } from '$lib/remote';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ params, locals }) => {
@@ -13,21 +13,35 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 
 		if (profileData.account?.id && profileData.profile?.profileId) {
 			const [memberData, ranksData] = await Promise.all([
-				getProfile(profileData.account.id, profileData.profile.profileId).then((res) => res.data),
-				getPlayerLeaderboardRanks(profileData.account.id, profileData.profile.profileId).then(
-					(res) => res.data
+				getProfileMember({
+					playerUuid: profileData.account.id,
+					profileUuid: profileData.profile.profileId ?? '',
+				}),
+				getWithTimeout(
+					(signal) =>
+						getPlayerLeaderboardRanks(
+							profileData.account.id,
+							profileData.profile.profileId ?? '',
+							undefined,
+							{
+								signal,
+							}
+						).then((res) => res.data),
+					500
 				),
 			]);
 
 			return {
 				profileData,
-				ssrMemberData: memberData,
-				ssrRanksData: ranksData,
+				ssrProfileData: profileData,
+				ssrMemberData: memberData ?? undefined,
+				ssrRanksData: ranksData ?? undefined,
 			};
 		}
 
 		return {
 			profileData,
+			ssrProfileData: profileData,
 		};
 	}
 

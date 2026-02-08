@@ -17,6 +17,7 @@
 <Dialog.Root>
 	<Dialog.Trigger class={buttonVariants({ variant: 'ghost', class: 'px-2', size: 'sm' })}>
 		<FileText size={20} />
+		<span class="sr-only">View Item Details</span>
 	</Dialog.Trigger>
 	<Dialog.ScrollContent class="dark bg-background border-border text-primary">
 		<ItemLore {item}>

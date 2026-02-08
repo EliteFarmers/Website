@@ -16,6 +16,7 @@
 	import { formatIgn } from '$lib/format';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
+	import { watch } from 'runed';
 	import { tick } from 'svelte';
 
 	interface Props {
@@ -167,17 +168,20 @@
 	const pageCtx = getPageCtx();
 	const favorites = getFavoritesContext();
 
-	$effect.pre(() => {
-		pageCtx.setBreadcrumbs(crumbs);
-		pageCtx.setSidebar('Stats', sidebarCrumbs);
-		tick().then(() => {
-			favorites.setPage({
-				icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
-				name: document.title,
-				href: page.url.pathname,
+	watch.pre(
+		() => [crumbs, sidebarCrumbs, account?.id, page.url.pathname],
+		() => {
+			pageCtx.setBreadcrumbs(crumbs);
+			pageCtx.setSidebar('Stats', sidebarCrumbs);
+			tick().then(() => {
+				favorites.setPage({
+					icon: account?.id ? `https://api.elitebot.dev/account/${account.id}/face.png` : undefined,
+					name: document.title,
+					href: page.url.pathname,
+				});
 			});
-		});
-	});
+		}
+	);
 </script>
 
 {#snippet memberDropdown(crumb: Crumb | Omit<Crumb, 'dropdown'>)}
