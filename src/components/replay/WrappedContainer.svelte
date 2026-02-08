@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
 	import { initRecapContext } from '$lib/stores/recap.svelte';
 	import X from '@lucide/svelte/icons/x';
@@ -58,7 +59,7 @@
 			<div
 				class="absolute bottom-2 z-100 flex w-full items-center justify-center gap-2 text-xs text-white/50 sm:text-sm"
 			>
-				<span>elitebot.dev/recap</span>
+				<span>{page.url.hostname}/recap</span>
 				<a href="/info/recap" target="_blank" class="hover:underline">Learn More</a>
 			</div>
 		{/snippet}

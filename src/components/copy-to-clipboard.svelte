@@ -54,5 +54,6 @@
 	{:else}
 		<Copy size={iconSize} class={iconClass} />
 	{/if}
+	<span class="sr-only">Copy {text} to clipboard</span>
 	{@render children?.()}
 </Button>

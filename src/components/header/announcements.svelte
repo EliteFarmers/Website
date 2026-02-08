@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
 	import type { AnnouncementDto } from '$lib/api';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
@@ -11,7 +12,7 @@
 	const filteredAnnouncements = $derived(ctx.announcements);
 </script>
 
-{#if filteredAnnouncements.length > 0}
+{#if filteredAnnouncements.length > 0 && !page.data.bot}
 	<div class="mx-2 flex flex-col gap-2 py-4 sm:px-1">
 		{#each filteredAnnouncements as a (a.id)}
 			{@render announcement(a)}

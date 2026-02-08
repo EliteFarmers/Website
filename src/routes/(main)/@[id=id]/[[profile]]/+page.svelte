@@ -8,9 +8,11 @@
 	import Collections from '$comp/stats/collections.svelte';
 	import JacobInfo from '$comp/stats/jacob/jacobinfo.svelte';
 	import Skills from '$comp/stats/skills.svelte';
+	import { env } from '$env/dynamic/public';
 	import { CROP_UNICODE_EMOJIS } from '$lib/constants/crops';
 	import { DEFAULT_SKILL_CAPS } from '$lib/constants/levels';
 	import { getLevelProgress } from '$lib/format';
+	import { buildProfilePageLdJson } from '$lib/seo/profile-page';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 
@@ -40,7 +42,7 @@
 
 	const topCollections = $derived(ctx.collections?.toSorted((a, b) => b.weight - a.weight).slice(0, 3));
 
-	let description = $derived(
+	const description = $derived(
 		`🌾 Farming Weight - ${weightStr}` +
 			`${weightRank > 0 ? ` (#${weightRank.toLocaleString()})` : ''}\n` +
 			`📜 Farming Level - ${farmingXp.level}` +
@@ -62,13 +64,35 @@
 				})
 				.join('\n') ?? '')
 	);
+
+	const canonicalPath = $derived(`/@${ctx.ign ?? ''}/${encodeURIComponent(profile?.profileName ?? '')}`);
+	const canonicalRoot = $derived(env.PUBLIC_CANONICAL_URL || env.PUBLIC_HOST_URL || page.url.origin);
+	const canonicalUrl = $derived.by(
+		() => `${canonicalRoot}${canonicalPath.startsWith('/') ? '' : '/'}${canonicalPath}`
+	);
+
+	const profileTitle = $derived(`${ctx.ignMeta} (${profile?.profileName}) | Stats`);
+	const ldJson = $derived.by(() =>
+		buildProfilePageLdJson({
+			title: profileTitle,
+			description,
+			url: canonicalUrl,
+			ign: ctx.ign ?? undefined,
+			ignMeta: ctx.ignMeta ?? undefined,
+			uuid: uuid ?? undefined,
+			profileName: profile?.profileName ?? undefined,
+			profileId: profile?.profileId ?? undefined,
+			gameMode: profile?.gameMode ?? undefined,
+		})
+	);
 </script>
 
 <Head
-	title="{ctx.ignMeta} ({profile?.profileName}) | Stats"
+	title={profileTitle}
 	{description}
 	imageUrl="https://api.elitebot.dev/account/{uuid}/face.png"
 	canonicalPath="/@{ctx.ign}/{encodeURIComponent(profile?.profileName ?? '')}"
+	{ldJson}
 />
 
 <section class="my-2 mb-16 flex items-center justify-center" id="Skills">

@@ -8,19 +8,24 @@
 	import NameCard from '$comp/stats/namecard/name-card.svelte';
 	import JoinElitePopup from '$comp/stats/player/join-elite-popup.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import type { getProfilesAccount } from '$lib/remote';
+	import type { LeaderboardRanksResponse, ProfileMemberDto } from '$lib/api';
 	import { initStatsContext } from '$lib/stores/stats.svelte';
 	import { Button } from '$ui/button';
 	import { watch } from 'runed';
 	import { tick, type Snippet } from 'svelte';
 	import Time from 'svelte-time/Time.svelte';
+	import type { LayoutData } from './$types';
 	import NavCrumbs from './nav-crumbs.svelte';
 
 	let {
 		data,
+		ssrMemberData,
+		ssrRanksData,
 		children,
 	}: {
-		data: Exclude<Awaited<ReturnType<typeof getProfilesAccount>>, { code: number; error: string }>;
+		data: Exclude<Awaited<LayoutData['profileData']>, { code: number; error: string }>;
+		ssrMemberData?: ProfileMemberDto | undefined;
+		ssrRanksData?: LeaderboardRanksResponse | undefined;
 		children: Snippet;
 	} = $props();
 
@@ -30,6 +35,9 @@
 			selectedProfile: data.profile,
 			profiles: data.profiles,
 			style: data.style,
+			initialMember: ssrMemberData ?? undefined,
+			initialRanks: ssrRanksData ?? undefined,
+			bot: page.data.bot ?? false,
 		}))()
 	);
 
@@ -43,6 +51,9 @@
 				selectedProfile: data.profile,
 				profiles: data.profiles,
 				style: data.style,
+				initialMember: ssrMemberData ?? undefined,
+				initialRanks: ssrRanksData ?? undefined,
+				bot: page.data.bot ?? false,
 			});
 
 			if (!browser) return;

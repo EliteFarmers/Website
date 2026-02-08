@@ -1,3 +1,4 @@
+import { PUBLIC_HOST_URL } from '$env/static/public';
 import { cache } from '$lib/servercache';
 import { getLeaderboardBackground } from '$lib/styles/render';
 import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
@@ -7,7 +8,7 @@ import type { RequestHandler } from './$types';
 export async function OPTIONS() {
 	return new Response(null, {
 		headers: {
-			'Access-Control-Allow-Origin': 'elitebot.dev',
+			'Access-Control-Allow-Origin': PUBLIC_HOST_URL.replace('https://', ''),
 			'Access-Control-Allow-Methods': 'GET, OPTIONS',
 		},
 	});
@@ -31,13 +32,13 @@ export const GET: RequestHandler = async ({ params, setHeaders }) => {
 
 	setHeaders({
 		'Cache-Control': 'max-age=3600, public',
-		'Access-Control-Allow-Origin': 'elitebot.dev',
+		'Access-Control-Allow-Origin': PUBLIC_HOST_URL.replace('https://', ''),
 	});
 
 	return new Response(new Uint8Array(buffer), {
 		headers: {
 			'Content-Type': 'image/webp',
-			'Access-Control-Allow-Origin': 'elitebot.dev',
+			'Access-Control-Allow-Origin': PUBLIC_HOST_URL.replace('https://', ''),
 		},
 	});
 };
