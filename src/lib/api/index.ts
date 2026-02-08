@@ -7,7 +7,6 @@ export const getWithTimeout = async <T>(fn: (signal: AbortSignal) => Promise<T>,
 
 	const timeoutPromise = new Promise<null>((resolve) => {
 		const timeoutId = setTimeout(() => {
-			console.warn(`Operation timed out after ${ms}ms`);
 			controller.abort();
 			resolve(null);
 		}, ms);
