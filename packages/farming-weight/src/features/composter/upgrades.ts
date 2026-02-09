@@ -325,7 +325,7 @@ export const COMPOSTER_UPGRADES: Record<ComposterUpgrade, ComposterUpgradeInfo> 
 			{
 				// Level 15
 				items: {
-					[ITEM_IDS.EnchantedBakedPotato]: 64,
+					[ITEM_IDS.EnchantedBakedPotato]: 48,
 					[ITEM_IDS.Squash]: 6,
 				},
 				copper: 1400,
