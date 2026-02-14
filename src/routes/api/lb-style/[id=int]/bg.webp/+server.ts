@@ -1,9 +1,10 @@
-import { PUBLIC_HOST_URL } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 import { cache } from '$lib/servercache';
 import { getLeaderboardBackground } from '$lib/styles/render';
 import { isValidLeaderboardStyle, isValidWeightStyle } from '$lib/styles/style';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+const { PUBLIC_HOST_URL } = env;
 
 export async function OPTIONS() {
 	return new Response(null, {

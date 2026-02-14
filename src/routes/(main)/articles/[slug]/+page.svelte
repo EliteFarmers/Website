@@ -4,10 +4,11 @@
 	import type { RootNode } from '$comp/blocks/blocks';
 	import Head from '$comp/head.svelte';
 	import DateDisplay from '$comp/time/date-display.svelte';
-	import { PUBLIC_HOST_URL, PUBLIC_STRAPI_API_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getPageCtx } from '$lib/hooks/page.svelte';
 	import ArticleAuthor from '../article-author.svelte';
 	import type { PageProps } from './$types';
+	const { PUBLIC_HOST_URL, PUBLIC_STRAPI_API_URL } = env;
 
 	let { data }: PageProps = $props();
 
