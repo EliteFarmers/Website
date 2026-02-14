@@ -2,16 +2,13 @@
 	import { version } from '$app/environment';
 	import { page } from '$app/state';
 	import RenderHtml from '$comp/markdown/render-html.svelte';
-	import {
-		PUBLIC_COMMUNITY_INVITE,
-		PUBLIC_DONATION_URL,
-		PUBLIC_GTAG_MEASUREMENT_ID,
-		PUBLIC_SUPPORT_SERVER_INVITE,
-	} from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import { Button } from '$ui/button';
 	import { Separator } from '$ui/separator';
 	import * as CookieConsent from 'vanilla-cookieconsent';
+	const { PUBLIC_COMMUNITY_INVITE, PUBLIC_DONATION_URL, PUBLIC_GTAG_MEASUREMENT_ID, PUBLIC_SUPPORT_SERVER_INVITE } =
+		env;
 
 	const adCtx = getAdCtx();
 </script>
