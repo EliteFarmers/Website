@@ -3,7 +3,7 @@
 	import Head from '$comp/head.svelte';
 	import Entry from '$comp/leaderboards/entry.svelte';
 	import MainSearch from '$comp/stats/main-search.svelte';
-	import { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getArticlesPaginated } from '$lib/remote/articles.remote';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
@@ -15,6 +15,7 @@
 	import type { PageData } from './$types';
 	import ArticlePill from './articles/article-pill.svelte';
 	import ArticleSkeleton from './articles/article-skeleton.svelte';
+	const { PUBLIC_DONATION_URL, PUBLIC_WEIGHT_REQ } = env;
 
 	interface Props {
 		data: PageData;

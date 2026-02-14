@@ -22,8 +22,8 @@
 		<RanksList leaderboards={loaded} />
 	{/await}
 	<p class="text-muted-foreground max-w-lg text-center">
-		Only leaderboards where this player has reached the minimum required score will be shown. If you want to see all
-		leaderboards, you can check out the
+		Only leaderboards where this player has reached the minimum required score and is within the top {(50000).toLocaleString()}
+		players will be shown. If you want to see all leaderboards, you can check out the
 		<a href="/leaderboard" class="text-link hover:underline">leaderboard</a>
 		page!
 	</p>
