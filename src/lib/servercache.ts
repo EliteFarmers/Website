@@ -1,5 +1,5 @@
 import { building, dev } from '$app/environment';
-import { ELITE_API_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import fs from 'fs/promises';
 import {
 	getAnnouncement,
@@ -28,6 +28,7 @@ import {
 import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
+const { ELITE_API_URL } = env;
 
 const cacheEntries = {
 	events: {

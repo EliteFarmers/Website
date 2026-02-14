@@ -29,6 +29,8 @@ export interface LeaderboardInfoDto {
 	profile: boolean;
 	/** Minimum score required to be on the leaderboard */
 	minimumScore: number;
+	/** Amount of top ranks cached in Redis for this leaderboard. */
+	cachedRankAmount: number;
 	/** Interval type of the leaderboard */
 	intervalType: LeaderboardType;
 	/** Score data type of the leaderboard */

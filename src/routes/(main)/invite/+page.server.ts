@@ -1,4 +1,5 @@
-import { PUBLIC_BOT_INVITE } from '$env/static/public';
+import { env } from '$env/dynamic/public';
+const { PUBLIC_BOT_INVITE } = env;
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

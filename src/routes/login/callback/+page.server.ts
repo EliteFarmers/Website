@@ -1,4 +1,5 @@
-import { PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
+import { env } from '$env/dynamic/public';
+const { PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
 import { getAcceptConfirmationUrl, login } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';

@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import EliteToast from '$comp/stats/player/elite-toast.svelte';
-	import { PUBLIC_ELITE_BADGE_ID, PUBLIC_WEIGHT_REQ } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
 	import { PersistedState, watch } from 'runed';
 	import { toast } from 'svelte-sonner';
+	const { PUBLIC_ELITE_BADGE_ID, PUBLIC_WEIGHT_REQ } = env;
 
 	const ctx = getStatsContext();
 	const closed = new PersistedState<{ state: 'ready' | 'open' | 'closed'; opened?: number }>('join-elite-toast', {
