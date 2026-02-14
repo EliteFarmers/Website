@@ -1,4 +1,5 @@
-import { PUBLIC_COMMUNITY_ID } from '$env/static/public';
+import { env } from '$env/dynamic/public';
+const { PUBLIC_COMMUNITY_ID } = env;
 import { getPublicGuild } from '$lib/api';
 import { getLeaderboardSlice } from '$lib/remote/leaderboards.remote';
 import type { PageServerLoad } from './$types';

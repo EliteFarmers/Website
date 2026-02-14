@@ -40,6 +40,7 @@
 		category: 'General',
 		profile: false,
 		minimumScore: 1000,
+		cachedRankAmount: 50000,
 		intervalType: 'Current',
 		suffix: '',
 	}}

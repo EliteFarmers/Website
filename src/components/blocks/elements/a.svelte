@@ -1,8 +1,9 @@
 <script lang="ts">
 	import ExternalLinkButton from '$comp/external-link-button.svelte';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
-
+	import { env } from '$env/dynamic/public';
 	import type { LinkProps } from '../blocks';
+	const { PUBLIC_HOST_URL } = env;
+
 	const { children, url }: LinkProps = $props();
 
 	const internal = $derived(url?.startsWith('/') || url?.startsWith('#') || url?.startsWith(PUBLIC_HOST_URL));

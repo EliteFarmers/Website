@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import PlayerHead from '$comp/sidebar/player-head.svelte';
-	import { PUBLIC_HOST_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { toggleRecapVisibilityCommand } from '$lib/remote';
 	import { getRecapContext } from '$lib/stores/recap.svelte';
@@ -18,6 +18,7 @@
 	import Wheat from '@lucide/svelte/icons/wheat';
 	import { calcWeightForCrop, Crop, getCropDisplayName, getCropFromName } from 'farming-weight';
 	import { fade, scale } from 'svelte/transition';
+	const { PUBLIC_HOST_URL } = env;
 
 	const context = getRecapContext();
 	let data = $derived(context.current);

@@ -60,11 +60,14 @@ async function removeReturnTypesFromFile(filePath: string) {
 		}
 	}
 
-	sourceFile.addImportDeclaration({
-		namedImports: ['ELITE_API_URL'],
-		moduleSpecifier: '$env/static/private',
+	const importDeclaration = sourceFile.addImportDeclaration({
+		namedImports: ['env'],
+		moduleSpecifier: '$env/dynamic/private',
 	});
-	console.log(`Added import for api URL.`);
+	sourceFile.insertText(
+		importDeclaration.getPos() + importDeclaration.getWidth() + 1,
+		`\nconst { ELITE_API_URL } = env;\n`
+	);
 
 	await sourceFile.save();
 

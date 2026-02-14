@@ -214,7 +214,8 @@ import type {
 } from '../schemas';
 
 import { customFetch } from '../custom-fetch';
-import { ELITE_API_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+const { ELITE_API_URL } = env;
 
 /**
  * Retrieves the Minecraft account information for a given player, along with an overview of their profiles and player data.

@@ -1,8 +1,9 @@
-import { STRAPI_API_URL, STRAPI_TOKEN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { articleGetArticlesResponse } from '$lib/api/client/EliteCms.zod';
 import { mdToHtml, mdToInline } from '$lib/md';
 import qs from 'qs';
 import * as z from 'zod';
+const { STRAPI_API_URL, STRAPI_TOKEN } = env;
 
 export async function fetchCmsData<T>(endpoint: string): Promise<T | null> {
 	if (!STRAPI_TOKEN || !STRAPI_API_URL) {

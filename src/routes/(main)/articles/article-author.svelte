@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import type { ArticleItemType } from '$lib/api/cms';
 	import type { DeepPartialNullable } from '$lib/utils';
 	import type { Snippet } from 'svelte';
+	const { PUBLIC_STRAPI_API_URL } = env;
 
 	let {
 		article,

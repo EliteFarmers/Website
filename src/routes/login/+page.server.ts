@@ -1,4 +1,5 @@
-import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } from '$env/static/public';
+import { env } from '$env/dynamic/public';
+const { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_DISCORD_REDIRECT_ROUTE } = env;
 import { getAuthAccount } from '$lib/api';
 import { error, redirect } from '@sveltejs/kit';
 import crypto from 'crypto';

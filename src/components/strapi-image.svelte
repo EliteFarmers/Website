@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { PUBLIC_STRAPI_API_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	import type { StrapiCover } from '$lib/api/cms';
 	import type { HTMLAttributes } from 'svelte/elements';
+	const { PUBLIC_STRAPI_API_URL } = env;
 
 	interface Props extends HTMLAttributes<HTMLImageElement> {
 		cover: StrapiCover;
