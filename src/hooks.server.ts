@@ -66,9 +66,9 @@ async function ResolveWithSecurityHeaders(
 			const isAdFree = event.locals.session?.flags?.includes('AD_FREE');
 			const shouldShowAds = !isAdFree && !event.locals.bot;
 			if (shouldShowAds) {
-				return html.replace('</head>', `${privateEnv.AD_SCRIPT || ''}</head>`);
+				return html.replace('%elite.adscript%', privateEnv.AD_SCRIPT || '');
 			}
-			return html;
+			return html.replace('%elite.adscript%', '');
 		},
 	});
 
