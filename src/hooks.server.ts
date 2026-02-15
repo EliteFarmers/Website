@@ -1,3 +1,4 @@
+import { env as privateEnv } from '$env/dynamic/private';
 import { env } from '$env/dynamic/public';
 import { FetchUserSession } from '$lib/api/auth';
 import { cache, initCachedItems } from '$lib/servercache';
@@ -60,7 +61,16 @@ async function ResolveWithSecurityHeaders(
 	resolve: Parameters<Handle>[0]['resolve'],
 	event: Parameters<Handle>[0]['event']
 ): Promise<ReturnType<Handle>> {
-	const response = await resolve(event);
+	const response = await resolve(event, {
+		transformPageChunk: ({ html }) => {
+			const isAdFree = event.locals.session?.flags?.includes('AD_FREE');
+			const shouldShowAds = !isAdFree && !event.locals.bot;
+			if (shouldShowAds) {
+				return html.replace('</head>', `${privateEnv.AD_SCRIPT || ''}</head>`);
+			}
+			return html;
+		},
+	});
 
 	// Security headers
 	response.headers.set('X-Frame-Options', 'SAMEORIGIN');

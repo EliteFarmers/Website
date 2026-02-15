@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { env } from '$env/dynamic/public';
 	import { onMount } from 'svelte';
 	import CookieConsent from './cookie-consent.svelte';
-	import { ADDITIONAL_TAGS } from './tag-config';
 	const { PUBLIC_GTAG_MEASUREMENT_ID } = env;
 
 	onMount(() => {
@@ -24,14 +22,6 @@
 			gtag('js', new Date());
 			window.gtag = gtag;
 		</script>
-	{/if}
-	{#if ADDITIONAL_TAGS && ADDITIONAL_TAGS.length > 0}
-		{#each ADDITIONAL_TAGS as tag, i (i)}
-			{#if tag.condition === undefined || tag.condition(page.data)}
-				<!-- eslint-disable-next-line -->
-				{@html tag.content}
-			{/if}
-		{/each}
 	{/if}
 </svelte:head>
 
