@@ -196,8 +196,8 @@ importers:
         specifier: 2.0.0-next.42
         version: 2.0.0-next.42(svelte@5.50.0)
       marked:
-        specifier: ^16.4.2
-        version: 16.4.2
+        specifier: ^17.0.0
+        version: 17.0.3
       mdsx:
         specifier: ^0.0.7
         version: 0.0.7(svelte@5.50.0)
@@ -4134,8 +4134,8 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  marked@16.4.2:
-    resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
+  marked@17.0.3:
+    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -10183,7 +10183,7 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  marked@16.4.2: {}
+  marked@17.0.3: {}
 
   math-intrinsics@1.1.0: {}
 
