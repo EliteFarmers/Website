@@ -3,10 +3,10 @@ import { getContext, setContext } from 'svelte';
 
 export class AdsContext {
 	#bottomAnchor = $state<HTMLElement | null>(null);
-	#bottomAnchorSize = $derived(new ElementRect(() => this.#bottomAnchor));
+	#bottomAnchorSize = new ElementRect(() => this.#bottomAnchor);
 	#footerBottom = $state<HTMLElement | null>(null);
-	#footerBottomSize = $derived(
-		new ElementRect(() => (this.#footerBottom?.children[0] as HTMLElement | null) ?? this.#footerBottom)
+	#footerBottomSize = new ElementRect(
+		() => (this.#footerBottom?.children[0] as HTMLElement | null) ?? this.#footerBottom
 	);
 	#floatingVideoLeftMargin = $state<number>(0);
 

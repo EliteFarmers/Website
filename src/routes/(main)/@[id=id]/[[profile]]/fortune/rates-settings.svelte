@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import ItemRender from '$comp/items/item-render.svelte';
 	import FortuneBreakdown from '$comp/items/tools/fortune-breakdown.svelte';
 	import SettingBigSeperator from '$comp/settings/setting-big-seperator.svelte';
 	import SettingHeader from '$comp/settings/setting-header.svelte';
@@ -15,7 +14,7 @@
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
-	import { FARMING_ATTRIBUTE_SHARDS, GARDEN_CHIPS, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
+	import { TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
 
 	const ratesData = getRatesData();
 	const gbl = getGlobalContext();
@@ -258,52 +257,24 @@
 	<SettingSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Attribute Shards</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">
-		Set the amount of each attribute shard you have! This is unfortunately necessary since Hypixel hasn't added them
-		to the API yet.
-	</p>
+	<p class="text-muted-foreground px-1 text-sm">Set the amount of each attribute shard you have!</p>
 	<SettingBigSeperator />
 
 	<p class="border-completed rounded-md border p-2 text-sm">
-		These toggles have been removed! Exported crops are now automatically detected from your profile data!
+		These settings have been removed! Attribute shards are now automatically detected from your profile data!
 	</p>
 
 	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
-	<p class="text-muted-foreground px-1 text-sm">
-		Set the level of each garden chip you have! This is unfortunately necessary since Hypixel hasn't added them to
-		the API yet.
-	</p>
+	<p class="text-muted-foreground px-1 text-sm">Set the level of each garden chip you have!</p>
 	<SettingBigSeperator />
 
-	{#each Object.values(GARDEN_CHIPS) as chip (chip.skyblockId)}
-		<SettingListItem title={chip.name} wiki={chip.wiki}>
-			{#snippet icon()}
-				<ItemRender skyblockId={chip.skyblockId} class="size-10" />
-			{/snippet}
-			<div class="mr-2 flex w-full max-w-32 flex-row items-center justify-end md:max-w-48">
-				<div class="flex flex-1 flex-row items-center gap-1">
-					<p class="w-12 p-2 pl-4 text-center text-lg">{$ratesData.chips[chip.skyblockId]}</p>
-					{#if $ratesData.chips[chip.skyblockId] !== undefined}
-						<Select.Simple
-							options={Array.from({ length: 21 }, (_, i) => ({
-								value: i,
-								label: i == 0 ? 'None' : `Level ${i}`,
-							}))}
-							value={$ratesData.chips[chip.skyblockId]}
-							change={(value) => {
-								$ratesData.chips[chip.skyblockId] = value ?? $ratesData.chips[chip.skyblockId];
-							}}
-							class="w-24"
-							placeholder="Level"
-						/>
-					{/if}
-				</div>
-			</div>
-		</SettingListItem>
-		<SettingSeperator />
-	{/each}
+	<p class="border-completed rounded-md border p-2 text-sm">
+		These settings have been removed! Garden chip levels are now automatically detected from your profile data!
+	</p>
+
+	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Exported Crops</SettingHeader>
 	<span class="text-muted-foreground px-1 text-sm"
@@ -347,24 +318,10 @@
 						}}
 					>
 						<p class="text-muted-foreground max-w-sm text-sm">
-							Strength, garden fortune, garden chips, and attribute shards can be saved to your profile!
+							Strength, flasks, and garden fortune can be saved to your profile!
 						</p>
 						<input type="hidden" name="player" value={ctx.uuid} />
 						<input type="hidden" name="profile" value={ctx.selectedProfile?.profileId} />
-						{#each Object.values(FARMING_ATTRIBUTE_SHARDS).filter((shard) => shard.effect === 'fortune' || shard.effect === 'rates') as shard (shard.skyblockId)}
-							<input
-								type="hidden"
-								name={shard.skyblockId}
-								value={$ratesData.attributes[shard.skyblockId] ?? 0}
-							/>
-						{/each}
-						{#each Object.values(GARDEN_CHIPS) as chip (chip.skyblockId)}
-							<input
-								type="hidden"
-								name={chip.skyblockId}
-								value={$ratesData.chips[chip.skyblockId] ?? 0}
-							/>
-						{/each}
 						<input type="hidden" name="community" value={$ratesData.communityCenter ?? 0} />
 						<input type="hidden" name="flasks" value={$ratesData.rosewaterFlasks ?? 0} />
 						<input type="hidden" name="strength" value={$ratesData.strength ?? 0} />

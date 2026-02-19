@@ -9,7 +9,6 @@
 	import UpcomingEvents from '$comp/sidebar/upcoming-events.svelte';
 	import FooterItems from '$comp/siderail/footer-items.svelte';
 	import Siderail from '$comp/siderail/siderail.svelte';
-	import { getAdCtx } from '$lib/hooks/ads.svelte';
 	import * as Sidebar from '$ui/sidebar';
 	import type { LayoutData } from './$types';
 	import Content from './content.svelte';
@@ -20,12 +19,10 @@
 	}
 
 	let { children, data }: Props = $props();
-
-	const adCtx = getAdCtx();
 </script>
 
 <Sidebar.Provider open={data.sidebar}>
-	<Sidebar.Root collapsible="icon" class="z-50" style="margin-bottom: {adCtx.bottomAnchorSize.height}px;">
+	<Sidebar.Root collapsible="icon" class="z-50">
 		<AppSidebar>
 			<FavoritedLinks />
 			<UpcomingEvents events={data.cache?.events} />
