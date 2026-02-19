@@ -1,4 +1,11 @@
-import { type GardenChipId, getChipLevel, getChipTempMultiplierPerLevel, normalizeChipId } from '../constants/chips.js';
+import { normalizeAttributes } from '../constants/attributes.js';
+import {
+	getChipInputLevel,
+	getChipLevel,
+	getChipTempMultiplierPerLevel,
+	normalizeChipId,
+	normalizeChipLevels,
+} from '../constants/chips.js';
 import { CROP_INFO, type Crop } from '../constants/crops.js';
 import type { LateCalculationContext } from '../constants/latecalc.js';
 import { getContributoryStats, Stat, type StatBreakdown } from '../constants/stats.js';
@@ -58,17 +65,8 @@ export class FarmingPlayer {
 	setOptions(options: PlayerOptions) {
 		this.options = options;
 		this.activeAccessories = [];
-		// Normalize chip IDs to support both full and short names
-		if (this.options.chips) {
-			const normalizedChips: Partial<Record<GardenChipId, number>> = {};
-			for (const [key, value] of Object.entries(this.options.chips)) {
-				const normalizedId = normalizeChipId(key);
-				if (normalizedId) {
-					normalizedChips[normalizedId] = value;
-				}
-			}
-			this.options.chips = normalizedChips;
-		}
+		this.options.attributes = normalizeAttributes(this.options.attributes);
+		this.options.chips = normalizeChipLevels(this.options.chips);
 
 		this.populatePets();
 		this.populateTools();
@@ -471,8 +469,8 @@ export class FarmingPlayer {
 		// Rare (<=10): 1 + 0.03 * level
 		// Epic (<=15): 1 + 0.03 * level
 		// Legendary (>15): 2x boost to temporary fortune sources
-		const hyperLevel = getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP) ?? 0;
-		const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel) ?? 0;
+		const hyperLevel = getChipLevel(getChipInputLevel(this.options.chips, 'hypercharge')) ?? 0;
+		const perLevel = getChipTempMultiplierPerLevel('hypercharge', hyperLevel) ?? 0;
 		const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
 
 		if (!this.options.temporaryFortune) {
@@ -781,8 +779,10 @@ export class FarmingPlayer {
 			this.permFortune = this.getGeneralFortune();
 		} else if (type === 'chip' && id && value) {
 			this.options.chips ??= {};
-			// @ts-ignore - `id` is a GardenChipId string
-			this.options.chips[id] = Number(value);
+			const normalizedId = normalizeChipId(id);
+			if (normalizedId) {
+				this.options.chips[normalizedId] = Number(value);
+			}
 			this.permFortune = this.getGeneralFortune();
 			this.tempFortune = this.getTempFortune();
 		} else if (type === 'crop_upgrade' && key && value) {

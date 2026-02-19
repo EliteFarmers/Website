@@ -139,7 +139,7 @@ test('Warty RNG Drops', () => {
 		bountiful: true,
 		mooshroom: true,
 		attributes: {
-			SHARD_WARTYBUG: 500, // Max level
+			wart_eater: 500, // Max level
 		},
 	});
 
@@ -165,7 +165,7 @@ test('Cropeetle shard increases special crop bonus', () => {
 		bountiful: true,
 		mooshroom: false,
 		attributes: {
-			SHARD_CROPEETLE: 100, // Max level (10)
+			crop_bug: 100, // Max level (10)
 		},
 	});
 
@@ -283,11 +283,11 @@ test('Multiple rate modifiers stack correctly with multiplicative formula', () =
 		bountiful: true,
 		mooshroom: false,
 		attributes: {
-			SHARD_CROPEETLE: 100, // Max level 10 = 20% special crop bonus
-			SHARD_WARTYBUG: 500,
+			crop_bug: 100, // Max level 10 = 20% special crop bonus
+			wart_eater: 500,
 		},
 		chips: {
-			RAREFINDER_GARDEN_CHIP: 15, // Epic tier = 37.5% rare item bonus
+			rarefinder: 15, // Epic tier = 37.5% rare item bonus
 		},
 		pet: mockPet,
 	});
@@ -309,10 +309,10 @@ test('Rate modifiers do not affect results when level is 0', () => {
 		bountiful: true,
 		mooshroom: false,
 		attributes: {
-			SHARD_CROPEETLE: 0,
+			crop_bug: 0,
 		},
 		chips: {
-			RAREFINDER_GARDEN_CHIP: 0,
+			rarefinder: 0,
 		},
 	});
 

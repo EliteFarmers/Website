@@ -15,18 +15,20 @@ test('Garden chip level clamp test', () => {
 
 test('Normalize chip ID accepts both full and short names', () => {
 	// Full IDs should work
-	expect(normalizeChipId('CROPSHOT_GARDEN_CHIP')).toBe('CROPSHOT_GARDEN_CHIP');
-	expect(normalizeChipId('VERMIN_VAPORIZER_GARDEN_CHIP')).toBe('VERMIN_VAPORIZER_GARDEN_CHIP');
-	expect(normalizeChipId('OVERDRIVE_GARDEN_CHIP')).toBe('OVERDRIVE_GARDEN_CHIP');
+	expect(normalizeChipId('CROPSHOT_GARDEN_CHIP')).toBe('cropshot');
+	expect(normalizeChipId('VERMIN_VAPORIZER_GARDEN_CHIP')).toBe('vermin_vaporizer');
+	expect(normalizeChipId('OVERDRIVE_GARDEN_CHIP')).toBe('overdrive');
 
 	// Short names should work
-	expect(normalizeChipId('CROPSHOT')).toBe('CROPSHOT_GARDEN_CHIP');
-	expect(normalizeChipId('VERMIN_VAPORIZER')).toBe('VERMIN_VAPORIZER_GARDEN_CHIP');
-	expect(normalizeChipId('OVERDRIVE')).toBe('OVERDRIVE_GARDEN_CHIP');
+	expect(normalizeChipId('CROPSHOT')).toBe('cropshot');
+	expect(normalizeChipId('VERMIN_VAPORIZER')).toBe('vermin_vaporizer');
+	expect(normalizeChipId('OVERDRIVE')).toBe('overdrive');
+	expect(normalizeChipId('VERMINVAPORIZER')).toBe('vermin_vaporizer');
 
 	// Case insensitive
-	expect(normalizeChipId('cropshot')).toBe('CROPSHOT_GARDEN_CHIP');
-	expect(normalizeChipId('Cropshot_Garden_Chip')).toBe('CROPSHOT_GARDEN_CHIP');
+	expect(normalizeChipId('cropshot')).toBe('cropshot');
+	expect(normalizeChipId('Cropshot_Garden_Chip')).toBe('cropshot');
+	expect(normalizeChipId('verminVaporizer')).toBe('vermin_vaporizer');
 
 	// Invalid IDs should return undefined
 	expect(normalizeChipId('INVALID_CHIP')).toBeUndefined();

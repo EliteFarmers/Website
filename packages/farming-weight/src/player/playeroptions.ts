@@ -1,4 +1,3 @@
-import type { GardenChipId } from '../constants/chips.js';
 import type { Crop } from '../constants/crops.js';
 import type { TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import type { Upgrade } from '../constants/upgrades.js';
@@ -9,6 +8,20 @@ import type { FarmingPet } from '../fortune/farmingpet.js';
 import type { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import type { FarmingPetType } from '../items/pets.js';
+
+export interface FarmingPlayerGardenChips {
+	cropshot?: number | null;
+	sowledge?: number | null;
+	hypercharge?: number | null;
+	quickdraw?: number | null;
+	mechamind?: number | null;
+	overdrive?: number | null;
+	synthesis?: number | null;
+	verminVaporizer?: number | null;
+	vermin_vaporizer?: number | null;
+	evergreen?: number | null;
+	rarefinder?: number | null;
+}
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Partial<Record<Crop, number>>;
@@ -28,8 +41,7 @@ export interface FortuneMissingFromAPI {
 	infestedPlotProbability?: number;
 
 	attributes?: Record<string, number>;
-	/** Chip levels. Accepts both full IDs (e.g., 'CROPSHOT_GARDEN_CHIP') or short names (e.g., 'CROPSHOT'). */
-	chips?: Partial<Record<GardenChipId, number>> | Record<string, number>;
+	chips?: Partial<FarmingPlayerGardenChips>;
 	perks?: Record<string, string | null | number>;
 
 	temporaryFortune?: TemporaryFarmingFortune;

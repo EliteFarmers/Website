@@ -1,5 +1,11 @@
-import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes } from '../constants/attributes.js';
-import { GARDEN_CHIPS, getChipLevel, getChipRarity } from '../constants/chips.js';
+import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes, normalizeAttributes } from '../constants/attributes.js';
+import {
+	GARDEN_CHIPS,
+	getChipInputLevel,
+	getChipLevel,
+	getChipRarity,
+	normalizeChipLevels,
+} from '../constants/chips.js';
 import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { Rarity, REFORGES } from '../constants/reforges.js';
 import { MATCHING_SPECIAL_CROP, SPECIAL_CROP_INFO } from '../constants/specialcrops.js';
@@ -134,12 +140,18 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 }
 
 export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDropsResult {
+	const calcOptions: CalculateCropDetailedDropsOptions = {
+		...options,
+		attributes: normalizeAttributes(options.attributes),
+		chips: normalizeChipLevels(options.chips),
+	};
+
 	const result: DetailedDropsResult = {
 		npcPrice: 0,
 		collection: 0,
 		npcCoins: 0,
 		fortune: 0,
-		blocksBroken: options.blocksBroken,
+		blocksBroken: calcOptions.blocksBroken,
 		coinSources: {} as Record<string, number>,
 		otherCollection: {} as Record<string, number>,
 		items: {} as Record<string, number>,
@@ -149,7 +161,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		rareItemBonusBreakdown: {} as Record<string, number>,
 	};
 
-	const { farmingFortune, blocksBroken, crop, bountiful, armorPieces = 4 } = options;
+	const { farmingFortune, blocksBroken, crop, bountiful, armorPieces = 4 } = calcOptions;
 
 	result.fortune = farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
 	let fortune = result.fortune + 100;
@@ -178,7 +190,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		result.coinSources['Bountiful'] = Math.round(baseDrops * 0.2);
 	}
 
-	if (options.mooshroom) {
+	if (calcOptions.mooshroom) {
 		const mushroomDrops = Math.round(blocksBroken * breaks);
 		result.coinSources['Mooshroom'] = mushroomDrops * CROP_INFO[Crop.Mushroom].npc;
 		result.otherCollection['Mushroom'] = mushroomDrops;
@@ -211,7 +223,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	// When farming wheat, also count seeds
 	if (crop === Crop.Wheat) {
 		const seedsResult = calculateDetailedDrops({
-			...options,
+			...calcOptions,
 			crop: Crop.Seeds,
 			maxTool: false,
 			mooshroom: false,
@@ -227,10 +239,10 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		}
 	}
 
-	if (options.maxTool) {
+	if (calcOptions.maxTool) {
 		let multiplier = 1;
-		if (options.chips) {
-			const level = getChipLevel(options.chips['MECHAMIND_GARDEN_CHIP']);
+		if (calcOptions.chips) {
+			const level = getChipLevel(getChipInputLevel(calcOptions.chips, 'mechamind'));
 			if (level > 0) {
 				const rarity = getChipRarity(level);
 				let perLevel = 0.015;
@@ -254,28 +266,28 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 
 	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
 
-	if (options.attributes) {
+	if (calcOptions.attributes) {
 		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
 			if (shard.ratesModifier) {
-				shard.ratesModifier(result, options);
+				shard.ratesModifier(result, calcOptions);
 			}
 		}
 	}
 
-	if (options.chips) {
+	if (calcOptions.chips) {
 		for (const chip of Object.values(GARDEN_CHIPS)) {
 			if (chip.ratesModifier) {
-				chip.ratesModifier(result, options);
+				chip.ratesModifier(result, calcOptions);
 			}
 		}
 	}
 
-	if (options.pet) {
-		const pet = options.pet;
+	if (calcOptions.pet) {
+		const pet = calcOptions.pet;
 		for (const modifier of pet.info.abilities ?? []) {
-			if (modifier.exists?.({ options }, pet) === false) continue;
+			if (modifier.exists?.({ options: calcOptions }, pet) === false) continue;
 			if (modifier.ratesModifier) {
-				modifier.ratesModifier(result, options, pet);
+				modifier.ratesModifier(result, calcOptions, pet);
 			}
 		}
 	}

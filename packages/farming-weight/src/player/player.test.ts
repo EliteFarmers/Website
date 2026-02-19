@@ -36,7 +36,7 @@ test('Temp fortune test', () => {
 test('Hypercharge chip temp fortune scaling test', () => {
 	const player = new FarmingPlayer({
 		chips: {
-			HYPERCHARGE_GARDEN_CHIP: 20,
+			hypercharge: 20,
 		},
 		temporaryFortune: {
 			centuryCake: true,
@@ -50,9 +50,9 @@ test('Hypercharge chip temp fortune scaling test', () => {
 test('Garden chips stat contribution test', () => {
 	const player = new FarmingPlayer({
 		chips: {
-			CROPSHOT_GARDEN_CHIP: 10,
-			VERMIN_VAPORIZER_GARDEN_CHIP: 7,
-			SOWLEDGE_GARDEN_CHIP: 4,
+			cropshot: 10,
+			vermin_vaporizer: 7,
+			sowledge: 4,
 		},
 	});
 
@@ -68,9 +68,9 @@ test('Garden chips stat contribution test', () => {
 test('Garden chips accept short names', () => {
 	const player = new FarmingPlayer({
 		chips: {
-			CROPSHOT: 10, // Short name
-			VERMIN_VAPORIZER: 7, // Short name
-			SOWLEDGE_GARDEN_CHIP: 4, // Full name still works
+			cropshot: 10, // Short name
+			vermin_vaporizer: 7, // Short name
+			sowledge: 4, // Full name still works
 		},
 	});
 
@@ -83,15 +83,15 @@ test('Garden chips accept short names', () => {
 	expect(wisdom).toBe(4);
 
 	// Verify internal normalization to full IDs
-	expect(player.options.chips?.CROPSHOT_GARDEN_CHIP).toBe(10);
-	expect(player.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP).toBe(7);
-	expect(player.options.chips?.SOWLEDGE_GARDEN_CHIP).toBe(4);
+	expect(player.options.chips?.cropshot).toBe(10);
+	expect(player.options.chips?.vermin_vaporizer).toBe(7);
+	expect(player.options.chips?.sowledge).toBe(4);
 });
 
 test('Overdrive chip contest crop fortune test', () => {
 	const player = new FarmingPlayer({
 		chips: {
-			OVERDRIVE_GARDEN_CHIP: 20,
+			overdrive: 20,
 		},
 		jacobContest: {
 			enabled: true,
@@ -129,7 +129,7 @@ test('Fortune progress test', () => {
 
 test('Max attribute shard fortune test', () => {
 	const player = new FarmingPlayer({
-		attributes: Object.fromEntries(Object.values(FARMING_ATTRIBUTE_SHARDS).map((shard) => [shard.skyblockId, 500])),
+		attributes: Object.fromEntries(Object.keys(FARMING_ATTRIBUTE_SHARDS).map((key) => [key, 500])),
 		infestedPlotProbability: 1,
 	});
 
