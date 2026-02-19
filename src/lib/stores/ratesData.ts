@@ -1,11 +1,5 @@
 import { browser } from '$app/environment';
-import {
-	FARMING_ATTRIBUTE_SHARDS,
-	ZorroMode,
-	type FarmingTool,
-	type GardenChipId,
-	type TemporaryFarmingFortune,
-} from 'farming-weight';
+import { ZorroMode, type FarmingTool, type TemporaryFarmingFortune } from 'farming-weight';
 import { getContext, setContext } from 'svelte';
 import { writable, type Writable } from 'svelte/store';
 import * as z from 'zod';
@@ -23,16 +17,12 @@ interface RatesData {
 	infestedPlotProbability?: number;
 	zorroMode: ZorroMode;
 	bzMode: 'order' | 'insta';
-	attributes: Record<string, number>;
-	chips: Record<string, number>;
 	rosewaterFlasks: number;
 }
 
 export const MissingRatesDataSchema = z.object({
 	communityCenter: z.number().optional(),
 	strength: z.number().optional(),
-	attributes: z.record(z.string(), z.number()).optional(),
-	chips: z.record(z.string(), z.number()).optional(),
 	flasks: z.number().optional(),
 	from: z.string().optional(),
 });
@@ -59,23 +49,6 @@ const defaultData = {
 	sprayedPlot: true,
 	infestedPlotProbability: 0.2,
 	zorroMode: ZorroMode.Normal,
-	attributes: Object.fromEntries(
-		Object.entries(FARMING_ATTRIBUTE_SHARDS)
-			.filter((a) => a[1].effect === 'rates' || a[1].effect === 'fortune')
-			.map((a) => [a[0], 0])
-	),
-	chips: {
-		CROPSHOT_GARDEN_CHIP: 0,
-		VERMIN_VAPORIZER_GARDEN_CHIP: 0,
-		SYNTHESIS_GARDEN_CHIP: 0,
-		SOWLEDGE_GARDEN_CHIP: 0,
-		MECHAMIND_GARDEN_CHIP: 0,
-		HYPERCHARGE_GARDEN_CHIP: 0,
-		EVERGREEN_GARDEN_CHIP: 0,
-		OVERDRIVE_GARDEN_CHIP: 0,
-		QUICKDRAW_GARDEN_CHIP: 0,
-		RAREFINDER_GARDEN_CHIP: 0,
-	} as Record<GardenChipId, number>,
 } as RatesData;
 
 export function initRatesData(data = defaultData) {
@@ -108,9 +81,6 @@ export function getRatesData() {
 		if (!rates || rates.v !== defaultData.v) {
 			rates = defaultData;
 		}
-
-		rates.attributes = { ...defaultData.attributes, ...rates.attributes };
-		rates.chips = { ...defaultData.chips, ...rates.chips };
 
 		return { ...defaultData, ...rates, v: defaultData.v };
 	});

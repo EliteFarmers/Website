@@ -24,11 +24,14 @@
 						<img
 							src="/api/block/{cell.blockName}.webp{gbl.packsParam}"
 							alt={cell?.blockName}
-							class="pixelated absolute inset-0 h-full w-full object-cover"
+							class="pixelated absolute inset-0 h-full w-full object-cover brightness-90"
 						/>
 					{/if}
 					{#if cell?.overlayItem}
-						<ItemRender skyblockId={cell.overlayItem} class="w-full drop-shadow-md sm:size-6 md:size-10" />
+						<ItemRender
+							skyblockId={cell.overlayItem}
+							class="w-full brightness-110 drop-shadow-md sm:size-6 md:size-10"
+						/>
 					{/if}
 				</div>
 			{/each}

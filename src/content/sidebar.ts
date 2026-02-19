@@ -29,7 +29,6 @@ export const SIDEBAR_NAV = [
 		title: 'Guides',
 		href: '/guides',
 		icon: BookOpen as unknown as Component,
-		new: 1,
 	},
 	{
 		title: 'Guilds',

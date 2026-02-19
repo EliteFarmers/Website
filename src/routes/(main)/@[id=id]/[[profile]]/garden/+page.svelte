@@ -3,6 +3,8 @@
 	import Head from '$comp/head.svelte';
 	import ComposterUpgrades from '$comp/stats/garden/composter-upgrades.svelte';
 	import CropUpgrades from '$comp/stats/garden/crop-upgrades.svelte';
+	import GardenChips from '$comp/stats/garden/garden-chips.svelte';
+	import Greenhouse from '$comp/stats/garden/greenhouse.svelte';
 	import Milestones from '$comp/stats/garden/milestones.svelte';
 	import MissingVisitors from '$comp/stats/garden/missing-visitors.svelte';
 	import Plots from '$comp/stats/garden/plots.svelte';
@@ -144,6 +146,10 @@
 			</div>
 		</div>
 	</section>
+
+	<Greenhouse />
+
+	<GardenChips />
 
 	<ComposterUpgrades />
 

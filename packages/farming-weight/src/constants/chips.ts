@@ -37,22 +37,6 @@ export interface GardenChipInfo {
 }
 
 export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
-	cropshot: {
-		skyblockId: 'CROPSHOT_GARDEN_CHIP',
-		name: 'Cropshot Chip',
-		wiki: GARDEN_CHIP_WIKI,
-		statsPerRarity: {
-			[Rarity.Rare]: {
-				[Stat.FarmingFortune]: 3,
-			},
-			[Rarity.Epic]: {
-				[Stat.FarmingFortune]: 4,
-			},
-			[Rarity.Legendary]: {
-				[Stat.FarmingFortune]: 5,
-			},
-		},
-	},
 	vermin_vaporizer: {
 		skyblockId: 'VERMIN_VAPORIZER_GARDEN_CHIP',
 		name: 'Vermin Vaporizer Chip',
@@ -109,6 +93,22 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		skyblockId: 'EVERGREEN_GARDEN_CHIP',
 		name: 'Evergreen Chip',
 		wiki: GARDEN_CHIP_WIKI,
+	},
+	cropshot: {
+		skyblockId: 'CROPSHOT_GARDEN_CHIP',
+		name: 'Cropshot Chip',
+		wiki: GARDEN_CHIP_WIKI,
+		statsPerRarity: {
+			[Rarity.Rare]: {
+				[Stat.FarmingFortune]: 3,
+			},
+			[Rarity.Epic]: {
+				[Stat.FarmingFortune]: 4,
+			},
+			[Rarity.Legendary]: {
+				[Stat.FarmingFortune]: 5,
+			},
+		},
 	},
 	overdrive: {
 		skyblockId: 'OVERDRIVE_GARDEN_CHIP',
