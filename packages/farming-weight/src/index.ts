@@ -3,6 +3,7 @@ export * from './constants/chips.js';
 export * from './constants/crops.js';
 export * from './constants/enchants.js';
 export * from './constants/garden.js';
+export * from './constants/mutations.js';
 export * from './constants/personalbests.js';
 export * from './constants/pests.js';
 export * from './constants/plots.js';

@@ -11,6 +11,8 @@ import type { CropSettingsOfString } from './CropSettingsOfString';
 import type { CropSettingsOfInt32 } from './CropSettingsOfInt32';
 import type { ComposterDto } from './ComposterDto';
 import type { GardenDtoVisitors } from './GardenDtoVisitors';
+import type { GreenhouseSlotUnlock } from './GreenhouseSlotUnlock';
+import type { GardenUpgradesDto } from './GardenUpgradesDto';
 
 export interface GardenDto {
 	/** Profile ID */
@@ -31,6 +33,12 @@ export interface GardenDto {
 	composter: ComposterDto;
 	/** Visitor data */
 	visitors: GardenDtoVisitors;
+	/** Unix timestamp of the last greenhouse growth stage in milliseconds */
+	lastGrowthStageTime: bigint;
+	/** Tracked unlocked greenhouse slots */
+	greenhouseSlots: GreenhouseSlotUnlock[];
+	/** Greenhouse upgrades */
+	gardenUpgrades: GardenUpgradesDto;
 	/** Last save time in unix seconds */
 	lastSave: string;
 }

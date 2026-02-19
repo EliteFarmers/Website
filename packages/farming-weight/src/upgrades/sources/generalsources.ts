@@ -43,8 +43,8 @@ import { getFortune } from '../getfortune.js';
 import { getSourceProgress } from '../getsourceprogress.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
-export const GARDEN_CHIP_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = Object.values(GARDEN_CHIPS).map((chip) =>
-	mapChipSource(chip)
+export const GARDEN_CHIP_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = Object.entries(GARDEN_CHIPS).map(
+	([chipId, chip]) => mapChipSource(chipId as keyof typeof GARDEN_CHIPS, chip)
 );
 
 function getLevelDeltaStats(
@@ -103,7 +103,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Attribute Shards',
-		api: false,
 		wiki: () => 'https://wiki.hypixel.net/Attributes',
 		exists: () => true,
 		max: () => {
@@ -129,7 +128,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Garden Chips',
-		api: false,
 		alwaysInclude: true,
 		active: () => ({
 			active: true,
@@ -146,8 +144,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		},
 		current: (player) => {
 			// Only return current fortune from chips with farming fortune increases
-			const totalCurrent = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
-				const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			const totalCurrent = Object.entries(GARDEN_CHIPS).reduce((acc, [chipId, chip]) => {
+				const level = getChipLevel(player.options.chips?.[chipId as keyof typeof GARDEN_CHIPS]);
 				const fortunePerLevel = chip.statsPerRarity?.[Rarity.Legendary]?.[Stat.FarmingFortune] ?? 0;
 				return acc + fortunePerLevel * level;
 			}, 0);
@@ -160,8 +158,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			}, 0);
 		},
 		currentStat: (player, stat) => {
-			return Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
-				const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			return Object.entries(GARDEN_CHIPS).reduce((acc, [chipId, chip]) => {
+				const level = getChipLevel(player.options.chips?.[chipId as keyof typeof GARDEN_CHIPS]);
 				const rarity = getChipRarity(level);
 				const per = chip.statsPerRarity?.[rarity]?.[stat] ?? 0;
 				return acc + per * level;
@@ -729,7 +727,6 @@ function mapShardSource(
 ): DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions> {
 	const result = {
 		name: shard.name,
-		api: false,
 		wiki: () => shard.wiki,
 		exists: () => true,
 		active: shard.active,
@@ -760,7 +757,6 @@ function mapShardSource(
 			return [
 				{
 					title: shard.name.replace('Shard', level.toString()),
-					api: false,
 					increase: nextFortune - currentFortune,
 					stats: {
 						[Stat.FarmingFortune]: nextFortune - currentFortune,
@@ -786,10 +782,9 @@ function mapShardSource(
 	return result;
 }
 
-function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer> {
+function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer> {
 	return {
 		name: chip.name,
-		api: false,
 		alwaysInclude: true,
 		wiki: () => chip.wiki,
 		exists: () => true,
@@ -801,7 +796,7 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			return per * GARDEN_CHIP_MAX_LEVEL;
 		},
 		currentStat: (player, stat) => {
-			const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			const level = getChipLevel(player.options.chips?.[chipId]);
 			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
 			return per * level;
 		},
@@ -816,10 +811,9 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			return { active: true, reason: `Applies to ${player.options.jacobContest.crop} during contest.` };
 		},
 		progress: (player) => {
-			const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			const level = getChipLevel(player.options.chips?.[chipId]);
 			return [
 				{
-					api: false,
 					name: 'Level',
 					current: level,
 					max: GARDEN_CHIP_MAX_LEVEL,
@@ -828,7 +822,7 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			];
 		},
 		upgrades: (player, stats) => {
-			const currentLevel = getChipLevel(player.options.chips?.[chip.skyblockId]);
+			const currentLevel = getChipLevel(player.options.chips?.[chipId]);
 			if (currentLevel >= GARDEN_CHIP_MAX_LEVEL) return [];
 
 			// If a specific stat is requested, only offer upgrades that affect it.
@@ -848,7 +842,6 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			return [
 				{
 					title: `${chip.name} ${nextLevel}`,
-					api: false,
 					increase: deltaStats[Stat.FarmingFortune] ?? 0,
 					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
 					action: UpgradeAction.LevelUp,

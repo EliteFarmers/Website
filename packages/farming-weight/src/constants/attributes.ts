@@ -6,7 +6,7 @@ import { Rarity } from './reforges.js';
 import { MATCHING_SPECIAL_CROP } from './specialcrops.js';
 import { getStatValue, Stat, type StatsRecord } from './stats.js';
 
-type ShardId = `SHARD_${string}`;
+type ShardId = keyof typeof FARMING_ATTRIBUTE_SHARDS;
 
 export type FarmingAttributes = Record<ShardId | string, number>;
 
@@ -24,8 +24,8 @@ export interface FarmingAttributeShard {
 
 export type FarmingAttributeShardEffect = 'none' | 'rates' | 'fortune' | 'wisdom';
 
-export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = {
-	SHARD_WARTYBUG: {
+export const FARMING_ATTRIBUTE_SHARDS: Record<string, FarmingAttributeShard> = {
+	wart_eater: {
 		name: 'Warty Bug Shard',
 		skyblockId: 'SHARD_WARTYBUG',
 		rarity: Rarity.Legendary,
@@ -34,7 +34,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		ratesModifier: (current, options) => {
 			if (options.crop !== Crop.NetherWart) return current;
 
-			const level = getShardLevel(Rarity.Legendary, options.attributes?.SHARD_WARTYBUG);
+			const level = getShardLevel(Rarity.Legendary, getAttributeAmount(options.attributes, 'wart_eater'));
 			if (level <= 0) return current;
 
 			const wartyChance = 0.00005 * level;
@@ -46,7 +46,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			return current;
 		},
 	},
-	SHARD_DRAGONFLY: {
+	garden_wisdom: {
 		name: 'Dragonfly Shard',
 		skyblockId: 'SHARD_DRAGONFLY',
 		rarity: Rarity.Epic,
@@ -58,16 +58,15 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			},
 		},
 	},
-	SHARD_FIREFLY: {
+	solar_power: {
 		name: 'Firefly Shard',
 		skyblockId: 'SHARD_FIREFLY',
 		rarity: Rarity.Epic,
 		effect: 'fortune',
 		wiki: 'https://wiki.hypixel.net/Firefly',
 		active: (options) => {
-			const a = options.attributes ?? {};
-			const firefly = a.SHARD_FIREFLY ?? 0;
-			const lunarMoth = a.SHARD_LUNAR_MOTH ?? 0;
+			const firefly = getAttributeAmount(options.attributes, 'solar_power');
+			const lunarMoth = getAttributeAmount(options.attributes, 'lunar_power');
 			const forceFirefly = 'options' in options && options.options.selectedCrop === Crop.Sunflower;
 			const forceLunarMoth = 'options' in options && options.options.selectedCrop === Crop.Moonflower;
 
@@ -105,16 +104,15 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			},
 		},
 	},
-	SHARD_LUNAR_MOTH: {
+	lunar_power: {
 		name: 'Lunar Moth Shard',
 		skyblockId: 'SHARD_LUNAR_MOTH',
 		rarity: Rarity.Epic,
 		effect: 'fortune',
 		wiki: 'https://wiki.hypixel.net/Lunar_Moth',
 		active: (options) => {
-			const a = options.attributes ?? {};
-			const firefly = a.SHARD_FIREFLY ?? 0;
-			const lunarMoth = a.SHARD_LUNAR_MOTH ?? 0;
+			const firefly = getAttributeAmount(options.attributes, 'solar_power');
+			const lunarMoth = getAttributeAmount(options.attributes, 'lunar_power');
 			const forceFirefly = 'options' in options && options.options.selectedCrop === Crop.Sunflower;
 			const forceLunarMoth = 'options' in options && options.options.selectedCrop === Crop.Moonflower;
 
@@ -152,7 +150,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			},
 		},
 	},
-	SHARD_LADYBUG: {
+	pretty_clothes: {
 		// 1% more copper from visitors per level
 		name: 'Ladybug Shard',
 		skyblockId: 'SHARD_LADYBUG',
@@ -160,14 +158,14 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		effect: 'none',
 		wiki: 'https://wiki.hypixel.net/Ladybug',
 	},
-	SHARD_CROPEETLE: {
+	crop_bug: {
 		name: 'Cropeetle Shard',
 		skyblockId: 'SHARD_CROPEETLE',
 		rarity: Rarity.Rare,
 		effect: 'rates',
 		wiki: 'https://wiki.hypixel.net/Cropeetle',
 		ratesModifier: (current, options) => {
-			const level = getShardLevel(Rarity.Rare, options.attributes?.SHARD_CROPEETLE);
+			const level = getShardLevel(Rarity.Rare, getAttributeAmount(options.attributes, 'crop_bug'));
 			if (level <= 0) return current;
 
 			const specialCrop = MATCHING_SPECIAL_CROP[options.crop];
@@ -179,7 +177,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			return current;
 		},
 	},
-	SHARD_INVISIBUG: {
+	fancy_visit: {
 		// 1% chance for rare or higher visitor per level
 		name: 'Invisibug Shard',
 		skyblockId: 'SHARD_INVISIBUG',
@@ -187,7 +185,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		effect: 'none',
 		wiki: 'https://wiki.hypixel.net/Invisibug',
 	},
-	SHARD_TERMITE: {
+	infiltration: {
 		name: 'Termite Shard',
 		skyblockId: 'SHARD_TERMITE',
 		rarity: Rarity.Uncommon,
@@ -199,7 +197,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 				return {
 					active: false,
 					reason: 'Termite shard is only active on infested plots.',
-					fortune: 3 * getShardLevel(Rarity.Uncommon, options.attributes?.SHARD_TERMITE),
+					fortune: 3 * getShardLevel(Rarity.Uncommon, getAttributeAmount(options.attributes, 'infiltration')),
 				};
 			}
 			return {
@@ -213,7 +211,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 			},
 		},
 	},
-	SHARD_PRAYING_MANTIS: {
+	insect_power: {
 		// 5% vacuum damage per level
 		name: 'Praying Mantis Shard',
 		skyblockId: 'SHARD_PRAYING_MANTIS',
@@ -221,7 +219,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		effect: 'none',
 		wiki: 'https://wiki.hypixel.net/Praying_Mantis',
 	},
-	SHARD_PEST: {
+	pest_luck: {
 		// 2% chance for rare pest drops per level
 		name: 'Pest Shard',
 		skyblockId: 'SHARD_PEST',
@@ -229,7 +227,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		effect: 'none',
 		wiki: 'https://wiki.hypixel.net/Pest',
 	},
-	SHARD_MUDWORM: {
+	visitor_bait: {
 		// Garden visitors 1% faster per level
 		name: 'Mudworm Shard',
 		skyblockId: 'SHARD_MUDWORM',
@@ -237,7 +235,7 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		effect: 'none',
 		wiki: 'https://wiki.hypixel.net/Mudworm',
 	},
-	SHARD_GALAXY_FISH: {
+	ultimate_dna: {
 		// 1 farming fortune per level
 		name: 'Galaxy Fish Shard',
 		skyblockId: 'SHARD_GALAXY_FISH',
@@ -257,6 +255,43 @@ export const FARMING_ATTRIBUTE_SHARDS: Record<ShardId, FarmingAttributeShard> = 
 		},
 	},
 };
+
+const ATTRIBUTE_SHARD_ID_BY_SKYBLOCK_ID = Object.fromEntries(
+	Object.entries(FARMING_ATTRIBUTE_SHARDS).map(([id, shard]) => [shard.skyblockId.toUpperCase(), id as ShardId])
+) as Record<string, ShardId>;
+
+export function normalizeAttributeId(id: string): ShardId | undefined {
+	const normalized = id.trim().toLowerCase();
+	if (normalized in FARMING_ATTRIBUTE_SHARDS) {
+		return normalized as ShardId;
+	}
+	return ATTRIBUTE_SHARD_ID_BY_SKYBLOCK_ID[id.trim().toUpperCase()];
+}
+
+export function getAttributeAmount(attributes: Record<string, number> | undefined, id: ShardId): number {
+	if (!attributes) return 0;
+
+	const direct = attributes[id];
+	if (direct !== undefined && direct !== null) return direct;
+
+	const legacyId = FARMING_ATTRIBUTE_SHARDS[id]?.skyblockId;
+	if (!legacyId) return 0;
+
+	const legacy = attributes[legacyId];
+	return legacy ?? 0;
+}
+
+export function normalizeAttributes(attributes?: Record<string, number>): Record<string, number> | undefined {
+	if (!attributes) return undefined;
+
+	const normalized: Record<string, number> = {};
+	for (const [id, amount] of Object.entries(attributes)) {
+		const shardId = normalizeAttributeId(id) ?? id;
+		normalized[shardId] = amount;
+	}
+
+	return normalized;
+}
 
 export const ATTRIBUTE_SHARD_LEVELING: Partial<Record<Rarity, number[]>> = {
 	[Rarity.Common]: [1, 3, 5, 6, 7, 8, 10, 14, 18, 24],
@@ -319,7 +354,12 @@ export function getShardStat(
 	stat: Stat,
 	level?: number
 ): number {
-	level ??= getShardLevel(shard.rarity, player.attributes?.[shard.skyblockId] ?? 0);
+	const shardId = normalizeAttributeId(shard.skyblockId);
+	const amount =
+		shardId !== undefined
+			? getAttributeAmount(player.attributes, shardId)
+			: (player.attributes?.[shard.skyblockId] ?? 0);
+	level ??= getShardLevel(shard.rarity, amount);
 	if (level <= 0) return 0;
 
 	const active = shard.active?.(player);

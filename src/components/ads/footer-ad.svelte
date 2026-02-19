@@ -1,7 +1,6 @@
 <script lang="ts">
 	import NitroAdSlot from '$comp/ads/nitro-ad-slot.svelte';
 	import { getAdCtx } from '$lib/hooks/ads.svelte';
-	import { MOBILE_BREAKPOINT } from '$lib/hooks/is-mobile.svelte';
 	import * as Sidebar from '$ui/sidebar';
 	import { onMount } from 'svelte';
 
@@ -51,28 +50,25 @@
 	{/key}
 </div>
 
-{#if sidebar.size.mobile}
-	<NitroAdSlot
-		createDiv={false}
-		slotId="anchor-bottom"
-		onCreated={(element) => {
-			adCtx.bottomAnchor = element;
-			bottomAnchor = element;
-		}}
-		config={{
-			format: 'anchor-v2',
-			anchor: 'bottom',
-			anchorBgColor: 'rgb(0 0 0 / 80%)',
-			anchorClose: true,
-			anchorPersistClose: false,
-			anchorStickyOffset: 0,
-			report: {
-				enabled: true,
-				icon: true,
-				wording: 'Report Ad',
-				position: 'top-right-side',
-			},
-			mediaQuery: `(max-width: ${MOBILE_BREAKPOINT}px)`,
-		}}
-	/>
-{/if}
+<NitroAdSlot
+	createDiv={false}
+	slotId="anchor-bottom"
+	onCreated={(element) => {
+		adCtx.bottomAnchor = element;
+		bottomAnchor = element;
+	}}
+	config={{
+		format: 'anchor-v2',
+		anchor: 'bottom',
+		anchorBgColor: 'rgb(0 0 0 / 80%)',
+		anchorClose: true,
+		anchorPersistClose: false,
+		anchorStickyOffset: 0,
+		report: {
+			enabled: true,
+			icon: true,
+			wording: 'Report Ad',
+			position: 'top-right-side',
+		},
+	}}
+/>

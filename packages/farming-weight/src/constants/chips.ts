@@ -6,19 +6,19 @@ export const GARDEN_CHIP_MAX_LEVEL = 20 as const;
 export const GARDEN_CHIP_WIKI = 'https://wiki.hypixel.net/Garden_Chip' as const;
 
 export type GardenChipId =
-	| 'CROPSHOT_GARDEN_CHIP'
-	| 'VERMIN_VAPORIZER_GARDEN_CHIP'
-	| 'SYNTHESIS_GARDEN_CHIP'
-	| 'SOWLEDGE_GARDEN_CHIP'
-	| 'MECHAMIND_GARDEN_CHIP'
-	| 'HYPERCHARGE_GARDEN_CHIP'
-	| 'EVERGREEN_GARDEN_CHIP'
-	| 'OVERDRIVE_GARDEN_CHIP'
-	| 'QUICKDRAW_GARDEN_CHIP'
-	| 'RAREFINDER_GARDEN_CHIP';
+	| 'cropshot'
+	| 'vermin_vaporizer'
+	| 'synthesis'
+	| 'sowledge'
+	| 'mechamind'
+	| 'hypercharge'
+	| 'evergreen'
+	| 'overdrive'
+	| 'quickdraw'
+	| 'rarefinder';
 
 export interface GardenChipInfo {
-	skyblockId: GardenChipId;
+	skyblockId: string;
 	name: string;
 	wiki: string;
 	/**
@@ -37,23 +37,7 @@ export interface GardenChipInfo {
 }
 
 export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
-	CROPSHOT_GARDEN_CHIP: {
-		skyblockId: 'CROPSHOT_GARDEN_CHIP',
-		name: 'Cropshot Chip',
-		wiki: GARDEN_CHIP_WIKI,
-		statsPerRarity: {
-			[Rarity.Rare]: {
-				[Stat.FarmingFortune]: 3,
-			},
-			[Rarity.Epic]: {
-				[Stat.FarmingFortune]: 4,
-			},
-			[Rarity.Legendary]: {
-				[Stat.FarmingFortune]: 5,
-			},
-		},
-	},
-	VERMIN_VAPORIZER_GARDEN_CHIP: {
+	vermin_vaporizer: {
 		skyblockId: 'VERMIN_VAPORIZER_GARDEN_CHIP',
 		name: 'Vermin Vaporizer Chip',
 		wiki: GARDEN_CHIP_WIKI,
@@ -69,12 +53,12 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 			},
 		},
 	},
-	SYNTHESIS_GARDEN_CHIP: {
+	synthesis: {
 		skyblockId: 'SYNTHESIS_GARDEN_CHIP',
 		name: 'Synthesis Chip',
 		wiki: GARDEN_CHIP_WIKI,
 	},
-	SOWLEDGE_GARDEN_CHIP: {
+	sowledge: {
 		skyblockId: 'SOWLEDGE_GARDEN_CHIP',
 		name: 'Sowledge Chip',
 		wiki: GARDEN_CHIP_WIKI,
@@ -90,12 +74,12 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 			},
 		},
 	},
-	MECHAMIND_GARDEN_CHIP: {
+	mechamind: {
 		skyblockId: 'MECHAMIND_GARDEN_CHIP',
 		name: 'Mechamind Chip',
 		wiki: GARDEN_CHIP_WIKI,
 	},
-	HYPERCHARGE_GARDEN_CHIP: {
+	hypercharge: {
 		skyblockId: 'HYPERCHARGE_GARDEN_CHIP',
 		name: 'Hypercharge Chip',
 		wiki: GARDEN_CHIP_WIKI,
@@ -105,27 +89,43 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 			[Rarity.Legendary]: 0.05,
 		},
 	},
-	EVERGREEN_GARDEN_CHIP: {
+	evergreen: {
 		skyblockId: 'EVERGREEN_GARDEN_CHIP',
 		name: 'Evergreen Chip',
 		wiki: GARDEN_CHIP_WIKI,
 	},
-	OVERDRIVE_GARDEN_CHIP: {
+	cropshot: {
+		skyblockId: 'CROPSHOT_GARDEN_CHIP',
+		name: 'Cropshot Chip',
+		wiki: GARDEN_CHIP_WIKI,
+		statsPerRarity: {
+			[Rarity.Rare]: {
+				[Stat.FarmingFortune]: 3,
+			},
+			[Rarity.Epic]: {
+				[Stat.FarmingFortune]: 4,
+			},
+			[Rarity.Legendary]: {
+				[Stat.FarmingFortune]: 5,
+			},
+		},
+	},
+	overdrive: {
 		skyblockId: 'OVERDRIVE_GARDEN_CHIP',
 		name: 'Overdrive Chip',
 		wiki: GARDEN_CHIP_WIKI,
 	},
-	QUICKDRAW_GARDEN_CHIP: {
+	quickdraw: {
 		skyblockId: 'QUICKDRAW_GARDEN_CHIP',
 		name: 'Quickdraw Chip',
 		wiki: GARDEN_CHIP_WIKI,
 	},
-	RAREFINDER_GARDEN_CHIP: {
+	rarefinder: {
 		skyblockId: 'RAREFINDER_GARDEN_CHIP',
 		name: 'Rarefinder Chip',
 		wiki: GARDEN_CHIP_WIKI,
 		ratesModifier: (current, options) => {
-			const level = getChipLevel(options.chips?.RAREFINDER_GARDEN_CHIP);
+			const level = getChipLevel(getChipInputLevel(options.chips, 'rarefinder'));
 			if (level <= 0) return current;
 
 			const rarity = getChipRarity(level);
@@ -140,6 +140,31 @@ export const GARDEN_CHIPS: Record<GardenChipId, GardenChipInfo> = {
 		},
 	},
 };
+
+const CHIP_ID_LOOKUP: Record<string, GardenChipId> = Object.entries(GARDEN_CHIPS).reduce(
+	(acc, [chipId, chip]) => {
+		const id = chipId as GardenChipId;
+		const canonical = chipId.toLowerCase();
+		const skyblock = chip.skyblockId.toLowerCase();
+		const shortFromSkyblock = skyblock.replace(/_garden_chip$/, '');
+
+		const aliases = [
+			canonical,
+			canonical.replace(/_/g, ''),
+			skyblock,
+			skyblock.replace(/_/g, ''),
+			shortFromSkyblock,
+			shortFromSkyblock.replace(/_/g, ''),
+		];
+
+		for (const alias of aliases) {
+			acc[alias] = id;
+		}
+
+		return acc;
+	},
+	{} as Record<string, GardenChipId>
+);
 
 export function getChipLevel(level?: number | null): number {
 	if (!level || level <= 0) return 0;
@@ -169,24 +194,51 @@ export function getChipTempMultiplierPerLevel(chipId: GardenChipId, level?: numb
 }
 
 /**
- * Normalizes a chip ID or short name to the full GardenChipId format.
- * Accepts both 'CROPSHOT_GARDEN_CHIP' and 'CROPSHOT'.
+ * Normalizes chip identifiers to the canonical GardenChipId format.
+ * Accepts canonical IDs, full SkyBlock IDs, and short names.
  */
 export function normalizeChipId(id: string): GardenChipId | undefined {
-	const upperId = id.toUpperCase();
+	const normalized = id
+		.trim()
+		.toLowerCase()
+		.replace(/[\s-]+/g, '_');
+	return CHIP_ID_LOOKUP[normalized] ?? CHIP_ID_LOOKUP[normalized.replace(/_/g, '')];
+}
 
-	// If it's already a valid full ID, return it
-	if (upperId in GARDEN_CHIPS) {
-		return upperId as GardenChipId;
+export function normalizeChipLevels(
+	chips?: Record<string, number | null | undefined>
+): Partial<Record<GardenChipId, number>> | undefined {
+	if (!chips) return undefined;
+
+	const normalized: Partial<Record<GardenChipId, number>> = {};
+	for (const [id, level] of Object.entries(chips)) {
+		const chipId = normalizeChipId(id);
+		if (!chipId || level === undefined || level === null) continue;
+		normalized[chipId] = level;
 	}
 
-	// Try adding _GARDEN_CHIP suffix
-	const fullId = `${upperId}_GARDEN_CHIP` as GardenChipId;
-	if (fullId in GARDEN_CHIPS) {
-		return fullId;
+	return normalized;
+}
+
+export function getChipInputLevel(
+	chips: Record<string, number | null | undefined> | undefined,
+	chipId: GardenChipId
+): number {
+	if (!chips) return 0;
+
+	const direct = chips[chipId];
+	if (direct !== undefined && direct !== null) return direct;
+
+	const legacyId = GARDEN_CHIPS[chipId].skyblockId;
+	const legacy = chips[legacyId];
+	if (legacy !== undefined && legacy !== null) return legacy;
+
+	for (const [id, level] of Object.entries(chips)) {
+		if (level === undefined || level === null) continue;
+		if (normalizeChipId(id) === chipId) return level;
 	}
 
-	return undefined;
+	return 0;
 }
 
 /**

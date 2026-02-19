@@ -38,14 +38,12 @@ test('General fortune sources', () => {
 			current: 0,
 			max: 90,
 			ratio: 0,
-			api: false,
 		},
 		{
 			name: 'Garden Chips',
 			current: 0,
 			max: 100,
 			ratio: 0,
-			api: false,
 			alwaysInclude: true,
 		},
 		{

@@ -5,13 +5,17 @@
 	import type { RatesItemPriceData } from '$lib/api/elite';
 	import { getItemsFromUpgrades, getUpgradeCost } from '$lib/items';
 	import { getItem, getItems } from '$lib/remote/items.remote';
+	import { getRatesData } from '$lib/stores/ratesData';
 	import type { RatesPlayerStore } from '$lib/stores/ratesPlayer.svelte';
 	import { getStatsContext } from '$lib/stores/stats.svelte';
+	import { Button } from '$ui/button';
+	import Settings from '@lucide/svelte/icons/settings';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { Crop, Stat } from 'farming-weight';
 	import { Debounced, useDebounce, watch } from 'runed';
 
 	const ctx = getStatsContext();
+	const ratesData = getRatesData();
 	const mode = $derived(ctx.selectedProfile?.gameMode);
 
 	async function getBazaarData(items: string[]) {
@@ -78,10 +82,19 @@
 </script>
 
 <div class="flex w-full flex-col gap-2">
-	<div class="flex flex-row items-center justify-start gap-1">
-		<h2 class="text-2xl font-bold">Available Upgrades</h2>
-		<JumpLink id="upgrades" self={false} />
+	<div class="flex flex-row items-center justify-between gap-1">
+		<div class="flex flex-row items-center justify-start gap-1">
+			<h2 class="text-2xl font-bold">Available Upgrades</h2>
+			<JumpLink id="upgrades" self={false} />
+		</div>
+		<div>
+			<Button onclick={() => ($ratesData.settings = true)}>
+				<Settings size={20} />
+				<span class="max-md:sr-only">Settings</span>
+			</Button>
+		</div>
 	</div>
+
 	{#if (mode ?? 'classic') !== 'classic'}
 		<div class="flex flex-row items-center gap-2 text-sm">
 			<TriangleAlert size={20} class="text-completed -mb-1" />

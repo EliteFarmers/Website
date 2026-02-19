@@ -11,9 +11,9 @@
 		tick().then(() => {
 			const hero = document.getElementById('hero-banner');
 			if (spacerElement && hero) {
-				spacerElement.classList.add('h-20');
+				spacerElement.classList.add('h-30');
 			} else if (spacerElement) {
-				spacerElement.classList.remove('h-20');
+				spacerElement.classList.remove('h-30');
 			}
 		});
 	});
@@ -21,7 +21,7 @@
 	const isVisible = new IsInViewport(() => asideElement);
 </script>
 
-<aside class="mt-48 flex h-full flex-col items-center justify-start" bind:this={asideElement}>
+<aside class="mt-32 flex h-full flex-col items-center justify-start" bind:this={asideElement}>
 	<div bind:this={spacerElement}></div>
 	{#if isVisible.current}
 		<StickySideRail

@@ -374,14 +374,14 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 		max: () => 25,
 		current: ({ player, crop }) => {
 			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
-			const level = getChipLevel(player.options.chips?.OVERDRIVE_GARDEN_CHIP);
+			const level = getChipLevel(player.options.chips?.overdrive);
 			return 5 * level;
 		},
 		currentStat: ({ player, crop }, stat) => {
 			if (!player.options.jacobContest?.enabled || player.options.jacobContest.crop !== crop) return 0;
 			const fortuneType = CROP_INFO[crop].fortuneType;
 			if (fortuneType === stat) {
-				const level = getChipLevel(player.options.chips?.OVERDRIVE_GARDEN_CHIP);
+				const level = getChipLevel(player.options.chips?.overdrive);
 				return 5 * level;
 			}
 			return 0;

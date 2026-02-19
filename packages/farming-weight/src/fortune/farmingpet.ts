@@ -1,4 +1,4 @@
-import { getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
+import { getChipInputLevel, getChipLevel, getChipTempMultiplierPerLevel } from '../constants/chips.js';
 import type { LateCalculationContext, LateCalculationResult } from '../constants/latecalc.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { getStatValue, Stat, type StatBreakdown } from '../constants/stats.js';
@@ -97,8 +97,8 @@ export class FarmingPet {
 
 		// Pet abilities
 		if (this.info.abilities) {
-			const hyperLevel = getChipLevel(this.options?.chips?.HYPERCHARGE_GARDEN_CHIP);
-			const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel);
+			const hyperLevel = getChipLevel(getChipInputLevel(this.options?.chips, 'hypercharge'));
+			const perLevel = getChipTempMultiplierPerLevel('hypercharge', hyperLevel);
 			const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
 
 			for (const ability of this.info.abilities) {

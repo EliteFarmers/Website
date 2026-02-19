@@ -145,6 +145,8 @@
 		uniqueVisitors: ctx.member.current?.garden?.uniqueVisitors ?? 0,
 		exportableCrops: ctx.member.current?.unparsed.exportedCrops ?? {},
 		dnaMilestone: ctx.member.current?.unparsed?.dnaMilestone ?? 0,
+		attributes: ctx.member.current?.memberData?.attributes ?? {},
+		chips: ctx.member.current?.memberData?.garden?.chips ?? {},
 
 		perks: ctx.member.current?.unparsed?.perks ?? undefined,
 
@@ -164,8 +166,7 @@
 		communityCenter: $ratesData.communityCenter,
 		filledRosewaterFlask: $ratesData.rosewaterFlasks,
 		strength: $ratesData.strength,
-		attributes: $ratesData.attributes,
-		chips: $ratesData.chips,
+
 		sprayedPlot: $ratesData.sprayedPlot,
 		infestedPlotProbability: $ratesData.infestedPlotProbability,
 
@@ -336,8 +337,6 @@
 			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
 			armor: untrack(() => $player.armorSet),
-			attributes: $ratesData.attributes,
-			chips: $ratesData.chips,
 			communityCenter: $ratesData.communityCenter,
 			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
@@ -364,9 +363,7 @@
 			blocksBroken: blocksActuallyBroken,
 			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
-			attributes: $ratesData.attributes,
 			maxTool: $player.selectedTool?.level === 50,
-			chips: $ratesData.chips,
 			pet: $player.selectedPet,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
