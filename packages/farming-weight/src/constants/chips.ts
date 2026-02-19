@@ -174,6 +174,7 @@ export function getChipTempMultiplierPerLevel(chipId: GardenChipId, level?: numb
  */
 export function normalizeChipId(id: string): GardenChipId | undefined {
 	const upperId = id.toUpperCase();
+	if (upperId.includes('VERMINVAPORIZER')) return 'VERMIN_VAPORIZER_GARDEN_CHIP';
 
 	// If it's already a valid full ID, return it
 	if (upperId in GARDEN_CHIPS) {

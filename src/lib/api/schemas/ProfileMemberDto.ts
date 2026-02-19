@@ -20,6 +20,7 @@ import type { JacobDataDto } from './JacobDataDto';
 import type { FarmingWeightDto } from './FarmingWeightDto';
 import type { ProfileMemberDtoGarden } from './ProfileMemberDtoGarden';
 import type { SkillsDto } from './SkillsDto';
+import type { ProfileMemberDataDto } from './ProfileMemberDataDto';
 import type { ChocolateFactoryDto } from './ChocolateFactoryDto';
 import type { ProfileEventMemberDto } from './ProfileEventMemberDto';
 import type { HypixelInventoryOverviewDto } from './HypixelInventoryOverviewDto';
@@ -48,6 +49,7 @@ export interface ProfileMemberDto {
 	/** @nullable */
 	garden?: ProfileMemberDtoGarden;
 	skills: SkillsDto;
+	memberData: ProfileMemberDataDto;
 	chocolateFactory: ChocolateFactoryDto;
 	events: ProfileEventMemberDto[];
 	inventories: HypixelInventoryOverviewDto[];

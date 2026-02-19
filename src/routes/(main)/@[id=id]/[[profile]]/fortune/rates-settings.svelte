@@ -16,7 +16,6 @@
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
 	import { FARMING_ATTRIBUTE_SHARDS, GARDEN_CHIPS, TEMPORARY_FORTUNE, ZorroMode } from 'farming-weight';
-	import ShardSetting from './shard-setting.svelte';
 
 	const ratesData = getRatesData();
 	const gbl = getGlobalContext();
@@ -265,18 +264,11 @@
 	</p>
 	<SettingBigSeperator />
 
-	{#each Object.values(FARMING_ATTRIBUTE_SHARDS).filter((shard) => shard.effect === 'fortune' || shard.effect === 'rates') as shard (shard.skyblockId)}
-		<SettingListItem title={shard.name}>
-			<ShardSetting
-				{shard}
-				amount={$ratesData.attributes[shard.skyblockId]}
-				onChange={(v) => {
-					$ratesData.attributes[shard.skyblockId] = v;
-				}}
-			/>
-		</SettingListItem>
-		<SettingSeperator />
-	{/each}
+	<p class="border-completed rounded-md border p-2 text-sm">
+		These toggles have been removed! Exported crops are now automatically detected from your profile data!
+	</p>
+
+	<SettingBigSeperator />
 
 	<SettingHeader class="mt-8 text-xl">Garden Chips</SettingHeader>
 	<p class="text-muted-foreground px-1 text-sm">

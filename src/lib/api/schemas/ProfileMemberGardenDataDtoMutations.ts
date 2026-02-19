@@ -7,18 +7,6 @@
 Use of this API requires following the [Elite API TOS](https://elitebot.dev/apiterms). This API is not affiliated with Hypixel or Mojang.
  * OpenAPI spec version: v1
  */
+import type { ProfileMemberMutationDataDto } from './ProfileMemberMutationDataDto';
 
-export interface SkillsDto {
-	farming: number;
-	mining: number;
-	combat: number;
-	foraging: number;
-	fishing: number;
-	enchanting: number;
-	alchemy: number;
-	carpentry: number;
-	runecrafting: number;
-	taming: number;
-	social: number;
-	hunting: number;
-}
+export type ProfileMemberGardenDataDtoMutations = { [key: string]: ProfileMemberMutationDataDto };

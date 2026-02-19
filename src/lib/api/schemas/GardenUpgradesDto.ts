@@ -8,17 +8,8 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  * OpenAPI spec version: v1
  */
 
-export interface SkillsDto {
-	farming: number;
-	mining: number;
-	combat: number;
-	foraging: number;
-	fishing: number;
-	enchanting: number;
-	alchemy: number;
-	carpentry: number;
-	runecrafting: number;
-	taming: number;
-	social: number;
-	hunting: number;
+export interface GardenUpgradesDto {
+	greenhouseYield: number;
+	greenhousePlotLimit: number;
+	greenhouseGrowthSpeed: number;
 }

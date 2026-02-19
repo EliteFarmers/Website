@@ -145,6 +145,8 @@
 		uniqueVisitors: ctx.member.current?.garden?.uniqueVisitors ?? 0,
 		exportableCrops: ctx.member.current?.unparsed.exportedCrops ?? {},
 		dnaMilestone: ctx.member.current?.unparsed?.dnaMilestone ?? 0,
+		attributes: ctx.member.current?.memberData?.attributes ?? {},
+		chips: ctx.member.current?.memberData?.garden?.chips ?? {},
 
 		perks: ctx.member.current?.unparsed?.perks ?? undefined,
 
@@ -164,8 +166,7 @@
 		communityCenter: $ratesData.communityCenter,
 		filledRosewaterFlask: $ratesData.rosewaterFlasks,
 		strength: $ratesData.strength,
-		attributes: $ratesData.attributes,
-		chips: $ratesData.chips,
+
 		sprayedPlot: $ratesData.sprayedPlot,
 		infestedPlotProbability: $ratesData.infestedPlotProbability,
 
