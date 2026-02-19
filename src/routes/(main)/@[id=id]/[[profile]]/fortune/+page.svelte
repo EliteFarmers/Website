@@ -18,8 +18,6 @@
 			tick().then(() => {
 				$ratesData.communityCenter = data.importedSettings.communityCenter ?? $ratesData.communityCenter;
 				$ratesData.strength = data.importedSettings.strength ?? $ratesData.strength;
-				$ratesData.attributes = data.importedSettings.attributes ?? $ratesData.attributes;
-				$ratesData.chips = data.importedSettings.chips ?? $ratesData.chips;
 
 				const from = data.importedSettings.from;
 				toast.success(`Successfully imported settings ${from ? 'from ' + from : ''}!`, {

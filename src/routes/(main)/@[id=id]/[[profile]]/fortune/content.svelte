@@ -337,8 +337,6 @@
 			selectedPet: untrack(() => $player.selectedPet),
 			selectedTool: untrack(() => $player.selectedTool),
 			armor: untrack(() => $player.armorSet),
-			attributes: $ratesData.attributes,
-			chips: $ratesData.chips,
 			communityCenter: $ratesData.communityCenter,
 			filledRosewaterFlask: $ratesData.rosewaterFlasks,
 			strength: $ratesData.strength,
@@ -365,9 +363,7 @@
 			blocksBroken: blocksActuallyBroken,
 			armorPieces: $player.armorSet.specialDropsCount(selectedCropKey),
 			infestedPlotProbability: $ratesData.infestedPlotProbability,
-			attributes: $ratesData.attributes,
 			maxTool: $player.selectedTool?.level === 50,
-			chips: $ratesData.chips,
 			pet: $player.selectedPet,
 		} as Parameters<typeof calculateDetailedAverageDrops>[0];
 	});
