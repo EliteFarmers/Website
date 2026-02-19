@@ -103,7 +103,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Attribute Shards',
-		api: false,
 		wiki: () => 'https://wiki.hypixel.net/Attributes',
 		exists: () => true,
 		max: () => {
@@ -129,7 +128,6 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: 'Garden Chips',
-		api: false,
 		alwaysInclude: true,
 		active: () => ({
 			active: true,
@@ -729,7 +727,6 @@ function mapShardSource(
 ): DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions> {
 	const result = {
 		name: shard.name,
-		api: false,
 		wiki: () => shard.wiki,
 		exists: () => true,
 		active: shard.active,
@@ -760,7 +757,6 @@ function mapShardSource(
 			return [
 				{
 					title: shard.name.replace('Shard', level.toString()),
-					api: false,
 					increase: nextFortune - currentFortune,
 					stats: {
 						[Stat.FarmingFortune]: nextFortune - currentFortune,
@@ -789,7 +785,6 @@ function mapShardSource(
 function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer> {
 	return {
 		name: chip.name,
-		api: false,
 		alwaysInclude: true,
 		wiki: () => chip.wiki,
 		exists: () => true,
@@ -819,7 +814,6 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 			const level = getChipLevel(player.options.chips?.[chipId]);
 			return [
 				{
-					api: false,
 					name: 'Level',
 					current: level,
 					max: GARDEN_CHIP_MAX_LEVEL,
@@ -848,7 +842,6 @@ function mapChipSource(chipId: keyof typeof GARDEN_CHIPS, chip: GardenChipInfo):
 			return [
 				{
 					title: `${chip.name} ${nextLevel}`,
-					api: false,
 					increase: deltaStats[Stat.FarmingFortune] ?? 0,
 					stats: Object.keys(deltaStats).length > 0 ? deltaStats : undefined,
 					action: UpgradeAction.LevelUp,
