@@ -48,6 +48,7 @@ import type {
 	CreateStyleRequest,
 	CreateTagRequest,
 	CreateTeamAdminParams,
+	CreateToolSettingRequest,
 	CropCollectionsDataPointDto,
 	DeleteContestPingsParams,
 	DeleteMemberAdminParams,
@@ -152,6 +153,7 @@ import type {
 	LeaderboardsResponse,
 	LinkedAccountsDto,
 	ListGuidesParams,
+	ListToolSettingsParams,
 	MemberFortuneSettingsDto,
 	MinecraftAccountDto,
 	NetworthBreakdown,
@@ -189,6 +191,7 @@ import type {
 	SubmitScoreResponse,
 	TagResponse,
 	ToggleRecapVisibilityRequestBody,
+	ToolSettingDto,
 	UpdateBadgeRequestUpdateBadge,
 	UpdateConfirmationRequest,
 	UpdateContestPingsRequestUpdateContestPings,
@@ -199,6 +202,7 @@ import type {
 	UpdateJacobFeatureRequestUpdateJacobFeature,
 	UpdateJacobLeaderboardRequestUpdateJacobLeaderboard,
 	UpdateTagRequest,
+	UpdateToolSettingRequest,
 	UpdateUserSettingsDto,
 	UploadCurrentContestsBody,
 	UploadImageDto,
@@ -10874,6 +10878,211 @@ export const getTexturePackIcon = async (packId: string, options?: RequestInit) 
 	return customFetch<getTexturePackIconResponse>(getGetTexturePackIconUrl(packId), {
 		...options,
 		method: 'GET',
+	});
+};
+
+/**
+ * Create a new tool setting entry with optional public visibility.
+ * @summary Create a tool setting
+ */
+export type createToolSettingResponse200 = {
+	data: ToolSettingDto;
+	status: 200;
+};
+
+export type createToolSettingResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type createToolSettingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type createToolSettingResponseSuccess = createToolSettingResponse200 & {
+	headers: Headers;
+};
+export type createToolSettingResponseError = (createToolSettingResponse400 | createToolSettingResponse401) & {
+	headers: Headers;
+};
+
+export type createToolSettingResponse = createToolSettingResponseSuccess | createToolSettingResponseError;
+
+export const getCreateToolSettingUrl = () => {
+	return `${ELITE_API_URL}/tool-settings`;
+};
+
+export const createToolSetting = async (createToolSettingRequest: CreateToolSettingRequest, options?: RequestInit) => {
+	return customFetch<createToolSettingResponse>(getCreateToolSettingUrl(), {
+		...options,
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(createToolSettingRequest),
+	});
+};
+
+/**
+ * List the authenticated user's settings with optional target/visibility filters.
+ * @summary List tool settings
+ */
+export type listToolSettingsResponse200 = {
+	data: ToolSettingDto[];
+	status: 200;
+};
+
+export type listToolSettingsResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type listToolSettingsResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type listToolSettingsResponseSuccess = listToolSettingsResponse200 & {
+	headers: Headers;
+};
+export type listToolSettingsResponseError = (listToolSettingsResponse400 | listToolSettingsResponse401) & {
+	headers: Headers;
+};
+
+export type listToolSettingsResponse = listToolSettingsResponseSuccess | listToolSettingsResponseError;
+
+export const getListToolSettingsUrl = (params: ListToolSettingsParams) => {
+	const normalizedParams = new URLSearchParams();
+
+	Object.entries(params || {}).forEach(([key, value]) => {
+		if (value !== undefined) {
+			normalizedParams.append(key, value === null ? 'null' : value.toString());
+		}
+	});
+
+	const stringifiedParams = normalizedParams.toString();
+
+	return stringifiedParams.length > 0
+		? `${ELITE_API_URL}/tool-settings?${stringifiedParams}`
+		: `${ELITE_API_URL}/tool-settings`;
+};
+
+export const listToolSettings = async (params: ListToolSettingsParams, options?: RequestInit) => {
+	return customFetch<listToolSettingsResponse>(getListToolSettingsUrl(params), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Delete a setting by sqid. Only the owner can delete.
+ * @summary Delete a tool setting
+ */
+export type deleteToolSettingResponse204 = {
+	data: void;
+	status: 204;
+};
+
+export type deleteToolSettingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type deleteToolSettingResponseSuccess = deleteToolSettingResponse204 & {
+	headers: Headers;
+};
+export type deleteToolSettingResponseError = deleteToolSettingResponse401 & {
+	headers: Headers;
+};
+
+export type deleteToolSettingResponse = deleteToolSettingResponseSuccess | deleteToolSettingResponseError;
+
+export const getDeleteToolSettingUrl = (settingId: string) => {
+	return `${ELITE_API_URL}/tool-settings/${settingId}`;
+};
+
+export const deleteToolSetting = async (settingId: string, options?: RequestInit) => {
+	return customFetch<deleteToolSettingResponse>(getDeleteToolSettingUrl(settingId), {
+		...options,
+		method: 'DELETE',
+	});
+};
+
+/**
+ * Get a setting by sqid. Public settings can be read by any authenticated user.
+ * @summary Get a tool setting
+ */
+export type getToolSettingResponse200 = {
+	data: ToolSettingDto;
+	status: 200;
+};
+
+export type getToolSettingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type getToolSettingResponseSuccess = getToolSettingResponse200 & {
+	headers: Headers;
+};
+export type getToolSettingResponseError = getToolSettingResponse401 & {
+	headers: Headers;
+};
+
+export type getToolSettingResponse = getToolSettingResponseSuccess | getToolSettingResponseError;
+
+export const getGetToolSettingUrl = (settingId: string) => {
+	return `${ELITE_API_URL}/tool-settings/${settingId}`;
+};
+
+export const getToolSetting = async (settingId: string, options?: RequestInit) => {
+	return customFetch<getToolSettingResponse>(getGetToolSettingUrl(settingId), {
+		...options,
+		method: 'GET',
+	});
+};
+
+/**
+ * Update an existing setting by sqid. Only the owner can update.
+ * @summary Update a tool setting
+ */
+export type updateToolSettingResponse200 = {
+	data: ToolSettingDto;
+	status: 200;
+};
+
+export type updateToolSettingResponse400 = {
+	data: ErrorResponse;
+	status: 400;
+};
+
+export type updateToolSettingResponse401 = {
+	data: void;
+	status: 401;
+};
+
+export type updateToolSettingResponseSuccess = updateToolSettingResponse200 & {
+	headers: Headers;
+};
+export type updateToolSettingResponseError = (updateToolSettingResponse400 | updateToolSettingResponse401) & {
+	headers: Headers;
+};
+
+export type updateToolSettingResponse = updateToolSettingResponseSuccess | updateToolSettingResponseError;
+
+export const getUpdateToolSettingUrl = (settingId: string) => {
+	return `${ELITE_API_URL}/tool-settings/${settingId}`;
+};
+
+export const updateToolSetting = async (
+	settingId: string,
+	updateToolSettingRequest: UpdateToolSettingRequest,
+	options?: RequestInit
+) => {
+	return customFetch<updateToolSettingResponse>(getUpdateToolSettingUrl(settingId), {
+		...options,
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json', ...options?.headers },
+		body: JSON.stringify(updateToolSettingRequest),
 	});
 };
 

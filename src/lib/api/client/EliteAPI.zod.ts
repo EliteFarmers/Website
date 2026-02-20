@@ -4104,6 +4104,89 @@ export const zodGetTexturePackIconParams = zod.object({
 });
 
 /**
+ * Create a new tool setting entry with optional public visibility.
+ * @summary Create a tool setting
+ */
+export const zodCreateToolSettingBodyTargetIdMin = 0;
+export const zodCreateToolSettingBodyTargetIdMax = 128;
+
+export const zodCreateToolSettingBodyNameMin = 0;
+export const zodCreateToolSettingBodyNameMax = 128;
+
+export const zodCreateToolSettingBodyDescriptionMin = 0;
+export const zodCreateToolSettingBodyDescriptionMax = 512;
+
+export const zodCreateToolSettingBody = zod.object({
+	targetId: zod.string().min(zodCreateToolSettingBodyTargetIdMin).max(zodCreateToolSettingBodyTargetIdMax),
+	version: zod.number(),
+	name: zod.string().min(zodCreateToolSettingBodyNameMin).max(zodCreateToolSettingBodyNameMax).nullish(),
+	description: zod
+		.string()
+		.min(zodCreateToolSettingBodyDescriptionMin)
+		.max(zodCreateToolSettingBodyDescriptionMax)
+		.nullish(),
+	isPublic: zod.coerce.boolean<boolean>(),
+	data: zod.unknown(),
+});
+
+/**
+ * List the authenticated user's settings with optional target/visibility filters.
+ * @summary List tool settings
+ */
+export const zodListToolSettingsQueryParams = zod.object({
+	targetId: zod.string().nullish(),
+	isPublic: zod.coerce.boolean<boolean>().nullish(),
+	limit: zod.number(),
+	offset: zod.number(),
+});
+
+/**
+ * Delete a setting by sqid. Only the owner can delete.
+ * @summary Delete a tool setting
+ */
+export const zodDeleteToolSettingParams = zod.object({
+	settingId: zod.string(),
+});
+
+/**
+ * Get a setting by sqid. Public settings can be read by any authenticated user.
+ * @summary Get a tool setting
+ */
+export const zodGetToolSettingParams = zod.object({
+	settingId: zod.string(),
+});
+
+/**
+ * Update an existing setting by sqid. Only the owner can update.
+ * @summary Update a tool setting
+ */
+export const zodUpdateToolSettingParams = zod.object({
+	settingId: zod.string(),
+});
+
+export const zodUpdateToolSettingBodyTargetIdMin = 0;
+export const zodUpdateToolSettingBodyTargetIdMax = 128;
+
+export const zodUpdateToolSettingBodyNameMin = 0;
+export const zodUpdateToolSettingBodyNameMax = 128;
+
+export const zodUpdateToolSettingBodyDescriptionMin = 0;
+export const zodUpdateToolSettingBodyDescriptionMax = 512;
+
+export const zodUpdateToolSettingBody = zod.object({
+	targetId: zod.string().min(zodUpdateToolSettingBodyTargetIdMin).max(zodUpdateToolSettingBodyTargetIdMax),
+	version: zod.number(),
+	name: zod.string().min(zodUpdateToolSettingBodyNameMin).max(zodUpdateToolSettingBodyNameMax).nullish(),
+	description: zod
+		.string()
+		.min(zodUpdateToolSettingBodyDescriptionMin)
+		.max(zodUpdateToolSettingBodyDescriptionMax)
+		.nullish(),
+	isPublic: zod.coerce.boolean<boolean>(),
+	data: zod.unknown(),
+});
+
+/**
  * @summary Get farming weight for a profile member
  */
 export const zodGetWeightForProfileParams = zod.object({
