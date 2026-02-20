@@ -24,7 +24,7 @@
 >
 	<div class="flex w-120 flex-col items-center-safe justify-between gap-2">
 		<h2 class="flex w-full flex-row items-center-safe gap-2 text-left text-2xl font-semibold">Sack Items</h2>
-		<ScrollArea class="h-80 rounded-md border">
+		<ScrollArea class="h-80 w-full rounded-md border">
 			<div class="my-1 flex flex-col gap-1">
 				{#each sacks as [itemId, amount] (itemId)}
 					{#await getItemValue(itemId)}
