@@ -1,4 +1,6 @@
 import { getRequestEvent } from '$app/server';
+import { env } from '$env/dynamic/private';
+const ELITE_API_TOKEN = env.ELITE_API_TOKEN;
 
 type SuccessStatus = 200 | 201 | 204;
 type ExtractSuccess<T extends { status: number }> = Extract<T, { status: SuccessStatus }>;
@@ -52,6 +54,10 @@ export const customFetch = async <T extends { status: number; data: unknown }>(
 				requestHeaders.set(header[0], header[1]);
 			}
 		}
+	}
+
+	if (ELITE_API_TOKEN) {
+		requestHeaders.set('X-Website-Secret', ELITE_API_TOKEN);
 	}
 
 	if (locals?.access_token) {
