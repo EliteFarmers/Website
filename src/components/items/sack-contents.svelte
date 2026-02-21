@@ -23,9 +23,9 @@
 	class="my-16 flex w-full flex-col items-center-safe justify-center-safe align-middle transition-transform duration-400"
 >
 	<div class="flex w-120 flex-col items-center-safe justify-between gap-2">
-		<h2 class="flex w-full flex-row items-center-safe gap-2 text-left text-2xl font-semibold">Sack Items</h2>
+		<h2 class="w-full text-left text-2xl font-semibold">Sack Items</h2>
 		<ScrollArea class="h-80 w-full rounded-md border">
-			<div class="my-1 flex flex-col gap-1">
+			<div class="my-1 flex flex-col">
 				{#each sacks as [itemId, amount] (itemId)}
 					{#await getItemValue(itemId)}
 						<LoaderCircleIcon class="size-4 animate-spin" />
@@ -37,45 +37,60 @@
 									: prev,
 							'npc'
 						)}
-						<Popover.Mobile>
-							{#snippet trigger()}
-								<Item.Root variant="outline" class="rounded-none border-x-0 py-1">
-									<Item.Media variant="image">
-										<ItemRender skyblockId={itemId} class="pixelated size-8" />
-									</Item.Media>
-									<Item.Content class="min-w-0">
-										<Item.Description
-											class="flex flex-row flex-nowrap justify-between gap-4 whitespace-nowrap"
-										>
-											<p class="flex min-w-0 items-center-safe gap-2">
-												<span class="truncate">
-													<FormattedText
-														text={value.name?.replace('Enchanted ', 'E. ') ?? itemId}
-													/>
-												</span>
-												<span>x{toReadable(Number(amount))}</span>
-											</p>
-											<p class="flex items-center-safe gap-1 uppercase">
-												{bestSellMethod}: {toReadable(
-													Number(value[bestSellMethod as keyof typeof value] ?? 0) *
-														Number(amount)
-												)}
-											</p>
-										</Item.Description>
-									</Item.Content>
-								</Item.Root>
-							{/snippet}
-							<div class="flex max-w-md flex-col gap-2">
-								{#each Object.entries(value).filter( ([key]) => sellMethods.includes(key as SellMethod) ) as [key, val] (key)}
-									<p class="text-sm font-medium capitalize">
-										{key}: {toReadable(Number(val) * Number(amount))}
+
+						<div
+							class="flex flex-row items-center gap-1 rounded-none px-2 first:border-t-0 last:border-b-0 even:border-y"
+						>
+							<Item.Media variant="image" class="size-8">
+								<ItemRender skyblockId={itemId} class="pixelated" />
+							</Item.Media>
+							<Item.Content class="min-w-0">
+								<Item.Description
+									class="flex flex-row flex-nowrap justify-between gap-4 whitespace-nowrap"
+								>
+									<p class="flex min-w-0 items-center-safe gap-2">
+										<span class="text-primary truncate">
+											<FormattedText text={value.name?.replace('Enchanted ', 'E. ') ?? itemId} />
+										</span>
+										<span>x{toReadable(Number(amount))}</span>
 									</p>
-								{/each}
-								<p class="mt-2 text-sm font-medium capitalize">
-									Estimated Value: {toReadable((value.lowest ?? 0) * Number(amount))}
-								</p>
-							</div>
-						</Popover.Mobile>
+									<Popover.Mobile>
+										{#snippet trigger()}
+											<p class="flex items-center-safe gap-1 uppercase">
+												<span class="text-muted-foreground text-xs">{bestSellMethod}</span>
+												<span class="text-completed">
+													{toReadable(
+														Number(value[bestSellMethod as keyof typeof value] ?? 0) *
+															Number(amount)
+													)}
+												</span>
+											</p>
+										{/snippet}
+										<div class="flex max-w-md flex-col gap-2">
+											{#each Object.entries(value).filter( ([key]) => sellMethods.includes(key as SellMethod) ) as [key, val] (key)}
+												{@const isBest = key === bestSellMethod}
+												<p
+													class="text-muted-foreground flex items-center gap-0.5 text-sm font-medium uppercase"
+												>
+													<span class="text-muted-foreground">
+														{key}:
+													</span>
+													<span class="data-[best=true]:text-completed" data-best={isBest}>
+														{toReadable(Number(val) * Number(amount))}
+													</span>
+												</p>
+											{/each}
+											<p class="mt-2 text-sm font-medium">
+												<span class="text-muted-foreground"> Estimated Value: </span>
+												<span class="text-completed">
+													{toReadable((value.lowest ?? 0) * Number(amount))}
+												</span>
+											</p>
+										</div>
+									</Popover.Mobile>
+								</Item.Description>
+							</Item.Content>
+						</div>
 					{:catch error}
 						<p>{itemId}: Error loading value: {error}</p>
 					{/await}
