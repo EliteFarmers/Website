@@ -1,4 +1,5 @@
 export * from './accounts.remote';
+export * from './fortune-sandbox.remote';
 export * from './gifts.remote';
 export * from './graphs.remote';
 export * from './guilds.remote';
