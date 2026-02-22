@@ -38,7 +38,8 @@
 			const aValue = getHighest(a).price * Number(aC);
 			const bValue = getHighest(b).price * Number(bC);
 			if (aValue === bValue) {
-				return a.localeCompare(b);
+				if (aC === bC) return a.localeCompare(b);
+				return Number(bC) - Number(aC);
 			}
 			return bValue - aValue;
 		})
@@ -72,7 +73,7 @@
 	id="sacks"
 	class="my-16 flex w-full flex-col items-center-safe justify-center-safe align-middle transition-transform duration-400"
 >
-	<div class="flex w-120 flex-col items-center-safe justify-between gap-2">
+	<div class="flex w-full max-w-120 flex-col items-center-safe justify-between gap-2">
 		<div class="flex w-full flex-row justify-between">
 			<h2 class="w-full text-left text-2xl font-semibold">Sack Items</h2>
 			<CoinsBreakdown
@@ -148,7 +149,7 @@
 												</p>
 												<p class="text-sm font-medium">
 													<span class="text-muted-foreground">Quantity: </span>
-													<span>{toReadable(Number(amount), navigator.language, 2)}</span>
+													<span>{amount.toLocaleString()}</span>
 												</p>
 											</div>
 											{#each Object.entries(value).filter( ([key]) => sellMethods.includes(key as SellMethod) ) as [key, val] (key)}
