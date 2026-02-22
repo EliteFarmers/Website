@@ -49,6 +49,10 @@ export const getItemValue = query.batch(z.string(), async (itemIds) => {
 	return (itemId) => lookup.get(itemId) ?? { ah: 0, bazaar: 0, npc: 0, lowest: 0, name: undefined };
 });
 
+export const getItemValues = query(z.array(z.string()), async (itemIds) => {
+	return new Map(itemIds.map((id) => [id, getSingleItemValue(id)]));
+});
+
 function getSingleItemValue(itemId: string) {
 	const bz = cache?.bazaar.products;
 	const ah = cache?.auctions.items;

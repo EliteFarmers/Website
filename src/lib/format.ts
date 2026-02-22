@@ -64,8 +64,8 @@ export function getLevelProgress(skill: Skill, xp: number, max?: number) {
 export function toReadable(num: number, locale = 'en-US', minDigits = 4) {
 	const formatter = new Intl.NumberFormat(locale, {
 		notation: 'compact',
-		minimumSignificantDigits: minDigits,
-		maximumSignificantDigits: 4,
+		minimumFractionDigits: 0,
+		maximumSignificantDigits: minDigits,
 	});
 	const formatted = formatter.format(num);
 
