@@ -56,8 +56,9 @@ export const getItemValues = query(z.array(z.string()), async (itemIds) => {
 function getSingleItemValue(itemId: string) {
 	const bz = cache?.bazaar.products;
 	const ah = cache?.auctions.items;
+	const item = cache?.items?.[itemId];
 
-	const npcPrice = bz?.[itemId]?.npc ?? 0;
+	const npcPrice = bz?.[itemId]?.npc || item?.npc_sell_price || 0;
 	const ahPrices = ah?.[itemId]?.filter((a) => a.lowest > 0).map((a) => a.lowest) ?? [];
 	const ahPrice = ahPrices.length > 0 ? Math.min(...ahPrices) : 0;
 	const bazaarPrice = bz?.[itemId]?.averageSellOrder ?? 0;
@@ -66,7 +67,7 @@ function getSingleItemValue(itemId: string) {
 	const lowestValue = Math.max(npcPrice, values.length > 0 ? Math.min(...values) : 0);
 
 	return {
-		name: cache?.items?.[itemId]?.name ?? bz?.[itemId]?.name,
+		name: item?.name ?? bz?.[itemId]?.name,
 		ah: ahPrice,
 		bazaar: bazaarPrice,
 		npc: npcPrice,
