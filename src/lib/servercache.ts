@@ -1,13 +1,16 @@
 import { building, dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
 import fs from 'fs/promises';
 import {
 	getAnnouncement,
 	getAuctionHouseProducts,
 	getBazaarProducts,
 	getHypixelGuilds,
+	getLeaderboard,
 	getLeaderboards,
 	getProducts,
+	getPublicGuild,
 	getSkyblockItems,
 	getStyles,
 	getTeamWordList,
@@ -20,7 +23,9 @@ import {
 	type EventTeamsWordListDto,
 	type GetBazaarProductsResponse,
 	type GetSkyblockItemsResponse,
+	type GuildDetailsDto,
 	type HypixelGuildDetailsDto,
+	type LeaderboardDto,
 	type ProductDto,
 	type SkyblockGemShopsResponse,
 	type WeightStyleWithDataDto,
@@ -29,6 +34,7 @@ import { fetchAllArticleCategories, fetchBusinessInfo } from './api/cms';
 import { parseLeaderboards } from './constants/leaderboards';
 import { mdToHtml } from './md';
 const { ELITE_API_URL } = env;
+const { PUBLIC_COMMUNITY_ID } = publicEnv;
 
 const cacheEntries = {
 	events: {
@@ -77,6 +83,25 @@ const cacheEntries = {
 		update: async () => {
 			const { data } = await getLeaderboards();
 			return parseLeaderboards(data);
+		},
+	},
+	homepageLeaderboard: {
+		interval: 900, // 15 minutes
+		data: null as LeaderboardDto | null,
+		update: async () => {
+			const { data } = await getLeaderboard('farmingweight', { offset: 0, limit: 10 }).catch(() => ({
+				data: null,
+			}));
+			return data ?? null;
+		},
+	},
+	communityGuild: {
+		interval: 900, // 15 minutes
+		data: null as GuildDetailsDto | null,
+		update: async () => {
+			if (!PUBLIC_COMMUNITY_ID) return null;
+			const { data } = await getPublicGuild(PUBLIC_COMMUNITY_ID).catch(() => ({ data: null }));
+			return data ?? null;
 		},
 	},
 	bazaar: {
@@ -167,6 +192,12 @@ export const cache = {
 	},
 	get leaderboards() {
 		return cacheEntries.leaderboards.data;
+	},
+	get homepageLeaderboard() {
+		return cacheEntries.homepageLeaderboard.data;
+	},
+	get communityGuild() {
+		return cacheEntries.communityGuild.data;
 	},
 	get bazaar() {
 		return cacheEntries.bazaar.data;
