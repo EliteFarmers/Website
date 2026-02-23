@@ -163,12 +163,7 @@
 	}
 
 	function applyArmorPreset(setName: 'HELIANTHUS') {
-		const ids = [
-			`${setName}_HELMET`,
-			`${setName}_CHESTPLATE`,
-			`${setName}_LEGGINGS`,
-			`${setName}_BOOTS`,
-		];
+		const ids = [`${setName}_HELMET`, `${setName}_CHESTPLATE`, `${setName}_LEGGINGS`, `${setName}_BOOTS`];
 
 		armor = FarmingArmor.fromArray(
 			ids.filter((id) => !!FARMING_ARMOR_INFO[id]).map((id) => createArmorItem(id)),
@@ -177,12 +172,7 @@
 	}
 
 	function applyEquipmentPreset(setName: 'BLOSSOM' | 'LOTUS') {
-		const ids = [
-			`${setName}_NECKLACE`,
-			`${setName}_CLOAK`,
-			`${setName}_BELT`,
-			`${setName}_BRACELET`,
-		];
+		const ids = [`${setName}_NECKLACE`, `${setName}_CLOAK`, `${setName}_BELT`, `${setName}_BRACELET`];
 
 		equipment = LotusGear.fromArray(
 			ids.filter((id) => !!FARMING_EQUIPMENT_INFO[id]).map((id) => createEquipmentItem(id)),
@@ -292,7 +282,9 @@
 						{#each commonArmorEnchants as enchantId (enchantId)}
 							{@const enchant = FARMING_ENCHANTS[enchantId]}
 							<div class="flex flex-col gap-1">
-								<Label class="text-xs">{enchant.name} ({piece.item.enchantments?.[enchantId] ?? 0})</Label>
+								<Label class="text-xs"
+									>{enchant.name} ({piece.item.enchantments?.[enchantId] ?? 0})</Label
+								>
 								<SliderSimple
 									class="h-8"
 									min={0}
@@ -330,7 +322,9 @@
 								skyblockId={equipmentId}
 								class="size-12 shrink-0 rounded-md border bg-black/20 p-1"
 							/>
-							<Label class="font-semibold">{slot === GearSlot.Gloves ? 'BRACELET' : slot.toUpperCase()}</Label>
+							<Label class="font-semibold"
+								>{slot === GearSlot.Gloves ? 'BRACELET' : slot.toUpperCase()}</Label
+							>
 						</div>
 
 						<Select.Simple
@@ -346,7 +340,9 @@
 						/>
 
 						<Select.Simple
-							options={getRarityOptionsFor(FARMING_EQUIPMENT_INFO[equipmentId]?.maxRarity ?? Rarity.Legendary)}
+							options={getRarityOptionsFor(
+								FARMING_EQUIPMENT_INFO[equipmentId]?.maxRarity ?? Rarity.Legendary
+							)}
 							value={piece.rarity}
 							change={(v) => {
 								if (!v) return;
@@ -386,7 +382,9 @@
 						{#each commonEquipmentEnchants as enchantId (enchantId)}
 							{@const enchant = FARMING_ENCHANTS[enchantId]}
 							<div class="flex flex-col gap-1">
-								<Label class="text-xs">{enchant.name} ({piece.item.enchantments?.[enchantId] ?? 0})</Label>
+								<Label class="text-xs"
+									>{enchant.name} ({piece.item.enchantments?.[enchantId] ?? 0})</Label
+								>
 								<SliderSimple
 									class="h-8"
 									min={0}

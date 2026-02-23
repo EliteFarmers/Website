@@ -69,44 +69,47 @@ export const getFortuneSandboxShare = query(zodGetToolSettingParams, async ({ se
 	}
 });
 
-export const saveFortuneSandboxShareCommand = command(zodFortuneSandboxShareSaveInput, async ({ data, name, description }) => {
-	const event = getRequestEvent();
-	if (!event.locals.access_token) {
-		return { error: 'Unauthorized', settingId: null };
-	}
-
-	const normalizedName = name?.trim() ? name.trim() : 'Fortune Sandbox Setup';
-	const normalizedDescription = description?.trim()
-		? description.trim()
-		: 'Shareable setup for the Farming Fortune Sandbox tool';
-
-	const payload = {
-		targetId: FORTUNE_SANDBOX_TOOL_SETTING_TARGET_ID,
-		version: FORTUNE_SANDBOX_TOOL_SETTING_VERSION,
-		name: normalizedName,
-		description: normalizedDescription,
-		isPublic: true,
-		data,
-	};
-
-	try {
-		const created = await createToolSetting(payload);
-		if (created.response.status === 401) {
+export const saveFortuneSandboxShareCommand = command(
+	zodFortuneSandboxShareSaveInput,
+	async ({ data, name, description }) => {
+		const event = getRequestEvent();
+		if (!event.locals.access_token) {
 			return { error: 'Unauthorized', settingId: null };
 		}
 
-		if (!created.ok || !created.data) {
+		const normalizedName = name?.trim() ? name.trim() : 'Fortune Sandbox Setup';
+		const normalizedDescription = description?.trim()
+			? description.trim()
+			: 'Shareable setup for the Farming Fortune Sandbox tool';
+
+		const payload = {
+			targetId: FORTUNE_SANDBOX_TOOL_SETTING_TARGET_ID,
+			version: FORTUNE_SANDBOX_TOOL_SETTING_VERSION,
+			name: normalizedName,
+			description: normalizedDescription,
+			isPublic: true,
+			data,
+		};
+
+		try {
+			const created = await createToolSetting(payload);
+			if (created.response.status === 401) {
+				return { error: 'Unauthorized', settingId: null };
+			}
+
+			if (!created.ok || !created.data) {
+				return {
+					error: getApiErrorMessage(created.error, 'Failed to save shared setup'),
+					settingId: null,
+				};
+			}
+
+			return { error: null, settingId: created.data.id };
+		} catch (error) {
 			return {
-				error: getApiErrorMessage(created.error, 'Failed to save shared setup'),
+				error: getApiErrorMessage(error, 'Failed to save shared setup'),
 				settingId: null,
 			};
 		}
-
-		return { error: null, settingId: created.data.id };
-	} catch (error) {
-		return {
-			error: getApiErrorMessage(error, 'Failed to save shared setup'),
-			settingId: null,
-		};
 	}
-});
+);

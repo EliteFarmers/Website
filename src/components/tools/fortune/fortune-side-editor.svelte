@@ -5,7 +5,14 @@
 	import ToolConfig from '$comp/tools/fortune/tool-config.svelte';
 	import * as Tabs from '$ui/tabs';
 	import type { FortuneSandboxPlayerGearSource } from '$lib/schemas/tool-settings/fortune-sandbox';
-	import { LotusGear, type Crop, type FarmingArmor, type FarmingPet, type FarmingTool, type PlayerOptions } from 'farming-weight';
+	import {
+		LotusGear,
+		type Crop,
+		type FarmingArmor,
+		type FarmingPet,
+		type FarmingTool,
+		type PlayerOptions,
+	} from 'farming-weight';
 
 	type SideKey = 'A' | 'B';
 	type LinkSection = 'pet' | 'tool' | 'armorEquipment' | 'stats';

@@ -172,7 +172,11 @@ function getOptionValue(
 	return Number.isFinite(value) ? value : fallback;
 }
 
-function setOptionValue(side: FortuneSandboxSideData, key: keyof NonNullable<FortuneSandboxSideData['options']>, value: number) {
+function setOptionValue(
+	side: FortuneSandboxSideData,
+	key: keyof NonNullable<FortuneSandboxSideData['options']>,
+	value: number
+) {
 	side.options = {
 		...(side.options ?? {}),
 		[key]: value,
@@ -290,7 +294,11 @@ export function getFortuneBreakEvenFields(side: FortuneSandboxSideData, crop: Cr
 		createOptionField('options.gardenLevel', 'Garden Level', 'gardenLevel', { start: 0, end: 15, step: 1 }),
 		createOptionField('options.farmingLevel', 'Farming Level', 'farmingLevel', { start: 0, end: 60, step: 1 }),
 		createOptionField('options.strength', 'Strength', 'strength', { start: 0, end: 500, step: 1 }),
-		createOptionField('options.communityCenter', 'Community Center', 'communityCenter', { start: 0, end: 5, step: 1 }),
+		createOptionField('options.communityCenter', 'Community Center', 'communityCenter', {
+			start: 0,
+			end: 5,
+			step: 1,
+		}),
 		createOptionField('options.filledRosewaterFlask', 'Filled Rosewater Flask', 'filledRosewaterFlask', {
 			start: 0,
 			end: 5,
@@ -298,8 +306,16 @@ export function getFortuneBreakEvenFields(side: FortuneSandboxSideData, crop: Cr
 		}),
 		createOptionField('options.anitaBonus', 'Anita Bonus', 'anitaBonus', { start: 0, end: 5, step: 1 }),
 		createOptionField('options.plotsUnlocked', 'Plots Unlocked', 'plotsUnlocked', { start: 0, end: 24, step: 1 }),
-		createOptionField('options.uniqueVisitors', 'Unique Visitors', 'uniqueVisitors', { start: 0, end: 80, step: 1 }),
-		createOptionField('options.refinedTruffles', 'Refined Truffles', 'refinedTruffles', { start: 0, end: 10, step: 1 }),
+		createOptionField('options.uniqueVisitors', 'Unique Visitors', 'uniqueVisitors', {
+			start: 0,
+			end: 80,
+			step: 1,
+		}),
+		createOptionField('options.refinedTruffles', 'Refined Truffles', 'refinedTruffles', {
+			start: 0,
+			end: 10,
+			step: 1,
+		}),
 		createOptionField('options.cocoaFortuneUpgrade', 'Cocoa Fortune Upgrade', 'cocoaFortuneUpgrade', {
 			start: 0,
 			end: 16,
@@ -359,7 +375,9 @@ export function getFortuneBreakEvenFields(side: FortuneSandboxSideData, crop: Cr
 			section: 'armorEquipment',
 			range: { start: 0, end: pesterminatorMax, step: 1 },
 			getValue: (target) => {
-				const enchantments = ensureArmorPiece(target, slot).enchantments as Record<string, number | null> | undefined;
+				const enchantments = ensureArmorPiece(target, slot).enchantments as
+					| Record<string, number | null>
+					| undefined;
 				return Number(enchantments?.['pesterminator'] ?? 0);
 			},
 			setValue: (target, value) => {
@@ -384,7 +402,9 @@ export function getFortuneBreakEvenFields(side: FortuneSandboxSideData, crop: Cr
 			section: 'armorEquipment',
 			range: { start: 0, end: greenThumbMax, step: 1 },
 			getValue: (target) => {
-				const enchantments = ensureEquipmentPiece(target, slot).enchantments as Record<string, number | null> | undefined;
+				const enchantments = ensureEquipmentPiece(target, slot).enchantments as
+					| Record<string, number | null>
+					| undefined;
 				return Number(enchantments?.['green_thumb'] ?? 0);
 			},
 			setValue: (target, value) => {

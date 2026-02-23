@@ -14,10 +14,21 @@
 		compareMode: boolean;
 		sideAPlayerGear: FortuneSandboxPlayerGearSource | null;
 		sideBPlayerGear: FortuneSandboxPlayerGearSource | null;
+		sideAName?: string;
+		sideBName?: string;
 		createSharePayload: () => FortuneSandboxToolSettingData;
 	}
 
-	let { authorized, loginRedirectHref, compareMode, sideAPlayerGear, sideBPlayerGear, createSharePayload }: Props = $props();
+	let {
+		authorized,
+		loginRedirectHref,
+		compareMode,
+		sideAPlayerGear,
+		sideBPlayerGear,
+		sideAName = 'Side A',
+		sideBName = 'Side B',
+		createSharePayload,
+	}: Props = $props();
 
 	let shareMessage = $state('');
 	let shareDialogOpen = $state(false);
@@ -124,11 +135,13 @@
 	url={shareDialogUrl}
 	info={shareDialogInfo}
 	error={shareDialogError}
-	compareMode={compareMode}
-	sideAPlayerGear={sideAPlayerGear}
-	sideBPlayerGear={sideBPlayerGear}
-	sharingSetup={sharingSetup}
-	canNativeShare={canNativeShare}
+	{compareMode}
+	{sideAPlayerGear}
+	{sideBPlayerGear}
+	{sideAName}
+	{sideBName}
+	{sharingSetup}
+	{canNativeShare}
 	onSave={saveShareSetup}
 	onCopy={copyShareDialogUrl}
 	onNativeShare={nativeShareDialogUrl}

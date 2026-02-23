@@ -10,67 +10,62 @@ const zodNumericRecord = z.record(z.string(), zodFiniteNumber.nullable());
 const zodItemAttributes = z.record(z.string(), z.union([z.string(), zodFiniteNumber, z.boolean(), z.null()]));
 const zodItemEnchantments = z.record(z.string(), z.union([zodFiniteNumber, z.string(), z.null()]));
 
-export const zodFortuneSandboxItem = z
-	.object({
-		name: z.string().nullish(),
-		skyblockId: z.string().nullish(),
-		uuid: z.string().nullish(),
-		lore: z.array(z.string()).nullish(),
-		attributes: zodItemAttributes.nullish(),
-		enchantments: zodItemEnchantments.nullish(),
-	});
+export const zodFortuneSandboxItem = z.object({
+	name: z.string().nullish(),
+	skyblockId: z.string().nullish(),
+	uuid: z.string().nullish(),
+	lore: z.array(z.string()).nullish(),
+	attributes: zodItemAttributes.nullish(),
+	enchantments: zodItemEnchantments.nullish(),
+});
 
-export const zodFortuneSandboxPet = z
-	.object({
-		type: z.string().nullish(),
-		uuid: z.string().nullish(),
-		tier: z.string().nullish(),
-		exp: z.number().nullish(),
-		heldItem: z.string().nullish(),
-	});
+export const zodFortuneSandboxPet = z.object({
+	type: z.string().nullish(),
+	uuid: z.string().nullish(),
+	tier: z.string().nullish(),
+	exp: z.number().nullish(),
+	heldItem: z.string().nullish(),
+});
 
-export const zodFortuneSandboxOptions = z
-	.object({
-		gardenLevel: zodNonNegativeNumber.optional(),
-		farmingLevel: zodNonNegativeNumber.optional(),
-		strength: zodNonNegativeNumber.optional(),
-		communityCenter: zodNonNegativeNumber.optional(),
-		filledRosewaterFlask: zodNonNegativeNumber.optional(),
-		anitaBonus: zodNonNegativeNumber.optional(),
-		plotsUnlocked: zodNonNegativeNumber.optional(),
-		uniqueVisitors: zodNonNegativeNumber.optional(),
-		refinedTruffles: zodNonNegativeNumber.optional(),
-		cocoaFortuneUpgrade: zodNonNegativeNumber.optional(),
-		dnaMilestone: zodNonNegativeNumber.optional(),
-		chips: zodNumericRecord.optional(),
-		attributes: zodNumericRecord.optional(),
-		milestones: zodNumericRecord.optional(),
-		cropUpgrades: zodNumericRecord.optional(),
-		personalBestsUnlocked: z.boolean().optional(),
-		personalBests: zodNumericRecord.optional(),
-		bestiaryKills: zodNumericRecord.optional(),
-		sprayedPlot: z.boolean().optional(),
-		infestedPlotProbability: z.number().min(0).max(1).optional(),
-		zorro: z
-			.object({
-				enabled: z.boolean(),
-				mode: z.union([z.string(), z.number()]),
-			})
-			.nullish(),
-	});
+export const zodFortuneSandboxOptions = z.object({
+	gardenLevel: zodNonNegativeNumber.optional(),
+	farmingLevel: zodNonNegativeNumber.optional(),
+	strength: zodNonNegativeNumber.optional(),
+	communityCenter: zodNonNegativeNumber.optional(),
+	filledRosewaterFlask: zodNonNegativeNumber.optional(),
+	anitaBonus: zodNonNegativeNumber.optional(),
+	plotsUnlocked: zodNonNegativeNumber.optional(),
+	uniqueVisitors: zodNonNegativeNumber.optional(),
+	refinedTruffles: zodNonNegativeNumber.optional(),
+	cocoaFortuneUpgrade: zodNonNegativeNumber.optional(),
+	dnaMilestone: zodNonNegativeNumber.optional(),
+	chips: zodNumericRecord.optional(),
+	attributes: zodNumericRecord.optional(),
+	milestones: zodNumericRecord.optional(),
+	cropUpgrades: zodNumericRecord.optional(),
+	personalBestsUnlocked: z.boolean().optional(),
+	personalBests: zodNumericRecord.optional(),
+	bestiaryKills: zodNumericRecord.optional(),
+	sprayedPlot: z.boolean().optional(),
+	infestedPlotProbability: z.number().min(0).max(1).optional(),
+	zorro: z
+		.object({
+			enabled: z.boolean(),
+			mode: z.union([z.string(), z.number()]),
+		})
+		.nullish(),
+});
 
-export const zodFortuneSandboxPlayerGearSource = z
-	.object({
-		playerName: z.string().trim().min(1).max(64),
-		playerUuid: z.string().trim().nullish(),
-		profileId: z.string().trim().nullish(),
-		profileName: z.string().trim().nullish(),
-	});
+export const zodFortuneSandboxPlayerGearSource = z.object({
+	playerName: z.string().trim().min(1).max(64),
+	playerUuid: z.string().trim().nullish(),
+	profileId: z.string().trim().nullish(),
+	profileName: z.string().trim().nullish(),
+});
 
-export const zodFortuneSandboxSource = z
-	.object({
-		playerGear: zodFortuneSandboxPlayerGearSource.optional(),
-	});
+export const zodFortuneSandboxSource = z.object({
+	playerGear: zodFortuneSandboxPlayerGearSource.optional(),
+});
 
 export const zodFortuneSandboxSideData = z.object({
 	options: zodFortuneSandboxOptions,
@@ -81,6 +76,13 @@ export const zodFortuneSandboxSideData = z.object({
 	equipment: z.array(zodFortuneSandboxItem).optional(),
 	source: zodFortuneSandboxSource.optional(),
 });
+
+export const zodFortuneSandboxSideNames = z
+	.object({
+		A: z.string().trim().min(1).max(64).optional(),
+		B: z.string().trim().min(1).max(64).optional(),
+	})
+	.optional();
 
 export const zodFortuneSandboxCompareState = z
 	.object({
@@ -129,6 +131,7 @@ export const zodFortuneSandboxToolSettingDataV2 = z.object({
 		A: zodFortuneSandboxSideData,
 		B: zodFortuneSandboxSideData.optional(),
 	}),
+	sideNames: zodFortuneSandboxSideNames,
 	compare: zodFortuneSandboxCompareState,
 });
 
@@ -163,6 +166,7 @@ export type FortuneSandboxToolSettingDataV1 = z.infer<typeof zodFortuneSandboxTo
 export type FortuneSandboxToolSettingData = z.infer<typeof zodFortuneSandboxToolSettingDataV2>;
 export type FortuneSandboxAnyToolSettingData = z.infer<typeof zodFortuneSandboxToolSettingData>;
 export type FortuneSandboxSideData = z.infer<typeof zodFortuneSandboxSideData>;
+export type FortuneSandboxSideNames = z.infer<typeof zodFortuneSandboxSideNames>;
 export type FortuneSandboxCompareState = z.infer<typeof zodFortuneSandboxCompareState>;
 export type FortuneSandboxShareSaveInput = z.infer<typeof zodFortuneSandboxShareSaveInput>;
 export type FortuneSandboxPlayerGearSource = z.infer<typeof zodFortuneSandboxPlayerGearSource>;
