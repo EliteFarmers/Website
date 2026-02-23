@@ -18,6 +18,7 @@
 
 	interface Props {
 		sideKey: SideKey;
+		sideName?: string;
 		state: SideImportState;
 		loadPlayer: (nameOrId: string, targetSide: SideKey) => Promise<void> | void;
 		reloadSelectedProfile: (targetSide: SideKey) => Promise<void> | void;
@@ -25,20 +26,27 @@
 		class?: string;
 	}
 
+	// eslint-disable-next-line svelte/no-unused-props
 	let {
 		sideKey,
+		sideName = `Side ${sideKey}`,
 		state = $bindable(),
 		loadPlayer,
 		reloadSelectedProfile,
 		showHeading = true,
 		class: className = '',
 	}: Props = $props();
+
+	const displaySideName = $derived.by(() => {
+		const trimmed = sideName.trim();
+		return trimmed || `Side ${sideKey}`;
+	});
 </script>
 
 <section class={`bg-card flex flex-col gap-3 rounded-lg border p-4 ${className}`.trim()}>
 	{#if showHeading}
 		<div class="flex flex-col gap-1">
-			<h3 class="text-base font-semibold">Import Side {sideKey} from Player</h3>
+			<h3 class="text-base font-semibold">Import {displaySideName} from Player</h3>
 			<p class="text-muted-foreground text-sm">
 				Loading a player replaces this side's pet, tools, armor, equipment, and stats.
 			</p>
@@ -60,7 +68,7 @@
 			onclick={() => void loadPlayer(state.searchValue, sideKey)}
 			disabled={state.loadState === 'loading'}
 		>
-			{state.loadState === 'loading' ? 'Loading...' : `Load Side ${sideKey}`}
+			{state.loadState === 'loading' ? 'Loading...' : `Load ${displaySideName}`}
 		</Button>
 		{#if state.profileOptions.length > 0}
 			<div class="flex flex-wrap items-center gap-2">

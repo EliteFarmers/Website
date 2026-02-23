@@ -39,12 +39,15 @@
 	import { getRatesData } from '$lib/stores/ratesData';
 	import { DEFAULT_SELECTED_CROPS, getSelectedCrops } from '$lib/stores/selectedCrops';
 	import * as Accordion from '$ui/accordion';
+	import { Button } from '$ui/button';
+	import { Input } from '$ui/input';
 	import { Label } from '$ui/label';
 	import { NumberInput } from '$ui/number-input';
 	import * as Select from '$ui/select';
 	import { SliderSimple } from '$ui/slider';
 	import { Switch } from '$ui/switch';
 	import * as Tabs from '$ui/tabs';
+	import { Walkthrough } from '$ui/walkthrough';
 	import {
 		ArmorSet,
 		calculateDetailedAverageDrops,
@@ -111,6 +114,7 @@
 	interface NormalizedSharedSetup {
 		sideA: FortuneSandboxSideData;
 		sideB: FortuneSandboxSideData;
+		sideNames: Record<SideKey, string>;
 		compare: {
 			enabled: boolean;
 			activeSide: SideKey;
@@ -123,6 +127,22 @@
 				scanSide: SideKey;
 			};
 		};
+	}
+
+	interface WalkthroughSnippetContext {
+		currentStepIndex: () => number;
+		currentStep: () =>
+			| {
+					target: string;
+					title: string;
+					description: string;
+					position?: 'top' | 'bottom' | 'left' | 'right';
+			  }
+			| undefined;
+		isLastStep: () => boolean;
+		next: () => void;
+		prev: () => void;
+		close: () => void;
 	}
 
 	const gbl = getGlobalContext();
@@ -153,10 +173,121 @@
 		{ value: 'bazaarProfit', label: 'Best Bazaar Profit' },
 		{ value: 'npcProfit', label: 'NPC Profit' },
 	];
-	const compareSideOptions = [
-		{ value: 'A', label: 'Side A' },
-		{ value: 'B', label: 'Side B' },
+	const defaultSideNames: Record<SideKey, string> = {
+		A: 'Side A',
+		B: 'Side B',
+	};
+	const walkthroughStorageKey = 'fortune-sandbox-walkthrough-v2';
+	const walkthroughSteps: {
+		target: string;
+		title: string;
+		description: string;
+		position?: 'top' | 'bottom' | 'left' | 'right';
+	}[] = [
+		{
+			target: 'fortune-guide-hero',
+			title: 'Sandbox Overview',
+			description:
+				'This page lets you model farming fortune setups without touching your real profile configuration.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-share',
+			title: 'Share and Reuse Setups',
+			description: 'Use share controls to save your current setup and compare state, then send a link to others.',
+			position: 'left',
+		},
+		{
+			target: 'fortune-guide-mode',
+			title: 'Pick a Mode',
+			description:
+				'Simple mode is quick input. Compare mode creates two independent sides so you can run true A/B setups.',
+			position: 'bottom',
+		},
+		{
+			target: 'simple-mode',
+			title: 'Enable Simple Mode',
+			description:
+				'Simple mode is best for quick estimates when you only know total farming and crop fortune values.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-simple-panel',
+			title: 'Simple Inputs',
+			description:
+				'Set your general fortune, crop fortune, assumed maxed pet, and armor tier to get fast results.',
+			position: 'right',
+		},
+		{
+			target: 'fortune-guide-import-player',
+			title: 'Import a Player',
+			description:
+				'Search and load a profile to pull pet, tools, armor, equipment, and stats directly into the sandbox.',
+			position: 'bottom',
+		},
+		{
+			target: 'simple-mode',
+			title: 'Switch to Advanced',
+			description: 'Turn simple mode off to unlock the full editor with item-level and stat-level control.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-advanced-panel',
+			title: 'Advanced Editor',
+			description:
+				'Use tabs to edit pet/tool, armor/equipment, and detailed garden/player stats for precise simulation.',
+			position: 'right',
+		},
+		{
+			target: 'fortune-guide-crop',
+			title: 'Choose a Crop',
+			description: 'All fortune math, tools, and rate outputs are calculated for the currently selected crop.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-assumptions',
+			title: 'Set Rate Assumptions',
+			description:
+				'Time spent and blocks per second apply across result panels and affect all profit/collection outputs.',
+			position: 'top',
+		},
+		{
+			target: 'compare-mode',
+			title: 'Switch to Compare',
+			description:
+				'Next will enable compare mode automatically so the tour can walk through side-specific controls.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-side-a-trigger',
+			title: 'Baseline Side Controls',
+			description: 'Use this panel as your baseline. Open it for imports and full pet/tool/armor/stat edits.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-side-b-trigger',
+			title: 'Comparison Side Controls',
+			description:
+				'Use this panel as the challenger. Importing this side fully replaces it and unlinks it from the baseline side.',
+			position: 'bottom',
+		},
+		{
+			target: 'fortune-guide-results-column',
+			title: 'Result Panels',
+			description:
+				'Use these cards to compare fortune, collection, and coin outputs for each side under the same assumptions.',
+			position: 'left',
+		},
+		{
+			target: 'fortune-guide-diff',
+			title: 'Diff and Break-Even',
+			description: 'The diff panel summarizes deltas and scans break-even points for numeric fields.',
+			position: 'top',
+		},
 	];
+	const compareWalkthroughStartIndex = 11;
+	const simpleWalkthroughStartIndex = 4;
+	const simpleWalkthroughEndIndex = 6;
 
 	const defaultPetItem: FarmingPetType = {
 		type: FarmingPets.Elephant,
@@ -266,6 +397,16 @@
 		return sideKey === 'A' ? sideAImportState : sideBImportState;
 	}
 
+	function normalizeSideName(value: unknown, fallback: string) {
+		const parsed = typeof value === 'string' ? value.trim() : '';
+		if (!parsed) return fallback;
+		return parsed.slice(0, 64);
+	}
+
+	function getSideDisplayName(sideKey: SideKey) {
+		return normalizeSideName(sideNames[sideKey], defaultSideNames[sideKey]);
+	}
+
 	function extractImportedOptions(member: unknown): Partial<PlayerOptions> {
 		const source = (member ?? {}) as Record<string, unknown>;
 		const garden = (source.garden ?? {}) as Record<string, unknown>;
@@ -297,10 +438,7 @@
 			dnaMilestone: Number(unparsed.dnaMilestone) || 0,
 			attributes: (memberData.attributes ?? {}) as Record<string, number>,
 			chips: (memberDataGarden.chips ?? {}) as Record<string, number>,
-			bestiaryKills: ((bestiary as { kills?: Record<string, number> }).kills ?? {}) as Record<
-				string,
-				number
-			>,
+			bestiaryKills: ((bestiary as { kills?: Record<string, number> }).kills ?? {}) as Record<string, number>,
 		};
 	}
 
@@ -478,6 +616,10 @@
 
 	function setCompareMode(next: boolean) {
 		if (next) {
+			sideNames = {
+				A: getSideDisplayName('A'),
+				B: getSideDisplayName('B'),
+			};
 			simpleMode = false;
 			compareMode = true;
 			compareActiveSide = 'A';
@@ -487,6 +629,67 @@
 			return;
 		}
 		compareMode = false;
+	}
+
+	function startWalkthrough() {
+		applyWalkthroughModesForIndex(0);
+		walkthroughOpen = true;
+	}
+
+	function completeWalkthrough() {
+		if (!browser) return;
+		window.localStorage.setItem(walkthroughStorageKey, '1');
+	}
+
+	function applyWalkthroughModesForIndex(stepIndex: number) {
+		let modeChanged = false;
+		const shouldCompare = stepIndex >= compareWalkthroughStartIndex;
+
+		if (shouldCompare) {
+			if (!compareMode) {
+				setCompareMode(true);
+				compareMobileTab = 'A';
+				modeChanged = true;
+			}
+			return modeChanged;
+		}
+
+		if (compareMode) {
+			setCompareMode(false);
+			modeChanged = true;
+		}
+
+		const shouldSimple = stepIndex >= simpleWalkthroughStartIndex && stepIndex <= simpleWalkthroughEndIndex;
+		if (simpleMode !== shouldSimple) {
+			simpleMode = shouldSimple;
+			modeChanged = true;
+		}
+
+		return modeChanged;
+	}
+
+	function nextWalkthroughStep(ctx: WalkthroughSnippetContext) {
+		if (ctx.isLastStep()) {
+			ctx.next();
+			return;
+		}
+		const nextIndex = ctx.currentStepIndex() + 1;
+		const modeChanged = applyWalkthroughModesForIndex(nextIndex);
+		if (modeChanged) {
+			setTimeout(() => ctx.next(), 120);
+			return;
+		}
+		ctx.next();
+	}
+
+	function prevWalkthroughStep(ctx: WalkthroughSnippetContext) {
+		const previousIndex = ctx.currentStepIndex() - 1;
+		const modeChanged = applyWalkthroughModesForIndex(Math.max(previousIndex, 0));
+		if (modeChanged) {
+			setTimeout(() => ctx.prev(), 120);
+			return;
+		}
+		ctx.prev();
 	}
 
 	function getXpForLevel(level: number, rarity: Rarity) {
@@ -610,6 +813,7 @@
 			return {
 				sideA: legacySide,
 				sideB: structuredClone(legacySide),
+				sideNames: { ...defaultSideNames },
 				compare: {
 					enabled: false,
 					activeSide: 'A',
@@ -629,6 +833,10 @@
 		return {
 			sideA: setting.sides.A,
 			sideB: setting.sides.B ?? structuredClone(setting.sides.A),
+			sideNames: {
+				A: normalizeSideName(setting.sideNames?.A, defaultSideNames.A),
+				B: normalizeSideName(setting.sideNames?.B, defaultSideNames.B),
+			},
 			compare: {
 				enabled: compareState.enabled ?? false,
 				activeSide: compareState.activeSide ?? 'A',
@@ -652,6 +860,7 @@
 	function applyNormalizedSharedSetup(normalized: NormalizedSharedSetup) {
 		sideA = createRuntimeSide(normalized.sideA);
 		sideB = createRuntimeSide(normalized.sideB);
+		sideNames = { ...normalized.sideNames };
 		compareMode = normalized.compare.enabled;
 		compareActiveSide = normalized.compare.activeSide;
 		compareLinkedSections = { ...normalized.compare.linkedSections };
@@ -673,6 +882,10 @@
 			sides: {
 				A: runtimeSideToData(sideA, selectedCropKey),
 				B: compareMode ? runtimeSideToData(sideB, selectedCropKey) : undefined,
+			},
+			sideNames: {
+				A: getSideDisplayName('A'),
+				B: getSideDisplayName('B'),
 			},
 			compare: {
 				enabled: compareMode,
@@ -791,9 +1004,10 @@
 				unlinkImportedSections(targetSide);
 			}
 			applyImportedSetupToSide(targetSide, importedData, 'replace');
+			sideNames[targetSide] = account.name;
 			compareActiveSide = targetSide;
 			sideImportState.loadState = 'loaded';
-			sideImportState.loadMessage = `Loaded ${sideImportState.loadedPlayerName}${activeProfile.profileName ? ` (${activeProfile.profileName})` : ''} to Side ${targetSide}`;
+			sideImportState.loadMessage = `Loaded ${sideImportState.loadedPlayerName}${activeProfile.profileName ? ` (${activeProfile.profileName})` : ''} to ${getSideDisplayName(targetSide)}`;
 		} catch {
 			sideImportState.loadState = 'error';
 			sideImportState.loadMessage = 'Failed to load player data';
@@ -843,9 +1057,10 @@
 				unlinkImportedSections(targetSide);
 			}
 			applyImportedSetupToSide(targetSide, importedData, 'replace');
+			sideNames[targetSide] = normalizeSideName(sideImportState.loadedPlayerName, getSideDisplayName(targetSide));
 			compareActiveSide = targetSide;
 			sideImportState.loadState = 'loaded';
-			sideImportState.loadMessage = `Loaded ${sideImportState.loadedPlayerName}${selectedProfileLabel ? ` (${selectedProfileLabel})` : ''} to Side ${targetSide}`;
+			sideImportState.loadMessage = `Loaded ${sideImportState.loadedPlayerName}${selectedProfileLabel ? ` (${selectedProfileLabel})` : ''} to ${getSideDisplayName(targetSide)}`;
 		} catch {
 			sideImportState.loadState = 'error';
 			sideImportState.loadMessage = 'Failed to load selected profile';
@@ -1061,7 +1276,7 @@
 			diffMessage = 'No break-even point found within the selected range.';
 			return;
 		}
-		diffMessage = `Break-even found at ${diffResult.value.toFixed(2)}.`;
+		diffMessage = `Break-even found at ${diffResult.value.toFixed(2)} by adjusting ${getSideDisplayName(diffScanSide)}.`;
 	}
 
 	function applyBreakEvenValue() {
@@ -1088,6 +1303,7 @@
 	let compareActiveSide = $state<SideKey>('A');
 	let compareMobileTab = $state<'A' | 'B' | 'diff'>('A');
 	let compareLinkedSections = $state<Record<LinkSection, boolean>>({ ...defaultCompareLinkedSections });
+	let sideNames = $state<Record<SideKey, string>>({ ...defaultSideNames });
 
 	let diffMode = $state<FortuneCompareDiffMode>('summary');
 	let diffMetric = $state<FortuneCompareMetric>('bazaarProfit');
@@ -1104,6 +1320,7 @@
 		sideSources: Partial<Record<SideKey, FortuneSandboxPlayerGearSource | null>>;
 	} | null>(null);
 
+	let walkthroughOpen = $state(false);
 	let importMessage = $state('');
 	let sideAImportState = $state<SideImportState>(createSideImportState());
 	let sideBImportState = $state<SideImportState>(createSideImportState());
@@ -1133,6 +1350,12 @@
 	const selectedCrop = $derived(Object.entries($selectedCrops).find(([, value]) => value)?.[0] ?? 'Wheat');
 	const selectedCropKey = $derived((getCropFromName(selectedCrop) ?? Crop.Wheat) as Crop);
 	const blocksActuallyBroken = $derived(blocksBroken * (bps / 20));
+	const sideNameA = $derived.by(() => normalizeSideName(sideNames.A, defaultSideNames.A));
+	const sideNameB = $derived.by(() => normalizeSideName(sideNames.B, defaultSideNames.B));
+	const compareSideOptions = $derived.by(() => [
+		{ value: 'A', label: sideNameA },
+		{ value: 'B', label: sideNameB },
+	]);
 
 	const selectedToolA = $derived.by(
 		() => sideA.toolsByCrop[String(selectedCropKey)] ?? createDefaultTool(selectedCropKey, sideA.options)
@@ -1338,6 +1561,11 @@
 		selectedCrops.update((crops) =>
 			Object.values(crops).some((isSelected) => isSelected) ? crops : { ...DEFAULT_SELECTED_CROPS, Wheat: true }
 		);
+		const hasSeenWalkthrough = window.localStorage.getItem(walkthroughStorageKey) === '1';
+		if (!hasSeenWalkthrough) {
+			applyWalkthroughModesForIndex(0);
+			walkthroughOpen = true;
+		}
 		const shareId = (data.shareId ?? new URL(window.location.href).searchParams.get('share') ?? '').trim();
 		if (shareId) {
 			void importSharedSetup(shareId);
@@ -1347,20 +1575,54 @@
 
 <Head title="Farming Fortune Sandbox | Elite" description="Configure your farming setup and see your rates!" />
 
+<Walkthrough bind:open={walkthroughOpen} steps={walkthroughSteps} padding={4} onComplete={completeWalkthrough}>
+	{#snippet children(ctx)}
+		{@const walkthroughCtx = ctx as WalkthroughSnippetContext}
+		<div class="bg-popover text-popover-foreground w-80 rounded-lg border p-4 shadow-xl sm:w-96">
+			<div class="space-y-1">
+				<p class="text-muted-foreground text-xs font-semibold tracking-wide uppercase">Fortune Sandbox Guide</p>
+				<h3 class="text-base leading-none font-semibold">{walkthroughCtx.currentStep()?.title}</h3>
+				<p class="text-muted-foreground text-sm">{walkthroughCtx.currentStep()?.description}</p>
+			</div>
+			<div class="mt-4 flex items-center justify-between gap-3">
+				<span class="text-muted-foreground text-xs">
+					Step {walkthroughCtx.currentStepIndex() + 1} / {walkthroughSteps.length}
+				</span>
+				<div class="flex items-center gap-2">
+					<Button variant="ghost" size="sm" onclick={walkthroughCtx.close}>Close</Button>
+					{#if walkthroughCtx.currentStepIndex() > 0}
+						<Button variant="outline" size="sm" onclick={() => prevWalkthroughStep(walkthroughCtx)}
+							>Back</Button
+						>
+					{/if}
+					<Button size="sm" onclick={() => nextWalkthroughStep(walkthroughCtx)}>
+						{walkthroughCtx.isLastStep() ? 'Finish' : 'Next'}
+					</Button>
+				</div>
+			</div>
+		</div>
+	{/snippet}
+</Walkthrough>
+
 <div class="flex w-full flex-col items-center gap-6 p-4">
 	<div class="flex w-full max-w-6xl items-center justify-between gap-3">
-		<div class="flex flex-col">
+		<div id="fortune-guide-hero" class="flex flex-col">
 			<h1 class="text-3xl font-bold">Farming Fortune Sandbox</h1>
 			<p class="text-muted-foreground">Experiment with different setups without being tied to a profile.</p>
 		</div>
-		<FortuneShareControls
-			authorized={gbl.authorized}
-			loginRedirectHref={getLoginRedirectHref()}
-			{compareMode}
-			sideAPlayerGear={sideA.playerGearSource}
-			sideBPlayerGear={sideB.playerGearSource}
-			{createSharePayload}
-		/>
+		<div id="fortune-guide-share" class="flex items-center gap-2">
+			<Button variant="outline" size="sm" onclick={startWalkthrough}>How to Use</Button>
+			<FortuneShareControls
+				authorized={gbl.authorized}
+				loginRedirectHref={getLoginRedirectHref()}
+				{compareMode}
+				sideAPlayerGear={sideA.playerGearSource}
+				sideBPlayerGear={sideB.playerGearSource}
+				sideAName={sideNameA}
+				sideBName={sideNameB}
+				{createSharePayload}
+			/>
+		</div>
 	</div>
 
 	{#if loadedSharedSetup}
@@ -1374,7 +1636,7 @@
 			{/if}
 			{#if loadedSharedSetup.sideSources.A}
 				<p class="text-muted-foreground text-sm">
-					Side A includes loaded gear from player {loadedSharedSetup.sideSources.A.playerName}
+					{sideNameA} includes loaded gear from player {loadedSharedSetup.sideSources.A.playerName}
 					{#if loadedSharedSetup.sideSources.A.profileName}
 						({loadedSharedSetup.sideSources.A.profileName})
 					{/if}
@@ -1382,7 +1644,7 @@
 			{/if}
 			{#if loadedSharedSetup.sideSources.B}
 				<p class="text-muted-foreground text-sm">
-					Side B includes loaded gear from player {loadedSharedSetup.sideSources.B.playerName}
+					{sideNameB} includes loaded gear from player {loadedSharedSetup.sideSources.B.playerName}
 					{#if loadedSharedSetup.sideSources.B.profileName}
 						({loadedSharedSetup.sideSources.B.profileName})
 					{/if}
@@ -1396,7 +1658,7 @@
 			<h2 class="mb-2 text-sm font-semibold">Loaded Player Gear Sources</h2>
 			<div class="text-muted-foreground flex flex-col gap-1 text-sm">
 				<p>
-					Side A:
+					{sideNameA}:
 					{#if sideA.playerGearSource}
 						{sideA.playerGearSource.playerName}
 						{#if sideA.playerGearSource.profileName}
@@ -1407,7 +1669,7 @@
 					{/if}
 				</p>
 				<p>
-					Side B:
+					{sideNameB}:
 					{#if sideB.playerGearSource}
 						{sideB.playerGearSource.playerName}
 						{#if sideB.playerGearSource.profileName}
@@ -1428,7 +1690,7 @@
 		</p>
 	{/if}
 
-	<section class="bg-card flex w-full max-w-6xl flex-col gap-3 rounded-lg border p-4">
+	<section id="fortune-guide-mode" class="bg-card flex w-full max-w-6xl flex-col gap-3 rounded-lg border p-4">
 		<div class="flex flex-wrap items-center justify-between gap-4">
 			<div>
 				<h2 class="text-lg font-semibold">Configuration Mode</h2>
@@ -1448,7 +1710,7 @@
 					/>
 				</div>
 				<div class="flex items-center gap-3">
-					<Label for="compare-mode">Compare A/B</Label>
+					<Label for="compare-mode">Compare Sides</Label>
 					<Switch id="compare-mode" checked={compareMode} onCheckedChange={setCompareMode} />
 				</div>
 			</div>
@@ -1461,7 +1723,10 @@
 	</section>
 
 	{#if !compareMode}
-		<section class="bg-card flex w-full max-w-6xl flex-col gap-4 rounded-lg border p-4">
+		<section
+			id="fortune-guide-import-player"
+			class="bg-card flex w-full max-w-6xl flex-col gap-4 rounded-lg border p-4"
+		>
 			<div class="flex flex-col gap-1">
 				<h2 class="text-lg font-semibold">Import from Player</h2>
 				<p class="text-muted-foreground text-sm">
@@ -1470,6 +1735,7 @@
 			</div>
 			<FortuneSideImport
 				sideKey="A"
+				sideName={sideNameA}
 				bind:state={sideAImportState}
 				{loadPlayer}
 				{reloadSelectedProfile}
@@ -1482,9 +1748,11 @@
 		<p class="text-destructive text-sm">{importMessage}</p>
 	{/if}
 
-	<CropSelector radio={true} />
+	<div id="fortune-guide-crop" class="w-full max-w-6xl">
+		<CropSelector radio={true} />
+	</div>
 
-	<section class="bg-card flex w-full max-w-6xl flex-col gap-4 rounded-lg border p-4">
+	<section id="fortune-guide-assumptions" class="bg-card flex w-full max-w-6xl flex-col gap-4 rounded-lg border p-4">
 		<div class="flex flex-col gap-1">
 			<h2 class="text-lg font-semibold">Rate Assumptions</h2>
 			<p class="text-muted-foreground text-sm">These apply to all result panels and diff calculations.</p>
@@ -1510,9 +1778,12 @@
 	</section>
 
 	<div class="grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-12">
-		<div class="flex flex-col gap-6 {compareMode ? 'lg:col-span-12' : 'lg:col-span-7'}">
+		<div
+			id="fortune-guide-config-column"
+			class="flex flex-col gap-6 {compareMode ? 'lg:col-span-12' : 'lg:col-span-7'}"
+		>
 			{#if !compareMode && simpleMode}
-				<section class="bg-card flex flex-col gap-5 rounded-lg border p-5">
+				<section id="fortune-guide-simple-panel" class="bg-card flex flex-col gap-5 rounded-lg border p-5">
 					<div>
 						<h2 class="text-xl font-semibold">Simple Configuration</h2>
 						<p class="text-muted-foreground text-sm">
@@ -1570,22 +1841,38 @@
 			{:else if compareMode}
 				<Accordion.Root type="multiple" class="w-full space-y-4">
 					<Accordion.Item value="A" class="rounded-lg border">
-						<Accordion.Trigger class="px-4 py-3 hover:no-underline">
-							<div class="flex w-full items-center justify-between gap-4">
-								<div class="flex flex-col text-left">
-									<span class="text-lg font-semibold">Side A Settings</span>
-									<span class="text-muted-foreground text-xs">
-										Pet: {sideA.pet.info.name} | Tool: {selectedToolA.info.name}
-									</span>
+						<div id="fortune-guide-side-a-trigger">
+							<Accordion.Trigger class="px-4 py-3 hover:no-underline">
+								<div class="flex w-full items-center justify-between gap-4">
+									<div class="flex flex-col text-left">
+										<span class="text-lg font-semibold">{sideNameA} Settings</span>
+										<span class="text-muted-foreground text-xs">
+											Pet: {sideA.pet.info.name} | Tool: {selectedToolA.info.name}
+										</span>
+									</div>
+									<span class="text-sm font-semibold"
+										>Fortune: {sideAContext.effectiveFortune.toFixed(0)}</span
+									>
 								</div>
-								<span class="text-sm font-semibold"
-									>Fortune: {sideAContext.effectiveFortune.toFixed(0)}</span
-								>
-							</div>
-						</Accordion.Trigger>
+							</Accordion.Trigger>
+						</div>
 						<Accordion.Content class="px-4 pt-2 pb-4">
+							<div class="mb-4 max-w-sm">
+								<Label for="fortune-side-a-name">Side Name</Label>
+								<Input
+									id="fortune-side-a-name"
+									class="mt-1"
+									maxlength={64}
+									placeholder={defaultSideNames.A}
+									bind:value={sideNames.A}
+									onblur={() => {
+										sideNames.A = getSideDisplayName('A');
+									}}
+								/>
+							</div>
 							<FortuneSideImport
 								sideKey="A"
+								sideName={sideNameA}
 								bind:state={sideAImportState}
 								{loadPlayer}
 								{reloadSelectedProfile}
@@ -1602,27 +1889,46 @@
 					</Accordion.Item>
 
 					<Accordion.Item value="B" class="rounded-lg border">
-						<Accordion.Trigger class="px-4 py-3 hover:no-underline">
-							<div class="flex w-full items-center justify-between gap-4">
-								<div class="flex flex-col text-left">
-									<span class="text-lg font-semibold">Side B Settings</span>
-									<span class="text-muted-foreground text-xs">
-										Pet: {sideB.pet.info.name} | Tool: {selectedToolB.info.name}
-									</span>
+						<div id="fortune-guide-side-b-trigger">
+							<Accordion.Trigger class="px-4 py-3 hover:no-underline">
+								<div class="flex w-full items-center justify-between gap-4">
+									<div class="flex flex-col text-left">
+										<span class="text-lg font-semibold">{sideNameB} Settings</span>
+										<span class="text-muted-foreground text-xs">
+											Pet: {sideB.pet.info.name} | Tool: {selectedToolB.info.name}
+										</span>
+									</div>
+									<span class="text-sm font-semibold"
+										>Fortune: {sideBContext.effectiveFortune.toFixed(0)}</span
+									>
 								</div>
-								<span class="text-sm font-semibold"
-									>Fortune: {sideBContext.effectiveFortune.toFixed(0)}</span
-								>
-							</div>
-						</Accordion.Trigger>
+							</Accordion.Trigger>
+						</div>
 						<Accordion.Content class="px-4 pt-2 pb-4">
+							<div class="mb-4 max-w-sm">
+								<Label for="fortune-side-b-name">Side Name</Label>
+								<Input
+									id="fortune-side-b-name"
+									class="mt-1"
+									maxlength={64}
+									placeholder={defaultSideNames.B}
+									bind:value={sideNames.B}
+									onblur={() => {
+										sideNames.B = getSideDisplayName('B');
+									}}
+								/>
+							</div>
 							<FortuneSideImport
 								sideKey="B"
+								sideName={sideNameB}
 								bind:state={sideBImportState}
 								{loadPlayer}
 								{reloadSelectedProfile}
 								class="mb-4"
 							/>
+							<p class="text-muted-foreground mb-3 text-xs">
+								Link toggles control whether {sideNameB} mirrors each section from {sideNameA}.
+							</p>
 							<div class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
 								{#each Object.keys(compareLinkedSections) as sectionKey (sectionKey)}
 									{@const section = sectionKey as LinkSection}
@@ -1649,17 +1955,22 @@
 					</Accordion.Item>
 				</Accordion.Root>
 			{:else}
-				<FortuneSideEditor
-					sideKey="A"
-					bind:side={sideA}
-					{selectedCropKey}
-					{onSectionInteraction}
-					{createDefaultTool}
-				/>
+				<div id="fortune-guide-advanced-panel">
+					<FortuneSideEditor
+						sideKey="A"
+						bind:side={sideA}
+						{selectedCropKey}
+						{onSectionInteraction}
+						{createDefaultTool}
+					/>
+				</div>
 			{/if}
 		</div>
 
-		<div class="flex flex-col gap-6 {compareMode ? 'lg:col-span-12' : 'lg:col-span-5'}">
+		<div
+			id="fortune-guide-results-column"
+			class="flex flex-col gap-6 {compareMode ? 'lg:col-span-12' : 'lg:col-span-5'}"
+		>
 			{#if !compareMode}
 				<FortuneResultPanel
 					title={`${selectedCrop} Results`}
@@ -1670,13 +1981,13 @@
 			{:else}
 				<div class="hidden gap-4 md:grid md:grid-cols-2">
 					<FortuneResultPanel
-						title={`Side A - ${selectedCrop}`}
+						title={`${sideNameA} - ${selectedCrop}`}
 						context={sideAContext}
 						{selectedCropKey}
 						showFortuneBreakdown={true}
 					/>
 					<FortuneResultPanel
-						title={`Side B - ${selectedCrop}`}
+						title={`${sideNameB} - ${selectedCrop}`}
 						context={sideBContext}
 						{selectedCropKey}
 						showFortuneBreakdown={true}
@@ -1686,13 +1997,13 @@
 				<div class="md:hidden">
 					<Tabs.Root bind:value={compareMobileTab} class="w-full">
 						<Tabs.List class="w-full">
-							<Tabs.Trigger value="A" class="flex-1">Side A</Tabs.Trigger>
-							<Tabs.Trigger value="B" class="flex-1">Side B</Tabs.Trigger>
+							<Tabs.Trigger value="A" class="flex-1">{sideNameA}</Tabs.Trigger>
+							<Tabs.Trigger value="B" class="flex-1">{sideNameB}</Tabs.Trigger>
 							<Tabs.Trigger value="diff" class="flex-1">Diff</Tabs.Trigger>
 						</Tabs.List>
 						<Tabs.Content value="A" class="mt-4">
 							<FortuneResultPanel
-								title={`Side A - ${selectedCrop}`}
+								title={`${sideNameA} - ${selectedCrop}`}
 								context={sideAContext}
 								{selectedCropKey}
 								showFortuneBreakdown={true}
@@ -1700,7 +2011,7 @@
 						</Tabs.Content>
 						<Tabs.Content value="B" class="mt-4">
 							<FortuneResultPanel
-								title={`Side B - ${selectedCrop}`}
+								title={`${sideNameB} - ${selectedCrop}`}
 								context={sideBContext}
 								{selectedCropKey}
 								showFortuneBreakdown={true}
@@ -1708,36 +2019,40 @@
 						</Tabs.Content>
 						<Tabs.Content value="diff" class="mt-4">
 							<p class="text-muted-foreground text-sm">
-								Use the diff panel below for summary, source deltas, and break-even scans.
+								Use the diff panel below to compare {sideNameA} vs {sideNameB} and run break-even scans.
 							</p>
 						</Tabs.Content>
 					</Tabs.Root>
 				</div>
 
-				<FortuneDiffPanel
-					bind:diffMode
-					bind:diffRange
-					{selectedCrop}
-					{diffMetric}
-					{diffScanSide}
-					{diffFieldId}
-					{diffResult}
-					{diffMessage}
-					{compareSummaryRows}
-					{compareCoinSourceDiff}
-					{compareCollectionSourceDiff}
-					{compareMetricOptions}
-					{compareSideOptions}
-					{breakEvenFieldOptions}
-					{currentBreakEvenFieldSectionLabel}
-					onMetricChange={onDiffMetricChange}
-					onScanSideChange={onDiffScanSideChange}
-					onFieldChange={onDiffFieldChange}
-					onRangeInput={onDiffRangeInput}
-					onRunBreakEven={runBreakEvenScan}
-					onApplyBreakEven={applyBreakEvenValue}
-					{formatSigned}
-				/>
+				<div id="fortune-guide-diff">
+					<FortuneDiffPanel
+						bind:diffMode
+						bind:diffRange
+						{selectedCrop}
+						{sideNameA}
+						{sideNameB}
+						{diffMetric}
+						{diffScanSide}
+						{diffFieldId}
+						{diffResult}
+						{diffMessage}
+						{compareSummaryRows}
+						{compareCoinSourceDiff}
+						{compareCollectionSourceDiff}
+						{compareMetricOptions}
+						{compareSideOptions}
+						{breakEvenFieldOptions}
+						{currentBreakEvenFieldSectionLabel}
+						onMetricChange={onDiffMetricChange}
+						onScanSideChange={onDiffScanSideChange}
+						onFieldChange={onDiffFieldChange}
+						onRangeInput={onDiffRangeInput}
+						onRunBreakEven={runBreakEvenScan}
+						onApplyBreakEven={applyBreakEvenValue}
+						{formatSigned}
+					/>
+				</div>
 			{/if}
 		</div>
 	</div>

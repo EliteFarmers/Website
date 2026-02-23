@@ -99,7 +99,10 @@
 
 <div class="flex flex-col gap-6">
 	<div class="flex items-center gap-4">
-		<ItemRender skyblockId={tool.item.skyblockId ?? ''} class="size-14 shrink-0 rounded-md border bg-black/20 p-1" />
+		<ItemRender
+			skyblockId={tool.item.skyblockId ?? ''}
+			class="size-14 shrink-0 rounded-md border bg-black/20 p-1"
+		/>
 		<div>
 			<h3 class="text-lg font-semibold">{tool.info.name}</h3>
 			<p class="text-muted-foreground text-sm">Applies to {tool.crops.length} crop(s)</p>

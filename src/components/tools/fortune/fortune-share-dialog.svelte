@@ -16,6 +16,8 @@
 		compareMode: boolean;
 		sideAPlayerGear: FortuneSandboxPlayerGearSource | null;
 		sideBPlayerGear: FortuneSandboxPlayerGearSource | null;
+		sideAName?: string;
+		sideBName?: string;
 		sharingSetup: boolean;
 		canNativeShare: boolean;
 		onSave: () => void;
@@ -33,6 +35,8 @@
 		compareMode,
 		sideAPlayerGear,
 		sideBPlayerGear,
+		sideAName = 'Side A',
+		sideBName = 'Side B',
 		sharingSetup,
 		canNativeShare,
 		onSave,
@@ -67,7 +71,7 @@
 					<p class="font-medium">This saved setup includes:</p>
 					{#if sideAPlayerGear}
 						<p>
-							Side A player gear: {sideAPlayerGear.playerName}
+							{sideAName} player gear: {sideAPlayerGear.playerName}
 							{#if sideAPlayerGear.profileName}
 								({sideAPlayerGear.profileName})
 							{/if}
@@ -75,7 +79,7 @@
 					{/if}
 					{#if sideBPlayerGear}
 						<p>
-							Side B player gear: {sideBPlayerGear.playerName}
+							{sideBName} player gear: {sideBPlayerGear.playerName}
 							{#if sideBPlayerGear.profileName}
 								({sideBPlayerGear.profileName})
 							{/if}
@@ -111,7 +115,8 @@
 		</div>
 		<Dialog.Footer>
 			<Button variant="outline" onclick={() => (open = false)} disabled={sharingSetup}>Cancel</Button>
-			<Button onclick={onSave} disabled={sharingSetup}>{sharingSetup ? 'Saving...' : 'Save And Copy Link'}</Button>
+			<Button onclick={onSave} disabled={sharingSetup}>{sharingSetup ? 'Saving...' : 'Save And Copy Link'}</Button
+			>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>

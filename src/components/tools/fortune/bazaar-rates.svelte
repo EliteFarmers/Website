@@ -156,12 +156,17 @@
 										{#if includeRng}
 											{@const rng = Object.fromEntries(
 												Object.entries(result.rngItems ?? {}).map(([item, amount], idx) => {
-													const name = bz?.[item]?.bazaar?.name ?? bz?.[item]?.item?.name ?? `RNG Item ${idx}`;
+													const name =
+														bz?.[item]?.bazaar?.name ??
+														bz?.[item]?.item?.name ??
+														`RNG Item ${idx}`;
 													return [name, price(bz, item, amount)];
 												})
 											)}
 											<CoinsBreakdown
-												coins={Math.floor(craft.total + Object.values(rng).reduce((a, b) => a + b, 0))}
+												coins={Math.floor(
+													craft.total + Object.values(rng).reduce((a, b) => a + b, 0)
+												)}
 												breakdown={{
 													[craft.name]: Math.floor(craft.per * craft.items),
 													'Craft Cost': Math.floor(-craft.cost),
@@ -186,7 +191,9 @@
 
 						{#if sellToBazaar.length > 0}
 							<p class="text-muted-foreground text-xs">
-								Other items = {Math.floor(otherCoinsTotal).toLocaleString()} ({Math.floor(otherCoinsNpcRemaining).toLocaleString()} to NPC, {Math.floor(sellToBazaarCoins).toLocaleString()} to BZ)
+								Other items = {Math.floor(otherCoinsTotal).toLocaleString()} ({Math.floor(
+									otherCoinsNpcRemaining
+								).toLocaleString()} to NPC, {Math.floor(sellToBazaarCoins).toLocaleString()} to BZ)
 							</p>
 						{/if}
 					</div>
