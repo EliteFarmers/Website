@@ -10,7 +10,7 @@ runs:
           with:
               node-version: 24
 
-        - uses: pnpm/action-setup@v2
+        - uses: pnpm/action-setup@v4
           name: Install pnpm
           with:
               version: 10
