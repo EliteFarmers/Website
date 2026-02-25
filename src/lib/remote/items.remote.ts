@@ -53,6 +53,8 @@ export const getItemValues = query(z.array(z.string()), async (itemIds) => {
 	return new Map(itemIds.map((id) => [id, getSingleItemValue(id)]));
 });
 
+export type ItemValue = ReturnType<typeof getSingleItemValue>;
+
 function getSingleItemValue(itemId: string) {
 	const bz = cache?.bazaar.products;
 	const ah = cache?.auctions.items;
