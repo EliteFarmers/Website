@@ -2,6 +2,7 @@
 	import type { LeaderboardEntry } from '$lib/api/elite';
 	import type { LeaderboardInfo } from '$lib/constants/leaderboards';
 	import { cn } from '$lib/utils';
+	import Skeleton from '$ui/skeleton/skeleton.svelte';
 	import type { Snippet } from 'svelte';
 	import Entry from './entry.svelte';
 
@@ -11,6 +12,7 @@
 		offset?: number;
 		showLeaderboardName?: boolean;
 		class?: string;
+		loading?: boolean;
 		namePrefix?: Snippet<
 			[
 				{
@@ -28,6 +30,7 @@
 		offset = 1,
 		showLeaderboardName = false,
 		class: className = '',
+		loading = false,
 		namePrefix,
 	}: Props = $props();
 
@@ -45,14 +48,33 @@
 	data-sveltekit-preload-data="tap"
 	class={cn('flex flex-col justify-center gap-2 rounded-lg align-middle lg:flex-row', className)}
 >
-	<div class="flex w-full flex-col items-center gap-2 lg:items-end">
-		{#each firstHalf as entry, index (getKey(entry, index))}
-			<Entry rank={index + offset} {entry} {leaderboard} {namePrefix} {showLeaderboardName} />
-		{/each}
-	</div>
-	<div class="flex w-full flex-col items-center gap-2 lg:items-start">
-		{#each secondHalf as entry, index (getKey(entry, index + firstHalf.length))}
-			<Entry rank={index + firstHalf.length + offset} {entry} {leaderboard} {namePrefix} {showLeaderboardName} />
-		{/each}
-	</div>
+	{#if loading}
+		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
+			{#each { length: 10 }, index (index)}
+				<Skeleton class="h-14 w-full rounded-lg opacity-50 sm:h-16" />
+			{/each}
+		</div>
+		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
+			{#each { length: 10 }, index (index)}
+				<Skeleton class="h-14 w-full rounded-lg opacity-50 sm:h-16" />
+			{/each}
+		</div>
+	{:else}
+		<div class="flex w-full flex-col items-center gap-2 lg:items-end">
+			{#each firstHalf as entry, index (getKey(entry, index))}
+				<Entry rank={index + offset} {entry} {leaderboard} {namePrefix} {showLeaderboardName} />
+			{/each}
+		</div>
+		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
+			{#each secondHalf as entry, index (getKey(entry, index + firstHalf.length))}
+				<Entry
+					rank={index + firstHalf.length + offset}
+					{entry}
+					{leaderboard}
+					{namePrefix}
+					{showLeaderboardName}
+				/>
+			{/each}
+		</div>
+	{/if}
 </div>

@@ -11,8 +11,10 @@
 	import { formatLeaderboardAmount } from '$lib/format';
 	import { getGlobalContext } from '$lib/hooks/global.svelte';
 	import { getPageCtx, type Crumb } from '$lib/hooks/page.svelte';
+	import { getLeaderboardSlice } from '$lib/remote';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
+	import Skeleton from '$ui/skeleton/skeleton.svelte';
 	import { Switch } from '$ui/switch';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
@@ -33,12 +35,15 @@
 	let { data }: Props = $props();
 
 	let showLeaderboardName = new PersistedState('showleaderboardname', true);
+	const leaderboardQuery = $derived(data.params ? getLeaderboardSlice(data.params) : null);
+	const lb = $derived(data.lb ?? leaderboardQuery?.current);
+	const loading = $derived(leaderboardQuery ? leaderboardQuery.loading : false);
 
-	let title = $derived(`${data.lb?.title}${data.leaderboard.suffix} Leaderboard`);
-	let entries = $derived(data.lb?.entries ?? []);
-	let offset = $derived((data.lb?.offset ?? 0) + 1);
+	let title = $derived(`${lb?.title}${data.leaderboard.suffix} Leaderboard`);
+	let entries = $derived(lb?.entries ?? []);
+	let offset = $derived((lb?.offset ?? 0) + 1);
 	let intervalType = $derived(
-		data.lb.id.endsWith('-monthly') ? 'monthly' : data.lb.id.endsWith('-weekly') ? 'weekly' : 'current'
+		lb?.id.endsWith('-monthly') ? 'monthly' : lb?.id.endsWith('-weekly') ? 'weekly' : 'current'
 	);
 
 	const topTen = $derived(
@@ -71,35 +76,39 @@
 	const favorites = getFavoritesContext();
 	const gbl = getGlobalContext();
 
-	let startTime = $derived(Number(data.lb.startsAt ?? 0) * 1000);
-	let endTime = $derived(Number(data.lb.endsAt ?? 0) * 1000);
+	let startTime = $derived(Number(lb?.startsAt ?? 0) * 1000);
+	let endTime = $derived(Number(lb?.endsAt ?? 0) * 1000);
 	let active = $derived(endTime > Date.now());
 
 	$effect.pre(() => {
 		breadcrumb.setBreadcrumbs(crumbs);
 		favorites.setPage({
-			name: `#${offset} - ` + (data.settings.title || data.lb?.title),
+			name: `#${offset} - ` + (data.settings.title || lb?.title),
 			href: page.url.pathname,
 		});
 	});
 
 	let searchForm = $state<HTMLFormElement | null>(null);
 	let searchInput = $state('');
-	let loading = $state(false);
+	let searchLoading = $state(false);
 	let searchOpen = $state(false);
 </script>
 
 <Head
 	{title}
 	description="{title} for Hypixel Skyblock.\n\n{topTen}"
-	canonicalPath="/leaderboard/{data.leaderboard.id}{data.lb.offset ? `/${data.lb.offset + 1}` : ''}"
+	canonicalPath="/leaderboard/{data.leaderboard.id}{lb?.offset ? `/${lb.offset + 1}` : ''}"
 />
 
 <section class="mt-16 flex w-full flex-col justify-center">
 	<div
 		class="mt-8 flex w-full flex-col items-center justify-center gap-2 {startTime && endTime ? 'mb-6.5' : 'mb-22'}"
 	>
-		<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
+		{#if loading}
+			<Skeleton class="mb-4 h-10 w-full max-w-2xl rounded-lg" />
+		{:else}
+			<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
+		{/if}
 		{#if startTime && endTime}
 			<div class="flex flex-row items-center text-sm md:text-base {active ? '' : 'mb-10'}">
 				<DateDisplay timestamp={startTime} />
@@ -128,10 +137,10 @@
 					action={page.url.search}
 					bind:this={searchForm}
 					use:enhance={() => {
-						loading = true;
+						searchLoading = true;
 						return async ({ update }) => {
 							await update();
-							loading = false;
+							searchLoading = false;
 						};
 					}}
 				>
@@ -142,6 +151,7 @@
 						onclick={() => {
 							searchOpen = true;
 						}}
+						disabled={loading || searchLoading}
 					>
 						<Search size={16} />
 					</Button>
@@ -151,16 +161,19 @@
 						bind:open={searchOpen}
 						cmd={() => {
 							tick().then(() => {
-								if (loading) return;
+								if (searchLoading) return;
 								searchForm?.requestSubmit();
 							});
 						}}
 					/>
 				</form>
-				<IntervalSelect leaderboard={data.lb} />
+				{#if lb}
+					<IntervalSelect leaderboard={lb} />
+				{/if}
 				<LeaderboardFilter
 					query="mode"
 					title="Game Mode"
+					disabled={loading}
 					options={[
 						{ label: 'Classic', value: 'classic' },
 						{ label: 'Ironman', value: 'ironman' },
@@ -173,6 +186,7 @@
 							<Button
 								class="size-8"
 								variant="outline"
+								disabled={loading}
 								href="/leaderboard/{data.settings.id.replace('-' + intervalType, '')}{interval ===
 								'current'
 									? ''
@@ -201,7 +215,7 @@
 		</div>
 		<div class="flex w-full flex-col items-center gap-2 lg:items-start">
 			<div class="flex w-full max-w-xl justify-center md:justify-start lg:justify-end">
-				<LeaderboardPagination info={data.leaderboard} leaderboard={data.lb} />
+				<LeaderboardPagination info={data.leaderboard} leaderboard={lb} {loading} />
 			</div>
 		</div>
 	</div>
@@ -211,8 +225,9 @@
 		leaderboard={data.leaderboard}
 		{offset}
 		showLeaderboardName={showLeaderboardName.current}
+		{loading}
 	/>
-	{#if !data.lb.entries.length}
+	{#if !lb?.entries.length && !loading}
 		<div class="mb-8 flex flex-row items-center justify-center">
 			<p class="text-muted-foreground w-full max-w-4xl rounded-lg border-2 py-16 text-center">
 				No entries found!
@@ -240,7 +255,7 @@
 			</div>
 			<div class="flex w-full flex-col items-center gap-2 lg:items-start">
 				<div class="flex w-full max-w-xl justify-center md:justify-start lg:justify-end">
-					<LeaderboardPagination info={data.leaderboard} leaderboard={data.lb} />
+					<LeaderboardPagination info={data.leaderboard} leaderboard={lb} {loading} />
 				</div>
 			</div>
 		</div>
@@ -251,19 +266,19 @@
 		<Switch bind:checked={showLeaderboardName.current} />
 	</div>
 
-	{#if data.lb.interval}
+	{#if lb?.interval}
 		<p class="mx-auto max-w-lg py-4 text-center text-sm">
 			Leaderboards on an interval work by saving an initial score the first time a player's data is pulled for an
 			interval, then using the difference between their current score and the initial score for their score shown
 			here. High scores on these leaderboards may be due to minions or other factors. A player must have reached
 			the minimum amount of
-			<strong>{formatLeaderboardAmount(data.leaderboard, data.lb.minimumScore)}</strong> to have their initial score
+			<strong>{formatLeaderboardAmount(data.leaderboard, lb?.minimumScore ?? 0)}</strong> to have their initial score
 			saved.
 		</p>
 	{:else}
 		<p class="mx-auto max-w-lg py-4 text-center text-sm">
 			This leaderboard only consists of the top players who have been searched on this website and have hit the
-			minimum score of <strong>{formatLeaderboardAmount(data.leaderboard, data.lb.minimumScore)}</strong>.
+			minimum score of <strong>{formatLeaderboardAmount(data.leaderboard, lb?.minimumScore ?? 0)}</strong>.
 		</p>
 	{/if}
 </section>
