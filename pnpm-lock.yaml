@@ -121,8 +121,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(@types/json-schema@7.0.15)(class-validator@0.14.2)
       '@vinejs/vine':
-        specifier: ^1.8.0
-        version: 1.8.0
+        specifier: ^4.0.0
+        version: 4.3.0
       arktype:
         specifier: ^2.1.25
         version: 2.1.25
@@ -1496,6 +1496,9 @@ packages:
   '@poppinss/macroable@1.1.0':
     resolution: {integrity: sha512-y/YKzZDuG8XrpXpM7Z1RdQpiIc0MAKyva24Ux1PB4aI7RiSI/79K8JVDcdyubriTm7vJ1LhFs8CrZpmPnx/8Pw==}
 
+  '@poppinss/types@1.2.1':
+    resolution: {integrity: sha512-qUYnzl0m9HJTWsXtr8Xo7CwDx6wcjrvo14bOVbIMIlKJCzKrm3LX55dRTDr1/x4PpSvKVgmxvC6Ly2YiqXKOvQ==}
+
   '@primer/octicons@19.19.0':
     resolution: {integrity: sha512-LBbL8nOl6FWMDy7riKB5ppHLtffY7loRq+CDGj0D5G1Xdo2mKlSOQy3rWy2RVE8SxxPFL+mj46C1nG+smKBEZA==}
 
@@ -2352,6 +2355,9 @@ packages:
   '@types/urijs@1.19.26':
     resolution: {integrity: sha512-wkXrVzX5yoqLnndOwFsieJA7oKM8cNkOKJtf/3vVGSUFkWDKZvFHpIl9Pvqb/T9UsawBBFMTTD8xu7sK5MWuvg==}
 
+  '@types/validator@13.15.10':
+    resolution: {integrity: sha512-T8L6i7wCuyoK8A/ZeLYt1+q0ty3Zb9+qbSSvrIVitzT3YjZqkTZ40IbRsPanlB4h1QB3JVL1SYCdR6ngtFYcuA==}
+
   '@types/validator@13.15.4':
     resolution: {integrity: sha512-LSFfpSnJJY9wbC0LQxgvfb+ynbHftFo0tMsFOl/J4wexLnYMmDSPaj2ZyDv3TkfL1UePxPrxOWJfbiRS8mQv7A==}
 
@@ -2467,20 +2473,20 @@ packages:
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
-  '@vinejs/compiler@2.5.1':
-    resolution: {integrity: sha512-efiO/SCQSMCqz6LDZTI4R3Ceq1ik3K2IqefEbbch+ko4dZncaYmQWJpX/fXVwgmO78jTZuerzD4I2WphPJUCwg==}
-    engines: {node: '>=18.0.0'}
-
   '@vinejs/compiler@3.0.0':
     resolution: {integrity: sha512-v9Lsv59nR56+bmy2p0+czjZxsLHwaibJ+SV5iK9JJfehlJMa501jUJQqqz4X/OqKXrxtE3uTQmSqjUqzF3B2mw==}
     engines: {node: '>=18.0.0'}
 
-  '@vinejs/vine@1.8.0':
-    resolution: {integrity: sha512-Qq3XxbA26jzqS9ICifkqzT399lMQZ2fWtqeV3luI2as+UIK7qDifJFU2Q4W3q3IB5VXoWxgwAZSZEO0em9I/qQ==}
-    engines: {node: '>=18.16.0'}
+  '@vinejs/compiler@4.1.3':
+    resolution: {integrity: sha512-UyH7Zn8dkTMLeU+PF2WjCnWkFb2qYaOxAcvp/uXW0njtKNcJOnVJaPsnWYwqewkTcHN47yvOdzosj3kj3RAP5w==}
+    engines: {node: '>=18.0.0'}
 
   '@vinejs/vine@3.0.1':
     resolution: {integrity: sha512-ZtvYkYpZOYdvbws3uaOAvTFuvFXoQGAtmzeiXu+XSMGxi5GVsODpoI9Xu9TplEMuD/5fmAtBbKb9cQHkWkLXDQ==}
+    engines: {node: '>=18.16.0'}
+
+  '@vinejs/vine@4.3.0':
+    resolution: {integrity: sha512-GaJY+PyTvcnjPvbL6pJhKNv4zl2vxFE5K8HoEf8LuTWrRa8WMB3jfS/MEywkbOLVQR1UlLxXNqAGcxgZfJcWkg==}
     engines: {node: '>=18.16.0'}
 
   '@vitest/expect@4.0.16':
@@ -2737,6 +2743,10 @@ packages:
   camelcase@8.0.0:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
+
+  camelcase@9.0.0:
+    resolution: {integrity: sha512-TO9xmyXTZ9HUHI8M1OnvExxYB0eYVS/1e5s7IDMTAoIcwUd+aNcFODs6Xk83mobk0velyHFQgA1yIrvYc6wclw==}
+    engines: {node: '>=20'}
 
   caniuse-lite@1.0.30001753:
     resolution: {integrity: sha512-Bj5H35MD/ebaOV4iDLqPEtiliTN29qkGtEHCwawWn4cYm+bPJM2NsaP30vtZcnERClMzp52J4+aw2UNbK4o+zw==}
@@ -4432,6 +4442,10 @@ packages:
     resolution: {integrity: sha512-X06Mfd/5aKsRHc0O0J5CUedwnPmnDtLF2+nq+KN9KSDlJHkPuh0JUviWjEWMe0SW/9TDdSLVPuk7L5gGTIA1/w==}
     engines: {node: '>=14.16'}
 
+  normalize-url@8.1.1:
+    resolution: {integrity: sha512-JYc0DPlpGWB40kH5g07gGTrYuMqV653k3uBKY6uITPWds3M0ov3GaWGp9lbE3Bzngx8+XkfzgvASb9vk9JDFXQ==}
+    engines: {node: '>=14.16'}
+
   npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
@@ -5627,6 +5641,10 @@ packages:
 
   validator@13.15.20:
     resolution: {integrity: sha512-KxPOq3V2LmfQPP4eqf3Mq/zrT0Dqp2Vmx2Bn285LwVahLc+CsxOM0crBHczm8ijlcjZ0Q5Xd6LW3z3odTPnlrw==}
+    engines: {node: '>= 0.10'}
+
+  validator@13.15.26:
+    resolution: {integrity: sha512-spH26xU080ydGggxRyR1Yhcbgx+j3y5jbNXk/8L+iRvdIEQ4uTRH2Sgf2dokud6Q4oAtsbNvJ1Ft+9xmm6IZcA==}
     engines: {node: '>= 0.10'}
 
   vanilla-cookieconsent@3.1.0:
@@ -7100,6 +7118,8 @@ snapshots:
 
   '@poppinss/macroable@1.1.0': {}
 
+  '@poppinss/types@1.2.1': {}
+
   '@primer/octicons@19.19.0':
     dependencies:
       object-assign: 4.1.1
@@ -8078,6 +8098,8 @@ snapshots:
 
   '@types/urijs@1.19.26': {}
 
+  '@types/validator@13.15.10': {}
+
   '@types/validator@13.15.4': {}
 
   '@typeschema/class-validator@0.2.0(@types/json-schema@7.0.15)(class-validator@0.14.2)':
@@ -8230,21 +8252,10 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vinejs/compiler@2.5.1': {}
-
   '@vinejs/compiler@3.0.0':
     optional: true
 
-  '@vinejs/vine@1.8.0':
-    dependencies:
-      '@poppinss/macroable': 1.1.0
-      '@types/validator': 13.15.4
-      '@vinejs/compiler': 2.5.1
-      camelcase: 8.0.0
-      dayjs: 1.11.19
-      dlv: 1.1.3
-      normalize-url: 8.1.0
-      validator: 13.15.20
+  '@vinejs/compiler@4.1.3': {}
 
   '@vinejs/vine@3.0.1':
     dependencies:
@@ -8257,6 +8268,19 @@ snapshots:
       normalize-url: 8.1.0
       validator: 13.15.20
     optional: true
+
+  '@vinejs/vine@4.3.0':
+    dependencies:
+      '@poppinss/macroable': 1.1.0
+      '@poppinss/types': 1.2.1
+      '@standard-schema/spec': 1.1.0
+      '@types/validator': 13.15.10
+      '@vinejs/compiler': 4.1.3
+      camelcase: 9.0.0
+      dayjs: 1.11.19
+      dlv: 1.1.3
+      normalize-url: 8.1.1
+      validator: 13.15.26
 
   '@vitest/expect@4.0.16':
     dependencies:
@@ -8528,7 +8552,10 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  camelcase@8.0.0: {}
+  camelcase@8.0.0:
+    optional: true
+
+  camelcase@9.0.0: {}
 
   caniuse-lite@1.0.30001753: {}
 
@@ -10700,7 +10727,10 @@ snapshots:
     dependencies:
       '@babel/parser': 7.28.5
 
-  normalize-url@8.1.0: {}
+  normalize-url@8.1.0:
+    optional: true
+
+  normalize-url@8.1.1: {}
 
   npm-run-path@4.0.1:
     dependencies:
@@ -12125,6 +12155,8 @@ snapshots:
       typescript: 5.9.3
 
   validator@13.15.20: {}
+
+  validator@13.15.26: {}
 
   vanilla-cookieconsent@3.1.0: {}
 
