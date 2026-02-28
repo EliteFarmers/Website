@@ -11,14 +11,17 @@
 
 	let { product, class: className = '' }: Props = $props();
 
-	let image = $derived(product.thumbnail?.url ?? '');
-	let dollars = $derived(((product.price ?? 0) / 100).toFixed(2));
-	let free = $derived(!product.price || +dollars === 0);
+	const image = $derived(product.thumbnail?.url ?? '');
+	const dollars = $derived(((product.price ?? 0) / 100).toFixed(2));
+	const free = $derived(!product.price || +dollars === 0);
+	const isNew = $derived(
+		product.releasedAt ? new Date(product.releasedAt).getTime() > Date.now() - 1000 * 60 * 60 * 24 * 7 : false
+	);
 </script>
 
 <a
 	class={cn(
-		'group bg-card hover:bg-accent/50 border-border relative flex w-full max-w-[280px] flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+		'group bg-card hover:bg-accent/50 border-border relative flex w-full max-w-70 flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
 		className
 	)}
 	href="/shop/{product.id}"
@@ -33,6 +36,12 @@
 			/>
 		{:else}
 			<Package size={48} class="text-muted-foreground/50" />
+		{/if}
+		{#if isNew}
+			<span
+				class="bg-destructive shadow-destructive/50 absolute top-2 right-2 rounded-full px-2 py-0.5 text-xs font-semibold text-white shadow-md"
+				>NEW</span
+			>
 		{/if}
 	</div>
 

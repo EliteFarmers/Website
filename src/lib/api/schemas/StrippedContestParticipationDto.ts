@@ -9,12 +9,12 @@ Use of this API requires following the [Elite API TOS](https://elitebot.dev/apit
  */
 
 export interface StrippedContestParticipationDto {
-	collected: number;
-	position: number;
-	/** @nullable */
-	medal?: string | null;
-	removed: boolean;
-	playerUuid: string;
-	playerName: string;
-	profileUuid: string;
+  collected: number;
+  position: number;
+  /** @nullable */
+  medal?: string | null;
+  removed: boolean;
+  playerUuid: string;
+  playerName: string;
+  profileUuid: string;
 }
