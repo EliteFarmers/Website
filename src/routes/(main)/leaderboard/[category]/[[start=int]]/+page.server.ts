@@ -3,7 +3,7 @@ import { getLeaderboardSlice } from '$lib/remote/leaderboards.remote';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params, parent, url }) => {
+export const load = (async ({ params, parent, url, locals }) => {
 	const { leaderboard: settings } = await parent();
 
 	if (!settings) {
@@ -37,21 +37,31 @@ export const load = (async ({ params, parent, url }) => {
 	}
 
 	try {
-		const lb = await getLeaderboardSlice({
+		const params = {
 			leaderboard: category,
 			offset: startNum,
 			limit: 20,
 			mode,
 			interval,
 			removed: removed ? (+removed as 0) : undefined,
-		});
+		};
 
-		if (!lb) {
-			throw error(500, "Leaderboard data couldn't be fetched");
+		if (locals.bot) {
+			const lb = await getLeaderboardSlice(params);
+
+			if (!lb) {
+				throw error(500, "Leaderboard data couldn't be fetched");
+			}
+
+			return {
+				lb,
+				settings,
+				category,
+			};
 		}
 
 		return {
-			lb,
+			params,
 			settings,
 			category,
 		};
