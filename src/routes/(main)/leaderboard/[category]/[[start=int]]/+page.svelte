@@ -14,7 +14,6 @@
 	import { getLeaderboardSlice } from '$lib/remote';
 	import { getFavoritesContext } from '$lib/stores/favorites.svelte';
 	import { Button } from '$ui/button';
-	import Skeleton from '$ui/skeleton/skeleton.svelte';
 	import { Switch } from '$ui/switch';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
@@ -39,7 +38,9 @@
 	const lb = $derived(data.lb ?? leaderboardQuery?.current);
 	const loading = $derived(leaderboardQuery ? leaderboardQuery.loading : false);
 
-	let title = $derived(`${lb?.title}${data.leaderboard.suffix} Leaderboard`);
+	let title = $derived(
+		loading ? data.settings.title + ' Leaderboard' : `${lb?.title}${data.leaderboard.suffix} Leaderboard`
+	);
 	let entries = $derived(lb?.entries ?? []);
 	let offset = $derived((lb?.offset ?? 0) + 1);
 	let intervalType = $derived(
@@ -104,11 +105,7 @@
 	<div
 		class="mt-8 flex w-full flex-col items-center justify-center gap-2 {startTime && endTime ? 'mb-6.5' : 'mb-22'}"
 	>
-		{#if loading}
-			<Skeleton class="mb-4 h-10 w-full max-w-2xl rounded-lg" />
-		{:else}
-			<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
-		{/if}
+		<h1 class="mb-4 max-w-2xl self-center text-center text-4xl">{title}</h1>
 		{#if startTime && endTime}
 			<div class="flex flex-row items-center text-sm md:text-base {active ? '' : 'mb-10'}">
 				<DateDisplay timestamp={startTime} />
