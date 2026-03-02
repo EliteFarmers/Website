@@ -14,9 +14,12 @@
 	let { timestamp, class: className, format = 'MMMM D, YYYY', children }: Props = $props();
 </script>
 
-<PopoverMobile class={cn('bg-muted inline-block w-fit', className)} triggerClass="w-fit">
+<PopoverMobile
+	class={cn('bg-muted inline-block w-fit', className)}
+	triggerClass="inline-flex min-h-6 w-fit items-center"
+>
 	{#snippet trigger()}
-		<span class="max-w-fit rounded px-1">
+		<span class="inline-flex min-h-6 max-w-fit items-center rounded px-1">
 			<Time {timestamp} {format} />
 		</span>
 	{/snippet}

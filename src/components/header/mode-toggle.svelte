@@ -51,6 +51,8 @@
 				class: 'px-1 py-0 text-base focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0',
 			})
 		)}
+		aria-label="Open theme settings"
+		title="Open theme settings"
 	>
 		<PaintBrush class="block" />
 	</DropdownMenu.Trigger>

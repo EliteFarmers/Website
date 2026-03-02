@@ -41,6 +41,8 @@
 			<Button
 				variant="outline"
 				class="hover:bg-secondary-hover w-full flex-initial rounded-md p-1 sm:flex-1 md:w-fit"
+				aria-label="Dismiss announcement"
+				title="Dismiss announcement"
 				onclick={() => {
 					ctx.dismissAnnouncement(a.id);
 				}}
