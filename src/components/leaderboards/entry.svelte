@@ -82,10 +82,11 @@
 >
 	{#if style?.background?.imageUrl || entry.meta?.leaderboard?.styleId}
 		{@const img = style?.background?.imageUrl}
-		<!-- svelte-ignore a11y_missing_attribute -->
 		<img
 			loading="lazy"
 			src={img ?? `/api/lb-style/${entry.meta?.leaderboard?.styleId}/bg.webp`}
+			alt=""
+			aria-hidden="true"
 			class="bg-card group-hover:bg-muted z-0 w-full max-w-5xl bg-no-repeat {!img ? 'h-full' : ''}"
 		/>
 		<div class="absolute inset-0 rounded-sm bg-linear-to-r from-black/20 via-transparent to-black/20"></div>
